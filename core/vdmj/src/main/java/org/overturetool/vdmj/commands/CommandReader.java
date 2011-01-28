@@ -256,6 +256,10 @@ abstract public class CommandReader
 				{
 					carryOn = doLatex(line, false);
 				}
+				else if(line.startsWith("word"))
+				{
+					carryOn = doWord(line);
+				}
 				else if (line.startsWith("remove"))
 				{
 					carryOn = doRemove(line);
@@ -781,6 +785,71 @@ abstract public class CommandReader
 		return true;
 	}
 
+	private boolean doWord(String line)
+	{
+		try
+		{
+			Set<File> loaded = interpreter.getSourceFiles();
+
+			if (line.equals("word"))
+			{
+				for (File file: interpreter.getSourceFiles())
+				{
+					doWord(file);
+				}
+
+				return true;
+			}
+
+			String[] parts = line.split("\\s+");
+
+			for (int p = 1; p < parts.length; p++)
+			{
+				File f = new File(parts[p]);
+
+    			if (loaded.contains(f))
+    			{
+    				doWord(f);
+    			}
+    			else
+    			{
+    				println(f + " is not loaded - try 'files'");
+    			}
+			}
+		}
+		catch (Exception e)
+		{
+			println("Usage: word [<filenames>]");
+		}
+
+		return true;
+	}
+
+	private void doWord(File file)
+	{
+		try
+		{
+			SourceFile source = interpreter.getSourceFile(file);
+
+			if (source == null)
+			{
+				println(file + ": file not found");
+			}
+			else
+			{
+				File html = new File(source.filename.getPath() + ".doc");
+				PrintWriter pw = new PrintWriter(html);
+				source.printWordCoverage(pw);
+				pw.close();
+				println("Word HTML coverage written to " + html);
+			}
+		}
+		catch (Exception e)
+		{
+			println("word: " + e.getMessage());
+		}
+	}
+
 	protected boolean doLatex(String line, boolean headers)
 	{
 		try
@@ -1136,6 +1205,7 @@ abstract public class CommandReader
 		println("list - list breakpoints");
 		println("coverage clear|write <dir>|merge <dir>|<filenames> - handle line coverage");
 		println("latex|latexdoc [<files>] - generate LaTeX line coverage files");
+		println("word [<files>] - generate Word HTML line coverage files");
 		println("files - list files in the current specification");
 		println("set [<pre|post|inv|dtc|measures> <on|off>] - set runtime checks");
 		println("reload - reload the current specification files");

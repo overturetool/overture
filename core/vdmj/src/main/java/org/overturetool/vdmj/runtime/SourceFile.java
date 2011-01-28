@@ -52,6 +52,10 @@ public class SourceFile
 	public final String LST_ESCAPE_BEGIN ="(*@";
 	public final String LST_ESCAPE_END ="@*)";
 
+	private final static String HTMLSTART =
+		"<p class=MsoNormal style='text-autospace:none'><span style='font-size:10.0pt; font-family:\"Courier New\"; color:black'>";
+	private final static String HTMLEND = "</span></p>";
+
 	public SourceFile(File filename) throws IOException
 	{
 		this.filename = filename;
@@ -151,15 +155,17 @@ public class SourceFile
 
 	public void printLatexCoverage(PrintWriter out, boolean headers)
 	{
-		printLatexCoverage(out,headers,false,true);
+		printLatexCoverage(out, headers, false, true);
 	}
 
-	public void printLatexCoverage(PrintWriter out, boolean headers,boolean modelOnly,boolean includeCoverageTable)
+	public void printLatexCoverage(PrintWriter out,
+		boolean headers,boolean modelOnly,boolean includeCoverageTable)
 	{
-		printLatex(out,headers,modelOnly,includeCoverageTable,true);
+		printLatex(out, headers, modelOnly, includeCoverageTable, true);
 	}
 
-	public void printLatex(PrintWriter out, boolean headers,boolean modelOnly,boolean includeCoverageTable,boolean markCoverage)
+	public void printLatex(PrintWriter out,
+		boolean headers, boolean modelOnly, boolean includeCoverageTable, boolean markCoverage)
 	{
 		Map<Integer, List<LexLocation>> hits =
 					LexLocation.getMissLocations(filename);
@@ -315,6 +321,150 @@ public class SourceFile
 			replace("}", "\\}").
 			replace("~", "\\~").
 			replaceAll("\\^{1}", "\\\\^{}");
+	}
+
+	public void printWordCoverage(PrintWriter out)
+	{
+		Map<Integer, List<LexLocation>> hits =
+					LexLocation.getMissLocations(filename);
+
+		out.println("<html>");
+		out.println("<head>");
+		out.println("<meta http-equiv=Content-Type content=\"text/html; charset=" + VDMJ.filecharset + "\">");
+		out.println("<meta name=Generator content=\"Microsoft Word 11 (filtered)\">");
+		out.println("<title>" + filename.getName() + "</title>");
+		out.println("<style>");
+		out.println("<!--");
+		out.println("p.MsoNormal, li.MsoNormal, div.MsoNormal");
+		out.println("{margin:0in; margin-bottom:.0001pt; font-size:12.0pt; font-family:\"Times New Roman\";}");
+		out.println("h1");
+		out.println("{margin-top:12.0pt; margin-right:0in; margin-bottom:3.0pt; margin-left:0in; page-break-after:avoid; font-size:16.0pt; font-family:Arial;}");
+		out.println("@page Section1");
+		out.println("{size:8.5in 11.0in; margin:1.0in 1.25in 1.0in 1.25in;}");
+		out.println("div.Section1");
+		out.println("{page:Section1;}");
+		out.println("-->");
+		out.println("</style>");
+		out.println("</head>");
+		out.println("<body lang=EN-GB>");
+		out.println("<div class=Section1>");
+
+		out.println("<h1 align=center style='text-align:center'>" + filename.getName() + "</h1>");
+		out.println(htmlLine());
+		out.println(htmlLine());
+
+		for (int lnum = 1; lnum <= lines.size(); lnum++)
+		{
+			String line = lines.get(lnum - 1);
+			String spaced = detab(line, Properties.parser_tabstop);
+			List<LexLocation> list = hits.get(lnum);
+			out.println(markupHTML(spaced, list));
+		}
+
+		out.println(htmlLine());
+		out.println(htmlLine());
+		out.println(htmlLine());
+
+		out.println("<div align=center>");
+		out.println("<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=\"60%\" style='width:60.0%;border-collapse:collapse'>");
+		out.println(rowHTML(true, "Function or Operation", "Coverage", "Calls"));
+
+		long total = 0;
+
+		LexNameList spans = LexLocation.getSpanNames(filename);
+		Collections.sort(spans);
+
+		for (LexNameToken name: spans)
+		{
+			long calls = LexLocation.getSpanCalls(name);
+			total += calls;
+
+			out.println(rowHTML(false,
+				htmlQuote(name.toString()),
+				Float.toString(LexLocation.getSpanPercent(name)) + "%",
+				Long.toString(calls)));
+		}
+
+		out.println(rowHTML(true,
+			htmlQuote(filename.getName()),
+			Float.toString(LexLocation.getHitPercent(filename)) + "%",
+			Long.toString(total)));
+
+		out.println("</table>");
+		out.println("</div>");
+		out.println("</div>");
+		out.println("</body>");
+		out.println("</html>");
+	}
+
+	private String htmlLine()
+	{
+		return "<p class=MsoNormal>&nbsp;</p>";
+	}
+
+	private String rowHTML(boolean emph, String name, String coverage, String calls)
+	{
+		StringBuilder sb = new StringBuilder();
+		String b1 = emph ? "<b>" : "";
+		String b2 = emph ? "</b>" : "";
+		String bg = emph ? "background:#D9D9D9;" : "";
+
+		sb.append("<tr>\n");
+		sb.append("<td width=\"50%\" valign=top style='width:50.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
+		sb.append("<p class=MsoNormal>" + b1 + name + b2 + "</p>\n");
+		sb.append("</td>\n");
+		sb.append("<td width=\"25%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
+		sb.append("<p class=MsoNormal align=right style='text-align:right'>" + b1 + coverage + b2 + "</p>\n");
+		sb.append("</td>\n");
+		sb.append("<td width=\"25%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
+		sb.append("<p class=MsoNormal align=right style='text-align:right'>" + b1 + calls + b2 + "</p>\n");
+		sb.append("</td>\n");
+		sb.append("</tr>\n");
+
+		return sb.toString();
+	}
+
+	private String markupHTML(String line, List<LexLocation> list)
+    {
+		if (line.isEmpty())
+		{
+			return htmlLine();
+		}
+
+		StringBuilder sb = new StringBuilder(HTMLSTART);
+		int p = 0;
+
+		if (list != null)
+		{
+    		for (LexLocation m: list)
+    		{
+    			int start = m.startPos - 1;
+    			int end = m.startLine == m.endLine ? m.endPos - 1 : line.length();
+
+    			if (start >= p)		// Backtracker produces duplicate tokens
+    			{
+    				sb.append(htmlQuote(line.substring(p, start)));
+    				sb.append("<span style='color:red'>");
+    				sb.append(htmlQuote(line.substring(start, end)));
+    				sb.append("</span>");
+
+    				p = end;
+    			}
+    		}
+		}
+
+		sb.append(htmlQuote(line.substring(p)));
+		sb.append(HTMLEND);
+		return sb.toString();
+    }
+
+	private String htmlQuote(String s)
+	{
+		return s.
+			replaceAll("&", "&amp;").
+			replaceAll(" ", "&nbsp;").
+			replaceAll("<", "&lt;").
+			replaceAll(">", "&gt;");
 	}
 
 	private static String detab(String s, int tabstop)
