@@ -59,7 +59,7 @@ public class TestSequence extends Vector<CallSequence>
 
 	public void filter(List<Object> result, CallSequence test, int n)
 	{
-		if (result.get(result.size()-1) == Verdict.FAILED)
+		if (result.get(result.size()-1) != Verdict.PASSED)
 		{
 			int stem = result.size() - 1;
 			ListIterator<CallSequence> it = listIterator(n);

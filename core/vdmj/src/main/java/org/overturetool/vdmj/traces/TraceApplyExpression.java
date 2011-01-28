@@ -128,8 +128,17 @@ public class TraceApplyExpression extends TraceCoreDefinition
 		else
 		{
 			CallObjectStatement stmt = (CallObjectStatement)callStatement;
-			newStatement = new CallObjectStatement(
-				stmt.designator, stmt.classname, stmt.fieldname, newargs);
+			
+			if (stmt.classname != null)
+			{
+				newStatement = new CallObjectStatement(
+					stmt.designator, stmt.classname, newargs);
+			}
+			else
+			{
+				newStatement = new CallObjectStatement(
+					stmt.designator, stmt.fieldname, newargs);
+			}
 		}
 
 		return new StatementTraceNode(newStatement);

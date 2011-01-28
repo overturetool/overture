@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -44,25 +45,31 @@ public class ObjectFieldDesignator extends ObjectDesignator
 {
 	private static final long serialVersionUID = 1L;
 	public final ObjectDesignator object;
-	public String classname;
-	public final String fieldname;
+	public final LexNameToken classname;
+	public final LexIdentifierToken fieldname;
 
 	private LexNameToken field = null;
 
-	public ObjectFieldDesignator(
-		ObjectDesignator object, String classname, String fieldname)
+	public ObjectFieldDesignator(ObjectDesignator object, LexNameToken classname)
 	{
 		super(object.location);
 		this.object = object;
 		this.classname = classname;
+		this.fieldname = null;
+	}
+
+	public ObjectFieldDesignator(ObjectDesignator object, LexIdentifierToken fieldname)
+	{
+		super(object.location);
+		this.object = object;
+		this.classname = null;
 		this.fieldname = fieldname;
 	}
 
 	@Override
 	public String toString()
 	{
-		return object + "." +
-			(classname == null ? "" : classname + "`") + fieldname;
+		return object + "." + (classname == null ? fieldname : classname);
 	}
 
 	@Override
@@ -75,9 +82,17 @@ public class ObjectFieldDesignator extends ObjectDesignator
 		if (type.isClass())
 		{
 			ClassType ctype = type.getClassType();
-			String cname = (classname == null) ? ctype.name.name : classname;
+			
+			if (classname == null)
+			{
+				field = new LexNameToken(
+					ctype.name.name, fieldname.name, fieldname.location);
+			}
+			else
+			{
+				field = classname;
+			}
 
-			field = new LexNameToken(cname, fieldname, location);
 			field.setTypeQualifier(qualifiers);
 			Definition fdef = ctype.classdef.findName(field, NameScope.NAMESANDSTATE);
 
@@ -94,12 +109,13 @@ public class ObjectFieldDesignator extends ObjectDesignator
 
 		if (type.isRecord())
 		{
+			String sname = (fieldname != null) ? fieldname.name : classname.toString();
 			RecordType rec = type.getRecord();
-			Field rf = rec.findField(fieldname);
+			Field rf = rec.findField(sname);
 
 			if (rf == null)
 			{
-				concern(unique, 3261, "Unknown field name, '" + fieldname + "'");
+				concern(unique, 3261, "Unknown field name, '" + sname + "'");
 				result.add(new UnknownType(location));
 			}
 			else
@@ -140,7 +156,7 @@ public class ObjectFieldDesignator extends ObjectDesignator
 			else if (val instanceof RecordValue)
 			{
 				RecordValue rec = val.recordValue(ctxt);
-				Value result = rec.fieldmap.get(fieldname);
+				Value result = rec.fieldmap.get(fieldname.name);
 
 				if (result == null)
 				{

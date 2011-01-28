@@ -31,6 +31,7 @@ import org.overturetool.vdmj.expressions.ExpressionList;
 import org.overturetool.vdmj.expressions.StringLiteralExpression;
 import org.overturetool.vdmj.expressions.VariableExpression;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -61,30 +62,42 @@ public class CallObjectStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
 	public final ObjectDesignator designator;
-	public String classname;
-	public final String fieldname;
+	public final LexNameToken classname;
+	public final LexIdentifierToken fieldname;
 	public final ExpressionList args;
 	public final boolean explicit;
 
 	private LexNameToken field;
 
-	public CallObjectStatement(
-		ObjectDesignator designator, String classname, String fieldname, ExpressionList args)
+	public CallObjectStatement(ObjectDesignator designator,
+		LexNameToken classname, ExpressionList args)
 	{
 		super(designator.location);
 
 		this.designator = designator;
 		this.classname = classname;
+		this.fieldname = null;
+		this.args = args;
+		this.explicit = classname.explicit;
+	}
+
+	public CallObjectStatement(ObjectDesignator designator,
+		LexIdentifierToken fieldname, ExpressionList args)
+	{
+		super(designator.location);
+
+		this.designator = designator;
+		this.classname = null;
 		this.fieldname = fieldname;
 		this.args = args;
-		this.explicit = (classname != null);
+		this.explicit = false;
 	}
 
 	@Override
 	public String toString()
 	{
 		return designator + "." +
-			(explicit ? classname + "`" : "") + fieldname +
+			(classname != null ? classname : fieldname) +
 			"(" + Utils.listToString(args) + ")";
 	}
 
@@ -106,12 +119,6 @@ public class CallObjectStatement extends Statement
 		}
 
 		ClassType ctype = dtype.getClassType();
-
-		if (classname == null)
-		{
-			classname = ctype.name.name;
-		}
-
 		ClassDefinition classdef = ctype.classdef;
 		ClassDefinition self = env.findClassDefinition();
 		Environment classenv = null;
@@ -128,7 +135,17 @@ public class CallObjectStatement extends Statement
 			classenv = new PublicClassEnvironment(classdef);
 		}
 
-		field = new LexNameToken(classname, fieldname, location);
+		if (classname == null)
+		{
+			field = new LexNameToken(
+				ctype.name.name, fieldname.name, fieldname.location);
+		}
+		else
+		{
+			field = classname;
+		}
+
+		field.location.executable(true);
 		TypeList atypes = getArgTypes(env, scope);
 		field.setTypeQualifier(atypes);
 		Definition fdef = classenv.findName(field, scope);
@@ -136,7 +153,7 @@ public class CallObjectStatement extends Statement
 		// Special code for the deploy method of CPU
 
 		if (Settings.dialect == Dialect.VDM_RT &&
-			classname.equals("CPU") && field.name.equals("deploy"))
+			field.module.equals("CPU") && field.name.equals("deploy"))
 		{
 			if (!atypes.get(0).isType(ClassType.class))
 			{
@@ -146,7 +163,7 @@ public class CallObjectStatement extends Statement
 			return new VoidType(location);
 		}
 		else if (Settings.dialect == Dialect.VDM_RT &&
-			classname.equals("CPU") && field.name.equals("setPriority"))
+			field.module.equals("CPU") && field.name.equals("setPriority"))
 		{
 			if (!(atypes.get(0) instanceof OperationType))
 			{
@@ -253,6 +270,7 @@ public class CallObjectStatement extends Statement
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		field.location.hit();
 
 		// The check above increments the hit counter for the call, but so
 		// do the evaluations of the designator below, so we correct the

@@ -7,4 +7,4 @@ Result = [(), (), (), PASSED]
 Test 4 = s.Push3(1); s.Push3(1); s.Push3(1); s.Push3(1)
 Result = [(), (), (), Error 4071: Precondition failure: pre_Push3 in 'Stack' at line 11:15, INCONCLUSIVE]
 Test 5 = s.Push3(1); s.Push3(1); s.Push3(1); s.Push3(1); s.Push3(1)
-Result = [(), (), (), Error 4071: Precondition failure: pre_Push3 in 'Stack' at line 11:15, INCONCLUSIVE]
+Test 5 FILTERED by test 4

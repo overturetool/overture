@@ -429,7 +429,15 @@ public class StatementReader extends SyntaxReader
 		if (oad.object instanceof ObjectFieldDesignator)
 		{
 			ObjectFieldDesignator ofd = (ObjectFieldDesignator)oad.object;
-    		return new CallObjectStatement(ofd.object, ofd.classname, ofd.fieldname, args);
+			
+			if (ofd.classname != null)
+			{
+	    		return new CallObjectStatement(ofd.object, ofd.classname, args);
+			}
+			else
+			{
+	    		return new CallObjectStatement(ofd.object, ofd.fieldname, args);
+			}
 		}
 		else if (oad.object instanceof ObjectIdentifierDesignator)
 		{
@@ -460,18 +468,14 @@ public class StatementReader extends SyntaxReader
 					// something like new A().X`op(), else it's the more usual
 					// new A().op().
 
-					String name = null;
-
 					switch (field.type)
 					{
 						case IDENTIFIER:
-							name = ((LexIdentifierToken)field).name;
-							des = new ObjectFieldDesignator(des, null, name);
+							des = new ObjectFieldDesignator(des, (LexIdentifierToken)field);
 							break;
 
 						case NAME:
-							LexNameToken tok = (LexNameToken)field;
-							des = new ObjectFieldDesignator(des, tok.module, tok.name);
+							des = new ObjectFieldDesignator(des, (LexNameToken)field);
 							break;
 
 						default:

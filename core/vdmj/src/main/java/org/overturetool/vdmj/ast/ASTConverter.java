@@ -988,7 +988,7 @@ public class ASTConverter
 			ExpressionList args = convertExpressionList(apply.getArgs());
 
 			return new TraceApplyExpression(
-				new CallObjectStatement(obj, null, apply.getMethodName(), args),
+				new CallObjectStatement(obj, getId(apply.getMethodName(), apply), args),
 				classname);
 		}
 		else
@@ -1253,10 +1253,18 @@ public class ASTConverter
 			{
 				ObjectDesignator designator = convertObjectDesignator(cs.getObjectDesignator());
 				IOmlName name = cs.getName();
-				String cname = name.hasClassIdentifier() ? name.getClassIdentifier() : null;
-				String fname = cs.getName().getIdentifier();
 				ExpressionList args = convertExpressionList(cs.getExpressionList());
-				stmt = new CallObjectStatement(designator, cname, fname, args);
+				
+				if (name.hasClassIdentifier())
+				{
+					LexNameToken tok = convertName(name);
+					stmt = new CallObjectStatement(designator, tok, args);
+				}
+				else
+				{
+					LexIdentifierToken tok = getId(name.getClassIdentifier(), name);
+					stmt = new CallObjectStatement(designator, tok, args);
+				}
 			}
 			else
 			{
@@ -1411,9 +1419,18 @@ public class ASTConverter
 			IOmlObjectFieldReference d = (IOmlObjectFieldReference)des;
 			ObjectDesignator od = convertObjectDesignator(d.getObjectDesignator());
 			IOmlName name = d.getName();
-			String cname = name.hasClassIdentifier() ? name.getClassIdentifier() : null;
-			String fname = d.getName().getIdentifier();
-			return new ObjectFieldDesignator(od, cname, fname);
+			
+			if (name.hasClassIdentifier())
+			{
+				LexNameToken tok = convertName(name);
+				return new ObjectFieldDesignator(od, tok);
+			}
+			else
+			{
+				LexIdentifierToken tok = getId(name.getClassIdentifier(), name);
+				return new ObjectFieldDesignator(od, tok);
+			}
+
 		}
 		else if (des instanceof IOmlObjectApply)
 		{
