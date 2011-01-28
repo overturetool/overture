@@ -59,6 +59,7 @@ public class FieldExpression extends Expression
 		super(object);
 		this.object = object;
 		this.field = field;
+		this.field.location.executable(true);
 	}
 
 	public FieldExpression(Expression object, LexNameToken field)
@@ -67,6 +68,7 @@ public class FieldExpression extends Expression
 		this.object = object;
 		this.field = new LexIdentifierToken(field.name, field.old, field.location);
 		this.memberName = field;
+		this.field.location.executable(true);
 	}
 
 	@Override
@@ -206,6 +208,7 @@ public class FieldExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		this.field.location.hit();
 
 		try
 		{

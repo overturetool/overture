@@ -51,6 +51,7 @@ public class FieldNumberExpression extends Expression
 		super(tuple);
 		this.tuple = tuple;
 		this.field = field;
+		this.field.location.executable(true);
 	}
 
 	@Override
@@ -86,6 +87,7 @@ public class FieldNumberExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		this.field.location.hit();
 
 		try
 		{
