@@ -59,6 +59,7 @@ public class AssignmentDefinition extends Definition
 		super(Pass.VALUES, name.location, name, NameScope.STATE);
 		this.type = type;
 		this.expression = expression;
+		this.location.executable(false);
 	}
 
 	@Override

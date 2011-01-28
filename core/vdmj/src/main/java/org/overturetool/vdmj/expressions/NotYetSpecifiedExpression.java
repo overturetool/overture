@@ -54,7 +54,7 @@ public class NotYetSpecifiedExpression extends Expression
 	public NotYetSpecifiedExpression(LexLocation location)
 	{
 		super(location);
-		location.hit();		// ie. ignore coverage for these
+		location.executable(false);		// ie. ignore coverage for these
 	}
 
 	@Override

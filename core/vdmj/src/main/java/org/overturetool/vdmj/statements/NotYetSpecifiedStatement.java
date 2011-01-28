@@ -48,7 +48,7 @@ public class NotYetSpecifiedStatement extends Statement
 	public NotYetSpecifiedStatement(LexLocation location)
 	{
 		super(location);
-		location.hit();		// ie. ignore coverage for these
+		location.executable(false);		// ie. ignore coverage for these
 	}
 
 	@Override

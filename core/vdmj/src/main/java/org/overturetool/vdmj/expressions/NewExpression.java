@@ -59,6 +59,7 @@ public class NewExpression extends Expression
 		super(location);
 		this.classname = classname;
 		this.args = args;
+		this.classname.location.executable(true);
 	}
 
 	@Override
@@ -132,6 +133,7 @@ public class NewExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+		classname.location.hit();
 
 		try
 		{
