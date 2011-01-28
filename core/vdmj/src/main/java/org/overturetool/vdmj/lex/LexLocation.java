@@ -136,9 +136,10 @@ public class LexLocation implements Serializable
 		{
 			LexLocation lother = (LexLocation)other;
 
-			return file.equals(lother.file) &&
+			return  startPos == lother.startPos &&
+					startLine == lother.startLine &&
 					module.equals(lother.module) &&
-					startLine == lother.startLine;
+					file.equals(lother.file);
 		}
 
 		return false;
@@ -147,7 +148,7 @@ public class LexLocation implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return file.hashCode() + module.hashCode() + startLine;
+		return file.hashCode() + module.hashCode() + startLine + startPos;
 	}
 
 	public boolean within(LexLocation span)
