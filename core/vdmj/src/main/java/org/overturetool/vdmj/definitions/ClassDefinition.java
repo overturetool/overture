@@ -1435,11 +1435,14 @@ public class ClassDefinition extends Definition
 			return null;
 		}
 
+		// Location of last local invariant
+		LexLocation invloc = invdefs.get(invdefs.size() - 1).location;
+
 		OperationType type = new OperationType(
-			location, new TypeList(), new BooleanType(location));
+			invloc, new TypeList(), new BooleanType(invloc));
 
 		LexNameToken invname =
-			new LexNameToken(name.name, "inv_" + name.name, location);
+			new LexNameToken(name.name, "inv_" + name.name, invloc);
 
 		Statement body = new ClassInvariantStatement(invname, invdefs);
 
