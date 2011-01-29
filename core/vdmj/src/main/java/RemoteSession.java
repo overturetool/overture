@@ -24,14 +24,18 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.overturetool.vdmj.debug.RemoteControl;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
+import org.overturetool.vdmj.runtime.SourceFile;
 
 public class RemoteSession implements RemoteControl
 {
+	private final static String COVERAGE = "./generated/word/";
+	
 	public void run(RemoteInterpreter interpreter)
 	{
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -45,7 +49,11 @@ public class RemoteSession implements RemoteControl
 				System.out.print(">> ");
 				String line = in.readLine();
 
-				if (line.length() == 0)
+				if (line == null)
+				{
+					return;	// EOF
+				}
+				else if (line.length() == 0)
 				{
 					// Fine...
 				}
@@ -61,6 +69,7 @@ public class RemoteSession implements RemoteControl
 					System.out.println("create       - create a local value");
 					System.out.println("env          - show the local environment and values");
 					System.out.println("files        - list the source files of the specification");
+					System.out.println("coverage     - write Word HTML coverage for all files");
 					System.out.println("modules      - list the modules loaded");
 					System.out.println("classes      - list the classes loaded");
 					System.out.println("<expression> - evaluate the expression");
@@ -102,6 +111,13 @@ public class RemoteSession implements RemoteControl
 						System.out.println(file.getAbsolutePath());
 					}
 				}
+				else if (line.equals("coverage"))
+				{
+					for (File file: interpreter.getSourceFiles())
+					{
+						doCoverage(interpreter.getSourceFile(file));
+					}
+				}
 				else if (line.equals("modules"))
 				{
 					for (String name: interpreter.getModules())
@@ -129,6 +145,24 @@ public class RemoteSession implements RemoteControl
 			{
 				System.out.println(e.getMessage());
 			}
+		}
+	}
+	
+	private void doCoverage(SourceFile source)
+	{
+		try
+		{
+			File dir = new File(COVERAGE);
+			dir.mkdirs();
+			File html = new File(COVERAGE + source.filename.getName() + ".doc");
+			PrintWriter pw = new PrintWriter(html);
+			source.printWordCoverage(pw);
+			pw.close();
+			System.out.println("Word HTML coverage written to " + html);
+		}
+		catch (Exception e)
+		{
+			System.out.println("coverage: " + e.getMessage());
 		}
 	}
 }

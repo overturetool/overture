@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.debug;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -33,6 +34,7 @@ import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
+import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.values.Value;
 
 public class RemoteInterpreter
@@ -82,6 +84,11 @@ public class RemoteInterpreter
 	public Set<File> getSourceFiles()
 	{
 		return interpreter.getSourceFiles();
+	}
+
+	public SourceFile getSourceFile(File file) throws IOException
+	{
+		return interpreter.getSourceFile(file);
 	}
 
 	public List<String> getModules() throws Exception
