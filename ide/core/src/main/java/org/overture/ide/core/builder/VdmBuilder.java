@@ -1,22 +1,13 @@
 package org.overture.ide.core.builder;
 
-import java.awt.Dialog;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 
 public class VdmBuilder extends VdmCoreBuilder {
-
-	private boolean poppedDialog = false;
 
 	@SuppressWarnings("deprecation")
 	@Override

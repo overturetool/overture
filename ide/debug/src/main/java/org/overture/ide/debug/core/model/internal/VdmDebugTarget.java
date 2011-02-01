@@ -1,9 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
@@ -26,6 +24,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -46,6 +46,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IOConsole;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.debug.core.ExtendedDebugEventDetails;
 import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugConstants;
@@ -75,7 +76,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	 * @deprecated
 	 * @see #getVdmProject()
 	 */
-//	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
+	//	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
 
 	private static final int THREAD_TERMINATION_TIMEOUT = 5000; // 5 seconds
 
@@ -87,7 +88,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 	private final ILaunch launch;
 
-//	private String name;
+	// private String name;
 
 	private boolean disconnected;
 
@@ -135,8 +136,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	public VdmDebugTarget(String modelId, IDbgpService dbgpService,
 			String sessionId, ILaunch launch, IProcess process)
 	{
-		this(modelId, dbgpService, sessionId, launch, process,
-				DefaultDebugOptions.getDefaultInstance());
+		this(modelId, dbgpService, sessionId, launch, process, DefaultDebugOptions.getDefaultInstance());
 	}
 
 	public VdmDebugTarget(String modelId, IDbgpService dbgpService,
@@ -168,8 +168,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 		this.disconnected = false;
 		// this.streamProxy = new VdmStreamProxy(getIOConsole());
-		this.breakpointManager = new VdmBreakpointManager(this,
-				createPathMapper());
+		this.breakpointManager = new VdmBreakpointManager(this, createPathMapper());
 
 		DebugEventHelper.fireCreateEvent(this);
 		synchronized (targets)
@@ -182,12 +181,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		try
 		{
-			IOConsole console = new IOConsole(VdmLaunchConfigurationDelegate
-					.getVdmProject(this.launch.getLaunchConfiguration())
-					.toString(), null);
+			IOConsole console = new IOConsole(VdmLaunchConfigurationDelegate.getVdmProject(this.launch.getLaunchConfiguration()).toString(), null);
 			console.activate();
-			ConsolePlugin.getDefault().getConsoleManager().addConsoles(
-					new IConsole[] { console });
+			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
 			return console;
 		} catch (CoreException e)
 		{
@@ -314,9 +310,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		{
 			final IProcess p = getProcess();
 			final int CHUNK = 500;
-			if (!(waitTerminated(threadManager, CHUNK,
-					THREAD_TERMINATION_TIMEOUT) && (p == null || waitTerminated(
-					p, CHUNK, THREAD_TERMINATION_TIMEOUT))))
+			if (!(waitTerminated(threadManager, CHUNK, THREAD_TERMINATION_TIMEOUT) && (p == null || waitTerminated(p, CHUNK, THREAD_TERMINATION_TIMEOUT))))
 			{
 				// Debugging process is not answering, so terminating it
 				if (p != null && p.canTerminate())
@@ -441,8 +435,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		if (first)
 		{
-			DebugEventHelper.fireExtendedEvent(this,
-					ExtendedDebugEventDetails.BEFORE_CODE_LOADED);
+			DebugEventHelper.fireExtendedEvent(this, ExtendedDebugEventDetails.BEFORE_CODE_LOADED);
 			initialized = true;
 			fireTargetInitialized();
 		}
@@ -617,8 +610,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		String encoding = "UTF-8"; //$NON-NLS-1$
 		try
 		{
-			encoding = getLaunch().getLaunchConfiguration().getAttribute(
-					DebugPlugin.ATTR_CONSOLE_ENCODING, encoding);
+			encoding = getLaunch().getLaunchConfiguration().getAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, encoding);
 		} catch (CoreException e)
 		{
 			e.printStackTrace();
@@ -703,8 +695,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 	private void setLogging(ILaunch launch) throws CoreException
 	{
-		if (launch.getLaunchConfiguration().getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false))
+		if (launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false))
 		{
 			logging = true;
 			final IWorkbench wb = PlatformUI.getWorkbench();
@@ -716,8 +707,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 					public void run()
 					{
-						IWorkbenchPage page = wb.getWorkbenchWindows()[0]
-								.getActivePage();
+						IWorkbenchPage page = wb.getWorkbenchWindows()[0].getActivePage();
 						IViewPart v;
 						try
 						{
@@ -743,31 +733,14 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	// / Extract
 	private boolean isCoverageEnabled() throws CoreException
 	{
-		return getLaunch().getLaunchConfiguration().getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false);
+		return getLaunch().getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false);
 	}
 
-	private String getContent(IVdmSourceUnit source) throws CoreException,
-			IOException
-	{
-		InputStreamReader reader = new InputStreamReader(source.getFile()
-				.getContents());
-		StringBuilder sb = new StringBuilder();
-
-		int inLine;
-		while ((inLine = reader.read()) != -1)
-		{
-			sb.append((char) inLine);
-		}
-		reader.close();
-		return sb.toString();
-	}
-
+	
 	public static void writeFile(File outputFolder, String fileName,
 			String content) throws IOException
 	{
-		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-				fileName));
+		FileWriter outputFileReader = new FileWriter(new File(outputFolder, fileName));
 		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 		outputStream.write(content);
 		outputStream.close();
@@ -800,11 +773,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		{
 			if (isCoverageEnabled())
 			{
-				DateFormat dateFormat = new SimpleDateFormat(
-						"yyyy_MM_dd_HH_mm_ss");
-				File coverageDir = new File(new File(
-						getOutputFolder(vdmProject), "coverage"), dateFormat
-						.format(new Date()));
+				DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+				File coverageDir = new File(new File(getOutputFolder(vdmProject), "coverage"), dateFormat.format(new Date()));
 
 				coverageDir.mkdirs();
 
@@ -812,9 +782,15 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{
-					String name = source.getSystemFile().getName();
+					String name = source.getSystemFile().getName() + "cov";
 
-					writeFile(coverageDir, name + "cov", getContent(source));
+					IProject p = (IProject) vdmProject.getAdapter(IProject.class);
+					p.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+					String outputFolderSegement = coverageDir.toURI().toASCIIString().substring(p.getLocationURI().toASCIIString().length() + 1);
+					IResource folder = p.findMember(new Path(outputFolderSegement));
+
+					source.getFile().copy(new Path(folder.getFullPath() + "/"
+							+ name), true, new NullProgressMonitor());
 				}
 			}
 			IProject project = (IProject) vdmProject.getAdapter(IProject.class);
