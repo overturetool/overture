@@ -711,7 +711,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	 * Overrides super class by filtering all entries against isDebugVisible
 	 */
 	@Override
-	protected StringBuilder propertyResponse(NameValuePairMap vars)
+	protected StringBuilder propertyResponse(NameValuePairMap vars, DBGPContextType context)
 			throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 
@@ -719,7 +719,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			if (!e.getKey().name.equals("self")) { // This test makes the self not appear
 
 				if (isDebugVisible(e.getValue())) {
-					sb.append(propertyResponse(e.getKey(), e.getValue()));
+					sb.append(propertyResponse(e.getKey(), e.getValue(), context));
 				}
 			}
 		}
@@ -728,9 +728,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	}
 
 	@Override
-	protected StringBuilder propertyResponse(LexNameToken name, Value value)
+	protected StringBuilder propertyResponse(LexNameToken name, Value value, DBGPContextType context)
 			throws UnsupportedEncodingException {
-		return propertyResponse(name.name, name.getExplicit(true).toString(),
+		String nameString = (context==DBGPContextType.GLOBAL ? name.module + "`" + name.name : name.name);
+		return propertyResponse(nameString, name.getExplicit(true).toString(),
 				name.module, value);
 	}
 
@@ -1350,7 +1351,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					longname.toString());
 		}
 
-		response(null, propertyResponse(longname, value));
+		response(null, propertyResponse(longname, value, context));
 	}
 
 	private StringBuilder propertyResponse(Integer key, Integer page)

@@ -824,20 +824,20 @@ public class DBGPReader
 		return sb;
 	}
 
-	protected StringBuilder propertyResponse(NameValuePairMap vars)
+	protected StringBuilder propertyResponse(NameValuePairMap vars, DBGPContextType context)
 		throws UnsupportedEncodingException
 	{
 		StringBuilder sb = new StringBuilder();
 
 		for (Entry<LexNameToken, Value> e: vars.entrySet())
 		{
-			sb.append(propertyResponse(e.getKey(), e.getValue()));
+			sb.append(propertyResponse(e.getKey(), e.getValue(), context));
 		}
 
 		return sb;
 	}
 
-	protected StringBuilder propertyResponse(LexNameToken name, Value value)
+	protected StringBuilder propertyResponse(LexNameToken name, Value value, DBGPContextType context)
 		throws UnsupportedEncodingException
 	{
 		return propertyResponse(
@@ -1947,7 +1947,7 @@ public class DBGPReader
 
 		NameValuePairMap vars = getContextValues(context, depth);
 
-		response(null, propertyResponse(vars));
+		response(null, propertyResponse(vars, context));
 	}
 
 	protected void propertyGet(DBGPCommand c) throws DBGPException, IOException
@@ -2018,7 +2018,7 @@ public class DBGPReader
 				DBGPErrorCode.CANT_GET_PROPERTY, longname.toString());
 		}
 
-		response(null, propertyResponse(longname, value));
+		response(null, propertyResponse(longname, value, context));
 	}
 
 	protected void processSource(DBGPCommand c) throws DBGPException, IOException
