@@ -273,7 +273,21 @@ public abstract class CoverageEditor
 
 		for (StyleRange styleRange : styleRanges)
 		{
-			getEditorSourceViewer().getTextWidget().replaceStyleRanges(styleRange.start, styleRange.length, new StyleRange[] { styleRange });
+
+			try
+			{
+				if (0 <= styleRange.start
+						&& styleRange.start + styleRange.length <= getEditorSourceViewer().getTextWidget().getCharCount())
+				{
+					getEditorSourceViewer().getTextWidget().replaceStyleRanges(styleRange.start, styleRange.length, new StyleRange[] { styleRange });
+				} else
+				{
+					System.err.println("Coverage range not valid: " + styleRange);
+				}
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		getEditorSourceViewer().getTextWidget().setEditable(false);
