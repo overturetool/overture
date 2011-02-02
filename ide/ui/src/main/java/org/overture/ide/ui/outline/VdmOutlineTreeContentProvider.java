@@ -51,7 +51,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 			{
 				all.add(((Module) parentElement).imports);
 			}
-			all.addAll(((Module) parentElement).defs.singleDefinitions());
+			all.addAll(filterDefinitionList(((Module) parentElement).defs.singleDefinitions()));
 			filterSLModule(all);
 			// all.addAll(((Module) parentElement).defs.singleDefinitions());
 			return all.toArray();
