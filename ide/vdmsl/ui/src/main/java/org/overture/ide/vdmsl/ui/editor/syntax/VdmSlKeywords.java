@@ -15,7 +15,7 @@ public class VdmSlKeywords implements IVdmKeywords {
 			"measure", "merge", "mod", "module", "mu", "munion", "nat", "nat1",
 			"nil", "not", "of", "operations", "or", "others", "post", "power",
 			"pre", "psubset", "rat", "rd", "real", "rem", "renamed", "return",
-			"reverse", "rng", "seq", "seq1", "set", "skip", "specified", "st",
+			"reverse", "rng", "seq", "seq1", "set", "skip"/*, "specified"*/, "st",
 			"state", "struct", "subset", "then", "tixe", "tl", "to", "token",
 			"trap", "traces", "true", "types", "undefined", "union", "uselib",
 			"values", "while", "with", "wr", "yet", "RESULT" };
@@ -25,9 +25,13 @@ public class VdmSlKeywords implements IVdmKeywords {
 
 	public static final String[] binaryoperators = { "comp", "and", "or",
 			"in set", "not in set", "union", "inter", "munion", "subset",
-			"psubset", "=>", "<=>", "=", "<>", "+", "-", "*", "/", "div",
-			"mod", "rem", "<", ">", "<=", ">=", "<>", "\\", "++", "<:", "<-:",
-			":>", ":->", ".#", "**" };
+			"psubset", "div", "mod", "rem"};//, "=>", "<=>", "=", "<>", "+", "-", "*", "/",
+			// "<", ">", "<=", ">=", "<>", "\\", "++", "<:", "<-:",
+			//":>", ":->",  "**" }; //handled in a different way ".#",
+	
+	public static final String[] binarySymbolOperators = { "=>", "<=>", "=", "<>", "+", "-", "*", "/",
+		 "<", ">", "<=", ">=", "<>", "\\", "++", "<:", "<-:",
+		":>", ":->",  "**" }; //handled in a different way ".#",
 
 	public static final String[] basictypes = { "bool", "int", "nat", "nat1",
 			"real", "rat", "char", "token" };
@@ -66,11 +70,11 @@ public class VdmSlKeywords implements IVdmKeywords {
 		return new String[0];
 	}
 
-	public String[] getAllKeywords() {
+	public String[] getAllSingleWordKeywords() {
 		int offset = 0;
 		String[] all = new String[basictypes.length 
 		                          + binaryoperators.length 
-		                          + multipleKeywords.length 
+		                         // + multipleKeywords.length 
 		                          + reservedwords.length 
 		                          + textvalues.length 
 		                          + unaryoperators.length];
@@ -81,8 +85,8 @@ public class VdmSlKeywords implements IVdmKeywords {
 		System.arraycopy(binaryoperators, 0, all, offset, binaryoperators.length);
 		offset = offset + binaryoperators.length;
 		
-		System.arraycopy(multipleKeywords, 0, all, offset, multipleKeywords.length);
-		offset = offset + multipleKeywords.length;
+//		System.arraycopy(multipleKeywords, 0, all, offset, multipleKeywords.length);
+//		offset = offset + multipleKeywords.length;
 		
 		System.arraycopy(reservedwords, 0, all, offset, reservedwords.length);
 		offset = offset + reservedwords.length;
@@ -94,6 +98,31 @@ public class VdmSlKeywords implements IVdmKeywords {
 		offset = offset + binaryoperators.length;
 		
 		return all;
+	}
+
+	public String[] getBinarySymbolOperators()
+	{
+		return binarySymbolOperators;
+	}
+
+	public String[] getUnderscorePrefixKeywords()
+	{
+		return new String[]{"is","mk"};
+	}
+
+	public String[] getUnderscorePrefixReservedWords()
+	{
+		return new String[]{"init","inv", "pre", "post"};
+	}
+
+	public boolean supportsQuoteTypes()
+	{
+		return true;
+	}
+
+	public boolean supportsTypleSelect()
+	{
+		return true;
 	}
 
 }

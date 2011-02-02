@@ -1,5 +1,6 @@
 package org.overture.ide.vdmrt.ui.editor.syntax;
 
+import org.overture.ide.ui.editor.syntax.IVdmKeywords;
 import org.overture.ide.ui.editor.syntax.VdmCodeScanner;
 import org.overture.ide.ui.editor.syntax.VdmColorProvider;
 
@@ -11,8 +12,8 @@ public class VdmRtCodeScanner extends VdmCodeScanner {
 	}
 
 	@Override
-	protected String[] getKeywords() {
-		return new VdmRtKeywords().getAllKeywords();
+	protected IVdmKeywords getKeywords() {
+		return new VdmRtKeywords();
 	}
 
 }

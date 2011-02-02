@@ -23,7 +23,7 @@ public class VdmWordDetector implements IWordDetector {
 		boolean isIdentifier = false;
 		switch (character) {
 		case '#':
-		case '<':
+		//case '<':
 			isIdentifier = true;
 		
 			
