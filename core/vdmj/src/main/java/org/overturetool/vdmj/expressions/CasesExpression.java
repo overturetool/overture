@@ -100,7 +100,8 @@ public class CasesExpression extends Expression
 			if (found != null) break;
 		}
 
-		return others != null ? others.findExpression(lineno) : null;
+		return found != null ? found :
+				others != null ? others.findExpression(lineno) : null;
 	}
 
 	@Override
