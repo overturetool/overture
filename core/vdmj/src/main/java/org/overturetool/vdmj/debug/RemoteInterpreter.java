@@ -48,6 +48,11 @@ public class RemoteInterpreter
 		this.dbgp = dbgp;
 	}
 
+	public Interpreter getInterpreter()
+	{
+		return interpreter;
+	}
+
 	public String execute(String line) throws Exception
 	{
 		return interpreter.execute(line, dbgp).toString();

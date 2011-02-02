@@ -184,7 +184,7 @@ public class Breakpoint implements Serializable
 
 		if (state.stepline != null)
 		{
-			if (!execl.equals(state.stepline))
+			if (execl.startLine != state.stepline.startLine)	// NB just line, not pos
 			{
 				if ((state.nextctxt == null && state.outctxt == null) ||
 					(state.nextctxt != null && !isAboveNext(ctxt.getRoot())) ||

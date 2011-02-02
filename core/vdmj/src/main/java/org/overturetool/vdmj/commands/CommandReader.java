@@ -133,7 +133,7 @@ abstract public class CommandReader
 			try
 			{
 				print(prompt);
-				line = Console.in.readLine();
+				line = getStdin().readLine();
 
 				if (line == null)
 				{
@@ -328,6 +328,16 @@ abstract public class CommandReader
 		}
 
 		return ExitStatus.EXIT_OK;
+	}
+
+	protected PrintWriter getStdout()
+	{
+		return Console.out;
+	}
+
+	protected BufferedReader getStdin()
+	{
+		return Console.in;
 	}
 
 	protected boolean doException(Exception e)
@@ -762,7 +772,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	private boolean doCoverage(File file)
+	protected boolean doCoverage(File file)
 	{
 		try
 		{
@@ -774,7 +784,7 @@ abstract public class CommandReader
 			}
 			else
 			{
-				source.printCoverage(Console.out);
+				source.printCoverage(getStdout());
 			}
 		}
 		catch (Exception e)
@@ -785,7 +795,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	private boolean doWord(String line)
+	protected boolean doWord(String line)
 	{
 		try
 		{
@@ -825,7 +835,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	private void doWord(File file)
+	protected void doWord(File file)
 	{
 		try
 		{
@@ -890,7 +900,7 @@ abstract public class CommandReader
 		return true;
 	}
 
-	private boolean doLatex(File file, boolean headers)
+	protected boolean doLatex(File file, boolean headers)
 	{
 		try
 		{
@@ -1152,7 +1162,7 @@ abstract public class CommandReader
 			{
 				println("FAILED: " + assertion);
 				println("Runtime: " + e.getMessage());
-				e.ctxt.printStackTrace(Console.out, true);
+				e.ctxt.printStackTrace(getStdout(), true);
 				assertErrors++;
 				break;
 			}
@@ -1426,15 +1436,15 @@ abstract public class CommandReader
 		}
 	}
 
-	protected static void print(String m)
+	protected void print(String m)
 	{
-		Console.out.print(m);
-		Console.out.flush();	// As it's not a complete line
+		getStdout().print(m);
+		getStdout().flush();	// As it's not a complete line
 	}
 
-	protected static void println(String m)
+	protected void println(String m)
 	{
-		Console.out.println(m);
+		getStdout().println(m);
 	}
 
 	protected String plural(int n, String s, String pl)
