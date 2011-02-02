@@ -31,6 +31,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.commands.ClassCommandReader;
 import org.overturetool.vdmj.commands.ModuleCommandReader;
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.RemoteControl;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
@@ -42,6 +43,7 @@ public class CommandSession implements RemoteControl
 	public void run(RemoteInterpreter interpreter)
 	{
 		Interpreter i = interpreter.getInterpreter();
+		final DBGPReader d = interpreter.getDebugReader();
 		List<File> fileList = new Vector<File>(i.getSourceFiles());
 		System.out.println("Command session started in " + new File(".").getAbsolutePath());
 
@@ -176,6 +178,7 @@ public class CommandSession implements RemoteControl
 				public ExitStatus run(List<File> filenames)
 				{
 					Interpreter.setTraceOutput(stdout);
+					setDebugReader(d);
 					return super.run(filenames);
 				}
 
@@ -333,6 +336,7 @@ public class CommandSession implements RemoteControl
 				public ExitStatus run(List<File> filenames)
 				{
 					Interpreter.setTraceOutput(stdout);
+					setDebugReader(d);
 					return super.run(filenames);
 				}
 

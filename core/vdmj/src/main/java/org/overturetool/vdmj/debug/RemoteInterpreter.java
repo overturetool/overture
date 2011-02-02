@@ -53,6 +53,11 @@ public class RemoteInterpreter
 		return interpreter;
 	}
 
+	public DBGPReader getDebugReader()
+	{
+		return dbgp;
+	}
+
 	public String execute(String line) throws Exception
 	{
 		return interpreter.execute(line, dbgp).toString();
@@ -65,7 +70,7 @@ public class RemoteInterpreter
 
 	public void init()
 	{
-		interpreter.init(null);
+		interpreter.init(dbgp);
 	}
 
 	public void create(String var, String exp) throws Exception

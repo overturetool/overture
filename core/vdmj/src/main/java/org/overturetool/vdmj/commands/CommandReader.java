@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
+import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -85,6 +86,9 @@ abstract public class CommandReader
 
 	/** The type of trace reduction. */
 	private TraceReductionType reductionType = TraceReductionType.RANDOM;
+	
+	/** The IDE DBGPReader, if any */
+	private DBGPReader dbgp = null;
 
 	/**
 	 * Create a command reader with the given interpreter and prompt.
@@ -339,6 +343,11 @@ abstract public class CommandReader
 	{
 		return Console.in;
 	}
+	
+	public void setDebugReader(DBGPReader dbgp)
+	{
+		this.dbgp = dbgp;
+	}
 
 	protected boolean doException(Exception e)
 	{
@@ -353,7 +362,7 @@ abstract public class CommandReader
 		try
 		{
    			long before = System.currentTimeMillis();
-   			println("= " + interpreter.execute(line, null));
+   			println("= " + interpreter.execute(line, dbgp));
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
 
@@ -652,7 +661,7 @@ abstract public class CommandReader
 	{
 		LexLocation.clearLocations();
 		println("Cleared all coverage information");
-		interpreter.init(null);
+		interpreter.init(dbgp);
 		println("Global context initialized");
 		return true;
 	}
@@ -1139,7 +1148,7 @@ abstract public class CommandReader
 					continue;
 				}
 
-	   			Value result = interpreter.execute(assertion, null);
+	   			Value result = interpreter.execute(assertion, dbgp);
 
 	   			if (!(result instanceof BooleanValue) || !result.boolValue(null))
    				{
