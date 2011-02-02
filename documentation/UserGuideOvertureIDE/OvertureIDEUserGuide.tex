@@ -175,7 +175,7 @@ December& 2010 & 2       & 1.0   \\ \hline
 This document is the user manual for the Overture Integrated Development
 Environment (IDE) for
 VDM. It serves as a reference for anybody wishing to make use of
-the tool with one of the VDM dialects (VDM-SL, VDM++ and VDM-RT).
+the tool with one of the VDM dialects (VDM-SL, VDM++ or VDM-RT).
 Overture tool support is build on top of the Eclipse platform. The
 objective of the Overture initiative is to create and support an open source
 platform that can be used for both experimentation with new VDM dialects,
@@ -196,7 +196,7 @@ systems and software
 group of mathematically well-founded languages for expressing system
 models during early design stages, before expensive implementation
 commitments are made. The construction and analysis of a model using
-Overture helps to identify areas of incompleteness or ambiguity in
+VDM helps to identify areas of incompleteness or ambiguity in
 informal system specifications, and provides some level of confidence
 that a valid implementation will have key properties, especially those
 of safety or security. VDM has a strong record of industrial
@@ -211,8 +211,8 @@ supports the description of data and functionality
 \cite{ISOVDM96a,Fitzgerald&98b,Fitzgerald&09}. Data are defined by
 means of types built using constructors that define structured data
 and collections such as sets, sequences and mappings from basic values
-such as Booleans and natural numbers. These types are very abstract, allowing
-you to add any relevant constraints using data type
+such as Booleans and natural numbers. These types are very abstract,
+allowing you to add any relevant constraints using data type
 invariants. Functionality is defined in terms of operations over these
 data types. Operations can be defined implicitly by preconditions and
 postconditions that characterize their behavior, or explicitly by
@@ -224,12 +224,12 @@ Constrained Environment (VICE))}), includes support for discrete
 time models \cite{Mukherjee&00,Verhoef&06b}. All
 three VDM dialects are supported by Overture.
 
-Since the VDM modelling languages have a formal mathematical semantics,
+Since VDM modelling languages have a formal mathematical semantics,
 a wide range of analyses can be performed on models, both to check
 internal consistency and to confirm that models have emergent
 properties. Analyses may be performed by inspection, static analysis,
 testing or mathematical proof. To assist in this process, Overture
-supplies tool support for building models in collaboration with other
+offers tool support for building models in collaboration with other
 modelling tools, to execute and test models and to carry out different
 forms of static analysis \cite{Larsen&10a}. It can be seen as an open
 source version of the commercial tool called VDMTools
