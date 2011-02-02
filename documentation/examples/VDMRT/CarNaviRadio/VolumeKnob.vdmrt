@@ -7,7 +7,7 @@ operations
 
   public HandleEvent: nat ==> ()
   HandleEvent (pev) == logSysToEnv(pev)
-  post checkResponseTimes(e2s,s2e,22000);
+  post checkResponseTimes(e2s,s2e,22000000000);
 
   public Run: () ==> ()
   Run () == start(self); --,VolumeKnobT);
