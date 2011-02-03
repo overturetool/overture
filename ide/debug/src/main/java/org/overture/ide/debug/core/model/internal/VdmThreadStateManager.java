@@ -4,6 +4,7 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
+import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 import org.overture.ide.debug.core.model.internal.operations.IDbgpDebuggerFeedback;
@@ -15,6 +16,9 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 		void handleResume(int detail);
 
 		void handleTermination(DbgpException e);
+
+		void setInterpreterState(
+				IDbgpStatusInterpreterThreadState interpreterThreadState);
 	}
 
 	private IStateChangeHandler handler;
@@ -46,6 +50,12 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 		if (status == null) {
 			setTerminated(null);
 			return;
+		}
+		
+		//set internal VDMJ state
+		if(status.getInterpreterThreadState()!=null)
+		{
+			handler.setInterpreterState(status.getInterpreterThreadState());
 		}
 
 		if (status.isBreak()) {

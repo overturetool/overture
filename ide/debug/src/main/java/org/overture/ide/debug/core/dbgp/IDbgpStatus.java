@@ -29,4 +29,7 @@ public interface IDbgpStatus {
 	boolean reasonAborred();
 
 	boolean reasonException();
+	
+	//additional
+	IDbgpStatusInterpreterThreadState getInterpreterThreadState();
 }

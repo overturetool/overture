@@ -27,10 +27,10 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpNotification;
 import org.overture.ide.debug.core.dbgp.IDbgpNotificationListener;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
+import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpExtendedCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
-import org.overture.ide.debug.core.dbgp.exceptions.DbgpTimeoutException;
 import org.overture.ide.debug.core.dbgp.internal.IDbgpTerminationListener;
 import org.overture.ide.debug.core.dbgp.internal.utils.Util;
 import org.overture.ide.debug.core.model.IDebugLaunchConstants;
@@ -66,6 +66,8 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	private boolean terminated = false;
 
 	private int propertyPageSize = 32;
+	
+	private IDbgpStatusInterpreterThreadState interpreterThreadState;
 
 	// VdmThreadStateManager.IStateChangeHandler
 	public void handleSuspend(int detail)
@@ -304,7 +306,8 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 		{
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		}
-		return name;
+		//TODO remove state from name
+		return name + new String(interpreterThreadState==null?"":" - "+interpreterThreadState.getStatus().toString());
 	}
 
 	public IBreakpoint[] getBreakpoints()
@@ -576,5 +579,11 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setInterpreterState(
+			IDbgpStatusInterpreterThreadState interpreterThreadState)
+	{
+		this.interpreterThreadState = interpreterThreadState;
 	}
 }

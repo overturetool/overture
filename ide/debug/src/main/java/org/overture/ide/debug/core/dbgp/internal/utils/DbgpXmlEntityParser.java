@@ -23,6 +23,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.IDbgpSessionInfo;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
+import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpProtocolException;
@@ -31,6 +32,7 @@ import org.overture.ide.debug.core.dbgp.internal.DbgpProperty;
 import org.overture.ide.debug.core.dbgp.internal.DbgpSessionInfo;
 import org.overture.ide.debug.core.dbgp.internal.DbgpStackLevel;
 import org.overture.ide.debug.core.dbgp.internal.DbgpStatus;
+import org.overture.ide.debug.core.dbgp.internal.DbgpStatusInterpreterThreadState;
 import org.overture.ide.debug.core.dbgp.internal.breakpoints.DbgpCallBreakpoint;
 import org.overture.ide.debug.core.dbgp.internal.breakpoints.DbgpConditionalBreakpoint;
 import org.overture.ide.debug.core.dbgp.internal.breakpoints.DbgpExceptionBreakpoint;
@@ -252,13 +254,34 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 
 	private static final String ATTR_REASON = "reason"; //$NON-NLS-1$
 	private static final String ATTR_STATUS = "status"; //$NON-NLS-1$
+	
+	private static final String ELEM_INTERNAL = "internal";
+	private static final String ATTR_THREAD_ID = "threadId";
+	private static final String ATTR_THREAD_NAME = "threadName";
+	private static final String ATTR_THREAD_STATE = "threadState";
 
 	public static IDbgpStatus parseStatus(Element element)
 			throws DbgpProtocolException {
 
 		String status = element.getAttribute(ATTR_STATUS);
 		String reason = element.getAttribute(ATTR_REASON);
-		return DbgpStatus.parse(status, reason);
+		
+		IDbgpStatusInterpreterThreadState interpreterThreadState = null;
+		
+		NodeList internalElements = element.getElementsByTagName(ELEM_INTERNAL);
+
+		if (internalElements.getLength() > 0
+				&& internalElements.item(0).getNodeType() == Node.ELEMENT_NODE)
+		{
+			Element internalElement = (Element) internalElements.item(0);
+			
+			int threadId = Integer.parseInt(internalElement.getAttribute(ATTR_THREAD_ID));
+			String name = internalElement.getAttribute(ATTR_THREAD_NAME);
+			String tState = internalElement.getAttribute(ATTR_THREAD_STATE);
+			interpreterThreadState = DbgpStatusInterpreterThreadState.parse(threadId, name, tState);
+		}
+		
+		return DbgpStatus.parse(status, reason, interpreterThreadState);
 	}
 
 	private static final String LINE_BREAKPOINT = "line"; //$NON-NLS-1$

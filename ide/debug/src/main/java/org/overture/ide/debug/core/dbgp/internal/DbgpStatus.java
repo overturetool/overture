@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
+import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState;
 
 public class DbgpStatus implements IDbgpStatus {
 	// Reasons
@@ -35,10 +36,10 @@ public class DbgpStatus implements IDbgpStatus {
 
 	public static final Integer STATUS_BREAK = new Integer(4);
 
-	private static final Map statusParser = new TreeMap(
+	private static final Map<String,Integer> statusParser = new TreeMap<String,Integer>(
 			String.CASE_INSENSITIVE_ORDER);
 
-	private static final Map reasonParser = new TreeMap(
+	private static final Map<String,Integer> reasonParser = new TreeMap<String,Integer>(
 			String.CASE_INSENSITIVE_ORDER);
 
 	static {
@@ -54,16 +55,18 @@ public class DbgpStatus implements IDbgpStatus {
 		reasonParser.put("exception", REASON_EXCEPTION); //$NON-NLS-1$
 	}
 
-	public static IDbgpStatus parse(String status, String reason) {
+	public static IDbgpStatus parse(String status, String reason, IDbgpStatusInterpreterThreadState interpreterThreadStatus) {
 		return new DbgpStatus((Integer) statusParser.get(status),
-				(Integer) reasonParser.get(reason));
+				(Integer) reasonParser.get(reason),interpreterThreadStatus);
 	}
 
 	private final Integer status;
 
 	private final Integer reason;
+	
+	private final IDbgpStatusInterpreterThreadState interpreterThreadState;
 
-	public DbgpStatus(Integer status, Integer reason) {
+	public DbgpStatus(Integer status, Integer reason, IDbgpStatusInterpreterThreadState interpreterThreadState) {
 		if (status == null) {
 			throw new IllegalArgumentException();
 		}
@@ -74,6 +77,12 @@ public class DbgpStatus implements IDbgpStatus {
 
 		this.status = status;
 		this.reason = reason;
+		this.interpreterThreadState = interpreterThreadState;
+	}
+	
+	public IDbgpStatusInterpreterThreadState getInterpreterThreadState()
+	{
+		return interpreterThreadState;
 	}
 
 	public boolean reasonAborred() {
