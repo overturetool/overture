@@ -47,6 +47,7 @@ public class ClassInvariantStatement extends Statement
 		super(name.location);
 		this.name = name;
 		this.invdefs = invdefs;
+		name.location.executable(false);
 	}
 
 	@Override

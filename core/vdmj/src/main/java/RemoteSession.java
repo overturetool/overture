@@ -35,7 +35,7 @@ import org.overturetool.vdmj.runtime.SourceFile;
 public class RemoteSession implements RemoteControl
 {
 	private final static String COVERAGE = "./generated/word/";
-	
+
 	public void run(RemoteInterpreter interpreter)
 	{
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -147,7 +147,7 @@ public class RemoteSession implements RemoteControl
 			}
 		}
 	}
-	
+
 	private void doCoverage(SourceFile source)
 	{
 		try
@@ -155,7 +155,7 @@ public class RemoteSession implements RemoteControl
 			File dir = new File(COVERAGE);
 			dir.mkdirs();
 			File html = new File(COVERAGE + source.filename.getName() + ".doc");
-			PrintWriter pw = new PrintWriter(html);
+			PrintWriter pw = new PrintWriter(html, "UTF-8");
 			source.printWordCoverage(pw);
 			pw.close();
 			System.out.println("Word HTML coverage written to " + html);

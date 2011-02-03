@@ -86,7 +86,7 @@ abstract public class CommandReader
 
 	/** The type of trace reduction. */
 	private TraceReductionType reductionType = TraceReductionType.RANDOM;
-	
+
 	/** The IDE DBGPReader, if any */
 	private DBGPReader dbgp = null;
 
@@ -343,7 +343,7 @@ abstract public class CommandReader
 	{
 		return Console.in;
 	}
-	
+
 	public void setDebugReader(DBGPReader dbgp)
 	{
 		this.dbgp = dbgp;
@@ -857,7 +857,7 @@ abstract public class CommandReader
 			else
 			{
 				File html = new File(source.filename.getPath() + ".doc");
-				PrintWriter pw = new PrintWriter(html);
+				PrintWriter pw = new PrintWriter(html, "UTF-8");
 				source.printWordCoverage(pw);
 				pw.close();
 				println("Word HTML coverage written to " + html);
@@ -922,7 +922,7 @@ abstract public class CommandReader
 			else
 			{
 				File tex = new File(source.filename.getPath() + ".tex");
-				PrintWriter pw = new PrintWriter(tex);
+				PrintWriter pw = new PrintWriter(tex, "UTF-8");
 				source.printLatexCoverage(pw, headers);
 				pw.close();
 				println("Latex coverage written to " + tex);
