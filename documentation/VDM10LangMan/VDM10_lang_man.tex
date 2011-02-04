@@ -117,7 +117,7 @@
 \lstset{language=VDM++}
 \lstset{alsolanguage=Java}
 % The command below enables you to escape into normal LaTeX mode inside your 
-% VDM chunks by starting with a `!´ character and ending with a `!´
+% VDM chunks by starting with a `!ï¿½ character and ending with a `!ï¿½
 \lstset{escapeinside=!!}
 
 %\newcommand{\kw}[1]{{\tt #1}}
@@ -7066,10 +7066,11 @@ The instances of \texttt{CPU} and \texttt{BUS} must be made as instance
 variables and the definition must use constructors. The constructor for the
 \texttt{CPU} class takes two parameters: the first one indicate the 
 primary scheduling policy used for the \texttt{CPU} whereas the second 
-parameter provides the capacity of the \texttt{CPU} (indicated as Million
-Instructions Per Second or MIPS). The constructor for the \texttt{BUS}
+parameter provides the capacity of the \texttt{CPU} (indicated as number of 
+instructions Per Second or Hz - NB. the step size of time is 1 nanosecond). 
+The constructor for the \texttt{BUS}
 class takes three parameters. The first one indicates the kind of bus, the
-second one the capacity of the bus (its band width) and finally the third 
+second one the capacity of the bus (its band width in bytes per second) and finally the third 
 parameter gives a set of \texttt{CPU} instances connected together by the
 given \texttt{BUS} instance.
 
@@ -7138,12 +7139,12 @@ instance variables
   static public a : A := new A();
   static public b : B := new B();
   -- define the first CPU with fixed priority scheduling 
-  -- and 22E6 MIPS
+  -- and 22E6 Hz
   CPU1 : CPU := new CPU (<FP>, 22E6);
 
   static public c : C := new C();
   -- define the second CPU with fixed priority scheduling 
-  -- and 11E6 MIPS
+  -- and 11E6 Hz
   CPU2 : CPU := new CPU (<FP>, 11E6);
 
   -- create a communication bus that links the three 
