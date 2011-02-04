@@ -498,11 +498,11 @@ be placed on the execution time of a particular portion of a model. A
 duration statement has the form
 
 \begin{lstlisting}
-duration (!\textit{time}!) !\textit{statement}!
+duration (!\textit{t}!) !\textit{statement}!
 \end{lstlisting}
 
-This means that \emph{statement} is estimated to take \emph{time} time
-units to execute. This information is used for accumulation of
+This means that \emph{statement} is estimated to take \emph{t} milliseconds 
+to execute. This information is used for accumulation of
 real-time behaviour; details of this accumulation, and the manner in
 which time is to be interpreted are described in
 Section~\ref{sec:timingintro} below.  Otherwise the duration statement
@@ -530,7 +530,7 @@ effect of its body \textit{statement}.
 
 In order to be able to describe distributed systems in \vdmpp\
 includes a notion of a system that describes how different parts of
-the system modelled are deployed to different Core Processing Units
+the system modelled are deployed to different Central Processing Units
 (\texttt{CPU}'s) and communication \texttt{BUS}'es 
 connecting the \texttt{CPU}'s
 together. Syntactically the system is described exactly like ordinary
@@ -548,11 +548,11 @@ The instances of \texttt{CPU} and \texttt{BUS} must be made as instance
 variables and the definition must use constructors. The constructor for the
 \texttt{CPU} class takes two parameters: the first one indicate the 
 primary scheduling policy used for the \texttt{CPU} whereas the second 
-parameter provides the capacity of the \texttt{CPU} (indicated as Million
-Instructions Per Second or MIPS in case one wish to use miliseconds as the
-time unit). The constructor for the \texttt{BUS}
+parameter provides the capacity of the \texttt{CPU} (indicated as number of 
+instructions Per Second or Hz - NB. the step size of time is 1 nanosecond). 
+The constructor for the \texttt{BUS}
 class takes three parameters. The first one indicates the kind of bus, the
-second one the capacity of the bus (its band width) and finally the third 
+second one the capacity of the bus (its band width in bytes per second) and finally the third 
 parameter gives a set of \texttt{CPU} instances connected together by the
 given \texttt{BUS} instance.
 
@@ -721,15 +721,15 @@ executed.
 \item[Task switching overhead:] A task switching overhead can be
 defined, to correspond to the task switching overhead for the intended
 real-time kernel.
-\item[Default duration information:] For those portions of the model
-not in the scope of a duration statement, conventional worst-case
+\item[Default cycles information:] For those portions of the model
+not in the scope of an explicit duration or cycles statement, conventional worst-case
 analysis is used. However it is parametrized in terms of the time
 taken to perform elementary assembly instructions without taking
 possibly optimisation techniques such as cache and pipelining into
 account. The user can then define the time for these assembly
 instructions, for the intended target processor. We call this mapping
 from assembly instructions to execution time on the target processor,
-the \emph{default duration information}.
+the \emph{default cycles information}.
 \item[Capacity of \texttt{CPU}'s and \texttt{BUS}'es:] If a distributed system is modelled
 the capacity of the \texttt{CPU}'s and the \texttt{BUS}'es used in the
 interpretation of scenarios of the system
@@ -1026,7 +1026,7 @@ is represented implicitly. When the treatment of a sensor input may
 take longer than the next sensor input arrives, it is likely that this
 will cause an interruption of the existing treatment. In that case the
 functional description using the functions \texttt{SensorTreatment} and
-\texttt{PerformSystemReaction} used above are more complicated. A full example
+\texttt{Perform\-System\-Reaction} used above are more complicated. A full example
 of such a VDM-SL model is given in Section~\ref{sec:VDMSL}. Naturally
 the feedback loop where the way the environment behaves depending upon
 the system reaction cannot be taken appropriately into account with
@@ -3172,10 +3172,9 @@ will report their own angle only. We leave it as an exercise for the
 reader to update the model to yield the real angle (combining the angle
 for the \texttt{FlareController} and the \texttt{FlareDispenser}).
 
-In the electronic
-version of this model available on the web there is a rather complex 
-\texttt{scenario.txt} that is sufficient to ensure that all parts of the
-model have been exercised at least oncejust by interpreting
+There is a rather complex \texttt{scenario.txt} available in the electronic
+version of this model on the web that is sufficient to ensure that all parts of the
+model have been exercised at least once just by interpreting
 \texttt{new World().Run()}. Again is this documented using the
 test coverage feature from Overture or 
 \VDMTools. In this sequential model in VDM++
@@ -3221,7 +3220,7 @@ is given in Figure~\ref{fig:classdiagconcur}.
 From the sequential model four of the classes will get active threads
 because they have independent computations that can be carried
 out. These are the \texttt{Environment}, the
-\texttt{MissileDetector}, the \texttt{FlareController} and the
+\texttt{Missile\-Detector}, the \texttt{FlareController} and the
 \texttt{FlareDispenser} classes. Note that this includes the class 
 that had the overall control in the sequential model (\texttt{Environment}) 
 and all the classes that had a \texttt{Step} operation.
@@ -3609,8 +3608,8 @@ BarrierReached() ==
  (while  (card dom wakeUpMap = barrierCount) do
    (currentTime := currentTime + stepLength;
     let threadSet : set of nat = {th | th in set dom wakeUpMap 
-                                                & wakeUpMap(th) <> nil and 
-                                                   wakeUpMap(th) <= currentTime }
+                                             & wakeUpMap(th) <> nil and 
+                                               wakeUpMap(th) <= currentTime }
     in
       for all t in set threadSet 
       do
@@ -3814,7 +3813,7 @@ Figure~\ref{fig:classdiagvice}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=\textwidth]{figures/viceCMclassdiag.png}
+\includegraphics[width=6in]{figures/viceCMclassdiag.png}
 \end{center}
 \caption{Class Diagram for the Real-Time Distributed Counter Measures Model\label{fig:classdiagvice}}
 \end{figure}
@@ -4607,7 +4606,7 @@ end Main
 \end{lstlisting}
 
 Here the sensor thread \texttt{sp} will execute approximately 
-every 100 time units
+every 100 time units (1 time unit = 1 nanosecond)
 following execution of the statement {\bf\ttfamily{start}}\texttt{(sp)}.
 
 Note that in a simple system such as the one above,
@@ -4775,7 +4774,7 @@ scheduling}. Under instruction number scheduling the amount of time
 each thread executes for is limited by the number of instructions
 executed during execution of the thread. Thus under instruction number
 scheduling, the decisions made by the scheduler are independent of
-duration statements or the default duration information.  Under time
+duration statements or the default cycles information.  Under time
 slice scheduling, the amount of time each thread executes for is
 limited by a fixed amount of simulated time. Thus under this
 scheduling algorithm the amount of time each thread executes for is
@@ -5061,7 +5060,7 @@ is parsed and checked to be correct it is able to show:
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=\textwidth]{figures/detailedexe.png}
+\includegraphics[width=5.5in]{figures/detailedexe.png}
 \end{center}
 \caption{An extract from one \texttt{CPU} execution for the counter measures example\label{fig:detailedexe}}
 \end{figure}
@@ -5433,7 +5432,7 @@ affects the overall performance of the system.
 particular dynamic and physical architecture including its real-time behaviour and deployment to \texttt{CPU}'s.
 \item[Concurrent VDM++ Design Model] A model which defines a particular dynamic
 architecture, without worrying in the first instance about real-time behaviour.
-\item[Default Duration Information] A mapping recording the execution
+\item[Default Cycles Information] A mapping recording the execution
 times of assembly instructions on the target processor.
 \item[Default Thread] The thread which initiated execution of the
 model. Either started by the user in the Overture or \vdmtools\ interpreter, 
@@ -5840,8 +5839,8 @@ BarrierReached() ==
  (while  (card dom wakeUpMap = barrierCount) do
    (currentTime := currentTime + stepLength;
     let threadSet : set of nat = {th | th in set dom wakeUpMap 
-                                                & wakeUpMap(th) <> nil and 
-                                                   wakeUpMap(th) <= currentTime }
+                                             & wakeUpMap(th) <> nil and 
+                                               wakeUpMap(th) <= currentTime }
     in
       for all t in set threadSet 
       do
@@ -7373,8 +7372,8 @@ BarrierReached() ==
   do
    (currentTime := currentTime + stepLength;
     let threadSet : set of nat = {th | th in set dom wakeUpMap 
-                                                & wakeUpMap(th) <> nil and 
-                                                   wakeUpMap(th) <= currentTime }
+                                             & wakeUpMap(th) <> nil and 
+                                               wakeUpMap(th) <= currentTime }
     in
       for all t in set threadSet 
         do
