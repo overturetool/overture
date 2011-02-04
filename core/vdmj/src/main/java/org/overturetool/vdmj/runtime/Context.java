@@ -52,6 +52,11 @@ public class Context extends HashMap<LexNameToken, Value>
 	/** The thread state associated with this context. */
 	public ThreadState threadState = null;
 
+	/** Non-zero if this is a pre or postcondition call. */
+	public int prepost = 0;
+	/** Set to the error message if prepost is set. */
+	public String prepostMsg = null;
+
 	/**
 	 * Create a context at the given location.
 	 *
@@ -334,5 +339,11 @@ public class Context extends HashMap<LexNameToken, Value>
 	public ObjectValue getSelf()
 	{
 		return outer == null ? null : outer.getSelf();
+	}
+
+	public void setPrepost(int prepost, String prepostMsg)
+	{
+		this.prepost = prepost;
+		this.prepostMsg = prepostMsg;
 	}
 }

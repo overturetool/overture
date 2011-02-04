@@ -1802,22 +1802,22 @@ public class DBGPReader
 		{
 			// The location of a context is where it was called from, so
 			// to build the stack locations, we take the location of the
-			// level above, and the first level is the BP's location...
+			// level above, and the first level is the BP's location,
+			// assuming we have one which is different to the ctxt location.
 
 			StringBuilder sb = new StringBuilder();
+			int d = 0;
 
 			if (!breakpoint.location.equals(breakContext.location))		// BP is different
 			{
-				sb.append(stackResponse(breakpoint.location, 0));
+				sb.append(stackResponse(breakpoint.location, d++));
+				actualDepth--;
 			}
 
-			int d = 0;
-			Context ctxt = breakContext.getFrame(d++);
-
-			while (d < actualDepth)
+			for (int f=0; f < actualDepth; f++)
 			{
-				sb.append(stackResponse(ctxt.location, d));
-				ctxt = breakContext.getFrame(d++);
+				Context ctxt = breakContext.getFrame(f);
+				sb.append(stackResponse(ctxt.location, d++));
 			}
 
 			response(null, sb);

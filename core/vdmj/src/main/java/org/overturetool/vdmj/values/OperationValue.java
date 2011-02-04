@@ -48,7 +48,6 @@ import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
@@ -341,18 +340,9 @@ public class OperationValue extends Value
     				preArgs.add(self);
     			}
 
-    			if (!precondition.eval(
-    				precondition.location, preArgs, ctxt).boolValue(ctxt))
-    			{
-    				// So that the stack shows the precondition call as well as where it was
-    				// called from, we create a new context frame before throwing an exception.
-    				// We can't use abort() because that throws a ValueException which is
-    				// "located" by the catch clause (usually an enclosing Expression).
-
-    				Context preCtxt = newContext(precondition.location, precondition.name, argContext);
-    				throw new ContextException(4071,
-    					"Precondition failure: " + precondition.name, precondition.location, preCtxt);
-    			}
+    			ctxt.setPrepost(4071, "Precondition failure: ");
+    			precondition.eval(from, preArgs, ctxt);
+    			ctxt.setPrepost(0, null);
     		}
 
     		rv = body.eval(argContext);
@@ -387,18 +377,9 @@ public class OperationValue extends Value
     				postArgs.add(self);
     			}
 
-    			if (!postcondition.eval(
-    				postcondition.location, postArgs, ctxt).boolValue(ctxt))
-    			{
-    				// So that the stack shows the postcondition call as well as where it was
-    				// called from, we create a new context frame before throwing an exception.
-    				// We can't use abort() because that throws a ValueException which is
-    				// "located" by the catch clause (usually an enclosing Expression).
-
-    				Context postCtxt = newContext(postcondition.location, postcondition.name, argContext);
-    				throw new ContextException(4072,
-    					"Postcondition failure: " + postcondition.name, postcondition.location, postCtxt);
-    			}
+    			ctxt.setPrepost(4072, "Postcondition failure: ");
+    			postcondition.eval(from, postArgs, ctxt);
+    			ctxt.setPrepost(0, null);
     		}
 		}
 		finally

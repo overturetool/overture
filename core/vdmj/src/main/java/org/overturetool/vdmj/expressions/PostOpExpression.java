@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -59,6 +60,15 @@ public class PostOpExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
+
+		int prepost = 0;
+		String prepostMsg = null;
+
+		if (ctxt.outer != null)
+		{
+			prepost = ctxt.outer.prepost;
+			prepostMsg = ctxt.outer.prepostMsg + ctxt.outer.title;
+		}
 
 		// The postcondition function arguments are the function args, the
 		// result, the old/new state (if any). These all exist in ctxt.
@@ -104,18 +114,33 @@ public class PostOpExpression extends Expression
     			}
 
     			// Create an object context using the "self" passed in, rather
-    			// than the self that we're being called from.
+    			// than the self that we're being called from, assuming they
+    			// are different.
 
-    			ObjectContext selfctxt = new ObjectContext(
-    				ctxt.location, "postcondition's object", ctxt, subself);
-
-    			selfctxt.putAll(ctxt);	// To add "RESULT" and args.
-    			ctxt = selfctxt;
+    			if (subself != octxt.self)
+    			{
+        			ObjectContext selfctxt = new ObjectContext(
+        				ctxt.location, "postcondition's object", ctxt, subself);
+    
+        			selfctxt.putAll(ctxt);	// To add "RESULT" and args.
+        			ctxt = selfctxt;
+    			}
 
     			populate(ctxt, suboldself);		// To add old "~" values
     		}
 
-    		return expression.eval(ctxt);
+    		Value rv = expression.eval(ctxt);
+
+    		if (prepost > 0 && !rv.boolValue(ctxt))
+			{
+    			// We throw the exception from here so that we can see the old
+    			// variable values. If we returned false, the FunctionValue would
+    			// throw instead, but without the old variables.
+
+				throw new ContextException(prepost,	prepostMsg, location, ctxt);
+			}
+
+    		return rv;
 		}
 		catch (ValueException e)
 		{

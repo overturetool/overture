@@ -345,17 +345,9 @@ public class FunctionValue extends Value
 				// Evaluate pre/post in evalContext as it includes the type
 				// variables, if any.
 
-				if (!precondition.eval(precondition.location, argValues, evalContext).boolValue(ctxt))
-				{
-    				// So that the stack shows the precondition call as well as where it was
-    				// called from, we create a new context frame before throwing an exception.
-    				// We can't use abort() because that throws a ValueException which is
-    				// "located" by the catch clause (usually an enclosing Expression).
-
-    				Context preCtxt = newContext(precondition.location, precondition.name, evalContext, sctxt);
-    				throw new ContextException(4055,
-    					"Precondition failure: " + precondition.name, precondition.location, preCtxt);
-				}
+				evalContext.setPrepost(4055, "Precondition failure: ");
+				precondition.eval(from, argValues, evalContext);
+				evalContext.setPrepost(0, null);
 			}
 
 			Long tid = Thread.currentThread().getId();
@@ -410,6 +402,15 @@ public class FunctionValue extends Value
 
     		Value rv = body.eval(evalContext).convertValueTo(type.result, evalContext);
 
+    		if (ctxt.prepost > 0)	// Note, caller's context is checked
+    		{
+    			if (!rv.boolValue(ctxt))
+    			{
+    				throw new ContextException(ctxt.prepost,
+    					ctxt.prepostMsg + name, location, evalContext);
+    			}
+    		}
+
 			if (postcondition != null && Settings.postchecks)
 			{
 				ValueList postArgs = new ValueList(argValues);
@@ -418,17 +419,9 @@ public class FunctionValue extends Value
 				// Evaluate pre/post in evalContext as it includes the type
 				// variables, if any.
 
-				if (!postcondition.eval(postcondition.location, postArgs, evalContext).boolValue(ctxt))
-    			{
-    				// So that the stack shows the postcondition call as well as where it was
-    				// called from, we create a new context frame before throwing an exception.
-    				// We can't use abort() because that throws a ValueException which is
-    				// "located" by the catch clause (usually an enclosing Expression).
-
-    				Context postCtxt = newContext(postcondition.location, postcondition.name, evalContext, sctxt);
-    				throw new ContextException(4056,
-    					"Postcondition failure: " + postcondition.name, postcondition.location, postCtxt);
-    			}
+				evalContext.setPrepost(4056, "Postcondition failure: ");
+				postcondition.eval(from, postArgs, evalContext);
+				evalContext.setPrepost(0, null);
 			}
 
 			if (measure != null)
