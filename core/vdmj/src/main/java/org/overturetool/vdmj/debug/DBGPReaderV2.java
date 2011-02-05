@@ -730,7 +730,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	@Override
 	protected StringBuilder propertyResponse(LexNameToken name, Value value, DBGPContextType context)
 			throws UnsupportedEncodingException {
-		String nameString = (context==DBGPContextType.GLOBAL ? name.module + "`" + name.name : name.name);
+		String nameString = (context==DBGPContextType.GLOBAL ? name.module + "`" + name.name :
+			name.old ? name.name + "~" : name.name);
 		return propertyResponse(nameString, name.getExplicit(true).toString(),
 				name.module, value);
 	}

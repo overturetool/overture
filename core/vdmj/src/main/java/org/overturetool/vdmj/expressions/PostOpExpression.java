@@ -50,7 +50,7 @@ public class PostOpExpression extends Expression
 	public PostOpExpression(
 		LexNameToken opname, Expression expression, StateDefinition state)
 	{
-		super(opname.location);
+		super(expression.location);
 		this.opname = opname;
 		this.expression = expression;
 		this.state = state;
