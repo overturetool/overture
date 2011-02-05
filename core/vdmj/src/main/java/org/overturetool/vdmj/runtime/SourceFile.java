@@ -58,10 +58,15 @@ public class SourceFile
 
 	public SourceFile(File filename) throws IOException
 	{
+		this(filename,VDMJ.filecharset);
+	}
+	
+	public SourceFile(File filename, String charset) throws IOException
+	{
 		this.filename = filename;
 
 		BufferedReader br = new BufferedReader(
-			new BacktrackInputReader(filename, VDMJ.filecharset));
+			new BacktrackInputReader(filename, charset));
 
 		String line = br.readLine();
 		boolean vdm_al = false;
