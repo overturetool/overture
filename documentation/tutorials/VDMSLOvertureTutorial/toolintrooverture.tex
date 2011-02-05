@@ -126,7 +126,7 @@ that provides a common look and feel to a large collection of
 extension products. Thus if a user is familiar with one Eclipse
 product, it will generally be easy to start using a different product
 on the same workbench. The Eclipse workbench consists of several
-panels known as \emph{views}, such as the Script Explorer view at the
+panels known as \emph{views}, such as the VDM Explorer view at the
 top left of Figure~\ref{fig:OverturePerspective}. A
 collection of panels is called a \emph{perspective}, for example
 Figure~\ref{fig:OverturePerspective} shows the standard
@@ -146,7 +146,7 @@ it will ask you for permission to do so.
 \end{center}
 \end{figure}
 
-The \emph{Script Explorer view} allows you to create, select, and
+The \emph{VDM Explorer view} allows you to create, select, and
 delete Overture projects and navigate between the files in these
 projects. Start by importing the alarm project. This can be done by
 right-clicking the explorer view and selecting \emph{Import}, followed
@@ -388,7 +388,7 @@ configuration for the alarm model. Note the three different debug
 options here. Two of these are used for internal development purposes
 by the Overture development team but the one called \texttt{Generate
   Latex Coverage} is important for you to check in case you would like
-to collec t test coverage information as explained below in
+to collect test coverage information as explained below in
 Section~\ref{sec:testcov}. The class and operation/function
 name can be chosen from a Browse dialog; if the operation or function
 has arguments, these must be typed in manually between the brackets of
@@ -575,11 +575,11 @@ must be selected as shown in Figure~\ref{fig:debugConfiguration}.
 Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
 on the \texttt{AlarmSL} project and select the \emph{Latex} $
-\rightarrow $ \emph{Latex coverage} the coverage information that have
+\rightarrow $ \emph{PdfLatex} the coverage information that have
 been gathered in any expressions that have been debugged since the
 last change to a file have been saved or the project have been cleaned
 will be turned into a pdf file. The \texttt{AlarmSL.pdf} file is
-placed in the \texttt{generated/latex} directory as shown in
+placed in the \texttt{generated/latex/specification} directory as shown in
 Figure~\ref{fig:testcov} and it includes the
 VDM definitions from all the files included in the project including
 coverage information. Note that whenever the model is adjusted or it
