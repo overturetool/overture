@@ -50,7 +50,7 @@ public class PostOpExpression extends Expression
 	public PostOpExpression(
 		LexNameToken opname, Expression expression, StateDefinition state)
 	{
-		super(expression);
+		super(opname.location);
 		this.opname = opname;
 		this.expression = expression;
 		this.state = state;
@@ -59,8 +59,8 @@ public class PostOpExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
-
+		// No break check here, as we want to start in the expression
+		
 		int prepost = 0;
 		String prepostMsg = null;
 
@@ -194,6 +194,12 @@ public class PostOpExpression extends Expression
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
 		return expression.typeCheck(env, null, scope);
+	}
+
+	@Override
+	public Expression findExpression(int lineno)
+	{
+		return expression.findExpression(lineno);
 	}
 
 	@Override
