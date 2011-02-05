@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -41,6 +42,7 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
+import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
@@ -99,17 +101,11 @@ public class LatexCoverageAction implements IObjectActionDelegate
 			if (project != null)
 			{
 				if (project.hasNature(IVdmPpCoreConstants.NATURE))
-					makeLatex(selectedProject,
-
-					Dialect.VDM_PP);
+					makeLatex(selectedProject, Dialect.VDM_PP);
 				if (project.hasNature(IVdmSlCoreConstants.NATURE))
-					makeLatex(selectedProject,
-
-					Dialect.VDM_SL);
+					makeLatex(selectedProject, Dialect.VDM_SL);
 				if (project.hasNature(IVdmRtCoreConstants.NATURE))
-					makeLatex(selectedProject,
-
-					Dialect.VDM_RT);
+					makeLatex(selectedProject, Dialect.VDM_RT);
 			}
 		} catch (Exception ex)
 		{
@@ -338,10 +334,14 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					}
 
 				}
-				latexBuilder.addInclude(texFile.getAbsolutePath());
-				SourceFile f = new SourceFile(moduleFile);
 
-				PrintWriter pw = new PrintWriter(texFile);
+				IFile selectedModelFile = selectedProject.findIFile(moduleFile);
+				String charset = selectedModelFile.getCharset();
+				latexBuilder.addInclude(texFile.getAbsolutePath());
+				//VDMJ.filecharset = "utf-8";
+				SourceFile f = new SourceFile(moduleFile,charset);
+
+				PrintWriter pw = new PrintWriter(texFile,charset);
 				IProject project = (IProject) selectedProject
 						.getAdapter(IProject.class);
 				Assert.isNotNull(project, "Project could not be adapted");
@@ -363,19 +363,6 @@ public class LatexCoverageAction implements IObjectActionDelegate
 			{
 				return moduleFile.getParentFile().getName().equalsIgnoreCase(
 						"lib");
-				// String name = moduleFile.getAbsolutePath()
-				// .toLowerCase()
-				// .replace('\\', '/');
-				// return (name.endsWith("/lib/io.vdmpp")
-				// || name.endsWith("/lib/io.vdmrt")
-				// || name.endsWith("/lib/io.vdmsl")
-				// || name.endsWith("/lib/math.vdmpp")
-				// || name.endsWith("/lib/math.vdmrt")
-				// || name.endsWith("/lib/math.vdmsl")
-				// || name.endsWith("/lib/vdmutil.vdmpp")
-				// || name.endsWith("/lib/vdmutil.vdmrt") ||
-				// name.endsWith("/lib/vdmutil.vdmsl"));
-
 			}
 
 		};
