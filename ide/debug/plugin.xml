@@ -160,13 +160,13 @@
 		</view>
 		
 		
-		 <view
+		 <!--view
             name="%DebugView.name"
             icon="icons/eview16/debug_view.gif"
             category="org.overture.ide.ui.view.category"
             class="org.overture.ide.debug.internal.ui.views.launch.VdmLaunchView"
             id="org.overture.ide.debug.ui.DebugView">
-      </view>
+      </view-->
 	</extension>
 
 

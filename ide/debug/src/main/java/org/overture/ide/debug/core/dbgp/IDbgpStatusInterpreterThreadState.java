@@ -11,5 +11,5 @@ public interface IDbgpStatusInterpreterThreadState
 
 	String getName();
 
-	InterpreterThreadStatus getStatus();
+	InterpreterThreadStatus getState();
 }

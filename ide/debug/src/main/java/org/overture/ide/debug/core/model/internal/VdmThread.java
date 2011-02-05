@@ -307,7 +307,7 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		}
 		//TODO remove state from name
-		return name + new String(interpreterThreadState==null?"":" - "+interpreterThreadState.getStatus().toString());
+		return name + new String(interpreterThreadState==null?"":" - "+interpreterThreadState.getState().toString());
 	}
 
 	public IBreakpoint[] getBreakpoints()
@@ -585,5 +585,10 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 			IDbgpStatusInterpreterThreadState interpreterThreadState)
 	{
 		this.interpreterThreadState = interpreterThreadState;
+	}
+
+	public IDbgpStatusInterpreterThreadState getInterpreterState()
+	{
+		return this.interpreterThreadState;
 	}
 }

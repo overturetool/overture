@@ -20,10 +20,12 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ITerminate;
+import org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactory;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.IVdmDebugElement;
 import org.overture.ide.debug.core.model.IVdmDebugTarget;
+import org.overture.ide.debug.internal.ui.viewers.update.VdmModelProxyFactory;
 
 public abstract class VdmDebugElement extends PlatformObject implements
 		IVdmDebugElement {
@@ -66,6 +68,10 @@ public abstract class VdmDebugElement extends PlatformObject implements
 
 		if (adapter == ILaunch.class) {
 			return getLaunch();
+		}
+		if(adapter == IModelProxyFactory.class)
+		{
+			return new VdmModelProxyFactory();
 		}
 
 		return super.getAdapter(adapter);

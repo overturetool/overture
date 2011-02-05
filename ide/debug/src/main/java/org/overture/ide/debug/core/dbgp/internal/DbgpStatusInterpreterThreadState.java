@@ -53,7 +53,7 @@ public class DbgpStatusInterpreterThreadState implements
 		return name;
 	}
 
-	public InterpreterThreadStatus getStatus()
+	public InterpreterThreadStatus getState()
 	{
 		return state;
 	}

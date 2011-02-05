@@ -65,6 +65,7 @@ public class VdmStack implements IVdmStack {
 				newFrames[i] = new VdmStackFrame(this, levels[i]);
 			}
 			frames = newFrames;
+			DebugEventHelper.fireChangeEvent(getThread());//todo FOLLOWUP added for debug view
 		}
 	}
 

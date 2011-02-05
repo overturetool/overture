@@ -12,6 +12,7 @@ package org.overture.ide.debug.core.model;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IThread;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
+import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationEngine;
 import org.overture.ide.debug.core.model.internal.IVdmStreamProxy;
@@ -40,4 +41,6 @@ public interface IVdmThread extends IThread /* , IFilteredStep */{
 	boolean retrieveLocalVariables();
 
 	void updateStackFrames();
+	
+	IDbgpStatusInterpreterThreadState getInterpreterState();
 }
