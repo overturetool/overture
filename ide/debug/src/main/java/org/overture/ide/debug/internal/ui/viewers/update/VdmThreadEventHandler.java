@@ -37,6 +37,12 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 		
         IThread thread = (IThread) event.getSource();
         System.out.println("handleSuspend "  +thread);
+        
+        //TODO temporary fix. Collapses all threads except the running one
+        if(!isRunning(thread)){
+        	fireDeltaUpdatingThread(thread, IModelDelta.COLLAPSE);
+        }
+        
 		if (event.isEvaluation() ||!isRunning(thread)) {
         	ModelDelta delta = buildRootDelta();
     		ModelDelta node = addPathToThread(delta, thread);
