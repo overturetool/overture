@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -354,9 +355,9 @@ public class VdmStackFrame extends VdmDebugElement implements
 	
 	public String getOnlyFileName(){
 		URI uri = level.getFileURI();
-		String res = uri.toASCIIString();
+		String res = new File(uri).getName();//.toASCIIString();
 		
-		return res.substring(res.lastIndexOf('/') + 1);
+		return res;//.substring(res.lastIndexOf('/') + 1);
 	}
 
 	public boolean hasRegisterGroups() throws DebugException {
