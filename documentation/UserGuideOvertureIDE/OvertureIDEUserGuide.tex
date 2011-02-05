@@ -276,7 +276,7 @@ user manual.
 \chapter{Getting Hold of the Software}\label{sec:install}
 
 Overture is an open source VDM tool, developed by a community of volunteers,
-built on top of the Eclipse platform. The project 
+and built on top of the Eclipse platform. The project 
 is hosted on SourceForge.  The best way to obtain Overture is to download 
 a special version of Eclipse with the Overture functionality already pre-installed. If you go to:
   \begin{quote}
@@ -293,10 +293,11 @@ a special version of Eclipse with the Overture functionality already pre-install
 Simply extract the zip file downloaded and run the Overture executable
 file at the top level to start the tool.
 When you start Overture for the first time, it will request a workspace
-location. Here we recommend that you  choose the default proposed 
+location. We recommend that you choose the default location proposed 
 by Overture and tick the box for ``Use this as the default and do
 not ask again''. A welcome screen will introduce you to the overall 
-mission of the Overture open source initiative. 
+mission of the Overture open source initiative the first time that you
+run the tool.
 
 Large libraries of sample VDM-SL, VDM++ and VDM-RT models are available
 and can be downloaded from SourceForge under the
@@ -306,24 +307,24 @@ and can be downloaded from SourceForge under the
 \begin{quote}
 \url{https://sourceforge.net/projects/overture/files/Examples/}
 \end{quote}
-Such existing projects can be imported as described in
+Such existing projects can be imported into Overture as described in
 section~\ref{subsec:importproj}. 
 
-\chapter{Using the Overture Perspective}\label{sec:vdmsupport}
+\chapter{Using the VDM Perspective}\label{sec:vdmsupport}
 
 \section{Understanding Eclipse Terminology}
 
 Eclipse is an open source platform based around a
 \emph{workbench}\index{workbench} that provides a common look and feel
-to a large collection of extension products. Thus, if a user is
-familiar with one Eclipse product, it will generally be easy to start
-using a different product on the same workbench. The Eclipse workbench
+to a large collection of extension products. If you are
+familiar with one Eclipse product, you will generally find it easy to start
+using other products that use the same workbench. The Eclipse workbench
 consists of several panels known as \emph{views}\index{view}, such as
-those shown in
-Figure~\ref{fig:userguire:OverturePerspective}. A particular collection of views
+those shown in Figure~\ref{fig:userguire:OverturePerspective}.
+A particular arrangement of views
 is called a \emph{perspective}\index{perspective}, for example
 Figure~\ref{fig:userguire:OverturePerspective} shows the standard
-Overture perspective. This consists of a set of views for managing
+VDM perspective. This consists of a set of views for managing
 Overture projects and viewing and editing files in a
 project. Different perspectives are available in Overture as will be
 described later, but for the moment think of a perspective as a
@@ -332,7 +333,7 @@ useful composition of views for conducting a particular task.
 \begin{figure}[!h]
 \begin{center}
   \includegraphics[width=\textwidth]{figures/OverturePerspective}
-  \caption[labelInTOC]{The Overture Perspective}
+  \caption[labelInTOC]{The VDM Perspective}
   \label{fig:userguire:OverturePerspective}
 \end{center}
 \end{figure}
@@ -341,13 +342,13 @@ The \emph{VDM Explorer}\index{explorer} view lets you create, select,
 and delete Overture projects and navigate between the files in these 
 projects, as well as adding new files to existing projects. A new VDM
 project is created choosing the \emph{File} $ \rightarrow$ \emph{New}
-$\rightarrow$ \emph{Project} option resulting in
-Figure~\ref{fig:userguide:newOvertureProjectSL}. Here select
-the desired VDM dialect and press \emph{Next}. Finally, a name needs 
-to be given to the project and then simply select \texttt{Finish}.
+$\rightarrow$ \emph{Project} option which results in the dialog shown in
+Figure~\ref{fig:userguide:newOvertureProjectSL}. Select
+the desired VDM dialect and press \emph{Next}. Finally, the project
+needs to be given a name. Click \texttt{Finish} to create the project.
 Depending upon the dialect of VDM used in a given project,
 a corresponding Overture \emph{Editor} view will be available to edit the files of
-that project. Dialect editors are sensitive to the keywords used in
+your new project. Dialect editors are sensitive to the keywords used in
 each particular dialect, and simplify the task of working on the
 specification.
 
@@ -363,11 +364,11 @@ specification.
 The \emph{Outline}\index{outline} view, on the right hand side of 
 Figure~\ref{fig:userguire:OverturePerspective}, presents an outline of
 the file selected
-in the editor. The outline displays all VDM definitions, such as
+in the editor. The outline shows all VDM definitions, such as
 state definitions, values, types, functions and operations. The
-type of the definitions are also shown in the view.
-The colour of the icons in front of the names in the outline
-indicates the accessibility of the corresponding definition. Red is
+type of each definition is also shown in the view and the colour of
+the icons in front of the names indicates the accessibility of each
+definition. Red is
 used for private definitions, yellow for protected definitions and
 green for public definitions. Triangles are used for
 type definitions, small squares are used for values, state components
@@ -376,10 +377,10 @@ larger circles and squares, permission predicates are shown with small
 lock symbols and traces are shown with a
 ``\texttt{T}''. Functions have a small ``\texttt{F}'' superscript over the
 icons and static definitions have a small ``\texttt{S}'' superscript.
-Record types have a small arrow placed in front of the
+Record types have a small arrow in front of the
 icon, and if that is clicked the fields of the record can be seen.
 Figure~\ref{fig:OutlineIcons} illustrates the different outline icons.
-At the top of the outline view there are buttons to filter what is displayed,
+At the top of the view there are buttons to filter what is displayed,
 for instance it is possible to hide non-public members.
 
 \begin{figure}[!htb]
@@ -390,18 +391,18 @@ for instance it is possible to hide non-public members.
 \end{center}
 \end{figure}
 
-Clicking on the name of a definition in the outline will highlight the
-definition in the Editor view.
+Clicking on the name of a definition in the outline will navigate to
+the definition and highlight the name in the Editor view.
 
 The \emph{Problems}\index{problems} view at the bottom of 
-Figure~\ref{fig:userguire:OverturePerspective} gathers 
+Figure~\ref{fig:userguire:OverturePerspective} displays 
 information messages about the projects you are
-working on.
+working on, such as warnings and syntax or type checking errors.
 
 The \emph{VDM Quick Interpreter}\index{quick interpreter}
 view has a small command-line at the bottom where a plain VDM expression
 (not depending upon the definitions in the VDM model you are working with) can be
-entered. When return is pressed the expression will be evaluated and
+entered. When return is pressed, the expression will be evaluated and
 the result shown above the command-line.
 
 Most of the other features of the workbench, such as the menus and
@@ -428,7 +429,7 @@ using the same menu.\index{project!open}\index{project!close}
 
 \subsection{Adding Additional VDM File Extensions}
 
-It is possible to associate additional or different file extensions with a
+It is possible to associate additional or different filename extensions with a
 particular VDM dialect editor, instead of the standard {\ttfamily .vdmsl},
 {\ttfamily .vdmpp} and {\ttfamily .vdmrt}. This is done using the \emph{Window}
 $\rightarrow$ \emph{Preferences} menu. Click the Add
@@ -462,7 +463,9 @@ directories that have no source files.
 If line numbers\index{line number} are required in the dialect
 editors, right click in the left-hand margin
 of the editor and select \texttt{show line numbers} as shown in
-Figure~\ref{fig:linenumbers}.\index{line numbers} 
+Figure~\ref{fig:linenumbers}.\index{line numbers} Note that the current
+line number and cursor position are displayed in the eclipse status
+bar, at the bottom of the workspace, when an editor has focus.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -529,7 +532,7 @@ Follow these steps to create a new Overture project:
           $\rightarrow$ \emph{Overture}; \index{project!create}
 	\item Select the VDM dialect you wish to use (VDM-SL, VDM-PP
           or VDM-RT);\index{VDM dialect}
-	\item Press \emph{Next};
+	\item Click \emph{Next};
          \item Type in a project name;
 	\item Choose whether you would like the contents of the new
           project to be in your workspace or outside
@@ -551,11 +554,11 @@ Follow these steps to create a new Overture project:
 
 \section{Creating Files}
 
-Switching to the Overture perspective will change the layout of the user
+Switching to the VDM perspective will change the layout of the user
 interface to focus on VDM development. To change perspective, go to the menu 
 \emph{Window} $\rightarrow$ \emph{Open perspective} $\rightarrow$
-\emph{Other...} and choose the Overture perspective.
-From the Overture Perspective you can create files
+\emph{Other...} and choose the VDM perspective.
+From the this perspective you can create files
 using one of the following methods:
 
 \begin{enumerate}
@@ -579,8 +582,9 @@ that are not required can be deleted from the template.
 
 \section{Setting Project Options}\label{subsec:options}
 
-It is possible to set various VDM
-specific settings for an Overture project. You can change these by selecting a project
+There are various VDM
+specific settings for an Overture project. You can change these by
+selecting a project
 in the \emph{Explorer} view and then right clicking and selecting
 \emph{Properties}. See Figure~\ref{fig:VDMSettings}. The options 
 that can be set for each VDM project are:\index{project!options}
@@ -633,7 +637,7 @@ options are selected the \LaTeX\ pretty printing will include test
 coverage information as well as provide test coverage tables for each
 class/module in the VDM model. It is also possible to define your own
 main document instead of making use of the standard one suggested by
-Overture (name of the project followed by \texttt{.tex}).
+Overture (which is the name of the project followed by \texttt{.tex}).
 
 \begin{figure}[!hbt]
 \begin{center}
@@ -652,17 +656,18 @@ is carried out continuously as source files are
 changed (even before the files are saved). Whenever files are saved, assuming
 there are no syntax errors, a full type check of the \emph{entire} VDM model is
 performed.
-Problems and warnings will be displayed both in the Problems view as well as
-directly in the Editor view where the problems have been identified.
+Problems and warnings will be listed in the Problems view as well as
+being highlighted directly in the Editor view where the problems have been
+identified.
 
 \section{Using Templates}
 
 Eclipse templates can be particularly useful when writing VDM models. If you
-hit \textit{CTRL+space} after typing the first few characters of a template name,
+press \textit{CTRL+space} after typing the first few characters of a template name,
 Overture will offer a proposal. For example, if you type ''fun'' followed
 by \textit{CTRL+space}, the IDE will propose the use of an implicit or explicit
 function template as shown in Figure~\ref{fig:functionTemplate}. The IDE includes
-several types of template: cases, quantifications, functions (explicit/implicit),
+several templates: cases, quantifications, functions (explicit/implicit),
 operations (explicit/implicit) and many more. The use of templates makes it much
 easier for users to create models, even if they are not deeply familiar
 with the VDM syntax.
@@ -693,38 +698,42 @@ standard Overture templates is available in Appendix~\ref{app:templates}.
 
 \chapter{Interpretation and Debugging in Overture}\label{sec:debug}
 
-This section describes how to debug a model using the Overture IDE. 
+This section describes how to run and debug a model using the Overture IDE. 
 
-\section{Debug Launch Configurations}
+\section{Run and Debug Launch Configurations}
 
-To execute or debug a VDM model, you must first create a \emph{debug} launch
-configuration\index{debug configuration}. Note that you need to create a debug
-launcher, even if you do not intend to debug the specification. This is because
-Overture will always jump into the debugger if there are any runtime problems
-with your specification. You cannot create a regular run launch configuration
-in Overture.
-
-To create a debug launch configuration, go to the main Run menu and select
-\emph{Run} $\rightarrow $ \emph{Debug Configurations}. Select the type of
+To execute or debug a VDM model, you must first create a launch
+configuration\index{debug configuration}. To do this, go to the main Run menu
+and select \emph{Run} $\rightarrow $ \emph{Run Configurations}. Select the type of
 project you want to launch, click the New icon to
 create a new launch specification of that type and give it a name. The
 launch dialog requires you to identify the VDM project name,
 the class/module name and the initial operation/function to call in that
-class/module. Figure~\ref{fig:userguide:launchconfig} shows a debug launch
+class/module. Figure~\ref{fig:userguide:launchconfig} shows a launch
 dialog. Clicking the Browse button will let you select a project from
 those available in the workspace. Clicking the Search button will search the chosen
 project for classes and modules to select an operation or function from.
 If the chosen operation or function has parameters, the types and names of those
 parameters will be copied into the Operation box - these \emph{must} be replaced with
-valid argument values\footnote{You will see type checking errors at the top of the dialog
-if you do not do this, such as "Error 3063: Too few arguments in ..."}.
+valid argument values\footnote{You will see type checking errors at the top of the
+dialog if you do not do this, such as "Error 3063: Too few arguments in ..."}.
 
-You can also open the
-\emph{Debug Configurations} dialog by right clicking on a project in the Explorer
-view and then selecting the \emph{Debug As} $\rightarrow$ \emph{VDM Launch Configurations}.
-Once a launch configuration has been defined, it can be re-run at any time by using the
-small downward arrow next to the debug icon
-(\includegraphics[width=0.03\textwidth]{icons/debuggericon}) in the IDE toolbar.
+Your new launch configuration can be started immediately by clicking the \emph{Run}
+button at the bottom of the dialog. Alternatively, the configuration can simply be
+saved by clicking \emph{Apply}. Once a launch configuration has been defined, it
+can be re-run at any time by using the small downward arrow next to the run or
+debug icons (\includegraphics[width=0.03\textwidth]{icons/debuggericon})
+in the IDE toolbar.
+
+A launch configuration can either be started normally, which will simply evaluate
+the expression given and stop, or it can be started in debug mode, which will
+stop the evaluation at any breakpoints you may have set. The same launch configuration
+can be used for either purpose, though by default those created through the
+\emph{Run Configurations} dialog will appear in the favourites list under the
+\emph{Run} toolbar icon. Similarly, a launch configuration created under the
+\emph{Debug Configurations} dialog will appear under the favourites of the
+debug toolbar icon. You can control which icons display the launch configuration
+in the \emph{Common} tab on the dialog. This is standard Eclipse behaviour.
 
 \begin{figure}[htp]
 \begin{center}
@@ -836,7 +845,7 @@ Figure~\ref{fig:userguide:BreakpointConditional}.
 The \emph{Expressions} view allows you to define expressions that are evaluated
 whenever the debugger stops.
 Watched expressions can be added to the view directly, or created by selecting \emph{Watch}
-when right-clicking a variable in the Variables view. It is possible to edit existing
+when right-clicking a variable in the Variables view. It is also possible to edit existing
 expressions. The view sits in the same panel as the Breakpoints view and
 the Variables view.
 
@@ -846,24 +855,25 @@ When a VDM model is being interpreted, it is possible to automatically collect
 test coverage information. Test coverage measurements help you to see how well a
 given test suite\index{Test Coverage!Test suite} exercises your VDM model.
 
-In order to enable collection of test coverage data, go to the debug launch 
-configuration and select the \emph{Generate Latex coverage} option. After
+In order to enable the collection of test coverage data, go to the debug launch 
+configuration and select the \emph{Generate coverage} option. After
 running this configuration, a new file with a \texttt{.cov} extension will be created for 
 each file in the project. These files are written into a project subfolder named
 \texttt{generated/coverage/<date and time>}. Double-clicking the \texttt{.cov} files
 will open a special editor window that displays the source with coverage
 coloured in red/green (red is executable but not covered). Alternatively, a PDF file
-containing the entire model with coloured test coverage can be generated 
+containing the entire model with coloured test coverage summarised for all runs
+can be generated 
 by right-clicking on the project name and selecting \emph{Latex} $\rightarrow$ 
 \emph{Latex Coverage}.
 
 \chapter{Pretty Printing to \LaTeX}\label{sec:prettyprint}
 
-Include \texttt{overture.tex} which among other things makes use of the
-\texttt{times.cls} and \texttt{listings.cls} style classes. This enables
-the use of the standard \texttt{lstlisting} environment for type setting
-source text and display it in a fixed width font where all VDM keywords
-are typeset in bold.
+%Include \texttt{overture.tex} which among other things makes use of the
+%\texttt{times.cls} and \texttt{listings.cls} style classes. This enables
+%the use of the standard \texttt{lstlisting} environment for type setting
+%source text and display it in a fixed width font where all VDM keywords
+%are typeset in bold.
 
 It is possible to use literate programming/specification \cite{Johnson96} with
 Overture just as you can with VDMTools. To take advantage of this,
@@ -884,7 +894,7 @@ Type checking accepts specifications that are \emph{possibly} correct, but
 we also want to know the places where the specification could possibly fail.
 
 Unfortunately, it is not always possible to statically check if such
-possible problems will \emph{actually} occur at run-time error or not. So Overture
+potential problems will \emph{actually} occur at run-time error or not. So Overture
 creates \emph{Proof Obligations}\index{proof obligation} for all the places
 where run-time errors \emph{could} occur. Each proof obligation (PO)
 is formulated as a predicate that must hold at a particular place in the VDM
@@ -1017,7 +1027,7 @@ to XMI}. This is illustrated in Figure~\ref{fig:exportfromUML}.
 
 Importing and exporting a UML model is
 an option in the Overture \emph{Explorer} view, where right-clicking
-a project gives a submenu for
+a VDM++ or VDM-RT project gives a submenu for
 \emph{UML Transformation}\index{UML transformation}. From here
 it is possible to \emph{Import XMI}\index{import XMI} or to
 \emph{Export XMI}\index{Export XMI}.
@@ -1046,7 +1056,7 @@ model development.
 \chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
 
 Whenever a VDM-RT model is executed, a logfile is created in
-a \texttt{logs/debugconfig} subfolder with a \texttt{.logrt} extension. The
+a \texttt{generated/logs/<launch>} subfolder with a \texttt{.logrt} extension. The
 file name for the logfile indicates the time at which the model was executed,
 so it is possible to distinguish multiple runs. Logfiles can be
 viewed with the built-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
@@ -1083,7 +1093,8 @@ sized window, you have the option of jumping to a certain time index
 using the \emph{Go to time} button.\index{Go to time} It is
 also possible to export all the generated views to JPEG format files
 using the \emph{Export Image} button.\index{export image button} All
-the generated images will be placed in the \texttt{logs} folder.
+the generated images will be placed in the same folder as the \texttt{.logrt}
+file.
 
 The log viewer can
 also give an overview of all executions on a single CPU. This view
@@ -1119,10 +1130,10 @@ jar, calling out to a Java class. The Java delegate, if present, has
 the same name as the VDM
 module/class name with underscores (``\_'') replaced with package naming
 dots (``.''). For example, the VDM class \texttt{remote\_lib\_sensor} becomes
-\texttt{remote.lib.sensor} in Java. The delegate lookup is only done once and
+the class \texttt{remote.lib.sensor} in Java. The delegate lookup is only done once and
 only when an \texttt{is not yet specified} statement or expression is first
-reached in a class or module. The jar with the external library must be places in
-the VDM project in a folder named \texttt{lib} where it will be put in the
+reached in a class or module. The jar with the external library must be placed in
+the VDM project in a subfolder named \texttt{lib} where it will be put in the
 class-path of the interpreter when it is executed.
 
 \section{External Library Example}
@@ -1132,7 +1143,7 @@ value from a real sensor. The VDM model interface of the sensor can be
 seen in listing~\ref{remoteSensorVdm} and the Java class
 implementing it can be seen in listing~\ref{remoteSensorJava}. The
 values that are to be exchanged between the Overture IDE and the jar
-file needs to be the internal Value objects used in VDMJ. Documentation about
+file needs to be the internal \emph{Value} objects used in VDMJ. Documentation about
 these classes can be found in the VDMJ Design Specification\cite{Battle10}.
 
 \begin{lstlisting}[language=VDM++,label=remoteSensorVdm,caption=Remote sensor VDM class,captionpos=b]
@@ -1175,11 +1186,11 @@ VDMTools\cite{APIMan}.
 A VDM model can be remotely controlled by implementing the Java interface
 \texttt{RemoteControl}. Remote control should be understood as a
 delegation of control of the interpreter, which means that the remote
-controller is in charge of the debug session and is responsible for taking
+controller is in charge of the execution or debug session and is responsible for taking
 action and executing parts of the VDM model when needed. When finished, it should
-return and the debug session will stop. When a Remote controller is
+return and the session will stop. When a Remote controller is
 used, the Overture debugger continues working normally, so for example
-breakpoints can be used. A debugging session with the use of a remote
+breakpoints can be used in debug mode. A debugging session with the use of a remote
 controller can be started by placing the jar with the RemoteControl implementation
 in a project subfolder called \texttt{lib}. The fully
 qualified name of the RemoteControl class must then be specified in the
