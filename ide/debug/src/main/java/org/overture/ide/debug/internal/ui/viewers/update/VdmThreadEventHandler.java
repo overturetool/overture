@@ -481,7 +481,8 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 	 {
 		 if (thread instanceof IVdmThread)
 			{
-				return (((IVdmThread) thread).getInterpreterState().getState() == InterpreterThreadStatus.RUNNING);
+			 IVdmThread t = (IVdmThread) thread;
+				return t.getInterpreterState()!=null && t.getInterpreterState().getState() == InterpreterThreadStatus.RUNNING;
 			}
 		 return false;
 				
