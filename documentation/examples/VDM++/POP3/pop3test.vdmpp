@@ -151,7 +151,7 @@ Start: POP3TestSender | POP3TestListener ==> ()
 Start(obj) ==
   start(obj);
   
-POP3Test:() ==> POP3Test
+public POP3Test:() ==> POP3Test
 POP3Test() ==
   (ch := new MessageChannelBuffer();
    server := new POP3Server(MakeMailDrop(), ch, MakePasswordMap());
