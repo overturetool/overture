@@ -77,6 +77,7 @@ import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.LatexSourceFile;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
@@ -2531,7 +2532,7 @@ public class DBGPReader
     	{
 			File tex = new File(dir.getPath() + File.separator + file.getName() + ".tex");
 			PrintWriter pw = new PrintWriter(tex);
-			source.printLatexCoverage(pw, headers);
+			new LatexSourceFile(source).printCoverage(pw, headers);
 			pw.close();
 			cdataResponse("Latex coverage written to " + tex);
     	}

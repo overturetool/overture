@@ -59,6 +59,7 @@ import org.overturetool.vdmj.runtime.Breakpoint;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.DebuggerException;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.LatexSourceFile;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
@@ -923,7 +924,7 @@ abstract public class CommandReader
 			{
 				File tex = new File(source.filename.getPath() + ".tex");
 				PrintWriter pw = new PrintWriter(tex, "UTF-8");
-				source.printLatexCoverage(pw, headers);
+				new LatexSourceFile(source).printCoverage(pw, headers);
 				pw.close();
 				println("Latex coverage written to " + tex);
 			}
