@@ -733,14 +733,14 @@ is possible to edit existing expressions.  Like the Breakpoints view,
 this view is hidden in the upper right hand corner in
 Figure~\ref{fig:DebuggingVDM}.
 
-While the Overture Expressions view allows you to inspect values, the
-functionality is somewhat limited. For more thorough inspections in
-Overture, the \emph{Interactive Console view} is provided. Here
-commands can be executed in a given context, i.e.\ when the debugger
-is at a breakpoint. The Interactive Console keeps a command history,
-so that previously executed commands can be run again easily. The
-interactive console can be seen at the bottom of
-Figure~\ref{fig:DebuggingVDM}.
+%While the Overture Expressions view allows you to inspect values, the
+%functionality is somewhat limited. For more thorough inspections in
+%Overture, the \emph{Interactive Console view} is provided. Here
+%commands can be executed in a given context, i.e.\ when the debugger
+%is at a breakpoint. The Interactive Console keeps a command history,
+%so that previously executed commands can be run again easily. The
+%interactive console can be seen at the bottom of
+%Figure~\ref{fig:DebuggingVDM}.
 
 
 \begin{myexercise}
@@ -1077,7 +1077,7 @@ VDMJ jar file \footnote{See the Overture documentation at
 
 \lstset{style=tool,language=}
 \begin{lstlisting}
-java -jar vdmj-2.0.0.jar
+java -jar vdmj-2.0.2.jar
 \end{lstlisting}
 
 \noindent If the jar file is executed with no further options like this, it will
@@ -1088,7 +1088,7 @@ specify the names of the VDM model files to load, or the name of a
 directory from which all VDM model files will be loaded:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.0.jar -vdmpp AlarmPP
+java -jar vdmj-2.0.2.jar -vdmpp AlarmPP
 \end{lstlisting}
 
 \noindent That will perform a syntax and type check of all the
@@ -1115,7 +1115,7 @@ the \verb|-q| option useful, as this suppresses the informational
 messages about the parsing and type checking:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.0.jar -vdmpp -q -e "new Test1().Run()" 
+java -jar vdmj-2.0.2.jar -vdmpp -q -e "new Test1().Run()" 
 AlarmPP
 \end{lstlisting}
 
