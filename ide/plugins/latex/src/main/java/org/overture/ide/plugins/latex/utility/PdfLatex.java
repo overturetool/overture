@@ -50,7 +50,7 @@ public class PdfLatex extends Thread {
 		cw.show();
 		try {
 
-			if (documentName.contains(new Character(File.separatorChar)
+				if (documentName.contains(new Character(File.separatorChar)
 					.toString())) {
 				// Map<String, String> env = pb.environment();
 				// // watch out here! this could be “PATH” or “path”

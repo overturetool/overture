@@ -50,6 +50,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.runtime.LatexSourceFile;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
@@ -196,7 +197,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 					// if ()
 					{
 
-						boolean modelOnly = !hasDocument(project);
+						boolean modelOnly = modelOnly(project);
 						LexLocation.resetLocations();
 						if (selectedProject.getDialect() == Dialect.VDM_PP
 								|| selectedProject.getDialect() == Dialect.VDM_RT)
@@ -239,12 +240,17 @@ public class LatexCoverageAction implements IObjectActionDelegate
 							+ ".tex";
 
 					latexBuilder.saveDocument(projectRoot, documentFileName);
-					if (!hasDocument(project))
+					if (hasGenerateMainDocument(project))
 						buildPdf(project, monitor, outputFolder,
 								documentFileName);
 					else
 					{
 						documentFileName = getDocument(project);
+						if(!new File(documentFileName).exists())
+						{
+							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK,
+									"Main document does not exist: "+documentFileName, null);
+						}
 						outputFolder = LatexBuilder.makeOutputFolder(project);
 						buildPdf(project, monitor, outputFolder,
 								documentFileName);
@@ -339,7 +345,7 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				String charset = selectedModelFile.getCharset();
 				latexBuilder.addInclude(texFile.getAbsolutePath());
 				//VDMJ.filecharset = "utf-8";
-				SourceFile f = new SourceFile(moduleFile,charset);
+				LatexSourceFile f = new LatexSourceFile(moduleFile,charset);
 
 				PrintWriter pw = new PrintWriter(texFile,charset);
 				IProject project = (IProject) selectedProject
@@ -347,11 +353,11 @@ public class LatexCoverageAction implements IObjectActionDelegate
 				Assert.isNotNull(project, "Project could not be adapted");
 				if (markCoverage(project))
 				{
-					f.printLatexCoverage(pw, false, modelOnly,
+					f.printCoverage(pw, false, modelOnly,
 							insertCoverageTable(project));
 				} else
 				{
-					f.printLatex(pw, false, modelOnly,
+					f.print(pw, false, modelOnly,
 							insertCoverageTable(project), false);
 				}
 				// ConsoleWriter cw = new ConsoleWriter("LATEX");
@@ -442,13 +448,13 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		return modules;
 	}
 
-	public boolean hasDocument(IProject project) throws CoreException
+	public boolean hasGenerateMainDocument(IProject project) throws CoreException
 	{
 		String result = project
 				.getPersistentProperty(WorkbenchPropertyPage1
 						.getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT));
 		// boolean modelOnly = !new LatexProject(selectedProject).hasDocument();
-		return !(result == null || result.equalsIgnoreCase("true"));
+		return (result == null || result.equalsIgnoreCase("true"));
 	}
 
 	public String getDocument(IProject project) throws CoreException
@@ -469,6 +475,14 @@ public class LatexCoverageAction implements IObjectActionDelegate
 	{
 		String result = project.getPersistentProperty(WorkbenchPropertyPage1
 				.getQualifierName(ILatexConstants.LATEX_MARK_COVERAGE));
+		return (result == null || result.equalsIgnoreCase("true"));
+
+	}
+	
+	public boolean modelOnly(IProject project) throws CoreException
+	{
+		String result = project.getPersistentProperty(WorkbenchPropertyPage1
+				.getQualifierName(ILatexConstants.LATEX_MODEL_ONLY));
 		return (result == null || result.equalsIgnoreCase("true"));
 
 	}
