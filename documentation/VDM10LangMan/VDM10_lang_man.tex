@@ -2830,7 +2830,8 @@ print_Const(mk_Const(c)) ==
   simply an identifier), and {\tt s1} and {\tt s2} are sets
   constructed by expressions (whereas {\tt tp1} is used to illustrate
   that type binds can also be used). Notice however that type binds
-  cannot be executed by the VDM interpreters.
+  can only be executed by the VDM interpreters in case the types can
+  be statically declared as finite.
 
   The {\it set range expression} is a special case of a set
   comprehension. It has the form
@@ -4296,8 +4297,9 @@ several examples of record patterns.
     expression of the bind. In a {\it type bind} the value is chosen
     from the type defined by the type expression.  {\it Multiple bind}
     is the same as {\it bind} except that several patterns are bound
-    to the same set or type.  Notice that type binds {\bf cannot} be
-    executed by the VDM interpreters.  This would require the VDM interpreters
+    to the same set or type.  Notice that type binds {\bf can} only be
+    executed by the VDM interpreters in case the type can be deduced
+    to be finite statically.  This would require the VDM interpreters
     to search through infinite domains like the natural numbers.
 
 \item[Examples:] Bindings are mainly used in quantified expressions and
