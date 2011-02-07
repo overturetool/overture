@@ -103,4 +103,13 @@ abstract public class BinaryExpression extends Expression
 		list.addAll(right.getValues(ctxt));
 		return list;
 	}
+	
+	@Override
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList subs = left.getSubExpressions();
+		subs.addAll(right.getSubExpressions());
+		subs.add(this);
+		return subs;
+	}
 }

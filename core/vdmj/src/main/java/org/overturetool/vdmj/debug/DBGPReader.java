@@ -58,6 +58,7 @@ import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.expressions.HistoryExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -1873,6 +1874,26 @@ public class DBGPReader
 					if (frame != null)
 					{
 						vars.putAll(frame.getVisibleVariables());
+					}
+				}
+				
+				if (breakContext instanceof ObjectContext)
+				{
+					ObjectContext octxt = (ObjectContext)breakContext;
+					Expression exp = octxt.self.type.classdef.findExpression(
+						breakpoint.location.startLine);
+					
+					for (Expression sub: exp.getSubExpressions())
+					{
+    					if (sub instanceof HistoryExpression)
+    					{
+    						HistoryExpression hexp = (HistoryExpression)sub;
+    						Value v = hexp.eval(octxt);
+    						LexNameToken name =
+    							new LexNameToken(octxt.self.type.name.module,
+    								hexp.toString(),hexp.location);
+    						vars.put(name, v);
+    					}
 					}
 				}
 				break;

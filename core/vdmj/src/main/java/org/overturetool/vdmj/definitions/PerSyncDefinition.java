@@ -85,6 +85,12 @@ public class PerSyncDefinition extends Definition
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return guard.findExpression(lineno);
+	}
+
+	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
 		ClassDefinition classdef = base.findClassDefinition();

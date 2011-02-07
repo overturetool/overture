@@ -189,6 +189,17 @@ public abstract class Expression implements Serializable,IAstNode
 	{
 		return new ValueList();  // Default, for expressions with no variables
 	}
+	
+	/**
+	 * Return a list of sub-expressions of this expression.
+	 */
+	
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList subs = new ExpressionList();
+		subs.add(this);
+		return subs;
+	}
 
 	/**
 	 * Get the name of the precondition function of this expression, if it is
