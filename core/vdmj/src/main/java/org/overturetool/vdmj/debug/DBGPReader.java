@@ -1876,23 +1876,26 @@ public class DBGPReader
 						vars.putAll(frame.getVisibleVariables());
 					}
 				}
-				
+
 				if (breakContext instanceof ObjectContext)
 				{
 					ObjectContext octxt = (ObjectContext)breakContext;
 					Expression exp = octxt.self.type.classdef.findExpression(
 						breakpoint.location.startLine);
-					
-					for (Expression sub: exp.getSubExpressions())
+
+					if (exp != null)
 					{
-    					if (sub instanceof HistoryExpression)
+    					for (Expression sub: exp.getSubExpressions())
     					{
-    						HistoryExpression hexp = (HistoryExpression)sub;
-    						Value v = hexp.eval(octxt);
-    						LexNameToken name =
-    							new LexNameToken(octxt.self.type.name.module,
-    								hexp.toString(),hexp.location);
-    						vars.put(name, v);
+        					if (sub instanceof HistoryExpression)
+        					{
+        						HistoryExpression hexp = (HistoryExpression)sub;
+        						Value v = hexp.eval(octxt);
+        						LexNameToken name =
+        							new LexNameToken(octxt.self.type.name.module,
+        								hexp.toString(),hexp.location);
+        						vars.put(name, v);
+        					}
     					}
 					}
 				}

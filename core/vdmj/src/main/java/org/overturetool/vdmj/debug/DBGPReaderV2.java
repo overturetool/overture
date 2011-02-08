@@ -104,9 +104,9 @@ import org.overturetool.vdmj.values.Value;
  * <li>Overture command for writing covtbl files after execution.
  * <li>Overture response. Used to check status after issuing an xcmd Overture
  * </ul>
- * 
+ *
  * @author kela
- * 
+ *
  */
 public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -623,7 +623,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	/**
 	 * Send a xcmd Overture Response
-	 * 
+	 *
 	 * @param overtureCmd
 	 *            The overture command which this is a response to
 	 * @param hdr
@@ -847,7 +847,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	/**
 	 * Calculates if a value has children and returns the child count
-	 * 
+	 *
 	 * @param value
 	 *            The value to determine child count for
 	 * @return number of children
@@ -902,7 +902,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	/**
 	 * Creates a string with property responses for all requested children of
 	 * the parsed value, intended to be used as the body of the value parsed
-	 * 
+	 *
 	 * @param value
 	 *            The value which children should be fetched
 	 * @param depth
@@ -1026,7 +1026,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	/**
 	 * Deref Value of Reference and Updatable Value types
-	 * 
+	 *
 	 * @param value
 	 *            The value to deref
 	 * @return The internal value of the parameter
@@ -1042,7 +1042,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	/**
 	 * Determines if a value should be shown in the debug client
-	 * 
+	 *
 	 * @param v
 	 *            The value to check
 	 * @return True if the value is allowed to be displayed in the client
@@ -1243,24 +1243,27 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					vars.putAll(frame.getVisibleVariables());
 				}
 			}
-			
+
 			if (breakContext instanceof ObjectContext)
 			{
 				ObjectContext octxt = (ObjectContext)breakContext;
 				Expression exp = octxt.self.type.classdef.findExpression(
 					breakpoint.location.startLine);
-				
-				for (Expression sub: exp.getSubExpressions())
+
+				if (exp != null)
 				{
-					if (sub instanceof HistoryExpression)
-					{
-						HistoryExpression hexp = (HistoryExpression)sub;
-						Value v = hexp.eval(octxt);
-						LexNameToken name =
-							new LexNameToken(octxt.self.type.name.module,
-								hexp.toString(),hexp.location);
-						vars.put(name, v);
-					}
+    				for (Expression sub: exp.getSubExpressions())
+    				{
+    					if (sub instanceof HistoryExpression)
+    					{
+    						HistoryExpression hexp = (HistoryExpression)sub;
+    						Value v = hexp.eval(octxt);
+    						LexNameToken name =
+    							new LexNameToken(octxt.self.type.name.module,
+    								hexp.toString(),hexp.location);
+    						vars.put(name, v);
+    					}
+    				}
 				}
 			}
 			break;
