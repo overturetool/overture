@@ -207,7 +207,7 @@ public class ObjectValue extends Value
 		return null;
 	}
 
-	public synchronized ValueList getOverloads(LexNameToken field)
+	public ValueList getOverloads(LexNameToken field)
 	{
 		ValueList list = new ValueList();
 
