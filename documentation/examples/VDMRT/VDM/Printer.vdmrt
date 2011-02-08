@@ -38,37 +38,13 @@ operations
   public static natToString : nat ==> seq of char 
   natToString(n) ==
   (
-  	let last =
-  	cases n mod 10:
-  	0-> "0",
-  	1-> "1",
-  	2-> "2",
-  	3-> "3",
-  	4-> "4",
-  	5-> "5",
-  	6-> "6",
-  	7-> "7",
-  	8-> "8",
-  	9-> "9"
-  	end
-    
-    in
-    if n < 10
-    then return last
-    else return (natToString(n div 10) ^ last)
-  
+    return VDMUtil`val2seq_of_char[nat](n);
   );
   
-  public static intToString : nat ==> seq of char 
+  public static intToString : int ==> seq of char 
   intToString(i) ==
   (
-   dcl s : seq of char := ""; 
-   
-   if i < 0 
-   then 
-   s := "-";
-   
-   return s ^ natToString(i);
+    return VDMUtil`val2seq_of_char[int](i);
   );
   
 end Printer
