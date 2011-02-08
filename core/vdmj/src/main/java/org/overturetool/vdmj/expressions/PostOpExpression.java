@@ -64,10 +64,10 @@ public class PostOpExpression extends Expression
 		int prepost = 0;
 		String prepostMsg = null;
 
-		if (ctxt.outer != null)
+		//if (ctxt.outer != null)
 		{
-			prepost = ctxt.outer.prepost;
-			prepostMsg = ctxt.outer.prepostMsg + ctxt.outer.title;
+			prepost = ctxt.prepost;
+			prepostMsg = ctxt.prepostMsg + ctxt.title;
 		}
 
 		// The postcondition function arguments are the function args, the

@@ -57,11 +57,16 @@ import org.overturetool.vdmj.VDMSL;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.MutexSyncDefinition;
+import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.HistoryExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -1880,23 +1885,54 @@ public class DBGPReader
 				if (breakContext instanceof ObjectContext)
 				{
 					ObjectContext octxt = (ObjectContext)breakContext;
-					Expression exp = octxt.self.type.classdef.findExpression(
-						breakpoint.location.startLine);
+					int line = breakpoint.location.startLine;
+					DefinitionList defs = octxt.self.type.classdef.definitions;
 
-					if (exp != null)
+					for (Definition d: defs)
 					{
-    					for (Expression sub: exp.getSubExpressions())
-    					{
-        					if (sub instanceof HistoryExpression)
-        					{
-        						HistoryExpression hexp = (HistoryExpression)sub;
-        						Value v = hexp.eval(octxt);
-        						LexNameToken name =
-        							new LexNameToken(octxt.self.type.name.module,
-        								hexp.toString(),hexp.location);
-        						vars.put(name, v);
-        					}
-    					}
+						if (d instanceof PerSyncDefinition)
+						{
+							PerSyncDefinition pdef = (PerSyncDefinition)d;
+							
+							if (pdef.location.startLine == line ||
+								pdef.guard.findExpression(line) != null)
+							{
+	            				for (Expression sub: pdef.guard.getSubExpressions())
+	            				{
+	            					if (sub instanceof HistoryExpression)
+	            					{
+	            						HistoryExpression hexp = (HistoryExpression)sub;
+	            						Value v = hexp.eval(octxt);
+	            						LexNameToken name =
+	            							new LexNameToken(octxt.self.type.name.module,
+	            								hexp.toString(),hexp.location);
+	            						vars.put(name, v);
+	            					}
+	            				}
+	    						
+	    						break;
+							}
+						}
+						else if (d instanceof MutexSyncDefinition)
+						{
+							MutexSyncDefinition mdef = (MutexSyncDefinition)d;
+							
+							if (mdef.location.startLine == line)
+							{
+	            				for (LexNameToken op: mdef.operations)
+	            				{
+	            					LexNameList ops = new LexNameList(op);
+	            					Expression hexp = new HistoryExpression(mdef.location, Token.ACTIVE, ops);
+	        						Value v = hexp.eval(octxt);
+	        						LexNameToken name =
+	        							new LexNameToken(octxt.self.type.name.module,
+	        								hexp.toString(), mdef.location);
+	        						vars.put(name, v);
+	            				}
+	            				
+	    						break;
+							}
+						}
 					}
 				}
 				break;
