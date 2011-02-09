@@ -278,6 +278,10 @@ public class Controller
 
 		File logOutput = new File(webDir, inputRootFolder.getName());
 		logOutput.mkdirs();
+		
+		String outputFolderName = dialect.toString().replaceAll("_", "");
+		File logOuputFiles = new File(logOutput,outputFolderName);
+		logOuputFiles.mkdirs();
 
 		StringBuilder sb = new StringBuilder();
 		// sb.append(HtmlTable.makeRow(HtmlTable.makeCellHeaderss(new String[] {
@@ -293,7 +297,7 @@ public class Controller
 
 			System.out.print(" table...");
 			String rows = tableRow("Project Name:", name);
-			rows += tableRow("Authure:", p.getSettings().getTexAuthor());
+			rows += tableRow("Author:", p.getSettings().getTexAuthor());
 			//rows += tableRow("Dialect:", p.getSettings().getDialect().toString());
 			rows += tableRow("Language Version:", p.getSettings().getLanguageVersion().toString());
 			rows += tableRow("Description:", p.getSettings().getContent());
@@ -306,16 +310,16 @@ public class Controller
 			if(pdfFile!=null && pdfFile.exists())
 			{
 				System.out.print(" pdf...");
-				File newPdf =new File(logOutput, name+".pdf");
+				File newPdf =new File(logOuputFiles, name+".pdf");
 				ProjectPacker.copyfile(pdfFile.getAbsolutePath(), newPdf.getAbsolutePath());
-				pdfLink=HtmlPage.makeLink("pdf", newPdf.getName());
+				pdfLink=HtmlPage.makeLink("pdf",outputFolderName+"/"+ newPdf.getName());
 			}
 			
 			System.out.print(" zip...");
-			File zipFile = new File(logOutput,name+".zip");
+			File zipFile = new File(logOuputFiles,name+".zip");
 			p.zipTo(zipFile);
 			
-			rows += tableRow("Download:", HtmlPage.makeLink("model", zipFile.getName())+ " "+pdfLink);
+			rows += tableRow("Download:", HtmlPage.makeLink("model", outputFolderName+"/"+zipFile.getName())+ " "+pdfLink);
 
 			sb.append(HtmlTable.makeTable(rows));
 			System.out.print("\n");

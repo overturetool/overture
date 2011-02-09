@@ -11,6 +11,7 @@ import org.overturetool.tools.packworkspace.ProjectPacker;
 import org.overturetool.tools.packworkspace.latex.FileUtils;
 import org.overturetool.tools.packworkspace.testing.ProjectTester.Phase;
 import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.LatexSourceFile;
 import org.overturetool.vdmj.runtime.SourceFile;
 
 public class LatexBuilder
@@ -99,7 +100,8 @@ public class LatexBuilder
 			try
 			{
 				PrintWriter pw = new PrintWriter(texFile);
-				sf.printLatexCoverage(pw, false, true, true);
+				//new LatexSourceFile(sf).printCoverage(pw, false, true, true);
+				new LatexSourceFile(sf).print(pw, false, true, false,false);
 				pw.flush();
 				pw.close();
 
