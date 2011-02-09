@@ -125,4 +125,9 @@ public class CaseAlternative implements Serializable
 	{
 		return result.getValues(ctxt);
 	}
+
+	public ExpressionList getSubExpressions()
+	{
+		return result.getSubExpressions();
+	}
 }

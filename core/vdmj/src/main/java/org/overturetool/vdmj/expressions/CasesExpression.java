@@ -186,4 +186,23 @@ public class CasesExpression extends Expression
 
 		return list;
 	}
+
+	@Override
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList subs = exp.getSubExpressions();
+
+		for (CaseAlternative c: cases)
+		{
+			subs.addAll(c.getSubExpressions());
+		}
+
+		if (others != null)
+		{
+			subs.addAll(others.getSubExpressions());
+		}
+
+		subs.add(this);
+		return subs;
+	}
 }

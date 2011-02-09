@@ -115,4 +115,13 @@ public class ElseIfExpression extends Expression
 		list.addAll(thenExp.getValues(ctxt));
 		return list;
 	}
+
+	@Override
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList subs = elseIfExp.getSubExpressions();
+		subs.addAll(thenExp.getSubExpressions());
+		subs.add(this);
+		return subs;
+	}
 }

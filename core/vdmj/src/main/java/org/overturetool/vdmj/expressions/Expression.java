@@ -189,11 +189,13 @@ public abstract class Expression implements Serializable,IAstNode
 	{
 		return new ValueList();  // Default, for expressions with no variables
 	}
-	
+
 	/**
-	 * Return a list of sub-expressions of this expression.
+	 * Return a list of sub-expressions of this expression. This is used when
+	 * looking for history operators in permission guards. It is currently
+	 * only implemented for a few Expression subclasses.
 	 */
-	
+
 	public ExpressionList getSubExpressions()
 	{
 		ExpressionList subs = new ExpressionList();

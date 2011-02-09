@@ -112,11 +112,11 @@ public class ApplyExpression extends Expression
 			(func instanceof ExplicitFunctionDefinition ||
 			 func instanceof ImplicitFunctionDefinition ||
 			 func instanceof PerSyncDefinition);
-		
+
 		if (inFunction)
 		{
 			LexNameToken called = null;
-			
+
 			if (root instanceof VariableExpression)
     		{
     			VariableExpression var = (VariableExpression)root;
@@ -125,7 +125,7 @@ public class ApplyExpression extends Expression
 			else if (root instanceof FuncInstantiationExpression)
 			{
 				FuncInstantiationExpression fie = (FuncInstantiationExpression)root;
-				
+
 				if (fie.expdef != null)
 				{
 					called = fie.expdef.name;
@@ -135,13 +135,13 @@ public class ApplyExpression extends Expression
 					called = fie.impdef.name;
 				}
 			}
-			
+
 			if (called != null)
 			{
     			if (func instanceof ExplicitFunctionDefinition)
     			{
     				ExplicitFunctionDefinition def = (ExplicitFunctionDefinition)func;
-    
+
         			if (called.equals(def.name))
         			{
         				recursive = def;
@@ -151,7 +151,7 @@ public class ApplyExpression extends Expression
     			else if (func instanceof ImplicitFunctionDefinition)
     			{
     				ImplicitFunctionDefinition def = (ImplicitFunctionDefinition)func;
-    
+
         			if (called.equals(def.name))
         			{
         				recursive = def;
@@ -160,7 +160,7 @@ public class ApplyExpression extends Expression
     			}
 			}
 		}
-		
+
 		boolean isSimple = !type.isUnion();
 		TypeSet results = new TypeSet();
 
@@ -475,5 +475,14 @@ public class ApplyExpression extends Expression
 		ValueList list = args.getValues(ctxt);
 		list.addAll(root.getValues(ctxt));
 		return list;
+	}
+
+	@Override
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList subs = args.getSubExpressions();
+		subs.addAll(root.getSubExpressions());
+		subs.add(this);
+		return subs;
 	}
 }

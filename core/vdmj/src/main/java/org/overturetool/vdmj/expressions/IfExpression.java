@@ -208,4 +208,24 @@ public class IfExpression extends Expression
 
 		return list;
 	}
+
+	@Override
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList subs = ifExp.getSubExpressions();
+		subs.addAll(thenExp.getSubExpressions());
+
+		for (ElseIfExpression elif: elseList)
+		{
+			subs.addAll(elif.getSubExpressions());
+		}
+
+		if (elseExp != null)
+		{
+			subs.addAll(elseExp.getSubExpressions());
+		}
+
+		subs.add(this);
+		return subs;
+	}
 }

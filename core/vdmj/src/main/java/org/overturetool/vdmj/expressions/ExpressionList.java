@@ -74,4 +74,16 @@ public class ExpressionList extends Vector<Expression>
 
 		return list;
 	}
+
+	public ExpressionList getSubExpressions()
+	{
+		ExpressionList list = new ExpressionList();
+
+		for (Expression exp: this)
+		{
+			list.addAll(exp.getSubExpressions());
+		}
+
+		return list;
+	}
 }
