@@ -306,7 +306,7 @@ public class OperationValue extends Value
 		Value originalSigma = null;
 		ObjectValue originalSelf = null;
 
-		if (precondition != null || postcondition != null)
+		if (postcondition != null)
 		{
 			if (stateName != null)
 			{
@@ -333,7 +333,7 @@ public class OperationValue extends Value
 
     			if (stateName != null)
     			{
-    				preArgs.add(originalSigma);
+    				preArgs.add(argContext.lookup(stateName));
     			}
     			else if (self != null)
     			{
