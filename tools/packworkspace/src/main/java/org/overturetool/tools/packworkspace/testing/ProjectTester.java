@@ -518,7 +518,7 @@ cp="";
 
 	}
 
-	private class ProcessTimeOutKiller extends Thread
+	private static class ProcessTimeOutKiller extends Thread
 	{
 		Process p;
 		final long startTime;

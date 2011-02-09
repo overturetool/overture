@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.latex.FileUtils;
+import org.overturetool.tools.packworkspace.rss.EscapeChars;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.lex.Dialect;
 
@@ -300,7 +301,7 @@ public class VdmReadme
 
 				break;
 			case VDM_RT:
-				launchConfigarationId = launchConfigarationId.replace("vdmrt", "vdmrt");
+				launchConfigarationId = launchConfigarationId.replace("vdmpp", "vdmrt");
 				break;
 		}
 
@@ -314,12 +315,12 @@ public class VdmReadme
 		sb.append("\n<stringAttribute key=\"vdm_launch_config_memory_option\" value=\"\"/>");
 		sb.append("\n<stringAttribute key=\"vdm_launch_config_remote_control_class\" value=\"\"/>");
 		sb.append("\n<booleanAttribute key=\"vdm_launch_config_remote_debug\" value=\"false\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_project\" value=\""+escapeXml(name)+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_expression\" value=\""+entryPoint+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_project\" value=\""+EscapeChars.forXML(name)+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_expression\" value=\""+EscapeChars.forXML(entryPoint)+"\"/>");
 		sb.append("\n<booleanAttribute key=\"vdm_launch_config_static_method\" value=\""+staticAccess+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_default\" value=\""+defaultModule+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_method\" value=\""+method+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""+module+"\"/>");	
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_default\" value=\""+EscapeChars.forXML(defaultModule)+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_method\" value=\""+EscapeChars.forXML(method)+"\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""+EscapeChars.forXML(module)+"\"/>");	
 
 
 		sb.append("\n</launchConfiguration>");

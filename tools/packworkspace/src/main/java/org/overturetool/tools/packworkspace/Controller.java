@@ -2,6 +2,8 @@ package org.overturetool.tools.packworkspace;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -292,7 +294,7 @@ public class Controller
 			System.out.print(" table...");
 			String rows = tableRow("Project Name:", name);
 			rows += tableRow("Authure:", p.getSettings().getTexAuthor());
-			rows += tableRow("Dialect:", p.getSettings().getDialect().toString());
+			//rows += tableRow("Dialect:", p.getSettings().getDialect().toString());
 			rows += tableRow("Language Version:", p.getSettings().getLanguageVersion().toString());
 			rows += tableRow("Description:", p.getSettings().getContent());
 			
@@ -321,15 +323,21 @@ public class Controller
 		}
 
 		String page = HtmlPage.makePage(HtmlPage.makeH1( inputRootFolder.getName()+": Examples")
-				+ HtmlTable.makeTable(sb.toString()));
+				+ sb.toString());
 		FileUtils.writeFile(page, new File(logOutput, "index.html"));
 		FileUtils.writeFile(HtmlPage.makeStyleCss(), new File(logOutput, "style.css"));
+		
+		//overturetool
+		String pageSection =HtmlPage.makeOvertureStyleCss()+"\n"+ HtmlPage.makeDiv( sb.toString().replaceAll("href=\"", "href=\""+HtmlPage.overtureExamplesPreLink),"examples");
+		FileUtils.writeFile(pageSection, new File(logOutput, "indexOv.html"));
+		
 
 	}
 
 	private String tableRow(String... cells)
 	{
-		return HtmlTable.makeRow(HtmlTable.makeCells(cells));
+		List c = Arrays.asList(cells);
+		return HtmlTable.makeRow(HtmlTable.makeCell(cells[0], "first")+HtmlTable.makeCells(c.subList(1, c.size())));
 	}
 
 	public static void createWebOverviewPage(List<Controller> controllers,

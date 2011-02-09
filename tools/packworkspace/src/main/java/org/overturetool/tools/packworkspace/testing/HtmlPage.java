@@ -4,6 +4,8 @@ import org.overturetool.vdmj.ExitStatus;
 
 public class HtmlPage
 {
+	public final static String overtureExamplesPreLink ="http://overture.sourceforge.net/examples/";
+	
 	public static String makePage(String body)
 	{
 		return "<html>"+
@@ -13,9 +15,19 @@ public class HtmlPage
 		"\n<body>\n" + body + "\n</body>\n</html>";
 	}
 	
+	public static String makeP(String body)
+	{
+		return "<p>" + body + "\n</p>";
+	}
+	
 	public static String makeLink(String text,String href)
 	{
 		return "<a href=\""+href+"\">"+text+"</a>";
+	}
+	
+	public static String makeLink(String text,String href, String preHref)
+	{
+		return "<a href=\""+preHref+href+"\">"+text+"</a>";
 	}
 	
 	public static String makeH1(String text)
@@ -26,6 +38,11 @@ public class HtmlPage
 	public static String makeStyleCss()
 	{
 		return styleCss;
+	}
+	
+	public static String makeOvertureStyleCss()
+	{
+		return drupalStyle;
 	}
 	
 	public static String makeBr()
@@ -115,11 +132,111 @@ public class HtmlPage
 		"\n			background-color: #F87676;"+
 		"\n}";
 
-
+		private final static String drupalStyle ="<style type=\"text/css\">\n"+
+		".examples h3\n"+
+		"{\n"+
+		"color: white;\n"+
+		"background-color: #340044;\n"+
+		"width: 40%;\n"+
+		"margin: 0px;\n"+
+		"padding: 8px 5px 5px 10px;\n"+
+		"font-weight: bold;\n"+
+		"}\n"+
+		"\n"+
+		"table\n"+
+		"{\n"+
+		"border-style:none;\n"+
+		"background-color: #340044;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable\n"+
+		"{\n"+
+		"width: 100%;\n"+
+		"padding: 0px;\n"+
+		"border: none;\n"+
+		"border: 3px solid #340044;\n"+
+		"font-family: Arial, Helvetica, sans-serif;\n"+
+		"font-size: 14px;\n"+
+		"margin: 0px;\n"+
+		"margin-bottom: 18px;\n"+
+		"border-collapse: separate;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable .first\n"+
+		"{\n"+ 
+		"font-weight: bold;\n"+
+		"width: 130px;\n"+
+		"}\n"+ 
+		"\n"+
+		"table.mytable td\n"+
+		"{\n"+
+		"border: none;\n"+
+		"background-color: white;\n"+
+		"vertical-align: middle;\n"+
+		"padding: 7px;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable td.faild\n"+
+		"{\n"+
+		"background-color: #F87676;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable td.ok\n"+
+		"{\n"+
+		"background-color: #80F479;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable th\n"+
+		"{\n"+
+		"border-style: none none double none;\n"+
+		"border-width: medium;\n"+
+		"border-color: inherit;\n"+
+		"font-size: 12px;\n"+
+		"background-color: #EBEBEB;\n"+
+		"vertical-align: middle;\n"+
+		"padding: 7px;\n"+
+		"font-weight: bold;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable tr.special td\n"+
+		"{\n"+
+		"border-bottom: 1px solid #340044;\n"+
+		"border-bottom-color: #0033CC;\n"+
+		"}\n"+
+		"\n"+
+		"table.mytable a\n"+
+		"{\n"+
+		"color: #000000;\n"+
+		"}\n"+
+		"\n"+
+		"body\n"+
+		"{\n"+
+		"font-family: Arial, Helvetica, sans-serif;\n"+
+		"}\n"+
+		"table.mytable tr.total td\n"+
+		"{\n"+
+		"			border-style: double none none none;\n"+
+		"			border-width: medium;\n"+
+		"			border-color: inherit;\n"+
+		"}\n"+
+		"table.mytable tr.total td.ok\n"+
+		"{\n"+
+					"background-color: #80F479;\n"+
+		"}\n"+
+		"table.mytable tr.total td.faild\n"+
+		"{\n"+
+		"			background-color: #F87676;\n"+
+		"}\n"+
+		"</style>";
 
 	public static String makeH(Integer level,String text)
 	{
 		return "\n<h"+level+">" + text+ "</h"+level+">\n";
+	}
+
+	public static String makeDiv(String content, String className)
+	{
+		return "\n<div class=\""+className+"\">"+content+"</div>\n"; 
 	}
 }
 		

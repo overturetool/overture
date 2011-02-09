@@ -1,5 +1,8 @@
 package org.overturetool.tools.packworkspace.testing;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class HtmlTable
 {
 	public static final String STYLE_CLASS_FAILD="faild";
@@ -26,6 +29,10 @@ public class HtmlTable
 	}
 	
 	public static String makeCells(String[] data)
+	{
+	return makeCells(Arrays.asList(data));	
+	}
+	public static String makeCells(List<String> data)
 	{
 		StringBuilder sb = new StringBuilder();
 		for (String string : data)
