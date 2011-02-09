@@ -83,7 +83,7 @@ public class ValueMap extends HashMap<Value, Value>
 		for (Value k: this.keySet())
 		{
 			Value kcopy = (Value)k.clone();
-			Value vcopy = get(k);
+			Value vcopy = (Value)get(k).clone();
 			copy.put(kcopy, vcopy);
 		}
 

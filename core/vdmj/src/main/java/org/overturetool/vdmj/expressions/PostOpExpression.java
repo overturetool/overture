@@ -61,15 +61,6 @@ public class PostOpExpression extends Expression
 	{
 		// No break check here, as we want to start in the expression
 		
-		int prepost = 0;
-		String prepostMsg = null;
-
-		//if (ctxt.outer != null)
-		{
-			prepost = ctxt.prepost;
-			prepostMsg = ctxt.prepostMsg + ctxt.title;
-		}
-
 		// The postcondition function arguments are the function args, the
 		// result, the old/new state (if any). These all exist in ctxt.
 		// We find the Sigma record and expand its contents to give additional
@@ -121,7 +112,7 @@ public class PostOpExpression extends Expression
     			{
         			ObjectContext selfctxt = new ObjectContext(
         				ctxt.location, "postcondition's object", ctxt, subself);
-    
+
         			selfctxt.putAll(ctxt);	// To add "RESULT" and args.
         			ctxt = selfctxt;
     			}
@@ -131,13 +122,14 @@ public class PostOpExpression extends Expression
 
     		Value rv = expression.eval(ctxt);
 
-    		if (prepost > 0 && !rv.boolValue(ctxt))
+    		if (ctxt.prepost > 0 && !rv.boolValue(ctxt))
 			{
     			// We throw the exception from here so that we can see the old
     			// variable values. If we returned false, the FunctionValue would
     			// throw instead, but without the old variables.
 
-				throw new ContextException(prepost,	prepostMsg, location, ctxt);
+				throw new ContextException(ctxt.prepost,
+					ctxt.prepostMsg + ctxt.title, location, ctxt);
 			}
 
     		return rv;
