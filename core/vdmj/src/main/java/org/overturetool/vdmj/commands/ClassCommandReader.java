@@ -51,6 +51,12 @@ public class ClassCommandReader extends CommandReader
 		super(interpreter, prompt);
 		cinterpreter = interpreter;
 	}
+	
+	public ClassCommandReader(ClassInterpreter interpreter, String prompt, boolean singlePass)
+	{
+		super(interpreter, prompt, singlePass);
+		cinterpreter = interpreter;
+	}
 
 	@Override
 	protected boolean doDefault(String line) throws Exception

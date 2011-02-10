@@ -44,6 +44,12 @@ public class ModuleCommandReader extends CommandReader
 		super(interpreter, prompt);
 		minterpreter = interpreter;
 	}
+	
+	public ModuleCommandReader(ModuleInterpreter interpreter, String prompt, boolean singlePass)
+	{
+		super(interpreter, prompt, singlePass);
+		minterpreter = interpreter;
+	}
 
 	@Override
 	protected boolean doModules(String line)

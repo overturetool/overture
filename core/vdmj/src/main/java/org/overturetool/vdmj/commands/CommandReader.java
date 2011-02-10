@@ -90,6 +90,8 @@ abstract public class CommandReader
 
 	/** The IDE DBGPReader, if any */
 	private DBGPReader dbgp = null;
+	
+	private final boolean singlePass;
 
 	/**
 	 * Create a command reader with the given interpreter and prompt.
@@ -102,6 +104,22 @@ abstract public class CommandReader
 	{
 		this.interpreter = interpreter;
 		this.prompt = prompt;
+		this.singlePass = false;
+	}
+	
+	/**
+	 * Create a command reader with the given interpreter and prompt.
+	 *
+	 * @param interpreter The interpreter instance to use.
+	 * @param prompt The user prompt.
+	 * @param singlePass True if the reader should read more than one command
+	 */
+
+	public CommandReader(Interpreter interpreter, String prompt, boolean singlePass)
+	{
+		this.interpreter = interpreter;
+		this.prompt = prompt;
+		this.singlePass = singlePass;
 	}
 
 	/**
@@ -329,6 +347,11 @@ abstract public class CommandReader
 			catch (Exception e)
 			{
 				carryOn = doException(e);
+			}
+			
+			if(singlePass)
+			{
+				break;
 			}
 		}
 

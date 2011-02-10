@@ -51,6 +51,7 @@ import org.overturetool.vdmj.VDMPP;
 import org.overturetool.vdmj.VDMRT;
 import org.overturetool.vdmj.VDMSL;
 import org.overturetool.vdmj.config.Properties;
+import org.overturetool.vdmj.debug.DBGPExecProcesser.DBGPExecResult;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
@@ -79,7 +80,9 @@ import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.CPUResource;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
+import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -441,6 +444,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 			case EXPR:
 				carryOn = processExpr(c);
+				break;
+				
+			case EXEC:
+				carryOn = processExec(c);
 				break;
 
 			case STEP_INTO:
@@ -1114,7 +1121,13 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
 				if (!traceExpression) {
-					theAnswer = interpreter.execute(expression, this);
+					if(expression.equals("###CONSOLE###"))
+	    			{
+	    				run();
+	    			}else
+	    			{
+	    				theAnswer = interpreter.execute(expression, this);
+	    			}
 					stdout("\n" + expression + " = " + theAnswer.toString()
 							+ "\n");
 				} else {
@@ -1221,6 +1234,43 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.OK;
 			response(hdr, property);
+		} catch (ContextException e) {
+			dyingThread(e);
+		} catch (Exception e) {
+			status = DBGPStatus.STOPPED;
+			statusReason = DBGPReason.ERROR;
+			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
+		}
+
+		return true;
+	}
+	
+	
+	protected boolean processExec(DBGPCommand c) throws DBGPException {
+		checkArgs(c, 1, true);
+//TODO
+//		if (status == DBGPStatus.BREAK || status == DBGPStatus.STOPPING) {
+//			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+//		}
+
+		try {
+			status = DBGPStatus.RUNNING;
+			statusReason = DBGPReason.OK;
+			String exp = c.data; // Already base64 decoded by the parser
+			
+			DBGPReader dbgpReaderThread = newThread(null);
+			DBGPExecResult result = DBGPExecProcesser.process(dbgpReaderThread, interpreter, exp);
+			dbgpReaderThread.complete(DBGPReason.OK, null);
+			StringBuilder property  = makeProperty("", "", "", "", 0, 0, true, result.result.length(), -1, 0,result.result , new StringBuilder());
+			theAnswer = new CharacterValue('l');//TODO
+			StringBuilder hdr = new StringBuilder("success=\"1\"");
+			status = DBGPStatus.STOPPED;
+			statusReason = DBGPReason.OK;
+			response(hdr, property);
+			if(result.quit)
+			{
+				this.complete(DBGPReason.OK, null);
+			}
 		} catch (ContextException e) {
 			dyingThread(e);
 		} catch (Exception e) {

@@ -31,6 +31,7 @@ public enum DBGPCommandType
 	RUN("run"),
 	EVAL("eval"),
 	EXPR("expr"),
+	EXEC("exec"),
 	STEP_INTO("step_into"),
 	STEP_OVER("step_over"),
 	STEP_OUT("step_out"),
