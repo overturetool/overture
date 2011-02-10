@@ -12,6 +12,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.overture.ide.debug.core.VdmDebugPlugin;
@@ -58,7 +59,29 @@ public class VmArgumentsLaunchConfigurationTab extends
 		setControl(comp);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
+		
+		
+		
+		Group group = new Group(comp, SWT.NONE);
+		group.setText("Java Virtual Machine custom arguments (e.g: -Xmx1024M -Xss20M):");
+//		GridLayout layout = new GridLayout();
+//		layout.numColumns = 1;
+//		interperterGroup.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
+		group.setLayoutData(gd);
+		
+		GridLayout layout = new GridLayout();
+		layout.makeColumnsEqualWidth = false;
+		layout.numColumns = 3;
+		group.setLayout(layout);
+		
+		createVmInput(group);
+
+	}
+
+	private void createVmInput(Composite comp)
+	{
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		Label label = new Label(comp, SWT.MIN);
@@ -71,12 +94,11 @@ public class VmArgumentsLaunchConfigurationTab extends
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fArgumentsText.setLayoutData(gd);
 		fArgumentsText.addModifyListener(fListener);
-
 	}
 
 	public String getName()
 	{
-		return "VM Arguments";
+		return "Debugger";
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

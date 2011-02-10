@@ -36,10 +36,10 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 				e1.printStackTrace();
 			}
 		}
-		Settings.dynamictypechecks = file.getProject().hasDynamictypechecks();
-		Settings.invchecks = file.getProject().hasInvchecks();
-		Settings.postchecks = file.getProject().hasPostchecks();
-		Settings.prechecks = file.getProject().hasPrechecks();
+//		Settings.dynamictypechecks = file.getProject().hasDynamictypechecks();
+//		Settings.invchecks = file.getProject().hasInvchecks();
+//		Settings.postchecks = file.getProject().hasPostchecks();
+//		Settings.prechecks = file.getProject().hasPrechecks();
 
 		Properties.init();
 		Properties.parser_tabstop = 1;

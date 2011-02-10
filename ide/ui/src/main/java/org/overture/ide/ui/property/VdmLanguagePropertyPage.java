@@ -30,11 +30,11 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	// private Combo languageVersionCombobox = null;
 	private Combo comboBoxLanguageVersion = null;
 	private Button checkBoxSuppressWarnings = null;
-	private Button checkBoxUsePostChecks = null;
-	private Button checkBoxUsePreChecks = null;
-	private Button checkBoxInvChecks = null;
-	private Button checkBoxDynamicTypeChecks = null;
-	private Button checkBoxUseMeasure = null;
+//	private Button checkBoxUsePostChecks = null;
+//	private Button checkBoxUsePreChecks = null;
+//	private Button checkBoxInvChecks = null;
+//	private Button checkBoxDynamicTypeChecks = null;
+//	private Button checkBoxUseMeasure = null;
 	private IVdmProject project = null;
 
 	private Group typeGroup;
@@ -64,7 +64,7 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 
 			createLanguagePanel(myComposite);
 			createTypeCheckGroup(myComposite);
-			createInterperterGroupCheckGroup(myComposite);
+//			createInterperterGroupCheckGroup(myComposite);
 
 		}
 		return myComposite;
@@ -125,35 +125,35 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 
 	}
 
-	void createInterperterGroupCheckGroup(Composite controlGroup)
-	{
-		interperterGroup = new Group(controlGroup, SWT.NONE);
-		interperterGroup.setText("Interpreting");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		interperterGroup.setLayout(layout);
+//	void createInterperterGroupCheckGroup(Composite controlGroup)
+//	{
+//		interperterGroup = new Group(controlGroup, SWT.NONE);
+//		interperterGroup.setText("Interpreting");
+//		GridLayout layout = new GridLayout();
+//		layout.numColumns = 1;
+//		interperterGroup.setLayout(layout);
 
-		checkBoxDynamicTypeChecks = new Button(interperterGroup, SWT.CHECK);
-		checkBoxDynamicTypeChecks.setText("Dynamic type checks");
-		checkBoxDynamicTypeChecks.setSelection(project.hasDynamictypechecks());
-
-		checkBoxInvChecks = new Button(interperterGroup, SWT.CHECK);
-		checkBoxInvChecks.setText("Invariants checks");
-		checkBoxInvChecks.setSelection(project.hasInvchecks());
-
-		checkBoxUsePreChecks = new Button(interperterGroup, SWT.CHECK);
-		checkBoxUsePreChecks.setText("Pre condition checks");
-		checkBoxUsePreChecks.setSelection(project.hasPrechecks());
-
-		checkBoxUsePostChecks = new Button(interperterGroup, SWT.CHECK);
-		checkBoxUsePostChecks.setText("Post condition checks");
-		checkBoxUsePostChecks.setSelection(project.hasPostchecks());
-
-		checkBoxUseMeasure = new Button(interperterGroup, SWT.CHECK);
-		checkBoxUseMeasure.setText("Measure Run-Time checks");
-		checkBoxUseMeasure.setSelection(project.hasMeasurechecks());
-
-	}
+//		checkBoxDynamicTypeChecks = new Button(interperterGroup, SWT.CHECK);
+//		checkBoxDynamicTypeChecks.setText("Dynamic type checks");
+//		checkBoxDynamicTypeChecks.setSelection(project.hasDynamictypechecks());
+//
+//		checkBoxInvChecks = new Button(interperterGroup, SWT.CHECK);
+//		checkBoxInvChecks.setText("Invariants checks");
+//		checkBoxInvChecks.setSelection(project.hasInvchecks());
+//
+//		checkBoxUsePreChecks = new Button(interperterGroup, SWT.CHECK);
+//		checkBoxUsePreChecks.setText("Pre condition checks");
+//		checkBoxUsePreChecks.setSelection(project.hasPrechecks());
+//
+//		checkBoxUsePostChecks = new Button(interperterGroup, SWT.CHECK);
+//		checkBoxUsePostChecks.setText("Post condition checks");
+//		checkBoxUsePostChecks.setSelection(project.hasPostchecks());
+//
+//		checkBoxUseMeasure = new Button(interperterGroup, SWT.CHECK);
+//		checkBoxUseMeasure.setText("Measure Run-Time checks");
+//		checkBoxUseMeasure.setSelection(project.hasMeasurechecks());
+//
+//	}
 
 	@SuppressWarnings( { "deprecation" })
 	public static IProject getSelectedProject()
@@ -188,11 +188,11 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		{
 			project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
 
-			project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
-			project.setInvchecks(checkBoxInvChecks.getSelection());
-			project.setPostchecks(checkBoxUsePostChecks.getSelection());
-			project.setPrechecks(checkBoxUsePreChecks.getSelection());
-			project.setMeasurechecks(checkBoxUseMeasure.getSelection());
+//			project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
+//			project.setInvchecks(checkBoxInvChecks.getSelection());
+//			project.setPostchecks(checkBoxUsePostChecks.getSelection());
+//			project.setPrechecks(checkBoxUsePreChecks.getSelection());
+//			project.setMeasurechecks(checkBoxUseMeasure.getSelection());
 			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
 
 			// project.typeCheck();

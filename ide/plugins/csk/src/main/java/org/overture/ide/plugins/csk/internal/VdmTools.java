@@ -62,10 +62,10 @@ public class VdmTools
 		PluginFolderInclude.writeFile(generated, vdmProject.getName() + ".prj", sb.toString());
 		VdmToolsOptions options = new VdmToolsOptions();
 		options.JCG_PACKAGE = (vdmProject.getName().replaceAll(" ", "") + "." + "model").toLowerCase();
-		options.DTC = vdmProject.hasDynamictypechecks();
-		options.INV = vdmProject.hasInvchecks();
-		options.POST = vdmProject.hasPostchecks();
-		options.PRE = vdmProject.hasPrechecks();
+//		options.DTC = vdmProject.hasDynamictypechecks();
+//		options.INV = vdmProject.hasInvchecks();
+//		options.POST = vdmProject.hasPostchecks();
+//		options.PRE = vdmProject.hasPrechecks();
 
 		options.Save(generated, vdmProject.getName());
 		Runtime.getRuntime().exec("\"" + getVdmToolsPath(shell, vdmProject)

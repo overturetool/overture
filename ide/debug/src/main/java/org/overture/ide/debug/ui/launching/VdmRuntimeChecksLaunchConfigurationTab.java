@@ -74,7 +74,7 @@ AbstractLaunchConfigurationTab
 
 	public String getName()
 	{
-		return "Runtime Checks";
+		return "Runtime";
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

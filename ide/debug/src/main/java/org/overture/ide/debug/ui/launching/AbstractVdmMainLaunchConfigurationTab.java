@@ -462,7 +462,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private void createLaunchModelGroup(Composite parent)
 	{
 		Group group = new Group(parent, parent.getStyle());
-		group.setText("Entry Point:");
+		group.setText("Launch Mode:");
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		group.setLayoutData(gd);

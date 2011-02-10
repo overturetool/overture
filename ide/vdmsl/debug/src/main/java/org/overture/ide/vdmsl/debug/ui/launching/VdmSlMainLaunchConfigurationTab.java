@@ -83,5 +83,11 @@ public class VdmSlMainLaunchConfigurationTab extends
 
 		return false;
 	}
+	
+	@Override
+	protected String getModuleLabelName()
+	{
+		return "Module";
+	}
 
 }

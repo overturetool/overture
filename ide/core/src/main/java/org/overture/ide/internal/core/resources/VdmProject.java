@@ -47,12 +47,12 @@ import org.overturetool.vdmj.lex.Dialect;
 public class VdmProject implements IVdmProject
 {
 	private static final String LANGUAGE_VERSION_ARGUMENT_KEY = "LANGUAGE_VERSION";
-	private static final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "DYNAMIC_TYPE_CHECKS";
-	private static final String INV_CHECKS_ARGUMENT_KEY = "INV_CHECKS";
-	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
-	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
+//	private static final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "DYNAMIC_TYPE_CHECKS";
+//	private static final String INV_CHECKS_ARGUMENT_KEY = "INV_CHECKS";
+//	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
+//	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
-	private static final String MEASURE_CHECKS_ARGUMENT_KEY = "MEASURE_CHECKS";
+//	private static final String MEASURE_CHECKS_ARGUMENT_KEY = "MEASURE_CHECKS";
 	
 	
 	
@@ -242,46 +242,46 @@ public class VdmProject implements IVdmProject
 		return getLanguageVersion().toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#hasDynamictypechecks()
-	 */
-	public boolean hasDynamictypechecks()
-	{
-		return hasArgument(DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#hasInvchecks()
-	 */
-	public boolean hasInvchecks()
-	{
-		return hasArgument(INV_CHECKS_ARGUMENT_KEY, true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#hasPostchecks()
-	 */
-	public boolean hasPostchecks()
-	{
-		return hasArgument(POST_CHECKS_ARGUMENT_KEY, true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#hasPrechecks()
-	 */
-	public boolean hasPrechecks()
-	{
-		return hasArgument(PRE_CHECKS_ARGUMENT_KEY, true);
-	}
-	
-	public boolean hasMeasurechecks()
-	{
-		return hasArgument(MEASURE_CHECKS_ARGUMENT_KEY, true);
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#hasDynamictypechecks()
+//	 */
+//	public boolean hasDynamictypechecks()
+//	{
+//		return hasArgument(DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, true);
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#hasInvchecks()
+//	 */
+//	public boolean hasInvchecks()
+//	{
+//		return hasArgument(INV_CHECKS_ARGUMENT_KEY, true);
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#hasPostchecks()
+//	 */
+//	public boolean hasPostchecks()
+//	{
+//		return hasArgument(POST_CHECKS_ARGUMENT_KEY, true);
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#hasPrechecks()
+//	 */
+//	public boolean hasPrechecks()
+//	{
+//		return hasArgument(PRE_CHECKS_ARGUMENT_KEY, true);
+//	}
+//	
+//	public boolean hasMeasurechecks()
+//	{
+//		return hasArgument(MEASURE_CHECKS_ARGUMENT_KEY, true);
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -292,46 +292,46 @@ public class VdmProject implements IVdmProject
 		return hasArgument(SUPRESS_WARNINGS_ARGUMENT_KEY, false);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
-	 */
-	public void setDynamictypechecks(Boolean value) throws CoreException
-	{
-		addBuilder(getProject(), ICoreConstants.BUILDER_ID, DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, value.toString());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
-	 */
-	public void setInvchecks(Boolean value) throws CoreException
-	{
-		addBuilder(getProject(), ICoreConstants.BUILDER_ID, INV_CHECKS_ARGUMENT_KEY, value.toString());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
-	 */
-	public void setPostchecks(Boolean value) throws CoreException
-	{
-		addBuilder(getProject(), ICoreConstants.BUILDER_ID, POST_CHECKS_ARGUMENT_KEY, value.toString());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
-	 */
-	public void setPrechecks(Boolean value) throws CoreException
-	{
-		addBuilder(getProject(), ICoreConstants.BUILDER_ID, PRE_CHECKS_ARGUMENT_KEY, value.toString());
-	}
-
-	public void setMeasurechecks(Boolean value) throws CoreException
-	{
-		addBuilder(getProject(), ICoreConstants.BUILDER_ID,MEASURE_CHECKS_ARGUMENT_KEY, value.toString());
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
+//	 */
+//	public void setDynamictypechecks(Boolean value) throws CoreException
+//	{
+//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, value.toString());
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
+//	 */
+//	public void setInvchecks(Boolean value) throws CoreException
+//	{
+//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, INV_CHECKS_ARGUMENT_KEY, value.toString());
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
+//	 */
+//	public void setPostchecks(Boolean value) throws CoreException
+//	{
+//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, POST_CHECKS_ARGUMENT_KEY, value.toString());
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
+//	 */
+//	public void setPrechecks(Boolean value) throws CoreException
+//	{
+//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, PRE_CHECKS_ARGUMENT_KEY, value.toString());
+//	}
+//
+//	public void setMeasurechecks(Boolean value) throws CoreException
+//	{
+//		addBuilder(getProject(), ICoreConstants.BUILDER_ID,MEASURE_CHECKS_ARGUMENT_KEY, value.toString());
+//	}
 	
 	/*
 	 * (non-Javadoc)
