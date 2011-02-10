@@ -9,7 +9,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,12 +40,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IOConsole;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.debug.core.ExtendedDebugEventDetails;
 import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugConstants;
@@ -55,7 +50,6 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.IDbgpStreamFilter;
 import org.overture.ide.debug.core.dbgp.IDbgpThreadAcceptor;
-import org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate;
 import org.overture.ide.debug.core.model.DefaultDebugOptions;
 import org.overture.ide.debug.core.model.IDebugLaunchConstants;
 import org.overture.ide.debug.core.model.IVdmBreakpointPathMapper;
@@ -71,7 +65,6 @@ import org.overture.ide.debug.utils.CharOperation;
 public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		IVdmThreadManagerListener, IStepFilters
 {
-
 	/**
 	 * @deprecated
 	 * @see #getVdmProject()
@@ -83,6 +76,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	private final ListenerList listeners;
 
 	private IVdmStreamProxy streamProxy;
+	
+	private VdmConsoleInputListener consoleInputListener;
 
 	private IProcess process;
 
@@ -177,21 +172,21 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		}
 	}
 
-	private IOConsole getIOConsole()
-	{
-		try
-		{
-			IOConsole console = new IOConsole(VdmLaunchConfigurationDelegate.getVdmProject(this.launch.getLaunchConfiguration()).toString(), null);
-			console.activate();
-			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
-			return console;
-		} catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+//	private IOConsole getIOConsole()
+//	{
+//		try
+//		{
+//			IOConsole console = new IOConsole(VdmLaunchConfigurationDelegate.getVdmProject(this.launch.getLaunchConfiguration()).toString(), null);
+//			console.activate();
+//			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+//			return console;
+//		} catch (CoreException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
 	public void shutdown()
 	{
@@ -427,6 +422,12 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		if (proxy != null)
 		{
 			proxy.setEncoding(getConsoleEncoding());
+			if(consoleInputListener!=null)
+			{
+				consoleInputListener.stop();
+			}
+			consoleInputListener = new VdmConsoleInputListener(getSessions()[0],proxy);
+			consoleInputListener.start();
 		}
 	}
 
@@ -450,6 +451,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		try
 		{
+			if(consoleInputListener!=null)
+			{
+				consoleInputListener.stop();
+			}
+			
 			if (streamProxy != null)
 			{
 				streamProxy.close();

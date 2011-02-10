@@ -20,6 +20,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 	/**
 	 * Map of previous TOS per thread
 	 */
+	public final static boolean DEBUG = false;
 
 	private Map fLastTopFrame = new HashMap();
 
@@ -36,6 +37,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 	protected void handleSuspend(DebugEvent event) {
 		
         IThread thread = (IThread) event.getSource();
+        if(DEBUG)
         System.out.println("handleSuspend "  +thread);
         
         //TODO temporary fix. Collapses all threads except the running one
@@ -82,6 +84,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 	@Override
 	protected void handleResume(DebugEvent event) {
 		IThread thread = removeSuspendedThread(event);
+		 if(DEBUG)
 		System.out.println("handleResume "  +thread);
 		fireDeltaAndClearTopFrame(thread, IModelDelta.STATE | IModelDelta.CONTENT );//| IModelDelta.SELECT
 		thread = getNextSuspendedThread();
@@ -227,6 +230,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 //		System.out.println("handleChange " + event.getSource());
 //		
 		IThread thread = (IThread) event.getSource();
+		 if(DEBUG)
 		System.out.println("handleChange "  +thread);
 		if (isRunning(thread))
 				{
@@ -238,6 +242,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 					ModelDelta delta = buildRootDelta();
 					ModelDelta node = addPathToThread(delta, thread);
 					int childCount = childCount(thread);
+					 if(DEBUG)
 					System.out.println("child: " + childCount);
 					node = node.addNode(thread, threadIndex, IModelDelta.CONTENT
 							| IModelDelta.STATE | IModelDelta.SELECT, childCount);
@@ -247,6 +252,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 								| IModelDelta.SELECT, childCount(frame));
 
 					}
+					 if(DEBUG)
 				 System.out.println(delta);
 					fireDelta(delta);
 				} catch (DebugException e)

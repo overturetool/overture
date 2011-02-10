@@ -62,7 +62,7 @@ public class VdmLaunchConfigurationDelegate implements
 			// set launch encoding to UTF-8. Mainly used to set console encoding.
 			launch.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, "UTF-8");
 
-			List<String> commandList = initializeLaunch(launch, configuration, mode,monitor);
+			List<String> commandList = initializeLaunch(launch, configuration, mode, monitor);
 
 			final VdmDebugTarget target = (VdmDebugTarget) launch.getDebugTarget();
 
@@ -119,11 +119,11 @@ public class VdmLaunchConfigurationDelegate implements
 	}
 
 	private List<String> initializeLaunch(ILaunch launch,
-			ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
-			throws CoreException
+			ILaunchConfiguration configuration, String mode,
+			IProgressMonitor monitor) throws CoreException
 	{
 		List<String> commandList = null;
-		Integer debugSessionId = new Integer(getSessionId());
+		Integer debugSessionId = Integer.valueOf(getSessionId());
 		if (useRemoteDebug(configuration))
 		{
 			debugSessionId = 1;
@@ -141,13 +141,14 @@ public class VdmLaunchConfigurationDelegate implements
 
 		Assert.isNotNull(vdmProject, " Project not found: "
 				+ configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
-		
-		
-		if(vdmProject== null || !VdmTypeCheckerUi.typeCheck(vdmProject,monitor))
+
+		if (vdmProject == null
+				|| !VdmTypeCheckerUi.typeCheck(vdmProject, monitor))
 		{
-			abort("Cannot launch a project ("+vdmProject+") with type errors, please check the problems view", null);
+			abort("Cannot launch a project (" + vdmProject
+					+ ") with type errors, please check the problems view", null);
 		}
-		
+
 		String charSet = getProject(configuration).getDefaultCharset();
 
 		commandList.add("-h");
@@ -162,23 +163,23 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add("-r");
 		commandList.add(vdmProject.getLanguageVersionName());
 		// set disable interpreter settings
-		if (!vdmProject.hasPrechecks())
+		if (!configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PRE_CHECKS, true))// vdmProject.hasPrechecks())
 		{
 			commandList.add("-pre");
 		}
-		if (!vdmProject.hasPostchecks())
+		if (!configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_POST_CHECKS, true))// vdmProject.hasPostchecks())
 		{
 			commandList.add("-post");
 		}
-		if (!vdmProject.hasInvchecks())
+		if (!configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_INV_CHECKS, true))// vdmProject.hasInvchecks())
 		{
 			commandList.add("-inv");
 		}
-		if (!vdmProject.hasDynamictypechecks())
+		if (!configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DTC_CHECKS, true))// vdmProject.hasDynamictypechecks())
 		{
 			commandList.add("-dtc");
 		}
-		if (!vdmProject.hasMeasurechecks())
+		if (!configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MEASURE_CHECKS, true))// vdmProject.hasMeasurechecks())
 		{
 			commandList.add("-measures");
 		}
@@ -189,8 +190,12 @@ public class VdmLaunchConfigurationDelegate implements
 		{
 			commandList.add("-e64");
 			commandList.add(getExpressionBase64(configuration, charSet));
-			commandList.add("-default64");
-			commandList.add(getDefaultBase64(configuration, charSet));
+			String default64 = getDefaultBase64(configuration, charSet);
+			if(default64.trim().length()>0)
+			{
+				commandList.add("-default64");
+				commandList.add(getDefaultBase64(configuration, charSet));
+			}
 		} else
 		{
 			// temp fix for commanline args of dbgreader
@@ -233,7 +238,7 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.addAll(1, getVmArguments(configuration));
 
 		VdmDebugTarget target = null;
-		//Debug mode
+		// Debug mode
 		if (mode.equals(ILaunchManager.DEBUG_MODE))
 		{
 			IDbgpService service = VdmDebugPlugin.getDefault().getDbgpService();
@@ -244,7 +249,7 @@ public class VdmLaunchConfigurationDelegate implements
 			}
 
 			DebugPlugin.getDefault().getBreakpointManager().setEnabled(true);
-			
+
 			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
 			target.setVdmProject(vdmProject);
 			launch.addDebugTarget(target);
@@ -253,7 +258,7 @@ public class VdmLaunchConfigurationDelegate implements
 			target.toggleLocalVariables(true);
 
 		}
-		//Run mode
+		// Run mode
 		else if (mode.equals(ILaunchManager.RUN_MODE))
 		{
 			IDbgpService service = VdmDebugPlugin.getDefault().getDbgpService();
@@ -264,15 +269,14 @@ public class VdmLaunchConfigurationDelegate implements
 			}
 
 			DebugPlugin.getDefault().getBreakpointManager().setEnabled(false);
-			
+
 			target = new VdmDebugTarget(IDebugConstants.ID_VDM_DEBUG_MODEL, service, debugSessionId.toString(), launch, null);
 			target.setVdmProject(vdmProject);
 			launch.addDebugTarget(target);
-			
+
 			target.toggleClassVariables(true);
 			target.toggleGlobalVariables(true);
 			target.toggleLocalVariables(true);
-			
 
 		}
 		return commandList;
@@ -332,8 +336,8 @@ public class VdmLaunchConfigurationDelegate implements
 		StringBuffer executeString = new StringBuffer();
 		for (String string : args)
 		{
-			executeString.append( string);
-			executeString.append( " ");
+			executeString.append(string);
+			executeString.append(" ");
 		}
 		return executeString.toString().trim();
 
@@ -414,8 +418,14 @@ public class VdmLaunchConfigurationDelegate implements
 		String expression;
 		try
 		{
+			if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false))
+			{
+				expression = "###CONSOLE###";
+			} else
+			{
+				expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
+			}
 
-			expression = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
 			return Base64.encode(expression.getBytes(charset)).toString();
 		} catch (UnsupportedEncodingException e)
 		{
@@ -447,7 +457,7 @@ public class VdmLaunchConfigurationDelegate implements
 		if (entries.size() > 0)
 		{
 			commandList.add("-cp");
-			StringBuffer classPath =new StringBuffer( " ");
+			StringBuffer classPath = new StringBuffer(" ");
 			for (String cp : entries)
 			{
 				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))

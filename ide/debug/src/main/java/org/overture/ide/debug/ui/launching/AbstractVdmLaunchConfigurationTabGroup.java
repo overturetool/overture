@@ -15,9 +15,11 @@ public abstract class AbstractVdmLaunchConfigurationTabGroup extends
 	{
 		List<ILaunchConfigurationTab> tabs = new Vector<ILaunchConfigurationTab>();
 		tabs.add(getMainTab());
+		tabs.add(new VdmRuntimeChecksLaunchConfigurationTab());
 		tabs.add(new SourceLookupTab());
 		tabs.add(new CommonTab());
 		tabs.add(new VmArgumentsLaunchConfigurationTab());
+		tabs.add(new VdmDevelopLaunchConfigurationTab());
 		tabs.addAll(getAdditionalTabs());
 		setTabs(tabs.toArray(new ILaunchConfigurationTab[tabs.size()]));
 

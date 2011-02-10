@@ -1,6 +1,8 @@
 package org.overture.ide.debug.ui.launching;
 
 import java.io.File;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -126,8 +128,12 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private Text fOperationText;
 	private Text fRemoteControlClassText;
 	private Button checkBoxGenerateLatexCoverage = null;
-	private Button checkBoxRemoteDebug = null;
-	private Button checkBoxEnableLogging = null;
+
+	private Button radioLaunchModeConsole = null;
+	private Button radioLaunchModeEntryPoint = null;
+	private Button radioLaunchModeRemoteControl = null;
+	// private Button checkBoxRemoteDebug = null;
+	// private Button checkBoxEnableLogging = null;
 	// private String expressionPathseperator = "";
 	private String defaultModule = "";
 	private String expression = "";
@@ -158,13 +164,14 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		// return true;// super.validate();
 		if (super.isValid(config))
 		{
-			if(getProject() == null || !getProject().exists() || !getProject().getName().equals(fProjectText.getText()))
+			if (getProject() == null || !getProject().exists()
+					|| !getProject().getName().equals(fProjectText.getText()))
 			{
 				setErrorMessage("Project does not exist");
 				return false;
 			}
-			
-			if(!getProject().isOpen())
+
+			if (!getProject().isOpen())
 			{
 				setErrorMessage("Project is not open");
 				return false;
@@ -179,24 +186,37 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			}
 			//
 
-			if (fRemoteControlClassText.getText().length() == 0)
+			if (radioLaunchModeConsole.getSelection())
+			{
+				// no future checks needed
+			}
+
+			if (radioLaunchModeRemoteControl.getSelection())
+			{
+				if (!isFullyQualifiedClassname(fRemoteControlClassText.getText()))
+				{
+					setErrorMessage("Remote Control class name is not a well-formed fully-qualified Java classname");
+					return false;
+				}
+			}
+
+			if (radioLaunchModeEntryPoint.getSelection())
 			{
 
 				boolean syntaxCorrect = validateClass() && validateOperation();
 				IVdmProject project = (IVdmProject) getProject().getAdapter(IVdmProject.class);
 				if (!syntaxCorrect)
 				{
-					//error message set in validate class and operation
+					// error message set in validate class and operation
 					return syntaxCorrect;
 				} else if (project != null)
 				{
 					expression = getExpression(fModuleNameText.getText().trim(), fOperationText.getText().trim(), staticOperation);
 					return validateTypes(project, expression);
 				}
-			} else
-			{
-				return true;// fRemoteControlClassText.getText().s.split(".").length>1;
 			}
+
+			return true;
 		}
 		//
 		//		
@@ -204,12 +224,43 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	}
 
-	// private void validatePage()
-	// {
-	// setErrorMessage(null);
-	// validateClass();
-	// validateOperation();
-	// }
+	/**
+	 * Determine whether the supplied string represents a well-formed fully-qualified Java classname. This utility
+	 * method enforces no conventions (e.g., packages are all lowercase) nor checks whether the class is available on
+	 * the classpath.
+	 * 
+	 * @param classname
+	 * @return true if the string is a fully-qualified class name
+	 */
+	public static boolean isFullyQualifiedClassname(String classname)
+	{
+		if (classname == null)
+			return false;
+		String[] parts = classname.split("[\\.]");
+		if (parts.length == 0)
+			return false;
+		for (String part : parts)
+		{
+			CharacterIterator iter = new StringCharacterIterator(part);
+			// Check first character (there should at least be one character for each part) ...
+			char c = iter.first();
+			if (c == CharacterIterator.DONE)
+				return false;
+			if (!Character.isJavaIdentifierStart(c)
+					&& !Character.isIdentifierIgnorable(c))
+				return false;
+			c = iter.next();
+			// Check the remaining characters, if there are any ...
+			while (c != CharacterIterator.DONE)
+			{
+				if (!Character.isJavaIdentifierPart(c)
+						&& !Character.isIdentifierIgnorable(c))
+					return false;
+				c = iter.next();
+			}
+		}
+		return true;
+	}
 
 	protected abstract boolean validateTypes(IVdmProject project,
 			String expression);
@@ -285,9 +336,11 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		comp.setFont(parent.getFont());
 
 		createProjectSelection(comp);
+		createLaunchModelGroup(comp);
 		createOperationEditor(comp);
 		createRemoteControlEditor(comp);
 		createOtherOptions(comp);
+
 	}
 
 	/*
@@ -406,6 +459,52 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		});
 	}
 
+	private void createLaunchModelGroup(Composite parent)
+	{
+		Group group = new Group(parent, parent.getStyle());
+		group.setText("Entry Point:");
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+
+		group.setLayoutData(gd);
+
+		GridLayout layout = new GridLayout();
+		layout.makeColumnsEqualWidth = false;
+		layout.numColumns = 3;
+		group.setLayout(layout);
+
+		SelectionListener launchModelSelectionListener = new SelectionListener()
+		{
+
+			public void widgetSelected(SelectionEvent e)
+			{
+				updateLaunchModeEnablement();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e)
+			{
+				updateLaunchModeEnablement();
+			}
+		};
+
+		radioLaunchModeEntryPoint = new Button(group, SWT.RADIO);
+		radioLaunchModeEntryPoint.setText("Entry Point");
+		radioLaunchModeEntryPoint.setSelection(false);
+		radioLaunchModeEntryPoint.addSelectionListener(fListener);
+		radioLaunchModeEntryPoint.addSelectionListener(launchModelSelectionListener);
+
+		radioLaunchModeRemoteControl = new Button(group, SWT.RADIO);
+		radioLaunchModeRemoteControl.setText("Remote Control");
+		radioLaunchModeRemoteControl.setSelection(false);
+		radioLaunchModeRemoteControl.addSelectionListener(fListener);
+		radioLaunchModeRemoteControl.addSelectionListener(launchModelSelectionListener);
+
+		radioLaunchModeConsole = new Button(group, SWT.RADIO);
+		radioLaunchModeConsole.setText("Console");
+		radioLaunchModeConsole.setSelection(false);
+		radioLaunchModeConsole.addSelectionListener(fListener);
+		radioLaunchModeConsole.addSelectionListener(launchModelSelectionListener);
+	}
+
 	private void createOperationEditor(Composite parent)
 	{
 		Group group = new Group(parent, parent.getStyle());
@@ -510,16 +609,32 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		checkBoxGenerateLatexCoverage.setSelection(false);
 		checkBoxGenerateLatexCoverage.addSelectionListener(fListener);
 
-		checkBoxRemoteDebug = new Button(group, SWT.CHECK);
-		checkBoxRemoteDebug.setText("Remote debug");
-		checkBoxRemoteDebug.setSelection(false);
-		checkBoxRemoteDebug.addSelectionListener(fListener);
+	}
 
-		checkBoxEnableLogging = new Button(group, SWT.CHECK);
-		checkBoxEnableLogging.setText("Enable logging");
-		checkBoxEnableLogging.setSelection(false);
-		checkBoxEnableLogging.addSelectionListener(fListener);
+	private void updateLaunchModeEnablement()
+	{
+		if (radioLaunchModeConsole.getSelection())
+		{
+			fRemoteControlClassText.setEnabled(false);
+			fOperationText.setEnabled(false);
+			fModuleNameText.setEnabled(false);
+			fOperationButton.setEnabled(false);
 
+		}
+		if (radioLaunchModeEntryPoint.getSelection())
+		{
+			fRemoteControlClassText.setEnabled(false);
+			fOperationText.setEnabled(true);
+			fModuleNameText.setEnabled(true);
+			fOperationButton.setEnabled(true);
+		}
+		if (radioLaunchModeRemoteControl.getSelection())
+		{
+			fRemoteControlClassText.setEnabled(true);
+			fOperationText.setEnabled(false);
+			fModuleNameText.setEnabled(false);
+			fOperationButton.setEnabled(false);
+		}
 	}
 
 	/**
@@ -616,7 +731,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				}
 
 				String opName = DisplayNameCreator.getDisplayName(method);
-				
+
 				staticOperation = isStaticCall(module, method);
 				expression = getExpression(fModuleNameText.getText().trim(), opName.trim(), staticOperation);
 				fOperationText.setText(opName);
@@ -668,12 +783,17 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, fOperationText.getText());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_STATIC_OPERATION, staticOperation);
 
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, fRemoteControlClassText.getText());
+		if (radioLaunchModeRemoteControl.getSelection())
+		{
+			configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, fRemoteControlClassText.getText());
+		} else
+		{
+			configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "");
+		}
 
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, checkBoxRemoteDebug.getSelection());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, checkBoxGenerateLatexCoverage.getSelection());
 
-		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, checkBoxEnableLogging.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, radioLaunchModeConsole.getSelection());
 
 		// configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION_SEPERATOR,
 		// expressionPathseperator);
@@ -696,10 +816,9 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 			fRemoteControlClassText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, ""));
 
-			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
 			checkBoxGenerateLatexCoverage.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false));
 
-			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
+			radioLaunchModeConsole.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false));
 
 			defaultModule = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_DEFAULT, "");
 
@@ -717,6 +836,29 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					// access is needed
 				}
 			}
+
+			if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "").length() > 0
+					|| configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE, "").length() > 0)
+			{
+				radioLaunchModeEntryPoint.setSelection(true);
+				radioLaunchModeRemoteControl.setSelection(false);
+				radioLaunchModeConsole.setSelection(false);
+			}
+
+			if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_CONTROL, "").length() > 0)
+			{
+				radioLaunchModeEntryPoint.setSelection(false);
+				radioLaunchModeRemoteControl.setSelection(true);
+				radioLaunchModeConsole.setSelection(false);
+			}
+
+			if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false))
+			{
+				radioLaunchModeEntryPoint.setSelection(false);
+				radioLaunchModeRemoteControl.setSelection(false);
+				radioLaunchModeConsole.setSelection(true);
+			}
+			updateLaunchModeEnablement();
 		} catch (CoreException e)
 		{
 			if (VdmDebugPlugin.DEBUG)

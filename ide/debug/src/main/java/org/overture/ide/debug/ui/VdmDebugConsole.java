@@ -12,10 +12,13 @@ import org.eclipse.debug.core.model.IFlushableStreamMonitor;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamMonitor;
 import org.eclipse.debug.core.model.IStreamsProxy;
+import org.eclipse.debug.internal.core.InputStreamMonitor;
+import org.eclipse.debug.internal.core.OutputStreamMonitor;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.console.IConsoleColorProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.console.IOConsole;
+import org.eclipse.ui.console.IOConsoleInputStream;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 
@@ -55,10 +58,9 @@ public class VdmDebugConsole extends IOConsole {
 		super(name, TYPE, imageDescriptor, encoding, true);
 		this.launch = launch;
 		this.fColorProvider = colorProvider;
-
 		//this.addPatternMatchListener(new ScriptDebugConsoleTraceTracker());
 	}
-
+	
 	@Override
 	public void matcherFinished() {
 		super.matcherFinished();
@@ -115,7 +117,14 @@ public class VdmDebugConsole extends IOConsole {
 		if (streamMonitor != null) {
 			connect(streamMonitor, IDebugUIConstants.ID_STANDARD_OUTPUT_STREAM);
 		}
+		
+		IOConsoleInputStream input = getInputStream();
+		if(input!= null){
+			getInputStream().setColor(fColorProvider.getColor(IDebugUIConstants.ID_STANDARD_INPUT_STREAM));
+		}
+			
 	}
+	
 
 	private List<StreamListener> fStreamListeners = new ArrayList<StreamListener>();
 
