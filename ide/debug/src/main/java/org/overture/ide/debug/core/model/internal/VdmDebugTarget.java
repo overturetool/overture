@@ -35,6 +35,8 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStepFilters;
 import org.eclipse.debug.core.model.ITerminate;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -148,6 +150,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			// OK
 		}
 
+		
+		
 		this.modelId = modelId;
 
 		this.listeners = new ListenerList();
@@ -170,6 +174,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		{
 			targets.put(this, ""); //$NON-NLS-1$
 		}
+		
+		
 	}
 
 //	private IOConsole getIOConsole()

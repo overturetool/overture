@@ -6,6 +6,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.IStreamListener;
 import org.eclipse.debug.core.model.IFlushableStreamMonitor;
@@ -17,12 +23,16 @@ import org.eclipse.debug.internal.core.OutputStreamMonitor;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.console.IConsoleColorProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleInputStream;
 import org.eclipse.ui.console.IOConsoleOutputStream;
+import org.eclipse.ui.progress.UIJob;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 
-public class VdmDebugConsole extends IOConsole {
+public class VdmDebugConsole extends IOConsole implements
+		IDebugEventSetListener {
 
 	/**
 	 * @since 2.0
@@ -58,7 +68,7 @@ public class VdmDebugConsole extends IOConsole {
 		super(name, TYPE, imageDescriptor, encoding, true);
 		this.launch = launch;
 		this.fColorProvider = colorProvider;
-		//this.addPatternMatchListener(new ScriptDebugConsoleTraceTracker());
+		// this.addPatternMatchListener(new ScriptDebugConsoleTraceTracker());
 	}
 	
 	@Override
@@ -236,6 +246,64 @@ public class VdmDebugConsole extends IOConsole {
 			fStreamMonitor = null;
 			fStream = null;
 		}
+	}
+
+	/**
+	 * Notify listeners when name changes.
+	 * 
+	 * @see org.eclipse.debug.core.IDebugEventSetListener#handleDebugEvents(org.eclipse.debug.core.DebugEvent[])
+	 */
+	public void handleDebugEvents(DebugEvent[] events) {
+		for (int i = 0; i < events.length; i++) {
+			DebugEvent event = events[i];
+			if (event.getSource().equals(getProcess())) {
+
+				if (event.getKind() == DebugEvent.TERMINATE) {
+					closeStreams();
+					DebugPlugin.getDefault().removeDebugEventListener(this);
+				}
+
+				resetName();
+			}
+		}
+	}
+
+	/**
+	 * resets the name of this console to the original computed name
+	 */
+	private void resetName() {
+
+		UIJob job = new UIJob("Activating Console") { //$NON-NLS-1$
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+
+				warnOfContentChange();
+				return Status.OK_STATUS;
+			}
+		};
+		job.setSystem(true);
+		job.schedule();
+
+	}
+
+	/**
+	 * send notification of a change of content in this console
+	 */
+	private void warnOfContentChange() {
+		IConsole[] consoles = ConsolePlugin.getDefault().getConsoleManager()
+				.getConsoles();		
+		for (IConsole iConsole : consoles) {
+			if (iConsole instanceof VdmDebugConsole) {				
+				VdmDebugConsole vdmC = (VdmDebugConsole) iConsole;								
+				vdmC.activate();
+			}
+		}
+
+	
+		
+//		if (warn != null) {
+//			ConsolePlugin.getDefault().getConsoleManager()
+//					.warnOfContentChange(warn);
+//		}
 	}
 
 }

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventFilter;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -63,8 +64,10 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 		ILaunchManager launchManager = DebugPlugin.getDefault()
 				.getLaunchManager();
 		launchManager.addLaunchListener(DebugConsoleManager.getInstance());
-		launchManager.addLaunchListener(VdmDebugLogManager.getInstance());
+		launchManager.addLaunchListener(VdmDebugLogManager.getInstance());		
 		plugin = this;
+		
+		
 		// HotCodeReplaceManager.getDefault().startup();
 	}
 

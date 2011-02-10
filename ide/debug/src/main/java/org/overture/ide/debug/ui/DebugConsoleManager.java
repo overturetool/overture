@@ -91,6 +91,9 @@ public class DebugConsoleManager implements ILaunchesListener2 {
 				: null);
 		final VdmDebugConsole console = new VdmDebugConsole(launch,
 				computeName(launch), null, encoding, colorProvider);
+		
+		DebugPlugin.getDefault().addDebugEventListener(console);
+		
 		if (process != null) {
 			console.setAttribute(IDebugUIConstants.ATTR_CONSOLE_PROCESS,
 					process);
