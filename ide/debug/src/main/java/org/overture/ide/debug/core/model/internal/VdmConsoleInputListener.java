@@ -13,6 +13,7 @@ public class VdmConsoleInputListener
 {
 	final IVdmStreamProxy proxy;
 	final IDbgpSession session;
+	Thread thread;
 
 	public VdmConsoleInputListener(IDbgpSession session, IVdmStreamProxy proxy)
 	{
@@ -22,36 +23,47 @@ public class VdmConsoleInputListener
 
 	public void start()
 	{
-		InputStream is = this.proxy.getStdin();
-		BufferedReader reader = null;
-		try
+		thread = new Thread(new Runnable()
 		{
-			reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			String line = null;
-			while ((line = reader.readLine()) != null)
+
+			public void run()
 			{
+				InputStream is = proxy.getStdin();
+				BufferedReader reader = null;
 				try
 				{
-					final String result = session.getExtendedCommands().execute(line).getValue();
-					this.proxy.writeStdout(result);
-				} catch (DbgpException e)
+					reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+					String line = null;
+					while ((line = reader.readLine()) != null)
+					{
+						try
+						{
+							final String result = session.getExtendedCommands().execute(line).getValue();
+							proxy.writeStdout(result);
+						} catch (DbgpException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				} catch (UnsupportedEncodingException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//
+				} catch (IOException e)
+				{
+					// dont't care
 				}
-			}
-		} catch (UnsupportedEncodingException e)
-		{
-			//
-		} catch (IOException e)
-		{
-			// dont't care
-		}
 
+			}
+		});
+		thread.start();
 	}
 
 	public void stop()
 	{
-
+		if (thread != null)
+		{
+			thread.stop();
+		}
 	}
 }
