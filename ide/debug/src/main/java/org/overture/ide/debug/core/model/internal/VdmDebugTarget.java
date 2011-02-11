@@ -432,7 +432,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			{
 				consoleInputListener.stop();
 			}
-			consoleInputListener = new VdmConsoleInputListener(getSessions()[0],proxy);
+			consoleInputListener = new VdmConsoleInputListener(this,proxy);
 			consoleInputListener.start();
 		}
 	}

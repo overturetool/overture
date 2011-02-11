@@ -25,8 +25,7 @@ public interface IDebugConstants
 	final static String VDM_LAUNCH_CONFIG_REMOTE_DEBUG = "vdm_launch_config_remote_debug";
 	final static String VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION = "vdm_launch_config_memory_option";
 	final static String VDM_LAUNCH_CONFIG_ENABLE_LOGGING = "vdm_launch_config_enable_logging";
-	
-	
+		
 	static final String VDM_LAUNCH_CONFIG_DTC_CHECKS  = "vdm_launch_config_dtc_checks";
 	static final String VDM_LAUNCH_CONFIG_INV_CHECKS  = "vdm_launch_config_inv_checks";
 	static final String VDM_LAUNCH_CONFIG_POST_CHECKS = "vdm_launch_config_post_checks";

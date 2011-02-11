@@ -7,6 +7,10 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -14,10 +18,33 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.debug.ui.launching.VdmDevelopLaunchConfigurationTab.WidgetListener;
 
 public class VdmRuntimeChecksLaunchConfigurationTab extends
 AbstractLaunchConfigurationTab
 {
+	class WidgetListener implements ModifyListener, SelectionListener
+	{
+		public void modifyText(ModifyEvent e)
+		{
+			// validatePage();
+			updateLaunchConfigurationDialog();
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e)
+		{
+			/* do nothing */
+		}
+
+		public void widgetSelected(SelectionEvent e)
+		{
+			// fOperationText.setEnabled(!fdebugInConsole.getSelection());
+
+			updateLaunchConfigurationDialog();
+		}
+	}
+	
+	protected WidgetListener fListener = new WidgetListener();
 	private Button checkBoxUsePostChecks = null;
 	private Button checkBoxUsePreChecks = null;
 	private Button checkBoxInvChecks = null;
@@ -32,15 +59,22 @@ AbstractLaunchConfigurationTab
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
 		createInterperterGroupCheckGroup(comp);
+		createExtendableContent(comp);
+	}
+	
+	/**
+	 * Enables sub classes to add groups to the existing view
+	 * @param comp
+	 */
+	protected void createExtendableContent(Composite comp)
+	{
+
 	}
 	
 	void createInterperterGroupCheckGroup(Composite controlGroup)
 	{
 		Group interperterGroup = new Group(controlGroup, SWT.NONE);
 		interperterGroup.setText("Interpreting");
-//		GridLayout layout = new GridLayout();
-//		layout.numColumns = 1;
-//		interperterGroup.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		interperterGroup.setLayoutData(gd);
@@ -52,23 +86,23 @@ AbstractLaunchConfigurationTab
 
 		checkBoxDynamicTypeChecks = new Button(interperterGroup, SWT.CHECK);
 		checkBoxDynamicTypeChecks.setText("Dynamic type checks");
-//		checkBoxDynamicTypeChecks.setSelection(project.hasDynamictypechecks());
+		checkBoxDynamicTypeChecks.addSelectionListener(fListener);
 
 		checkBoxInvChecks = new Button(interperterGroup, SWT.CHECK);
 		checkBoxInvChecks.setText("Invariants checks");
-//		checkBoxInvChecks.setSelection(project.hasInvchecks());
+		checkBoxInvChecks.addSelectionListener(fListener);
 
 		checkBoxUsePreChecks = new Button(interperterGroup, SWT.CHECK);
 		checkBoxUsePreChecks.setText("Pre condition checks");
-//		checkBoxUsePreChecks.setSelection(project.hasPrechecks());
+		checkBoxUsePreChecks.addSelectionListener(fListener);
 
 		checkBoxUsePostChecks = new Button(interperterGroup, SWT.CHECK);
 		checkBoxUsePostChecks.setText("Post condition checks");
-//		checkBoxUsePostChecks.setSelection(project.hasPostchecks());
+		checkBoxUsePostChecks.addSelectionListener(fListener);
 
 		checkBoxUseMeasure = new Button(interperterGroup, SWT.CHECK);
 		checkBoxUseMeasure.setText("Measure Run-Time checks");
-//		checkBoxUseMeasure.setSelection(project.hasMeasurechecks());
+		checkBoxUseMeasure.addSelectionListener(fListener);
 
 	}
 

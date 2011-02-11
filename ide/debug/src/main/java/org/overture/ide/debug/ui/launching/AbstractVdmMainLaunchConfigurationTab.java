@@ -754,7 +754,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		// not supported
-
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, true);
 	}
 
 	private boolean isStaticCall(IAstNode module, IAstNode operation)
@@ -836,6 +836,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					// access is needed
 				}
 			}
+			
+			radioLaunchModeEntryPoint.setSelection(true);
 
 			if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "").length() > 0
 					|| configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MODULE, "").length() > 0)

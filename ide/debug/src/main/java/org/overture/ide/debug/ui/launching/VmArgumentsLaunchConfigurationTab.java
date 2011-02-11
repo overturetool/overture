@@ -59,14 +59,10 @@ public class VmArgumentsLaunchConfigurationTab extends
 		setControl(comp);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
-		
-		
-		
+			
 		Group group = new Group(comp, SWT.NONE);
 		group.setText("Java Virtual Machine custom arguments (e.g: -Xmx1024M -Xss20M):");
-//		GridLayout layout = new GridLayout();
-//		layout.numColumns = 1;
-//		interperterGroup.setLayout(layout);
+
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		group.setLayoutData(gd);

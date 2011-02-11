@@ -12,13 +12,14 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 public class VdmConsoleInputListener
 {
 	final IVdmStreamProxy proxy;
-	final IDbgpSession session;
+	final VdmDebugTarget target;
 	Thread thread;
 
-	public VdmConsoleInputListener(IDbgpSession session, IVdmStreamProxy proxy)
+	public VdmConsoleInputListener(VdmDebugTarget vdmDebugTarget,
+			IVdmStreamProxy proxy)
 	{
 		this.proxy = proxy;
-		this.session = session;
+		this.target = vdmDebugTarget;
 	}
 
 	public void start()
@@ -38,8 +39,12 @@ public class VdmConsoleInputListener
 					{
 						try
 						{
-							final String result = session.getExtendedCommands().execute(line).getValue();
-							proxy.writeStdout(result);
+							if (target.getSessions().length > 0)
+							{
+								IDbgpSession session = target.getSessions()[0];
+								final String result = session.getExtendedCommands().execute(line).getValue();
+								proxy.writeStdout(result);
+							}
 						} catch (DbgpException e)
 						{
 							// TODO Auto-generated catch block
@@ -49,13 +54,16 @@ public class VdmConsoleInputListener
 				} catch (UnsupportedEncodingException e)
 				{
 					//
-				} catch (IOException e)
+				}
+				catch (IOException e)
 				{
 					// dont't care
 				}
 
 			}
 		});
+		thread.setName("DBGP Console reader: "+ target.getName());
+		thread.setDaemon(true);
 		thread.start();
 	}
 
@@ -63,7 +71,7 @@ public class VdmConsoleInputListener
 	{
 		if (thread != null)
 		{
-			thread.stop();
+			thread.interrupt();
 		}
 	}
 }
