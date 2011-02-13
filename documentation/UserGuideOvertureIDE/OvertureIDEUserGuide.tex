@@ -297,7 +297,16 @@ location. We recommend that you choose the default location proposed
 by Overture and tick the box for ``Use this as the default and do
 not ask again''. A welcome screen will introduce you to the overall 
 mission of the Overture open source initiative the first time that you
-run the tool.
+run the tool and provide you with a number of interesting pointers of
+additional material (see Figure~\ref{fig:userguire:welcomeWindow}).
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=\textwidth]{screenDumps/welcomeWindow}
+  \caption{The Overture Welcome Screen}
+  \label{fig:userguire:welcomeWindow}
+\end{center}
+\end{figure}
 
 Large libraries of sample VDM-SL, VDM++ and VDM-RT models are available
 and can be downloaded from SourceForge under the
@@ -354,9 +363,9 @@ specification.
 
 \begin{figure}[!h]
 \begin{center}
+  \includegraphics[width=2.5in]{figures/newovertureSLproject}
   \caption[labelInTOC]{Creating a New VDM Project}
   \label{fig:userguide:newOvertureProjectSL}
-  \includegraphics[width=2.5in]{figures/newovertureSLproject}
 \end{center}
 \end{figure}
 
@@ -710,13 +719,25 @@ create a new launch specification of that type and give it a name. The
 launch dialog requires you to identify the VDM project name,
 the class/module name and the initial operation/function to call in that
 class/module. Figure~\ref{fig:userguide:launchconfig} shows a launch
-dialog. Clicking the Browse button will let you select a project from
+dialog. The standard Eclipse strategy is the launch mode called
+``Entry point'' and then you simply click 
+the Browse button and it will let you select a project from
 those available in the workspace. Clicking the Search button will search the chosen
-project for classes and modules to select an operation or function from.
+project for classes and modules to select a public operation or function from.
 If the chosen operation or function has parameters, the types and names of those
 parameters will be copied into the Operation box - these \emph{must} be replaced with
 valid argument values\footnote{You will see type checking errors at the top of the
 dialog if you do not do this, such as "Error 3063: Too few arguments in ..."}.
+
+However, there are other launch mode possibilities here as well. The
+``Remote Control'' launch mode is advanced but it is explained in mode
+detail in Section~\ref{sec:javalibs}. The ``Console'' launch mode
+enables you to get a special debug console where you can enter
+multiple entry points (one after another) instead of deciding upon the
+single entry point at launch time\footnote{Those familiar with
+  VDMTools will recognise this functionaility as initialising a
+  specific VDM model and then having a prompt where different
+  expressions can be evaluated making use of the definitions from the model.}.
 
 Your new launch configuration can be started immediately by clicking the \emph{Run}
 button at the bottom of the dialog. Alternatively, the configuration can simply be
@@ -740,6 +761,35 @@ in the \emph{Common} tab on the dialog. This is standard Eclipse behaviour.
   \includegraphics[width=380px]{screenDumps/launchconfig}
   \caption{The launch configuration dialog}
   \label{fig:userguide:launchconfig}
+\end{center}
+\end{figure}
+
+Whenever a launch configuration is started up it is also possible to
+decide upon which additional run-time checks to carry out. Per default
+all possible run-time checks are swiched on but if desired (some of)
+these can be swiched off using the ``Runtime'' pane (see
+Figure~\ref{fig:userguide:launchconfigRToptions}). In the launch
+configuration the ``Debug'' pane shown in
+Figure~\ref{fig:userguide:launchconfigSpecialoptions} can also be
+useful in rare cases where one have particular deep recursion for
+example. this is an advanced setting where one can decide the
+arguments given to the Java virtual machine for allocation of maximum
+amounts of space per thread in a VDM model. However, this option is
+rarely used.
+
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=380px]{screenDumps/launchconfigRToptions}
+  \caption{The launch configuration dialog}
+  \label{fig:userguide:launchconfigRToptions}
+\end{center}
+\end{figure}
+
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=380px]{screenDumps/launchconfigSpecialOptions}
+  \caption{The launch configuration dialog}
+  \label{fig:userguide:launchconfigSpecialOptions}
 \end{center}
 \end{figure}
 
