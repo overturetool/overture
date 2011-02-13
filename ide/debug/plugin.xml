@@ -201,7 +201,7 @@ Watch
        <action
              class="org.overture.ide.debug.ui.actions.VdmWatchAction"
              definitionId="org.overture.ide.debug.command.watch"
-             icon="icons/cview16/vdmpp_file_tsk.png"
+             icon="icons/dtool16/watch_exp.gif"
              id="org.overture.ide.debug.action.watchAction"
              label="Watch"
              menubarPath="org.eclipse.ui.run/vdmGroup"
