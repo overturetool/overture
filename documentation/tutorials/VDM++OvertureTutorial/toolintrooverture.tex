@@ -603,10 +603,29 @@ alarm.
 
 Before the debugging can begin in Overture, a debug configuration must
 be created by right clicking the project and choosing \emph{Debug As}
-$ \rightarrow $ \emph{Debug configuration}\footnote{Note that the
-  \emph{Run As} functionality existing Eclipse users are used to is
-  not supported in the current version of Overture.}. The debug configuration
-dialog requires the project name and the class and the operation/function
+$ \rightarrow $ \emph{Debug configuration}.
+%\footnote{Note that the
+%  \emph{Run As} functionality existing Eclipse users are used to is
+%  not supported in the current version of Overture.}. 
+The debug configuration
+dialog have 3 different launch modes:
+
+\begin{description}
+\item[Entry Point:] This is the standard Eclipse approach where one
+  decides before debugging which operation/function to call.
+\item[Remote Console:] This is an anvanced option that enables remote
+  control of the interpreter and this is described in the Overture
+  user manual~\cite{Larsen&10d}.
+\item[Console:] This will simply start up a console where the user
+  interactive can debug different operations/functions defined in the
+  selected project\footnote{For VDMTools users this will be a familiar
+    console corresponding to a VDM model that has been initialised in
+    VDMTools' interpreter.}.
+\end{description}
+
+Here we will start with using 
+the traditional Eclipse approach with an ``Entry Point'' launch
+configuration requires the project name and the class and the operation/function
 used as the entry point of the test.  Figure~\ref{fig:debugConfiguration}
 shows the debug configuration for the alarm model. The class and
 operation/function name can be chosen from a Browse dialog; if the
@@ -958,10 +977,9 @@ attempts to define its essential predicates (invariants, pre and
 post-conditions)\footnote{Note that when using repetitions and
   sequencing in combination it is easy to define traces that expands
   to hundreds of thousands of test cases and naturally their execution
-  may then be very slow if one executes them all. Thus work is
-  underway for a feature that reduce the numbers of tests to be
-  executed using various intelligenet selection techniques. This will
-  be released in a future version of Overture.}.
+  may then be very slow if one executes them all. Thus it is
+  also possible to use a feature that reduce the numbers of tests to be
+  executed.}.
 
 \section{Proof Obligations}\label{sec:PO}
 
@@ -1209,7 +1227,7 @@ support for VDM++:
 \item combinatorial testing enabling automation of parts of the
   testing process; 
 \item proof obligation generation and
-\item a command-line interface enabling access to test coverage.
+\item a command-line interface.
 %\item the existence of the application programming interface;
 %\sindex{VDMTools@\vdmtools\ API}
 %\item the existence of code generators; and
