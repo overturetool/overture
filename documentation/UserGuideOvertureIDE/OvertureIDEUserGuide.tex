@@ -730,7 +730,8 @@ parameters will be copied into the Operation box - these \emph{must} be replaced
 valid argument values\footnote{You will see type checking errors at the top of the
 dialog if you do not do this, such as "Error 3063: Too few arguments in ..."}.
 
-However, there are other launch mode possibilities here as well. The
+However, there are other launch mode possibilities here as
+well.\index{launch configuration mode} The
 ``Remote Control'' launch mode is advanced but it is explained in mode
 detail in Section~\ref{sec:javalibs}. The ``Console'' launch mode
 enables you to get a special debug console where you can enter
@@ -739,6 +740,9 @@ single entry point at launch time\footnote{Those familiar with
   VDMTools will recognise this functionaility as initialising a
   specific VDM model and then having a prompt where different
   expressions can be evaluated making use of the definitions from the model.}.
+The commands that can be used in the ``Console'' view correspond to
+the commands you can give in VDMJ when it has been started in
+interpreter mode (see Section~\ref{sec:commandlineinterpreter}).
 
 Your new launch configuration can be started immediately by clicking the \emph{Run}
 button at the bottom of the dialog. Alternatively, the configuration can simply be
@@ -852,7 +856,11 @@ It shows the call stack of models that are suspended, and for VDM++ and VDM-RT s
 for all threads are shown.
 At the top of the view, there are buttons
 for debugging such as: stop, step into, step over, resume, etc. (see
-Table~\ref{tab:debugButtons}).
+Table~\ref{tab:debugButtons}). Note that in case a multi-threaded VDM
+model is debugged it is possible in this view to change to another
+thread to inspect where it is currently and inspect the local
+variables at that thread since they are all stopped when a breakpoint
+is reached.
 
 \subsection{The Variables View}
  
@@ -860,7 +868,11 @@ The \emph{Variables} view shows all the variables in a thread context, allowing 
 examined after a breakpoint (or an error) has been reached. The variables and their values are
 automatically updated when stepping through a model. The view is
 located in the upper right hand corner in the Debug perspective. It is
-possible to inspect compound variables, expand nested structures and soon.
+possible to inspect compound variables, expand nested structures and
+so on. Note that when you stop at a permission predicate it is also
+possible to see the value of the relevant history counters (in
+Figure~\ref{fig:userguide:DebuggingVDM} \texttt{\#fin(ClientSend)} and
+\texttt{\#fin(ServerListen)}). 
 
 \subsection{The Breakpoints View}
 
@@ -877,7 +889,10 @@ the same panel as the Variables view in the upper right hand corner.
 Breakpoints can be conditional. This is a powerful feature for the
 developer since it allows you to specify a conditional expression 
 which has to be true for the debugger to stop at the given breakpoint.
-As well as using an expression, a conditional breakpoint may specify a hitcount and whether the breakpoint should stop when the hit count is equal to,greater than, or a multiple of the given value.
+As well as using an expression, a conditional breakpoint may specify a
+hit count and whether the breakpoint should stop when the hit count is
+equal to, greater than, or a multiple of the given value, or a general
+expression using the variables in scope at the breakpoint.
 A normal breakpoint can be made conditional by right clicking on the breakpoint
 mark in the Editor view\footnote{Note this is not possible from the Breakpoint view}
 and selecting \emph{Breakpoint Properties}. This opens a dialog like the one shown in
@@ -1498,7 +1513,7 @@ specification is clean (ignoring warnings). Parser or type checking
 errors result in an exit code of 1. The interpreter and PO generator
 always exit with a code of zero.
 
-\section{The VDMJ Interpreter and Debugger}
+\section{The VDMJ Interpreter and Debugger}\label{sec:commandlineinterpreter}
 
 Assuming a specification does not contain any parse or type checking errors, the interpreter can be
 started by using the \texttt{-i} command line option.
