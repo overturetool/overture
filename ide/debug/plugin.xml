@@ -194,7 +194,7 @@
           visible="false">
        <menu
              id="org.overture.ide.debug.vdmMenu"
-             label="label"
+             label="VDM Menu"
              path="addictions">
           <separator
                 name="vdmGroup">
@@ -210,10 +210,10 @@
              style="push">
           <enablement>
              <and>
-                <systemProperty
+                <!--systemProperty
                       name="org.overture.debug.ui.debuggerActive"
                       value="true">
-                </systemProperty>
+                </systemProperty-->
                 
                    <objectClass
                          name="org.eclipse.jface.text.ITextSelection">
