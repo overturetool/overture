@@ -49,11 +49,14 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	protected Control createContents(Composite parent)
 	{
 		Composite myComposite = new Composite(parent, SWT.NONE);
-		FillLayout layout = new FillLayout();
-
-		layout.type = SWT.VERTICAL;
+//		FillLayout layout = new FillLayout();
+//		
+//		layout.type = SWT.VERTICAL;
+		
+		GridLayout layout = new GridLayout(1,true);
+		
+		
 		myComposite.setLayout(layout);
-
 		IProject p = getSelectedProject();
 
 		if (p != null)
