@@ -1,9 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others. All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
-
 package org.overture.ide.debug.ui;
 
 import java.util.ArrayList;
@@ -35,6 +29,7 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		IDebugContextListener
 {
 
+	private static VdmEvaluationContextManager fgManager;
 	/**
 	 * System property indicating a stack frame is selected in the debug view with an <code>IVdmStackFrame</code>
 	 * adapter.
@@ -42,16 +37,32 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	private static final String DEBUGGER_ACTIVE = VdmDebugPlugin.PLUGIN_ID
 			+ ".debuggerActive"; //$NON-NLS-1$
 
-	private static VdmEvaluationContextManager manager;
+	/**
+	 * System property indicating an element is selected in the debug view that is an instanceof
+	 * <code>IJavaStackFrame</code> or <code>IJavaThread</code>.
+	 */
+	private static final String INSTANCE_OF_IJAVA_STACK_FRAME = VdmDebugPlugin.PLUGIN_ID
+			+ ".instanceof.IVdmStackFrame"; //$NON-NLS-1$
+	/**
+	 * System property indicating the frame in the debug view supports 'force return'
+	 */
+	private static final String SUPPORTS_FORCE_RETURN = VdmDebugPlugin.PLUGIN_ID
+			+ ".supportsForceReturn"; //$NON-NLS-1$	
+	/**
+	 * System property indicating whether the frame in the debug view supports instance and reference retrieval (1.5 VMs
+	 * and later).
+	 */
+	private static final String SUPPORTS_INSTANCE_RETRIEVAL = VdmDebugPlugin.PLUGIN_ID
+			+ ".supportsInstanceRetrieval"; //$NON-NLS-1$
 
-	private Map pageToContextMap;
+	private Map<IWorkbenchPage,IVdmStackFrame> fContextsByPage = null;
 
-	private IWorkbenchWindow activeWindow;
+	private IWorkbenchWindow fActiveWindow;
 
 	protected VdmEvaluationContextManager()
 	{
 		DebugUITools.getDebugContextManager().addDebugContextListener(this);
-		pageToContextMap = new HashMap();
+
 	}
 
 	public static void startup()
@@ -60,18 +71,17 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		{
 			public void run()
 			{
-				if (manager == null)
+				if (fgManager == null)
 				{
-					manager = new VdmEvaluationContextManager();
-
+					fgManager = new VdmEvaluationContextManager();
 					IWorkbench workbench = PlatformUI.getWorkbench();
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++)
 					{
-						manager.windowOpened(windows[i]);
+						fgManager.windowOpened(windows[i]);
 					}
-					workbench.addWindowListener(manager);
-					manager.activeWindow = workbench.getActiveWorkbenchWindow();
+					workbench.addWindowListener(fgManager);
+					fgManager.fActiveWindow = workbench.getActiveWorkbenchWindow();
 				}
 			}
 		};
@@ -80,7 +90,7 @@ public class VdmEvaluationContextManager implements IWindowListener,
 
 	public void windowActivated(IWorkbenchWindow window)
 	{
-		activeWindow = window;
+		fActiveWindow = window;
 	}
 
 	public void windowClosed(IWorkbenchWindow window)
@@ -103,8 +113,8 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	 */
 	private void setContext(IWorkbenchPage page, IVdmStackFrame frame)
 	{
-		pageToContextMap.put(page, frame);
-		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
+		// pageToContextMap.put(page, frame);
+		//		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
 
 		/*
 		 * if (frame.canForceReturn()) { System.setProperty(SUPPORTS_FORCE_RETURN, "true"); //$NON-NLS-1$ } else {
@@ -115,6 +125,28 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		 * System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true"); //$NON-NLS-1$ } else {
 		 * System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); //$NON-NLS-1$ }
 		 */
+
+		if (fContextsByPage == null)
+		{
+			fContextsByPage = new HashMap<IWorkbenchPage,IVdmStackFrame>();
+		}
+		fContextsByPage.put(page, frame);
+		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
+		// if (frame.canForceReturn()) {
+		//			System.setProperty(SUPPORTS_FORCE_RETURN, "true"); //$NON-NLS-1$
+		// } else {
+		//			System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$
+		// }
+		// if (((IJavaDebugTarget)frame.getDebugTarget()).supportsInstanceRetrieval()){
+		//			System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true"); //$NON-NLS-1$
+		// } else {
+		//			System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); //$NON-NLS-1$
+		// }
+		// if (instOf) {
+		//			System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true"); //$NON-NLS-1$
+		// } else {
+		//			System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); //$NON-NLS-1$
+		// }
 	}
 
 	/**
@@ -124,25 +156,44 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	 */
 	private void removeContext(IWorkbenchPage page)
 	{
-		pageToContextMap.remove(page);
-		if (pageToContextMap.isEmpty())
+		// pageToContextMap.remove(page);
+		// if (pageToContextMap.isEmpty())
+		// {
+		//			System.setProperty(DEBUGGER_ACTIVE, "false"); //$NON-NLS-1$
+		// // System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false");
+		//			// //$NON-NLS-1$
+		//			// System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$
+		// // System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false");
+		//			// //$NON-NLS-1$
+		// }
+		if (fContextsByPage != null)
 		{
-			System.setProperty(DEBUGGER_ACTIVE, "false"); //$NON-NLS-1$
-			// System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false");
-			// //$NON-NLS-1$
-			// System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$
-			// System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false");
-			// //$NON-NLS-1$
+			fContextsByPage.remove(page);
+			if (fContextsByPage.isEmpty())
+			{
+				System.setProperty(DEBUGGER_ACTIVE, "false"); //$NON-NLS-1$
+				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); //$NON-NLS-1$
+				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$
+				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); //$NON-NLS-1$
+			}
 		}
 	}
 
 	private static IVdmStackFrame getContext(IWorkbenchPage page)
 	{
-		if (manager != null)
+		// if (manager != null)
+		// {
+		// if (manager.pageToContextMap != null)
+		// {
+		// return (IVdmStackFrame) manager.pageToContextMap.get(page);
+		// }
+		// }
+		// return null;
+		if (fgManager != null)
 		{
-			if (manager.pageToContextMap != null)
+			if (fgManager.fContextsByPage != null)
 			{
-				return (IVdmStackFrame) manager.pageToContextMap.get(page);
+				return (IVdmStackFrame) fgManager.fContextsByPage.get(page);
 			}
 		}
 		return null;
@@ -194,7 +245,7 @@ public class VdmEvaluationContextManager implements IWindowListener,
 		List<IWorkbenchWindow> alreadyVisited = new ArrayList<IWorkbenchWindow>();
 		if (window == null)
 		{
-			window = manager.activeWindow;
+			window = fgManager.fActiveWindow;
 		}
 		return getEvaluationContext(window, alreadyVisited);
 	}
@@ -244,6 +295,35 @@ public class VdmEvaluationContextManager implements IWindowListener,
 
 	public void debugContextChanged(DebugContextEvent event)
 	{
+		// if ((event.getFlags() & DebugContextEvent.ACTIVATED) > 0)
+		// {
+		// IWorkbenchPart part = event.getDebugContextProvider().getPart();
+		// if (part != null)
+		// {
+		// IWorkbenchPage page = part.getSite().getPage();
+		// ISelection selection = event.getContext();
+		// if (selection instanceof IStructuredSelection)
+		// {
+		// IStructuredSelection ss = (IStructuredSelection) selection;
+		// if (ss.size() == 1)
+		// {
+		// Object element = ss.getFirstElement();
+		// if (element instanceof IAdaptable)
+		// {
+		// IVdmStackFrame frame = (IVdmStackFrame) ((IAdaptable) element).getAdapter(IVdmStackFrame.class);
+		// if (frame != null)
+		// {
+		// setContext(page, frame);
+		// return;
+		// }
+		// }
+		// }
+		// }
+		//
+		// // no context in the given view
+		// removeContext(page);
+		// }
+		// }
 		if ((event.getFlags() & DebugContextEvent.ACTIVATED) > 0)
 		{
 			IWorkbenchPart part = event.getDebugContextProvider().getPart();
@@ -260,15 +340,20 @@ public class VdmEvaluationContextManager implements IWindowListener,
 						if (element instanceof IAdaptable)
 						{
 							IVdmStackFrame frame = (IVdmStackFrame) ((IAdaptable) element).getAdapter(IVdmStackFrame.class);
+							// boolean instOf = element instanceof IVdmStackFrame || element instanceof IVdmThread;
 							if (frame != null)
 							{
+								// do not consider scrapbook frames
+								// if (frame.getLaunch().getAttribute(ScrapbookLauncher.SCRAPBOOK_LAUNCH) == null) {
+								// setContext(page, frame, instOf);
+								// return;
+								// }
 								setContext(page, frame);
 								return;
 							}
 						}
 					}
 				}
-
 				// no context in the given view
 				removeContext(page);
 			}

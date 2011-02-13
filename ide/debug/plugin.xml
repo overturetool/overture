@@ -173,7 +173,13 @@
 
 
 
+<!--
+====================================
 
+Watch
+
+====================================
+-->
 
 
 
@@ -192,28 +198,20 @@
           id="org.overture.ide.debug.debugActionSet"
           label="Vdm Action Set"
           visible="false">
-       <menu
-             id="org.overture.ide.debug.vdmMenu"
-             label="VDM Menu"
-             path="addictions">
-          <separator
-                name="vdmGroup">
-          </separator>
-       </menu>
        <action
              class="org.overture.ide.debug.ui.actions.VdmWatchAction"
              definitionId="org.overture.ide.debug.command.watch"
              icon="icons/cview16/vdmpp_file_tsk.png"
              id="org.overture.ide.debug.action.watchAction"
              label="Watch"
-             menubarPath="org.overture.ide.debug.vdmMenu/vdmGroup"
+             menubarPath="org.eclipse.ui.run/vdmGroup"
              style="push">
           <enablement>
              <and>
-                <!--systemProperty
-                      name="org.overture.debug.ui.debuggerActive"
+                <systemProperty
+                      name="org.overture.ide.debug.core.debuggerActive"
                       value="true">
-                </systemProperty-->
+                </systemProperty>
                 
                    <objectClass
                          name="org.eclipse.jface.text.ITextSelection">
@@ -244,7 +242,37 @@
     </propertyTester>
  </extension>
 	
-	<!-- Preference pages -->
+	
+   
+   <!-- Watch context menu-->
+  <extension
+        point="org.eclipse.ui.popupMenus">
+         <viewerContribution
+            targetID="#TextEditorContext"
+            id="org.overture.ide.debug.ui.SourceUnitPopupActions">
+         <visibility>
+            <and>
+               <systemProperty
+                     name="org.overture.ide.debug.core.debuggerActive"
+                     value="true">
+               </systemProperty>
+               <objectClass
+                     name="org.eclipse.jface.text.ITextSelection">
+               </objectClass>
+            </and>
+         </visibility>
+ <action
+               label="%Watch.label"
+               icon="icons/dtool16/watch_exp.gif"
+               helpContextId="watch_action_context"
+               class="org.overture.ide.debug.ui.actions.VdmWatchAction"
+               menubarPath="additions"
+               id="org.overture.ide.debug.ui.SourceUnitPopup.Watch">
+         </action>
+</viewerContribution>
+  </extension>
+	
+   <!-- Preference pages -->
 	 <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -254,6 +282,4 @@
             name="Debugger">
       </page>
    </extension>
-	
-   
 </plugin>

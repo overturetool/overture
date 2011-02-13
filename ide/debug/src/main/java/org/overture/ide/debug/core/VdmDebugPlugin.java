@@ -32,6 +32,7 @@ import org.overture.ide.debug.core.model.ISourceOffsetLookup;
 import org.overture.ide.debug.core.model.internal.DbgpService;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
 import org.overture.ide.debug.ui.DebugConsoleManager;
+import org.overture.ide.debug.ui.VdmEvaluationContextManager;
 import org.overture.ide.debug.ui.log.VdmDebugLogManager;
 
 @SuppressWarnings("deprecation")
@@ -67,7 +68,8 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 		launchManager.addLaunchListener(VdmDebugLogManager.getInstance());		
 		plugin = this;
 		
-		
+		//TODO
+		VdmEvaluationContextManager.startup();
 		// HotCodeReplaceManager.getDefault().startup();
 	}
 
