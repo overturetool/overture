@@ -285,11 +285,7 @@ a special version of Eclipse with the Overture functionality already pre-install
   \noindent you can use the \textit{Download Now} button to
   automatically download pre-installed versions of Overture for your
   operating system.  Supported systems are: Windows, Linux and
-  Mac\footnote{An update facility is planned, which will allow plugin
-    updates to be applied directly from Eclipse.
-    However, this can be
-    a risky process because of the dependencies on non-Overture
-    components and so is not yet supported.}.
+  Mac.
 Simply extract the zip file downloaded and run the Overture executable
 file at the top level to start the tool.
 When you start Overture for the first time, it will request a workspace
@@ -298,7 +294,10 @@ by Overture and tick the box for ``Use this as the default and do
 not ask again''. A welcome screen will introduce you to the overall 
 mission of the Overture open source initiative the first time that you
 run the tool and provide you with a number of interesting pointers of
-additional material (see Figure~\ref{fig:userguire:welcomeWindow}).
+additional material (see
+Figure~\ref{fig:userguire:welcomeWindow}).\index{welcome screen} You
+can always get back to this page using \emph{Help} $ \rightarrow$
+\emph{Welcome}. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -331,7 +330,7 @@ using other products that use the same workbench. The Eclipse workbench
 consists of several panels known as \emph{views}\index{view}, such as
 those shown in Figure~\ref{fig:userguire:OverturePerspective}.
 A particular arrangement of views
-is called a \emph{perspective}\index{perspective}, for example
+is called a \emph{perspective}\index{perspective}\index{perspective!VDM}, for example
 Figure~\ref{fig:userguire:OverturePerspective} shows the standard
 VDM perspective. This consists of a set of views for managing
 Overture projects and viewing and editing files in a
@@ -410,7 +409,9 @@ working on, such as warnings and syntax or type checking errors.
 
 The \emph{VDM Quick Interpreter}\index{quick interpreter}
 view has a small command-line at the bottom where a plain VDM expression
-(not depending upon the definitions in the VDM model you are working with) can be
+(not depending upon the definitions in the VDM model you are working
+with but for that you can use the ``Console'' launch mode explained in
+Section~\ref{sec:launchmodes}) can be
 entered. When return is pressed, the expression will be evaluated and
 the result shown above the command-line.
 
@@ -709,7 +710,7 @@ standard Overture templates is available in Appendix~\ref{app:templates}.
 
 This section describes how to run and debug a model using the Overture IDE. 
 
-\section{Run and Debug Launch Configurations}
+\section{Run and Debug Launch Configurations}\label{sec:launchmodes}
 
 To execute or debug a VDM model, you must first create a launch
 configuration\index{debug configuration}. To do this, go to the main Run menu
@@ -965,7 +966,7 @@ then select \emph{Proof Obligations} $\rightarrow$ \emph{Generate Proof
   Obligations}. Overture will change into a special
 \emph{Proof Obligations} perspective\index{proof
   obligation!perspective} as shown in
-Figure~\ref{fig:POview}.\index{perspective!proof obligations}  
+Figure~\ref{fig:POview}.\index{perspective!proof obligation}  
 
 \begin{figure}[htbp]
 \begin{center}
@@ -1093,7 +1094,7 @@ project. This is done by right-clicking on the VDM++ project to be
 converted in the Explorer view, followed by 
 the \emph{Clone as VDM-RT} option\index{create real time
   project}. A new VDM-RT project is then automatically
-created.\index{create!VDM-RT project} It will have the
+created. It will have the
 same name as the original VDM++ project, but with \texttt{VDM\_RT} appended.
 Inside the project, all the \texttt{.vdmpp} files will have been converted
 to a \texttt{.vdmrt} extension. The original VDM++ project is not
@@ -1883,12 +1884,12 @@ waiting                   & The number of outstanding requests for the operation
 % VDM-RT 
 act                       & The number of times that operation name operation has been activated\\
 active                    & The number of operation name operations that are currently active.\\
-bus                       & BUS (Priority <CSMACD>, capacity,set of connected CPUs)\\
+bus                       & BUS (Priority $<$CSMACD$>$, capacity,set of connected CPUs)\\
 class                     & Class Definition\\
 classSkeleton             & Class Definition full skeleton\\
-cpu                       & CPU (Priority <FP/FCFS>, capacity)\\
-cycle                     & Cycles(number of cycles)statement\\
-duration                  & Duration(time in milliceconds)statement\\
+cpu                       & CPU (Priority $<$FP/FCFS$>$, capacity)\\
+cycle                     & Cycles (number of cycles) statement\\
+duration                  & Duration (time in nanoseconds) statement\\
 fin                       & The number of times that the operation name operation has been completed\\
 functionExplicit          & Explicit function\\
 functionImplicit          & Implicit function\\
