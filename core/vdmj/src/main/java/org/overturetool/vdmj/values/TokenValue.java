@@ -36,7 +36,7 @@ public class TokenValue extends Value
 
 	public TokenValue(Value exp)
 	{
-		this.value = exp;
+		this.value = exp.deref();
 		this.hash = exp.hashCode();
 	}
 
