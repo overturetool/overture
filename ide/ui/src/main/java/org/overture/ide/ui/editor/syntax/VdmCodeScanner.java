@@ -33,7 +33,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		final IToken string = new Token(new TextAttribute(provider.getColor(VdmColorProvider.STRING)));
 		final IToken stringBold = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT),null, SWT.BOLD | SWT.ITALIC));
 		IToken comment = new Token(new TextAttribute(provider.getColor(VdmColorProvider.SINGLE_LINE_COMMENT)));
-		// final IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
+		 final IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
 		
 		List<IRule> rules = new ArrayList<IRule>();
 		// Add rule for single line comments.
@@ -80,7 +80,8 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		rules.add(wordRuleWithSpaces);
 
 		// Add word rule for keywords.
-		WordRule wordRule = new WordRule(new VdmWordDetector(), Token.UNDEFINED);
+		WordRule wordRule = new WordRule(new VdmWordDetector(), other);//Not sure why Token.UNDEFINED doesn't work but it makes S'end' colored.
+
 		for (int i = 0; i < fgKeywords.getAllSingleWordKeywords().length; i++)
 		{
 			wordRule.addWord(fgKeywords.getAllSingleWordKeywords()[i], keyword);

@@ -91,7 +91,8 @@
   </shortcut>
  </extension>
 
- <extension
+ <!--http://www.eclipse.org/articles/Article-Launch-Framework/launch.html-->
+ <!--extension
        point="org.eclipse.debug.ui.launchGroups">
     <launchGroup
           bannerImage="icons/cview16/vdmsl_file_tsk.gif"
@@ -107,7 +108,7 @@
           label="VDM-SL Launch"
           mode="run">
     </launchGroup>
- </extension>
+ </extension-->
 
 
 <extension
