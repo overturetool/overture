@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -27,18 +26,11 @@ import org.overturetool.vdmj.Release;
 public class VdmLanguagePropertyPage extends PropertyPage implements
 		IWorkbenchPropertyPage
 {
-	// private Combo languageVersionCombobox = null;
 	private Combo comboBoxLanguageVersion = null;
 	private Button checkBoxSuppressWarnings = null;
-//	private Button checkBoxUsePostChecks = null;
-//	private Button checkBoxUsePreChecks = null;
-//	private Button checkBoxInvChecks = null;
-//	private Button checkBoxDynamicTypeChecks = null;
-//	private Button checkBoxUseMeasure = null;
 	private IVdmProject project = null;
 
 	private Group typeGroup;
-	private Group interperterGroup;
 
 	public VdmLanguagePropertyPage()
 	{
@@ -48,41 +40,42 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 	@Override
 	protected Control createContents(Composite parent)
 	{
-		Composite myComposite = new Composite(parent, SWT.NONE);
-//		FillLayout layout = new FillLayout();
-//		
-//		layout.type = SWT.VERTICAL;
-		
-		GridLayout layout = new GridLayout(1,true);
-		
-		
-		myComposite.setLayout(layout);
+		Composite comp = new Composite(parent, SWT.NONE);
+
+		comp.setLayout(new GridLayout(1, true));
+		comp.setFont(parent.getFont());
+
 		IProject p = getSelectedProject();
 
 		if (p != null)
 		{
-
 			this.project = (IVdmProject) p.getAdapter(IVdmProject.class);
 			Assert.isNotNull(this.project, "Project could not be adapted");
 
-			createLanguagePanel(myComposite);
-			createTypeCheckGroup(myComposite);
-//			createInterperterGroupCheckGroup(myComposite);
-
+			createLanguagePanel(comp);
+			createTypeCheckGroup(comp);
 		}
-		return myComposite;
+		return comp;
+	}
+
+	private Group createGroup(String name, Composite comp)
+	{
+		Group group = new Group(comp, SWT.NONE);
+		group.setText(name);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+
+		group.setLayoutData(gd);
+
+		GridLayout layout = new GridLayout();
+		layout.makeColumnsEqualWidth = false;
+		layout.numColumns = 3;
+		group.setLayout(layout);
+		return group;
 	}
 
 	void createLanguagePanel(Composite composite)
 	{
-		Group languageOptionsGroup = new Group(composite, SWT.NONE);
-		languageOptionsGroup.setText("Language options");
-		GridLayout mylayout = new GridLayout();
-		mylayout.marginHeight = 1;
-		mylayout.marginWidth = 1;
-		mylayout.horizontalSpacing = 20;
-		mylayout.numColumns = 2;
-		languageOptionsGroup.setLayout(mylayout);
+		Group languageOptionsGroup = createGroup("Language options", composite);
 
 		Label mylabel = new Label(languageOptionsGroup, SWT.NONE);
 		mylabel.setLayoutData(new GridData());
@@ -114,49 +107,15 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		}
 	}
 
-	void createTypeCheckGroup(Composite controlGroup)
+	void createTypeCheckGroup(Composite comp)
 	{
-		typeGroup = new Group(controlGroup, SWT.NONE);
-		typeGroup.setText("Type checking");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		typeGroup.setLayout(layout);
+		typeGroup = createGroup("Type checking", comp);
 
 		checkBoxSuppressWarnings = new Button(typeGroup, SWT.CHECK);
 		checkBoxSuppressWarnings.setText("Suppress warnings");
 		checkBoxSuppressWarnings.setSelection(project.hasSuppressWarnings());
 
 	}
-
-//	void createInterperterGroupCheckGroup(Composite controlGroup)
-//	{
-//		interperterGroup = new Group(controlGroup, SWT.NONE);
-//		interperterGroup.setText("Interpreting");
-//		GridLayout layout = new GridLayout();
-//		layout.numColumns = 1;
-//		interperterGroup.setLayout(layout);
-
-//		checkBoxDynamicTypeChecks = new Button(interperterGroup, SWT.CHECK);
-//		checkBoxDynamicTypeChecks.setText("Dynamic type checks");
-//		checkBoxDynamicTypeChecks.setSelection(project.hasDynamictypechecks());
-//
-//		checkBoxInvChecks = new Button(interperterGroup, SWT.CHECK);
-//		checkBoxInvChecks.setText("Invariants checks");
-//		checkBoxInvChecks.setSelection(project.hasInvchecks());
-//
-//		checkBoxUsePreChecks = new Button(interperterGroup, SWT.CHECK);
-//		checkBoxUsePreChecks.setText("Pre condition checks");
-//		checkBoxUsePreChecks.setSelection(project.hasPrechecks());
-//
-//		checkBoxUsePostChecks = new Button(interperterGroup, SWT.CHECK);
-//		checkBoxUsePostChecks.setText("Post condition checks");
-//		checkBoxUsePostChecks.setSelection(project.hasPostchecks());
-//
-//		checkBoxUseMeasure = new Button(interperterGroup, SWT.CHECK);
-//		checkBoxUseMeasure.setText("Measure Run-Time checks");
-//		checkBoxUseMeasure.setSelection(project.hasMeasurechecks());
-//
-//	}
 
 	@SuppressWarnings( { "deprecation" })
 	public static IProject getSelectedProject()
@@ -190,15 +149,8 @@ public class VdmLanguagePropertyPage extends PropertyPage implements
 		try
 		{
 			project.setBuilder(Release.lookup(comboBoxLanguageVersion.getText()));
-
-//			project.setDynamictypechecks(checkBoxDynamicTypeChecks.getSelection());
-//			project.setInvchecks(checkBoxInvChecks.getSelection());
-//			project.setPostchecks(checkBoxUsePostChecks.getSelection());
-//			project.setPrechecks(checkBoxUsePreChecks.getSelection());
-//			project.setMeasurechecks(checkBoxUseMeasure.getSelection());
 			project.setSuppressWarnings(checkBoxSuppressWarnings.getSelection());
 
-			// project.typeCheck();
 			VdmTypeCheckerUi.typeCheck(getShell(), project);
 		} catch (CoreException e)
 		{
