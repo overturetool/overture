@@ -24,12 +24,14 @@ import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.definitions.PerSyncDefinition;
+import org.overturetool.vdmj.definitions.RenamedDefinition;
 import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.modules.ImportFromModule;
+import org.overturetool.vdmj.modules.ImportedOperation;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleImports;
 import org.overturetool.vdmj.types.Field;
@@ -189,7 +191,11 @@ public class VdmElementImageProvider {
 		else if (element instanceof ImportFromModule) {
 			return VdmPluginImages.DESC_OBJS_IMPDECL;
 		}
-
+		
+		else if(element instanceof ImportsContainer){
+			return computeDescriptor(((ImportsContainer) element).getImports(), adornmentFlags);
+		}
+		
 		else if (element instanceof IFile) {
 			IFile file = (IFile) element;
 			// if (JavaCore.isJavaLikeFileName(file.getName())) {
@@ -204,7 +210,12 @@ public class VdmElementImageProvider {
 					SMALL_ICONS, adornmentFlags);
 		} else if (element instanceof InheritedDefinition){
 			return getInheritedDefinitionImage((InheritedDefinition)element,SMALL_ICONS,adornmentFlags);
+		} else if (element instanceof RenamedDefinition){
+			return VdmPluginImages.DESC_OBJS_IMPDECL;
+		} else if(element instanceof ImportedOperation){
+			return VdmPluginImages.DESC_METHOD_DEFAULT;					
 		}
+		
 		
 		return null;
 	}
