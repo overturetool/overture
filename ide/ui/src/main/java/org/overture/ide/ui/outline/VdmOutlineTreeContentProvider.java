@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.ui.internal.viewsupport.ImportsContainer;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
 import org.overturetool.vdmj.definitions.Definition;
@@ -47,9 +48,11 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 			// DefinitionList all = new DefinitionList();
 			List<Object> all = new ArrayList<Object>();
 
-			if (((Module) parentElement).imports != null)
+			Module module = (Module) parentElement;
+			
+			if (module.imports != null)
 			{
-				all.add(((Module) parentElement).imports);
+				all.add(new ImportsContainer(module.imports, module.importdefs));
 			}
 			all.addAll(filterDefinitionList(((Module) parentElement).defs.singleDefinitions()));
 			filterSLModule(all);
@@ -58,7 +61,18 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 		} else if (parentElement instanceof ModuleImports)
 		{
 			return ((ModuleImports) parentElement).imports.toArray();
-		} else if (parentElement instanceof ImportFromModule)
+		} else if (parentElement instanceof ImportsContainer){
+			ImportsContainer container = (ImportsContainer) parentElement;
+			if(!container.getImportDefs().isEmpty()){
+				return container.getImportDefs().toArray();	
+			}
+			else{
+				return container.getImports().imports.toArray();
+			}
+			
+		}
+		
+		else if (parentElement instanceof ImportFromModule)
 		{
 
 			List<Object> all = new ArrayList<Object>();
@@ -151,7 +165,11 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 		} else if (element instanceof ImportFromModule)
 		{
 			return ((ImportFromModule) element).signatures.size() > 0;
-		} else if (element instanceof TypeDefinition)
+		} else if  (element instanceof ImportsContainer){
+			return ((ImportsContainer) element).getImports().imports.size() > 0;
+		}
+		
+		else if (element instanceof TypeDefinition)
 		{
 			TypeDefinition typeDef = (TypeDefinition) element;
 			if (typeDef.type instanceof RecordType)
@@ -159,6 +177,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 				return ((RecordType) typeDef.type).fields.size() > 0;
 			}
 		}
+		
 		return false;
 	}
 
