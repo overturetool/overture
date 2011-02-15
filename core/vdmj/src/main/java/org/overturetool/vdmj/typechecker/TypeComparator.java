@@ -803,12 +803,6 @@ public class TypeComparator
 					return Result.No;
 				}
 
-				if (((sub instanceof Seq1Type) && !(sup instanceof Seq1Type))
-					|| ((sub instanceof SeqType) && (sup instanceof Seq1Type)))
-				{
-					return Result.No;
-				}
-
 				SeqType subs = (SeqType)sub;
 				SeqType sups = (SeqType)sup;
 
@@ -817,7 +811,20 @@ public class TypeComparator
 					return Result.Yes;
 				}
 
-				return searchSubType(subs.seqof, sups.seqof);
+				if (searchSubType(subs.seqof, sups.seqof) == Result.Yes)
+				{
+					if (!(sub instanceof Seq1Type) &&
+						 (sup instanceof Seq1Type))
+					{
+						return Result.No;
+					}
+					
+					return Result.Yes;
+				}
+				else
+				{
+					return Result.No;
+				}
 			}
 			else if (sub instanceof FunctionType)
 			{

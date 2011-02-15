@@ -28,6 +28,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.CharacterType;
+import org.overturetool.vdmj.types.Seq1Type;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -54,7 +55,14 @@ public class StringLiteralExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		return new SeqType(location, new CharacterType(location));
+		if (value.value.isEmpty())
+		{
+			return new SeqType(location, new CharacterType(location));
+		}
+		else
+		{
+			return new Seq1Type(location, new CharacterType(location));
+		}
 	}
 
 	@Override

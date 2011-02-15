@@ -119,7 +119,7 @@ public class PogTest extends TestCase
 		"(is_([0, 1, 2, true], T1) and ((is_(0, bool))\nand (is_(1, bool))\nand (is_(2, bool)))) or\n(is_([0, 1, 2, true], T2) and inv_T2([0, 1, 2, true]) and ((0 > 0)\nand (is_nat1(true))))\n",
 		"(forall t:(T1 | T2) &\n  (is_([0, 1, 2, true], T1) and ((is_(0, bool))\n  and (is_(1, bool))\n  and (is_(2, bool)))) or\n  (is_([0, 1, 2, true], T2) and inv_T2([0, 1, 2, true]) and ((0 > 0)\n  and (is_nat1(true)))))\n",
 		"(forall a:(T1 | T2 | int) &\n  (is_(a, T1)) or\n  (is_(a, T2) and inv_T2(a) and (is_(a, seq of (nat1)))))\n",
-		"is_({1 |-> \"2\"}, inmap nat1 to seq of (char))\n",
+		"is_({1 |-> \"2\"}, inmap nat1 to seq1 of (char))\n",
 		"(forall n:nat1, x:nat1 &\n  (not (n < 2) =>\n    (n - 1) > 0))\n",
 		"(forall n:nat1, x:nat1 &\n  (not (n < 2) =>\n    (x - 1) > 0))\n",
 		"(forall n:nat1, x:nat1 &\n  (not (n < 2) =>\n    id(n, x) > id((n - 1), (x - 1))))\n",
