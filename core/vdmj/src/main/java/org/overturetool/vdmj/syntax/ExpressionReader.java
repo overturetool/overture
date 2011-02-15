@@ -1109,11 +1109,11 @@ public class ExpressionReader extends SyntaxReader
 			if (type instanceof UnresolvedType)
 			{
 				UnresolvedType nt = (UnresolvedType)type;
-				exp = new IsExpression(nt.typename, test);
+				exp = new IsExpression(ve.location, nt.typename, test);
 			}
 			else
 			{
-				exp = new IsExpression(type, test);
+				exp = new IsExpression(ve.location, type, test);
 			}
 		}
 		else
@@ -1126,35 +1126,35 @@ public class ExpressionReader extends SyntaxReader
 				switch (type)
 				{
 					case BOOL:
-						exp = new IsExpression(new BooleanType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
 						break;
 
 					case NAT:
-						exp = new IsExpression(new NaturalType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
 						break;
 
 					case NAT1:
-						exp = new IsExpression(new NaturalOneType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
 						break;
 
 					case INT:
-						exp = new IsExpression(new IntegerType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
 						break;
 
 					case RAT:
-						exp = new IsExpression(new RationalType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
 						break;
 
 					case REAL:
-						exp = new IsExpression(new RealType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
 						break;
 
 					case CHAR:
-						exp = new IsExpression(new CharacterType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new IsExpression(new TokenType(ve.location), readExpression());
+						exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
 						break;
 
 					default:
@@ -1163,7 +1163,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 			else
 			{
-				exp = new IsExpression(typename, readExpression());
+				exp = new IsExpression(ve.location, typename, readExpression());
 			}
 		}
 

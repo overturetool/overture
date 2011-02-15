@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -48,17 +49,17 @@ public class IsExpression extends Expression
 
 	private Definition typedef = null;
 
-	public IsExpression(LexNameToken typename, Expression test)
+	public IsExpression(LexLocation location, LexNameToken typename, Expression test)
 	{
-		super(typename.location);
+		super(location);
 		this.basictype = null;
 		this.typename = typename;
 		this.test = test;
 	}
 
-	public IsExpression(Type type, Expression test)
+	public IsExpression(LexLocation location, Type type, Expression test)
 	{
-		super(type.location);
+		super(location);
 		this.basictype = type;
 		this.typename = null;
 		this.test = test;

@@ -1254,7 +1254,7 @@ public class ASTConverter
 				ObjectDesignator designator = convertObjectDesignator(cs.getObjectDesignator());
 				IOmlName name = cs.getName();
 				ExpressionList args = convertExpressionList(cs.getExpressionList());
-				
+
 				if (name.hasClassIdentifier())
 				{
 					LexNameToken tok = convertName(name);
@@ -1419,7 +1419,7 @@ public class ASTConverter
 			IOmlObjectFieldReference d = (IOmlObjectFieldReference)des;
 			ObjectDesignator od = convertObjectDesignator(d.getObjectDesignator());
 			IOmlName name = d.getName();
-			
+
 			if (name.hasClassIdentifier())
 			{
 				LexNameToken tok = convertName(name);
@@ -1821,11 +1821,11 @@ public class ASTConverter
 			if (type instanceof NamedType)
 			{
 				NamedType nt = (NamedType)type;
-				exp = new IsExpression(nt.typename, e);
+				exp = new IsExpression(location, nt.typename, e);
 			}
 			else
 			{
-				exp = new IsExpression(type, e);
+				exp = new IsExpression(location, type, e);
 			}
 		}
 		else if (expression instanceof IOmlUndefinedExpression)
