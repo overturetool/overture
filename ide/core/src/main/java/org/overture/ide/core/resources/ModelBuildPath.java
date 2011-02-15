@@ -20,7 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ModelPath
+public class ModelBuildPath
 {
 	final IVdmProject vdmProject;
 	final IProject project;
@@ -29,7 +29,7 @@ public class ModelPath
 	List<IContainer> srcPaths = new Vector<IContainer>();
 	IContainer output;
 
-	public ModelPath(IVdmProject project)
+	public ModelBuildPath(IVdmProject project)
 	{
 		this.vdmProject = project;
 
@@ -37,6 +37,7 @@ public class ModelPath
 		IPath base = this.project.getLocation();
 		base = base.append(".modelpath");
 		this.modelPathFile = base.toFile();
+		this.output = this.project.getFolder("generated");
 		parse();
 	}
 
@@ -52,13 +53,9 @@ public class ModelPath
 
 	public List<IContainer> getModelSrcPaths()
 	{
-		if (!hasModelPath())
-		{
-			srcPaths.add(getDefaultModelSrcPath());
-			return srcPaths;
-		}
-
-		return srcPaths;
+		List<IContainer> tmp = new Vector<IContainer>(srcPaths.size());
+		tmp.addAll(srcPaths);
+		return tmp;
 	}
 
 	public IContainer getOutput()
@@ -66,10 +63,11 @@ public class ModelPath
 		return this.output;
 	}
 
-	private void parse()
+	private synchronized void parse()
 	{
-		if(!hasModelPath())
+		if (!hasModelPath())
 		{
+			srcPaths.add(getDefaultModelSrcPath());
 			return;
 		}
 		try
@@ -110,7 +108,41 @@ public class ModelPath
 		}
 	}
 
-	public void save(List<IContainer> srcPaths, IContainer output)
+	public synchronized void add(IContainer container)
+	{
+		if (!srcPaths.contains(container))
+		{
+			srcPaths.add(container);
+		}
+	}
+
+	public synchronized void remove(IContainer container)
+	{
+		if (srcPaths.contains(container))
+		{
+			srcPaths.remove(container);
+		}
+	}
+
+	public synchronized boolean contains(IContainer container)
+	{
+		return srcPaths.contains(container);
+	}
+
+	public void save() throws CoreException
+	{
+		save(srcPaths, output);
+	}
+
+	/**
+	 * Reload the build path and discard any un-saved changes
+	 */
+	public void reload()
+	{
+		parse();
+	}
+
+	private synchronized void save(List<IContainer> srcPaths, IContainer output)
 			throws CoreException
 	{
 		StringBuffer sb = new StringBuffer();
@@ -120,11 +152,16 @@ public class ModelPath
 
 		for (IContainer src : srcPaths)
 		{
-			sb.append("\t<modelpathentry kind=\"src\" path=\""
-					+ src.getProjectRelativePath() + "\"/>\n");
+			if (src.getProjectRelativePath().toString().length() > 0)
+			{
+				sb.append("\t<modelpathentry kind=\"src\" path=\""
+						+ src.getProjectRelativePath() + "\"/>\n");
+			}
+
 		}
 
-		if (output != null)
+		if (output != null
+				&& output.getProjectRelativePath().toString().length() > 0)
 		{
 			sb.append("\t<modelpathentry kind=\"output\" path=\""
 					+ output.getProjectRelativePath() + "\"/>\n");

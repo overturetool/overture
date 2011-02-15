@@ -38,10 +38,6 @@ public class BuilderPp extends VdmjBuilder {
 		try
 		{
 			Settings.release = getProject().getLanguageVersion();
-//			Settings.dynamictypechecks = getProject().hasDynamictypechecks();
-//			Settings.invchecks = getProject().hasInvchecks();
-//			Settings.postchecks = getProject().hasPostchecks();
-//			Settings.prechecks = getProject().hasPrechecks();
 		} catch (CoreException e1)
 		{
 			e1.printStackTrace();

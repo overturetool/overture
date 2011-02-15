@@ -151,7 +151,7 @@ public class VdmPluginImages
 	//	public static final String IMG_OBJS_EXTJAR= NAME_PREFIX + "jar_l_obj.gif"; 			//$NON-NLS-1$
 	//	public static final String IMG_OBJS_JAR_WSRC= NAME_PREFIX + "jar_src_obj.gif"; 		//$NON-NLS-1$
 	//	public static final String IMG_OBJS_EXTJAR_WSRC= NAME_PREFIX + "jar_lsrc_obj.gif";	//$NON-NLS-1$
-	//	public static final String IMG_OBJS_CLASSFOLDER= NAME_PREFIX + "cf_obj.gif"; 			//$NON-NLS-1$
+		public static final String IMG_OBJS_CLASSFOLDER= NAME_PREFIX + "cf_obj.gif"; 			//$NON-NLS-1$
 	//	public static final String IMG_OBJS_CLASSFOLDER_WSRC= NAME_PREFIX + "cf_src_obj.gif"; 		//$NON-NLS-1$
 	//
 	//	public static final String IMG_OBJS_ENV_VAR= NAME_PREFIX + "envvar_obj.gif"; 			//$NON-NLS-1$
@@ -330,7 +330,7 @@ public class VdmPluginImages
 	// public static final ImageDescriptor DESC_OBJS_JAR_WSRC= createManagedFromKey(T_OBJ, IMG_OBJS_JAR_WSRC);
 	// public static final ImageDescriptor DESC_OBJS_EXTJAR_WSRC= createManagedFromKey(T_OBJ, IMG_OBJS_EXTJAR_WSRC);
 	//
-	// public static final ImageDescriptor DESC_OBJS_CLASSFOLDER= createManagedFromKey(T_OBJ, IMG_OBJS_CLASSFOLDER);
+	 public static final ImageDescriptor DESC_OBJS_CLASSFOLDER= createManagedFromKey(T_OBJ, IMG_OBJS_CLASSFOLDER);
 	// public static final ImageDescriptor DESC_OBJS_CLASSFOLDER_WSRC= createManagedFromKey(T_OBJ,
 	// IMG_OBJS_CLASSFOLDER_WSRC);
 	//

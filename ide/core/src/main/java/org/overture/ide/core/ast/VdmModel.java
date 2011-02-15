@@ -26,8 +26,8 @@ import org.overturetool.vdmj.modules.ModuleList;
 
 public class VdmModel implements IVdmModel
 {
-	static int count = 0;
-	int id;
+	// static int count = 0;
+	// int id;
 	protected boolean isTypeChecked = false;
 	protected boolean isTypeCorrect = false;
 
@@ -37,8 +37,8 @@ public class VdmModel implements IVdmModel
 
 	public VdmModel()
 	{
-		count++;
-		id = count;
+		// count++;
+		// id = count;
 	}
 
 	/*
@@ -192,21 +192,6 @@ public class VdmModel implements IVdmModel
 			}
 		}
 		return isParseCorrect;
-		// vdmSourceUnits.get(0).
-		// if(parseCurrectTable.size()==0)
-		// {
-		// return false;//we don't want to type check if empty
-		// }
-		//		
-		//		
-		// for (Boolean isCurrect : parseCurrectTable.values())
-		// {
-		// if (!isCurrect)
-		// {
-		// return false;
-		// }
-		// }
-		// return true;
 	}
 
 	public boolean exists()
@@ -217,7 +202,6 @@ public class VdmModel implements IVdmModel
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -226,9 +210,12 @@ public class VdmModel implements IVdmModel
 		this.isTypeChecked = false;
 		this.isTypeCorrect = false;
 		if (!vdmSourceUnits.contains(unit))
+		{
 			this.vdmSourceUnits.add(unit);
-		else
+		} else
+		{
 			System.err.println("Add error: " + unit);
+		}
 
 	}
 
@@ -237,9 +224,12 @@ public class VdmModel implements IVdmModel
 		this.isTypeChecked = false;
 		this.isTypeCorrect = false;
 		if (vdmSourceUnits.contains(unit))
+		{
 			this.vdmSourceUnits.remove(unit);
-		else
+		} else
+		{
 			System.err.println("Remove error: " + unit);
+		}
 	}
 
 	public synchronized IVdmSourceUnit getVdmSourceUnit(IFile file)
@@ -274,7 +264,6 @@ public class VdmModel implements IVdmModel
 		int worked = 1;
 		if (monitor != null)
 		{
-
 			monitor.beginTask("Refreshing model", vdmSourceUnits.size());
 		}
 		for (IVdmSourceUnit source : vdmSourceUnits)

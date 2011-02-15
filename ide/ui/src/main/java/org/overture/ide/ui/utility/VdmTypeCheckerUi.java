@@ -15,34 +15,35 @@ import org.overture.ide.core.resources.IVdmProject;
 public class VdmTypeCheckerUi
 {
 
-	public static class CompletedStatus{
+	public static class CompletedStatus
+	{
 		private boolean completed;
-		
+
 		public synchronized boolean isCompleted()
 		{
 			return completed;
 		}
+
 		public synchronized void setCompledted()
 		{
 			completed = true;
 		}
 	}
-	
+
 	public static boolean typeCheck(Shell shell, final IVdmProject project)
 	{
 		Assert.isNotNull(shell, "Shell for type checker cannot be null");
 		Assert.isNotNull(project, "Project for type checker cannot be null");
-		
+
 		final IVdmModel model = project.getModel();
-		
-		
+
 		final CompletedStatus checkCompleted = new CompletedStatus();
-		//TODO we may be able to use the istypechecked and istypecorrect in a better way here
-		if(!model.getRootElementList().isEmpty() && model.isTypeCorrect() )
+		// TODO we may be able to use the istypechecked and istypecorrect in a better way here
+		if (!model.getRootElementList().isEmpty() && model.isTypeCorrect())
 		{
-			return true; //skip future checking to speed up the process
+			return true; // skip future checking to speed up the process
 		}
-		
+
 		try
 		{
 			IRunnableWithProgress op = new IRunnableWithProgress()
@@ -72,8 +73,8 @@ public class VdmTypeCheckerUi
 		{
 
 		}
-		
-		while(!checkCompleted.isCompleted())
+
+		while (!checkCompleted.isCompleted())
 		{
 			try
 			{
@@ -82,44 +83,36 @@ public class VdmTypeCheckerUi
 			{
 			}
 		}
-		
+
 		return project.getModel().isTypeCorrect();
 	}
-	
-	
-	public static boolean typeCheck(final IVdmProject project, IProgressMonitor monitorParent)
+
+	public static boolean typeCheck(final IVdmProject project,
+			IProgressMonitor monitorParent)
 	{
 		Assert.isNotNull(project, "Project for type checker cannot be null");
-		
+
 		final IVdmModel model = project.getModel();
-		
-		
-		
+
 		IProgressMonitor monitor = new SubProgressMonitor(monitorParent, 20);
 		final CompletedStatus checkCompleted = new CompletedStatus();
-		//TODO we may be able to use the istypechecked and istypecorrect in a better way here
-		if(!model.getRootElementList().isEmpty() && model.isTypeCorrect() )
+		// TODO we may be able to use the istypechecked and istypecorrect in a better way here
+		if (!model.getRootElementList().isEmpty() && model.isTypeCorrect())
 		{
-			return true; //skip future checking to speed up the process
+			return true; // skip future checking to speed up the process
 		}
-		
-		
-		
-						model.refresh(false, monitor);
-						try
-						{
-							project.typeCheck(monitor);
-						} catch (CoreException e1)
-						{
-							return false;
-						}
-						checkCompleted.setCompledted();
 
-				
-			
-		
-		
-		while(!checkCompleted.isCompleted())
+		model.refresh(false, monitor);
+		try
+		{
+			project.typeCheck(monitor);
+		} catch (CoreException e1)
+		{
+			return false;
+		}
+		checkCompleted.setCompledted();
+
+		while (!checkCompleted.isCompleted())
 		{
 			try
 			{
@@ -128,7 +121,7 @@ public class VdmTypeCheckerUi
 			{
 			}
 		}
-		
+
 		return project.getModel().isTypeCorrect();
 	}
 }

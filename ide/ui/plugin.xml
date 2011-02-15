@@ -390,6 +390,14 @@
            id="org.overture.ide.ui.commands.toggleComment"
            name="Toggle Comment">
      </command>
+     <command
+           id="org.overture.ide.ui.commands.addToBuildPath"
+           name="Use as Source Folder">
+     </command>
+     <command
+           id="org.overture.ide.ui.commands.removeFromBuildPath"
+           name="Remove from Build Path">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.decorators">
@@ -428,6 +436,78 @@
            id="org.overture.ide.ui.latex"
            name="Latex">
      </page>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="popup:org.overture.ide.ui.VdmExplorer">
+        <menu
+              label="Build Path">
+           <command
+                 commandId="org.overture.ide.ui.commands.addToBuildPath"
+                 icon="icons/elcl16/add_as_source_folder.gif"
+                 label="Use as Source Folder"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+	                 <and>
+	                 	<or>
+	               			<adapt type="org.overture.ide.core.resources.IVdmProject">
+	               			</adapt>
+	               			<adapt type="org.eclipse.core.resources.IFolder">
+	               			</adapt>
+	            		</or>
+	             		<test
+	                        property="org.overture.ide.core.resources.IsInBuildPath"
+	                        value="false">
+	                  	</test>
+	           		  </and>
+                 </iterate>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.overture.ide.ui.commands.removeFromBuildPath"
+                 icon="icons/elcl16/remove_from_buildpath.gif"
+                 label="Remove from Build Path"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+	                 <and>
+	                 	<or>
+	               			<adapt type="org.overture.ide.core.resources.IVdmProject">
+	               			</adapt>
+	               			<adapt type="org.eclipse.core.resources.IFolder">
+	               			</adapt>
+	            		</or>
+	             		<test
+	                        property="org.overture.ide.core.resources.IsInBuildPath"
+	                        value="true">
+	                  	</test>
+	           		  </and>
+                 </iterate>
+              </visibleWhen>
+           </command>
+        </menu>
+     </menuContribution>
+  </extension>
+  
+<!-- 
+=========================================================================
+Handlers
+=========================================================================
+-->
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.overture.ide.ui.handlers.AddSourceFolderToBuildPathCommandHandler"
+           commandId="org.overture.ide.ui.commands.addToBuildPath">
+     </handler>
+     <handler
+           class="org.overture.ide.ui.handlers.RemoveSourceFolderFromBuildPathCommandHandler"
+           commandId="org.overture.ide.ui.commands.removeFromBuildPath">
+     </handler>
   </extension>
   
 </plugin>

@@ -1,5 +1,6 @@
 package org.overture.ide.ui.navigator;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -11,7 +12,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.navigator.IDescriptionProvider;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.ui.VdmPluginImages;
 
+@SuppressWarnings("restriction")
 public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelProvider, IDescriptionProvider {
 
 	private ResourceManager resourceManager;
@@ -39,6 +43,20 @@ public class VdmNavigatorLabelProvider extends LabelProvider implements ILabelPr
         ImageDescriptor descriptor = adapter.getImageDescriptor(element);
         if (descriptor == null) {
             return null;
+        }
+        
+        //Adds package icon to folder if the folder is in the build path
+        if(element instanceof IFolder)
+        {
+        	IFolder folder = (IFolder) element;
+        	IVdmProject project = (IVdmProject) folder.getProject().getAdapter(IVdmProject.class);
+        	if(project.getModelBuildPath().contains(folder))
+        	{
+        		descriptor = VdmPluginImages.getDescriptor(VdmPluginImages.IMG_OBJS_PACKFRAG_ROOT);
+        	}else if(project.getModelBuildPath().getOutput()!=null && project.getModelBuildPath().getOutput().equals(folder))
+        	{
+        		descriptor = VdmPluginImages.getDescriptor(VdmPluginImages.IMG_OBJS_CLASSFOLDER);
+        	}
         }
 
         //add any annotations to the image descriptor

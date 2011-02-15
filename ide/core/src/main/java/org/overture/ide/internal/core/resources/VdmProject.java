@@ -35,7 +35,7 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.builder.SafeBuilder;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.resources.ModelPath;
+import org.overture.ide.core.resources.ModelBuildPath;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;
 
@@ -58,11 +58,13 @@ public class VdmProject implements IVdmProject
 	
 	public final IProject project;
 	private ILanguage language = null;
+	private final ModelBuildPath modelpath;
 
 	private VdmProject(IProject project) throws CoreException,
 			NotAllowedException
 	{
 		this.project = project;
+		
 		for (ILanguage language : LanguageManager.getInstance().getLanguages())
 		{
 			if (project.hasNature(language.getNature()))
@@ -73,6 +75,8 @@ public class VdmProject implements IVdmProject
 		}
 		if (this.language == null)
 			throw new NotAllowedException();
+		
+		this.modelpath = new ModelBuildPath(this);
 		
 		//Fix for old projects with Script Builder
 		//this.setBuilder(this.getLanguageVersion());
@@ -642,7 +646,6 @@ public class VdmProject implements IVdmProject
 			throws CoreException
 	{
 		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
-		ModelPath modelpath= new ModelPath(this);
 		
 		for (IContainer container : modelpath.getModelSrcPaths())
 		{
@@ -663,7 +666,6 @@ public class VdmProject implements IVdmProject
 	
 	public boolean isModelFile(IFile file) throws CoreException
 	{
-		ModelPath modelpath= new ModelPath(this);
 		for (IContainer src : modelpath.getModelSrcPaths())
 		{
 			if(src.getLocation().isPrefixOf(file.getLocation()) && file.getContentDescription() != null
@@ -791,6 +793,11 @@ public class VdmProject implements IVdmProject
 	public Object getAdapter(Class adapter)
 	{
 		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
+	public ModelBuildPath getModelBuildPath()
+	{
+		return this.modelpath;
 	}
 
 

@@ -370,7 +370,7 @@ public class ResourceManager implements IResourceChangeListener
 
 		List<IFile> removedFiles = new Vector<IFile>();
 		IProject p = (IProject) project.getAdapter(IProject.class);
-
+		
 		for (IFile file : vdmSourceUnits.keySet())
 		{
 			if (file.getProject().equals(p)
@@ -385,7 +385,7 @@ public class ResourceManager implements IResourceChangeListener
 		// remove the old files
 		for (IFile iFile : removedFiles)
 		{
-			vdmSourceUnits.remove(iFile);
+			remove(iFile);
 		}
 	}
 

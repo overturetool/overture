@@ -48,6 +48,13 @@
            properties="dialect"
            type="org.eclipse.core.resources.IFolder">
      </propertyTester>
+     <propertyTester
+           class="org.overture.ide.core.propertytester.IsInBuildPathPropertyTester"
+           id="org.overture.ide.core.InBuildPathPropertyTester"
+           namespace="org.overture.ide.core.resources"
+           properties="IsInBuildPath"
+           type="org.eclipse.core.resources.IContainer">
+     </propertyTester>
   </extension>
   <extension
         point="org.eclipse.core.runtime.adapters">

@@ -24,5 +24,11 @@ public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 	{
 		//do not fire from working copy
 	}
+	
+	@Override
+	public String toString()
+	{
+		return super.toString()+ " - Working copy";
+	}
 
 }

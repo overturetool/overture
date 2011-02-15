@@ -32,7 +32,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.ModelPath;
+import org.overture.ide.core.resources.ModelBuildPath;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 
@@ -62,6 +62,10 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement)
 		{
+			if(inputElement instanceof ModelBuildPath)
+			{
+				return ((ModelBuildPath)inputElement).getModelSrcPaths().toArray();
+			}
 			if (inputElement instanceof List)
 			{
 				return ((List) inputElement).toArray();
@@ -81,9 +85,9 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 
 	}
 
-	ModelPath modelpath = null;
+	ModelBuildPath modelpath = null;
 	TreeViewer tree = null;
-	List<IContainer> data = null;
+//	List<IContainer> data = null;
 
 	@Override
 	protected Control createContents(Composite parent)
@@ -112,11 +116,12 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 		myCompositeTree.setLayoutData(gd);
 
 		IProject project = getSelectedProject();
-		modelpath = new ModelPath((IVdmProject) project.getAdapter(IVdmProject.class));
-		data = modelpath.getModelSrcPaths();
+//		modelpath = new ModelBuildPath((IVdmProject) project.getAdapter(IVdmProject.class));
+//		data = modelpath.getModelSrcPaths();
+		modelpath =((IVdmProject) project.getAdapter(IVdmProject.class)).getModelBuildPath();
 		tree.setLabelProvider(new WorkbenchLabelProvider());
 		tree.setContentProvider(new ModelPathContentProvider());
-		tree.setInput(data);
+		tree.setInput(modelpath);
 
 		Button addFolderButtom = createPushButton(myComposite, "Add...", null);
 		gd = new GridData(GridData.FILL_HORIZONTAL
@@ -160,6 +165,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 						return null;
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public Object[] getChildren(Object element)
 					{
@@ -199,11 +205,12 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 						if (o instanceof IContainer)
 						{
 							IContainer source = (IContainer) o;
-							if (!data.contains(source))
-							{
-								data.add(source);
+//							if (!data.contains(source))
+//							{
+							modelpath.add(source);
+//								data.add(source);
 								tree.refresh();
-							}
+//							}
 						}
 						// fScenarioText.setText(((IFile) dialog.getFirstResult()).getProjectRelativePath().toString());
 					}
@@ -213,6 +220,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 			}
 
 		});
+		addFolderButtom.setEnabled(false);
 
 		return myComposite;
 	}
@@ -280,7 +288,8 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 		{
 			try
 			{
-				modelpath.save(data, modelpath.getOutput());
+				modelpath.save();
+//				modelpath.save(data, modelpath.getOutput());
 
 				IVdmProject vdmProject = (IVdmProject) getSelectedProject().getAdapter(IVdmProject.class);
 				VdmTypeCheckerUi.typeCheck(getShell(), vdmProject);
