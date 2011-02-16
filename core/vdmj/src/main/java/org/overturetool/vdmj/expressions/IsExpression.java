@@ -68,7 +68,7 @@ public class IsExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return "is_" + (typename == null ? basictype : typename) + "(" + test + ")";
+		return "is_(" + test + ", " + (typename == null ? basictype : typename) + ")";
 	}
 
 	@Override
