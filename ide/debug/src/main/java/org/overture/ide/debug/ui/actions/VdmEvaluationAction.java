@@ -1,11 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- 
+ * Copyright (c) 2000, 2007 IBM Corporation and others. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
 package org.overture.ide.debug.ui.actions;
@@ -65,17 +61,21 @@ import org.overture.ide.ui.editor.core.VdmEditor;
 
 public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 		IObjectActionDelegate, IPartListener, IVdmEvaluationListener,
-		IEditorActionDelegate, IViewActionDelegate {
+		IEditorActionDelegate, IViewActionDelegate
+{
 
-	private static class ObjectResolver {
+	private static class ObjectResolver
+	{
 		private IWorkbenchPart part;
 		private IRegion region;
 
-		protected static ISelection getSelection(IWorkbenchPart part) {
-			if (part != null) {
-				ISelectionProvider provider = part.getSite()
-						.getSelectionProvider();
-				if (provider != null) {
+		protected static ISelection getSelection(IWorkbenchPart part)
+		{
+			if (part != null)
+			{
+				ISelectionProvider provider = part.getSite().getSelectionProvider();
+				if (provider != null)
+				{
 					return provider.getSelection();
 				}
 			}
@@ -83,12 +83,17 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 			return null;
 		}
 
-		protected static boolean textHasContent(String text) {
-			if (text != null) {
+		protected static boolean textHasContent(String text)
+		{
+			if (text != null)
+			{
 				int length = text.length();
-				if (length > 0) {
-					for (int i = 0; i < length; i++) {
-						if (Character.isLetterOrDigit(text.charAt(i))) {
+				if (length > 0)
+				{
+					for (int i = 0; i < length; i++)
+					{
+						if (Character.isLetterOrDigit(text.charAt(i)))
+						{
 							return true;
 						}
 					}
@@ -98,25 +103,28 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 			return false;
 		}
 
-		protected Object resolveTextSelection(ITextSelection selection) {
+		protected Object resolveTextSelection(ITextSelection selection)
+		{
 			String text = selection.getText();
-			if (textHasContent(text)) {
-				region = new Region(selection.getOffset(), selection
-						.getLength());
+			if (textHasContent(text))
+			{
+				region = new Region(selection.getOffset(), selection.getLength());
 				return text;
-			} else if (part instanceof IEditorPart) {
+			} else if (part instanceof IEditorPart)
+			{
 				IEditorPart editor = (IEditorPart) part;
-				if (editor instanceof ITextEditor) {
+				if (editor instanceof ITextEditor)
+				{
 					ITextEditor textEditor = (ITextEditor) editor;
-					IDocument doc = textEditor.getDocumentProvider()
-							.getDocument(editor.getEditorInput());
-					region = VdmWordFinder.findWord(doc, selection
-							.getOffset());
-					if (region != null) {
-						try {
-							return doc.get(region.getOffset(), region
-									.getLength());
-						} catch (BadLocationException e) {
+					IDocument doc = textEditor.getDocumentProvider().getDocument(editor.getEditorInput());
+					region = VdmWordFinder.findWord(doc, selection.getOffset());
+					if (region != null)
+					{
+						try
+						{
+							return doc.get(region.getOffset(), region.getLength());
+						} catch (BadLocationException e)
+						{
 						}
 					}
 				}
@@ -126,22 +134,27 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 		}
 
 		protected Object resolveStructuredSelection(
-				IStructuredSelection selection) {
-			if (!selection.isEmpty()) {
-				if (part.getSite().getId().equals(
-						IDebugUIConstants.ID_DEBUG_VIEW)) {
-					IEditorPart editor = part.getSite().getPage()
-							.getActiveEditor();
+				IStructuredSelection selection)
+		{
+			if (!selection.isEmpty())
+			{
+				if (part.getSite().getId().equals(IDebugUIConstants.ID_DEBUG_VIEW))
+				{
+					IEditorPart editor = part.getSite().getPage().getActiveEditor();
 
 					ISelection newSelection = getSelection(editor);
-					if (newSelection instanceof ITextSelection) {
+					if (newSelection instanceof ITextSelection)
+					{
 						return resolveTextSelection((ITextSelection) newSelection);
 					}
-				} else {
-					Iterator elements = selection.iterator();
-					while (elements.hasNext()) {
+				} else
+				{
+					Iterator<?> elements = selection.iterator();
+					while (elements.hasNext())
+					{
 						Object element = elements.next();
-						if (!(element instanceof IVdmVariable)) {
+						if (!(element instanceof IVdmVariable))
+						{
 							return null;
 						}
 					}
@@ -153,25 +166,30 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 			return null;
 		}
 
-		public ObjectResolver(IWorkbenchPart part) {
+		public ObjectResolver(IWorkbenchPart part)
+		{
 			this.part = part;
 		}
 
-		public Object resolveSelectedObject() {
+		public Object resolveSelectedObject()
+		{
 			ISelection selection = getSelection(part);
 
-			if (selection instanceof ITextSelection) {
+			if (selection instanceof ITextSelection)
+			{
 				return resolveTextSelection((ITextSelection) selection);
-			} else if (selection instanceof IStructuredSelection) {
+			} else if (selection instanceof IStructuredSelection)
+			{
 				return resolveStructuredSelection((IStructuredSelection) selection);
 			}
 
 			return null;
 		}
 
-		public IRegion getRegion() {
-			return region;
-		}
+//		public IRegion getRegion()
+//		{
+//			return region;
+//		}
 	}
 
 	private IWorkbenchWindow window;
@@ -181,71 +199,87 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 	private boolean evaluation;
 
 	protected static IDebugModelPresentation getDebugModelPresentation(
-			String identifier) {
+			String identifier)
+	{
 		return DebugUITools.newDebugModelPresentation(identifier);
 	}
 
-	private void setWindow(IWorkbenchWindow window) {
+	private void setWindow(IWorkbenchWindow window)
+	{
 		this.window = window;
 	}
 
-	protected IWorkbenchWindow getWindow() {
+	protected IWorkbenchWindow getWindow()
+	{
 		return this.window;
 	}
 
-	private void setPart(IWorkbenchPart part) {
+	private void setPart(IWorkbenchPart part)
+	{
 		this.part = part;
 	}
 
-	protected IWorkbenchPart getPart() {
+	protected IWorkbenchPart getPart()
+	{
 		return this.editor != null ? this.editor : this.part;
 	}
 
-	private void setAction(IAction action) {
+	private void setAction(IAction action)
+	{
 		this.action = action;
 	}
 
-	protected IAction getAction() {
+	protected IAction getAction()
+	{
 		return action;
 	}
 
-	private void setSelectedObject(Object object) {
+	private void setSelectedObject(Object object)
+	{
 		this.selectedObject = object;
 	}
 
-	protected Object getSelectedObject() {
+	protected Object getSelectedObject()
+	{
 		return this.selectedObject;
 	}
 
-	private void setEvaluating(boolean evaluation) {
+	private void setEvaluating(boolean evaluation)
+	{
 		this.evaluation = evaluation;
 	}
 
-	protected boolean isEvaluating() {
+	protected boolean isEvaluating()
+	{
 		return this.evaluation;
 	}
 
-	protected void evaluationCleanup() {
+	protected void evaluationCleanup()
+	{
 		setEvaluating(false);
 		// setTargetPart(fNewTargetPart);
 	}
 
 	private VdmEditor editor;
 
-	private void setEditor(VdmEditor editor) {
+	private void setEditor(VdmEditor editor)
+	{
 		this.editor = editor;
 	}
 
-	protected VdmEditor getEditor() {
+	protected VdmEditor getEditor()
+	{
 		return this.editor;
 	}
 
 	// IWorkbenchWindowActionDelegate
-	public void init(IWorkbenchWindow window) {
+	public void init(IWorkbenchWindow window)
+	{
 		setWindow(window);
 
 		IWorkbenchPage page = window.getActivePage();
-		if (page != null) {
+		if (page != null)
+		{
 			setPart(page.getActivePart());
 		}
 
@@ -253,102 +287,126 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 		update();
 	}
 
-	public void dispose() {
+	public void dispose()
+	{
 		// disposeDebugModelPresentation();
 
 		IWorkbenchWindow window = getWindow();
-		if (window != null) {
+		if (window != null)
+		{
 			window.getPartService().removePartListener(this);
 		}
 	}
 
 	// IObjectActionDelegate
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(IAction action, IWorkbenchPart targetPart)
+	{
 		setAction(action);
 		setPart(targetPart);
 		update();
 	}
 
 	// IActionDelegate
-	public void run(IAction action) {
+	public void run(IAction action)
+	{
 		update();
 		run();
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(IAction action, ISelection selection)
+	{
 		setAction(action);
 	}
 
 	// IPartListener
-	public void partActivated(IWorkbenchPart part) {
+	public void partActivated(IWorkbenchPart part)
+	{
 		setPart(part);
 	}
 
-	public void partBroughtToTop(IWorkbenchPart part) {
+	public void partBroughtToTop(IWorkbenchPart part)
+	{
 
 	}
 
-	public void partClosed(IWorkbenchPart part) {
-		if (part == getPart()) {
+	public void partClosed(IWorkbenchPart part)
+	{
+		if (part == getPart())
+		{
 			setPart(null);
 		}
 	}
 
-	public void partDeactivated(IWorkbenchPart part) {
+	public void partDeactivated(IWorkbenchPart part)
+	{
 
 	}
 
-	public void partOpened(IWorkbenchPart part) {
+	public void partOpened(IWorkbenchPart part)
+	{
 
 	}
 
 	// Other stuff
-	protected void update() {
+	protected void update()
+	{
 		IAction action = getAction();
-		if (action != null) {
+		if (action != null)
+		{
 			ObjectResolver or = new ObjectResolver(getPart());
 			setSelectedObject(or.resolveSelectedObject());
 		}
 	}
 
-	protected void showExpressionView() {
-		if (getPart().getSite().getId().equals(
-				IDebugUIConstants.ID_EXPRESSION_VIEW)) {
+	protected void showExpressionView()
+	{
+		if (getPart().getSite().getId().equals(IDebugUIConstants.ID_EXPRESSION_VIEW))
+		{
 			return;
 		}
 
 		IWorkbenchPage page = VdmDebugPlugin.getActivePage();
-		if (page != null) {
-			IViewPart part = page
-					.findView(IDebugUIConstants.ID_EXPRESSION_VIEW);
-			if (part == null) {
-				try {
+		if (page != null)
+		{
+			IViewPart part = page.findView(IDebugUIConstants.ID_EXPRESSION_VIEW);
+			if (part == null)
+			{
+				try
+				{
 					page.showView(IDebugUIConstants.ID_EXPRESSION_VIEW);
-				} catch (PartInitException e) {
+				} catch (PartInitException e)
+				{
 					// reportError(e.getStatus().getMessage());
 				}
-			} else {
+			} else
+			{
 				page.bringToTop(part);
 			}
 		}
 	}
 
-	public static StyledText getStyledText(IWorkbenchPart part) {
+	public static StyledText getStyledText(IWorkbenchPart part)
+	{
 		ITextViewer viewer = (ITextViewer) part.getAdapter(ITextViewer.class);
 		StyledText textWidget = null;
-		if (viewer == null) {
+		if (viewer == null)
+		{
 			Control control = (Control) part.getAdapter(Control.class);
-			if (control instanceof StyledText) {
+			if (control instanceof StyledText)
+			{
 				textWidget = (StyledText) control;
 			}
-		} else {
+		} else
+		{
 			textWidget = viewer.getTextWidget();
 		}
 		return textWidget;
 	}
 
-	public static Point getPopupAnchor(StyledText textWidget) {
-		if (textWidget != null) {
+	public static Point getPopupAnchor(StyledText textWidget)
+	{
+		if (textWidget != null)
+		{
 			Point docRange = textWidget.getSelectionRange();
 			int midOffset = docRange.x + (docRange.y / 2);
 			Point point = textWidget.getLocationAtOffset(midOffset);
@@ -365,29 +423,35 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 		return null;
 	}
 
-	protected Shell getShell() {
-		if (getPart() != null) {
+	protected Shell getShell()
+	{
+		if (getPart() != null)
+		{
 			return getPart().getSite().getShell();
 		}
 
 		return VdmDebugPlugin.getActiveWorkbenchShell();
 	}
 
-	protected IVdmStackFrame getStackFrameContext() {
+	protected IVdmStackFrame getStackFrameContext()
+	{
 		IWorkbenchPart part = getPart();
 		IVdmStackFrame frame = null;
-		if (part == null) {
-			frame = VdmEvaluationContextManager
-					.getEvaluationContext(getWindow());
-		} else {
+		if (part == null)
+		{
+			frame = VdmEvaluationContextManager.getEvaluationContext(getWindow());
+		} else
+		{
 			frame = VdmEvaluationContextManager.getEvaluationContext(part);
 		}
 		return frame;
 	}
 
-	protected void run() {
+	protected void run()
+	{
 		final IVdmStackFrame stackFrame = getStackFrameContext();
-		if (stackFrame == null) {
+		if (stackFrame == null)
+		{
 			reportError("VdmEvaluationAction_cannotGetStackFrame");
 			return;
 		}
@@ -395,119 +459,133 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 		// setNewTargetPart(getTargetPart());
 
 		// Preparing runnable
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		IRunnableWithProgress runnable = new IRunnableWithProgress()
+		{
 			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
-				if (stackFrame.isSuspended()) {
+					throws InvocationTargetException, InterruptedException
+			{
+				if (stackFrame.isSuspended())
+				{
 					Object selection = getSelectedObject();
-					if (!(selection instanceof String)) {
+					if (!(selection instanceof String))
+					{
 						return;
 					}
 					String expression = (String) selection;
 
-					IVdmEvaluationEngine engine = stackFrame
-							.getVdmThread().getEvaluationEngine();
+					IVdmEvaluationEngine engine = stackFrame.getVdmThread().getEvaluationEngine();
 					setEvaluating(true);
-					engine.asyncEvaluate(expression, stackFrame,
-							VdmEvaluationAction.this);
-				} else {
-					throw new InvocationTargetException(
-							null,
-							"VdmEvaluationAction_threadIsNotSuspended");
+					engine.asyncEvaluate(expression, stackFrame, VdmEvaluationAction.this);
+				} else
+				{
+					throw new InvocationTargetException(null, "VdmEvaluationAction_threadIsNotSuspended");
 				}
 			}
 		};
 
 		// Run
-		try {
-			IWorkbench workbench = VdmDebugPlugin.getDefault()
-					.getWorkbench();
+		try
+		{
+			IWorkbench workbench = VdmDebugPlugin.getDefault().getWorkbench();
 			workbench.getProgressService().busyCursorWhile(runnable);
-		} catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e)
+		{
 			evaluationCleanup();
 			String message = e.getMessage();
-			if (message == null) {
+			if (message == null)
+			{
 				message = e.getClass().getName();
-				if (e.getCause() != null) {
+				if (e.getCause() != null)
+				{
 					message = e.getCause().getClass().getName();
-					if (e.getCause().getMessage() != null) {
+					if (e.getCause().getMessage() != null)
+					{
 						message = e.getCause().getMessage();
 					}
 				}
 			}
 			reportError(message);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e)
+		{
 		}
 	}
 
 	// Error reporting
-	public static String getExceptionMessage(Throwable exception) {
-		if (exception instanceof CoreException) {
+	public static String getExceptionMessage(Throwable exception)
+	{
+		if (exception instanceof CoreException)
+		{
 			CoreException ce = (CoreException) exception;
 			Throwable throwable = ce.getStatus().getException();
-			if (throwable instanceof CoreException) {
+			if (throwable instanceof CoreException)
+			{
 				// Traverse nested CoreExceptions
 				return getExceptionMessage(throwable);
 			}
 			return ce.getStatus().getMessage();
 		}
-		String message = NLS.bind(
-				"Messages.VdmEvaluationAction_anExceptionOccurred", exception
-						.getClass());
-		if (exception.getMessage() != null) {
-			message = NLS.bind(
-					"Messages.VdmEvaluationAction_anExceptionOccurred2",
-					message, exception.getMessage());
+		String message = NLS.bind("Messages.VdmEvaluationAction_anExceptionOccurred", exception.getClass());
+		if (exception.getMessage() != null)
+		{
+			message = NLS.bind("Messages.VdmEvaluationAction_anExceptionOccurred2", message, exception.getMessage());
 		}
 		return message;
 	}
 
-	protected static String getErrorMessage(IVdmEvaluationResult result) {
+	protected static String getErrorMessage(IVdmEvaluationResult result)
+	{
 		String[] errors = result.getErrorMessages();
-		if (errors.length == 0) {
+		if (errors.length == 0)
+		{
 			return getExceptionMessage(result.getException());
 		}
 		return getErrorMessage(errors);
 	}
 
-	protected static String getErrorMessage(String[] errors) {
+	protected static String getErrorMessage(String[] errors)
+	{
 		String message = ""; //$NON-NLS-1$
-		for (int i = 0; i < errors.length; i++) {
+		for (int i = 0; i < errors.length; i++)
+		{
 			String msg = errors[i];
-			if (i == 0) {
+			if (i == 0)
+			{
 				message = msg;
-			} else {
-				message = NLS.bind(
-						"Messages.VdmEvaluationAction_errorMessage, message",
-						msg);
+			} else
+			{
+				message = NLS.bind("Messages.VdmEvaluationAction_errorMessage, message", msg);
 			}
 		}
 		return message;
 	}
 
-	protected void reportErrors(IVdmEvaluationResult result) {
+	protected void reportErrors(IVdmEvaluationResult result)
+	{
 		String message = getErrorMessage(result);
 		reportError(message);
 	}
 
-	protected void reportError(String message) {
-		Status status = new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID
-				, IStatus.ERROR, message, null);
-		ErrorDialog.openError(getShell(),
-				"Messages.VdmEvaluationAction_errorEvaluating", null, status);
+	protected void reportError(String message)
+	{
+		Status status = new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, IStatus.ERROR, message, null);
+		ErrorDialog.openError(getShell(), "Messages.VdmEvaluationAction_errorEvaluating", null, status);
 	}
 
 	// IVdmEvaluationListener
-	public void evaluationComplete(IVdmEvaluationResult result) {
+	public void evaluationComplete(IVdmEvaluationResult result)
+	{
 		// if plug-in has shutdown, ignore - see bug# 8693
-		if (VdmDebugPlugin.getDefault() == null) {
+		if (VdmDebugPlugin.getDefault() == null)
+		{
 			return;
 		}
 
 		final IVdmValue value = result.getValue();
-		if (result.hasErrors() || value != null) {
+		if (result.hasErrors() || value != null)
+		{
 			final Display display = VdmDebugPlugin.getStandardDisplay();
-			if (display.isDisposed()) {
+			if (display.isDisposed())
+			{
 				return;
 			}
 
@@ -517,17 +595,26 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 
 	}
 
-	protected void displayResult(IVdmEvaluationResult result) {
+	protected void displayResult(IVdmEvaluationResult result)
+	{
 		// Nothing by default
 	}
 
 	// IEditorActionDelegate
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		setEditor((VdmEditor) targetEditor);
+	public void setActiveEditor(IAction action, IEditorPart targetEditor)
+	{
+		if (targetEditor instanceof VdmEditor)
+		{
+			setEditor((VdmEditor) targetEditor);
+		} else
+		{
+			setEditor(null);
+		}
 	}
 
 	// IViewActionDelegate
-	public void init(IViewPart view) {
+	public void init(IViewPart view)
+	{
 		setPart(view);
 	}
 }

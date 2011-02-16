@@ -45,7 +45,7 @@ public class VdmWatchAction extends VdmEvaluationAction {
 
 		if (selectedObject instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) selectedObject;
-			Iterator elements = selection.iterator();
+			Iterator<?> elements = selection.iterator();
 			while (elements.hasNext()) {
 				try {
 					createWatchExpression(((IVdmVariable) elements.next())
