@@ -53,7 +53,7 @@ public class SystemClock
 			RTLogger.log(new RTExtendedTextMessage(String.format("-- Moved time by %d", duration)));
 		}
 	}
-	
+
 	/**
 	 * Time unit enumeration used to specify units used in the VDM syntax
 	 * @author kela
@@ -62,13 +62,13 @@ public class SystemClock
 	public enum TimeUnit
 	{
 		seconds(1.0,"s"),
-		
+
 		decisecond(Math.pow(10, -1),"ds"),
 		centisecond(Math.pow(10, -2),"cs"),
 		millisecond(Math.pow(10, -3),"ms"),
-		microsecond(Math.pow(10, -6),"µs"),
+		microsecond(Math.pow(10, -6),"ï¿½s"),
 		nanosecond(Math.pow(10, -9),"ns");
-				
+
 		private final Double value;
 		private final String symbol;
 		private TimeUnit(Double value,String symbol)
@@ -76,12 +76,12 @@ public class SystemClock
 			this.value = value;
 			this.symbol = symbol;
 		}
-		
+
 		public Double getValue()
 		{
 			return value;
 		}
-		
+
 		@Override
 		public String toString()
 		{
@@ -97,9 +97,9 @@ public class SystemClock
 	 */
 	public static long timeToInternal(TimeUnit unit,Double time)
 	{
-		return (long) Math.round(((time*unit.getValue())/TimeUnit.nanosecond.getValue()));
+		return Math.round(((time*unit.getValue())/TimeUnit.nanosecond.getValue()));
 	}
-	
+
 	/**
 	 * Utility method to convert a value in the given unit to the internal time
 	 * @param unit The unit of the time parameter
@@ -108,9 +108,9 @@ public class SystemClock
 	 */
 	public static long timeToInternal(TimeUnit unit,long time)
 	{
-		return (long) Math.round(((time*unit.getValue())/TimeUnit.nanosecond.getValue()));
+		return Math.round(((time*unit.getValue())/TimeUnit.nanosecond.getValue()));
 	}
-	
+
 	/**
 	 * Utility method to convert the internal time to the given unit.
 	 * @param unit The unit to convert the internal time to
@@ -121,7 +121,7 @@ public class SystemClock
 	{
 		return (internalTime*TimeUnit.nanosecond.getValue())/unit.getValue();
 	}
-	
+
 	/**
 	 * Utility method to convert the internal time to the given unit.
 	 * @param unit The unit to convert the internal time to

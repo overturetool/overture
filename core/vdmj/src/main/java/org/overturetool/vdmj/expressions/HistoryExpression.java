@@ -34,10 +34,10 @@ import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.IntegerValue;
+import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.Value;
@@ -110,11 +110,15 @@ public class HistoryExpression extends Expression
     		}
 
     		location.hit();
-    		return new IntegerValue(result);
+    		return new NaturalValue(result);
 		}
 		catch (ValueException e)
 		{
 			return abort(e);
+		}
+		catch (Exception e)
+		{
+			return abort(4065, e.getMessage(), ctxt);
 		}
 	}
 
@@ -181,6 +185,6 @@ public class HistoryExpression extends Expression
     		}
 		}
 
-		return new IntegerType(location);
+		return new NaturalType(location);
 	}
 }

@@ -335,7 +335,7 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 		return null;
 	}
 
-	public ValueList getAllValues(@SuppressWarnings("unused") Context ctxt) throws ValueException
+	public ValueList getAllValues(Context ctxt) throws ValueException
 	{
 		throw new ValueException(4, "Cannot get bind values for type " + this, ctxt);
 	}

@@ -27,6 +27,9 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.PONameContext;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -152,5 +155,14 @@ public class PerSyncDefinition extends Definition
 	public Expression getExpression()
 	{
 		return guard;
+	}
+
+	@Override
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ctxt.push(new PONameContext(new LexNameList(opname)));
+		ProofObligationList list = guard.getProofObligations(ctxt);
+		ctxt.pop();
+		return list;
 	}
 }
