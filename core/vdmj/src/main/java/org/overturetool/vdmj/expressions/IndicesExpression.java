@@ -32,7 +32,7 @@ import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.IntegerValue;
+import org.overturetool.vdmj.values.NaturalOneValue;
 import org.overturetool.vdmj.values.SetValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
@@ -79,7 +79,7 @@ public class IndicesExpression extends UnaryExpression
 
     		for (int i=1; i<= seq.size(); i++)
     		{
-    			result.add(new IntegerValue(i));
+    			result.add(new NaturalOneValue(i));
     		}
 
     		return new SetValue(result);
@@ -88,6 +88,10 @@ public class IndicesExpression extends UnaryExpression
         {
         	return abort(e);
         }
+		catch (Exception e)
+		{
+			return abort(4065, e.getMessage(), ctxt);
+		}
 	}
 
 	@Override

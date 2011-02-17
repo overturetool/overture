@@ -30,7 +30,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.IntegerValue;
+import org.overturetool.vdmj.values.NaturalValue;
 import org.overturetool.vdmj.values.Value;
 
 public class ThreadIdExpression extends Expression
@@ -45,8 +45,15 @@ public class ThreadIdExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		location.hit();
-		return new IntegerValue(ctxt.threadState.threadId);
+		try
+		{
+			location.hit();
+			return new NaturalValue(ctxt.threadState.threadId);
+		}
+		catch (Exception e)
+		{
+			return abort(4065, e.getMessage(), ctxt);
+		}
 	}
 
 	@Override
