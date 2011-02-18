@@ -98,5 +98,7 @@ public interface IVdmProject extends IAdaptable
 	public IVdmModel getModel();
 
 	public ModelBuildPath getModelBuildPath();
+	
+	public Options getOptions();
 
 }

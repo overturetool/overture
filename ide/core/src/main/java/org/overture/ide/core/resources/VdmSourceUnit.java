@@ -55,14 +55,28 @@ public class VdmSourceUnit implements IVdmSourceUnit
 			Map<LexLocation, IAstNode> locationToAstNodeMap, boolean parseErrors)
 	{
 		this.parseList.clear();
-		this.allLocation.clear();
-		this.locationToAstNodeMap.clear();
+		
+			this.allLocation.clear();
+		
+		
+		
+			this.locationToAstNodeMap.clear();
+		
+		
 		this.parseErrors = parseErrors;
 		if (!parseErrors)
 		{
 			this.parseList.addAll(parseResult);
-			this.allLocation.addAll(allLocation);
-			this.locationToAstNodeMap.putAll(locationToAstNodeMap);
+			synchronized (allLocation)
+			{
+				this.allLocation.addAll(allLocation);
+			}
+			
+			synchronized (locationToAstNodeMap)
+			{
+				this.locationToAstNodeMap.putAll(locationToAstNodeMap);
+			}
+			
 		}
 
 		fireChangedEvent();

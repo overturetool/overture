@@ -55,6 +55,7 @@ public abstract class VdmSourceViewerConfiguration extends
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
 	{
 		MonoReconciler reconciler = new MonoReconciler(new VdmReconcilingStrategy(), false);
+		reconciler.setDelay(800);//TODO
 		reconciler.install(sourceViewer);
 
 		return reconciler;

@@ -23,7 +23,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.overture.ide.core.resources.IOptionGroup;
 import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.plugins.latex.Activator;
 import org.overture.ide.plugins.latex.ILatexConstants;
 
 @SuppressWarnings("restriction")
@@ -56,7 +58,7 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 		// org.eclipse.swt.widgets.FileDialog
 
 		final Composite myComposite = new Composite(parent, SWT.NONE);
-
+try{
 		FillLayout layout = new FillLayout();
 		// layout.numColumns = 1;
 		layout.type = SWT.VERTICAL;
@@ -80,17 +82,15 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 
 		fileNameText = new Text(mainDocumentGroup, SWT.FILL);
 		fileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
+		IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID,true);
+				
 		String documentName = null;
-		try
+		String tmpDoc = opt.getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT,null);
+		if (tmpDoc != null)
 		{
-			String tmp = project.getPersistentProperty(getQualifierName(ILatexConstants.LATEX_MAIN_DOCUMENT));
-			if (tmp != null)
-			{
-				documentName = tmp;
-			}
-		} catch (CoreException e1)
-		{
-			e1.printStackTrace();
+			documentName = tmpDoc;
 		}
 		if (documentName == null)
 			fileNameText.setText(project.getProject().getName() + ".tex");
@@ -124,53 +124,23 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 
 		useAutoReportGeneration = new Button(mainDocumentGroup, SWT.CHECK);
 		useAutoReportGeneration.setText("Generate main document");
-		try
-		{
-			String tmp = project.getPersistentProperty(getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT));
-
-			useAutoReportGeneration.setSelection(tmp == null
-					|| tmp.equalsIgnoreCase("true"));
-
-		} catch (CoreException e1)
-		{
-		}
+		useAutoReportGeneration.setSelection(opt.getAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT,true));
 
 		buttonInsertCoverageTables = new Button(mainDocumentGroup, SWT.CHECK);
 		buttonInsertCoverageTables.setText("Insert coverage tables");
-		try
-		{
-			String tmp = project.getPersistentProperty(getQualifierName(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE));
-			buttonInsertCoverageTables.setSelection(tmp == null
-					|| tmp.equalsIgnoreCase("true"));
-
-		} catch (CoreException e1)
-		{
-		}
+		buttonInsertCoverageTables.setSelection( opt.getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE,true));
 
 		buttonMarkCoverage = new Button(mainDocumentGroup, SWT.CHECK);
 		buttonMarkCoverage.setText("Mark coverage");
-		try
-		{
-			String tmp = project.getPersistentProperty(getQualifierName(ILatexConstants.LATEX_MARK_COVERAGE));
-			buttonMarkCoverage.setSelection(tmp == null
-					|| tmp.equalsIgnoreCase("true"));
+		buttonMarkCoverage.setSelection( opt.getAttribute(ILatexConstants.LATEX_MARK_COVERAGE,true));
 
-		} catch (CoreException e1)
-		{
-		}
-		
 		buttonModelOnly = new Button(mainDocumentGroup, SWT.CHECK);
 		buttonModelOnly.setText("Model only");
-		try
-		{
-			String tmp = project.getPersistentProperty(getQualifierName(ILatexConstants.LATEX_MODEL_ONLY));
-			buttonModelOnly.setSelection(tmp == null
-					|| tmp.equalsIgnoreCase("true"));
-
-		} catch (CoreException e1)
-		{
-		}
-
+		buttonModelOnly.setSelection(opt.getAttribute(ILatexConstants.LATEX_MODEL_ONLY,true));
+}catch(Exception e)
+{
+	e.printStackTrace();
+}
 		return myComposite;
 	}
 
@@ -186,18 +156,8 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 			{
 				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT), "false");
 			}
-			
-//			if (useAutoReportGeneration.getSelection())
-//			{
-//				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_MAIN_DOCUMENT), null);
-//				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT), "true");
-//				// project.setMainDocument("");
-//			} else
-//			{
-				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_MAIN_DOCUMENT), fileNameText.getText());
-//				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT), "false");
-//				// project.setMainDocument(fileNameText.getText());
-//			}
+
+			project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_MAIN_DOCUMENT), fileNameText.getText());
 
 			if (buttonInsertCoverageTables.getSelection())
 			{
@@ -206,7 +166,6 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 			{
 				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE), "false");
 			}
-			
 
 			if (buttonMarkCoverage.getSelection())
 			{
@@ -215,7 +174,7 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 			{
 				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_MARK_COVERAGE), "false");
 			}
-			
+
 			if (buttonModelOnly.getSelection())
 			{
 				project.setPersistentProperty(getQualifierName(ILatexConstants.LATEX_MODEL_ONLY), "true");
@@ -228,6 +187,49 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
+		if (p != null)
+		{
+			IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID,true);
+			
+			if (useAutoReportGeneration.getSelection())
+			{
+				opt.setAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, true);
+			} else
+			{
+				opt.setAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, false);
+			}
+
+			opt.setAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT, fileNameText.getText());
+
+			if (buttonInsertCoverageTables.getSelection())
+			{
+				opt.setAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true);
+			} else
+			{
+				opt.setAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, false);
+			}
+
+			if (buttonMarkCoverage.getSelection())
+			{
+				opt.setAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true);
+			} else
+			{
+				opt.setAttribute(ILatexConstants.LATEX_MARK_COVERAGE, false);
+			}
+
+			if (buttonModelOnly.getSelection())
+			{
+				opt.setAttribute(ILatexConstants.LATEX_MODEL_ONLY, true);
+			} else
+			{
+				opt.setAttribute(ILatexConstants.LATEX_MODEL_ONLY, false);
+			}
+
+			opt.getOptions().save();
+		}
+
 		return super.performOk();
 	}
 

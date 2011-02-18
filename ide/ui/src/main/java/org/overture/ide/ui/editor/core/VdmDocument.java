@@ -14,11 +14,6 @@ public class VdmDocument extends Document implements IDocument
 	public IVdmProject getProject()
 	{
 		return source.getProject();
-//		if (file != null && VdmProject.isVdmProject(file.getProject()))
-//		{
-//			return VdmProject.createProject(file.getProject());
-//		}
-//		return null;
 	}
 
 	public IVdmSourceUnit getSourceUnit()

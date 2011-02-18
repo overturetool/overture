@@ -184,19 +184,7 @@
        </filterExpression>
     </commonFilter>
  </extension>
- <!--extension
-       id="org.overture.ide.plugins.latex.builder"
-       name="Pdf Latex Builder"
-       point="org.eclipse.core.resources.builders">
-    <builder
-          callOnEmptyDelta="false"
-          hasNature="false"
-          isConfigurable="false">
-       <run
-             class="org.overture.ide.plugins.latex.builder.LatexIncrementalProjectBuilder">
-       </run>
-    </builder>
- </extension--> 
+
 
 
 

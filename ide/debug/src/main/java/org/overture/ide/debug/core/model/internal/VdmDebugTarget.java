@@ -272,9 +272,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		synchronized (processLock)
 		{
 			return threadManager.isTerminated()
-					&& (process == null || process.isTerminated());
+					&& ((process == null || process.isTerminated()&& isRemote()));
 		}
 	}
+	
+	
 
 	protected static boolean waitTerminated(ITerminate terminate, int chunk,
 			long timeout)
@@ -692,7 +694,13 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	 */
 	public boolean isRemote()
 	{
-		return false;
+		try
+		{
+			return launch.getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
+		} catch (CoreException e)
+		{
+			return false;
+		}
 	}
 
 	public void setVdmProject(IVdmProject project)
@@ -762,7 +770,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		Assert.isNotNull(project, "Project could not be adapted");
-		File outputDir = new File(project.getLocation().toFile(), "generated");
+		File outputDir = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();//new File(project.getLocation().toFile(), "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}

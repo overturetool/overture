@@ -36,6 +36,7 @@ import org.overture.ide.core.builder.SafeBuilder;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.resources.ModelBuildPath;
+import org.overture.ide.core.resources.Options;
 import org.overture.ide.core.utility.ILanguage;
 import org.overture.ide.core.utility.LanguageManager;
 
@@ -59,6 +60,7 @@ public class VdmProject implements IVdmProject
 	public final IProject project;
 	private ILanguage language = null;
 	private final ModelBuildPath modelpath;
+	private Options options = null;
 
 	private VdmProject(IProject project) throws CoreException,
 			NotAllowedException
@@ -798,6 +800,15 @@ public class VdmProject implements IVdmProject
 	public ModelBuildPath getModelBuildPath()
 	{
 		return this.modelpath;
+	}
+
+	public Options getOptions()
+	{
+		if(options == null)
+		{
+			options = Options.load(this);
+		}
+		return options;
 	}
 
 

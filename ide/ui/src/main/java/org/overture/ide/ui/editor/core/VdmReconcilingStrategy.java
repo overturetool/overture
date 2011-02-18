@@ -11,46 +11,23 @@ import org.overture.ide.core.parser.ISourceParser;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmProject;
 
-
 public class VdmReconcilingStrategy implements IReconcilingStrategy
 {
 	private VdmDocument currentDocument;
-
-	public VdmReconcilingStrategy()
-	{
-		
-	}
+	ISourceParser parser;
+	IVdmProject vdmProject;
 
 	public void reconcile(IRegion partition)
 	{
-		try
+		if (currentDocument.getSourceUnit() == null)
 		{
-			if(currentDocument.getSourceUnit() == null)
-			{
-				return;//No reconcile if the source unit had been removed from the project (build path change)
-			}
-			IVdmProject vdmProject = (IVdmProject) currentDocument.getProject()
-					.getAdapter(IVdmProject.class);
-
-			if (currentDocument.getSourceUnit() != null && vdmProject != null)
-			{
-
-				ISourceParser parser = SourceParserManager.getInstance()
-						.getSourceParser(vdmProject);
-
-				if (parser != null)
-				{
-					parser.parse(currentDocument.getSourceUnit(),
-							currentDocument.get());
-				}
-				//Setting type checked to false after some alteration
-				vdmProject.getModel().setIsTypeChecked(false);
-			}
-
-		} catch (CoreException e)
+			return;// No reconcile if the source unit had been removed from the project (build path change)
+		} else if (parser != null)
 		{
-			if (VdmCore.DEBUG)
-				e.printStackTrace();
+			parser.parse(currentDocument.getSourceUnit(), currentDocument.get());
+
+			// Setting type checked to false after some alteration
+			vdmProject.getModel().setIsTypeChecked(false);
 		}
 	}
 
@@ -62,7 +39,23 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 	public void setDocument(IDocument document)
 	{
 		if (document instanceof VdmDocument)
+		{
 			currentDocument = (VdmDocument) document;
+			vdmProject = (IVdmProject) currentDocument.getProject().getAdapter(IVdmProject.class);
+			if (currentDocument.getSourceUnit() != null && vdmProject != null)
+			{
+
+				try
+				{
+					parser = SourceParserManager.getInstance().getSourceParser(vdmProject);
+				} catch (CoreException e)
+				{
+					if (VdmCore.DEBUG)
+						e.printStackTrace();
+				}
+
+			}
+		}
 	}
 
 }

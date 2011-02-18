@@ -107,6 +107,11 @@ public class ModelBuildPath
 			VdmCore.log("Faild to parse .modelpath file", e);
 		}
 	}
+	
+	public synchronized void setOutput(IContainer container)
+	{
+		this.output = container;
+	}
 
 	public synchronized void add(IContainer container)
 	{

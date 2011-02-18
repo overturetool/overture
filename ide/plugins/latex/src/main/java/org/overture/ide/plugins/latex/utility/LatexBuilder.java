@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.latex.Activator;
 import org.overturetool.vdmj.lex.Dialect;
 
@@ -40,11 +41,11 @@ public class LatexBuilder
 
 	}
 
-	public void saveDocument(File projectRoot, String name) throws IOException
+	public void saveDocument(IProject project,File projectRoot, String name) throws IOException
 	{
 		String document = readFile("latex/document.tex");
 		String documentFileName = name;// + ".tex";
-		File latexRoot = makeOutputFolder(projectRoot);
+		File latexRoot = makeOutputFolder(project);
 		StringBuilder sb = new StringBuilder();
 		String title = //"Coverage Report: " + 
 		projectRoot.getName().replace('\\', '/').substring(0,
@@ -105,14 +106,15 @@ public class LatexBuilder
 
 	public static File makeOutputFolder(IProject project)
 	{
-		File projectRoot = project.getLocation().toFile();
-		return makeOutputFolder(projectRoot);
-	}
+//		File projectRoot = project.getLocation().toFile();
+//		return makeOutputFolder(project);
+//	}
+//
+//	public static File makeOutputFolder(IProject  project)
+//	{
 
-	public static File makeOutputFolder(File projectRoot)
-	{
-
-		File outputFolder = new File(projectRoot, "generated");
+		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
+		File outputFolder = p.getModelBuildPath().getOutput().getLocation().toFile();//new File(projectRoot, "generated");
 		if (!outputFolder.exists())
 			outputFolder.mkdirs();
 

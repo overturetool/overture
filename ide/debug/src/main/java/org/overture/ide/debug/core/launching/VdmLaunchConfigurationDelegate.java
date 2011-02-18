@@ -69,8 +69,10 @@ public class VdmLaunchConfigurationDelegate implements
 			final DebugSessionAcceptor acceptor = new DebugSessionAcceptor(target, monitor);
 			try
 			{
-				monitor.worked(1);
-				target.setProcess(launchExternalProcess(launch, commandList, getVdmProject(configuration), configuration));
+				if(!useRemoteDebug(configuration))
+				{
+					target.setProcess(launchExternalProcess(launch, commandList, getVdmProject(configuration), configuration));
+				}
 				monitor.worked(1);
 
 				// Waiting for debugging engine to connect
@@ -364,7 +366,7 @@ public class VdmLaunchConfigurationDelegate implements
 	protected File getOutputFolder(IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
 	{
-		File outputDir = new File(getProject(configuration).getLocation().toFile(), "generated");
+		File outputDir = project.getModelBuildPath().getOutput().getLocation().toFile();//new File(getProject(configuration).getLocation().toFile(), "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}

@@ -56,7 +56,7 @@ public class VdmTools
 			sb.append(HEADER_FILE + path.length() + "," + path);
 		}
 
-		File generated = new File(location, "generated");
+		File generated = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();//new File(location, "generated");
 		generated.mkdirs();
 
 		PluginFolderInclude.writeFile(generated, vdmProject.getName() + ".prj", sb.toString());
