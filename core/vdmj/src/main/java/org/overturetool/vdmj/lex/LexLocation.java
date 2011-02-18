@@ -87,8 +87,10 @@ public class LexLocation implements Serializable
 		this.startPos = startPos;
 		this.endLine = endLine;
 		this.endPos = endPos;
-
-		allLocations.add(this);
+		synchronized (allLocations)
+		{
+			allLocations.add(this);
+		}
 	}
 
 	/**
@@ -173,17 +175,31 @@ public class LexLocation implements Serializable
 
 	public static void clearLocations()
 	{
-		for (LexLocation loc: allLocations)
+		synchronized (allLocations)
 		{
-			loc.hits = 0;
+			for (LexLocation loc: allLocations)
+			{
+				loc.hits = 0;
+			}
 		}
 	}
 
 	public static void resetLocations()
 	{
-		allLocations = new Vector<LexLocation>();
-		locationToAstNode = new Hashtable<LexLocation, IAstNode>();
-		nameSpans =	new HashMap<LexNameToken, LexLocation>();
+		synchronized (allLocations)
+		{
+			allLocations = new Vector<LexLocation>();
+		}
+		
+		synchronized (locationToAstNode)
+		{
+			locationToAstNode = new Hashtable<LexLocation, IAstNode>();
+		}
+		
+		synchronized (nameSpans)
+		{
+			nameSpans =	new HashMap<LexNameToken, LexLocation>();
+		}
 	}
 
 	public static void clearAfter(File file, int linecount, int charpos)
@@ -191,23 +207,27 @@ public class LexLocation implements Serializable
 		// Called from the LexTokenReader's pop method, to remove any
 		// locations "popped". We assume any pushes are on the end of
 		// the vector.
-
-		ListIterator<LexLocation> it =
-			allLocations.listIterator(allLocations.size());
-
-		while (it.hasPrevious())
+		synchronized (allLocations)
 		{
-			LexLocation l = it.previous();
+	
 
-			if (!l.file.equals(file) ||
-				l.startLine < linecount ||
-				(l.startLine == linecount && l.startPos < charpos))
+			ListIterator<LexLocation> it =
+				allLocations.listIterator(allLocations.size());
+
+			while (it.hasPrevious())
 			{
-				break;
-			}
-			else
-			{
-				it.remove();
+				LexLocation l = it.previous();
+
+				if (!l.file.equals(file) ||
+						l.startLine < linecount ||
+						(l.startLine == linecount && l.startPos < charpos))
+				{
+					break;
+				}
+				else
+				{
+					it.remove();
+				}
 			}
 		}
 	}
@@ -246,20 +266,28 @@ public class LexLocation implements Serializable
 	{
 		int hits = 0;
 		int misses = 0;
-		LexLocation span = nameSpans.get(name);
-
-		for (LexLocation l: allLocations)
+		LexLocation span = null;
+		
+		synchronized (nameSpans)
 		{
-			if (l.executable && l.within(span))
+			span = nameSpans.get(name);
+		}
+		
+		synchronized (allLocations)
+		{
+			for (LexLocation l: allLocations)
 			{
-				if (l.hits > 0)
-    			{
-    				hits++;
-    			}
-    			else
-    			{
-    				misses++;
-    			}
+				if (l.executable && l.within(span))
+				{
+					if (l.hits > 0)
+					{
+						hits++;
+					}
+					else
+					{
+						misses++;
+					}
+				}
 			}
 		}
 
@@ -272,13 +300,21 @@ public class LexLocation implements Serializable
 		// The assumption is that the first executable location in
 		// the span for the name is hit as many time as the span is called.
 
-		LexLocation span = nameSpans.get(name);
-
-		for (LexLocation l: allLocations)
+		LexLocation span = null;
+		
+		synchronized (nameSpans)
 		{
-			if (l.executable && l.within(span))
+			span = nameSpans.get(name);
+		}
+		
+		synchronized (allLocations)
+		{
+			for (LexLocation l: allLocations)
 			{
-				return l.hits;
+				if (l.executable && l.within(span))
+				{
+					return l.hits;
+				}
 			}
 		}
 
@@ -289,11 +325,14 @@ public class LexLocation implements Serializable
 	{
 		List<Integer> hits = new Vector<Integer>();
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.hits > 0 && l.file.equals(file))
+			for (LexLocation l: allLocations)
 			{
-				hits.add(l.startLine);
+				if (l.hits > 0 && l.file.equals(file))
+				{
+					hits.add(l.startLine);
+				}
 			}
 		}
 
@@ -304,11 +343,14 @@ public class LexLocation implements Serializable
 	{
 		List<Integer> misses = new Vector<Integer>();
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.hits == 0 && l.file.equals(file))
+			for (LexLocation l: allLocations)
 			{
-				misses.add(l.startLine);
+				if (l.hits == 0 && l.file.equals(file))
+				{
+					misses.add(l.startLine);
+				}
 			}
 		}
 
@@ -320,12 +362,15 @@ public class LexLocation implements Serializable
 		List<Integer> lines = new Vector<Integer>();
 		int last = 0;
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.executable && l.startLine != last && l.file.equals(file))
+			for (LexLocation l: allLocations)
 			{
-				lines.add(l.startLine);
-				last = l.startLine;
+				if (l.executable && l.startLine != last && l.file.equals(file))
+				{
+					lines.add(l.startLine);
+					last = l.startLine;
+				}
 			}
 		}
 
@@ -337,19 +382,22 @@ public class LexLocation implements Serializable
 		Map<Integer, List<LexLocation>> map =
 				new HashMap<Integer, List<LexLocation>>();
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.executable && l.hits > 0 && l.file.equals(file))
+			for (LexLocation l: allLocations)
 			{
-				List<LexLocation> list = map.get(l.startLine);
-
-				if (list == null)
+				if (l.executable && l.hits > 0 && l.file.equals(file))
 				{
-					list = new Vector<LexLocation>();
-					map.put(l.startLine, list);
-				}
+					List<LexLocation> list = map.get(l.startLine);
 
-				list.add(l);
+					if (list == null)
+					{
+						list = new Vector<LexLocation>();
+						map.put(l.startLine, list);
+					}
+
+					list.add(l);
+				}
 			}
 		}
 
@@ -361,18 +409,21 @@ public class LexLocation implements Serializable
 		int hits = 0;
 		int misses = 0;
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.file.equals(file) && l.executable)
+			for (LexLocation l: allLocations)
 			{
-				if (l.hits > 0)
-    			{
-    				hits++;
-    			}
-    			else
-    			{
-    				misses++;
-    			}
+				if (l.file.equals(file) && l.executable)
+				{
+					if (l.hits > 0)
+					{
+						hits++;
+					}
+					else
+					{
+						misses++;
+					}
+				}
 			}
 		}
 
@@ -385,19 +436,22 @@ public class LexLocation implements Serializable
 		Map<Integer, List<LexLocation>> map =
 				new HashMap<Integer, List<LexLocation>>();
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.executable && l.hits == 0 && l.file.equals(file))
+			for (LexLocation l: allLocations)
 			{
-				List<LexLocation> list = map.get(l.startLine);
-
-				if (list == null)
+				if (l.executable && l.hits == 0 && l.file.equals(file))
 				{
-					list = new Vector<LexLocation>();
-					map.put(l.startLine, list);
-				}
+					List<LexLocation> list = map.get(l.startLine);
 
-				list.add(l);
+					if (list == null)
+					{
+						list = new Vector<LexLocation>();
+						map.put(l.startLine, list);
+					}
+
+					list.add(l);
+				}
 			}
 		}
 
@@ -408,11 +462,14 @@ public class LexLocation implements Serializable
 	{
 		List<LexLocation> locations = new Vector<LexLocation>();
 
-		for (LexLocation l: allLocations)
+		synchronized (allLocations)
 		{
-			if (l.executable && l.file.equals(file))
+			for (LexLocation l: allLocations)
 			{
-				locations.add(l);
+				if (l.executable && l.file.equals(file))
+				{
+					locations.add(l);
+				}
 			}
 		}
 
@@ -460,7 +517,10 @@ public class LexLocation implements Serializable
 	
 	public static void addAstNode(LexLocation location, IAstNode node)
 	{
-		locationToAstNode.put(location, node);
+		synchronized (locationToAstNode)
+		{
+			locationToAstNode.put(location, node);
+		}
 	}
 	
 	public static Map<LexLocation,IAstNode> getLocationToAstNodeMap()

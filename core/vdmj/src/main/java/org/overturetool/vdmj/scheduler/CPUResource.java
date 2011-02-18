@@ -169,7 +169,7 @@ public class CPUResource extends Resource
 	public long getCyclesDuration(long cycles)
 	{
 		//TODO optimize by converting the speed into the correct units only once
-		return SystemClock.timeToInternal(TimeUnit.seconds,new Double(cycles)/clock); // cycles/cpu [Hz]
+		return isVirtual() ? 0 :  SystemClock.timeToInternal(TimeUnit.seconds,new Double(cycles)/clock); // cycles/cpu [Hz]
 	}
 
 	public int getNumber()

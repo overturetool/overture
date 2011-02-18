@@ -112,15 +112,10 @@ public class CyclesStatement extends Statement
 		}
 		else
 		{
-			long step = ctxt.threadState.CPU.getDuration(value);
-			if(ctxt.threadState.CPU.isVirtual())
-			{
-				step = 0;//if vCPU cycles takes no time
-			}
 			me.inOuterTimestep(true);
 			Value rv = statement.eval(ctxt);
 			me.inOuterTimestep(false);
-			me.duration(step, ctxt, location);
+			me.duration(ctxt.threadState.CPU.getDuration(value), ctxt, location);
 			return rv;
 		}
 	}
