@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
 
-import org.overturetool.vdmj.messages.Redirector;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.traces.Verdict;
 import org.overturetool.vdmj.values.Value;
@@ -101,13 +100,16 @@ public class TraceXmlWrapper
 			else if (object instanceof Value)
 				result += object.toString() + " ; ";
 			else
-				result += object.toString();
+				result += object.toString() + " ; ";
 
 		}
 
-		if (result.length() > 3)
-			result = result.substring(0, result.length() - 3); // remove the
-																// last ;
+		result = result.trim();
+		
+		if (result.length() > 0 && result.endsWith(";"))
+		{
+			result = result.substring(0, result.length() - 1); // remove the
+		}														// last ;
 
 		xml.StartElement(RESULT_TAG, NUMBER_TAG, testName, VERDICT_TAG, verdict);
 		xml.WriteValue(result);
