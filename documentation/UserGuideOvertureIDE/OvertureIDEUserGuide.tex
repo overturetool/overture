@@ -880,7 +880,19 @@ possible to inspect compound variables, expand nested structures and
 so on. Note that when you stop at a permission predicate it is also
 possible to see the value of the relevant history counters (in
 Figure~\ref{fig:userguide:DebuggingVDM} \texttt{\#fin(ClientSend)} and
-\texttt{\#fin(ServerListen)}). 
+\texttt{\#fin(ServerListen)}). By right-clicking on a variable it is
+possible to select a ``watch point''. As a result a window like
+Figure~\ref{fig:watchpoint} will occur. Using this it is possible to
+watch the value of such a variable easily whenever a new stop is
+reached in the debugging process.
+
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=.5\textwidth]{screenDumps/watchpoint}
+  \caption{Example of a watchpoint}
+  \label{fig:watchpoint}
+\end{center}
+\end{figure}
 
 \subsection{The Breakpoints View}
 
