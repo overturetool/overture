@@ -261,7 +261,8 @@ IsFinished() == skip;
 sync
   -- getNum is mutually exclusive to ensure unique values
   mutex (getNum);
-  -- getMinMaxAverage is blocked until all responses have been received
+  -- getMinMaxAverage is blocked until all responses have 
+  -- been received
   per getMinMaxAverage => card dom s2e >= max_stimuli;
 
   per IsFinished => #fin(logSysToEnv) > 0;
@@ -281,7 +282,7 @@ operations
 
   public HandleEvent: nat ==> ()
   HandleEvent (pev) == logSysToEnv(pev)
-  post checkResponseTimes(e2s,s2e,24000);
+  post checkResponseTimes(e2s,s2e,24000000000);
 
   public Run: () ==> ()
   Run () == start(self); --,VolumeKnobT);
@@ -311,7 +312,7 @@ operations
 
   public HandleEvent: nat ==> ()
   HandleEvent (pev) == logSysToEnv(pev)
-  post checkResponseTimes(e2s,s2e,40000);
+  post checkResponseTimes(e2s,s2e,40000000000);
 
   public Run: () ==> ()
   Run () == start(self); --,TransmitTMCT);
@@ -341,7 +342,7 @@ operations
 
   public HandleEvent: nat ==> ()
   HandleEvent (pev) == logSysToEnv(pev)
-  post checkResponseTimes(e2s,s2e,22000);
+  post checkResponseTimes(e2s,s2e,22000000000);
 
   public Run: () ==> ()
   Run () == start(self); --,VolumeKnobT);

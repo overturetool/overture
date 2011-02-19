@@ -262,7 +262,7 @@ provides a common look and feel to a large collection of extension
 products. Thus if a user is familiar with one Eclipse product, it will
 generally be easy to start using a different product on the same
 workbench. The Eclipse workbench consists of several panels known as
-\emph{views}, such as the Script Explorer view at the top left of
+\emph{views}, such as the VDM Explorer view at the top left of
 Figure~\ref{fig:OverturePerspective}. A particular
 collection of panels designed to assist a specific activity is called
 a \emph{perspective}. For example
@@ -279,7 +279,7 @@ other perspectives are also available in Overture.
 \end{center}
 \end{figure}
 
-The \emph{Script Explorer view} allows you to create, select, and
+The \emph{VDM Explorer view} allows you to create, select, and
 delete Overture projects and navigate between the files in these
 projects. Start by importing the alarm project from zip file mentioned
 above. This can be done by right clicking the project view
@@ -316,7 +316,7 @@ the standard settings used for new projects.
 
 \begin{figure}[!htb]
 \begin{center}
-  \includegraphics[width=4.0in]{figures/settings}
+  \includegraphics[width=3.0in]{figures/settings}
   \caption[labelInTOC]{Properties for the \texttt{AlarmErrPP} Project}
   \label{fig:settings}
 \end{center}
@@ -368,7 +368,10 @@ possible to see how a couple of expressions (typed in at the box at
 the botton of the view) are evaluated\footnote{If errors appear in
   this evaluation the current version of the Overture IDE simply yield
   a \texttt{Fatal error} where it is anticipated that later releases
-  will provide more helpful run-time errors to the users.}. 
+  will provide more helpful run-time errors to the users.}. Note that
+in order to get a console where you are able to make use of
+definitions you need to use the console launch mode as described in
+Section~\ref{sec:debugconfig} below. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -469,11 +472,11 @@ you can make inside such a VDM++ class.
 In order to map the UML class diagram created in Enterprise Architect
 to VDM, use the \texttt{AlarmUML} project.
 %, a new project must be created in the Overture tool to receive
-%it. This is done by right-clicking in the \emph{Script Explorer} view,
+%it. This is done by right-clicking in the \emph{VDM Explorer} view,
 %and creating a new VDM-PP project and for example naming it
 %\texttt{AlarmUML}. 
 By right-clicking the project
-root in the \emph{Script Explorer}, \emph{UML Transformation} can be
+root in the \emph{VDM Explorer}, \emph{UML Transformation} can be
 chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
 exported from EA and open this. The round-trip engineering abilities of
 this link however is still at a prototype stage so if you wish to use
@@ -599,7 +602,7 @@ order to check if the correct expert is paged as a result of a given
 alarm.
 
 
-\subsection{The Debug Configuration}
+\subsection{The Debug Configuration}\label{sec:debugconfig}
 
 Before the debugging can begin in Overture, a debug configuration must
 be created by right clicking the project and choosing \emph{Debug As}
@@ -625,7 +628,7 @@ dialog have 3 different launch modes:
 
 Here we will start with using 
 the traditional Eclipse approach with an ``Entry Point'' launch
-configuration requires the project name and the class and the operation/function
+configuration which requires the project name and the class and the operation/function
 used as the entry point of the test.  Figure~\ref{fig:debugConfiguration}
 shows the debug configuration for the alarm model. The class and
 operation/function name can be chosen from a Browse dialog; if the

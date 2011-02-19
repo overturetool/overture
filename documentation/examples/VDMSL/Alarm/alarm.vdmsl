@@ -48,20 +48,3 @@ functions
   QualificationOK(exs,reqquali) ==
     exists ex in set exs & reqquali in set ex.quali;
 
-  Test: nat -> nat
-  Test(n) ==
-   let m in set {1,2} in m+n
-  post RESULT > 7
-
-operations
-
-Op: nat ==> nat
-Op(n) ==
-  (st1 := st1 + n;
-   return st1)
-post st1 > 7;
-
-state St of
-  st1 : nat
-init s == s = mk_St(3)
-end

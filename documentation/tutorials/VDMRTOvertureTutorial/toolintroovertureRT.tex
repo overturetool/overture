@@ -156,7 +156,7 @@ provides a common look and feel for a large collection of extension
 products. Thus if a user is familiar with one Eclipse-based product,
 it will generally be easy to start using a different product on the
 same workbench. The Eclipse workbench consists of several panels
-called \emph{views}, such as the Script Explorer view at the top left
+called \emph{views}, such as the VDM Explorer view at the top left
 of Figure~\ref{fig:userguide:OverturePerspective}. A particular
 collection of panels designed to assist a specific activity is called a
 \emph{perspective}. For example
@@ -165,7 +165,7 @@ Overture perspective which contains views for managing Overture
 projects, and viewing and editing files. As we shall show later,
 several other perspectives are avilable in Overture.
 
-The \emph{Script Explorer view} helps you create, select, and delete
+The \emph{VDM Explorer view} helps you create, select, and delete
 Overture projects and navigate between the files in these
 projects. Start by importing the car navigation project from the
 book's web site. This can be done by right clicking the project view
@@ -218,7 +218,10 @@ possible to see how a couple of expressions (typed in at the box at
 the botton of the view) are evaluated\footnote{If errors appear in
   this evaluation the current version of the Overture IDE simply yield
   a \texttt{Fatal error} where it is anticipated that later releases
-  will provide more helpful run-time errors to the users.}. 
+  will provide more helpful run-time errors to the users.}. Note that
+in order to get a console where you are able to make use of
+definitions you need to use the console launch mode as described in
+Section~\ref{sec:debugconfig} below. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -239,7 +242,7 @@ according to context and history.
 When making corrections to the model, you can use the Overture IDE
 templates. When you hit the key combination \textit{CTRL+space} after
 entering the initial characters of the template needed, Overture will
-offer possible completions. For example, if you typ ''op'' followed by
+offer possible completions. For example, if you type ''op'' followed by
 \textit{CTRL+space}, Overture will propose the use of an implicit or
 explicit operation template.
 
@@ -293,13 +296,13 @@ intended to write.
 
 In order to map the UML class diagram created in Enterprise Architect
 to VDM, a new project must be created in the Overture IDE to receive
-it. This is done by right-clicking in the \emph{Script Explorer} view,
+it. This is done by right-clicking in the \emph{VDM Explorer} view,
 and creating a new VDM-RT project and for example naming it
 \texttt{CarRadioNavUML}. If the desired language dialect (say a VDM-RT 
 project) is not directly available in the right-click menu, please choose
 \emph{Project} or 
 \emph{Other} and browse to the VDM-RT project. By right-clicking the new 
-project root in the \emph{Script Explorer}, \emph{UML Transformation} can 
+project root in the \emph{VDM Explorer}, \emph{UML Transformation} can 
 be chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
 exported from EA called \texttt{carradnavuml.xmi} and open this.
 
@@ -376,17 +379,37 @@ RunScenario1 () ==
 end World
 \end{lstlisting}
 
-\subsection{The Debug configuration}
+\subsection{The Debug configuration}\label{sec:debugconfig}
 
 Before you start to debug a model in Overture, you need to set up a
 \emph{debug configuration}. Right click the project and choose
-\emph{Debug As} $ \rightarrow $ \emph{Debug configuration}\footnote{Note that the
-  \emph{Run As} functionality existing Eclipse users are used to is
-  not supported in the current version of Overture. In the current
-  version of Overture debugging of VDM-RT models in general does not
-  work very well because of the scheduling done internally in the
-  interpreter. This is currently being redesigned and it is expected
-  that in the next stable release this will be fully operational.}. The dialog
+\emph{Debug As} $ \rightarrow $ \emph{Debug configuration}.
+%\footnote{Note that the
+%  \emph{Run As} functionality existing Eclipse users are used to is
+%  not supported in the current version of Overture. In the current
+%  version of Overture debugging of VDM-RT models in general does not
+%  work very well because of the scheduling done internally in the
+%  interpreter. This is currently being redesigned and it is expected
+%  that in the next stable release this will be fully operational.}. 
+The debug configuration
+dialog have 3 different launch modes:
+
+\begin{description}
+\item[Entry Point:] This is the standard Eclipse approach where one
+  decides before debugging which operation/function to call.
+\item[Remote Console:] This is an anvanced option that enables remote
+  control of the interpreter and this is described in the Overture
+  user manual~\cite{Larsen&10d}.
+\item[Console:] This will simply start up a console where the user
+  interactive can debug different operations/functions defined in the
+  selected project\footnote{For VDMTools users this will be a familiar
+    console corresponding to a VDM model that has been initialised in
+    VDMTools' interpreter.}.
+\end{description}
+
+Here we will start with using 
+the traditional Eclipse approach with an ``Entry Point'' launch
+configuration which 
 requires the project name, the class, the operation/function used as
 the entry point of the test and the source file containing the entry
 point definition.  As an example,

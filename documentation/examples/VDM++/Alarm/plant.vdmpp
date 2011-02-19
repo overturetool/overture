@@ -19,15 +19,11 @@ PlantInv(as,sch) ==
      forall p in set dom sch &
        exists expert in set sch(p) &
          a.GetReqQuali() in set expert.GetQuali());
-\end{vdm_al}
 
-\begin{vdm_al}
 types
 
 public Period = token;
-\end{vdm_al}
-  
-\begin{vdm_al}
+
 operations
 
 public ExpertToPage: Alarm * Period ==> Expert

@@ -226,7 +226,10 @@ possible to see how a couple of expressions (typed in at the box at
 the botton of the view) are evaluated\footnote{If errors appear in
   this evaluation the current version of the Overture IDE simply yield
   a \texttt{Fatal error} where it is anticipated that later releases
-  will provide more helpful run-time errors to the users.}. 
+  will provide more helpful run-time errors to the users.}. Note that
+in order to get a console where you are able to make use of
+definitions you need to use the console launch mode as described in
+Section~\ref{sec:debugconfig} below. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -364,7 +367,7 @@ exercise the system in order to check whether, for this test, the
 correct expert is paged as a result of a given alarm.
 
 
-\subsection{The Debug configuration}
+\subsection{The Debug configuration}\label{sec:debugconfig}
 
 Before the debugging can be initiated in Overture\footnote{In the
   current version of Overture we advise to use the \texttt{clean}
@@ -373,10 +376,30 @@ Before the debugging can be initiated in Overture\footnote{In the
   checking is conduction prior to debugging.}, a debug
 configuration must be created by right-clicking the project and
 choosing \emph{Debug As} $ \rightarrow $ \emph{Debug
-configuration}\footnote{Note that the
-  \emph{Run As} functionality existing Eclipse users are used to is
-  not supported in the current version of Overture.}. 
-The debug configuration dialog requires the project
+configuration}.
+%\footnote{Note that the
+%  \emph{Run As} functionality existing Eclipse users are used to is
+%  not supported in the current version of Overture.}. 
+
+The debug configuration
+dialog have 3 different launch modes:
+
+\begin{description}
+\item[Entry Point:] This is the standard Eclipse approach where one
+  decides before debugging which operation/function to call.
+\item[Remote Console:] This is an anvanced option that enables remote
+  control of the interpreter and this is described in the Overture
+  user manual~\cite{Larsen&10d}.
+\item[Console:] This will simply start up a console where the user
+  interactive can debug different operations/functions defined in the
+  selected project\footnote{For VDMTools users this will be a familiar
+    console corresponding to a VDM model that has been initialised in
+    VDMTools' interpreter.}.
+\end{description}
+
+Here we will start with using 
+the traditional Eclipse approach with an ``Entry Point'' launch
+configuration which requires the project
 name, the class and the operation/function used as the entry point of the
 test. When the \texttt{AlarmSL} project was imported you also
 automatically got a basic launch configuration called
