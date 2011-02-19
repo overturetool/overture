@@ -1,5 +1,6 @@
 This is a distributed real-time version of a home automation example constructed
 by Sune Wolff. 
+
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------

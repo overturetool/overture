@@ -1,4 +1,3 @@
-
 This specification is a VDM++ model of the SAFER 
 (Simplified Aid for EVA Rescue) example presented in 
 the second volume of the NASA guidebook on formal 
@@ -34,6 +33,7 @@ More explanation about this work can be found in the papers:
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
+#AUTHOR= Sten Agerholm and Peter Gorm Larsen
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

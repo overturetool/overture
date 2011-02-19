@@ -1,3 +1,5 @@
+This is a sequential VDM++ version of a home automation example constructed
+by Sune Wolff. 
 
 #******************************************************
 #  AUTOMATED TEST SETTINGS

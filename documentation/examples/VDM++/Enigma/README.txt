@@ -5,7 +5,9 @@ Verhoef. Validated Designs for Object-oriented Systems, Springer, New York.
 Enigma cipher machine used by the Germans in the Second World War to
 encrypt and decrypt messages that were exchanged between military
 units. The purpose of the model is to get a basic understanding of the
-cipher mechanism as implemented in Enigma.
+cipher mechanism as implemented in Enigma. This example was the first place
+where the VDMUnit testing approach was introduced.
+
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
