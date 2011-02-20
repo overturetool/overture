@@ -6344,7 +6344,8 @@ override the VDM interpreter's default execution time computation.
 \end{lstlisting}
 In this example, assuming that this loop is not executed in the
 context of an enclosing duration statement, on each iteration of the
-loop the VDM interpreters will increment its internal clock by 10 time units,
+loop the VDM interpreters will increment its internal clock by 10 time
+units (nanoseconds),
 rather than computing the amount of time required to execute the
 statement \texttt{n := n + 1}. 
 
@@ -7071,7 +7072,7 @@ variables and the definition must use constructors. The constructor for the
 \texttt{CPU} class takes two parameters: the first one indicate the 
 primary scheduling policy used for the \texttt{CPU} whereas the second 
 parameter provides the capacity of the \texttt{CPU} (indicated as number of 
-instructions Per Second or Hz - NB. the step size of time is 1 nanosecond). 
+instructions Per Second or Hz -- NB. the (time unit) step size of time is 1 nanosecond). 
 The constructor for the \texttt{BUS}
 class takes three parameters. The first one indicates the kind of bus, the
 second one the capacity of the bus (its band width in bytes per second) and finally the third 
@@ -8156,7 +8157,7 @@ operations
 \end{lstlisting}
 
 The Timer's thread ensures that the current time is incremented. The period 
-with which this is done is 1000 time units. The allowed jitter is 10 time units
+with which this is done is 1000 time units (nanoseconds). The allowed jitter is 10 time units
 and the minimal distance between two instances is 200 time units and finally
 no offset has been used.
 %We take one time unit for the Timer to correspond to 10 system time units.
@@ -9074,7 +9075,7 @@ same prefix will be skipped automatically.
 \Ruledef{trace binding definition}{
   \Ruleref{trace let def binding} \dsep 
   \Ruleref{trace let best binding}
-};
+}
  
 \Ruledef{trace let def binding}{ 
   \Lop{let}, \Ruleref{local definition}, 
@@ -9180,8 +9181,7 @@ The \emph{trace concurrency expressions} are similar to the
 definition lists inside it will be executed in all possible
 permulations of the elements. This is particular useful for concurrent
 VDM++ models where potential deadlocks can occur under some
-circumstances\footnote{This feature is not yet available in the tool
-  support.}. 
+circumstances. 
 
 \item[Examples:] In an example like the one below test cases will be
 generated in all possible combination starting with a call
