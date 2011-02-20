@@ -1,4 +1,4 @@
-This is a sequential VDM++ version of a home automation example constructed
+This is a VDM-SL version of a home automation example constructed
 by Sune Wolff. 
 
 More information can be found in:
@@ -10,14 +10,13 @@ Software and Informatics, Vol 3., No 2-3, June/September 2009, pp. 305-341.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Sune Wolff
-#LIB= IO
+#LIB= 
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=new TestComplete().Execute()
-#LIB=IO
+#ENTRY_POINT=DEFAULT`HomeAutomation([mk_(true,20,19,60,62),mk_(false,20,20,60,60),mk_(true,20,19,60,60)])
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************
