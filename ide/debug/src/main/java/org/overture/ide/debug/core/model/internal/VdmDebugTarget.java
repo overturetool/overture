@@ -260,19 +260,21 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	// ITerminate
 	public boolean canTerminate()
 	{
+//		return true;
 		synchronized (processLock)
 		{
-			return threadManager.canTerminate() || process != null
-					&& process.canTerminate();
+			return threadManager.canTerminate() || (process != null && process.canTerminate());
 		}
 	}
 
 	public boolean isTerminated()
 	{
+	//	return true;
 		synchronized (processLock)
 		{
-			return threadManager.isTerminated()
-					&& ((process == null || process.isTerminated()&& isRemote()));
+			boolean res =  threadManager.isTerminated()
+					&& ((process == null || process.isTerminated() || isRemote()));
+			return res;
 		}
 	}
 	
@@ -307,7 +309,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	protected void terminate(boolean waitTermination) throws DebugException
 	{
 		fireTargetTerminating();
-
+		
 		threadManager.sendTerminationRequest();
 		if (waitTermination)
 		{
@@ -325,7 +327,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 		threadManager.removeListener(this);
 		breakpointManager.threadTerminated();
-
+	
 		DebugEventHelper.fireTerminateEvent(this);
 	}
 

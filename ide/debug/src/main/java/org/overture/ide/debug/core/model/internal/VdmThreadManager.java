@@ -38,8 +38,7 @@ import org.overture.ide.debug.core.model.IVdmStackFrame;
 import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 
-public class VdmThreadManager implements IVdmThreadManager,
-		IDbgpStreamListener {
+public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener {
 	private static final boolean DEBUG = VdmDebugPlugin.DEBUG;
 
 	private IVdmDebugThreadConfigurator configurator = null;
@@ -79,8 +78,7 @@ public class VdmThreadManager implements IVdmThreadManager,
 	protected void fireThreadAccepted(IVdmThread thread, boolean first) {
 		Object[] list = listeners.getListeners();
 		for (int i = 0; i < list.length; ++i) {
-			((IVdmThreadManagerListener) list[i]).threadAccepted(thread,
-					first);
+			((IVdmThreadManagerListener) list[i]).threadAccepted(thread, first);
 		}
 	}
 
@@ -110,10 +108,10 @@ public class VdmThreadManager implements IVdmThreadManager,
 	}
 
 	public IVdmThread[] getThreads() {
-		synchronized (threads) {			
-			
-			return (IVdmThread[]) threads.toArray(new IVdmThread[threads
-					.size()]);
+		synchronized (threads) {
+
+			return (IVdmThread[]) threads
+					.toArray(new IVdmThread[threads.size()]);
 		}
 	}
 
@@ -254,9 +252,9 @@ public class VdmThreadManager implements IVdmThreadManager,
 			session.configure(target.getOptions());
 			session.getStreamManager().addListener(this);
 
-			final boolean breakOnFirstLine = //target.breakOnFirstLineEnabled()
-					//|| 
-					isAnyThreadInStepInto();
+			final boolean breakOnFirstLine = // target.breakOnFirstLineEnabled()
+			// ||
+			isAnyThreadInStepInto();
 			VdmThread thread = new VdmThread(target, session, this);
 			thread.initialize(sub.newChild(25));
 			addThread(thread);
@@ -267,8 +265,8 @@ public class VdmThreadManager implements IVdmThreadManager,
 			}
 			if (isFirstThread || !isSupportsThreads(thread)) {
 				SubMonitor child = sub.newChild(25);
-				target.breakpointManager.initializeSession(thread
-						.getDbgpSession(), child);
+				target.breakpointManager.initializeSession(
+						thread.getDbgpSession(), child);
 				child = sub.newChild(25);
 				if (configurator != null) {
 					configurator.initializeBreakpoints(thread, child);
@@ -315,8 +313,8 @@ public class VdmThreadManager implements IVdmThreadManager,
 	private static boolean isSupportsThreads(IVdmThread thread) {
 		try {
 			final IDbgpFeature feature = thread.getDbgpSession()
-					.getCoreCommands().getFeature(
-							IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS);
+					.getCoreCommands()
+					.getFeature(IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS);
 			return feature != null
 					&& IDbgpFeature.ONE_VALUE.equals(feature.getValue());
 		} catch (DbgpException e) {
@@ -365,9 +363,11 @@ public class VdmThreadManager implements IVdmThreadManager,
 
 			if (ths.length == 0) {
 				if (waitingForThreads) {
-					return true;
+		 			return false;
+					// return true;
 				} else {
-					return false;
+					return true;
+					// return false;
 				}
 			}
 
@@ -400,10 +400,13 @@ public class VdmThreadManager implements IVdmThreadManager,
 	public void sendTerminationRequest() throws DebugException {
 		synchronized (threads) {
 			IVdmThread[] threads = getThreads();
+			if (threads.length > 0) {
+				waitingForThreads = false;
+			}
 			for (int i = 0; i < threads.length; ++i) {
 				threads[i].sendTerminationRequest();
 			}
-			waitingForThreads = false;
+			
 		}
 	}
 
@@ -435,36 +438,36 @@ public class VdmThreadManager implements IVdmThreadManager,
 		synchronized (threads) {
 			IThread[] threads = getThreads();
 			for (int i = 0; i < threads.length; ++i) {
-				((VdmThread)threads[i]).resumeInner();
+				((VdmThread) threads[i]).resumeInner();
 			}
 		}
 	}
-	
-	public void stepInto() throws DebugException{
+
+	public void stepInto() throws DebugException {
 		synchronized (threads) {
 			IThread[] threads = getThreads();
-//			System.out.println("Thread number:" + threads.length );
+			// System.out.println("Thread number:" + threads.length );
 			for (int i = 0; i < threads.length; ++i) {
-				((VdmThread)threads[i]).stepIntoInner();
-//				System.out.println("Step Thread: " + i);
+				((VdmThread) threads[i]).stepIntoInner();
+				// System.out.println("Step Thread: " + i);
 			}
 		}
 	}
-	
-	public void stepOver() throws DebugException{
+
+	public void stepOver() throws DebugException {
 		synchronized (threads) {
 			IThread[] threads = getThreads();
 			for (int i = 0; i < threads.length; ++i) {
-				((VdmThread)threads[i]).stepOverInner();
+				((VdmThread) threads[i]).stepOverInner();
 			}
 		}
 	}
-	
-	public void stepReturn() throws DebugException{
+
+	public void stepReturn() throws DebugException {
 		synchronized (threads) {
 			IThread[] threads = getThreads();
 			for (int i = 0; i < threads.length; ++i) {
-				((VdmThread)threads[i]).stepReturnInner();
+				((VdmThread) threads[i]).stepReturnInner();
 			}
 		}
 	}
@@ -500,12 +503,12 @@ public class VdmThreadManager implements IVdmThreadManager,
 
 	public void handleCustomTerminationCommands() {
 		synchronized (threads) {
-			if(threads.size() == 1)
-			{
-				target.handleCustomTerminationCommands(threads.get(0).getDbgpSession());
+			if (threads.size() == 1) {
+				target.handleCustomTerminationCommands(threads.get(0)
+						.getDbgpSession());
 			}
 		}
-		
+
 	}
 
 }
