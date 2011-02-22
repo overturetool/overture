@@ -30,6 +30,7 @@ public class VdmModel implements IVdmModel
 	// int id;
 	protected boolean isTypeChecked = false;
 	protected boolean isTypeCorrect = false;
+	protected int workingCopyNotCommitedCount = 0;
 
 	protected Date checkedTime;
 
@@ -258,6 +259,8 @@ public class VdmModel implements IVdmModel
 		this.isTypeCorrect = false;
 
 	}
+	
+
 
 	public void refresh(boolean completeRefresh, IProgressMonitor monitor)
 	{
@@ -307,8 +310,9 @@ public class VdmModel implements IVdmModel
 		return this.vdmSourceUnits;
 	}
 
-	public VdmModelWorkingCopy getWorkingCopy()
+	public synchronized VdmModelWorkingCopy getWorkingCopy()
 	{
+		workingCopyNotCommitedCount++;
 		return new VdmModelWorkingCopy(this);
 	}
 
@@ -320,6 +324,11 @@ public class VdmModel implements IVdmModel
 	public void setIsTypeChecked(boolean checked)
 	{
 		this.isTypeChecked = checked;
+	}
+	
+	public synchronized boolean hasWorkingCopies()
+	{
+		return workingCopyNotCommitedCount>0;
 	}
 
 }

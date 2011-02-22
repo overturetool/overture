@@ -31,7 +31,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.VdmSourceUnit;
 import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
@@ -63,7 +62,7 @@ public abstract class CoverageEditor
 					VdmDocument doc = (VdmDocument) super.createDocument(element);
 					IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
 					Assert.isNotNull(project, "Project could not be adapted");
-					doc.setSourceUnit(new VdmSourceUnit(project, file));
+					doc.setSourceUnit(new CoverageSourceUnit(project, file));
 					return doc;
 				}
 			}
@@ -106,6 +105,9 @@ public abstract class CoverageEditor
 				sourceFile = f.getLocation().toFile();
 				content = readFile(((org.eclipse.core.internal.resources.File) res).getContents());
 				vdmSourceFile = (IFile) res;
+			}else
+			{
+				throw new PartInitException("File not found: "+res.getLocationURI().toASCIIString());
 			}
 
 			project = (IVdmProject) res.getProject().getAdapter(IVdmProject.class);
@@ -123,6 +125,8 @@ public abstract class CoverageEditor
 				selectedFile = (IFile) covTbl;
 				vdmCoverage = readFile(selectedFile);
 			}
+			
+			
 
 		} catch (IOException e)
 		{
@@ -346,4 +350,14 @@ public abstract class CoverageEditor
 		stream.close();
 		return sb.toString();
 	}
+
+//	public void setInitDocument(IDocumentProvider documentProvider, IEditorInput input)
+//	{
+//		IDocument document= documentProvider.getDocument(input);
+//		if(document instanceof VdmDocument)
+//		{
+//			IFile res = ((FileEditorInput) input).getFile();
+//			((VdmDocument)document).setSourceUnit(new CoverageSourceUnit(project, res));
+//		}
+//	}
 }

@@ -24,6 +24,8 @@ public class SafeBuilder extends Thread
 	{
 		this.currentProject = currentProject;
 		this.monitor = monitor;
+		this.setName("VDM Safe Builder");
+		this.setDaemon(true);
 	}
 
 	@Override

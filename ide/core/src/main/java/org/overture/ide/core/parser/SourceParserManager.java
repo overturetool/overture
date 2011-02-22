@@ -144,7 +144,7 @@ public class SourceParserManager
 
 		if (monitor != null)
 		{
-			monitor.subTask("Parsing files: " + project.getName());
+			monitor.subTask("Parsing files for project: " + project.getName());
 		}
 
 		Assert.isNotNull(project, "Project could not be adapted");
@@ -162,6 +162,7 @@ public class SourceParserManager
 				// return;
 				// if(!file.hasParseTree())
 				// file.getParseList().clear();
+				System.out.println("Parsing file (build): "+ source);
 				parseFile(source);
 			}
 		}

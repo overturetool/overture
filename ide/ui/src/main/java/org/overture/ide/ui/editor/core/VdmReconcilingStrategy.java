@@ -22,8 +22,9 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 		if (currentDocument.getSourceUnit() == null)
 		{
 			return;// No reconcile if the source unit had been removed from the project (build path change)
-		} else if (parser != null)
+		} else if (parser != null && !vdmProject.getModel().hasWorkingCopies())
 		{
+			System.out.println("Reconcile parse: "+currentDocument.getSourceUnit());
 			parser.parse(currentDocument.getSourceUnit(), currentDocument.get());
 
 			// Setting type checked to false after some alteration
@@ -41,7 +42,7 @@ public class VdmReconcilingStrategy implements IReconcilingStrategy
 		if (document instanceof VdmDocument)
 		{
 			currentDocument = (VdmDocument) document;
-			vdmProject = (IVdmProject) currentDocument.getProject().getAdapter(IVdmProject.class);
+			vdmProject = currentDocument.getProject();//.getAdapter(IVdmProject.class);
 			if (currentDocument.getSourceUnit() != null && vdmProject != null)
 			{
 

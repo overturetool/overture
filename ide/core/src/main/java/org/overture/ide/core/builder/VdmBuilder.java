@@ -24,7 +24,6 @@ public class VdmBuilder extends VdmCoreBuilder
 			final SafeBuilder builder = new SafeBuilder(getVdmProject(), monitor);
 
 			clearProblemMarkers();
-			builder.setDaemon(true);
 			builder.start();
 			while (!builder.isInterrupted() && builder.isAlive())
 			{
@@ -73,7 +72,7 @@ public class VdmBuilder extends VdmCoreBuilder
 
 			} catch (Exception e)
 			{
-
+				VdmCore.log("Error cleaning project: " + getProject(), e);
 				// we can't do any thing about it
 				// the following code pops up a dialog saying the clean failed
 				// but it was suggested to leave it commented for the moment

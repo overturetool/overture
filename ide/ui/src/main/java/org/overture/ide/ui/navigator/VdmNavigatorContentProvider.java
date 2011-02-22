@@ -1,7 +1,6 @@
 package org.overture.ide.ui.navigator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -14,7 +13,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
@@ -52,8 +50,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 					} else
 					{
 
-						IVdmProject vdmProject = (IVdmProject) ((IProject) children[i])
-								.getAdapter(IVdmProject.class);
+						IVdmProject vdmProject = (IVdmProject) ((IProject) children[i]).getAdapter(IVdmProject.class);
 						if (vdmProject != null)
 						{
 							result.add((IProject) children[i]);
@@ -69,37 +66,30 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 		return new Object[0];
 	}
 
+	private UIJob jobNavigatorRefresh = new UIJob(PlatformUI.getWorkbench().getDisplay(), "Navigator Update (VdmNavigatorContent)")
+	{
+		@Override
+		public IStatus runInUIThread(IProgressMonitor monitor)
+		{
+			try
+			{
+				TreeViewer viewer = fViewer;
+				if (!viewer.getControl().isDisposed())
+				{
+					viewer.refresh();
+				}
+				return Status.OK_STATUS;
+			} catch (Exception e)
+			{
+				VdmUIPlugin.log(e);
+				return new Status(IStatus.ERROR, IVdmUiConstants.PLUGIN_ID, "Error in Navigator Update (VdmNavigatorContent)", e);
+			}
+		}
+	};
+
 	public void resourceChanged(IResourceChangeEvent event)
 	{
-		UIJob job = new UIJob(PlatformUI.getWorkbench().getDisplay(),
-				"Navigator Update (VdmNavigatorContent)")
-		{
-
-			@Override
-			public IStatus runInUIThread(IProgressMonitor monitor)
-			{
-				try
-				{
-					TreeViewer viewer = fViewer;
-					if (!viewer.getControl().isDisposed())
-					{
-						TreePath[] treePaths = viewer.getExpandedTreePaths();
-						viewer.refresh();
-						viewer.setExpandedTreePaths(treePaths);
-					}
-					return Status.OK_STATUS;
-				} catch (Exception e)
-				{
-					VdmUIPlugin.log(e);
-					return new Status(IStatus.ERROR, IVdmUiConstants.PLUGIN_ID,
-							"Error in Navigator Update (VdmNavigatorContent)",
-							e);
-				}
-			}
-
-		};
-
-		job.schedule();
+		jobNavigatorRefresh.schedule();
 	}
 
 	@Override
@@ -135,8 +125,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 			}
 			if (newWorkspace != null)
 			{
-				newWorkspace.addResourceChangeListener(this,
-						IResourceChangeEvent.POST_CHANGE);
+				newWorkspace.addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
 			}
 		}
 
@@ -157,7 +146,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 		// // return result.toArray();
 		// } else {
 
-		// TODO: these lines should be commented to obtain the old navigator
+		// ODO: these lines should be commented to obtain the old navigator
 		// START COMMENT HERE
 		// if(element instanceof IProject){
 		// ArrayList<Object> result = new ArrayList<Object>();
@@ -192,40 +181,40 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 
 	}
 
-	private Collection<? extends Object> getIFolderChildren(IFolder folder)
-	{
-		ArrayList<Object> result = new ArrayList<Object>();
-
-		result.add(new ResourceContainer(folder));
-		if (isRootFolder(folder))
-		{
-			result.add(new SourceContainer(folder, true));
-		}
-		// result.addAll(childrenContainingSource((IFolder) object));
-
-		return result;
-	}
-
-	private ArrayList<Object> getResourceContainerChildren(
-			ResourceContainer element)
-	{
-		ArrayList<Object> result = new ArrayList<Object>();
-		ResourceContainer resourceContainer = (ResourceContainer) element;
-		for (Object object : resourceContainer.getChildren().toArray())
-		{
-			if (object instanceof IFolder)
-			{
-				result.add(new ResourceContainer((IFolder) object));
-			}
-			if (object instanceof IFile)
-			{
-				result.add(object);
-			}
-
-		}
-		return result;
-
-	}
+//	private Collection<? extends Object> getIFolderChildren(IFolder folder)
+//	{
+//		ArrayList<Object> result = new ArrayList<Object>();
+//
+//		result.add(new ResourceContainer(folder));
+//		if (isRootFolder(folder))
+//		{
+//			result.add(new SourceContainer(folder, true));
+//		}
+//		// result.addAll(childrenContainingSource((IFolder) object));
+//
+//		return result;
+//	}
+//
+//	private ArrayList<Object> getResourceContainerChildren(
+//			ResourceContainer element)
+//	{
+//		ArrayList<Object> result = new ArrayList<Object>();
+//		ResourceContainer resourceContainer = (ResourceContainer) element;
+//		for (Object object : resourceContainer.getChildren().toArray())
+//		{
+//			if (object instanceof IFolder)
+//			{
+//				result.add(new ResourceContainer((IFolder) object));
+//			}
+//			if (object instanceof IFile)
+//			{
+//				result.add(object);
+//			}
+//
+//		}
+//		return result;
+//
+//	}
 
 	public boolean hasChildren(Object element)
 	{
@@ -235,8 +224,7 @@ public class VdmNavigatorContentProvider extends BaseWorkbenchContentProvider
 
 	static public boolean isRootFolder(IFolder folder)
 	{
-		return folder.getProjectRelativePath().toPortableString().equals(
-				"model");
+		return folder.getProjectRelativePath().toPortableString().equals("model");
 	}
 
 	static public boolean isFileResource(IFile iResource)

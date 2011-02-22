@@ -19,8 +19,8 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	protected IVdmProject project;
 	protected IFile file;
 	protected int type;
-	protected List<LexLocation> allLocation = new Vector<LexLocation>();
-	protected HashMap<LexLocation, IAstNode> locationToAstNodeMap = new HashMap<LexLocation, IAstNode>();
+	protected final List<LexLocation> allLocation = new Vector<LexLocation>();
+	protected final HashMap<LexLocation, IAstNode> locationToAstNodeMap = new HashMap<LexLocation, IAstNode>();
 	protected boolean parseErrors = false;
 
 	protected List<IAstNode> parseList = new Vector<IAstNode>();
@@ -137,10 +137,10 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	/**
 	 * No not make this synchronized it will lock up due to getParse list and this one being called at the same time
 	 */
-	@SuppressWarnings("unchecked")
 	public/* synchronized */Map<LexLocation, IAstNode> getLocationToAstNodeMap()
 	{
-		return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
+		//return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
+		return locationToAstNodeMap;
 	}
 
 	public boolean hasParseErrors()

@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -157,11 +158,11 @@ public class Options implements Serializable
 			sb.append("\t<group key=\"" + g.id + "\">\n");
 
 			Map<String, Object> attributes = g.getAttributes();
-			for (String attKey : attributes.keySet())
+			for (Entry<String, Object> entry : attributes.entrySet())
 			{
 				String type = null;
 
-				Object value = attributes.get(attKey);
+				Object value = entry.getValue();
 
 				if (value instanceof String)
 				{
@@ -173,8 +174,8 @@ public class Options implements Serializable
 
 				if (type != null)
 				{
-					sb.append("\t\t<" + type + " key=\"" + attKey
-							+ "\" value=\"" + attributes.get(attKey).toString()
+					sb.append("\t\t<" + type + " key=\"" + entry.getKey()
+							+ "\" value=\"" + entry.getValue().toString()
 							+ "\"/>\n");
 				}
 			}
@@ -196,7 +197,10 @@ public class Options implements Serializable
 			VdmCore.log("Faild to save .modelpath file", e);
 		} finally
 		{
-			out.close();
+			if(out != null)
+			{
+				out.close();
+			}
 		}
 	}
 

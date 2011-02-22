@@ -6,9 +6,9 @@ import org.overture.ide.core.resources.VdmSourceUnitWorkingCopy;
 
 public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 {
-	IVdmModel sourceModel;
+	VdmModel sourceModel;
 
-	public VdmModelWorkingCopy(IVdmModel sourceModel)
+	public VdmModelWorkingCopy(VdmModel sourceModel)
 	{
 		this.sourceModel = sourceModel;
 		for (IVdmSourceUnit source : sourceModel.getSourceUnits())
@@ -27,7 +27,10 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 			}
 		}
 		sourceModel.setTypeCheckedStatus(isTypeCorrect());
-
+		synchronized (sourceModel)
+		{
+			sourceModel.workingCopyNotCommitedCount--;
+		}
 	}
 
 	@Override

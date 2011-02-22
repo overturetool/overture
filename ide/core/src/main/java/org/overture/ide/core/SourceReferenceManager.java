@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.eclipse.core.internal.resources.IManager;
 import org.eclipse.core.resources.IResource;
@@ -44,7 +45,14 @@ public class SourceReferenceManager implements IManager
 			IVdmElementDelta delta = e.getDelta();
 			if (delta.getKind() == IVdmElementDelta.ADDED
 					|| delta.getKind() == IVdmElementDelta.CHANGED)
-				refresh();
+			{
+				if (delta.getElement() instanceof IVdmSourceUnit
+						&& delta.getElement() != null
+						&& delta.getElement().equals(sourceUnit))
+				{
+					refresh();
+				}
+			}
 		}
 	}
 
@@ -66,10 +74,14 @@ public class SourceReferenceManager implements IManager
 
 	public void refresh()
 	{
+		// TODO bug.... really slowwww
+		System.out.println("makeLineSizes " + sourceUnit);
 		makeLineSizes();
 		if (sourceUnit.hasParseTree())
 		{
+			System.out.println("makeOffsetToAstMap");
 			makeOffsetToAstMap();
+			System.out.println("makeOuterOffsetToAstMap");
 			makeOuterOffsetToAstMap();
 		} else
 		{
@@ -88,7 +100,7 @@ public class SourceReferenceManager implements IManager
 				{
 					if (reference.isWithinRange(pos)
 							&& (reference.getNode() instanceof Definition))
-//							&& reference.getFile().getName().equals(iResource.getName()))
+					// && reference.getFile().getName().equals(iResource.getName()))
 					{
 						return reference.getNode();
 					}
@@ -197,13 +209,13 @@ public class SourceReferenceManager implements IManager
 		Map<LexLocation, IAstNode> locationMap = sourceUnit.getLocationToAstNodeMap();
 		synchronized (locationMap)
 		{
-			for (LexLocation location : locationMap.keySet())
+			for (Entry<LexLocation, IAstNode> entry : locationMap.entrySet())
 			{
 				try
 				{
 					SourceReference outerLocation = null;
 
-					outerLocation = calc.getOuterLocation(locationMap.get(location));
+					outerLocation = calc.getOuterLocation(entry.getValue());
 
 					if (outerLocation != null)
 					{
@@ -587,7 +599,8 @@ public class SourceReferenceManager implements IManager
 		int startOffset = 0;
 		int endOffset = 0;
 		IAstNode node = null;
-//		File resource = null;
+
+		// File resource = null;
 
 		public SourceReference(int startLine, int startPos, int endLine,
 				int endPos, IAstNode node)
@@ -595,14 +608,14 @@ public class SourceReferenceManager implements IManager
 			this.node = node;
 			startOffset = getLineOffset(startLine) + startPos;
 			endOffset = getLineOffset(endLine) + endPos;
-			//this.resource = node.getLocation().file;
+			// this.resource = node.getLocation().file;
 
 		}
 
-//		public File getFile()
-//		{
-//			return this.resource;
-//		}
+		// public File getFile()
+		// {
+		// return this.resource;
+		// }
 
 		public boolean isWithinRange(int offset)
 		{

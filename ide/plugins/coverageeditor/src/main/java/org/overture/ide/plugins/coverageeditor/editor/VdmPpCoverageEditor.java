@@ -52,9 +52,7 @@ public class VdmPpCoverageEditor extends VdmPpEditor
 			throws PartInitException
 	{
 		super.init(site, input);
-
 		covEditor.init(site, input);
-
 	}
 
 	@Override

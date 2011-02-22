@@ -112,4 +112,11 @@ public interface IVdmModel extends IVdmElement
 	public void refresh(boolean completeRefresh, IProgressMonitor monitor);
 
 	public abstract void remove(IVdmSourceUnit iVdmSourceUnit);
+	
+	/**
+	 * Returns if any working copies has been issued from the current model. If this returns true
+	 * any changes to the model might be overridden when a working copy is committed.
+	 * @return returns true if working copies has been issued
+	 */
+	 boolean hasWorkingCopies();
 }

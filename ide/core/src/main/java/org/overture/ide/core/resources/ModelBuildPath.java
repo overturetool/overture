@@ -58,7 +58,7 @@ public class ModelBuildPath
 		return tmp;
 	}
 
-	public IContainer getOutput()
+	public synchronized IContainer getOutput()
 	{
 		return this.output;
 	}
@@ -134,7 +134,7 @@ public class ModelBuildPath
 		return srcPaths.contains(container);
 	}
 
-	public void save() throws CoreException
+	public synchronized void save() throws CoreException
 	{
 		save(srcPaths, output);
 	}
@@ -147,7 +147,7 @@ public class ModelBuildPath
 		parse();
 	}
 
-	private synchronized void save(List<IContainer> srcPaths, IContainer output)
+	private void save(List<IContainer> srcPaths, IContainer output)
 			throws CoreException
 	{
 		StringBuffer sb = new StringBuffer();
@@ -185,7 +185,10 @@ public class ModelBuildPath
 			VdmCore.log("Faild to save .modelpath file", e);
 		} finally
 		{
-			out.close();
+			if(out != null)
+			{
+				out.close();
+			}
 		}
 		ResourceManager.getInstance().syncBuildPath(vdmProject);
 
