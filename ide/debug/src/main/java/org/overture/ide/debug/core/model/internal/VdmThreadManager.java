@@ -363,11 +363,9 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 
 			if (ths.length == 0) {
 				if (waitingForThreads) {
-		 			return false;
-					// return true;
-				} else {
 					return true;
-					// return false;
+				} else {
+					return false;
 				}
 			}
 
