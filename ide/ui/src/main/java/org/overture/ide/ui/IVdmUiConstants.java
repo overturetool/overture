@@ -10,6 +10,8 @@ public class IVdmUiConstants {
 	public final static String OUTLINE_ID = "org.overture.ide.ui.VdmOutlinePage";
 	public static final String DEFAULT_OSX_LATEX_PATH = "/usr/texbin/pdflatex";
 	public static final String OSX_LATEX_PATH_PREFERENCE = "__OSX_LATEX_PATH_PREFERENCE__";
+	
+	public static final String ENABLE_EDITOR_RECONFILER = "enable_editor_reconciler";
 }
 
 

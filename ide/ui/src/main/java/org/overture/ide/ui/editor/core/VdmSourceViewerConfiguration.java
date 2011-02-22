@@ -17,6 +17,7 @@ import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.autoedit.VdmAutoEditStrategy;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
@@ -54,11 +55,17 @@ public abstract class VdmSourceViewerConfiguration extends
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
 	{
-		MonoReconciler reconciler = new MonoReconciler(new VdmReconcilingStrategy(), false);
-		reconciler.setDelay(800);//TODO
-		reconciler.install(sourceViewer);
+		if (VdmUIPlugin.getDefault().getPreferenceStore().getBoolean(IVdmUiConstants.ENABLE_EDITOR_RECONFILER))
+		{
+			MonoReconciler reconciler = new MonoReconciler(new VdmReconcilingStrategy(), false);
+			// reconciler.setDelay(500);
+			reconciler.install(sourceViewer);
 
-		return reconciler;
+			return reconciler;
+		} else
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -155,7 +162,5 @@ public abstract class VdmSourceViewerConfiguration extends
 
 		return super.getDefaultPrefixes(sourceViewer, contentType);
 	}
-
-	
 
 }
