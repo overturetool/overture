@@ -32,6 +32,7 @@ import org.overturetool.vdmj.messages.rtlog.RTLogger;
 public class SystemClock
 {
 	private static long wallTime = 0;
+	final static double PRECISION = 100000000.0d;
 
 	public static synchronized long getWallTime()
 	{
@@ -119,7 +120,7 @@ public class SystemClock
 	 */
 	public static Double internalToTime(TimeUnit unit,long internalTime)
 	{
-		return (internalTime*TimeUnit.nanosecond.getValue())/unit.getValue();
+		return Math.round((internalTime*TimeUnit.nanosecond.getValue())/unit.getValue()*PRECISION)/PRECISION;
 	}
 
 	/**
