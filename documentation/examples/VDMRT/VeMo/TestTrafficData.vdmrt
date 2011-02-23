@@ -1,0 +1,80 @@
+\section{Test of TrafficData}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TestTrafficData
+-- Description: 	Test the TrafficData class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestTrafficData is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+private pos : Position;
+--
+-- Operations definition section
+--
+operations
+public TestTrafficData: seq of char ==> TestTrafficData
+TestTrafficData(s) ==
+(
+	TestCase(s);
+);
+
+protected SetUp: () ==> ()
+SetUp () == pos := new Position(5,1); 
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+ dcl td : TrafficData := new TrafficData(<Congestion>, pos, <NORTH>),
+ td2 : TrafficData := new TrafficData(<LeftTurn>, pos, <WEST>),
+ td3 : TrafficData := new TrafficData(<RedLight>, pos, <EAST>);
+
+ AssertTrue(td.GetPosition().X() = 5);
+ AssertTrue(td.GetPosition().Y() = 1); 
+ AssertTrue(td.GetDirection() = <NORTH>);
+ AssertTrue(td.GetMessage() = <Congestion>);
+ AssertTrue(TrafficData`MessageTypeToString(td.GetMessage()) = "Congestion ");
+ 
+ AssertTrue(td2.GetPosition().X() = 5);
+ AssertTrue(td2.GetPosition().Y() = 1); 
+ AssertTrue(td2.GetDirection() = <WEST>);
+ AssertTrue(td2.GetMessage() = <LeftTurn>);
+ AssertTrue(TrafficData`MessageTypeToString(td2.GetMessage()) = "Left Turn");
+ 
+ AssertTrue(td3.GetPosition().X() = 5);
+ AssertTrue(td3.GetPosition().Y() = 1); 
+ AssertTrue(td3.GetDirection() = <EAST>);
+ AssertTrue(td3.GetMessage() = <RedLight>);
+ AssertTrue(TrafficData`MessageTypeToString(td3.GetMessage()) = "Red Light");
+ 
+ testExpired();
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+public testExpired : () ==> ()
+testExpired() ==
+( 
+  dcl td : TrafficData := new TrafficData(<LowGrip>, pos, <NORTH>);
+  AssertFalse(td.Expired());
+  duration(15000) --should depend on Config to ensure we are above threshold
+  AssertFalse(td.Expired());
+  duration(15000) --should depend on Config to ensure we are above threshold
+  AssertTrue(td.Expired());
+);
+
+end TestTrafficData
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestTrafficData]
+\end{rtinfo}

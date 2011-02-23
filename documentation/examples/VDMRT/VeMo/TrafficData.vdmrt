@@ -1,0 +1,97 @@
+\section{TrafficData Class}
+
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TrafficData
+-- Description: 	TrafficData is the base for different types of 
+--					messages in the system.
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TrafficData
+
+--
+-- instance variables
+--
+instance variables
+private dir: Types`Direction;
+private pos: Position;
+private message: MessageType;
+private timeToLive : nat;
+
+--
+-- Types definition section
+--
+types   
+public MessageType = <LowGrip> | <Congestion> | <LeftTurn> | <RedLight>;
+
+--
+-- Operations definition section
+--
+operations
+public TrafficData: MessageType * Position * Types`Direction ==> TrafficData
+	TrafficData(m,p,d) ==
+		(
+		pos := p ;
+		message := m;
+		dir := d;
+		timeToLive := time + Config`TrafficDataLifeTime;
+		);
+
+public GetPosition: () ==> Position 
+	GetPosition() ==
+	return pos;
+	
+public GetMessage: () ==> MessageType
+	GetMessage() ==
+	return message;
+
+public GetDirection: () ==> Types`Direction 
+GetDirection() ==
+return dir;
+	
+public Expired : () ==> bool
+Expired() ==
+return time >= timeToLive;
+
+public ToString : () ==> seq of char 
+ToString() ==
+return "traffic data reporting " 
+		^ MessageTypeToString(message) 
+		^ " moved " ^ Types`DirectionToString(dir) 
+		^ " at " ^ pos.toString()  
+		^ " with lifetime " 
+		^ Printer`intToString(timeToLive - time);
+
+--
+-- Functions definition section
+--
+functions
+
+public static MessageTypeToString : MessageType -> seq of char 
+MessageTypeToString(m) ==
+(
+cases m:
+<LowGrip>-> "Low Grip",
+<Congestion>-> "Congestion ",
+<LeftTurn>-> "Left Turn",
+<RedLight> -> "Red Light"
+end
+)
+
+--
+-- Values definition section
+--
+values
+
+end TrafficData
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TrafficData]
+\end{rtinfo}

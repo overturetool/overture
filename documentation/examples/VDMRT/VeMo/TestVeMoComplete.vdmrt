@@ -1,0 +1,44 @@
+\section{VeMoComplete Main test class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TestVeMoComplete
+-- Description: 	Test all test suites and classes in VeMo system 
+-----------------------------------------------
+
+--
+-- class definition
+--
+
+class TestVeMoComplete
+
+
+instance variables
+
+
+--
+-- Operations definition section
+--
+operations
+
+public Execute: () ==> ()
+	Execute() ==
+		(
+		dcl w : World := new World() , ts : TestSuite := new TestSuite();
+		ts.AddTest(new TestVehicle("TestVehicle"));
+		ts.AddTest(new TestPosition("TestPosition")); 
+		ts.AddTest(new TestTrafficLight("TestTrafficLight"));
+		ts.AddTest(new TestTrafficData("TestTrafficData"));
+		ts.AddTest(new TestTraffic("TestTraffic"));
+		ts.AddTest(new TestController("TestController"));
+	    ts.AddTest(new TestVeMoController("TestVeMoController"));
+		ts.Run();
+		);
+		
+end TestVeMoComplete
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestVeMoComplete]
+\end{rtinfo}

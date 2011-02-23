@@ -1,0 +1,117 @@
+\section{Test of Traffic}
+
+
+\begin{vdm_al}
+------------------------------------------------
+-- Class:			TestTraffic
+-- Description: 	Test the Traffic class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestTraffic is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+private pos : Position;
+--
+-- Operations definition section
+--
+operations
+public TestTraffic: seq of char ==> TestTraffic
+TestTraffic(s) ==
+(
+	TestCase(s);
+);
+
+protected SetUp: () ==> ()
+SetUp () == pos := new Position(1,1); 
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+  dcl traf : Traffic := new Traffic(),
+  vec : Vehicle := new Vehicle(2, pos, 1, <NORTH>),
+  vec2 : Vehicle := new Vehicle(3, pos, 1, <NORTH>),
+  vec3 : Vehicle := new Vehicle(4, pos, 1, <NORTH>),
+  vec4 : Vehicle := new Vehicle(5, pos, 1, <NORTH>),
+  vec5 : Vehicle := new Vehicle(6, pos, 1, <NORTH>),
+  vec6 : Vehicle := new Vehicle(7, pos, 1, <NORTH>);
+ 
+  AssertFalse(traf.ExistVehicle(vec));
+  traf.AddVehicle(vec);
+  AssertTrue(traf.ExistVehicle(vec));
+  traf.AddVehicle(vec2);
+  
+  let vs = traf.GetVehicles() in
+  (
+   AssertTrue(len vs = 2);
+   AssertTrue(vs(1) = vec);
+  );
+  
+   traf.AddVehicle(vec3);
+   traf.AddVehicle(vec4);
+   traf.AddVehicle(vec5);
+   
+   let vs = traf.GetVehicles() in
+   AssertTrue(len vs = 5);
+   
+   traf.AddVehicle(vec6);
+   let vs = traf.GetVehicles() in
+   AssertTrue(len vs = 5);
+   
+   testCongestion();
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+--public Step: () ==> ()
+--Step() == skip;
+--timeToLive := timeToLive -1;
+
+public testCongestion : () ==> ()
+testCongestion() ==
+(
+ dcl pos2 : Position := new Position(1,2),
+ pos3 : Position := new Position(1,3),
+ pos4 : Position := new Position(1,5);
+
+ dcl traf : Traffic := new Traffic(),
+ vec : Vehicle := new Vehicle(2, pos, 1, <NORTH>),
+ vec2 : Vehicle := new Vehicle(3, pos2, 1, <NORTH>),
+ vec3 : Vehicle := new Vehicle(4, pos3, 1, <NORTH>),
+ vec4 : Vehicle := new Vehicle(5, pos4, 1, <SOUTH>);
+ 
+ dcl traf : Traffic := new Traffic();
+ 
+ let vs = [vec,vec2,vec3,vec4] in
+ (
+  for v in vs do 
+  (
+  traf.AddVehicle(v);
+  );
+
+--start vehicle
+
+--sequential model only
+--  for v in vs do 
+--  (
+--   v.Step();
+--   v.Step();
+--  );
+ 
+  AssertTrue(traf.Congestion());
+ );
+ 
+)
+end TestTraffic
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestTraffic]
+\end{rtinfo}
