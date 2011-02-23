@@ -13,31 +13,30 @@ public class WorkbenchPreferencePageVdm extends PreferencePage implements
 
 	public WorkbenchPreferencePageVdm()
 	{
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public WorkbenchPreferencePageVdm(String title)
 	{
 		super(title);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public WorkbenchPreferencePageVdm(String title, ImageDescriptor image)
 	{
 		super(title, image);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override
 	protected Control createContents(Composite parent)
 	{
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	public void init(IWorkbench workbench)
 	{
-		// TODO Auto-generated method stub
 
 	}
 

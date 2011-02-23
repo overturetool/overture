@@ -22,12 +22,19 @@ IWorkbenchPreferencePage {
 	{
 		return VdmUIPlugin.getDefault().getPreferenceStore();
 	}
+	
+	@Override
+	protected void performDefaults()
+	{
+		IPreferenceStore store = getPreferenceStore();
+		store.setDefault(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, true);
+		super.performDefaults();
+	}
 
 	public void init(IWorkbench workbench)
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, true);
-		super.performDefaults();
 	}
 
 }

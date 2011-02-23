@@ -1,5 +1,6 @@
 package org.overture.ide.plugins.csk.internal;
 
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
@@ -7,17 +8,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.overture.ide.plugins.csk.Activator;
 import org.overture.ide.plugins.csk.ICskConstants;
 
-public class WorkbenchPreferencePage1 extends
-		org.eclipse.jface.preference.FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage
+public class WorkbenchPreferencePageCsk extends FieldEditorPreferencePage implements
+IWorkbenchPreferencePage 
 {
 
 	@Override
 	protected void createFieldEditors()
 	{
-		addField(new FileFieldEditor(ICskConstants.VPPGDE_PATH, "VDM Tools vppgde path", getFieldEditorParent()));
-		addField(new FileFieldEditor(ICskConstants.VRTGDE_PATH, "VDM Tools vrtgde path", getFieldEditorParent()));
-		addField(new FileFieldEditor(ICskConstants.VSLGDE_PATH, "VDM Tools vslgde path", getFieldEditorParent()));
+		addField(new FileFieldEditor(ICskConstants.VPPGDE_PATH, "Path to VDM Tools for VDM-PP (vppgde):", getFieldEditorParent()));
+		addField(new FileFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDM Tools for VICE  (vicegde):", getFieldEditorParent()));
+		addField(new FileFieldEditor(ICskConstants.VSLGDE_PATH, "Path to VDM Tools for VDM-SL (vdmgde):", getFieldEditorParent()));
 
 	}
 
@@ -34,11 +34,10 @@ public class WorkbenchPreferencePage1 extends
 		store.setDefault(ICskConstants.VPPGDE_PATH, ICskConstants.DEFAULT_VPPGDE_PATH);
 		super.performDefaults();
 	}
-
+	
 	public void init(IWorkbench workbench)
 	{
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
