@@ -802,7 +802,7 @@ public class DBGPReader
 
 		sb.append("<breakpoint id=\"" + bp.number + "\"");
 		sb.append(" type=\"line\"");
-		sb.append(" state=\"enabled\"");
+		sb.append(" state=\"" + (bp.isEnabled() ? "enabled" : "disabled") + "\"");
 		sb.append(" filename=\"" + bp.location.file.toURI() + "\"");
 		sb.append(" lineno=\"" + bp.location.startLine + "\"");
 		sb.append(">");
@@ -1574,15 +1574,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
-		option = c.getOption(DBGPOptionType.S);
-
-		if (option != null)
-		{
-    		if (!option.value.equalsIgnoreCase("enabled"))
-    		{
-    			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, option.value);
-    		}
-		}
+		
 
 		option = c.getOption(DBGPOptionType.N);
 		int lineno = 0;
@@ -1694,14 +1686,26 @@ public class DBGPReader
 			}
 		}
 
+		
+		option = c.getOption(DBGPOptionType.S);
+		
+		
+		if (option != null)
+		{
+    		if (!option.value.equalsIgnoreCase("enabled"))
+    		{
+    			bp.setEnabled(false);
+    		}
+		}
+		
 		StringBuilder hdr = new StringBuilder(
-			"state=\"enabled\" id=\"" + bp.number + "\"");
+			"state=\""+ (bp.isEnabled() ? "enabled" : "disabled") + "\" id=\"" + bp.number + "\"");
 		response(hdr, null);
 	}
 
-	protected void breakpointUpdate(DBGPCommand c) throws DBGPException
+	protected void breakpointUpdate(DBGPCommand c) throws DBGPException, IOException
 	{
-		checkArgs(c, 2, false);
+		checkArgs(c, 4, false);
 
 		DBGPOption option = c.getOption(DBGPOptionType.D);
 
@@ -1711,12 +1715,33 @@ public class DBGPReader
 		}
 
 		Breakpoint bp = interpreter.breakpoints.get(Integer.parseInt(option.value));
-
+			
 		if (bp == null)
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
 		}
 
+		option = c.getOption(DBGPOptionType.S);
+		
+		if (option == null)
+		{
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
+		}
+		
+		if(option.value.equalsIgnoreCase("disabled"))
+		{
+			bp.setEnabled(false);
+			response(null, null);
+			return;
+		}
+		
+		if(option.value.equalsIgnoreCase("enabled"))
+		{
+			bp.setEnabled(true);
+			response(null, null);
+			return;
+		}
+		
 		throw new DBGPException(DBGPErrorCode.UNIMPLEMENTED, c.toString());
 	}
 

@@ -60,12 +60,15 @@ public class Breakpoint implements Serializable
 	/** The number of times this breakpoint has been reached. */
 	public long hits = 0;
 
+	/** The condition saying if a the breakpoint is enabled */
+	protected boolean enabled = true;
+	
 	public Breakpoint(LexLocation location)
 	{
 		this.location = location;
 		this.number = 0;
 		this.trace = null;
-		this.parsed = null;
+		this.parsed = null;		
 	}
 
 	/**
@@ -172,6 +175,11 @@ public class Breakpoint implements Serializable
 
 	public void check(LexLocation execl, Context ctxt)
 	{
+		//skips if breakpoint is disabled
+//		if(!enabled){
+//			return;
+//		}
+		
 		location.hit();
 		hits++;
 
@@ -263,5 +271,15 @@ public class Breakpoint implements Serializable
 	protected void println(String line)
 	{
 		Console.out.println(line);
+	}
+	
+	public void setEnabled(boolean bool)
+	{
+		this.enabled = bool;
+	}
+	
+	public boolean isEnabled()
+	{
+		return this.enabled;
 	}
 }

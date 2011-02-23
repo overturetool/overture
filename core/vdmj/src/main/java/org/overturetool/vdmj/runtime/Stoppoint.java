@@ -48,6 +48,11 @@ public class Stoppoint extends Breakpoint
 	@Override
 	public void check(LexLocation execl, Context ctxt)
 	{
+		//skips if breakpoint is disabled
+		if(!enabled){
+			return;
+		}
+		
 		location.hit();
 		hits++;
 
