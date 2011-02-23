@@ -14,7 +14,7 @@ IWorkbenchPreferencePage {
 	@Override
 	protected void createFieldEditors()
 	{
-		addField(new BooleanFieldEditor(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, "Enable reconciler", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, "Syntax checking while you type", getFieldEditorParent()));
 	}
 	
 	@Override

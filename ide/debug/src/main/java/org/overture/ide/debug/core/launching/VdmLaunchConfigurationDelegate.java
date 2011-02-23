@@ -451,7 +451,7 @@ public class VdmLaunchConfigurationDelegate implements
 			{
 				if (f.getName().toLowerCase().endsWith(".jar"))
 				{
-					entries.add(toPlatformPath(f.getAbsolutePath()));
+					entries.add(f.getAbsolutePath());
 				}
 			}
 		}
