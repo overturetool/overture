@@ -639,6 +639,32 @@ Overture (which is the name of the project followed by \texttt{.tex}).
 \end{center}
 \end{figure}
 
+More generally it is possible to set preferences that will be used for
+all projects. This can be done in the general VDM preferences under
+\emph{Window} $\rightarrow$ \emph{Preferences} $\rightarrow$
+\emph{VDM}. Here it is for example possible to link projects to
+VDMTools if one have the appropriate executables from CSK installed on
+the computer. Figure~\ref{fig:CSKPreferences} shows how it is possible to
+set up paths to the corresponding VDMTools executables. If this have
+been set up it is possible to right click on a project in the VDM
+explorer view and then select \emph{VDM Tools} $\rightarrow$
+\emph{Open project in VDMTools} and then a project file for VDMTools
+will automatically be generated and VDMTools will be opened with all
+the files from that project. In the \emph{Preferences} part it is also
+possible to switch off continuous syntax checking while editing and
+setting of the path to \emph{pdflatex} in case the path to this is not
+visible from the Overture application. Finally it is possible to make
+use of templates but that is further described in
+Section~\ref{sec:templates}. 
+
+\begin{figure}[!hbt]
+\begin{center}
+  \includegraphics[width=\textwidth]{screendumps/CSKPreferences}
+  \caption{Overture Preferences for connctions to VDMTools}
+  \label{fig:CSKPreferences}
+\end{center}
+\end{figure}
+
 \chapter{Editing VDM Models}\label{sec:editVDM}
 
 \section{VDM Dialect Editors}
@@ -652,7 +678,7 @@ Problems and warnings will be listed in the Problems view as well as
 being highlighted directly in the Editor view where the problems have been
 identified.
 
-\section{Using Templates}
+\section{Using Templates}\label{sec:templates}
 
 Eclipse templates can be particularly useful when writing VDM models. If you
 press \textit{CTRL+space} after typing the first few characters of a template name,
@@ -1078,11 +1104,25 @@ execution. The number of skipped test cases is indicated after the number
 of test cases for the trace definition name.\index{icon!skipped test case}
 \end{description}
 
-
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=4.5in]{screenDumps/tracesalarm}
 \caption{Using Combinatorial Testing\label{fig:tracesalarm}}
+\end{center}
+\end{figure}
+
+In the CT Overview view it is possible to right-click on a specific
+test case and then send it to the interpreter (see
+Figure~\ref{fig:SendToInterpreter}). This is in particular usefull for
+failed test cases since this will take you right to the place where it
+is failing and you will be able to inspect the exact circumstances
+including the values of the different variables in scope when this
+happens. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=4.5in]{screenDumps/SendToInterpreter}
+\caption{Moving test case from Combinatorial Testing to Interpreter\label{fig:SendToInterpreter}}
 \end{center}
 \end{figure}
 

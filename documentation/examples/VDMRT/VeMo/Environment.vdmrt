@@ -42,7 +42,7 @@ Environment(filename) ==
 
 	def mk_(-,input) = io.freadval[InputTP](filename) in
 	(
-	   inlines := input;
+	inlines := input;
 	);	 
 );
 
