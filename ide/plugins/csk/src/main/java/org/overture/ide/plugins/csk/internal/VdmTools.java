@@ -18,6 +18,7 @@ public class VdmTools
 {
 	public static final String HEADER1 = "b";
 	public static final String HEADER2 = ",k13,ProjectFilePPf3,f";
+	public static final String HEADER2_SL = ",k11,ProjectFilef3,f";
 
 	public static final String HEADER_FILE = "e2,m4,filem";
 
@@ -46,7 +47,18 @@ public class VdmTools
 		StringBuilder sb = new StringBuilder();
 		sb.append(HEADER1);
 		sb.append(files.size() + 3);
-		sb.append(HEADER2);
+		
+		switch (vdmProject.getDialect())
+		{
+			case VDM_PP:
+				case VDM_RT:
+				sb.append(HEADER2);
+				break;
+			case VDM_SL:
+				sb.append(HEADER2_SL);
+				break;
+		}
+		
 		sb.append(files.size());
 		sb.append(",");
 
@@ -109,10 +121,10 @@ public class VdmTools
 		}
 		if (!valid)
 		{
-			MessageDialog.openError(shell, "VDM Tools Error", "CSK VPPGDE Path not valid");
+			MessageDialog.openError(shell, "VDM Tools Error", "CSK VDM Tools Path not valid");
 
 		}
-		Assert.isTrue(valid, "VPPGDE path is not valid");
+		Assert.isTrue(valid, "VDM Tools path is not valid");
 		return path;
 	}
 }
