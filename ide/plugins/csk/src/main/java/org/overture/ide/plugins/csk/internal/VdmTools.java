@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
@@ -38,27 +38,27 @@ public class VdmTools
 			+ "JCG_INTERFACES:\n" + "Seed_nondetstmt:-1\n"
 			+ "j2v_stubsOnly:0\n" + "j2v_transforms:0";
 
-	public void createProject(Shell shell, IVdmProject vdmProject, List<File> files)
-			throws IOException
+	public void createProject(Shell shell, IVdmProject vdmProject,
+			List<File> files) throws IOException
 	{
-		
+
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		File location = project.getLocation().toFile();
 		StringBuilder sb = new StringBuilder();
 		sb.append(HEADER1);
 		sb.append(files.size() + 3);
-		
+
 		switch (vdmProject.getDialect())
 		{
 			case VDM_PP:
-				case VDM_RT:
+			case VDM_RT:
 				sb.append(HEADER2);
 				break;
 			case VDM_SL:
 				sb.append(HEADER2_SL);
 				break;
 		}
-		
+
 		sb.append(files.size());
 		sb.append(",");
 
@@ -68,20 +68,29 @@ public class VdmTools
 			sb.append(HEADER_FILE + path.length() + "," + path);
 		}
 
-		File generated = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();//new File(location, "generated");
+		File generated = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();// new File(location,
+		// "generated");
 		generated.mkdirs();
 
 		PluginFolderInclude.writeFile(generated, vdmProject.getName() + ".prj", sb.toString());
 		VdmToolsOptions options = new VdmToolsOptions();
 		options.JCG_PACKAGE = (vdmProject.getName().replaceAll(" ", "") + "." + "model").toLowerCase();
-//		options.DTC = vdmProject.hasDynamictypechecks();
-//		options.INV = vdmProject.hasInvchecks();
-//		options.POST = vdmProject.hasPostchecks();
-//		options.PRE = vdmProject.hasPrechecks();
+		// options.DTC = vdmProject.hasDynamictypechecks();
+		// options.INV = vdmProject.hasInvchecks();
+		// options.POST = vdmProject.hasPostchecks();
+		// options.PRE = vdmProject.hasPrechecks();
 
 		options.Save(generated, vdmProject.getName());
-		Runtime.getRuntime().exec("\"" + getVdmToolsPath(shell, vdmProject)
-				+ "\" " + vdmProject.getName() + ".prj", null, generated);
+
+		String projectFileName = vdmProject.getName() + ".prj";
+
+		String vdmToolsPath = getVdmToolsPath(shell, vdmProject);
+
+		if (vdmToolsPath != null)
+		{
+			Runtime.getRuntime().exec(toPlatformPath(vdmToolsPath) + " "
+					+ projectFileName, null, generated);
+		}
 	}
 
 	private String getFilePath(File location, File file)
@@ -89,10 +98,26 @@ public class VdmTools
 		return file.getAbsolutePath();// "./../"+file.getAbsolutePath().substring(location.getAbsolutePath().length()+1);
 	}
 
+	public static boolean isWindowsPlatform()
+	{
+		return System.getProperty("os.name").toLowerCase().contains("win");
+	}
+
+	protected static String toPlatformPath(String path)
+	{
+		if (isWindowsPlatform())
+		{
+			return "\"" + path + "\"";
+		} else
+		{
+			return path.replace(" ", "\\ ");
+		}
+	}
+
 	private static String getVdmToolsPath(Shell shell, IVdmProject project)
 	{
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		String path = "";
+		String path = null;
 
 		switch (project.getDialect())
 		{
@@ -118,13 +143,20 @@ public class VdmTools
 		{
 			valid = new File(path).exists();
 
+			if (Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX))
+			{
+				path = "open " + path;
+			}
+
 		}
 		if (!valid)
 		{
 			MessageDialog.openError(shell, "VDM Tools Error", "CSK VDM Tools Path not valid");
-
+			path = null;
 		}
-		Assert.isTrue(valid, "VDM Tools path is not valid");
+		// Assert.isTrue(valid, "VDM Tools path is not valid");
 		return path;
 	}
+
+	
 }
