@@ -118,12 +118,12 @@ go to:
 
 A library of sample VDM-RT models, including all those needed
 for the exercises in the book, is available and can be downloaded from
-SourceForge under the \texttt{examplesRT.zip} file using the
+the
 URL\footnote{The library files are created to be used with Eclipse,
   but can be opened with file compression programs like \texttt{Winrar} on
   Windows.}:
 \begin{quote}
-\url{https://sf.net/projects/overture/files/Examples/}
+\url{http://overture.sourceforge.net/examples/ExamplesVDM_RT.zip}
 \end{quote}
 You can import the example library zip folder as described in
 Section~\ref{sec:vdmsupport}.  Finally, the web site
@@ -291,7 +291,7 @@ intended to write.
 %\end{myhardexercise}
 
 
-\section{Mapping UML to  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
+\section{Mapping Between UML and  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
 \label{sec:typecheck}
 
 In order to map the UML class diagram created in Enterprise Architect
@@ -332,7 +332,7 @@ machine-generated identifiers since custom types are not named in
 UML. As a result, you have to expect to make minor modifications to
 the generated VDM files. 
 
-\subsection{Mapping VDM to UML}
+%\subsection{Mapping VDM to UML}
 
 It is possible to automatically transform all the classes from the car
 radio navigation project to UML. To do this, simply right
@@ -435,6 +435,8 @@ the debugger reaches a breakpoint, evaluation suspends and the user
 can inspect the values of different variables and step through the VDM
 model line by line.
  
+\subsection{The Debug Perspective}
+
 The Debug perspective is illustrated on figure~\ref{fig:userguide:DebuggingVDM}
 \begin{figure}[htp]
 \begin{center}
@@ -482,6 +484,8 @@ automatically updated when stepping through a model.
   \label{fig:userguide:BreakpointView}
 \end{center}
 \end{figure}
+
+\subsection{Breakpoints}
 
 The \emph{Breakpoints view} gives an overview of all breakpoints
 set~(see Figure~\ref{fig:userguide:BreakpointView}). From this view
@@ -609,8 +613,7 @@ In order to do the automation, Overture needs to know about the
 combinations of operation calls that you would like to have carried
 out, so it is necessary to write a kind of regular expression called a
 \emph{trace}. VDM-RT has been extended such that traces can be written
-directly as a part of a VDM-RT model. A full explanation of this can be
-found at \cite{Larsen&09d}. In our case, inside the \texttt{Test}
+directly as a part of a VDM-RT model. In our case, inside the \texttt{Test}
 class one can find:
 
 \begin{lstlisting}

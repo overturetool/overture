@@ -91,12 +91,12 @@ initiative.
 
 A large library of sample VDM-SL models, including all those needed
 for the exercises in the book, is available and can be downloaded from
-SourceForge as the \texttt{examplesSL.zip} file using the
+the
 URL\footnote{The library files are created to be used with Eclipse,
   but can be opened with file compression programs like \texttt{Winrar} on
   Windows but it is not necessary to open it at all.}: 
 \begin{quote}
-\url{https://sf.net/projects/overture/files/Examples/}
+\url{http://overture.sourceforge.net/examples/ExamplesVDM_SL.zip}
 \end{quote}
 You can import the example library zip folder as described in
 Section~\ref{sec:vdmsupport}.  Finally, in order to make use of the
@@ -281,7 +281,8 @@ more\footnote{It is possible to see and enhance the complete list of
 Additional templates can easily be added in the future. The use
 of templates makes it much easier for users lacking deep familiarity
 with VDM syntax to nevertheless construct models.
-\begin{figure}
+
+\begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=4in]{figures/FunctionTemplate}
 \caption{Explicit function template}
@@ -339,7 +340,7 @@ in order to make use of the IO standard library in the \texttt{Test}
 module. Inside \texttt{IO} there is for example a definition of a
 function called \texttt{print} and that can for example be used in an
 operation as:
-\newpage
+%\newpage
 \begin{lstlisting}
 Try: nat ==> nat
 Try(n) ==
@@ -451,6 +452,8 @@ for \texttt{NumberOfExperts} try to set such a breakpoint in line
   in the left-hand-side 
  margin of the editor view and selecting \texttt{Show Line Numbers}.}
 and debug again.
+
+\subsection{The Debug Perspective}
  
 %The \emph{Debug perspective} shows the VDM model in an editor, like the
 %Overture perspective, along with other specialized views for debugging.
@@ -506,6 +509,8 @@ located in the upper right hand corner in the Debug perspective.
   \includegraphics[width=4in]{figures/BreakpointView}
 \end{center}
 \end{figure}
+
+\subsection{Breakpoints}
 
 The \emph{Breakpoints view} gives an overview of all breakpoints
 set~(see Figure~\ref{fig:BreakpointView}). From this view
@@ -694,8 +699,7 @@ In order to do the automation, Overture needs to know about the
 combinations of function calls that you would like to have carried
 out, so it is necessary to write a kind of regular expression called a
 \emph{trace} in the VDM-10 version. VDM-SL has been extended such that
-traces can be written directly as a part of a VDM-SL model. A full
-explanation of this can be found in~\cite{Larsen&09d}. Here the
+traces can be written directly as a part of a VDM-SL model. Here the
 definition looks like:
 
 \begin{lstlisting}

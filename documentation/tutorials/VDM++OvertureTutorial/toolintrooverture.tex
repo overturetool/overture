@@ -147,12 +147,12 @@ The best way to run Overture is to download a special version of
 
 A large library of sample VDM++ models, including all those needed
 for the exercises in the book, is available and can be downloaded from
-SourceForge under the \texttt{examplesPP.zip} file using the
+the
 URL\footnote{The library files are created to be used with Eclipse,
   but can be opened with file compression programs like \texttt{Winrar} on
   Windows.}:
 \begin{quote}
-\url{https://sf.net/projects/overture/files/Examples/}
+\url{http://overture.sourceforge.net/examples/ExamplesVDM_PP.zip}
 \end{quote}
 You can import the example library zip folder as described in
 Section~\ref{sec:vdmsupport}.  Finally, the web site
@@ -466,7 +466,7 @@ you can make inside such a VDM++ class.
 \end{center}
 \end{figure}
 
-\section{Mapping UML to  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
+\section{Mapping Between UML and  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
 \label{sec:typecheck}
 
 In order to map the UML class diagram created in Enterprise Architect
@@ -568,8 +568,7 @@ to see how values (note using ``\vdmstyle{=}'' rather than
 access modifiers should be used.
 \end{myhardexercise}
 
-
-\subsection{Mapping VDM to UML}
+%\subsection{Mapping VDM to UML}
 
 After correcting all the errors in the \texttt{AlarmErrPP} project, it is possible
 to map the complete VDM model to UML. To do this, simply right
@@ -658,6 +657,8 @@ Breakpoints can easily be set by double clicking in left
 margin in the editor view. When the debugger reaches the location of a
 breakpoint, evaluation suspends and you can inspect the values of
 different variables and step through the VDM model line by line.
+
+\subsection{The Debug Perspective}
  
 %The \emph{Debug perspective} shows the VDM model in an editor, like the
 %Overture perspective, along with other specialized views for debugging.
@@ -716,6 +717,8 @@ located in the upper right corner in the Debug perspective.
   \label{fig:BreakpointView}
 \end{center}
 \end{figure}
+
+\subsection{Breakpoints}
 
 The \emph{Breakpoints view} gives an overview of all breakpoints set
 (see Figure~\ref{fig:BreakpointView}). From this view you
@@ -914,8 +917,7 @@ In order to do the automation, Overture needs to know about the
 combinations of operation calls that you would like to have carried
 out, so it is necessary to write a kind of regular expression called a
 \emph{trace}. VDM++ has been extended such that traces can be written
-directly as a part of a VDM++ model. A full explanation of this can be
-found in~\cite{Larsen&09d}. In our case, inside the \texttt{Test1}
+directly as a part of a VDM++ model. In our case, inside the \texttt{Test1}
 class one can write\footnote{Such \emph{traces} can actually also be
   represented as UML sequence diagrams and then automatically
   translated into the corresponding VDM++ textual form, but since this
