@@ -28,7 +28,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NumericValue;
@@ -47,7 +47,7 @@ public class ModExpression extends NumericBinaryExpression
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
 		checkNumeric(env, scope);
-		return new IntegerType(location);
+		return new NaturalType(location);	// NB. mod is nat; rem is int
 	}
 
 	@Override
