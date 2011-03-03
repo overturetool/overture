@@ -25,26 +25,34 @@ package org.overturetool.vdmj.traces;
 
 import java.util.Vector;
 
+import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
+import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.values.Value;
 
 public class TraceVariableList extends Vector<TraceVariable>
 {
 	private static final long serialVersionUID = 1L;
 
-	public TraceVariableList(Context ctxt)
-	{
-		for (LexNameToken key: ctxt.keySet())
-		{
-			Value value = ctxt.get(key);
-			add(new TraceVariable(key.location, key, value));
-		}
-	}
-
 	public TraceVariableList()
 	{
 		super();
+	}
+
+	public TraceVariableList(Context ctxt, DefinitionList localDefs)
+	{
+		Environment local = new FlatEnvironment(localDefs);
+
+		for (LexNameToken key: ctxt.keySet())
+		{
+			Value value = ctxt.get(key);
+			Definition d = local.findName(key, NameScope.NAMES);
+			add(new TraceVariable(key.location, key, value, d.getType()));
+		}
 	}
 
 	public CallSequence getVariables()

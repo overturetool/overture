@@ -27,6 +27,7 @@ import java.util.List;
 
 
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
@@ -41,14 +42,15 @@ import org.overturetool.vdmj.typechecker.NameScope;
 public class TraceLetDefBinding extends TraceDefinition
 {
     private static final long serialVersionUID = 1L;
-	public final List<ValueDefinition> localDefs;
+	public final DefinitionList localDefs;
 	public final TraceDefinition body;
 
 	public TraceLetDefBinding(
 		LexLocation location, List<ValueDefinition> localDefs, TraceDefinition body)
 	{
 		super(location);
-		this.localDefs = localDefs;
+		this.localDefs = new DefinitionList();
+		this.localDefs.addAll(localDefs);
 		this.body = body;
 	}
 
@@ -95,7 +97,7 @@ public class TraceLetDefBinding extends TraceDefinition
 		}
 
 		TraceNode node = body.expand(evalContext);
-		node.setVariables(new TraceVariableList(evalContext));
+		node.setVariables(new TraceVariableList(evalContext, localDefs));
 		return node;
 	}
 }
