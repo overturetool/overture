@@ -1,5 +1,6 @@
 package org.overture.ide.vdmsl.ui.editor.core;
 
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -21,7 +22,9 @@ public class VdmSlSourceViewerConfiguration extends
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		return new VdmSlContentAssistant();
+		ContentAssistant  assistant = new VdmSlContentAssistant();
+		assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+		return assistant;
 	}
 	
 	

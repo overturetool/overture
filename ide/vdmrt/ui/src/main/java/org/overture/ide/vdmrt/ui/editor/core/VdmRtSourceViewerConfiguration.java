@@ -1,5 +1,6 @@
 package org.overture.ide.vdmrt.ui.editor.core;
 
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -19,8 +20,9 @@ public class VdmRtSourceViewerConfiguration extends
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		// TODO Auto-generated method stub
-		return new VdmRtContentAssistent();
+		ContentAssistant  assistant = new VdmRtContentAssistent();
+		assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+		return assistant;
 	}
 
 }

@@ -75,13 +75,13 @@ public class SourceReferenceManager implements IManager
 	public void refresh()
 	{
 		// TODO bug.... really slowwww
-		System.out.println("makeLineSizes " + sourceUnit);
+//		System.out.println("makeLineSizes " + sourceUnit);
 		makeLineSizes();
 		if (sourceUnit.hasParseTree())
 		{
-			System.out.println("makeOffsetToAstMap");
+//			System.out.println("makeOffsetToAstMap");
 			makeOffsetToAstMap();
-			System.out.println("makeOuterOffsetToAstMap");
+//			System.out.println("makeOuterOffsetToAstMap");
 			makeOuterOffsetToAstMap();
 		} else
 		{

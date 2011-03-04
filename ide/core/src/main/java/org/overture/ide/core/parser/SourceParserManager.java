@@ -162,7 +162,7 @@ public class SourceParserManager
 				// return;
 				// if(!file.hasParseTree())
 				// file.getParseList().clear();
-				System.out.println("Parsing file (build): "+ source);
+//				System.out.println("Parsing file (build): "+ source);
 				parseFile(source);
 			}
 		}

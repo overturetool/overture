@@ -1,5 +1,6 @@
 package org.overture.ide.vdmpp.ui.editor.core;
 
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -20,7 +21,9 @@ public class VdmPpSourceViewerConfiguration extends
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {		
-		return new VdmPpContentAssistant();
+		ContentAssistant  assistant = new VdmPpContentAssistant();
+		assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+		return assistant;
 	}
 
 }
