@@ -24,7 +24,6 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.pog.MapApplyObligation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.SeqApplyObligation;
