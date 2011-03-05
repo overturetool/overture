@@ -537,6 +537,12 @@ abstract public class Interpreter
 		{
 			case NAME:
 				lexname = (LexNameToken)token;
+				
+				if (Settings.dialect == Dialect.VDM_SL &&
+					!lexname.module.equals(getDefaultName()))
+				{
+					setDefaultName(lexname.module);
+				}
 				break;
 
 			case IDENTIFIER:
