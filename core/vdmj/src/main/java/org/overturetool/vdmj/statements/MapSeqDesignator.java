@@ -184,10 +184,8 @@ public class MapSeqDesignator extends StateDesignator
 		{
 			list.add(new SeqApplyObligation(mapseq, exp, ctxt));
 		}
-		else if (mapType != null)
-		{
-			list.add(new MapApplyObligation(mapseq, exp, ctxt));
-		}
+		
+		// Maps are OK, as you can create new map domain entries
 
 		return list;
 	}
