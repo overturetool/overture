@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.overturetool.vdmjc.client.CommandLine;
 import org.overturetool.vdmjc.client.Dialect;
+import org.overturetool.vdmjc.client.Release;
 import org.overturetool.vdmjc.config.Config;
 
 public class VDMJC
@@ -84,8 +85,8 @@ public class VDMJC
 				}
 			}
 
-			System.out.println("Dialect is " + dialect.name());
-			new CommandLine(dialect, startLine).run();
+			System.out.println("Dialect is " + dialect.name() + " " + Release.DEFAULT);
+			new CommandLine(dialect, Release.DEFAULT, startLine).run();
 			System.exit(0);
 		}
 		catch (Exception e)

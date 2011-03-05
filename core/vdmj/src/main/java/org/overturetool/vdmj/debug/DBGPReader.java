@@ -2255,6 +2255,10 @@ public class DBGPReader
 		{
 			processLatex(c);
 		}
+		else if (option.value.equals("word"))
+		{
+			processWord(c);
+		}
 		else if (option.value.equals("pog"))
 		{
 			processPOG(c);
@@ -2620,6 +2624,34 @@ public class DBGPReader
 			new LatexSourceFile(source).printCoverage(pw, headers);
 			pw.close();
 			cdataResponse("Latex coverage written to " + tex);
+    	}
+    }
+
+	private void processWord(DBGPCommand c)
+    	throws DBGPException, IOException, URISyntaxException
+    {
+    	if (status == DBGPStatus.BREAK)
+    	{
+    		throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+    	}
+    
+    	int i = c.data.indexOf(' ');
+    	File dir = new File(new URI(c.data.substring(0, i)));
+    	File file = new File(new URI(c.data.substring(i + 1)));
+    
+    	SourceFile source = interpreter.getSourceFile(file);
+    
+    	if (source == null)
+    	{
+    		cdataResponse(file + ": file not found");
+    	}
+    	else
+    	{
+    		File html = new File(dir.getPath() + File.separator + file.getName() + ".doc");
+    		PrintWriter pw = new PrintWriter(html);
+    		source.printWordCoverage(pw);
+    		pw.close();
+    		cdataResponse("Word HTML coverage written to " + html);
     	}
     }
 

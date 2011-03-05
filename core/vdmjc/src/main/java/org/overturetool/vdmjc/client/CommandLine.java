@@ -35,19 +35,23 @@ import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.overturetool.vdmjc.common.Utils;
+
 
 public class CommandLine
 {
 	protected Dialect dialect;
+	protected Release release;
 	private String startLine = null;
 
 	protected static Queue<String> messages = new ConcurrentLinkedQueue<String>();
 
 	protected static Queue<String> scriptMessages = new ConcurrentLinkedQueue<String>();
 
-	public CommandLine(Dialect dialect, String startLine)
+	public CommandLine(Dialect dialect, Release release, String startLine)
 	{
 		this.dialect = dialect;
+		this.release = release;
 		this.startLine = startLine;
 	}
 
@@ -200,6 +204,8 @@ public class CommandLine
 					lineTyped.append((char)c);
 				}
 			}
+
+			Utils.milliPause(10);
 		}
 	}
 
@@ -247,6 +253,10 @@ public class CommandLine
 				{
 					carryOn = processLs();
 				}
+	            else if (line.startsWith("release"))
+	            {
+	            	carryOn = processRelease(line);
+	            }
 	            else if (line.startsWith("load"))
 	            {
 	            	carryOn = processLoad(line);
@@ -303,6 +313,7 @@ public class CommandLine
     		println("  script <vdmsl|vdmpp|vdmrt> <script file> <log file> <files>");
     		println("  dbgp");
     		println("  dialect <vdmsl|vdmpp|vdmrt>");
+    		println("  release " + Release.list());
     		println("  quiet");
     		println("  help");
     		println("  ls | dir");
@@ -374,6 +385,32 @@ public class CommandLine
 		return true;
 	}
 
+	protected boolean processRelease(String line)
+	{
+		String[] parts = line.split("\\s+");
+		
+		if (parts.length != 2)
+		{
+			println("Usage: release " + Release.list());
+		}
+		else
+		{
+			Release r = Release.lookup(parts[1].toLowerCase());
+			
+			if (r == null)
+			{
+				println("Usage: release " + Release.list());
+			}
+			else
+			{
+				release = r;
+				println("Dialect is now " + dialect.name() + " " + release);
+			}
+		}
+		
+		return true;
+	}
+
 	protected boolean processQuiet()
 	{
 		println("Quiet setting is now " +
@@ -385,7 +422,7 @@ public class CommandLine
 	{
 		try
 		{
-			new ProcessCommandLine(dialect, getFiles(line), "undefined").run();
+			new ProcessCommandLine(dialect, release, getFiles(line), "undefined").run();
 		}
 		catch (IOException e)
 		{
@@ -405,7 +442,7 @@ public class CommandLine
 		{
 			String files = line.substring(0,line.indexOf('"')).trim();
 			String expression = line.substring(line.indexOf('"'));
-			new ProcessCommandLine(dialect, getFiles(files), expression).run();
+			new ProcessCommandLine(dialect, release, getFiles(files), expression).run();
 		}
 		catch (IOException e)
 		{
@@ -434,7 +471,7 @@ public class CommandLine
 				expression = stdin.readLine().trim();
 			}
 
-			new ProcessCommandLine(dialect, getFiles(line), expression).run();
+			new ProcessCommandLine(dialect, release, getFiles(line), expression).run();
 		}
 		catch (IOException e)
 		{
@@ -507,7 +544,7 @@ public class CommandLine
 				scriptMessages.add("quit");//Exit debug
 				scriptMessages.add("quit");//Exit this
 
-				new ProcessCommandLine(dialect, getFiles(files), expression,"vdm10",logFile).run();
+				new ProcessCommandLine(dialect, release, getFiles(files), expression, logFile).run();
 			}
 			else
 			{

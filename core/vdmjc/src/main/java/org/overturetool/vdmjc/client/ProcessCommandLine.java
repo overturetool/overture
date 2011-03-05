@@ -39,26 +39,24 @@ public class ProcessCommandLine extends CommandLine
 	private final List<File> loadedFiles;
 	private final String expression;
 	private File logFile = null;
-	private String release = null;
 
 	private ProcessListener process;
 	private ConnectionThread currentThread = null;
 
 	public ProcessCommandLine(
-		Dialect dialect, List<File> loadedFiles, String expression)
+		Dialect dialect, Release release, List<File> loadedFiles, String expression)
 	{
-		super(dialect, null);
+		super(dialect, release, null);
 		this.loadedFiles = loadedFiles;
 		this.expression = expression;
 	}
 
 	public ProcessCommandLine(
-			Dialect dialect, List<File> loadedFiles, String expression, String release,File logFile)
+			Dialect dialect, Release release, List<File> loadedFiles, String expression, File logFile)
 		{
-			super(dialect, null);
+			super(dialect, release, null);
 			this.loadedFiles = loadedFiles;
 			this.expression = expression;
-			this.release = release;
 			this.logFile = logFile;
 		}
 
@@ -126,7 +124,7 @@ public class ProcessCommandLine extends CommandLine
 			return false;
 		}
 
-		process = new ProcessListener(dialect, loadedFiles, expression,release,logFile);
+		process = new ProcessListener(dialect, release, loadedFiles, expression, logFile);
 		process.start();
 
 		if (!process.waitStarted())		// Didn't start
@@ -285,6 +283,10 @@ public class ProcessCommandLine extends CommandLine
 	            else if (line.startsWith("latex"))
 	            {
 	            	carryOn = processLatex(line);
+	            }
+	            else if (line.equals("word"))
+	            {
+	            	carryOn = processWord(line);
 	            }
 	            else if (line.equals("run") ||
 	            		 line.equals("continue") ||
@@ -637,6 +639,38 @@ public class ProcessCommandLine extends CommandLine
 			for (File file: files)
 			{
 				currentThread.xcmd_overture_coverage(file);
+			}
+		}
+		catch (Exception e)
+		{
+			println("Problem locating files");
+		}
+
+		return true;
+	}
+
+	private boolean processWord(String line)
+	{
+   		if (currentThread.getStatus() == DBGPStatus.RUNNING)
+   		{
+   			println("Thread is running...");
+   			return true;
+   		}
+
+   		try
+		{
+			List<File> files = getFiles(line);
+
+			if (files.isEmpty())
+			{
+				files = loadedFiles;
+			}
+
+			File cwd = new File(".");
+
+			for (File file: files)
+			{
+				currentThread.xcmd_overture_word(cwd, file);
 			}
 		}
 		catch (Exception e)

@@ -44,18 +44,19 @@ public class ProcessListener extends Thread
 	 */
 	public static boolean VDMJ_DEBUG = false;
 	private final Dialect dialect;
+	private final Release release;
 	private final List<File> files;
 	private final String expression;
 	private File logFile = null;
-	private String release = null;
 
 	private ConnectionListener listener;
 	private Process process;
 	private int exitCode;
 
-	public ProcessListener(Dialect dialect, List<File> files, String expression)
+	public ProcessListener(Dialect dialect, Release release, List<File> files, String expression)
 	{
 		this.dialect = dialect;
+		this.release = release;
 		this.files = files;
 		this.expression = expression;
 
@@ -63,10 +64,9 @@ public class ProcessListener extends Thread
 		setDaemon(true);
 	}
 
-	public ProcessListener(Dialect dialect, List<File> files, String expression, String release,File logFile)
+	public ProcessListener(Dialect dialect, Release release, List<File> files, String expression, File logFile)
 	{
-		this(dialect,files,expression);
-		this.release = release;
+		this(dialect, release, files, expression);
 		this.logFile = logFile;
 	}
 
@@ -114,7 +114,7 @@ public class ProcessListener extends Thread
 			if (release != null)
 			{
 				pargs.add("-r");
-				pargs.add(release);
+				pargs.add(release.toString());
 			}
 
 			for (File file: files)
