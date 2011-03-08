@@ -60,6 +60,15 @@ public class LocalDefinition extends Definition
 	}
 
 	@Override
+	public void typeResolve(Environment base)
+	{
+   		if (type != null)
+   		{
+   			type = type.typeResolve(base, null);
+   		}
+	}
+
+	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
    		if (type != null)

@@ -112,18 +112,18 @@ public class ValueDefinition extends Definition
 		return accessSpecifier.ifSet(" ") + pattern +
 				(type == null ? "" : ":" + type) + " = " + exp;
 	}
-	
+
 	@Override
 	public boolean equals(Object other)
 	{
 		if (other instanceof ValueDefinition)
 		{
 			ValueDefinition vdo = (ValueDefinition)other;
-			
+
 			if (defs.size() == vdo.defs.size())
 			{
 				Iterator<Definition> diter = vdo.defs.iterator();
-				
+
 				for (Definition d: defs)
 				{
 					if (!diter.next().equals(d))
@@ -131,18 +131,27 @@ public class ValueDefinition extends Definition
 						return false;
 					}
 				}
-				
+
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		return defs.hashCode();
+	}
+
+	@Override
+	public void typeResolve(Environment env)
+	{
+		if (type != null)
+		{
+			type = type.typeResolve(env, null);
+		}
 	}
 
 	@Override
@@ -156,8 +165,6 @@ public class ValueDefinition extends Definition
 		}
 		else if (type != null)
 		{
-			type = type.typeResolve(base, null);
-
 			if (!TypeComparator.compatible(type, expType))
 			{
 				report(3051, "Expression does not match declared type");

@@ -61,6 +61,12 @@ public class RenamedDefinition extends Definition
 	}
 
 	@Override
+	public void typeResolve(Environment env)
+	{
+		def.typeResolve(env);
+	}
+
+	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
 		def.typeCheck(base, scope);
@@ -198,7 +204,7 @@ public class RenamedDefinition extends Definition
 	{
 		return def.isUpdatable();
 	}
-	
+
 	@Override
 	public Definition deref()
 	{
