@@ -178,7 +178,7 @@ public class ApplyExpression extends Expression
 
 			if (inFunction && Settings.release == Release.VDM_10)
 			{
-				report(3300, "Operation " + ot + " cannot be called from a function");
+				report(3300, "Operation '" + root + "' cannot be called from a function");
 				results.add(new UnknownType(location));
 			}
 			else

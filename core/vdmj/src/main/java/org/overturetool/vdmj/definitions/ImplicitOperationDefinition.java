@@ -52,6 +52,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
@@ -324,7 +325,9 @@ public class ImplicitOperationDefinition extends Definition
 
 		if (predef != null)
 		{
-			Type b = predef.body.typeCheck(local, null, NameScope.NAMESANDSTATE);
+			FlatEnvironment pre = new FlatEnvironment(new DefinitionList(), local);
+			pre.setEnclosingDefinition(predef);
+			Type b = predef.body.typeCheck(pre, null, NameScope.NAMESANDSTATE);
 			BooleanType expected = new BooleanType(location);
 
 			if (!b.isType(BooleanType.class))
@@ -346,12 +349,15 @@ public class ImplicitOperationDefinition extends Definition
 	    		FlatCheckedEnvironment post =
 	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMESANDANYSTATE);
 	    		post.setStatic(accessSpecifier);
+	    		post.setEnclosingDefinition(postdef);
 				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 				post.unusedCheck();
 			}
 			else
 			{
-				b = postdef.body.typeCheck(local, null, NameScope.NAMESANDANYSTATE);
+	    		FlatEnvironment post = new FlatEnvironment(new DefinitionList(), local);
+	    		post.setEnclosingDefinition(postdef);
+				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 			}
 
 			BooleanType expected = new BooleanType(location);

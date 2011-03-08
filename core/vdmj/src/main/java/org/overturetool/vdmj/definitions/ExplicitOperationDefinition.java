@@ -47,6 +47,7 @@ import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeComparator;
@@ -222,7 +223,9 @@ public class ExplicitOperationDefinition extends Definition
 
 		if (predef != null)
 		{
-			Type b = predef.body.typeCheck(local, null, NameScope.NAMESANDSTATE);
+			FlatEnvironment pre = new FlatEnvironment(new DefinitionList(), local);
+			pre.setEnclosingDefinition(predef);
+			Type b = predef.body.typeCheck(pre, null, NameScope.NAMESANDSTATE);
 			BooleanType expected = new BooleanType(location);
 
 			if (!b.isType(BooleanType.class))
@@ -237,9 +240,8 @@ public class ExplicitOperationDefinition extends Definition
 			LexNameToken result = new LexNameToken(name.module, "RESULT", location);
 			Pattern rp = new IdentifierPattern(result);
 			DefinitionList rdefs = rp.getDefinitions(type.result, NameScope.NAMESANDANYSTATE);
-			FlatCheckedEnvironment post =
-				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMESANDANYSTATE);
-
+			FlatEnvironment post = new FlatEnvironment(rdefs, local);
+			post.setEnclosingDefinition(postdef);
 			Type b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 			BooleanType expected = new BooleanType(location);
 

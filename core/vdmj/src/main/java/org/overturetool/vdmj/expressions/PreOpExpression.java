@@ -87,16 +87,6 @@ public class PreOpExpression extends Expression
     			LexNameToken selfname = opname.getSelfName();
     			ObjectValue self = octxt.lookup(selfname).objectValue(ctxt);
 
-//    			// If the opname was defined in a superclass of "self", we have
-//    			// to discover the subobject to populate its state variables.
-//
-//    			ObjectValue subself = self; //findObject(opname.module, self);
-//
-//    			if (subself == null)
-//    			{
-//    				abort(4027, "Cannot create pre_op environment", ctxt);
-//    			}
-
     			// Create an object context using the "self" passed in, rather
     			// than the self that we're being called from.
 
