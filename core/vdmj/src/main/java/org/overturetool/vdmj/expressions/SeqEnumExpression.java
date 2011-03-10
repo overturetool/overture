@@ -29,6 +29,7 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.Seq1Type;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -76,7 +77,7 @@ public class SeqEnumExpression extends SeqExpression
 		}
 
 		return ts.isEmpty() ? new SeqType(location) :
-			new SeqType(location, ts.getType(location));
+			new Seq1Type(location, ts.getType(location));
 	}
 
 	@Override
