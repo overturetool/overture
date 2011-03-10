@@ -52,6 +52,33 @@ public class TypeSet extends TreeSet<Type>
 	@Override
 	public boolean add(Type t)
 	{
+		if (t instanceof Seq1Type)
+		{
+			// If we add a Seq1Type, and there is already a SeqType in the set
+			// we ignore the Seq1Type.
+			
+			Seq1Type s1t = (Seq1Type)t;
+			SeqType st = new SeqType(s1t.location, s1t.seqof);
+			
+			if (contains(st))
+			{
+				return false;	// Was already there
+			}
+		}
+		else if (t instanceof SeqType)
+		{
+			// If we add a SeqType, and there is already a Seq1Type in the set
+			// we replace the Seq1Type.
+			
+			SeqType st = (SeqType)t;
+			Seq1Type s1t = new Seq1Type(st.location, st.seqof);
+			
+			if (contains(s1t))
+			{
+				remove(s1t);	// Replace seq with seq1
+			}
+		}
+		
 		return super.add(t);
 	}
 
