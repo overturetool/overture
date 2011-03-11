@@ -160,6 +160,7 @@ abstract public class XMLStreamReader extends InputStreamReader
 	{
 		return in
     		.replaceAll("&amp;", "&")
+    		.replaceAll("&apos;", "\'")
     		.replaceAll("&lt;", "<")
     		.replaceAll("&gt;", ">")
     		.replaceAll("&quot;", "\\\"");
