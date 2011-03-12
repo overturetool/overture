@@ -432,6 +432,7 @@ public class UnionType extends Type
 		{
     		numDone = true;
 			numType = new NaturalOneType(location);		// lightest default
+			boolean found = false;
 
     		for (Type t: types)
     		{
@@ -443,8 +444,12 @@ public class UnionType extends Type
     				{
     					numType = nt;
     				}
+
+    				found = true;
     			}
     		}
+    		
+    		if (!found) numType = null;
 		}
 
 		return numType;

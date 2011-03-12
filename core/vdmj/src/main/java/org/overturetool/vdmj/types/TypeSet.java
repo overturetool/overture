@@ -78,6 +78,24 @@ public class TypeSet extends TreeSet<Type>
 				remove(s1t);	// Replace seq with seq1
 			}
 		}
+		else if (t instanceof NumericType)
+		{
+			for (Type x: this)
+			{
+				if (x instanceof NumericType)
+				{
+					if (x.getNumeric().getWeight() < t.getNumeric().getWeight())
+					{
+						remove(x);
+						break;
+					}
+					else
+					{
+						return false;	// Was already there
+					}
+				}
+			}
+		}
 		
 		return super.add(t);
 	}

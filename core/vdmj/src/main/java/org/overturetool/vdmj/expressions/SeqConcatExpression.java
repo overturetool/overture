@@ -28,6 +28,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.Seq1Type;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -64,8 +65,17 @@ public class SeqConcatExpression extends BinaryExpression
 			rtype = new SeqType(location, new UnknownType(location));
 		}
 
-		TypeSet ts = new TypeSet(ltype, rtype);
-		return ts.getType(location);
+		Type lof = ltype.getSeq();
+		Type rof = rtype.getSeq();
+		boolean seq1 = (lof instanceof Seq1Type) || (rof instanceof Seq1Type);
+		
+		lof = ((SeqType)lof).seqof;
+		rof = ((SeqType)rof).seqof;
+		TypeSet ts = new TypeSet(lof, rof);
+		
+		return seq1 ?
+			new Seq1Type(location, ts.getType(location)) :
+			new SeqType(location, ts.getType(location));
 	}
 
 	@Override
