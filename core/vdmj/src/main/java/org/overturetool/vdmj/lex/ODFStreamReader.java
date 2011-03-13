@@ -56,6 +56,7 @@ public class ODFStreamReader extends XMLStreamReader
 
 		return in
     		.replaceAll("<text:tab/>", "\t")
+    		.replaceAll("<text:line-break/>", "\n")
 			.replaceAll("<text:s/>", " ")
     		.replaceAll("</text:p>", "\n")
 			.replaceAll("<text:p [^/>]+/>", "\n");

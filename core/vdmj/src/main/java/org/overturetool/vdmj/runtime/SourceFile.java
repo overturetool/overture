@@ -91,6 +91,14 @@ public class SourceFile
 		return lines.size();
 	}
 
+	public void printSource(PrintWriter out)
+	{
+		for (String line: lines)
+		{
+			out.println(line);
+		}
+	}
+	
 	public void printCoverage(PrintWriter out)
 	{
 		List<Integer> hitlist = LexLocation.getHitList(filename);

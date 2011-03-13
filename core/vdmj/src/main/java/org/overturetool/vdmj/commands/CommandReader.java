@@ -199,6 +199,10 @@ abstract public class CommandReader
 						return ExitStatus.RELOAD;
 					}
 				}
+				else if (line.startsWith("save"))
+				{
+					carryOn = doSave(line);
+				}
 				else if (line.equals("files"))
 				{
 					carryOn = doFiles();
@@ -893,6 +897,83 @@ abstract public class CommandReader
 		}
 	}
 
+	protected boolean doSave(String line)
+	{
+		try
+		{
+			Set<File> loaded = interpreter.getSourceFiles();
+
+			if (line.equals("save"))
+			{
+				for (File file: interpreter.getSourceFiles())
+				{
+					doSave(file);
+				}
+
+				return true;
+			}
+
+			String[] parts = line.split("\\s+");
+
+			for (int p = 1; p < parts.length; p++)
+			{
+				File f = new File(parts[p]);
+
+    			if (loaded.contains(f))
+    			{
+    				doSave(f);
+    			}
+    			else
+    			{
+    				println(f + " is not loaded - try 'files'");
+    			}
+			}
+		}
+		catch (Exception e)
+		{
+			println("Usage: save [<filenames>]");
+		}
+
+		return true;
+	}
+
+	protected void doSave(File file)
+	{
+		try
+		{
+			String name = file.getName().toLowerCase();
+			
+			if (name.endsWith(".doc") ||
+				name.endsWith(".docx") ||
+				name.endsWith(".odt"))
+			{
+    			SourceFile source = interpreter.getSourceFile(file);
+    
+    			if (source == null)
+    			{
+    				println(file + ": file not found");
+    			}
+    			else
+    			{
+    				File vdm = new File(source.filename.getPath() + "." +
+    					Settings.dialect.getArgstring().substring(1));
+    				PrintWriter spw = new PrintWriter(vdm, "UTF-8");
+    				source.printSource(spw);
+    				spw.close();
+    				println("Extracted source written to " + vdm);
+    			}
+			}
+			else
+			{
+				println("Not a Word or ODF file: " + file);
+			}
+		}
+		catch (Exception e)
+		{
+			println("save: " + e.getMessage());
+		}
+	}
+
 	protected boolean doLatex(String line, boolean headers)
 	{
 		try
@@ -1253,6 +1334,7 @@ abstract public class CommandReader
 		println("set [<pre|post|inv|dtc|measures> <on|off>] - set runtime checks");
 		println("reload - reload the current specification files");
 		println("load <files or dirs> - replace current loaded specification files");
+		println("save [<files>] - generate Word/ODF source extract files");
 		println("quit - leave the interpreter");
 	}
 
