@@ -33,6 +33,7 @@ import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.ObjectValue;
+import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.Value;
 
 
@@ -56,6 +57,8 @@ public class Context extends HashMap<LexNameToken, Value>
 	public int prepost = 0;
 	/** Set to the error message if prepost is set. */
 	public String prepostMsg = null;
+	/** Set to the operation being guarded, if any. */
+	public OperationValue guardOp = null;
 
 	/**
 	 * Create a context at the given location.

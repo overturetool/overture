@@ -176,7 +176,7 @@ public class OperationValue extends Value
 		return self;
 	}
 
-	public void setGuard(Expression add)
+	public void setGuard(Expression add, boolean isMutex)
 	{
 		if (guard == null)
 		{
@@ -185,9 +185,11 @@ public class OperationValue extends Value
 		else
 		{
 			// Create "old and new" expression
+			
+			LexLocation where = isMutex ? guard.location : add.location;
 
 			guard = new AndExpression(guard,
-				new LexKeywordToken(Token.AND, guard.location), add);
+				new LexKeywordToken(Token.AND, where), add);
 		}
 	}
 
@@ -443,10 +445,13 @@ public class OperationValue extends Value
 			}
 
 			// The guardLock list is signalled by the GuardValueListener
-			// and by notifySelf when something changes.
+			// and by notifySelf when something changes. The guardOp
+			// is set to indicate the guard state to any breakpoints.
 
 			debug("guard WAIT");
+			ctxt.guardOp = this;
 			self.guardLock.block(ctxt, guard.location);
+			ctxt.guardOp = null;
 			debug("guard WAKE");
 		}
 

@@ -58,7 +58,6 @@ import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.MutexSyncDefinition;
 import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.expressions.Expression;
@@ -1907,20 +1906,19 @@ public class DBGPReader
 					}
 				}
 
-				if (breakContext instanceof ObjectContext)
+				if (breakContext.guardOp != null &&
+					breakContext instanceof ObjectContext)
 				{
 					ObjectContext octxt = (ObjectContext)breakContext;
-					int line = breakpoint.location.startLine;
-					DefinitionList defs = octxt.self.type.classdef.definitions;
+					String opname = breakContext.guardOp.name.name;
 
-					for (Definition d: defs)
+					for (Definition d: octxt.self.type.classdef.definitions)
 					{
 						if (d instanceof PerSyncDefinition)
 						{
 							PerSyncDefinition pdef = (PerSyncDefinition)d;
 							
-							if (pdef.location.startLine == line ||
-								pdef.guard.findExpression(line) != null)
+							if (pdef.opname.name.equals(opname))
 							{
 	            				for (Expression sub: pdef.guard.getSubExpressions())
 	            				{
@@ -1934,29 +1932,30 @@ public class DBGPReader
 	            						vars.put(name, v);
 	            					}
 	            				}
-	    						
-	    						break;
 							}
 						}
 						else if (d instanceof MutexSyncDefinition)
 						{
 							MutexSyncDefinition mdef = (MutexSyncDefinition)d;
 							
-							if (mdef.location.startLine == line)
-							{
-	            				for (LexNameToken op: mdef.operations)
-	            				{
-	            					LexNameList ops = new LexNameList(op);
-	            					Expression hexp = new HistoryExpression(mdef.location, Token.ACTIVE, ops);
-	        						Value v = hexp.eval(octxt);
-	        						LexNameToken name =
-	        							new LexNameToken(octxt.self.type.name.module,
-	        								hexp.toString(), mdef.location);
-	        						vars.put(name, v);
-	            				}
-	            				
-	    						break;
-							}
+            				for (LexNameToken mop: mdef.operations)
+            				{
+            					if (mop.name.equals(opname))
+            					{
+                    				for (LexNameToken op: mdef.operations)
+                    				{
+                    					LexNameList ops = new LexNameList(op);
+                    					Expression hexp = new HistoryExpression(mdef.location, Token.ACTIVE, ops);
+                						Value v = hexp.eval(octxt);
+                						LexNameToken name =
+                							new LexNameToken(octxt.self.type.name.module,
+                								hexp.toString(), mdef.location);
+                						vars.put(name, v);
+                    				}
+                    				
+                    				break;
+            					}
+            				}
 						}
 					}
 				}

@@ -1361,7 +1361,7 @@ public class ClassDefinition extends Definition
 
     			for (Value op: overloads)
     			{
-    				op.operationValue(initCtxt).setGuard(exp);
+    				op.operationValue(initCtxt).setGuard(exp, false);
     			}
 
     			hasPermissions  = true;
@@ -1377,7 +1377,7 @@ public class ClassDefinition extends Definition
 
     				for (Value op: overloads)
     				{
-    					op.operationValue(initCtxt).setGuard(exp);
+    					op.operationValue(initCtxt).setGuard(exp, true);
     				}
     			}
 
