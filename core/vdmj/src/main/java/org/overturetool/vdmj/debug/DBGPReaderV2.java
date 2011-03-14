@@ -1296,11 +1296,12 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				}
 			}
 
-			if (breakContext.guardOp != null &&
-				breakContext instanceof ObjectContext)
+			if (breakContext instanceof ObjectContext)
 			{
 				ObjectContext octxt = (ObjectContext)breakContext;
-				String opname = breakContext.guardOp.name.name;
+				int line = breakpoint.location.startLine;
+				String opname = breakContext.guardOp == null ?
+					"" : breakContext.guardOp.name.name;
 
 				for (Definition d: octxt.self.type.classdef.definitions)
 				{
@@ -1308,7 +1309,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					{
 						PerSyncDefinition pdef = (PerSyncDefinition)d;
 						
-						if (pdef.opname.name.equals(opname))
+						if (pdef.opname.name.equals(opname) ||
+							pdef.location.startLine == line ||
+							pdef.guard.findExpression(line) != null)
 						{
             				for (Expression sub: pdef.guard.getSubExpressions())
             				{
@@ -1322,6 +1325,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
             						vars.put(name, v);
             					}
             				}
+            				
+            				break;
 						}
 					}
 					else if (d instanceof MutexSyncDefinition)
