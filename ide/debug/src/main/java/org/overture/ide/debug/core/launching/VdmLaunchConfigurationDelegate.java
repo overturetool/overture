@@ -226,6 +226,9 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add("LaunchConfigurationExpression");
 
 		commandList.addAll(getExtendedCommands(vdmProject, configuration));
+		
+		commandList.add("-baseDir");
+		commandList.add(getProject(configuration).getLocationURI().toASCIIString());
 
 		commandList.addAll(getSpecFiles(vdmProject));
 		if (useRemoteDebug(configuration))

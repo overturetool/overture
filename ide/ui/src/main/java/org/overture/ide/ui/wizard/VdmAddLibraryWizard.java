@@ -82,6 +82,12 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 		boolean useMath = _pageTwo.getLibrarySelection().isMathSelected();
 		boolean useIo = _pageTwo.getLibrarySelection().isIoSelected();
 		boolean useUtil = _pageTwo.getLibrarySelection().isUtilSelected();
+		boolean useCsvIo = _pageTwo.getLibrarySelection().isCsvSelected();
+		
+		if(useCsvIo)
+		{
+			useIo = true;
+		}
 
 		if (useIo || useMath || useUtil)
 		{
@@ -128,6 +134,15 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 						copyFile(libFolder,
 								"includes/lib/pp/VDMUtil.vdmpp",
 								"VDMUtil." + extension);
+				if(useCsvIo)
+					if (dialect == Dialect.VDM_SL)
+						copyFile(libFolder,
+								"includes/lib/sl/CSV.vdmsl",
+								"CSV." + extension);
+					else
+						copyFile(libFolder,
+								"includes/lib/pp/CSV.vdmpp",
+								"CSV." + extension);
 
 			} catch (IOException e)
 			{

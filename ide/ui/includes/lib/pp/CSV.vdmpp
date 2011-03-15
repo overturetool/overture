@@ -1,0 +1,43 @@
+class CSV is subclass of IO
+
+-- 	Overture STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customisable. 
+-- Dont care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+
+functions
+/**
+ * Writes a seq of ? to a file in CSV format 
+ * filename The name of the file 
+ * val The value to write
+ * fdir <append> | <start>
+*/
+public static fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) == is not yet specified;
+
+/**
+ * Reads a seq of ? from a file in CSV format 
+ * filename The name of the file 
+ * index The line number to read
+*/
+public static freadval[@p]:seq1 of char * int -> bool * [@p]
+freadval(f,index) == is not yet specified;
+
+/**
+ * Gets the number of lines in a file in CSV format 
+ * filename The name of the file 
+*/
+public static flinecount:seq1 of char -> bool * int
+flinecount(f) == is not yet specified;
+
+
+end CSV

@@ -22,7 +22,7 @@ filedirective = <start>|<append>
 functions
 
 -- Write VDM value in ASCII format to std out:
-public
+public static
 writeval[@p]: @p -> bool
 writeval(val)==
   is not yet specified;
@@ -31,13 +31,13 @@ writeval(val)==
 -- fdir = <start> will overwrite existing file,
 -- fdir = <append> will append output to the file (created if
 -- not existing).
-public
+public static
 fwriteval[@p]:seq1 of char * @p * filedirective -> bool
 fwriteval(filename,val,fdir) ==
   is not yet specified;
 
 -- Read VDM value in ASCII format from file
-public
+public static
 freadval[@p]:seq1 of char -> bool * [@p]
 freadval(f) ==
   is not yet specified
