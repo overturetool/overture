@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ArrayBlockingQueue;
 
+import org.overturetool.vdmj.debug.RemoteInterpreter.Call.CallType;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
@@ -60,12 +62,30 @@ public class RemoteInterpreter
 
 	public String execute(String line) throws Exception
 	{
-		return interpreter.execute(line, dbgp).toString();
+		executionQueueRequest.add(new Call(CallType.Execute,line));
+		Object result = executionQueueResult.take();
+		if(result instanceof Exception)
+		{
+			throw (Exception)result;
+		}
+		else
+		{
+			return ((Value) result).toString();
+		}
 	}
 
 	public Value valueExecute(String line) throws Exception
 	{
-		return interpreter.execute(line, dbgp);
+		executionQueueRequest.add(new Call(CallType.Execute,line));
+		Object result = executionQueueResult.take();
+		if(result instanceof Exception)
+		{
+			throw (Exception)result;
+		}
+		else
+		{
+			return (Value) result;
+		}
 	}
 
 	public void init()
@@ -77,8 +97,12 @@ public class RemoteInterpreter
 	{
 		if (interpreter instanceof ClassInterpreter)
 		{
-			ClassInterpreter ci = (ClassInterpreter)interpreter;
-			ci.create(var, exp);
+			executionQueueRequest.add(new Call(CallType.Create,var,exp));
+			Object result = executionQueueResult.take();
+			if(result instanceof Exception)
+			{
+				throw (Exception)result;
+			}
 		}
 		else
 		{
@@ -138,4 +162,79 @@ public class RemoteInterpreter
 
 		return names;
 	}
+	
+	
+	
+	public void finish()
+	{
+		isFinished = true;
+	}
+	
+	ArrayBlockingQueue<Call> executionQueueRequest = new ArrayBlockingQueue<Call>(1);
+	ArrayBlockingQueue<Object> executionQueueResult = new ArrayBlockingQueue<Object>(1);
+	private boolean isFinished;
+	public static class Call
+	{
+		public enum CallType{Execute, Create};
+		public final CallType type;
+		public final String exp;
+		public final String var;
+		
+		public Call(CallType type, String var, String exp)
+		{
+			this.type = type;
+			this.var = var;
+			this.exp = exp;
+		}
+		
+		public Call(CallType type, String exp)
+		{
+			this.type = type;
+			this.var = null;
+			this.exp = exp;
+		}
+		@Override
+		public String toString()
+		{
+			return this.type+ " "+this.var+" "+ this.exp;
+		}
+	}
+	
+
+	public void processRemoteCalls()
+	{
+		while(!isFinished)
+		{
+			try
+			{
+				Call call = executionQueueRequest.take();
+				try
+				{
+					switch (call.type)
+					{
+						case Create:
+							if (interpreter instanceof ClassInterpreter)
+							{
+								ClassInterpreter ci = (ClassInterpreter)interpreter;
+								ci.create(call.var, call.exp);
+								executionQueueResult.add(new Object());
+							}
+							break;
+						case Execute:
+								executionQueueResult.add(interpreter.execute(call.exp, dbgp));
+							break;
+						
+					}
+				} catch (Exception e)
+				{
+					executionQueueResult.add(e);
+				}
+			} catch (InterruptedException e)
+			{
+				return;
+			}
+		}
+	}
+	
+	
 }

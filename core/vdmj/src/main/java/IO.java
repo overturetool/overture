@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -94,29 +95,26 @@ public class IO implements Serializable
 
 		try
 		{
-			File file = new File(stringOf(fval).replace('/', File.separatorChar));
-
-			if (!file.isAbsolute())
-			{
-				file = new File(new File(".").getParentFile(), file.getAbsolutePath());
-			}
-
+			File file = getFile(fval);
+			
 			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP);
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("IO");
 			Expression exp = reader.readExpression();
-
+			boolean success = false;
 			try
 			{
 				Interpreter ip = Interpreter.getInstance();
 				ip.typeCheck(exp, ip.getGlobalEnvironment());
+				success = true;
 			}
 			catch (Exception e)
 			{
+				success = false;
 				// OK
 			}
 
-			result.add(new BooleanValue(true));
+			result.add(new BooleanValue(success));
 			Context ectxt = new Context(null, "freadval", null);
 			ectxt.setThreadState(null, CPUValue.vCPU);
 			result.add(exp.eval(ectxt));
@@ -130,6 +128,31 @@ public class IO implements Serializable
 		}
 
 		return new TupleValue(result);
+	}
+	
+	/**
+	 * Gets the absolute path the the input file based on the file name parsed and the working dir of the IDE or the
+	 * execution dir of VDMJ
+	 * 
+	 * @param fval file name
+	 * @return
+	 */
+	protected static File getFile(Value fval)
+	{
+		String path = stringOf(fval).replace('/', File.separatorChar);
+		File file = new File(path);
+
+		if (!file.isAbsolute())
+		{
+			if (Settings.usingDBGP)
+			{
+				file = new File(Settings.DGBPbaseDir, path);
+			}else
+			{
+				file = new File(new File(".").getParentFile(), file.getAbsolutePath());
+			}
+		}
+		return file;
 	}
 
 	public static Value fecho(Value fval, Value tval, Value dval)
@@ -172,7 +195,7 @@ public class IO implements Serializable
 	// We need this because the toString of the Value converts special
 	// characters back to their quoted form.
 
-	private static String stringOf(Value val)
+	protected static String stringOf(Value val)
 	{
 		StringBuilder s = new StringBuilder();
 		val = val.deref();

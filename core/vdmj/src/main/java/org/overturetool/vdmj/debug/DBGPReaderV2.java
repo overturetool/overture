@@ -133,6 +133,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Settings.usingDBGP = true;
+		Settings.DGBPbaseDir = new File(".").getParentFile();
 
 		String host = null;
 		int port = -1;
@@ -278,6 +279,18 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					LexTokenReader.consoleFileName = i.next();
 				} else {
 					usage("-consoleName option requires a console name");
+				}
+			}else if (arg.equals("-baseDir")) {
+				if (i.hasNext()) {
+					try {
+						Settings.DGBPbaseDir = new File(new URI(i.next()));
+					} catch (URISyntaxException e) {
+						usage(e.getMessage() + ": " + arg);
+					} catch (IllegalArgumentException e) {
+						usage(e.getMessage() + ": " + arg);
+					}
+				} else {
+					usage("-baseDir option requires a folder name");
 				}
 			} else if (arg.startsWith("-")) {
 				usage("Unknown option " + arg);
@@ -1103,9 +1116,35 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			try {
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
-				remoteControl.run(new RemoteInterpreter(interpreter, this));
-				stdout("\nRemote control completed");
+//				remoteControl.run(new RemoteInterpreter(interpreter, this));
+//				stdout("\nRemote control completed");
+//				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+				
+				final RemoteInterpreter remoteInterpreter = new RemoteInterpreter(interpreter, this);
+				Thread remoteThread = new Thread(new Runnable()
+				{
+					
+					public void run()
+					{
+						try
+						{
+							remoteControl.run(remoteInterpreter);
+						} catch (Exception e)
+						{
+							status = DBGPStatus.STOPPED;
+							statusReason = DBGPReason.ERROR;
+							errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+						}
+					}
+				});
+				remoteThread.setName("RemoteControl runner");
+				remoteThread.setDaemon(true);
+				remoteThread.start();
+				remoteInterpreter.processRemoteCalls();
+//				remoteControl.run(new RemoteInterpreter(interpreter, this));
+				stdout("Remote control completed");
 				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+				
 			} catch (Exception e) {
 				status = DBGPStatus.STOPPED;
 				statusReason = DBGPReason.ERROR;

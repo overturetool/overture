@@ -525,7 +525,7 @@ public class DBGPReader
 			" [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]" +
 			" [-pre] [-post] [-inv] [-dtc] [-measures]"+
 			" [-coverage <dir URL>] [-default64 <base64 name>]" +
-			" [-remote <class>] [-consoleName <console>] {<filename URLs>}");
+			" [-remote <class>] [-consoleName <console>] [-baseDir <File>] {<filename URLs>}");
 
 		System.exit(1);
 	}
@@ -1366,7 +1366,29 @@ public class DBGPReader
 			{
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
-				remoteControl.run(new RemoteInterpreter(interpreter, this));
+				
+				final RemoteInterpreter remoteInterpreter = new RemoteInterpreter(interpreter, this);
+				Thread remoteThread = new Thread(new Runnable()
+				{
+					
+					public void run()
+					{
+						try
+						{
+							remoteControl.run(remoteInterpreter);
+						} catch (Exception e)
+						{
+							status = DBGPStatus.STOPPED;
+							statusReason = DBGPReason.ERROR;
+							errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+						}
+					}
+				});
+				remoteThread.setName("RemoteControl runner");
+				remoteThread.setDaemon(true);
+				remoteThread.start();
+				remoteInterpreter.processRemoteCalls();
+//				remoteControl.run(new RemoteInterpreter(interpreter, this));
 				stdout("Remote control completed");
 				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 			}

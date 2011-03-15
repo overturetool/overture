@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj;
 
+import java.io.File;
+
 import org.overturetool.vdmj.lex.Dialect;
 
 /**
@@ -41,4 +43,5 @@ public class Settings
 
 	public static boolean usingDBGP = false;
 	public static boolean usingCmdLine = false;
+	public static File DGBPbaseDir;
 }
