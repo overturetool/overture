@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overturetool.vdmj.scheduler.CPUResource;
 import org.overturetool.vdmj.scheduler.SystemClock;
 
 public abstract class RTMessage
@@ -19,16 +20,18 @@ public abstract class RTMessage
 
 	protected Long time = SystemClock.getWallTime();// Timestamp the message
 
-	protected synchronized Long getStaticId(String name)
+	protected synchronized Long getStaticId(String name, CPUResource cpuId)
 	{
-		if (staticIds.containsKey(name))
+		String nameFinal = name + cpuId.getNumber();
+		
+		if (staticIds.containsKey(nameFinal))
 		{
-			return staticIds.get(name);
+			return staticIds.get(nameFinal);
 		} else
 		{
-			RTDeployStaticMessage deployMessage = new RTDeployStaticMessage(name);
+			RTDeployStaticMessage deployMessage = new RTDeployStaticMessage(name,cpuId);
 			cachedStaticDeploys.add(deployMessage);
-			staticIds.put(name, deployMessage.getObjectReference());
+			staticIds.put(nameFinal, deployMessage.getObjectReference());
 			return deployMessage.getObjectReference();
 		}
 

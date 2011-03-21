@@ -22,7 +22,7 @@ public abstract class RTThreadMessage extends RTMessage
 	}
 	
 	protected String objRefString(ISchedulableThread thread)
-	{
+	{try{
 		ObjectValue obj = thread.getObject(); 
 		
 		if(obj == null && objRef == null)
@@ -31,18 +31,21 @@ public abstract class RTThreadMessage extends RTMessage
 			if(thread instanceof InitThread)
 			{
 				clnm = "INIT";
-				objRef = getStaticId(clnm).toString();
+				objRef = getStaticId(clnm,cpuNumber).toString();
 			}else if(thread instanceof MainThread)
 			{
 				clnm = "ENTRY";
-				objRef = getStaticId(clnm).toString();
+				objRef = getStaticId(clnm,cpuNumber).toString();
 			}
 		}else if (objRef ==null)
 		{
 			objRef = ""+obj.objectReference;
 			clnm =  obj.type.toString() ;
 		}
-		
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}
 		
 		return " objref: " + objRef + " clnm: \"" + clnm+"\"";
 	}
@@ -51,17 +54,21 @@ public abstract class RTThreadMessage extends RTMessage
 	public void generateStaticDeploys()
 	{
 		ObjectValue obj = thread.getObject(); 
+		try{
 		if(obj == null)
 		{
 			if(thread instanceof InitThread)
 			{
 				clnm = "INIT";
-				objRef = getStaticId(clnm).toString();
+				objRef = getStaticId(clnm,cpuNumber).toString();
 			}else if(thread instanceof MainThread)
 			{
 				clnm = "ENTRY";
-				objRef = getStaticId(clnm).toString();
+				objRef = getStaticId(clnm,cpuNumber).toString();
 			}
+		}}catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 	

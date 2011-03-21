@@ -48,12 +48,16 @@ public class RTOperationMessage extends RTMessage
 	
 	@Override
 	public void generateStaticDeploys()
-	{
+	{try{
 		if (operationVal.isStatic){
-			objref = getStaticId(operationVal.classdef.name.name);
+			objref = getStaticId(operationVal.classdef.name.name,from);
 		}else
 		{
 			objref = Long.valueOf(operationVal.getSelf().objectReference);
+		}
+	}catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 	

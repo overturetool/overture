@@ -70,7 +70,8 @@ public class RTLogger
 				RTMessage.cachedStaticDeploys.clear();
 			}
 			deployEvents.add(message);
-		} else
+		} 
+		else
 		{
 			if (deployEvents.size() > 0)
 			{
