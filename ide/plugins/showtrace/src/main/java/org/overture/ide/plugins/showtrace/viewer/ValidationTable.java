@@ -120,8 +120,8 @@ public class ValidationTable
                 tokens.eolIsSignificant(true);
                 tokens.quoteChar(qchar);
                 tokens.parseNumbers();
-                while(tokens.nextToken() != -1 && !abort) 
-                    if(cnt != 1 || tokens.ttype != 10)
+                while(tokens.nextToken() != StreamTokenizer.TT_EOF && !abort) 
+                    if(cnt != 1 || tokens.ttype != StreamTokenizer.TT_EOL)
                         if(cnt == 1 && tokens.ttype == qchar)
                         {
                             vrname = new String(tokens.sval);
@@ -135,7 +135,7 @@ public class ValidationTable
                             theItem.setText(cnt, tokens.sval);
                             cnt++;
                         } else
-                        if(cnt == 3 && tokens.ttype == -2)
+                        if(cnt == 3 && tokens.ttype == StreamTokenizer.TT_NUMBER)
                         {
                             stime = new Long(Math.round(tokens.nval));
                             theItem.setText(cnt, stime.toString());
@@ -144,52 +144,52 @@ public class ValidationTable
                             theItem.setText(0, "  FAIL");
                             cnt++;
                         } else
-                        if(cnt == 3 && tokens.ttype == -3)
+                        if(cnt == 3 && tokens.ttype == StreamTokenizer.TT_WORD)
                         {
                             stime = null;
                             theItem.setText(0, "  PASS");
                             theItem.setBackground(0, ColorConstants.green);
                             cnt++;
                         } else
-                        if(cnt == 4 && tokens.ttype == 10)
+                        if(cnt == 4 && tokens.ttype == StreamTokenizer.TT_EOL)
                             cnt = 1;
                         else
-                        if(cnt == 4 && tokens.ttype == -2)
+                        if(cnt == 4 && tokens.ttype == StreamTokenizer.TT_NUMBER)
                         {
                             sthrid = new Long(Math.round(tokens.nval));
                             theItem.setText(cnt, sthrid.toString());
                             theViewer.addLowerError(stime, sthrid, vrname);
                             cnt++;
                         } else
-                        if(cnt == 4 && tokens.ttype == -3)
+                        if(cnt == 4 && tokens.ttype == StreamTokenizer.TT_WORD)
                         {
                             stime = null;
                             cnt++;
                         } else
-                        if(cnt == 5 && tokens.ttype == -2)
+                        if(cnt == 5 && tokens.ttype == StreamTokenizer.TT_NUMBER)
                         {
                             dtime = new Long(Math.round(tokens.nval));
                             theItem.setText(cnt, dtime.toString());
                             cnt++;
                         } else
-                        if(cnt == 5 && tokens.ttype == -3)
+                        if(cnt == 5 && tokens.ttype == StreamTokenizer.TT_WORD)
                         {
                             dtime = null;
                             cnt++;
                         } else
-                        if(cnt == 6 && tokens.ttype == -2)
+                        if(cnt == 6 && tokens.ttype == StreamTokenizer.TT_NUMBER)
                         {
                             dthrid = new Long(Math.round(tokens.nval));
                             theItem.setText(cnt, dthrid.toString());
                             theViewer.addUpperError(dtime, dthrid, vrname);
                             cnt++;
                         } else
-                        if(cnt == 6 && tokens.ttype == -3)
+                        if(cnt == 6 && tokens.ttype == StreamTokenizer.TT_WORD)
                         {
                             dthrid = null;
                             cnt++;
                         } else
-                        if(cnt == 7 && tokens.ttype == 10)
+                        if(cnt == 7 && tokens.ttype == StreamTokenizer.TT_EOL)
                         {
                             stime = null;
                             sthrid = null;
