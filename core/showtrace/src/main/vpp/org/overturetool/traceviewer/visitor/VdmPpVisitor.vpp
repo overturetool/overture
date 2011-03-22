@@ -1,0 +1,573 @@
+\begin{vdm_al}
+class VdmPpVisitor is subclass of OmlVisitor
+
+values
+  private nl : seq of char = "\r\n";
+  private prefix : seq of char = "new Oml"
+
+instance variables
+  public result : seq of char := [];
+  private lvl : nat := 0
+
+operations
+  private pushNL: () ==> ()
+  pushNL () == lvl := lvl + 2;
+
+  private popNL: () ==> ()
+  popNL () == lvl := lvl - 2;
+
+  private getNL: () ==> seq of char
+  getNL () ==
+    ( dcl res : seq of char := nl, cnt : nat := lvl;
+      while cnt > 0 do ( res := res ^" "; cnt := cnt - 1 );
+      return res );
+
+  private printBoolField: bool ==> ()
+  printBoolField (pval) ==
+    result := if pval then "true" else "false";
+
+  private printCharField: char ==> ()
+  printCharField (pval) ==
+    result := [''',pval,'''];
+
+  private printNatField: nat ==> ()
+  -- implement this operation by hand!
+  printNatField (-) == error;
+
+  private printRealField: real ==> ()
+  -- implement this operation by hand!
+  printRealField (-) == error;
+
+  private printNodeField: IOmlNode ==> ()
+  printNodeField (pNode) == pNode.accept(self);
+
+  private printStringField: seq of char ==> ()
+  printStringField (str) == result := "\"" ^ str ^ "\"";
+
+  private printSeqofField: seq of IOmlNode`FieldValue ==> ()
+  printSeqofField (pval) ==
+    ( dcl str : seq of char := "[", cnt : nat := len pval;
+      pushNL();
+      str := str ^ getNL();
+      while cnt > 0 do
+        ( printField(pval(len pval - cnt + 1));
+          str := str ^ result;
+          if cnt > 1
+          then str := str ^ "," ^ getNL();
+          cnt := cnt - 1 ); 
+      popNL();
+      str := str ^ getNL() ^ "]";
+      result := str );
+
+  private printSetofField: set of IOmlNode`FieldValue ==> ()
+  printSetofField (pval) ==
+    ( dcl str : seq of char := "{", cnt : nat := card pval,
+          pvs : set of IOmlNode`FieldValue := pval;
+      pushNL();
+      str := str ^ getNL();
+      while cnt > 0 do
+        let pv in set pvs in
+          ( printField(pv);
+            str := str ^ result;
+            pvs := pvs \ {pv};
+            if cnt > 1
+            then str := str ^ "," ^ getNL();
+            cnt := cnt - 1 ); 
+      popNL();
+      str := str ^ getNL() ^ "}";
+      result := str );
+
+  private printMapField: map IOmlNode`FieldValue to IOmlNode`FieldValue ==> ()
+  printMapField (pval) == 
+    ( dcl str : seq of char := "{", cnt : nat := card dom pval,
+          pvs : set of IOmlNode`FieldValue := dom pval;
+      pushNL();
+      str := str ^ getNL();
+      while cnt > 0 do
+        let pv in set pvs in
+          ( printField(pv);
+            str := str ^ result ^ " |-> ";
+            printField(pval(pv));
+            str := str ^ result;
+            pvs := pvs \ {pv};
+            if cnt > 1
+            then str := str ^ "," ^ getNL();
+            cnt := cnt - 1 ); 
+      popNL();
+      str := str ^ getNL() ^ "}";
+      result := str );
+
+  private printField: IOmlNode`FieldValue ==> ()
+  printField (fld) ==
+    if is_bool(fld) then printBoolField(fld)
+    elseif is_char(fld) then printCharField(fld)
+    elseif is_nat(fld) then printNatField(fld)
+    elseif is_real(fld) then printRealField(fld)
+    elseif isofclass(IOmlNode,fld) then printNodeField(fld)
+    else printStringField(fld);
+
+  private printPositionInfo: IOmlNode ==> ()
+  printPositionInfo (pNode) ==
+    ( dcl str : seq of char := ".setLexemIndex(";
+      printNatField(pNode.getLeftMostLexemIndex());
+      str := str ^ result ^ ").setLexemIndex(";
+      printNatField(pNode.getRightMostLexemIndex());
+      str := str ^ result ^ ")";
+      result := str );
+
+  public visitNode: IOmlNode ==> ()
+  visitNode (pNode) == pNode.accept(self);
+
+  public visitDocument: IOmlDocument ==> ()
+  visitDocument(pcmp) ==
+    ( dcl str : seq of char := "new OmlDocument(";
+      pushNL();
+      printStringField(pcmp.getFilename());
+      str := str ^ result ^ "," ^ getNL();
+      if pcmp.hasTraceFile() then visitTraceFile(pcmp.getTraceFile());
+      str := str ^ result ^ "," ^ getNL();
+      str := str ^ "[";
+      pushNL();
+      def lexems = pcmp.getLexems() in
+        if len lexems > 0
+        then ( str := str ^ getNL();
+               for idx = 1 to len lexems - 1 do
+                 ( visitLexem(lexems(idx));
+                   str := str ^ result ^ "," ^ getNL() );
+               visitLexem(lexems(len lexems));
+               str := str ^ result );
+      popNL();
+      str := str ^ getNL() ^ "]";
+      popNL();
+      str := str ^ getNL() ^ ")";
+      result := str );
+
+  public visitLexem: IOmlLexem ==> ()
+  visitLexem (pcmp) ==
+    ( dcl str : seq of char := "new OmlLexem(";
+      printNatField(pcmp.getLine());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getColumn());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getLexval());
+      str := str ^ result ^ ",";
+      printStringField(pcmp.getText());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getIndex());
+      str := str ^ result ^ ",";
+      printNatField(pcmp.getType());
+      str := str ^ ")";
+      result := str );
+
+  public visitDeployObj: IOmlDeployObj ==> ()
+  visitDeployObj(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getObjref());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getClnm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitInstVarChange: IOmlInstVarChange ==> ()
+  visitInstVarChange(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printStringField(pcmp.getInstnm());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getVal());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObjref());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitThreadSwapOut: IOmlThreadSwapOut ==> ()
+  visitThreadSwapOut(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasClnm()
+      then printStringField(pcmp.getClnm())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getOverhead());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitThreadSwapIn: IOmlThreadSwapIn ==> ()
+  visitThreadSwapIn(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasClnm()
+      then printStringField(pcmp.getClnm())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getOverhead());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitDelayedThreadSwapIn: IOmlDelayedThreadSwapIn ==> ()
+  visitDelayedThreadSwapIn(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasClnm()
+      then printStringField(pcmp.getClnm())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getDelay());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getOverhead());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitReplyRequest: IOmlReplyRequest ==> ()
+  visitReplyRequest(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getBusid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getFromcpu());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getTocpu());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getMsgid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getOrigmsgid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCallthr());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCalleethr());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getSize());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitOpRequest: IOmlOpRequest ==> ()
+  visitOpRequest(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getOpname());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getClnm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getAsynchronous());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasArgs()
+      then printStringField(pcmp.getArgs())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitMessageActivate: IOmlMessageActivate ==> ()
+  visitMessageActivate(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getMsgid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitCPUdecl: IOmlCPUdecl ==> ()
+  visitCPUdecl(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getExpl());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getSys());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getName());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitOpCompleted: IOmlOpCompleted ==> ()
+  visitOpCompleted(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getOpname());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getClnm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getAsynchronous());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasRes()
+      then printStringField(pcmp.getRes())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitTraceFile: IOmlTraceFile ==> ()
+  visitTraceFile(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      printSeqofField(pcmp.getTrace());
+      str := str ^result;
+      str := str ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitThreadCreate: IOmlThreadCreate ==> ()
+  visitThreadCreate(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getPeriod());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasClnm()
+      then printStringField(pcmp.getClnm())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitMessageCompleted: IOmlMessageCompleted ==> ()
+  visitMessageCompleted(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getMsgid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitMessageRequest: IOmlMessageRequest ==> ()
+  visitMessageRequest(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getBusid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getFromcpu());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getTocpu());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getMsgid());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCallthr());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getOpname());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getSize());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitBUSdecl: IOmlBUSdecl ==> ()
+  visitBUSdecl(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getName());
+      str := str ^result ^"," ^getNL();
+      printSetofField(pcmp.getTopo());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitThreadKill: IOmlThreadKill ==> ()
+  visitThreadKill(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitOpActivate: IOmlOpActivate ==> ()
+  visitOpActivate(pcmp) ==
+    ( dcl str : seq of char := prefix ^pcmp.identity() ^"(";
+      pushNL();
+      str := str ^getNL();
+      printNatField(pcmp.getId());
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getOpname());
+      str := str ^result ^"," ^getNL();
+      if pcmp.hasObjref()
+      then printNatField(pcmp.getObjref())
+      else result := "nil";
+      str := str ^result ^"," ^getNL();
+      printStringField(pcmp.getClnm());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getCpunm());
+      str := str ^result ^"," ^getNL();
+      printBoolField(pcmp.getAsynchronous());
+      str := str ^result ^"," ^getNL();
+      printNatField(pcmp.getObstime());
+      str := str ^result;
+      popNL();
+      str := str ^getNL() ^")";
+      if pcmp.hasPositionInfo()
+      then ( printPositionInfo(pcmp);
+             str := str ^ result );
+      result := str );
+
+  public visitTraceEvent: IOmlTraceEvent ==> ()
+  visitTraceEvent(pNode) == pNode.accept(self);
+
+end VdmPpVisitor
+\end{vdm_al}
