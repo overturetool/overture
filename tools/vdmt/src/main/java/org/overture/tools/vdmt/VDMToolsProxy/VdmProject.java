@@ -55,7 +55,9 @@ public class VdmProject {
 		}
 
 		// get files from dependencies
+		log.debug("Depended locations count: "+ dependedArtifactsSourceLocation.size());
 		for (File dFile : dependedArtifactsSourceLocation) {
+			log.debug("Depended location: "+ dFile.getAbsolutePath());
 			for (File file : Util.GetFiles(getVppLocation(dFile), extension)) {
 				addFile(file);
 			}

@@ -137,6 +137,15 @@ public abstract class VdmBaseMojo extends AbstractMojo {
 					// repository. Try to guess the source location
 					File guessLocation = new File(project.getBasedir()
 							.getParentFile(), a.getArtifactId());
+//					getLog().debug("%%%% "+ guessLocation);
+//					getLog().debug("%%%%project base "+ project.getBasedir());
+					
+					String path = guessLocation.getAbsolutePath();
+					path = path.replace("ide"+File.separatorChar+"plugins", "core");
+					getLog().debug("First guess of dependency: "+path);
+					if (!addProjectBaseToList(new File(path), false)) {
+						
+					}else
 					if (!addProjectBaseToList(guessLocation, false)) {
 						String artifact = a.getGroupId() + ":"
 								+ a.getArtifactId() + " " + a.getVersion();
