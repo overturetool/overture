@@ -25,6 +25,7 @@
     <module>quickinterpreter</module>
     <module>coverageeditor</module>
     <module>csk</module>
+		<module>externaleditor</module>
 
 
   </modules>
