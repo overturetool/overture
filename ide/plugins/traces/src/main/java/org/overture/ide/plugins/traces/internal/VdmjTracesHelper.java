@@ -51,7 +51,7 @@ public class VdmjTracesHelper implements ITracesHelper
 	Map<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
 	Dialect dialect = Dialect.VDM_PP;
-	String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
+//	String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
 	Shell shell;
 
 	public VdmjTracesHelper(Shell shell, IVdmProject vdmProject, int max)
@@ -81,7 +81,7 @@ public class VdmjTracesHelper implements ITracesHelper
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		
 		nature = this.project.getVdmNature();
-		contentTypeId = this.project.getContentTypeIds().get(0);
+//		contentTypeId = this.project.getContentTypeIds().get(0);
 		dialect = this.project.getDialect();
 
 		this.projectDir = new File(project.getLocation().toFile(),

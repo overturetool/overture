@@ -75,9 +75,9 @@ public abstract class VdmEditor extends TextEditor {
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 
 	VdmContentOutlinePage fOutlinePage = null;
-	SourceReferenceManager sourceReferenceManager = null;
+	protected SourceReferenceManager sourceReferenceManager = null;
 
-	private VdmSourceViewerConfiguration fVdmSourceViewer;
+	protected VdmSourceViewerConfiguration fVdmSourceViewer;
 
 	public VdmEditor() {
 
@@ -348,6 +348,14 @@ public abstract class VdmEditor extends TextEditor {
 	}
 
 	public SourceReferenceManager getSourceReferenceManager() {
+		if(this.sourceReferenceManager == null)
+		{
+			IVdmElement inputElement = getInputVdmElement();
+			if (inputElement instanceof IVdmSourceUnit) {
+				this.sourceReferenceManager = new SourceReferenceManager(
+				(IVdmSourceUnit) inputElement);
+			}
+		}
 		return this.sourceReferenceManager;
 	}
 
@@ -370,8 +378,8 @@ public abstract class VdmEditor extends TextEditor {
 			if (sourceReferenceManager != null) {
 				sourceReferenceManager.shutdown(null);
 			}
-			sourceReferenceManager = new SourceReferenceManager(
-					(IVdmSourceUnit) inputElement);
+			sourceReferenceManager = getSourceReferenceManager();//new SourceReferenceManager(
+					//(IVdmSourceUnit) inputElement);
 			sourceReferenceManager.startup(null);
 		}
 

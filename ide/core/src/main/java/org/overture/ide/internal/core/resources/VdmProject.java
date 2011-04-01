@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
@@ -48,15 +50,15 @@ import org.overturetool.vdmj.lex.Dialect;
 public class VdmProject implements IVdmProject
 {
 	private static final String LANGUAGE_VERSION_ARGUMENT_KEY = "LANGUAGE_VERSION";
-//	private static final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "DYNAMIC_TYPE_CHECKS";
-//	private static final String INV_CHECKS_ARGUMENT_KEY = "INV_CHECKS";
-//	private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
-//	private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
+	// private static final String DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY = "DYNAMIC_TYPE_CHECKS";
+	// private static final String INV_CHECKS_ARGUMENT_KEY = "INV_CHECKS";
+	// private static final String POST_CHECKS_ARGUMENT_KEY = "POST_CHECKS";
+	// private static final String PRE_CHECKS_ARGUMENT_KEY = "PRE_CHECKS";
 	private static final String SUPRESS_WARNINGS_ARGUMENT_KEY = "SUPPRESS_WARNINGS";
-//	private static final String MEASURE_CHECKS_ARGUMENT_KEY = "MEASURE_CHECKS";
+	// private static final String MEASURE_CHECKS_ARGUMENT_KEY = "MEASURE_CHECKS";
 	
 	
-	
+
 	public final IProject project;
 	private ILanguage language = null;
 	private final ModelBuildPath modelpath;
@@ -66,7 +68,7 @@ public class VdmProject implements IVdmProject
 			NotAllowedException
 	{
 		this.project = project;
-		
+
 		for (ILanguage language : LanguageManager.getInstance().getLanguages())
 		{
 			if (project.hasNature(language.getNature()))
@@ -77,20 +79,19 @@ public class VdmProject implements IVdmProject
 		}
 		if (this.language == null)
 			throw new NotAllowedException();
-		
+
 		this.modelpath = new ModelBuildPath(this);
-		
-		//Fix for old projects with Script Builder
-		//this.setBuilder(this.getLanguageVersion());
+
+		// Fix for old projects with Script Builder
+		// this.setBuilder(this.getLanguageVersion());
 	}
 
 	public static boolean isVdmProject(IProject project)
 	{
-		
-					
+
 		try
-		{			
-			
+		{
+
 			for (ILanguage language : LanguageManager.getInstance().getLanguages())
 			{
 
@@ -248,46 +249,46 @@ public class VdmProject implements IVdmProject
 		return getLanguageVersion().toString();
 	}
 
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#hasDynamictypechecks()
-//	 */
-//	public boolean hasDynamictypechecks()
-//	{
-//		return hasArgument(DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, true);
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#hasInvchecks()
-//	 */
-//	public boolean hasInvchecks()
-//	{
-//		return hasArgument(INV_CHECKS_ARGUMENT_KEY, true);
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#hasPostchecks()
-//	 */
-//	public boolean hasPostchecks()
-//	{
-//		return hasArgument(POST_CHECKS_ARGUMENT_KEY, true);
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#hasPrechecks()
-//	 */
-//	public boolean hasPrechecks()
-//	{
-//		return hasArgument(PRE_CHECKS_ARGUMENT_KEY, true);
-//	}
-//	
-//	public boolean hasMeasurechecks()
-//	{
-//		return hasArgument(MEASURE_CHECKS_ARGUMENT_KEY, true);
-//	}
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#hasDynamictypechecks()
+	// */
+	// public boolean hasDynamictypechecks()
+	// {
+	// return hasArgument(DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, true);
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#hasInvchecks()
+	// */
+	// public boolean hasInvchecks()
+	// {
+	// return hasArgument(INV_CHECKS_ARGUMENT_KEY, true);
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#hasPostchecks()
+	// */
+	// public boolean hasPostchecks()
+	// {
+	// return hasArgument(POST_CHECKS_ARGUMENT_KEY, true);
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#hasPrechecks()
+	// */
+	// public boolean hasPrechecks()
+	// {
+	// return hasArgument(PRE_CHECKS_ARGUMENT_KEY, true);
+	// }
+	//
+	// public boolean hasMeasurechecks()
+	// {
+	// return hasArgument(MEASURE_CHECKS_ARGUMENT_KEY, true);
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -298,47 +299,47 @@ public class VdmProject implements IVdmProject
 		return hasArgument(SUPRESS_WARNINGS_ARGUMENT_KEY, false);
 	}
 
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
-//	 */
-//	public void setDynamictypechecks(Boolean value) throws CoreException
-//	{
-//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, value.toString());
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
-//	 */
-//	public void setInvchecks(Boolean value) throws CoreException
-//	{
-//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, INV_CHECKS_ARGUMENT_KEY, value.toString());
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
-//	 */
-//	public void setPostchecks(Boolean value) throws CoreException
-//	{
-//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, POST_CHECKS_ARGUMENT_KEY, value.toString());
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
-//	 */
-//	public void setPrechecks(Boolean value) throws CoreException
-//	{
-//		addBuilder(getProject(), ICoreConstants.BUILDER_ID, PRE_CHECKS_ARGUMENT_KEY, value.toString());
-//	}
-//
-//	public void setMeasurechecks(Boolean value) throws CoreException
-//	{
-//		addBuilder(getProject(), ICoreConstants.BUILDER_ID,MEASURE_CHECKS_ARGUMENT_KEY, value.toString());
-//	}
-	
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#setDynamictypechecks(java.lang. Boolean)
+	// */
+	// public void setDynamictypechecks(Boolean value) throws CoreException
+	// {
+	// addBuilder(getProject(), ICoreConstants.BUILDER_ID, DYNAMIC_TYPE_CHECKS_ARGUMENT_KEY, value.toString());
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#setInvchecks(java.lang.Boolean)
+	// */
+	// public void setInvchecks(Boolean value) throws CoreException
+	// {
+	// addBuilder(getProject(), ICoreConstants.BUILDER_ID, INV_CHECKS_ARGUMENT_KEY, value.toString());
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#setPostchecks(java.lang.Boolean)
+	// */
+	// public void setPostchecks(Boolean value) throws CoreException
+	// {
+	// addBuilder(getProject(), ICoreConstants.BUILDER_ID, POST_CHECKS_ARGUMENT_KEY, value.toString());
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// * @see org.overture.ide.utility.IVdmProject1#setPrechecks(java.lang.Boolean)
+	// */
+	// public void setPrechecks(Boolean value) throws CoreException
+	// {
+	// addBuilder(getProject(), ICoreConstants.BUILDER_ID, PRE_CHECKS_ARGUMENT_KEY, value.toString());
+	// }
+	//
+	// public void setMeasurechecks(Boolean value) throws CoreException
+	// {
+	// addBuilder(getProject(), ICoreConstants.BUILDER_ID,MEASURE_CHECKS_ARGUMENT_KEY, value.toString());
+	// }
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.overture.ide.utility.IVdmProject1#setSuppressWarnings(java.lang.Boolean )
@@ -493,7 +494,7 @@ public class VdmProject implements IVdmProject
 		if (model.isTypeCorrect())
 		{
 			return true; // no need to do any work
-		}else 
+		} else
 		{
 			final IVdmProject currentProject = this;
 
@@ -509,7 +510,6 @@ public class VdmProject implements IVdmProject
 				@SuppressWarnings("deprecation")
 				public void run() throws Exception
 				{
-					
 
 					final SafeBuilder builder = new SafeBuilder(currentProject, mon);
 					builder.start();
@@ -521,7 +521,7 @@ public class VdmProject implements IVdmProject
 							builder.stop();
 						}
 					}
-					
+
 				}
 
 			};
@@ -620,10 +620,10 @@ public class VdmProject implements IVdmProject
 	public List<IVdmSourceUnit> getSpecFiles() throws CoreException
 	{
 		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
-
+		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		for (String contentTypeId : language.getContentTypes())
 		{
-			list.addAll(getFiles(contentTypeId));
+			list.addAll(getFiles(contentTypeManager.getContentType(contentTypeId)));
 		}
 
 		return list;
@@ -639,47 +639,56 @@ public class VdmProject implements IVdmProject
 	 * 
 	 * @param project
 	 *            the project to scan
-	 * @param contentTypeId
+	 * @param iContentType
 	 *            of the type of files that should be returned
 	 * @return a list of IFile
 	 * @throws CoreException
 	 */
-	public List<IVdmSourceUnit> getFiles(String contentTypeId)
+	public List<IVdmSourceUnit> getFiles(IContentType iContentType)
 			throws CoreException
 	{
 		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
-		
+
 		for (IContainer container : modelpath.getModelSrcPaths())
 		{
-			if(!container.exists() || !container.isAccessible())
+			if (!container.exists() || !container.isAccessible())
 			{
 				continue;
 			}
 			for (IResource res : container.members(IContainer.INCLUDE_PHANTOMS
 					| IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS))
 			{
-				list.addAll(ResourceManager.getInstance().getFiles(this.project, res, contentTypeId));
+				list.addAll(ResourceManager.getInstance().getFiles(this, res, iContentType));
 			}
 		}
-		
+
 		return list;
 	}
-	
-	
+
 	public boolean isModelFile(IFile file) throws CoreException
 	{
 		for (IContainer src : modelpath.getModelSrcPaths())
 		{
-			if(src.getLocation().isPrefixOf(file.getLocation()) && file.getContentDescription() != null
-					&& getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+			// Check model path
+			if (src.getLocation().isPrefixOf(file.getLocation()))
 			{
-				return true;
+				//Check content type
+				for (IContentType contentType : getContentTypeIds())
+				{
+					if(contentType.isAssociatedWith(file.getName())&& !file.getName().startsWith("~$"))
+					{
+						return true;
+					}
+				}
+//				if (file.getContentDescription() != null && getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+//				{
+//					return true;
+//				}
 			}
 		}
-		
+
 		return false;
 	}
-
 
 	/***
 	 * Gets the IFile from the Eclipse filesystem from a normal file placed in a project
@@ -730,7 +739,8 @@ public class VdmProject implements IVdmProject
 	{
 		final IPath absolutePath = new Path(file.getAbsolutePath());
 		final IFile ifile = project.getFile(absolutePath.lastSegment());
-		Job j = new Job("Link file"){
+		Job j = new Job("Link file")
+		{
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
@@ -743,14 +753,14 @@ public class VdmProject implements IVdmProject
 					VdmCore.log("VdmProject linkFileToProject", e);
 					return Status.CANCEL_STATUS;
 				}
-				
+
 				return Status.OK_STATUS;
 			}
-			
+
 		};
 		j.setPriority(Job.BUILD);
 		j.schedule();
-		
+
 	}
 
 	public IVdmModel getModel()
@@ -781,9 +791,15 @@ public class VdmProject implements IVdmProject
 		return null;
 	}
 
-	public List<String> getContentTypeIds()
+	public List<IContentType> getContentTypeIds()
 	{
-		return language.getContentTypes();
+		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+		List<IContentType> types = new Vector<IContentType>();
+		for (String type : language.getContentTypes())
+		{
+			types.add(contentTypeManager.getContentType(type));
+		}
+		return types;
 	}
 
 	public String getName()
@@ -804,14 +820,12 @@ public class VdmProject implements IVdmProject
 
 	public Options getOptions()
 	{
-		if(options == null)
+		if (options == null)
 		{
 			options = Options.load(this);
 		}
 		return options;
 	}
-
-
 
 	// @Override
 	// public boolean equals(Object obj)

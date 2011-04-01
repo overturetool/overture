@@ -238,7 +238,7 @@ public class SourceReferenceManager implements IManager
 		InputStream inpput;
 		try
 		{
-			inpput = sourceUnit.getFile().getContents();
+			inpput = getContent(sourceUnit);
 
 			List<Integer> lines = new Vector<Integer>();
 			int data = EOF;
@@ -272,6 +272,11 @@ public class SourceReferenceManager implements IManager
 		{
 			VdmCore.log("SourceReferenceManager makeLineSizes", e);
 		}
+	}
+
+	protected InputStream getContent(IVdmSourceUnit sourceUnit2) throws CoreException
+	{
+		return sourceUnit2.getFile().getContents();
 	}
 
 	private class VdmjLocationCalculator

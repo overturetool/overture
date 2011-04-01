@@ -11,6 +11,7 @@ import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -43,7 +44,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	private File selectedFile;
 	private Display display;
-	
+
 	private SashForm form;
 	private TabFolder folder;
 	private ValidationTable theConjectures;
@@ -53,15 +54,13 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	private String fileName;
 	private Vector<Long> theTimes;
 	private long currentTime;
-		
+
 	private boolean canExportJpg = false;
 	private boolean canMoveHorizontal = false;
 	private boolean canOpenValidation = false;
-	
+
 	private TracefileVisitor theVisitor;
 	private TracefileMarker theMarkers;
-	
-
 
 	public VdmRtLogEditor()
 	{
@@ -75,7 +74,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theVisitor = null;
 		theMarkers = null;
 	}
-
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -91,7 +89,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		fileName = selectedFile.getAbsolutePath();
 	}
 
-		@Override
+	@Override
 	public void createPartControl(Composite parent)
 	{
 		Control[] childern = parent.getChildren();
@@ -118,20 +116,22 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 			if (FileUtility.getContent(file).size() == 0)
 			{
-				//FileUtility.addMarker(file, "File is empty", 0, 0, 0, 0, IMarker.SEVERITY_ERROR, TracefileViewerPlugin.PLUGIN_ID);
-				 ErrorDialog.openError(
-	                     getSite().getShell(),
-	                     "Editor open",
-	                     "File is empty",
-	                     Status.CANCEL_STATUS);
+				// FileUtility.addMarker(file, "File is empty", 0, 0, 0, 0, IMarker.SEVERITY_ERROR,
+				// TracefileViewerPlugin.PLUGIN_ID);
+				ErrorDialog.openError(getSite().getShell(), "Editor open", "File is empty", Status.CANCEL_STATUS);
 				return;
 			}
 		} catch (CGException cge)
 		{
 			showMessage(cge);
 		}
-//		makeActions();
-//		contributeToActionBars();
+		// makeActions();
+		// contributeToActionBars();
+		catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		try
 		{
@@ -143,21 +143,20 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	}
 
-
-//	private void makeActions()
-//	{
-//		fileOpenAction = new Action()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				openFileAction();
-//			}
-//		};
-//		fileOpenAction.setText("Open trace file");
-//		fileOpenAction.setToolTipText("Open trace file");
-//		fileOpenAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor("IMG_OBJ_FILE"));
-//	}
+	// private void makeActions()
+	// {
+	// fileOpenAction = new Action()
+	// {
+	// @Override
+	// public void run()
+	// {
+	// openFileAction();
+	// }
+	// };
+	// fileOpenAction.setText("Open trace file");
+	// fileOpenAction.setToolTipText("Open trace file");
+	// fileOpenAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor("IMG_OBJ_FILE"));
+	// }
 
 	void openValidationConjectures()
 	{
@@ -166,21 +165,21 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theConjectures.parseValidationFile(valFileName);
 	}
 
-//	private void openFileAction()
-//	{
-//		if (fileName != null)
-//			deleteTabPages();
-//		if (!$assertionsDisabled && theVisitor != null)
-//		{
-//			throw new AssertionError();
-//		} else
-//		{
-//			FileDialog fDlg = new FileDialog(getSite().getShell());
-//			fileName = fDlg.open();
-//			parseFile(fileName);
-//			return;
-//		}
-//	}
+	// private void openFileAction()
+	// {
+	// if (fileName != null)
+	// deleteTabPages();
+	// if (!$assertionsDisabled && theVisitor != null)
+	// {
+	// throw new AssertionError();
+	// } else
+	// {
+	// FileDialog fDlg = new FileDialog(getSite().getShell());
+	// fileName = fDlg.open();
+	// parseFile(fileName);
+	// return;
+	// }
+	// }
 
 	void diagramExportAction()
 	{
@@ -208,25 +207,25 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			updateOverviewPage();
 		}
 	}
-	
+
 	void moveNextHorizontal()
 	{
 		int index = theTimes.indexOf(currentTime);
-		
-		if (index+1 < theTimes.size())
+
+		if (index + 1 < theTimes.size())
 		{
-			currentTime = theTimes.get(index+1);
+			currentTime = theTimes.get(index + 1);
 			updateOverviewPage();
 		}
 	}
-	
+
 	void movePreviousHorizontal()
 	{
 		int index = theTimes.indexOf(currentTime);
-		
-		if (index-1 >=0 )
+
+		if (index - 1 >= 0)
 		{
-			currentTime = theTimes.get(index-1);
+			currentTime = theTimes.get(index - 1);
 			updateOverviewPage();
 		}
 	}
@@ -477,33 +476,33 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}
 	}
 
-//	private void deleteTabPages()
-//	{
-//		folder.setSelection(0);
-//		canExportJpg = false;
-//		canMoveHorizontal = false;
-//		canOpenValidation = false;
-//		GenericTabItem pgti;
-//		for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
-//			pgti = iter.next();
-//
-//		theDetails = new HashSet<GenericTabItem>();
-//		theArch.disposeFigures();
-//		theOverview.disposeFigures();
-//		fileName = null;
-//		theVisitor = null;
-//		theTimes = null;
-//		currentTime = 0L;
-//		try
-//		{
-//			theMarkers.dispose();
-//			IFile file = ((FileEditorInput) getEditorInput()).getFile();
-//			theMarkers = new TracefileMarker(file);
-//		} catch (CGException cge)
-//		{
-//			showMessage(cge);
-//		}
-//	}
+	// private void deleteTabPages()
+	// {
+	// folder.setSelection(0);
+	// canExportJpg = false;
+	// canMoveHorizontal = false;
+	// canOpenValidation = false;
+	// GenericTabItem pgti;
+	// for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
+	// pgti = iter.next();
+	//
+	// theDetails = new HashSet<GenericTabItem>();
+	// theArch.disposeFigures();
+	// theOverview.disposeFigures();
+	// fileName = null;
+	// theVisitor = null;
+	// theTimes = null;
+	// currentTime = 0L;
+	// try
+	// {
+	// theMarkers.dispose();
+	// IFile file = ((FileEditorInput) getEditorInput()).getFile();
+	// theMarkers = new TracefileMarker(file);
+	// } catch (CGException cge)
+	// {
+	// showMessage(cge);
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -516,7 +515,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 			public void run()
 			{
-				
+
 				cw.println(message);
 				cw.show();
 				// MessageDialog.openInformation(getSite().getShell(),
@@ -550,10 +549,10 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	{
 		try
 		{
-			//deleteTabPages();
-			if(theMarkers!=null)
+			// deleteTabPages();
+			if (theMarkers != null)
 			{
-			theMarkers.dispose();
+				theMarkers.dispose();
 			}
 		} catch (CGException cge)
 		{
@@ -576,27 +575,26 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isDirty()
 	{
 		return false;
 	}
-	
-	public boolean canExportJpg ()
+
+	public boolean canExportJpg()
 	{
-		return canExportJpg ;
-	}
-	
-	public boolean canMoveHorizontal ()
-	{
-		return canMoveHorizontal ;
-	}
-	
-	public boolean canOpenValidation ()
-	{
-		return canOpenValidation ;
+		return canExportJpg;
 	}
 
+	public boolean canMoveHorizontal()
+	{
+		return canMoveHorizontal;
+	}
+
+	public boolean canOpenValidation()
+	{
+		return canOpenValidation;
+	}
 
 }

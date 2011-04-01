@@ -23,9 +23,6 @@ import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.modules.Module;
-
-import com.sun.org.omg.CORBA.OperationDescription;
-
 public class VdmCompleteProcesser
 {
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();

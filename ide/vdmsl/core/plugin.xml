@@ -32,6 +32,9 @@
          <ContentType
                id="org.overture.ide.vdmsl.content-type">
          </ContentType>
+         <ContentType
+               id="org.overture.ide.vdm.external.content-type">
+         </ContentType>
       </Language>
    </extension>
 </plugin>

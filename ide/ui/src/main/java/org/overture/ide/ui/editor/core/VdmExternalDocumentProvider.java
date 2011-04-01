@@ -3,27 +3,45 @@ package org.overture.ide.ui.editor.core;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.ui.IVdmUiConstants;
+import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.partitioning.VdmDocumentPartitioner;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
-public class VdmDocumentProvider extends FileDocumentProvider
+public class VdmExternalDocumentProvider extends FileDocumentProvider
 {
 
 	@Override
 	protected IDocument createDocument(Object element) throws CoreException
 	{
-		IDocument document = super.createDocument(element);
+		IDocument document = null;
+
+		if (element instanceof FileEditorInput)
+		{
+			IFile file = ((FileEditorInput) element).getFile();
+			if (IVdmProject.externalFileContentType.isAssociatedWith(file.getName()))
+			{
+				document = new VdmExternalDocument();
+				if (setDocumentContent(document, (IEditorInput) element, getEncoding(element)))
+				{
+					setupDocument(element, document);
+				}
+			}
+		}
+
+		if (document == null)
+		{
+			document = super.createDocument(element);
+		}
 
 		if (element instanceof FileEditorInput)
 		{
@@ -43,8 +61,10 @@ public class VdmDocumentProvider extends FileDocumentProvider
 					if (source != null)
 					{
 						((VdmDocument) document).setSourceUnit(source);
-					}else{
-						//throw new CoreException(new Status(IStatus.ERROR, IVdmUiConstants.PLUGIN_ID, "Error source file not found in build path: "+ file));
+					} else
+					{
+						// throw new CoreException(new Status(IStatus.ERROR, IVdmUiConstants.PLUGIN_ID,
+						// "Error source file not found in build path: "+ file));
 					}
 				}
 
@@ -65,6 +85,26 @@ public class VdmDocumentProvider extends FileDocumentProvider
 	@Override
 	protected IDocument createEmptyDocument()
 	{
-		return new VdmDocument();
+		return new VdmExternalDocument();
+	}
+
+	@Override
+	protected boolean setDocumentContent(IDocument document,
+			IEditorInput editorInput, String encoding) throws CoreException
+	{
+		if (document instanceof VdmExternalDocument)
+		{
+			IFile file = null;
+			if (editorInput instanceof FileEditorInput)
+			{
+				file = ((FileEditorInput) editorInput).getFile();
+			}
+			if (editorInput instanceof IStorageEditorInput)
+			{
+				document.set(FileUtility.getContentExternalText(file));
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -9,6 +9,7 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.config.Properties;
+import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -55,7 +56,9 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 		try
 		{
 
-			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset);
+			ReaderType streamReaderType = AbstractParserParticipant.findStreamReaderType(file.getFile());
+			
+			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset,streamReaderType);
 			reader = new ModuleReader(ltr);
 			modules.addAll(reader.readModules());
 
@@ -79,6 +82,7 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 			result.setFatalError(e);
 		} catch (Throwable e)
 		{
+			e.printStackTrace();
 //			perrs++;
 			result.setFatalError(e);
 		}
@@ -102,5 +106,7 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 
 		return result;
 	}
+
+	
 
 }

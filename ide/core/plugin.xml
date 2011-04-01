@@ -74,4 +74,20 @@
      </factory>
   </extension>
 
+
+<!-- 
+=========================================================================
+Content Types
+=========================================================================
+-->
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="docx,doc,odt"
+            id="org.overture.ide.vdm.external.content-type"
+            name="External VDM Content type"
+            priority="normal">
+      </content-type>     
+   </extension>
 </plugin>

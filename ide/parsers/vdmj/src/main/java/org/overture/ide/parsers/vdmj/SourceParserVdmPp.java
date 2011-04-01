@@ -14,6 +14,7 @@ import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.syntax.ClassReader;
 
@@ -62,10 +63,13 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 		try
 		{
 
-			LexTokenReader ltr = new LexTokenReader(source,
-					Settings.dialect,
-					file.getSystemFile(),
-					charset);
+			ReaderType streamReaderType = findStreamReaderType(file.getFile());
+			
+			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset,streamReaderType);
+//			LexTokenReader ltr = new LexTokenReader(source,
+//					Settings.dialect,
+//					file.getSystemFile(),
+//					charset);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
 			List<IAstNode> nodes = new Vector<IAstNode>();

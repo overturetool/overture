@@ -30,6 +30,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.overture.ide.core.SourceReferenceManager;
+import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
@@ -172,7 +173,15 @@ public abstract class CoverageEditor
 		LexLocation.resetLocations();
 		LexLocation.clearLocations();
 		Properties.parser_tabstop = 1;
-		LexTokenReader ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset);
+		LexTokenReader ltr = null;
+		try
+		{
+			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset,AbstractParserParticipant.findStreamReaderType(vdmSourceFile));
+		} catch (CoreException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		switch (project.getDialect())
 		{

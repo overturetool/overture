@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -19,6 +17,7 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -48,16 +47,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		try
 		{
 			LexLocation.getAllLocations().clear();
-			result = startParse(file,
-					new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))),
-					file.getFile().getCharset());
+			result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
 			setFileMarkers(file.getFile(), result);
-			if (result != null && result.getAst()!=null)
-				file.reconcile(
-						result.getAst(),
-						result.getAllLocation(),
-						result.getLocationToAstNodeMap(),
-						result.hasParseErrors());
+			if (result != null && result.getAst() != null)
+				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
 
 		} catch (CoreException e)
 		{
@@ -82,11 +75,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			setFileMarkers(file.getFile(), result);
 			if (result != null)
 
-				file.reconcile(
-						result.getAst(),
-						result.getAllLocation(),
-						result.getLocationToAstNodeMap(),
-						result.hasParseErrors());
+				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
 		} catch (CoreException e)
 		{
 			if (VdmCore.DEBUG)
@@ -111,12 +100,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	{
 		if (file != null)
 		{
-			FileUtility.deleteMarker(file,IMarker.PROBLEM,ICoreConstants.PLUGIN_ID);
+			FileUtility.deleteMarker(file, IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
 			if (result.hasParseErrors())
 			{
-				file.deleteMarkers(IMarker.PROBLEM,
-						true,
-						IResource.DEPTH_INFINITE);
+				file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 				int previousErrorNumber = -1;
 				for (VDMError error : result.getErrors())
 				{
@@ -127,26 +114,18 @@ public abstract class AbstractParserParticipant implements ISourceParser
 						continue;
 					else
 						previousErrorNumber = error.number;
-					FileUtility.addMarker(file,
-							error.toProblemString(),
-							error.location,
-							IMarker.SEVERITY_ERROR,
-							ICoreConstants.PLUGIN_ID);
+					FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID);
 				}
 			}
 
 			IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
-			
+
 			if (result.getWarnings().size() > 0 && vdmProject != null
 					&& vdmProject.hasSuppressWarnings())
 			{
 				for (VDMWarning warning : result.getWarnings())
 				{
-					FileUtility.addMarker(file,
-							warning.toProblemString(),
-							warning.location,
-							IMarker.SEVERITY_WARNING,
-							ICoreConstants.PLUGIN_ID);
+					FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID);
 				}
 			}
 		}
@@ -164,18 +143,12 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	 *            the charset of the content
 	 * @return the result of the parse including error report and the AST
 	 */
-	protected abstract ParseResult startParse(IVdmSourceUnit file, String content,
-			String charset);
-
-
+	protected abstract ParseResult startParse(IVdmSourceUnit file,
+			String content, String charset);
 
 	protected void addWarning(IFile file, String message, int lineNumber)
 	{
-		FileUtility.addMarker(file,
-				message,
-				lineNumber,
-				IMarker.SEVERITY_WARNING,
-				ICoreConstants.PLUGIN_ID);
+		FileUtility.addMarker(file, message, lineNumber, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID);
 	}
 
 	protected void addError(IFile file, String message, int lineNumber)
@@ -188,6 +161,24 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		System.out.println(e.toString());
 	};
 
+	public static ReaderType findStreamReaderType(IFile file)
+			throws CoreException
+	{
+		ReaderType streamReaderType = ReaderType.Latex;
+
+		if (file.getFileExtension().endsWith("doc"))
+		{
+			streamReaderType = ReaderType.Doc;
+		}else if(file.getFileExtension().endsWith("docx"))
+		{
+			streamReaderType = ReaderType.Docx;
+		}else if(file.getFileExtension().endsWith("odt"))
+		{
+			streamReaderType = ReaderType.Odf;
+		}
+		return streamReaderType;
+	}
+
 	public static class ParseResult
 	{
 		private List<IAstNode> ast = null;
@@ -195,23 +186,22 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 		private Throwable fatalError;
 		private List<LexLocation> allLocation;
-		private Map<LexLocation,IAstNode> locationToAstNodeMap;
+		private Map<LexLocation, IAstNode> locationToAstNodeMap;
 
-		public ParseResult() {
+		public ParseResult()
+		{
 
 		}
 
-		
-
 		public boolean hasParseErrors()
 		{
-			return errors.size()!=0 || fatalError!=null;
+			return errors.size() != 0 || fatalError != null;
 		}
 
 		public void setAst(List<IAstNode> ast)
 		{
-			Assert.isNotNull(ast,"AST cannot be null");
-			Assert.isTrue(ast.size()!=0,"AST cannot be an empty list");
+			Assert.isNotNull(ast, "AST cannot be null");
+			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
 			this.ast = ast;
 		}
 
@@ -244,7 +234,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		{
 			if (VdmCore.DEBUG)
 			{
-				//fatalError.printStackTrace();
+				// fatalError.printStackTrace();
 			}
 			this.fatalError = fatalError;
 		}
@@ -254,30 +244,23 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			return fatalError;
 		}
 
-
-
 		public void setAllLocation(List<LexLocation> allLocation)
 		{
 			this.allLocation = allLocation;
 		}
-
-
 
 		public List<LexLocation> getAllLocation()
 		{
 			return allLocation;
 		}
 
-
-
-		public void setLocationToAstNodeMap(Map<LexLocation,IAstNode> locationToAstNodeMap)
+		public void setLocationToAstNodeMap(
+				Map<LexLocation, IAstNode> locationToAstNodeMap)
 		{
 			this.locationToAstNodeMap = locationToAstNodeMap;
 		}
 
-
-
-		public Map<LexLocation,IAstNode> getLocationToAstNodeMap()
+		public Map<LexLocation, IAstNode> getLocationToAstNodeMap()
 		{
 			return locationToAstNodeMap;
 		};

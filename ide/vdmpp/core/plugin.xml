@@ -30,6 +30,9 @@
          <ContentType
                id="org.overture.ide.vdmpp.content-type">
          </ContentType>
+         <ContentType
+               id="org.overture.ide.vdm.external.content-type">
+         </ContentType>
       </Language>
    </extension>
   

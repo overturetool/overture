@@ -72,13 +72,13 @@ public class ResourceManager implements IResourceChangeListener
 
 				try
 				{
-					if (!file.isSynchronized(IResource.DEPTH_INFINITE))
+					if (!file.isSynchronized(IResource.DEPTH_ONE) )
 					{
-						file.refreshLocal(IResource.DEPTH_INFINITE, null);
+						file.refreshLocal(IResource.DEPTH_ONE, null);
 					}
-					//if (file.getContentDescription() != null
-					//		&& project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
-					if(project.isModelFile(file))
+					// if (file.getContentDescription() != null
+					// && project.getContentTypeIds().contains(file.getContentDescription().getContentType().getId()))
+					if (project.isModelFile(file))
 					{
 						IVdmSourceUnit unit = createSourceUnit(file, project);
 						return unit;
@@ -118,8 +118,8 @@ public class ResourceManager implements IResourceChangeListener
 	 * @return a list of IFiles
 	 * @throws CoreException
 	 */
-	public List<IVdmSourceUnit> getFiles(IProject project, IResource resource,
-			String contentTypeId) throws CoreException
+	public List<IVdmSourceUnit> getFiles(IVdmProject project, IResource resource,
+			IContentType contentTypeId) throws CoreException
 	{
 		List<IVdmSourceUnit> list = new Vector<IVdmSourceUnit>();
 
@@ -139,11 +139,12 @@ public class ResourceManager implements IResourceChangeListener
 		// this file and the project
 		else if (resource instanceof IFile)
 		{
-			IContentType contentType = project.getContentTypeMatcher().findContentTypeFor(resource.toString());
-
-			if (contentType != null
-					&& ((contentTypeId != null && contentTypeId.equals(contentType.getId())) || contentTypeId == null))
+//			if (contentTypeId != null
+//					&& contentTypeId.isAssociatedWith(resource.toString()) && !resource.getName().startsWith("~"))
+			if(project.isModelFile((IFile) resource))
+			{
 				list.add(getVdmSourceUnit((IFile) resource));
+			}
 		}
 		return list;
 	}
@@ -305,12 +306,12 @@ public class ResourceManager implements IResourceChangeListener
 					IVdmProject project = (IVdmProject) res.getProject().getAdapter(IVdmProject.class);
 					Assert.isNotNull(project, "Project in ResourceManager is null for file: "
 							+ file);
-					String contentTypeId = null;
+					IContentType contentTypeId = null;
 					try
 					{
 						if (file.getContentDescription() != null)
 						{
-							contentTypeId = file.getContentDescription().getContentType().getId();
+							contentTypeId = file.getContentDescription().getContentType();
 						}
 					} catch (CoreException e)
 					{
@@ -370,7 +371,7 @@ public class ResourceManager implements IResourceChangeListener
 
 		List<IFile> removedFiles = new Vector<IFile>();
 		IProject p = (IProject) project.getAdapter(IProject.class);
-		
+
 		for (IFile file : vdmSourceUnits.keySet())
 		{
 			if (file.getProject().equals(p)

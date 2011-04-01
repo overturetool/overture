@@ -276,7 +276,19 @@
 	        </and>
          </filterExpression>
       </commonFilter> 
-      
+      <commonFilter  
+            id="org.eclipse.ui.navigator.resources.filters.startsWithTildeDollar"
+            name="%Filters.startsWithTildeDollar.name"
+            description="%Filters.startsWithTildeDollar.description"
+            activeByDefault="true"
+            >
+         <filterExpression>
+            <and>
+                <instanceof value="org.eclipse.core.resources.IFile"/>
+                <test property="org.eclipse.core.resources.name" value="~$*"/>             
+            </and>
+         </filterExpression>
+      </commonFilter> 
       <!--<commonFilter
             id="org.eclipse.ui.navigator.resources.filters.closedProject"
             name="%filters.closedProject.name"
