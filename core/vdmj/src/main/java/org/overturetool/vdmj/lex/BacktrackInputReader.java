@@ -41,6 +41,8 @@ import org.overturetool.vdmj.messages.InternalException;
 
 public class BacktrackInputReader extends Reader
 {
+	public enum ReaderType {Doc,Docx,Odf,Latex};
+	
 	/** A stack of position markers for popping. */
 	private Stack<Integer> stack = new Stack<Integer>();
 
@@ -112,6 +114,52 @@ public class BacktrackInputReader extends Reader
         }
         catch (IOException e)
         {
+	        // This can never really happen...
+        }
+	}
+	
+	/**
+	 * Create an object to read the string passed. This is used in the
+	 * interpreter to parse expressions typed in.
+	 *
+	 * @param expression
+	 */
+	public BacktrackInputReader(String expression, String charset, File file, ReaderType streamReaderType)
+	{
+    	try
+        {
+	        ByteArrayInputStream is =
+	        	new ByteArrayInputStream(expression.getBytes(charset));
+
+	        InputStreamReader isr = null;
+	        
+	        switch (streamReaderType)
+			{
+				case Doc:
+					isr = new DocStreamReader(new FileInputStream(file), charset);
+					break;
+				case Docx:
+					isr = new DocxStreamReader(new FileInputStream(file));
+					break;
+				case Odf:
+					isr = new ODFStreamReader(new FileInputStream(file));
+					break;
+				case Latex:
+				default:
+					isr = new LatexStreamReader(is, charset);
+					break;
+			}
+	        
+    		data = new char[expression.length() + 1];
+	        max = isr.read(data);
+	        pos = 0;
+
+	        isr.close();
+	        is.close();
+        }
+        catch (IOException e)
+        {
+        	e.printStackTrace();
 	        // This can never really happen...
         }
 	}

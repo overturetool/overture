@@ -217,9 +217,9 @@ public class LexTokenReader extends BacktrackInputReader
 	 */
 
 	public LexTokenReader(String content, Dialect dialect, File file,
-			String charset)
+			String charset, ReaderType streamReaderType)
 	{
-		super(content, charset);
+		super(content, charset, file, streamReaderType);
 		this.file = file;
 		this.dialect = dialect;
 		init();
