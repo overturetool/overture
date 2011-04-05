@@ -9,7 +9,7 @@
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="true"
             icon="icons/cview16/vdm_external_file_tsk.gif"
-            id="org.overture.ide.vdmsl.ui.VdmExternalEditor"
+            id="org.overture.ide.plugins.externaleditor.ui.VdmExternalEditor"
             name="Vdm External Editor">
          <contentTypeBinding
                contentTypeId="org.overture.ide.vdm.external.content-type">
@@ -21,17 +21,43 @@
      <extension
          point="org.eclipse.ui.editorActions">
       <editorContribution
-            targetID="org.overture.ide.vdmsl.ui.VdmExternalEditor"
-            id="org.overture.ide.debug.VdmExternalEditor.BreakpointRulerActions">
+            targetID="org.overture.ide.plugins.externaleditor.ui.VdmExternalEditor"
+            id="org.overture.ide.debug.VdmEditor.BreakpointRulerActions">
          <action
                actionID="RulerDoubleClick"
                class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
-               id="org.overture.ide.debug.ui.actions.ExternalManageBreakpointRulerAction"
+               id="org.overture.ide.debug.ui.actions.ManageBreakpointRulerAction"
                label="%AddBreakpoint.label"
                style="toggle">
          </action>
          
       </editorContribution>
     </extension>
+    
+    
+    <extension
+        point="org.eclipse.ui.popupMenus">
+     <viewerContribution
+           id="org.overture.ide.plugins.externaleditor.ui.RulerBarPopupActions"
+           targetID="org.overture.ide.plugins.externaleditor.ui.VdmExternalEditor.RulerContext">
+        <action
+              class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+              icon="icons/cview16/brkp_obj.gif"
+              id="org.overture.ide.plugins.externaleditor.ui.ToggleBreakpointRuler"
+              label="Toggle Breakpoint"
+              menubarPath="additions">
+        </action>
+     </viewerContribution>
+  </extension>
 
+<!--
+        Specify content type and related editor id to be used by the source
+        viewer in debug when a breakpoint is reached
+    -->
+    <extension point="org.overture.ide.debug.sourceviewerEditor">
+        <SourceViewerEditor 
+            ContentTypeId="org.overture.ide.vdm.external.content-type"
+            EditorId="org.overture.ide.plugins.externaleditor.ui.VdmExternalEditor">
+        </SourceViewerEditor>
+    </extension>
 </plugin>

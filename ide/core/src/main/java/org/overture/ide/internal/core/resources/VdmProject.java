@@ -623,7 +623,13 @@ public class VdmProject implements IVdmProject
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		for (String contentTypeId : language.getContentTypes())
 		{
-			list.addAll(getFiles(contentTypeManager.getContentType(contentTypeId)));
+			for (IVdmSourceUnit iVdmSourceUnit : getFiles(contentTypeManager.getContentType(contentTypeId)))
+			{
+				if(!list.contains(iVdmSourceUnit))
+				{
+					list.add(iVdmSourceUnit);
+				}
+			}
 		}
 
 		return list;

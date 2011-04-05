@@ -14,5 +14,6 @@ Require-Bundle: org.overture.ide.core;bundle-version="0.3.4",
  org.overture.ide.ui;bundle-version="0.3.4",
  org.overture.ide.vdmpp.ui;bundle-version="0.3.3",
  org.overture.ide.vdmrt.ui;bundle-version="0.3.3",
- org.overture.ide.vdmsl.ui;bundle-version="0.3.3"
+ org.overture.ide.vdmsl.ui;bundle-version="0.3.3",
+ org.eclipse.debug.ui;bundle-version="3.6.3"
 Bundle-Activator: org.overture.ide.plugins.externaleditor.VdmExternalEditorActivator
