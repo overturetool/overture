@@ -267,10 +267,18 @@ public class VdmElementLabels {
 		if (element instanceof ImportAll) {
 			result.append(element.name.toString());
 		} else if (element instanceof ImportedType) {
+			
+			
 			ImportedType type = (ImportedType) element;
 			result.append(type.name.toString());
-			result.append(" : " + getSimpleTypeString(type.def.getType()),
-					StyledString.DECORATIONS_STYLER);
+			if(type.def!=null)
+			{
+				result.append(" : " + getSimpleTypeString(type.def.getType()), StyledString.DECORATIONS_STYLER);
+			}else
+			{
+				result.append(" : " , StyledString.DECORATIONS_STYLER);
+			}
+			
 			result.append(type.renamed.name, StyledString.DECORATIONS_STYLER);
 		} else if (element instanceof ImportedValue) {
 			ImportedValue value = (ImportedValue) element;
