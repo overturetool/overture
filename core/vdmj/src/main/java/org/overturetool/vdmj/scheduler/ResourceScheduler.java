@@ -26,9 +26,7 @@ package org.overturetool.vdmj.scheduler;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.values.BUSValue;
 
 public class ResourceScheduler implements Serializable
 {
@@ -73,7 +71,7 @@ public class ResourceScheduler implements Serializable
 	public void start(MainThread main)
 	{
 		mainThread = main;
-		BUSValue.start();	// Start BUS threads first...
+		// BUSValue.start();	// Start BUS threads first...
 
 		boolean idle = true;
 		stopping = false;
@@ -142,20 +140,31 @@ public class ResourceScheduler implements Serializable
     		}
 		}
 
-		BasicSchedulableThread.signalAll(Signal.TERMINATE);
+		// BasicSchedulableThread.signalAll(Signal.TERMINATE);
 	}
 
 	public String getStatus()
 	{
-		StringBuilder sb = new StringBuilder();
+ 		StringBuilder sb = new StringBuilder();
+ 		String sep = "";
 
-		for (Resource r: resources)
-		{
-			sb.append(r.getStatus());
-			sb.append("\n");
-		}
+ 		for (Resource r: resources)
+ 		{
+ 			sb.append(sep);
+ 			String s = r.getStatus();
 
-		return sb.toString();
+ 			if (!s.isEmpty())
+ 			{
+ 				sb.append(s);
+ 				sep = "\n";
+ 			}
+ 			else
+ 			{
+ 				sep = "";
+ 			}
+ 		}
+
+ 		return sb.toString();
 	}
 
 	public static boolean isStopping()

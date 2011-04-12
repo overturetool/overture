@@ -942,13 +942,13 @@ abstract public class CommandReader
 		try
 		{
 			String name = file.getName().toLowerCase();
-			
+
 			if (name.endsWith(".doc") ||
 				name.endsWith(".docx") ||
 				name.endsWith(".odt"))
 			{
     			SourceFile source = interpreter.getSourceFile(file);
-    
+
     			if (source == null)
     			{
     				println(file + ": file not found");
@@ -1136,9 +1136,20 @@ abstract public class CommandReader
 		return notAvailable(line);
 	}
 
-	protected boolean doThreads(String line)
+	protected boolean doThreads(@SuppressWarnings("unused") String line)
 	{
-		return notAvailable(line);
+		String threads = interpreter.scheduler.getStatus();
+
+		if (threads.isEmpty())
+		{
+			println("No threads running");
+		}
+		else
+		{
+			println(threads);
+		}
+
+		return true;
 	}
 
 	protected boolean doAssert(String line)

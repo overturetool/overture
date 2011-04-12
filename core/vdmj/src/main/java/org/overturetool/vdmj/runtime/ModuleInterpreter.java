@@ -176,6 +176,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public void traceInit(DBGPReader dbgp)
 	{
+		scheduler.reset();
 		initialContext = modules.initialize(dbgp);
 	}
 
@@ -211,11 +212,11 @@ public class ModuleInterpreter extends Interpreter
 		mainContext.setThreadState(dbgp, null);
 		clearBreakpointHits();
 
-		scheduler.reset();
-		
+		// scheduler.reset();
+
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
-		
+
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);
@@ -301,13 +302,13 @@ public class ModuleInterpreter extends Interpreter
 	{
 		return modules.getProofObligations();
 	}
-	
+
 	@Override
 	public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug) throws ValueException
 	{
 		return initialContext;
 	}
-	
+
 
 
 	@Override
@@ -327,10 +328,10 @@ public class ModuleInterpreter extends Interpreter
 			list.add(e.getMessage());
 			return list;
 		}
-		
+
 		clearBreakpointHits();
-		
-		scheduler.reset();
+
+		// scheduler.reset();
 		CTMainThread main = new CTMainThread(test, ctxt, debug);
 		main.start();
 		scheduler.start(main);

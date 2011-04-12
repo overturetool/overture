@@ -249,13 +249,6 @@ public class DebuggerReader extends CommandReader
 	}
 
 	@Override
-	protected boolean doThreads(String line)
-	{
-		print(interpreter.scheduler.getStatus());
-		return true;
-	}
-
-	@Override
 	protected boolean doState(String line)
 	{
 		if (interpreter instanceof ModuleInterpreter)

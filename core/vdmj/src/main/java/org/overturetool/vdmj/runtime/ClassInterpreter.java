@@ -162,9 +162,11 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		BasicSchedulableThread.terminateAll();
+
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
-		
+
 		scheduler.init();
 		SystemClock.init();
 		CPUValue.init(scheduler);
@@ -178,11 +180,17 @@ public class ClassInterpreter extends Interpreter
 
 		createdValues = new NameValuePairMap();
 		createdDefinitions = new DefinitionSet();
+
+		scheduler.reset();	// Required before a run, as well as init above
+		BUSValue.start();	// Start any BUS threads first...
 	}
 
 	@Override
 	public void traceInit(DBGPReader dbgp)
 	{
+		BasicSchedulableThread.terminateAll();
+		scheduler.reset();
+
 		SystemClock.init();
 		initialContext = classes.initialize(dbgp);
 		createdValues = new NameValuePairMap();
@@ -209,11 +217,11 @@ public class ClassInterpreter extends Interpreter
 		mainContext.setThreadState(dbgp, CPUValue.vCPU);
 		clearBreakpointHits();
 
-		scheduler.reset();
-		
+		// scheduler.reset();
+
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
-		
+
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);
@@ -376,7 +384,7 @@ public class ClassInterpreter extends Interpreter
 		// Show the "system constructor" thread creation
 
 		ISchedulableThread thread = BasicSchedulableThread.getThread(Thread.currentThread());
-		
+
 		RTLogger.log(new RTThreadCreateMessage(thread, CPUValue.vCPU.resource));
 
 		RTLogger.log(new RTThreadSwapMessage(SwapType.In,thread, CPUValue.vCPU.resource, 0, 0));
@@ -385,12 +393,12 @@ public class ClassInterpreter extends Interpreter
 	private void logSwapOut()
 	{
 		ISchedulableThread thread = BasicSchedulableThread.getThread(Thread.currentThread());
-		
+
 		RTLogger.log(new RTThreadSwapMessage(SwapType.Out,thread,CPUValue.vCPU.resource,0,0));
 
 		RTLogger.log(new RTThreadKillMessage(thread, CPUValue.vCPU.resource));
 	}
-	
+
 
 	@Override
 	public Context getInitialTraceContext(NamedTraceDefinition tracedef,boolean debug) throws ValueException
@@ -398,10 +406,10 @@ public class ClassInterpreter extends Interpreter
 		ObjectValue object = null;
 
 		ClassDefinition classdef=tracedef.classDefinition;
-		
+
 		// Create a new test object
 		object = classdef.newInstance(null, null, initialContext);
-		
+
 
 		Context ctxt = new ObjectContext(
 				classdef.name.location, classdef.name.name + "()",
@@ -411,7 +419,7 @@ public class ClassInterpreter extends Interpreter
 
 		return ctxt;
 	}
-	
+
 	@Override
 	public List<Object> runOneTrace(
 			NamedTraceDefinition tracedef, CallSequence test,boolean debug)
@@ -431,7 +439,7 @@ public class ClassInterpreter extends Interpreter
 
 		clearBreakpointHits();
 
-		scheduler.reset();
+		// scheduler.reset();
 		CTMainThread main = new CTMainThread(test, ctxt, debug);
 		main.start();
 		scheduler.start(main);

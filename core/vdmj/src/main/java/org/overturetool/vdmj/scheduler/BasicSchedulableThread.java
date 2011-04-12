@@ -150,6 +150,17 @@ public class BasicSchedulableThread implements Serializable
 		}
 	}
 
+	public static void terminateAll()
+	{
+		synchronized (allThreads)
+		{
+    		for (ISchedulableThread th: allThreads)
+    		{
+   				th.setSignal(Signal.TERMINATE);
+    		}
+		}
+	}
+
 	public static void signalAll(Signal sig)
 	{
 		synchronized (allThreads)

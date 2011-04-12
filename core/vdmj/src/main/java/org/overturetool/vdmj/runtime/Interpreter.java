@@ -51,6 +51,7 @@ import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ParserException;
@@ -206,7 +207,10 @@ abstract public class Interpreter
 
 		br.close();
 
-		return execute(sb.toString(), null);
+		Value result = execute(sb.toString(), null);
+
+		BasicSchedulableThread.terminateAll();	// NB not a session (used for tests)
+		return result;
 	}
 
 	/**
@@ -537,7 +541,7 @@ abstract public class Interpreter
 		{
 			case NAME:
 				lexname = (LexNameToken)token;
-				
+
 				if (Settings.dialect == Dialect.VDM_SL &&
 					!lexname.module.equals(getDefaultName()))
 				{
@@ -621,6 +625,7 @@ abstract public class Interpreter
 			n++;
 		}
 
+		traceInit(null);
 		Settings.usingCmdLine = wasCMD;
 		Settings.usingDBGP = wasDBGP;
 	}
