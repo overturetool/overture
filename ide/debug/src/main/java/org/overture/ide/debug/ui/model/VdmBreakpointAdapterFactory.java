@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.overture.ide.core.resources.IVdmProject;
 
 public class VdmBreakpointAdapterFactory implements IAdapterFactory
 {
@@ -27,15 +28,20 @@ public class VdmBreakpointAdapterFactory implements IAdapterFactory
 					{
 						return null;
 					}
-					IContentDescription contentDesc = file.getContentDescription();
-					if(contentDesc == null){
-						return null;
-					}
-					String contentTypeId = contentDesc.getContentType().getId();
-					if(SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
+					IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
+					if(project != null && project.isModelFile(file))
 					{
 						return new VdmLineBreakpointAdapter();
 					}
+//					IContentDescription contentDesc = file.getContentDescription();
+//					if(contentDesc == null){
+//						return null;
+//					}
+//					String contentTypeId = contentDesc.getContentType().getId();
+//					if(SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
+//					{
+//						return new VdmLineBreakpointAdapter();
+//					}
 				} catch (CoreException e)
 				{
 					// TODO Auto-generated catch block
