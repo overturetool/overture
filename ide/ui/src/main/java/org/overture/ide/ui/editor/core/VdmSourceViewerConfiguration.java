@@ -55,10 +55,10 @@ public abstract class VdmSourceViewerConfiguration extends
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
 	{
-		if (VdmUIPlugin.getDefault().getPreferenceStore().getBoolean(IVdmUiConstants.ENABLE_EDITOR_RECONFILER))
+		if (!VdmUIPlugin.getDefault().getPreferenceStore().contains(IVdmUiConstants.ENABLE_EDITOR_RECONFILER) ||VdmUIPlugin.getDefault().getPreferenceStore().getBoolean(IVdmUiConstants.ENABLE_EDITOR_RECONFILER))
 		{
 			MonoReconciler reconciler = new MonoReconciler(new VdmReconcilingStrategy(), false);
-			// reconciler.setDelay(500);
+			 reconciler.setDelay(500);
 			reconciler.install(sourceViewer);
 
 			return reconciler;

@@ -7,6 +7,7 @@ import org.overture.ide.core.resources.VdmSourceUnitWorkingCopy;
 public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 {
 	VdmModel sourceModel;
+	boolean discarded = false;
 
 	public VdmModelWorkingCopy(VdmModel sourceModel)
 	{
@@ -19,6 +20,10 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 
 	public synchronized void commit()
 	{
+		if(discarded)
+		{
+			return;
+		}
 		for (IVdmSourceUnit sourceUnit : this.vdmSourceUnits)
 		{
 			if (sourceUnit instanceof VdmSourceUnitWorkingCopy)
@@ -27,6 +32,15 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 			}
 		}
 		sourceModel.setTypeCheckedStatus(isTypeCorrect());
+		synchronized (sourceModel)
+		{
+			sourceModel.workingCopyNotCommitedCount--;
+		}
+	}
+	
+	public synchronized void discard()
+	{
+		this.discarded = true;
 		synchronized (sourceModel)
 		{
 			sourceModel.workingCopyNotCommitedCount--;

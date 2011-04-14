@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.overture.ide.core.ICoreConstants;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ast.VdmModelWorkingCopy;
 import org.overture.ide.core.parser.SourceParserManager;
@@ -16,11 +17,11 @@ public class SafeBuilder extends Thread
 {
 
 	final IVdmProject currentProject;
-	
+
 	final IProgressMonitor monitor;
 
 	public SafeBuilder(final IVdmProject currentProject,
-			 final IProgressMonitor monitor)
+			final IProgressMonitor monitor)
 	{
 		this.currentProject = currentProject;
 		this.monitor = monitor;
@@ -53,27 +54,36 @@ public class SafeBuilder extends Thread
 							{
 								AbstractVdmBuilder builder = (AbstractVdmBuilder) o;
 
-								final VdmModelWorkingCopy model = currentProject.getModel().getWorkingCopy();
+								final IVdmModel model = currentProject.getModel();
 								SourceParserManager.parseMissingFiles(currentProject, model, monitor);
 
 								// if the project don't have parse errors
 								if (model != null && model.isParseCorrect())
 								{
-									if (VdmCore.DEBUG)
+									VdmModelWorkingCopy workingModel = model.getWorkingCopy();
+									try
 									{
-										System.out.println("Parse correct .. building("
-												+ currentProject.getName()
-												+ ")");
-									}
-									monitor.subTask("Type checking: "
-											+ currentProject);
-									IStatus status =builder.buildModel(currentProject, model);
-									// mark ast root as type checked
-									monitor.done();
-									if (model != null)
+
+										if (VdmCore.DEBUG)
+										{
+											System.out.println("Parse correct .. building("
+													+ currentProject.getName()
+													+ ")");
+										}
+										monitor.subTask("Type checking: "
+												+ currentProject);
+										IStatus status = builder.buildModel(currentProject, workingModel);
+										// mark ast root as type checked
+										monitor.done();
+										if (workingModel != null)
+										{
+											workingModel.setTypeCheckedStatus(status.isOK());
+											workingModel.commit();
+										}
+									} catch (Exception e)
 									{
-										model.setTypeCheckedStatus(status.isOK());
-										model.commit();
+										workingModel.discard();
+										throw e;
 									}
 									return;
 								}
