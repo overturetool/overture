@@ -11,12 +11,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventFilter;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -103,6 +102,24 @@ public class VdmDebugPlugin extends AbstractUIPlugin {
 					new DbgpServicePreferenceUpdater());
 
 		}
+
+		return dbgpService;
+
+	}
+	
+	/**
+	 * Inefficient use getDbgpService
+	 * @param freePort
+	 * @return
+	 */
+	public synchronized IDbgpService getDbgpService(int freePort) {
+
+//		if (dbgpService == null) {
+			dbgpService = new DbgpService(freePort);
+			getPluginPreferences().addPropertyChangeListener(
+					new DbgpServicePreferenceUpdater());
+
+//		}
 
 		return dbgpService;
 

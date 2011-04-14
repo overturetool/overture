@@ -19,7 +19,7 @@ import org.overture.ide.debug.core.dbgp.internal.utils.Base64Helper;
 import org.overture.ide.debug.utils.StrUtils;
 
 public class DbgpRequest implements IDbgpRawPacket {
-	private final Map options;
+	private final Map<String,String> options;
 
 	private final String command;
 	private final boolean async;
@@ -33,7 +33,7 @@ public class DbgpRequest implements IDbgpRawPacket {
 	public DbgpRequest(String command, boolean async) {
 		this.command = command;
 		this.async = async;
-		this.options = new HashMap();
+		this.options = new HashMap<String,String>();
 	}
 
 	public String getCommand() {

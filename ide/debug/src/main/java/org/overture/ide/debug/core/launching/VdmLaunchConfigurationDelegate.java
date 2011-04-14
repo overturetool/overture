@@ -3,7 +3,6 @@ package org.overture.ide.debug.core.launching;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -156,7 +155,17 @@ public class VdmLaunchConfigurationDelegate implements
 		commandList.add("-h");
 		commandList.add("localhost");
 		commandList.add("-p");
-		commandList.add(Integer.valueOf(VdmDebugPlugin.getDefault().getDbgpService().getPort()).toString());
+		int port = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OVERRIDE_PORT, -1);
+		//Start debug service with the override port or just start the service and get the port
+		if(port >0)
+		{
+			port = VdmDebugPlugin.getDefault().getDbgpService(port).getPort();
+		}else
+		{
+			port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
+		}
+		commandList.add(Integer.valueOf(port).toString());
+
 		commandList.add("-k");
 		commandList.add(debugSessionId.toString());
 		commandList.add("-w");
@@ -535,34 +544,7 @@ public class VdmLaunchConfigurationDelegate implements
 		throw new CoreException((IStatus) new Status(IStatus.ERROR, IDebugConstants.ID_VDM_DEBUG_MODEL, 0, message, e));
 	}
 
-	/**
-	 * Returns a free port number on localhost, or -1 if unable to find a free port.
-	 * 
-	 * @return a free port number on localhost, or -1 if unable to find a free port
-	 */
-	public static int findFreePort()
-	{
-		ServerSocket socket = null;
-		try
-		{
-			socket = new ServerSocket(0);
-			return socket.getLocalPort();
-		} catch (IOException e)
-		{
-		} finally
-		{
-			if (socket != null)
-			{
-				try
-				{
-					socket.close();
-				} catch (IOException e)
-				{
-				}
-			}
-		}
-		return -1;
-	}
+	
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{

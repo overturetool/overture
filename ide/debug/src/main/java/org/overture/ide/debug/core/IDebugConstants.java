@@ -34,6 +34,7 @@ public interface IDebugConstants
 	
 	static final String VDM_LAUNCH_CONFIG_CONSOLE_ENTRY = "vdm_launch_config_console_entry";
 	
+	static final String VDM_LAUNCH_CONFIG_OVERRIDE_PORT = "vdm_launch_config_override_port";
 	
 	final static String VDM_DEBUG_SESSION_ID = "vdm_debug_session_id";
 

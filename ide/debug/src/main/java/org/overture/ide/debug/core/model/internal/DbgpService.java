@@ -41,7 +41,7 @@ public class DbgpService implements IDbgpService, IDbgpTerminationListener,
 
 	private DbgpServer server;
 
-	private final Map acceptors = Collections.synchronizedMap(new HashMap());
+	private final Map<String,IDbgpThreadAcceptor> acceptors = Collections.synchronizedMap(new HashMap<String,IDbgpThreadAcceptor>());
 
 	private int serverPort;
 

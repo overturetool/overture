@@ -272,8 +272,16 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	//	return true;
 		synchronized (processLock)
 		{
-			boolean res =  threadManager.isTerminated()
-					&& ((process == null || process.isTerminated() || isRemote()));
+			boolean res= threadManager.isTerminated()
+			&& (process == null || process.isTerminated() || isRemote());
+			try
+			{
+				//Handle the case where the debug process died because of an internal error etc.
+				res = res || (process!=null && process.isTerminated() && process.getExitValue()>0);
+			} catch (DebugException e)
+			{
+				
+			}
 			return res;
 		}
 	}
