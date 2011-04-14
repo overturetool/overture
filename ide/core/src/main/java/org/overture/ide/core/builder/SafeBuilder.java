@@ -55,12 +55,14 @@ public class SafeBuilder extends Thread
 								AbstractVdmBuilder builder = (AbstractVdmBuilder) o;
 
 								final IVdmModel model = currentProject.getModel();
-								SourceParserManager.parseMissingFiles(currentProject, model, monitor);
+//								SourceParserManager.parseMissingFiles(currentProject, model, monitor);
 
 								// if the project don't have parse errors
 								if (model != null && model.isParseCorrect())
 								{
+									
 									VdmModelWorkingCopy workingModel = model.getWorkingCopy();
+									SourceParserManager.parseMissingFiles(currentProject, workingModel, monitor);
 									try
 									{
 
