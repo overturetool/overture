@@ -297,7 +297,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	void buildProjectIfRequired()
 	{
-		project.getModel().clean();
+//		project.getModel().clean();
 		shell.getDisplay().syncExec(new Runnable()
 		{
 

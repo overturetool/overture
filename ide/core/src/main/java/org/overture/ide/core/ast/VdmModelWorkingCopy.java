@@ -1,5 +1,9 @@
 package org.overture.ide.core.ast;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.resources.VdmSourceUnitWorkingCopy;
@@ -16,6 +20,15 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 		{
 			this.addVdmSourceUnit(source.getWorkingCopy());
 		}
+		
+		
+		this.isTypeChecked = sourceModel.isTypeChecked;
+		this.isTypeCorrect = sourceModel.isTypeCorrect;
+		this.workingCopyNotCommitedCount = 0;
+
+		this.checkedTime= sourceModel.checkedTime;
+
+		
 	}
 
 	public synchronized void commit()

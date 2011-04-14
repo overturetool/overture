@@ -32,7 +32,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 			if (resource instanceof IFile && resource.exists() && ((IFile) resource).getContentDescription()!=null)
 			{
 
-				if (getVdmProject().getContentTypeIds().contains(((IFile) resource).getContentDescription().getContentType().getId()))
+				if (getVdmProject().isModelFile((IFile) resource))
 				{
 					sourceFound = true;
 					return false;// do not visit children

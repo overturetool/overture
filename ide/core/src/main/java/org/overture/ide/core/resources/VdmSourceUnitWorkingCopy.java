@@ -11,6 +11,9 @@ public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 	{
 		super(vdmSourceUnit.getProject(),vdmSourceUnit.getFile());
 		this.sourceUnit = vdmSourceUnit;
+		this.parseList.addAll(this.sourceUnit.getParseList());
+//		this.allLocation.addAll(this.sourceUnit.);
+		this.locationToAstNodeMap.putAll(this.sourceUnit.getLocationToAstNodeMap());
 	}
 	
 	
