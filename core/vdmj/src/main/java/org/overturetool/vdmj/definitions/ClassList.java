@@ -150,7 +150,7 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 	}
 
-	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp)
+	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp, RootContext initialContext)
 	{
 		SystemDefinition systemClass = null;
 
@@ -159,7 +159,7 @@ public class ClassList extends Vector<ClassDefinition>
 			if (cdef instanceof SystemDefinition)
 			{
 				systemClass = (SystemDefinition)cdef;
-				systemClass.systemInit(scheduler, dbgp);
+				systemClass.systemInit(scheduler, dbgp, initialContext);
 				TransactionValue.commitAll();
 			}
 		}

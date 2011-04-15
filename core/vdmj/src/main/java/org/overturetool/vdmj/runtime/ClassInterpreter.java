@@ -175,7 +175,7 @@ public class ClassInterpreter extends Interpreter
 
 		logSwapIn();
 		initialContext = classes.initialize(dbgp);
-		classes.systemInit(scheduler, dbgp);
+		classes.systemInit(scheduler, dbgp, initialContext);
 		logSwapOut();
 
 		createdValues = new NameValuePairMap();

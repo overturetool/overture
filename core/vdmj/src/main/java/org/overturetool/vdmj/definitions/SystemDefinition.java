@@ -38,7 +38,7 @@ import org.overturetool.vdmj.messages.rtlog.RTLogger;
 import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.StateContext;
+import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -60,22 +60,22 @@ public class SystemDefinition extends ClassDefinition
 {
 	private static final long serialVersionUID = 1L;
 
-	private static Context systemContext = null;
-	
+	// private static Context systemContext = null;
+
 	/**
-	 * Experimental DESTECS extension. 
+	 * Experimental DESTECS extension.
 	 * Allowing access at runtime to the instances variables of the system.
 	 */
-	
+
 	private static ObjectValue system = null;
-	
+
 	public static NameValuePairList getSystemMembers()
 	{
 		if (system != null)
 		{
 			return system.members.asList();
 		}
-		
+
 		return null;
 	}
 
@@ -108,7 +108,7 @@ public class SystemDefinition extends ClassDefinition
 						iv.expression instanceof NewExpression)
 				{
 					UnresolvedType ut = (UnresolvedType)iv.type;
-					
+
 					if (ut.typename.getName().equals("CPU"))
 					{
 						NewExpression newExp = (NewExpression) iv.expression;
@@ -123,7 +123,7 @@ public class SystemDefinition extends ClassDefinition
 							RealLiteralExpression frequencyExp = (RealLiteralExpression) newExp.args.get(1);
 							speed = frequencyExp.value.value;
 						}
-						
+
 						if (speed == 0)
 						{
 							d.report(3305, "CPU frequency to slow: " + speed + " Hz");
@@ -165,10 +165,10 @@ public class SystemDefinition extends ClassDefinition
 		}
 	}
 
-	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp)
+	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp, RootContext initialContext)
 	{
-		systemContext = new StateContext(location, "RT system environment");
-		systemContext.setThreadState(dbgp, CPUValue.vCPU);
+		// systemContext = new StateContext(location, "RT system environment");
+		initialContext.setThreadState(dbgp, CPUValue.vCPU);
 
 		try
 		{
@@ -202,7 +202,7 @@ public class SystemDefinition extends ClassDefinition
 			// Run the constructor to do any deploys etc.
 
 			system = makeNewInstance(null, new ValueList(),
-					systemContext, new HashMap<LexNameToken, ObjectValue>());
+					initialContext, new HashMap<LexNameToken, ObjectValue>());
 
 			// Do CPUs first so that default BUSses can connect all CPUs.
 
@@ -220,8 +220,8 @@ public class SystemDefinition extends ClassDefinition
     				args.add(new QuoteValue("FCFS"));	// Default policy
     				args.add(new RealValue(0));			// Default speed
 
-    				cpu = (CPUValue)instance.newInstance(null, args, systemContext);
-    				v.set(location, cpu, systemContext);
+    				cpu = (CPUValue)instance.newInstance(null, args, initialContext);
+    				v.set(location, cpu, initialContext);
     			}
     			else
     			{
@@ -268,8 +268,8 @@ public class SystemDefinition extends ClassDefinition
 			}
 
 			// For efficiency, we create a 2D array of CPU-to-CPU bus links
-			BUSValue.createMap(systemContext, cpus);
-			
+			BUSValue.createMap(initialContext, cpus);
+
 			//Disable the system construction - all objects have not been created and deployed.
 			RTOperationMessage.inSystemConstruction = false;
 		}
@@ -284,7 +284,7 @@ public class SystemDefinition extends ClassDefinition
     	catch (Exception e)
     	{
     		throw new ContextException(
-    			4135, "Cannot instantiate a system class", location, systemContext);
+    			4135, "Cannot instantiate a system class", location, initialContext);
     	}
 	}
 
