@@ -217,7 +217,11 @@ public class ImplicitOperationDefinition extends Definition
 
 		// Now we build local definitions for each of the externals, so
 		// that they can be added to the local environment, while the
-		// global state is made inaccessible.
+		// global state is made inaccessible - but only if we have
+		// an "ext" clause
+
+		NameScope scopeToUse = null;
+		NameScope oldScopeToUse = null;
 
 		if (externals != null)
 		{
@@ -258,9 +262,19 @@ public class ImplicitOperationDefinition extends Definition
     				}
     			}
     		}
+
+    		// All relevant globals are now in defs (local)
+    		scopeToUse = NameScope.NAMES;
+    		oldScopeToUse = NameScope.NAMES;
+		}
+		else
+		{
+			scopeToUse = NameScope.NAMESANDSTATE;
+			oldScopeToUse = NameScope.NAMESANDANYSTATE;
 		}
 
 		defs.typeCheck(base, scope);
+
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 		local.setStatic(accessSpecifier);
 		local.setEnclosingDefinition(this);
@@ -302,7 +316,7 @@ public class ImplicitOperationDefinition extends Definition
     			}
 			}
 
-			actualResult = body.typeCheck(local, NameScope.NAMESANDSTATE);
+			actualResult = body.typeCheck(local, scopeToUse);
 			boolean compatible = TypeComparator.compatible(type.result, actualResult);
 
 			if ((isConstructor && !actualResult.isType(VoidType.class) && !compatible) ||
@@ -327,7 +341,7 @@ public class ImplicitOperationDefinition extends Definition
 		{
 			FlatEnvironment pre = new FlatEnvironment(new DefinitionList(), local);
 			pre.setEnclosingDefinition(predef);
-			Type b = predef.body.typeCheck(pre, null, NameScope.NAMESANDSTATE);
+			Type b = predef.body.typeCheck(pre, null, scopeToUse);
 			BooleanType expected = new BooleanType(location);
 
 			if (!b.isType(BooleanType.class))
@@ -347,17 +361,17 @@ public class ImplicitOperationDefinition extends Definition
 			{
 	    		DefinitionList postdefs = result.getDefinitions();
 	    		FlatCheckedEnvironment post =
-	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMESANDANYSTATE);
+	    			new FlatCheckedEnvironment(postdefs, local, oldScopeToUse);
 	    		post.setStatic(accessSpecifier);
 	    		post.setEnclosingDefinition(postdef);
-				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
+				b = postdef.body.typeCheck(post, null, oldScopeToUse);
 				post.unusedCheck();
 			}
 			else
 			{
 	    		FlatEnvironment post = new FlatEnvironment(new DefinitionList(), local);
 	    		post.setEnclosingDefinition(postdef);
-				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
+				b = postdef.body.typeCheck(post, null, oldScopeToUse);
 			}
 
 			BooleanType expected = new BooleanType(location);
@@ -366,6 +380,26 @@ public class ImplicitOperationDefinition extends Definition
 			{
 				report(3018, "Postcondition returns unexpected type");
 				detail2("Actual", b, "Expected", expected);
+			}
+		}
+
+		if (errors != null)
+		{
+			for (ErrorCase error: errors)
+			{
+				Type a = error.left.typeCheck(local, null, scopeToUse);
+
+				if (!a.isType(BooleanType.class))
+				{
+					error.left.report(3307, "Errs clause is not bool -> bool");
+				}
+
+				Type b = error.right.typeCheck(local, null, oldScopeToUse);
+
+				if (!b.isType(BooleanType.class))
+				{
+					error.right.report(3307, "Errs clause is not bool -> bool");
+				}
 			}
 		}
 

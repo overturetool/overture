@@ -41,17 +41,24 @@ public class ExternalDefinition extends Definition
 	private static final long serialVersionUID = 1L;
 	public final Definition state;
 	public final boolean readOnly;
+	public final LexNameToken oldname;	// For "wr" only
 
 	public ExternalDefinition(Definition state, LexToken mode)
 	{
 		super(Pass.DEFS, state.location, state.name, NameScope.STATE);
 		this.state = state;
 		this.readOnly = mode.is(Token.READ);
+		this.oldname = readOnly ? null : state.name.getOldName();
 	}
 
 	@Override
 	public Definition findName(LexNameToken sought, NameScope scope)
 	{
+		if (sought.old)
+		{
+			return (sought.equals(oldname)) ? this : null;
+		}
+
 		return (sought.equals(state.name)) ? this : null;
 	}
 
