@@ -647,6 +647,8 @@ as the expected and actual values.
 3302, "Variable <name> cannot be accessed from this context"
 3303, "Measure parameters different to function"
 3304, "Recursive function cannot be its own measure"
+3305, "CPU frequency to slow: <speed> Hz"
+3306, "CPU frequency to fast: <speed> Hz"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"
