@@ -24,12 +24,16 @@ import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpPropertyCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.AtomicVdmType;
+import org.overture.ide.debug.core.model.CollectionVdmType;
+import org.overture.ide.debug.core.model.ComplexVdmType;
 import org.overture.ide.debug.core.model.IVdmDebugTarget;
 import org.overture.ide.debug.core.model.IVdmStackFrame;
 import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.IVdmType;
 import org.overture.ide.debug.core.model.IVdmTypeFactory;
 import org.overture.ide.debug.core.model.IVdmValue;
+import org.overture.ide.debug.core.model.SetVdmType;
+import org.overture.ide.debug.core.model.StringVdmType;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationCommand;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationEngine;
 import org.overture.ide.debug.core.model.internal.eval.VdmEvaluationCommand;
@@ -181,6 +185,11 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 				value = type.formatValue(this);
 			}
 			
+		}
+		
+		if(type instanceof CollectionVdmType || type instanceof ComplexVdmType || type instanceof StringVdmType)
+		{
+			return type.getName();
 		}
 		return value;
 	}

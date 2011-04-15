@@ -116,6 +116,8 @@ import org.overturetool.vdmj.values.Value;
 public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private static final int SHORT_STRING_MAX = 200;
+
 	/**
 	 * Map containing Values accessible from the client by a key. Should be
 	 * emptied at resume
@@ -795,7 +797,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		}
 
 		if (numChildren > 0) {
-			data = value.kind().toString();
+			data = value.toShortString(SHORT_STRING_MAX);
 		} else {
 			data = value.toString();
 		}

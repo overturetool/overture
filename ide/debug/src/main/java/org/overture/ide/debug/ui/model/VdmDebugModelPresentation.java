@@ -10,6 +10,7 @@ import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
+import org.overture.ide.debug.core.model.internal.VdmValue;
 
 public class VdmDebugModelPresentation extends LabelProvider implements
 		IDebugModelPresentation
@@ -26,7 +27,16 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 		String detail = "";
 		try
 		{
-			detail = value.getValueString();
+			if(value instanceof VdmValue)
+			{
+				VdmValue vdmValue = (VdmValue) value;
+				vdmValue.getVariables();
+				detail = vdmValue.getRawValue();
+			}else
+			{
+				detail = value.getValueString();	
+			}
+			
 		} catch (DebugException e)
 		{
 		}
