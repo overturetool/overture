@@ -220,8 +220,7 @@ public class ImplicitOperationDefinition extends Definition
 		// global state is made inaccessible - but only if we have
 		// an "ext" clause
 
-		NameScope scopeToUse = null;
-		NameScope oldScopeToUse = null;
+		boolean limitStateScope = false;
 
 		if (externals != null)
 		{
@@ -234,7 +233,7 @@ public class ImplicitOperationDefinition extends Definition
 
     				if (sdef == null)
     				{
-    					report(3031, "Unknown state variable " + exname);
+    					exname.report(3031, "Unknown state variable " + exname);
     				}
     				else
     				{
@@ -263,19 +262,16 @@ public class ImplicitOperationDefinition extends Definition
     			}
     		}
 
-    		// All relevant globals are now in defs (local)
-    		scopeToUse = NameScope.NAMES;
-    		oldScopeToUse = NameScope.NAMES;
-		}
-		else
-		{
-			scopeToUse = NameScope.NAMESANDSTATE;
-			oldScopeToUse = NameScope.NAMESANDANYSTATE;
+    		// All relevant globals are now in defs (local), so we
+    		// limit the state searching scope
+    		
+    		limitStateScope = true;
 		}
 
 		defs.typeCheck(base, scope);
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
+		local.setLimitStateScope(limitStateScope);
 		local.setStatic(accessSpecifier);
 		local.setEnclosingDefinition(this);
 
@@ -316,7 +312,7 @@ public class ImplicitOperationDefinition extends Definition
     			}
 			}
 
-			actualResult = body.typeCheck(local, scopeToUse);
+			actualResult = body.typeCheck(local, NameScope.NAMESANDSTATE);
 			boolean compatible = TypeComparator.compatible(type.result, actualResult);
 
 			if ((isConstructor && !actualResult.isType(VoidType.class) && !compatible) ||
@@ -341,7 +337,7 @@ public class ImplicitOperationDefinition extends Definition
 		{
 			FlatEnvironment pre = new FlatEnvironment(new DefinitionList(), local);
 			pre.setEnclosingDefinition(predef);
-			Type b = predef.body.typeCheck(pre, null, scopeToUse);
+			Type b = predef.body.typeCheck(pre, null, NameScope.NAMESANDSTATE);
 			BooleanType expected = new BooleanType(location);
 
 			if (!b.isType(BooleanType.class))
@@ -361,17 +357,17 @@ public class ImplicitOperationDefinition extends Definition
 			{
 	    		DefinitionList postdefs = result.getDefinitions();
 	    		FlatCheckedEnvironment post =
-	    			new FlatCheckedEnvironment(postdefs, local, oldScopeToUse);
+	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMESANDANYSTATE);
 	    		post.setStatic(accessSpecifier);
 	    		post.setEnclosingDefinition(postdef);
-				b = postdef.body.typeCheck(post, null, oldScopeToUse);
+				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 				post.unusedCheck();
 			}
 			else
 			{
 	    		FlatEnvironment post = new FlatEnvironment(new DefinitionList(), local);
 	    		post.setEnclosingDefinition(postdef);
-				b = postdef.body.typeCheck(post, null, oldScopeToUse);
+				b = postdef.body.typeCheck(post, null, NameScope.NAMESANDANYSTATE);
 			}
 
 			BooleanType expected = new BooleanType(location);
@@ -387,14 +383,14 @@ public class ImplicitOperationDefinition extends Definition
 		{
 			for (ErrorCase error: errors)
 			{
-				Type a = error.left.typeCheck(local, null, scopeToUse);
+				Type a = error.left.typeCheck(local, null, NameScope.NAMESANDSTATE);
 
 				if (!a.isType(BooleanType.class))
 				{
 					error.left.report(3307, "Errs clause is not bool -> bool");
 				}
 
-				Type b = error.right.typeCheck(local, null, oldScopeToUse);
+				Type b = error.right.typeCheck(local, null, NameScope.NAMESANDANYSTATE);
 
 				if (!b.isType(BooleanType.class))
 				{

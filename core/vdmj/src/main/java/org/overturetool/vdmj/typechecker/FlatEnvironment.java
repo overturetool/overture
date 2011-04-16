@@ -37,6 +37,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 public class FlatEnvironment extends Environment
 {
 	protected final DefinitionList definitions;
+	private boolean limitStateScope = false;
 
 	public FlatEnvironment(DefinitionList definitions)
 	{
@@ -71,7 +72,8 @@ public class FlatEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findName(name, scope);
+		return (outer == null || (limitStateScope && scope == NameScope.STATE)) ?
+			null : outer.findName(name, scope);
 	}
 
 	@Override
@@ -148,4 +150,9 @@ public class FlatEnvironment extends Environment
     {
 		definitions.markUsed();
     }
+	
+	public void setLimitStateScope(boolean limitStateScope)
+	{
+		this.limitStateScope = limitStateScope;
+	}
 }
