@@ -72,8 +72,19 @@ public class FlatEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null || (limitStateScope && scope == NameScope.STATE)) ?
-			null : outer.findName(name, scope);
+		if (outer == null)
+		{
+			return null;
+		}
+		else
+		{
+			if (limitStateScope)
+			{
+				scope = NameScope.NAMES;	// Limit NAMESAND(ANY)STATE
+			}
+			
+			return outer.findName(name, scope);
+		}
 	}
 
 	@Override
