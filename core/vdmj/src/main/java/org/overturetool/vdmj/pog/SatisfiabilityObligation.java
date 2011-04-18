@@ -84,7 +84,7 @@ public class SatisfiabilityObligation extends ProofObligation
     		sb.append(" =>\n");
 		}
 
-		if (stateDefinition != null)
+		if (op.result != null)
 		{
 			sb.append("exists ");
     		separator = "";
