@@ -251,7 +251,7 @@ public abstract class Definition implements Serializable, IAstNode
 				(nameScope == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE)))
 			{
 				sought.report(3302,
-					"State variable '" + sought.name + "' cannot be accessed from this context");
+					"State variable '" + sought.getName() + "' cannot be accessed from this context");
 			}
 
 			markUsed();
