@@ -94,17 +94,7 @@ public class ExpressionReader extends SyntaxReader
 
 	public Expression readExpression() throws ParserException, LexException
 	{
-		Expression exp = readConnectiveExpression();
-		LexToken token = lastToken();
-
-		if (token.is(Token.MAPLET))
-		{
-			nextToken();
-			Expression mapsTo = readExpression();
-			exp = new MapletExpression(exp, token, mapsTo);
-		}
-
-		return exp;
+		return readConnectiveExpression();
 	}
 
 	// Connectives Family. All (recursive) right grouping...
@@ -1205,10 +1195,13 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		Expression first = readExpression();
+		token = lastToken();
 
-		if (first instanceof MapletExpression)
+		if (token.is(Token.MAPLET))
 		{
-			return readMapExpression(start, (MapletExpression)first);
+			nextToken();
+			MapletExpression maplet = new MapletExpression(first, token, readExpression());
+			return readMapExpression(start, maplet);
 		}
 		else
 		{
@@ -1300,10 +1293,13 @@ public class ExpressionReader extends SyntaxReader
 			while (ignore(Token.COMMA))
 			{
 				Expression member = readExpression();
+				LexToken token = lastToken();
 
-				if (member instanceof MapletExpression)
+				if (token.is(Token.MAPLET))
 				{
-					members.add((MapletExpression)member);
+					nextToken();
+					MapletExpression maplet = new MapletExpression(member, token, readExpression());
+					members.add(maplet);
 				}
 				else
 				{

@@ -83,9 +83,9 @@ public class MapEnumExpression extends MapExpression
 		TypeSet dom = new TypeSet();
 		TypeSet rng = new TypeSet();
 
-		for (Expression ex: members)
+		for (MapletExpression ex: members)
 		{
-			Type mt = ex.typeCheck(env, null, scope);
+			Type mt = ex.typeCheck(env, scope);
 
 			if (!mt.isMap())
 			{

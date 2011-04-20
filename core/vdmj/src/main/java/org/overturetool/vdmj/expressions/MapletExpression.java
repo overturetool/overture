@@ -23,38 +23,40 @@
 
 package org.overturetool.vdmj.expressions;
 
+import java.io.Serializable;
+
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.pog.POContextStack;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
-public class MapletExpression extends BinaryExpression
+public class MapletExpression implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	public final LexLocation location;
+	public final Expression left;
+	public final Expression right;
+
 	public MapletExpression(Expression left, LexToken op, Expression right)
 	{
-		super(left, op, right);
+		this.location = op.location;
+		this.left = left;
+		this.right = right;
 	}
 
-	@Override
-	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	public Type typeCheck(Environment env, NameScope scope)
 	{
-		ltype = left.typeCheck(env, null, scope);
-		rtype = right.typeCheck(env, null, scope);
+		Type ltype = left.typeCheck(env, null, scope);
+		Type rtype = right.typeCheck(env, null, scope);
 
 		return new MapType(location, ltype, rtype);
-	}
-
-	@Override
-	public Value eval(Context ctxt)
-	{
-		breakpoint.check(location, ctxt);
-		return abort(4018, "Maplet cannot be evaluated", ctxt);
 	}
 
 	@Override
@@ -63,9 +65,23 @@ public class MapletExpression extends BinaryExpression
 		return left + " |-> " + right;
 	}
 
-	@Override
-	public String kind()
+	public Expression findExpression(int lineno)
 	{
-		return "|->";
+		Expression found = left.findExpression(lineno);
+		return (found == null) ? right.findExpression(lineno) : found;
+	}
+
+	public ProofObligationList getProofObligations(POContextStack ctxt)
+	{
+		ProofObligationList list = left.getProofObligations(ctxt);
+		list.addAll(right.getProofObligations(ctxt));
+		return list;
+	}
+
+	public ValueList getValues(Context ctxt)
+	{
+		ValueList list = left.getValues(ctxt);
+		list.addAll(right.getValues(ctxt));
+		return list;
 	}
 }

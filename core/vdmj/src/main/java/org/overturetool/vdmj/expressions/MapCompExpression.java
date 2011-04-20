@@ -59,7 +59,7 @@ import org.overturetool.vdmj.values.ValueMap;
 public class MapCompExpression extends MapExpression
 {
 	private static final long serialVersionUID = 1L;
-	public final Expression first;
+	public final MapletExpression first;
 	public final List<MultipleBind> bindings;
 	public final Expression predicate;
 	private Type maptype;
@@ -93,12 +93,7 @@ public class MapCompExpression extends MapExpression
 			predicate.report(3118, "Predicate is not boolean");
 		}
 
-		if (!(first instanceof MapletExpression))
-		{
-			first.report(3119, "Map composition is not a maplet");
-		}
-
-		maptype = first.typeCheck(local, null, scope);	// The map from/to type
+		maptype = first.typeCheck(local, scope);	// The map from/to type
 		local.unusedCheck();
 		return maptype;
 	}
@@ -125,7 +120,6 @@ public class MapCompExpression extends MapExpression
 			}
 
 			quantifiers.init();
-			MapletExpression mapfirst = (MapletExpression)first;
 
 			while (quantifiers.hasNext(ctxt))
 			{
@@ -155,9 +149,9 @@ public class MapCompExpression extends MapExpression
 					(predicate == null ||
 					 predicate.eval(evalContext).boolValue(ctxt)))
 				{
-					Value dom = mapfirst.left.eval(evalContext);
-					Value rng = mapfirst.right.eval(evalContext);
-					mapfirst.location.hit();
+					Value dom = first.left.eval(evalContext);
+					Value rng = first.right.eval(evalContext);
+					first.location.hit();
 
 					Value old = map.put(dom, rng);
 
