@@ -264,7 +264,7 @@ public class ImplicitOperationDefinition extends Definition
 
     		// All relevant globals are now in defs (local), so we
     		// limit the state searching scope
-    		
+
     		limitStateScope = true;
 		}
 
@@ -562,7 +562,7 @@ public class ImplicitOperationDefinition extends Definition
 		}
 
 		parameters.add(plist);
-		PreOpExpression preop = new PreOpExpression(name, precondition, state);
+		Expression preop = new PreOpExpression(name, precondition, errors, state);
 
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPreName(precondition.location), NameScope.GLOBAL,
@@ -605,7 +605,7 @@ public class ImplicitOperationDefinition extends Definition
 		}
 
 		parameters.add(plist);
-		PostOpExpression postop = new PostOpExpression(name, postcondition, state);
+		Expression postop = new PostOpExpression(name, precondition, postcondition, errors, state);
 
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPostName(postcondition.location), NameScope.GLOBAL,

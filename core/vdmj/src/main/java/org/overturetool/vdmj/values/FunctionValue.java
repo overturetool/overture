@@ -406,8 +406,12 @@ public class FunctionValue extends Value
     		{
     			if (!rv.boolValue(ctxt))
     			{
+    				// Note that this calls getLocation to find out where the body
+    				// wants to report its location for this error - this may be an
+    				// errs clause in some circumstances.
+
     				throw new ContextException(ctxt.prepost,
-    					ctxt.prepostMsg + name, location, evalContext);
+    					ctxt.prepostMsg + name, body.getLocation(), evalContext);
     			}
     		}
 

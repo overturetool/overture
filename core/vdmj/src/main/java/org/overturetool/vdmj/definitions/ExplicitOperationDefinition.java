@@ -428,7 +428,7 @@ public class ExplicitOperationDefinition extends Definition
 		}
 
 		parameters.add(plist);
-		PreOpExpression preop = new PreOpExpression(name, precondition, state);
+		PreOpExpression preop = new PreOpExpression(name, precondition, null, state);
 
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPreName(precondition.location), NameScope.GLOBAL,
@@ -470,7 +470,7 @@ public class ExplicitOperationDefinition extends Definition
 		}
 
 		parameters.add(plist);
-		PostOpExpression postop = new PostOpExpression(name, postcondition, state);
+		PostOpExpression postop = new PostOpExpression(name, precondition, postcondition, null, state);
 
 		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
 			name.getPostName(postcondition.location), NameScope.GLOBAL,

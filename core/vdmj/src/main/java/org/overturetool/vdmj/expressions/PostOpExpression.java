@@ -23,17 +23,21 @@
 
 package org.overturetool.vdmj.expressions;
 
+import java.util.List;
+
 import org.overturetool.vdmj.definitions.StateDefinition;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.statements.ErrorCase;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.FunctionValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -44,15 +48,22 @@ public class PostOpExpression extends Expression
 {
 	private static final long serialVersionUID = 1L;
 	public final LexNameToken opname;
-	public final Expression expression;
+	public final Expression preexpression;
+	public final Expression postexpression;
+	public final List<ErrorCase> errors;
 	public final StateDefinition state;
 
+	private LexLocation errorLocation;
+
 	public PostOpExpression(
-		LexNameToken opname, Expression expression, StateDefinition state)
+		LexNameToken opname, Expression preexpression, Expression postexpression,
+		List<ErrorCase> errors, StateDefinition state)
 	{
-		super(expression.location);
+		super(postexpression.location);
 		this.opname = opname;
-		this.expression = expression;
+		this.preexpression = preexpression;
+		this.postexpression = postexpression;
+		this.errors = errors;
 		this.state = state;
 	}
 
@@ -60,7 +71,7 @@ public class PostOpExpression extends Expression
 	public Value eval(Context ctxt)
 	{
 		// No break check here, as we want to start in the expression
-		
+
 		// The postcondition function arguments are the function args, the
 		// result, the old/new state (if any). These all exist in ctxt.
 		// We find the Sigma record and expand its contents to give additional
@@ -120,24 +131,45 @@ public class PostOpExpression extends Expression
     			populate(ctxt, suboldself);		// To add old "~" values
     		}
 
-    		Value rv = expression.eval(ctxt);
 
-    		if (ctxt.prepost > 0 && !rv.boolValue(ctxt))
-			{
-    			// We throw the exception from here so that we can see the old
-    			// variable values. If we returned false, the FunctionValue would
-    			// throw instead, but without the old variables.
+    		// If there are errs clauses, and there is a precondition defined, then
+    		// we evaluate that as well as the postcondition.
 
-				throw new ContextException(ctxt.prepost,
-					ctxt.prepostMsg + ctxt.title, location, ctxt);
-			}
+    		boolean result =
+    			(errors == null || preexpression == null ||
+    				preexpression.eval(ctxt).boolValue(ctxt)) &&
+    			postexpression.eval(ctxt).boolValue(ctxt);
 
-    		return rv;
+    		errorLocation = location;
+
+    		if (errors != null)
+    		{
+    			for (ErrorCase err: errors)
+    			{
+    				boolean left  = err.left.eval(ctxt).boolValue(ctxt);
+    				boolean right = err.right.eval(ctxt).boolValue(ctxt);
+
+    				if (left && !right)
+    				{
+    					errorLocation = err.left.location;
+    				}
+
+    				result = result || (left && right);
+    			}
+    		}
+
+    		return new BooleanValue(result);
 		}
 		catch (ValueException e)
 		{
 			return abort(e);
 		}
+	}
+
+	@Override
+	public LexLocation getLocation()
+	{
+		return errorLocation == null ? location : errorLocation;
 	}
 
 	private void populate(Context ctxt, ObjectValue object)
@@ -179,19 +211,19 @@ public class PostOpExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return expression.toString();
+		return postexpression.toString();
 	}
 
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		return expression.typeCheck(env, null, scope);
+		return postexpression.typeCheck(env, null, scope);
 	}
 
 	@Override
 	public Expression findExpression(int lineno)
 	{
-		return expression.findExpression(lineno);
+		return postexpression.findExpression(lineno);
 	}
 
 	@Override

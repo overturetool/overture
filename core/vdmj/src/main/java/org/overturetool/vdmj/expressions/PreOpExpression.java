@@ -23,16 +23,20 @@
 
 package org.overturetool.vdmj.expressions;
 
+import java.util.List;
+
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.statements.ErrorCase;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.RecordValue;
 import org.overturetool.vdmj.values.Value;
@@ -42,14 +46,16 @@ public class PreOpExpression extends Expression
 	private static final long serialVersionUID = 1L;
 	public final LexNameToken opname;
 	public final Expression expression;
+	public final List<ErrorCase> errors;
 	public final StateDefinition state;
 
 	public PreOpExpression(
-		LexNameToken opname, Expression expression, StateDefinition state)
+		LexNameToken opname, Expression expression, List<ErrorCase> errors, StateDefinition state)
 	{
 		super(expression);
 		this.opname = opname;
 		this.expression = expression;
+		this.errors = errors;
 		this.state = state;
 	}
 
@@ -97,7 +103,17 @@ public class PreOpExpression extends Expression
     			ctxt = selfctxt;
     		}
 
-    		return expression.eval(ctxt);
+    		boolean result = expression.eval(ctxt).boolValue(ctxt);
+
+    		if (errors != null)
+    		{
+    			for (ErrorCase err: errors)
+    			{
+    				result = result || err.left.eval(ctxt).boolValue(ctxt);
+    			}
+    		}
+
+    		return new BooleanValue(result);
     	}
     	catch (ValueException e)
     	{

@@ -216,6 +216,17 @@ public abstract class Expression implements Serializable,IAstNode
 	}
 
 	/**
+	 * Get the location of the expression. This is occasionally overridden by
+	 * pre and postcondition expressions that need to simulate their location
+	 * as being that of an errs clause.
+	 */
+
+	public LexLocation getLocation()
+	{
+		return location;
+	}
+
+	/**
 	 * @see org.overturetool.vdmj.definitions.Definition#report
 	 */
 
@@ -305,14 +316,9 @@ public abstract class Expression implements Serializable,IAstNode
 			TypeChecker.detail2(tag1, obj1, tag2, obj2);
 		}
 	}
-	
+
 	public String getName()
 	{
 		return location.module;
-	}
-	
-	public LexLocation getLocation()
-	{
-		return location;
 	}
 }
