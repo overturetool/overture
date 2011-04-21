@@ -91,6 +91,11 @@ public class VariableExpression extends Expression
         					vardef.classDefinition.name.name);
         				return new UnknownType(location);
         			}
+        			else if (!vardef.isStatic() && env.isStatic())
+            		{
+            			report(3181, "Cannot access " + name + " from a static context");
+            			return new UnknownType(location);
+            		}
     			}
     		}
     		else if (qualifiers != null)
@@ -144,14 +149,6 @@ public class VariableExpression extends Expression
 						}
 					}
 				}
-    		}
-
-    		if (vardef != null &&
-    			vardef.classDefinition != null &&		// It's a member of a class
-    			!vardef.isStatic() && env.isStatic())
-    		{
-    			report(3181, "Cannot access " + name + " from a static context");
-    			return new UnknownType(location);
     		}
     	}
     	else

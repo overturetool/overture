@@ -80,6 +80,11 @@ public class IdentifierDesignator extends StateDesignator
     					def.classDefinition.name.name);
     				return new UnknownType(location);
     			}
+    			else if (!def.isStatic() && env.isStatic())
+    			{
+    				report(3181, "Cannot access " + name + " from a static context");
+    				return new UnknownType(location);
+    			}
 			}
 
 			return def.getType();
