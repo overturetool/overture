@@ -4933,6 +4933,16 @@ identifier and old values of global variables (which can be written
 to) can also be used. Thus, the scope corresponds to the scope of the
 post-condition.
 
+An operation definition making use of an \keyw{errs} clause 
+essentially gets an effective pre-condition which is a disjunction of
+the original pre-condition and all the condition expressions {\tt c1},
+\ldots, {\tt cn}. The effective post-condition in these cases becomes
+a disjunction of the conjuncts ({\tt orig\_pre and orig\_post)} and
+the {\tt c1 and r1}, \ldots, {\tt cn and rn}. However, in a VDM-SL
+setting where operation quotation of the pre- and post-conditions is
+possible the \keyw{errs} parts a the operation definition are not
+taken into account. 
+
 Superficially there appears to be some redundancy between exceptions
 and pre-conditions here. However there is a conceptual distinction
 between them which dictates which should be used and when. The
