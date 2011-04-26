@@ -2,6 +2,7 @@ package org.overture.ide.plugins.poviewer.view;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -70,11 +71,11 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 		{
 		}
 
-		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement)
 		{
 			if (inputElement instanceof List)
 			{
+				@SuppressWarnings("rawtypes")
 				List list = (List) inputElement;
 				return list.toArray();
 			}
@@ -260,7 +261,14 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 			private void gotoDefinition(ProofObligation po)
 			{
-				EditorUtility.gotoLocation(project.findIFile(po.location.file), po.location, po.name);
+				IFile file = project.findIFile(po.location.file);
+				if(IVdmProject.externalFileContentType.isAssociatedWith(file.getName()))
+				{
+					EditorUtility.gotoLocation(IPoviewerConstants.ExternalEditorId,file, po.location, po.name);
+				}else{
+					EditorUtility.gotoLocation(file, po.location, po.name);	
+				}
+				
 			}
 		};
 		
