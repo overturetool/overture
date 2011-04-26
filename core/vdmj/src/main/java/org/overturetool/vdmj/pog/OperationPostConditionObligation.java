@@ -23,8 +23,12 @@
 
 package org.overturetool.vdmj.pog;
 
+import java.util.List;
+
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.statements.ErrorCase;
 
 public class OperationPostConditionObligation extends ProofObligation
 {
@@ -32,13 +36,49 @@ public class OperationPostConditionObligation extends ProofObligation
 		ExplicitOperationDefinition op, POContextStack ctxt)
 	{
 		super(op.location, POType.OP_POST_CONDITION, ctxt);
-		value = ctxt.getObligation(op.postcondition.toString());
+		value = ctxt.getObligation(getExp(op.precondition, op.postcondition, null));
 	}
 
 	public OperationPostConditionObligation(
 		ImplicitOperationDefinition op, POContextStack ctxt)
 	{
 		super(op.location, POType.OP_POST_CONDITION, ctxt);
-		value = ctxt.getObligation(op.postcondition.toString());
+		value = ctxt.getObligation(getExp(op.precondition, op.postcondition, op.errors));
+	}
+
+	private String getExp(Expression preexp, Expression postexp, List<ErrorCase> errs)
+	{
+		if (errs == null)
+		{
+			return postexp.toString();
+		}
+		else
+		{
+			StringBuilder sb = new StringBuilder();
+
+			if (preexp != null)
+			{
+				sb.append("(");
+				sb.append(preexp);
+				sb.append(" and ");
+				sb.append(postexp);
+				sb.append(")");
+			}
+			else
+			{
+				sb.append(postexp);
+			}
+
+			for (ErrorCase err: errs)
+			{
+				sb.append(" or (");
+				sb.append(err.left);
+				sb.append(" and ");
+				sb.append(err.right);
+				sb.append(")");
+			}
+
+			return sb.toString();
+		}
 	}
 }
