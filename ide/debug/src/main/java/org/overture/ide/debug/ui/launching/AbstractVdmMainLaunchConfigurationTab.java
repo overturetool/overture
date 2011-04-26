@@ -685,7 +685,15 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			// dialog.setComparator(new
 			// ResourceComparator(ResourceComparator...NAME));
 			if (dialog.open() == IDialogConstants.OK_ID)
-			{
+			{				
+				if(dialog.getFirstResult() instanceof Module)
+				{
+					Module m = (Module) dialog.getFirstResult();
+					defaultModule = m.getName();
+					fModuleNameText.setText(DisplayNameCreator.getDisplayName(m));
+					return;
+				}
+				
 				Definition method = (Definition) dialog.getFirstResult();
 				IAstNode module = null;
 
