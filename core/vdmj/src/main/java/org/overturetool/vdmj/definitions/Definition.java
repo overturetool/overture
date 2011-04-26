@@ -425,6 +425,11 @@ public abstract class Definition implements Serializable, IAstNode
 		return false;
 	}
 
+	public boolean isCallableFunction()
+	{
+		return false;
+	}
+
 	/**
 	 * Return true if the definition is an instance variable.
 	 */

@@ -701,4 +701,10 @@ public class ExplicitFunctionDefinition extends Definition
 	{
 		return true;
 	}
+
+	@Override
+	public boolean isCallableFunction()
+	{
+		return true;
+	}
 }

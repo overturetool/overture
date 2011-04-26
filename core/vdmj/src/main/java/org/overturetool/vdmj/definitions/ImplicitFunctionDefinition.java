@@ -618,4 +618,10 @@ public class ImplicitFunctionDefinition extends Definition
 	{
 		return true;
 	}
+
+	@Override
+	public boolean isCallableFunction()
+	{
+		return (body != null);
+	}
 }
