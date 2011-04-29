@@ -80,7 +80,8 @@ public class NotYetSpecifiedExpression extends Expression
 	{
 		breakpoint.check(location, ctxt);
 
-		if (location.module.equals("VDMUtil"))
+		if (location.module.equals("VDMUtil") ||
+			location.module.equals("DEFAULT"))
 		{
     		if (ctxt.title.equals("get_file_pos()"))
     		{

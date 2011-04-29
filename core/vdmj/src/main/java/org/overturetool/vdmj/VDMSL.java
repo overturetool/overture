@@ -146,8 +146,8 @@ public class VDMSL extends VDMJ
 			}
    		}
 
-   		int n = modules.notLoaded();
    		perrs += modules.combineDefaults();
+   		int n = modules.notLoaded();
 
    		if (n > 0)
    		{
