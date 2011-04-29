@@ -52,7 +52,7 @@ public class Delegate implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private final String name;
-	private final DefinitionList definitions;
+	private DefinitionList definitions;
 
 	public Delegate(String name, DefinitionList definitions)
 	{
@@ -77,6 +77,7 @@ public class Delegate implements Serializable
 				delegateClass = this.getClass().getClassLoader().loadClass(classname);
 				delegateMethods = new HashMap<String, Method>();
 				delegateArgs = new HashMap<String, LexNameList>();
+				definitions = definitions.singleDefinitions();
 			}
 			catch (ClassNotFoundException e)
 			{
