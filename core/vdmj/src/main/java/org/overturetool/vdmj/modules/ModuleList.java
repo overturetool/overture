@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
@@ -40,6 +42,7 @@ import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -200,11 +203,34 @@ public class ModuleList extends Vector<Module>
 		if (!isEmpty())
 		{
 			Module def = new Module();
+			
+			if (Settings.release == Release.VDM_10)
+			{
+				// In VDM-10, we implicitly import all from the other
+				// modules included with the flat specifications (if any).
+				
+    			List<ImportFromModule> imports = new Vector<ImportFromModule>();
+    			
+    			for (Module m: this)
+    			{
+    				if (!m.isFlat)
+    				{
+    					imports.add(ModuleReader.importAll(m.name));
+    				}
+    			}
+    			
+    			if (!imports.isEmpty())
+    			{
+    				def = new Module(def.name,
+    					new ModuleImports(def.name, imports), null, def.defs);
+    			}
+			}
+			
 			ModuleList named = new ModuleList();
 
 			for (Module m: this)
 			{
-				if (m.name.name.equals("DEFAULT"))
+				if (m.isFlat)
 				{
 					def.defs.addAll(m.defs);
 					def.files.add(m.name.location.file);
@@ -219,8 +245,8 @@ public class ModuleList extends Vector<Module>
 			if (!def.defs.isEmpty())
 			{
 				clear();
-				addAll(named);
 				add(def);
+				addAll(named);
 
 				for (Definition d: def.defs)
 				{

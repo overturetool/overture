@@ -71,6 +71,8 @@ public class Module implements Serializable,IAstNode
 	public DefinitionList importdefs;
 	/** True if the module was loaded from an object file. */
 	public boolean typechecked = false;
+	/** True if the "module" is actually a flat definition file. */
+	public boolean isFlat = false;
 
 	/** A delegate Java class, if one exists. */
 	private Delegate delegate = null;
@@ -110,7 +112,7 @@ public class Module implements Serializable,IAstNode
 	{
 		if (defs.isEmpty())
 		{
-			this.name =	new LexIdentifierToken("DEFAULT", false, new LexLocation());
+			this.name =	defaultName(new LexLocation());
 		}
 		else
 		{
@@ -131,6 +133,8 @@ public class Module implements Serializable,IAstNode
 		importdefs = new DefinitionList();	// and import nothing
 
 		this.delegate = new Delegate(name.name, defs);
+		
+		isFlat = true;
 	}
 
 	/**

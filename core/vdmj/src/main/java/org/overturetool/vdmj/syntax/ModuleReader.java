@@ -128,6 +128,16 @@ public class ModuleReader extends SyntaxReader
 		return modules;
 	}
 
+	public static ImportFromModule importAll(LexIdentifierToken from)
+	{
+		List<List<Import>> types = new Vector<List<Import>>();
+		LexNameToken all = new LexNameToken(from.name, "all", from.location);
+		List<Import> impAll = new Vector<Import>();
+		impAll.add(new ImportAll(all));
+		types.add(impAll);
+		return new ImportFromModule(from, types);
+	}
+
 	private Module readFlatModule() throws ParserException, LexException
 	{
 		File file = lastToken().location.file;

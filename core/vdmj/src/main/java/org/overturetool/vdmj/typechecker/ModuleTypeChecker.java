@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.typechecker;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.modules.Module;
@@ -73,6 +75,7 @@ public class ModuleTypeChecker extends TypeChecker
 		// Check for module name duplication
 
 		boolean nothing = true;
+		boolean hasFlat = false;
 
 		for (Module m1: modules)
 		{
@@ -81,6 +84,18 @@ public class ModuleTypeChecker extends TypeChecker
 				if (m1 != m2 && m1.name.equals(m2.name))
 				{
 					TypeChecker.report(3429, "Module " + m1.name + " duplicates " + m2.name, m1.name.location);
+				}
+			}
+			
+			if (m1.isFlat)
+			{
+				hasFlat = true;
+			}
+			else
+			{
+				if (hasFlat && Settings.release == Release.CLASSIC)
+				{
+					TypeChecker.report(3308, "Cannot mix modules and flat specifications", m1.name.location);
 				}
 			}
 
