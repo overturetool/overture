@@ -112,7 +112,7 @@ public static
     fac:nat -> nat1 
     fac(a) == 
     is not yet specified 
-    pre a < 26;         -- The limit for 64-bit calculations
+    pre a < 21;         -- The limit for 64-bit calculations
 
   values
 public
