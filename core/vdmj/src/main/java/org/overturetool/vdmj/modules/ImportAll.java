@@ -23,7 +23,9 @@
 
 package org.overturetool.vdmj.modules;
 
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.ImportedDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
 
@@ -46,7 +48,14 @@ public class ImportAll extends Import
 			report(3190, "Import all from module with no exports?");
 		}
 
-		return from.exportdefs;	// The lot!
+		DefinitionList imported = new DefinitionList();
+
+		for (Definition d: from.exportdefs)
+		{
+			imported.add(new ImportedDefinition(location, d));
+		}
+
+		return imported;	// The lot!
 	}
 
 	@Override

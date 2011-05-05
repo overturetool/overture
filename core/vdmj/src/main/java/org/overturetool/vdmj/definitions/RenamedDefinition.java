@@ -41,9 +41,9 @@ public class RenamedDefinition extends Definition
 	private static final long serialVersionUID = 1L;
 	public final Definition def;
 
-	public RenamedDefinition(LexNameToken name, Definition def, NameScope scope)
+	public RenamedDefinition(LexNameToken name, Definition def)
 	{
-		super(def.pass, name.location, name, scope);
+		super(def.pass, name.location, name, def.nameScope);
 		this.def = def;
 		this.used = def.used;
 	}

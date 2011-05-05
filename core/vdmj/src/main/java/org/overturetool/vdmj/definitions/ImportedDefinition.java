@@ -43,9 +43,9 @@ public class ImportedDefinition extends Definition
 	private static final long serialVersionUID = 1L;
 	public final Definition def;
 
-	public ImportedDefinition(LexLocation location, Definition def, NameScope scope)
+	public ImportedDefinition(LexLocation location, Definition def)
 	{
-		super(Pass.DEFS, location, def.name, scope);
+		super(Pass.DEFS, location, def.name, def.nameScope);
 		this.def = def;
 	}
 
@@ -95,7 +95,7 @@ public class ImportedDefinition extends Definition
 	@Override
 	public LexNameList getVariableNames()
 	{
-		return new LexNameList(name);
+		return def.getVariableNames();
 	}
 
 	@Override

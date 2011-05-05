@@ -59,11 +59,11 @@ public class ImportedValue extends Import
 		{
 			if (renamed != null)
 			{
-				expdef = new RenamedDefinition(renamed, expdef, NameScope.GLOBAL);
+				expdef = new RenamedDefinition(renamed, expdef);
 			}
 			else
 			{
-				expdef = new ImportedDefinition(name.location, expdef, NameScope.GLOBAL);
+				expdef = new ImportedDefinition(name.location, expdef);
 			}
 
 			list.add(expdef);

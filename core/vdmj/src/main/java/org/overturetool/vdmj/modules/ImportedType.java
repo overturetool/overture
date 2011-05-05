@@ -30,7 +30,6 @@ import org.overturetool.vdmj.definitions.RenamedDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.InvariantType;
 import org.overturetool.vdmj.types.Type;
@@ -75,12 +74,11 @@ public class ImportedType extends Import
 		{
 			if (renamed != null)
 			{
-				expdef = new RenamedDefinition(renamed, expdef, NameScope.TYPENAME);
+				expdef = new RenamedDefinition(renamed, expdef);
 			}
 			else
 			{
-				expdef = new ImportedDefinition(
-								name.location, expdef, NameScope.TYPENAME);
+				expdef = new ImportedDefinition(name.location, expdef);
 			}
 
 			list.add(expdef);
