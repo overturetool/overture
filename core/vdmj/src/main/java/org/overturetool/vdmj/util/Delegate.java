@@ -46,6 +46,7 @@ import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ExitException;
 import org.overturetool.vdmj.values.Value;
 
 public class Delegate implements Serializable
@@ -248,6 +249,10 @@ public class Delegate implements Serializable
 		}
 		catch (InvocationTargetException e)
 		{
+			if(e.getTargetException() instanceof ExitException)
+			{
+				throw (ExitException)e.getTargetException();
+			}
 			throw new InternalException(59,
 				"Failed in native method: " + e.getTargetException().getMessage());
 		}

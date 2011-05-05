@@ -317,6 +317,36 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				}
 			}
 		}
+		
+		if(host == null)
+		{
+			usage("Missing mandatory host URL");
+		}
+		
+		if(port == -1)
+		{
+			usage("Missing mandatory port number");
+		}
+		
+		if(ideKey == null)
+		{
+			usage("Missing mandatory IDE key");
+		}
+		
+		if(expression == null)
+		{
+			usage("Missing mandatory expression");
+		}
+		
+		if(Settings.dialect == null)
+		{
+			usage("Missing mandatory dialect");
+		}
+		
+		if(files.isEmpty())
+		{
+			usage("Missing mandatory specification files");
+		}
 
 		if (host == null || port == -1 || controller == null || ideKey == null
 				|| expression == null || Settings.dialect == null

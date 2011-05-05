@@ -206,11 +206,11 @@ public class DBGPExecProcesser
 					return notAvailable(line);
 				}
 
-				@Override
-				protected boolean doThreads(String line)
-				{
-					return notAvailable(line);
-				}
+//				@Override
+//				protected boolean doThreads(String line)
+//				{
+//					return notAvailable(line);
+//				}
 
 				@Override
 				public ExitStatus run(List<File> filenames)
