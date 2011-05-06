@@ -2,10 +2,10 @@
 <templates>
 
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Case Expression" enabled="true" name="caseExpression" id="caseExpressionVDMSL">cases ${expression}:
-	${patternList1} -&gt; ${expression1}
-	${patternList2} -&gt; ${expression2}
+	${patternList1} -&gt; ${expression1},
+	${patternList2} -&gt; ${expression2},
 	others -&gt; ${expressionOthers}
-end</template>
+end;</template>
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Declare" enabled="true" name="dclStatement" id="dclStatementVDMSL">dcl ${name} : ${nameType};
 	${name} := ${expression}</template>
 	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="def pattern = expression1 in expression2" enabled="true" name="defExpression" id="defExpressionVDMSL">def ${pattern} = ${expression1} in

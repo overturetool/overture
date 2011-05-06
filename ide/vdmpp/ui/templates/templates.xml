@@ -4,10 +4,10 @@
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of times that operation name operation has been activated" enabled="true" name="act" id="actVDMPP">#act(${operationName})</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="The number of operation name operations that are currently active." enabled="true" name="active" id="activeVDMPP">#active(${operationName})</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Case Expression" enabled="true" name="caseExpression" id="caseExpressionVDMPP">cases ${expression}:
-	${patternList1} -&gt; ${expression1}
-	${patternList2} -&gt; ${expression2}
+	${patternList1} -&gt; ${expression1},
+	${patternList2} -&gt; ${expression2},
 	others -&gt; ${expressionOthers}
-end</template>
+end;</template>
 	<template autoinsert="true" context="org.overture.ide.vdmpp.ui.contextType" deleted="false" description="Class Definition" enabled="true" name="class" id="classVDMPP">class ${className}
 
 end ${className}</template>
