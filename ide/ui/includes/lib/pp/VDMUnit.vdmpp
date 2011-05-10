@@ -88,7 +88,7 @@ operations
     
   public getMessage: () ==> seq of char
   getMessage () == return fMessage
-    pre hasMessage()
+    pre len fMessage > 0--hasMessage()
     
 end AssertionFailedError
 
@@ -229,6 +229,8 @@ operations
         (
             tearDown();
         );
+        
+    if exception <> nil then exit exception;
    );
   
   public tearDown: () ==> ()
@@ -305,22 +307,10 @@ operations
   
   -- implementing the abstract run operation 
   public run: TestResult ==> ()
-  run (ptr) ==
-    ( -- announce the start of the test
-      ptr.startTest(self);
-      -- iterate over the test cases
-      for ptst in fTests do ptst.run(ptr);
-      -- announce the end of the test
-      ptr.endTest(self) );
-
+  run (ptr) ==for ptst in fTests do ptst.run(ptr);
+     
   public run: Test * TestResult ==> ()
-  run (test, ptr) ==
-    ( -- announce the start of the test
-      ptr.startTest(self);
-      -- iterate over the test cases
-       test.run(ptr);
-      -- announce the end of the test
-      ptr.endTest(self) );
+  run (test, ptr) == test.run(ptr);
       
     public tests : () ==> seq of Test
     tests()==return fTests;

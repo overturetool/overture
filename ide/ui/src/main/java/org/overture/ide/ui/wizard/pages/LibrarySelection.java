@@ -15,9 +15,12 @@ public class LibrarySelection extends Composite
 	private Button checkBoxCsvIo = null;
 	private Button checkBoxMath = null;
 	private Button checkBoxUtil = null;
+	private Button checkBoxVdmUnit = null;
+	boolean isOo;
 
-	public LibrarySelection(Composite parent, int style) {
+	public LibrarySelection(Composite parent, int style, boolean isOo) {
 		super(parent, style);
+		this.isOo=isOo;
 		initialize();
 	}
 
@@ -37,6 +40,12 @@ public class LibrarySelection extends Composite
 		checkBoxCsvIo = new Button(this, SWT.CHECK);
 		checkBoxCsvIo.setText("CSV");
 		checkBoxCsvIo.setToolTipText("Provides IO facilities for CSV files");
+		if(isOo)
+		{
+			checkBoxVdmUnit = new Button(this, SWT.CHECK);
+			checkBoxVdmUnit.setText("VDM-Unit");
+			checkBoxVdmUnit.setToolTipText("Provides JUnit like facilities for VDM models");
+		}
 		setSize(new Point(300, 200));
 		setLayout(new GridLayout());
 	}
@@ -57,5 +66,9 @@ public class LibrarySelection extends Composite
 	public boolean isCsvSelected()
 	{
 		return checkBoxCsvIo.getSelection();
+	}
+	public boolean isVdmUnitSelected()
+	{
+		return checkBoxVdmUnit.getSelection();
 	}
 }
