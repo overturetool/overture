@@ -21,9 +21,9 @@ public class VdmBuilder extends VdmCoreBuilder
 		}
 		try
 		{
-			final SafeBuilder builder = new SafeBuilder(getVdmProject(), monitor);
+			final SafeBuilder builder = new SafeBuilder(getVdmProject(),this, monitor);
 
-			clearProblemMarkers();
+//			clearProblemMarkers();
 			builder.start();
 			while (!builder.isInterrupted() && builder.isAlive())
 			{

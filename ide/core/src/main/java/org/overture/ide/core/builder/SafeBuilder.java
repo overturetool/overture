@@ -19,11 +19,12 @@ public class SafeBuilder extends Thread
 	final IVdmProject currentProject;
 
 	final IProgressMonitor monitor;
-
+final private VdmBuilder coreBuilder;
 	public SafeBuilder(final IVdmProject currentProject,
-			final IProgressMonitor monitor)
+			VdmBuilder vdmBuilder, final IProgressMonitor monitor)
 	{
 		this.currentProject = currentProject;
+		this.coreBuilder = vdmBuilder;
 		this.monitor = monitor;
 		this.setName("VDM Safe Builder");
 		this.setDaemon(true);
@@ -60,7 +61,7 @@ public class SafeBuilder extends Thread
 								// if the project don't have parse errors
 								if (model != null && model.isParseCorrect())
 								{
-									
+									coreBuilder.clearProblemMarkers();
 									VdmModelWorkingCopy workingModel = model.getWorkingCopy();
 									SourceParserManager.parseMissingFiles(currentProject, workingModel, monitor);
 									try
