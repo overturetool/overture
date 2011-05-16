@@ -1,5 +1,9 @@
 package org.overture.ide.core.builder;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -19,12 +23,12 @@ public class SafeBuilder extends Thread
 	final IVdmProject currentProject;
 
 	final IProgressMonitor monitor;
-final private VdmBuilder coreBuilder;
+
 	public SafeBuilder(final IVdmProject currentProject,
-			VdmBuilder vdmBuilder, final IProgressMonitor monitor)
+			 final IProgressMonitor monitor)
 	{
 		this.currentProject = currentProject;
-		this.coreBuilder = vdmBuilder;
+		
 		this.monitor = monitor;
 		this.setName("VDM Safe Builder");
 		this.setDaemon(true);
@@ -61,7 +65,7 @@ final private VdmBuilder coreBuilder;
 								// if the project don't have parse errors
 								if (model != null && model.isParseCorrect())
 								{
-									coreBuilder.clearProblemMarkers();
+									clearProblemMarkers((IProject) currentProject.getAdapter(IProject.class));
 									VdmModelWorkingCopy workingModel = model.getWorkingCopy();
 									SourceParserManager.parseMissingFiles(currentProject, workingModel, monitor);
 									try
@@ -101,6 +105,26 @@ final private VdmBuilder coreBuilder;
 		{
 			System.out.println(ex.getMessage());
 			VdmCore.log(ex);
+		}
+
+	}
+	
+	/***
+	 * This method removed all problem markers and its sub-types from the project. It is called before an instance of
+	 * the AbstractBuilder is created
+	 * 
+	 * @param project
+	 *            The project which should be build.
+	 */
+	public static void clearProblemMarkers(IProject project)
+	{
+		try
+		{
+			project.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+
+		} catch (CoreException e)
+		{
+			VdmCore.log("VdmCoreBuilder:clearProblemMarkers", e);
 		}
 
 	}

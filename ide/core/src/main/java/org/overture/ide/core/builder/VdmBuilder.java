@@ -21,7 +21,7 @@ public class VdmBuilder extends VdmCoreBuilder
 		}
 		try
 		{
-			final SafeBuilder builder = new SafeBuilder(getVdmProject(),this, monitor);
+			final SafeBuilder builder = new SafeBuilder(getVdmProject(),monitor);
 
 //			clearProblemMarkers();
 			builder.start();
@@ -53,7 +53,7 @@ public class VdmBuilder extends VdmCoreBuilder
 
 		if (getProject().getAdapter(IVdmProject.class) != null)
 		{
-			clearProblemMarkers();
+			SafeBuilder.clearProblemMarkers(getProject());
 
 			// IMPORTANT we do not have an incremental builder so a full parse/
 			// build is required, therefore remove any

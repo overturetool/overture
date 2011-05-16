@@ -127,25 +127,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 			}
 	}
 
-	/***
-	 * This method removed all problem markers and its sub-types from the project. It is called before an instance of
-	 * the AbstractBuilder is created
-	 * 
-	 * @param project
-	 *            The project which should be build.
-	 */
-	public void clearProblemMarkers()
-	{
-		try
-		{
-			getProject().deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-
-		} catch (CoreException e)
-		{
-			VdmCore.log("VdmCoreBuilder:clearProblemMarkers", e);
-		}
-
-	}
+	
 
 	/***
 	 * Validated that the project who invoked the builder is a supported VDM project
