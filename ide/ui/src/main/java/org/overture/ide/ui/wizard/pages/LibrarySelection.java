@@ -69,6 +69,6 @@ public class LibrarySelection extends Composite
 	}
 	public boolean isVdmUnitSelected()
 	{
-		return checkBoxVdmUnit.getSelection();
+		return checkBoxVdmUnit!=null && checkBoxVdmUnit.getSelection();
 	}
 }
