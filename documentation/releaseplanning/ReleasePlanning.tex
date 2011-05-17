@@ -132,13 +132,13 @@
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[LO]{\leftmark}
-\fancyhead[RE]{Release plan Overture/DESTECS}
+\fancyhead[RE]{Release plan for Overture}
 \fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}}
 \fancyfoot[C]{\thepage}
 
 \begin{document}
  
-\title{Release Planning for Overture and DESTECS}
+\title{Release Planning for Overture}
 \author{Peter Gorm Larsen\\
         %\and
         Kenneth Lausdahl\\
@@ -176,47 +176,47 @@
 \chapter{Introduction}
 
 This document is intended to provide an overview of the release
-planning for the open source project called Overture as well as the
-European research project DESTECS. Efforts will be made to ensure that
-stable releases of both the executables for Overture and DESTECS in a
-systematic fashion. It is recommended that official public releases of
-these executables are synchronised with each other. The planning
-presented here is aggressive and probably on the optimistic side but
-naturally this also depends upon the time the different stakeholders
-are able to deliver to the projects during 2010.
+planning for the open source project called Overture. Efforts will be
+made to ensure that stable releases of the executables for
+Overture in a systematic fashion. It is recommended that
+official public releases of these executables are synchronised with
+each other. The planning presented here is aggressive and probably on
+the optimistic side but naturally this also depends upon the time the
+different stakeholders are able to deliver to the projects during
+2010.
 
 Official major public releases will be made yearly and will be made
-available through the Overture and DESTECS official websites
-respectively.  One month before the major release, a Release Candidate
-will be made for the purpose of testing and locate bugs. In the
-meantime, snapshot builds will be provided via SourceForge. In this
-period only bug fixes needed for the features planning in that release
-will be checked in. Minor official public releases will be released
-approximately once every three months and for each of these two weeks
-of release candidate periods will be used. A full release procedure
-will be followed for each of the public releases such that the users
-can expect all public releases to be stable.  In between these public
-releases ad-hoc releases will be produced on a needs basis but it is
-suggested that at least a weekly build that contains the latest source
-code will be put in system. For such ad-hoc releases the
-documentation cannot be guaranteed to be updated and it will not be
-tested at the same level of detail as for official releases so no
-guarantee is provided for all ad-hoc releases. All the builds will
-consist of stand alone branded version for the Windows, Mac and Linux
-platforms.
+available through the Overture official websites.  One month before
+the major release, a Release Candidate will be made for the purpose of
+testing and locate bugs. In the meantime, snapshot builds will be
+provided via SourceForge. In this period only bug fixes needed for the
+features planning in that release will be checked in. Minor official
+public releases will be released approximately once every three months
+and for each of these two weeks of release candidate periods will be
+used. A full release procedure will be followed for each of the public
+releases such that the users can expect all public releases to be
+stable.  In between these public releases ad-hoc releases will be
+produced on a needs basis but it is suggested that at least a weekly
+build that contains the latest source code will be put in system. For
+such ad-hoc releases the documentation cannot be guaranteed to be
+updated and it will not be tested at the same level of detail as for
+official releases so no guarantee is provided for all ad-hoc
+releases. All the builds will consist of stand alone branded version
+for the Windows, Mac and Linux platforms.
 
 This document start off with providing an overview of the release
 numbering scheme in Section~\ref{sec:numbering}. This is followed by
 Section~\ref{sec:Overture2010} which provides the current plan for the
-releases of Overture executables during 2010. Finally
-Section~\ref{sec:DESTECS2010} provides the current plan for the
-additional features released in the DESTECS executable releases in
-2010. Later on the document will be updated with plans for subsequent
-years. 
+releases of Overture executables during 2010. 
+%Finally
+%Section~\ref{sec:DESTECS2010} provides the current plan for the
+%additional features released in the DESTECS executable releases in
+%2010. Later on the document will be updated with plans for subsequent
+%years. 
 
 \chapter{Release Build Numbering}\label{sec:numbering}
 
-The Overture and DESTECS project deliverables (both executables as
+The Overture project deliverables (both executables as
 well as associated documentation) build numbering will be made with
 the following format:
 \begin{center}
@@ -224,10 +224,12 @@ the following format:
 \end{center}
 
 The \textbf{X} indicates which is the major public release version of
-the tool. During the DESTECS project there will be three major
-releases of the DESTECS Tool (month 12, 24 and 36, i.e.\ December
-2010, 2011 and 2012 respectively). It is suggested that these builds
-are numbered 1.0.0, 2.0.0 and 3.0.0 respectively.
+the tool. 
+%During the DESTECS project there will be three major
+%releases of the DESTECS Tool (month 12, 24 and 36, i.e.\ December
+%2010, 2011 and 2012 respectively). 
+%It is suggested that these builds
+%are numbered 1.0.0, 2.0.0 and 3.0.0 respectively.
 
 An increase of \textbf{Y} indicates a minor public release including
 significant update since last version, for example, a new feature
@@ -274,11 +276,11 @@ the Overture executable.
 
 
 \item \markFuture{ Documentation of the Overture IDE in order to enable more
-  developers to make updates for the IDE and for the DESTECS
+  developers to make updates for the IDE 
   development to follow similar principles. This shall document the
   implementation of the editor, the parser, the builder, the outline
-  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
-	DESTECS:
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}}%, \ref{analyseDLTKDebug}}
+	%DESTECS:
 	\begin{enumerate}
 		\item Parser 
 		\item Builder; How to insure TC is completed
@@ -290,7 +292,7 @@ the Overture executable.
 \item \markFuture{ provide goto definition and completion; \developer{AugustoRibeiro}}
 
 \item \markFuture{Complete the new ASTGen utility and add all sources for it to
-  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}}
+  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None}}
 
 \item \markFuture{Change to the AST generated from the new version of ASTGen all
   over the Overture sources (i.e.\ this will affect the development of
@@ -299,7 +301,7 @@ the Overture executable.
 \item \markDone{A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
   place for the run-time error reported for the test case
-  selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}, \textbf{Dependencies: \ref{launchconfig}} }
+  selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}}%, \textbf{Dependencies: \ref{launchconfig}} }
 
 \item  \markDone{Include all definitions in the Outline view for all VDM
   dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}}  Missing RT System and Threads}
@@ -322,8 +324,6 @@ the Overture executable.
 
 \item \markDone{ Investigate the possibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}} Will do.
 
-\item \markFuture{ First stable bi-directional connection from Overture/VDM++
-  to/from JML. \developer{CarlosVilhena}}
 \item \markDone{New version of the interpreter for scheduling of multiple
   threads in VDM++ and VDM-RT prepared for co-simulkation also able to
   break after a fixed amount of time. \developer{KennethLausdahl,++}}
@@ -331,11 +331,15 @@ the Overture executable.
   executable so the user can search on-line in these sources
   (including a VDM-10 language manual). \developer{PeterGormLarsen,++}}
 \end{enumerate}
+\end{description}
 
-\item[Release 1.0.0 (December 2010):] The aim for this release is to
+\chapter{Contents of Overture releases in 2011}\label{sec:Overture2011}
+
+\begin{description}
+\item[Release 1.0.0 (February 2011):] The aim for this release was to
   include the following features:   
 \begin{enumerate}
-\item \markFuture{ Quick fix incorporated in the editor view of the IDE for all VDM
+\item \markFuture{Quick fix incorporated in the editor view of the IDE for all VDM
   dialects. \developer{??}}
 \item \markFuture{Goto definition in the edit view of the IDE across all files in
   a project for all VDM dialects. \developer{??}}
@@ -362,6 +366,7 @@ the Overture executable.
 \end{enumerate}
 \end{description}
 
+\chapter{Contents of Overture releases in 2012}\label{sec:Overture2012}
 
 
 \begin{description}
@@ -391,10 +396,9 @@ the Overture executable.
 
 
 \begin{description}
-\item[Release 1.0.1 (2011):] The aim for this release is to
+\item[Release 1.0.1 (May 2011):] The aim for this release is to
   include the following features:  
 \begin{enumerate}
-
 \item Launching specs with errors eventually fails in IDE: ID:3206614
 \item Launch dialog type checking is wrong ID: 3197397
 \item PO red cross icon should change. ID: 3193289
@@ -403,7 +407,7 @@ the Overture executable.
 \end{description}
 
 \begin{description}
-\item[Release 1.1.0 (2011):] The aim for this release is to
+\item[Release 1.1.0 (November 2011):] The aim for this release is to
   include the following features:  
 \begin{enumerate}
 
@@ -423,11 +427,11 @@ the Overture executable.
 \begin{enumerate}
 
 \item Documentation of the Overture IDE in order to enable more
-  developers to make updates for the IDE and for the DESTECS
+  developers to make updates for the IDE 
   development to follow similar principles. This shall document the
   implementation of the editor, the parser, the builder, the outline
-  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
-	DESTECS:
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}}%, \ref{analyseDLTKDebug}}
+	%DESTECS:
 	\begin{enumerate}
 		\item Parser 
 		\item Builder; How to insure TC is completed
@@ -439,9 +443,11 @@ the Overture executable.
 
 \item Change to the AST generated from the new version of ASTGen all
   over the Overture sources (i.e.\ this will affect the development of
-  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
-  \item First stable bi-directional connection from Overture/VDM++
-  to/from JML. \developer{CarlosVilhena}
+  UML
+%, JML 
+  and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
+%  \item First stable bi-directional connection from Overture/VDM++
+%  to/from JML. \developer{CarlosVilhena}
   
   \item Quick fix incorporated in the editor view of the IDE for all VDM
   dialects. \developer{??}
