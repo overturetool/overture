@@ -75,8 +75,8 @@
 \lstset{language=VDM++}
 \lstset{alsolanguage=Java}
 % The command below enables you to escape into normal LaTeX mode inside your 
-% VDM chunks by starting with a `?Å¥ character and ending with a `Å£Å¥
-%\lstset{escapeinside=?Å£}
+% VDM chunks by starting with a `?ÔøΩÔøΩ character and ending with a `ÔøΩÔøΩÔøΩÔøΩ
+%\lstset{escapeinside=?ÔøΩÔøΩ}
 
 \newcommand{\kw}[1]{{\tt #1}}
 
@@ -122,6 +122,8 @@
 \end{center}}
 
 \newcommand{\markDone}[1]{{\color{Gray}#1}}
+\newcommand{\markFuture}[1]{{\color{OliveGreen}\textit{#1}}}
+\newcommand{\markDeleted}[1]{{\color{Maroon}\textit{#1}}}
 \newcommand{\developer}[1]{{\scriptsize \fbox{#1}}}
 
 
@@ -136,16 +138,16 @@
 
 \begin{document}
  
-\title{2010 Release Planning for Overture and DESTECS}
+\title{Release Planning for Overture and DESTECS}
 \author{Peter Gorm Larsen\\
         %\and
         Kenneth Lausdahl\\
         Augusto Ribeiro}
 
-\date{February 2010}
+\date{May 2011}
 
 %\frontmatter
-\reportno{TR-2010-04}     
+\reportno{TR-2011-05}     
 
 \pagenumbering{roman}
 \maketitle
@@ -267,11 +269,11 @@ the Overture executable.
   include the following features:  
 \begin{enumerate}
 
-\item Follow standard way to use pictures in Eclipse and document this
-  for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}
+\item \markDone{Follow standard way to use pictures in Eclipse and document this
+  for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}}
 
 
-\item Documentation of the Overture IDE in order to enable more
+\item \markFuture{ Documentation of the Overture IDE in order to enable more
   developers to make updates for the IDE and for the DESTECS
   development to follow similar principles. This shall document the
   implementation of the editor, the parser, the builder, the outline
@@ -282,30 +284,30 @@ the Overture executable.
 		\item Builder; How to insure TC is completed
 		\item How to add debug with a new interpreter and corresponding launch configuration.
 		\end{enumerate}
+}
+\item \markFuture{Provide help (F1) inside Eclipse}, \markDone{as a first go we just add pdf files to the welcome page}; \developer{AugustoRibeiro}
 
-\item Provide help (F1) inside Eclipse, as a first go we just add pdf files to the welcome page; \developer{AugustoRibeiro}
+\item \markFuture{ provide goto definition and completion; \developer{AugustoRibeiro}}
 
-\item provide goto definition and completion; \developer{AugustoRibeiro}
+\item \markFuture{Complete the new ASTGen utility and add all sources for it to
+  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}}
 
-\item Complete the new ASTGen utility and add all sources for it to
-  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}
-
-\item Change to the AST generated from the new version of ASTGen all
+\item \markFuture{Change to the AST generated from the new version of ASTGen all
   over the Overture sources (i.e.\ this will affect the development of
-  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
+  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}}
 
-\item A button for moving a test case from the combinatorial testing
+\item \markDone{A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
   place for the run-time error reported for the test case
-  selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}, \textbf{Dependencies: \ref{launchconfig}} 
+  selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}, \textbf{Dependencies: \ref{launchconfig}} }
 
 \item  \markDone{Include all definitions in the Outline view for all VDM
-  dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}}}  Missing RT System and Threads
+  dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}}  Missing RT System and Threads}
 
 
-\item Make use of {\bf\ttfamily measure}'s inside the the interpreter
+\item \markDone{ Make use of {\bf\ttfamily measure}'s inside the the interpreter
   so it would be checked in the same way as invariants, pre and post
-  conditions. \developer{NickBattle}
+  conditions. \developer{NickBattle}}
 \end{enumerate}
 
 
@@ -320,43 +322,43 @@ the Overture executable.
 
 \item \markDone{ Investigate the possibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}} Will do.
 
-\item First stable bi-directional connection from Overture/VDM++
-  to/from JML. \developer{CarlosVilhena}
-\item New version of the interpreter for scheduling of multiple
+\item \markFuture{ First stable bi-directional connection from Overture/VDM++
+  to/from JML. \developer{CarlosVilhena}}
+\item \markDone{New version of the interpreter for scheduling of multiple
   threads in VDM++ and VDM-RT prepared for co-simulkation also able to
-  break after a fixed amount of time. \developer{KennethLausdahl,++}
-\item User documentation in pdf available as a part of the Overture
+  break after a fixed amount of time. \developer{KennethLausdahl,++}}
+\item \markDone{User documentation in pdf available as a part of the Overture
   executable so the user can search on-line in these sources
-  (including a VDM-10 language manual). \developer{PeterGormLarsen,++}
+  (including a VDM-10 language manual). \developer{PeterGormLarsen,++}}
 \end{enumerate}
 
 \item[Release 1.0.0 (December 2010):] The aim for this release is to
   include the following features:   
 \begin{enumerate}
-\item Quick fix incorporated in the editor view of the IDE for all VDM
-  dialects. \developer{??}
-\item Goto definition in the edit view of the IDE across all files in
-  a project for all VDM dialects. \developer{??}
-\item First version of refactoring support for all VDM
-  dialects. \developer{??}
-\item Possibly first release of proof support feature for proving a
-  subset of the POs generated. \developer{NickBattle}
-\item Support in the Proof Obligation Explorer view for new icons
+\item \markFuture{ Quick fix incorporated in the editor view of the IDE for all VDM
+  dialects. \developer{??}}
+\item \markFuture{Goto definition in the edit view of the IDE across all files in
+  a project for all VDM dialects. \developer{??}}
+\item \markFuture{First version of refactoring support for all VDM
+  dialects. \developer{??}}
+\item \markDone{Possibly first release of proof support feature for proving a
+  subset of the POs generated. \developer{NickBattle}}
+\item \markDone{Support in the Proof Obligation Explorer view for new icons
   indicating whether the user have proved a PO or have manually
   inspected it and approved it. This also means that the icon with the
   red cross shall only be used for those where proof have failed and a
   less intemidating iconj shall be used for the POs that one have not
-  yet dealt with. \developer{??}
-\item Include VDMDoc (inspired by JavaDoc) for all VDM dialects. \developer{??}
-\item Stable version of the UML mapper enabling proper round-trip
+  yet dealt with. \developer{??}}
+\item \markFuture{ Include VDMDoc (inspired by JavaDoc) for all VDM dialects. \developer{??}}
+\item \markFuture{Stable version of the UML mapper enabling proper round-trip
   engineering between VDM and UML class diagrams and enable generation
   of traces from a subset of UML sequence
-  diagrams. \developer{KennethLausdahl,PeterGormLarsen} 
-\item First release of code generator from VDM to a programming
-  language. \developer{MarcelVerhoef}
-\item Increased \LaTeX\ support in the editor such that parts outside
+  diagrams. \developer{KennethLausdahl,PeterGormLarsen} }
+\item \markFuture{First release of code generator from VDM to a programming
+  language. \developer{MarcelVerhoef}}
+\item \markFuture{Increased \LaTeX\ support in the editor such that parts outside
   the \texttt{vdm\_al} environments are highlighed as TeXClipse would
-  do it. \developer{??}
+  do it. \developer{??}}
 \end{enumerate}
 \end{description}
 
@@ -366,17 +368,98 @@ the Overture executable.
 \item[Release X (?):] The aim for this release is to
   include the following features:  
 \begin{enumerate}
-\item VDM Tools
+\item \markDone{ VDM Tools
 	\begin{enumerate}
 		\item Start VDM Tools command line prompt from a Overture project. Where the prompt is a console inside Eclipse.
 		
 		\item Create a number of buttons for VDM Tools code generation through the VDM Tools comman dline interface, with output in the console.
 		
-		\item Make a VDM Tools corba DBGPReader to enable a VDM Tools debugger to connect to the Overture IDE and use the basic debug facility.
+		\item \markDeleted{ Make a VDM Tools corba DBGPReader to enable a VDM Tools debugger to connect to the Overture IDE and use the basic debug facility.}
 		\item Preferences for VDM Tools
 	\end{enumerate}
+      }
 
-\item Make Java code generator
+
+
+
+\item \markDone{Ant scripts to build a product}
+\item \markDone{Test program which can parse/type/interpret all examples and compare results with expected.}
+\item \markDone{Extract VDM is not specified classes from Java implementation of external interpreter modules.}
+
+\end{enumerate}
+\end{description}
+
+
+\begin{description}
+\item[Release 1.0.1 (2011):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+
+\item Launching specs with errors eventually fails in IDE: ID:3206614
+\item Launch dialog type checking is wrong ID: 3197397
+\item PO red cross icon should change. ID: 3193289
+\item XMI is not created inside the generated folder ID: 3193287
+\end{enumerate}
+\end{description}
+
+\begin{description}
+\item[Release 1.1.0 (2011):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+
+\item Complete the new ASTGen utility and add all sources for it to
+  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}
+  
+   \item Include VDMDoc (inspired by JavaDoc) for all VDM dialects. / Allowing multi line comments in VDM to be represented in the AST \developer{??}
+   \item Make VDM ast pretty printer for math syntax
+   
+\end{enumerate}
+\end{description}
+
+
+\begin{description}
+\item[Release Future (2011/2012):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+
+\item Documentation of the Overture IDE in order to enable more
+  developers to make updates for the IDE and for the DESTECS
+  development to follow similar principles. This shall document the
+  implementation of the editor, the parser, the builder, the outline
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}, \ref{analyseDLTKDebug}}
+	DESTECS:
+	\begin{enumerate}
+		\item Parser 
+		\item Builder; How to insure TC is completed
+		\item How to add debug with a new interpreter and corresponding launch configuration.
+		\end{enumerate}
+\item Provide help (F1) inside Eclipse
+\item Provide goto definition and completion; \developer{AugustoRibeiro}
+
+
+\item Change to the AST generated from the new version of ASTGen all
+  over the Overture sources (i.e.\ this will affect the development of
+  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
+  \item First stable bi-directional connection from Overture/VDM++
+  to/from JML. \developer{CarlosVilhena}
+  
+  \item Quick fix incorporated in the editor view of the IDE for all VDM
+  dialects. \developer{??}
+\item Goto definition in the edit view of the IDE across all files in
+  a project for all VDM dialects. \developer{??}
+\item First version of refactoring support for all VDM
+  dialects. \developer{??}
+ 
+\item Stable version of the UML mapper enabling proper round-trip
+  engineering between VDM and UML class diagrams and enable generation
+  of traces from a subset of UML sequence
+  diagrams. \developer{KennethLausdahl,PeterGormLarsen} 
+\item First release of code generator from VDM to a programming
+  language. \developer{MarcelVerhoef}
+\item Increased \LaTeX\ support in the editor such that parts outside
+  the \texttt{vdm\_al} environments are highlighed as TeXClipse would
+  do it. \developer{??}
+  \item Make Java code generator
 
 \item Make C code generator
 
@@ -384,71 +467,19 @@ the Overture executable.
 
 \item Make VDM Doc parser
 
-\item Make VDM ast pretty printer for math syntax
+
 
 \item Make VDM source format
-
-
-
-\item Ant scripts to build a product
-\item Tests of the plug-ins
-\item Test program which can parse/type/interpret all examples and compare results with expected.
-\item Extract VDM is not specified classes from Java implementation of external interpreter modules.
+  
+  \item Tests of the plug-ins
 \item Make a VDM model of Multi-core CPU distribution/scheduling.
 
 \end{enumerate}
 \end{description}
 
-\chapter{Contents of DESTECS releases in 2010}\label{sec:DESTECS2010}
 
-This section presents a plan for the contents of the 2010 releases of
-the DESTECS executable.
 
-\begin{description}
-\item[Release 0.1.0 (March 2010):] The aim for this release is to
-  include the following features:  
-\begin{enumerate}
-\item Develop development environment for DESTECS enabling different
-  plug-ins to be added and documenting this. \developer{KennethLausdahl}
-\item Stand-alone DESTECS executable with the DESTECS icon
-  \developer{KennethLausdahl} 
-\item Develop wizard for creating a new DESTECS project. This shall
-  create 3 different directories in the project for ``Discrete
-  Event'', ``Continuous Time'' and ``Fault Modelling''
-  respectively. \developer{??} 
-\item Ability to invoke the 20-sim editor for 20-sim models in a
-  DESTECS project. \developer{ControlLabs}
-\end{enumerate}
 
-\item[Release 0.2.0 (June 2010):] The aim for this release is to
-  include the following features:  
-\begin{enumerate}
-\item DESTECS tool (Core + GUI) 
-\item Define communication interfaces \developer{IHA+CLP}
-\item 20-sim Implementation Interface \developer{CLP}
-\item Overture communicating with the interface stubs \developer{IHA}
-\item 20-sim communicating with the interface stubs \developer{CLP}
-\end{enumerate}
-
-\item[Release 0.3.0 (September 2010):] The aim for this release is to
-  include the following features:   
-\begin{enumerate}
-\item Overture implement interface \developer{IHA}
-\item 20-sim implement interface \developer{CLP}
-\item Watertank example working \developer{IHA+CLP}
-\end{enumerate}
-
-\item[Release 1.0.0 (December 2010):] The aim for this release is to
-  include the following features:   
-\begin{enumerate}
-\item Higher complexity models working \developer{IHA+CLP}
-\item Testing and bughunting \developer{IHA+CLP}
-\item Co-simulation between Overture VDM models and 20-sim models is
-  fully enabled. \developer{KennethLausdahl,++}
-\item Synchronising the log viewer from Overture with the plot of
-  variables from 20-sim in an Eclipse setting. \developer{ControlLabs,++}
-\end{enumerate}
-\end{description}
 
 
 \bibliographystyle{newalpha}
@@ -459,6 +490,6 @@ the DESTECS executable.
 
 
 
-\input{OvertureStatus}
-\input{Released}
+%\input{OvertureStatus}
+%\input{Released}
 \end{document}
