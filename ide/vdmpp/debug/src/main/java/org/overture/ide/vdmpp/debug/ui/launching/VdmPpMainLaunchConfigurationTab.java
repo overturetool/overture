@@ -15,6 +15,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
+import org.overturetool.vdmj.types.Type;
 
 public class VdmPpMainLaunchConfigurationTab extends
 		AbstractVdmMainLaunchConfigurationTab
@@ -56,7 +57,8 @@ public class VdmPpMainLaunchConfigurationTab extends
 				}
 			}
 			ClassList classes = model.getClassList();
-			ClassInterpreter ci = new ClassInterpreter(classes);
+		
+			ClassInterpreter ci = new ClassInterpreter(classes);			
 			if (!expression.contains("new"))
 			{
 				if (expression.contains("`"))
@@ -71,8 +73,9 @@ public class VdmPpMainLaunchConfigurationTab extends
 			// else if(expression.length()>4)
 			// {
 			// ci.setDefaultName(expression.trim().substring(3, expression.indexOf("(")).trim());
-			// }
-			ci.typeCheck(expression);
+			// }			
+			ci.setDefaultName(null);
+			Type t = ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)
 		{

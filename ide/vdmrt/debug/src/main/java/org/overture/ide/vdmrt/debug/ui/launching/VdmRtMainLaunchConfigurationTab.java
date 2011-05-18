@@ -75,6 +75,7 @@ public class VdmRtMainLaunchConfigurationTab extends
 				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); 																										// check
 			}
 			
+			ci.setDefaultName(null);
 			ci.typeCheck(expression);
 			return true;
 		} catch (NotAllowedException e)
