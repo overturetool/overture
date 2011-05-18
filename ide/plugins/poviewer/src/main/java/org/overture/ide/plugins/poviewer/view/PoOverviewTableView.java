@@ -138,7 +138,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 		{
 			ProofObligation data = (ProofObligation) obj;
 
-			String imgPath = "icons/cview16/unproved.png";
+			String imgPath = "icons/cview16/caution.png";
 
 			if (data.status == POStatus.PROVED)
 				imgPath = "icons/cview16/proved.png";
