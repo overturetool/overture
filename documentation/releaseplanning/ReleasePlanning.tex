@@ -275,29 +275,6 @@ the Overture executable.
   for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}}
 
 
-\item \markFuture{ Documentation of the Overture IDE in order to enable more
-  developers to make updates for the IDE 
-  development to follow similar principles. This shall document the
-  implementation of the editor, the parser, the builder, the outline
-  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}}%, \ref{analyseDLTKDebug}}
-	%DESTECS:
-	\begin{enumerate}
-		\item Parser 
-		\item Builder; How to insure TC is completed
-		\item How to add debug with a new interpreter and corresponding launch configuration.
-		\end{enumerate}
-}
-\item \markFuture{Provide help (F1) inside Eclipse}, \markDone{as a first go we just add pdf files to the welcome page}; \developer{AugustoRibeiro}
-
-\item \markFuture{ provide goto definition and completion; \developer{AugustoRibeiro}}
-
-\item \markFuture{Complete the new ASTGen utility and add all sources for it to
-  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None}}
-
-\item \markFuture{Change to the AST generated from the new version of ASTGen all
-  over the Overture sources (i.e.\ this will affect the development of
-  UML, JML and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}}
-
 \item \markDone{A button for moving a test case from the combinatorial testing
   perspective into the debugger such that it will stop at the right
   place for the run-time error reported for the test case
@@ -322,7 +299,7 @@ the Overture executable.
   include the following features:   
 \begin{enumerate}
 
-\item \markDone{ Investigate the possibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}} Will do.
+\item \markDone{ Investigate the possibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}}.
 
 \item \markDone{New version of the interpreter for scheduling of multiple
   threads in VDM++ and VDM-RT prepared for co-simulkation also able to
@@ -339,12 +316,6 @@ the Overture executable.
 \item[Release 1.0.0 (February 2011):] The aim for this release was to
   include the following features:   
 \begin{enumerate}
-\item \markFuture{Quick fix incorporated in the editor view of the IDE for all VDM
-  dialects. \developer{??}}
-\item \markFuture{Goto definition in the edit view of the IDE across all files in
-  a project for all VDM dialects. \developer{??}}
-\item \markFuture{First version of refactoring support for all VDM
-  dialects. \developer{??}}
 \item \markDone{Possibly first release of proof support feature for proving a
   subset of the POs generated. \developer{NickBattle}}
 \item \markDone{Support in the Proof Obligation Explorer view for new icons
@@ -353,16 +324,6 @@ the Overture executable.
   red cross shall only be used for those where proof have failed and a
   less intemidating iconj shall be used for the POs that one have not
   yet dealt with. \developer{??}}
-\item \markFuture{ Include VDMDoc (inspired by JavaDoc) for all VDM dialects. \developer{??}}
-\item \markFuture{Stable version of the UML mapper enabling proper round-trip
-  engineering between VDM and UML class diagrams and enable generation
-  of traces from a subset of UML sequence
-  diagrams. \developer{KennethLausdahl,PeterGormLarsen} }
-\item \markFuture{First release of code generator from VDM to a programming
-  language. \developer{MarcelVerhoef}}
-\item \markFuture{Increased \LaTeX\ support in the editor such that parts outside
-  the \texttt{vdm\_al} environments are highlighed as TeXClipse would
-  do it. \developer{??}}
 \end{enumerate}
 \end{description}
 
