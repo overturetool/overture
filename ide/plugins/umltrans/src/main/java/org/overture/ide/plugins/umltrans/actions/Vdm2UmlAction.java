@@ -99,7 +99,15 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 				filesPathes.add(file.getSystemFile());
 			}
 
-			File outFile = new File(selectedProject.getLocation().toFile(),
+			File genDir = new File(selectedProject.getLocation().toFile(),"generated");
+			
+			if(!genDir.exists())
+			{
+				genDir.mkdir();
+			}
+			
+			
+			File outFile = new File(genDir,
 					selectedProject.getName() + ".xmi");
 			if (outFile != null)
 			{
