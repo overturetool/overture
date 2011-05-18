@@ -60,21 +60,22 @@ public class VdmRtMainLaunchConfigurationTab extends
 			// if (expression.contains("new"))
 			// ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); //
 			// needed for static fn/op check
-			if (!expression.contains("new"))
-			{
-				if (expression.contains("`"))
-				{
-					ci.setDefaultName(expression.substring(0, expression.indexOf("`")));
-				} else if (expression.contains("("))
-				{
-					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
-																							// check
-				}
-			} else if (expression.contains("new"))
-			{
-				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); 																										// check
-			}
+//			if (!expression.contains("new"))
+//			{
+//				if (expression.contains("`"))
+//				{
+//					ci.setDefaultName(expression.substring(0, expression.indexOf("`")));
+//				} else if (expression.contains("("))
+//				{
+//					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
+//																							// check
+//				}
+//			} else if (expression.contains("new"))
+//			{
+//				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); 																										// check
+//			}
 			
+			//Fix to the lauchConfig type check expression 
 			ci.setDefaultName(null);
 			ci.typeCheck(expression);
 			return true;

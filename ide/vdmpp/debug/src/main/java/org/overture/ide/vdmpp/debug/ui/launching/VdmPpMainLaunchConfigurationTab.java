@@ -59,21 +59,19 @@ public class VdmPpMainLaunchConfigurationTab extends
 			ClassList classes = model.getClassList();
 		
 			ClassInterpreter ci = new ClassInterpreter(classes);			
-			if (!expression.contains("new"))
-			{
-				if (expression.contains("`"))
-				{
-					ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR)));
-				} else if (expression.contains("("))
-				{
-					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
-																							// check
-				}
-			}
-			// else if(expression.length()>4)
-			// {
-			// ci.setDefaultName(expression.trim().substring(3, expression.indexOf("(")).trim());
-			// }			
+//			if (!expression.contains("new"))
+//			{
+//				if (expression.contains("`"))
+//				{
+//					ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR)));
+//				} else if (expression.contains("("))
+//				{
+//					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
+//																							// check
+//				}
+//			}
+			
+			//Fix to the lauchConfig type check expression 
 			ci.setDefaultName(null);
 			Type t = ci.typeCheck(expression);
 			return true;
