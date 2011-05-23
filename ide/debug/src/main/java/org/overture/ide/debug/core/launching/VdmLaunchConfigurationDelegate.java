@@ -23,6 +23,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.ClasspathUtils;
@@ -37,8 +38,8 @@ import org.overturetool.vdmj.util.Base64;
  * @see http://www.eclipse.org/articles/Article-Debugger/how-to.html
  * @author ari
  */
-public class VdmLaunchConfigurationDelegate implements
-		ILaunchConfigurationDelegate
+public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
+		
 {
 
 	static int sessionId = 0;;
