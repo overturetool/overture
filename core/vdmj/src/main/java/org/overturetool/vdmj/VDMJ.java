@@ -33,6 +33,9 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.overturetool.vdmj.config.Properties;
+import org.overturetool.vdmj.debug.DBGPErrorCode;
+import org.overturetool.vdmj.debug.DBGPReason;
+import org.overturetool.vdmj.debug.DBGPStatus;
 import org.overturetool.vdmj.debug.RemoteControl;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
 import org.overturetool.vdmj.lex.Dialect;
@@ -318,7 +321,7 @@ abstract public class VDMJ
         					{
         						try
 								{
-									RemoteControl remote = remoteClass.newInstance();
+									final RemoteControl remote = remoteClass.newInstance();
 									Interpreter i = controller.getInterpreter();
 
 									if (defaultName != null)
@@ -330,7 +333,27 @@ abstract public class VDMJ
 
 									try
 									{
-										remote.run(new RemoteInterpreter(i, null));
+										//remote.run(new RemoteInterpreter(i, null));
+										final RemoteInterpreter remoteInterpreter = new RemoteInterpreter(i, null);
+										Thread remoteThread = new Thread(new Runnable()
+										{
+											
+											public void run()
+											{
+												try
+												{
+													remote.run(remoteInterpreter);
+												} catch (Exception e)
+												{
+													println(e.getMessage());
+//													status = ExitStatus.EXIT_ERRORS;
+												}
+											}
+										});
+										remoteThread.setName("RemoteControl runner");
+										remoteThread.setDaemon(true);
+										remoteThread.start();
+										remoteInterpreter.processRemoteCalls();
 										status = ExitStatus.EXIT_OK;
 									}
 									catch (Exception e)

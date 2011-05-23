@@ -68,14 +68,14 @@ public class IO implements Serializable
 
 	public static Value fwriteval(Value fval, Value tval, Value dval)
 	{
-		String filename = stringOf(fval);
+		File file = getFile(fval);
 		String text = tval.toString();// stringOf(tval);
 		String fdir = dval.toString();	// <start>|<append>
 
 		try
 		{
 			FileOutputStream fos =
-				new FileOutputStream(filename, fdir.equals("<append>"));
+				new FileOutputStream(file, fdir.equals("<append>"));
 
 			fos.write(text.getBytes(Console.charset));
 			fos.close();
@@ -131,7 +131,7 @@ public class IO implements Serializable
 	}
 	
 	/**
-	 * Gets the absolute path the the input file based on the file name parsed and the working dir of the IDE or the
+	 * Gets the absolute path the file based on the filename parsed and the working dir of the IDE or the
 	 * execution dir of VDMJ
 	 * 
 	 * @param fval file name
@@ -171,8 +171,9 @@ public class IO implements Serializable
 
 			try
 			{
+				File file = getFile(fval);
 				FileOutputStream fos =
-					new FileOutputStream(filename, fdir.equals("<append>"));
+					new FileOutputStream(file, fdir.equals("<append>"));
 
 				fos.write(text.getBytes(Console.charset));
 				fos.close();

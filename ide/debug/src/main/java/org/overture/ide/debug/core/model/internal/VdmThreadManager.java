@@ -151,7 +151,7 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 			}
 		}
 		if (DEBUG) {
-			System.out.println("Received (stdout): " + data); //$NON-NLS-1$
+//			System.out.println("Received (stdout): " + data); //$NON-NLS-1$
 		}
 	}
 

@@ -48,7 +48,7 @@ public class CSV extends IO implements Serializable
 	 */
 	public static Value fwriteval(Value fval, Value tval, Value dval)
 	{
-		String filename = stringOf(fval);
+		File file = getFile(fval);
 		String fdir = dval.toString();	// <start>|<append>
 		StringBuffer text = new StringBuffer();
 		if(tval instanceof SeqValue)
@@ -70,7 +70,7 @@ public class CSV extends IO implements Serializable
 		try
 		{
 			FileOutputStream fos =
-				new FileOutputStream(filename, fdir.equals("<append>"));
+				new FileOutputStream(file, fdir.equals("<append>"));
 
 			fos.write(text.toString().getBytes(Console.charset));
 			fos.close();
@@ -112,6 +112,7 @@ public class CSV extends IO implements Serializable
 			} catch (Exception e)
 			{
 				success = false;
+				lastError = e.getMessage();
 				// OK
 			}
 
@@ -183,6 +184,11 @@ public class CSV extends IO implements Serializable
 		String line = null;
 		int lineIndex = 0;
 		List<String> cells = new Vector<String>();
+		
+		if(index<1)
+		{
+			throw new IOException("CSV line index before first entry");
+		}
 
 		try
 		{
@@ -204,6 +210,12 @@ public class CSV extends IO implements Serializable
 		{
 			bufRdr.close();
 		}
+		
+		if(cells.isEmpty())
+		{
+			throw new IOException("CSV no data read. Empty line.");
+		}
+		
 		return cells;
 	}
 	

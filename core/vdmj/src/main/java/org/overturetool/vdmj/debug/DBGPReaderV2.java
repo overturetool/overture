@@ -80,6 +80,7 @@ import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
+import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -1172,6 +1173,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				remoteThread.setName("RemoteControl runner");
 				remoteThread.setDaemon(true);
 				remoteThread.start();
+//				InitThread initThread = new InitThread(Thread.currentThread());
+//				BasicSchedulableThread.add(initThread);
 				remoteInterpreter.processRemoteCalls();
 //				remoteControl.run(new RemoteInterpreter(interpreter, this));
 				stdout("Remote control completed");

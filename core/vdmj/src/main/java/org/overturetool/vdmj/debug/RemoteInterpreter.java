@@ -37,12 +37,14 @@ import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.SourceFile;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.values.Value;
 
 public class RemoteInterpreter
 {
 	private final Interpreter interpreter;
 	private final DBGPReader dbgp;
+	private boolean running = false;
 
 	public RemoteInterpreter(Interpreter interpreter, DBGPReader dbgp)
 	{
@@ -62,6 +64,11 @@ public class RemoteInterpreter
 
 	public String execute(String line) throws Exception
 	{
+		if(isFinished)
+		{
+			throw new Exception("RemoteInterpreter has finished.");
+		}
+		
 		executionQueueRequest.add(new Call(CallType.Execute,line));
 		Object result = executionQueueResult.take();
 		if(result instanceof Exception)
@@ -76,6 +83,11 @@ public class RemoteInterpreter
 
 	public Value valueExecute(String line) throws Exception
 	{
+		if(isFinished)
+		{
+			throw new Exception("RemoteInterpreter has finished.");
+		}
+		
 		executionQueueRequest.add(new Call(CallType.Execute,line));
 		Object result = executionQueueResult.take();
 		if(result instanceof Exception)
@@ -95,6 +107,11 @@ public class RemoteInterpreter
 
 	public void create(String var, String exp) throws Exception
 	{
+		if(isFinished)
+		{
+			throw new Exception("RemoteInterpreter has finished.");
+		}
+		
 		if (interpreter instanceof ClassInterpreter)
 		{
 			executionQueueRequest.add(new Call(CallType.Create,var,exp));
@@ -201,8 +218,19 @@ public class RemoteInterpreter
 	}
 	
 
-	public void processRemoteCalls()
+	public void processRemoteCalls() throws Exception
 	{
+		if(running)
+		{
+			return;
+		}
+		
+		if(BasicSchedulableThread.getThread(Thread.currentThread())== null)
+		{
+			throw new Exception("Process Remote Calls can only be called from a valid VDM thread");
+		}
+		
+		running = true;
 		while(!isFinished)
 		{
 			try
