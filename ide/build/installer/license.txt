@@ -1,0 +1,4 @@
+Overture Tool is distributed in the hope that it will be useful, but without any warrenty.
+
+- Overture Tool is distributed under GPL 2.0 license.
+
