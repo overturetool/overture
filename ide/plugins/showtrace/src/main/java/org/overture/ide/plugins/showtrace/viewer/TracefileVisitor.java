@@ -745,7 +745,7 @@ public class TracefileVisitor extends OmlVisitor
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
                 if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-                    drawCpuTimeMarker(pgti, new Long(120L), ov_uypos, event_utime);//TODO size of the time label
+                    drawCpuTimeMarker(pgti, new Long(150L), ov_uypos, event_utime);//TODO size of the time label
                 Vector sq_19 = null;
                 sq_19 = cpu.getHistory(event_utime);
                 IOmlTraceEvent event = null;
