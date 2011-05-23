@@ -16,7 +16,7 @@
 !define PRODUCT_REG_KEY "Overture"
 !define PRODUCT_NAME "Overture"
 
-!define OVERTUREIDE "DestecsIde-"
+!define OVERTUREIDE "OvertureIde-"
 !define OVERTUREFOLDER "${OVERTUREIDE}${PRODUCT_VERSION}I"
 ;!define DESTECSZIP "${DESTECSFOLDER}-win32.win32.x86.zip"
 !define OVERTUREZIP "overture.zip"
@@ -189,7 +189,7 @@ FunctionEnd
 ; Install Overture Tool
 Function OvertureInstall
   ; Print to detail log 
-  DetailPrint "Installing DESTECS Tool"
+  DetailPrint "Installing Overture"
   ; Unzip the file
   ZipDLL::extractall "${OVERTUREZIP}" "$TEMP\overture"
   ExecWait 'xcopy /S /Y $\"$TEMP\overture$\" $\"$INSTDIR$\"'
