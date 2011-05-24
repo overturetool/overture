@@ -400,7 +400,7 @@ public class ApplyExpression extends Expression
 			}
 		}
 
-		if (type.isFunction())
+		if (!type.isUnknown() && type.isFunction())
 		{
 			FunctionType f = type.getFunction();
 			String prename = root.getPreName();
