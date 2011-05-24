@@ -167,6 +167,7 @@ January & 2010 &         & 0.1.5 \\ \hline
 March   & 2010 &         & 0.2   \\ \hline
 May     & 2010 & 1       & 0.2   \\ \hline
 February& 2011 & 2       & 1.0.0   \\ \hline
+June    & 2011 & 3       & 1.0.1   \\ \hline
 \end{tabular}
 
 \tableofcontents
@@ -591,6 +592,46 @@ extension (according to the chosen dialect, \texttt{.vdmsl},
 created in the directory. This file will use the appropriate
 module/class template to get you started. Naturally, keywords 
 that are not required can be deleted from the template.
+
+\section{Adding Standard Libraries}
+
+In addition to adding new empty files it is possible to add existing
+standard libraries. This can be done by right-clicking on the project
+where the library is to be added and then selecting \emph{New} $\rightarrow$
+    \emph{Add VDM Library}. That will make a new window as shown in
+    Figure~\ref{fig:NewLibraries}. Here the different standard
+    libraries provide different standard functionalities. In the body
+    of many of these functions/operations are declared as
+    ``{\textbf{\ttfamily is not yet specified}}'' but the actual
+    functionality for all of these are hard-coded into Overture so the
+    user can get access to this when the respective standard libraries
+    are included. This can be
+    summarised as:
+
+\begin{description}
+\item[IO:] This library provides functionality for input and output
+  from/to files and the standard console. 
+\item[Math:] This library provides functionality for standard
+  mathematical functions such as sine and cosine.
+\item[Util:] This library provides functionality for converting
+  different kind of VDM values mainly to and from files and strings.
+\item[CSV:] This library is an extension of the IO library which
+  provides additional functionality for saving and reading VDM values
+  to/from comma seperate format used by excel spreadsheets. 
+\item[VDM-Unit:] This library provides functionality for unit testing
+  of VDM models similar to the well-known JUnit library.
+\end{description}
+
+\begin{figure}[!htb]
+	\begin{center}
+	  \includegraphics[scale=0.8]{figures/NewLibraries}
+	  \caption[Adding New Libraries]{Adding New Libraries}
+	  \label{fig:NewLibraries}
+	\end{center}
+\end{figure}
+
+These libraries are available for all VDM dialects also when a flat
+VDM-SL specification is used.
 
 \section{Setting Project Options}\label{subsec:options}
 
@@ -1244,7 +1285,8 @@ to have existing legacy code that you may not
 wish to spend time modelling in VDM, but would like to make use of
 from a VDM model. Overture has a feature to link a VDM
 model with external Java libraries contained in a standard \texttt{jar} file
-\footnote{In fact the \texttt{IO}, \texttt{MATH} and \texttt{VDMUtil} libraries are implemented as such
+\footnote{In fact the \texttt{IO}, \texttt{MATH}, \texttt{Util},
+  \texttt{CSV} and \texttt{VDM-Unit} libraries are implemented as such
 external jar files.}.
 Using this feature it is possible 
 to call functionality provided by jar files from a VDM model. This functionality
