@@ -52,17 +52,35 @@ public class InheritedDefinition extends Definition
 		setAccessSpecifier(def.accessSpecifier);
 		setClassDefinition(def.classDefinition);
 	}
+	
+	private void checkSuperDefinition()
+	{
+		// This is used to get over the case where an inherited definition
+		// is a ValueDefinition that has since been replaced with a new
+		// LocalDefinition. It would be better to somehow list the
+		// inherited definitions that refer to a LocalDefinition and update
+		// them...
+		
+		if (superdef instanceof UntypedDefinition)
+		{
+			if (classDefinition != null)
+			{
+				superdef = classDefinition.findName(superdef.name, nameScope);
+			}
+		}
+	}
 
 	@Override
 	public Type getType()
 	{
+		checkSuperDefinition();
 		return superdef.getType();
 	}
 
 	@Override
 	public String toString()
 	{
-		return accessSpecifier.ifSet(" ") + getVariableNames() + ":" + getType();
+		return accessSpecifier.ifSet(" ") + superdef.toString(); //getVariableNames() + ":" + getType();
 	}
 
 	@Override
@@ -94,14 +112,7 @@ public class InheritedDefinition extends Definition
 	public LexNameList getVariableNames()
 	{
 		LexNameList names = new LexNameList();
-
-		if (superdef instanceof UntypedDefinition)
-		{
-			if (classDefinition != null)
-			{
-				superdef = classDefinition.findName(superdef.name, nameScope);
-			}
-		}
+		checkSuperDefinition();
 
 		for (LexNameToken vn: superdef.getVariableNames())
 		{
