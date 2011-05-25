@@ -716,7 +716,8 @@ there are no syntax errors, a full type check of the \emph{entire} VDM model is
 performed.
 Problems and warnings will be listed in the Problems view as well as
 being highlighted directly in the Editor view where the problems have been
-identified.
+identified.
+
 
 \section{Using Templates}\label{sec:templates}
 
@@ -728,7 +729,8 @@ function template as shown in Figure~\ref{fig:functionTemplate}. The IDE include
 several templates: cases, quantifications, functions (explicit/implicit),
 operations (explicit/implicit) and many more. The use of templates makes it much
 easier for users to create models, even if they are not deeply familiar
-with the VDM syntax.
+with the VDM syntax.
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=4in]{figures/FunctionTemplate}
@@ -780,8 +782,8 @@ dialog if you do not do this, such as "Error 3063: Too few arguments in ..."}.
 
 However, there are other launch mode possibilities here as
 well.\index{launch configuration mode} The
-``Remote Control'' launch mode is advanced but it is explained in mode
-detail in Section~\ref{sec:javalibs}. The ``Console'' launch mode
+``Remote Control'' launch mode is advanced but it is explained in more
+detail in Section~\ref{sec:Remote}. The ``Console'' launch mode
 enables you to get a special debug console where you can enter
 multiple entry points (one after another) instead of deciding upon the
 single entry point at launch time\footnote{Those familiar with
@@ -807,7 +809,8 @@ can be used for either purpose, though by default those created through the
 \emph{Run} toolbar icon. Similarly, a launch configuration created under the
 \emph{Debug Configurations} dialog will appear under the favourites of the
 debug toolbar icon. You can control which icons display the launch configuration
-in the \emph{Common} tab on the dialog. This is standard Eclipse behaviour.
+in the \emph{Common} tab on the dialog. This is standard Eclipse behaviour.
+
 
 \begin{figure}[htp]
 \begin{center}
@@ -969,7 +972,8 @@ breakpoints can only be set on lines that contain executable code.}.
 The debug perspective also has a \emph{Breakpoints} view that lists all current
 breakpoints, allowing you to navigate easily to the location of a given breakpoint,
 disable it or delete it. The view is located in
-the same panel as the Variables view in the upper right hand corner.
+the same panel as the Variables view in the upper right hand corner.
+
 
 \subsection{Conditional Breakpoints}
 \label{sec:userguide:breakpoints}
@@ -980,7 +984,8 @@ which has to be true for the debugger to stop at the given breakpoint.
 As well as using an expression, a conditional breakpoint may specify a
 hit count and whether the breakpoint should stop when the hit count is
 equal to, greater than, or a multiple of the given value, or a general
-expression using the variables in scope at the breakpoint.
+expression using the variables in scope at the breakpoint.
+
 A normal breakpoint can be made conditional by right clicking on the breakpoint
 mark in the Editor view\footnote{Note this is not possible from the Breakpoint view}
 and selecting \emph{Breakpoint Properties}. This opens a dialog like the one shown in
@@ -1036,7 +1041,8 @@ plain VDM models mixed with textual documentation.  The VDM model parts must be
 enclosed within ``\verb+\begin{vdm_al}+'' and ``\verb+\end{vdm_al}+''. The
 text-parts outside these specification blocks are ignored by the VDM parser,
 though note that each source file must start with a recognizable \LaTeX\
-construct: a \verb+\documentclass, \section, \subsection+ or a \LaTeX\ comment.
+construct: a \verb+\documentclass, \section, \subsection+ or a \LaTeX\ comment.
+
 
 \chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
@@ -1056,7 +1062,8 @@ model if it is error-free, and so it may have particular context information
 associated with it. POs can be considered as
 constraints that will guarantee the internal integrity of a VDM model if they
 are all met. In the long term, it will be possible to prove these constraints
-with a proof component in Overture, but this is not yet available.
+with a proof component in Overture, but this is not yet available.
+
 POs can be divided into different categories\index{proof obligation!categories}
 depending upon their nature. The full list of categories can be found in
 Appendix~\ref{app:POcategories} along with a short description for
@@ -1278,7 +1285,13 @@ Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 \end{center}
 \end{figure}
 
-\chapter{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
+\chapter{Expanding VDM Models Scope and Functionality by Linking Java and VDM} \label{sec:linkToJava}
+
+In some cases the impact and value of VDM models can be immensely improved by expanding them with functionality which is not delivered directly in VDM. Examples of such functionality could be; (a) to associate the model with existing legacy systems, for which no model or specification exists, (b) to add a graphical representation of the model, or (c) to enable network communication, for instance in a client-server setup.  In order to achieve this functionality Overture enables the possibility of linking a VDM model directly with the underlying Java-based VDMJ interpreter, and reversely linking a Java implementation with a VDM model. 
+
+Overture supplies to different methods for linking between VDM and Java; (1) the functionality which allow VDM to interact with an external Java library is described in Section~\ref{sec:javalibs} and (2) the method used to allow a Java implementation to control a VDM model is explained in Section~\ref{sec:remote}. An example of how these methods can be used to create a GUI for a model is supplied in Section~\ref{sec:gui}.  
+
+\section{Defining Your Own Java Libraries to be used from Overture}\label{sec:javalibs}
 
 VDM models are not appropriate for describing everything. It is common
 to have existing legacy code that you may not
@@ -1300,13 +1313,12 @@ the same name as the VDM
 module/class name with underscores (``\_'') replaced with package naming
 dots (``.''). For example, the VDM class \texttt{remote\_lib\_sensor} becomes
 the class \texttt{remote.lib.sensor} in Java. The delegate lookup is only done once and
-only when an \texttt{is not yet specified} statement or expression is first
+only when an  \texttt{is not yet specified} statement or expression is first
 reached in a class or module. The jar with the external library must be placed in
 the VDM project in a subfolder named \texttt{lib} where it will be put in the
 class-path of the interpreter when it is executed.
 
-\section{External Library Example}
-
+\subsection{External Library Example}
 In this example, a remote sensor will be defined in VDM which can read a
 value from a real sensor. The VDM model interface of the sensor can be
 seen in listing~\ref{remoteSensorVdm} and the Java class
@@ -1344,7 +1356,7 @@ public class sensor
 }
 \end{lstlisting}
 
-\chapter{Enabling Remote Control of the Overture
+\section{Enabling Remote Control of the Overture
   Interpreter}\label{sec:remote}
 
 In some situations, it may be valuable to be able to establish a
@@ -1365,7 +1377,7 @@ in a project subfolder called \texttt{lib}. The fully
 qualified name of the RemoteControl class must then be specified in the
 launch configuration in the \textit{Remote Control} box.
 
-\section{Example of a Remote Control Class}
+\subsection{Example of a Remote Control Class}
 
 In this example, we have a VDM class \texttt{A} which defines an operation
 that just returns its argument. As
@@ -1397,6 +1409,170 @@ public class RemoteController implements RemoteControl
 	}
 }
 \end{lstlisting}
+
+\section{Establishing a GUI for a VDM model: An Example of Using Linking}\label{sec:gui}
+
+This example describes how the linking functionality can be used to create a graphical representation of a VDM model. A GUI has been developed in Java Swing which will be used to both control and present the scenario which is modelled in the VDM model. In this example both the external library method as well as the Remote Controller method is utilized. This is done to enable the VDM model to display data directly to the Java GUI, and to allow the VDM model to be controlled from the Java GUI. 
+
+The example is based on a VDM++ model of the smokers concurrency problem~\cite{Patil71}. Consider a scenario where three chain smokers and an agent, who does not smoke, are sitting at a table, infinitely going through the following lifecycle:
+\begin{enumerate}
+\item Each chain smoker continuously seeks to roll a cigarette and then smoke it,
+\item a smoker needs three ingredients: tobacco, paper and matches,
+\item each smoker has an infinite supply of only one of the ingredients. 
+One of the smokers has tobacco, the second has paper, and the third has
+matches,
+\item the agent has an infinite supply of all three materials and randomly places two different ingredients on the table at a time,
+\item the smoker who has the remaining ingredient then empties the table, rolls a cigarette and smokes it. The smokers never accumulate the ingredients and never grab an ingredient from the table which they are already in possession of. 
+\item when the table becomes empty, the agent puts another two random ingredients on the table, and the
+cycle repeats.
+\end{enumerate}
+
+In this example a GUI has been created for the model in which the user of the GUI is considered to be the agent providing the smoker with ingredients, as illustrated in Figure~\ref{fig:gui:SmokersGUI}.  By clicking one of three buttons one of the respective ingredients will be placed on the table. Once there are the necessary ingredients on the table, one smoker will grab them and start smoking. \\
+
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=\textwidth]{figures/smokersGUI}
+  \caption[labelInTOC]{GUI of Smokers Example}
+  \label{fig:gui:SmokersGUI}
+\end{center}
+\end{figure}
+
+To allow the GUI to be a true graphical representation of the model, the model itself will be able to update the GUI whenever it needs to by using the external library method. If only the remote controller was used, the model would be unable to update the GUI and it would rely on the Java implementation to request data on any state changes in the model. \\
+
+A VDM model interface has been created which allows the model to interact with the Java GUI, the interface is shown in Listing~\ref{SmokersVDMInterface}. The hierarchical naming pattern of Java packages, which  normally are separated by periods (.), are denoted with underscores in the VDM model. Meaning that with this interface the external Java library must contain a class \textit{Graphics} which is organized in the \textit{gui} package.  
+
+\begin{lstlisting}[language=VDM++,label=SmokersVDMInterface,caption=VDM interface for external Java library,captionpos=b]
+class gui_Graphics
+operations
+
+    public init : () ==> ()
+	init() == is not yet specified;
+
+	public tobaccoAdded : () ==> ()
+	tobaccoAdded() == is not yet specified; 
+
+	public paperAdded : () ==> ()
+	paperAdded() == is not yet specified; 
+
+	public matchAdded : () ==> ()
+	matchAdded() == is not yet specified; 
+
+	public tableCleared : () ==> ()
+	tableCleared() == is not yet specified;  
+
+	public nowSmoking : nat ==> ()
+	nowSmoking(smokerNumber) == is not yet specified;
+end gui_Graphics
+\end{lstlisting}
+
+The Java class implementing the VDM interface is shown in Listing~\ref{SmokersVDMInterfaceJavaImpl}. This example will not go into detail with regards to actual GUI implementation, however it can be seen that it utilizes the MVC pattern and that the Java implementation of the VDM interface interacts with the graphical interface through the model object (this is the model in MVC pattern and not a representation of the VDM model).  
+
+It should be noted that the names of the package and class can be directly related to VDM interface. Furthermore the imports should be noted; firstly the class must be marked as Serializable, secondly multiple packages from the Overture interpreter are imported as well. These are needed for the conversion between VDM values and Java values, as it can be seen in the \textit{nowSmoking} method in Listing~\ref{SmokersVDMInterfaceJavaImpl}.
+
+Please be aware that it is extremely important that there are no unused imports in the Java implementation, as this will result in an error when the Java library is loaded by Overture. 
+
+\begin{lstlisting}[language=Java,label=SmokersVDMInterfaceJavaImpl,caption=Java implementation of the VDM interface for the external Java library,captionpos=b]
+package gui; 
+
+import java.io.Serializable;
+import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.VoidValue;
+
+public class Graphics implements Serializable {
+
+    Controller ctrl;
+    Model model;
+
+    public Value init() {
+    	ctrl = new Controller();  //init the Controller of the MVC pattern
+    	model = ctrl.getModel();
+        return new VoidValue();
+    }
+
+    public Value tobaccoAdded() {
+        model.tobaccoAdded();
+        return new VoidValue();
+    }
+    
+  public Value nowSmoking(Value smokeid) throws ValueException {
+	model.nowSmoking(smokeid.intValue(null)); //set smoker
+	ctrl.DisableButtons(); 			  //prevent new GUI input
+	model.finishedSmoking(); 		  //wait for smoker to finish
+	ctrl.EnableButtons(); 			  //enable GUI input
+    }
+! \ldots !
+}
+\end{lstlisting}
+
+In order to use VDM Types the Java implementation must have the VDMJ java library in its build path. The library can be found in Overture installation directory:
+
+ \textless  Overturedir\textgreater\textbackslash Plugins \textbackslash org.overture.ide.generated.vdmj:\_x.x\textbackslash lib, 
+
+which can then be added to the Java build path, Figure~ \ref{fig:gui:VDMJBuildPath}. \\
+
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=\textwidth]{figures/SmokersVDMJBuildPath}
+  \caption[labelInTOC]{Adding VDMJ library to the build path in Eclipse}
+  \label{fig:gui:VDMJBuildPath}
+\end{center}
+\end{figure}
+
+To enable the GUI to interact with the model the remote controller method is utilized, by implementing the \textit{RemoteControl} interface, as shown in Listing~\ref{SmokersRemoteControl}. The RemoteController interface also requires the VDMJ Java library to be included in the Java build path, as explained above. The RemoteControl interface supplies direct access to the VDM interpreter, that is passed to the \textit{SmokingControl} object which establishes the bridge between the GUI and the running VDM model. The \textit{SmokingControl} class is specific for this example, and its implementation could essentially be implemented directly in the  \textit{RemoteControl} realization. 
+
+It is important the \textit{run} method does not run out of scope before modelled scenario has finished, as this will terminate the execution of the model.  
+
+\begin{lstlisting}[language=Java,label=SmokersRemoteControl,caption=Java implementation of the RemoteControl interface, captionpos=b]
+public class SmokerRemote implements RemoteControl {
+
+  RemoteInterpreter interpreter;
+  @Override
+  public void run(RemoteInterpreter intrprtr) throws Exception {
+	
+    interpreter = intrprtr;
+    SmokingControl ctrl = new SmokingControl(interpreter);  
+    ctrl.init();
+   }
+}
+\end{lstlisting}
+
+
+The implementation of the \textit{SmokingControl} is shown in Listing~\ref{SmokersSmokingControl}. In the \textit{init} method it can be seen how VDM statements are executed as strings commands, the \textit{World} class is created and the \textit{Run} operation is invoked.  This is the basic way of interacting with a model through the remote control functionality. The \textit{AddPaper} method shows how the variables defined in the \textit{init} method can be used for invoking an operation. The \textit{AddPaper} method is called directly from the Button click action, as shown in Listing\ref{SmokersButtonClickAction}.
+
+\begin{lstlisting}[language=Java,label=SmokersSmokingControl,caption=Java implementation of the bridge between the GUI and the interpreter executing the VDM model, captionpos=b]
+public class SmokingControl {
+  
+  RemoteInterpreter interpreter;
+  public SmokingControl(RemoteInterpreter intrprtr) {
+    interpreter = intrprtr;
+    Controller.smoke = this;
+  }
+  	
+  public void init() {
+    execute("create w := new World()");
+    execute("w.Run()");
+  }
+
+ public void AddPaper() {
+    execute("w.agent.AddPaper()");
+    execute("w.Yield()");                  //Optimization for thread fairness  
+   }
+! \ldots !
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,label=SmokersButtonClickAction,caption=Java implementation of the Button click action invoking the remote intepreter, captionpos=b]
+addPaperButton.addActionListener(new ActionListener() {
+  public void actionPerformed(ActionEvent e) {	
+    smoke.AddPaper();
+  }
+});	
+\end{lstlisting}
+
+
+The last thing to note in Listing~\ref{SmokersSmokingControl} is the constructor which adds itself to a public static field in the \textit{Controller} class. This step is necessary to brigde the objects created by the Remote Control method with the objects created in connection with the external Java library method. 
+To understand why this construct is needed, some insight into the initialization steps is necessary. Firstly the entire VDM model, and thereby the \textit{Graphics} object, is created via the \textit{RemoteControl} interface by \textit{SmokingControl}. Now recall from Listing~\ref{SmokersVDMInterfaceJavaImpl} that the \textit{Controller} class, of the MVC pattern, is created when the \textit{init} method of the \textit{Graphics} class is invoked from the VDM model, meaning that the actual graphical Java components, are also created when \textit{init} is called. Now in order to connect a click on the GUI buttons with the commands that can be executed in the model, the \textit{Controller} needs to have access to the interpreter, i.e. the \textit{SmokingControl} object. Meanwhile the Graphics object is created deep inside the VDM model and the complex \textit{SmokingControl} object cannot be passed to it through the interpreter execute method. Instead the bridge between the \textit{Controller} and the \textit{SmokingControl} object is kept in Java, and the insider knowledge that the Controller object will eventually be created from inside the model, is used  to justify the static reference. This is a special case when combining the Remote Control method with the external Java library method. 
 
 \chapter{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
