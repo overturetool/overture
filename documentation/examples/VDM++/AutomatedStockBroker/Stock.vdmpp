@@ -1,0 +1,92 @@
+class Stock is subclass of GLOBAL
+ types
+  
+  public RateOfChange = <positive> | <negative> | <constant>;  
+  
+ instance variables
+  name : StockIdentifier;
+  valueHistory : seq of StockValue;
+  currentRateOfChange : [RateOfChange]; 
+ operations
+  
+  public Stock: StockIdentifier * StockValue ==> Stock
+  Stock(n,startValue) == (
+   valueHistory := [];
+   valueHistory := [startValue] ^ valueHistory; 
+   name := n;
+   currentRateOfChange := nil;  
+  ); 
+
+  public UpdateStock:() ==> ()
+  UpdateStock() == (
+   
+   currentRateOfChange :=
+   cases currentRateOfChange:
+    nil -> InitialRateOfChange(hd valueHistory),
+    others -> NextRateOfChange(currentRateOfChange, hd valueHistory)
+   end;   
+
+   cases currentRateOfChange:
+    <positive> -> valueHistory := [hd valueHistory + 1] ^ valueHistory,  
+    <negative> -> valueHistory := [hd valueHistory - 1] ^ valueHistory,
+    <constant> -> valueHistory := [hd valueHistory] ^ valueHistory
+   end;
+  )
+  pre len valueHistory >= 1
+  post (currentRateOfChange = <positive> => valueHistory(1) > valueHistory(2))
+   and (currentRateOfChange = <negative> => valueHistory(1) < valueHistory(2))
+   and (currentRateOfChange = <constant> => valueHistory(1) = valueHistory(2))
+   and hd valueHistory >= 0;
+
+  public GetName: () ==> StockIdentifier 
+  GetName() == 
+   return name; 
+
+  public GetCurrentValue : () ==> StockValue 
+  GetCurrentValue() == 
+   return hd valueHistory; 
+
+  public GetValueHistory : () ==> seq of StockValue 
+  GetValueHistory() == (
+   return valueHistory; 
+  );
+  
+ functions
+  
+  InitialRateOfChange : (StockValue) -> RateOfChange
+  InitialRateOfChange(sv) == 
+   let r = MATH`rand(21) mod 3 
+   in
+    if(sv > 0)
+    then
+     cases r:
+      0 -> <positive>,
+      1 -> <negative>,
+      2 -> <constant>
+     end
+    else 
+     cases r:
+      0 -> <positive>,
+      1 -> <positive>,
+      2 -> <constant>
+     end;
+
+  NextRateOfChange : RateOfChange * StockValue -> RateOfChange
+  NextRateOfChange(roc,sv) == 
+   let r = MATH`rand(10), 
+    other = MakelistFromSet({x | x : RateOfChange & x <> roc and (x=<negative> => sv > 0) })   
+   in
+    if r >= 0 and r <= 7 and (roc = <negative> => sv > 0)  
+    then roc
+    else  
+     other((MATH`rand(20) mod len other) + 1);
+
+  MakelistFromSet : set of RateOfChange -> seq of RateOfChange
+  MakelistFromSet(roc) ==
+   if( card roc > 0) then 
+    let r in set roc 
+     in 
+     [r] ^ MakelistFromSet(roc \ {r})
+   else []
+
+end Stock

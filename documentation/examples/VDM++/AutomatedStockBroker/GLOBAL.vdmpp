@@ -1,0 +1,70 @@
+class GLOBAL
+types
+public String = seq of char;
+
+public EventType = <UpperLimit> | <LowerLimit> | <Peak> | <Valley> | 
+<EntersNoActionRegion> | <LeavesNoActionRegion>;
+
+public StockState = <PotentialBuy> | <Bought>;
+
+public Event :: Type : EventType
+TimeStamp : nat
+Value : nat; 
+
+public Region :: UpperValue : StockValue
+  LowerValue : StockValue
+inv mk_Region(p1,p2) == p1 >= p2;
+
+public StockValue = nat;
+public StockIdentifier = token;
+
+public ActionType = <Buy> | <Sell> ;
+
+public ActionTrigger :: Trigger : seq of EventType
+Action : ActionType;
+
+public StockRecord :: Name : StockIdentifier 
+Triggers : map StockState to ActionTrigger 
+NoActionReg : Region
+Cost : StockValue
+State : StockState
+
+inv mk_StockRecord(p1,p2,p3,p4,p5) == p2(<PotentialBuy>).Action = <Buy> 
+and p2(<Bought>).Action = <Sell>;
+
+public ActionEvent :: Type : ActionType
+  Time : nat
+  StockName : StockIdentifier
+  Value : StockValue;
+ 
+values
+public static testValues : map StockIdentifier to seq of Event = 
+{mk_token("test") |-> [
+mk_Event(<LeavesNoActionRegion>,6,5),
+mk_Event(<LowerLimit>,5,8),
+mk_Event(<UpperLimit>,4,12),
+mk_Event(<EntersNoActionRegion>,3,11),
+mk_Event(<LeavesNoActionRegion>,2,13),
+mk_Event(<UpperLimit>,1,12),  
+mk_Event(<EntersNoActionRegion>,0,10)
+],
+mk_token("test12") |-> [
+mk_Event(<LeavesNoActionRegion>,6,5),
+mk_Event(<LowerLimit>,5,8),
+mk_Event(<UpperLimit>,4,12),
+mk_Event(<EntersNoActionRegion>,3,11),
+mk_Event(<LeavesNoActionRegion>,2,16),
+mk_Event(<UpperLimit>,1,12),  
+mk_Event(<EntersNoActionRegion>,0,10)
+],
+mk_token("test2") |-> [
+mk_Event(<LeavesNoActionRegion>,6,5),
+mk_Event(<UpperLimit>,5,8),
+mk_Event(<LowerLimit>,4,8),
+mk_Event(<EntersNoActionRegion>,3,11),
+mk_Event(<LeavesNoActionRegion>,2,6),
+mk_Event(<LowerLimit>,1,8),  
+mk_Event(<EntersNoActionRegion>,0,10)
+]};
+
+end GLOBAL
