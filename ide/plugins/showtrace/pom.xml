@@ -23,13 +23,44 @@
           
           </excludePackages>
           <excludeClasses>
-
+			<param>Color</param>
+			<param>ColorConstants</param>
+			<param>Dimension</param>
+			<param>Ellipse</param>
+			<param>Figure</param>
+			<param>Font</param>
+			<param>Image</param>
+			<param>ImageFigure</param>
+			<param>IMarker</param>
+			<param>Label</param>
+			<param>Point</param>
+			<param>PolyLine</param>
+			<param>PositionConstants</param>
+			<param>RoundedRectangle</param>
+			<param>Shape</param>
+			
+			<param>Line</param>
+			<param>NormalLabel</param>
+			<param>RectangleLabelFigure</param>
+			<param>RotatedLabel</param>
+			<param>GenericTabItem</param>
+			<!-- There is a bug in the generated code -->
+			<param>TracefileVisitor</param>
           </excludeClasses>
           <importPackages>
             <param>org.overturetool.traceviewer.ast.itf</param>
             <param>org.overturetool.traceviewer.ast.imp</param>
             <param>org.overturetool.traceviewer.visitor</param>
+            <param>org.eclipse.draw2d</param>
+            <param>org.eclipse.draw2d.geometry</param>
+            <param>org.eclipse.swt.graphics</param>
+            
           </importPackages>
+          <singleimport>
+          	<param>java.util.Vector</param>
+          	<param>org.overturetool.traceviewer.visitor.OmlVisitor</param>
+          	
+          </singleimport>
         </configuration>
       </plugin>
 	</plugins>
