@@ -82,11 +82,11 @@ class StockWatcher is subclass of GLOBAL
                   or eventHistory(e + 1).Type = <Peak>);
 
   UpdateAction : nat ==> ()
-  UpdateAction(time) == 
+  UpdateAction(tim) == 
    let actionTrigger = stockRecord.Triggers(stockRecord.State)
     in 
-    if IsActionTriggeredAtTime(time,actionTrigger,eventHistory) and 
-       not IsInRegion(GetStockValue(time), stockRecord.NoActionReg) 
+    if IsActionTriggeredAtTime(tim,actionTrigger,eventHistory) and 
+       not IsInRegion(GetStockValue(tim), stockRecord.NoActionReg) 
     then currentlyTriggeredAction := actionTrigger.Action
     else currentlyTriggeredAction := nil;
 
