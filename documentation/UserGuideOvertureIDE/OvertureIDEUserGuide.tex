@@ -1570,9 +1570,49 @@ addPaperButton.addActionListener(new ActionListener() {
 });	
 \end{lstlisting}
 
-
 The last thing to note in Listing~\ref{SmokersSmokingControl} is the constructor which adds itself to a public static field in the \textit{Controller} class. This step is necessary to brigde the objects created by the Remote Control method with the objects created in connection with the external Java library method. 
-To understand why this construct is needed, some insight into the initialization steps is necessary. Firstly the entire VDM model, and thereby the \textit{Graphics} object, is created via the \textit{RemoteControl} interface by \textit{SmokingControl}. Now recall from Listing~\ref{SmokersVDMInterfaceJavaImpl} that the \textit{Controller} class, of the MVC pattern, is created when the \textit{init} method of the \textit{Graphics} class is invoked from the VDM model, meaning that the actual graphical Java components, are also created when \textit{init} is called. Now in order to connect a click on the GUI buttons with the commands that can be executed in the model, the \textit{Controller} needs to have access to the interpreter, i.e. the \textit{SmokingControl} object. Meanwhile the Graphics object is created deep inside the VDM model and the complex \textit{SmokingControl} object cannot be passed to it through the interpreter execute method. Instead the bridge between the \textit{Controller} and the \textit{SmokingControl} object is kept in Java, and the insider knowledge that the Controller object will eventually be created from inside the model, is used  to justify the static reference. This is a special case when combining the Remote Control method with the external Java library method. 
+To understand why this construct is needed, some insight into the initialization steps is necessary. Firstly the entire VDM model, and thereby the \textit{Graphics} object, is created via the \textit{RemoteControl} interface by \textit{SmokingControl}. Now recall from Listing~\ref{SmokersVDMInterfaceJavaImpl} that the \textit{Controller} class, of the MVC pattern, is created when the \textit{init} method of the \textit{Graphics} class is invoked from the VDM model, meaning that the actual graphical Java components, are also created when \textit{init} is called. Now in order to connect a click on the GUI buttons with the commands that can be executed in the model, the \textit{Controller} needs to have access to the interpreter, i.e. the \textit{SmokingControl} object. Meanwhile the Graphics object is created deep inside the VDM model and the complex \textit{SmokingControl} object cannot be passed to it through the interpreter execute method. Instead the bridge between the \textit{Controller} and the \textit{SmokingControl} object is kept in Java, and the insider knowledge that the Controller object will eventually be created from inside the model, is used  to justify the static reference. This is a special case when combining the Remote Control method with the external Java library method. \\
+
+Once the Java program has been implemented, it must be exported to a Jar file and placed in the lib directory in the Overture/VDM projects directory, in order for Overture to find it.
+In Eclipse a Jar file can be created through the Export function, as illustrated on Figures~\ref{fig:gui:EclipseExport} and \ref{fig:gui:JarExport}. 
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[width=3in]{figures/SmokersExport}
+  \caption[labelInTOC]{Exporting in Eclipse}
+  \label{fig:gui:EclipseExport}
+\end{center}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[width=3in]{figures/SmokersJarExport}
+  \caption[labelInTOC]{Exporting to a Jar in Eclipse}
+  \label{fig:gui:JarExport}
+\end{center}
+\end{figure}
+
+Note that it can be very beneficial to check ``Save the description of this JAR …'', illustrated on Figure~\ref{fig:gui:SaveExport}, as this saves the export configuration and makes it a lot faster to redeploy the JAR file to VDM project during development.  \\
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[width=3in]{figures/SmokersSaveExport}
+  \caption[labelInTOC]{Saving the description of the export for future use}
+  \label{fig:gui:SaveExport}
+\end{center}
+\end{figure}
+
+Before running the model in Overture the debug configuration needs to be changed to using the Remote Control. ``The Launch Mode'' must be change to ``Remote Control'', and the fully qualified name of the class implementing the remote control interface must be supplied. The debug configuration for the current example is supplied in Figure~\ref{fig:gui:DebugConfiguration}. \\
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[width=3.5in]{figures/SmokersDebugConfig}
+  \caption[labelInTOC]{Changing the Overture debug configuration into using the remote controller}
+  \label{fig:gui:DebugConfiguration}
+\end{center}
+\end{figure}
+
+
 
 \chapter{A Command-Line Interface to VDMJ}\label{sec:commandline}
 
