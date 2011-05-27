@@ -41,6 +41,7 @@ abstract public class SchedulingPolicy implements Serializable
 	abstract public boolean hasActive();
 	abstract public boolean hasPriorities();
 	abstract public String getStatus();
+	abstract public long timeToNextAlarm();
 
 	public static SchedulingPolicy factory(String type)
 	{

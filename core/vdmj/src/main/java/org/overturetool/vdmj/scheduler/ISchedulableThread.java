@@ -29,7 +29,6 @@ import org.overturetool.vdmj.values.ObjectValue;
 
 public interface ISchedulableThread
 {
-
 	public abstract boolean equals(Object other);
 
 	public abstract int hashCode();
@@ -49,6 +48,8 @@ public interface ISchedulableThread
 	public abstract void waiting(Context ctxt, LexLocation location);
 
 	public abstract void locking(Context ctxt, LexLocation location);
+
+	public abstract void alarming(long expected);
 
 	public abstract void runslice(long slice);
 
@@ -74,6 +75,10 @@ public interface ISchedulableThread
 
 	public abstract long getDurationEnd();
 
+	public abstract long getAlarmWakeTime();
+
+	public abstract void clearAlarm();
+
 	public abstract void inOuterTimestep(boolean b);
 
 	public abstract boolean inOuterTimestep();
@@ -81,15 +86,14 @@ public interface ISchedulableThread
 	public abstract CPUResource getCPUResource();
 
 	public abstract long getId();
-	
-	public abstract String getName();
-	
-	public abstract void setName(String name);
-	
-	public abstract boolean isAlive();
-	
-	void setSignal(Signal sig);
-	
-	public abstract Thread getThread();
 
+	public abstract String getName();
+
+	public abstract void setName(String name);
+
+	public abstract boolean isAlive();
+
+	void setSignal(Signal sig);
+
+	public abstract Thread getThread();
 }

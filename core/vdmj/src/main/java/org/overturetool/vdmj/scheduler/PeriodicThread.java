@@ -29,7 +29,6 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
@@ -54,8 +53,6 @@ public class PeriodicThread extends SchedulablePoolThread
 
 	private final boolean first;
 	private final static Random PRNG = new Random();
-
-	private boolean running = false;
 
 	public PeriodicThread(
 		ObjectValue self, OperationValue operation,
@@ -84,6 +81,31 @@ public class PeriodicThread extends SchedulablePoolThread
 	}
 
 	@Override
+	public void start()
+	{
+		super.start();
+
+		// Here we put the thread into ALARM state (rather than RUNNABLE) and
+		// set the time at which we want to be runnable to the expected start,
+		// which may have an offset.
+
+		long wakeUpTime = expected;
+
+		if (first)
+		{
+			if (offset > 0 || jitter > 0)
+			{
+    			long noise = (jitter == 0) ? 0 :
+    				Math.abs(PRNG.nextLong() % (jitter + 1));
+
+    			wakeUpTime = offset + noise;
+			}
+		}
+
+		alarming(wakeUpTime);
+	}
+
+	@Override
 	protected void body()
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
@@ -100,25 +122,9 @@ public class PeriodicThread extends SchedulablePoolThread
 			ctxt.setThreadState(null, object.getCPU());
 		}
 
-		if (first)
-		{
-			if (offset > 0 || jitter > 0)
-			{
-    			long noise = (jitter == 0) ? 0 :
-    				Math.abs(PRNG.nextLong() % (jitter + 1));
-    			waitUntil(offset + noise, ctxt, operation.name.location);
-			}
-		}
-		else
-		{
-			waitUntil(expected, ctxt, operation.name.location);
-		}
-
 		new PeriodicThread(
 			getObject(), operation, period, jitter, delay, 0,
 			nextTime()).start();
-
-		running = true;
 
 		if (Settings.usingDBGP)
 		{
@@ -128,9 +134,7 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
 			runCmd(ctxt);
 		}
-
 	}
-
 
 	private void runDBGP(Context ctxt)
 	{
@@ -148,8 +152,6 @@ public class PeriodicThread extends SchedulablePoolThread
     			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
     			throw new ContextException(e, operation.name.location);
     		}
-
-
 		}
 		catch (ContextException e)
 		{
@@ -217,27 +219,6 @@ public class PeriodicThread extends SchedulablePoolThread
 		return next;
 	}
 
-	private void waitUntil(long until, Context ctxt, LexLocation location)
-	{
-		long time = SystemClock.getWallTime();
-
-		if (Settings.dialect == Dialect.VDM_RT)
-		{
-    		if (until > time)
-    		{
-    			duration(until - time, ctxt, location);
-    		}
-		}
-		else
-		{
-    		while (until > time)
-    		{
-    			reschedule(ctxt, location);
-    			time = SystemClock.getWallTime();
-    		}
-		}
-	}
-
 	public static void reset()
 	{
 		PRNG.setSeed(123);
@@ -246,9 +227,8 @@ public class PeriodicThread extends SchedulablePoolThread
 	@Override
 	public boolean isActive()
 	{
-		// The initial timestep does not count as a deadlock wait
+		// The initial ALARM wait does not count as a deadlock wait
 
-		return (running && state == RunState.TIMESTEP) ||
-				state == RunState.WAITING;
+		return state == RunState.TIMESTEP || state == RunState.WAITING;
 	}
 }

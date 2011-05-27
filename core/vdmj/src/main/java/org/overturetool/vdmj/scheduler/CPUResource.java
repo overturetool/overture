@@ -136,24 +136,30 @@ public class CPUResource extends Resource
 	@Override
 	public long getMinimumTimestep()
 	{
-		if (swappedIn == null)
-		{
-			return Long.MAX_VALUE;		// We're not in timestep
-		}
-		else
+		long minTime = policy.timeToNextAlarm();
+
+		if (swappedIn != null)
 		{
 			switch (swappedIn.getRunState())
 			{
 				case TIMESTEP:
-					return swappedIn.getTimestep();
+					long step = swappedIn.getTimestep();
+
+					if (step < minTime)
+					{
+						minTime = step;
+					}
+					break;
 
 				case RUNNING:
-					return -1;			// Can't timestep
+					return -1;		// Can't timestep
 
 				default:
-					return Long.MAX_VALUE;
+					break;
 			}
 		}
+
+		return minTime;
 	}
 
 	public void createThread(ISchedulableThread th)

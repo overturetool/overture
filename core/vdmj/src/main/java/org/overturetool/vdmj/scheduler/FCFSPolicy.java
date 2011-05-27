@@ -139,22 +139,70 @@ public class FCFSPolicy extends SchedulingPolicy
 	}
 
 	@Override
+	public long timeToNextAlarm()
+	{
+		long minTime = Long.MAX_VALUE;
+		long now = SystemClock.getWallTime();
+
+		synchronized (threads)
+		{
+    		for (ISchedulableThread th: threads)
+    		{
+    			switch (th.getRunState())
+    			{
+     				case ALARM:
+    					long delay = th.getAlarmWakeTime() - now;
+
+    					if (delay < 0)
+    					{
+    						delay = 0;	// Time has past
+    					}
+
+    					if (delay < minTime)
+    					{
+    						minTime = delay;
+    					}
+     					break;
+
+        			default:
+        				break;
+    			}
+    		}
+		}
+
+		return minTime;
+	}
+
+	@Override
 	public void advance()
 	{
 		synchronized (threads)
 		{
     		for (ISchedulableThread th: threads)
     		{
-    			if (th.getRunState() == RunState.TIMESTEP)
+    			switch (th.getRunState())
     			{
-    				durationThread = th;
-    				th.setState(RunState.RUNNABLE);
+    				case TIMESTEP:
+        				durationThread = th;
+        				th.setState(RunState.RUNNABLE);
 
-    				if (Properties.rt_duration_transactions &&
-    					th.getDurationEnd() == SystemClock.getWallTime())
-    				{
-    					TransactionValue.commitOne(th.getId());
-    				}
+        				if (Properties.rt_duration_transactions &&
+        					th.getDurationEnd() == SystemClock.getWallTime())
+        				{
+        					TransactionValue.commitOne(th.getId());
+        				}
+        				break;
+
+    				case ALARM:
+    					if (th.getAlarmWakeTime() <= SystemClock.getWallTime())
+    					{
+    						th.clearAlarm();	// Time to wake up!
+    						th.setState(RunState.RUNNABLE);
+    					}
+    					break;
+
+        			default:
+        					break;
     			}
     		}
 		}

@@ -103,6 +103,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	private long steps;
 	private long timestep;
 	private long durationEnd;
+	private long alarmWakeTime;
 	private long swapInBy;
 	private boolean inOuterTimeStep;
 	private Thread executingThread;
@@ -135,6 +136,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		steps = 0;
 		timestep = Long.MAX_VALUE;
 		durationEnd = 0;
+		alarmWakeTime = Long.MAX_VALUE;
 		inOuterTimeStep = false;
 
 		resource.register(this, priority);
@@ -290,6 +292,16 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	{
 		// Enter a locking state - called by thread
 		waitUntilState(RunState.LOCKING, RunState.RUNNING, ctxt, location);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#alarming(long, Context, LexLocation)
+	 */
+	public synchronized void alarming(long expected)
+	{
+		// Enter an alarming state - called by another thread, does not block.
+		alarmWakeTime = expected;
+		setState(RunState.ALARM);
 	}
 
 	/* (non-Javadoc)
@@ -500,6 +512,22 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	public synchronized long getDurationEnd()
 	{
 		return durationEnd;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getAlarmWakeTime()
+	 */
+	public synchronized long getAlarmWakeTime()
+	{
+		return alarmWakeTime;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#clearAlarm()
+	 */
+	public void clearAlarm()
+	{
+		alarmWakeTime = Long.MAX_VALUE;
 	}
 
 	/* (non-Javadoc)
