@@ -1,0 +1,26 @@
+class Speaker
+ instance variables
+ mAlarm : nat := 0;
+
+ operations
+ public StartAlarm : () ==> ()
+ --Start alarm for max duration of one minute
+ StartAlarm() ==
+  mAlarm := 3;
+
+ --Stop alarm. If alarm already stopped this has no effect.
+ public StopAlarm : () ==> ()
+ StopAlarm() ==
+  mAlarm := 0;
+
+ --return true if alarm is currently active, false otherwise.
+ public IsActive : () ==> bool
+ IsActive() ==
+  return mAlarm <> 0;
+
+ public Run : () ==> ()
+ Run() ==
+  if (mAlarm > 0) 
+  then mAlarm := mAlarm - 1
+
+end Speaker

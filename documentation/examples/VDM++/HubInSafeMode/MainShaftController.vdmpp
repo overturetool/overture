@@ -1,0 +1,91 @@
+class MainShaftController
+ values
+ public static LOCK_LIMIT : RPMType = 1;
+ public static MAX_RPM : RPMType = WindMeasurementController`MAX_WIND * 10;
+
+ types
+ public RPMType = nat
+ inv rpm == rpm <= WindMeasurementController`MAX_WIND * 10;
+
+ instance variables
+ mIsLocked : bool := false;
+ mBrakeSeq :seq of Brake := [];
+ inv BrakeSeqInv(mBrakeSeq);
+ mRPM : RPMType := 0;
+ mIsBrakeApplied : bool := false;
+
+ functions
+ static BrakeSeqInv : seq of Brake -> bool
+ BrakeSeqInv(brakeSeq) ==
+  forall i in set inds brakeSeq & 
+     i>1 => brakeSeq(i-1).GetLow() = brakeSeq(i).GetHigh();
+
+ operations
+ public MainShaftController : () ==> MainShaftController
+ MainShaftController() ==
+ (--Blade Pitch
+  AddBrake(new Brake(100,MAX_RPM));
+  --Generator
+  AddBrake(new Brake(50,100));
+  --Disc Brake
+  AddBrake(new Brake(LOCK_LIMIT,50));
+  --Lock
+  AddBrake(new Brake(0, LOCK_LIMIT));
+ );
+
+ public CloseLock : () ==> ()
+ CloseLock() == 
+  mIsLocked := true
+ pre not IsLocked() and GetRPM() = 0 and IsBrakeApplied();
+
+ public OpenLock : () ==> ()
+ OpenLock() == 
+  mIsLocked := false
+ pre IsLocked() and GetRPM() = 0 and IsBrakeApplied();
+
+ public IsLocked : () ==> bool
+ IsLocked() == 
+  return mIsLocked;
+
+ AddBrake : Brake ==> ()
+ AddBrake(brake) ==
+  mBrakeSeq := mBrakeSeq ^ [brake]
+ pre BrakeSeqInv(mBrakeSeq ^ [brake]);
+
+ RemoveBrake : Brake ==> ()
+ RemoveBrake(brake) ==
+  mBrakeSeq := [mBrakeSeq(i)|i in set inds mBrakeSeq & not mBrakeSeq(i).IsEqual(brake)]
+ pre (exists i in set inds mBrakeSeq & mBrakeSeq(i).IsEqual(brake)) and
+   BrakeSeqInv([mBrakeSeq(i)|i in set inds mBrakeSeq & not mBrakeSeq(i).IsEqual(brake)]);
+
+ public ApplyBrake : () ==> ()
+ ApplyBrake() ==
+  mIsBrakeApplied := true
+ pre len mBrakeSeq <> 0;
+
+ public ReleaseBrake : () ==> ()
+ ReleaseBrake() ==
+  mIsBrakeApplied := false
+ pre len mBrakeSeq <> 0;
+
+ public IsBrakeApplied : () ==> bool
+ IsBrakeApplied() == 
+  return mIsBrakeApplied
+ pre len mBrakeSeq <> 0;
+
+ -- return current rotational speed of main shaft in RPM.
+ public GetRPM : () ==> RPMType
+ GetRPM() ==
+  return mRPM;
+
+ public Run : () ==> ()
+ Run() ==
+ (if mIsBrakeApplied 
+  then for all i in set inds mBrakeSeq do
+         mRPM := mBrakeSeq(i).ApplyBrake(mRPM)
+  else mRPM := WindMeasurementController`GetInstance().GetWindSpeed() * 10; 
+ )
+ pre len mBrakeSeq <> 0
+ post mRPM <= MAX_RPM;
+
+end MainShaftController
