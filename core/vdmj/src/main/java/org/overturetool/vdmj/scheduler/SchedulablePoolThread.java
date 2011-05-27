@@ -32,7 +32,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -384,31 +383,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 
 	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
 	{
-		switch (sig)
-		{
-			case TERMINATE:
-				throw new ThreadDeath();
-
-			case SUSPEND:
-			case DEADLOCKED:
-				if (ctxt != null)
-				{
-    				if (Settings.usingDBGP)
-    				{
-    					ctxt.threadState.dbgp.stopped(ctxt, location);
-    				}
-    				else
-    				{
-    					DebuggerReader.stopped(ctxt, location);
-    				}
-
-    				if (sig == Signal.DEADLOCKED)
-    				{
-    					throw new ThreadDeath();
-    				}
-				}
-				break;
-		}
+		BasicSchedulableThread.handleSignal(sig, ctxt, location);
 	}
 
 	/* (non-Javadoc)
@@ -419,6 +394,11 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		BasicSchedulableThread.suspendOthers(this);
 	}
 
+	public void setExceptionOthers()
+	{
+		BasicSchedulableThread.setExceptionOthers(this);
+	}
+	
 	public static void signalAll(Signal sig)
 	{
 		BasicSchedulableThread.signalAll(sig);

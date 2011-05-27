@@ -185,19 +185,19 @@ public class InitThread implements ISchedulableThread
 		throw new NotSupportedError();
 	}
 
-	@Override
+	
 	public void alarming(long expected)
 	{
 		throw new NotSupportedError();
 	}
 
-	@Override
+	
 	public long getAlarmWakeTime()
 	{
 		throw new NotSupportedError();
 	}
 
-	@Override
+	
 	public void clearAlarm()
 	{
 		throw new NotSupportedError();

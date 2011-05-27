@@ -103,19 +103,25 @@ public class BasicSchedulableThread implements Serializable
 		return null;
 	}
 
-	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	public static void handleSignal(Signal sig, Context ctxt, LexLocation location)
 	{
 		switch (sig)
 		{
 			case TERMINATE:
 				throw new ThreadDeath();
 
+			case ERROR:				
 			case SUSPEND:
 			case DEADLOCKED:
 				if (ctxt != null)
 				{
 					if (Settings.usingDBGP)
 					{
+						if(sig == Signal.ERROR)
+						{
+							ctxt.threadState.dbgp.setErrorState();
+						}
+						
 						ctxt.threadState.dbgp.stopped(ctxt, location);
 					}
 					else
@@ -150,6 +156,21 @@ public class BasicSchedulableThread implements Serializable
 		}
 	}
 
+	public static void setExceptionOthers(ISchedulableThread thread)
+	{
+		synchronized (allThreads)
+		{
+			for (ISchedulableThread th : allThreads)
+			{
+				if (!th.equals(thread))
+				{
+					th.setSignal(Signal.ERROR);
+				}
+			}
+		}
+	}
+	
+	
 	public static void terminateAll()
 	{
 		synchronized (allThreads)

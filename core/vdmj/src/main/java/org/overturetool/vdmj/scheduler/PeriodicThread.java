@@ -155,14 +155,18 @@ public class PeriodicThread extends SchedulablePoolThread
 		}
 		catch (ContextException e)
 		{
-			suspendOthers();
+			
 			ResourceScheduler.setException(e);
+			//suspendOthers();
+			setExceptionOthers();
 			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
+			
 		}
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			BasicSchedulableThread.signalAll(Signal.SUSPEND);
+			ctxt.threadState.dbgp.setErrorState();
+			BasicSchedulableThread.signalAll(Signal.ERROR);
 		}
 		finally
 		{

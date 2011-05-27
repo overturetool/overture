@@ -126,6 +126,8 @@ public class DBGPReader
 	protected RemoteControl remoteControl = null;
 	protected boolean stopped = false;
 
+	protected boolean errorState = false;
+
 	protected static final int SOURCE_LINES = 5;
 
 	@SuppressWarnings("unchecked")
@@ -918,12 +920,19 @@ public class DBGPReader
 
 			breakContext = ctxt;
 			breakpoint = bp;
-			statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
+			if(errorState)
+			{
+				statusResponse(DBGPStatus.BREAK, DBGPReason.ERROR);
+			}
+			else
+			{
+				statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
+			}
+				run();
 
-			run();
-
-			breakContext = null;
-			breakpoint = null;
+				breakContext = null;
+				breakpoint = null;
+			
 		}
 		catch (Exception e)
 		{
@@ -931,6 +940,11 @@ public class DBGPReader
 		}
 	}
 
+	public void setErrorState()
+	{
+		errorState  = true;
+	}
+	
 	public void invocationError(Throwable e)
 	{
 		String message =e.getMessage();

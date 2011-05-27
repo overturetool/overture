@@ -26,7 +26,6 @@ package org.overturetool.vdmj.scheduler;
 import java.io.Serializable;
 
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -296,31 +295,7 @@ public abstract class SchedulableThread extends Thread implements Serializable,R
 
 	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
 	{
-		switch (sig)
-		{
-			case TERMINATE:
-				throw new ThreadDeath();
-
-			case SUSPEND:
-			case DEADLOCKED:
-				if (ctxt != null)
-				{
-    				if (Settings.usingDBGP)
-    				{
-    					ctxt.threadState.dbgp.stopped(ctxt, location);
-    				}
-    				else
-    				{
-    					DebuggerReader.stopped(ctxt, location);
-    				}
-
-    				if (sig == Signal.DEADLOCKED)
-    				{
-    					throw new ThreadDeath();
-    				}
-				}
-				break;
-		}
+		BasicSchedulableThread.handleSignal(sig, ctxt, location);
 	}
 
 	/* (non-Javadoc)

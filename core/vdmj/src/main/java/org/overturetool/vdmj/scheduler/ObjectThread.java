@@ -145,14 +145,18 @@ public class ObjectThread extends SchedulablePoolThread
 		}
 		catch (ContextException e)
 		{
-			suspendOthers();
-			ResourceScheduler.setException(e);
+			
+			ResourceScheduler.setException(e);	
+			ctxt.threadState.dbgp.setErrorState();
+//			suspendOthers();
+			setExceptionOthers();
 			reader.stopped(e.ctxt, e.location);
 		}
 		catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
-			BasicSchedulableThread.signalAll(Signal.SUSPEND);
+			ctxt.threadState.dbgp.setErrorState();
+			BasicSchedulableThread.signalAll(Signal.ERROR);
 		}
 		finally
 		{
