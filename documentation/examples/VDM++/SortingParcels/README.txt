@@ -4,9 +4,6 @@ warehouse. This model is made by Bjarke Møholt as a small mini-project
 in a course on "Modelling of Mission Critical Systems" (see
 https://services.brics.dk/java/courseadmin/TOMoMi/pages/Modelling+of+Mission+Critical+Systems).
 
-More information about the model and the purpose of it can be found in
-the Report.pdf file included in the zip file with the source files.
-
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
