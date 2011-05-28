@@ -1,0 +1,63 @@
+class Table
+
+types
+
+public Element = <Tobacco> | <Paper> | <Match>;
+
+instance variables
+  elements : set of Element := {};
+  inv card elements <= 3 
+
+operations
+
+public AddElement:  Element ==> bool
+AddElement(es) ==
+  if(es not in set elements) then
+  (
+   	elements := elements union {es};
+ 	return true;
+  )
+  else
+ 	return false;
+
+private ExtraElement: () ==> set of Element
+ExtraElement() ==   
+let es = elements
+  in (
+       elements := {};
+        World`graphics.tableCleared();
+        IO`print("table clear");
+       return es);
+
+public TakeElements: set of Element ==> set of Element
+TakeElements(es) == (
+
+  let e in set es
+    in 
+      cases e:   
+        <Tobacco> -> MissingPM(),
+        <Paper> -> MissingTM(),
+        <Match> -> MissingTP()
+       end;
+
+    ExtraElement();)
+pre card es = 1;
+
+MissingPM : () ==> ()
+MissingPM() == skip;
+
+MissingTM : () ==> ()
+MissingTM() == skip;
+
+MissingTP : () ==> ()
+MissingTP() == skip;
+
+sync
+per MissingPM => elements = {<Paper>,<Match>};  
+per MissingTM => elements = {<Tobacco>,<Match>};    
+per MissingTP => elements = {<Tobacco>, <Paper>};  
+
+--per AddElements => elements = {};
+--per TakeElements => card elements = 2;
+
+end Table

@@ -1,0 +1,56 @@
+class Agent
+
+values
+  thing_l = [<Tobacco>, <Paper>, <Match>]
+
+instance variables
+  timer : nat := 0;
+  table : Table;
+
+operations
+
+public Agent: Table ==> Agent
+Agent(tab) ==
+  table := tab;
+
+public GetTime: () ==> nat
+GetTime() ==
+  return timer;
+
+public AddTobacco : () ==> bool
+AddTobacco() == 
+(
+  if table.AddElement(thing_l(1)) then
+  (
+ 	World`graphics.tobaccoAdded();
+	return true;
+  );
+
+  return false;
+);
+
+public AddPaper : () ==> bool
+AddPaper() == 
+(
+  if table.AddElement(thing_l(2)) then
+  (
+ 	World`graphics.paperAdded();
+	return true;
+  );
+
+  return false;
+);
+
+public AddMatch : () ==> bool
+AddMatch() == 
+(
+  if table.AddElement(thing_l(3)) then
+  (
+ 	World`graphics.matchAdded();
+	return true;
+  );
+
+  return false;
+);
+
+end Agent
