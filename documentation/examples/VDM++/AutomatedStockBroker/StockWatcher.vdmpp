@@ -85,10 +85,11 @@ class StockWatcher is subclass of GLOBAL
   UpdateAction(tim) == 
    let actionTrigger = stockRecord.Triggers(stockRecord.State)
     in 
-    if IsActionTriggeredAtTime(tim,actionTrigger,eventHistory) and 
-       not IsInRegion(GetStockValue(tim), stockRecord.NoActionReg) 
-    then currentlyTriggeredAction := actionTrigger.Action
-    else currentlyTriggeredAction := nil;
+     currentlyTriggeredAction :=
+        if IsActionTriggeredAtTime(tim,actionTrigger,eventHistory) and 
+           not IsInRegion(GetStockValue(tim), stockRecord.NoActionReg) 
+        then actionTrigger.Action
+        else nil;
 
   public ObserveStock : nat ==> ()
   ObserveStock(time) == (
