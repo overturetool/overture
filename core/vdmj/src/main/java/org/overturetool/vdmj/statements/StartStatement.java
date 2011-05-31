@@ -23,7 +23,9 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -148,10 +150,13 @@ public class StartStatement extends Statement
 			PeriodicStatement ps = (PeriodicStatement)op.body;
 			OperationValue pop = pctxt.lookup(ps.opname).operationValue(pctxt);
 
-			long period = SystemClock.timeToInternal(TimeUnit.millisecond,ps.values[0]);
-			long jitter = SystemClock.timeToInternal(TimeUnit.millisecond,ps.values[1]);
-			long delay  = SystemClock.timeToInternal(TimeUnit.millisecond,ps.values[2]);
-			long offset = SystemClock.timeToInternal(TimeUnit.millisecond,ps.values[3]);
+			TimeUnit tu = (Settings.dialect == Dialect.VDM_PP) ?
+				TimeUnit.nanosecond : TimeUnit.millisecond;
+
+			long period = SystemClock.timeToInternal(tu, ps.values[0]);
+			long jitter = SystemClock.timeToInternal(tu, ps.values[1]);
+			long delay  = SystemClock.timeToInternal(tu, ps.values[2]);
+			long offset = SystemClock.timeToInternal(tu, ps.values[3]);
 
 			// Note that periodic threads never set the stepping flag
 

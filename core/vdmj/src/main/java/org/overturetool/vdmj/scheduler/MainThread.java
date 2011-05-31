@@ -153,6 +153,10 @@ public class MainThread extends SchedulablePoolThread
 	{
 		Console.err.println(e.getMessage());
 		exception = e;
-		ctxt.threadState.dbgp.setErrorState();
+
+		if (ctxt.threadState.dbgp != null)
+		{
+			ctxt.threadState.dbgp.setErrorState();
+		}
 	}
 }

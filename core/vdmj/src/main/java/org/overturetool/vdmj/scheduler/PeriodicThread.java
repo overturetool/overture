@@ -29,6 +29,7 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
@@ -89,20 +90,23 @@ public class PeriodicThread extends SchedulablePoolThread
 		// set the time at which we want to be runnable to the expected start,
 		// which may have an offset.
 
-		long wakeUpTime = expected;
-
-		if (first)
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			if (offset > 0 || jitter > 0)
-			{
-    			long noise = (jitter == 0) ? 0 :
-    				Math.abs(PRNG.nextLong() % (jitter + 1));
+    		long wakeUpTime = expected;
 
-    			wakeUpTime = offset + noise;
-			}
+    		if (first)
+    		{
+    			if (offset > 0 || jitter > 0)
+    			{
+        			long noise = (jitter == 0) ? 0 :
+        				Math.abs(PRNG.nextLong() % (jitter + 1));
+
+        			wakeUpTime = offset + noise;
+    			}
+    		}
+
+    		alarming(wakeUpTime);
 		}
-
-		alarming(wakeUpTime);
 	}
 
 	@Override
@@ -111,6 +115,14 @@ public class PeriodicThread extends SchedulablePoolThread
 		RootContext global = ClassInterpreter.getInstance().initialContext;
 		LexLocation from = object.type.classdef.location;
 		Context ctxt = new ObjectContext(from, "async", global, object);
+
+		if (Settings.dialect == Dialect.VDM_PP)
+		{
+			// VDM++ does not use the ALARM wakeup method of  VDM-RT, so
+			// we make a busy wait until the time is expected.
+
+			waitUntil(expected, ctxt, operation.name.location);
+		}
 
 		if (Settings.usingDBGP)
 		{
@@ -155,12 +167,12 @@ public class PeriodicThread extends SchedulablePoolThread
 		}
 		catch (ContextException e)
 		{
-			
+
 			ResourceScheduler.setException(e);
 			//suspendOthers();
 			setExceptionOthers();
 			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
-			
+
 		}
 		catch (Exception e)
 		{
@@ -203,6 +215,17 @@ public class PeriodicThread extends SchedulablePoolThread
 		finally
 		{
 			TransactionValue.commitAll();
+		}
+	}
+
+	private void waitUntil(long until, Context ctxt, LexLocation location)
+	{
+		long time = SystemClock.getWallTime();
+
+		while (until > time)
+		{
+			reschedule(ctxt, location);
+			time = SystemClock.getWallTime();
 		}
 	}
 
