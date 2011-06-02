@@ -147,10 +147,10 @@ public class TestSequence extends Vector<CallSequence>
 			if (subset == null)
 			{
 				subset = new TestSequence();
+				map.put(shape, subset);
 			}
 
 			subset.add(cs);
-			map.put(shape, subset);
 		}
 
 		String[] shapes = map.keySet().toArray(new String[0]);
@@ -181,7 +181,7 @@ public class TestSequence extends Vector<CallSequence>
 
 		for (Entry<String, TestSequence> entry: map.entrySet())
 		{
-			addAll(map.get(entry.getValue()));
+			addAll(map.get(entry.getKey()));
 		}
     }
 
