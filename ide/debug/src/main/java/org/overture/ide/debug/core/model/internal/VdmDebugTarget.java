@@ -35,8 +35,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStepFilters;
 import org.eclipse.debug.core.model.ITerminate;
 import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -446,6 +444,15 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			}
 			consoleInputListener = new VdmConsoleInputListener(this,proxy);
 			consoleInputListener.start();
+			
+			
+			try
+			{
+				this.streamProxy.getStdout().write(IDebugConstants.CONSOLE_INTERACTIVE_WELCOME_MESSAGE.getBytes());
+			} catch (IOException e)
+			{
+				VdmDebugPlugin.logError("Fails to set welcome message in proxy console.", e);
+			}
 		}
 	}
 
