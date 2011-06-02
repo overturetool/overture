@@ -28,6 +28,12 @@
 	overwrite="true" filtering="true">
 </copy>
 
+<copy
+    file="../../documentation/QuickOverviewVDMPPOperators/QuickOverviewofVDMOperators.pdf"
+    toFile="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf"
+    overwrite="true" filtering="true">
+</copy>
+
 	<!-- Download examples from SF to embed in help -->
 <get
 	src="http://sourceforge.net/projects/overture/files/Examples/examplesSL.zip"
