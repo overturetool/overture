@@ -491,6 +491,56 @@ PType t = exp.apply(new TypeCheckVisitor(), new TypeCheckInfo());
 
 This approach provides enables both a type checker and interpreter to be implemented and other things to be implemented through the same interface on the AST nodes.
 
+\subsection{Plug-in use and derived trees}
+
+There is generally three ways plug-ins might use the AST:
+\begin{enumerate}
+\item Read only. The tree is used as input in a read only style to do some internal processing.
+\item Read/Write. The plug-in will use the tree for internal processing and possibly add plug-in specific data to the AST.
+\item Read/Write. The plug-in will use the tree and possible rewrite the AST and add new information to it.
+\end{enumerate}
+
+The three different usage kinds differ be either leaving the source AST intact possibly adding plug-in specific data or changing the AST in any way. Thus the latter will require a AST clone, however the two first types could be direct access to the AST used in our IDE.
+
+When it comes to ``derived trees'' it might turn out to be very inefficient to copy and AST all the time especially for the parse/type check phases. Instead a visitor can potentially be implemented to instantiate a new AST-2 from a source AST, but this will add unnecessary complexity and break back tracking to the original AST.
+
+\subsection{Plug-in access}
+We can chose to either give access to the internal AST of the IDE or only allow access to a clone which a plug-in can obtain.
+
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns a deep clone of this {@link ARealType} node.
+	 * @return a deep clone of this {@link ARealType} node
+	 */
+	public ARealType clone()
+	{
+		...
+	}
+
+
+	/**
+	**
+	 * Creates a deep clone of this {@link ARealType} node while putting all
+	 * old node-new node relations in the map {@code oldToNewMap}.
+	 * @param oldToNewMap the map filled with the old node-new node relation
+	 * @return a deep clone of this {@link ARealType} node
+	 */
+	public ARealType clone(Map<Node,Node> oldToNewMap)
+	{
+		...
+	}
+\end{lstlisting}
+
+\subsection{Derived trees/custom plug-in data}
+We should keep it simple. Since the plug-in which exists now only need a feature to provide simple tags on certain nodes a complete AST copy to new identical classes with a number of new fields might be overdoing it. However a simple map in the \texttt{Node} class could hold such information. But this does not exclude the other derived AST idea from being implemented later, it will just be an implementation of the source AST visitor.
+
+\begin{lstlisting}[language=java]
+	String pluginId ="org.overture.ide.plugins.codegeneration";
+	String field="javaType";
+	exp.setCustomField(pluginId, field, String.class);
+	Class javaClass = exp.getCustomField(pluginId, field,Object.class);
+\end{lstlisting}
+
 
 \section{Illustration with a simple AST structure}
 To be written:
@@ -546,6 +596,19 @@ Aspect Declaration
 exp 
     = [type]:type
     ;
+\end{lstlisting}
+
+\chapter{How to move forward}
+
+\section{AST Features}
+
+copy
+SL API
+OO structure - link to VDM PP classes
+
+\begin{lstlisting}[language=java]
+	public @Override abstract Object clone();
+	public abstract Node clone(Map<Node,Node> oldToNewMap);
 \end{lstlisting}
 
 \bibliographystyle{acm}
