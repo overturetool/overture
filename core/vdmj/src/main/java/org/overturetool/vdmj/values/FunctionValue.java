@@ -368,6 +368,16 @@ public class FunctionValue extends Value
 				if (measure == null)
 				{
 					measure = evalContext.lookup(measureName).functionValue(ctxt);
+
+					if (typeValues != null)		// Function is polymorphic, so measure copies type args
+					{
+						measure = (FunctionValue)measure.clone();
+						measure.uninstantiated = false;
+						measure.type = new FunctionType(
+							measure.location, measure.type.partial, type.parameters, measure.type.result);
+						measure.typeValues = typeValues;
+					}
+
 					measure.measuringThreads = Collections.synchronizedSet(new HashSet<Long>());
 					measure.callingThreads = Collections.synchronizedSet(new HashSet<Long>());
 					measure.isMeasure = true;
@@ -572,9 +582,12 @@ public class FunctionValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new FunctionValue(location, name, type,
+		FunctionValue copy = new FunctionValue(location, name, type,
 			paramPatternList, body, precondition, postcondition,
 			freeVariables, checkInvariants);
+
+		copy.typeValues = typeValues;
+		return copy;
 	}
 
 	public String toTitle()
