@@ -23,9 +23,11 @@
 
 package org.overturetool.vdmj.definitions;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Vector;
 
 import org.overturetool.vdmj.Settings;
@@ -92,6 +94,7 @@ public class ExplicitFunctionDefinition extends Definition
 	public boolean recursive = false;
 	public int measureLexical = 0;
 	public Definition measuredef;
+	private Map<TypeList, FunctionValue> polyfuncs = null;
 
 	public ExplicitFunctionDefinition(LexNameToken name, NameScope scope,
 		LexNameList typeParams, FunctionType type,
@@ -333,6 +336,17 @@ public class ExplicitFunctionDefinition extends Definition
 			}
 			else
 			{
+				ExplicitFunctionDefinition efd = (ExplicitFunctionDefinition)measuredef;
+				
+				if (this.typeParams == null && efd.typeParams != null)
+				{
+					measure.report(3309, "Measure must not be polymorphic");
+				}
+				else if (this.typeParams != null && efd.typeParams == null)
+				{
+					measure.report(3310, "Measure must also be polymorphic");
+				}
+				
 				FunctionType mtype = (FunctionType)measuredef.getType();
 
 				if (!TypeComparator.compatible(mtype.parameters, type.parameters))
@@ -568,7 +582,51 @@ public class ExplicitFunctionDefinition extends Definition
 
 	public FunctionValue getPolymorphicValue(TypeList actualTypes)
 	{
-		return new FunctionValue(this, actualTypes, null, null, null);
+		if (polyfuncs == null)
+		{
+			polyfuncs = new HashMap<TypeList, FunctionValue>();
+		}
+		else
+		{
+			// We always return the same function value for a polymorph
+			// with a given set of types. This is so that the one function
+			// value can record measure counts for recursive polymorphic
+			// functions.
+			
+			FunctionValue rv = polyfuncs.get(actualTypes);
+			
+			if (rv != null)
+			{
+				return rv;
+			}
+		}
+		
+		FunctionValue prefv = null;
+		FunctionValue postfv = null;
+
+		if (predef != null)
+		{
+			prefv = predef.getPolymorphicValue(actualTypes);
+		}
+		else
+		{
+			prefv = null;
+		}
+
+		if (postdef != null)
+		{
+			postfv = postdef.getPolymorphicValue(actualTypes);
+		}
+		else
+		{
+			postfv = null;
+		}
+
+		FunctionValue rv = new FunctionValue(
+				this, actualTypes, prefv, postfv, null);
+
+		polyfuncs.put(actualTypes, rv);
+		return rv;
 	}
 
 	@Override

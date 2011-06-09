@@ -222,67 +222,21 @@ public class FuncInstantiationExpression extends Expression
     				fixed.add(ptype);
     			}
     		}
-
+    		
+    		FunctionValue rv = null;
+    		
     		if (expdef == null)
 			{
-    			FunctionValue prefv = null;
-    			FunctionValue postfv = null;
-
-    			if (impdef.predef != null)
-    			{
-    				prefv = impdef.predef.getPolymorphicValue(fixed);
-    			}
-    			else
-    			{
-    				prefv = null;
-    			}
-
-    			if (impdef.postdef != null)
-    			{
-    				postfv = impdef.postdef.getPolymorphicValue(fixed);
-    			}
-    			else
-    			{
-    				postfv = null;
-    			}
-
-				FunctionValue rv = new FunctionValue(
-					impdef, fixed, prefv, postfv, null);
-
-				rv.setSelf(fv.self);
-				rv.uninstantiated = false;
-				return rv;
+				rv = impdef.getPolymorphicValue(fixed);
 			}
 			else
 			{
-    			FunctionValue prefv = null;
-    			FunctionValue postfv = null;
-
-    			if (expdef.predef != null)
-    			{
-    				prefv = expdef.predef.getPolymorphicValue(fixed);
-    			}
-    			else
-    			{
-    				prefv = null;
-    			}
-
-    			if (expdef.postdef != null)
-    			{
-    				postfv = expdef.postdef.getPolymorphicValue(fixed);
-    			}
-    			else
-    			{
-    				postfv = null;
-    			}
-
-				FunctionValue rv =  new FunctionValue(
-					expdef, fixed, prefv, postfv, null);
-
-				rv.setSelf(fv.self);
-				rv.uninstantiated = false;
-				return rv;
+				rv = expdef.getPolymorphicValue(fixed);
 			}
+
+    		rv.setSelf(fv.self);
+			rv.uninstantiated = false;
+			return rv;
 		}
 		catch (ValueException e)
 		{

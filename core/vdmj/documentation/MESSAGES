@@ -651,6 +651,8 @@ as the expected and actual values.
 3306, "CPU frequency to fast: <speed> Hz"
 3307, "Errs clause is not bool -> bool"
 3308, "Cannot mix modules and flat specifications"
+3309, "Measure must not be polymorphic"
+3310, "Measure must also be polymorphic"
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"
