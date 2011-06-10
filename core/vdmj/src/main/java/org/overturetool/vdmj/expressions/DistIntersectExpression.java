@@ -81,6 +81,12 @@ public class DistIntersectExpression extends UnaryExpression
 		try
 		{
     		ValueSet setset = exp.eval(ctxt).setValue(ctxt);
+
+    		if (setset.isEmpty())
+    		{
+    			abort(4151, "Cannot take dinter of empty set", ctxt);
+    		}
+
     		ValueSet result = null;
 
     		for (Value v: setset)

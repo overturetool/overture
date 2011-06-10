@@ -798,6 +798,9 @@ as the expected and actual values.
 4146, "Measure failure: f(args), measure <name>, current <value>, previous <value>"
 4147, "Polymorphic function missing @T"
 4148, "Measure function is called recursively: <name>"
+4149, (Overture)
+4150, (Overture)
+4151, "Cannot take dinter of empty set"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"
