@@ -3,10 +3,12 @@ package org.overture.ide.debug.ui.launching;
 import java.io.File;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -14,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.internal.core.LaunchConfiguration;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
@@ -809,6 +812,26 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 		// System.out.println("Expression: " + expression);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
+		
+		if (!fProjectText.getText().equals("")) {
+//			System.out.println("Setting config path to: " + fProjectText.getText());
+//			configuration.setAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_PATHS,
+//					Collections.singletonList(fProjectText.getText()));
+//			configuration.setAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_TYPES,
+//					Collections.singletonList(Integer
+//							.toString(IResource.PROJECT)));
+			IResource[] resources = new IResource[]{(IResource)ResourcesPlugin
+				.getWorkspace()
+				.getRoot()
+				.getProject(fProjectText.getText())};
+			System.out.println("Setting config path to: " + resources);
+			configuration.setMappedResources(resources);
+		} else {
+//			configuration.removeAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_PATHS);
+//			configuration.removeAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_TYPES);
+			configuration.setMappedResources(null);
+		}
+
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
