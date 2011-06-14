@@ -814,21 +814,13 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
 		
 		if (!fProjectText.getText().equals("")) {
-//			System.out.println("Setting config path to: " + fProjectText.getText());
-//			configuration.setAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_PATHS,
-//					Collections.singletonList(fProjectText.getText()));
-//			configuration.setAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_TYPES,
-//					Collections.singletonList(Integer
-//							.toString(IResource.PROJECT)));
 			IResource[] resources = new IResource[]{(IResource)ResourcesPlugin
 				.getWorkspace()
 				.getRoot()
 				.getProject(fProjectText.getText())};
-			System.out.println("Setting config path to: " + resources);
+			
 			configuration.setMappedResources(resources);
 		} else {
-//			configuration.removeAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_PATHS);
-//			configuration.removeAttribute(LaunchConfiguration.ATTR_MAPPED_RESOURCE_TYPES);
 			configuration.setMappedResources(null);
 		}
 
