@@ -16,7 +16,7 @@ public class LanguageManager
 	 * A handle to the unique Singleton instance.
 	 */
 	static private LanguageManager _instance = null;
-	static final List<ILanguage> languages = new Vector<ILanguage>();
+	final List<ILanguage> languages = new Vector<ILanguage>();
 
 	/**
 	 * @return The unique instance of this class.
@@ -74,7 +74,7 @@ public class LanguageManager
 		return languages;
 	}
 
-	public static boolean isVdmNature(String nature)
+	public boolean isVdmNature(String nature)
 	{
 		for (ILanguage language : languages)
 		{
@@ -84,7 +84,7 @@ public class LanguageManager
 		return false;
 	}
 	
-	public static ILanguage getLanguage(String nature)
+	public ILanguage getLanguage(String nature)
 	{
 		for (ILanguage language : languages)
 		{
