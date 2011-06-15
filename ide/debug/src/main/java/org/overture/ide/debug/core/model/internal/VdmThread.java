@@ -69,6 +69,8 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	
 	private IDbgpStatusInterpreterThreadState interpreterThreadState;
 
+	private boolean errorState;
+
 	// VdmThreadStateManager.IStateChangeHandler
 	public void handleSuspend(int detail)
 	{
@@ -344,6 +346,10 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	// Resume
 	public boolean canResume()
 	{
+		if(errorState)
+		{
+			return false;
+		}
 		return stateManager.canResume();
 	}
 
@@ -381,6 +387,10 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	// Step into
 	public boolean canStepInto()
 	{
+		if(errorState)
+		{
+			return false;
+		}
 		return stateManager.canStepInto();
 	}
 
@@ -402,6 +412,10 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	// Step over
 	public boolean canStepOver()
 	{
+		if(errorState)
+		{
+			return false;
+		}
 		return stateManager.canStepOver();
 	}
 
@@ -420,6 +434,10 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	// Step return
 	public boolean canStepReturn()
 	{
+		if(errorState)
+		{
+			return false;
+		}
 		return stateManager.canStepReturn();
 	}
 
@@ -590,5 +608,10 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 	public IDbgpStatusInterpreterThreadState getInterpreterState()
 	{
 		return this.interpreterThreadState;
+	}
+
+	public void setErrorState() {
+		errorState = true;
+		
 	}
 }

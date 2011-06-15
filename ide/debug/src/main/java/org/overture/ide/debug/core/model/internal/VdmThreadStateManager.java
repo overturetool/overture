@@ -42,6 +42,8 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 
 	private final Object stepIntoLock = new Object();
 
+	private boolean errorState = false;
+
 	protected void handleStatus(DbgpException exception, IDbgpStatus status,
 			int suspendDetail) {
 		if (exception != null) {
@@ -58,6 +60,13 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 			handler.setInterpreterState(status.getInterpreterThreadState());
 		}
 
+		// status is break but with an error, f.e. precondition failure
+		if(status.isBreak() && status.reasonError())
+		{
+			errorState  = true;
+		}
+		
+		
 		if (status.isBreak()) {
 			setSuspended(true, suspendDetail);
 		} else if (status.isStopping()) {
@@ -96,7 +105,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 	}
 
 	private boolean canStep() {
-		return !terminated && suspended;
+		return (!terminated && suspended) && !errorState; 
 	}
 
 	private void beginStep(int detail) {
@@ -211,7 +220,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 
 	// Resume
 	public boolean canResume() {
-		return !terminated && suspended;
+		return (!terminated && suspended) && !errorState;
 	}
 
 	public void endResume(DbgpException e, IDbgpStatus status) {

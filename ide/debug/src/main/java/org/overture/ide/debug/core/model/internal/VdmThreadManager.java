@@ -38,9 +38,11 @@ import org.overture.ide.debug.core.model.IVdmStackFrame;
 import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 
+import sun.awt.DebugHelper;
+
 public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener {
 	private static final boolean DEBUG = VdmDebugPlugin.DEBUG;
-
+	private boolean errorState = false;
 	private IVdmDebugThreadConfigurator configurator = null;
 
 	// Helper methods
@@ -156,7 +158,9 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	}
 
 	public void stderrReceived(String data) {
+		
 		final IVdmStreamProxy proxy = target.getStreamProxy();
+		
 		if (proxy != null) {
 			data = filter(data, IDbgpStreamFilter.STDERR);
 			if (data != null) {
@@ -166,7 +170,10 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 		if (DEBUG) {
 			System.out.println("Received (stderr): " + data); //$NON-NLS-1$
 		}
+		
+		DebugEventHelper.fireChangeEvent(target);
 	}
+	
 
 	void setStreamFilters(IDbgpStreamFilter[] streamFilters) {
 		this.streamFilters = streamFilters;
@@ -409,6 +416,10 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	}
 
 	public boolean canResume() {
+		if(errorState)
+		{
+			return false;
+		}
 		return getThreadBoolean(new IThreadBoolean() {
 			public boolean get(IThread thread) {
 				return thread.canResume();
