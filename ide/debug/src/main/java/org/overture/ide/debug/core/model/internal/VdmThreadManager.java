@@ -38,7 +38,6 @@ import org.overture.ide.debug.core.model.IVdmStackFrame;
 import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 
-import sun.awt.DebugHelper;
 
 public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener {
 	private static final boolean DEBUG = VdmDebugPlugin.DEBUG;
