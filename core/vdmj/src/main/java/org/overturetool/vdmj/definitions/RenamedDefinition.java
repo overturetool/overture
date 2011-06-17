@@ -116,8 +116,16 @@ public class RenamedDefinition extends Definition
 	}
 
 	@Override
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
+		// We can only find an import if it is being sought from the module that
+		// imports it.
+
+		if (fromModule != null && !location.module.equals(fromModule))
+		{
+			return null;	// Someone else's import
+		}
+
 		Definition renamed = super.findName(sought, NameScope.TYPENAME);
 
 		if (renamed != null && def instanceof TypeDefinition)
@@ -127,7 +135,7 @@ public class RenamedDefinition extends Definition
 		}
 		else
 		{
-			return def.findType(sought);
+			return def.findType(sought, fromModule);
 		}
 	}
 

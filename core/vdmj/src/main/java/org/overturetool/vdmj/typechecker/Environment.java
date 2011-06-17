@@ -128,7 +128,7 @@ abstract public class Environment
 	abstract public Definition findName(LexNameToken name, NameScope scope);
 
 	/** Find a type in the environment. */
-	abstract public Definition findType(LexNameToken name);
+	abstract public Definition findType(LexNameToken name, String fromModule);
 
 	/** Find the state defined in the environment, if any. */
 	abstract public StateDefinition findStateDefinition();

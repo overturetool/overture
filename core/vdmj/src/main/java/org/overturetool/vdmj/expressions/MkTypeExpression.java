@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.util.Iterator;
 
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -72,7 +73,7 @@ public class MkTypeExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		Definition typeDef = env.findType(typename);
+		Definition typeDef = env.findType(typename, location.module);
 
 		if (typeDef == null)
 		{
@@ -101,8 +102,10 @@ public class MkTypeExpression extends Expression
 			// If the type name is explicit, the Type ought to have an explicit
 			// name. This only really affects trace expansion.
 
-			recordType =
-				new RecordType(recordType.name.getExplicit(true), recordType.fields);
+			ExplicitFunctionDefinition inv = recordType.invdef;
+
+			recordType = new RecordType(recordType.name.getExplicit(true), recordType.fields);
+			recordType.setInvariant(inv);
 		}
 
 		if (recordType.fields.size() != args.size())

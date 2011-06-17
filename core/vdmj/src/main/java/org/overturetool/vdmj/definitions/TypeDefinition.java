@@ -151,7 +151,7 @@ public class TypeDefinition extends Definition
 	}
 
 	@Override
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
 		if (type instanceof NamedType)
 		{

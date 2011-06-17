@@ -179,7 +179,7 @@ public class ValueDefinition extends Definition
 		if (base.isVDMPP() && type instanceof NamedType)
 		{
 			NamedType named = (NamedType)type;
-    		Definition typedef = base.findType(named.typename);
+    		Definition typedef = base.findType(named.typename, location.module);
 
     		if (typedef.accessSpecifier.narrowerThan(accessSpecifier))
     		{

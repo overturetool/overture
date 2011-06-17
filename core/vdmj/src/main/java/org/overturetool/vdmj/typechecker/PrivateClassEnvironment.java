@@ -65,16 +65,16 @@ public class PrivateClassEnvironment extends Environment
 	}
 
 	@Override
-	public Definition findType(LexNameToken name)
+	public Definition findType(LexNameToken name, String fromModule)
 	{
-		Definition def = classdef.findType(name);
+		Definition def = classdef.findType(name, null);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name);
+		return (outer == null) ? null : outer.findType(name, null);
 	}
 
 	@Override

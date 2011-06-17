@@ -289,10 +289,11 @@ public abstract class Definition implements Serializable, IAstNode
 	 * definitions.
 	 *
 	 * @param sought The name of the type definition being sought.
+	 * @param fromModule The name of the module seeking the type.
 	 * @return The type definition or null.
 	 */
 
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
 		return null;
 	}

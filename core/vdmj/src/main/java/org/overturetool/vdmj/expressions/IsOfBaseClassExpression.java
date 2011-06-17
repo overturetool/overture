@@ -127,7 +127,7 @@ public class IsOfBaseClassExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		if (env.findType(baseclass) == null)
+		if (env.findType(baseclass, null) == null)
 		{
 			report(3114, "Undefined base class type: " + baseclass.name);
 		}

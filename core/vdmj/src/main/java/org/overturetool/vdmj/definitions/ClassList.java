@@ -254,7 +254,7 @@ public class ClassList extends Vector<ClassDefinition>
 	{
 		for (ClassDefinition d: this)
 		{
-			Definition def = d.findType(name);
+			Definition def = d.findType(name, null);
 
 			if (def != null)
 			{

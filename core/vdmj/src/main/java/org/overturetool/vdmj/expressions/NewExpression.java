@@ -71,7 +71,7 @@ public class NewExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		Definition cdef = env.findType(classname.getClassName());
+		Definition cdef = env.findType(classname.getClassName(), null);
 
 		if (cdef == null || !(cdef instanceof ClassDefinition))
 		{

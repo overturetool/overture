@@ -80,16 +80,16 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public Definition findType(LexNameToken name)
+	public Definition findType(LexNameToken name, String fromModule)
 	{
-		Definition def = module.defs.findType(name);
+		Definition def = module.defs.findType(name, module.name.name);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = module.importdefs.findType(name);
+		def = module.importdefs.findType(name, module.name.name);
 
 		if (def != null)
 		{

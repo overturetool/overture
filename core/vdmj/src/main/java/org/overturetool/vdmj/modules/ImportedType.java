@@ -64,7 +64,7 @@ public class ImportedType extends Import
 	{
 		DefinitionList list = new DefinitionList();
 		from = module;
-		Definition expdef = from.exportdefs.findType(name);
+		Definition expdef = from.exportdefs.findType(name, null);
 
 		if (expdef == null)
 		{
@@ -93,7 +93,7 @@ public class ImportedType extends Import
 		if (def != null && from != null)
 		{
 			def.type = (InvariantType)def.type.typeResolve(env, null);
-			Definition expdef = from.exportdefs.findType(name);
+			Definition expdef = from.exportdefs.findType(name, null);
 
 			if (expdef != null)
 			{

@@ -53,7 +53,7 @@ public class ExportedType extends Export
 	public DefinitionList getDefinition(DefinitionList actualDefs)
 	{
 		DefinitionList list = new DefinitionList();
-		Definition def = actualDefs.findType(name);
+		Definition def = actualDefs.findType(name, name.module);
 
 		if (def == null)
 		{

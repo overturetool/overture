@@ -69,7 +69,7 @@ public class UnresolvedType extends Type
 
 	private Type dereference(Environment env, TypeDefinition root)
 	{
-		Definition def = env.findType(typename);
+		Definition def = env.findType(typename, location.module);
 
 		if (def == null)
 		{

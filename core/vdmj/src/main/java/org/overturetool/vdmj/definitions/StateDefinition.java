@@ -183,7 +183,7 @@ public class StateDefinition extends Definition
 	}
 
 	@Override
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
 		if (super.findName(sought, NameScope.STATE) != null)
 		{

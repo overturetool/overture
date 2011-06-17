@@ -134,7 +134,7 @@ public class IsOfClassExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		Definition cls = env.findType(classname);
+		Definition cls = env.findType(classname, null);
 
 		if (cls == null || !(cls instanceof ClassDefinition))
 		{

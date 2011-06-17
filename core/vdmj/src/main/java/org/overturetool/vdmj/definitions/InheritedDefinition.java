@@ -52,7 +52,7 @@ public class InheritedDefinition extends Definition
 		setAccessSpecifier(def.accessSpecifier);
 		setClassDefinition(def.classDefinition);
 	}
-	
+
 	private void checkSuperDefinition()
 	{
 		// This is used to get over the case where an inherited definition
@@ -60,7 +60,7 @@ public class InheritedDefinition extends Definition
 		// LocalDefinition. It would be better to somehow list the
 		// inherited definitions that refer to a LocalDefinition and update
 		// them...
-		
+
 		if (superdef instanceof UntypedDefinition)
 		{
 			if (classDefinition != null)
@@ -143,7 +143,7 @@ public class InheritedDefinition extends Definition
 	}
 
 	@Override
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
 		if (superdef instanceof TypeDefinition && sought.equals(name))
 		{
@@ -228,7 +228,7 @@ public class InheritedDefinition extends Definition
 	{
 		return superdef.isUpdatable();
 	}
-	
+
 	@Override
 	public Definition deref()
 	{

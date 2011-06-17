@@ -78,7 +78,7 @@ public class PublicClassEnvironment extends Environment
 	}
 
 	@Override
-	public Definition findType(LexNameToken name)
+	public Definition findType(LexNameToken name, String fromModule)
 	{
 		Definition def = classes.findType(name);
 
@@ -87,7 +87,7 @@ public class PublicClassEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name);
+		return (outer == null) ? null : outer.findType(name, null);
 	}
 
 	@Override

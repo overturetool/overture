@@ -99,9 +99,17 @@ public class ImportedDefinition extends Definition
 	}
 
 	@Override
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
-		Definition d = def.findType(sought);
+		// We can only find an import if it is being sought from the module that
+		// imports it.
+
+		if (fromModule != null && !location.module.equals(fromModule))
+		{
+			return null;	// Someone else's import
+		}
+
+		Definition d = def.findType(sought, fromModule);
 
 		if (d != null)
 		{

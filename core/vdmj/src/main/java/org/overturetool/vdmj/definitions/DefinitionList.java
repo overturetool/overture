@@ -115,11 +115,11 @@ public class DefinitionList extends Vector<Definition>
 		return null;
 	}
 
-	public Definition findType(LexNameToken name)
+	public Definition findType(LexNameToken name, String fromModule)
 	{
 		for (Definition d: this)
 		{
-			Definition def = d.findType(name);
+			Definition def = d.findType(name, fromModule);
 
 			if (def != null)
 			{

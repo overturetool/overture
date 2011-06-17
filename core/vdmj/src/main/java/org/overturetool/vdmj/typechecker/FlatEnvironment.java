@@ -82,22 +82,22 @@ public class FlatEnvironment extends Environment
 			{
 				scope = NameScope.NAMES;	// Limit NAMESAND(ANY)STATE
 			}
-			
+
 			return outer.findName(name, scope);
 		}
 	}
 
 	@Override
-	public Definition findType(LexNameToken name)
+	public Definition findType(LexNameToken name, String fromModule)
 	{
-		Definition def = definitions.findType(name);
+		Definition def = definitions.findType(name, fromModule);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name);
+		return (outer == null) ? null : outer.findType(name, fromModule);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class FlatEnvironment extends Environment
     {
 		definitions.markUsed();
     }
-	
+
 	public void setLimitStateScope(boolean limitStateScope)
 	{
 		this.limitStateScope = limitStateScope;

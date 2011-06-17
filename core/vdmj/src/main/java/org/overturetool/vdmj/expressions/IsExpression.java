@@ -83,7 +83,7 @@ public class IsExpression extends Expression
 
 		if (typename != null)
 		{
-			typedef = env.findType(typename);
+			typedef = env.findType(typename, location.module);
 
 			if (typedef == null)
 			{

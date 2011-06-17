@@ -259,7 +259,7 @@ public class ClassDefinition extends Definition
 
 		for (LexNameToken supername: supernames)
 		{
-			Definition def = base.findType(supername);
+			Definition def = base.findType(supername, null);
 
 			if (def == null)
 			{
@@ -320,7 +320,7 @@ public class ClassDefinition extends Definition
 
 			if (override == null)
 			{
-				override = definitions.findType(localName);
+				override = definitions.findType(localName, null);
 			}
 
 			if (override != null)
@@ -792,7 +792,7 @@ public class ClassDefinition extends Definition
 	 */
 
 	@Override
-	public Definition findType(LexNameToken sought)
+	public Definition findType(LexNameToken sought, String fromModule)
 	{
 		if ((!sought.explicit && sought.name.equals(name.name)) ||
 			sought.equals(name.getClassName()))
@@ -800,13 +800,13 @@ public class ClassDefinition extends Definition
 			return this;	// Class referred to as "A" or "CLASS`A"
 		}
 
-		Definition def = definitions.findType(sought);
+		Definition def = definitions.findType(sought, null);
 
 		if (def == null)
 		{
 			for (Definition d: allInheritedDefinitions)
 			{
-				Definition indef = d.findType(sought);
+				Definition indef = d.findType(sought, null);
 
 				if (indef != null)
 				{
