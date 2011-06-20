@@ -99,7 +99,8 @@ end
 
 	ADDTUP (fval,tval : Eid, rk:Rkey)
 	ext wr rm  : map Rkey to Rinf
-	    rd esm : map Esetnm to set of Eid 	    
+	    rd esm : map Esetnm to set of Eid 
+        rd em  : map Eid to [Value]
 	pre rk in set dom rm and 
 	    let ri = mu(rm(rk),r |-> (rm(rk)).r union
 	    {mk_Tuple(fval,tval)}) in
