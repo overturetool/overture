@@ -30,6 +30,7 @@ public class FileUtils
 			}
 		} catch (Exception e)
 		{
+			System.err.println("Faild to read file from jar: \""+s+"\"");
 			e.printStackTrace();
 		} finally
 		{
