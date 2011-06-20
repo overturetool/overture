@@ -15,7 +15,7 @@ the ProjectReport.pdf file included in the zip file with the source files.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Anders Kaels Malmos
-#LIB=IO,MATH
+#LIB=IO;MATH
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
