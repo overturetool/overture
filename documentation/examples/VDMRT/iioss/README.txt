@@ -13,6 +13,6 @@ in a stable.
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
 #ENTRY_POINT=new World().Run()
-#LIB=IO,VDMUtil
+#LIB=IO;VDMUtil
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************
