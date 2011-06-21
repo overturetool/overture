@@ -59,7 +59,7 @@ operations
   Validate : PinCode ==> <PinOk> | <PinNotOk> | <Retained>        
   Validate(pin) ==
     let codeOk = curCard.code = Encode(pin),
-        cardLegal = IsLegalCard(curCard) 
+        cardLegal = IsLegalCard(curCard,illegalCards,accounts) 
     in
       (if not cardLegal then 
         (retainedCards := retainedCards union {curCard};
@@ -82,7 +82,7 @@ operations
   GetBalance : () ==> nat
   GetBalance() ==
     return accounts(curCard.accountId).balance
-  pre curCard <> nil and cardOk and IsLegalCard(curCard);
+  pre curCard <> nil and cardOk and IsLegalCard(curCard,illegalCards,accounts);
 
   MakeWithdrawal : nat * Date ==> bool
   MakeWithdrawal(amount,date) ==
@@ -100,7 +100,7 @@ operations
          return true)
      else 
        return false
-  pre curCard <> nil and cardOk and IsLegalCard(curCard);
+  pre curCard <> nil and cardOk and IsLegalCard(curCard,illegalCards,accounts);
 
   RequestStatement : () ==> Name * seq of Transaction * nat
   RequestStatement() ==
@@ -108,13 +108,17 @@ operations
         mk_Account(cards,balance,transactions) = accounts(accountId)
     in
       return mk_(cards(cardId).name,transactions,balance)
-  pre curCard <> nil and cardOk and IsLegalCard(curCard);
+  pre curCard <> nil and cardOk and IsLegalCard(curCard,illegalCards,accounts)
 
-  IsLegalCard : Card ==> bool
-  IsLegalCard(mk_Card(-,cardId,accountId)) ==
-    return cardId not in set illegalCards and 
-           accountId in set dom accounts and
-           cardId in set dom accounts(accountId).cards;
+functions
+
+  IsLegalCard : Card * set of CardId * map AccountId to Account -> bool
+  IsLegalCard(mk_Card(-,cardId,accountId),pillegalcards,paccounts) ==
+     cardId not in set pillegalcards and 
+     accountId in set dom paccounts and
+     cardId in set dom paccounts(accountId).cards;
+
+operations
 
   ReportIllegalCard : CardId ==> ()
   ReportIllegalCard(cardId) ==
