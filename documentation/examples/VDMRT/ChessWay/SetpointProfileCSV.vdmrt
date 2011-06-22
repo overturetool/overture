@@ -1,0 +1,94 @@
+class SetpointProfileCSV
+
+instance variables
+
+-- file to read and the number of lines it contains
+filename: seq of char;
+lines: int;
+line: int;
+
+-- current and next setpoint
+setpoint: real;
+next_setpoint: [(real * real)]
+
+operations
+
+-- constructor for SetpointProfileCSV
+public SetpointProfileCSV: real * seq of char ==> SetpointProfileCSV
+SetpointProfileCSV(init, file) ==
+(
+	-- count lines in file
+	filename := file;
+	line := 1;
+	let mk_(success,l) = CSV`flinecount(file) in
+	(
+		if not success then quit("Failed to read input file '%s': %s.", [file, new CSV().ferror()]);
+		lines := l
+	);	
+	setpoint := init;
+	next_setpoint := nil
+);
+
+-- constructor for SetpointProfileCSV
+public SetpointProfileCSV: seq of char ==> SetpointProfileCSV
+SetpointProfileCSV(file) ==
+	SetpointProfileCSV(0.0, file);
+
+-- read the next setpoint from the file
+private ReadNextSetpoint: () ==> ()
+ReadNextSetpoint() ==
+(
+	let mk_(-,vals) = CSV`freadval[seq of real](filename,line) in 
+	(
+		if len vals <> 2 then quit("Incorrect number of values in %s line %s (expected: 2, actual: %s)\n", [filename,line,len vals])
+		else 
+		(
+			next_setpoint := mk_(vals(1),vals(2));
+			line := line + 1;
+		)
+	)
+)
+pre line <= lines and next_setpoint = nil;
+
+-- return the value of the current setpoint
+public GetSetpoint: () ==> real
+GetSetpoint() ==
+( dcl curtime : real := time / 1.0E9;
+	-- no more setpoints
+	if line = lines then return setpoint;	
+
+	-- read from file if we need to
+	if next_setpoint = nil then ReadNextSetpoint();
+
+	-- update setpoint if necessary
+	let mk_(t,sp) = next_setpoint in
+		if curtime >= t then 
+		(
+			setpoint := sp;
+			next_setpoint := nil
+		);
+
+    -- show the computed setpoint
+    IO`printf("setpoint (%s) = %s\n", [curtime, setpoint]);
+
+	-- return current setpoint
+	return setpoint
+);
+
+-- quit with given error (printf version)
+private quit: seq of char * seq of ? ==> ()
+quit(m,s) ==
+(
+	IO`printf(m ^ "\n",s);
+	exit
+);
+
+-- quit with given error (println version)
+private quit: seq of char ==> ()
+quit(m) ==
+(
+	IO`println(m);
+	exit
+)
+
+end SetpointProfileCSV

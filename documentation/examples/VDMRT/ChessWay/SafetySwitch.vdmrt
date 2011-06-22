@@ -1,0 +1,25 @@
+% SafetySwitch.vdmrt
+
+\subsubsection{Observing the safety switch -- the \texttt{SafetySwitch} class}
+
+The \texttt{SafetySwitch} class obtains the status from the environment and returns
+a Boolean value.
+
+\begin{vdm_al}
+class SafetySwitch
+
+instance variables
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public SafetySwitch: Controller ==> SafetySwitch
+  SafetySwitch (pController) == mController := pController;
+
+  public getStatus: () ==> bool
+  getStatus () == 
+    duration (0)
+      return mController.getValue("SAFETY") > 0;
+
+end SafetySwitch
+\end{vdm_al}

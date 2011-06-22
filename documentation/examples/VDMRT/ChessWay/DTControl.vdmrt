@@ -1,0 +1,10 @@
+class DTControl is subclass of DTObject
+
+operations
+
+-- calculates output, based on the error
+public Output: real ==> real
+Output(err) == 
+	is subclass responsibility
+
+end DTControl

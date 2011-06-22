@@ -1,0 +1,34 @@
+class P is subclass of DTControl
+
+instance variables
+
+-- design parameters
+protected k: real;
+
+operations
+
+-- constructor for PD
+public P: real ==> P
+P(k_) ==
+(
+    k := k_;
+);
+    
+-- default constructor for PD
+public P: () ==> P
+P() ==
+    P(DEF_K);
+
+-- calculates output, based on the error
+public Output: real ==> real
+Output(err) == 
+(
+	return k * err
+);
+
+values
+
+-- defaults
+DEF_K: real = 0.2;
+
+end P

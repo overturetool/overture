@@ -1,0 +1,28 @@
+% Accelerometer.vdmrt
+
+\subsubsection{Obtaining the 3-D acceleration data -- the \texttt{Accelerometer} class}
+
+The \texttt{Accelerometer} class obtains the current accelerometer values for each dimension
+from the \texttt{Environment} and composes a three-tuple of real values.
+
+\begin{vdm_al}
+class Accelerometer
+
+instance variables
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public Accelerometer: Controller ==> Accelerometer
+  Accelerometer (pController) == mController := pController;
+
+  public getAccelerationData: () ==> real * real * real
+  getAccelerationData () ==
+    duration (0)
+      ( dcl ax : real := mController.getValue("ACC_X"),
+            ay : real := mController.getValue("ACC_Y"),
+            az : real := mController.getValue("ACC_Z");
+        return mk_(ax, ay, az) )
+  
+end Accelerometer
+\end{vdm_al}

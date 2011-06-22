@@ -1,0 +1,31 @@
+{
+  -- enable the safety switch
+  "RIGHT_SAFETY" |->
+  [
+    mk_ (0.0, 1.0, 0.0)
+  ],
+  
+  -- keep the direction switch neutral
+  "RIGHT_DIRECTION" |->
+  [
+    mk_ (0.0, 0.0, 0.0)
+  ],
+  
+  -- turn the system on between [2..8] seconds
+  "RIGHT_ONOFF" |->
+  [
+    mk_ (0.0, 0.0, 0.0),
+    mk_ (2, 1.0, 0.0),
+    mk_ (8, 0.0, 0.0)
+  ],
+  
+  -- user pushes handle bar forward to 15 degrees with ramp-up
+  "USER" |->
+  [
+    mk_ (0.0, 0.0, 0.0),
+    mk_ (4.0, 0.0, 0.2618),
+    mk_ (5.0, 0.2618, 0.0),
+    mk_ (6.0, 0.2618, -0.2618),
+    mk_ (7.0, 0.0, 0.0)
+  ]
+}

@@ -1,0 +1,26 @@
+class Actuator is subclass of IActuatorReal
+
+instance variables
+
+-- actuator value
+value: real;
+
+operations
+
+-- constructor for PWM
+public Actuator : real ==> Actuator 
+Actuator(v) ==
+	value := v;
+
+-- default constructor for PWM
+public Actuator: () ==> Actuator
+Actuator() ==
+	Actuator(0.0);
+
+-- set actuator value
+public SetValue: real ==> ()
+SetValue(v) ==
+  ( IO`printf("SetValue = %s\n", [v]);
+	value := v );
+
+end Actuator

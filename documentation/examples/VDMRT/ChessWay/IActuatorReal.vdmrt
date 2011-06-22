@@ -1,0 +1,10 @@
+class IActuatorReal
+
+operations
+
+-- set actuator value
+public SetValue: real ==> ()
+SetValue(v) ==
+	is subclass responsibility;
+
+end IActuatorReal

@@ -1,0 +1,58 @@
+% ChessWay.vdmrt
+
+\subsubsection{Constructing the system model -- the \texttt{ChessWay} class}
+
+The \texttt{ChessWay} system class defines the distributed architecture on which
+the embedded controller software is deployed. The system is composed of two CPUs
+connected by a BUS. The BUS is used in case the controllers deployed on either
+processor need to communicate, for example to exchange information relating to
+their internal state.
+
+\begin{vdm_al}
+system ChessWay
+
+instance variables
+  -- architecture definition (two CPUs at 10 MIPS)
+  fpga1 : CPU := new CPU(<FP>, 10E6);
+  fpga2 : CPU := new CPU(<FP>, 10E6);
+
+  -- communication infrastructure (one BUS at 100 kpbs)
+  bus : BUS := new BUS(<FCFS>, 100E3, {fpga1, fpga2});
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+  -- sensors (co-simulation variables)
+  public static acc_in: [ISensorReal] := nil;
+  public static vel_in: [ISensorReal] := nil;
+
+  -- actuators (co-simulation variables)
+  public static acc_out: [IActuatorReal] := nil;
+  public static vel_out: [IActuatorReal] := nil
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+  -- deployable objects (two controllers)
+  static public lctrl : LeftController := new LeftController();
+  static public rctrl : RightController := new RightController();
+
+  -- flag to enable debugging logging in system classes
+  static public debug : bool := true
+\end{vdm_al}
+
+The system constructor deploys the instances of the \texttt{LeftController} and 
+the \texttt{RightController}, one to each CPU, which are named \texttt{LeftCtrl}
+and \texttt{RightCtrl} respectively.
+
+\begin{vdm_al}
+operations
+  -- construct the system class
+  public ChessWay : () ==> ChessWay
+  ChessWay () == 
+    ( -- deploy the controllers on the CPUs
+      fpga1.deploy(lctrl,"LeftCtrl");
+      fpga2.deploy(rctrl,"RightCtrl") );
+ 
+end ChessWay
+\end{vdm_al}
