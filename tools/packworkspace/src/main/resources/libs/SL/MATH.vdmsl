@@ -60,7 +60,12 @@ definitions
 
     pi_f:() +> real
     pi_f () ==
-    is not yet specified
+    is not yet specified;
+
+	fac:nat -> nat1 
+    fac(a) == 
+    is not yet specified 
+    pre a < 21;         -- The limit for 64-bit calculations
 
   operations
 
