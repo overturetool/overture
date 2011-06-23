@@ -125,10 +125,27 @@ public class VdmReadme
 			else if (data[0].equals(ENCODING))
 				setEncoding(data[1].trim());
 			else if (data[0].equals(LIB))
-				setLibs(data[1].trim().split(";"));
+				setLibs(fixSemiSplit(data[1]));
 			else if (data[0].equals(VM_ARGUMENTS))
-				setVmArguments(data[1].trim().split(";"));
+				setVmArguments(fixSemiSplit(data[1]));
 		}
+	}
+
+	static String[] fixSemiSplit(String text)
+	{
+		String splitter = ",";
+		if (text.contains(splitter))
+		{
+			return text.trim().split(splitter);
+		} 
+		
+		splitter=";";
+		if (text.contains(splitter))
+		{
+			return text.trim().split(splitter);
+		}
+		return new String[] { text };
+
 	}
 
 	public void writeProjectFile(File outputFolder)
@@ -172,8 +189,8 @@ public class VdmReadme
 
 	public void writeReadmeContentFile(File outputFolder, String fileName)
 	{
-		File file =new File(outputFolder, fileName);
-		FileUtils.writeFile(getReadmeContent(), file,false);
+		File file = new File(outputFolder, fileName);
+		FileUtils.writeFile(getReadmeContent(), file, false);
 	}
 
 	public String getReadmeContent()
@@ -224,7 +241,7 @@ public class VdmReadme
 	public void createReadme(File newReadMeFile)
 	{
 		FileUtils.writeFile(toString(), newReadMeFile);
-			}
+	}
 
 	public void appendReadme()
 	{
@@ -252,7 +269,7 @@ public class VdmReadme
 		}
 
 		FileUtils.writeFile(sb.toString() + "\n\n" + toString(), file);
-		
+
 	}
 
 	public void writeLaunchFile(File folder)
@@ -268,18 +285,19 @@ public class VdmReadme
 			return;
 
 		String entryPoint = entryPoints.get(0);
-		
+
 		if (entryPoint.contains("`") && !entryPoint.startsWith("new "))
 		{
 			staticAccess = true;
 			module = entryPoint.substring(0, entryPoint.indexOf('`')).trim();
 			method = entryPoint.substring(entryPoint.indexOf('`') + 1).trim();
 			defaultModule = module;
-			
-		}else if(entryPoint.startsWith("new ")){
-			
+
+		} else if (entryPoint.startsWith("new "))
+		{
+
 		}
-		
+
 		if (entryPoint.contains("`"))
 		{
 			module = entryPoint.substring(0, entryPoint.indexOf('`')).trim();
@@ -287,7 +305,7 @@ public class VdmReadme
 		} else if (entryPoint.contains("."))
 		{
 			module = entryPoint.substring(4, entryPoint.indexOf(").") + 1).trim();
-			defaultModule = entryPoint.substring(4, entryPoint.indexOf("(") ).trim();
+			defaultModule = entryPoint.substring(4, entryPoint.indexOf("(")).trim();
 			method = entryPoint.substring(entryPoint.indexOf(").") + 2).trim();
 		}
 
@@ -308,29 +326,30 @@ public class VdmReadme
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
 		sb.append("\n<launchConfiguration type=\""
 				+ escapeXml(launchConfigarationId) + "\">");
-		
+
 		sb.append("\n<intAttribute key=\"vdm_debug_session_id\" value=\"1\"/>");
 		sb.append("\n<booleanAttribute key=\"vdm_launch_config_create_coverage\" value=\"true\"/>");
 		sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_logging\" value=\"false\"/>");
 		sb.append("\n<stringAttribute key=\"vdm_launch_config_memory_option\" value=\"\"/>");
 		sb.append("\n<stringAttribute key=\"vdm_launch_config_remote_control_class\" value=\"\"/>");
 		sb.append("\n<booleanAttribute key=\"vdm_launch_config_remote_debug\" value=\"false\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_project\" value=\""+EscapeChars.forXML(name)+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_expression\" value=\""+EscapeChars.forXML(entryPoint)+"\"/>");
-		sb.append("\n<booleanAttribute key=\"vdm_launch_config_static_method\" value=\""+staticAccess+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_default\" value=\""+EscapeChars.forXML(defaultModule)+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_method\" value=\""+EscapeChars.forXML(method)+"\"/>");
-		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""+EscapeChars.forXML(module)+"\"/>");	
-
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_project\" value=\""
+				+ EscapeChars.forXML(name) + "\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_expression\" value=\""
+				+ EscapeChars.forXML(entryPoint) + "\"/>");
+		sb.append("\n<booleanAttribute key=\"vdm_launch_config_static_method\" value=\""
+				+ staticAccess + "\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_default\" value=\""
+				+ EscapeChars.forXML(defaultModule) + "\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_method\" value=\""
+				+ EscapeChars.forXML(method) + "\"/>");
+		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""
+				+ EscapeChars.forXML(module) + "\"/>");
 
 		sb.append("\n</launchConfiguration>");
-		
-		
-
-
 
 		FileUtils.writeFile(sb.toString(), launch);
-		
+
 	}
 
 	private static String escapeXml(String data)
