@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.tools.packworkspace.ProjectPacker;
-import org.overturetool.tools.packworkspace.latex.FileUtils;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.VDMJ;
@@ -101,7 +100,7 @@ public class ProjectTester
 
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		project.packTo(dir, modelDir);
-		FileUtils.writeFile(FileUtils.readFile("/web/default.asp"), new File(dir, "model/default.asp"));
+//		FileUtils.writeFile(FileUtils.readFile("/web/default.asp"), new File(dir, "model/default.asp"));
 
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
