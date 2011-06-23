@@ -23,14 +23,17 @@
 
 package org.overturetool.vdmj.values;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexNameToken;
 
 /**
  * A class to hold a name and a runtime value pair.
  */
 
-public class NameValuePair
+public class NameValuePair implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	public final LexNameToken name;
 	public final Value value;
 
