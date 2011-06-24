@@ -76,6 +76,7 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.ObjectContext;
+import org.overturetool.vdmj.runtime.RuntimeValidator;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
@@ -397,6 +398,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 						PrintWriter p = new PrintWriter(new FileOutputStream(
 								logfile, false));
 						RTLogger.setLogfile(p);
+						
+						PrintWriter p1 = new PrintWriter(new FileOutputStream(
+								new File(new File(logfile).getParentFile(),"timingInvariants.txt"), false));
+						RuntimeValidator.setLogFile(p1);
 					}
 
 					Interpreter i = controller.getInterpreter();
