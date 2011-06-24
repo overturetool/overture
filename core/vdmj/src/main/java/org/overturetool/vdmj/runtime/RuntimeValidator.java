@@ -43,4 +43,12 @@ public class RuntimeValidator
 			}
 		}
 	}
+
+	public static void stop()
+	{
+		if(Settings.timingInvChecks)
+		{
+			//TODO
+		}
+	}
 }

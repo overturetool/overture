@@ -228,6 +228,8 @@ public class ClassInterpreter extends Interpreter
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);
+		
+		RuntimeValidator.stop();
 
 		return main.getResult();	// Can throw ContextException
 	}
