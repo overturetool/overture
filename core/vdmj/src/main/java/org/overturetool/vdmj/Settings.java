@@ -40,6 +40,7 @@ public class Settings
 	public static boolean invchecks = true;
 	public static boolean dynamictypechecks = true;
 	public static boolean measureChecks = true;
+	public static boolean timingInvChecks = false;
 
 	public static boolean usingDBGP = false;
 	public static boolean usingCmdLine = false;

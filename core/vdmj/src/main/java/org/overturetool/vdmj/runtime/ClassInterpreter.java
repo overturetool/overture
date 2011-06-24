@@ -164,6 +164,9 @@ public class ClassInterpreter extends Interpreter
 	{
 		BasicSchedulableThread.terminateAll();
 
+		//TODO: Must be removed
+		RuntimeValidator.init(this);
+		
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 

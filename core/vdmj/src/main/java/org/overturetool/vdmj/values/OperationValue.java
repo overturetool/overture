@@ -51,6 +51,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.RuntimeValidator;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.AsyncThread;
@@ -586,10 +587,13 @@ public class OperationValue extends Value
 	private synchronized void req(boolean logreq)
 	{
 		hashReq++;
+		
+		MessageType type = MessageType.Request;
+		RuntimeValidator.validate(this, type);
 
 		if (logreq)		// Async OpRequests are made in asyncEval
 		{
-			trace(MessageType.Request);
+			trace(type);
 		}
 
 		debug("#req = " + hashReq);
@@ -601,7 +605,9 @@ public class OperationValue extends Value
 
 		if (!ResourceScheduler.isStopping())
 		{
-			trace(MessageType.Activate);
+			MessageType type = MessageType.Activate; 
+			RuntimeValidator.validate(this,type);
+			trace(type);
 			debug("#act = " + hashAct);
 		}
 	}
@@ -612,7 +618,9 @@ public class OperationValue extends Value
 
 		if (!ResourceScheduler.isStopping())
 		{
-			trace(MessageType.Completed);
+			MessageType type = MessageType.Completed;
+			RuntimeValidator.validate(this, type);
+			trace(type);
 			debug("#fin = " + hashFin);
 		}
 	}

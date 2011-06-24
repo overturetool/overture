@@ -39,6 +39,7 @@ import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.RootContext;
+import org.overturetool.vdmj.runtime.RuntimeValidator;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -203,6 +204,9 @@ public class SystemDefinition extends ClassDefinition
 
 			system = makeNewInstance(null, new ValueList(),
 					initialContext, new HashMap<LexNameToken, ObjectValue>());
+			
+			//Bind system instances to runtime validator
+			RuntimeValidator.bindSystemVariables(this);
 
 			// Do CPUs first so that default BUSses can connect all CPUs.
 
