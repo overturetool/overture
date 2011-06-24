@@ -31,7 +31,7 @@ Window (id, type) ==
 
 private PeriodicOp: () ==> ()
 PeriodicOp() ==
-  cycles(1E6)
+  --cycles(1E3)
  (dcl tempCorr: NetworkTypes`correction := GetCorrection();
   if (tempCorr = <OPEN>)
   then (World`env.DecHumid();
@@ -41,7 +41,7 @@ PeriodicOp() ==
 
 async public SetCorrection: NetworkTypes`correction ==> ()
 SetCorrection(cor) ==
-  cycles(1E6)
+  --cycles(1E3)
   Corr := cor
 pre (cor = <OPEN>) or (cor = <CLOSE>);
 
@@ -54,7 +54,7 @@ IsFinished() ==
   skip;
 
 sync
-  mutex(PeriodicOp); -- ADDED
+  --mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
   mutex(SetCorrection, GetCorrection);
 
@@ -64,6 +64,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(1000,0,0,0) (PeriodicOp)
+periodic(10000,0,0,7500) (PeriodicOp)
 
 end Window

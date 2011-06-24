@@ -20,8 +20,8 @@ instance variables
   private outlines : seq of outline := [];
   private simtime  : nat;
   private finished : bool := false;
-  private envTemp  : int := 0;
-  private envHumid : int := 0;
+  private envTemp  : int := 20;
+  private envHumid : int := 75;
 --  inv envTemp >= 0;
 --  inv envHumid >= 0;
 
@@ -62,8 +62,8 @@ CreateSignal() ==
          (if timeIn <= curtime
           then (SetTemp(tempIn);
                 SetHumid(humidIn);
-                IO`print("\nNew env values set");
-                IO`print(timeIn);                
+                --IO`print("\nNew env values set at time: ");
+                --IO`print(timeIn);                
                 inlines := tl inlines;
                 return
                );
@@ -77,7 +77,12 @@ CreateSignal() ==
 
 private ShowResults: () ==> ()
 ShowResults() ==
-  IO`print(outlines);
+ (for all i in set inds outlines
+  do
+   (IO`print("\n");
+    IO`print(outlines(i));
+   );  
+ );
 
 public HandleEvent: nat * nat * nat ==> ()
 HandleEvent(curTime, TempValue, HumidValue) ==
@@ -85,11 +90,15 @@ HandleEvent(curTime, TempValue, HumidValue) ==
 
 public SetTemp: nat ==> ()
 SetTemp(t) ==
-  envTemp := t;
+ (envTemp := t;
+  HandleEvent(time, envTemp, envHumid);
+ );
 
 public SetHumid: nat ==> ()
 SetHumid(h) ==
-  envHumid := h;
+ (envHumid := h;
+  HandleEvent(time, envTemp, envHumid);
+ );
 
 public ReadTemp: () ==> int
 ReadTemp() ==
@@ -97,11 +106,15 @@ ReadTemp() ==
 
 public IncTemp: () ==> ()
 IncTemp() ==
-  envTemp := envTemp + 1;
+ (envTemp := envTemp + 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
 
 public DecTemp: () ==> ()
 DecTemp() ==
-  envTemp := envTemp - 1;
+ (envTemp := envTemp - 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
 
 public ReadHumid: () ==> nat
 ReadHumid() ==
@@ -109,15 +122,27 @@ ReadHumid() ==
 
 public IncHumid: () ==> ()
 IncHumid() ==
-  envHumid := envHumid + 1;
+ (envHumid := envHumid + 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
 
 public DecHumid: () ==> ()
 DecHumid() ==
-  envHumid := envHumid - 1;
+ (envHumid := envHumid - 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
 
 public IsFinished: () ==> ()
 IsFinished() ==
   skip;
+
+private printEnvChange : seq of char * nat ==> ()
+printEnvChange (string, val) == 
+ (IO`print("\n" ^ string ^ ": ");
+  IO`print(val);
+  IO`print(" at time: ");
+  IO`print(time);  
+ );
 
 sync
 
@@ -129,7 +154,8 @@ sync
   mutex(DecHumid);
   mutex(SetHumid);
   mutex(ReadHumid, IncHumid, DecHumid, SetHumid);
-  mutex(CreateSignal);	-- ADDED
+  --mutex(CreateSignal);	-- ADDED
+  mutex(HandleEvent);
   per IsFinished => finished;
 
 --
@@ -138,6 +164,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(1000,0,0,0) (CreateSignal)
+periodic(10000,0,0,0) (CreateSignal)
 
 end Environment

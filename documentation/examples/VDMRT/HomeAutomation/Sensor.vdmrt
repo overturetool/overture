@@ -34,7 +34,7 @@ GetType() ==
 
 public ReadValue: () ==> int
 ReadValue() ==
-  cycles (1E3)
+  --cycles (1E3)
   return Value;
 
 public Step: () ==> ()

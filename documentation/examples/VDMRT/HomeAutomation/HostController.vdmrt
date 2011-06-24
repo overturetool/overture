@@ -44,7 +44,7 @@ HostController(t, h) ==
 
 public UpdateValues: () ==> ()
 UpdateValues() ==
-  cycles(1E9)
+  --cycles(1E9)
  (for all r in set rng NodeList 
   do
    (if (r = <HUMIDSENSOR>)
@@ -68,7 +68,7 @@ GetHumid() ==
 
 public Algorithm: () ==> ()
 Algorithm() ==
-  cycles(1E11)
+  --cycles(1E11)
  (cases Algo:
     <THTW> -> THTWAlgo(),
     <TTW>  -> TTWAlgo(),
@@ -84,26 +84,26 @@ THTWAlgo() ==
  (if (Humid > TargetHumid)
   then (HA`WinNode.SetCorrection(<OPEN>);
         HA`ThermNode.SetCorrection(<NONE>);
-        print := true;
+        --print := true;
        )
   elseif (Temp > TargetTemp)
   then (HA`WinNode.SetCorrection(<CLOSE>);
         HA`ThermNode.SetCorrection(<DEC>);
-        print := true;
+        --print := true;
        )
   elseif (Temp < TargetTemp)
   then (HA`WinNode.SetCorrection(<CLOSE>);
         HA`ThermNode.SetCorrection(<INC>);
-        print := true;
+        --print := true;
        )
   else (HA`WinNode.SetCorrection(<CLOSE>);
         HA`ThermNode.SetCorrection(<NONE>);
-        if print
-        then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("\nTarget values reached");
-              IO`print(time);
-             );
-        print := false;
+        --if print
+        --then (World`env.HandleEvent(time, Temp, Humid);
+              --printStr("\nTarget values reached at time: ");
+              --IO`print(time);
+        --     );
+        --print := false;
        );
  );
 
@@ -247,8 +247,8 @@ Finish() ==
   finished := true;
 
 sync
-  mutex(PeriodicOp); -- ADDED
-  mutex(AddNode,RemoveNode); -- without this a transactional error occur
+  --mutex(PeriodicOp); -- ADDED
+  --mutex(AddNode,RemoveNode); -- without this a transactional error occur
   -- with it a deadlock appear
   per IsFinished => finished;
   per printStr => print;
@@ -259,6 +259,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(400,0,0,0) (PeriodicOp)
+periodic(10000,0,0,4500) (PeriodicOp)
 
 end HostController

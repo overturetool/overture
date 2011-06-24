@@ -31,7 +31,7 @@ HumidSensor (id, type, val) ==
 
 public PeriodicOp: () ==> ()
 PeriodicOp () ==
-  cycles(1E6)
+  --cycles(1E3)
   Value := World`env.ReadHumid();
 
 public IsFinished: () ==> ()
@@ -39,7 +39,7 @@ IsFinished() ==
   skip;
 
 sync
-  mutex(PeriodicOp);	-- ADDED
+  --mutex(PeriodicOp);	-- ADDED
   per IsFinished => finished;
 
 --
@@ -48,6 +48,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(400,0,0,0) (PeriodicOp)
+periodic(10000,0,0,3000) (PeriodicOp)
 
 end HumidSensor
