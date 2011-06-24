@@ -74,6 +74,8 @@ public class RecordType extends InvariantType
 	@Override
 	public Type isType(String typename)
 	{
+		if (opaque) return null;
+
 		if (typename.indexOf('`') > 0)
 		{
 			return (name.getName().equals(typename)) ? this : null;
@@ -88,6 +90,7 @@ public class RecordType extends InvariantType
 	@Override
 	public boolean isRecord()
 	{
+		if (opaque) return false;
 		return true;
 	}
 
@@ -185,19 +188,19 @@ public class RecordType extends InvariantType
 	{
 		return name.hashCode();
 	}
-	
+
 	@Override
 	public ValueList getAllValues(Context ctxt) throws ValueException
 	{
 		TypeList types = new TypeList();
-		
+
 		for (Field f: fields)
 		{
 			types.add(f.type);
 		}
-		
+
 		ValueList results = new ValueList();
-		
+
 		for (Value v: types.getAllValues(ctxt))
 		{
 			try
@@ -210,7 +213,7 @@ public class RecordType extends InvariantType
 				// Value does not match invariant, so ignore it
 			}
 		}
-		
+
 		return results;
 	}
 }

@@ -34,6 +34,7 @@ public abstract class InvariantType extends Type
 {
 	private static final long serialVersionUID = 1L;
 	public ExplicitFunctionDefinition invdef = null;
+	public boolean opaque = false;
 
 	public InvariantType(LexLocation location)
 	{
@@ -42,6 +43,11 @@ public abstract class InvariantType extends Type
 
 	@Override
 	abstract protected String toDisplay();
+
+	public void setOpaque(boolean opaque)
+	{
+		this.opaque = opaque;
+	}
 
 	public void setInvariant(ExplicitFunctionDefinition invdef)
 	{

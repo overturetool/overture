@@ -51,18 +51,21 @@ public class NamedType extends InvariantType
 	@Override
 	public Type isType(String other)
 	{
+		if (opaque) return null;
 		return type.isType(other);
 	}
 
 	@Override
 	public boolean isType(Class<? extends Type> typeclass)
 	{
+		if (opaque) return false;
 		return type.isType(typeclass);
 	}
 
 	@Override
 	public boolean isUnion()
 	{
+		if (opaque) return false;
 		return type.isUnion();
 	}
 
@@ -93,60 +96,70 @@ public class NamedType extends InvariantType
 	@Override
 	public boolean isSeq()
 	{
+		if (opaque) return false;
 		return type.isSeq();
 	}
 
 	@Override
 	public boolean isSet()
 	{
+		if (opaque) return false;
 		return type.isSet();
 	}
 
 	@Override
 	public boolean isMap()
 	{
+		if (opaque) return false;
 		return type.isMap();
 	}
 
 	@Override
 	public boolean isRecord()
 	{
+		if (opaque) return false;
 		return type.isRecord();
 	}
 
 	@Override
 	public boolean isClass()
 	{
+		if (opaque) return false;
 		return type.isClass();
 	}
 
 	@Override
 	public boolean isNumeric()
 	{
+		if (opaque) return false;
 		return type.isNumeric();
 	}
 
 	@Override
 	public boolean isProduct()
 	{
+		if (opaque) return false;
 		return type.isProduct();
 	}
 
 	@Override
 	public boolean isProduct(int n)
 	{
+		if (opaque) return false;
 		return type.isProduct(n);
 	}
 
 	@Override
 	public boolean isFunction()
 	{
+		if (opaque) return false;
 		return type.isFunction();
 	}
 
 	@Override
 	public boolean isOperation()
 	{
+		if (opaque) return false;
 		return type.isOperation();
 	}
 
@@ -270,7 +283,7 @@ public class NamedType extends InvariantType
 		ValueList raw = type.getAllValues(ctxt);
 		boolean checks = Settings.invchecks;
 		Settings.invchecks = true;
-		
+
 		ValueList result = new ValueList();
 		for (Value v: raw)
 		{
@@ -283,7 +296,7 @@ public class NamedType extends InvariantType
 				// Raw value not in type because of invariant
 			}
 		}
-		
+
 		Settings.invchecks = checks;
 		return result;
 	}

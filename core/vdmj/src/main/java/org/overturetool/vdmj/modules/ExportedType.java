@@ -27,8 +27,10 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.types.InvariantType;
 import org.overturetool.vdmj.types.NamedType;
-import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.types.RecordType;
+import org.overturetool.vdmj.types.Type;
 
 public class ExportedType extends Export
 {
@@ -67,10 +69,28 @@ public class ExportedType extends Export
 			}
 			else
 			{
-				// Structureless type
-				list.add(new TypeDefinition(def.name,
-					new NamedType(def.name, new UnknownType(def.location)),
-					null, null));
+				Type type = def.getType();
+
+				if (type instanceof NamedType)
+				{
+					NamedType ntype = (NamedType)type;
+					InvariantType copy = new NamedType(ntype.typename, ntype.type);
+					copy.setOpaque(true);
+					copy.setInvariant(ntype.invdef);
+					list.add(new TypeDefinition(def.name, copy,	null, null));
+				}
+				else if (type instanceof RecordType)
+				{
+					RecordType rtype = (RecordType)type;
+					InvariantType copy = new RecordType(rtype.name, rtype.fields);
+					copy.setOpaque(true);
+					copy.setInvariant(rtype.invdef);
+					list.add(new TypeDefinition(def.name, copy,	null, null));
+				}
+				else
+				{
+					report(67, "Exported type " + name + " not structured");
+				}
 			}
 		}
 

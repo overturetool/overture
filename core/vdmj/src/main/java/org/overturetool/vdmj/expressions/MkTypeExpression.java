@@ -97,6 +97,12 @@ public class MkTypeExpression extends Expression
 
 		recordType = (RecordType)rec;
 
+		if (recordType.opaque)
+		{
+			report(3127, "Type '" + typename + "' is not a record type");
+			return rec;
+		}
+
 		if (typename.explicit)
 		{
 			// If the type name is explicit, the Type ought to have an explicit
