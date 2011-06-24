@@ -150,13 +150,10 @@ public class StartStatement extends Statement
 			PeriodicStatement ps = (PeriodicStatement)op.body;
 			OperationValue pop = pctxt.lookup(ps.opname).operationValue(pctxt);
 
-			TimeUnit tu = (Settings.dialect == Dialect.VDM_PP) ?
-				TimeUnit.nanosecond : TimeUnit.millisecond;
-
-			long period = SystemClock.timeToInternal(tu, ps.values[0]);
-			long jitter = SystemClock.timeToInternal(tu, ps.values[1]);
-			long delay  = SystemClock.timeToInternal(tu, ps.values[2]);
-			long offset = SystemClock.timeToInternal(tu, ps.values[3]);
+			long period = ps.values[0];
+			long jitter = ps.values[1];
+			long delay  = ps.values[2];
+			long offset = ps.values[3];
 
 			// Note that periodic threads never set the stepping flag
 

@@ -98,7 +98,7 @@ public class DurationStatement extends Statement
 			duration.report(3281, "Arguments to duration must be integer >= 0");
 		}
 
-		step = SystemClock.timeToInternal(TimeUnit.millisecond,new Double(durationValue));//convert the input value [ms] to internal
+		step = durationValue;//sets the input value [ns] to internal
 		
 		return statement.typeCheck(env, scope);
 	}
