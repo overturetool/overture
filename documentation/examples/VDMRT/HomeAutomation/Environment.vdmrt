@@ -61,23 +61,24 @@ CreateSignal() ==
         in
          (if timeIn <= curtime
           then (SetTemp(tempIn);
-                SetHumid(humidIn);
-                --IO`print("\nNew env values set at time: ");
-                --IO`print(timeIn);                
+                SetHumid(humidIn);              
                 inlines := tl inlines;
                 return
                );
          );
-       )
-  else (ShowResults();
+       );
+  if (time >= simtime)
+  then (ShowResults();
         finished := true;
-        return
+        return;
        );
  );	
 
 private ShowResults: () ==> ()
 ShowResults() ==
- (for all i in set inds outlines
+ (IO`print("Time, Temperature, Humidity\n");
+
+  for all i in set inds outlines
   do
    (IO`print("\n");
     IO`print(outlines(i));
@@ -136,14 +137,6 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-private printEnvChange : seq of char * nat ==> ()
-printEnvChange (string, val) == 
- (IO`print("\n" ^ string ^ ": ");
-  IO`print(val);
-  IO`print(" at time: ");
-  IO`print(time);  
- );
-
 sync
 
   mutex(IncTemp);
@@ -154,7 +147,6 @@ sync
   mutex(DecHumid);
   mutex(SetHumid);
   mutex(ReadHumid, IncHumid, DecHumid, SetHumid);
-  --mutex(CreateSignal);	-- ADDED
   mutex(HandleEvent);
   per IsFinished => finished;
 
@@ -164,6 +156,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(10000,0,0,0) (CreateSignal)
+periodic(1000,0,0,0) (CreateSignal)
 
 end Environment

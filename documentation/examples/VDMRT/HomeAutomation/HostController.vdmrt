@@ -10,19 +10,27 @@
 --
 class HostController
 
+values
+
+  private OVERSHOOT_CNT : nat = 2;
+
 --
 -- instance variables
 --
 instance variables
 
   private finished    : bool := false;
-  private print       : bool := true;
+
   private TargetTemp  : nat;
   private Temp        : nat := 0;
   private TargetHumid : nat;
   private Humid       : nat := 0;
   private NodeList    : map nat to NetworkTypes`nodeType := { |-> };
   private Algo        : algType := <NONE>;
+
+  private incTempCnt  : nat := 0;
+  private decTempCnt  : nat := 0;
+  private decHumidCnt : nat := 0;
 
 --
 -- Types definition section
@@ -69,7 +77,14 @@ GetHumid() ==
 public Algorithm: () ==> ()
 Algorithm() ==
   --cycles(1E11)
- (cases Algo:
+ (if (Humid > TargetHumid)
+  then decHumidCnt := decHumidCnt + 1
+  elseif (Temp > TargetTemp)
+  then decTempCnt := decTempCnt + 1
+  elseif (Temp < TargetTemp)
+  then incTempCnt := incTempCnt + 1;
+
+  cases Algo:
     <THTW> -> THTWAlgo(),
     <TTW>  -> TTWAlgo(),
     <TT>   -> TTAlgo(),
@@ -79,115 +94,74 @@ Algorithm() ==
   end
  );
 
-private THTWAlgo: () ==> ()
-THTWAlgo() ==
- (if (Humid > TargetHumid)
+-- Avoid overshooting target values
+private THTWAlgo : () ==> ()
+THTWAlgo () == 
+ (if (incTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<INC>);
+        incTempCnt := 0;
+       )
+  else if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        decTempCnt := 0;
+       )
+  else if (decHumidCnt >= OVERSHOOT_CNT)
   then (HA`WinNode.SetCorrection(<OPEN>);
-        HA`ThermNode.SetCorrection(<NONE>);
-        --print := true;
-       )
-  elseif (Temp > TargetTemp)
-  then (HA`WinNode.SetCorrection(<CLOSE>);
-        HA`ThermNode.SetCorrection(<DEC>);
-        --print := true;
-       )
-  elseif (Temp < TargetTemp)
-  then (HA`WinNode.SetCorrection(<CLOSE>);
-        HA`ThermNode.SetCorrection(<INC>);
-        --print := true;
+        decHumidCnt := 0;
        )
   else (HA`WinNode.SetCorrection(<CLOSE>);
         HA`ThermNode.SetCorrection(<NONE>);
-        --if print
-        --then (World`env.HandleEvent(time, Temp, Humid);
-              --printStr("\nTarget values reached at time: ");
-              --IO`print(time);
-        --     );
-        --print := false;
        );
  );
 
 private TTWAlgo: () ==> ()
 TTWAlgo() ==
- (if (Temp > TargetTemp + 2)
-  then (HA`WinNode.SetCorrection(<OPEN>);
-        HA`ThermNode.SetCorrection(<DEC>);
-        print := true;
+ (if (incTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<INC>);
+        incTempCnt := 0;
        )
-  elseif (Temp > TargetTemp)
-  then (HA`WinNode.SetCorrection(<CLOSE>);
-        HA`ThermNode.SetCorrection(<DEC>);
-        print := true;
-       )
-  elseif (Temp < TargetTemp)
-  then (HA`WinNode.SetCorrection(<CLOSE>);
-        HA`ThermNode.SetCorrection(<INC>);
-        print := true;
+  else if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        decTempCnt := 0;
        )
   else (HA`WinNode.SetCorrection(<CLOSE>);
         HA`ThermNode.SetCorrection(<NONE>);
-        if print
-        then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("\nTarget values reached");
-              let - = new IO().writeval[nat](time)
-              in skip;
-             );
-        print := false;
        );
  );
 
 private TTAlgo: () ==> ()
 TTAlgo() ==
- (if (Temp > TargetTemp)
-  then (HA`ThermNode.SetCorrection(<DEC>);
-        print := true;
-       )
-  elseif (Temp < TargetTemp)
+ (if (incTempCnt >= OVERSHOOT_CNT)
   then (HA`ThermNode.SetCorrection(<INC>);
-        print := true;
+        incTempCnt := 0;
+       )
+  else if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        decTempCnt := 0;
        )
   else (HA`ThermNode.SetCorrection(<NONE>);
-        if print
-        then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("\nTarget values reached");
-              let - = new IO().writeval[nat](time)
-              in skip;
-             );
-        print := false;
        );
  );
 
 private TWAlgo: () ==> ()
 TWAlgo() ==
- (if (Temp > TargetTemp)
+ (if (decTempCnt >= OVERSHOOT_CNT)
   then (HA`WinNode.SetCorrection(<OPEN>);
-        print := true;
+        decTempCnt := 0;
+       )
+  else if (decHumidCnt >= OVERSHOOT_CNT)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        decHumidCnt := 0;
        )
   else (HA`WinNode.SetCorrection(<CLOSE>);
-        if print
-        then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("\nTarget values reached");
-              let - = new IO().writeval[nat](time)
-              in skip;
-             );
-        print := false;
        );
  );
 
 private HWAlgo: () ==> ()
 HWAlgo() ==
- (if (Humid > TargetHumid)
+ (if (decHumidCnt >= OVERSHOOT_CNT)
   then (HA`WinNode.SetCorrection(<OPEN>);
-        print := true;
-       )
-  else (HA`WinNode.SetCorrection(<CLOSE>);
-        if print
-        then (World`env.HandleEvent(time, Temp, Humid);
-              printStr("\nTarget values reached");
-              let - = new IO().writeval[nat](time)
-              in skip;
-             );
-        print := false;
+        decHumidCnt := 0;
        );
  );
 
@@ -206,13 +180,6 @@ UpdateAlgorithm() ==
   elseif (rng NodeList = {<HUMIDSENSOR>, <WINDOW>})
   then Algo := <HW>
   else Algo := <NONE>;
- );
-
-private printStr: seq of char ==> ()
-printStr(str) ==
- (print := false;
-  let - = new IO().echo(str)
-  in skip;
  );
 
 public AddNode: nat * NetworkTypes`nodeType ==> ()
@@ -247,11 +214,8 @@ Finish() ==
   finished := true;
 
 sync
-  --mutex(PeriodicOp); -- ADDED
-  --mutex(AddNode,RemoveNode); -- without this a transactional error occur
-  -- with it a deadlock appear
+  mutex(AddNode,RemoveNode);
   per IsFinished => finished;
-  per printStr => print;
 
 --
 -- Thread definition section
@@ -259,6 +223,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(10000,0,0,4500) (PeriodicOp)
+periodic(1000,0,0,0) (PeriodicOp)
 
 end HostController

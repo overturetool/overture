@@ -64,6 +64,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(10000,0,0,7500) (PeriodicOp)
+periodic(1000,0,0,0) (PeriodicOp)
 
 end Window

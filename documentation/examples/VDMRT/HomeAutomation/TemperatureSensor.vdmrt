@@ -48,6 +48,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(10000,0,0,1500) (PeriodicOp)
+periodic(1000,0,0,0) (PeriodicOp)
 
 end TemperatureSensor
