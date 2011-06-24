@@ -516,7 +516,9 @@ public class OperationValue extends Value
     		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
     			null, from, to, self, this, argValues, null, stepping);
 
-    		new AsyncThread(request).start();
+    		AsyncThread t = new AsyncThread(request);
+    		t.start();
+    		RuntimeValidator.validateAsync(this,t);
     		return new VoidValue();
 		}
 	}

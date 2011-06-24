@@ -268,4 +268,38 @@ public abstract class ConjectureDefinition{
 		
 	}
 	
+	public String getLogFormat()
+	{
+		StringBuffer s = new StringBuffer();
+		s.append("\"" + this.name + "\"" + " " + "\"" + this.toString() + "\"" + " "  );
+		
+		if(isPassed())
+		{
+			s.append("PASS");
+			
+		}
+		else
+		{
+			for (ConjectureValue cv : conjectureValues) {
+				if(!cv.isValidated())
+				{
+					StringBuffer ts = new StringBuffer(s.toString());
+					
+					ts.append(cv.triggerTime);
+					ts.append(" ");
+					ts.append(cv.triggerThreadId);
+					ts.append(" ");
+					ts.append(cv.endTime);
+					ts.append(" ");
+					ts.append(cv.endThreadId);
+					return ts.toString();
+				}
+				
+			}
+		}	
+		
+		return s.toString();
+	}
+	
+	
 }

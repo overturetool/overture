@@ -1,5 +1,7 @@
 package org.overturetool.vdmj.runtime.validation;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.AsyncThread;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.scheduler.SystemClock;
@@ -23,17 +26,34 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 	final List<String[]> variables = new ArrayList<String[]>();
 	
 	public void init(ClassInterpreter classInterpreter) {
-		// TODO Auto-generated method stub
+		TimingInvariantsParser parser = new TimingInvariantsParser();
+		
+		for (File file : classInterpreter.getSourceFiles()) {
+			try {
+				conjectures.addAll(parser.parse(file));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for (ConjectureDefinition cd : conjectures) {
+			org.overturetool.vdmj.messages.Console.out.println(cd.toString());
+		}
 		
 	}
 
 	public void validate(OperationValue operationValue, MessageType type) {
+		if(operationValue.isStatic){
+			return;
+		}
+			
 		
 		if(conjectures.size() > 0)
 		{
 			ISchedulableThread ct = BasicSchedulableThread.getThread(Thread.currentThread());
 			
 			for (ConjectureDefinition conj : conjectures) {
+				
 				conj.process(operationValue.name.name,operationValue.classdef.getName(),type, SystemClock.getWallTime(),ct.getId(),operationValue.getSelf().objectReference);
 			}
 		}	
@@ -133,6 +153,31 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 		return variables;
 	}
 
+
+	public void validateAsync(OperationValue op, AsyncThread t) {
+		if(conjectures.size() > 0)
+		{
+			
+			for (ConjectureDefinition conj : conjectures) {
+				conj.process(op.name.name,op.classdef.getName(),MessageType.Request, SystemClock.getWallTime(),t.getId(),t.getObject().objectReference);
+			}
+		}
+		
+	}
+
+	public String stop() {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		for (ConjectureDefinition cj : conjectures) {
+			sb.append(cj.getLogFormat());
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+
+	
+	
 	
 	
 }
