@@ -40,8 +40,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Release;
@@ -81,7 +81,6 @@ import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
-import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.traces.TraceReductionType;
 import org.overturetool.vdmj.util.Base64;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -150,6 +149,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		boolean warnings = true;
 		boolean quiet = false;
 		String logfile = null;
+		String logTimeInvfile = null;
 		boolean expBase64 = false;
 		File coverage = null;
 		String defaultName = null;
@@ -243,6 +243,18 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					}
 				} else {
 					usage("-log option requires a filename");
+				}
+			}else if (arg.equals("-timeinv")) {
+				if (i.hasNext()) {
+					try {
+						logTimeInvfile = new URI(i.next()).getPath();
+					} catch (URISyntaxException e) {
+						usage(e.getMessage() + ": " + arg);
+					} catch (IllegalArgumentException e) {
+						usage(e.getMessage() + ": " + arg);
+					}
+				} else {
+					usage("-timeinv option requires a filename");
 				}
 			} else if (arg.equals("-w")) {
 				warnings = false;
@@ -359,6 +371,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		if (Settings.dialect != Dialect.VDM_RT && logfile != null) {
 			usage("-log can only be used with -vdmrt");
 		}
+		if(Settings.dialect != Dialect.VDM_RT && logTimeInvfile != null)
+		{
+			usage("-timeinv can only be used with -vdmrt");
+		}
 
 		if (expBase64) {
 			try {
@@ -398,10 +414,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 						PrintWriter p = new PrintWriter(new FileOutputStream(
 								logfile, false));
 						RTLogger.setLogfile(p);
-						
-						PrintWriter p1 = new PrintWriter(new FileOutputStream(
-								new File(new File(logfile).getParentFile(),"timingInvariants.txt"), false));
-						RuntimeValidator.setLogFile(p1);
+					}
+					
+					if(logTimeInvfile != null)
+					{
+						Settings.timingInvChecks = true;
+						PrintWriter p = new PrintWriter(new FileOutputStream(
+								logTimeInvfile, false));
+						RuntimeValidator.setLogFile(p);
 					}
 
 					Interpreter i = controller.getInterpreter();
