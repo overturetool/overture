@@ -2,7 +2,7 @@
  *
  *	Copyright (c) 2009 IHA
  *
- *	Author: Peter Gorm Larsen
+ *	Author: Kenneth Lausdahl and Augusto Ribeiro
  *
  *	This file is part of VDMJ.
  *
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
+import org.overturetool.vdmj.runtime.validation.ValueValidationExpression.BinaryOps;
 
 
 public class TimingInvariantsParser
@@ -170,8 +171,7 @@ public class TimingInvariantsParser
 				res.addAll(decodeArg(s));
 			}
 			
-		}
-		if(string.startsWith("#"))
+		}else if(string.startsWith("#"))
 		{
 			MessageType type = MessageType.Request;
 			
@@ -195,11 +195,51 @@ public class TimingInvariantsParser
 			res.add(new OperationValidationExpression(name[1],name[0],type));
 			
 			
-		}
-		
-		if(string.matches("\\d+\\W\\w\\w"))
+		}else if(string.matches("\\d+\\W\\w\\w"))
 		{
 			res.add(new IntegerContainer(Integer.valueOf(string.substring(0,string.indexOf(' ')))));
+		}else if(string.matches("\\w+`\\w+[.\\w+]*\\W+\\w+`\\w+"))
+		{
+			ValueValidationExpression.BinaryOps binop = BinaryOps.EQ;
+			
+			if(string.contains(BinaryOps.EQ.syntax))
+			{
+				binop = BinaryOps.EQ;
+			}else if(string.contains(BinaryOps.GREATER.syntax))
+			{
+				binop = BinaryOps.GREATER;
+			}else if(string.contains(BinaryOps.GREATEREQ.syntax))
+			{
+				binop = BinaryOps.GREATEREQ;
+			}else if(string.contains(BinaryOps.LESS.syntax))
+			{
+				binop = BinaryOps.LESS;
+			}else if(string.contains(BinaryOps.LESSEQ.syntax))
+			{
+				binop = BinaryOps.LESSEQ;
+			}
+			
+			String left = string.substring(0,string.indexOf(binop.syntax));
+			String right = string.substring(string.indexOf(binop.syntax)+binop.syntax.length());
+			
+			String[] leftName;
+			if(left.contains("`"))
+			{
+				leftName = left.split("`");
+			}else
+			{
+				leftName = left.split(".");
+			}
+			
+			String[] rightName;
+			if(right.contains("`"))
+			{
+				rightName = right.split("`");
+			}else
+			{
+				rightName = right.split(".");
+			}
+//			res.add(new ValueValidationExpression(leftName, binop, rightName));
 		}
 		return res;
 		

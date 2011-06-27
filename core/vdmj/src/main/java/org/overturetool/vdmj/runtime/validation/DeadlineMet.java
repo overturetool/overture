@@ -2,7 +2,7 @@
  *
  *	Copyright (c) 2009 IHA
  *
- *	Author: Peter Gorm Larsen
+ *	Author: Kenneth Lausdahl and Augusto Ribeiro
  *
  *	This file is part of VDMJ.
  *

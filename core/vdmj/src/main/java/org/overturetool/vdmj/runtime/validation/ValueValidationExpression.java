@@ -2,7 +2,7 @@
  *
  *	Copyright (c) 2009 IHA
  *
- *	Author: Peter Gorm Larsen
+ *	Author: Kenneth Lausdahl and Augusto Ribeiro
  *
  *	This file is part of VDMJ.
  *
@@ -34,11 +34,18 @@ public class ValueValidationExpression implements IValidationExpression {
 
 	public enum BinaryOps
 	{
-		GREATER,
-		LESS,
-		EQ,
-		GREATEREQ,
-		LESSEQ
+		GREATER(">"),
+		LESS("<"),
+		EQ("="),
+		GREATEREQ(">="),
+		LESSEQ("<=");
+		
+		public final String syntax;
+		
+		private BinaryOps(String syntax)
+		{
+			this.syntax = syntax;
+		}
 	}
 	
 	private String[] leftName;
