@@ -193,8 +193,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 		StringBuffer sb = new StringBuffer();
 		
 		for (ConjectureDefinition cj : conjectures) {
-			sb.append(cj.getLogFormat());
-			sb.append("\n");
+			sb.append(cj.getLogFormat());			
 		}
 		return sb.toString();
 	}

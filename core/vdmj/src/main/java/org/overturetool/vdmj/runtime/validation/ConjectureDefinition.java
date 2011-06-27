@@ -138,6 +138,8 @@ public abstract class ConjectureDefinition{
 		
 		if(opExpr.matches(opname,classname,kind))
 		{
+			
+			
 			if(valueExpr != null)
 			{
 				if(valueExpr.isTrue())
@@ -291,31 +293,30 @@ public abstract class ConjectureDefinition{
 	public String getLogFormat()
 	{
 		StringBuffer s = new StringBuffer();
-		s.append("\"" + this.name + "\"" + " " + "\"" + this.toString() + "\"" + " "  );
 		
 		if(isPassed())
 		{
-			s.append("PASS");
 			
+			s.append("\"" + this.name + "\"" + " " + "\"" + this.toString() + "\"" + " "  );
+			s.append("PASS");
+			s.append("\n");
 		}
 		else
-		{
+		{					
 			for (ConjectureValue cv : conjectureValues) {
 				if(!cv.isValidated())
 				{
-					StringBuffer ts = new StringBuffer(s.toString());
-					
-					ts.append(cv.triggerTime);
-					ts.append(" ");
-					ts.append(cv.triggerThreadId);
-					ts.append(" ");
-					ts.append(cv.endTime);
-					ts.append(" ");
-					ts.append(cv.endThreadId);
-					return ts.toString();
+					s.append("\"" + this.name + "\"" + " " + "\"" + this.toString() + "\"" + " "  );					
+					s.append(cv.triggerTime);
+					s.append(" ");
+					s.append(cv.triggerThreadId);
+					s.append(" ");
+					s.append(cv.endTime);
+					s.append(" ");
+					s.append(cv.endThreadId);
+					s.append("\n");
 				}
-				
-			}
+			}			
 		}	
 		
 		return s.toString();

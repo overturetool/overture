@@ -48,6 +48,7 @@ public class ConjectureValue {
 		this.validated = def.startupValue;
 		this.triggerThreadId = triggerThreadId;
 		this.triggerObjectId = triggerObjectId;
+		this.endTime = 0;
 	}
 	
 	public void setEnd(long endTime, long threadId, int objectReference)
