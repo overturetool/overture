@@ -45,6 +45,7 @@ AbstractLaunchConfigurationTab
 	
 	private Button checkBoxRemoteDebug = null;
 	private Button checkBoxEnableLogging = null;
+	private Button checkBoxExperimentalTimeInvariantCheck = null;
 	private WidgetListener fListener = new WidgetListener();
 
 	public void createControl(Composite parent)
@@ -80,6 +81,11 @@ AbstractLaunchConfigurationTab
 		checkBoxEnableLogging.setText("Enable logging");
 		checkBoxEnableLogging.setSelection(false);
 		checkBoxEnableLogging.addSelectionListener(fListener);
+		
+		checkBoxExperimentalTimeInvariantCheck = new Button(group, SWT.CHECK);
+		checkBoxExperimentalTimeInvariantCheck.setText("Enable experimental time inv checks");
+		checkBoxExperimentalTimeInvariantCheck.setSelection(false);
+		checkBoxExperimentalTimeInvariantCheck.addSelectionListener(fListener);	
 	}
 
 	public String getName()
@@ -93,6 +99,7 @@ AbstractLaunchConfigurationTab
 		{
 			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
 			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
+			checkBoxExperimentalTimeInvariantCheck.setSelection(configuration.getAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false));
 		} catch (CoreException e)
 		{
 			if (VdmDebugPlugin.DEBUG)
@@ -107,12 +114,14 @@ AbstractLaunchConfigurationTab
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, checkBoxRemoteDebug.getSelection());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, checkBoxEnableLogging.getSelection());
+		configuration.setAttribute("vdm_launch_config_enable_realtime_time_inv_checks", checkBoxExperimentalTimeInvariantCheck.getSelection());
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
+		configuration.setAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false);
 	}
 
 }

@@ -24,15 +24,18 @@ public class VdmRtLaunchConfigurationDelegate extends
 			throws CoreException
 	{
 		List<String> arguments = new ArrayList<String>();
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+		Date date = new Date();
+		File logDir = new File(new File(getOutputFolder(project, configuration), "logs"), configuration.getName());
+		String dateString = dateFormat.format(date);
+		
 		if (configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, false))
 		{
 			// log
-			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-			Date date = new Date();
-			File logDir = new File(new File(getOutputFolder(project, configuration), "logs"), configuration.getName());
 			logDir.mkdirs();
-			String logFilename = dateFormat.format(date) + ".logrt";
-			System.out.println(logFilename);
+			String logFilename = dateString + ".logrt";
+//			System.out.println(logFilename);
 			File f = new File(logDir, logFilename);
 			if (!f.exists())
 			{
@@ -48,6 +51,28 @@ public class VdmRtLaunchConfigurationDelegate extends
 			}
 
 			arguments.add("-log");
+			arguments.add(logDir.toURI().toASCIIString() + logFilename);
+		}
+		
+		if (configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_TIME_INV_CHECKS, false))
+		{
+			logDir.mkdirs();
+			String logFilename = dateString + ".txt";
+			File f = new File(logDir, logFilename);
+			if (!f.exists())
+			{
+				f.getParentFile().mkdirs();
+				try
+				{
+					f.createNewFile();
+				} catch (IOException e)
+				{
+
+					e.printStackTrace();
+				}
+			}
+
+			arguments.add("-timeinv");
 			arguments.add(logDir.toURI().toASCIIString() + logFilename);
 		}
 		return arguments;

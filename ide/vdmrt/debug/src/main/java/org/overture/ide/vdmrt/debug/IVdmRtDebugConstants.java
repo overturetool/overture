@@ -7,5 +7,6 @@ public interface IVdmRtDebugConstants
 	static final String PLUGIN_ID = "org.overture.ide.vdmrt.debug";
 	
 	final static String VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING = "vdm_launch_config_enable_realtime_logging";
+	static final String VDM_LAUNCH_CONFIG_ENABLE_REALTIME_TIME_INV_CHECKS = "vdm_launch_config_enable_realtime_time_inv_checks";
 
 }
