@@ -152,7 +152,7 @@ To switch the operating modes one should use
 
 \begin{vdm_al}
 thread
- periodic (200,0,190,0) (pace);
+ periodic (200E6,0,190,0) (pace);
    
 sync
 

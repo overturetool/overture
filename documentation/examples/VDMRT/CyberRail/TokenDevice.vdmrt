@@ -80,7 +80,7 @@ setQ_APM_out(apm)== ( q_APM_out := apm; );
 
 
 thread
-periodic(200000,100,2900,200000)(travel);
+periodic(2000E6,100,2900,200000)(travel);
 
 sync
 

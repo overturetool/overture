@@ -91,7 +91,7 @@ The following operation discharges a pulse to the heart.
 
 \begin{vdm_al}
 thread
-  periodic (50,0,49,0) (followPlan)
+  periodic (50E6,0,49,0) (followPlan)
 
 
 \end{vdm_al}

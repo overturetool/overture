@@ -92,7 +92,7 @@ mutex(handleRadarWarningEvent);
 mutex(handleRadarWarningEvent,handleFOWarningEvent);
 
 thread
- periodic (1000,10,30,0)(updateFOs)
+ periodic (1000E6,10,30,0)(updateFOs)
 
 
 end Environment

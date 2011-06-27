@@ -19,7 +19,7 @@ operations
       RadNavSys`mmi.HandleKeyPress(2,num2) )
 
 thread
-  periodic (2000,100,1000,0) 
+  periodic (2000E6,100,1000,0) 
     (createSignal)
 
 end InsertAddress

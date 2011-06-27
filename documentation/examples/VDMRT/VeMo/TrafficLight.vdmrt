@@ -94,7 +94,7 @@ values
 -- Thread definition section
 --
 thread
- periodic (1000,10,900,0) (Step)
+ periodic (1000E6,10,900E6,0) (Step)
     
 
 --

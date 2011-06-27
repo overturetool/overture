@@ -5,7 +5,7 @@ obs : map Grid`Point to Grid`PointAvalibility;
 mobs : set of MovingObstacle := {};
 thread
 -- periodic (period,jitter,delay,offset) (operation
-periodic(2500,1,0,0)( LocateMovingObstacles);
+periodic(2500E6,1,0,0)( LocateMovingObstacles);
  
 sync
 --check before move

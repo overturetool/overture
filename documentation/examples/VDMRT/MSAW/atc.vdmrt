@@ -253,7 +253,7 @@ Step() ==
  
 thread
 
-periodic (1600,0,0,0) (Step)
+periodic (1600E6,0,0,0) (Step)
 
 sync 
 per isFinished => not busy;

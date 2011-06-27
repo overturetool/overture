@@ -91,7 +91,7 @@ sync
 	per isFinished => not busy
 	
 thread
-	periodic (1000,0,0,0) (NeedMedic)
+	periodic (1000E6,0,0,0) (NeedMedic)
 end Server
 
 \end{vdm_al}

@@ -54,7 +54,7 @@ operations
  public Stop: () ==> ()
  Stop() == busy:=false;
 thread
-periodic(1000,100, 100,0)(Step);
+periodic(1000E6,100, 100,0)(Step);
  
 sync
  

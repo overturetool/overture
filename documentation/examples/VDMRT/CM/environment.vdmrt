@@ -85,7 +85,7 @@ per isFinished => not busy;
 
 thread
 
-periodic (1000,10,900,0) (createSignal)
+periodic (1000E6,10,900,0) (createSignal)
 
 end Environment
 \end{vdm_al}

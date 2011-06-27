@@ -143,7 +143,7 @@ The complex concurrent thread definition is now redifined by a beautifull and cl
 \begin{vdm_al}
 
 thread
-  periodic (1000,10,900,0) (createSignal);
+  periodic (1000E6,10,900,0) (createSignal);
 
 
 \end{vdm_al}

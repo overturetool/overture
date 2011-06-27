@@ -111,7 +111,7 @@ Step() ==
      
 thread
 
-periodic(2000,0,0,0) (Step)
+periodic(2000E6,0,0,0) (Step)
 
 sync 
 mutex(UpdatePriorityList);

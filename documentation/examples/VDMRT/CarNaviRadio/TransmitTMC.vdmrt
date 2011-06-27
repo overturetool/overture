@@ -19,7 +19,7 @@ operations
       RadNavSys`radio.HandleTMC(num2) )
 
 thread
-  periodic (4000,400,3910,0) 
+  periodic (4000E6,400,3910,0) 
     (createSignal)
 
 end TransmitTMC

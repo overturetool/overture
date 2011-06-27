@@ -97,7 +97,7 @@ inputStimuli() ==
 );
 
 thread
-periodic(2000,100,1900,0) (inputStimuli);
+periodic(2000E6,100,1900,0) (inputStimuli);
 
 
 sync
