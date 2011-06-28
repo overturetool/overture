@@ -52,7 +52,7 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 	/** True if the type's and its subtype's names have been resolved. */
 	public boolean resolved = false;
 	/** The type's possible definition(s) (if a named type) */
-	public DefinitionList definitions = null;
+	public transient DefinitionList definitions = null;
 
 	/**
 	 * Create a new type at the given location.
