@@ -1,0 +1,75 @@
+Tokens
+
+  char ='';
+  plus = '+';
+  int = 'int';
+  real = 'real';
+  bool = 'bool';
+  true = 'true';
+  false = 'false';
+  and_and = '&&';
+  or_or = '||';
+  numbers_literal = 'some regex for numbers';
+
+Abstract Syntax Tree
+
+binop
+    =   {plus} [token]:plus
+    |   {minus} [token]:minus
+    |   {lazy_and} [token]:and_and
+    |   {lazy_or} [token]:or_or
+    ;
+    
+unop
+    =   {negate} [token]:minus
+    ;
+    
+exp
+    =   {binop} [left]:exp binop [right]:exp
+
+    |   {unop} unop exp
+    |   {int_const} numbers_literal
+    |   {boolean_const} boolean
+    
+    
+    
+    |   {apply} [root]:exp [args]:exp*
+    |   {boolean_const} boolean //Boolean literal
+    //|   {breakpoint}
+    |   {cases} [exp]:exp [cases]:exp* [others]:exp
+    |   {charliteral} char
+    |   {elseif} [elseif]:exp [then]:exp
+    |   {exists1} [bind]:bind [predicate]:exp
+    //|   {exists} [bind]:bind [predicate]:exp //some multi bind
+    |   {field} [object]:exp [field]:name
+    |   {fieldNumber} [tuple]:exp [field]:numbers_literal
+    //|   {forAll} [bindList]:??* [predicate]:exp
+    //|   {functionInstantiation} [function]:exp [types]:??
+    |   {}
+    ;
+    
+bind
+    =
+    ;
+    
+boolean
+    =   {true}
+    |   {false}
+    ;
+    
+name
+    =
+    ;
+    
+type
+    =   {real} [token]:real
+    |   {int} [token]:int
+    |   {bool} [token]:bool
+    ;
+
+Aspect Declaration
+
+exp = [type]:type
+    ;
+    
+//node = [typeCheck]:type
