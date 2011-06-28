@@ -7,6 +7,8 @@ Tokens
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
   lextoken = 'java:org.overturetool.vdmj.lex.LexToken';
+  lexnametoken = 'lexnametoken'; //'java:org.overturetool.vdmj.lex.LexNameToken';
+  lexidentifiertoken = 'lexidentifiertoken'; //TODO
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   plus = '+';
   int = 'int';
@@ -15,8 +17,12 @@ Tokens
   true = 'true';
   false = 'false';
   and_and = '&&';
-  or_or = '||';
+  or_or = '||';  
   numbers_literal = 'some regex for numbers';
+  char_literal = 'some regex for chars';
+  quote_literal = 'some regex for quote types';
+  real_literal = 'some regex for reals';
+  string_literal = 'some regex for string';
 
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
@@ -28,23 +34,121 @@ Abstract Syntax Tree
  */
 
 binop {-> package='org.overture.ast.expressions'}
-    =   {plus} [token]:location //[token]:plus
-    |   {minus} [token]:minus
-    |   {lazy_and} [token]:and_and
-    |   {lazy_or} [token]:or_or
+    =   {lazy_and} [location]:location
+    |   {equivalent} [location]:location
+    |   {implies} [location]:location
+    |   {lazy_or} [location]:location
+    |   {comp} [location]:location
+    |   {domainResBy} [location]:location
+    |   {domainResTo} [location]:location
+    |   {equals} [location]:location
+    |   {inSet} [location]:location
+    |   {mapUnion} [location]:location
+    |   {notEqual} [location]:location
+    |   {notInSet} [location]:location
+    |   {div} [location]:location
+    |   {divide} [location]:location
+    |   {greaterEqual} [location]:location
+    |   {greater} [location]:location
+    |   {lessEqual} [location]:location
+    |   {less} [location]:location
+    |   {mod} [location]:location    
+    |   {plus} [location]:location //[token]:plus
+    |   {rem} [location]:location
+    |   {subtract} [location]:location
+    |   {times} [location]:location
+    |   {plusPlus} [location]:location
+    |   {properSubset} [location]:location
+    |   {rangeResBy} [location]:location
+    |   {rangeResTo} [location]:location
+    |   {seqConcat} [location]:location
+    |   {setDifference} [location]:location
+    |   {setIntersect} [location]:location
+    |   {setUnion} [location]:location
+    |   {starStar} [location]:location
+    |   {subset} [location]:location         
     ;
     
-unop
-    =   {negate} [token]:minus
+unop {-> package='org.overture.ast.expressions'}
+    =   {absolute} [location]:location 
+    |   {cardinality} [location]:location 
+    |   {distConcat} [location]:location 
+    |   {distIntersect} [location]:location 
+    |   {distMerge} [location]:location
+    |   {distUnion} [location]:location 
+    |   {floor} [location]:location 
+    |   {head} [location]:location 
+    |   {indices} [location]:location 
+    |   {len} [location]:location 
+    |   {mapDomain} [location]:location 
+    |   {mapInverse} [location]:location 
+    |   {mapRange} [location]:location 
+    |   {not} [location]:location 
+    |   {powerSet} [location]:location 
+    |   {reverse} [location]:location 
+    |   {tail} [location]:location
+    |   {unaryMinus} [location]:location 
+    |   {unaryPlus} [location]:location      
     ;
     
 exp {-> package='org.overture.ast.expressions'}
-    =   {binop} [left]:exp binop [right]:exp
-//    |   {and} [left]:exp binop [right]:exp
-    |   {unop} unop exp
-    |   {int_const} numbers_literal
+    =   
+        {apply} [root]:exp [args]:exp*
+    |   {binop} [left]:exp binop [right]:exp
     |   {boolean_const} boolean
-    |   {apply} [root]:exp [args]:exp*
+    //|   {cases} [expression]:exp [cases]:caseAlternative* [others]:exp //TODO: caseAlternative
+    |   {char_const} char_literal //regex for chars
+    |   {elseIf} [elseIf]:exp [then]:exp  
+    //|   {exists1}  [bind]:bind [predicate]:exp
+    //|   {exists} [bindList]:multipleBind* [predicate]:exp
+    //|   {field} [object]:exp [field]:LexIdentifierToken
+    //|   {fieldNumber} [tuple]:exp [field]:LexIdentifierToken
+    //|   {forAll} [bindList]:multipleBind* [predicate]:exp
+    //|   {funcInstatiation} [function]:exp [actualTypes]:typeList
+    //|   {history} [hop]:token [opnames]:lexnamelist
+    |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
+    |   {int_const} numbers_literal
+    //|   {iota} [bind]:bind [predicate]:exp
+    |   {is} [typeName]:lexnametoken [test]:exp
+    |   {isOfBaseClass} [baseClass]:lexnametoken [exp]:exp
+    |   {isOfClass} [className]:lexnametoken [exp]:exp
+    //|   {lambda} [bindList]:typeBind [expression]:exp    
+    //|   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
+    //|   {letDef} [localDefs]:definition* [expression]:exp
+    //|   {def} [localDefs]:definition* [expression]:exp
+    //|   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
+    |   {mapEnum} [members]:maplet*     
+    |   {maplet} [location]:location [left]:exp [right]:exp
+    //|   {mkBasic} [type]:type [arg]:exp
+    |   {mkType} [typeName]:lexnametoken [args]:exp*
+    //|   {mu} [recordType]:exp [modifiers]:recordModifier
+    |   {new} [className]:lexidentifiertoken [args]:exp*
+    |   {nil} 
+    |   {notYetSpecified} 
+    //|   {postOp} [opname]:lextokenname [preexpression]:exp [postexpression]:exp [errors]:errorCase* [state]:stateDefinition
+    |   {pre} [function]:exp [args]:exp*
+    //|   {preOp} [opname]:lextokenname [expression]:exp  [errors]:errorCase* [state]:stateDefinition
+    |   {quote_const} quote_literal
+    |   {real_const} real_literal
+    |   {sameBaseClass} [left]:exp [right]:exp
+    |   {sameClass} [left]:exp [right]:exp
+    |   {self} [name]:lexnametoken
+    //|   {seqComp} [first]:exp [setBind]:setBind [predicate]:exp
+    |   {seqEnum} [members]:exp*
+    |   {elements} [exp]:exp
+    //|   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
+    |   {setEnum} [members]:exp*
+    |   {setRange} [first]:exp [last]:exp
+    //|   {stateInit} [state]:stateDefinition
+    |   {string_const} string_literal
+    |   {subclassResponsibility} 
+    |   {subseq} [seq]:exp [from]:exp [to]:exp
+    |   {threadId} 
+    |   {time} 
+    |   {tuple} [args]:exp*    
+    |   {unary} unop [exp]:exp     
+    |   {undefined}
+    |   {variable} [name]:lexnametoken           
     ;
     
 boolean
