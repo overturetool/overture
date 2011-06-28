@@ -41,6 +41,7 @@ import com.lausdahl.ast.creator.methods.TokenConstructorMethod;
 
 public class Main
 {
+	private static final String INPUT_FILENAME = "test.astV2";
 	private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
 	private static File generated = new File("..\\ast\\src\\");
 	static boolean create = true;
@@ -60,7 +61,7 @@ public class Main
 			env.addClass(new PredefinedClassDefinition("generated.node", "Token"));
 			env.addClass(new PredefinedClassDefinition("java.util", "List"));
 			// ANTLRStringStream input = new ANTLRStringStream(data);
-			ANTLRFileStream input = new ANTLRFileStream("test.txt");
+			ANTLRFileStream input = new ANTLRFileStream(INPUT_FILENAME);
 			AstcLexer lexer = new AstcLexer(input);
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 
