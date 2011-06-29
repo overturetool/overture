@@ -1,6 +1,8 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import org.antlr.runtime.tree.CommonTree;
+
+import com.lausdahl.ast.creator.Environment;
 
 public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
 {
@@ -42,5 +44,11 @@ public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
 	public String toString()
 	{
 			return getName();
+	}
+	
+	@Override
+	public boolean hasSuper()
+	{
+	return false;
 	}
 }

@@ -1,7 +1,10 @@
-package com.lausdahl.ast.creator.methods;
+package com.lausdahl.ast.creator.methods.analysis;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.Method.Argument;
 
 public class AnswerAcceptMethod extends Method
 {
@@ -20,17 +23,18 @@ public class AnswerAcceptMethod extends Method
 	{
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
+		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IAnswer);
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link IAnswer<A>#case" + c.getName() + "("
-				+ c.getName() + ")} of the {@link IAnswer<A>} {@code caller}.\n");
-		sb.append("\t* @param caller the {@link IAnswer<A>} to which this {@link "
+		sb.append("\t* Calls the {@link "+argDef.getName()+"#case" + c.getName() + "("
+				+ c.getName() + ")} of the {@link "+argDef.getName()+"} {@code caller}.\n");
+		sb.append("\t* @param caller the {@link "+argDef.getName()+"} to which this {@link "
 				+ c.getName() + "} node is applied\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
 		name = "apply";
 		annotation = "@Override";
 		returnType = "<A> A";
-		arguments.add(new Argument("IAnswer<A>", "caller"));
+		arguments.add(new Argument(argDef.getName(), "caller"));
 		body = "\t\treturn caller.case" + c.getName() + "(this);";
 	}
 	

@@ -1,4 +1,4 @@
-package generated.node;
+package %generated.node%;
 
 import java.util.*;
 
@@ -25,23 +25,23 @@ import java.util.*;
  *  @author Aske Simon Christensen, aske@brics.dk
  */
 @SuppressWarnings("serial")
-public class NodeList<E extends Node> extends LinkedList<E> {
-	Node parent;
+public class %NodeList%<E extends %Node%> extends LinkedList<E> {
+	%Node% parent;
 	
-	private void setParent(Node n) {
-		Node p = n.parent();
+	private void setParent(%Node% n) {
+		%Node% p = n.parent();
 		if (p != null) {
 			p.removeChild(n);
 		}
 		n.parent(parent);
 	}
 	
-	public NodeList(Node parent) {
+	public %NodeList%(%Node% parent) {
 		super();
 		this.parent = parent;
 	}
 	
-	public NodeList(Node parent, Collection<? extends E> c) {
+	public %NodeList%(%Node% parent, Collection<? extends E> c) {
 		this(parent);
 		addAll(c);
 	}
@@ -63,7 +63,7 @@ public class NodeList<E extends Node> extends LinkedList<E> {
 	
 	public @Override boolean remove(Object o) {
 		if (super.remove(o)) {
-			((Node)o).parent(null);
+			((%Node%)o).parent(null);
 			return true;
 		}
 		return false;

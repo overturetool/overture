@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
 import java.util.Vector;
@@ -8,35 +8,56 @@ import com.lausdahl.ast.creator.methods.Method;
 public class InterfaceDefinition implements IInterfaceDefinition
 {
 	public List<Method> methods = new Vector<Method>();
-	public List<String> imports = new Vector<String>();
+	public List<IInterfaceDefinition> imports = new Vector<IInterfaceDefinition>();
 	public List<String> supers = new Vector<String>();
 	protected String name;
+	protected String namePostfix = "";
 	// public String superName;
-	private String packageName = "generated.node";
-	public static boolean VDM=false;
+	private String packageName = "";
+	public static boolean VDM = false;
+	private String tag = "";
 
 	public InterfaceDefinition(String name)
 	{
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getName()
 	 */
 	@Override
 	public String getName()
 	{
-		return "I"+this.name;
+		String tmp = "I" + this.name;
+		if (tmp.contains("<"))
+		{
+			tmp = tmp.replace("<", namePostfix + "<");
+		} else
+		{
+			tmp += namePostfix;
+		}
+		return tmp;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getImports()
 	 */
 	@Override
 	public List<String> getImports()
 	{
 		List<String> imports = new Vector<String>();
-		imports.addAll(this.imports);
+
+		for (IInterfaceDefinition i : this.imports)
+		{
+			String n = i.getPackageName() + "." + i.getSignatureName();
+			if (!imports.contains(n))
+			{
+				imports.add(n);
+			}
+		}
+		// imports.addAll(this.imports);
 		for (Method m : methods)
 		{
 			for (String string : m.getRequiredImports())
@@ -51,7 +72,8 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		return imports;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#isFinal()
 	 */
 	@Override
@@ -60,7 +82,8 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#isAbstract()
 	 */
 	@Override
@@ -68,8 +91,9 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	{
 		return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getPackageName()
 	 */
 	@Override
@@ -77,8 +101,9 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	{
 		return this.packageName;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#setPackageName(java.lang.String)
 	 */
 	@Override
@@ -92,23 +117,24 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	{
 		return getJavaSourceCode();
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getSignatureName()
 	 */
 	@Override
 	public String getSignatureName()
 	{
 		String n = getName();
-		if(n.contains("<"))
+		if (n.contains("<"))
 		{
-			return n.substring(0,n.indexOf('<'));
+			return n.substring(0, n.indexOf('<'));
 		}
 		return n;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getJavaSourceCode()
 	 */
 	@Override
@@ -160,7 +186,8 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		return sb.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getVdmSourceCode()
 	 */
 	@Override
@@ -170,9 +197,9 @@ public class InterfaceDefinition implements IInterfaceDefinition
 
 		sb.append(IClassDefinition.classHeader + "\n");
 
-		if (getPackageName()!= null)
+		if (getPackageName() != null)
 		{
-			sb.append("\n--package " +getPackageName() + ";\n\n\n");
+			sb.append("\n--package " + getPackageName() + ";\n\n\n");
 		}
 
 		for (String importName : getImports())
@@ -192,11 +219,11 @@ public class InterfaceDefinition implements IInterfaceDefinition
 			}
 			sb.append(intfs.subSequence(0, intfs.length() - 2));
 		}
-		
+
 		sb.append("\ntypes\n\n");
 		for (String t : getGenericClassArguments())
 		{
-			sb.append("\n\tpublic "+t+" = ?;\n");
+			sb.append("\n\tpublic " + t + " = ?;\n");
 		}
 
 		sb.append("\noperations\n\n");
@@ -211,30 +238,30 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		for (Method m : methods)
 		{
 			sb.append(m.getJavaDoc() + "\n");
-			sb.append(m.getVdmSignature() +"is subclass responsibility"+ ";\n");
+			sb.append(m.getVdmSignature() + "is subclass responsibility"
+					+ ";\n");
 		}
 
-		sb.append("\nend "+getSignatureName());
+		sb.append("\nend " + getSignatureName());
 		return sb.toString().replace("org.overturetool.vdmj.lex.", "").replace("OrgOverturetoolVdmjLex", "");
 	}
-	
+
 	protected List<String> getGenericClassArguments()
 	{
 		List<String> args = new Vector<String>();
-		
-		if(getName().contains("<"))
+
+		if (getName().contains("<"))
 		{
-			String tmp = getName().substring(getName().indexOf('<')+1,getName().indexOf('>'));
+			String tmp = getName().substring(getName().indexOf('<') + 1, getName().indexOf('>'));
 			for (String string : tmp.split(","))
 			{
 				args.add(string);
-				
+
 			}
 		}
 		return args;
 	}
-	
-	
+
 	public static String firstLetterUpper(String name)
 	{
 		return String.valueOf(name.charAt(0)).toUpperCase() + name.substring(1);
@@ -242,27 +269,28 @@ public class InterfaceDefinition implements IInterfaceDefinition
 
 	public static String javaClassName(String name)
 	{
-		
+
 		while (name.indexOf(Field.fieldPrefic) != -1)
 		{
 			int index = name.indexOf(Field.fieldPrefic);
 			name = name.substring(0, index)
-					+ firstLetterUpper(name.substring(index + Field.fieldPrefic.length()));
+					+ firstLetterUpper(name.substring(index
+							+ Field.fieldPrefic.length()));
 		}
-		
+
 		while (name.indexOf('_') != -1)
 		{
 			int index = name.indexOf('_');
 			name = name.substring(0, index)
 					+ firstLetterUpper(name.substring(index + 1));
 		}
-		
-//		if(InterfaceDefinition.VDM && name.contains("."))
-//		{
-//			return name.substring(name.lastIndexOf('.')+1);
-//		}
-		
-		if(name.contains("."))
+
+		// if(InterfaceDefinition.VDM && name.contains("."))
+		// {
+		// return name.substring(name.lastIndexOf('.')+1);
+		// }
+
+		if (name.contains("."))
 		{
 			String[] arr = name.split("\\.");
 			name = "";
@@ -271,10 +299,30 @@ public class InterfaceDefinition implements IInterfaceDefinition
 				name += firstLetterUpper(string);
 			}
 		}
-		
-		
-		
-		
+
 		return name;
+	}
+
+	public void setNamePostfix(String postfix)
+	{
+		this.namePostfix = postfix;
+	}
+
+	@Override
+	public String getNamePostfix()
+	{
+		return namePostfix;
+	}
+
+	@Override
+	public void setTag(String tag)
+	{
+		this.tag = tag;
+	}
+
+	@Override
+	public String getTag()
+	{
+		return this.tag;
 	}
 }

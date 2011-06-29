@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
 import java.util.Vector;
@@ -10,30 +10,46 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 {
 	protected List<Field> fields = new Vector<Field>();
 	public List<String> interfaces = new Vector<String>();
-	public String superName;
+	public IClassDefinition superDef;
 
 	public BaseClassDefinition(String name)
 	{
 		super(name);
 	}
 
-	public String getSuperName()
-	{
-		return this.superName;
-	}
+	// public String getSuperName()
+	// {
+	// return this.superName;
+	// }
 
 	public String getName()
 	{
-		return this.name;
+		return this.name + this.namePostfix;
 	}
+
+//	@Override
+//	public String getPackageName()
+//	{
+//		if (getSuperDef() == null)
+//		{
+//			return super.getPackageName();
+//		} else
+//		{
+//			return getSuperDef().getPackageName();
+//		}
+//	}
 
 	public boolean hasSuper()
 	{
-		return this.superName != null;
+		return this.superDef != null;
 	}
 
 	public void addField(Field field)
 	{
+		// if(field.type == null)
+		// {
+		// throw new Error("field not valid");
+		// }
 		this.fields.add(field);
 	}
 
@@ -46,7 +62,26 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	public List<String> getImports()
 	{
 		List<String> imports = new Vector<String>();
-		imports.addAll(this.imports);
+
+		if (getSuperDef() != null)
+		{
+			String n = getSuperDef().getPackageName() + "."
+					+ getSuperDef().getSignatureName();
+			if (!imports.contains(n))
+			{
+				imports.add(n);
+			}
+		}
+
+		for (IInterfaceDefinition i : this.imports)
+		{
+			String n = i.getPackageName() + "." + i.getSignatureName();
+			if (!imports.contains(n))
+			{
+				imports.add(n);
+			}
+		}
+		// imports.addAll(this.imports);
 		for (Method m : methods)
 		{
 			for (String string : m.getRequiredImports())
@@ -62,14 +97,13 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			for (String string : m.getRequiredImports())
 			{
-				if (!imports.contains(string) /*&& m.isList*/)//TODO
+				if (!imports.contains(string) /* && m.isList */)// TODO
 				{
 					imports.add(string);
 				}
 			}
 		}
-		
-		
+
 		return imports;
 	}
 
@@ -87,7 +121,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		if (getPackageName() != null)
 		{
-			sb.append("\npackage " + getPackageName()+ ";\n\n\n");
+			sb.append("\npackage " + getPackageName() + ";\n\n\n");
 		}
 
 		for (String importName : getImports())
@@ -100,7 +134,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		if (hasSuper())
 		{
-			sb.append(" extends " + getSuperName());
+			sb.append(" extends " + getSuperDef().getName());
 		}
 
 		if (!interfaces.isEmpty())
@@ -231,20 +265,21 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		sb.append("\nend " + getSignatureName());
 
-		return sb.toString().replaceAll("this", "self").replaceAll("null", "nil").replace("org.overturetool.vdmj.lex.", "").replace("OrgOverturetoolVdmjLex", "").replaceAll("self\\.", "").replaceAll("token", "token_").replaceAll("super\\.", getSuperName()
+		return sb.toString().replaceAll("this", "self").replaceAll("null", "nil").replace("org.overturetool.vdmj.lex.", "").replace("OrgOverturetoolVdmjLex", "").replaceAll("self\\.", "").replaceAll("token", "token_").replaceAll("super\\.", (getSuperDef() != null ? getSuperDef().getName()
+				: "")
 				+ "`");
 	}
 
-//	public static String javaClassName(String name)
-//	{
-//		while (name.indexOf('_') != -1)
-//		{
-//			int index = name.indexOf('_');
-//			name = name.substring(0, index)
-//					+ firstLetterUpper(name.substring(index + 1));
-//		}
-//		return name;
-//	}
+	// public static String javaClassName(String name)
+	// {
+	// while (name.indexOf('_') != -1)
+	// {
+	// int index = name.indexOf('_');
+	// name = name.substring(0, index)
+	// + firstLetterUpper(name.substring(index + 1));
+	// }
+	// return name;
+	// }
 
 	public static String firstLetterUpper(String name)
 	{
@@ -254,7 +289,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	@Override
 	public String getSuperSignatureName()
 	{
-		String n = getSuperName();
+		String n = getSuperDef().getName();
 		if (n.contains("<"))
 		{
 			return n.substring(0, n.indexOf('<'));
@@ -272,6 +307,10 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return n;
 	}
 
-	
-	
+	@Override
+	public IClassDefinition getSuperDef()
+	{
+		return this.superDef;
+	}
+
 }

@@ -1,7 +1,10 @@
-package com.lausdahl.ast.creator.methods;
+package com.lausdahl.ast.creator.methods.analysis;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.Method.Argument;
 
 public class QuestionAcceptMethod extends Method
 {
@@ -20,11 +23,12 @@ public class QuestionAcceptMethod extends Method
 	{
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
+		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IQuestion);
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link IQuestion<Q>#case" + c.getName() + "("
+		sb.append("\t* Calls the {@link "+argDef.getName()+"#case" + c.getName() + "("
 				+ c.getName()
-				+ ")} of the {@link IQuestion<Q>} {@code caller}.\n");
-		sb.append("\t* @param caller the {@link IQuestion<Q>} to which this {@link "
+				+ ")} of the {@link "+argDef.getName()+"} {@code caller}.\n");
+		sb.append("\t* @param caller the {@link "+argDef.getName()+"} to which this {@link "
 				+ c.getName() + "} node is applied\n");
 		sb.append("\t* @param question the question provided to {@code caller}\n");
 		sb.append("\t*/");
@@ -32,7 +36,7 @@ public class QuestionAcceptMethod extends Method
 		name = "apply";
 		annotation = "@Override";
 		returnType = "<Q> void";
-		arguments.add(new Argument("IQuestion<Q>", "caller"));
+		arguments.add(new Argument(argDef.getName(), "caller"));
 		arguments.add(new Argument("Q", "question"));
 		body = "\t\tcaller.case" + c.getName() + "(this, question);";
 	}

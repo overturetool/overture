@@ -1,10 +1,10 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.Field;
-import com.lausdahl.ast.creator.IClassDefinition;
-import com.lausdahl.ast.creator.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 
 public class CloneWithMapMethod extends CloneMethod
 {
@@ -19,7 +19,7 @@ public class CloneWithMapMethod extends CloneMethod
 //		this.requiredImports.add("java.util.List");
 		this.requiredImports.add("java.util.Map");
 
-		this.arguments.add(new Argument("Map<Node,Node>", "oldToNewMap"));
+		this.arguments.add(new Argument("Map<"+env.node.getName()+","+env.node.getName()+">", "oldToNewMap"));
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");

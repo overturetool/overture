@@ -1,9 +1,9 @@
-package generated.node;
+package %generated.node%;
 /**
  * {@code Token} is the superclass of all tokens is the AST.
  */
 @SuppressWarnings("nls")
-public abstract class Token extends Node {
+public abstract class %Token% extends %Node% {
 	private String text;
 	private int line;
 	private int pos;
@@ -20,8 +20,8 @@ public abstract class Token extends Node {
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	@Override public NodeEnum kindNode() {
-		return NodeEnum.TOKEN;
+	@Override public %NodeEnum% kindNode() {
+		return %NodeEnum%.TOKEN;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public abstract class Token extends Node {
 	 * @param child the child node to be removed from this {@link Token} node
 	 * @throws RuntimeException if {@code child} is not a child of this {@link Token} node
 	 */
-	public @Override void removeChild(@SuppressWarnings("unused") Node child) {
+	public @Override void removeChild(@SuppressWarnings("unused") %Node% child) {
 		throw new RuntimeException("Not a child.");
 	}
 

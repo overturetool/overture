@@ -23,11 +23,17 @@ tokens {
 	FIELD_DCL ='->';
 }
 
+@lexer::header{  
+package com.lausdahl.ast.creator.parser;
+}  
 
-
+@header {
+package com.lausdahl.ast.creator.parser;
+}
+ 
 QUOTE   :      '\'';
- 
- 
+    
+    
 //BOOL_VAL 
 //	: 'true'
 //	| 'false'
@@ -55,7 +61,7 @@ FLOAT
     |   ('0'..'9')+ EXPONENT
     ;
     
-
+ 
 WS  :   ( ' '
         | '\t'
         | '\r'

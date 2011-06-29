@@ -1,8 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.Field;
+import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field;
 
 public class ToStringMethod extends Method
 {

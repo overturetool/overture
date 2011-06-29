@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 
 
@@ -15,7 +15,8 @@ public interface IClassDefinition extends IInterfaceDefinition
 	
 	boolean hasSuper();
 	
-	String getSuperName();
+//	String getSuperName();
+	IClassDefinition getSuperDef();
 	
 	void addField(Field field);
 

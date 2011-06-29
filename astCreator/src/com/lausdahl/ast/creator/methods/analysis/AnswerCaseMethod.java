@@ -1,17 +1,19 @@
-package com.lausdahl.ast.creator.methods;
+package com.lausdahl.ast.creator.methods.analysis;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
-import com.lausdahl.ast.creator.InterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.Method.Argument;
 
-public class AnalysisCaseMethod extends Method
+public class AnswerCaseMethod extends Method
 {
-	public AnalysisCaseMethod()
+	public AnswerCaseMethod()
 	{
 		super(null,null);
 	}
 
-	public AnalysisCaseMethod(IClassDefinition c,Environment env)
+	public AnswerCaseMethod(IClassDefinition c,Environment env)
 	{
 		super(c,env);
 	}
@@ -31,6 +33,7 @@ public class AnalysisCaseMethod extends Method
 		this.name = "case" + InterfaceDefinition.javaClassName(c.getName());
 		this.arguments.add(new Argument(c.getName(), "node"));
 		// this.annotation="@override";
-		this.body = "";
+		this.body = "\t\treturn null;";
+		this.returnType = "A";
 	}
 }

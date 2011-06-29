@@ -1,8 +1,10 @@
-package com.lausdahl.ast.creator.methods;
+package com.lausdahl.ast.creator.methods.analysis;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
-import com.lausdahl.ast.creator.InterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.Method.Argument;
 
 public class QuestionCaseMethod extends Method
 {

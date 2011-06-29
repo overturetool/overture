@@ -3,10 +3,10 @@ package com.lausdahl.ast.creator.methods;
 import java.util.List;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.BaseClassDefinition;
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
-import com.lausdahl.ast.creator.IInterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 
 public abstract class Method
 {
@@ -45,7 +45,7 @@ public abstract class Method
 //	private boolean isStructureFinal = false;
 	protected boolean skip = false;
 	protected boolean optionalVdmArgument = true;
-	private Environment env;
+	protected Environment env;
 
 	public Method(IClassDefinition c,Environment env)
 	{

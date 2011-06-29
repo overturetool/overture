@@ -1,7 +1,7 @@
 package com.lausdahl.ast.creator.methods;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
 
 public class DefaultConstructorMethod extends Method
 {

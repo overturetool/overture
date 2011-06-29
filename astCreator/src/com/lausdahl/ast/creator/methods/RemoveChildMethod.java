@@ -3,17 +3,19 @@ package com.lausdahl.ast.creator.methods;
 import java.util.List;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.Field;
-import com.lausdahl.ast.creator.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
 
 public class RemoveChildMethod extends Method
 {
 	List<Field> fields;
+	Environment env;
 
 	public RemoveChildMethod(IClassDefinition c, List<Field> fields,Environment env)
 	{
 		super(c,env);
 		this.fields = fields;
+		this.env = env;
 	}
 
 	@Override
@@ -27,7 +29,7 @@ public class RemoveChildMethod extends Method
 		javaDoc += "\t */";
 
 		this.name = "removeChild";
-		this.arguments.add(new Argument("Node", "child"));
+		this.arguments.add(new Argument(env.node.getName(), "child"));
 
 		StringBuilder sb = new StringBuilder();
 

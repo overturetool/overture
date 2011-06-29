@@ -17,7 +17,7 @@ Tokens
   and_and = '&&';
   or_or = '||';
   numbers_literal = 'some regex for numbers';
-   minus='_';
+  minus='_';
 
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
@@ -28,7 +28,7 @@ Abstract Syntax Tree
  *
  */
 
-binop {-> package='org.overture.ast.expressions'}
+binop {-> package='org.overture.interpreter.ast.expressions'}
     =   {plus} [token]:location //[token]:plus
     //|   {minus} [token]:minus
     |   {lazy_and} [token]:and_and
@@ -39,8 +39,8 @@ unop
     =   {negate} [token]:minus
     ;
     
-exp {-> package='org.overture.ast.expressions'}
-    =   {binop} [left]:exp binop [right]:exp
+exp {-> package='org.overture.interpreter.ast.expressions'}
+    =   {binop} [left]:exp binop [right]:exp [newThing]:lextoken
 //    |   {and} [left]:exp binop [right]:exp
     |   {unop} unop exp
     |   {int_const} numbers_literal

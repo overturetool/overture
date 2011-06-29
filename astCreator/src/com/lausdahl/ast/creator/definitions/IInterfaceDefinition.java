@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
 
@@ -23,7 +23,12 @@ public interface IInterfaceDefinition
 
 	public abstract String getVdmSourceCode();
 	
+	public abstract void setNamePostfix(String postfix);
 	
+	public abstract String getNamePostfix();
 	
+	public abstract void setTag(String tag);
+	
+	public abstract String getTag();
 
 }

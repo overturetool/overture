@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
 import java.util.Vector;

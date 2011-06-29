@@ -1,17 +1,20 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
 import java.util.Vector;
+
+import com.lausdahl.ast.creator.Environment;
 
 public class Field
 {
 	public boolean isTokenField = false;
 	public boolean isAspect = false;
 	public String name;
-	public String type;
+	public IInterfaceDefinition type;
 	public boolean isList = false;
 	public static String fieldPrefic = "_";
 	private Environment env;
+	private String unresolvedType;
 
 	public Field(Environment env)
 	{
@@ -21,6 +24,10 @@ public class Field
 	public List<String> getRequiredImports()
 	{
 		List<String> imports = new Vector<String>();
+		if(isList)
+		{
+			imports.add("java.util.List");
+		}
 //		imports.add("java.util.List");
 		
 		IInterfaceDefinition defIntf = env.lookUpInterface(getType());
@@ -46,18 +53,26 @@ public class Field
 
 	public String getName()
 	{
-		String tmp = (name == null ? type : name);
+		if(type == null)
+		{
+			type = getInternalType(unresolvedType);
+		}
+		String tmp = (name == null ? type.getName() : name);
 		return fieldPrefic + tmp.substring(0, 1).toLowerCase()
 				+ tmp.substring(1);
 	}
 
 	public String getType()
 	{
-		String internaalType = getInternalType();
+		if(type == null)
+		{
+			type = getInternalType(unresolvedType);
+		}
+		String internaalType = type.getName();//getInternalType();
 		if (isList)
 		{
 
-			internaalType = "NodeList<" + internaalType + ">";
+			internaalType = env.nodeList.getSignatureName()+"<" + internaalType + ">";
 		}
 
 		// String tmp = internaalType;
@@ -74,7 +89,12 @@ public class Field
 
 	public String getMethodArgumentType()
 	{
-		String internaalType = getInternalType();
+//		String internaalType = getInternalType();
+		if(type == null)
+		{
+			type = getInternalType(unresolvedType);
+		}
+		String internaalType = type.getName();
 		if (isList)
 		{
 
@@ -83,7 +103,7 @@ public class Field
 		return internaalType;
 	}
 
-	protected String getInternalType()
+	protected IInterfaceDefinition getInternalType(String unresolvedTypeName)
 	{
 		if (isTokenField)
 		{
@@ -97,9 +117,9 @@ public class Field
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
 				if (c.getType() == CommonTreeClassDefinition.ClassType.Token
-						&& c.thisClass.getText().equals(type))
+						&& c.thisClass.getText().equals(unresolvedTypeName))
 				{
-					return c.getName();
+					return c;
 				}
 			}
 		}
@@ -110,9 +130,9 @@ public class Field
 			{
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
-				if (c.thisClass.getText().equals(type))
+				if (c.thisClass.getText().equals(unresolvedTypeName))
 				{
-					return c.getName();
+					return c;
 				}
 			}
 		}
@@ -123,9 +143,9 @@ public class Field
 			{
 				CustomClassDefinition c = (CustomClassDefinition) cd;
 
-				if (c.name.equals(type))
+				if (c.name.equals(unresolvedTypeName))
 				{
-					return c.name;
+					return c;
 				}
 			}
 		}
@@ -142,7 +162,14 @@ public class Field
 		// {
 		// return type;
 		// }
-		return "%" + type;
+		return null;//"%" + type;
+	}
+
+	public void setType(String text)
+	{
+		this.unresolvedType = text;
+		this.type = getInternalType(unresolvedType);
+		
 	}
 
 }

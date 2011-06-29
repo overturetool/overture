@@ -1,17 +1,19 @@
-package com.lausdahl.ast.creator.methods;
+package com.lausdahl.ast.creator.methods.analysis;
 
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
-import com.lausdahl.ast.creator.InterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.Method.Argument;
 
-public class AnswerCaseMethod extends Method
+public class QuestionAnswerCaseMethod extends Method
 {
-	public AnswerCaseMethod()
+	public QuestionAnswerCaseMethod()
 	{
 		super(null,null);
 	}
 
-	public AnswerCaseMethod(IClassDefinition c,Environment env)
+	public QuestionAnswerCaseMethod(IClassDefinition c,Environment env)
 	{
 		super(c,env);
 	}
@@ -26,10 +28,12 @@ public class AnswerCaseMethod extends Method
 				+ "} node from {@link " + c.getName() + "#apply(Switch)}.\n");
 		sb.append("\t* @param node the calling {@link " + c.getName()
 				+ "} node\n");
+		sb.append("\t* @param question the provided question\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
 		this.name = "case" + InterfaceDefinition.javaClassName(c.getName());
 		this.arguments.add(new Argument(c.getName(), "node"));
+		this.arguments.add(new Argument("Q", "question"));
 		// this.annotation="@override";
 		this.body = "\t\treturn null;";
 		this.returnType = "A";

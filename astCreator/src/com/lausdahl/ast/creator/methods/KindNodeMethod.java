@@ -1,7 +1,7 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 
 public class KindNodeMethod extends Method
 {
@@ -22,15 +22,15 @@ public class KindNodeMethod extends Method
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
-		sb.append("\t * Returns the {@link NodeEnum} corresponding to the\n");
+		sb.append("\t * Returns the {@link NodeEnum"+c.getNamePostfix()+"} corresponding to the\n");
 		sb.append("\t * type of this {@link Node} node.\n");
-		sb.append("\t * @return the {@link NodeEnum} for this node\n");
+		sb.append("\t * @return the {@link NodeEnum"+c.getNamePostfix()+"} for this node\n");
 		sb.append("\t */");
 		this.javaDoc = sb.toString();
 		name = "kindNode";
 		annotation = "@Override";
-		returnType="NodeEnum";
-		body = "\t\treturn NodeEnum."+c.getEnumName()+";";
+		returnType="NodeEnum"+c.getNamePostfix();
+		body = "\t\treturn NodeEnum"+c.getNamePostfix()+"."+c.getEnumName()+";";
 
 		
 		// @Override public NodeEnum kindNode() {

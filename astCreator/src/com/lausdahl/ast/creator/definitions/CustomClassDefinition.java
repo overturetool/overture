@@ -1,8 +1,9 @@
-package com.lausdahl.ast.creator;
+package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.methods.ConstructorMethod;
 import com.lausdahl.ast.creator.methods.CustomSetMethod;
 import com.lausdahl.ast.creator.methods.DefaultConstructorMethod;

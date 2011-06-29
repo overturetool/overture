@@ -1,18 +1,18 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.IClassDefinition;
-import com.lausdahl.ast.creator.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 
 public class KindMethod extends Method
 {
 
 	CommonTreeClassDefinition c;
 
-	public KindMethod(CommonTreeClassDefinition c,Environment env)
+	public KindMethod(CommonTreeClassDefinition c, Environment env)
 	{
-		super(c,env);
+		super(c, env);
 		this.c = c;
 	}
 
@@ -28,16 +28,16 @@ public class KindMethod extends Method
 		} else
 		{
 			IClassDefinition superClass = c.getSuperClassDefinition();
-			if(superClass instanceof CommonTreeClassDefinition)
+			if (superClass instanceof CommonTreeClassDefinition)
 			{
-			String enumerationName = ((CommonTreeClassDefinition)superClass).getEnumTypeName();
-			this.name = "kind" + c.getSuperClassDefinition().getName();
+				String enumerationName = ((CommonTreeClassDefinition) superClass).getEnumTypeName();
+				this.name = "kind" + c.getSuperClassDefinition().getName();
 
-			// this.arguments.add(new Argument(f.getType(), "value"));
-			this.returnType = enumerationName;
-			this.annotation = "@Override";
-			this.body = "\t\treturn " + enumerationName + "." + c.getEnumName()
-					+ ";";
+				// this.arguments.add(new Argument(f.getType(), "value"));
+				this.returnType = enumerationName;
+				this.annotation = "@Override";
+				this.body = "\t\treturn " + enumerationName + "."
+						+ c.getEnumName() + ";";
 			}
 		}
 
