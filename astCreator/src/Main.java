@@ -16,8 +16,8 @@ import com.lausdahl.ast.creator.methods.analysis.CopyNode2ExtendedNodeListHelper
 
 public class Main
 {
-	private static final String INPUT_FILENAME = "test.astV2";
-	private static final String INPUT_FILENAME2 = "testExtended.astV2";
+	private static final String INPUT_FILENAME = "testdata\\test.astV2";
+	private static final String INPUT_FILENAME2 = "testdata\\testExtended.astV2";
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
 	private static File generated = new File("..\\ast\\src\\");
 	static boolean create = true;
@@ -87,18 +87,6 @@ public class Main
 
 		}
 		
-//		System.out.println(methods);
-
-//		String tmpName = answerIntf.getName().substring(1);
-//		if (tmpName.contains("<"))
-//		{
-//			tmpName = tmpName.substring(0, tmpName.indexOf('<')) + "Adaptor"
-//					+ answerIntf.getName().substring(tmpName.indexOf('<') + 1);
-//		} else
-//		{
-//			tmpName += "Adaptor";
-//		}
-
 		CustomClassDefinition copyAdaptor = new CustomClassDefinition("CopyAdaptor", destination);
 		copyAdaptor.setPackageName(defaultPackage);
 		copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");

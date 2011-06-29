@@ -38,7 +38,7 @@ public class SourceFileWriter
 				continue;
 			}
 			SourceFileWriter.write(outputFolder, def);
-			SourceFileWriter.write(generatedVdm, def, false);
+//			SourceFileWriter.write(generatedVdm, def, false);
 		}
 	}
 	
