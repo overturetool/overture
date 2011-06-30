@@ -43,61 +43,61 @@ Abstract Syntax Tree
  */
 
 binop {-> package='org.overture.ast.expressions'}
-    =   {lazy_and} [location]:location
-    |   {equivalent} [location]:location
-    |   {implies} [location]:location
-    |   {lazy_or} [location]:location
-    |   {comp} [location]:location
-    |   {domainResBy} [location]:location
-    |   {domainResTo} [location]:location
-    |   {equals} [location]:location
-    |   {inSet} [location]:location
-    |   {mapUnion} [location]:location
-    |   {notEqual} [location]:location
-    |   {notInSet} [location]:location
-    |   {div} [location]:location
-    |   {divide} [location]:location
-    |   {greaterEqual} [location]:location
-    |   {greater} [location]:location
-    |   {lessEqual} [location]:location
-    |   {less} [location]:location
-    |   {mod} [location]:location    
-    |   {plus} [location]:location //[token]:plus
-    |   {rem} [location]:location
-    |   {subtract} [location]:location
-    |   {times} [location]:location
-    |   {plusPlus} [location]:location
-    |   {properSubset} [location]:location
-    |   {rangeResBy} [location]:location
-    |   {rangeResTo} [location]:location
-    |   {seqConcat} [location]:location
-    |   {setDifference} [location]:location
-    |   {setIntersect} [location]:location
-    |   {setUnion} [location]:location
-    |   {starStar} [location]:location
-    |   {subset} [location]:location         
+    =   {lazy_and} 
+    |   {equivalent} 
+    |   {implies} 
+    |   {lazy_or} 
+    |   {comp} 
+    |   {domainResBy} 
+    |   {domainResTo} 
+    |   {equals} 
+    |   {inSet} 
+    |   {mapUnion} 
+    |   {notEqual} 
+    |   {notInSet} 
+    |   {div} 
+    |   {divide} 
+    |   {greaterEqual} 
+    |   {greater} 
+    |   {lessEqual} 
+    |   {less} 
+    |   {mod}     
+    |   {plus} 
+    |   {rem} 
+    |   {subtract} 
+    |   {times} 
+    |   {plusPlus} 
+    |   {properSubset} 
+    |   {rangeResBy} 
+    |   {rangeResTo} 
+    |   {seqConcat} 
+    |   {setDifference} 
+    |   {setIntersect} 
+    |   {setUnion} 
+    |   {starStar} 
+    |   {subset}          
     ;
     
 unop {-> package='org.overture.ast.expressions'}
-    =   {absolute} [location]:location 
-    |   {cardinality} [location]:location 
-    |   {distConcat} [location]:location 
-    |   {distIntersect} [location]:location 
-    |   {distMerge} [location]:location
-    |   {distUnion} [location]:location 
-    |   {floor} [location]:location 
-    |   {head} [location]:location 
-    |   {indices} [location]:location 
-    |   {len} [location]:location 
-    |   {mapDomain} [location]:location 
-    |   {mapInverse} [location]:location 
-    |   {mapRange} [location]:location 
-    |   {not} [location]:location 
-    |   {powerSet} [location]:location 
-    |   {reverse} [location]:location 
-    |   {tail} [location]:location
-    |   {unaryMinus} [location]:location 
-    |   {unaryPlus} [location]:location      
+    =   {absolute} 
+    |   {cardinality}  
+    |   {distConcat} 
+    |   {distIntersect}  
+    |   {distMerge} 
+    |   {distUnion} 
+    |   {floor}  
+    |   {head} 
+    |   {indices}  
+    |   {len} 
+    |   {mapDomain} 
+    |   {mapInverse} 
+    |   {mapRange} 
+    |   {not}  
+    |   {powerSet} 
+    |   {reverse}  
+    |   {tail} 
+    |   {unaryMinus}
+    |   {unaryPlus}       
     ;
     
 exp {-> package='org.overture.ast.expressions'}
@@ -128,7 +128,7 @@ exp {-> package='org.overture.ast.expressions'}
     //|   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
     |   {mapEnum} [members]:maplet*     
     |   {maplet} [location]:location [left]:exp [right]:exp
-    |   {mkBasic} [type]:type [arg]:exp
+    |   {mkBasic} [arg]:exp
     |   {mkType} [typeName]:lexnametoken [args]:exp*
     //|   {mu} [recordType]:exp [modifiers]:recordModifier
     |   {new} [className]:lexidentifiertoken [args]:exp*
@@ -166,14 +166,7 @@ boolean_const
     ;
     
 type {-> package='org.overture.ast.types'}
-    =	{boolean} [token]:bool
-    |	{char} [token]:char 	  
-    |   {int} [token]:int
-    |   {natOne} [token]:natOne
-    |	{nat} [token]:nat
-    |	{rational} [token]:rat
-    |	{real} [token]:real
-    |	{token} token_literal
+    =	#basic
     |	{bracket} [type]:type
     //|	{class} [name]:lexnametoken [classdef]:classDefinition
     |	{function} [partial]:bool_java [result]:type [parameters]:type*
@@ -195,6 +188,22 @@ type {-> package='org.overture.ast.types'}
     | 	{unresolved} [typename]:lexnametoken
     |	{voidReturn}
     | 	{void} 
+    ;
+
+
+#basic {-> package='org.overture.ast.types'}
+    =   {boolean} [token]:bool
+    |   {char} [token]:char    
+    |   #numeric     
+    |   {token} token_literal
+    ;
+
+#numeric {-> package='org.overture.ast.types'}
+    =   {int} [token]:int
+    |   {natOne} [token]:natOne
+    |   {nat} [token]:nat
+    |   {rational} [token]:rat
+    |   {real} [token]:real
     ;
 
 //field {-> package='org.overture.ast.types'}
@@ -245,7 +254,9 @@ definition {-> package='org.overture.ast.definitions'}
 	//| missing bus cpu and system defs
 	|	{classInvariant_def}  [expression]:exp
 	|	{equals_def} [pattern]:pattern [typebind]:typeBind [setbind]:setBind [test]:exp [expType]:type [defType]:type [defs]:definition*
-	|	{explicitFunction_def} [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java [measure]:lexnametoken [isCurried]:bool_java
+	|	{explicitFunction_def} [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* 
+	                           [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java 
+	                           [measure]:lexnametoken [isCurried]:bool_java
 	//|	{explicitOperation_def} [typeParams]:lexnametoken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
 	|	{external_def} [state]:definition [readOnly]:bool_java [oldname]:lexnametoken
 	|	{implicitFunction_def}  [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java [measure]:lexnametoken [isCurried]:bool_java
@@ -267,6 +278,13 @@ definition {-> package='org.overture.ast.definitions'}
 
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
+
+unop = [location]:location
+    ;
+
+binop = [location]:location
+    ;
+
 exp = [type]:type
     ;
 
