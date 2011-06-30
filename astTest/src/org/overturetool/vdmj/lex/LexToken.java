@@ -29,13 +29,14 @@ package org.overturetool.vdmj.lex;
 import java.io.Serializable;
 
 import org.overture.ast.node.ExternalNode;
+import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
 
 
 /**
  * The parent class for all lexical token types.
  */
 
- public final class LexToken implements Serializable,  ExternalNode
+ public final class LexToken implements Serializable,  ExternalNode,ExternalNodeInterpreter
 {
 	private static final long serialVersionUID = 1L;
 

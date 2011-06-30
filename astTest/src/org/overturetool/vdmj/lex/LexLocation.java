@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.overture.ast.node.ExternalNode;
+import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
 
 
 
@@ -44,7 +45,7 @@ import org.overture.ast.node.ExternalNode;
  * A class to hold the location of a token.
  */
 
-public class LexLocation implements Serializable , ExternalNode
+public class LexLocation implements Serializable , ExternalNode,ExternalNodeInterpreter
 {
 	@Override
 	public LexLocation clone()

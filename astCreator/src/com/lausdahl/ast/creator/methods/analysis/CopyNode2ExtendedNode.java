@@ -1,6 +1,10 @@
 package com.lausdahl.ast.creator.methods.analysis;
 
+import java.util.List;
+import java.util.Vector;
+
 import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
@@ -54,9 +58,24 @@ this.body = "\t\treturn null;//TODO";
 
 			bodySb.append("\t\treturn new " + destination.getSignatureName()
 					+ "(");
-			for (int i = 0; i < c.getFields().size(); i++)
+			
+			List<Field> fields = new Vector<Field>();
+			if (c instanceof CommonTreeClassDefinition)
 			{
-				Field sourceField = c.getFields().get(i);
+				fields.addAll(((CommonTreeClassDefinition) c).getInheritedFields());
+			}
+			fields.addAll(c.getFields());
+			
+			List<Field> destFields = new Vector<Field>();
+			if (destination instanceof CommonTreeClassDefinition)
+			{
+				destFields.addAll(((CommonTreeClassDefinition) destination).getInheritedFields());
+			}
+			destFields.addAll(destination.getFields());
+			
+			for (int i = 0; i < fields.size(); i++)
+			{
+				Field sourceField = fields.get(i);
 				Method getMethod = new GetMethod(c, sourceField, env);
 				getMethod.getJavaSourceCode();
 				String getMethodName = getMethod.name;
@@ -66,7 +85,7 @@ this.body = "\t\treturn null;//TODO";
 					if (!sourceField.isList)
 					{
 						bodySb.append("("
-								+ destination.getFields().get(i).getType()
+								+ destFields.get(i).getType()
 								+ ")" + getter + ".apply(this),");
 					} else
 					{
@@ -77,7 +96,7 @@ this.body = "\t\treturn null;//TODO";
 					bodySb.append(getter + ",");
 				}
 			}
-			int diff = destination.getFields().size() - c.getFields().size();
+			int diff = destFields.size() - fields.size();
 			if (diff > 0)
 			{
 				for (int i = 0; i < diff; i++)

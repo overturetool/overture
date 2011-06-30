@@ -150,7 +150,7 @@ public class CreateOnParse
 								c.addField(f);
 								Method m = new TokenConstructorMethod(c, f, idT.getText(), env);
 								c.methods.add(m);
-								System.out.println("Token: " + p);
+								println("Token: " + p);
 							}
 						}
 					} else if (node.getText().equals("Aspect Declaration"))
@@ -192,7 +192,7 @@ public class CreateOnParse
 
 								}
 
-								System.out.println("Aspect Decleration: " + p);
+								println("Aspect Decleration: " + p);
 							}
 						}
 					}
@@ -266,7 +266,7 @@ public class CreateOnParse
 			indent += "  ";
 		}
 
-		System.out.println(indent + token.getText());
+		println(indent + token.getText());
 		if (token.getChildCount() > 0)
 		{
 			for (Object chld : token.getChildren())
@@ -278,6 +278,22 @@ public class CreateOnParse
 			}
 		}
 		if (level == 2)
+			println();
+	}
+
+	private static void println(String text)
+	{
+		if (Main.test)
+		{
+			System.out.println(text);
+		}
+	}
+
+	private static void println()
+	{
+		if (Main.test)
+		{
 			System.out.println();
+		}
 	}
 }

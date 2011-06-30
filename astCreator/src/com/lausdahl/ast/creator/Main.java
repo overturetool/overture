@@ -1,14 +1,13 @@
+package com.lausdahl.ast.creator;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.Generator;
-import com.lausdahl.ast.creator.SourceFileWriter;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.analysis.CopyNode2ExtendedNode;
@@ -16,33 +15,54 @@ import com.lausdahl.ast.creator.methods.analysis.CopyNode2ExtendedNodeListHelper
 
 public class Main
 {
+	/**
+	 * Set this to false to generate the overture II AST
+	 */
+	public static final boolean test = false;
+	
+	
+	
+	private static final String INPUT_FILENAME_OVERTURE_II = "overtureII.astv2";
 	private static final String INPUT_FILENAME = "testdata\\test.astV2";
 	private static final String INPUT_FILENAME2 = "testdata\\testExtended.astV2";
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
 	private static File generated = new File("..\\ast\\src\\");
-	static boolean create = true;
+	
 
 	/**
 	 * @param args
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws IOException,
-			InstantiationException, IllegalAccessException
+	public static void main(String[] args) throws Exception
 	{
-		System.out.println("Generator starting with input: "+INPUT_FILENAME);
-		String defaultPackage = "org.overture.ast.node";
-		String analysisPackage = "org.overture.ast.analysis";
-		Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
+		if(!test)
+		{
+			System.out.println("Running with overture II");
+			generated = new File("..\\ast\\src\\");
+			System.out.println("Generator starting with input: "+INPUT_FILENAME_OVERTURE_II);
+			String defaultPackage = "org.overture.ast.node";
+			String analysisPackage = "org.overture.ast.analysis";
+			Environment env1 = create(INPUT_FILENAME_OVERTURE_II, defaultPackage, analysisPackage, "", generated, true);
+			System.out.println("\n\nGenerator completed with "+env1.getAllDefinitions().size()+" generated files.\n\n");
+		}else
+		{
+			System.out.println("TESTING...");
+			generated = new File("..\\astTest\\src\\");
+			System.out.println("Generator starting with input: "+INPUT_FILENAME);
+			String defaultPackage = "org.overture.ast.node";
+			String analysisPackage = "org.overture.ast.analysis";
+			Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
+			
+			defaultPackage = "org.overture.interpreter.ast.node";
+			analysisPackage = "org.overture.interpreter.ast.analysis";
+			String extendName = "Interpreter";
+			Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
+	
+			createCopyAdaptor(env1, env2,defaultPackage,extendName,generated);
+			System.out.println("TESTING...DONE.");
+		}
+	
 		
-//		defaultPackage = "org.overture.interpreter.ast.node";
-//		analysisPackage = "org.overture.interpreter.ast.analysis";
-//		String extendName = "Interpreter";
-//		Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
-//
-//		createCopyAdaptor(env1, env2,defaultPackage,extendName,generated);
-		System.out.println("\n\nGenerator completed with "+env1.getAllDefinitions().size()+" generated files.\n\n");
 	}
 
 	public static Environment create(String inputFile, String defaultPackage,
@@ -64,12 +84,12 @@ public class Main
 		return env;
 	}
 	
-	public static void createCopyAdaptor(Environment source, Environment destination, String defaultPackage,String namePostfix,File outputFolder)
+	public static void createCopyAdaptor(Environment source, Environment destination, String defaultPackage,String namePostfix,File outputFolder) throws Exception
 	{
 		List<Method> methods = new Vector<Method>(); 
 		for (CommonTreeClassDefinition c : Generator.getClasses(source.getClasses()))
 		{
-			if (c.getType() == IClassDefinition.ClassType.Production)
+			if (c.getType() == IClassDefinition.ClassType.Production || c.getType()==ClassType.SubProduction)
 			{
 				continue;
 			}
@@ -80,6 +100,13 @@ public class Main
 				{
 					destDef = def;
 				}
+			}
+			if(destDef==null)
+			{
+				System.err.println("Source class: "+c.getName()+" has no match in target environment.");
+				System.err.println("Target Environment:");
+				System.err.println(destination);
+				throw new Exception("Tree match error on copy");
 			}
 			Method m = new CopyNode2ExtendedNode(c, destDef, source,destination);
 			m.setClassDefinition(c);
