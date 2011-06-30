@@ -31,6 +31,7 @@ public class Main
 	public static void main(String[] args) throws IOException,
 			InstantiationException, IllegalAccessException
 	{
+		System.out.println("Generator starting with input: "+INPUT_FILENAME);
 		String defaultPackage = "org.overture.ast.node";
 		String analysisPackage = "org.overture.ast.analysis";
 		Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
@@ -41,7 +42,7 @@ public class Main
 //		Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
 //
 //		createCopyAdaptor(env1, env2,defaultPackage,extendName,generated);
-
+		System.out.println("\n\nGenerator completed with "+env1.getAllDefinitions().size()+" generated files.\n\n");
 	}
 
 	public static Environment create(String inputFile, String defaultPackage,

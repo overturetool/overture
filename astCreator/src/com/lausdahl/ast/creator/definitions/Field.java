@@ -38,6 +38,7 @@ public class Field
 		if(isList)
 		{
 			imports.add("java.util.List");
+			imports.add(getInternalType(unresolvedType).getPackageName() + "." + getInternalType(unresolvedType).getSignatureName());
 		}
 //		imports.add("java.util.List");
 		
