@@ -8,6 +8,7 @@ import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.definitions.JavaTypes;
 
 public class CloneMethod extends Method
 {
@@ -20,8 +21,8 @@ public class CloneMethod extends Method
 		this.name = "clone";
 
 		this.returnType = c.getName();
-//		this.requiredImports.add("java.util.LinkedList");
-//		this.requiredImports.add("java.util.List");
+		// this.requiredImports.add("java.util.LinkedList");
+		// this.requiredImports.add("java.util.List");
 		this.requiredImports.add("java.util.Map");
 
 		StringBuilder sbDoc = new StringBuilder();
@@ -32,14 +33,14 @@ public class CloneMethod extends Method
 				+ "} node\n");
 		sbDoc.append("\t */");
 		StringBuilder sb = new StringBuilder();
-		
+
 		List<Field> fields = new Vector<Field>();
-		if(classDefinition instanceof CommonTreeClassDefinition)
+		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
-			fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
+			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
 		}
 		fields.addAll(c.getFields());
-		
+
 		switch (classType)
 		{
 			case Alternative:
@@ -53,7 +54,7 @@ public class CloneMethod extends Method
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name =  f.getName();
+						String name = f.getName();
 						// this.arguments.add(new Argument(f.getType(), name + "_"));
 
 						if (f.isList)
@@ -61,7 +62,13 @@ public class CloneMethod extends Method
 							tmp += ("\t\t\tcloneList(" + name + "),\n");
 						} else
 						{
-							tmp += ("\t\t\tcloneNode(" + name + "),\n");
+							if (JavaTypes.isPrimitiveType(f.getType()))
+							{
+								tmp += ("\t\t\t" + name + ",\n");
+							} else
+							{
+								tmp += ("\t\t\tcloneNode(" + name + "),\n");
+							}
 						}
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2) + "\n");
@@ -94,15 +101,15 @@ public class CloneMethod extends Method
 		this.body = sb.toString();
 	}
 
-	public CloneMethod(IClassDefinition c, ClassType classType,Environment env)
+	public CloneMethod(IClassDefinition c, ClassType classType, Environment env)
 	{
-		super(c,env);
+		super(c, env);
 		this.classType = classType;
 	}
-	
+
 	@Override
 	protected void prepareVdm()
 	{
-	skip = true;
+		skip = true;
 	}
 }

@@ -7,6 +7,7 @@ import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.JavaTypes;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 
 public class CloneWithMapMethod extends CloneMethod
@@ -63,7 +64,14 @@ public class CloneWithMapMethod extends CloneMethod
 							tmp += ("\t\t\tcloneList(" + name + ", oldToNewMap),\n");
 						} else
 						{
-							tmp += ("\t\t\tcloneNode(" + name + ", oldToNewMap),\n");
+							
+							if (JavaTypes.isPrimitiveType(f.getType()))
+							{
+								tmp += ("\t\t\t" + name + ",\n");
+							} else
+							{
+								tmp += ("\t\t\tcloneNode(" + name + ", oldToNewMap),\n");
+							}
 						}
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2) + "\n");
