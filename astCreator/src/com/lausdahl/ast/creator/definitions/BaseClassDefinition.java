@@ -17,27 +17,12 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		super(name);
 	}
 
-	// public String getSuperName()
-	// {
-	// return this.superName;
-	// }
-
 	public String getName()
 	{
 		return this.name + this.namePostfix;
 	}
 
-//	@Override
-//	public String getPackageName()
-//	{
-//		if (getSuperDef() == null)
-//		{
-//			return super.getPackageName();
-//		} else
-//		{
-//			return getSuperDef().getPackageName();
-//		}
-//	}
+
 
 	public boolean hasSuper()
 	{
@@ -46,10 +31,6 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 	public void addField(Field field)
 	{
-		// if(field.type == null)
-		// {
-		// throw new Error("field not valid");
-		// }
 		this.fields.add(field);
 	}
 
@@ -152,7 +133,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (Field f : fields)
 		{
-			sb.append("\n\tprivate " + f.getType() + " " + f.getName() + ";");
+			sb.append("\n\t"+f.accessspecifier.syntax+" " + f.getType() + " " + f.getName() + ";");
 		}
 
 		sb.append("\n\n");

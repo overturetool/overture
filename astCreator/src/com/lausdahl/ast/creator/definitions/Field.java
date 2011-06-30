@@ -7,6 +7,16 @@ import com.lausdahl.ast.creator.Environment;
 
 public class Field
 {
+	public static enum AccessSpecifier{
+		Private("private"),
+		Protected("protected"),
+		Public("public");
+		public final String syntax;
+		private AccessSpecifier(String syntax)
+		{
+			this.syntax = syntax;
+		}
+	}
 	public boolean isTokenField = false;
 	public boolean isAspect = false;
 	public String name;
@@ -15,6 +25,7 @@ public class Field
 	public static String fieldPrefic = "_";
 	private Environment env;
 	private String unresolvedType;
+	public AccessSpecifier accessspecifier=AccessSpecifier.Private;
 
 	public Field(Environment env)
 	{

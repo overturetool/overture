@@ -1,5 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.List;
+import java.util.Vector;
+
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
@@ -30,6 +33,28 @@ public class ConstructorMethod extends Method
 		sbDoc.append("* The basic child nodes are removed from their previous parents.\n");
 
 		StringBuilder sb = new StringBuilder();
+
+		if(classDefinition instanceof CommonTreeClassDefinition)
+		{
+			sb.append("\t\tsuper(");
+			List<Field> fields = new Vector<Field>();
+			fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
+			skip = skip && fields.isEmpty();
+			for (Field f: fields)
+			{
+				String name = f.getName().replaceAll("_", "")+ "_";
+				this.arguments.add(new Argument(f.getMethodArgumentType(), name
+						));
+				sb.append(name+",");
+			}
+			if(!fields.isEmpty())
+			{
+				sb.delete(sb.length()-1, sb.length());
+			}
+			sb.append(");\n");
+			
+		}
+		
 		for (Field f : classDefinition.getFields())
 		{
 			String name = f.getName().replaceAll("_", "");

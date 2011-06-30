@@ -1,5 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.List;
+import java.util.Vector;
+
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
@@ -32,6 +35,14 @@ public class CloneWithMapMethod extends CloneMethod
 		sbDoc.append("\t */");
 
 		StringBuilder sb = new StringBuilder();
+		
+		List<Field> fields = new Vector<Field>();
+		if(classDefinition instanceof CommonTreeClassDefinition)
+		{
+			fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
+		}
+		fields.addAll(c.getFields());
+		
 		switch (classType)
 		{
 			case Alternative:
@@ -44,7 +55,7 @@ public class CloneWithMapMethod extends CloneMethod
 				if (!c.getFields().isEmpty())
 				{
 					String tmp = "";
-					for (Field f : c.getFields())
+					for (Field f : fields)
 					{
 						String name = f.getName();
 						if (f.isList)
@@ -67,7 +78,7 @@ public class CloneWithMapMethod extends CloneMethod
 				if (!c.getFields().isEmpty())
 				{
 					String tmp = "";
-					for (Field f : c.getFields())
+					for (Field f : fields)
 					{
 						tmp += ("get"
 								+ CommonTreeClassDefinition.javaClassName(f.getName()) + "(), ");

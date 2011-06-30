@@ -1,8 +1,10 @@
 package com.lausdahl.ast.creator.definitions;
 
-import org.antlr.runtime.tree.CommonTree;
+import java.util.List;
+import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
 import com.lausdahl.ast.creator.methods.CloneMethod;
 import com.lausdahl.ast.creator.methods.CloneWithMapMethod;
 import com.lausdahl.ast.creator.methods.ConstructorMethod;
@@ -37,7 +39,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 		this.env = env;
 		super.name = getName();
 
-		if (type != ClassType.Production /* && !fields.isEmpty() */ && this.type != ClassType.SubProduction)
+//		if (type != ClassType.Production /* && !fields.isEmpty() */ && this.type != ClassType.SubProduction)
 		{
 			methods.add(new ConstructorMethod(this, env));
 			if (type != ClassType.Token)
@@ -194,7 +196,10 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 		Method getM = new GetMethod(this, field, env);
 		methods.add(getM);
-
+		if(type==ClassType.Production|| type==ClassType.SubProduction)
+		{
+			field.accessspecifier = AccessSpecifier.Protected;
+		}
 	}
 
 	@Override
@@ -241,5 +246,18 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 				break;
 		}
 		return super.getPackageName();
+	}
+	
+	public List<Field> getInheritedFields()
+	{
+		List<Field> fields = new Vector<Field>();
+		IClassDefinition sDef = getSuperDef();
+		if(sDef instanceof CommonTreeClassDefinition)
+		{
+			fields.addAll(((CommonTreeClassDefinition)sDef).getInheritedFields());
+			fields.addAll(sDef.getFields());
+		}
+		
+		return fields;
 	}
 }
