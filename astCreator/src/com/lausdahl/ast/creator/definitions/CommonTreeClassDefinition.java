@@ -22,22 +22,22 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 	Environment env;
 
 	private ClassType type = ClassType.Alternative;
-//	public IClassDefinition superClass;
-	public CommonTree thisClass;
+	// public IClassDefinition superClass;
+	public String rawName;
 
-	public CommonTreeClassDefinition(CommonTree thisClass,
+	public CommonTreeClassDefinition(String rawName,
 			IClassDefinition superClass, ClassType type, Environment env)
 	{
 		super(null);
 
-		this.thisClass = thisClass;
+		this.rawName = rawName;
 		setSuperClass(superClass);
 
 		this.type = type;
 		this.env = env;
 		super.name = getName();
 
-		if (type != ClassType.Production /* && !fields.isEmpty() */)
+		if (type != ClassType.Production /* && !fields.isEmpty() */ && this.type != ClassType.SubProduction)
 		{
 			methods.add(new ConstructorMethod(this, env));
 			if (type != ClassType.Token)
@@ -53,7 +53,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 		methods.add(new ToStringMethod(this, env));
 
-		if (this.type != ClassType.Production)
+		if (this.type != ClassType.Production && this.type != ClassType.SubProduction)
 		{
 			methods.add(new CloneMethod(this, type, env));
 			methods.add(new CloneWithMapMethod(this, type, env));
@@ -64,11 +64,32 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 			methods.add(new KindNodeMethod(this, env));
 		}
 
-		if (this.type != ClassType.Token)
+//		if (this.type != ClassType.Token/*&& this.type != ClassType.SubProduction*/)
+//		{
+//			methods.add(new KindMethod(this, env));
+//		}
+		
+		switch (this.type)
 		{
-			methods.add(new KindMethod(this, env));
+			case Alternative:
+				
+			case Custom:
+				methods.add(new KindMethod(this,false,env));
+				break;
+			case Production:
+				methods.add(new KindMethod(this,true ,env));
+				break;
+			case SubProduction:
+				methods.add(new KindMethod(this,false,env));
+				methods.add(new KindMethod(this,true,env));
+				break;
+			case Token:
+				break;
+			
+			
 		}
 
+		
 		env.addClass(this);
 	}
 
@@ -89,27 +110,28 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 	public String getName()
 	{
-		if (thisClass != null)
+		if (rawName != null)
 		{
-			String name = firstLetterUpper(thisClass.getText());
+			String name = firstLetterUpper(rawName);
 			switch (type)
 			{
 				case Alternative:
-					name = "A" + name+getSuperClassDefinition().getName().substring(1);
+					name = "A" + name
+							+ getSuperClassDefinition().getName().substring(1);
 					break;
 				case Production:
 					name = "P" + name;
+					break;
+				case SubProduction:
+					name = "S" + name+ getSuperClassDefinition().getName().substring(1);;
 					break;
 				case Token:
 					name = "T" + name;
 					break;
 			}
 
-//			if (getSuperClassDefinition() != null)
-//			{
-//				name += getSuperClassDefinition().getName();//getSuperName().substring(1);
-//			}
-			String tmp = javaClassName(name.replace(namePostfix, "")+namePostfix);
+			String tmp = javaClassName(name.replace(namePostfix, "")
+					+ namePostfix);
 			if (VDM && tmp.contains("."))
 			{
 				return tmp.substring(tmp.lastIndexOf('.') + 1);
@@ -121,34 +143,10 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 		return null;
 	}
 
-//	public String getSuperName()
-//	{
-//		switch (type)
-//		{
-//			case Alternative:
-//				if (getSuperClassDefinition() != null)
-//				{
-//					return getSuperClassDefinition().getName();
-//				}
-//				break;
-//			case Production:
-//				return "Node";
-//
-//			case Token:
-//				return "Token";
-//
-//			default:
-//				return "Node";
-//
-//		}
-//
-//		return null;
-//	}
-
 	@Override
 	public boolean isAbstract()
 	{
-		return type == ClassType.Production;
+		return type == ClassType.Production || type == ClassType.SubProduction;
 	}
 
 	@Override
@@ -157,16 +155,17 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 		return type == ClassType.Token;
 	}
 
-	
 	@Override
 	public IClassDefinition getSuperDef()
 	{
 		return getSuperClassDefinition();
 	}
+
 	public IClassDefinition getSuperClassDefinition()
 	{
 		switch (type)
 		{
+			case SubProduction:
 			case Alternative:
 				if (superDef != null)
 				{
@@ -206,30 +205,41 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 	public String getEnumName()
 	{
-		return javaClassName(thisClass.getText()).toUpperCase();
+		return javaClassName(rawName).toUpperCase();
 	}
 
 	public String getEnumTypeName()
 	{
-		return "E" + BaseClassDefinition.firstLetterUpper(thisClass.getText())+namePostfix;
+		if(type==ClassType.Production)
+		{
+			
+		
+		return "E" + BaseClassDefinition.firstLetterUpper(rawName)
+				+ namePostfix;
+		}else
+		{
+			return "E" + BaseClassDefinition.firstLetterUpper(rawName)+BaseClassDefinition.firstLetterUpper(((CommonTreeClassDefinition)getSuperClassDefinition()).rawName)
+			+ namePostfix;
+		}
 	}
+
 	@Override
 	public String getPackageName()
 	{
-	switch (type)
-	{
-		case Production:
-			return super.getPackageName();
-		case Alternative:
-			return getSuperDef().getPackageName();
-		case Custom:
-		
-		case Token:
-		case Unknown:
+		switch (type)
+		{
+			case Production:
+				return super.getPackageName();
+			case Alternative:
+				return getSuperDef().getPackageName();
+			case Custom:
 
-		default:
-			break;
-	}
-	return super.getPackageName();
+			case Token:
+			case Unknown:
+
+			default:
+				break;
+		}
+		return super.getPackageName();
 	}
 }

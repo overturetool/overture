@@ -9,18 +9,20 @@ public class KindMethod extends Method
 {
 
 	CommonTreeClassDefinition c;
+	boolean isAbstractKind = false;
 
-	public KindMethod(CommonTreeClassDefinition c, Environment env)
+	public KindMethod(CommonTreeClassDefinition c,boolean isAbstractKind, Environment env)
 	{
 		super(c, env);
 		this.c = c;
+		this.isAbstractKind = isAbstractKind;
 	}
 
 	@Override
 	protected void prepare()
 	{
 
-		if (c.getType() == ClassType.Production)
+		if (isAbstractKind)//(c.getType() == ClassType.Production)
 		{
 			this.isAbstract = true;
 			this.name = "kind" + c.getName();

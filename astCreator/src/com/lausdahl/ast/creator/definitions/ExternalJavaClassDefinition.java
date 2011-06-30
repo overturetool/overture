@@ -1,17 +1,15 @@
 package com.lausdahl.ast.creator.definitions;
 
-import org.antlr.runtime.tree.CommonTree;
-
 import com.lausdahl.ast.creator.Environment;
 
 public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
 {
 	String name;
 
-	public ExternalJavaClassDefinition(CommonTree thisClass,
+	public ExternalJavaClassDefinition(String rawName ,
 			IClassDefinition superClass, ClassType type, String name,Environment env)
 	{
-		super(thisClass, superClass, type,env);
+		super(rawName, superClass, type,env);
 		if(name.contains("."))
 		{
 			setPackageName(name.substring(0,name.lastIndexOf(".")));

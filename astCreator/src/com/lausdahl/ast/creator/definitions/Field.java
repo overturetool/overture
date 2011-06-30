@@ -117,7 +117,7 @@ public class Field
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
 				if (c.getType() == CommonTreeClassDefinition.ClassType.Token
-						&& c.thisClass.getText().equals(unresolvedTypeName))
+						&& c.rawName.equals(unresolvedTypeName))
 				{
 					return c;
 				}
@@ -130,7 +130,7 @@ public class Field
 			{
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
-				if (c.thisClass.getText().equals(unresolvedTypeName))
+				if (c.rawName.equals(unresolvedTypeName))
 				{
 					return c;
 				}

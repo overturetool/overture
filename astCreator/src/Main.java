@@ -35,12 +35,12 @@ public class Main
 		String analysisPackage = "org.overture.ast.analysis";
 		Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
 		
-		defaultPackage = "org.overture.interpreter.ast.node";
-		analysisPackage = "org.overture.interpreter.ast.analysis";
-		String extendName = "Interpreter";
-		Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
-
-		createCopyAdaptor(env1, env2,defaultPackage,extendName,generated);
+//		defaultPackage = "org.overture.interpreter.ast.node";
+//		analysisPackage = "org.overture.interpreter.ast.analysis";
+//		String extendName = "Interpreter";
+//		Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
+//
+//		createCopyAdaptor(env1, env2,defaultPackage,extendName,generated);
 
 	}
 

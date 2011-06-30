@@ -1,5 +1,5 @@
 grammar Astc;
-
+//http://www.antlr.org/wiki/display/ANTLR3/Tree+construction
 options{
 	language=Java;
 	output=AST;
@@ -112,7 +112,7 @@ toks
   ;
   
 aspectdcl
-  : ASPECT_DCL^ aspectdcla ';'!
+  : ASPECT_DCL^ (aspectdcla ';'!)*
   ;
   
 aspectdcla
@@ -122,10 +122,16 @@ aspectdcla
 
 
 production
-  : ID productionfields? ASSIGN alternative ('|' alternative)* ';' -> ^(ID productionfields? (alternative)*) 
+  : name productionfields? ASSIGN alternative ('|' alternative)* ';' -> ^(ID["P"] name productionfields? (alternative)*) 
   ;
   
-  
+name 
+  : ID^ 
+  | '#' ID->^('#' ID)
+  ;
+
+ 
+   
 productionfields
   : '{'! FIELD_DCL^ productionfield* '}'!
   ;
@@ -136,6 +142,7 @@ productionfield
 
 alternative
   : ('{' ID '}')? (definitions)* -> ^(ID (definitions)*)
+  | '#' ID -> ^(ID["ALTERNATIVE_SUB_ROOT"] ID)
   ;
   
 definitions

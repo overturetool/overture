@@ -47,10 +47,33 @@ public class CreateOnParse
 							if (production instanceof CommonTree)
 							{
 								CommonTree p = (CommonTree) production;
-								CommonTreeClassDefinition c = new CommonTreeClassDefinition(p, null, CommonTreeClassDefinition.ClassType.Production, env);
-								c.setPackageName(defaultPackage);
+								CommonTree nameNode = (CommonTree) p.getChildren().get(0);
+
+								CommonTreeClassDefinition c = null;
+								if (nameNode.getText().equals("#"))
+								{
+									for (IClassDefinition def : env.getClasses())
+									{
+										if (def instanceof CommonTreeClassDefinition
+												&& ((CommonTreeClassDefinition) def).rawName.equals(nameNode.getChild(0).getText()))
+										{
+											c = (CommonTreeClassDefinition) def;
+										}
+									}
+								} else
+								{
+									c = new CommonTreeClassDefinition(nameNode.getText(), null, CommonTreeClassDefinition.ClassType.Production, env);
+									c.setPackageName(defaultPackage);
+								}
+
+								boolean foundNameNode = true;
 								for (Object a : p.getChildren())
 								{
+									if (foundNameNode)
+									{
+										foundNameNode = false;
+										continue;
+									}
 									if (a instanceof CommonTree)
 									{
 										CommonTree aa = (CommonTree) a;
@@ -71,6 +94,11 @@ public class CreateOnParse
 													}
 												}
 											}
+										} else if (aa.getText() != null
+												&& aa.getText().equals("ALTERNATIVE_SUB_ROOT"))
+										{
+											CommonTreeClassDefinition subAlternativeClassDef = new CommonTreeClassDefinition(aa.getChild(0).getText(), c, CommonTreeClassDefinition.ClassType.SubProduction, env);
+											subAlternativeClassDef.setPackageName(defaultPackage);
 										} else
 										{
 											exstractA(c, aa, env, defaultPackage);
@@ -104,11 +132,13 @@ public class CreateOnParse
 								CommonTreeClassDefinition c = null;
 								if (!externalJavaType)
 								{
-									c = new CommonTreeClassDefinition(p, null, CommonTreeClassDefinition.ClassType.Token, env);
-									c.setPackageName(defaultPackage+".tokens");
+									// CommonTree nameNode = (CommonTree)p.getChildren().get(0);
+									c = new CommonTreeClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, env);
+									c.setPackageName(defaultPackage + ".tokens");
 								} else
 								{
-									c = new ExternalJavaClassDefinition(p, null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
+									// CommonTree nameNode = (CommonTree)p.getChildren().get(0);
+									c = new ExternalJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
 								}
 
 								c.imports.add(env.token);
@@ -179,7 +209,8 @@ public class CreateOnParse
 	private static void exstractA(CommonTreeClassDefinition superClass,
 			CommonTree a, Environment env, String defaultPackage)
 	{
-		CommonTreeClassDefinition c = new CommonTreeClassDefinition(a, superClass, CommonTreeClassDefinition.ClassType.Alternative, env);
+		// CommonTree nameNode = (CommonTree)a.getChildren().get(0);
+		CommonTreeClassDefinition c = new CommonTreeClassDefinition(a.getText(), superClass, CommonTreeClassDefinition.ClassType.Alternative, env);
 		c.setPackageName(defaultPackage);
 		if (a.getChildCount() > 0)
 		{
@@ -210,7 +241,7 @@ public class CreateOnParse
 					for (IClassDefinition cl : env.getClasses())
 					{
 						if (cl instanceof ExternalJavaClassDefinition
-								&& ((ExternalJavaClassDefinition) cl).thisClass.getText().equals(typeName))
+								&& ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
 						{
 							field.isTokenField = true;
 							field.type = cl;// TODO

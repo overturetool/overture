@@ -80,6 +80,16 @@ public class Generator
 					{
 						eDef.elements.add(sub.getEnumName());
 					}
+				}else if (c.getType() == ClassType.SubProduction)
+				{
+					EnumDefinition eDef = new EnumDefinition(c.getEnumTypeName());
+					eDef.setPackageName(c.getPackageName());
+					enums.add(eDef);
+
+					for (CommonTreeClassDefinition sub : getClasses(env.getSubClasses(c)))
+					{
+						eDef.elements.add(sub.getEnumName());
+					}
 				}
 			}
 		}
