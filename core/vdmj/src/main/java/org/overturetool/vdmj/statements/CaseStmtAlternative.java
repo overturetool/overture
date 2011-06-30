@@ -53,7 +53,7 @@ public class CaseStmtAlternative implements Serializable
 
 	public CaseStmtAlternative(Pattern pattern, Statement stmt)
 	{
-		this.location = stmt.location;
+		this.location = pattern.location;
 		this.pattern = pattern;
 		this.statement = stmt;
 	}
