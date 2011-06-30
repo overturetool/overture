@@ -175,7 +175,7 @@ public class CreateOnParse
 
 											if (aspectDclT.getChildCount() > 0)
 											{
-												for (Object aspectDclName : p.getChildren())
+												for (Object aspectDclName : aspectDclT.getChildren())
 												{
 													if (aspectDclName instanceof CommonTree)
 													{
