@@ -32,7 +32,7 @@ public class CopyNode2ExtendedNodeListHelper extends Method
 		bodySb.append("\t\t"+this.returnType+" newList = new " +this.returnType+"<"+envDest.node.getName()+">(null);\n");
 		bodySb.append("\t\t"+"for( "+env.node.getName()+" n : list)\n");
 		bodySb.append("\t\t"+"{\n");
-		bodySb.append("\t\t"+"\tnewList.add(n);\n");
+		bodySb.append("\t\t"+"\tnewList.add(n.apply(this));\n");
 		bodySb.append("\t\t"+"}\n");
 		bodySb.append("\t\t"+"return newList;");
 		this.body = bodySb.toString();

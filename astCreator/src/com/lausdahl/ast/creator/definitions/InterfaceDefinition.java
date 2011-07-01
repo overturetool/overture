@@ -1,5 +1,6 @@
 package com.lausdahl.ast.creator.definitions;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -9,6 +10,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
 {
 	public List<Method> methods = new Vector<Method>();
 	public List<IInterfaceDefinition> imports = new Vector<IInterfaceDefinition>();
+	List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 	public List<String> supers = new Vector<String>();
 	protected String name;
 	protected String namePostfix = "";
@@ -16,6 +18,8 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	private String packageName = "";
 	public static boolean VDM = false;
 	private String tag = "";
+	protected String namePrefix = "I";
+	protected String annotation = "";
 
 	public InterfaceDefinition(String name)
 	{
@@ -29,13 +33,25 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	@Override
 	public String getName()
 	{
-		String tmp = "I" + this.name;
+		String tmp = namePrefix + this.name;
 		if (tmp.contains("<"))
 		{
 			tmp = tmp.replace("<", namePostfix + "<");
-		} else
+		} else if (genericArguments.isEmpty())
 		{
 			tmp += namePostfix;
+		} else
+		{
+			String tmp1 = tmp + namePostfix + "<";
+			for (IInterfaceDefinition arg : genericArguments)
+			{
+				tmp1 += arg.getSignatureName() + ", ";
+			}
+			if (!genericArguments.isEmpty())
+			{
+				tmp1 = tmp1.substring(0, tmp1.length() - 2);
+			}
+			tmp = tmp1 + ">";
 		}
 		return tmp;
 	}
@@ -207,6 +223,10 @@ public class InterfaceDefinition implements IInterfaceDefinition
 			sb.append("--import " + importName + ";\n");
 		}
 
+		if (annotation != null && annotation.length() > 0)
+		{
+			sb.append(annotation + "\n");
+		}
 		sb.append("/*public interface*/class " + getSignatureName());
 
 		if (!supers.isEmpty())
@@ -324,5 +344,33 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	public String getTag()
 	{
 		return this.tag;
+	}
+
+	public void setGenericArguments(IInterfaceDefinition... arguments)
+	{
+		if (arguments != null)
+		{
+			this.genericArguments.addAll(Arrays.asList(arguments));
+		}
+	}
+
+	public void setGenericArguments(List<IInterfaceDefinition> arguments)
+	{
+		if (arguments != null)
+		{
+			this.genericArguments.addAll(arguments);
+		}
+	}
+
+	@Override
+	public List<IInterfaceDefinition> getGenericArguments()
+	{
+		return this.genericArguments;
+	}
+
+	@Override
+	public void setAnnotation(String annotation)
+	{
+		this.annotation = annotation;
 	}
 }

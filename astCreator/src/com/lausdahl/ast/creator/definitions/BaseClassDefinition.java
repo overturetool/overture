@@ -9,17 +9,13 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		IClassDefinition
 {
 	protected List<Field> fields = new Vector<Field>();
-	public List<String> interfaces = new Vector<String>();
+	public List<IInterfaceDefinition> interfaces = new Vector<IInterfaceDefinition>();
 	public IClassDefinition superDef;
 
 	public BaseClassDefinition(String name)
 	{
 		super(name);
-	}
-
-	public String getName()
-	{
-		return this.name + this.namePostfix;
+		namePrefix ="";
 	}
 
 
@@ -55,6 +51,15 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		}
 
 		for (IInterfaceDefinition i : this.imports)
+		{
+			String n = i.getPackageName() + "." + i.getSignatureName();
+			if (!imports.contains(n))
+			{
+				imports.add(n);
+			}
+		}
+		
+		for (IInterfaceDefinition i : this.interfaces)
 		{
 			String n = i.getPackageName() + "." + i.getSignatureName();
 			if (!imports.contains(n))
@@ -109,8 +114,13 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			sb.append("import " + importName + ";\n");
 		}
-
-		sb.append("\n\npublic " + (isFinal() ? "final " : "")
+		sb.append("\n\n");
+		
+		if (annotation != null && annotation.length() > 0)
+		{
+			sb.append(annotation + "\n");
+		}
+		sb.append("public " + (isFinal() ? "final " : "")
 				+ (isAbstract() ? "abstract " : "") + "class " + getName());
 
 		if (hasSuper())
@@ -122,9 +132,9 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			sb.append(" implements ");
 			StringBuilder intfs = new StringBuilder();
-			for (String intfName : interfaces)
+			for (IInterfaceDefinition intfName : interfaces)
 			{
-				intfs.append(intfName + ", ");
+				intfs.append(intfName.getName() + ", ");
 			}
 			sb.append(intfs.subSequence(0, intfs.length() - 2));
 		}
@@ -193,9 +203,9 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 				sb.append(" , ");
 			}
 			StringBuilder intfs = new StringBuilder();
-			for (String intfName : interfaces)
+			for (IInterfaceDefinition intfName : interfaces)
 			{
-				intfs.append(stripGenericArguments(intfName) + ", ");
+				intfs.append(stripGenericArguments(intfName.getName()) + ", ");
 			}
 			sb.append(intfs.subSequence(0, intfs.length() - 2));
 		}

@@ -1,25 +1,26 @@
-package com.lausdahl.ast.creator.methods.analysis;
+package com.lausdahl.ast.creator.methods.analysis.adopter;
 
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
-import com.lausdahl.ast.creator.methods.Method;
 
-public class QuestionCaseMethod extends Method
+public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 {
-	public QuestionCaseMethod()
+	public AnalysisAdaptorDefaultNodeMethod()
 	{
 		super(null,null);
 	}
 
-	public QuestionCaseMethod(IClassDefinition c,Environment env)
+	public AnalysisAdaptorDefaultNodeMethod(Environment env)
 	{
-		super(c,env);
+		super(null,env);
+		
 	}
 
 	@Override
 	protected void prepare()
 	{
+		classDefinition = env.node;
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
@@ -27,14 +28,14 @@ public class QuestionCaseMethod extends Method
 				+ "} node from {@link " + c.getName() + "#apply(Switch)}.\n");
 		sb.append("\t* @param node the calling {@link " + c.getName()
 				+ "} node\n");
-		sb.append("\t* @param question the provided question\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "case" + InterfaceDefinition.javaClassName(c.getName());
-		this.arguments.add(new Argument(c.getName(), "node"));
-		this.arguments.add(new Argument("Q", "question"));
+		this.name = "default" + InterfaceDefinition.javaClassName(c.getName());
+		setupArguments();
 		// this.annotation="@override";
-		// this.body = "\t\treturn null;";
-		// this.returnType="A";
+		
+		this.body = "\t\t"+ (addReturnToBody ? "return null;" : "")
+					+"//nothing to do";
+		
 	}
 }

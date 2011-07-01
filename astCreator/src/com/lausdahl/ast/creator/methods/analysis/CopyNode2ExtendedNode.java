@@ -46,33 +46,33 @@ public class CopyNode2ExtendedNode extends Method
 		this.javaDoc = sb.toString();
 		this.name = "case" + InterfaceDefinition.javaClassName(c.getName());
 		this.arguments.add(new Argument(c.getName(), "node"));
-		this.annotation = "@SuppressWarnings(\"unchecked\")";
+//		this.annotation = "@SuppressWarnings(\"unchecked\")";
 		this.returnType = envDest.node.getSignatureName();
 		StringBuilder bodySb = new StringBuilder();
 
 		if (c instanceof ExternalJavaClassDefinition)
 		{
-this.body = "\t\treturn null;//TODO";
+			this.body = "\t\treturn null;//TODO";
 		} else
 		{
 
 			bodySb.append("\t\treturn new " + destination.getSignatureName()
 					+ "(");
-			
+
 			List<Field> fields = new Vector<Field>();
 			if (c instanceof CommonTreeClassDefinition)
 			{
 				fields.addAll(((CommonTreeClassDefinition) c).getInheritedFields());
 			}
 			fields.addAll(c.getFields());
-			
+
 			List<Field> destFields = new Vector<Field>();
 			if (destination instanceof CommonTreeClassDefinition)
 			{
 				destFields.addAll(((CommonTreeClassDefinition) destination).getInheritedFields());
 			}
 			destFields.addAll(destination.getFields());
-			
+
 			for (int i = 0; i < fields.size(); i++)
 			{
 				Field sourceField = fields.get(i);
@@ -80,21 +80,22 @@ this.body = "\t\treturn null;//TODO";
 				getMethod.getJavaSourceCode();
 				String getMethodName = getMethod.name;
 				String getter = "node." + getMethodName + "()";
+				bodySb.append("(" + getter + " == null ? null : ");
 				if (!sourceField.isTokenField)
 				{
 					if (!sourceField.isList)
 					{
-						bodySb.append("("
-								+ destFields.get(i).getType()
-								+ ")" + getter + ".apply(this),");
+						bodySb.append("(" + destFields.get(i).getType() + ")"
+								+ getter + ".apply(this)");
 					} else
 					{
-						bodySb.append("copyList(" + getter + "),");
+						bodySb.append("copyList(" + getter + ")");
 					}
 				} else
 				{
-					bodySb.append(getter + ",");
+					bodySb.append(getter);
 				}
+				bodySb.append("),");
 			}
 			int diff = destFields.size() - fields.size();
 			if (diff > 0)

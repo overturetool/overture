@@ -28,14 +28,23 @@ public class SourceFileWriter
 		outputFolder.mkdirs();
 		generatedVdm.mkdirs();
 		
+		System.out.println("Copying base classes to destination...");
 		copyBaseClasses(outputFolder,defaultPackage,analysisPackageName,env);
-		
+		System.out.println("Writing source files.:");
+		int i=100;
 		for (IInterfaceDefinition def : env.getAllDefinitions())
 		{
 			if (def instanceof PredefinedClassDefinition
 					|| def instanceof ExternalJavaClassDefinition)
 			{
 				continue;
+			}
+			System.out.print(/*def.getSignatureName()+"..."*/".");
+			i--;
+			if(i==0)
+			{
+				i=100;
+				System.out.println();
 			}
 			SourceFileWriter.write(outputFolder, def);
 //			SourceFileWriter.write(generatedVdm, def, false);

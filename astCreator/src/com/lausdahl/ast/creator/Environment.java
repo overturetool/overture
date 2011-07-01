@@ -3,7 +3,6 @@ package com.lausdahl.ast.creator;
 import java.util.List;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
@@ -11,6 +10,8 @@ import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 public class Environment
 {
 	public static final IInterfaceDefinition voidDef = new PredefinedClassDefinition("", "void");
+	public static final IInterfaceDefinition A = new PredefinedClassDefinition("", "A",true);
+	public static final IInterfaceDefinition Q = new PredefinedClassDefinition("", "Q",true);
 	public static final IInterfaceDefinition stringDef = new PredefinedClassDefinition("","String");
 	public final PredefinedClassDefinition node;
 	public final PredefinedClassDefinition token;

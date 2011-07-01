@@ -14,7 +14,7 @@ public class CustomClassDefinition extends BaseClassDefinition
 {
 
 	public static List<CustomClassDefinition> classes = new Vector<CustomClassDefinition>();
-
+	
 	// public String interfaceName;
 	// public List<Field> fields = new Vector<Field>();
 
@@ -24,6 +24,7 @@ public class CustomClassDefinition extends BaseClassDefinition
 	public CustomClassDefinition(String name, Environment env)
 	{
 		super(name);
+		
 		this.env = env;
 		methods.add(new ConstructorMethod(this, env));
 		methods.add(new DefaultConstructorMethod(this, env));
@@ -41,93 +42,6 @@ public class CustomClassDefinition extends BaseClassDefinition
 		Method getM = new GetMethod(this, field, env);
 		methods.add(getM);
 
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	// @Override
-	// public String toString()
-	// {
-	// String tmp = IClassDefinition.classHeader+ "\n\npackage generated.node;\n\n\n";
-	//
-	//
-	// List<String> imports = new Vector<String>();
-	// for (Method m : methods)
-	// {
-	// for (String string : m.getRequiredImports())
-	// {
-	// if(!imports.contains(string))
-	// {
-	// imports.add(string);
-	// }
-	// }
-	// }
-	//
-	// for (Field m : fields)
-	// {
-	// for (String string : m.getRequiredImports())
-	// {
-	// if(!imports.contains(string)&& m.isList)
-	// {
-	// imports.add(string);
-	// }
-	// }
-	// }
-	//
-	// for (String string : imports)
-	// {
-	// tmp+="import "+string+";\n";
-	// }
-	//
-	//
-	// tmp += "public " + "class " + name;
-	//
-	// if (interfaceName != null)
-	// {
-	// tmp += " implements " + interfaceName;
-	// }
-	//
-	// tmp += "\n{";
-	//
-	// for (Field f : fields)
-	// {
-	// tmp += "\n\tprivate " + f.getType() + " " + f.getName() + ";";
-	// }
-	//
-	// tmp += "\n\n";
-	//
-	// if (!fields.isEmpty())
-	// {
-	// tmp += new DefaultConstructorMethod(this).toString();
-	// tmp += new ConstructorMethod(this).toString();
-	// }
-	//
-	// for (Field f : fields)
-	// {
-	// Method setM = new CustomSetMethod(this,f);
-	// tmp += setM.toString() + "\n";
-	//
-	// Method getM = new GetMethod(f);
-	// tmp += getM.toString() + "\n";
-	// }
-	//
-	// for (Method m : methods)
-	// {
-	// tmp += m.toString() + "\n";
-	// }
-	//
-	// tmp += "\n}\n";
-	// return tmp;
-	// }
-
-	@Override
-	public List<Field> getFields()
-	{
-		return fields;
 	}
 
 }

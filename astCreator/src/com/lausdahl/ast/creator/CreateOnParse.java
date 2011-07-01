@@ -145,7 +145,7 @@ public class CreateOnParse
 								c.imports.add(env.node);
 								Field f = new Field(env);
 								f.name = "text";
-								f.type = env.stringDef;
+								f.type = Environment.stringDef;
 								f.isTokenField = true;
 								c.addField(f);
 								Method m = new TokenConstructorMethod(c, f, idT.getText(), env);

@@ -1,25 +1,25 @@
-package com.lausdahl.ast.creator.methods.analysis;
+package com.lausdahl.ast.creator.methods.analysis.adopter;
 
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
-import com.lausdahl.ast.creator.methods.Method;
 
-public class AnalysisCaseMethod extends Method
+public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 {
-	public AnalysisCaseMethod()
+	public AnalysisAdaptorDefaultTokenMethod()
 	{
-		super(null,null);
+		super(null, null);
 	}
 
-	public AnalysisCaseMethod(IClassDefinition c,Environment env)
+	public AnalysisAdaptorDefaultTokenMethod(Environment env)
 	{
-		super(c,env);
-	}
+		super(null, env);
+			}
 
 	@Override
 	protected void prepare()
 	{
+		classDefinition = env.token;
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
@@ -29,9 +29,11 @@ public class AnalysisCaseMethod extends Method
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "case" + InterfaceDefinition.javaClassName(c.getName());
-		this.arguments.add(new Argument(c.getName(), "node"));
-		// this.annotation="@override";
-		this.body = "";
+		this.name = "default" + InterfaceDefinition.javaClassName(c.getName());
+		setupArguments();
+
+		this.body = "\t\t" + (addReturnToBody ? "return null;" : "")
+				+ "//nothing to do";
+
 	}
 }

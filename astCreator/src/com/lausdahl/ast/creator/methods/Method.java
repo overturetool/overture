@@ -101,7 +101,6 @@ public abstract class Method
 	public List<String> getRequiredImports()
 	{
 		internalPrepare();
-		int i=9;
 		addImportForType(returnType);
 		for (Argument arg : arguments)
 		{

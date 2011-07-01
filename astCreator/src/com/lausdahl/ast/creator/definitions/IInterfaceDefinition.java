@@ -30,5 +30,13 @@ public interface IInterfaceDefinition
 	public abstract void setTag(String tag);
 	
 	public abstract String getTag();
+	
+	public abstract void setGenericArguments(IInterfaceDefinition... arguments);
+	
+	public abstract void setGenericArguments(List<IInterfaceDefinition> arguments);
+	
+	public abstract List<IInterfaceDefinition> getGenericArguments();
+	
+	public abstract void setAnnotation(String annotation);
 
 }

@@ -9,11 +9,19 @@ public class PredefinedClassDefinition implements IClassDefinition
 	private String name;
 	private String namePostfix = "";
 	private String tag = "";
+	private boolean frozenName = false;
 
 	public PredefinedClassDefinition(String packageName, String name)
 	{
 		this.packageName = packageName;
 		this.name = name;
+	}
+	
+	public PredefinedClassDefinition(String packageName, String name,boolean frozenName)
+	{
+		this.packageName = packageName;
+		this.name = name;
+		this.frozenName = frozenName;
 	}
 
 	@Override
@@ -61,7 +69,7 @@ public class PredefinedClassDefinition implements IClassDefinition
 	@Override
 	public String getName()
 	{
-		return name + getNamePostfix();
+		return name + (frozenName?"":getNamePostfix());
 	}
 
 	@Override
@@ -121,5 +129,29 @@ public class PredefinedClassDefinition implements IClassDefinition
 	public String getTag()
 	{
 		return this.tag;
+	}
+
+	@Override
+	public void setGenericArguments(IInterfaceDefinition... arguments)
+	{
+		
+	}
+
+	@Override
+	public List<IInterfaceDefinition> getGenericArguments()
+	{
+		return new Vector<IInterfaceDefinition>();
+	}
+
+	@Override
+	public void setGenericArguments(List<IInterfaceDefinition> arguments)
+	{
+		
+	}
+
+	@Override
+	public void setAnnotation(String annotation)
+	{
+		
 	}
 }

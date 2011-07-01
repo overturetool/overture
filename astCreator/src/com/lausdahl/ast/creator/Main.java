@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
+import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
@@ -116,8 +117,10 @@ public class Main
 		}
 		
 		CustomClassDefinition copyAdaptor = new CustomClassDefinition("CopyAdaptor", destination);
+		copyAdaptor.setAnnotation("@SuppressWarnings(\"unused\")");
 		copyAdaptor.setPackageName(defaultPackage);
-		copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
+//		copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
+		copyAdaptor.interfaces.add(new GenericArgumentedIInterfceDefinition(source.getTaggedDef(destination.TAG_IAnswer),destination.node));
 		copyAdaptor.methods.addAll(methods);
 		copyAdaptor.methods.add(new CopyNode2ExtendedNodeListHelper(source,destination));
 		copyAdaptor.imports.addAll(source.getAllDefinitions());

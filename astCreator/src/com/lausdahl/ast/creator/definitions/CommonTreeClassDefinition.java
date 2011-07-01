@@ -30,7 +30,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 	public CommonTreeClassDefinition(String rawName,
 			IClassDefinition superClass, ClassType type, Environment env)
 	{
-		super(null);
+		super("");
 
 		this.rawName = rawName;
 		setSuperClass(superClass);
