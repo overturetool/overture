@@ -10,9 +10,9 @@ public class SetMethod extends Method
 {
 	Field f;
 
-	public SetMethod(IClassDefinition c, Field f,Environment env)
+	public SetMethod(IClassDefinition c, Field f, Environment env)
 	{
-		super(c,env);
+		super(c, env);
 		this.f = f;
 	}
 
@@ -24,29 +24,33 @@ public class SetMethod extends Method
 				+ CommonTreeClassDefinition.javaClassName(f.getName());
 		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
 
-		
-		javaDoc="\t/**\n";
-		javaDoc+="\t * Sets the {@code " + f.getName()+ "} child of this {@link " + c.getName() + "} node.\n";
-		javaDoc+="\t * @param value the new {@code " + f.getName()+ "} child of this {@link " + c.getName() + "} node\n";
-		javaDoc+="\t*/";
-		
-		
+		javaDoc = "\t/**\n";
+		javaDoc += "\t * Sets the {@code " + f.getName()
+				+ "} child of this {@link " + c.getName() + "} node.\n";
+		javaDoc += "\t * @param value the new {@code " + f.getName()
+				+ "} child of this {@link " + c.getName() + "} node\n";
+		javaDoc += "\t*/";
+
 		StringBuilder sb = new StringBuilder();
 
-		if (!f.isTokenField && !f.isAspect
-				&& !(c instanceof CustomClassDefinition))
+		if (!f.isTokenField && /*
+								 * !f.isAspect &&
+								 */!(c instanceof CustomClassDefinition))
 		{
 			if (!f.isList)
 			{
-				sb.append("\t\tif (this." + f.getName() + " != null) {\n");
-				sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
-				sb.append("\t\t}\n");
-				sb.append("\t\tif (value != null) {\n");
-				sb.append("\t\t\tif (value.parent() != null) {\n");
-				sb.append("\t\t\t\tvalue.parent().removeChild(value);\n");
-				sb.append("\t\t}\n");
-				sb.append("\t\t\tvalue.parent(this);\n");
-				sb.append("\t\t}\n");
+				if (!f.isAspect)
+				{
+					sb.append("\t\tif (this." + f.getName() + " != null) {\n");
+					sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
+					sb.append("\t\t}\n");
+					sb.append("\t\tif (value != null) {\n");
+					sb.append("\t\t\tif (value.parent() != null) {\n");
+					sb.append("\t\t\t\tvalue.parent().removeChild(value);\n");
+					sb.append("\t\t}\n");
+					sb.append("\t\t\tvalue.parent(this);\n");
+					sb.append("\t\t}\n");
+				}
 				sb.append("\t\tthis." + f.getName() + " = value;\n");
 			} else
 			{
@@ -58,19 +62,18 @@ public class SetMethod extends Method
 				sb.append("\t\tif (value != null) {\n");
 				sb.append("\t\t\tthis." + f.getName() + ".addAll(value);\n");
 				sb.append("\t\t}\n");
-				
 
 			}
 		}
 
-		else	if (f.isTokenField||f.isAspect)
+		else if (f.isTokenField || f.isAspect)
 		{
 			sb.append("\t\tthis." + f.getName() + " = value;");
 		}
 
 		this.body = sb.toString();
 	}
-	
+
 	@Override
 	protected void prepareVdm()
 	{
@@ -79,13 +82,13 @@ public class SetMethod extends Method
 				+ CommonTreeClassDefinition.javaClassName(f.getName());
 		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
 
-		
-		javaDoc="\t/**\n";
-		javaDoc+="\t * Sets the {@code " + f.getName()+ "} child of this {@link " + c.getName() + "} node.\n";
-		javaDoc+="\t * @param value the new {@code " + f.getName()+ "} child of this {@link " + c.getName() + "} node\n";
-		javaDoc+="\t*/";
-		
-		
+		javaDoc = "\t/**\n";
+		javaDoc += "\t * Sets the {@code " + f.getName()
+				+ "} child of this {@link " + c.getName() + "} node.\n";
+		javaDoc += "\t * @param value the new {@code " + f.getName()
+				+ "} child of this {@link " + c.getName() + "} node\n";
+		javaDoc += "\t*/";
+
 		StringBuilder sb = new StringBuilder();
 
 		if (!f.isTokenField && !f.isAspect
@@ -115,7 +118,7 @@ public class SetMethod extends Method
 			}
 		}
 
-		else	if (f.isTokenField||f.isAspect)
+		else if (f.isTokenField || f.isAspect)
 		{
 			sb.append("\t\tthis." + f.getName() + " := value;");
 		}

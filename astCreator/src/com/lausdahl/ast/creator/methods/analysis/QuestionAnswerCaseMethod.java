@@ -23,9 +23,9 @@ public class QuestionAnswerCaseMethod extends Method
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
-		sb.append("\t* Called by the {@link " + c.getName()
-				+ "} node from {@link " + c.getName() + "#apply(Switch)}.\n");
-		sb.append("\t* @param node the calling {@link " + c.getName()
+		sb.append("\t* Called by the {@link " + c.getSignatureName()
+				+ "} node from {@link " + c.getSignatureName() + "#apply(Switch)}.\n");
+		sb.append("\t* @param node the calling {@link " + c.getSignatureName()
 				+ "} node\n");
 		sb.append("\t* @param question the provided question\n");
 		sb.append("\t*/");

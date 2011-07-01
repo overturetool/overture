@@ -7,6 +7,7 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
 import com.lausdahl.ast.creator.definitions.EnumDefinition;
+import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
@@ -32,6 +33,7 @@ import com.lausdahl.ast.creator.methods.analysis.adopter.QuestionAnswerAdaptorCa
 import com.lausdahl.ast.creator.methods.analysis.adopter.QuestionAnswerAdaptorDefaultMethod;
 import com.lausdahl.ast.creator.methods.analysis.adopter.QuestionAnswerAdaptorDefaultNodeMethod;
 import com.lausdahl.ast.creator.methods.analysis.adopter.QuestionAnswerAdaptorDefaultTokenMethod;
+import com.lausdahl.ast.creator.methods.analysis.depthfirst.DepthFirstCaseMethod;
 
 public class Generator
 {
@@ -56,6 +58,8 @@ public class Generator
 		createQuestion(env, analysisPackageName);
 		System.out.print("Question-Answer...");
 		createQuestionAnswer(env, analysisPackageName);
+		System.out.print("Depth-First...");
+		createdepthFirstAdaptor(env, defaultPackage);
 		System.out.println();
 		// SourceFileWriter.write(outputFolder, env1);
 		return env;
@@ -302,5 +306,32 @@ public class Generator
 //			}
 //		}
 //	}
+	private void createdepthFirstAdaptor(Environment source, String defaultPackage) 
+	{
+		CustomClassDefinition adaptor = new CustomClassDefinition("DepthFirstAnalysisAdaptor", source);
+		adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
+		adaptor.setPackageName(defaultPackage);
+//		copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
+		adaptor.interfaces.add(source.getTaggedDef(source.TAG_IAnalysis));
 
+		for (CommonTreeClassDefinition c : Generator.getClasses(source.getClasses()))
+		{
+			if (c.getType() == IClassDefinition.ClassType.Production /*|| c.getType()==ClassType.SubProduction*/)
+			{
+				continue;
+			}
+			
+			Method m = new DepthFirstCaseMethod(c, source);
+			m.setClassDefinition(c);
+			m.setEnvironment(source);
+			adaptor.methods.add(m);
+
+		}
+		
+//		copyAdaptor.methods.add(new CopyNode2ExtendedNodeListHelper(source,destination));
+		adaptor.imports.addAll(source.getAllDefinitions());
+//		copyAdaptor.imports.addAll(destination.getAllDefinitions());
+		
+		source.addClass(adaptor);
+	}
 }

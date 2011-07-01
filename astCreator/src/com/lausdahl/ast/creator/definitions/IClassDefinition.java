@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface IClassDefinition extends IInterfaceDefinition
 {
+	List<IInterfaceDefinition> getInterfaces();
 
 	String getName();
 	

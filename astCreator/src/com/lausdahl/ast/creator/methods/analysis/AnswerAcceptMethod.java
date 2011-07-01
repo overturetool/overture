@@ -24,9 +24,9 @@ public class AnswerAcceptMethod extends Method
 		StringBuilder sb = new StringBuilder();
 		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IAnswer);
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link "+argDef.getName()+"#case" + c.getName() + "("
-				+ c.getName() + ")} of the {@link "+argDef.getName()+"} {@code caller}.\n");
-		sb.append("\t* @param caller the {@link "+argDef.getName()+"} to which this {@link "
+		sb.append("\t* Calls the {@link "+argDef.getSignatureName()+"#case" + c.getName() + "("
+				+ c.getSignatureName() + ")} of the {@link "+argDef.getSignatureName()+"} {@code caller}.\n");
+		sb.append("\t* @param caller the {@link "+argDef.getSignatureName()+"} to which this {@link "
 				+ c.getName() + "} node is applied\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();

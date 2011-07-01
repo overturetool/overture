@@ -10,9 +10,9 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition;
 
 public class ConstructorMethod extends Method
 {
-	public ConstructorMethod(IClassDefinition c,Environment env)
+	public ConstructorMethod(IClassDefinition c, Environment env)
 	{
-		super(c,env);
+		super(c, env);
 	}
 
 	@Override
@@ -34,27 +34,26 @@ public class ConstructorMethod extends Method
 
 		StringBuilder sb = new StringBuilder();
 
-		if(classDefinition instanceof CommonTreeClassDefinition)
+		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
 			sb.append("\t\tsuper(");
 			List<Field> fields = new Vector<Field>();
-			fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
+			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
 			skip = skip && fields.isEmpty();
-			for (Field f: fields)
+			for (Field f : fields)
 			{
-				String name = f.getName().replaceAll("_", "")+ "_";
-				this.arguments.add(new Argument(f.getMethodArgumentType(), name
-						));
-				sb.append(name+",");
+				String name = f.getName().replaceAll("_", "") + "_";
+				this.arguments.add(new Argument(f.getMethodArgumentType(), name));
+				sb.append(name + ",");
 			}
-			if(!fields.isEmpty())
+			if (!fields.isEmpty())
 			{
-				sb.delete(sb.length()-1, sb.length());
+				sb.delete(sb.length() - 1, sb.length());
 			}
 			sb.append(");\n");
-			
+
 		}
-		
+
 		for (Field f : classDefinition.getFields())
 		{
 			String name = f.getName().replaceAll("_", "");
@@ -88,5 +87,29 @@ public class ConstructorMethod extends Method
 		return super.toString();
 	}
 
+	@Override
+	public List<String> getRequiredImports()
+	{
+
+		List<String> list = new Vector<String>();
+		list.addAll(super.getRequiredImports());
+		if (classDefinition instanceof CommonTreeClassDefinition)
+		{
+
+			List<Field> fields = new Vector<Field>();
+			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
+			for (Field field : fields)
+			{
+				list.addAll(field.getRequiredImports());
+			}
+		}
+		
+		String nodelistpackage = env.nodeList.getPackageName()+"."+env.nodeList.getSignatureName();
+		if(list.contains(nodelistpackage))
+		{
+			list.remove(nodelistpackage);
+		}
+		return list;
+	}
 
 }

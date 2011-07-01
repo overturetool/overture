@@ -181,9 +181,25 @@ public class CreateOnParse
 													{
 														CommonTree aspectDclNameT = (CommonTree) aspectDclName;
 														f.name = aspectDclNameT.getText();
+														break;
 													}
 												}
 											}
+											
+											if (aspectDclT.getChildCount() > 1)
+											{
+												if (aspectDclT.getChild(1) != null)
+												{
+													String regex = aspectDclT.getChild(1).getText();
+													if (regex.trim().equals("*"))
+													{
+														f.isList = true;
+													}
+												}
+											}
+											
+											
+											
 											f.isAspect = true;
 											f.setType(aspectDclT.getText());
 											c.addField(f);

@@ -309,4 +309,12 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return this.superDef;
 	}
 
+
+
+	@Override
+	public List<IInterfaceDefinition> getInterfaces()
+	{
+		return this.interfaces;
+	}
+
 }

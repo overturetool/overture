@@ -25,7 +25,7 @@ public class AnalysisAcceptMethod extends Method
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
 		sb.append("\t* Calls the {@link "+argDef.getSignatureName()+"#case" + c.getName() + "("
-				+ c.getName()
+				+ c.getSignatureName()
 				+ ")} of the {@link "+argDef.getSignatureName()+"} {@code analysis}.\n");
 		sb.append("\t* @param analysis the {@link "+argDef.getSignatureName()+"} to which this {@link "
 				+ c.getName() + "} node is applied\n");

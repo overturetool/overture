@@ -154,4 +154,10 @@ public class PredefinedClassDefinition implements IClassDefinition
 	{
 		
 	}
+
+	@Override
+	public List<IInterfaceDefinition> getInterfaces()
+	{
+		return new Vector<IInterfaceDefinition>();
+	}
 }

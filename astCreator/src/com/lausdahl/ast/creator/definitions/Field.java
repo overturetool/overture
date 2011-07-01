@@ -114,6 +114,21 @@ public class Field
 		}
 		return internaalType;
 	}
+	
+	public String getInnerTypeForList()
+	{
+		if(type == null)
+		{
+			type = getInternalType(unresolvedType);
+		}
+		String internaalType = type.getName();
+//		if (isList)
+//		{
+//
+//			return "List<? extends " + internaalType + ">";
+//		}
+		return internaalType;
+	}
 
 	protected IInterfaceDefinition getInternalType(String unresolvedTypeName)
 	{
