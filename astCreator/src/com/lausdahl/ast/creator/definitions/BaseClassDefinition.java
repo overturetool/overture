@@ -143,7 +143,12 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (Field f : fields)
 		{
-			sb.append("\n\t"+f.accessspecifier.syntax+" " + f.getType() + " " + f.getName() + ";");
+			sb.append("\n\t"+f.accessspecifier.syntax+" " + f.getType() + " " + f.getName() );
+			if(f.isList)
+			{
+				sb.append(" = new "+ f.getType()+"(this)");
+			}
+			sb.append(";");
 		}
 
 		sb.append("\n\n");
