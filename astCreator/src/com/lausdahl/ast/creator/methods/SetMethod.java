@@ -55,7 +55,10 @@ public class SetMethod extends Method
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t}\n");
 				sb.append("\t\tthis." + f.getName() + ".clear();\n");
-				sb.append("\t\tthis." + f.getName() + ".addAll(value);\n");
+				sb.append("\t\tif (value != null) {\n");
+				sb.append("\t\t\tthis." + f.getName() + ".addAll(value);\n");
+				sb.append("\t\t}\n");
+				
 
 			}
 		}
