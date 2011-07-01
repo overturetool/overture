@@ -42,6 +42,7 @@ as the expected and actual values.
 0065, "Illegal Lock state"
 0066, "Thread is not running on a CPU"
 0067, "Exported type <name> not structured"
+0068, "Periodic threads overlapping"
 
 1000, "Malformed quoted character"
 1001, "Invalid char <ch> in base <n> number"

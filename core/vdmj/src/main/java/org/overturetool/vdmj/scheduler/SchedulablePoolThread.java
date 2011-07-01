@@ -376,7 +376,10 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
     		}
     		catch (InterruptedException e)
     		{
-    			handleSignal(signal, ctxt, location);
+    			if (signal != null)
+    			{
+    				handleSignal(signal, ctxt, location);
+    			}
     		}
 		}
 	}
@@ -398,7 +401,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	{
 		BasicSchedulableThread.setExceptionOthers(this);
 	}
-	
+
 	public static void signalAll(Signal sig)
 	{
 		BasicSchedulableThread.signalAll(sig);

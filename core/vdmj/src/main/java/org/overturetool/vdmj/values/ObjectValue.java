@@ -54,7 +54,7 @@ public class ObjectValue extends Value
 	public final ClassType type;
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
-	
+
 	/**
 	 * The list holds all object values created by this object value
 	 */
@@ -65,7 +65,9 @@ public class ObjectValue extends Value
 	public transient Lock guardLock;
 	private transient CPUValue CPU;
 	private Object delegateObject = null;
-	
+	private int periodicCount = 0;
+	private int periodicOverlaps = 0;
+
 	/**
 	 * The Object value who created this instance
 	 */
@@ -81,7 +83,7 @@ public class ObjectValue extends Value
 		this.CPU = cpu;
 		this.guardLock = new Lock();
 		this.children = new LinkedList<ObjectValue>();
-		
+
 		if(creator != null)
 		{
 			setCreator(creator);
@@ -162,6 +164,22 @@ public class ObjectValue extends Value
 	public OperationValue getThreadOperation(Context ctxt) throws ValueException
 	{
 		return get(type.classdef.name.getThreadName(), false).operationValue(ctxt);
+	}
+
+	public synchronized int incPeriodicCount()
+	{
+		if (periodicCount > 0)
+		{
+			periodicOverlaps++;
+		}
+
+		periodicCount++;
+		return periodicOverlaps;
+	}
+
+	public synchronized void decPeriodicCount()
+	{
+		periodicCount--;
 	}
 
 	public synchronized Value get(LexNameToken field, boolean explicit)
@@ -500,16 +518,16 @@ public class ObjectValue extends Value
 		invlistener = listener;
 		listener.invopvalue.setSelf(this);
 	}
-	
+
 	/**
-	 * Sets the creator of this object value and adds this to 
+	 * Sets the creator of this object value and adds this to
 	 * the newCreator parsed as argument
 	 * @param newCreator The creator of this object value
 	 */
 	private synchronized void setCreator(ObjectValue newCreator)
 	{
 		//Do not set the creator if created by the system class. The System contains
-		// fields with references to Thread instances which are not Serializable and 
+		// fields with references to Thread instances which are not Serializable and
 		// will fail a deep copy with a NotSerializableExpection for Thread
 		if(newCreator!= null && newCreator.type.classdef instanceof SystemDefinition)
 		{
@@ -518,34 +536,34 @@ public class ObjectValue extends Value
 		//establish transitive reference
 		newCreator.addChild(this);
 	}
-	
+
 	/**
-	 * Removed the creator of this object value by detaching from the 
+	 * Removed the creator of this object value by detaching from the
 	 * creator's child list
 	 */
 	public synchronized void removeCreator()
 	{
 		// if we are moving to a new CPU, we are no longer a part of the transitive
-		// references from our creator, so let us remove ourself. This will prevent 
-		// us from being updated if our creator is migrating in the 
+		// references from our creator, so let us remove ourself. This will prevent
+		// us from being updated if our creator is migrating in the
 		// future.
 		if(this.creator != null)
 		{
 			this.creator.removeChild(this);
 			//creator no longer needed, as we already detached ourself.
-			this.creator = null; 
+			this.creator = null;
 		}
 	}
-	
+
 	/**
 	 * Add a child created by this object value
 	 * @param referenced
 	 */
 	private synchronized void addChild(ObjectValue referenced)
 	{
-		children.add(referenced); 
+		children.add(referenced);
 	}
-	
+
 	/**
 	 * Remove a child from this object value. After this the reference will no longer
 	 * be considered as created by this object value

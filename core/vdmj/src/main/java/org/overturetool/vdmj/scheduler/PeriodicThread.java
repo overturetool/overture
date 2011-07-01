@@ -27,6 +27,7 @@ import java.util.Random;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
+import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.lex.Dialect;
@@ -154,10 +155,19 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
     		try
     		{
+    			int overlaps = object.incPeriodicCount();
+
+    			if (Properties.rt_max_periodic_overlaps > 0 &&
+    				overlaps >= Properties.rt_max_periodic_overlaps)
+    			{
+    				throw new ContextException(68, "Periodic threads overlapping", operation.name.location, ctxt);
+    			}
+
         		operation.localEval(
         			operation.name.location, new ValueList(), ctxt, true);
 
         		ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
+        		object.decPeriodicCount();
     		}
     		catch (ValueException e)
     		{
@@ -167,12 +177,10 @@ public class PeriodicThread extends SchedulablePoolThread
 		}
 		catch (ContextException e)
 		{
-
 			ResourceScheduler.setException(e);
 			//suspendOthers();
 			setExceptionOthers();
 			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
-
 		}
 		catch (Exception e)
 		{
@@ -190,10 +198,20 @@ public class PeriodicThread extends SchedulablePoolThread
 	{
 		try
 		{
+			int overlaps = object.incPeriodicCount();
+
+			if (Properties.rt_max_periodic_overlaps > 0 &&
+				overlaps >= Properties.rt_max_periodic_overlaps)
+			{
+				throw new ContextException(68, "Periodic threads overlapping", operation.name.location, ctxt);
+			}
+
     		ctxt.setThreadState(null, object.getCPU());
 
     		operation.localEval(
     			operation.name.location, new ValueList(), ctxt, true);
+
+    		object.decPeriodicCount();
 		}
 		catch (ValueException e)
 		{
