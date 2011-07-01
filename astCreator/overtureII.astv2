@@ -31,6 +31,7 @@ Tokens
   real_literal = 'some regex for reals';
   string_literal = 'some regex for string';
   token_literal = 'some regex for token type';
+  bool_literal = 'some regex for bool type';
 
 
 Abstract Syntax Tree
@@ -104,7 +105,7 @@ exp {-> package='org.overture.ast.expressions'}
     =   
         {apply} [root]:exp [args]:exp*
     |   {binop} [left]:exp binop [right]:exp
-    |   {boolean_const} boolean_const
+    |   {boolean_const} bool_literal
     //|   {cases} [expression]:exp [cases]:caseAlternative* [others]:exp //TODO: caseAlternative
     |   {char_const} char_literal //regex for chars
     |   {elseIf} [elseIf]:exp [then]:exp  
@@ -169,7 +170,7 @@ type {-> package='org.overture.ast.types'}
     =	#basic
     |	{bracket} [type]:type
     //|	{class} [name]:lexnametoken [classdef]:classDefinition
-    |	{function} [partial]:bool_java [result]:type [parameters]:type*
+    |	{function} [partial]:boolean_const [result]:type [parameters]:type*
     |	{named} [typename]:lexnametoken [type]:type //super = invariant type
    // |	{record} [typename]:lexnametoken [fields]:field* //super = invariant type
     | 	{map}	[from]:type [to]:type 
@@ -249,17 +250,17 @@ patternBind {-> package='org.overture.ast.patterns'}
 	
 definition {-> package='org.overture.ast.definitions'}
 	= 	{assignment_def} [type]:type [expression]:exp [expType]:type
-	| 	{instanceVariable_def} [type]:type [expression]:exp [expType]:type [initialized]:bool_java [oldname]:lexnametoken
+	| 	{instanceVariable_def} [type]:type [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:lexnametoken
 	|	{class_def} [className]:lexnametoken [supernames]:lexnametoken* [definitions]:definition*
 	//| missing bus cpu and system defs
 	|	{classInvariant_def}  [expression]:exp
 	|	{equals_def} [pattern]:pattern [typebind]:typeBind [setbind]:setBind [test]:exp [expType]:type [defType]:type [defs]:definition*
-	|	{explicitFunction_def} [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* 
-	                           [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java 
-	                           [measure]:lexnametoken [isCurried]:bool_java
+	|	{explicitFunction_def} [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern_inner_list* 
+	                           [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:boolean_const 
+	                           [measure]:lexnametoken [isCurried]:boolean_const
 	//|	{explicitOperation_def} [typeParams]:lexnametoken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
-	|	{external_def} [state]:definition [readOnly]:bool_java [oldname]:lexnametoken
-	|	{implicitFunction_def}  [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java [measure]:lexnametoken [isCurried]:bool_java
+	|	{external_def} [state]:definition [readOnly]:boolean_const [oldname]:lexnametoken
+	|	{implicitFunction_def}  [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:boolean_const [measure]:lexnametoken [isCurried]:boolean_const
 	//| TODO implicit operation def
 	|	{imported_def} [def]:definition
 	|	{inherited_def} [superdef]:definition [oldname]:lexnametoken
@@ -276,6 +277,19 @@ definition {-> package='org.overture.ast.definitions'}
 	|	{value_def} [pattern]:pattern [type]:type [expression]:exp [defs]:definition* [expType]:type 
 	;
 
+modules {-> package='org.overture.ast.modules'}
+    = {module} [name]:lexnametoken 
+        //[imports]:moduleImports
+        //[exports]:moduleExports
+        [defs]:definition*
+        ;
+
+patternList {-> package='org.overture.ast.patterns'}
+    = {pattern_inner_list} [list]:pattern*
+    ;
+
+
+
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
 
@@ -291,7 +305,7 @@ exp = [type]:type
 type = [location]:location
      ; 
 
-pattern = [location]:location
+pattern = [location]:location [definitions]:definition*
 	;
 
 bind = [location]:location
