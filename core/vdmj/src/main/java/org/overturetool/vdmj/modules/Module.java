@@ -25,7 +25,9 @@ package org.overturetool.vdmj.modules;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.ast.IAstNode;
@@ -229,9 +231,9 @@ public class Module implements Serializable,IAstNode
 	 * @return True if initialized OK.
 	 */
 
-	public ContextException initialize(StateContext initialContext)
+	public Set<ContextException> initialize(StateContext initialContext)
 	{
-		ContextException trouble = null;
+		Set<ContextException> trouble = new HashSet<ContextException>();
 
 		for (Definition d: importdefs)
 		{
@@ -243,7 +245,7 @@ public class Module implements Serializable,IAstNode
 				}
 				catch (ContextException e)
 				{
-					trouble = e;	// Carry on...
+					trouble.add(e);		// Carry on...
 				}
 			}
 		}
@@ -256,7 +258,7 @@ public class Module implements Serializable,IAstNode
 			}
 			catch (ContextException e)
 			{
-				trouble = e;	// Carry on...
+				trouble.add(e);		// Carry on...
 			}
 		}
 
@@ -271,7 +273,7 @@ public class Module implements Serializable,IAstNode
 		}
 		catch (ContextException e)
 		{
-			trouble = e;	// Carry on...
+			trouble.add(e);		// Carry on...
 		}
 
 		return trouble;

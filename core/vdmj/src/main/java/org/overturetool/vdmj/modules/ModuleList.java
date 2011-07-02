@@ -38,6 +38,7 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
@@ -136,28 +137,40 @@ public class ModuleList extends Vector<Module>
 		}
 
 		initialContext.setThreadState(dbgp, null);
-		ContextException problems = null;
+		Set<ContextException> problems = null;
 		int retries = 2;
 
 		do
 		{
-			problems = null;
+			problems = new HashSet<ContextException>();
 
         	for (Module m: this)
     		{
-        		ContextException e = m.initialize(initialContext);
+        		Set<ContextException> e = m.initialize(initialContext);
 
         		if (e != null)
         		{
-        			problems = e;
+        			problems.addAll(e);
         		}
      		}
 		}
-		while (--retries > 0 && problems != null);
+		while (--retries > 0 && !problems.isEmpty());
 
-		if (problems != null)
+		if (!problems.isEmpty())
 		{
-			throw problems;		// ... out of pram :)
+			ContextException toThrow = problems.iterator().next();
+			
+			for (ContextException e: problems)
+			{
+				Console.err.println(e);
+				
+				if (e.number != 4034)	// Not in scope err 
+				{
+					toThrow = e;
+				}
+			}
+			
+			throw toThrow;
 		}
 
 		return initialContext;
