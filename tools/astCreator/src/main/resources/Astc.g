@@ -146,8 +146,12 @@ alternative
   ;
   
 definitions
-  : ('['! ID ']'! ':'!)? ID^ (repeat)?
+  : ('['! ID ']'! ':'!)? (ID |JAVANAME)^ (repeat)?
   ;
+  
+//typeName
+//  : ID '.' ID
+//  ;
   
 repeat
   : '?'

@@ -7,16 +7,17 @@ import com.lausdahl.ast.creator.Environment;
 
 public class Field
 {
-	public static enum AccessSpecifier{
-		Private("private"),
-		Protected("protected"),
-		Public("public");
+	public static enum AccessSpecifier
+	{
+		Private("private"), Protected("protected"), Public("public");
 		public final String syntax;
+
 		private AccessSpecifier(String syntax)
 		{
 			this.syntax = syntax;
 		}
 	}
+
 	public boolean isTokenField = false;
 	public boolean isAspect = false;
 	public String name;
@@ -25,7 +26,7 @@ public class Field
 	public static String fieldPrefic = "_";
 	private Environment env;
 	private String unresolvedType;
-	public AccessSpecifier accessspecifier=AccessSpecifier.Private;
+	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
 
 	public Field(Environment env)
 	{
@@ -35,21 +36,23 @@ public class Field
 	public List<String> getRequiredImports()
 	{
 		List<String> imports = new Vector<String>();
-		if(isList)
+		if (isList)
 		{
 			imports.add("java.util.List");
-			imports.add(getInternalType(unresolvedType).getPackageName() + "." + getInternalType(unresolvedType).getSignatureName());
+			imports.add(getInternalType(unresolvedType).getPackageName() + "."
+					+ getInternalType(unresolvedType).getSignatureName());
 		}
-//		imports.add("java.util.List");
-		
+		// imports.add("java.util.List");
+
 		IInterfaceDefinition defIntf = env.lookUpInterface(getType());
-		if (defIntf != null )
+		if (defIntf != null)
 		{
-			imports.add(defIntf.getPackageName() + "." + defIntf.getSignatureName());
+			imports.add(defIntf.getPackageName() + "."
+					+ defIntf.getSignatureName());
 		}
- 
+
 		IClassDefinition def = env.lookUp(getType());
-		if (def != null )
+		if (def != null)
 		{
 			imports.add(def.getPackageName() + "." + def.getSignatureName());
 		}
@@ -60,12 +63,22 @@ public class Field
 	@Override
 	public String toString()
 	{
-		return getName() + ": " + getType();
+		String name = null;
+		String typeName = null;
+		try
+		{
+			name = getName();
+			typeName = getType();
+		} catch (Exception e)
+		{
+
+		}
+		return name + ": " + typeName;
 	}
 
 	public String getName()
 	{
-		if(type == null)
+		if (type == null)
 		{
 			type = getInternalType(unresolvedType);
 		}
@@ -76,15 +89,16 @@ public class Field
 
 	public String getType()
 	{
-		if(type == null)
+		if (type == null)
 		{
 			type = getInternalType(unresolvedType);
 		}
-		String internaalType = type.getName();//getInternalType();
+		String internaalType = type.getName();// getInternalType();
 		if (isList)
 		{
 
-			internaalType = env.nodeList.getSignatureName()+"<" + internaalType + ">";
+			internaalType = env.nodeList.getSignatureName() + "<"
+					+ internaalType + ">";
 		}
 
 		// String tmp = internaalType;
@@ -101,8 +115,8 @@ public class Field
 
 	public String getMethodArgumentType()
 	{
-//		String internaalType = getInternalType();
-		if(type == null)
+		// String internaalType = getInternalType();
+		if (type == null)
 		{
 			type = getInternalType(unresolvedType);
 		}
@@ -114,19 +128,19 @@ public class Field
 		}
 		return internaalType;
 	}
-	
+
 	public String getInnerTypeForList()
 	{
-		if(type == null)
+		if (type == null)
 		{
 			type = getInternalType(unresolvedType);
 		}
 		String internaalType = type.getName();
-//		if (isList)
-//		{
-//
-//			return "List<? extends " + internaalType + ">";
-//		}
+		// if (isList)
+		// {
+		//
+		// return "List<? extends " + internaalType + ">";
+		// }
 		return internaalType;
 	}
 
@@ -144,7 +158,7 @@ public class Field
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
 				if (c.getType() == CommonTreeClassDefinition.ClassType.Token
-						&& c.rawName.equals(unresolvedTypeName))
+						&& checkName(c,unresolvedTypeName,true))//c.rawName.equals(unresolvedTypeName))
 				{
 					return c;
 				}
@@ -157,7 +171,8 @@ public class Field
 			{
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
-				if (c.rawName.equals(unresolvedTypeName))
+				//if (c.rawName.equals(unresolvedTypeName))
+				if(checkName(c,unresolvedTypeName,true))
 				{
 					return c;
 				}
@@ -170,33 +185,52 @@ public class Field
 			{
 				CustomClassDefinition c = (CustomClassDefinition) cd;
 
-				if (c.name.equals(unresolvedTypeName))
+				//if (c.name.equals(unresolvedTypeName))
+				if(checkName(c,unresolvedTypeName,false))
 				{
 					return c;
 				}
 			}
 		}
 
-		// if(type.equals(Double.class.getSimpleName()))
-		// {
-		// return type;
-		// }
-		// if(type.equals(Integer.class.getSimpleName()))
-		// {
-		// return type;
-		// }
-		// if(type.equals(String.class.getSimpleName()))
-		// {
-		// return type;
-		// }
-		return null;//"%" + type;
+		
+		return null;// "%" + type;
+	}
+	
+	private boolean checkName(IClassDefinition def, String name, boolean rawNameCheck)
+	{
+		if(name == null || name.trim().length()==0)
+		{
+			return true;
+		}
+		String nameToCheck = null;
+		String rest = null;
+		if(name.contains("."))
+		{
+			nameToCheck = name.substring(name.lastIndexOf('.')+1,name.length());
+			rest = name.substring(0,name.lastIndexOf('.'));
+		}else
+		{
+			nameToCheck = name;
+		}
+		
+		if(rawNameCheck && def instanceof CommonTreeClassDefinition)
+		{
+			CommonTreeClassDefinition cDef = (CommonTreeClassDefinition) def;
+			return cDef.rawName.equals(nameToCheck) && checkName(cDef.getSuperDef(), rest, rawNameCheck);
+		}else if(def instanceof CustomClassDefinition)
+		{
+			CustomClassDefinition cDef = (CustomClassDefinition) def;
+			return cDef.name.equals(nameToCheck) && checkName(cDef.getSuperDef(), rest, rawNameCheck);
+		}
+		return false;
 	}
 
 	public void setType(String text)
 	{
 		this.unresolvedType = text;
 		this.type = getInternalType(unresolvedType);
-		
+
 	}
 
 }
