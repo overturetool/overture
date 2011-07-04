@@ -10,7 +10,7 @@ import org.overture.ast.node.tokens.TNumbersLiteral;
 import org.overture.interpreter.ast.expressions.ABinopExpInterpreter;
 import org.overture.interpreter.ast.expressions.AIntConstExpInterpreter;
 import org.overture.interpreter.ast.expressions.APlusBinopInterpreter;
-import org.overture.interpreter.ast.node.CopyAdaptor;
+import org.overture.interpreter.ast.node.CopyAdaptorInterpreter;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class TestAstCopy extends TestCase
@@ -19,7 +19,7 @@ public class TestAstCopy extends TestCase
 	{
 		PExp exp = new ABinopExp(null,new AIntConstExp(null,new TNumbersLiteral("2")), new APlusBinop(new LexLocation()), new AIntConstExp(null,new TNumbersLiteral("5")));
 
-		CopyAdaptor adpator = new CopyAdaptor();
+		CopyAdaptorInterpreter adpator = new CopyAdaptorInterpreter();
 
 		ABinopExpInterpreter res = (ABinopExpInterpreter) exp.apply(adpator);
 

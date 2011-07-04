@@ -1,0 +1,47 @@
+package com.lausdahl.ast.creator.definitions;
+
+import java.util.List;
+import java.util.Vector;
+
+import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.methods.ConstructorMethod;
+import com.lausdahl.ast.creator.methods.CustomSetMethod;
+import com.lausdahl.ast.creator.methods.DefaultConstructorMethod;
+import com.lausdahl.ast.creator.methods.GetMethod;
+import com.lausdahl.ast.creator.methods.Method;
+
+public class CustomClassDefinition extends BaseClassDefinition
+{
+
+	public static List<CustomClassDefinition> classes = new Vector<CustomClassDefinition>();
+	
+	// public String interfaceName;
+	// public List<Field> fields = new Vector<Field>();
+
+	public Object tag;
+	Environment env;
+
+	public CustomClassDefinition(String name, Environment env)
+	{
+		super(name);
+		
+		this.env = env;
+		methods.add(new ConstructorMethod(this, env));
+		methods.add(new DefaultConstructorMethod(this, env));
+
+		classes.add(this);
+	}
+
+	@Override
+	public void addField(Field field)
+	{
+		super.addField(field);
+		Method setM = new CustomSetMethod(this, field, env);
+		methods.add(setM);
+
+		Method getM = new GetMethod(this, field, env);
+		methods.add(getM);
+
+	}
+
+}
