@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AExplicitFunctionDefDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
@@ -22,7 +22,9 @@ import org.overture.ast.patterns.PPatternList;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.runtime.NameScope;
+import org.overture.runtime.FlatCheckedEnvironment;
+import org.overture.runtime.HelperDefinition;
+
 import org.overture.runtime.TypeList;
 import org.overturetool.vdmj.lex.LexLocation;
 
@@ -55,8 +57,8 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 	
 	
 	@Override
-	public PType caseAExplicitFunctionDefDefinition(
-			AExplicitFunctionDefDefinition node, TypeCheckInfo question) {
+	public PType caseAExplicitFunctionDefinition(
+			AExplicitFunctionDefinition node, TypeCheckInfo question) {
 		System.out.println("Visiting Explicit Function Def: " + node.getName().getText());
 		
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
@@ -68,27 +70,34 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 
 		PType expectedResult = checkParams(node.getParamPatternList().listIterator(), node.getType());
 
-		paramDefinitionList = getParamDefinitions(node.getType(), node.getParamPatternList(),node.getLocation());
+		List<List<PDefinition>> paramDefinitionList = getParamDefinitions(node.getType(), node.getParamPatternList(),node.getLocation());
 
-		for (DefinitionList pdef: paramDefinitionList)
+		for (List<PDefinition> pdef: paramDefinitionList)
 		{
 			defs.addAll(pdef);	// All definitions of all parameter lists
 		}
 
-		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
-		local.setStatic(accessSpecifier);
-		local.setEnclosingDefinition(this);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs,question.env, question.scope);
+		
+		//TODO: access specifier not defined
+//		local.setStatic(accessSpecifier);
+		local.setEnclosingDefinition(node);
 
-		defs.typeCheck(local, scope);
+		//building the new scope for subtypechecks
+		TypeCheckInfo info = new TypeCheckInfo();
+		info.env = local;
+		info.scope = question.scope;
+		info.qualifiers = question.qualifiers;
+		HelperDefinition.typeCheck(defs,info,this);
 
-		if (base.isVDMPP() && !accessSpecifier.isStatic)
+		if (question.env.isVDMPP()) //TODO:Access specifier: && !accessSpecifier.isStatic)
 		{
-			local.add(getSelfDefinition());
+			local.add(HelperDefinition.getSelfDefinition(node));
 		}
-
-		if (predef != null)
+ 
+		if (node.getPredef() != null)
 		{
-			Type b = predef.body.typeCheck(local, null, NameScope.NAMES);
+			PType b = node.getPredef()..body.typeCheck(local, null, NameScope.NAMES);
 			BooleanType expected = new BooleanType(location);
 
 			if (!b.isType(BooleanType.class))
@@ -220,21 +229,21 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 		{
 			report(3020, "Too many parameter patterns");
 			detail2("Pattern(s)", patterns, "Type(s)", ptypes);
-			return ftype.result;
+			return ftype.getResult();
 		}
-		else if (patterns.size() < ptypes.size())
+		else if (patterns.getList().size() < ptypes.size())
 		{
 			report(3021, "Too few parameter patterns");
 			detail2("Pattern(s)", patterns, "Type(s)", ptypes);
-			return ftype.result;
+			return ftype.getResult();
 		}
 
-		if (ftype.result instanceof FunctionType)
+		if (ftype.getResult() instanceof AFunctionType)
 		{
 			if (!plists.hasNext())
 			{
 				// We're returning the function itself
-				return ftype.result;
+				return ftype.getResult();
 			}
 
 			// We're returning what the function returns, assuming we
@@ -245,7 +254,7 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 			// the return type when all of the curried parameters are
 			// provided.
 
-			return checkParams(plists, (FunctionType)ftype.result);
+			return checkParams(plists, (AFunctionType)ftype.getResult());
 		}
 
 		if (plists.hasNext())
@@ -253,7 +262,7 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 			report(3022, "Too many curried parameters");
 		}
 
-		return ftype.result;
+		return ftype.getResult();
 	}
 	
 	private List<List<PDefinition>> getParamDefinitions(AFunctionType type, NodeList<APatternInnerListPatternList> paramPatternList, LexLocation location)
@@ -278,22 +287,26 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 
 				for (PPattern p: plist.getList())
 				{
-					defs.addAll(p.getDefinitions(unknown, NameScope.LOCAL));
+					//TODO: getDefinitions is different
+					PatternHelper.getDefinitions(p,unknown,NameScope.LOCAL);
+					//defs.addAll(p.getDefinitions(unknown, NameScope.LOCAL));
 				}
 			}
 			else
 			{
-    			for (Pattern p: plist)
+    			for (PPattern p: plist.getList())
     			{
-    				defs.addAll(p.getDefinitions(titer.next(), NameScope.LOCAL));
+    				//TODO: getDefinitions is different
+					//defs.addAll(p.getDefinitions(titer.next(), NameScope.LOCAL));
     			}
 			}
 
-			defList.add(defs.asList());
+			
+			defList.add(new ArrayList<PDefinition>(defs));
 
-			if (ftype.result instanceof FunctionType)	// else???
+			if (ftype.getResult() instanceof AFunctionType)	// else???
 			{
-				ftype = (FunctionType)ftype.result;
+				ftype = (AFunctionType)ftype.getResult();
 			}
 		}
 
@@ -309,6 +322,7 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 	{
 		System.out.println("Detail2: " + tag1 + obj1 + tag2 + obj2);
 	}
+
 
 }
 
