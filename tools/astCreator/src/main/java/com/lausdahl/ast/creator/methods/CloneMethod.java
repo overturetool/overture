@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
@@ -62,7 +63,7 @@ public class CloneMethod extends Method
 							tmp += ("\t\t\tcloneList(" + name + "),\n");
 						} else
 						{
-							if (JavaTypes.isPrimitiveType(f.getType()))
+							if (JavaTypes.isPrimitiveType(f.getType())|| f.type instanceof ExternalEnumJavaClassDefinition)
 							{
 								tmp += ("\t\t\t" + name + ",\n");
 							} else

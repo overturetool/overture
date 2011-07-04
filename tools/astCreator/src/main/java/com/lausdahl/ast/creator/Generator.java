@@ -7,7 +7,6 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
 import com.lausdahl.ast.creator.definitions.EnumDefinition;
-import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;

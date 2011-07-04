@@ -8,6 +8,7 @@ import org.antlr.runtime.tree.CommonTree;
 
 import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
@@ -116,6 +117,7 @@ public class CreateOnParse
 								CommonTree p = (CommonTree) toke;
 								CommonTree idT = null;
 								boolean externalJavaType = false;
+								boolean enumType= false;
 								if (p.getChildCount() > 0)
 								{
 									idT = (CommonTree) p.getChild(0);
@@ -124,7 +126,14 @@ public class CreateOnParse
 										if (p.getChild(0).getText().equals("java"))
 										{
 											externalJavaType = true;
-											idT = (CommonTree) p.getChild(2);
+											if (p.getChildCount() > 2 && p.getChild(2).getText().equals("enum"))
+											{
+												enumType = true;
+												idT = (CommonTree) p.getChild(4);
+											} else
+											{
+												idT = (CommonTree) p.getChild(2);
+											}
 										}
 									}
 								}
@@ -132,12 +141,13 @@ public class CreateOnParse
 								CommonTreeClassDefinition c = null;
 								if (!externalJavaType)
 								{
-									// CommonTree nameNode = (CommonTree)p.getChildren().get(0);
 									c = new CommonTreeClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, env);
 									c.setPackageName(defaultPackage + ".tokens");
-								} else
+								} else if(enumType)
 								{
-									// CommonTree nameNode = (CommonTree)p.getChildren().get(0);
+									c = new ExternalEnumJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
+								}else
+								{
 									c = new ExternalJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
 								}
 
@@ -185,7 +195,7 @@ public class CreateOnParse
 													}
 												}
 											}
-											
+
 											if (aspectDclT.getChildCount() > 1)
 											{
 												if (aspectDclT.getChild(1) != null)
@@ -197,9 +207,7 @@ public class CreateOnParse
 													}
 												}
 											}
-											
-											
-											
+
 											f.isAspect = true;
 											f.setType(aspectDclT.getText());
 											c.addField(f);
