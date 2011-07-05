@@ -20,11 +20,11 @@ public class Main
 	/**
 	 * Set this to false to generate the overture II AST
 	 */
-	public static final boolean test = true;
+	public static final boolean test = false;
 
 	public static final boolean extend = false;
 
-	private static final String INPUT_FILENAME_OVERTURE_II = "src\\main\\resources\\overtureII.astv2";
+	private static final String INPUT_FILENAME_OVERTURE_II = "..\\..\\core\\ast\\src\\main\\resources\\overtureII.astv2";
 	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\test2.astV2";
 	private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\testExtended.astV2";
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
@@ -39,7 +39,7 @@ public class Main
 		if (!test)
 		{
 			System.out.println("Running with overture II");
-			generated = new File("..\\..\\ast\\src\\");
+			generated = new File("..\\..\\core\\ast\\src\\main\\java\\");
 			System.out.println("Generator starting with input: "
 					+ INPUT_FILENAME_OVERTURE_II);
 			String defaultPackage = "org.overture.ast.node";

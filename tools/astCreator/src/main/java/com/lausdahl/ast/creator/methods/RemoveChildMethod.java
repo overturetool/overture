@@ -3,6 +3,7 @@ package com.lausdahl.ast.creator.methods;
 import java.util.List;
 
 import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 
@@ -35,7 +36,7 @@ public class RemoveChildMethod extends Method
 
 		for (Field field : fields)
 		{
-			if (field.isTokenField || field.isAspect)
+			if ((field.isTokenField &&  !(field.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)field.type).extendsNode)) || field.isAspect)
 			{
 				continue;
 			}

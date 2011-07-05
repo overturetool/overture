@@ -3,22 +3,20 @@ package com.lausdahl.ast.creator.methods;
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
+import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 
-public class SetMethod extends Method
-{
+public class SetMethod extends Method {
 	Field f;
 
-	public SetMethod(IClassDefinition c, Field f, Environment env)
-	{
+	public SetMethod(IClassDefinition c, Field f, Environment env) {
 		super(c, env);
 		this.f = f;
 	}
 
 	@Override
-	protected void prepare()
-	{
+	protected void prepare() {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
 				+ CommonTreeClassDefinition.javaClassName(f.getName());
@@ -33,14 +31,9 @@ public class SetMethod extends Method
 
 		StringBuilder sb = new StringBuilder();
 
-		if (!f.isTokenField && /*
-								 * !f.isAspect &&
-								 */!(c instanceof CustomClassDefinition))
-		{
-			if (!f.isList)
-			{
-				if (!f.isAspect)
-				{
+		if ((!f.isTokenField && !(c instanceof CustomClassDefinition)) || (f.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)f.type).extendsNode)) {
+			if (!f.isList) {
+				if (!f.isAspect) {
 					sb.append("\t\tif (this." + f.getName() + " != null) {\n");
 					sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
 					sb.append("\t\t}\n");
@@ -52,8 +45,7 @@ public class SetMethod extends Method
 					sb.append("\t\t}\n");
 				}
 				sb.append("\t\tthis." + f.getName() + " = value;\n");
-			} else
-			{
+			} else {
 
 				sb.append("\t\tif (value == this." + f.getName() + ") {\n");
 				sb.append("\t\t\treturn;\n");
@@ -66,8 +58,7 @@ public class SetMethod extends Method
 			}
 		}
 
-		else if (f.isTokenField || f.isAspect)
-		{
+		else if (f.isTokenField || f.isAspect) {
 			sb.append("\t\tthis." + f.getName() + " = value;");
 		}
 
@@ -75,8 +66,7 @@ public class SetMethod extends Method
 	}
 
 	@Override
-	protected void prepareVdm()
-	{
+	protected void prepareVdm() {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
 				+ CommonTreeClassDefinition.javaClassName(f.getName());
@@ -92,10 +82,8 @@ public class SetMethod extends Method
 		StringBuilder sb = new StringBuilder();
 
 		if (!f.isTokenField && !f.isAspect
-				&& !(c instanceof CustomClassDefinition))
-		{
-			if (!f.isList)
-			{
+				&& !(c instanceof CustomClassDefinition)) {
+			if (!f.isList) {
 				sb.append("\t\tif this." + f.getName() + " <> null then(\n");
 				sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
 				sb.append("\t\t);\n");
@@ -106,8 +94,7 @@ public class SetMethod extends Method
 				sb.append("\t\t\tvalue.parent(this);\n");
 				sb.append("\t\t);\n");
 				sb.append("\t\tthis." + f.getName() + " := value;\n");
-			} else
-			{
+			} else {
 
 				sb.append("\t\tif value = this." + f.getName() + " then (\n");
 				sb.append("\t\t\treturn;\n");
@@ -118,8 +105,7 @@ public class SetMethod extends Method
 			}
 		}
 
-		else if (f.isTokenField || f.isAspect)
-		{
+		else if (f.isTokenField || f.isAspect) {
 			sb.append("\t\tthis." + f.getName() + " := value;");
 		}
 

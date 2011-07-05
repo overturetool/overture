@@ -118,6 +118,7 @@ public class CreateOnParse
 								CommonTree idT = null;
 								boolean externalJavaType = false;
 								boolean enumType= false;
+								boolean nodeType= false;
 								if (p.getChildCount() > 0)
 								{
 									idT = (CommonTree) p.getChild(0);
@@ -129,6 +130,10 @@ public class CreateOnParse
 											if (p.getChildCount() > 2 && p.getChild(2).getText().equals("enum"))
 											{
 												enumType = true;
+												idT = (CommonTree) p.getChild(4);
+											}else if (p.getChildCount() > 2 && p.getChild(2).getText().equals("node"))
+											{
+												nodeType = true;
 												idT = (CommonTree) p.getChild(4);
 											} else
 											{
@@ -148,7 +153,7 @@ public class CreateOnParse
 									c = new ExternalEnumJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
 								}else
 								{
-									c = new ExternalJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
+									c = new ExternalJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(),nodeType, env);
 								}
 
 								c.imports.add(env.token);

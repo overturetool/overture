@@ -5,11 +5,12 @@ import com.lausdahl.ast.creator.Environment;
 public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
 {
 	String name;
-
+	public final boolean extendsNode;
 	public ExternalJavaClassDefinition(String rawName ,
-			IClassDefinition superClass, ClassType type, String name,Environment env)
+			IClassDefinition superClass, ClassType type, String name,boolean extendsNode,Environment env)
 	{
 		super(rawName, superClass, type,env);
+		this.extendsNode = extendsNode;
 		if(name.contains("."))
 		{
 			setPackageName(name.substring(0,name.lastIndexOf(".")));
