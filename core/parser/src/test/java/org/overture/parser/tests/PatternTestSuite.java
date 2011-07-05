@@ -1,24 +1,17 @@
 package org.overture.parser.tests;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.Test;
-import junit.framework.TestSuite;
 
-public class PatternTestSuite extends TestSuite
+public class PatternTestSuite extends BaseTestSuite
 {
 
-	public static Test suite()
+	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
-		TestSuite suite = new TestSuite("Parser Expression TestSuite");
-		File[] files = new File("src\\test\\resources\\pattern").listFiles();
-		if (files != null)
-		{
-			for (File file : files)
-			{
-				suite.addTest(new ExpressionTestCase(file));
-			}
-		}
-		return suite;
+		String name = "Parser Pattern TestSuite";
+		String root = "src\\test\\resources\\pattern";
+		return createTestCompleteFile(name,new File(root),PatternTestCase.class);
 	}
 }

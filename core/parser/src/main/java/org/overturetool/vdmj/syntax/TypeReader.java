@@ -26,6 +26,16 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.node.tokens.TBool;
+import org.overture.ast.node.tokens.TChar;
+import org.overture.ast.node.tokens.TInt;
+import org.overture.ast.node.tokens.TNat;
+import org.overture.ast.node.tokens.TNatOne;
+import org.overture.ast.node.tokens.TRat;
+import org.overture.ast.node.tokens.TReal;
+import org.overture.ast.node.tokens.TStringLiteral;
+import org.overture.ast.node.tokens.TTokenLiteral;
+import org.overture.ast.types.*;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -34,34 +44,7 @@ import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.types.BooleanType;
-import org.overturetool.vdmj.types.BracketType;
-import org.overturetool.vdmj.types.CharacterType;
-import org.overturetool.vdmj.types.Field;
-import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.InMapType;
-import org.overturetool.vdmj.types.IntegerType;
-import org.overturetool.vdmj.types.MapType;
-import org.overturetool.vdmj.types.NaturalOneType;
-import org.overturetool.vdmj.types.NaturalType;
-import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.OptionalType;
-import org.overturetool.vdmj.types.ParameterType;
-import org.overturetool.vdmj.types.ProductType;
-import org.overturetool.vdmj.types.QuoteType;
-import org.overturetool.vdmj.types.RationalType;
-import org.overturetool.vdmj.types.RealType;
-import org.overturetool.vdmj.types.RecordType;
-import org.overturetool.vdmj.types.Seq1Type;
-import org.overturetool.vdmj.types.SeqType;
-import org.overturetool.vdmj.types.SetType;
-import org.overturetool.vdmj.types.TokenType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.types.UnionType;
-import org.overturetool.vdmj.types.UnknownType;
-import org.overturetool.vdmj.types.UnresolvedType;
-import org.overturetool.vdmj.types.VoidType;
+
 
 
 /**
@@ -75,56 +58,59 @@ public class TypeReader extends SyntaxReader
 		super(reader);
 	}
 
-	public Type readType()
+	public PType readType()
 		throws ParserException, LexException
 	{
-		Type type = readUnionType();
+		PType type = readUnionType();
 
 		if (lastToken().is(Token.ARROW) ||
 			lastToken().is(Token.TOTAL_FUNCTION))
 		{
 			LexToken token = lastToken();
 			nextToken();
-			Type result = readType();
+			PType result = readType();
 
-			if (result instanceof VoidType)
+			if (result instanceof AVoidType)
 			{
 				throwMessage(2070, "Function type cannot return void type");
 			}
 
-			type = new FunctionType(token.location,
+			type = new AFunctionType(token.location,
 				token.is(Token.ARROW), productExpand(type), result);
 		}
 
 		return type;
 	}
 
-	private Type readUnionType()
+	private PType readUnionType()
 		throws ParserException, LexException
 	{
-		Type type = readComposeType();
+		PType type = readComposeType();
 
 		while (lastToken().type == Token.PIPE)
 		{
 			LexToken token = lastToken();
 			nextToken();
-			type = new UnionType(token.location, type, readComposeType());
+			List<PType> list = new Vector<PType>();
+			list.add(type);
+			list.add(readComposeType());
+			type = new AUnionType(token.location, list);
 		}
 
 		return type;
 	}
 
-	private Type readComposeType()
+	private PType readComposeType()
 		throws ParserException, LexException
 	{
-		Type type = null;
+		PType type = null;
 
 		if (lastToken().is(Token.COMPOSE))
 		{
 			nextToken();
 			LexIdentifierToken id = readIdToken("Compose not followed by record identifier");
 			checkFor(Token.OF, 2249, "Missing 'of' in compose type");
-			type = new RecordType(idToName(id), readFieldList());
+			type = new ARecordInvariantType(id.location,idToName(id), readFieldList(),null);
 			checkFor(Token.END, 2250, "Missing 'end' in compose type");
 		}
 		else
@@ -135,10 +121,10 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	public List<Field> readFieldList()
+	public List<PField> readFieldList()
 		throws ParserException, LexException
 	{
-		List<Field> list = new Vector<Field>();
+		List<PField> list = new Vector<PField>();
 
 		while (lastToken().isNot(Token.END) &&
 			   lastToken().isNot(Token.SEMICOLON) &&
@@ -164,7 +150,7 @@ public class TypeReader extends SyntaxReader
 				}
 				
 				LexNameToken tagname = idToName(tagid);
-				list.add(new Field(tagname, tagid.name, readType(), false));
+				list.add(new AFieldField(null,null,null,tagname, tagid.name, readType(), false));
 				reader.unpush();
 			}
 			else if (separator.is(Token.EQABST))
@@ -183,7 +169,7 @@ public class TypeReader extends SyntaxReader
 				}
 
 				LexNameToken tagname = idToName(tagid);
-				list.add(new Field(tagname, tagid.name, readType(), true));
+				list.add(new AFieldField(null,null,null,tagname, tagid.name, readType(), true));
 				reader.unpush();
 			}
 			else	// Anonymous field or end of fields
@@ -192,10 +178,10 @@ public class TypeReader extends SyntaxReader
 				{
 					reader.retry();
 					String anon = Integer.toString(list.size() + 1);
-					Type ftype = readType();
+					PType ftype = readType();
 					LexNameToken tagname = new LexNameToken(
-						getCurrentModule(), anon, ftype.location);
-					list.add(new Field(tagname, anon, ftype, false));
+						getCurrentModule(), anon, ftype.getLocation());
+					list.add(new AFieldField(null,null,null,tagname, anon, ftype, false));
 					reader.unpush();
 				}
 				catch (Exception e)
@@ -207,11 +193,11 @@ public class TypeReader extends SyntaxReader
 			}
 		}
 
-		for (Field f1: list)
+		for (PField f1: list)
 		{
-			for (Field f2: list)
+			for (PField f2: list)
 			{
-				if (f1 != f2 && f1.tag.equals(f2.tag))
+				if (f1 != f2 && ((AFieldField)f1).getTag().equals(((AFieldField)f2).getTag()))//TODO unsafe cast
 				{
 					throwMessage(2073, "Duplicate field names in record type");
 				}
@@ -221,12 +207,13 @@ public class TypeReader extends SyntaxReader
 		return list;
 	}
 
-	private Type readProductType()
+	private PType readProductType()
 		throws ParserException, LexException
 	{
 		LexToken token = lastToken();
-		Type type = readMapType();
-		TypeList productList = new TypeList(type);
+		PType type = readMapType();
+		List<PType> productList = new Vector<PType>();
+		productList.add(type);
 
 		while (lastToken().type == Token.TIMES)
 		{
@@ -239,13 +226,13 @@ public class TypeReader extends SyntaxReader
 			return type;
 		}
 
-		return new ProductType(token.location, productList);
+		return new AProductType(token.location, productList);
 	}
 
-	private Type readMapType()
+	private PType readMapType()
 		throws ParserException, LexException
 	{
-		Type type = null;
+		PType type = null;
 		LexToken token = lastToken();
 
 		switch (token.type)
@@ -254,14 +241,14 @@ public class TypeReader extends SyntaxReader
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(Token.TO, 2251, "Expecting 'to' in map type");
-				type = new MapType(token.location, type, readMapType());
+				type = new AMapType(token.location, type, readMapType(),false);
 				break;
 
 			case INMAP:
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(Token.TO, 2252, "Expecting 'to' in inmap type");
-				type = new InMapType(token.location, type, readMapType());
+				type = new AInMapType(token.location, type, readMapType());
 				break;
 
 			default:
@@ -272,10 +259,10 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	private Type readSetSeqType()
+	private PType readSetSeqType()
 		throws ParserException, LexException
 	{
-		Type type = null;
+		PType type = null;
 		LexToken token = lastToken();
 
 		switch (token.type)
@@ -283,19 +270,19 @@ public class TypeReader extends SyntaxReader
 			case SET:
 				nextToken();
 				checkFor(Token.OF, 2253, "Expecting 'of' after set");
-				type = new SetType(token.location, readMapType());
+				type = new ASetType(token.location, readMapType(),false);
 				break;
 
 			case SEQ:
 				nextToken();
 				checkFor(Token.OF, 2254, "Expecting 'of' after seq");
-				type = new SeqType(token.location, readMapType());
+				type = new ASeqType(token.location, readMapType(),false);
 				break;
 
 			case SEQ1:
 				nextToken();
 				checkFor(Token.OF, 2255, "Expecting 'of' after seq1");
-				type = new Seq1Type(token.location, readMapType());
+				type = new ASeq1Type(token.location, readMapType(),false);
 				break;
 
 			default:
@@ -306,104 +293,104 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	private Type readBasicType()
+	private PType readBasicType()
 		throws ParserException, LexException
 	{
-		Type type = null;
+		PType type = null;
 		LexToken token = lastToken();
 		LexLocation location = token.location;
 
 		switch (token.type)
 		{
 			case NAT:
-				type = new NaturalType(location);
+				type = new ANatNumericBasicType(location,new TNat(token.type.name()));
 				nextToken();
 				break;
 
 			case NAT1:
-				type = new NaturalOneType(location);
+				type = new ANatOneNumericBasicType(location, new TNatOne(token.type.name()));
 				nextToken();
 				break;
 
 			case BOOL:
-				type = new BooleanType(location);
+				type = new ABooleanBasicType(location, new TBool(token.type.name()));
 				nextToken();
 				break;
 
 			case REAL:
-				type = new RealType(location);
+				type = new ARealNumericBasicType(location, new TReal(token.type.name()));
 				nextToken();
 				break;
 
 			case INT:
-				type = new IntegerType(location);
+				type = new AIntNumericBasicType(location, new TInt(token.type.name()));
 				nextToken();
 				break;
 
 			case RAT:
-				type = new RationalType(location);
+				type = new ARationalNumericBasicType(location, new TRat(token.type.name()));
 				nextToken();
 				break;
 
 			case CHAR:
-				type = new CharacterType(location);
+				type = new ACharBasicType(location, new TChar(token.type.name()));
 				nextToken();
 				break;
 
 			case TOKEN:
-				type = new TokenType(location);
+				type = new ATokenBasicType(location, new TTokenLiteral(token.type.name()));
 				nextToken();
 				break;
 
 			case QUOTE:
-				type = new QuoteType((LexQuoteToken)token);
+				type = new AQuoteType(location, new TStringLiteral( ((LexQuoteToken)token).value));//(LexQuoteToken)token);
 				nextToken();
 				break;
 
 			case BRA:
 				if (nextToken().is(Token.KET))
 				{
-					type = new VoidType(location);
+					type = new AVoidType(location);
 					nextToken();
 				}
 				else
 				{
-					type = new BracketType(location, readType());
+					type = new ABracketType(location, readType());
 					checkFor(Token.KET, 2256, "Bracket mismatch");
 				}
 				break;
 
 			case SEQ_OPEN:
 				nextToken();
-				type = new OptionalType(location, readType());
+				type = new AOptionalType(location, readType());
 				checkFor(Token.SEQ_CLOSE, 2257, "Missing close bracket after optional type");
 				break;
 
 			case NIL:
-				type = new VoidType(location);
+				type = new AVoidType(location);
 				nextToken();
 				break;
 
 			case IDENTIFIER:
 				LexIdentifierToken id = (LexIdentifierToken)token;
-				type = new UnresolvedType(idToName(id));
+				type = new AUnresolvedType(location,idToName(id));
 				nextToken();
 				break;
 
 			case NAME:
-				type = new UnresolvedType((LexNameToken)token);
+				type = new AUnresolvedType(location,(LexNameToken)token);
 				nextToken();
 				break;
 
 			case AT:
 				nextToken();
-				type = new ParameterType(
+				type = new AParameterType(location,
 						idToName(readIdToken("Invalid type parameter")));
 				break;
 
 			case QMARK:
 				nextToken();
-				type = new UnknownType(location);	// Not strictly VDM :-)
+				type = new AUnknownType(location);	// Not strictly VDM :-)
 				break;
 
 			default:
@@ -413,27 +400,27 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	public OperationType readOperationType()
+	public AOperationType readOperationType()
 		throws ParserException, LexException
 	{
-		Type paramtype = readType();
+		PType paramtype = readType();
 		LexToken arrow = lastToken();
 		checkFor(Token.OPDEF, 2258, "Expecting '==>' in explicit operation type");
-		Type resulttype = readType();
-		return new OperationType(arrow.location, productExpand(paramtype), resulttype);
+		PType resulttype = readType();
+		return new AOperationType(arrow.location, productExpand(paramtype), resulttype);
 	}
 
-	private TypeList productExpand(Type parameters)
+	private List<PType> productExpand(PType parameters)
 	{
-		TypeList types = new TypeList();
+		List<PType> types = new Vector<PType>();
 
-		if (parameters instanceof ProductType)
+		if (parameters instanceof AProductType)
 		{
 			// Expand unbracketed product types
-			ProductType pt = (ProductType)parameters;
-			types.addAll(pt.types);
+			AProductType pt = (AProductType)parameters;
+			types.addAll(pt.getTypes());
 		}
-		else if (parameters instanceof VoidType)
+		else if (parameters instanceof AVoidType)
 		{
 			// No type
 		}
