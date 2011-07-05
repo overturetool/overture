@@ -112,9 +112,9 @@ unop {-> package='org.overture.ast.expressions'}
 exp {-> package='org.overture.ast.expressions'}
     =   {apply} [root]:exp [args]:exp*
     |   {binop} [left]:exp binop [right]:exp
-    |   {boolean_const} bool_literal
+    |   {boolean_const} [value]:LexBooleanToken
     |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
-    |   {char_const} char_literal //regex for chars
+    |   {char_const} [value]:LexCharacterToken
     |   {elseIf} [elseIf]:exp [then]:exp  
     |   {exists1}  [bind]:bind [predicate]:exp
     |   {exists} [bindList]:multipleBind* [predicate]:exp
@@ -124,7 +124,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {funcInstatiation} [function]:exp [actualTypes]:type*
     |   {history} [hop]:token [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
-    |   {int_const} numbers_literal
+    |   {int_const} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
     |   {is} [typeName]:LexNameToken [test]:exp
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
@@ -145,8 +145,8 @@ exp {-> package='org.overture.ast.expressions'}
     //|   {postOp} [opname]:lextokenname [preexpression]:exp [postexpression]:exp [errors]:errorCase* [state]:stateDefinition
     |   {pre} [function]:exp [args]:exp*
     //|   {preOp} [opname]:lextokenname [expression]:exp  [errors]:errorCase* [state]:stateDefinition
-    |   {quote_const} quote_literal
-    |   {real_const} real_literal
+    |   {quote_const} [value]:LexQuoteToken
+    |   {real_const} [value]:LexRealToken
     |   {sameBaseClass} [left]:exp [right]:exp
     |   {sameClass} [left]:exp [right]:exp
     |   {self} [name]:LexNameToken
@@ -157,7 +157,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {setEnum} [members]:exp*
     |   {setRange} [first]:exp [last]:exp
     |   {stateInit} [state]:state
-    |   {string_const} string_literal
+    |   {string_const} [value]:LexStringToken
     |   {subclassResponsibility} 
     |   {subseq} [seq]:exp [from]:exp [to]:exp
     |   {threadId} 
