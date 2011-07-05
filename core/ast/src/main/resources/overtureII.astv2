@@ -135,7 +135,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {def} [localDefs]:definition* [expression]:exp
     |   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
     |   {mapEnum} [members]:maplet*     
-    |   {maplet} [location]:location [left]:exp [right]:exp
+    |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
     |   {mkType} [typeName]:LexNameToken [args]:exp*
     |   {mu} [recordType]:exp [modifiers]:modifier.record
@@ -252,8 +252,8 @@ pattern {-> package='org.overture.ast.patterns'}
     ;
     
 bind {-> package='org.overture.ast.patterns'}
-    =   {set} [plist]:pattern [set]:exp //binds
-    |   {type} [plist]:pattern* [type]:type //binds
+    =   {set} [pattern]:pattern [set]:exp //binds
+    |   {type} [pattern]:pattern [type]:type //binds
     ;
 
 multipleBind {-> package='org.overture.ast.patterns'}
@@ -276,9 +276,9 @@ definition {-> package='org.overture.ast.definitions'}
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp [actualResult]:type
-                           [isTypeInvariant]:boolean_const 
+                           [isTypeInvariant]:java_Boolean 
                            [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
-                           [isCurried]:boolean_const 
+                           [isCurried]:java_Boolean 
                               
     //| {explicitOperation_def} [typeParams]:LexNameToken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
     |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
@@ -286,7 +286,7 @@ definition {-> package='org.overture.ast.definitions'}
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp 
-                           [isTypeInvariant]:boolean_const [measure]:LexNameToken [isCurried]:boolean_const 
+                           [isTypeInvariant]:java_Boolean [measure]:LexNameToken [isCurried]:java_Boolean 
     //| TODO implicit operation def
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken
@@ -325,7 +325,7 @@ unop = [location]:location
 binop = [location]:location
     ;
 
-exp = [type]:type
+exp = [type]:type [location]:location
     ;
 
 type = [location]:location
