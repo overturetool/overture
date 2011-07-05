@@ -20,6 +20,7 @@ Tokens
   plus = '+';
   java_Boolean = 'java:java.lang.Boolean';
   java_Integer = 'java:java.lang.Integer';
+  java_String = 'java:java.lang.String';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
   
   bool = 'bool';
@@ -40,6 +41,9 @@ Tokens
   string_literal = 'some regex for string';
   token_literal = 'some regex for token type';
   bool_literal = 'some regex for bool type';
+  static = 'static';
+  async = 'async';
+  
 
 
 Abstract Syntax Tree
@@ -185,11 +189,11 @@ type {-> package='org.overture.ast.types'}
     =   #basic
     |   {bracket} [type]:type
     |   {class} [name]:LexNameToken [classdef]:definition.class 
-    |   {function} [partial]:boolean_const [result]:type [parameters]:type*
+    |   {function} [partial]:java_Boolean [parameters]:type* [result]:type
     |   #invariant
     |   {map}   [from]:type [to]:type [empty]:java_Boolean
-    |   {invMap} [from]:type [to]:type 
-    |   {operation} [result]:type [parameters]:type*
+    |   {inMap} [from]:type [to]:type 
+    |   {operation} [parameters]:type* [result]:type
     |   {optional} [type]:type
     |   {parameter} [name]:LexNameToken
     |   {product} [types]:type*
@@ -225,10 +229,17 @@ type {-> package='org.overture.ast.types'}
     |   {real} [token]:real
     ;
 
-//field {-> package='org.overture.ast.types'}
-//  =   {field} [accessibility]:accessSpecifier [tagname]:LexNameToken [tag]:string [type]:type [equalityAbstraction]:bool_java
-
+field {-> package='org.overture.ast.types'}
+    =   {field} [access]:access [static]:static [async]:async [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
+    ;
 //accessSpecifier  {-> package='org.overture.ast.definitions'}
+//  = {accessSpecifier} [isStatic]:bool_java [isAsync]:bool_java [access]:token 
+//  ;
+access  {-> package='org.overture.ast.definitions'}
+    =   {public}
+    |   {protected}
+    |   {private}
+    ;
 //  = {accessSpecifier} [isStatic]:bool_java [isAsync]:bool_java [access]:token 
 //  ;
 
