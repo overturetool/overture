@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 
 public class Field {
 	public static enum AccessSpecifier {
@@ -78,6 +79,7 @@ public class Field {
 		if (type == null) {
 			type = getInternalType(unresolvedType);
 		}
+		checkType(type);
 		String internaalType = type.getName();// getInternalType();
 		if (isList) {
 
@@ -102,8 +104,19 @@ public class Field {
 		if (type == null) {
 			type = getInternalType(unresolvedType);
 		}
-		if (type == null) {
-			String msg = ("Unable to resolve type for field: \"" + toString()
+		checkType(type);
+		String internaalType = type.getName();
+		if (isList) {
+
+			return "List<? extends " + internaalType + ">";
+		}
+		return internaalType;
+	}
+
+	public void checkType(IInterfaceDefinition t)
+	{
+		if (t == null) {
+			String msg = ("Unable to resolve type for field: \"" + getName()+" : "+ unresolvedType
 					+ "\" in class %s with raw type " + unresolvedType);
 			String className = "";
 			for (IClassDefinition def : env.getClasses()) {
@@ -116,18 +129,13 @@ public class Field {
 			System.err.println(String.format(msg, className));
 			System.exit(-1);
 		}
-		String internaalType = type.getName();
-		if (isList) {
-
-			return "List<? extends " + internaalType + ">";
-		}
-		return internaalType;
 	}
 
 	public String getInnerTypeForList() {
 		if (type == null) {
 			type = getInternalType(unresolvedType);
 		}
+		
 		String internaalType = type.getName();
 		// if (isList)
 		// {
@@ -142,6 +150,8 @@ public class Field {
 			return type;
 		}
 
+		
+		//First look up all tokens
 		for (IClassDefinition cd : env.getClasses()) {
 			if (cd instanceof CommonTreeClassDefinition) {
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
@@ -154,6 +164,42 @@ public class Field {
 			}
 		}
 
+		//Lookup in all root productions
+		for (IClassDefinition cd : env.getClasses()) {
+			if (cd instanceof CommonTreeClassDefinition) {
+				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
+
+				// if (c.rawName.equals(unresolvedTypeName))
+				if (c.getType()==ClassType.Production && checkName(c, unresolvedTypeName, true)) {
+					return c;
+				}
+			}
+		}
+		//Lookup in all sub productions
+		for (IClassDefinition cd : env.getClasses()) {
+			if (cd instanceof CommonTreeClassDefinition) {
+				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
+
+				// if (c.rawName.equals(unresolvedTypeName))
+				if (c.getType()==ClassType.SubProduction&& checkName(c, unresolvedTypeName, true)) {
+					return c;
+				}
+			}
+		}
+		
+		//Lookup in all alternatives
+		for (IClassDefinition cd : env.getClasses()) {
+			if (cd instanceof CommonTreeClassDefinition) {
+				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
+
+				// if (c.rawName.equals(unresolvedTypeName))
+				if (c.getType()==ClassType.Alternative && checkName(c, unresolvedTypeName, true)) {
+					return c;
+				}
+			}
+		}
+		
+		//Lookup for all raw names no matter the type
 		for (IClassDefinition cd : env.getClasses()) {
 			if (cd instanceof CommonTreeClassDefinition) {
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
@@ -165,6 +211,7 @@ public class Field {
 			}
 		}
 
+		//Lookup in all with not raw name
 		for (IClassDefinition cd : env.getClasses()) {
 			if (cd instanceof CustomClassDefinition) {
 				CustomClassDefinition c = (CustomClassDefinition) cd;
@@ -208,7 +255,7 @@ public class Field {
 
 	public void setType(String text) {
 		this.unresolvedType = text;
-		this.type = getInternalType(unresolvedType);
+//		this.type = getInternalType(unresolvedType);
 
 	}
 
