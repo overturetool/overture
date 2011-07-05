@@ -6,7 +6,7 @@ Tokens
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
-  LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
+  //LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
   LexNameToken = 'java:node:org.overturetool.vdmj.lex.LexNameToken';
   LexIdentifierToken = 'java:node:org.overturetool.vdmj.lex.LexIdentifierToken';
   LexBooleanToken = 'java:node:org.overturetool.vdmj.lex.LexBooleanToken';
@@ -113,7 +113,7 @@ exp {-> package='org.overture.ast.expressions'}
     =   {apply} [root]:exp [args]:exp*
     |   {binop} [left]:exp binop [right]:exp
     |   {boolean_const} bool_literal
-    |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp //TODO: caseAlternative
+    |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
     |   {char_const} char_literal //regex for chars
     |   {elseIf} [elseIf]:exp [then]:exp  
     |   {exists1}  [bind]:bind [predicate]:exp
@@ -266,13 +266,13 @@ patternBind {-> package='org.overture.ast.patterns'}
     ;
     
 definition {-> package='org.overture.ast.definitions'}
-    =   {assignmentf} [type]:type [expression]:exp [expType]:type
-    |   {instanceVariable} [type]:type [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken
-    |   {class} [type]:type [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition*
+    =   {assignmentf} [expression]:exp [expType]:type
+    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken
+    |   {class} [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition*
     //| missing bus cpu and system defs
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
-    |   {explicitFunction} [typeParams]:LexNameToken* [type]:function [paramPatternList]:pattern_inner_list* 
+    |   {explicitFunction} [typeParams]:LexNameToken* [functionType]:function [paramPatternList]:pattern_inner_list* 
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp [actualResult]:type
@@ -282,7 +282,7 @@ definition {-> package='org.overture.ast.definitions'}
                               
     //| {explicitOperation_def} [typeParams]:LexNameToken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
     |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
-    |   {implicitFunction} [typeParams]:LexNameToken* [type]:function [paramPatternList]:pattern* 
+    |   {implicitFunction} [typeParams]:LexNameToken* [typeFunction]:function [paramPatternList]:pattern* 
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp 
@@ -290,7 +290,7 @@ definition {-> package='org.overture.ast.definitions'}
     //| TODO implicit operation def
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken
-    |   {local} [type]:type 
+    |   {local} 
     |   {multiBindList} [bindings]:multipleBind* [defs]:definition*
     |   {mutexSync} [operations]:LexNameToken*
     // |    {namedTrace_def} [pathname]:string* [terms]:traceDefinitionTerm*
@@ -298,9 +298,9 @@ definition {-> package='org.overture.ast.definitions'}
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
     // |    {thread_def} [statement]:statement [operationName]:LexNameToken [operationDef]:explicitOperation_def
-    |   {type} [type]:invariant //TODO: missing inv type
+    |   {type} [typeInvariant]:invariant //TODO: missing inv type
     |   {untyped}
-    |   {value} [pattern]:pattern [type]:type [expression]:exp [defs]:definition* [expType]:type 
+    |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
     ;
 
 modules {-> package='org.overture.ast.modules'}
@@ -340,6 +340,6 @@ bind = [location]:location
 multipleBind = [location]:location
     ;
     
-definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class // [pass]:pass
+definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [type]:type // [pass]:pass
     ;
     
