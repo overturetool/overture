@@ -14,6 +14,7 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.Node;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.node.tokens.TNumbersLiteral;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
@@ -260,9 +261,10 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 
 		rtypes.add(node.getElse().apply(this, question));
 
-		return HelperType.getType(rtypes,node.getLocation());
-		
+		return HelperType.getType(rtypes,node.getLocation());		
 	}
+	
+	
 	
 }
 

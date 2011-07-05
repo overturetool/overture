@@ -17,8 +17,10 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckVisitor;
+import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexIdentifierTokenImpl;
+import org.overturetool.vdmj.lex.LexIntegerToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexNameTokenImpl;
@@ -34,10 +36,10 @@ public class Main {
 	public static void main(String[] args) {
 		LexLocation loc = new LexLocation();
 		
-		TNumbersLiteral number2 = new TNumbersLiteral("2");
-		TNumbersLiteral number5 = new TNumbersLiteral("5");
+		LexIntegerToken number2 = new LexIntegerToken(2,loc);
+		LexIntegerToken number5 = new LexIntegerToken(5,loc);
 		
-		ABooleanConstExp bool_true = new ABooleanConstExp(null, loc, new TBoolLiteral("true"));
+		ABooleanConstExp bool_true = new ABooleanConstExp(null, loc, new LexBooleanToken(true, loc));
 		
 		AIfExp ifExp = new AIfExp(null, loc, bool_true, new AIntConstExp(null,loc, number2), null, new AIntConstExp(null,loc, number5));
 		
@@ -57,7 +59,7 @@ public class Main {
 				null, //classdefinition
 				null, // type
 				null, //type params
-				new AFunctionType(loc, new ABooleanConstExp(null, loc, new TBoolLiteral("false")), new AIntNumericBasicType(loc,new TInt("int")) , funcParamType), //functiontype 
+				new AFunctionType(loc, new ABooleanConstExp(null, loc, null), new AIntNumericBasicType(loc,new TInt("int")) , funcParamType), //functiontype 
 				null,//paramPatternList, //paramPatternList
 				null, //pre
 				null, //predef
