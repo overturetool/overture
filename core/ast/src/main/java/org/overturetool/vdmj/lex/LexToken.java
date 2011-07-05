@@ -33,16 +33,15 @@ import org.overture.ast.analysis.IAnalysis;
 import org.overture.ast.analysis.IAnswer;
 import org.overture.ast.analysis.IQuestion;
 import org.overture.ast.analysis.IQuestionAnswer;
-import org.overture.ast.node.ExternalNode;
 import org.overture.ast.node.Node;
-import org.overture.ast.node.Token;
+import org.overture.ast.node.NodeEnum;
 
 
 /**
  * The parent class for all lexical token types.
  */
 
- public class LexToken extends Token implements Serializable
+ public  class LexToken extends Node implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -209,38 +208,16 @@ import org.overture.ast.node.Token;
 		return null;
 	}
 
-//	@Override
-//	public Node clone(Map<Node, Node> oldToNewMap)
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public void apply(IAnalysis analysis)
-//	{
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public <A> A apply(IAnswer<A> caller)
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public <Q> void apply(IQuestion<Q> caller, Q question)
-//	{
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public NodeEnum kindNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeChild(Node child) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

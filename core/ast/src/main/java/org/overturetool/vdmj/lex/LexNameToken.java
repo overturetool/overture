@@ -5,7 +5,17 @@ import java.util.List;
 import org.overture.ast.node.Node;
 import org.overture.ast.types.PType;
 
-public abstract class LexNameToken extends Node{
+public abstract class LexNameToken extends LexToken{
+
+	public LexNameToken(LexLocation location, VDMToken type) {
+		super(location, type);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6021528487608461917L;
 
 	public abstract LexIdentifierToken getIdentifier();
 
@@ -40,6 +50,12 @@ public abstract class LexNameToken extends Node{
 	public abstract boolean matches(LexNameToken other);
 	
 	public abstract LexLocation getLocation();
+
+	public abstract String getModule();
+
+	public abstract List<PType> getTypeQualifier();
+
+	public abstract boolean isOld();
 
 	
 
