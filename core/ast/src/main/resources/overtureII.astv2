@@ -6,13 +6,21 @@ Tokens
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
-  lextoken = 'java:org.overturetool.vdmj.lex.LexToken';
-  lexnametoken = 'lexnametoken'; //'java:org.overturetool.vdmj.lex.LexNameToken';
-  lexidentifiertoken = 'lexidentifiertoken'; //TODO
+  LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
+  LexNameToken = 'java:node:org.overturetool.vdmj.lex.ILexNameToken';
+  LexIdentifierToken = 'java:node:org.overturetool.vdmj.lex.ILexIdentifierToken';
+  LexBooleanToken = 'java:node:org.overturetool.vdmj.lex.LexBooleanToken';
+  LexCharacterToken = 'java:node:org.overturetool.vdmj.lex.LexCharacterToken';
+  LexIntegerToken = 'java:node:org.overturetool.vdmj.lex.LexIntegerToken';
+  LexQuoteToken = 'java:node:org.overturetool.vdmj.lex.LexQuoteToken';
+  LexRealToken = 'java:node:org.overturetool.vdmj.lex.LexRealToken';
+  LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
+  
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   plus = '+';
-  bool_java = 'java:java.lang.Boolean';
-  
+  java_Boolean = 'java:java.lang.Boolean';
+  java_Integer = 'java:java.lang.Integer';
+  nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
   
   bool = 'bool';
   char = 'char';
@@ -31,6 +39,7 @@ Tokens
   real_literal = 'some regex for reals';
   string_literal = 'some regex for string';
   token_literal = 'some regex for token type';
+  bool_literal = 'some regex for bool type';
 
 
 Abstract Syntax Tree
@@ -101,37 +110,36 @@ unop {-> package='org.overture.ast.expressions'}
     ;
     
 exp {-> package='org.overture.ast.expressions'}
-    =   
-        {apply} [root]:exp [args]:exp*
+    =   {apply} [root]:exp [args]:exp*
     |   {binop} [left]:exp binop [right]:exp
-    |   {boolean_const} boolean_const
-    //|   {cases} [expression]:exp [cases]:caseAlternative* [others]:exp //TODO: caseAlternative
+    |   {boolean_const} bool_literal
+    |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp //TODO: caseAlternative
     |   {char_const} char_literal //regex for chars
     |   {elseIf} [elseIf]:exp [then]:exp  
-    //|   {exists1}  [bind]:bind [predicate]:exp
-    //|   {exists} [bindList]:multipleBind* [predicate]:exp
-    //|   {field} [object]:exp [field]:LexIdentifierToken
-    //|   {fieldNumber} [tuple]:exp [field]:LexIdentifierToken
-    //|   {forAll} [bindList]:multipleBind* [predicate]:exp
+    |   {exists1}  [bind]:bind [predicate]:exp
+    |   {exists} [bindList]:multipleBind* [predicate]:exp
+    |   {field} [object]:exp [field]:LexIdentifierToken
+    |   {fieldNumber} [tuple]:exp [field]:LexIdentifierToken
+    |   {forAll} [bindList]:multipleBind* [predicate]:exp
     |   {funcInstatiation} [function]:exp [actualTypes]:type*
-    |   {history} [hop]:token [opnames]:lexnametoken*
+    |   {history} [hop]:token [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {int_const} numbers_literal
-    //|   {iota} [bind]:bind [predicate]:exp
-    |   {is} [typeName]:lexnametoken [test]:exp
-    |   {isOfBaseClass} [baseClass]:lexnametoken [exp]:exp
-    |   {isOfClass} [className]:lexnametoken [exp]:exp
-    //|   {lambda} [bindList]:typeBind [expression]:exp    
-    //|   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
-    //|   {letDef} [localDefs]:definition* [expression]:exp
-    //|   {def} [localDefs]:definition* [expression]:exp
-    //|   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
+    |   {iota} [bind]:bind [predicate]:exp
+    |   {is} [typeName]:LexNameToken [test]:exp
+    |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
+    |   {isOfClass} [className]:LexNameToken [exp]:exp
+    |   {lambda} [bindList]:bind.type [expression]:exp    
+    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
+    |   {letDef} [localDefs]:definition* [expression]:exp
+    |   {def} [localDefs]:definition* [expression]:exp
+    |   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
     |   {mapEnum} [members]:maplet*     
     |   {maplet} [location]:location [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
-    |   {mkType} [typeName]:lexnametoken [args]:exp*
-    //|   {mu} [recordType]:exp [modifiers]:recordModifier
-    |   {new} [className]:lexidentifiertoken [args]:exp*
+    |   {mkType} [typeName]:LexNameToken [args]:exp*
+    |   {mu} [recordType]:exp [modifiers]:modifier.record
+    |   {new} [className]:LexIdentifierToken [args]:exp*
     |   {nil} 
     |   {notYetSpecified} 
     //|   {postOp} [opname]:lextokenname [preexpression]:exp [postexpression]:exp [errors]:errorCase* [state]:stateDefinition
@@ -141,14 +149,14 @@ exp {-> package='org.overture.ast.expressions'}
     |   {real_const} real_literal
     |   {sameBaseClass} [left]:exp [right]:exp
     |   {sameClass} [left]:exp [right]:exp
-    |   {self} [name]:lexnametoken
-    //|   {seqComp} [first]:exp [setBind]:setBind [predicate]:exp
+    |   {self} [name]:LexNameToken
+    |   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
     |   {seqEnum} [members]:exp*
     |   {elements} [exp]:exp
-    //|   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
+    |   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
     |   {setEnum} [members]:exp*
     |   {setRange} [first]:exp [last]:exp
-    //|   {stateInit} [state]:stateDefinition
+    |   {stateInit} [state]:state
     |   {string_const} string_literal
     |   {subclassResponsibility} 
     |   {subseq} [seq]:exp [from]:exp [to]:exp
@@ -157,7 +165,15 @@ exp {-> package='org.overture.ast.expressions'}
     |   {tuple} [args]:exp*    
     |   {unary} unop [exp]:exp     
     |   {undefined}
-    |   {variable} [name]:lexnametoken           
+    |   {variable} [name]:LexNameToken           
+    ;
+    
+modifier {-> package='org.overture.ast.expressions'}
+    = {record} [tag]:LexIdentifierToken [value]:exp
+    ;
+    
+alternative {-> package='org.overture.ast.expressions'}
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp
     ;
     
 boolean_const
@@ -166,30 +182,33 @@ boolean_const
     ;
     
 type {-> package='org.overture.ast.types'}
-    =	#basic
-    |	{bracket} [type]:type
-    //|	{class} [name]:lexnametoken [classdef]:classDefinition
-    |	{function} [partial]:bool_java [result]:type [parameters]:type*
-    |	{named} [typename]:lexnametoken [type]:type //super = invariant type
-   // |	{record} [typename]:lexnametoken [fields]:field* //super = invariant type
-    | 	{map}	[from]:type [to]:type 
-    |	{invMap} [from]:type [to]:type 
-    |	{operation} [result]:type [parameters]:type*
-    |	{optional} [type]:type
-    |	{parameter} [name]:lexnametoken
-    |	{product} [types]:type*
-    |	{quote} [value]:string_literal //TODO whats the value type
-    |	{seq} [seqof]:type
-    |	{seqOne} [seqof]:type
-    |	{setType} [setof]:type
-    |	{undefined}
-    | 	{union} [types]:type* //should be a type set
-    |	{unknown}
-    | 	{unresolved} [typename]:lexnametoken
-    |	{voidReturn}
-    | 	{void} 
+    =   #basic
+    |   {bracket} [type]:type
+    |   {class} [name]:LexNameToken [classdef]:class_def 
+    |   {function} [partial]:boolean_const [result]:type [parameters]:type*
+    |   #invariant
+    |   {map}   [from]:type [to]:type [empty]:java_Boolean
+    |   {invMap} [from]:type [to]:type 
+    |   {operation} [result]:type [parameters]:type*
+    |   {optional} [type]:type
+    |   {parameter} [name]:LexNameToken
+    |   {product} [types]:type*
+    |   {quote} [value]:string_literal //TODO whats the value type
+    |   {seq} [seqof]:type [empty]:java_Boolean
+    |   {seq1} [seqof]:type [empty]:java_Boolean
+    |   {set} [setof]:type [empty]:java_Boolean
+    |   {undefined}
+    |   {union} [types]:type* //should be a type set
+    |   {unknown}
+    |   {unresolved} [typename]:LexNameToken
+    |   {voidReturn}
+    |   {void} 
     ;
 
+#invariant {-> package='org.overture.ast.types'}
+    =   {named} [typename]:LexNameToken [type]:type [invdef]:explicitFunction //super = invariant type
+    |   {record} [typename]:LexNameToken [fields]:field* [invdef]:explicitFunction //super = invariant type
+    ;
 
 #basic {-> package='org.overture.ast.types'}
     =   {boolean} [token]:bool
@@ -207,74 +226,95 @@ type {-> package='org.overture.ast.types'}
     ;
 
 //field {-> package='org.overture.ast.types'}
-//	=	{field} [accessibility]:accessSpecifier [tagname]:lexnametoken [tag]:string [type]:type [equalityAbstraction]:bool_java
+//  =   {field} [accessibility]:accessSpecifier [tagname]:LexNameToken [tag]:string [type]:type [equalityAbstraction]:bool_java
 
 //accessSpecifier  {-> package='org.overture.ast.definitions'}
-//	= {accessSpecifier} [isStatic]:bool_java [isAsync]:bool_java [access]:token 
-//	;
+//  = {accessSpecifier} [isStatic]:bool_java [isAsync]:bool_java [access]:token 
+//  ;
 
 pattern {-> package='org.overture.ast.patterns'}
-	=	
-	//|	{boolean_pattern} [value]:lexbooleantoken 
-	//|	{character_pattern} [value]:lexcharactertoken
-		{concatenation_pattern} [left]:pattern [right]:pattern
-	| 	{expression_pattern} [exp]:exp
-	|	{identifier_pattern} [name]:lexnametoken
-	|	{ignore_pattern} 
-	//|	{integer_pattern} [value]:lexintegertoken
-	|	{nil_pattern}
-	//| 	{quote_pattern}	[value]:lexquotetoken
-	//|	{real_pattern} [value]:lexrealtoken
-	|	{record_pattern} [typename]:lexnametoken [plist]:pattern* [type]:type
-	|	{seq_pattern} [plist]:pattern*
-	|	{set_pattern} [plist]:pattern*
-	//|	{string_pattern} [value]:lexstringtoken
-	|	{tuple_pattern} [plist]:pattern*
-	|	{union_pattern} [left]:pattern [right]:pattern
-	;
-	
+    =   {boolean} [value]:LexBooleanToken
+    |   {character} [value]:LexCharacterToken
+    |   {concatenation} [left]:pattern [right]:pattern
+    |   {expression} [exp]:exp
+    |   {identifier} [name]:LexNameToken
+    |   {ignore} 
+    |   {integer} [value]:LexIntegerToken
+    |   {nil}
+    |   {quote} [value]:LexQuoteToken
+    |   {real} [value]:LexRealToken
+    |   {record} [typename]:LexNameToken [plist]:pattern* [type]:type
+    |   {seq} [plist]:pattern*
+    |   {set} [plist]:pattern*
+    |   {string} [value]:LexStringToken
+    |   {tuple} [plist]:pattern*
+    |   {union} [left]:pattern [right]:pattern
+    ;
+    
 bind {-> package='org.overture.ast.patterns'}
-	=  	{setBind} [plist]:pattern [set]:exp //binds
-	| 	{typeBind} [plist]:pattern* [type]:type //binds
-	;
+    =   {set} [plist]:pattern [set]:exp //binds
+    |   {type} [plist]:pattern* [type]:type //binds
+    ;
 
 multipleBind {-> package='org.overture.ast.patterns'}
-	=  	{multipleSetBind} [plist]:pattern* [set]:exp //binds
-	|	{multipleTypeBind}  [plist]:pattern* [type]:type //binds
-	;
+    =   {multipleSet} [plist]:pattern* [set]:exp //binds
+    |   {multipleType}  [plist]:pattern* [type]:type //binds
+    ;
 
 patternBind {-> package='org.overture.ast.patterns'}
-	= {pattern_bind_def} [location]:location [pattern]:pattern [bind]:bind
-	;
-	
+    = {pattern_bind_def} [location]:location [pattern]:pattern [bind]:bind
+    ;
+    
 definition {-> package='org.overture.ast.definitions'}
-	= 	{assignment_def} [type]:type [expression]:exp [expType]:type
-	| 	{instanceVariable_def} [type]:type [expression]:exp [expType]:type [initialized]:bool_java [oldname]:lexnametoken
-	|	{class_def} [className]:lexnametoken [supernames]:lexnametoken* [definitions]:definition*
-	//| missing bus cpu and system defs
-	|	{classInvariant_def}  [expression]:exp
-	|	{equals_def} [pattern]:pattern [typebind]:typeBind [setbind]:setBind [test]:exp [expType]:type [defType]:type [defs]:definition*
-	|	{explicitFunction_def} [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* 
-	                           [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java 
-	                           [measure]:lexnametoken [isCurried]:bool_java
-	//|	{explicitOperation_def} [typeParams]:lexnametoken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
-	|	{external_def} [state]:definition [readOnly]:bool_java [oldname]:lexnametoken
-	|	{implicitFunction_def}  [typeParams]:lexnametoken* [type]:function [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:exp [isTypeInvariant]:bool_java [measure]:lexnametoken [isCurried]:bool_java
-	//| TODO implicit operation def
-	|	{imported_def} [def]:definition
-	|	{inherited_def} [superdef]:definition [oldname]:lexnametoken
-	|	{local_def} [type]:type 
-	|	{multiBindList_def} [bindings]:multipleBind* [defs]:definition*
-	|	{mutexSync_def} [operations]:lexnametoken*
-	// |	{namedTrace_def} [pathname]:string* [terms]:traceDefinitionTerm*
-	|	{perSync_def} [opname]:lexnametoken [guard]:exp
-	|	{renamed_def} [def]:definition
-	//|	{state_def} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
-	// |	{thread_def} [statement]:statement [operationName]:lexnametoken [operationDef]:explicitOperation_def
-	//|	{type_def} [type]:invariant_type //TODO: missing inv type
-	|	{untyped_def}
-	|	{value_def} [pattern]:pattern [type]:type [expression]:exp [defs]:definition* [expType]:type 
-	;
+    =   {assignmentf} [type]:type [expression]:exp [expType]:type
+    |   {instanceVariable} [type]:type [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken
+    |   {class_def} [type]:type [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition*
+    //| missing bus cpu and system defs
+    |   {classInvariant}  [expression]:exp
+    |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
+    |   {explicitFunction} [typeParams]:LexNameToken* [type]:function [paramPatternList]:pattern_inner_list* 
+                           [precondition]:exp [predef]:explicitFunction 
+                           [postcondition]:exp [postdef]:explicitFunction 
+                           [body]:exp [actualResult]:type
+                           [isTypeInvariant]:boolean_const 
+                           [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
+                           [isCurried]:boolean_const 
+                              
+    //| {explicitOperation_def} [typeParams]:LexNameToken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
+    |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
+    |   {implicitFunction} [typeParams]:LexNameToken* [type]:function [paramPatternList]:pattern* 
+                           [precondition]:exp [predef]:explicitFunction 
+                           [postcondition]:exp [postdef]:explicitFunction 
+                           [body]:exp 
+                           [isTypeInvariant]:boolean_const [measure]:LexNameToken [isCurried]:boolean_const 
+    //| TODO implicit operation def
+    |   {imported} [def]:definition
+    |   {inherited} [superdef]:definition [oldname]:LexNameToken
+    |   {local} [type]:type 
+    |   {multiBindList} [bindings]:multipleBind* [defs]:definition*
+    |   {mutexSync} [operations]:LexNameToken*
+    // |    {namedTrace_def} [pathname]:string* [terms]:traceDefinitionTerm*
+    |   {perSync} [opname]:LexNameToken [guard]:exp
+    |   {renamed} [def]:definition
+    |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
+    // |    {thread_def} [statement]:statement [operationName]:LexNameToken [operationDef]:explicitOperation_def
+    |   {type_def} [type]:invariant //TODO: missing inv type
+    |   {untyped}
+    |   {value} [pattern]:pattern [type]:type [expression]:exp [defs]:definition* [expType]:type 
+    ;
+
+modules {-> package='org.overture.ast.modules'}
+    = {module} [name]:LexNameToken 
+        //[imports]:moduleImports
+        //[exports]:moduleExports
+        [defs]:definition*
+        ;
+
+patternList {-> package='org.overture.ast.patterns'}
+    = {pattern_inner_list} [list]:pattern*
+    ;
+
+
 
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
@@ -291,14 +331,15 @@ exp = [type]:type
 type = [location]:location
      ; 
 
-pattern = [location]:location
-	;
+pattern = [location]:location [definitions]:definition*
+    ;
 
 bind = [location]:location
-	;
+    ;
 
 multipleBind = [location]:location
-	;
-	
-definition = [location]:location [name]:lexnametoken // [nameScope]:nameScope [pass]:pass
-	;
+    ;
+    
+definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:class_def // [pass]:pass
+    ;
+    
