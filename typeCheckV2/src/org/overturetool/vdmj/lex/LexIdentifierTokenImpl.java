@@ -23,15 +23,15 @@
 
 package org.overturetool.vdmj.lex;
 
-public class LexIdentifierToken extends LexToken
+public class LexIdentifierTokenImpl extends LexIdentifierToken
 {
 	private static final long serialVersionUID = 1L;
 	public final String name;
 	public final boolean old;
 
-	public LexIdentifierToken(String name, boolean old, LexLocation location)
+	public LexIdentifierTokenImpl(String name, boolean old, LexLocation location)
 	{
-		super(location, Token.IDENTIFIER);
+		super(location, VDMToken.IDENTIFIER);
 		this.name = name;
 		this.old = old;
 	}
@@ -49,7 +49,7 @@ public class LexIdentifierToken extends LexToken
 			location.endLine,
 			location.endPos);
 
-		return new LexNameToken("CLASS", name, loc);
+		return new LexNameTokenImpl("CLASS", name, loc);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class LexIdentifierToken extends LexToken
 		if (other instanceof LexIdentifierToken)
 		{
 			LexIdentifierToken tother = (LexIdentifierToken)other;
-			return this.name.equals(tother.name) && this.old == tother.old;
+			return this.name.equals(tother.getName()) && this.old == tother.isOld();
 		}
 
 		return false;
@@ -74,5 +74,20 @@ public class LexIdentifierToken extends LexToken
 	public String toString()
 	{
 		return name + (old ? "~" : "");
+	}
+
+	@Override
+	public boolean isOld() {
+		return old;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public LexLocation getLocation() {
+		return location;
 	}
 }

@@ -26,7 +26,7 @@ package org.overture.runtime;
 import java.util.List;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 

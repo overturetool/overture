@@ -1,8 +1,8 @@
 package org.overture.typecheck;
 
-import org.overture.ast.typechecker.NameScope;
 import org.overture.runtime.Environment;
 import org.overture.runtime.TypeList;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 public class TypeCheckInfo

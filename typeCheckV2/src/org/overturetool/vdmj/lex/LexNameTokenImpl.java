@@ -25,13 +25,20 @@ package org.overturetool.vdmj.lex;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
+import org.overture.ast.analysis.IAnalysis;
+import org.overture.ast.analysis.IAnswer;
+import org.overture.ast.analysis.IQuestion;
+import org.overture.ast.analysis.IQuestionAnswer;
+import org.overture.ast.node.Node;
+import org.overture.ast.node.NodeEnum;
 import org.overture.ast.types.PType;
 import org.overture.runtime.TypeComparator;
 import org.overturetool.vdmj.messages.InternalException;
 
 
-public class LexNameToken extends LexToken implements Serializable, Comparable<LexNameToken>
+public class LexNameTokenImpl extends LexNameToken implements Serializable, Comparable<LexNameToken>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,45 +51,45 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 	private int hashcode = 0;
 
-	public LexNameToken(
+	public LexNameTokenImpl(
 		String module, String name, LexLocation location,
 		boolean old, boolean explicit)
 	{
-		super(location, Token.NAME);
+		super(location, VDMToken.NAME);
 		this.module = module;
 		this.name = name;
 		this.old = old;
 		this.explicit = explicit;
 	}
 
-	public LexNameToken(String module, String name, LexLocation location)
+	public LexNameTokenImpl(String module, String name, LexLocation location)
 	{
 		this(module, name, location, false, false);
 	}
 
-	public LexNameToken(String module, LexIdentifierToken id)
+	public LexNameTokenImpl(String module, LexIdentifierToken id)
 	{
-		super(id.location, Token.NAME);
+		super(id.getLocation(), VDMToken.NAME);
 		this.module = module;
-		this.name = id.name;
-		this.old = id.old;
+		this.name = id.getName();
+		this.old = id.isOld();
 		this.explicit = false;
 	}
 
 	public LexIdentifierToken getIdentifier()
 	{
-		return new LexIdentifierToken(name, old, location);
+		return new LexIdentifierTokenImpl(name, old, location);
 	}
 
 	public LexNameToken getExplicit(boolean ex)
 	{
-		return new LexNameToken(module, name, location, old, ex);
+		return new LexNameTokenImpl(module, name, location, old, ex);
 	}
 
 	public LexNameToken getOldName()
 	{
-		return new LexNameToken(module,
-			new LexIdentifierToken(name, true, location));
+		return new LexNameTokenImpl(module,
+			new LexIdentifierTokenImpl(name, true, location));
 	}
 
 	public String getName()
@@ -94,27 +101,27 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 	public LexNameToken getPreName(LexLocation l)
 	{
-		return new LexNameToken(module, "pre_" + name, l);
+		return new LexNameTokenImpl(module, "pre_" + name, l);
 	}
 
 	public LexNameToken getPostName(LexLocation l)
 	{
-		return new LexNameToken(module, "post_" + name, l);
+		return new LexNameTokenImpl(module, "post_" + name, l);
 	}
 
 	public LexNameToken getInvName(LexLocation l)
 	{
-		return new LexNameToken(module, "inv_" + name, l);
+		return new LexNameTokenImpl(module, "inv_" + name, l);
 	}
 
 	public LexNameToken getInitName(LexLocation l)
 	{
-		return new LexNameToken(module, "init_" + name, l);
+		return new LexNameTokenImpl(module, "init_" + name, l);
 	}
 
 	public LexNameToken getModifiedName(String classname)
 	{
-		LexNameToken mod = new LexNameToken(classname, name, location);
+		LexNameToken mod = new LexNameTokenImpl(classname, name, location);
 		mod.setTypeQualifier(typeQualifier);
 		return mod;
 	}
@@ -123,11 +130,11 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 	{
 		if (module.equals("CLASS"))
 		{
-			return new LexNameToken(name, "self", location);
+			return new LexNameTokenImpl(name, "self", location);
 		}
 		else
 		{
-			return new LexNameToken(module, "self", location);
+			return new LexNameTokenImpl(module, "self", location);
 		}
 	}
 
@@ -135,27 +142,27 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 	{
 		if (module.equals("CLASS"))
 		{
-			return new LexNameToken(name, "thread", location);
+			return new LexNameTokenImpl(name, "thread", location);
 		}
 		else
 		{
-			return new LexNameToken(module, "thread", location);
+			return new LexNameTokenImpl(module, "thread", location);
 		}
 	}
 
 	public static LexNameToken getThreadName(LexLocation loc)
 	{
-		return new LexNameToken(loc.module, "thread", loc);
+		return new LexNameTokenImpl(loc.module, "thread", loc);
 	}
 
 	public LexNameToken getPerName(LexLocation loc)
 	{
-		return new LexNameToken(module, "per_" + name, loc);
+		return new LexNameTokenImpl(module, "per_" + name, loc);
 	}
 
 	public LexNameToken getClassName()
 	{
-		return new LexNameToken("CLASS", name, location);
+		return new LexNameTokenImpl("CLASS", name, location);
 	}
 
 	public void setTypeQualifier(List<PType> types)
@@ -183,15 +190,15 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 		LexNameToken lother = (LexNameToken)other;
 
-		if (typeQualifier != null && lother.typeQualifier != null)
+		if (typeQualifier != null && lother.getTypeQualifier() != null)
 		{
-			if (!TypeComparator.compatible(typeQualifier, lother.typeQualifier))
+			if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
 			{
 				return false;
 			}
 		}
-		else if ((typeQualifier != null && lother.typeQualifier == null) ||
-				 (typeQualifier == null && lother.typeQualifier != null))
+		else if ((typeQualifier != null && lother.getTypeQualifier() == null) ||
+				 (typeQualifier == null && lother.getTypeQualifier() != null))
 		{
 			return false;
 		}
@@ -201,9 +208,9 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 	public boolean matches(LexNameToken other)
 	{
-		return module.equals(other.module) &&
-				name.equals(other.name) &&
-				old == other.old;
+		return module.equals(other.getModule()) &&
+				name.equals(other.getName()) &&
+				old == other.isOld();
 	}
 
 	@Override
@@ -226,7 +233,7 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 	public LexNameToken copy()
 	{
-		LexNameToken c = new LexNameToken(module, name, location, old, explicit);
+		LexNameToken c = new LexNameTokenImpl(module, name, location, old, explicit);
 		c.setTypeQualifier(typeQualifier);
 		return c;
 	}
@@ -234,5 +241,73 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 	public int compareTo(LexNameToken o)
 	{
 		return toString().compareTo(o.toString());
+	}
+
+	@Override
+	public LexLocation getLocation() {
+		return location;
+	}
+
+	@Override
+	public String getModule() {
+		return module;
+	}
+
+	@Override
+	public Object clone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Node clone(Map<Node, Node> oldToNewMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NodeEnum kindNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeChild(Node child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void apply(IAnalysis analysis) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> caller) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <Q> void apply(IQuestion<Q> caller, Q question) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<PType> getTypeQualifier() {
+		return typeQualifier;
+	}
+
+	@Override
+	public boolean isOld() {
+		return old;
 	}
 }

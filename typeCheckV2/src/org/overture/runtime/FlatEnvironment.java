@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.definitions.AClassDefDefinition;
+import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.typechecker.NameScope;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 
@@ -138,7 +138,7 @@ public class FlatEnvironment extends Environment
 	}
 
 	@Override
-	public AClassDefDefinition findClassDefinition()
+	public AClassDefinition findClassDefinition()
 	{
 		return outer == null ? null : outer.findClassDefinition();
 	}

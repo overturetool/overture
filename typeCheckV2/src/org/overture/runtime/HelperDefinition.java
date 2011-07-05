@@ -6,24 +6,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
-import org.overture.ast.definitions.AClassDefDefinition;
+import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckVisitor;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 public class HelperDefinition {
 
-	public static boolean hasSupertype(AClassDefDefinition aClassDefDefinition, AClassType other) {
+	public static boolean hasSupertype(AClassDefinition aClassDefDefinition, AClassType other) {
 		if (aClassDefDefinition.getType().equals(other))
 		{
 			return true;
@@ -84,7 +83,7 @@ public class HelperDefinition {
 				}
 
 				return null;
-			case TYPEDEF:
+			case TYPE:
 				return null;
 				
 			default:
@@ -99,8 +98,8 @@ public class HelperDefinition {
 			if ((d.getNameScope()== NameScope.STATE && !scope.matches(NameScope.STATE)) ||
 				(d.getNameScope() == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE)))
 			{
-				sought.report(3302,
-					"State variable '" + sought.getName() + "' cannot be accessed from this context");
+				TypeChecker.report(3302,
+					"State variable '" + sought.getName() + "' cannot be accessed from this context",sought.getLocation());
 			}
 
 			markUsed(d);
@@ -220,10 +219,10 @@ public class HelperDefinition {
 	}
 
 	private static PDefinition getSelfDefinition(
-			AClassDefDefinition classDefinition) {
+			AClassDefinition classDefinition) {
 		
 		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
-				classDefinition.getName().getSelfName(), NameScope.LOCAL, classDefinition.getType());
+				classDefinition.getName().getSelfName(), NameScope.LOCAL,false, null , classDefinition.getType());
 			markUsed(def);
 			return def;
 	}

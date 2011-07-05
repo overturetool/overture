@@ -26,12 +26,12 @@ package org.overture.runtime;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.definitions.AClassDefDefinition;
+import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.typechecker.NameScope;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 
@@ -77,7 +77,7 @@ abstract public class Environment
 			{
 				if (n1 != n2 && n1.equals(n2) && !done.contains(n1))
 				{
-					TypeChecker.warning(5007, "Duplicate definition: " + n1, n1.location);
+					TypeChecker.warning(5007, "Duplicate definition: " + n1, n1.getLocation());
 					done.add(n1);
 				}
 			}
@@ -90,24 +90,24 @@ abstract public class Environment
 
 				PDefinition def = outer.findName(n1, NameScope.NAMESANDSTATE);
 
-				if (def != null && def.getLocation() != n1.location &&
+				if (def != null && def.getLocation() != n1.getLocation() &&
 					def.getNameScope().matches(scope))
 				{
 					// Reduce clutter for names in the same module/class
 					String message = null;
 
-					if (def.getLocation().file.equals(n1.location.file))
+					if (def.getLocation().file.equals(n1.getLocation().file))
 					{
 						message = def.getName() + " " + def.getLocation().toShortString() +
-							" hidden by " +	n1.name;
+							" hidden by " +	n1.getName();
 					}
 					else
 					{
 						message = def.getName() + " " + def.getLocation() +
-							" hidden by " + n1.name;
+							" hidden by " + n1.getName();
 					}
 
-					TypeChecker.warning(5008, message, n1.location);
+					TypeChecker.warning(5008, message, n1.getLocation());
 				}
 			}
 		}
@@ -138,7 +138,7 @@ abstract public class Environment
 	abstract public AStateDefinition findStateDefinition();
 
 	/** Find the enclosing class definition, if any. */
-	abstract public AClassDefDefinition findClassDefinition();
+	abstract public AClassDefinition findClassDefinition();
 
 	/** True if the calling context is a static function or operation. */
 	abstract public boolean isStatic();
