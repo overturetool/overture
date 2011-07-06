@@ -6,7 +6,7 @@ Tokens
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
-  //LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
+  LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
   LexNameToken = 'java:node:org.overturetool.vdmj.lex.LexNameToken';
   LexIdentifierToken = 'java:node:org.overturetool.vdmj.lex.LexIdentifierToken';
   LexBooleanToken = 'java:node:org.overturetool.vdmj.lex.LexBooleanToken';
@@ -98,6 +98,7 @@ unop {-> package='org.overture.ast.expressions'}
     |   {distIntersect}  
     |   {distMerge} 
     |   {distUnion} 
+    |   {elements}
     |   {floor}  
     |   {head} 
     |   {indices}  
@@ -126,7 +127,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {fieldNumber} [tuple]:exp [field]:LexIdentifierToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
     |   {funcInstatiation} [function]:exp [actualTypes]:type*
-    |   {history} [hop]:token [opnames]:LexNameToken*
+    |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {int_const} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
@@ -142,7 +143,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
     |   {mkType} [typeName]:LexNameToken [args]:exp*
-    |   {mu} [recordType]:exp [modifiers]:modifier.record
+    |   {mu} [recordType]:exp [modifiers]:modifier.record*
     |   {new} [className]:LexIdentifierToken [args]:exp*
     |   {nil} 
     |   {notYetSpecified} 
@@ -156,7 +157,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {self} [name]:LexNameToken
     |   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
     |   {seqEnum} [members]:exp*
-    |   {elements} [exp]:exp
+//    |   {elements} [exp]:exp
     |   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
     |   {setEnum} [members]:exp*
     |   {setRange} [first]:exp [last]:exp
