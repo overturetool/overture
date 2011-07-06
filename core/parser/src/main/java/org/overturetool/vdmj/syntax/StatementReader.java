@@ -800,7 +800,7 @@ public class StatementReader extends SyntaxReader
 		return defs;
 	}
 
-	public AssignmentDefinition readAssignmentDefinition()
+	public AAssignmentDefinition readAssignmentDefinition()
 		throws ParserException, LexException
 	{
 		LexIdentifierToken name = readIdToken("Expecting variable identifier");
