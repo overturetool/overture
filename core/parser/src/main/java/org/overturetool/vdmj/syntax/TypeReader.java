@@ -336,7 +336,7 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case BOOL:
-				type = new ABooleanBasicType(location, new TBool(token.type.name()));
+				type = new ABooleanBasicType(location);
 				nextToken();
 				break;
 
@@ -356,12 +356,12 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case CHAR:
-				type = new ACharBasicType(location, new TChar(token.type.name()));
+				type = new ACharBasicType(location);
 				nextToken();
 				break;
 
 			case TOKEN:
-				type = new ATokenBasicType(location, new TTokenLiteral(token.type.name()));
+				type = new ATokenBasicType(location);
 				nextToken();
 				break;
 

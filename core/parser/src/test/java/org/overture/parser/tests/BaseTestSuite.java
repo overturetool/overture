@@ -22,8 +22,13 @@ public class BaseTestSuite
 		
 		if (testRoot != null && testRoot.exists())
 		{
+			
 			for (File file : testRoot.listFiles())
 			{
+				if(file.getName().startsWith("."))
+				{
+					continue;
+				}
 				Object instance = ctor.newInstance(new Object[]{file});
 				suite.addTest((Test) instance);
 			}
@@ -42,6 +47,10 @@ public class BaseTestSuite
 		{
 			for (File file : testRoot.listFiles())
 			{
+				if(file.getName().startsWith("."))
+				{
+					continue;
+				}
 				List<String> lines = readFile(file);
 				if(lines!=null)
 				{
@@ -61,10 +70,6 @@ public class BaseTestSuite
 	protected static List<String> readFile(File file) throws IOException
 	{
 		List<String> lines = new Vector<String>();
-		if(file.getName().startsWith("."))
-		{
-			return lines;
-		}
 		BufferedReader reader = null;
 
 		try

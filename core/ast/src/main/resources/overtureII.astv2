@@ -352,8 +352,65 @@ imports {-> package='org.overture.ast.modules'}
 patternList {-> package='org.overture.ast.patterns'}
     = {pattern_inner_list} [list]:pattern*
     ;
+    
+/*
+    Statements
+*/
 
+stm {-> package='org.overture.ast.statements'}
+    =   {always} [always]:stm [body]:stm
+    |   {assignment} [target]:stateDesignator [exp]:exp
+    |   {atomic} [assignments]:stm.assignment*
+    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [args]:exp*
+    |   {call} [name]:LexNameToken [args]:exp*
+    |   {cases} [exp]:exp [cases]:alternativeStm.case [others]:stm*//? is this correct
+    |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
+    |   {cycles} [cycles]:exp [statement]:stm
+    |   {duration} [duration]:exp [statement]:stm
+    |   {elseIf} [elseIf]:exp [thenStm]:stm
+    |   {error}
+    |   {exit}
+    |   {forAll} [pattern]:pattern [set]:exp [statement]:stm
+    |   {forIndex} [var]:LexNameToken [from]:exp [to]:exp [by]:exp [statement]:stm
+    |   {forPatternBind} [patternBind]:patternBind [reverse]:java_Boolean [exp]:exp [statement]:stm
+    |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
+    |   {letBe} [bind]:multipleBind [suchThat]:exp [statement]:stm
+//    |   {letDef}
+    |   {notYetSpecified} [opname]:LexNameToken [args]:exp*
+    |   {return} [expression]:exp
+    |   #SimpleBlock
+    |   {skip}
+//    |   {specification}
+    |   {start} [obj]:exp
+    |   {subclassResponsibility}
+    //|   {tixe}
+    //|   {traceVariable}
+    |   {trap} [patternBind]:patternBind [with]:stm [body]:stm
+    |   {while} [exp]:exp [statement]:stm 
+    ; 
+    
+#SimpleBlock {-> package='org.overture.ast.statements'}
+    =   {block} [assignmentDefs]:definition*
+    |   {nonDeterministic}
+    ;
+    
+stateDesignator {-> package='org.overture.ast.statements'}
+    =   {field} [object]:stateDesignator [field]:LexIdentifierToken
+    |   {identifier} [name]:LexNameToken
+    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp
+    ;
+    
+objectDesignator {-> package='org.overture.ast.statements'}
+    =   {apply} [object]:objectDesignator [args]:exp*
+    |   {field} [object]:objectDesignator [className]:LexNameToken [fieldName]:LexIdentifierToken
+    |   {identifier} [name]:LexNameToken [expression]:exp.variable
+    |   {new} [expression]:exp.new
+    |   {self} [self]:LexNameToken
+    ;
 
+alternativeStm {-> package='org.overture.ast.statements'}
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp
+    ;
 
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
@@ -382,3 +439,6 @@ multipleBind = [location]:location
 definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [type]:type // [pass]:pass
     ;
     
+#SimpleBlock 
+    =   [statements]:stm*
+    ;
