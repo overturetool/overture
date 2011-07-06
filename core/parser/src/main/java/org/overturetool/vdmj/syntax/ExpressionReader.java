@@ -59,6 +59,8 @@ import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
 import org.overturetool.vdmj.lex.LexException;
@@ -699,7 +701,7 @@ public class ExpressionReader extends SyntaxReader
     						} 
         				}
     					
-    					exp = new AApplyExp(null,exp.getLocation(), exp, null);
+    					exp = new AApplyExp(null,exp.getLocation(), exp, null, null, null);
 //   					exp = new ApplyExpression(exp);
     					nextToken();
     				}
@@ -767,7 +769,7 @@ public class ExpressionReader extends SyntaxReader
 						}
 
 						checkFor(VDMToken.KET, 2122, "Expecting ')' after function args");
-						exp = new AApplyExp(null, exp.getLocation(), exp, args);
+						exp = new AApplyExp(null, exp.getLocation(), exp, args, null, null);
 						//exp = new ApplyExpression(exp, args);
     				}
     				break;
