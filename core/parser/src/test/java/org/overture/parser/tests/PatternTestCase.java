@@ -3,6 +3,7 @@ package org.overture.parser.tests;
 import java.io.File;
 import java.io.PrintWriter;
 
+import org.overture.ast.patterns.PPattern;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -31,7 +32,7 @@ public class PatternTestCase extends BaseParserTestCase
 
 		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect);
 		reader = new PatternReader(ltr);
-//		PPattern expression = reader.readPattern();
+		PPattern expression = reader.readPattern();
 
 		if (reader != null && reader.getErrorCount() > 0)
 		{
@@ -47,14 +48,34 @@ public class PatternTestCase extends BaseParserTestCase
 			reader.printWarnings(new PrintWriter(System.out));
 		}
 
-//		System.out.println("Parsed: " + expression);
+		System.out.println("Parsed: " + expression);
 
 	}
 
 	@Override
-	public void internal(String content)
+	public void internal(String content) throws ParserException, LexException
 	{
-		// TODO Auto-generated method stub
-		
+		Settings.dialect = Dialect.VDM_SL;
+		PatternReader reader = null;
+
+		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
+		reader = new PatternReader(ltr);
+		PPattern expression = reader.readPattern();
+
+		if (reader != null && reader.getErrorCount() > 0)
+		{
+			// perrs += reader.getErrorCount();
+			reader.printErrors(new PrintWriter(System.out));
+			
+		}
+		assertEquals(reader.getErrorCount(), 0);
+
+		if (reader != null && reader.getWarningCount() > 0)
+		{
+			// pwarn += reader.getWarningCount();
+			reader.printWarnings(new PrintWriter(System.out));
+		}
+
+		System.out.println("Parsed: " + expression);
 	}
 }

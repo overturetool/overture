@@ -35,10 +35,9 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.lex.VDMToken;
-import org.overturetool.vdmj.messages.LocatedException;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.messages.LocatedException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -188,7 +187,7 @@ public abstract class SyntaxReader
 	{
 		LexToken tok = reader.getLast();
 
-		if (tok.type == Token.IDENTIFIER)
+		if (tok.type == VDMToken.IDENTIFIER)
 		{
 			LexIdentifierToken id = (LexIdentifierToken)tok;
 			
@@ -263,7 +262,7 @@ public abstract class SyntaxReader
 	{
 		LexToken tok = reader.getLast();
 
-		if (tok.type == Token.IDENTIFIER)
+		if (tok.type == VDMToken.IDENTIFIER)
 		{
 			nextToken();
 			LexIdentifierToken id = (LexIdentifierToken)tok;
@@ -276,7 +275,7 @@ public abstract class SyntaxReader
 			return id;
 		}
 
-		if (tok.type == Token.NAME)
+		if (tok.type == VDMToken.NAME)
 		{
 			message = "Found qualified name " + tok + ". " + message;
 		}
@@ -529,7 +528,7 @@ public abstract class SyntaxReader
 	 * @param upto A list of tokens to recover to.
 	 */
 
-	protected void report(LocatedException error, Token[] after, Token[] upto)
+	protected void report(LocatedException error, VDMToken[] after, VDMToken[] upto)
 	{
 		VDMError vdmerror = new VDMError(error);
 		errors.add(vdmerror);
@@ -543,14 +542,14 @@ public abstract class SyntaxReader
 		// Either leave one token beyond something in the after list, or
 		// at something in the next upto list.
 
-		List<Token> afterList = Arrays.asList(after);
-		List<Token> uptoList = Arrays.asList(upto);
+		List<VDMToken> afterList = Arrays.asList(after);
+		List<VDMToken> uptoList = Arrays.asList(upto);
 
 		try
 		{
-    		Token tok = lastToken().type;
+    		VDMToken tok = lastToken().type;
 
-    		while (!uptoList.contains(tok) && tok != Token.EOF)
+    		while (!uptoList.contains(tok) && tok != VDMToken.EOF)
     		{
     			if (afterList.contains(tok))
     			{

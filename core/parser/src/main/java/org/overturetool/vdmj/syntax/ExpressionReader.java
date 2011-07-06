@@ -45,7 +45,7 @@ import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.lex.VDMToken;
 
 
 

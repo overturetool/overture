@@ -583,7 +583,7 @@ public class LexTokenReader extends BacktrackInputReader
 	 * Read the next complete token from the input stream. Whitespace is
 	 * skipped, and the start line and position of the token are noted from the
 	 * current stream position. Then the next character to process is used to
-	 * drive a large switch statement to produce the right {@link Token}. The
+	 * drive a large switch statement to produce the right {@link VDMToken}. The
 	 * lastToken field is updated and the result returned.
 	 *
 	 * @return The next token, or a LexToken of type EOF.
@@ -598,14 +598,14 @@ public class LexTokenReader extends BacktrackInputReader
 
 		int tokline = linecount;
 		int tokpos = charpos;
-		Token type = null;
+		VDMToken type = null;
 		last = null;
 		boolean rdch = true;
 
 		switch (ch)
 		{
 			case EOF:
-				type = Token.EOF;
+				type = VDMToken.EOF;
 				break;
 
 			case '-':
@@ -620,28 +620,28 @@ public class LexTokenReader extends BacktrackInputReader
 				}
 				else if (ch == '>')
 				{
-					type = Token.ARROW;
+					type = VDMToken.ARROW;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.MINUS;
+					type = VDMToken.MINUS;
 				}
 				break;
 
 			case '+':
 				if (rdCh() == '>')
 				{
-					type = Token.TOTAL_FUNCTION;
+					type = VDMToken.TOTAL_FUNCTION;
 				}
 				else if (ch == '+')
 				{
-					type = Token.PLUSPLUS;
+					type = VDMToken.PLUSPLUS;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.PLUS;
+					type = VDMToken.PLUS;
 				}
 				break;
 
@@ -650,30 +650,30 @@ public class LexTokenReader extends BacktrackInputReader
 				{
 					if (rdCh() == '>')
 					{
-						type = Token.RANGERESBY;
+						type = VDMToken.RANGERESBY;
 					}
 					else
 					{
 						rdch = false;
-						type = Token.EQABST;
+						type = VDMToken.EQABST;
 					}
 				}
 				else if (ch == '>')
 				{
-					type = Token.RANGERESTO;
+					type = VDMToken.RANGERESTO;
 				}
 				else if (ch == '=')
 				{
-					type = Token.ASSIGN;
+					type = VDMToken.ASSIGN;
 				}
 				else if (ch == ':')
 				{
-					type = Token.COLONCOLON;
+					type = VDMToken.COLONCOLON;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.COLON;
+					type = VDMToken.COLON;
 				}
 				break;
 
@@ -682,7 +682,7 @@ public class LexTokenReader extends BacktrackInputReader
 				{
 					if (rdCh() == '>')
 					{
-						type = Token.MAPLET;
+						type = VDMToken.MAPLET;
 					}
 					else
 					{
@@ -691,12 +691,12 @@ public class LexTokenReader extends BacktrackInputReader
 				}
 				else if (ch == '|')
 				{
-					type = Token.PIPEPIPE;
+					type = VDMToken.PIPEPIPE;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.PIPE;
+					type = VDMToken.PIPE;
 				}
 				break;
 
@@ -705,7 +705,7 @@ public class LexTokenReader extends BacktrackInputReader
 				{
 					if (rdCh() == '.')
 					{
-						type = Token.RANGE;
+						type = VDMToken.RANGE;
 						break;
 					}
 
@@ -714,7 +714,7 @@ public class LexTokenReader extends BacktrackInputReader
 				else
 				{
 					rdch = false;
-					type = Token.POINT;
+					type = VDMToken.POINT;
 				}
 				break;
 
@@ -723,34 +723,34 @@ public class LexTokenReader extends BacktrackInputReader
 				{
 					if (rdCh() == '>')
 					{
-						type = Token.OPDEF;
+						type = VDMToken.OPDEF;
 					}
 					else
 					{
 						rdch = false;
-						type = Token.EQUALSEQUALS;
+						type = VDMToken.EQUALSEQUALS;
 					}
 				}
 				else if (ch == '>')
 				{
-					type = Token.IMPLIES;
+					type = VDMToken.IMPLIES;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.EQUALS;
+					type = VDMToken.EQUALS;
 				}
 				break;
 
 			case '*':
 				if (rdCh() == '*')
 				{
-					type = Token.STARSTAR;
+					type = VDMToken.STARSTAR;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.TIMES;
+					type = VDMToken.TIMES;
 				}
 				break;
 
@@ -761,25 +761,25 @@ public class LexTokenReader extends BacktrackInputReader
 					unpush();
 					if (rdCh() == '>')
 					{
-						type = Token.EQUIVALENT;
+						type = VDMToken.EQUIVALENT;
 					}
 					else
 					{
 						rdch = false;
-						type = Token.LE;
+						type = VDMToken.LE;
 					}
 				}
 				else if (ch == ':')
 				{
 					unpush();
-					type = Token.DOMRESTO;
+					type = VDMToken.DOMRESTO;
 				}
 				else if (ch == '-')
 				{
 					unpush();
 					if (rdCh() == ':')
 					{
-						type = Token.DOMRESBY;
+						type = VDMToken.DOMRESBY;
 					}
 					else
 					{
@@ -789,7 +789,7 @@ public class LexTokenReader extends BacktrackInputReader
 				else if (ch == '>')
 				{
 					unpush();
-					type = Token.NE;
+					type = VDMToken.NE;
 				}
 				else if (startOfName(ch))
 				{
@@ -801,31 +801,31 @@ public class LexTokenReader extends BacktrackInputReader
 						unpush();
 						last = new LexQuoteToken(name,
 								location(tokline, tokpos));
-						type = Token.QUOTE;
+						type = VDMToken.QUOTE;
 					}
 					else
 					{
 						pop();
-						type = Token.LT;
+						type = VDMToken.LT;
 					}
 				}
 				else
 				{
 					unpush();
 					rdch = false;
-					type = Token.LT;
+					type = VDMToken.LT;
 				}
 				break;
 
 			case '>':
 				if (rdCh() == '=')
 				{
-					type = Token.GE;
+					type = VDMToken.GE;
 				}
 				else
 				{
 					rdch = false;
-					type = Token.GT;
+					type = VDMToken.GT;
 				}
 				break;
 
@@ -865,7 +865,7 @@ public class LexTokenReader extends BacktrackInputReader
 						rdCh();
 					} while (Character.isLetter(ch));
 
-					type = Token.lookup(tag.toString(), dialect);
+					type = VDMToken.lookup(tag.toString(), dialect);
 
 					if (type == null)
 					{
@@ -876,7 +876,7 @@ public class LexTokenReader extends BacktrackInputReader
 				}
 				else
 				{
-					type = Token.HASH;
+					type = VDMToken.HASH;
 					rdch = false;
 				}
 				break;
@@ -903,49 +903,49 @@ public class LexTokenReader extends BacktrackInputReader
 				}
 				else
 				{
-					type = Token.DIVIDE;
+					type = VDMToken.DIVIDE;
 					rdch = false;
 				}
 				break;
 
 			case ',':
-				type = Token.COMMA;
+				type = VDMToken.COMMA;
 				break;
 			case ';':
-				type = Token.SEMICOLON;
+				type = VDMToken.SEMICOLON;
 				break;
 			case '?':
-				type = Token.QMARK;
+				type = VDMToken.QMARK;
 				break;
 			case '@':
-				type = Token.AT;
+				type = VDMToken.AT;
 				break;
 			case '&':
-				type = Token.AMPERSAND;
+				type = VDMToken.AMPERSAND;
 				break;
 			case '^':
-				type = Token.CONCATENATE;
+				type = VDMToken.CONCATENATE;
 				break;
 			case '(':
-				type = Token.BRA;
+				type = VDMToken.BRA;
 				break;
 			case ')':
-				type = Token.KET;
+				type = VDMToken.KET;
 				break;
 			case '{':
-				type = Token.SET_OPEN;
+				type = VDMToken.SET_OPEN;
 				break;
 			case '}':
-				type = Token.SET_CLOSE;
+				type = VDMToken.SET_CLOSE;
 				break;
 			case '[':
-				type = Token.SEQ_OPEN;
+				type = VDMToken.SEQ_OPEN;
 				break;
 			case ']':
-				type = Token.SEQ_CLOSE;
+				type = VDMToken.SEQ_CLOSE;
 				break;
 			case '\\':
-				type = Token.SETDIFF;
+				type = VDMToken.SETDIFF;
 				break;
 
 			default:
@@ -962,7 +962,7 @@ public class LexTokenReader extends BacktrackInputReader
 					switch (name.size())
 					{
 						case 1:
-							type = Token.lookup(name.get(0), dialect);
+							type = VDMToken.lookup(name.get(0), dialect);
 
 							if (type == null)
 							{

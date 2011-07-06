@@ -26,10 +26,17 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.patterns.*;
+import org.overture.ast.patterns.ADefPatternBind;
+import org.overture.ast.patterns.AMultipleSetMultipleBind;
+import org.overture.ast.patterns.AMultipleTypeMultipleBind;
+import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.PBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.PPatternBind;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.lex.VDMToken;
 
 /**

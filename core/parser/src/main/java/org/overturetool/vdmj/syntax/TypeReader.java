@@ -28,14 +28,36 @@ import java.util.Vector;
 
 import org.overture.ast.node.tokens.TBool;
 import org.overture.ast.node.tokens.TChar;
-import org.overture.ast.node.tokens.TInt;
-import org.overture.ast.node.tokens.TNat;
-import org.overture.ast.node.tokens.TNatOne;
-import org.overture.ast.node.tokens.TRat;
-import org.overture.ast.node.tokens.TReal;
 import org.overture.ast.node.tokens.TStringLiteral;
 import org.overture.ast.node.tokens.TTokenLiteral;
-import org.overture.ast.types.*;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapType;
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.AMapType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ARationalNumericBasicType;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeq1Type;
+import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidType;
+import org.overture.ast.types.PField;
+import org.overture.ast.types.PType;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -43,7 +65,8 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.lex.VDMToken;
+
 
 
 
@@ -63,8 +86,8 @@ public class TypeReader extends SyntaxReader
 	{
 		PType type = readUnionType();
 
-		if (lastToken().is(Token.ARROW) ||
-			lastToken().is(Token.TOTAL_FUNCTION))
+		if (lastToken().is(VDMToken.ARROW) ||
+			lastToken().is(VDMToken.TOTAL_FUNCTION))
 		{
 			LexToken token = lastToken();
 			nextToken();
@@ -76,7 +99,7 @@ public class TypeReader extends SyntaxReader
 			}
 
 			type = new AFunctionType(token.location,
-				token.is(Token.ARROW), productExpand(type), result);
+				token.is(VDMToken.ARROW), productExpand(type), result);
 		}
 
 		return type;
@@ -87,7 +110,7 @@ public class TypeReader extends SyntaxReader
 	{
 		PType type = readComposeType();
 
-		while (lastToken().type == Token.PIPE)
+		while (lastToken().type == VDMToken.PIPE)
 		{
 			LexToken token = lastToken();
 			nextToken();
@@ -105,13 +128,13 @@ public class TypeReader extends SyntaxReader
 	{
 		PType type = null;
 
-		if (lastToken().is(Token.COMPOSE))
+		if (lastToken().is(VDMToken.COMPOSE))
 		{
 			nextToken();
 			LexIdentifierToken id = readIdToken("Compose not followed by record identifier");
-			checkFor(Token.OF, 2249, "Missing 'of' in compose type");
+			checkFor(VDMToken.OF, 2249, "Missing 'of' in compose type");
 			type = new ARecordInvariantType(id.location,idToName(id), readFieldList(),null);
-			checkFor(Token.END, 2250, "Missing 'end' in compose type");
+			checkFor(VDMToken.END, 2250, "Missing 'end' in compose type");
 		}
 		else
 		{
@@ -126,17 +149,17 @@ public class TypeReader extends SyntaxReader
 	{
 		List<PField> list = new Vector<PField>();
 
-		while (lastToken().isNot(Token.END) &&
-			   lastToken().isNot(Token.SEMICOLON) &&
-			   lastToken().isNot(Token.INV))
+		while (lastToken().isNot(VDMToken.END) &&
+			   lastToken().isNot(VDMToken.SEMICOLON) &&
+			   lastToken().isNot(VDMToken.INV))
 		{
 			reader.push();
 			LexToken tag = lastToken();
 			LexToken separator = nextToken();
 
-			if (separator.is(Token.COLON))
+			if (separator.is(VDMToken.COLON))
 			{
-				if (tag.isNot(Token.IDENTIFIER))
+				if (tag.isNot(VDMToken.IDENTIFIER))
 				{
 					throwMessage(2071, "Expecting field identifier before ':'");
 				}
@@ -144,18 +167,18 @@ public class TypeReader extends SyntaxReader
 				nextToken();
 				LexIdentifierToken tagid = (LexIdentifierToken)tag;
 
-				if (tagid.old)
+				if (tagid.isOld())
 				{
 					throwMessage(2295, "Can't use old name here", tag);
 				}
 				
 				LexNameToken tagname = idToName(tagid);
-				list.add(new AFieldField(null,null,null,tagname, tagid.name, readType(), false));
+				list.add(new AFieldField(null,null,null,tagname, tagid.getName(), readType(), false));
 				reader.unpush();
 			}
-			else if (separator.is(Token.EQABST))
+			else if (separator.is(VDMToken.EQABST))
 			{
-				if (tag.isNot(Token.IDENTIFIER))
+				if (tag.isNot(VDMToken.IDENTIFIER))
 				{
 					throwMessage(2072, "Expecting field name before ':-'");
 				}
@@ -163,13 +186,13 @@ public class TypeReader extends SyntaxReader
 				nextToken();
 				LexIdentifierToken tagid = (LexIdentifierToken)tag;
 
-				if (tagid.old)
+				if (tagid.isOld())
 				{
 					throwMessage(2295, "Can't use old name here", tag);
 				}
 
 				LexNameToken tagname = idToName(tagid);
-				list.add(new AFieldField(null,null,null,tagname, tagid.name, readType(), true));
+				list.add(new AFieldField(null,null,null,tagname, tagid.getName(), readType(), true));
 				reader.unpush();
 			}
 			else	// Anonymous field or end of fields
@@ -215,7 +238,7 @@ public class TypeReader extends SyntaxReader
 		List<PType> productList = new Vector<PType>();
 		productList.add(type);
 
-		while (lastToken().type == Token.TIMES)
+		while (lastToken().type == VDMToken.TIMES)
 		{
 			nextToken();
 			productList.add(readMapType());
@@ -240,14 +263,14 @@ public class TypeReader extends SyntaxReader
 			case MAP:
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
-				checkFor(Token.TO, 2251, "Expecting 'to' in map type");
+				checkFor(VDMToken.TO, 2251, "Expecting 'to' in map type");
 				type = new AMapType(token.location, type, readMapType(),false);
 				break;
 
 			case INMAP:
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
-				checkFor(Token.TO, 2252, "Expecting 'to' in inmap type");
+				checkFor(VDMToken.TO, 2252, "Expecting 'to' in inmap type");
 				type = new AInMapType(token.location, type, readMapType());
 				break;
 
@@ -269,19 +292,19 @@ public class TypeReader extends SyntaxReader
 		{
 			case SET:
 				nextToken();
-				checkFor(Token.OF, 2253, "Expecting 'of' after set");
+				checkFor(VDMToken.OF, 2253, "Expecting 'of' after set");
 				type = new ASetType(token.location, readMapType(),false);
 				break;
 
 			case SEQ:
 				nextToken();
-				checkFor(Token.OF, 2254, "Expecting 'of' after seq");
+				checkFor(VDMToken.OF, 2254, "Expecting 'of' after seq");
 				type = new ASeqType(token.location, readMapType(),false);
 				break;
 
 			case SEQ1:
 				nextToken();
-				checkFor(Token.OF, 2255, "Expecting 'of' after seq1");
+				checkFor(VDMToken.OF, 2255, "Expecting 'of' after seq1");
 				type = new ASeq1Type(token.location, readMapType(),false);
 				break;
 
@@ -303,12 +326,12 @@ public class TypeReader extends SyntaxReader
 		switch (token.type)
 		{
 			case NAT:
-				type = new ANatNumericBasicType(location,new TNat(token.type.name()));
+				type = new ANatNumericBasicType(location);
 				nextToken();
 				break;
 
 			case NAT1:
-				type = new ANatOneNumericBasicType(location, new TNatOne(token.type.name()));
+				type = new ANatOneNumericBasicType(location);
 				nextToken();
 				break;
 
@@ -318,17 +341,17 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case REAL:
-				type = new ARealNumericBasicType(location, new TReal(token.type.name()));
+				type = new ARealNumericBasicType(location);
 				nextToken();
 				break;
 
 			case INT:
-				type = new AIntNumericBasicType(location, new TInt(token.type.name()));
+				type = new AIntNumericBasicType(location);
 				nextToken();
 				break;
 
 			case RAT:
-				type = new ARationalNumericBasicType(location, new TRat(token.type.name()));
+				type = new ARationalNumericBasicType(location);
 				nextToken();
 				break;
 
@@ -348,7 +371,7 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case BRA:
-				if (nextToken().is(Token.KET))
+				if (nextToken().is(VDMToken.KET))
 				{
 					type = new AVoidType(location);
 					nextToken();
@@ -356,14 +379,14 @@ public class TypeReader extends SyntaxReader
 				else
 				{
 					type = new ABracketType(location, readType());
-					checkFor(Token.KET, 2256, "Bracket mismatch");
+					checkFor(VDMToken.KET, 2256, "Bracket mismatch");
 				}
 				break;
 
 			case SEQ_OPEN:
 				nextToken();
 				type = new AOptionalType(location, readType());
-				checkFor(Token.SEQ_CLOSE, 2257, "Missing close bracket after optional type");
+				checkFor(VDMToken.SEQ_CLOSE, 2257, "Missing close bracket after optional type");
 				break;
 
 			case NIL:
@@ -405,7 +428,7 @@ public class TypeReader extends SyntaxReader
 	{
 		PType paramtype = readType();
 		LexToken arrow = lastToken();
-		checkFor(Token.OPDEF, 2258, "Expecting '==>' in explicit operation type");
+		checkFor(VDMToken.OPDEF, 2258, "Expecting '==>' in explicit operation type");
 		PType resulttype = readType();
 		return new AOperationType(arrow.location, productExpand(paramtype), resulttype);
 	}
