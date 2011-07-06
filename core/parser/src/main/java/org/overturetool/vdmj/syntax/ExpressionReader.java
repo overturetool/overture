@@ -788,7 +788,7 @@ public class ExpressionReader extends SyntaxReader
     				}
 
     				checkFor(VDMToken.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
-   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types,null);
+   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types,null,null);
     				//exp = new FuncInstantiationExpression(exp, types);
     				break;
 
