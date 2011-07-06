@@ -41,8 +41,10 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
+import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
@@ -266,7 +268,10 @@ public class UnionPattern extends Pattern
 		list.add(left.getPossibleType());
 		list.add(right.getPossibleType());
 
-		return list.getType(location);
+		Type s = list.getType(location);
+		
+		return s.isUnknown() ?
+			new SetType(location, new UnknownType(location)) : s;
 	}
 
 	@Override

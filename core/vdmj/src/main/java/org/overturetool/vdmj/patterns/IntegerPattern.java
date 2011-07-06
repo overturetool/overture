@@ -31,7 +31,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.IntegerType;
+import org.overturetool.vdmj.types.NumericType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
@@ -83,7 +83,7 @@ public class IntegerPattern extends Pattern
 	@Override
 	public Type getPossibleType()
 	{
-		return new IntegerType(location);
+		return NumericType.typeOf(value.value, location);
 	}
 
 	@Override

@@ -86,6 +86,12 @@ public class CaseAlternative implements Serializable
 		}
 
 		defs.typeCheck(base, scope);
+		
+		if (!pattern.matches(expType))
+		{
+			pattern.report(3311, "Pattern cannot match");
+		}
+		
 		Environment local = new FlatCheckedEnvironment(defs, base, scope);
 		Type r = result.typeCheck(local, null, scope);
 		local.unusedCheck();

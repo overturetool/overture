@@ -90,6 +90,12 @@ public class CaseStmtAlternative implements Serializable
 		}
 
 		defs.typeCheck(base, scope);
+
+		if (!pattern.matches(ctype))
+		{
+			pattern.report(3311, "Pattern cannot match");
+		}
+		
 		Environment local = new FlatCheckedEnvironment(defs, base, scope);
 		Type r = statement.typeCheck(local, scope);
 		local.unusedCheck();

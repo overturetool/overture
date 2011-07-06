@@ -35,6 +35,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
@@ -96,6 +97,12 @@ public abstract class Pattern implements Serializable
 
 	/** Get the type(s) that could match this pattern. */
 	abstract public Type getPossibleType();
+	
+	/** Test whether the pattern can match the type passed */
+	public boolean matches(Type type)
+	{
+		return TypeComparator.compatible(getPossibleType(), type);
+	}
 
 	/**
 	 * @return A list of the pattern's variable names.

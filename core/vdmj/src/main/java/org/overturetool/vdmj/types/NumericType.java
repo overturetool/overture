@@ -47,4 +47,20 @@ public abstract class NumericType extends BasicType
 	{
 		return this;
 	}
+	
+	public static NumericType typeOf(long iv, LexLocation location)
+	{
+		if (iv > 0)
+		{
+			return new NaturalOneType(location);
+		}
+		else if (iv >= 0)
+		{
+			return new NaturalType(location);
+		}
+		else
+		{
+			return new IntegerType(location);
+		}
+	}
 }
