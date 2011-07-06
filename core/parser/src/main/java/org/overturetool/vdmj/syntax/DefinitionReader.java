@@ -27,30 +27,17 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Arrays;
 
+import org.overture.ast.definitions.*;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.tokens.TAsync;
+import org.overture.ast.node.tokens.TStatic;
+import org.overture.ast.node.tokens.TStringLiteral;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.*;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.definitions.AccessSpecifier;
-import org.overturetool.vdmj.definitions.AssignmentDefinition;
-import org.overturetool.vdmj.definitions.ClassInvariantDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.EqualsDefinition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
-import org.overturetool.vdmj.definitions.MutexSyncDefinition;
-import org.overturetool.vdmj.definitions.PerSyncDefinition;
-import org.overturetool.vdmj.definitions.StateDefinition;
-import org.overturetool.vdmj.definitions.ThreadDefinition;
-import org.overturetool.vdmj.definitions.NamedTraceDefinition;
-import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.expressions.EqualsExpression;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.ExpressionList;
+
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -60,43 +47,11 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.MultipleBind;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.patterns.SetBind;
-import org.overturetool.vdmj.patterns.TuplePattern;
-import org.overturetool.vdmj.patterns.TypeBind;
-import org.overturetool.vdmj.statements.CallObjectStatement;
-import org.overturetool.vdmj.statements.CallStatement;
-import org.overturetool.vdmj.statements.ErrorCase;
-import org.overturetool.vdmj.statements.ExternalClause;
-import org.overturetool.vdmj.statements.SpecificationStatement;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.traces.TraceApplyExpression;
-import org.overturetool.vdmj.traces.TraceConcurrentExpression;
-import org.overturetool.vdmj.traces.TraceLetDefBinding;
-import org.overturetool.vdmj.traces.TraceLetBeStBinding;
-import org.overturetool.vdmj.traces.TraceBracketedExpression;
-import org.overturetool.vdmj.traces.TraceCoreDefinition;
-import org.overturetool.vdmj.traces.TraceDefinitionTerm;
-import org.overturetool.vdmj.traces.TraceDefinition;
-import org.overturetool.vdmj.traces.TraceRepeatDefinition;
+
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.Field;
-import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.InvariantType;
-import org.overturetool.vdmj.types.NamedType;
-import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.PatternListTypePair;
-import org.overturetool.vdmj.types.PatternTypePair;
-import org.overturetool.vdmj.types.ProductType;
-import org.overturetool.vdmj.types.RecordType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.types.UnresolvedType;
+
 
 
 /**
@@ -110,27 +65,27 @@ public class DefinitionReader extends SyntaxReader
 		super(reader);
 	}
 
-	private static Token[] sectionArray =
+	private static VDMToken[] sectionArray =
 	{
-		Token.TYPES,
-		Token.FUNCTIONS,
-		Token.STATE,
-		Token.VALUES,
-		Token.OPERATIONS,
-		Token.INSTANCE,
-		Token.THREAD,
-		Token.SYNC,
-		Token.TRACES,
-		Token.END,
-		Token.EOF
+		VDMToken.TYPES,
+		VDMToken.FUNCTIONS,
+		VDMToken.STATE,
+		VDMToken.VALUES,
+		VDMToken.OPERATIONS,
+		VDMToken.INSTANCE,
+		VDMToken.THREAD,
+		VDMToken.SYNC,
+		VDMToken.TRACES,
+		VDMToken.END,
+		VDMToken.EOF
 	};
 
-	private static Token[] afterArray =
+	private static VDMToken[] afterArray =
 	{
-		Token.SEMICOLON
+		VDMToken.SEMICOLON
 	};
 
-	private static List<Token> sectionList = Arrays.asList(sectionArray);
+	private static List<VDMToken> sectionList = Arrays.asList(sectionArray);
 
 	private boolean newSection() throws LexException
 	{
@@ -142,12 +97,12 @@ public class DefinitionReader extends SyntaxReader
 		return sectionList.contains(tok.type);
 	}
 
-	public DefinitionList readDefinitions() throws ParserException, LexException
+	public List<PDefinition> readDefinitions() throws ParserException, LexException
 	{
-		DefinitionList list = new DefinitionList();
+		List<PDefinition> list = new Vector<PDefinition>();
 		boolean threadDone = false;
 
-		while (lastToken().isNot(Token.EOF) && lastToken().isNot(Token.END))
+		while (lastToken().isNot(VDMToken.EOF) && lastToken().isNot(VDMToken.END))
 		{
 			switch (lastToken().type)
 			{
@@ -172,7 +127,7 @@ public class DefinitionReader extends SyntaxReader
 
         				if (!newSection())
         				{
-        					checkFor(Token.SEMICOLON,
+        					checkFor(VDMToken.SEMICOLON,
         						2080, "Missing ';' after state definition");
         				}
     				}
@@ -231,7 +186,7 @@ public class DefinitionReader extends SyntaxReader
 
         				if (!newSection())
         				{
-        					checkFor(Token.SEMICOLON,
+        					checkFor(VDMToken.SEMICOLON,
         						2085, "Missing ';' after thread definition");
         				}
     				}
@@ -268,19 +223,24 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private AccessSpecifier readAccessSpecifier(boolean async)
+	private PAccessSpecifier readAccessSpecifier(boolean async)
 		throws LexException, ParserException
 	{
 		if (dialect == Dialect.VDM_SL)
 		{
-			return AccessSpecifier.DEFAULT;
+			return new AAccessSpecifierAccessSpecifier(
+					new APrivateAccess(),null,null);
+			//return AccessSpecifier.DEFAULT;
 		}
 
 		// Defaults
-		boolean isStatic = false;
-		boolean isAsync = false;
-		Token access = Token.PRIVATE;
-
+//		boolean isStatic = false;
+//		boolean isAsync = false;
+		TStatic isStatic = null;
+		TAsync isAsync = null;
+		//VDMToken access = VDMToken.PRIVATE;
+		PAccess access = new APrivateAccess();	
+				
 		boolean more = true;
 
 		while (more)
@@ -290,7 +250,7 @@ public class DefinitionReader extends SyntaxReader
 				case ASYNC:
 					if (async)
 					{
-						isAsync = true;
+						isAsync = new TAsync();
 						nextToken();
 					}
 					else
@@ -301,14 +261,21 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case STATIC:
-					isStatic = true;
+					isStatic = new TStatic();
 					nextToken();
 					break;
 
 				case PUBLIC:
+					access = new APublicAccess();
+					nextToken();
+					break;
 				case PRIVATE:
+					access = new APrivateAccess();
+					nextToken();
+					break;
 				case PROTECTED:
-					access = lastToken().type;
+					//access = lastToken().type;
+					access = new AProtectedAccess();
 					nextToken();
 					break;
 
@@ -318,23 +285,26 @@ public class DefinitionReader extends SyntaxReader
 			}
 		}
 
-		return new AccessSpecifier(isStatic, isAsync, access);
+		return new AAccessSpecifierAccessSpecifier(access,isStatic, isAsync);
 	}
 
-	public TypeDefinition readTypeDefinition() throws ParserException, LexException
+	public ATypeDefinition readTypeDefinition() throws ParserException, LexException
 	{
 		LexIdentifierToken id = readIdToken("Expecting new type identifier");
 		TypeReader tr = getTypeReader();
-		InvariantType invtype = null;
+		SInvariantType invtype = null;
 
 		switch (lastToken().type)
 		{
 			case EQUALS:
 				nextToken();
-				NamedType nt = new NamedType(idToName(id), tr.readType());
+//				NamedType nt = new NamedType(idToName(id), tr.readType());
+				PType type = tr.readType();
+				ANamedInvariantType nt = 
+					new ANamedInvariantType(id.location,idToName(id), type,null);
 
-				if (nt.type instanceof UnresolvedType &&
-					((UnresolvedType)nt.type).typename.equals(nt.typename))
+				if (type instanceof AUnresolvedType &&
+					((AUnresolvedType)type).typename.equals(nt.typename))
 				{
 					throwMessage(2014, "Recursive type declaration");
 				}
@@ -344,7 +314,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case COLONCOLON:
 				nextToken();
-				invtype = new RecordType(idToName(id), tr.readFieldList());
+				invtype = new ARecordType(idToName(id), tr.readFieldList());
 				break;
 
 			default:
@@ -354,21 +324,21 @@ public class DefinitionReader extends SyntaxReader
 		Pattern invPattern = null;
 		Expression invExpression = null;
 
-		if (lastToken().is(Token.INV))
+		if (lastToken().is(VDMToken.INV))
 		{
 			nextToken();
 			invPattern =  getPatternReader().readPattern();
-			checkFor(Token.EQUALSEQUALS, 2087, "Expecting '==' after pattern in invariant");
+			checkFor(VDMToken.EQUALSEQUALS, 2087, "Expecting '==' after pattern in invariant");
 			invExpression = getExpressionReader().readExpression();
 		}
 
 		return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}
 
-	private DefinitionList readTypes() throws LexException, ParserException
+	private List<PDefinition> readTypes() throws LexException, ParserException
 	{
-		checkFor(Token.TYPES, 2013, "Expected 'types'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.TYPES, 2013, "Expected 'types'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
@@ -383,7 +353,7 @@ public class DefinitionReader extends SyntaxReader
 
 				if (!newSection())
 				{
-					checkFor(Token.SEMICOLON,
+					checkFor(VDMToken.SEMICOLON,
 						2078, "Missing ';' after type definition");
 				}
 			}
@@ -396,17 +366,17 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private DefinitionList readValues() throws LexException, ParserException
+	private List<PDefinition> readValues() throws LexException, ParserException
 	{
-		checkFor(Token.VALUES, 2013, "Expected 'values'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.VALUES, 2013, "Expected 'values'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
 			try
 			{
-				AccessSpecifier access = readAccessSpecifier(false);
-				Definition def = readValueDefinition(NameScope.GLOBAL);
+				PAccess access = readAccessSpecifier(false);
+				PDefinition def = readValueDefinition(NameScope.GLOBAL);
 
 				// Force all values to be static
 				def.setAccessSpecifier(access.getStatic(true));
@@ -414,7 +384,7 @@ public class DefinitionReader extends SyntaxReader
 
 				if (!newSection())
 				{
-					checkFor(Token.SEMICOLON,
+					checkFor(VDMToken.SEMICOLON,
 						2081, "Missing ';' after value definition");
 				}
 			}
@@ -427,17 +397,17 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private DefinitionList readFunctions() throws LexException, ParserException
+	private List<PDefinition> readFunctions() throws LexException, ParserException
 	{
-		checkFor(Token.FUNCTIONS, 2013, "Expected 'functions'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.FUNCTIONS, 2013, "Expected 'functions'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
 			try
 			{
-				AccessSpecifier access = readAccessSpecifier(false);
-				Definition def = readFunctionDefinition(NameScope.GLOBAL);
+				PAccessSpecifier access = readAccessSpecifier(false);
+				PDefinition def = readFunctionDefinition(NameScope.GLOBAL);
 
 				if (Settings.release == Release.VDM_10)
 				{
@@ -453,7 +423,7 @@ public class DefinitionReader extends SyntaxReader
 
 				if (!newSection())
 				{
-					checkFor(Token.SEMICOLON,
+					checkFor(VDMToken.SEMICOLON,
 						2079, "Missing ';' after function definition");
 				}
 			}
@@ -466,23 +436,23 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	public DefinitionList readOperations() throws LexException, ParserException
+	public List<PDefinition> readOperations() throws LexException, ParserException
 	{
-		checkFor(Token.OPERATIONS, 2013, "Expected 'operations'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.OPERATIONS, 2013, "Expected 'operations'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
 			try
 			{
-				AccessSpecifier access = readAccessSpecifier(dialect == Dialect.VDM_RT);
-				Definition def = readOperationDefinition();
+				PAccess access = readAccessSpecifier(dialect == Dialect.VDM_RT);
+				PDefinition def = readOperationDefinition();
 				def.setAccessSpecifier(access);
 				list.add(def);
 
 				if (!newSection())
 				{
-					checkFor(Token.SEMICOLON,
+					checkFor(VDMToken.SEMICOLON,
 						2082, "Missing ';' after operation definition");
 				}
 			}
@@ -495,22 +465,22 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	public DefinitionList readInstanceVariables() throws LexException, ParserException
+	public List<PDefinition> readInstanceVariables() throws LexException, ParserException
 	{
-		checkFor(Token.INSTANCE, 2083, "Expected 'instance variables'");
-		checkFor(Token.VARIABLES, 2083, "Expecting 'instance variables'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.INSTANCE, 2083, "Expected 'instance variables'");
+		checkFor(VDMToken.VARIABLES, 2083, "Expecting 'instance variables'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
 			try
 			{
-				Definition def = readInstanceVariableDefinition();
+				PDefinition def = readInstanceVariableDefinition();
 				list.add(def);
 
 				if (!newSection())
 				{
-					checkFor(Token.SEMICOLON,
+					checkFor(VDMToken.SEMICOLON,
 						2084, "Missing ';' after instance variable definition");
 				}
 			}
@@ -523,21 +493,21 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private DefinitionList readTraces() throws LexException, ParserException
+	private List<PDefinition> readTraces() throws LexException, ParserException
 	{
-		checkFor(Token.TRACES, 2013, "Expected 'traces'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.TRACES, 2013, "Expected 'traces'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
 			try
 			{
-				Definition def = readNamedTraceDefinition();
+				PDefinition def = readNamedTraceDefinition();
 				list.add(def);
 
 				if (!newSection())
 				{
-					ignore(Token.SEMICOLON);	// Optional?
+					ignore(VDMToken.SEMICOLON);	// Optional?
 				}
 			}
 			catch (LocatedException e)
@@ -549,21 +519,21 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private DefinitionList readSyncs() throws LexException, ParserException
+	private List<PDefinition> readSyncs() throws LexException, ParserException
 	{
-		checkFor(Token.SYNC, 2013, "Expected 'sync'");
-		DefinitionList list = new DefinitionList();
+		checkFor(VDMToken.SYNC, 2013, "Expected 'sync'");
+		List<PDefinition> list = new Vector<PDefinition>();
 
 		while (!newSection())
 		{
 			try
 			{
-				Definition def = readPermissionPredicateDefinition();
+				PDefinition def = readPermissionPredicateDefinition();
 				list.add(def);
 
 				if (!newSection())
 				{
-					checkFor(Token.SEMICOLON,
+					checkFor(VDMToken.SEMICOLON,
 						2086, "Missing ';' after sync definition");
 				}
 			}
@@ -580,31 +550,31 @@ public class DefinitionReader extends SyntaxReader
 	{
 		LexNameList typeParams = null;
 
-		if (lastToken().is(Token.SEQ_OPEN))
+		if (lastToken().is(VDMToken.SEQ_OPEN))
 		{
 			typeParams = new LexNameList();
 			nextToken();
-			checkFor(Token.AT, 2088, "Expecting '@' before type parameter");
+			checkFor(VDMToken.AT, 2088, "Expecting '@' before type parameter");
 			LexIdentifierToken tid = readIdToken("Expecting '@identifier' in type parameter list");
 			typeParams.add(idToName(tid));
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
-				checkFor(Token.AT, 2089, "Expecting '@' before type parameter");
+				checkFor(VDMToken.AT, 2089, "Expecting '@' before type parameter");
 				tid = readIdToken("Expecting '@identifier' in type parameter list");
 				typeParams.add(idToName(tid));
 			}
 
-			checkFor(Token.SEQ_CLOSE, 2090, "Expecting ']' after type parameters");
+			checkFor(VDMToken.SEQ_CLOSE, 2090, "Expecting ']' after type parameters");
 		}
 
 		return typeParams;
 	}
 
-	private Definition readFunctionDefinition(NameScope scope)
+	private PDefinition readFunctionDefinition(NameScope scope)
 		throws ParserException, LexException
 	{
-		Definition def = null;
+		PDefinition def = null;
 		LexIdentifierToken funcName = readIdToken("Expecting new function identifier");
 
 		if (funcName.name.startsWith("mk_"))
@@ -614,11 +584,11 @@ public class DefinitionReader extends SyntaxReader
 
 		LexNameList typeParams = readTypeParams();
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			def = readExplicitFunctionDefinition(funcName, scope, typeParams);
 		}
-		else if (lastToken().is(Token.BRA))
+		else if (lastToken().is(VDMToken.BRA))
 		{
 			def = readImplicitFunctionDefinition(funcName, scope, typeParams);
 		}
@@ -631,7 +601,7 @@ public class DefinitionReader extends SyntaxReader
 		return def;
 	}
 
-	private Definition readExplicitFunctionDefinition(
+	private PDefinition readExplicitFunctionDefinition(
 		LexIdentifierToken funcName, NameScope scope, LexNameList typeParams)
 		throws ParserException, LexException
 	{
@@ -655,19 +625,19 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2019, "Expecting identifier " + funcName.name + " after type in definition");
 		}
 
-		if (lastToken().isNot(Token.BRA))
+		if (lastToken().isNot(VDMToken.BRA))
 		{
 			throwMessage(2020, "Expecting '(' after function name");
 		}
 
 		List<PatternList> parameters = new Vector<PatternList>();
 
-		while (lastToken().is(Token.BRA))
+		while (lastToken().is(VDMToken.BRA))
 		{
-			if (nextToken().isNot(Token.KET))
+			if (nextToken().isNot(VDMToken.KET))
 			{
     			parameters.add(getPatternReader().readPatternList());
-    			checkFor(Token.KET, 2091, "Expecting ')' after function parameters");
+    			checkFor(VDMToken.KET, 2091, "Expecting ')' after function parameters");
     		}
     		else
     		{
@@ -676,26 +646,26 @@ public class DefinitionReader extends SyntaxReader
     		}
 		}
 
-		checkFor(Token.EQUALSEQUALS, 2092, "Expecting '==' after parameters");
+		checkFor(VDMToken.EQUALSEQUALS, 2092, "Expecting '==' after parameters");
 		ExpressionReader expr = getExpressionReader();
 		Expression body = expr.readExpression();
 		Expression precondition = null;
 		Expression postcondition = null;
 		LexNameToken measure = null;
 
-		if (lastToken().is(Token.PRE))
+		if (lastToken().is(VDMToken.PRE))
 		{
 			nextToken();
 			precondition = expr.readExpression();
 		}
 
-		if (lastToken().is(Token.POST))
+		if (lastToken().is(VDMToken.POST))
 		{
 			nextToken();
 			postcondition = expr.readExpression();
 		}
 
-		if (lastToken().is(Token.MEASURE))
+		if (lastToken().is(VDMToken.MEASURE))
 		{
 			nextToken();
 			measure = readNameToken("Expecting name after 'measure'");
@@ -707,7 +677,7 @@ public class DefinitionReader extends SyntaxReader
 			false, measure);
 	}
 
-	private Definition readImplicitFunctionDefinition(
+	private PDefinition readImplicitFunctionDefinition(
 		LexIdentifierToken funcName, NameScope scope, LexNameList typeParams)
 		throws ParserException, LexException
 	{
@@ -719,21 +689,21 @@ public class DefinitionReader extends SyntaxReader
 		TypeReader tr = getTypeReader();
 		List<PatternListTypePair> parameterPatterns = new Vector<PatternListTypePair>();
 
-		if (lastToken().isNot(Token.KET))
+		if (lastToken().isNot(VDMToken.KET))
 		{
 			PatternList pl = pr.readPatternList();
-			checkFor(Token.COLON, 2093, "Missing colon after pattern/type parameter");
+			checkFor(VDMToken.COLON, 2093, "Missing colon after pattern/type parameter");
 			parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
 				pl = pr.readPatternList();
-				checkFor(Token.COLON, 2093, "Missing colon after pattern/type parameter");
+				checkFor(VDMToken.COLON, 2093, "Missing colon after pattern/type parameter");
 				parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
 			}
 		}
 
-    	checkFor(Token.KET, 2124, "Expecting ')' after parameters");
+    	checkFor(VDMToken.KET, 2124, "Expecting ')' after parameters");
 
 		LexToken firstResult = lastToken();
    		PatternList resultNames = new PatternList();
@@ -743,12 +713,12 @@ public class DefinitionReader extends SyntaxReader
    		{
    			LexIdentifierToken rname = readIdToken("Expecting result identifier");
    	   		resultNames.add(new IdentifierPattern(idToName(rname)));
-   	   		checkFor(Token.COLON, 2094, "Missing colon in identifier/type return value");
+   	   		checkFor(VDMToken.COLON, 2094, "Missing colon in identifier/type return value");
    	   		resultTypes.add(tr.readType());
    		}
-   		while (ignore(Token.COMMA));
+   		while (ignore(VDMToken.COMMA));
 
-   		if (lastToken().is(Token.IDENTIFIER))
+   		if (lastToken().is(VDMToken.IDENTIFIER))
 		{
 			throwMessage(2261, "Missing comma between return types?");
 		}
@@ -773,13 +743,13 @@ public class DefinitionReader extends SyntaxReader
 		Expression postcondition = null;
 		LexNameToken measure = null;
 
-		if (lastToken().is(Token.EQUALSEQUALS))		// extended implicit function
+		if (lastToken().is(VDMToken.EQUALSEQUALS))		// extended implicit function
 		{
 			nextToken();
 			body = expr.readExpression();
 		}
 
-		if (lastToken().is(Token.PRE))
+		if (lastToken().is(VDMToken.PRE))
 		{
 			nextToken();
 			precondition = expr.readExpression();
@@ -787,19 +757,19 @@ public class DefinitionReader extends SyntaxReader
 
 		if (body == null)	// Mandatory for standard implicit functions
 		{
-			checkFor(Token.POST, 2095, "Implicit function must have post condition");
+			checkFor(VDMToken.POST, 2095, "Implicit function must have post condition");
 			postcondition = expr.readExpression();
 		}
 		else
 		{
-			if (lastToken().is(Token.POST))
+			if (lastToken().is(VDMToken.POST))
 			{
 				nextToken();
 				postcondition = expr.readExpression();
 			}
 		}
 
-		if (lastToken().is(Token.MEASURE))
+		if (lastToken().is(VDMToken.MEASURE))
 		{
 			nextToken();
 			measure = readNameToken("Expecting name after 'measure'");
@@ -810,7 +780,7 @@ public class DefinitionReader extends SyntaxReader
 			body, precondition, postcondition, measure);
 	}
 
-	public Definition readLocalDefinition(NameScope scope)
+	public PDefinition readLocalDefinition(NameScope scope)
 		throws ParserException, LexException
 	{
 		ParserException funcDefError = null;
@@ -818,7 +788,7 @@ public class DefinitionReader extends SyntaxReader
     	try
     	{
         	reader.push();
-        	Definition def = readFunctionDefinition(scope);
+        	PDefinition def = readFunctionDefinition(scope);
     		reader.unpush();
     		return def;
     	}
@@ -832,7 +802,7 @@ public class DefinitionReader extends SyntaxReader
 		try
 		{
         	reader.push();
-        	Definition def = readValueDefinition(scope);
+        	PDefinition def = readValueDefinition(scope);
     		reader.unpush();
     		return def;
 		}
@@ -844,29 +814,31 @@ public class DefinitionReader extends SyntaxReader
 		}
 	}
 
-	public Definition readValueDefinition(NameScope scope)
+	public PDefinition readValueDefinition(NameScope scope)
 		throws ParserException, LexException
 	{
        	// Should be <pattern>[:<type>]=<expression>
 
-    	Pattern p = getPatternReader().readPattern();
-    	Type type = null;
+    	PPattern p = getPatternReader().readPattern();
+    	PType type = null;
 
-    	if (lastToken().is(Token.COLON))
+    	if (lastToken().is(VDMToken.COLON))
     	{
     		nextToken();
     		type = getTypeReader().readType();
     	}
 
- 		checkFor(Token.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
-		return new ValueDefinition(
-			p, scope, type, getExpressionReader().readExpression());
+ 		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
+ 		return new AValueDefinition(lastToken().location,null,scope,null,
+				null,type,p,getExpressionReader().readExpression(),null,null);
+//		return new ValueDefinition(
+//			p, scope, type, getExpressionReader().readExpression());
 	}
 
-	private Definition readStateDefinition() throws ParserException, LexException
+	private PDefinition readStateDefinition() throws ParserException, LexException
 	{
 		LexIdentifierToken name = readIdToken("Expecting identifier after 'state' definition");
-		checkFor(Token.OF, 2097, "Expecting 'of' after state name");
+		checkFor(VDMToken.OF, 2097, "Expecting 'of' after state name");
 		List<Field> fieldList = getTypeReader().readFieldList();
 
 		Expression invExpression = null;
@@ -874,42 +846,42 @@ public class DefinitionReader extends SyntaxReader
 		Pattern invPattern = null;
 		Pattern initPattern = null;
 
-		if (lastToken().is(Token.INV))
+		if (lastToken().is(VDMToken.INV))
 		{
 			nextToken();
 			invPattern = getPatternReader().readPattern();
-			checkFor(Token.EQUALSEQUALS, 2098, "Expecting '==' after pattern in invariant");
+			checkFor(VDMToken.EQUALSEQUALS, 2098, "Expecting '==' after pattern in invariant");
 			invExpression = getExpressionReader().readExpression();
 		}
 
-		if (lastToken().is(Token.INIT))
+		if (lastToken().is(VDMToken.INIT))
 		{
 			nextToken();
 			initPattern = getPatternReader().readPattern();
-			checkFor(Token.EQUALSEQUALS, 2099, "Expecting '==' after pattern in initializer");
+			checkFor(VDMToken.EQUALSEQUALS, 2099, "Expecting '==' after pattern in initializer");
 			initExpression = getExpressionReader().readExpression();
 		}
 
-		checkFor(Token.END, 2100, "Expecting 'end' after state definition");
+		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 		return new StateDefinition(idToName(name), fieldList,
 			invPattern, invExpression, initPattern, initExpression);
 	}
 
-	private Definition readOperationDefinition()
+	private PDefinition readOperationDefinition()
 		throws ParserException, LexException
 	{
-		Definition def = null;
+		PDefinition def = null;
 		LexIdentifierToken funcName = readIdToken("Expecting new operation identifier");
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			def = readExplicitOperationDefinition(funcName);
 		}
-		else if (lastToken().is(Token.BRA))
+		else if (lastToken().is(VDMToken.BRA))
 		{
 			def = readImplicitOperationDefinition(funcName);
 		}
-		else if (lastToken().is(Token.SEQ_OPEN))
+		else if (lastToken().is(VDMToken.SEQ_OPEN))
 		{
 			throwMessage(2059, "Operations cannot have [@T] type parameters");
 		}
@@ -922,7 +894,7 @@ public class DefinitionReader extends SyntaxReader
 		return def;
 	}
 
-	private Definition readExplicitOperationDefinition(LexIdentifierToken funcName)
+	private PDefinition readExplicitOperationDefinition(LexIdentifierToken funcName)
 		throws ParserException, LexException
 	{
 		// Like "f: int ==> bool f(x) == <statement>"
@@ -938,17 +910,17 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2022, "Expecting name " + funcName.name + " after type in definition");
 		}
 
-		if (lastToken().isNot(Token.BRA))
+		if (lastToken().isNot(VDMToken.BRA))
 		{
 			throwMessage(2023, "Expecting '(' after operation name");
 		}
 
 		PatternList parameters = null;
 
-		if (nextToken().isNot(Token.KET))
+		if (nextToken().isNot(VDMToken.KET))
 		{
 			parameters = getPatternReader().readPatternList();
-			checkFor(Token.KET, 2101, "Expecting ')' after operation parameters");
+			checkFor(VDMToken.KET, 2101, "Expecting ')' after operation parameters");
 		}
 		else
 		{
@@ -956,18 +928,18 @@ public class DefinitionReader extends SyntaxReader
 			nextToken();
 		}
 
-		checkFor(Token.EQUALSEQUALS, 2102, "Expecting '==' after parameters");
+		checkFor(VDMToken.EQUALSEQUALS, 2102, "Expecting '==' after parameters");
 		Statement body = getStatementReader().readStatement();
 		Expression precondition = null;
 		Expression postcondition = null;
 
-		if (lastToken().is(Token.PRE))
+		if (lastToken().is(VDMToken.PRE))
 		{
 			nextToken();
 			precondition = getExpressionReader().readExpression();
 		}
 
-		if (lastToken().is(Token.POST))
+		if (lastToken().is(VDMToken.POST))
 		{
 			nextToken();
 			postcondition = getExpressionReader().readExpression();
@@ -980,7 +952,7 @@ public class DefinitionReader extends SyntaxReader
 		return def;
 	}
 
-	private Definition readImplicitOperationDefinition(LexIdentifierToken funcName)
+	private PDefinition readImplicitOperationDefinition(LexIdentifierToken funcName)
 		throws ParserException, LexException
 	{
 		// Like g(x: int) [y: bool]? ext rd fred[:int] pre exp post exp
@@ -990,26 +962,26 @@ public class DefinitionReader extends SyntaxReader
 		TypeReader tr = getTypeReader();
 		List<PatternListTypePair> parameterPatterns = new Vector<PatternListTypePair>();
 
-		if (lastToken().isNot(Token.KET))
+		if (lastToken().isNot(VDMToken.KET))
 		{
 			PatternList pl = pr.readPatternList();
-			checkFor(Token.COLON, 2103, "Missing colon after pattern/type parameter");
+			checkFor(VDMToken.COLON, 2103, "Missing colon after pattern/type parameter");
 			parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
 				pl = pr.readPatternList();
-				checkFor(Token.COLON, 2103, "Missing colon after pattern/type parameter");
+				checkFor(VDMToken.COLON, 2103, "Missing colon after pattern/type parameter");
 				parameterPatterns.add(new PatternListTypePair(pl, tr.readType()));
 			}
 		}
 
-    	checkFor(Token.KET, 2124, "Expecting ')' after args");
+    	checkFor(VDMToken.KET, 2124, "Expecting ')' after args");
 
 		LexToken firstResult = lastToken();
    		PatternTypePair resultPattern = null;
 
-		if (firstResult.is(Token.IDENTIFIER))
+		if (firstResult.is(VDMToken.IDENTIFIER))
 		{
 			PatternList resultNames = new PatternList();
 			TypeList resultTypes = new TypeList();
@@ -1018,12 +990,12 @@ public class DefinitionReader extends SyntaxReader
 			{
 				LexIdentifierToken rname = readIdToken("Expecting result identifier");
 				resultNames.add(new IdentifierPattern(idToName(rname)));
-				checkFor(Token.COLON, 2104, "Missing colon in identifier/type return value");
+				checkFor(VDMToken.COLON, 2104, "Missing colon in identifier/type return value");
 				resultTypes.add(tr.readType());
 			}
-			while (ignore(Token.COMMA));
+			while (ignore(VDMToken.COMMA));
 
-			if (lastToken().is(Token.IDENTIFIER))
+			if (lastToken().is(VDMToken.IDENTIFIER))
 			{
 				throwMessage(2261, "Missing comma between return types?");
 			}
@@ -1043,7 +1015,7 @@ public class DefinitionReader extends SyntaxReader
 
 		Statement body = null;
 
-		if (lastToken().is(Token.EQUALSEQUALS))		// extended implicit operation
+		if (lastToken().is(VDMToken.EQUALSEQUALS))		// extended implicit operation
 		{
 			nextToken();
 			body = getStatementReader().readStatement();
@@ -1063,12 +1035,12 @@ public class DefinitionReader extends SyntaxReader
 	{
 		List<ExternalClause> externals = null;
 
-		if (lastToken().is(Token.EXTERNAL))
+		if (lastToken().is(VDMToken.EXTERNAL))
 		{
 			externals = new Vector<ExternalClause>();
 			nextToken();
 
-			while (lastToken().is(Token.READ) || lastToken().is(Token.WRITE))
+			while (lastToken().is(VDMToken.READ) || lastToken().is(VDMToken.WRITE))
 			{
 				externals.add(readExternal());
 			}
@@ -1083,7 +1055,7 @@ public class DefinitionReader extends SyntaxReader
 		Expression precondition = null;
 		Expression postcondition = null;
 
-		if (lastToken().is(Token.PRE))
+		if (lastToken().is(VDMToken.PRE))
 		{
 			nextToken();
 			precondition = expr.readExpression();
@@ -1091,12 +1063,12 @@ public class DefinitionReader extends SyntaxReader
 
 		if (postMandatory)	// Mandatory for standard implicit operations
 		{
-			checkFor(Token.POST, 2105, "Implicit operation must define a post condition");
+			checkFor(VDMToken.POST, 2105, "Implicit operation must define a post condition");
 			postcondition = expr.readExpression();
 		}
 		else
 		{
-			if (lastToken().is(Token.POST))
+			if (lastToken().is(VDMToken.POST))
 			{
 				nextToken();
 				postcondition = expr.readExpression();
@@ -1105,7 +1077,7 @@ public class DefinitionReader extends SyntaxReader
 
 		List<ErrorCase> errors = null;
 
-		if (lastToken().is(Token.ERRS))
+		if (lastToken().is(VDMToken.ERRS))
 		{
 			errors = new Vector<ErrorCase>();
 			nextToken();
@@ -1113,9 +1085,9 @@ public class DefinitionReader extends SyntaxReader
 			while (lastToken() instanceof LexIdentifierToken)
 			{
 				LexIdentifierToken name = readIdToken("Expecting error identifier");
-				checkFor(Token.COLON, 2106, "Expecting ':' after name in errs clause");
+				checkFor(VDMToken.COLON, 2106, "Expecting ':' after name in errs clause");
 				Expression left = expr.readExpression();
-				checkFor(Token.ARROW, 2107, "Expecting '->' in errs clause");
+				checkFor(VDMToken.ARROW, 2107, "Expecting '->' in errs clause");
 				Expression right = expr.readExpression();
 				errors.add(new ErrorCase(name, left, right));
 			}
@@ -1134,7 +1106,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		LexToken mode = lastToken();
 
-		if (mode.isNot(Token.READ) && mode.isNot(Token.WRITE))
+		if (mode.isNot(VDMToken.READ) && mode.isNot(VDMToken.WRITE))
 		{
 			throwMessage(2026, "Expecting 'rd' or 'wr' after 'ext'");
 		}
@@ -1143,14 +1115,14 @@ public class DefinitionReader extends SyntaxReader
 		nextToken();
 		names.add(readNameToken("Expecting name in external clause"));
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			names.add(readNameToken("Expecting name in external clause"));
 		}
 
 		Type type = null;
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
 			type = getTypeReader().readType();
@@ -1159,7 +1131,7 @@ public class DefinitionReader extends SyntaxReader
 		return new ExternalClause(mode, names, type);
 	}
 
-	public EqualsDefinition readEqualsDefinition()
+	public AEqualsDefinition readEqualsDefinition()
 		throws ParserException, LexException
 	{
        	// The grammar here says the form of the definition should be
@@ -1182,7 +1154,7 @@ public class DefinitionReader extends SyntaxReader
     	{
         	reader.push();
     		Pattern pattern = getPatternReader().readPattern();
-     		checkFor(Token.EQUALS, 2108, "Expecting <pattern>=<exp>");
+     		checkFor(VDMToken.EQUALS, 2108, "Expecting <pattern>=<exp>");
      		Expression test = getExpressionReader().readExpression();
     		reader.unpush();
 
@@ -1199,7 +1171,7 @@ public class DefinitionReader extends SyntaxReader
 		{
         	reader.push();
     		TypeBind typebind = getBindReader().readTypeBind();
-     		checkFor(Token.EQUALS, 2109, "Expecting <type bind>=<exp>");
+     		checkFor(VDMToken.EQUALS, 2109, "Expecting <type bind>=<exp>");
      		Expression test = getExpressionReader().readExpression();
     		reader.unpush();
 
@@ -1216,8 +1188,8 @@ public class DefinitionReader extends SyntaxReader
 		{
         	reader.push();
     		Pattern pattern = getPatternReader().readPattern();
-     		checkFor(Token.IN, 2110, "Expecting <pattern> in set <set exp>");
-     		checkFor(Token.SET, 2111, "Expecting <pattern> in set <set exp>");
+     		checkFor(VDMToken.IN, 2110, "Expecting <pattern> in set <set exp>");
+     		checkFor(VDMToken.SET, 2111, "Expecting <pattern> in set <set exp>");
      		EqualsExpression test = getExpressionReader().readDefEqualsExpression();
      		SetBind setbind = new SetBind(pattern, test.left);
      		reader.unpush();
@@ -1232,12 +1204,12 @@ public class DefinitionReader extends SyntaxReader
 		}
  	}
 
-	private Definition readInstanceVariableDefinition()
+	private PDefinition readInstanceVariableDefinition()
 		throws ParserException, LexException
     {
 		LexToken token = lastToken();
 
-		if (token.is(Token.INV))
+		if (token.is(VDMToken.INV))
 		{
 			nextToken();
 			Expression exp = getExpressionReader().readExpression();
@@ -1257,19 +1229,19 @@ public class DefinitionReader extends SyntaxReader
 		}
     }
 
-	private Definition readThreadDefinition() throws LexException, ParserException
+	private PDefinition readThreadDefinition() throws LexException, ParserException
 	{
 		LexToken token = lastToken();
 
-		if (token.is(Token.PERIODIC))
+		if (token.is(VDMToken.PERIODIC))
 		{
 			nextToken();
-			checkFor(Token.BRA, 2112, "Expecting '(' after periodic");
-			ExpressionList args = getExpressionReader().readExpressionList();
-			checkFor(Token.KET, 2113, "Expecting ')' after period arguments");
-			checkFor(Token.BRA, 2114, "Expecting '(' after periodic(...)");
+			checkFor(VDMToken.BRA, 2112, "Expecting '(' after periodic");
+			List<PExp> args = getExpressionReader().readExpressionList();
+			checkFor(VDMToken.KET, 2113, "Expecting ')' after period arguments");
+			checkFor(VDMToken.BRA, 2114, "Expecting '(' after periodic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after periodic(...)");
-			checkFor(Token.KET, 2115, "Expecting (name) after periodic(...)");
+			checkFor(VDMToken.KET, 2115, "Expecting (name) after periodic(...)");
 
 			return new ThreadDefinition(name, args);
 		}
@@ -1280,7 +1252,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 	}
 
-	private Definition readPermissionPredicateDefinition()
+	private PDefinition readPermissionPredicateDefinition()
 		throws LexException, ParserException
 	{
 		LexToken token = lastToken();
@@ -1290,37 +1262,40 @@ public class DefinitionReader extends SyntaxReader
 			case PER:
 				nextToken();
 				LexNameToken name = readNameToken("Expecting name after 'per'");
-				checkFor(Token.IMPLIES, 2116, "Expecting <name> => <exp>");
-				Expression exp = getExpressionReader().readPerExpression();
-				return new PerSyncDefinition(token.location, name, exp);
+				checkFor(VDMToken.IMPLIES, 2116, "Expecting <name> => <exp>");
+				PExp exp = getExpressionReader().readPerExpression();
+				return new APerSyncDefinition(
+						token.location, name,null,null,null,null,null,exp);
+				//return new PerSyncDefinition(token.location, name, exp);
 
 			case MUTEX:
 				nextToken();
-				checkFor(Token.BRA, 2117, "Expecting '(' after mutex");
+				checkFor(VDMToken.BRA, 2117, "Expecting '(' after mutex");
 				LexNameList opnames = new LexNameList();
 
 				switch (lastToken().type)
 				{
 					case ALL:
 						nextToken();
-						checkFor(Token.KET, 2118, "Expecting ')' after 'all'");
+						checkFor(VDMToken.KET, 2118, "Expecting ')' after 'all'");
 						break;
 
 					default:
 						LexNameToken op = readNameToken("Expecting a name");
 						opnames.add(op);
 
-						while (ignore(Token.COMMA))
+						while (ignore(VDMToken.COMMA))
 						{
 							op = readNameToken("Expecting a name");
 							opnames.add(op);
 						}
 
-						checkFor(Token.KET, 2119, "Expecting ')'");
+						checkFor(VDMToken.KET, 2119, "Expecting ')'");
 						break;
 				}
 
-				return new MutexSyncDefinition(token.location, opnames);
+				return new AMutexSyncDefinition(token.location,null,null,
+												null,null,null, opnames);
 
 			default:
 				throwMessage(2028, "Expecting 'per' or 'mutex'");
@@ -1328,12 +1303,12 @@ public class DefinitionReader extends SyntaxReader
 		}
 	}
 
-	private Definition readNamedTraceDefinition()
+	private PDefinition readNamedTraceDefinition()
 		throws ParserException, LexException
 	{
 		LexLocation start = lastToken().location;
 		List<String> names = readTraceIdentifierList();
-		checkFor(Token.COLON, 2264, "Expecting ':' after trace name(s)");
+		checkFor(VDMToken.COLON, 2264, "Expecting ':' after trace name(s)");
 		List<TraceDefinitionTerm> traces = readTraceDefinitionList();
 
 		return new NamedTraceDefinition(start, names, traces);
@@ -1345,7 +1320,7 @@ public class DefinitionReader extends SyntaxReader
 		List<String> names = new Vector<String>();
 		names.add(readIdToken("Expecting trace identifier").name);
 
-		while (lastToken().is(Token.DIVIDE))
+		while (lastToken().is(VDMToken.DIVIDE))
 		{
 			nextToken();
 			names.add(readIdToken("Expecting trace identifier").name);
@@ -1360,7 +1335,7 @@ public class DefinitionReader extends SyntaxReader
 		List<TraceDefinitionTerm> list = new Vector<TraceDefinitionTerm>();
 		list.add(readTraceDefinitionTerm());
 
-		while (lastToken().is(Token.SEMICOLON))
+		while (lastToken().is(VDMToken.SEMICOLON))
 		{
 			try
 			{
@@ -1385,7 +1360,7 @@ public class DefinitionReader extends SyntaxReader
 		TraceDefinitionTerm term = new TraceDefinitionTerm();
 		term.add(readTraceDefinition());
 
-		while (lastToken().is(Token.PIPE))
+		while (lastToken().is(VDMToken.PIPE))
 		{
 			nextToken();
 			term.add(readTraceDefinition());
@@ -1397,7 +1372,7 @@ public class DefinitionReader extends SyntaxReader
 	private TraceDefinition readTraceDefinition()
 		throws LexException, ParserException
 	{
-		if (lastToken().is(Token.LET))
+		if (lastToken().is(VDMToken.LET))
 		{
 			return readTraceBinding();
 		}
@@ -1437,7 +1412,7 @@ public class DefinitionReader extends SyntaxReader
 				break;
 
 			case SET_OPEN:
-				if (nextToken().isNot(Token.NUMBER))
+				if (nextToken().isNot(VDMToken.NUMBER))
 				{
 					throwMessage(2266, "Expecting '{n}' or '{n1, n2}' after trace definition");
 				}
@@ -1449,14 +1424,14 @@ public class DefinitionReader extends SyntaxReader
 				switch (nextToken().type)
 				{
 					case COMMA:
-						if (nextToken().isNot(Token.NUMBER))
+						if (nextToken().isNot(VDMToken.NUMBER))
 						{
 							throwMessage(2265, "Expecting '{n1, n2}' after trace definition");
 						}
 
 						lit = (LexIntegerToken)readToken();
 						to = lit.value;
-						checkFor(Token.SET_CLOSE, 2265, "Expecting '{n1, n2}' after trace definition");
+						checkFor(VDMToken.SET_CLOSE, 2265, "Expecting '{n1, n2}' after trace definition");
 						break;
 
 					case SET_CLOSE:
@@ -1475,7 +1450,7 @@ public class DefinitionReader extends SyntaxReader
 	private TraceDefinition readTraceBinding()
 		throws ParserException, LexException
 	{
-		checkFor(Token.LET, 2230, "Expecting 'let'");
+		checkFor(VDMToken.LET, 2230, "Expecting 'let'");
 		ParserException letDefError = null;
 
 		try
@@ -1513,7 +1488,7 @@ public class DefinitionReader extends SyntaxReader
 		List<ValueDefinition> localDefs = new Vector<ValueDefinition>();
 		LexToken start = lastToken();
 
-		Definition def = readLocalDefinition(NameScope.LOCAL);
+		PDefinition def = readLocalDefinition(NameScope.LOCAL);
 
 		if (!(def instanceof ValueDefinition))
 		{
@@ -1522,7 +1497,7 @@ public class DefinitionReader extends SyntaxReader
 
 		localDefs.add((ValueDefinition)def);
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			def = readLocalDefinition(NameScope.LOCAL);
 
@@ -1534,7 +1509,7 @@ public class DefinitionReader extends SyntaxReader
 			localDefs.add((ValueDefinition)def);
 		}
 
-		checkFor(Token.IN, 2231, "Expecting 'in' after local definitions");
+		checkFor(VDMToken.IN, 2231, "Expecting 'in' after local definitions");
 		TraceDefinition body = readTraceDefinition();
 
 		return new TraceLetDefBinding(start.location, localDefs, body);
@@ -1547,14 +1522,14 @@ public class DefinitionReader extends SyntaxReader
 		MultipleBind bind = getBindReader().readMultipleBind();
 		Expression stexp = null;
 
-		if (lastToken().is(Token.BE))
+		if (lastToken().is(VDMToken.BE))
 		{
 			nextToken();
-			checkFor(Token.ST, 2232, "Expecting 'st' after 'be' in let statement");
+			checkFor(VDMToken.ST, 2232, "Expecting 'st' after 'be' in let statement");
 			stexp = getExpressionReader().readExpression();
 		}
 
-		checkFor(Token.IN, 2233, "Expecting 'in' after bind in let statement");
+		checkFor(VDMToken.IN, 2233, "Expecting 'in' after bind in let statement");
 		TraceDefinition body = readTraceDefinition();
 
 		return new TraceLetBeStBinding(start.location, bind, stexp, body);
@@ -1585,24 +1560,24 @@ public class DefinitionReader extends SyntaxReader
 			case BRA:
 				nextToken();
 				List<TraceDefinitionTerm> list = readTraceDefinitionList();
-				checkFor(Token.KET, 2269, "Expecting '(trace definitions)'");
+				checkFor(VDMToken.KET, 2269, "Expecting '(trace definitions)'");
 				return new TraceBracketedExpression(token.location, list);
 
 			case PIPEPIPE:
 				nextToken();
-				checkFor(Token.BRA, 2292, "Expecting '|| (...)'");
+				checkFor(VDMToken.BRA, 2292, "Expecting '|| (...)'");
 				List<TraceDefinition> defs = new Vector<TraceDefinition>();
 				defs.add(readTraceDefinition());
-				checkFor(Token.COMMA, 2293, "Expecting '|| (a, b {,...})'");
+				checkFor(VDMToken.COMMA, 2293, "Expecting '|| (a, b {,...})'");
 				defs.add(readTraceDefinition());
 
-				while (lastToken().is(Token.COMMA))
+				while (lastToken().is(VDMToken.COMMA))
 				{
 					nextToken();
 					defs.add(readTraceDefinition());
 				}
 
-				checkFor(Token.KET, 2294, "Expecting ')' ending || clause");
+				checkFor(VDMToken.KET, 2294, "Expecting ')' ending || clause");
 				return new TraceConcurrentExpression(token.location, defs);
 
 			default:
