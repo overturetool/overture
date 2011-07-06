@@ -323,7 +323,7 @@ modules {-> package='org.overture.ast.modules'}
         [defs]:definition*
         ;
 
-imports {-> package='org.overturetool.vdmj.modules'} 
+imports {-> package='org.overture.ast.modules'} 
     = {module} [name]:LexIdentifierToken [imports]:fromModule*
     | {fromModule} [name]:LexIdentifierToken [signatures]:signatures
     | {signatures} [importList]:import*
