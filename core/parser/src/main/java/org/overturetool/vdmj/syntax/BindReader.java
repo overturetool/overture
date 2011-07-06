@@ -169,7 +169,7 @@ public class BindReader extends SyntaxReader
 
 	public PMultipleBind readMultipleBind() throws LexException, ParserException
 	{
-		Vector<PPattern> plist = getPatternReader().readPatternList();
+		List<PPattern> plist = getPatternReader().readPatternList();
 		PMultipleBind mb = null;
 
 		switch (lastToken().type)

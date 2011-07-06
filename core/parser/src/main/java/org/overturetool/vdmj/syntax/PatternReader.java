@@ -23,7 +23,7 @@
 
 package org.overturetool.vdmj.syntax;
 
-import java.util.Vector;
+import java.util.*;
 
 import org.overture.ast.patterns.*;
 
@@ -238,9 +238,9 @@ public class PatternReader extends SyntaxReader
 		return pattern;
 	}
 
-	public Vector<PPattern> readPatternList() throws ParserException, LexException
+	public List<PPattern> readPatternList() throws ParserException, LexException
 	{
-		Vector<PPattern> list = new Vector<PPattern>();
+		List<PPattern> list = new Vector<PPattern>();
 		list.add(readPattern());
 
 		while (ignore(VDMToken.COMMA))
