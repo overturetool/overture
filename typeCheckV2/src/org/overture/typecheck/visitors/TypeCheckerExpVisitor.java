@@ -1,4 +1,4 @@
-package org.overture.typecheck;
+package org.overture.typecheck.visitors;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +15,7 @@ import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.runtime.TypeChecker;
+import org.overture.typecheck.TypeCheckInfo;
 
 public class TypeCheckerExpVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {

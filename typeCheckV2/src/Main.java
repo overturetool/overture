@@ -15,7 +15,7 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.ModuleEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overture.typecheck.TypeCheckVisitor;
+import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexIntegerToken;

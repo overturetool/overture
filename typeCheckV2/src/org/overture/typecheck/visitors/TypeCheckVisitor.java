@@ -1,4 +1,4 @@
-package org.overture.typecheck;
+package org.overture.typecheck.visitors;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +34,7 @@ import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.runtime.FlatCheckedEnvironment;
 import org.overture.runtime.TypeChecker;
 import org.overture.runtime.TypeComparator;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 

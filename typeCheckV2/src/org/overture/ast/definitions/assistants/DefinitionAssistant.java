@@ -18,7 +18,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.runtime.TypeChecker;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overture.typecheck.TypeCheckVisitor;
+import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
