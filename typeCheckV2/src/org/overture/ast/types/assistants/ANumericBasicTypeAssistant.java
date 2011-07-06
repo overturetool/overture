@@ -1,8 +1,8 @@
-package org.overture.runtime;
+package org.overture.ast.types.assistants;
 
 import org.overture.ast.types.SNumericBasicType;
 
-public class HelperNumericBasicType {
+public class ANumericBasicTypeAssistant {
 
 	public static int getWeight(SNumericBasicType subn) {
 		switch(subn.kindSNumericBasicType())

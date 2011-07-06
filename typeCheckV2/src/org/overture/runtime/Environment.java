@@ -29,6 +29,8 @@ import java.util.Set;
 import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.DefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -67,7 +69,7 @@ abstract public class Environment
 
 	protected void dupHideCheck(List<PDefinition> list, NameScope scope)
 	{
-		LexNameList allnames = DefinitionHelper.getVariableName(list);//.getVariableNames();
+		LexNameList allnames = PDefinitionAssistant.getVariableName(list);
 
 		for (LexNameToken n1: allnames)
 		{
@@ -166,7 +168,7 @@ abstract public class Environment
 	{
 		for (PDefinition possible: findMatches(name))
 		{
-			if (HelperDefinition.isFunctionOrOperation(possible))
+			if (DefinitionAssistant.isFunctionOrOperation(possible))
 			{
 				TypeChecker.detail("Possible", possible.getName());
 			}

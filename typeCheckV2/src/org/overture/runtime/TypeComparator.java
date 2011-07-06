@@ -49,6 +49,8 @@ import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.assistants.ANumericBasicTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistant;
 
 
 
@@ -475,7 +477,7 @@ public class TypeComparator
 				// VDMTools doesn't seem to worry about sub/super type
 				// assignments. This was "cfrom.equals(cto)".
 
-				if (HelperType.hasSupertype(cfrom,cto) || HelperType.hasSupertype(cto,cfrom))
+				if (PTypeAssistant.hasSupertype(cfrom,cto) || PTypeAssistant.hasSupertype(cto,cfrom))
 				{
 					return Result.Yes;
 				}
@@ -754,7 +756,7 @@ public class TypeComparator
 					SNumericBasicType subn = (SNumericBasicType)sub;
 					SNumericBasicType supn = (SNumericBasicType)sup;
 
-					return (HelperNumericBasicType.getWeight(subn) <= HelperNumericBasicType.getWeight(supn)) ?
+					return (ANumericBasicTypeAssistant.getWeight(subn) <= ANumericBasicTypeAssistant.getWeight(supn)) ?
 						Result.Yes : Result.No;
 				}
 			}
@@ -879,7 +881,7 @@ public class TypeComparator
 				AClassType supc = (AClassType)sup;
 				AClassType subc = (AClassType)sub;
 
-				if (HelperType.hasSupertype(subc,supc))
+				if (PTypeAssistant.hasSupertype(subc,supc))
 				{
 					return Result.Yes;
 				}

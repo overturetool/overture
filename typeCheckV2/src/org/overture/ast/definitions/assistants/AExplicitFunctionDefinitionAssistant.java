@@ -1,6 +1,7 @@
-package org.overture.typecheck;
+package org.overture.ast.definitions.assistants;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -13,18 +14,18 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.APatternInnerListPatternList;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.runtime.HelperDefinition;
-import org.overture.runtime.HelperPattern;
 import org.overture.runtime.TypeChecker;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class HelperAExplicitFunctionDefinition {
+public class AExplicitFunctionDefinitionAssistant {
 
 	public static PType checkParams(AExplicitFunctionDefinition node,
 			ListIterator<APatternInnerListPatternList> plists,
@@ -94,17 +95,15 @@ public class HelperAExplicitFunctionDefinition {
 
 				for (PPattern p: plist.getList())
 				{
-					//TODO: getDefinitions is different
-					HelperPattern.getDefinitions(p,unknown,NameScope.LOCAL);
-					//defs.addAll(p.getDefinitions(unknown, NameScope.LOCAL));
+					defs.addAll(PPatternAssistant.getDefinitions(p,unknown,NameScope.LOCAL));
+
 				}
 			}
 			else
 			{
     			for (PPattern p: plist.getList())
     			{
-    				//TODO: getDefinitions is different
-    				HelperPattern.getDefinitions(p,titer.next(),NameScope.LOCAL);					
+    				defs.addAll(PPatternAssistant.getDefinitions(p,titer.next(),NameScope.LOCAL));					
     			}
 			}
 
@@ -130,10 +129,16 @@ public class HelperAExplicitFunctionDefinition {
 			PDefinition p = new ALocalDefinition(
 				pname.location, pname, NameScope.NAMES,false,null, new AParameterType(null,pname));
 
-			HelperDefinition.markUsed(p);
+			DefinitionAssistant.markUsed(p);
 			defs.add(p);
 		}
 
 		return defs;
+	}
+
+	public static Collection<? extends LexNameToken> getVariableNames(
+			AExplicitFunctionDefinition efd) {
+		
+		return new LexNameList(efd.getName());
 	}
 }

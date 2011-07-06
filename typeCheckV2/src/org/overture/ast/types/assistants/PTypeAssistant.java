@@ -1,9 +1,10 @@
-package org.overture.runtime;
+package org.overture.ast.types.assistants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.overture.ast.definitions.assistants.DefinitionAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOptionalType;
@@ -16,10 +17,10 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 
 
-public class HelperType {
+public class PTypeAssistant {
 
 	public static boolean hasSupertype(AClassType cto, AClassType other) {
-		return HelperDefinition.hasSupertype(cto.getClassdef(),other);
+		return DefinitionAssistant.hasSupertype(cto.getClassdef(),other);
 	}
 
 	public static boolean isType(PType b, Class<ABooleanBasicType> typeclass) {

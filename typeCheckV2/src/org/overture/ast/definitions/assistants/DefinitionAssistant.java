@@ -1,4 +1,4 @@
-package org.overture.runtime;
+package org.overture.ast.definitions.assistants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -14,13 +15,15 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.runtime.TypeChecker;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckVisitor;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
-public class HelperDefinition {
+public class DefinitionAssistant {
 
 	public static boolean hasSupertype(AClassDefinition aClassDefDefinition, AClassType other) {
 		if (aClassDefDefinition.getType().equals(other))
@@ -33,7 +36,7 @@ public class HelperDefinition {
 			{
 				AClassType sclass = (AClassType)type;
 
-				if (HelperType.hasSupertype(sclass, other))
+				if (PTypeAssistant.hasSupertype(sclass, other))
 				{
 					return true;
 				}
@@ -77,7 +80,7 @@ public class HelperDefinition {
 		switch(d.kindPDefinition())
 		{
 			case STATE:
-				if (HelperDefinition.findName(d,name, NameScope.STATE) != null)
+				if (DefinitionAssistant.findName(d,name, NameScope.STATE) != null)
 				{
 					return d;
 				}
@@ -145,7 +148,7 @@ public class HelperDefinition {
 	public static void unusedCheck(List<PDefinition> definitions) {
 		for (PDefinition d: definitions)
 		{
-			HelperDefinition.unusedCheck(d);
+			DefinitionAssistant.unusedCheck(d);
 		}
 		
 	}
@@ -153,8 +156,8 @@ public class HelperDefinition {
 	private static void unusedCheck(PDefinition d) {
 		if (!d.getUsed())
 		{
-			HelperDefinition.warning(d, 5000, "Definition '" + d.getName() + "' not used");
-			HelperDefinition.markUsed(d);		// To avoid multiple warnings
+			DefinitionAssistant.warning(d, 5000, "Definition '" + d.getName() + "' not used");
+			DefinitionAssistant.markUsed(d);		// To avoid multiple warnings
 		}
 		
 	}
@@ -171,7 +174,7 @@ public class HelperDefinition {
 
 		for (PDefinition d: singleDefinitions(definitions))
 		{
-			if (HelperDefinition.isFunctionOrOperation(d) && d.getName().matches(name))
+			if (DefinitionAssistant.isFunctionOrOperation(d) && d.getName().matches(name))
 			{
 				set.add(d);
 			}
@@ -185,7 +188,7 @@ public class HelperDefinition {
 
 		for (PDefinition d: definitions)
 		{
-			all.addAll(HelperDefinition.getDefinitions(d));
+			all.addAll(DefinitionAssistant.getDefinitions(d));
 		}
 
 		return all;
@@ -206,16 +209,16 @@ public class HelperDefinition {
 	}
 
 	public static void typeCheck(NodeList<PDefinition> defs,
-			 TypeCheckInfo question, TypeCheckVisitor typeCheckVisitor) {
+			 TypeCheckInfo question, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) {
 		for (PDefinition d: defs)
 		{			
-			d.apply(typeCheckVisitor, question );
+			d.apply(rootVisitor, question );
 		}
 		
 	}
 
 	public static PDefinition getSelfDefinition(AExplicitFunctionDefinition node) {
-		return HelperDefinition.getSelfDefinition(node.getClassDefinition());
+		return DefinitionAssistant.getSelfDefinition(node.getClassDefinition());
 	}
 
 	private static PDefinition getSelfDefinition(

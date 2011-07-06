@@ -30,6 +30,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.DefinitionAssistant;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -71,7 +72,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findName(LexNameToken name, NameScope scope)
 	{
-		PDefinition def = HelperDefinition.findName(definitions,name, scope);
+		PDefinition def = DefinitionAssistant.findName(definitions,name, scope);
 
 		if (def != null)
 		{
@@ -96,7 +97,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findType(LexNameToken name, String fromModule)
 	{
-		PDefinition def = HelperDefinition.findType(definitions,name, fromModule);
+		PDefinition def = DefinitionAssistant.findType(definitions,name, fromModule);
 
 		if (def != null)
 		{
@@ -109,7 +110,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = HelperDefinition.findStateDefinition(definitions);
+		AStateDefinition def = DefinitionAssistant.findStateDefinition(definitions);
 
 		if (def != null)
 		{
@@ -122,7 +123,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		HelperDefinition.unusedCheck(definitions);
+		DefinitionAssistant.unusedCheck(definitions);
 	}
 
 	@Override
@@ -152,7 +153,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(LexNameToken name)
 	{
-		Set<PDefinition> defs = HelperDefinition.findMatches(definitions,name);
+		Set<PDefinition> defs = DefinitionAssistant.findMatches(definitions,name);
 
 		if (outer != null)
 		{
@@ -165,7 +166,7 @@ public class FlatEnvironment extends Environment
 	@Override
     public void markUsed()
     {
-		HelperDefinition.markUsed(definitions);
+		DefinitionAssistant.markUsed(definitions);
     }
 
 	public void setLimitStateScope(boolean limitStateScope)

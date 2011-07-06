@@ -7,24 +7,20 @@ import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AIntConstExp;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.node.NodeList;
-import org.overture.ast.node.tokens.TBoolLiteral;
-import org.overture.ast.node.tokens.TInt;
-import org.overture.ast.node.tokens.TNumbersLiteral;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.APatternInnerListPatternList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.PType;
+import org.overture.typecheck.ModuleEnvironment;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckVisitor;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexIdentifierTokenImpl;
 import org.overturetool.vdmj.lex.LexIntegerToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexNameTokenImpl;
-import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
@@ -43,9 +39,12 @@ public class Main {
 		
 		AIfExp ifExp = new AIfExp(null, loc, bool_true, new AIntConstExp(null,loc, number2), null, new AIntConstExp(null,loc, number5));
 		
-		List<PPattern> paramPatternList = new ArrayList<PPattern>();
-		paramPatternList.add(new AIdentifierPattern(loc, null,
-				new LexNameTokenImpl("A",new LexIdentifierTokenImpl("a",false,null))));
+		List<PPattern> innerListPattern = new ArrayList<PPattern>();
+		innerListPattern.add(new AIdentifierPattern(loc, null,
+				new LexNameToken("A",new LexIdentifierToken("a",false,null))));
+		
+		List<APatternInnerListPatternList> paramPatternList = new ArrayList<APatternInnerListPatternList>();
+		paramPatternList.add(new APatternInnerListPatternList( innerListPattern));
 			
 		
 		List<PType> funcParamType = new ArrayList<PType>();
@@ -53,14 +52,14 @@ public class Main {
 		
 		AExplicitFunctionDefinition foo = new AExplicitFunctionDefinition(
 				loc, //location
-				new LexNameTokenImpl("A","foo",new LexLocation()), //lexnametoken 
+				new LexNameToken("A","foo",new LexLocation()), //lexnametoken 
 				NameScope.GLOBAL, //namescope 
 				new Boolean(false), //used
 				null, //classdefinition
 				null, // type
-				null, //type params
-				new AFunctionType(loc, new ABooleanConstExp(null, loc, null), new AIntNumericBasicType(loc,new TInt("int")) , funcParamType), //functiontype 
-				null,//paramPatternList, //paramPatternList
+				new ArrayList<LexNameToken>(),  //type params
+				new AFunctionType(loc,false, funcParamType , new AIntNumericBasicType(loc)), //functiontype 
+				paramPatternList, //paramPatternList
 				null, //pre
 				null, //predef
 				null, //postcondition
@@ -77,11 +76,14 @@ public class Main {
 		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(foo);
 		
-		AModuleModules module = new AModuleModules(new LexNameTokenImpl("A", new LexIdentifierTokenImpl("A", false, loc)), defs );
+		AModuleModules module = new AModuleModules(new LexNameToken("A", new LexIdentifierToken("A", false, loc)), null, null, defs );
 		
+		TypeCheckInfo tci = new TypeCheckInfo();
+		tci.scope = NameScope.NAMES;
+		tci.env = new ModuleEnvironment(module);
 		
-		module.apply(new TypeCheckVisitor(), null);
-
+		PType tcheckResult = module.apply(new TypeCheckVisitor(), tci);	
+		System.out.println("Finished");
 	}
 
 }
