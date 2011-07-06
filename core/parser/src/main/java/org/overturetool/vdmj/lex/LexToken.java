@@ -58,7 +58,7 @@ abstract public class LexToken implements Serializable
 	 * @return	True if this is of that type.
 	 */
 
-	public boolean is(Token ttype)
+	public boolean is(VDMToken ttype)
 	{
 		return this.type == ttype;
 	}

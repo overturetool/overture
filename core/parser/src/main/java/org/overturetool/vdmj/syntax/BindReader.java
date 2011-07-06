@@ -26,19 +26,11 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.patterns.*;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.patterns.Bind;
-import org.overturetool.vdmj.patterns.MultipleBind;
-import org.overturetool.vdmj.patterns.MultipleSetBind;
-import org.overturetool.vdmj.patterns.MultipleTypeBind;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternBind;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.patterns.SetBind;
-import org.overturetool.vdmj.patterns.TypeBind;
-
+import org.overturetool.vdmj.lex.VDMToken;
 
 /**
  * A syntax analyser to parse set and type binds.
@@ -51,16 +43,17 @@ public class BindReader extends SyntaxReader
 		super(reader);
 	}
 
-	public PatternBind readPatternOrBind() throws ParserException, LexException
+	public PPatternBind readPatternOrBind() throws ParserException, LexException
 	{
 		ParserException bindError = null;
 
 		try
 		{
 			reader.push();
-			Bind bind = readBind();
+			PBind bind = readBind();
 			reader.unpush();
-			return new PatternBind(bind.location, bind);
+			return new ADefPatternBind(bind.getLocation(),null,bind);
+			//return new PPatternBind(bind.getLocation(), bind);
 		}
 		catch (ParserException e)
 		{
@@ -72,9 +65,10 @@ public class BindReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			Pattern p = getPatternReader().readPattern();
+			PPattern p = getPatternReader().readPattern();
 			reader.unpush();
-			return new PatternBind(p.location, p);
+			return new ADefPatternBind(p.getLocation(),p,null);
+//			return new PPatternBind(p.location, p);
 		}
 		catch (ParserException e)
 		{
@@ -84,14 +78,14 @@ public class BindReader extends SyntaxReader
 		}
 	}
 
-	public Bind readBind() throws ParserException, LexException
+	public PBind readBind() throws ParserException, LexException
 	{
 		ParserException setBindError = null;
 
 		try
 		{
 			reader.push();
-			Bind bind = readSetBind();
+			PBind bind = readSetBind();
 			reader.unpush();
 			return bind;
 		}
@@ -105,7 +99,7 @@ public class BindReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			Bind bind = readTypeBind();
+			PBind bind = readTypeBind();
 			reader.unpush();
 			return bind;
 		}
@@ -117,17 +111,17 @@ public class BindReader extends SyntaxReader
 		}
 	}
 
-	public SetBind readSetBind() throws LexException, ParserException
+	public ASetBind readSetBind() throws LexException, ParserException
 	{
-		Pattern pattern = getPatternReader().readPattern();
-		SetBind sb = null;
+		PPattern pattern = getPatternReader().readPattern();
+		ASetBind sb = null;
 
-		if (lastToken().is(Token.IN))
+		if (lastToken().is(VDMToken.IN))
 		{
-			if (nextToken().is(Token.SET))
+			if (nextToken().is(VDMToken.SET))
 			{
 				nextToken();
-				sb = new SetBind(pattern, getExpressionReader().readExpression());
+				sb = new ASetBind(pattern.getLocation(),pattern, getExpressionReader().readExpression());
 			}
 			else
 			{
@@ -142,15 +136,15 @@ public class BindReader extends SyntaxReader
 		return sb;
 	}
 
-	public TypeBind readTypeBind() throws LexException, ParserException
+	public ATypeBind readTypeBind() throws LexException, ParserException
 	{
-		Pattern pattern = getPatternReader().readPattern();
-		TypeBind tb = null;
+		PPattern pattern = getPatternReader().readPattern();
+		ATypeBind tb = null;
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
-			tb = new TypeBind(pattern, getTypeReader().readType());
+			tb = new ATypeBind(pattern.getLocation(),pattern, null);
 		}
 		else
 		{
@@ -160,12 +154,12 @@ public class BindReader extends SyntaxReader
 		return tb;
 	}
 
-	public List<TypeBind> readTypeBindList() throws ParserException, LexException
+	public List<ATypeBind> readTypeBindList() throws ParserException, LexException
 	{
-		List<TypeBind> list = new Vector<TypeBind>();
+		List<ATypeBind> list = new Vector<ATypeBind>();
 		list.add(readTypeBind());
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			list.add(readTypeBind());
 		}
@@ -173,18 +167,18 @@ public class BindReader extends SyntaxReader
 		return list;
 	}
 
-	public MultipleBind readMultipleBind() throws LexException, ParserException
+	public PMultipleBind readMultipleBind() throws LexException, ParserException
 	{
-		PatternList plist = getPatternReader().readPatternList();
-		MultipleBind mb = null;
+		Vector<PPattern> plist = getPatternReader().readPatternList();
+		PMultipleBind mb = null;
 
 		switch (lastToken().type)
 		{
 			case IN:
-				if (nextToken().is(Token.SET))
+				if (nextToken().is(VDMToken.SET))
 				{
 					nextToken();
-					mb = new MultipleSetBind(
+					mb = new AMultipleSetMultipleBind(lastToken().location,
 							plist, getExpressionReader().readExpression());
 				}
 				else
@@ -195,7 +189,7 @@ public class BindReader extends SyntaxReader
 
 			case COLON:
 				nextToken();
-				mb = new MultipleTypeBind(plist, getTypeReader().readType());
+				mb = new AMultipleTypeMultipleBind(lastToken().location,plist, null);
 				break;
 
 			default:
@@ -205,12 +199,12 @@ public class BindReader extends SyntaxReader
 		return mb;
 	}
 
-	public List<MultipleBind> readBindList() throws ParserException, LexException
+	public List<PMultipleBind> readBindList() throws ParserException, LexException
 	{
-		List<MultipleBind> list = new Vector<MultipleBind>();
+		List<PMultipleBind> list = new Vector<PMultipleBind>();
 		list.add(readMultipleBind());
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			list.add(readMultipleBind());
 		}

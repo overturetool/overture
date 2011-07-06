@@ -36,6 +36,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.VDMError;
@@ -447,7 +448,7 @@ public abstract class SyntaxReader
 	 * @throws ParserException
 	 */
 
-	protected void checkFor(Token tok, int number, String message)
+	protected void checkFor(VDMToken tok, int number, String message)
 		throws LexException, ParserException
 	{
 		if (lastToken().is(tok))
@@ -468,7 +469,7 @@ public abstract class SyntaxReader
 	 * @throws LexException
 	 */
 
-	protected boolean ignore(Token tok) throws LexException
+	protected boolean ignore(VDMToken tok) throws LexException
 	{
 		if (lastToken().is(tok))
 		{
