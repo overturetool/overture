@@ -61,6 +61,10 @@ public class BaseTestSuite
 	protected static List<String> readFile(File file) throws IOException
 	{
 		List<String> lines = new Vector<String>();
+		if(file.getName().startsWith("."))
+		{
+			return lines;
+		}
 		BufferedReader reader = null;
 
 		try
