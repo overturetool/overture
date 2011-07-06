@@ -133,7 +133,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {is} [typeName]:LexNameToken [test]:exp
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
     |   {isOfClass} [className]:LexNameToken [exp]:exp
-    |   {lambda} [bindList]:bind.type [expression]:exp    
+    |   {lambda} [bindList]:bind.type* [expression]:exp    
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
     |   {letDef} [localDefs]:definition* [expression]:exp
     |   {def} [localDefs]:definition* [expression]:exp
@@ -222,11 +222,11 @@ type {-> package='org.overture.ast.types'}
     ;
 
 #numeric {-> package='org.overture.ast.types'}
-    =   {int} [token]:int
-    |   {natOne} [token]:natOne
-    |   {nat} [token]:nat
-    |   {rational} [token]:rat
-    |   {real} [token]:real
+    =   {int} 
+    |   {natOne} 
+    |   {nat} 
+    |   {rational} 
+    |   {real} 
     ;
 
 field {-> package='org.overture.ast.types'}
@@ -315,11 +315,20 @@ definition {-> package='org.overture.ast.definitions'}
     ;
 
 modules {-> package='org.overture.ast.modules'}
-    = {module} [name]:LexNameToken 
-        //[imports]:moduleImports
+    = {module} [name]:LexNameToken [imports]:imports.module
         //[exports]:moduleExports
+        [importdefs]:definition*
+        //[exportdefs]:definition*
         [defs]:definition*
         ;
+
+imports {-> package='org.overturetool.vdmj.modules'} 
+    = {module} [name]:LexIdentifierToken [imports]:fromModule*
+    | {fromModule} [name]:LexIdentifierToken [signatures]:signatures
+    | {signatures} [importList]:import*
+    | {import} [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:module
+    ;
+ 
 
 patternList {-> package='org.overture.ast.patterns'}
     = {pattern_inner_list} [list]:pattern*
