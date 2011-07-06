@@ -26,8 +26,36 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.definitions.AMultiBindListDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.*;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.node.tokens.TBool;
+import org.overture.ast.node.tokens.TChar;
+import org.overture.ast.node.tokens.TInt;
+import org.overture.ast.node.tokens.TNat;
+import org.overture.ast.node.tokens.TNatOne;
+import org.overture.ast.node.tokens.TRat;
+import org.overture.ast.node.tokens.TReal;
+import org.overture.ast.node.tokens.TTokenLiteral;
+import org.overture.ast.patterns.APatternInnerListPatternList;
+import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.PBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.ARationalNumericBasicType;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -46,6 +74,7 @@ import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 
 
@@ -65,7 +94,7 @@ public class ExpressionReader extends SyntaxReader
 		List<PExp> list = new NodeList<PExp>(null);
 		list.add(readExpression());
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			list.add(readExpression());
 		}
@@ -88,10 +117,11 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readImpliesExpression();
 		LexToken token = lastToken();
 
-		if (token.is(Token.EQUIVALENT))
+		if (token.is(VDMToken.EQUIVALENT))
 		{
 			nextToken();
-			exp = new EquivalentExpression(exp, token, readConnectiveExpression());
+			exp = new ABinopExp(null, null, exp, new AEquivalentBinop(token.location), readConnectiveExpression());
+//			exp = new AEquivalentBinop(exp, token, readConnectiveExpression());
 		}
 
 		return exp;
@@ -102,10 +132,11 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readOrExpression();
 		LexToken token = lastToken();
 
-		if (token.is(Token.IMPLIES))
+		if (token.is(VDMToken.IMPLIES))
 		{
 			nextToken();
-			exp = new ImpliesExpression(exp, token, readImpliesExpression());
+			exp = new ABinopExp(null, null, exp, new AImpliesBinop(token.location), readImpliesExpression());
+//			exp = new ImpliesExpression(exp, token, readImpliesExpression());
 		}
 
 		return exp;
@@ -117,10 +148,11 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readAndExpression();
 		LexToken token = lastToken();
 
-		if (token.is(Token.OR))
+		if (token.is(VDMToken.OR))
 		{
 			nextToken();
-			exp = new OrExpression(exp, token, readOrExpression());
+			exp = new ABinopExp(null, null, exp, new ALazyOrBinop(token.location), readOrExpression());
+//			exp = new OrExpression(exp, token, readOrExpression());
 		}
 
 		return exp;
@@ -131,10 +163,11 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readNotExpression();
 		LexToken token = lastToken();
 
-		if (token.is(Token.AND))
+		if (token.is(VDMToken.AND))
 		{
 			nextToken();
-			exp = new AndExpression(exp, token, readAndExpression());
+			exp = new ABinopExp(null, null, exp, new ALazyAndBinop(token.location), readAndExpression());
+//			exp = new AndExpression(exp, token, readAndExpression());
 		}
 
 		return exp;
@@ -145,10 +178,11 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = null;
 		LexToken token = lastToken();
 
-		if (token.is(Token.NOT))
+		if (token.is(VDMToken.NOT))
 		{
 			nextToken();
-			exp = new NotExpression(token.location, readNotExpression());
+			exp = new AUnaryExp(null, null, new ANotUnop(token.location), readNotExpression()); 
+//			exp = new NotExpression(token.location, readNotExpression());
 		}
 		else
 		{
@@ -160,7 +194,7 @@ public class ExpressionReader extends SyntaxReader
 
 	// Relations Family...
 
-	public EqualsExpression readDefEqualsExpression()
+	public ABinopExp readDefEqualsExpression()
 		throws ParserException, LexException
 	{
 		// This is an oddball parse for the "def" expression :-)
@@ -168,9 +202,10 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readEvaluatorP1Expression();
 		LexToken token = lastToken();
 
-		if (readToken().is(Token.EQUALS))
+		if (readToken().is(VDMToken.EQUALS))
 		{
-			return new EqualsExpression(exp, token, readEvaluatorP1Expression());
+			return new ABinopExp(null, null, exp, new AEqualsBinop(token.location), readEvaluatorP1Expression());
+//			return new EqualsExpression(exp, token, readEvaluatorP1Expression());
 		}
 
 		throwMessage(2029, "Expecting <set bind> = <expression>");
@@ -183,16 +218,16 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readEvaluatorP1Expression();
 		LexToken token = lastToken();
 
-		if (token.is(Token.NOT))
+		if (token.is(VDMToken.NOT))
 		{
 			// Check for "not in set"
 			reader.push();
 
-			if (nextToken().is(Token.IN))
+			if (nextToken().is(VDMToken.IN))
 			{
-				if (nextToken().is(Token.SET))
+				if (nextToken().is(VDMToken.SET))
 				{
-					token = new LexKeywordToken(Token.NOTINSET, token.location);
+					token = new LexKeywordToken(VDMToken.NOTINSET, token.location);
 					reader.unpush();
 				}
 				else
@@ -205,14 +240,14 @@ public class ExpressionReader extends SyntaxReader
 				reader.pop();
 			}
 		}
-		else if (token.is(Token.IN))
+		else if (token.is(VDMToken.IN))
 		{
 			// Check for "in set"
 			reader.push();
 
-			if (nextToken().is(Token.SET))
+			if (nextToken().is(VDMToken.SET))
 			{
-				token = new LexKeywordToken(Token.INSET, token.location);
+				token = new LexKeywordToken(VDMToken.INSET, token.location);
 				reader.unpush();
 			}
 			else
@@ -226,52 +261,63 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case LT:
 				nextToken();
-				exp = new LessExpression(exp, token, readNotExpression());
+				
+				exp = new ABinopExp(null, null, exp, new ALessBinop(token.location), readNotExpression());
+				//exp = new LessExpression(exp, token, readNotExpression());
 				break;
 
 			case LE:
 				nextToken();
-				exp = new LessEqualExpression(exp, token, readNotExpression());
+				exp = exp = new ABinopExp(null, null, exp, new ALessEqualBinop(token.location), readNotExpression());
+//				exp = new LessEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case GT:
 				nextToken();
-				exp = new GreaterExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new AGreaterBinop(token.location), readNotExpression());
+//				exp = new GreaterExpression(exp, token, readNotExpression());
 				break;
 
 			case GE:
 				nextToken();
-				exp = new GreaterEqualExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new AGreaterEqualBinop(token.location), readNotExpression());
+//				exp = new GreaterEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case NE:
 				nextToken();
-				exp = new NotEqualExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new ANotEqualBinop(token.location), readNotExpression());
+//				exp = new NotEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case EQUALS:
 				nextToken();
-				exp = new EqualsExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new AEqualsBinop(token.location), readNotExpression());
+//				exp = new EqualsExpression(exp, token, readNotExpression());
 				break;
 
 			case SUBSET:
 				nextToken();
-				exp = new SubsetExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new ASubsetBinop(token.location), readNotExpression());
+//				exp = new SubsetExpression(exp, token, readNotExpression());
 				break;
 
 			case PSUBSET:
 				nextToken();
-				exp = new ProperSubsetExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new AProperSubsetBinop(token.location), readNotExpression());
+//				exp = new ProperSubsetExpression(exp, token, readNotExpression());
 				break;
 
 			case INSET:
 				nextToken();
-				exp = new InSetExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new AInSetBinop(token.location), readNotExpression());
+//				exp = new InSetExpression(exp, token, readNotExpression());
 				break;
 
 			case NOTINSET:
 				nextToken();
-				exp = new NotInSetExpression(exp, token, readNotExpression());
+				exp = new ABinopExp(null, null, exp, new ANotInSetBinop(token.location), readNotExpression());
+//				exp = new NotInSetExpression(exp, token, readNotExpression());
 				break;
 		}
 
@@ -294,37 +340,44 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case PLUS:
 					nextToken();
-					exp = new PlusExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new APlusBinop(token.location), readEvaluatorP2Expression());
+//					exp = new PlusExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MINUS:
 					nextToken();
-					exp = new SubtractExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new ASubtractBinop(token.location), readEvaluatorP2Expression());
+//					exp = new SubtractExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case UNION:
 					nextToken();
-					exp = new SetUnionExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new ASetUnionBinop(token.location), readEvaluatorP2Expression());
+//					exp = new SetUnionExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case SETDIFF:
 					nextToken();
-					exp = new SetDifferenceExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new ASetDifferenceBinop(token.location), readEvaluatorP2Expression());
+//					exp = new SetDifferenceExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MUNION:
 					nextToken();
-					exp = new MapUnionExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new AMapUnionBinop(token.location), readEvaluatorP2Expression());
+//					exp = new MapUnionExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case PLUSPLUS:
 					nextToken();
-					exp = new PlusPlusExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new APlusPlusBinop(token.location), readEvaluatorP2Expression());
+//					exp = new PlusPlusExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case CONCATENATE:
 					nextToken();
-					exp = new SeqConcatExpression(exp, token, readEvaluatorP2Expression());
+					exp = new ABinopExp(null, null, exp, new ASeqConcatBinop(token.location), readEvaluatorP2Expression());
+//					exp = new SeqConcatExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				default:
@@ -350,32 +403,38 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case TIMES:
 					nextToken();
-					exp = new TimesExpression(exp, token, readEvaluatorP3Expression());
+					exp = new ABinopExp(null, null, exp, new ATimesBinop(token.location), readEvaluatorP3Expression());
+//					exp = new TimesExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIVIDE:
 					nextToken();
-					exp = new DivideExpression(exp, token, readEvaluatorP3Expression());
+					exp = new ABinopExp(null, null, exp, new ADivideBinop(token.location), readEvaluatorP3Expression());
+//					exp = new DivideExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case REM:
 					nextToken();
-					exp = new RemExpression(exp, token, readEvaluatorP3Expression());
+					exp = new ABinopExp(null, null, exp, new ARemBinop(token.location), readEvaluatorP3Expression());
+//					exp = new RemExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case MOD:
 					nextToken();
-					exp = new ModExpression(exp, token, readEvaluatorP3Expression());
+					exp = new ABinopExp(null, null, exp, new AModBinop(token.location), readEvaluatorP3Expression());
+//					exp = new ModExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIV:
 					nextToken();
-					exp = new DivExpression(exp, token, readEvaluatorP3Expression());
+					exp = new ABinopExp(null, null, exp, new ADivBinop(token.location), readEvaluatorP3Expression());
+//					exp = new DivExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case INTER:
 					nextToken();
-					exp = new SetIntersectExpression(exp, token, readEvaluatorP3Expression());
+					exp = new ABinopExp(null, null, exp, new ASetIntersectBinop(token.location), readEvaluatorP3Expression());
+//					exp = new SetIntersectExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				default:
@@ -393,11 +452,12 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = null;
 		LexToken token = lastToken();
 
-		if (token.is(Token.INVERSE))
+		if (token.is(VDMToken.INVERSE))
 		{
 			nextToken();
 			// Unary, so recursion OK for left grouping
-			exp = new MapInverseExpression(token.location, readEvaluatorP3Expression());
+			exp = new AUnaryExp(null, null, new AMapInverseUnop(token.location), readEvaluatorP3Expression());
+//			exp = new MapInverseExpression(token.location, readEvaluatorP3Expression());
 		}
 		else
 		{
@@ -421,12 +481,14 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case DOMRESTO:
 					nextToken();
-					exp = new DomainResToExpression(exp, token, readEvaluatorP5Expression());
+					exp = new ABinopExp(null, null, exp, new ADomainResToBinop(token.location), readEvaluatorP5Expression());
+//					exp = new DomainResToExpression(exp, token, readEvaluatorP5Expression());
 					break;
 
 				case DOMRESBY:
 					nextToken();
-					exp = new DomainResByExpression(exp, token, readEvaluatorP5Expression());
+					exp = new ABinopExp(null, null, exp, new ADomainResToBinop(token.location), readEvaluatorP5Expression());
+//					exp = new DomainResByExpression(exp, token, readEvaluatorP5Expression());
 					break;
 
 				default:
@@ -452,12 +514,14 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case RANGERESTO:
 					nextToken();
-					exp = new RangeResToExpression(exp, token, readEvaluatorP6Expression());
+					exp = new ABinopExp(null, null, exp, new ARangeResToBinop(token.location), readEvaluatorP6Expression());
+//					exp = new RangeResToExpression(exp, token, readEvaluatorP6Expression());
 					break;
 
 				case RANGERESBY:
 					nextToken();
-					exp = new RangeResByExpression(exp, token, readEvaluatorP6Expression());
+					exp = new ABinopExp(null, null, exp, new ARangeResByBinop(token.location), readEvaluatorP6Expression());
+//					exp = new RangeResByExpression(exp, token, readEvaluatorP6Expression());
 					break;
 
 				default:
@@ -481,67 +545,80 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case PLUS:
 				nextToken();
-				exp = new UnaryPlusExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AUnaryPlusUnop(location), readEvaluatorP6Expression());
+//				exp = new UnaryPlusExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case MINUS:
 				nextToken();
-				exp = new UnaryMinusExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AUnaryMinusUnop(location), readEvaluatorP6Expression());
+//				exp = new UnaryMinusExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case CARD:
 				nextToken();
-				exp = new CardinalityExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ACardinalityUnop(location), readEvaluatorP6Expression());
+//				exp = new CardinalityExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DOM:
 				nextToken();
-				exp = new MapDomainExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AMapDomainUnop(location), readEvaluatorP6Expression());
+//				exp = new MapDomainExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case LEN:
 				nextToken();
-				exp = new LenExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ALenUnop(location), readEvaluatorP6Expression());
+//				exp = new LenExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case POWER:
 				nextToken();
-				exp = new PowerSetExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new APowerSetUnop(location), readEvaluatorP6Expression());
+//				exp = new PowerSetExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case RNG:
 				nextToken();
-				exp = new MapRangeExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AMapRangeUnop(location), readEvaluatorP6Expression());
+//				exp = new MapRangeExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case ELEMS:
 				nextToken();
-				exp = new ElementsExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AElementsUnop(location), readEvaluatorP6Expression());
+//				exp = new ElementsExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case ABS:
 				nextToken();
-				exp = new AbsoluteExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AAbsoluteUnop(location), readEvaluatorP6Expression());
+				//exp = new AbsoluteExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DINTER:
 				nextToken();
-				exp = new DistIntersectExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ADistIntersectUnop(location), readEvaluatorP6Expression());
+//				exp = new DistIntersectExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case MERGE:
 				nextToken();
-				exp = new DistMergeExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ADistMergeUnop(location), readEvaluatorP6Expression());
+//				exp = new DistMergeExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case HEAD:
 				nextToken();
-				exp = new HeadExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AHeadUnop(location), readEvaluatorP6Expression());
+//				exp = new HeadExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case TAIL:
 				nextToken();
-				exp = new TailExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ATailUnop(location), readEvaluatorP6Expression());
+//				exp = new TailExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case REVERSE:
@@ -551,27 +628,32 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				nextToken();
-				exp = new ReverseExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AReverseUnop(location), readEvaluatorP6Expression());
+//				exp = new ReverseExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case FLOOR:
 				nextToken();
-				exp = new FloorExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AFloorUnop(location), readEvaluatorP6Expression());
+//				exp = new FloorExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DUNION:
 				nextToken();
-				exp = new DistUnionExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ADistUnionUnop(location), readEvaluatorP6Expression());
+//				exp = new DistUnionExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DISTCONC:
 				nextToken();
-				exp = new DistConcatExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new ADistConcatUnop(location), readEvaluatorP6Expression());
+//				exp = new DistConcatExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case INDS:
 				nextToken();
-				exp = new IndicesExpression(location, readEvaluatorP6Expression());
+				exp = new AUnaryExp(null, null, new AIndicesUnop(location), readEvaluatorP6Expression());
+//				exp = new IndicesExpression(location, readEvaluatorP6Expression());
 				break;
 
 			default:
@@ -601,30 +683,32 @@ public class ExpressionReader extends SyntaxReader
     				// or mk_*(), is_*(), mu(), pre_*(), post_*(),
     				// init_*() or inv_*()
 
-    				if (nextToken().is(Token.KET))
+    				if (nextToken().is(VDMToken.KET))
     				{
-    					if (exp instanceof VariableExpression)
+    					if (exp instanceof AVariableExp)
     					{
-    						VariableExpression ve = (VariableExpression)exp;
-    						String name = ve.name.name;
+    						AVariableExp ve = (AVariableExp)exp;
+    						String name = ve.getName().name;
+//    						String name = ve.getName().name;
 
         					if (name.startsWith("mk_"))
     						{
         						// a mk_TYPE() with no field values
     							exp = readMkExpression(ve);
     							break;
-    						}
+    						} 
         				}
-
-   						exp = new ApplyExpression(exp);
+    					
+    					exp = new AApplyExp(null,exp.getLocation(), exp, null);
+//   					exp = new ApplyExpression(exp);
     					nextToken();
     				}
     				else
     				{
-    					if (exp instanceof VariableExpression)
+    					if (exp instanceof AVariableExp)
     					{
-    						VariableExpression ve = (VariableExpression)exp;
-    						String name = ve.name.name;
+    						AVariableExp ve = (AVariableExp)exp;
+    						String name = ve.getName().name;
 
     						if (name.equals("mu"))
     						{
@@ -653,18 +737,19 @@ public class ExpressionReader extends SyntaxReader
 
     					PExp first = readExpression();
 
-    					if (lastToken().is(Token.COMMA))
+    					if (lastToken().is(VDMToken.COMMA))
     					{
     						reader.push();
 
-    						if (nextToken().is(Token.RANGE))
+    						if (nextToken().is(VDMToken.RANGE))
     						{
     							nextToken();
-    							checkFor(Token.COMMA, 2120, "Expecting 'e1,...,e2' in subsequence");
+    							checkFor(VDMToken.COMMA, 2120, "Expecting 'e1,...,e2' in subsequence");
     							PExp last = readExpression();
-    							checkFor(Token.KET, 2121, "Expecting ')' after subsequence");
+    							checkFor(VDMToken.KET, 2121, "Expecting ')' after subsequence");
     							reader.unpush();
-    							exp = new SubseqExpression(exp, first, last);
+    							exp = new ASubseqExp(null, exp.getLocation(), exp, first, last);
+//    							exp = new SubseqExpression(exp, first, last);
     							break;
     						}
 
@@ -676,31 +761,33 @@ public class ExpressionReader extends SyntaxReader
 						List<PExp> args = new NodeList<PExp>(null);
 						args.add(first);
 
-						while (ignore(Token.COMMA))
+						while (ignore(VDMToken.COMMA))
 						{
 							args.add(readExpression());
 						}
 
-						checkFor(Token.KET, 2122, "Expecting ')' after function args");
-   						exp = new ApplyExpression(exp, args);
+						checkFor(VDMToken.KET, 2122, "Expecting ')' after function args");
+						exp = new AApplyExp(null, exp.getLocation(), exp, args);
+						//exp = new ApplyExpression(exp, args);
     				}
     				break;
 
     			case SEQ_OPEN:
     				// Polymorphic function instantiation
-    				TypeList types = new TypeList();
+    				List<PType> types = new Vector<PType>();
     				TypeReader tr = getTypeReader();
 
     				nextToken();
     				types.add(tr.readType());
 
-    				while (ignore(Token.COMMA))
+    				while (ignore(VDMToken.COMMA))
     				{
     					types.add(tr.readType());
     				}
 
-    				checkFor(Token.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
-   					exp = new FuncInstantiationExpression(exp, types);
+    				checkFor(VDMToken.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
+   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types);
+    				//exp = new FuncInstantiationExpression(exp, types);
     				break;
 
     			case POINT:
@@ -710,7 +797,8 @@ public class ExpressionReader extends SyntaxReader
     					case NAME:
     						if (dialect != Dialect.VDM_SL)
     						{
-        						exp = new FieldExpression(exp, lastNameToken());
+    							exp = new AFieldExp(null, exp.getLocation(), exp, lastNameToken(), null);
+//        						exp = new FieldExpression(exp, lastNameToken());
     						}
     						else
     						{
@@ -719,17 +807,19 @@ public class ExpressionReader extends SyntaxReader
     						break;
 
     					case IDENTIFIER:
-    						exp = new FieldExpression(exp, lastIdToken());
+    						exp = new AFieldExp(null, exp.getLocation(), exp, null, lastIdToken());
+//    						exp = new FieldExpression(exp, lastIdToken());
     						break;
 
     					case HASH:
-    						if (nextToken().isNot(Token.NUMBER))
+    						if (nextToken().isNot(VDMToken.NUMBER))
     						{
     							throwMessage(2031, "Expecting field number after .#");
     						}
 
     						LexIntegerToken num = (LexIntegerToken)lastToken();
-    						exp = new FieldNumberExpression(exp, num);
+    						exp = new AFieldNumberExp(null, exp.getLocation(), exp, num);
+//    						exp = new FieldNumberExpression(exp, num);
     						break;
 
     					default:
@@ -750,25 +840,28 @@ public class ExpressionReader extends SyntaxReader
 		// are always qualified (ie. x refers to C`x where it was declared, not
 		// an overriding version lower down).
 
-		if (exp instanceof VariableExpression)
+		if (exp instanceof AVariableExp)
 		{
-			VariableExpression ve = (VariableExpression)exp;
-			ve.setExplicit(true);
+			AVariableExp ve = (AVariableExp)exp;
+			ve.setName( ve.getName().getExplicit(true));
+			//ve.setExplicit(true);
 		}
 
 		// Combinator Family. Right grouping.
 		LexToken token = lastToken();
 
-		if (token.is(Token.COMP))
+		if (token.is(VDMToken.COMP))
 		{
 			nextToken();
-			return new CompExpression(exp, token, readApplicatorExpression());
+			return new ABinopExp(null, null, exp, new ACompBinop(token.location), readApplicatorExpression());
+//			return new CompExpression(exp, token, readApplicatorExpression());
 		}
 
-		if (token.is(Token.STARSTAR))
+		if (token.is(VDMToken.STARSTAR))
 		{
 			nextToken();
-			return new StarStarExpression(exp, token, readEvaluatorP6Expression());
+			return new ABinopExp(null, null, exp, new AStarStarBinop(token.location), readEvaluatorP6Expression());
+//			return new StarStarExpression(exp, token, readEvaluatorP6Expression());
 		}
 
 		return exp;
@@ -778,22 +871,25 @@ public class ExpressionReader extends SyntaxReader
 		throws ParserException, LexException
 	{
 		LexToken token = lastToken();
-
+		
 		switch (token.type)
 		{
 			case NUMBER:
 				nextToken();
-				return new IntegerLiteralExpression((LexIntegerToken)token);
+				return new AIntConstExp(null, token.location, (LexIntegerToken)token);
+//				return new IntegerLiteralExpression((LexIntegerToken)token);
 
 			case REALNUMBER:
-				nextToken();
-				return new RealLiteralExpression((LexRealToken)token);
+				nextToken(); 
+				return new ARealConstExp(null, token.location, (LexRealToken)token);
+//				return new RealLiteralExpression((LexRealToken)token);
 
 			case NAME:
 				// Includes mk_ constructors
 				LexNameToken name = lastNameToken();
 				nextToken();
-				return new VariableExpression(name);
+				return new AVariableExp(null, name.location, name);
+//				return new VariableExpression(name);
 
 			case IDENTIFIER:
 				// Includes mk_ constructors
@@ -802,41 +898,49 @@ public class ExpressionReader extends SyntaxReader
 				LexNameToken id =
 					new LexNameToken(reader.currentModule, (LexIdentifierToken)token);
 				nextToken();
-				return new VariableExpression(id);
+				return new AVariableExp(null, id.location, id);
+//				return new VariableExpression(id);
 
 			case STRING:
 				nextToken();
-				return new StringLiteralExpression((LexStringToken)token);
+				return new AStringConstExp(null, token.location, (LexStringToken)token);
+//				return new StringLiteralExpression((LexStringToken)token);
 
 			case CHARACTER:
 				nextToken();
-				return new CharLiteralExpression((LexCharacterToken)token);
+				return new ACharConstExp(null, token.location, (LexCharacterToken)token);
+				//return new CharLiteralExpression((LexCharacterToken)token);
 
 			case QUOTE:
 				nextToken();
-				return new QuoteLiteralExpression((LexQuoteToken)token);
+				return new AQuoteConstExp(null, token.location,(LexQuoteToken)token);
+//				return new QuoteLiteralExpression((LexQuoteToken)token);
 
 			case TRUE:
 			case FALSE:
 				nextToken();
-				return new BooleanLiteralExpression((LexBooleanToken)token);
+				return new ABooleanConstExp(null, token.location, (LexBooleanToken)token);
+//				return new BooleanLiteralExpression((LexBooleanToken)token);
 
 			case UNDEFINED:
 				nextToken();
-				return new UndefinedExpression(token.location);
+				return new AUndefinedExp(null, token.location);
+//				return new UndefinedExpression(token.location);
 
 			case NIL:
 				nextToken();
-				return new NilExpression(token.location);
+				return new ANilExp(null, token.location);
+//				return new NilExpression(token.location);
 
 			case THREADID:
 				nextToken();
-				return new ThreadIdExpression(token.location);
+				return new AThreadIdExp(null, token.location);
+//				return new ThreadIdExpression(token.location);
 
 			case BRA:
 				nextToken();
 				PExp exp = readExpression();
-				checkFor(Token.KET, 2124, "Expecting ')'");
+				checkFor(VDMToken.KET, 2124, "Expecting ')'");
 				return exp;
 
 			case SET_OPEN:
@@ -889,21 +993,24 @@ public class ExpressionReader extends SyntaxReader
 
 			case SELF:
 				nextToken();
-				return new SelfExpression(token.location);
+				return new ASelfExp(null, token.location, (LexNameToken)token);
+//				return new SelfExpression(token.location);
 
 			case IS:
 				switch (nextToken().type)
 				{
 					case NOT:
 						nextToken();
-						checkFor(Token.YET, 2125, "Expecting 'is not yet specified'");
-						checkFor(Token.SPECIFIED, 2126, "Expecting 'is not yet specified'");
-						return new NotYetSpecifiedExpression(token.location);
+						checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
+						checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
+						return new ANotYetSpecifiedExp(null, token.location);
+//						return new NotYetSpecifiedExpression(token.location);
 
 					case SUBCLASS:
 						nextToken();
-						checkFor(Token.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
-						return new SubclassResponsibilityExpression(token.location);
+						checkFor(VDMToken.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
+						return new ASubclassResponsibilityExp(null, token.location);
+//						return new SubclassResponsibilityExpression(token.location);
 				}
 
 				throwMessage(2033, "Expected 'is not specified' or 'is subclass responsibility'");
@@ -940,96 +1047,107 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readTimeExpression(LexLocation location) throws LexException
 	{
 		nextToken();
-		return new TimeExpression(location);
+		return new ATimeExp(null, location);
+//		return new TimeExpression(location);
 	}
 
-	private MuExpression readMuExpression(VariableExpression ve)
+	private AMuExp readMuExpression(AVariableExp ve)
 		throws ParserException, LexException
 	{
-		List<RecordModifier> args = new Vector<RecordModifier>();
+		List<ARecordModifier> args = new Vector<ARecordModifier>();
 		PExp record = readExpression();
 
 		do
 		{
-			checkFor(Token.COMMA, 2128, "Expecting comma separated record modifiers");
+			checkFor(VDMToken.COMMA, 2128, "Expecting comma separated record modifiers");
 			LexIdentifierToken id = readIdToken("Expecting <identifier> |-> <expression>");
-			checkFor(Token.MAPLET, 2129, "Expecting <identifier> |-> <expression>");
-			args.add(new RecordModifier(id, readExpression()));
+			checkFor(VDMToken.MAPLET, 2129, "Expecting <identifier> |-> <expression>");
+			args.add(new ARecordModifier(id, readExpression()));
 		}
-		while (lastToken().is(Token.COMMA));
+		while (lastToken().is(VDMToken.COMMA));
 
-		checkFor(Token.KET, 2130, "Expecting ')' after mu maplets");
-		return new MuExpression(ve.location, record, args);
+		checkFor(VDMToken.KET, 2130, "Expecting ')' after mu maplets");
+		return new AMuExp(null, ve.getLocation(), record, args);
+		//return new MuExpression(ve.location, record, args);
 	}
 
-	private PExp readMkExpression(VariableExpression ve)
+	private PExp readMkExpression(AVariableExp ve)
 		throws ParserException, LexException
 	{
-		List<PExp> args = new Nodelist<PExp>(null);
+		List<PExp> args = new NodeList<PExp>(null);
 
-		if (lastToken().isNot(Token.KET))	// NB. mk_T() is legal
+		if (lastToken().isNot(VDMToken.KET))	// NB. mk_T() is legal
 		{
 			args.add(readExpression());
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
 				args.add(readExpression());
 			}
 		}
 
-		checkFor(Token.KET, 2131, "Expecting ')' after mk_ tuple");
+		checkFor(VDMToken.KET, 2131, "Expecting ')' after mk_ tuple");
 		PExp exp = null;
 
-		if (ve.name.name.equals("mk_"))
+		if (ve.getName().name.equals("mk_"))
 		{
 			if (args.size() < 2)
 			{
 				throwMessage(2035, "Tuple must have >1 argument");
 			}
 
-			exp = new TupleExpression(ve.location, args);
+			exp = new ATupleExp(null, ve.getLocation(), args);
+//			exp = new TupleExpression(ve.location, args);
 		}
 		else
 		{
-			LexNameToken typename = getMkTypeName(ve.name);
-			Token type = Token.lookup(typename.name, Dialect.VDM_SL);
+			LexNameToken typename = getMkTypeName(ve.getName());
+			VDMToken type = VDMToken.lookup(typename.name, Dialect.VDM_SL);
 
 			if (type != null)
 			{
 				PExp value = args.get(0);
 
-				switch (type)
+				switch (type) //TODO is this right? Type information is lost? If so lose the switch
 				{
 					case BOOL:
-						exp = new MkBasicExpression(new BooleanType(ve.location), value);
+						exp = new AMkBasicExp(new ABooleanBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new BooleanType(ve.location), value);
 						break;
 
 					case NAT:
-						exp = new MkBasicExpression(new NaturalType(ve.location), value);
+						exp = new AMkBasicExp(new ANatNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new NaturalType(ve.location), value);
 						break;
 
 					case NAT1:
-						exp = new MkBasicExpression(new NaturalOneType(ve.location), value);
+						exp = new AMkBasicExp(new ANatOneNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new NaturalOneType(ve.location), value);
 						break;
 
 					case INT:
-						exp = new MkBasicExpression(new IntegerType(ve.location), value);
+						exp = new AMkBasicExp(new AIntNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new IntegerType(ve.location), value);
 						break;
 
 					case RAT:
-						exp = new MkBasicExpression(new RationalType(ve.location), value);
+						exp = new AMkBasicExp(new ARationalNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new RationalType(ve.location), value);
 						break;
 
 					case REAL:
-						exp = new MkBasicExpression(new RealType(ve.location), value);
+						exp = new AMkBasicExp(new ARealNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new RealType(ve.location), value);
 						break;
 
 					case CHAR:
-						exp = new MkBasicExpression(new CharacterType(ve.location), value);
+						exp = new AMkBasicExp(new ACharBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new CharacterType(ve.location), value);
 						break;
 
 					case TOKEN:
-						exp = new MkBasicExpression(new TokenType(ve.location), value);
+						exp = new AMkBasicExp(new ATokenBasicType(ve.getLocation()), ve.getLocation(), value);
+//						exp = new MkBasicExpression(new TokenType(ve.location), value);
 						break;
 
 					default:
@@ -1038,7 +1156,8 @@ public class ExpressionReader extends SyntaxReader
 			}
 			else
 			{
-				exp = new MkTypeExpression(typename, args);
+				exp = new AMkTypeExp(null, ve.getLocation(), typename, args);
+//				exp = new MkTypeExpression(typename, args);
 			}
 		}
 
@@ -1066,68 +1185,78 @@ public class ExpressionReader extends SyntaxReader
 		return null;
 	}
 
-	private IsExpression readIsExpression(VariableExpression ve)
+	private AIsExp readIsExpression(AVariableExp ve)
 		throws ParserException, LexException
 	{
-		String name = ve.name.name;
-		IsExpression exp = null;
+		String name = ve.getName().name;
+		AIsExp exp = null;
 
 		if (name.equals("is_"))
 		{
 			PExp test = readExpression();
-			checkFor(Token.COMMA, 2132, "Expecting is_(expression, type)");
+			checkFor(VDMToken.COMMA, 2132, "Expecting is_(expression, type)");
 			TypeReader tr = getTypeReader();
-			Type type = tr.readType();
+			PType type = tr.readType();
 
-			if (type instanceof UnresolvedType)
+			if (type instanceof AUnresolvedType)
 			{
-				UnresolvedType nt = (UnresolvedType)type;
-				exp = new IsExpression(ve.location, nt.typename, test);
+				AUnresolvedType nt = (AUnresolvedType)type;
+				exp = new AIsExp(null,nt.getLocation(), nt.getTypename(), test);
+//				exp = new IsExpression(ve.location, nt.typename, test);
 			}
 			else
 			{
-				exp = new IsExpression(ve.location, type, test);
+				exp = new AIsExp(type, ve.getLocation(), null, test);
+//				exp = new IsExpression(ve.location, type, test);
 			}
 		}
 		else
 		{
-			LexNameToken typename = getMkTypeName(ve.name);
-			Token type = Token.lookup(typename.name, Dialect.VDM_SL);
+			LexNameToken typename = getMkTypeName(ve.getName());
+			VDMToken type = VDMToken.lookup(typename.name, Dialect.VDM_SL);
 
 			if (type != null)
 			{
 				switch (type)
 				{
-					case BOOL:
-						exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
+					case BOOL: 
+						exp = new AIsExp(new ABooleanBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
 						break;
 
 					case NAT:
-						exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
+						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
 						break;
 
 					case NAT1:
-						exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
+						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
 						break;
 
 					case INT:
-						exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
+						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
 						break;
 
 					case RAT:
-						exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
+						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
 						break;
 
 					case REAL:
-						exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
+						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
 						break;
 
 					case CHAR:
-						exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
+						exp = new AIsExp(new ACharBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
+						exp = new AIsExp(new ATokenBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+//						exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
 						break;
 
 					default:
@@ -1136,28 +1265,30 @@ public class ExpressionReader extends SyntaxReader
 			}
 			else
 			{
-				exp = new IsExpression(ve.location, typename, readExpression());
+				exp = new AIsExp(null, ve.getLocation(), typename, readExpression());
+//				exp = new IsExpression(ve.location, typename, readExpression());
 			}
 		}
 
-		checkFor(Token.KET, 2133, "Expecting ')' after is_ expression");
+		checkFor(VDMToken.KET, 2133, "Expecting ')' after is_ expression");
 		return exp;
 	}
 
-	private PreExpression readPreExpression(VariableExpression ve)
+	private APreExp readPreExpression(AVariableExp ve)
 		throws ParserException, LexException
 	{
-		List<PExp> args = new ExpressionList();
+		List<PExp> args = new Vector<PExp>(); 
 		PExp function = readExpression();
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			args.add(readExpression());
 		}
 
-		checkFor(Token.KET, 2134, "Expecting pre_(function [,args])");
+		checkFor(VDMToken.KET, 2134, "Expecting pre_(function [,args])");
 
-		return new PreExpression(ve.location, function, args);
+		return new APreExp(null, ve.getLocation(), function, args);
+//		return new PreExpression(ve.location, function, args);
 	}
 
 	private PExp readSetOrMapExpression(LexLocation start)
@@ -1165,25 +1296,28 @@ public class ExpressionReader extends SyntaxReader
 	{
 		LexToken token = lastToken();
 
-		if (token.is(Token.SET_CLOSE))
+		if (token.is(VDMToken.SET_CLOSE))
 		{
 			nextToken();
-			return new SetEnumExpression(start);		// empty set
+			return new ASetEnumSetExp(null, token.location, null); //TODO
+//			return new SetEnumExpression(start);		// empty set
 		}
-		else if (token.is(Token.MAPLET))
+		else if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
-			checkFor(Token.SET_CLOSE, 2135, "Expecting '}' in empty map");
-			return new MapEnumExpression(start);		// empty map
+			checkFor(VDMToken.SET_CLOSE, 2135, "Expecting '}' in empty map");
+			return new AMapEnumMapExp(null,token.location, null);
+//			return new MapEnumExpression(start);		// empty map
 		}
 
 		PExp first = readExpression();
 		token = lastToken();
 
-		if (token.is(Token.MAPLET))
+		if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
-			MapletExpression maplet = new MapletExpression(first, token, readExpression());
+			AMapletExp maplet = new AMapletExp(null, token.location, first, readExpression());
+			//MapletExpression maplet = new MapletExpression(first, token, readExpression());
 			return readMapExpression(start, maplet);
 		}
 		else
@@ -1192,41 +1326,45 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	private SetExpression readSetExpression(LexLocation start, PExp first)
+//	private SetExpression readSetExpression(LexLocation start, PExp first)
+	private SSetExp readSetExpression(LexLocation start, PExp first)
 		throws ParserException, LexException
 	{
-		SetExpression result = null;
+		SSetExp result = null;
+//		SetExpression result = null;
 
-		if (lastToken().is(Token.PIPE))
+		if (lastToken().is(VDMToken.PIPE))
 		{
 			nextToken();
 			BindReader br = getBindReader();
-			List<MultipleBind> bindings = br.readBindList();
+			List<PMultipleBind> bindings = br.readBindList();
 			PExp exp = null;
 
-			if (lastToken().is(Token.AMPERSAND))
+			if (lastToken().is(VDMToken.AMPERSAND))
 			{
 				nextToken();
 				exp = readExpression();
 			}
 
-			checkFor(Token.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
-			result = new SetCompExpression(start, first, bindings, exp);
+			checkFor(VDMToken.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
+			result = new ASetCompSetExp(null, exp.getLocation(), first, bindings, exp);
+//			result = new SetCompExpression(start, first, bindings, exp);
 		}
 		else
 		{
-			if (lastToken().is(Token.COMMA))
+			if (lastToken().is(VDMToken.COMMA))
 			{
 				reader.push();
 
-				if (nextToken().is(Token.RANGE))
+				if (nextToken().is(VDMToken.RANGE))
 				{
 					nextToken();
-					checkFor(Token.COMMA, 2137, "Expecting 'e1,...,e2' in set range");
+					checkFor(VDMToken.COMMA, 2137, "Expecting 'e1,...,e2' in set range");
 					PExp end = readExpression();
-					checkFor(Token.SET_CLOSE, 2138, "Expecting '}' after set range");
+					checkFor(VDMToken.SET_CLOSE, 2138, "Expecting '}' after set range");
 					reader.unpush();
-					return new SetRangeExpression(start, first, end);
+					return new ASetRangeSetExp(null, start, first, end); //TODO inheritance issue?
+//					return new SetRangeExpression(start, first, end);
 				}
 
 				reader.pop();	// Not a set range then...
@@ -1235,53 +1373,58 @@ public class ExpressionReader extends SyntaxReader
 			List<PExp>  members = new NodeList<PExp>(null);
 			members.add(first);
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
 				members.add(readExpression());
 			}
 
-			checkFor(Token.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
-			result = new SetEnumExpression(start, members);
+			checkFor(VDMToken.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
+			result = new ASetEnumSetExp(null, start, members);
+//			result = new SetEnumExpression(start, members);
 		}
 
 		return result;
 	}
 
-	private MapExpression readMapExpression(LexLocation start, MapletExpression first)
+	//private MapExpression readMapExpression(LexLocation start, MapletExpression first)
+	private SMapExp readMapExpression(LexLocation start, AMapletExp first)
 		throws ParserException, LexException
 	{
-		MapExpression result = null;
+		SMapExp result = null;
 
-		if (lastToken().is(Token.PIPE))
+		if (lastToken().is(VDMToken.PIPE))
 		{
 			nextToken();
 			BindReader br = getBindReader();
-			List<MultipleBind> bindings = br.readBindList();
+			List<PMultipleBind> bindings = br.readBindList();
 			PExp exp = null;
 
-			if (lastToken().is(Token.AMPERSAND))
+			if (lastToken().is(VDMToken.AMPERSAND))
 			{
 				nextToken();
 				exp = readExpression();
 			}
 
-			checkFor(Token.SET_CLOSE, 2140, "Expecting '}' after map comprehension");
-			result = new MapCompExpression(start, first, bindings, exp);
+			checkFor(VDMToken.SET_CLOSE, 2140, "Expecting '}' after map comprehension");
+			result = new AMapCompMapExp(null, start, first, bindings, exp); //TODO bindings should be list
+//			result = new MapCompExpression(start, first, bindings, exp);
 		}
 		else
 		{
-			List<MapletExpression> members = new Vector<MapletExpression>();
+			List<AMapletExp> members = new Vector<AMapletExp>();
+			//List<MapletExpression> members = new Vector<MapletExpression>();
 			members.add(first);
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
 				PExp member = readExpression();
 				LexToken token = lastToken();
 
-				if (token.is(Token.MAPLET))
+				if (token.is(VDMToken.MAPLET))
 				{
 					nextToken();
-					MapletExpression maplet = new MapletExpression(member, token, readExpression());
+					AMapletExp maplet = new AMapletExp(null, token.location, member, readExpression());
+					//MapletExpression maplet = new MapletExpression(member, token, readExpression());
 					members.add(maplet);
 				}
 				else
@@ -1290,67 +1433,75 @@ public class ExpressionReader extends SyntaxReader
 				}
 			}
 
-			checkFor(Token.SET_CLOSE, 2141, "Expecting '}' after map enumeration");
-			result = new MapEnumExpression(start, members);
+			checkFor(VDMToken.SET_CLOSE, 2141, "Expecting '}' after map enumeration");
+			result = new AMapEnumMapExp(null, start, members);
+//			result = new MapEnumExpression(start, members);
 		}
 
 		return result;
 	}
 
-	private SeqExpression readSeqExpression(LexLocation start)
+	//private SeqExpression readSeqExpression(LexLocation start)
+	private SSeqExp readSeqExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		if (lastToken().is(Token.SEQ_CLOSE))
+		if (lastToken().is(VDMToken.SEQ_CLOSE))
 		{
 			nextToken();
-			return new SeqEnumExpression(start);		// empty list
+			return new ASeqEnumSeqExp(null, start, null);
+//			return new SeqEnumExpression(start);		// empty list
 		}
 
-		SeqExpression result = null;
+		SSeqExp result = null;
+		//SeqExpression result = null;
 		PExp first = readExpression();
 
-		if (lastToken().is(Token.PIPE))
+		if (lastToken().is(VDMToken.PIPE))
 		{
 			nextToken();
 			BindReader br = getBindReader();
-			SetBind setbind = br.readSetBind();
+			ASetBind setbind = br.readSetBind();
+//			PSet setbind = br.readSetBind();
 			PExp exp = null;
 
-			if (lastToken().is(Token.AMPERSAND))
+			if (lastToken().is(VDMToken.AMPERSAND))
 			{
 				nextToken();
 				exp = readExpression();
 			}
 
-			checkFor(Token.SEQ_CLOSE, 2142, "Expecting ']' after list comprehension");
-			result = new SeqCompExpression(start, first, setbind, exp);
+			checkFor(VDMToken.SEQ_CLOSE, 2142, "Expecting ']' after list comprehension");
+			result = new ASeqCompSeqExp(null, start, first, setbind, exp);
+//			result = new SeqCompExpression(start, first, setbind, exp);
 		}
 		else
 		{
 			List<PExp> members = new NodeList<PExp>(null);
 			members.add(first);
 
-			while (ignore(Token.COMMA))
+			while (ignore(VDMToken.COMMA))
 			{
 				members.add(readExpression());
 			}
 
-			checkFor(Token.SEQ_CLOSE, 2143, "Expecting ']' after list enumeration");
-			result = new SeqEnumExpression(start, members);
+			checkFor(VDMToken.SEQ_CLOSE, 2143, "Expecting ']' after list enumeration");
+			result = new ASeqEnumSeqExp(null, start, members);
+//			result = new SeqEnumExpression(start, members);
 		}
 
 		return result;
 	}
 
-	private IfExpression readIfExpression(LexLocation start)
+	private AIfExp readIfExpression(LexLocation start)
 		throws ParserException, LexException
 	{
 		PExp exp = readExpression();
-		checkFor(Token.THEN, 2144, "Missing 'then'");
+		checkFor(VDMToken.THEN, 2144, "Missing 'then'");
 		PExp thenExp = readExpression();
-		List<ElseIfExpression> elseList = new Vector<ElseIfExpression>();
+		List<AElseIfExp> elseList = new Vector<AElseIfExp>();
+//		List<ElseIfExpression> elseList = new Vector<ElseIfExpression>();
 
-		while (lastToken().is(Token.ELSEIF))
+		while (lastToken().is(VDMToken.ELSEIF))
 		{
 			nextToken();
 			elseList.add(readElseIfExpression(lastToken().location));
@@ -1358,7 +1509,7 @@ public class ExpressionReader extends SyntaxReader
 
 		PExp elseExp = null;
 
-		if (lastToken().is(Token.ELSE))
+		if (lastToken().is(VDMToken.ELSE))
 		{
 			nextToken();
 			elseExp = readConnectiveExpression();	// Precedence < maplet?
@@ -1368,32 +1519,35 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2040, "Expecting 'else' in 'if' expression");
 		}
 
-		return new IfExpression(start, exp, thenExp, elseList, elseExp);
+		return new AIfExp(null, exp.getLocation(), exp, thenExp, elseList, elseExp);
+//		return new IfExpression(start, exp, thenExp, elseList, elseExp);
 	}
 
 
-	private ElseIfExpression readElseIfExpression(LexLocation start)
+	private AElseIfExp readElseIfExpression(LexLocation start)
 		throws ParserException, LexException
 	{
 		PExp exp = readExpression();
-		checkFor(Token.THEN, 2145, "Missing 'then' after 'elseif'");
+		checkFor(VDMToken.THEN, 2145, "Missing 'then' after 'elseif'");
 		PExp thenExp = readExpression();
-		return new ElseIfExpression(start, exp, thenExp);
+		return new AElseIfExp(null, exp.getLocation(), exp, thenExp);
+		//return new ElseIfExpression(start, exp, thenExp);
 	}
 
-	private CasesExpression readCasesExpression(LexLocation start)
+	private ACasesExp readCasesExpression(LexLocation start)
 		throws ParserException, LexException
 	{
 		PExp exp = readExpression();
-		checkFor(Token.COLON, 2146, "Expecting ':' after cases expression");
+		checkFor(VDMToken.COLON, 2146, "Expecting ':' after cases expression");
 
-		List<CaseAlternative> cases = new Vector<CaseAlternative>();
+		List<ACaseAlternative> cases = new Vector<ACaseAlternative>();
+//		List<CaseAlternative> cases = new Vector<CaseAlternative>();
 		PExp others = null;
 		cases.addAll(readCaseAlternatives(exp));
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
-			if (lastToken().is(Token.OTHERS))
+			if (lastToken().is(VDMToken.OTHERS))
 			{
 				break;
 			}
@@ -1401,28 +1555,31 @@ public class ExpressionReader extends SyntaxReader
 			cases.addAll(readCaseAlternatives(exp));
 		}
 
-		if (lastToken().is(Token.OTHERS))
+		if (lastToken().is(VDMToken.OTHERS))
 		{
 			nextToken();
-			checkFor(Token.ARROW, 2147, "Expecting '->' after others");
+			checkFor(VDMToken.ARROW, 2147, "Expecting '->' after others");
 			others = readExpression();
 		}
 
-		checkFor(Token.END, 2148, "Expecting 'end' after cases");
-		return new CasesExpression(start, exp, cases, others);
+		checkFor(VDMToken.END, 2148, "Expecting 'end' after cases");
+		return new ACasesExp(null, exp.getLocation(), exp, cases, others);
+//		return new CasesExpression(start, exp, cases, others);
 	}
 
-	private List<CaseAlternative> readCaseAlternatives(PExp exp)
+	private List<ACaseAlternative> readCaseAlternatives(PExp exp)
 		throws ParserException, LexException
 	{
-		List<CaseAlternative> alts = new Vector<CaseAlternative>();
-		PatternList plist = getPatternReader().readPatternList();
-		checkFor(Token.ARROW, 2149, "Expecting '->' after case pattern list");
+		List<ACaseAlternative> alts = new Vector<ACaseAlternative>();
+		List<PPattern> plist = getPatternReader().readPatternList();
+//		PatternList plist = getPatternReader().readPatternList();
+		checkFor(VDMToken.ARROW, 2149, "Expecting '->' after case pattern list");
 		PExp then = readExpression();
 
-		for (Pattern p: plist)
+		for (PPattern p: plist) 
 		{
-			alts.add(new CaseAlternative(exp, p, then));
+			alts.add(new ACaseAlternative(null, exp, p, then)); 
+			//alts.add(new CaseAlternative(exp, p, then));
 		}
 
 		return alts;
@@ -1436,7 +1593,8 @@ public class ExpressionReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			LetDefExpression exp = readLetDefExpression(start);
+			ALetDefExp exp = readLetDefExpression(start);
+//			LetDefExpression exp = readLetDefExpression(start);
 			reader.unpush();
 			return exp;
 		}
@@ -1450,7 +1608,8 @@ public class ExpressionReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			LetBeStExpression exp = readLetBeStExpression(start);
+			ALetBeStExp exp = readLetBeStExpression(start);
+//			LetBeStExpression exp = readLetBeStExpression(start);
 			reader.unpush();
 			return exp;
 		}
@@ -1462,205 +1621,221 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	private LetDefExpression readLetDefExpression(LexLocation start)
+	private ALetDefExp readLetDefExpression(LexLocation start)
 		throws ParserException, LexException
 	{
 		DefinitionReader dr = getDefinitionReader();
-		DefinitionList localDefs = new DefinitionList();
+		
+		List<PDefinition> localDefs = new Vector<PDefinition>();
 
 		localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			localDefs.add(dr.readLocalDefinition(NameScope.LOCAL));
 		}
 
-		checkFor(Token.IN, 2150, "Expecting 'in' after local definitions");
+		checkFor(VDMToken.IN, 2150, "Expecting 'in' after local definitions");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new LetDefExpression(start, localDefs, readConnectiveExpression());
+		return new ALetDefExp(null, start,localDefs, readConnectiveExpression());
+//		return new LetDefExpression(start, localDefs, readConnectiveExpression());
 	}
 
-	private LetBeStExpression readLetBeStExpression(LexLocation start)
+	private ALetBeStExp readLetBeStExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		MultipleBind bind = getBindReader().readMultipleBind();
+		PMultipleBind bind = getBindReader().readMultipleBind();
 		PExp stexp = null;
 
-		if (lastToken().is(Token.BE))
+		if (lastToken().is(VDMToken.BE))
 		{
 			nextToken();
-			checkFor(Token.ST, 2151, "Expecting 'st' after 'be' in let expression");
+			checkFor(VDMToken.ST, 2151, "Expecting 'st' after 'be' in let expression");
 			stexp = readExpression();
 		}
 
-		checkFor(Token.IN, 2152, "Expecting 'in' after bind in let expression");
+		checkFor(VDMToken.IN, 2152, "Expecting 'in' after bind in let expression");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new LetBeStExpression(start, bind, stexp, readConnectiveExpression());
+		return new ALetBeStExp(null, start, bind, stexp, readConnectiveExpression());
+//		return new LetBeStExpression(start, bind, stexp, readConnectiveExpression());
 	}
 
-	private ForAllExpression readForAllExpression(LexLocation start)
+	private AForAllExp readForAllExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		List<MultipleBind> bindList = getBindReader().readBindList();
-		checkFor(Token.AMPERSAND, 2153, "Expecting '&' after bind list in forall");
-		return new ForAllExpression(start, bindList, readExpression());
+		List<PMultipleBind> bindList = getBindReader().readBindList();
+		checkFor(VDMToken.AMPERSAND, 2153, "Expecting '&' after bind list in forall");
+		return new AForAllExp(null, start, bindList, readExpression()); 
+//		return new ForAllExpression(start, bindList, readExpression());
 	}
 
-	private ExistsExpression readExistsExpression(LexLocation start)
+	private AExistsExp readExistsExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		List<MultipleBind> bindList = getBindReader().readBindList();
-		checkFor(Token.AMPERSAND, 2154, "Expecting '&' after bind list in exists");
-		return new ExistsExpression(start, bindList, readExpression());
+		List<PMultipleBind> bindList = getBindReader().readBindList();
+		checkFor(VDMToken.AMPERSAND, 2154, "Expecting '&' after bind list in exists");
+		return new AExistsExp(null, start, bindList, readExpression());
+//		return new ExistsExpression(start, bindList, readExpression());
 	}
 
-	private Exists1Expression readExists1Expression(LexLocation start)
+	private AExists1Exp readExists1Expression(LexLocation start)
 		throws ParserException, LexException
 	{
-		Bind bind = getBindReader().readBind();
-		checkFor(Token.AMPERSAND, 2155, "Expecting '&' after single bind in exists1");
-		return new Exists1Expression(start, bind, readExpression());
+		PBind bind = getBindReader().readBind();
+//		Bind bind = getBindReader().readBind();
+		checkFor(VDMToken.AMPERSAND, 2155, "Expecting '&' after single bind in exists1");
+		return new AExists1Exp(null, start, bind, readExpression());
+//		return new Exists1Expression(start, bind, readExpression());
 	}
 
-	private IotaExpression readIotaExpression(LexLocation start)
+	private AIotaExp readIotaExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		Bind bind = getBindReader().readBind();
-		checkFor(Token.AMPERSAND, 2156, "Expecting '&' after single bind in iota");
-		return new IotaExpression(start, bind, readExpression());
+		PBind bind = getBindReader().readBind();
+//		Bind bind = getBindReader().readBind();
+		checkFor(VDMToken.AMPERSAND, 2156, "Expecting '&' after single bind in iota");
+		return new AIotaExp(null, start, bind, readExpression());
+//		return new IotaExpression(start, bind, readExpression());
 	}
 
-	private LambdaExpression readLambdaExpression(LexLocation start)
+	private ALambdaExp readLambdaExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		List<TypeBind> bindList = getBindReader().readTypeBindList();
-		checkFor(Token.AMPERSAND, 2157, "Expecting '&' after bind list in lambda");
-		return new LambdaExpression(start, bindList, readExpression());
+		List<ATypeBind> bindList = getBindReader().readTypeBindList();
+		checkFor(VDMToken.AMPERSAND, 2157, "Expecting '&' after bind list in lambda");
+		return new ALambdaExp(null, start, bindList, readExpression()); 
+//		return new LambdaExpression(start, bindList, readExpression());
 	}
 
-	private DefExpression readDefExpression(LexLocation start)
+	private ADefExp readDefExpression(LexLocation start)
 		throws ParserException, LexException
 	{
 		DefinitionReader dr = getDefinitionReader();
-		DefinitionList equalsDefs = new DefinitionList();
+		List<PDefinition> equalsDefs = new Vector<PDefinition>();
 
-		while (lastToken().isNot(Token.IN))
+		while (lastToken().isNot(VDMToken.IN))
 		{
 			equalsDefs.add(dr.readEqualsDefinition());
-			ignore(Token.SEMICOLON);
+			ignore(VDMToken.SEMICOLON);
 		}
 
-		checkFor(Token.IN, 2158, "Expecting 'in' after equals definitions");
-		return new DefExpression(start, equalsDefs, readExpression());
+		checkFor(VDMToken.IN, 2158, "Expecting 'in' after equals definitions");
+		return new ADefExp(null, start, equalsDefs, readExpression());
+//		return new DefExpression(start, equalsDefs, readExpression());
 	}
 
-	private NewExpression readNewExpression(LexLocation start)
+	private ANewExp readNewExpression(LexLocation start)
 		throws ParserException, LexException
 	{
 		LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
-		checkFor(Token.BRA, 2159, "Expecting '(' after new class name");
+		checkFor(VDMToken.BRA, 2159, "Expecting '(' after new class name");
 
     	List<PExp> args = new NodeList<PExp>(null);
     	ExpressionReader er = getExpressionReader();
 
-    	if (lastToken().isNot(Token.KET))
+    	if (lastToken().isNot(VDMToken.KET))
     	{
     		args.add(er.readExpression());
 
-    		while (ignore(Token.COMMA))
+    		while (ignore(VDMToken.COMMA))
     		{
         		args.add(er.readExpression());
     		}
     	}
 
-    	checkFor(Token.KET, 2124, "Expecting ')' after constructor args");
-    	return new NewExpression(start, name, args);
+    	checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
+    	return new ANewExp(null, start, name, args);
+//    	return new NewExpression(start, name, args);
     }
 
-	private IsOfBaseClassExpression readIsOfBaseExpression(LexLocation start)
+	private AIsOfBaseClassExp readIsOfBaseExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		checkFor(Token.BRA, 2160, "Expecting '(' after 'isofbase'");
+		checkFor(VDMToken.BRA, 2160, "Expecting '(' after 'isofbase'");
     	List<PExp> args = readExpressionList();
-    	checkFor(Token.KET, 2161, "Expecting ')' after 'isofbase' args");
+    	checkFor(VDMToken.KET, 2161, "Expecting ')' after 'isofbase' args");
 
     	if (args.size() != 2)
     	{
     		throwMessage(2041, "Expecting two arguments for 'isofbase'");
     	}
 
-    	if (!(args.get(0) instanceof VariableExpression))
+    	if (!(args.get(0) instanceof AVariableExp))
     	{
     		throwMessage(2042, "Expecting (<class>,<exp>) arguments for 'isofbase'");
     	}
 
-    	LexNameToken classname = ((VariableExpression)args.get(0)).name;
+    	LexNameToken classname = ((AVariableExp)args.get(0)).getName();
 
 		if (classname.old)
 		{
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new IsOfBaseClassExpression(start, classname, args.get(1));
+		return new AIsOfBaseClassExp(null, start, classname, args.get(1));
+//		return new IsOfBaseClassExpression(start, classname, args.get(1));
     }
 
-	private IsOfClassExpression readIsOfClassExpression(LexLocation start)
+	private AIsOfClassExp readIsOfClassExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		checkFor(Token.BRA, 2162, "Expecting '(' after 'isofclass'");
+		checkFor(VDMToken.BRA, 2162, "Expecting '(' after 'isofclass'");
     	List<PExp> args = readExpressionList();
-    	checkFor(Token.KET, 2163, "Expecting ')' after 'isofclass' args");
+    	checkFor(VDMToken.KET, 2163, "Expecting ')' after 'isofclass' args");
 
     	if (args.size() != 2)
     	{
     		throwMessage(2043, "Expecting two arguments for 'isofclass'");
     	}
 
-    	if (!(args.get(0) instanceof VariableExpression))
+    	if (!(args.get(0) instanceof AVariableExp))
     	{
     		throwMessage(2044, "Expecting (<class>,<exp>) arguments for 'isofclass'");
     	}
 
-    	LexNameToken classname = ((VariableExpression)args.get(0)).name;
+    	LexNameToken classname = ((AVariableExp)args.get(0)).getName();
 
 		if (classname.old)
 		{
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new IsOfClassExpression(start, classname, args.get(1));
+		return new AIsOfClassExp(null, start, classname, args.get(1));
+//		return new IsOfClassExpression(start, classname, args.get(1));
     }
 
-	private SameBaseClassExpression readSameBaseExpression(LexLocation start)
+	private ASameBaseClassExp readSameBaseExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		checkFor(Token.BRA, 2164, "Expecting '(' after 'samebaseclass'");
+		checkFor(VDMToken.BRA, 2164, "Expecting '(' after 'samebaseclass'");
     	List<PExp> args = readExpressionList();
-    	checkFor(Token.KET, 2165, "Expecting ')' after 'samebaseclass' args");
+    	checkFor(VDMToken.KET, 2165, "Expecting ')' after 'samebaseclass' args");
 
     	if (args.size() != 2)
     	{
     		throwMessage(2045, "Expecting two expressions in 'samebaseclass'");
     	}
 
-    	return new SameBaseClassExpression(start, args);
+    	return new ASameBaseClassExp(null, start, args.get(0), args.get(1));
+//    	return new SameBaseClassExpression(start, args);
     }
 
-	private SameClassExpression readSameClassExpression(LexLocation start)
+	private ASameClassExp readSameClassExpression(LexLocation start)
 		throws ParserException, LexException
 	{
-		checkFor(Token.BRA, 2166, "Expecting '(' after 'sameclass'");
+		checkFor(VDMToken.BRA, 2166, "Expecting '(' after 'sameclass'");
     	List<PExp> args = readExpressionList();
-    	checkFor(Token.KET, 2167, "Expecting ')' after 'sameclass' args");
+    	checkFor(VDMToken.KET, 2167, "Expecting ')' after 'sameclass' args");
 
     	if (args.size() != 2)
     	{
     		throwMessage(2046, "Expecting two expressions in 'sameclass'");
     	}
-
-    	return new SameClassExpression(start, args);
+    	
+    	return new ASameClassExp(null, start, args.get(0), args.get(1));
+//    	return new SameClassExpression(start, args);
     }
 
 	private boolean inPerExpression = false;
@@ -1692,20 +1867,21 @@ public class ExpressionReader extends SyntaxReader
 			case REQ:
 			case WAITING:
 				nextToken();
-				checkFor(Token.BRA, 2168, "Expecting " + s + "(name(s))");
+				checkFor(VDMToken.BRA, 2168, "Expecting " + s + "(name(s))");
 
 				LexNameList opnames = new LexNameList();
 				LexNameToken opname = readNameToken("Expecting a name");
 				opnames.add(opname);
 
-				while (ignore(Token.COMMA))
+				while (ignore(VDMToken.COMMA))
 				{
 					opname = readNameToken("Expecting " + s + "(name(s))");
 					opnames.add(opname);
 				}
 
-				checkFor(Token.KET, 2169, "Expecting " + s + "(name(s))");
-				return new HistoryExpression(location, op.type, opnames);
+				checkFor(VDMToken.KET, 2169, "Expecting " + s + "(name(s))");
+				return new AHistoryExp(null, op.location, op, opnames);
+//				return new HistoryExpression(location, op.type, opnames);
 
 			default:
 				throwMessage(2048, "Expecting #act, #active, #fin, #req or #waiting");

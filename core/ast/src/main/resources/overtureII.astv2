@@ -123,8 +123,8 @@ exp {-> package='org.overture.ast.expressions'}
     |   {elseIf} [elseIf]:exp [then]:exp  
     |   {exists1}  [bind]:bind [predicate]:exp
     |   {exists} [bindList]:multipleBind* [predicate]:exp
-    |   {field} [object]:exp [field]:LexIdentifierToken
-    |   {fieldNumber} [tuple]:exp [field]:LexIdentifierToken
+    |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
+    |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
     |   {funcInstatiation} [function]:exp [actualTypes]:type*
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
@@ -138,8 +138,9 @@ exp {-> package='org.overture.ast.expressions'}
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
     |   {letDef} [localDefs]:definition* [expression]:exp
     |   {def} [localDefs]:definition* [expression]:exp
-    |   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
-    |   {mapEnum} [members]:maplet*     
+//    |   {mapComp} [first]:maplet [bindings]:multipleBind [predicate]:exp
+//    |   {mapEnum} [members]:maplet*     
+    |   #Map
     |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
     |   {mkType} [typeName]:LexNameToken [args]:exp*
@@ -155,12 +156,13 @@ exp {-> package='org.overture.ast.expressions'}
     |   {sameBaseClass} [left]:exp [right]:exp
     |   {sameClass} [left]:exp [right]:exp
     |   {self} [name]:LexNameToken
-    |   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
-    |   {seqEnum} [members]:exp*
-//    |   {elements} [exp]:exp
-    |   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
-    |   {setEnum} [members]:exp*
-    |   {setRange} [first]:exp [last]:exp
+//    |   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
+//    |   {seqEnum} [members]:exp*
+    |   #Seq
+//    |   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
+//    |   {setEnum} [members]:exp*
+//    |   {setRange} [first]:exp [last]:exp
+    |   #Set
     |   {stateInit} [state]:state
     |   {string_const} [value]:LexStringToken
     |   {subclassResponsibility} 
@@ -171,6 +173,22 @@ exp {-> package='org.overture.ast.expressions'}
     |   {unary} unop [exp]:exp     
     |   {undefined}
     |   {variable} [name]:LexNameToken           
+    ;
+    
+#Map {-> package='org.overture.ast.expressions'}
+    =   {mapComp} [first]:maplet [bindings]:multipleBind* [predicate]:exp
+    |   {mapEnum} [members]:maplet* 
+    ;
+    
+#Seq {-> package='org.overture.ast.expressions'}
+    =   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
+    |   {seqEnum} [members]:exp*
+    ;
+    
+#Set {-> package='org.overture.ast.expressions'}
+    =   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
+    |   {setEnum} [members]:exp*
+    |   {setRange} [first]:exp [last]:exp
     ;
     
 modifier {-> package='org.overture.ast.expressions'}
@@ -216,10 +234,10 @@ type {-> package='org.overture.ast.types'}
     ;
 
 #basic {-> package='org.overture.ast.types'}
-    =   {boolean} [token]:bool
-    |   {char} [token]:char    
+    =   {boolean}
+    |   {char}
     |   #numeric     
-    |   {token} token_literal
+    |   {token}
     ;
 
 #numeric {-> package='org.overture.ast.types'}
