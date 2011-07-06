@@ -112,9 +112,9 @@ public class ClassType extends Type
 		}
 	}
 
-	public Definition findName(LexNameToken tag)
+	public Definition findName(LexNameToken tag, NameScope scope)
 	{
-		return classdef.findName(tag, NameScope.NAMESANDSTATE);
+		return classdef.findName(tag, scope);
 	}
 
 	@Override

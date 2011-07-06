@@ -121,7 +121,7 @@ public class FieldExpression extends Expression
     		}
 
     		memberName.setTypeQualifier(qualifiers);
-    		Definition fdef = cls.findName(memberName);
+    		Definition fdef = cls.findName(memberName, scope);
 
    			if (fdef == null)
    			{
@@ -130,7 +130,7 @@ public class FieldExpression extends Expression
 
     			TypeList oldq = memberName.typeQualifier;
     			memberName.setTypeQualifier(null);
-    			fdef = cls.findName(memberName);
+    			fdef = cls.findName(memberName, scope);
     			memberName.setTypeQualifier(oldq);	// Just for error text!
     		}
 
