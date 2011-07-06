@@ -249,11 +249,11 @@ type {-> package='org.overture.ast.types'}
     ;
 
 field {-> package='org.overture.ast.types'}
-    =   {field} [access]:access [static]:static [async]:async [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
+    =   {field} [access]:accessSpecifier [static]:static [async]:async [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
     ;
-//accessSpecifier  {-> package='org.overture.ast.definitions'}
-//  = {accessSpecifier} [isStatic]:bool_java [isAsync]:bool_java [access]:token 
-//  ;
+accessSpecifier  {-> package='org.overture.ast.types'}
+  = {accessSpecifier} [access]:access [static]:static [async]:async 
+  ;
 access  {-> package='org.overture.ast.definitions'}
     =   {public}
     |   {protected}
@@ -296,7 +296,7 @@ patternBind {-> package='org.overture.ast.patterns'}
     ;
     
 definition {-> package='org.overture.ast.definitions'}
-    =   {assignmentf} [expression]:exp [expType]:type
+    =   {assignment} [expression]:exp [expType]:type
     |   {instanceVariable} [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken
     |   {class} [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition*
     //| missing bus cpu and system defs
