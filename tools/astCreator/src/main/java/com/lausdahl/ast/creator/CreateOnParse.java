@@ -170,6 +170,8 @@ public class CreateOnParse
 						}
 					} else if (node.getText().equals("Aspect Declaration"))
 					{
+						if(node.getChildren() != null)
+						{
 						for (Object toke : node.getChildren())
 						{
 							if (toke instanceof CommonTree)
@@ -223,6 +225,7 @@ public class CreateOnParse
 
 								println("Aspect Decleration: " + p);
 							}
+						}
 						}
 					}
 				}
