@@ -40,6 +40,7 @@ public class SourceFileWriter
 				continue;
 			}
 			System.out.print(/*def.getSignatureName()+"..."*/".");
+			System.out.flush();
 			i--;
 			if(i==0)
 			{

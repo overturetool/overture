@@ -1,6 +1,9 @@
 package com.lausdahl.ast.creator;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -117,8 +120,8 @@ public class CreateOnParse
 								CommonTree p = (CommonTree) toke;
 								CommonTree idT = null;
 								boolean externalJavaType = false;
-								boolean enumType= false;
-								boolean nodeType= false;
+								boolean enumType = false;
+								boolean nodeType = false;
 								if (p.getChildCount() > 0)
 								{
 									idT = (CommonTree) p.getChild(0);
@@ -127,11 +130,13 @@ public class CreateOnParse
 										if (p.getChild(0).getText().equals("java"))
 										{
 											externalJavaType = true;
-											if (p.getChildCount() > 2 && p.getChild(2).getText().equals("enum"))
+											if (p.getChildCount() > 2
+													&& p.getChild(2).getText().equals("enum"))
 											{
 												enumType = true;
 												idT = (CommonTree) p.getChild(4);
-											}else if (p.getChildCount() > 2 && p.getChild(2).getText().equals("node"))
+											} else if (p.getChildCount() > 2
+													&& p.getChild(2).getText().equals("node"))
 											{
 												nodeType = true;
 												idT = (CommonTree) p.getChild(4);
@@ -148,12 +153,12 @@ public class CreateOnParse
 								{
 									c = new CommonTreeClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, env);
 									c.setPackageName(defaultPackage + ".tokens");
-								} else if(enumType)
+								} else if (enumType)
 								{
 									c = new ExternalEnumJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
-								}else
+								} else
 								{
-									c = new ExternalJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(),nodeType, env);
+									c = new ExternalJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), nodeType, env);
 								}
 
 								c.imports.add(env.token);
@@ -170,62 +175,74 @@ public class CreateOnParse
 						}
 					} else if (node.getText().equals("Aspect Declaration"))
 					{
-						if(node.getChildren() != null)
+						if (node.getChildren() != null)
 						{
-						for (Object toke : node.getChildren())
-						{
-							if (toke instanceof CommonTree)
+							for (Object toke : node.getChildren())
 							{
-								CommonTree p = (CommonTree) toke;
-								String classDefName = "P"
-										+ BaseClassDefinition.firstLetterUpper(p.getText());
-								IClassDefinition c = env.lookUp(classDefName);
-
-								if (p.getChildCount() > 0)
+								if (toke instanceof CommonTree)
 								{
-									for (Object aspectDcl : p.getChildren())
+									CommonTree p = (CommonTree) toke;
+									// String classDefName = "P"
+									// + BaseClassDefinition.firstLetterUpper(p.getText());
+									String classDefName = getNameFromAspectNode((CommonTree) p.getChild(0));
+									IClassDefinition c = env.lookUp(classDefName);
+									if (c == null)
 									{
-										if (aspectDcl instanceof CommonTree)
+										System.err.println("Faild to lookup aspect addition with "
+												+ p);
+										continue;
+									}
+									boolean firstName = true;
+									if (p.getChildCount() > 0)
+									{
+										for (Object aspectDcl : p.getChildren())
 										{
-											CommonTree aspectDclT = (CommonTree) aspectDcl;
-											Field f = new Field(env);
-
-											if (aspectDclT.getChildCount() > 0)
+											if (firstName)
 											{
-												for (Object aspectDclName : aspectDclT.getChildren())
+												firstName = false;
+												continue;
+											}
+											if (aspectDcl instanceof CommonTree)
+											{
+												CommonTree aspectDclT = (CommonTree) aspectDcl;
+												Field f = new Field(env);
+
+												if (aspectDclT.getChildCount() > 0)
 												{
-													if (aspectDclName instanceof CommonTree)
+													for (Object aspectDclName : aspectDclT.getChildren())
 													{
-														CommonTree aspectDclNameT = (CommonTree) aspectDclName;
-														f.name = aspectDclNameT.getText();
-														break;
+														if (aspectDclName instanceof CommonTree)
+														{
+															CommonTree aspectDclNameT = (CommonTree) aspectDclName;
+															f.name = aspectDclNameT.getText();
+															break;
+														}
 													}
 												}
-											}
 
-											if (aspectDclT.getChildCount() > 1)
-											{
-												if (aspectDclT.getChild(1) != null)
+												if (aspectDclT.getChildCount() > 1)
 												{
-													String regex = aspectDclT.getChild(1).getText();
-													if (regex.trim().equals("*"))
+													if (aspectDclT.getChild(1) != null)
 													{
-														f.isList = true;
+														String regex = aspectDclT.getChild(1).getText();
+														if (regex.trim().equals("*"))
+														{
+															f.isList = true;
+														}
 													}
 												}
-											}
 
-											f.isAspect = true;
-											f.setType(aspectDclT.getText());
-											c.addField(f);
+												f.isAspect = true;
+												f.setType(aspectDclT.getText());
+												c.addField(f);
+											}
 										}
+
 									}
 
+									println("Aspect Decleration: " + p);
 								}
-
-								println("Aspect Decleration: " + p);
 							}
-						}
 						}
 					}
 				}
@@ -236,6 +253,49 @@ public class CreateOnParse
 		}
 
 		return env;
+	}
+
+	private String getNameFromAspectNode(CommonTree p)
+	{
+		String topName = p.getText();
+		if (p.getChildCount() > 0)
+		{
+			for (Object c : p.getChildren())
+			{
+				if (c instanceof CommonTree)
+				{
+					topName += ((CommonTree) c).getText();
+				}
+			}
+		}
+
+		String[] names = topName.split("->");
+
+		List<String> nns = Arrays.asList(names);
+		Collections.reverse(nns);
+
+		String name = null;
+		for (String s : nns)
+		{
+			if (name == null)
+			{
+				if (s.startsWith("#"))
+				{
+					name = "S";
+				} else
+				{
+					name = "P";
+				}
+			}
+			name +=BaseClassDefinition.firstLetterUpper(s.replace("#", ""));
+		}
+
+//		String name = (topName.startsWith("#") ? "S" : "P");
+//
+//		name += BaseClassDefinition.firstLetterUpper(topName.substring(topName.startsWith("#") ? 1
+//				: 0));
+
+		return name;
 	}
 
 	private static void exstractA(CommonTreeClassDefinition superClass,

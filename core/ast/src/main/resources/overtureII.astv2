@@ -415,30 +415,30 @@ alternativeStm {-> package='org.overture.ast.statements'}
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
 
-unop = [location]:location
+%unop = [location]:location
     ;
 
-binop = [location]:location
+%binop = [location]:location
     ;
 
-exp = [type]:type [location]:location
+%exp = [type]:type [location]:location
     ;
 
-type = [location]:location
+%type = [location]:location
      ; 
 
-pattern = [location]:location [definitions]:definition*
+%pattern = [location]:location [definitions]:definition*
     ;
 
-bind = [location]:location
+%bind = [location]:location
     ;
 
-multipleBind = [location]:location
+%multipleBind = [location]:location
     ;
     
-definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [type]:type // [pass]:pass
+%definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [type]:type // [pass]:pass
     ;
     
-#SimpleBlock 
+%stm->#SimpleBlock 
     =   [statements]:stm*
     ;
