@@ -188,8 +188,8 @@ public class CreateOnParse
 									IClassDefinition c = env.lookUp(classDefName);
 									if (c == null)
 									{
-										System.err.println("Faild to lookup aspect addition with "
-												+ p);
+										System.err.println("Failed to lookup aspect addition with "
+												+ p + classDefName);
 										continue;
 									}
 									boolean firstName = true;
