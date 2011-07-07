@@ -22,7 +22,6 @@ import java.util.*;
  *  will be invalidated, so any subsequent iterator operation will throw a
  *  <code>ConcurrentModificationException</code>.<p>
  *
- *  @author Aske Simon Christensen, aske@brics.dk
  */
 @SuppressWarnings("serial")
 public class %NodeList%<E extends %Node%> extends LinkedList<E> {
