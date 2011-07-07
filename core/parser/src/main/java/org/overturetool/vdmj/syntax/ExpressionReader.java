@@ -701,7 +701,7 @@ public class ExpressionReader extends SyntaxReader
     						} 
         				}
     					
-    					exp = new AApplyExp(null,exp.getLocation(), exp, null, null, null);
+    					exp = new AApplyExp(null,exp.getLocation(), exp,  null);
 //   					exp = new ApplyExpression(exp);
     					nextToken();
     				}
@@ -769,7 +769,7 @@ public class ExpressionReader extends SyntaxReader
 						}
 
 						checkFor(VDMToken.KET, 2122, "Expecting ')' after function args");
-						exp = new AApplyExp(null, exp.getLocation(), exp, args, null, null);
+						exp = new AApplyExp(null, exp.getLocation(), exp, args);
 						//exp = new ApplyExpression(exp, args);
     				}
     				break;
@@ -788,7 +788,7 @@ public class ExpressionReader extends SyntaxReader
     				}
 
     				checkFor(VDMToken.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
-   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types,null,null);
+   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types);
     				//exp = new FuncInstantiationExpression(exp, types);
     				break;
 
