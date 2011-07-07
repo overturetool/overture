@@ -2,7 +2,7 @@ Tokens
 /* This section declared tokens as internal types or external classes
  * internal definitions:
  *  plus='+';
- *
+ * 
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
@@ -55,41 +55,6 @@ Abstract Syntax Tree
  *
  */
 
-binop {-> package='org.overture.ast.expressions'}
-    =   {lazy_and} 
-    |   {equivalent} 
-    |   {implies} 
-    |   {lazy_or} 
-    |   {comp} 
-    |   {domainResBy} 
-    |   {domainResTo} 
-    |   {equals} 
-    |   {inSet} 
-    |   {mapUnion} 
-    |   {notEqual} 
-    |   {notInSet} 
-    |   {div} 
-    |   {divide} 
-    |   {greaterEqual} 
-    |   {greater} 
-    |   {lessEqual} 
-    |   {less} 
-    |   {mod}     
-    |   {plus} 
-    |   {rem} 
-    |   {subtract} 
-    |   {times} 
-    |   {plusPlus} 
-    |   {properSubset} 
-    |   {rangeResBy} 
-    |   {rangeResTo} 
-    |   {seqConcat} 
-    |   {setDifference} 
-    |   {setIntersect} 
-    |   {setUnion} 
-    |   {starStar} 
-    |   {subset}          
-    ;
     
 unop {-> package='org.overture.ast.expressions'}
     =   {absolute} 
@@ -115,8 +80,8 @@ unop {-> package='org.overture.ast.expressions'}
     ;
     
 exp {-> package='org.overture.ast.expressions'}
-    =   {apply} [root]:exp [args]:exp*
-    |   {binop} [left]:exp binop [right]:exp
+    =   {apply} [root]:exp [args]:exp* [argtypes]:type* [recursive]:definition
+    |   #Binary// {binop} [left]:exp binop [right]:exp
     |   {boolean_const} [value]:LexBooleanToken
     |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
     |   {char_const} [value]:LexCharacterToken
@@ -126,7 +91,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp [actualTypes]:type*
+    |   {funcInstatiation} [function]:exp [actualTypes]:type* [expdef]:definition.explicitFunction [impdef]:definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {int_const} [value]:LexIntegerToken
@@ -168,6 +133,50 @@ exp {-> package='org.overture.ast.expressions'}
     |   {variable} [name]:LexNameToken           
     ;
     
+#Binary {-> package='org.overture.ast.expressions'}
+    =   #Boolean
+    |   {comp} 
+    |   {domainResBy}
+    |   {domainResTo}
+    |   {equals}
+    |   {inSet}
+    |   {mapUnion}
+    |   {notEqual}
+    |   {notInSet}
+    |   #Numeric
+    |   {plusPlus}
+    |   {properSubset}
+    |   {rangeByRes}
+    |   {rangeResTo}
+    |   {seqConcat}
+    |   {setDifference}
+    |   {setIntersec}
+    |   {setUnion}
+    |   {starStar}
+    |   {subset}
+    ;
+    
+#Boolean {-> package='org.overture.ast.expressions'}
+    =   {and}
+    |   {equivalent}
+    |   {implies}
+    |   {or}
+    ;
+    
+#Numeric {-> package='org.overture.ast.expressions'}
+    =   {div}
+    |   {divide}
+    |   {greaterEqual}
+    |   {greater}
+    |   {lessEqual}
+    |   {less}
+    |   {mod}
+    |   {plus}
+    |   {rem}
+    |   {substract}
+    |   {times}
+    ;
+    
 #Map {-> package='org.overture.ast.expressions'}
     =   {mapComp} [first]:maplet [bindings]:multipleBind* [predicate]:exp
     |   {mapEnum} [members]:maplet* 
@@ -201,7 +210,7 @@ type {-> package='org.overture.ast.types'}
     =   #basic
     |   {bracket} [type]:type
     |   {class} [name]:LexNameToken [classdef]:definition.class 
-    |   {function} [partial]:java_Boolean [parameters]:type* [result]:type
+    |   {function} [partial]:java_Boolean [parameters]:type* [result]:type 
     |   #invariant
     |   {map}   [from]:type [to]:type [empty]:java_Boolean
     |   {inMap} [from]:type [to]:type 
@@ -308,7 +317,9 @@ definition {-> package='org.overture.ast.definitions'}
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp 
-                           [isTypeInvariant]:java_Boolean [measure]:LexNameToken [isCurried]:java_Boolean 
+                           [isTypeInvariant]:java_Boolean 
+                           [measure]:LexNameToken  [recursive]:java_Boolean
+                           [isCurried]:java_Boolean 
     |   {explicitOperation} [parameterPatterns]:pair.patternType* 
                             [result]:pair.patternType 
                             [body]:stm
@@ -445,13 +456,13 @@ Aspect Declaration
 %unop = [location]:location
     ;
 
-%binop = [location]:location
-    ;
-
 %exp = [type]:type [location]:location
     ;
 
-%type = [location]:location
+%exp->#Binary = [left]:exp [right]:exp [op]:LexToken [ltype]:type [rtype]:type
+    ; 
+
+%type = [location]:location [resolved]:java_Boolean
      ; 
 
 %pattern = [location]:location [definitions]:definition*
