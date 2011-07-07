@@ -14,12 +14,14 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
+import org.overture.ast.types.SNumericBasicType;
 import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -308,6 +310,50 @@ public class PTypeAssistant {
 		default:
 			assert false : "Can't getMap of a non-map";	
 			return null;	
+		}
+	}
+
+	public static boolean isSet(PType type) {
+		switch(type.kindPType())
+		{
+			case SET:
+				return true;	
+			default:
+				return false;
+		}
+	}
+
+	public static ASetType getSet(PType type) {
+		switch (type.kindPType()) {
+		case SET:
+			if(type instanceof ASetType)
+			{
+				return (ASetType) type;
+			}			
+		default:
+			assert false : "Can't getSet of a non-set";	
+			return null;	
+		}
+	}
+
+	public static SNumericBasicType getNumeric(PType type) {
+		switch(type.kindPType())
+		{
+			case BASIC:
+				if(type instanceof SBasicType)
+				{
+					SBasicType bType = (SBasicType) type;
+					if(bType.kindSBasicType() == EBasicType.NUMERIC)
+					{
+						if(type instanceof SNumericBasicType)
+						{
+							return (SNumericBasicType) type;
+						}
+					}										
+				}				
+				default:
+					assert false : "Can't getNumeric of a non-numeric";	
+					return null;
 		}
 	}
 

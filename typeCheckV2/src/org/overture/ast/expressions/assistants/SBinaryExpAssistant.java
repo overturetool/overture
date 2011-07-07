@@ -15,15 +15,15 @@ public class SBinaryExpAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 	
-		node.setLtype(node.getLeft().apply(rootVisitor, question));
-		node.setRtype(node.getRight().apply(rootVisitor, question));
+		node.getLeft().apply(rootVisitor, question);
+		node.getRight().apply(rootVisitor, question);
 
-		if (!PTypeAssistant.isType(node.getLtype(),expected.getClass()))
+		if (!PTypeAssistant.isType(node.getLeft().getType(),expected.getClass()))
 		{
 			PExpAssistant.report(3065, "Left hand of " + node.getOp() + " is not " + expected,node);
 		}
 
-		if (!PTypeAssistant.isType(node.getRtype(),expected.getClass()))
+		if (!PTypeAssistant.isType(node.getRight().getType(),expected.getClass()))
 		{
 			PExpAssistant.report(3066, "Right hand of " + node.getOp() + " is not " + expected,node);
 		}
