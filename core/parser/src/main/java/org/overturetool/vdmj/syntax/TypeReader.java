@@ -170,7 +170,7 @@ public class TypeReader extends SyntaxReader
 				}
 				
 				LexNameToken tagname = idToName(tagid);
-				list.add(new AFieldField(null,null,null,tagname, tagid.getName(), readType(), false));
+				list.add(new AFieldField(null,tagname, tagid.getName(), readType(), false));
 				reader.unpush();
 			}
 			else if (separator.is(VDMToken.EQABST))
@@ -189,7 +189,7 @@ public class TypeReader extends SyntaxReader
 				}
 
 				LexNameToken tagname = idToName(tagid);
-				list.add(new AFieldField(null,null,null,tagname, tagid.getName(), readType(), true));
+				list.add(new AFieldField(null,tagname, tagid.getName(), readType(), true));
 				reader.unpush();
 			}
 			else	// Anonymous field or end of fields
@@ -201,7 +201,7 @@ public class TypeReader extends SyntaxReader
 					PType ftype = readType();
 					LexNameToken tagname = new LexNameToken(
 						getCurrentModule(), anon, ftype.getLocation());
-					list.add(new AFieldField(null,null,null,tagname, anon, ftype, false));
+					list.add(new AFieldField(null,tagname, anon, ftype, false));
 					reader.unpush();
 				}
 				catch (Exception e)
