@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AClassDefinition;
+
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -25,7 +26,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 
 public class DefinitionAssistant {
 
-	public static boolean hasSupertype(AClassDefinition aClassDefDefinition, AClassType other) {
+	public static boolean hasSupertype(SClassDefinition aClassDefDefinition, AClassType other) {
 		if (aClassDefDefinition.getType().equals(other))
 		{
 			return true;
@@ -222,7 +223,7 @@ public class DefinitionAssistant {
 	}
 
 	private static PDefinition getSelfDefinition(
-			AClassDefinition classDefinition) {
+			SClassDefinition classDefinition) {
 		
 		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
 				classDefinition.getName().getSelfName(), NameScope.LOCAL,false, null , classDefinition.getType());

@@ -26,9 +26,10 @@ package org.overture.runtime;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.definitions.AClassDefinition;
+
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.DefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -140,7 +141,7 @@ abstract public class Environment
 	abstract public AStateDefinition findStateDefinition();
 
 	/** Find the enclosing class definition, if any. */
-	abstract public AClassDefinition findClassDefinition();
+	abstract public SClassDefinition findClassDefinition();
 
 	/** True if the calling context is a static function or operation. */
 	abstract public boolean isStatic();

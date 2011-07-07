@@ -25,9 +25,9 @@ package org.overture.typecheck;
 
 import java.util.Set;
 
-import org.overture.ast.definitions.AClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.DefinitionAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.runtime.Environment;
@@ -148,7 +148,7 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public AClassDefinition findClassDefinition()
+	public SClassDefinition findClassDefinition()
 	{
 		return null;
 	}
