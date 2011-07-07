@@ -91,7 +91,7 @@ public class AExplicitFunctionDefinitionAssistant {
 				// This is a type/param mismatch, reported elsewhere. But we
 				// have to create definitions to avoid a cascade of errors.
 
-				PType unknown = new AUnknownType(location);
+				PType unknown = new AUnknownType(location,false);
 
 				for (PPattern p: plist.getList())
 				{
@@ -127,7 +127,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		for (LexNameToken pname: node.getTypeParams())
 		{
 			PDefinition p = new ALocalDefinition(
-				pname.location, pname, NameScope.NAMES,false,null, new AParameterType(null,pname));
+				pname.location, pname, NameScope.NAMES,false,null, new AParameterType(null,false,pname));
 
 			DefinitionAssistant.markUsed(p);
 			defs.add(p);

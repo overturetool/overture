@@ -58,7 +58,7 @@ public class Main {
 				null, //classdefinition
 				null, // type
 				new ArrayList<LexNameToken>(),  //type params
-				new AFunctionType(loc,false, funcParamType , new AIntNumericBasicType(loc)), //functiontype 
+				new AFunctionType(loc,false, false, funcParamType , new AIntNumericBasicType(loc,true)), //functiontype 
 				paramPatternList, //paramPatternList
 				null, //pre
 				null, //predef
@@ -82,7 +82,7 @@ public class Main {
 		tci.scope = NameScope.NAMES;
 		tci.env = new ModuleEnvironment(module);
 		
-		PType tcheckResult = module.apply(new TypeCheckVisitor(), tci);	
+		PType tcheckResult = module.apply(TypeCheckVisitor.getInstance(), tci);	
 		System.out.println("Finished");
 	}
 
