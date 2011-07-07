@@ -127,7 +127,7 @@ public class Field {
 			}
 			System.out.println();
 			System.err.println(String.format(msg, className));
-			System.exit(-1);
+			throw new Error(msg);
 		}
 	}
 

@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-06 23:31:32
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-07 09:35:39
 
 package com.lausdahl.ast.creator.parser;
 
@@ -810,7 +810,7 @@ public class AstcParser extends Parser {
 
 
             // AST REWRITE
-            // elements: productionfields, name, alternative
+            // elements: alternative, productionfields, name
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1241,7 +1241,7 @@ public class AstcParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: definitions, ID
+                    // elements: ID, definitions
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 

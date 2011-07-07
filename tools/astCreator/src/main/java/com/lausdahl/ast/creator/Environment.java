@@ -41,6 +41,15 @@ public class Environment
 
 	public void addClass(IClassDefinition cl)
 	{
+		for (IClassDefinition def : classes)
+		{
+			if(def.getName().equals(cl.getName()))
+			{
+				String msg = "Trying to add a dublicate for class: "+def.getPackageName()+"."+def.getName();
+				System.err.println(msg);
+				throw new Error(msg);
+			}
+		}
 		this.classes.add(cl);
 	}
 	
