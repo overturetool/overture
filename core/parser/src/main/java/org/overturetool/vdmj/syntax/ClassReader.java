@@ -23,18 +23,16 @@
 
 package org.overturetool.vdmj.syntax;
 
+import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
 
 /**
@@ -54,12 +52,12 @@ public class ClassReader extends SyntaxReader
 
 		try
 		{
-			if (lastToken().is(Token.EOF))
+			if (lastToken().is(VDMToken.EOF))
 			{
 				return list;	// The file is empty
 			}
 
-    		if (lastToken().isNot(Token.CLASS) && lastToken().isNot(Token.SYSTEM))
+    		if (lastToken().isNot(VDMToken.CLASS) && lastToken().isNot(VDMToken.SYSTEM))
     		{
     			warning(5015,
     				"LaTeX source should start with %comment, \\document, \\section or \\subsection",
@@ -71,9 +69,9 @@ public class ClassReader extends SyntaxReader
     					"Expecting list of 'class' definitions");
     		}
 
-    		while (lastToken().is(Token.CLASS) || lastToken().is(Token.SYSTEM))
+    		while (lastToken().is(VDMToken.CLASS) || lastToken().is(VDMToken.SYSTEM))
     		{
-    			if (lastToken().is(Token.CLASS))
+    			if (lastToken().is(VDMToken.CLASS))
     			{
     				list.add(readClass());
     			}
@@ -83,25 +81,25 @@ public class ClassReader extends SyntaxReader
     			}
     		}
 
-    		if (lastToken().isNot(Token.EOF))
+    		if (lastToken().isNot(VDMToken.EOF))
     		{
     			throwMessage(2006, "Found tokens after class definitions");
     		}
 		}
 		catch (LocatedException e)
 		{
-			Token[] end = new Token[0];
+			VDMToken[] end = new VDMToken[0];
 			report(e, end, end);
 		}
 
 		return list;
 	}
 
-	private ClassDefinition readClass() throws ParserException, LexException
+	private SClassDefinition readClass() throws ParserException, LexException
 	{
 		LexNameList superclasses = new LexNameList();
 
-		if (lastToken().is(Token.CLASS))
+		if (lastToken().is(VDMToken.CLASS))
 		{
 			setCurrentModule("");
 			nextToken();
@@ -109,16 +107,16 @@ public class ClassReader extends SyntaxReader
 			LexNameToken className = classId.getClassName();
 			setCurrentModule(classId.name);
 
-			if (lastToken().is(Token.IS))
+			if (lastToken().is(VDMToken.IS))
 			{
 				nextToken();
-				checkFor(Token.SUBCLASS, 2075, "Expecting 'is subclass of'");
-				checkFor(Token.OF, 2076, "Expecting 'is subclass of'");
+				checkFor(VDMToken.SUBCLASS, 2075, "Expecting 'is subclass of'");
+				checkFor(VDMToken.OF, 2076, "Expecting 'is subclass of'");
 
 				LexIdentifierToken id = readIdToken("Expecting class identifier");
 				superclasses.add(id.getClassName());
 
-				while (ignore(Token.COMMA))
+				while (ignore(VDMToken.COMMA))
 				{
 					id = readIdToken("Expecting class identifier");
 					superclasses.add(id.getClassName());
@@ -126,7 +124,7 @@ public class ClassReader extends SyntaxReader
 			}
 
 			DefinitionList members = getDefinitionReader().readDefinitions();
-			checkFor(Token.END, 2077, "Expecting 'end' after class members");
+			checkFor(VDMToken.END, 2077, "Expecting 'end' after class members");
 
 			LexIdentifierToken endname =
 				readIdToken("Expecting 'end <name>' after class members");
@@ -136,7 +134,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
-			return new ClassDefinition(className, superclasses, members);
+			return new SClassDefinition(className, superclasses, members);
 		}
 		else
 		{
@@ -146,9 +144,9 @@ public class ClassReader extends SyntaxReader
 		return null;
 	}
 
-	private SystemDefinition readSystem() throws ParserException, LexException
+	private ASystemClassDefinition readSystem() throws ParserException, LexException
 	{
-		if (lastToken().is(Token.SYSTEM))
+		if (lastToken().is(VDMToken.SYSTEM))
 		{
 			setCurrentModule("");
 			nextToken();
@@ -156,11 +154,11 @@ public class ClassReader extends SyntaxReader
 			LexNameToken className = classId.getClassName();
 			setCurrentModule(classId.name);
 
-			if (lastToken().is(Token.IS))
+			if (lastToken().is(VDMToken.IS))
 			{
 				nextToken();
-				checkFor(Token.SUBCLASS, 2075, "Expecting 'is subclass of'");
-				checkFor(Token.OF, 2076, "Expecting 'is subclass of'");
+				checkFor(VDMToken.SUBCLASS, 2075, "Expecting 'is subclass of'");
+				checkFor(VDMToken.OF, 2076, "Expecting 'is subclass of'");
 
 				throwMessage(2280, "System class cannot be a subclass");
 			}
@@ -168,9 +166,9 @@ public class ClassReader extends SyntaxReader
 			DefinitionList members = new DefinitionList();
 			DefinitionReader dr = getDefinitionReader();
 
-    		while (lastToken().is(Token.INSTANCE) || lastToken().is(Token.OPERATIONS))
+    		while (lastToken().is(VDMToken.INSTANCE) || lastToken().is(VDMToken.OPERATIONS))
     		{
-    			if (lastToken().is(Token.INSTANCE))
+    			if (lastToken().is(VDMToken.INSTANCE))
     			{
     				members.addAll(dr.readInstanceVariables());
     			}
@@ -207,7 +205,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
-			return new SystemDefinition(className, members);
+			return new ASystemClassDefinition(className, members);
 		}
 		else
 		{
