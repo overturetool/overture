@@ -55,33 +55,13 @@ Abstract Syntax Tree
  *
  */
 
-    
-unop {-> package='org.overture.ast.expressions'}
-    =   {absolute} 
-    |   {cardinality}  
-    |   {distConcat} 
-    |   {distIntersect}  
-    |   {distMerge} 
-    |   {distUnion} 
-    |   {elements}
-    |   {floor}  
-    |   {head} 
-    |   {indices}  
-    |   {len} 
-    |   {mapDomain} 
-    |   {mapInverse} 
-    |   {mapRange} 
-    |   {not}  
-    |   {powerSet} 
-    |   {reverse}  
-    |   {tail} 
-    |   {unaryMinus}
-    |   {unaryPlus}       
-    ;
-    
+/*
+    Expressions
+*/    
 exp {-> package='org.overture.ast.expressions'}
     =   {apply} [root]:exp [args]:exp* [argtypes]:type* [recursive]:definition
-    |   #Binary// {binop} [left]:exp binop [right]:exp
+    |   #Unary
+    |   #Binary
     |   {boolean_const} [value]:LexBooleanToken
     |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
     |   {char_const} [value]:LexCharacterToken
@@ -128,11 +108,35 @@ exp {-> package='org.overture.ast.expressions'}
     |   {threadId} 
     |   {time} 
     |   {tuple} [args]:exp*    
-    |   {unary} unop [exp]:exp     
+  //  |   {unary} unop [exp]:exp     
     |   {undefined}
     |   {variable} [name]:LexNameToken           
     ;
     
+#Unary {-> package='org.overture.ast.expressions'}
+    =   {absolute} 
+    |   {cardinality}  
+    |   {distConcat} 
+    |   {distIntersect}  
+    |   {distMerge} 
+    |   {distUnion} 
+    |   {elements}
+    |   {floor}  
+    |   {head} 
+    |   {indices}  
+    |   {len} 
+    |   {mapDomain} 
+    |   {mapInverse} 
+    |   {mapRange} 
+    |   {not}  
+    |   {powerSet} 
+    |   {reverse}  
+    |   {tail} 
+    |   {unaryMinus}
+    |   {unaryPlus}       
+    ;
+
+
 #Binary {-> package='org.overture.ast.expressions'}
     =   #Boolean
     |   {comp} 
@@ -146,15 +150,17 @@ exp {-> package='org.overture.ast.expressions'}
     |   #Numeric
     |   {plusPlus}
     |   {properSubset}
-    |   {rangeByRes}
+    |   {rangeResBy}
     |   {rangeResTo}
     |   {seqConcat}
     |   {setDifference}
-    |   {setIntersec}
+    |   {setIntersect}
     |   {setUnion}
     |   {starStar}
     |   {subset}
     ;
+    
+
     
 #Boolean {-> package='org.overture.ast.expressions'}
     =   {and}
@@ -322,8 +328,8 @@ definition {-> package='org.overture.ast.definitions'}
                            [isCurried]:java_Boolean 
     |   {explicitOperation} [parameterPatterns]:pair.patternType* 
                             [result]:pair.patternType 
-                            [body]:stm
-                            [externals]:clause.external* 
+                            [externals]:clause.external*
+                            [body]:stm 
                             [precondition]:exp 
                             [postcondition]:exp 
                             [errors]:case.error*
@@ -333,6 +339,17 @@ definition {-> package='org.overture.ast.definitions'}
                             [state]:definition.state
                             [actualResult]:type
                             [stateDefinition]:definition
+                            [isConstructor]:java_Boolean
+    |   {implicitOperation} [opType]:type.operation
+                            [parameterPatterns]:pattern*
+                            [precondition]:exp 
+                            [postcondition]:exp 
+                            [body]:stm 
+                            [predef]:definition.explicitFunction
+                            [postdef]:definition.explicitFunction
+                            [paramDefinitions]:definition*
+                            [state]:definition.state
+                            [actualResult]:type
                             [isConstructor]:java_Boolean
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken
@@ -453,13 +470,13 @@ case {-> package='org.overture.ast.statements'}
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
 
-%unop = [location]:location
+%exp->#Unary =  [exp]:exp
     ;
 
 %exp = [type]:type [location]:location
     ;
 
-%exp->#Binary = [left]:exp [right]:exp [op]:LexToken [ltype]:type [rtype]:type
+%exp->#Binary = [left]:exp [op]:LexToken [right]:exp
     ; 
 
 %type = [location]:location [resolved]:java_Boolean

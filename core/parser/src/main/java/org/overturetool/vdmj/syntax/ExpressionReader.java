@@ -26,21 +26,9 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.AMultiBindListDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.node.tokens.TBool;
-import org.overture.ast.node.tokens.TChar;
-import org.overture.ast.node.tokens.TInt;
-import org.overture.ast.node.tokens.TNat;
-import org.overture.ast.node.tokens.TNatOne;
-import org.overture.ast.node.tokens.TRat;
-import org.overture.ast.node.tokens.TReal;
-import org.overture.ast.node.tokens.TTokenLiteral;
-import org.overture.ast.patterns.APatternInnerListPatternList;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -59,8 +47,6 @@ import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
 import org.overturetool.vdmj.lex.LexException;
@@ -122,7 +108,8 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.EQUIVALENT))
 		{
 			nextToken();
-			exp = new ABinopExp(null, null, exp, new AEquivalentBinop(token.location), readConnectiveExpression());
+//			exp = new ABinopExp(null, null, exp, new AEquivalentBinop(token.location), readConnectiveExpression());
+			exp = new AEquivalentBooleanBinaryExp(null, null, exp, token, readConnectiveExpression());
 //			exp = new AEquivalentBinop(exp, token, readConnectiveExpression());
 		}
 
@@ -137,7 +124,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.IMPLIES))
 		{
 			nextToken();
-			exp = new ABinopExp(null, null, exp, new AImpliesBinop(token.location), readImpliesExpression());
+			exp = new AImpliesBooleanBinaryExp(null, null, exp, token, readImpliesExpression());
 //			exp = new ImpliesExpression(exp, token, readImpliesExpression());
 		}
 
@@ -153,7 +140,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.OR))
 		{
 			nextToken();
-			exp = new ABinopExp(null, null, exp, new ALazyOrBinop(token.location), readOrExpression());
+			exp = new AOrBooleanBinaryExp(null, null, exp, token, readOrExpression());
 //			exp = new OrExpression(exp, token, readOrExpression());
 		}
 
@@ -168,7 +155,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.AND))
 		{
 			nextToken();
-			exp = new ABinopExp(null, null, exp, new ALazyAndBinop(token.location), readAndExpression());
+			exp = new AAndBooleanBinaryExp(null, null, exp, token, readAndExpression());
 //			exp = new AndExpression(exp, token, readAndExpression());
 		}
 
@@ -183,7 +170,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.NOT))
 		{
 			nextToken();
-			exp = new AUnaryExp(null, null, new ANotUnop(token.location), readNotExpression()); 
+			exp = new ANotUnaryExp(null, token.location, readNotExpression()); 
 //			exp = new NotExpression(token.location, readNotExpression());
 		}
 		else
@@ -196,7 +183,7 @@ public class ExpressionReader extends SyntaxReader
 
 	// Relations Family...
 
-	public ABinopExp readDefEqualsExpression()
+	public AEqualsBinaryExp readDefEqualsExpression()
 		throws ParserException, LexException
 	{
 		// This is an oddball parse for the "def" expression :-)
@@ -206,7 +193,7 @@ public class ExpressionReader extends SyntaxReader
 
 		if (readToken().is(VDMToken.EQUALS))
 		{
-			return new ABinopExp(null, null, exp, new AEqualsBinop(token.location), readEvaluatorP1Expression());
+			return new AEqualsBinaryExp(null, null, exp, token, readEvaluatorP1Expression());
 //			return new EqualsExpression(exp, token, readEvaluatorP1Expression());
 		}
 
@@ -264,61 +251,61 @@ public class ExpressionReader extends SyntaxReader
 			case LT:
 				nextToken();
 				
-				exp = new ABinopExp(null, null, exp, new ALessBinop(token.location), readNotExpression());
+				exp = new ALessNumericBinaryExp(null, null, exp, token, readNotExpression());
 				//exp = new LessExpression(exp, token, readNotExpression());
 				break;
 
 			case LE:
 				nextToken();
-				exp = exp = new ABinopExp(null, null, exp, new ALessEqualBinop(token.location), readNotExpression());
+				exp = exp = new ALessEqualNumericBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new LessEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case GT:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new AGreaterBinop(token.location), readNotExpression());
+				exp = new AGreaterNumericBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new GreaterExpression(exp, token, readNotExpression());
 				break;
 
 			case GE:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new AGreaterEqualBinop(token.location), readNotExpression());
+				exp = new AGreaterEqualNumericBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new GreaterEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case NE:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new ANotEqualBinop(token.location), readNotExpression());
+				exp = new ANotEqualBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new NotEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case EQUALS:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new AEqualsBinop(token.location), readNotExpression());
+				exp = new AEqualsBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new EqualsExpression(exp, token, readNotExpression());
 				break;
 
 			case SUBSET:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new ASubsetBinop(token.location), readNotExpression());
+				exp = new ASubsetBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new SubsetExpression(exp, token, readNotExpression());
 				break;
 
 			case PSUBSET:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new AProperSubsetBinop(token.location), readNotExpression());
+				exp = new AProperSubsetBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new ProperSubsetExpression(exp, token, readNotExpression());
 				break;
 
 			case INSET:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new AInSetBinop(token.location), readNotExpression());
+				exp = new AInSetBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new InSetExpression(exp, token, readNotExpression());
 				break;
 
 			case NOTINSET:
 				nextToken();
-				exp = new ABinopExp(null, null, exp, new ANotInSetBinop(token.location), readNotExpression());
+				exp = new ANotInSetBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new NotInSetExpression(exp, token, readNotExpression());
 				break;
 		}
@@ -342,43 +329,43 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case PLUS:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new APlusBinop(token.location), readEvaluatorP2Expression());
+					exp = new APlusNumericBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new PlusExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MINUS:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ASubtractBinop(token.location), readEvaluatorP2Expression());
+					exp = new ASubstractNumericBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new SubtractExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case UNION:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ASetUnionBinop(token.location), readEvaluatorP2Expression());
+					exp = new ASetUnionBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new SetUnionExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case SETDIFF:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ASetDifferenceBinop(token.location), readEvaluatorP2Expression());
+					exp = new ASetDifferenceBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new SetDifferenceExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MUNION:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new AMapUnionBinop(token.location), readEvaluatorP2Expression());
+					exp = new AMapUnionBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new MapUnionExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case PLUSPLUS:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new APlusPlusBinop(token.location), readEvaluatorP2Expression());
+					exp = new APlusPlusBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new PlusPlusExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case CONCATENATE:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ASeqConcatBinop(token.location), readEvaluatorP2Expression());
+					exp = new ASeqConcatBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
 //					exp = new SeqConcatExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
@@ -405,37 +392,37 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case TIMES:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ATimesBinop(token.location), readEvaluatorP3Expression());
+					exp = new ATimesNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
 //					exp = new TimesExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIVIDE:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ADivideBinop(token.location), readEvaluatorP3Expression());
+					exp = new ADivideNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
 //					exp = new DivideExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case REM:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ARemBinop(token.location), readEvaluatorP3Expression());
+					exp = new ARemNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
 //					exp = new RemExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case MOD:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new AModBinop(token.location), readEvaluatorP3Expression());
+					exp = new AModNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
 //					exp = new ModExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIV:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ADivBinop(token.location), readEvaluatorP3Expression());
+					exp = new ADivNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
 //					exp = new DivExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case INTER:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ASetIntersectBinop(token.location), readEvaluatorP3Expression());
+					exp = new ASetIntersectBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
 //					exp = new SetIntersectExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
@@ -458,7 +445,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 			// Unary, so recursion OK for left grouping
-			exp = new AUnaryExp(null, null, new AMapInverseUnop(token.location), readEvaluatorP3Expression());
+			exp = new AMapInverseUnaryExp(null, token.location, readEvaluatorP3Expression());
 //			exp = new MapInverseExpression(token.location, readEvaluatorP3Expression());
 		}
 		else
@@ -483,13 +470,13 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case DOMRESTO:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ADomainResToBinop(token.location), readEvaluatorP5Expression());
+					exp = new ADomainResToBinaryExp(null, null, exp, token, readEvaluatorP5Expression());
 //					exp = new DomainResToExpression(exp, token, readEvaluatorP5Expression());
 					break;
 
 				case DOMRESBY:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ADomainResToBinop(token.location), readEvaluatorP5Expression());
+					exp = new ADomainResByBinaryExp(null, null, exp, token, readEvaluatorP5Expression());
 //					exp = new DomainResByExpression(exp, token, readEvaluatorP5Expression());
 					break;
 
@@ -516,13 +503,13 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case RANGERESTO:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ARangeResToBinop(token.location), readEvaluatorP6Expression());
+					exp = new ARangeResToBinaryExp(null, null, exp, token, readEvaluatorP6Expression());
 //					exp = new RangeResToExpression(exp, token, readEvaluatorP6Expression());
 					break;
 
 				case RANGERESBY:
 					nextToken();
-					exp = new ABinopExp(null, null, exp, new ARangeResByBinop(token.location), readEvaluatorP6Expression());
+					exp = new ARangeResByBinaryExp(null, null, exp, token, readEvaluatorP6Expression());
 //					exp = new RangeResByExpression(exp, token, readEvaluatorP6Expression());
 					break;
 
@@ -547,79 +534,79 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case PLUS:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AUnaryPlusUnop(location), readEvaluatorP6Expression());
+				exp = new AUnaryPlusUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new UnaryPlusExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case MINUS:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AUnaryMinusUnop(location), readEvaluatorP6Expression());
+				exp = new AUnaryMinusUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new UnaryMinusExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case CARD:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ACardinalityUnop(location), readEvaluatorP6Expression());
+				exp = new ACardinalityUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new CardinalityExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DOM:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AMapDomainUnop(location), readEvaluatorP6Expression());
+				exp = new AMapDomainUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new MapDomainExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case LEN:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ALenUnop(location), readEvaluatorP6Expression());
+				exp = new ALenUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new LenExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case POWER:
 				nextToken();
-				exp = new AUnaryExp(null, null, new APowerSetUnop(location), readEvaluatorP6Expression());
+				exp = new APowerSetUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new PowerSetExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case RNG:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AMapRangeUnop(location), readEvaluatorP6Expression());
+				exp = new AMapRangeUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new MapRangeExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case ELEMS:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AElementsUnop(location), readEvaluatorP6Expression());
+				exp = new AElementsUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new ElementsExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case ABS:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AAbsoluteUnop(location), readEvaluatorP6Expression());
+				exp = new AAbsoluteUnaryExp(null, location, readEvaluatorP6Expression());
 				//exp = new AbsoluteExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DINTER:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ADistIntersectUnop(location), readEvaluatorP6Expression());
+				exp = new ADistIntersectUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new DistIntersectExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case MERGE:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ADistMergeUnop(location), readEvaluatorP6Expression());
+				exp = new ADistMergeUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new DistMergeExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case HEAD:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AHeadUnop(location), readEvaluatorP6Expression());
+				exp = new AHeadUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new HeadExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case TAIL:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ATailUnop(location), readEvaluatorP6Expression());
+				exp = new ATailUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new TailExpression(location, readEvaluatorP6Expression());
 				break;
 
@@ -630,31 +617,31 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				nextToken();
-				exp = new AUnaryExp(null, null, new AReverseUnop(location), readEvaluatorP6Expression());
+				exp = new AReverseUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new ReverseExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case FLOOR:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AFloorUnop(location), readEvaluatorP6Expression());
+				exp = new AFloorUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new FloorExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DUNION:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ADistUnionUnop(location), readEvaluatorP6Expression());
+				exp = new ADistUnionUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new DistUnionExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case DISTCONC:
 				nextToken();
-				exp = new AUnaryExp(null, null, new ADistConcatUnop(location), readEvaluatorP6Expression());
+				exp = new ADistConcatUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new DistConcatExpression(location, readEvaluatorP6Expression());
 				break;
 
 			case INDS:
 				nextToken();
-				exp = new AUnaryExp(null, null, new AIndicesUnop(location), readEvaluatorP6Expression());
+				exp = new AIndicesUnaryExp(null, location, readEvaluatorP6Expression());
 //				exp = new IndicesExpression(location, readEvaluatorP6Expression());
 				break;
 
@@ -701,7 +688,7 @@ public class ExpressionReader extends SyntaxReader
     						} 
         				}
     					
-    					exp = new AApplyExp(null,exp.getLocation(), exp,  null);
+    					exp = new AApplyExp(null,exp.getLocation(), exp,  null, null, null);
 //   					exp = new ApplyExpression(exp);
     					nextToken();
     				}
@@ -769,7 +756,7 @@ public class ExpressionReader extends SyntaxReader
 						}
 
 						checkFor(VDMToken.KET, 2122, "Expecting ')' after function args");
-						exp = new AApplyExp(null, exp.getLocation(), exp, args);
+						exp = new AApplyExp(null, exp.getLocation(), exp, args, null, null);
 						//exp = new ApplyExpression(exp, args);
     				}
     				break;
@@ -788,7 +775,7 @@ public class ExpressionReader extends SyntaxReader
     				}
 
     				checkFor(VDMToken.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
-   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types);
+   					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types, null, null);
     				//exp = new FuncInstantiationExpression(exp, types);
     				break;
 
@@ -855,14 +842,14 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.COMP))
 		{
 			nextToken();
-			return new ABinopExp(null, null, exp, new ACompBinop(token.location), readApplicatorExpression());
+			return new ACompBinaryExp(null, null, exp, token, readApplicatorExpression());
 //			return new CompExpression(exp, token, readApplicatorExpression());
 		}
 
 		if (token.is(VDMToken.STARSTAR))
 		{
 			nextToken();
-			return new ABinopExp(null, null, exp, new AStarStarBinop(token.location), readEvaluatorP6Expression());
+			return new AStarStarBinaryExp(null, null, exp, token, readEvaluatorP6Expression());
 //			return new StarStarExpression(exp, token, readEvaluatorP6Expression());
 		}
 
@@ -1113,42 +1100,42 @@ public class ExpressionReader extends SyntaxReader
 				switch (type) //TODO is this right? Type information is lost? If so lose the switch
 				{
 					case BOOL:
-						exp = new AMkBasicExp(new ABooleanBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ABooleanBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new BooleanType(ve.location), value);
 						break;
 
 					case NAT:
-						exp = new AMkBasicExp(new ANatNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ANatNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new NaturalType(ve.location), value);
 						break;
 
 					case NAT1:
-						exp = new AMkBasicExp(new ANatOneNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ANatOneNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new NaturalOneType(ve.location), value);
 						break;
 
 					case INT:
-						exp = new AMkBasicExp(new AIntNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new AIntNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new IntegerType(ve.location), value);
 						break;
 
 					case RAT:
-						exp = new AMkBasicExp(new ARationalNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ARationalNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new RationalType(ve.location), value);
 						break;
 
 					case REAL:
-						exp = new AMkBasicExp(new ARealNumericBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ARealNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new RealType(ve.location), value);
 						break;
 
 					case CHAR:
-						exp = new AMkBasicExp(new ACharBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ACharBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new CharacterType(ve.location), value);
 						break;
 
 					case TOKEN:
-						exp = new AMkBasicExp(new ATokenBasicType(ve.getLocation()), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ATokenBasicType(ve.getLocation(), false), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new TokenType(ve.location), value);
 						break;
 
@@ -1222,42 +1209,42 @@ public class ExpressionReader extends SyntaxReader
 				switch (type)
 				{
 					case BOOL: 
-						exp = new AIsExp(new ABooleanBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ABooleanBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
 						break;
 
 					case NAT:
-						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
 						break;
 
 					case NAT1:
-						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
 						break;
 
 					case INT:
-						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
 						break;
 
 					case RAT:
-						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
 						break;
 
 					case REAL:
-						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
 						break;
 
 					case CHAR:
-						exp = new AIsExp(new ACharBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ACharBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new AIsExp(new ATokenBasicType(ve.getLocation()), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ATokenBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
 						break;
 
