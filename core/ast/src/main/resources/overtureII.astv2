@@ -378,6 +378,7 @@ definition {-> package='org.overture.ast.definitions'}
     = {bus}
     | {cpu}
     | {system}
+    | {class}//Hmm we cant instanciate SClassDefinition...
     ;
 
 modules {-> package='org.overture.ast.modules'}

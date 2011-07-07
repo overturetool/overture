@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.modules.AModuleModules;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexException;
@@ -37,7 +38,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
 import org.overturetool.vdmj.modules.DLModule;
 import org.overturetool.vdmj.modules.Export;
@@ -73,18 +74,18 @@ public class ModuleReader extends SyntaxReader
 		super(reader);
 	}
 
-	public ModuleList readModules()
+	public List<AModuleModules> readModules()
 	{
-		ModuleList modules = new ModuleList();
+		List<AModuleModules> modules = new Vector<AModuleModules>();
 
 		try
 		{
-			if (lastToken().is(Token.EOF))
+			if (lastToken().is(VDMToken.EOF))
 			{
 				return modules;		// The file is empty
 			}
 
-    		if (lastToken().isNot(Token.MODULE) &&
+    		if (lastToken().isNot(VDMToken.MODULE) &&
     			!DefinitionReader.newSection(lastToken()))
     		{
     			warning(5015,
@@ -92,7 +93,7 @@ public class ModuleReader extends SyntaxReader
     				lastToken().location);
     		}
 
-    		while (lastToken().isNot(Token.EOF) && lastToken().isNot(Token.END))
+    		while (lastToken().isNot(VDMToken.EOF) && lastToken().isNot(VDMToken.END))
     		{
     			switch (lastToken().type)
     			{
@@ -121,7 +122,7 @@ public class ModuleReader extends SyntaxReader
     	}
     	catch (LocatedException e)
     	{
-    		Token[] end = new Token[0];
+    		VDMToken[] end = new VDMToken[0];
     		report(e, end, end);
     	}
 
@@ -138,15 +139,15 @@ public class ModuleReader extends SyntaxReader
 		return new ImportFromModule(from, types);
 	}
 
-	private Module readFlatModule() throws ParserException, LexException
+	private AModuleModules readFlatModule() throws ParserException, LexException
 	{
 		File file = lastToken().location.file;
 		setCurrentModule("DEFAULT");
 		DefinitionList definitions = getDefinitionReader().readDefinitions();
-		return new Module(file, definitions);
+		return new AModuleModules(file, definitions);
 	}
 
-	private Module readModule() throws ParserException, LexException
+	private AModuleModules readModule() throws ParserException, LexException
 	{
 		LexIdentifierToken name = new LexIdentifierToken("?", false, lastToken().location);
 		ModuleImports imports = null;
@@ -155,37 +156,37 @@ public class ModuleReader extends SyntaxReader
 		try
 		{
 			setCurrentModule("");
-			checkFor(Token.MODULE, 2170, "Expecting 'module' at module start");
+			checkFor(VDMToken.MODULE, 2170, "Expecting 'module' at module start");
 			name = readIdToken("Expecting identifier after 'module'");
 			setCurrentModule(name.name);
 
-			if (lastToken().is(Token.IMPORTS))
+			if (lastToken().is(VDMToken.IMPORTS))
 			{
 				imports = readImports(name);
 			}
 
-			if (lastToken().is(Token.EXPORTS))
+			if (lastToken().is(VDMToken.EXPORTS))
 			{
 				exports = readExports();
 			}
 
 			// Be forgiving about the ordering...
 
-			if (imports == null && lastToken().is(Token.IMPORTS))
+			if (imports == null && lastToken().is(VDMToken.IMPORTS))
 			{
 				imports = readImports(name);
 			}
 		}
 		catch (LocatedException e)
 		{
-			Token[] after = { Token.DEFINITIONS };
-			Token[] upto = { Token.END };
+			VDMToken[] after = { VDMToken.DEFINITIONS };
+			VDMToken[] upto = { VDMToken.END };
 			report(e, after, upto);
 		}
 
 		DefinitionList defs = null;
 
-		if (lastToken().is(Token.DEFINITIONS))
+		if (lastToken().is(VDMToken.DEFINITIONS))
 		{
 			nextToken();
 			defs = getDefinitionReader().readDefinitions();
@@ -195,7 +196,7 @@ public class ModuleReader extends SyntaxReader
 			defs = new DefinitionList();
 		}
 
-		checkFor(Token.END, 2171, "Expecting 'end' after module definitions");
+		checkFor(VDMToken.END, 2171, "Expecting 'end' after module definitions");
 		LexIdentifierToken endname =
 			readIdToken("Expecting 'end <name>' after module definitions");
 
@@ -205,10 +206,10 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		LexLocation.addSpan(idToName(name), lastToken());
-		return new Module(name, imports, exports, defs);
+		return new AModuleModules(name, imports, exports, defs);
 	}
 
-	private Module readDLModule() throws ParserException, LexException
+	private AModuleModules readDLModule() throws ParserException, LexException
 	{
 		LexIdentifierToken name = new LexIdentifierToken("?", false, lastToken().location);
 		ModuleImports imports = null;
@@ -217,23 +218,23 @@ public class ModuleReader extends SyntaxReader
 
 		try
 		{
-			checkFor(Token.DLMODULE, 2172, "Expecting 'dlmodule' at module start");
+			checkFor(VDMToken.DLMODULE, 2172, "Expecting 'dlmodule' at module start");
 			name = readIdToken("Expecting identifier after 'dlmodule'");
 			setCurrentModule(name.name);
 
-			if (lastToken().is(Token.IMPORTS))
+			if (lastToken().is(VDMToken.IMPORTS))
 			{
 				imports = readImports(name);
 			}
 
-			if (lastToken().is(Token.EXPORTS))
+			if (lastToken().is(VDMToken.EXPORTS))
 			{
 				exports = readExports();
 			}
 
-			if (lastToken().is(Token.USELIB))
+			if (lastToken().is(VDMToken.USELIB))
 			{
-				if (nextToken().is(Token.STRING))
+				if (nextToken().is(VDMToken.STRING))
 				{
 					library = (LexStringToken)lastToken();
 					nextToken();
@@ -246,12 +247,12 @@ public class ModuleReader extends SyntaxReader
 		}
 		catch (LocatedException e)
 		{
-			Token[] after = {};
-			Token[] upto = { Token.END };
+			VDMToken[] after = {};
+			VDMToken[] upto = { VDMToken.END };
 			report(e, after, upto);
 		}
 
-		checkFor(Token.END, 2173, "Expecting 'end' after dlmodule definitions");
+		checkFor(VDMToken.END, 2173, "Expecting 'end' after dlmodule definitions");
 		LexIdentifierToken endname =
 			readIdToken("Expecting 'end <name>' after dlmodule definitions");
 
@@ -265,7 +266,7 @@ public class ModuleReader extends SyntaxReader
 
 	private ModuleExports readExports() throws ParserException, LexException
 	{
-		checkFor(Token.EXPORTS, 2174, "Malformed imports? Expecting 'exports' section");
+		checkFor(VDMToken.EXPORTS, 2174, "Malformed imports? Expecting 'exports' section");
 		return new ModuleExports(readExportsFromModule());
 	}
 
@@ -274,7 +275,7 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<List<Export>> types = new Vector<List<Export>>();
 
-		if (lastToken().is(Token.ALL))
+		if (lastToken().is(VDMToken.ALL))
 		{
 			LexNameToken all = new LexNameToken(getCurrentModule(), "all", lastToken().location);
 			List<Export> expAll = new Vector<Export>();
@@ -326,8 +327,8 @@ public class ModuleReader extends SyntaxReader
 		List<Export> list = new Vector<Export>();
 		list.add(readExportedType());
 
-		while (lastToken().isNot(Token.DEFINITIONS) &&
-			   lastToken().isNot(Token.USELIB) && !newType())
+		while (lastToken().isNot(VDMToken.DEFINITIONS) &&
+			   lastToken().isNot(VDMToken.USELIB) && !newType())
 		{
 			list.add(readExportedType());
 		}
@@ -338,10 +339,10 @@ public class ModuleReader extends SyntaxReader
 	private ExportedType readExportedType()
 		throws ParserException, LexException
 	{
-		boolean struct = lastToken().is(Token.STRUCT);
+		boolean struct = lastToken().is(VDMToken.STRUCT);
 		if (struct) nextToken();
 		LexNameToken name = readNameToken("Expecting exported type name");
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ExportedType(name, struct);
 	}
 
@@ -351,8 +352,8 @@ public class ModuleReader extends SyntaxReader
 		List<Export> list = new Vector<Export>();
 		list.add(readExportedValue());
 
-		while (lastToken().isNot(Token.DEFINITIONS) &&
-			   lastToken().isNot(Token.USELIB) && !newType())
+		while (lastToken().isNot(VDMToken.DEFINITIONS) &&
+			   lastToken().isNot(VDMToken.USELIB) && !newType())
 		{
 			list.add(readExportedValue());
 		}
@@ -365,9 +366,9 @@ public class ModuleReader extends SyntaxReader
 	{
 		LexToken token = lastToken();
 		LexNameList nameList = readIdList();
-		checkFor(Token.COLON, 2175, "Expecting ':' after export name");
+		checkFor(VDMToken.COLON, 2175, "Expecting ':' after export name");
 		Type type = getTypeReader().readType();
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ExportedValue(token.location, nameList, type);
 	}
 
@@ -377,7 +378,7 @@ public class ModuleReader extends SyntaxReader
 		List<Export> list = new Vector<Export>();
 		list.add(readExportedFunction());
 
-		while (lastToken().is(Token.IDENTIFIER) || lastToken().is(Token.NAME))
+		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
 		{
 			list.add(readExportedFunction());
 		}
@@ -390,7 +391,7 @@ public class ModuleReader extends SyntaxReader
 	{
 		LexToken token = lastToken();
 		LexNameList nameList = readIdList();
-		checkFor(Token.COLON, 2176, "Expecting ':' after export name");
+		checkFor(VDMToken.COLON, 2176, "Expecting ':' after export name");
 		LexToken tloc = lastToken();
 		Type type = getTypeReader().readType();
 
@@ -399,7 +400,7 @@ public class ModuleReader extends SyntaxReader
 			throwMessage(2053, "Exported function is not a function type", tloc);
 		}
 
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ExportedFunction(token.location, nameList, type);
 	}
 
@@ -409,7 +410,7 @@ public class ModuleReader extends SyntaxReader
 		List<Export> list = new Vector<Export>();
 		list.add(readExportedOperation());
 
-		while (lastToken().is(Token.IDENTIFIER) || lastToken().is(Token.NAME))
+		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
 		{
 			list.add(readExportedOperation());
 		}
@@ -422,9 +423,9 @@ public class ModuleReader extends SyntaxReader
 	{
 		LexToken token = lastToken();
 		LexNameList nameList = readIdList();
-		checkFor(Token.COLON, 2177, "Expecting ':' after export name");
+		checkFor(VDMToken.COLON, 2177, "Expecting ':' after export name");
 		Type type = getTypeReader().readOperationType();
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ExportedOperation(token.location, nameList, type);
 	}
 
@@ -435,7 +436,7 @@ public class ModuleReader extends SyntaxReader
 		list.add(readNameToken("Expecting name list"));
 		ignoreTypeParams();
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			list.add(readNameToken("Expecting name list"));
 			ignoreTypeParams();
@@ -447,11 +448,11 @@ public class ModuleReader extends SyntaxReader
 	private ModuleImports readImports(LexIdentifierToken name)
 		throws ParserException, LexException
 	{
-		checkFor(Token.IMPORTS, 2178, "Expecting 'imports'");
+		checkFor(VDMToken.IMPORTS, 2178, "Expecting 'imports'");
 		List<ImportFromModule> imports = new Vector<ImportFromModule>();
 		imports.add(readImportDefinition());
 
-		while (ignore(Token.COMMA))
+		while (ignore(VDMToken.COMMA))
 		{
 			imports.add(readImportDefinition());
 		}
@@ -462,7 +463,7 @@ public class ModuleReader extends SyntaxReader
 	private ImportFromModule readImportDefinition()
 		throws ParserException, LexException
 	{
-		checkFor(Token.FROM, 2179, "Expecting 'from' in import definition");
+		checkFor(VDMToken.FROM, 2179, "Expecting 'from' in import definition");
 		LexIdentifierToken from = readIdToken("Expecting module identifier after 'from'");
 		return new ImportFromModule(from, readImportsFromModule(from));
 	}
@@ -472,7 +473,7 @@ public class ModuleReader extends SyntaxReader
 	{
 		List<List<Import>> types = new Vector<List<Import>>();
 
-		if (lastToken().is(Token.ALL))
+		if (lastToken().is(VDMToken.ALL))
 		{
 			LexNameToken all = new LexNameToken(getCurrentModule(), "all", lastToken().location);
 			List<Import> impAll = new Vector<Import>();
@@ -524,7 +525,7 @@ public class ModuleReader extends SyntaxReader
 		List<Import> list = new Vector<Import>();
 		list.add(readImportedType(from));
 
-		while (lastToken().is(Token.IDENTIFIER) || lastToken().is(Token.NAME))
+		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
 		{
 			list.add(readImportedType(from));
 		}
@@ -547,12 +548,12 @@ public class ModuleReader extends SyntaxReader
 
 			LexNameToken renamed = null;
 
-			if (ignore(Token.RENAMED))
+			if (ignore(VDMToken.RENAMED))
 			{
 				renamed = readNameToken("Expected renamed type name");
 			}
 
-			ignore(Token.SEMICOLON);
+			ignore(VDMToken.SEMICOLON);
 			return new ImportedType(def, renamed);
 		}
 		catch (ParserException e)
@@ -565,12 +566,12 @@ public class ModuleReader extends SyntaxReader
 		LexNameToken defname = getDefName(from, name);
 		LexNameToken renamed = null;
 
-		if (ignore(Token.RENAMED))
+		if (ignore(VDMToken.RENAMED))
 		{
 			renamed = readNameToken("Expected renamed type name");
 		}
 
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ImportedType(defname, renamed);
 	}
 
@@ -580,7 +581,7 @@ public class ModuleReader extends SyntaxReader
 		List<Import> list = new Vector<Import>();
 		list.add(readImportedValue(from));
 
-		while (lastToken().is(Token.IDENTIFIER) || lastToken().is(Token.NAME))
+		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
 		{
 			list.add(readImportedValue(from));
 		}
@@ -595,7 +596,7 @@ public class ModuleReader extends SyntaxReader
 		LexNameToken defname = getDefName(from, name);
 		Type type = null;
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
 			type = getTypeReader().readType();
@@ -603,12 +604,12 @@ public class ModuleReader extends SyntaxReader
 
 		LexNameToken renamed = null;
 
-		if (ignore(Token.RENAMED))
+		if (ignore(VDMToken.RENAMED))
 		{
 			renamed = readNameToken("Expected renamed value name");
 		}
 
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ImportedValue(defname, type, renamed);
 	}
 
@@ -618,7 +619,7 @@ public class ModuleReader extends SyntaxReader
 		List<Import> list = new Vector<Import>();
 		list.add(readImportedFunction(from));
 
-		while (lastToken().is(Token.IDENTIFIER) || lastToken().is(Token.NAME))
+		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
 		{
 			list.add(readImportedFunction(from));
 		}
@@ -635,7 +636,7 @@ public class ModuleReader extends SyntaxReader
 
 		Type type = null;
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
 			LexToken tloc = lastToken();
@@ -649,12 +650,12 @@ public class ModuleReader extends SyntaxReader
 
 		LexNameToken renamed = null;
 
-		if (ignore(Token.RENAMED))
+		if (ignore(VDMToken.RENAMED))
 		{
 			renamed = readNameToken("Expected renamed function name");
 		}
 
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ImportedFunction(defname, type, typeParams, renamed);
 	}
 
@@ -664,7 +665,7 @@ public class ModuleReader extends SyntaxReader
 		List<Import> list = new Vector<Import>();
 		list.add(readImportedOperation(from));
 
-		while (lastToken().is(Token.IDENTIFIER) || lastToken().is(Token.NAME))
+		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
 		{
 			list.add(readImportedOperation(from));
 		}
@@ -679,7 +680,7 @@ public class ModuleReader extends SyntaxReader
 		LexNameToken defname = getDefName(from, name);
 		Type type = null;
 
-		if (lastToken().is(Token.COLON))
+		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
 			type = getTypeReader().readOperationType();
@@ -687,12 +688,12 @@ public class ModuleReader extends SyntaxReader
 
 		LexNameToken renamed = null;
 
-		if (ignore(Token.RENAMED))
+		if (ignore(VDMToken.RENAMED))
 		{
 			renamed = readNameToken("Expected renamed operation name");
 		}
 
-		ignore(Token.SEMICOLON);
+		ignore(VDMToken.SEMICOLON);
 		return new ImportedOperation(defname, type, renamed);
 	}
 
@@ -723,9 +724,9 @@ public class ModuleReader extends SyntaxReader
 
 	private void ignoreTypeParams() throws LexException
 	{
-		if (lastToken().is(Token.SEQ_OPEN))
+		if (lastToken().is(VDMToken.SEQ_OPEN))
 		{
-			while (!ignore(Token.SEQ_CLOSE))
+			while (!ignore(VDMToken.SEQ_CLOSE))
 			{
 				nextToken();
 			}

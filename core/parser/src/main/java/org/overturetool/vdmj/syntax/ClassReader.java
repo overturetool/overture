@@ -26,9 +26,12 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -38,6 +41,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 /**
  * A syntax analyser to parse class definitions.
@@ -138,7 +142,13 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
-			return new SClassDefinition(className, superclasses, members);
+			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,superclasses, members);
+			for (PDefinition pDefinition : def.getDefinitions())
+			{
+				pDefinition.setClassDefinition(def);
+			}
+			return def;
+
 		}
 		else
 		{
@@ -209,7 +219,13 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
-			return new ASystemClassDefinition(className, members);
+//			return new ASystemClassDefinition(className, members);
+			ASystemClassDefinition def = new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,new LexNameList(), members);
+			for (PDefinition pDefinition : def.getDefinitions())
+			{
+				pDefinition.setClassDefinition(def);
+			}
+			return def;
 		}
 		else
 		{

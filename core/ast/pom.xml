@@ -23,7 +23,7 @@
 				<executions>
 					<execution>
 						<id>java</id>
-						<phase>process-resources</phase>
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>astcreate</goal>
 
@@ -31,6 +31,7 @@
 					</execution>
 				</executions>
 				<configuration>
+				<folderToDeletePreGenerate>org/overture/ast</folderToDeletePreGenerate>
 					<asts>
 						<param>overtureII.astv2</param>
 					</asts>
