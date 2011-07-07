@@ -332,7 +332,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
     // |    {thread_def} [statement]:statement [operationName]:LexNameToken [operationDef]:explicitOperation_def
-    |   {type} [type]:invariant [invPattern]:pattern [invExpression]:exp
+    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
     ;
