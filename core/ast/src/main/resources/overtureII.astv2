@@ -476,7 +476,7 @@ Aspect Declaration
 %exp = [type]:type [location]:location
     ;
 
-%exp->#Binary = [left]:exp [op]:LexToken [right]:exp
+%exp->#Binary = [left]:exp [op]:LexToken [right]:exp 
     ; 
 
 %type = [location]:location [resolved]:java_Boolean
