@@ -23,7 +23,11 @@
 
 package org.overturetool.vdmj.syntax;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -46,9 +50,9 @@ public class ClassReader extends SyntaxReader
 		super(reader);
 	}
 
-	public ClassList readClasses()
+	public List<SClassDefinition> readClasses()
 	{
-		ClassList list = new ClassList();
+		List<SClassDefinition> list = new Vector<SClassDefinition>();
 
 		try
 		{
@@ -123,7 +127,7 @@ public class ClassReader extends SyntaxReader
 				}
 			}
 
-			DefinitionList members = getDefinitionReader().readDefinitions();
+			List<PDefinition> members = getDefinitionReader().readDefinitions();
 			checkFor(VDMToken.END, 2077, "Expecting 'end' after class members");
 
 			LexIdentifierToken endname =
@@ -163,7 +167,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2280, "System class cannot be a subclass");
 			}
 
-			DefinitionList members = new DefinitionList();
+			List<PDefinition> members = new Vector<PDefinition>();
 			DefinitionReader dr = getDefinitionReader();
 
     		while (lastToken().is(VDMToken.INSTANCE) || lastToken().is(VDMToken.OPERATIONS))
