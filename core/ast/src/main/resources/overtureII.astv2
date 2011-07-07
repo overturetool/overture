@@ -257,7 +257,7 @@ type {-> package='org.overture.ast.types'}
     ;
 
 field {-> package='org.overture.ast.types'}
-    =   {field} [access]:accessSpecifier [static]:static [async]:async [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
+    =   {field} [access]:accessSpecifier [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
     ;
 accessSpecifier  {-> package='org.overture.ast.types'}
   = {accessSpecifier} [access]:access [static]:static [async]:async 
@@ -289,6 +289,7 @@ pattern {-> package='org.overture.ast.patterns'}
     
 pair {-> package='org.overture.ast.patterns'}
     = {patternType} [pattern]:pattern [type]:type
+    | {patternListType} [pattern]:pattern* [type]:type
     ; 
     
 bind {-> package='org.overture.ast.patterns'}
@@ -319,14 +320,19 @@ definition {-> package='org.overture.ast.definitions'}
                            [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
                            [isCurried]:java_Boolean 
     |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
-    |   {implicitFunction} [typeParams]:LexNameToken* [typeFunction]:function [paramPatternList]:pair.patternType* 
-                           [precondition]:exp [predef]:explicitFunction 
-                           [postcondition]:exp [postdef]:explicitFunction 
-                           [body]:exp 
-                           [isTypeInvariant]:java_Boolean 
-                           [measure]:LexNameToken  [recursive]:java_Boolean
-                           [isCurried]:java_Boolean 
-    |   {explicitOperation} [parameterPatterns]:pair.patternType* 
+    |   {implicitFunction}  [typeParams]:LexNameToken* 
+                            [typeFunction]:function 
+                            [paramPatternList]:pair.patternListType* 
+                            [precondition]:exp 
+                            [predef]:explicitFunction 
+                            [postcondition]:exp 
+                            [postdef]:explicitFunction 
+                            [result]:pair.patternType
+                            [body]:exp 
+                            [isTypeInvariant]:java_Boolean 
+                            [measure]:LexNameToken 
+                            [isCurried]:java_Boolean 
+    |   {explicitOperation} [parameterPatterns]:pattern* 
                             [result]:pair.patternType 
                             [externals]:clause.external*
                             [body]:stm 
@@ -341,9 +347,10 @@ definition {-> package='org.overture.ast.definitions'}
                             [stateDefinition]:definition
                             [isConstructor]:java_Boolean
     |   {implicitOperation} [opType]:type.operation
-                            [parameterPatterns]:pattern*
+                            [parameterPatternList]:pair.patternListType*
                             [precondition]:exp 
-                            [postcondition]:exp 
+                            [postcondition]:exp
+                            [result]:pair.patternType 
                             [body]:stm 
                             [predef]:definition.explicitFunction
                             [postdef]:definition.explicitFunction
@@ -351,6 +358,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [state]:definition.state
                             [actualResult]:type
                             [isConstructor]:java_Boolean
+                            
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken
     |   {local} 
@@ -419,13 +427,14 @@ stm {-> package='org.overture.ast.statements'}
     |   {return} [expression]:exp
     |   #SimpleBlock
     |   {skip}
-    |   {specification} [externals]:clause.external [precondition]:exp [postcondition]:exp [errors]:case.error*
+    |   {specification} [externals]:clause.external* [precondition]:exp [postcondition]:exp [errors]:case.error*
     |   {start} [obj]:exp
     |   {subclassResponsibility}
     |   {tixe} [traps]:stmtAlternative.tixe [body]:stm
     //|   {traceVariable} //TODO why does this have a value inside?
     |   {trap} [patternBind]:patternBind [with]:stm [body]:stm
-    |   {while} [exp]:exp [statement]:stm 
+    |   {while} [exp]:exp [statement]:stm
+    |   {periodic} [opname]:LexNameToken [args]:exp*
     ; 
     
 #LetDef {-> package='org.overture.ast.statements'}
@@ -491,11 +500,15 @@ Aspect Declaration
 %multipleBind = [location]:location
     ;
     
-%definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [type]:type // [pass]:pass
+%definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [access]:accessSpecifier [type]:type // [pass]:pass
     ;
 
 %definition->#class
     = [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition*
+    ;
+    
+%stm
+    = [location]:location
     ;
     
 %stm->#LetDef
