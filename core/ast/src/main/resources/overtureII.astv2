@@ -281,6 +281,10 @@ pattern {-> package='org.overture.ast.patterns'}
     |   {union} [left]:pattern [right]:pattern
     ;
     
+pair {-> package='org.overture.ast.patterns'}
+    = {patternType} [pattern]:pattern [type]:type
+    ; 
+    
 bind {-> package='org.overture.ast.patterns'}
     =   {set} [pattern]:pattern [set]:exp //binds
     |   {type} [pattern]:pattern [type]:type //binds
@@ -312,7 +316,7 @@ definition {-> package='org.overture.ast.definitions'}
                               
     //| {explicitOperation_def} [typeParams]:LexNameToken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
     |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
-    |   {implicitFunction} [typeParams]:LexNameToken* [typeFunction]:function [paramPatternList]:pattern* 
+    |   {implicitFunction} [typeParams]:LexNameToken* [typeFunction]:function [paramPatternList]:pair.patternType* 
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp 
@@ -328,7 +332,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
     // |    {thread_def} [statement]:statement [operationName]:LexNameToken [operationDef]:explicitOperation_def
-    |   {type} [typeInvariant]:invariant //TODO: missing inv type
+    |   {type} [type]:invariant [invPattern]:pattern [invExpression]:exp
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
     ;
