@@ -146,9 +146,9 @@ exp {-> package='org.overture.ast.expressions'}
     |   {new} [className]:LexIdentifierToken [args]:exp*
     |   {nil} 
     |   {notYetSpecified} 
-    //|   {postOp} [opname]:lextokenname [preexpression]:exp [postexpression]:exp [errors]:errorCase* [state]:stateDefinition
+    |   {postOp} [opname]:LexNameToken [preexpression]:exp [postexpression]:exp [errors]:case.error* [state]:definition.state [errorLocation]:location
     |   {pre} [function]:exp [args]:exp*
-    //|   {preOp} [opname]:lextokenname [expression]:exp  [errors]:errorCase* [state]:stateDefinition
+    |   {preOp} [opname]:LexNameToken [expression]:exp  [errors]:case.error* [state]:definition.state
     |   {quote_const} [value]:LexQuoteToken
     |   {real_const} [value]:LexRealToken
     |   {sameBaseClass} [left]:exp [right]:exp
@@ -252,8 +252,6 @@ access  {-> package='org.overture.ast.definitions'}
     |   {protected}
     |   {private}
     ;
-//  = {accessSpecifier} [isStatic]:bool_java [isAsync]:bool_java [access]:token 
-//  ;
 
 pattern {-> package='org.overture.ast.patterns'}
     =   {boolean} [value]:LexBooleanToken
@@ -296,7 +294,6 @@ definition {-> package='org.overture.ast.definitions'}
     =   {assignment} [expression]:exp [expType]:type
     |   {instanceVariable} [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken
     |   #class 
-    //| missing bus cpu and system defs
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
     |   {explicitFunction} [typeParams]:LexNameToken* [functionType]:function [paramPatternList]:pattern_inner_list* 
@@ -306,15 +303,26 @@ definition {-> package='org.overture.ast.definitions'}
                            [isTypeInvariant]:java_Boolean 
                            [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
                            [isCurried]:java_Boolean 
-                              
-    //| {explicitOperation_def} [typeParams]:LexNameToken* [type]:operation [paramPatternList]:pattern* [precondition]:exp [postcondition]:exp [body]:statement  
     |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
     |   {implicitFunction} [typeParams]:LexNameToken* [typeFunction]:function [paramPatternList]:pair.patternType* 
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp 
                            [isTypeInvariant]:java_Boolean [measure]:LexNameToken [isCurried]:java_Boolean 
-    //| TODO implicit operation def
+    |   {explicitOperation} [parameterPatterns]:pair.patternType* 
+                            [result]:pair.patternType 
+                            [body]:stm
+                            [externals]:clause.external* 
+                            [precondition]:exp 
+                            [postcondition]:exp 
+                            [errors]:case.error*
+                            [opType]:type.operation
+                            [predef]:definition.explicitFunction
+                            [postdef]:definition.explicitFunction
+                            [state]:definition.state
+                            [actualResult]:type
+                            [stateDefinition]:definition
+                            [isConstructor]:java_Boolean
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken
     |   {local} 
@@ -324,7 +332,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {perSync} [opname]:LexNameToken [guard]:exp
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
-    // |    {thread_def} [statement]:statement [operationName]:LexNameToken [operationDef]:explicitOperation_def
+    |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
     |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
