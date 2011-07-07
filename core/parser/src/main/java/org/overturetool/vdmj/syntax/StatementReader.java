@@ -26,6 +26,8 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.statements.PStm;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.AssignmentDefinition;
@@ -102,9 +104,9 @@ public class StatementReader extends SyntaxReader
 		super(reader);
 	}
 
-	public Statement readStatement() throws ParserException, LexException
+	public PStm readStatement() throws ParserException, LexException
 	{
-		Statement stmt = null;
+		PStm stmt = null;
 		LexToken token = lastToken();
 		LexLocation location = token.location;
 
