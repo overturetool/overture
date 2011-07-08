@@ -1954,7 +1954,7 @@ public class DBGPReader
 						if (d instanceof PerSyncDefinition)
 						{
 							PerSyncDefinition pdef = (PerSyncDefinition)d;
-							
+
 							if (pdef.opname.name.equals(opname) ||
 								pdef.location.startLine == line ||
 								pdef.guard.findExpression(line) != null)
@@ -1976,7 +1976,7 @@ public class DBGPReader
 						else if (d instanceof MutexSyncDefinition)
 						{
 							MutexSyncDefinition mdef = (MutexSyncDefinition)d;
-							
+
             				for (LexNameToken mop: mdef.operations)
             				{
             					if (mop.name.equals(opname))
@@ -1991,7 +1991,7 @@ public class DBGPReader
                 								hexp.toString(), mdef.location);
                 						vars.put(name, v);
                     				}
-                    				
+
                     				break;
             					}
             				}
@@ -2348,6 +2348,7 @@ public class DBGPReader
 
 		LexLocation.clearLocations();
 		interpreter.init(this);
+		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		cdataResponse("Global context and test coverage initialized");
 	}
 
