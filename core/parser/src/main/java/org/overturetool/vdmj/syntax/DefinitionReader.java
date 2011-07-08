@@ -316,7 +316,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case COLONCOLON:
 				nextToken();
-				invtype = new ARecordInvariantType(id.location,false,idToName(id), tr.readFieldList(),null);
+				invtype = new ARecordInvariantType(id.location, false, idToName(id), tr.readFieldList(), null);
 				break;
 
 			default:
