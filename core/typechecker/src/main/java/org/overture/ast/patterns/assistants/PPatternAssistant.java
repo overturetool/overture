@@ -8,6 +8,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.runtime.Environment;
 
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -21,7 +22,7 @@ public class PPatternAssistant {
 				{
 					AIdentifierPattern idPattern = (AIdentifierPattern) rp;					
 					List<PDefinition> defs = new ArrayList<PDefinition>();
-					defs.add(new ALocalDefinition(idPattern.getLocation(), idPattern.getName(), scope, false, null, ptype));
+					defs.add(new ALocalDefinition(idPattern.getLocation(), idPattern.getName(), scope, false, null, null, ptype));
 					return defs;
 				}
 				break;
@@ -31,6 +32,11 @@ public class PPatternAssistant {
 		}
 
 		return null;
+	}
+
+	public static void typeResolve(PPattern pattern, Environment env) {
+		pattern.setResolved(true);
+		
 	}
 
 }

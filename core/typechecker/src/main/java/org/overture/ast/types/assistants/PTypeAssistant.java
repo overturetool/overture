@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.assistants.DefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapType;
@@ -29,7 +29,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 public class PTypeAssistant {
 
 	public static boolean hasSupertype(AClassType cto, AClassType other) {
-		return DefinitionAssistant.hasSupertype(cto.getClassdef(), other);
+		return PDefinitionAssistant.hasSupertype(cto.getClassdef(), other);
 	}
 
 	public static boolean isType(PType b, Class<? extends PType> typeclass) {

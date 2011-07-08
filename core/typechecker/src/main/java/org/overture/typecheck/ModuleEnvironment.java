@@ -28,7 +28,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.DefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.runtime.Environment;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -69,14 +69,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findName(LexNameToken name, NameScope scope)
 	{
-		PDefinition def = DefinitionAssistant.findName(module.getDefs(),name, scope);
+		PDefinition def = PDefinitionAssistant.findName(module.getDefs(),name, scope);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = DefinitionAssistant.findName(module.getImportdefs(),name, scope);
+		def = PDefinitionAssistant.findName(module.getImportdefs(),name, scope);
 
 		if (def != null)
 		{
@@ -89,14 +89,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findType(LexNameToken name, String fromModule)
 	{
-		PDefinition def = DefinitionAssistant.findType(module.getDefs(), name,module.getName().getName());
+		PDefinition def = PDefinitionAssistant.findType(module.getDefs(), name,module.getName().getName());
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def =  DefinitionAssistant.findType(module.getImportdefs(),name,module.getName().getName());
+		def =  PDefinitionAssistant.findType(module.getImportdefs(),name,module.getName().getName());
 
 		if (def != null)
 		{
@@ -109,8 +109,8 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(LexNameToken name)
 	{
-		Set<PDefinition> defs = DefinitionAssistant.findMatches(module.getDefs(),name);
-		defs.addAll(DefinitionAssistant.findMatches(module.getImportdefs(),name));
+		Set<PDefinition> defs = PDefinitionAssistant.findMatches(module.getDefs(),name);
+		defs.addAll(PDefinitionAssistant.findMatches(module.getImportdefs(),name));
 		return defs;
 	}
 
@@ -125,7 +125,7 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = DefinitionAssistant.findStateDefinition(module.getDefs());
+		AStateDefinition def = PDefinitionAssistant.findStateDefinition(module.getDefs());
 
 		if (def != null)
 		{

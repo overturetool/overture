@@ -129,7 +129,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			PDefinition p = new ALocalDefinition(
 				pname.location, pname, NameScope.NAMES,false,null, null, new AParameterType(null,false,pname));
 
-			DefinitionAssistant.markUsed(p);
+			PDefinitionAssistant.markUsed(p);
 			defs.add(p);
 		}
 

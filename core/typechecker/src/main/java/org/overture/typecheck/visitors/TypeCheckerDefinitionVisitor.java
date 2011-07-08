@@ -6,7 +6,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
-import org.overture.ast.definitions.assistants.DefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.node.NodeList;
@@ -69,11 +69,11 @@ public class TypeCheckerDefinitionVisitor extends
 		info.env = local;
 		info.scope = question.scope;
 		info.qualifiers = question.qualifiers;
-		DefinitionAssistant.typeCheck(defs,info,this); //can be this because its a definition list
+		PDefinitionAssistant.typeCheck(defs,this,info); //can be this because its a definition list
 
 		if (question.env.isVDMPP()) //TODO:Access specifier: && !accessSpecifier.isStatic)
 		{
-			local.add(DefinitionAssistant.getSelfDefinition(node));
+			local.add(PDefinitionAssistant.getSelfDefinition(node));
 		}
  
 		if (node.getPredef() != null)
@@ -96,7 +96,7 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getPostdef() != null)
 		{
 			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
-			PPattern rp = new AIdentifierPattern(null,null,result);
+			PPattern rp = new AIdentifierPattern(null,null,null, result);
 			List<PDefinition> rdefs = PPatternAssistant.getDefinitions(rp,expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post =
 				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
@@ -138,7 +138,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		if (node.getMeasure() == null && node.getRecursive())
 		{
-			DefinitionAssistant.warning(node,5012, "Recursive function has no measure");
+			PDefinitionAssistant.warning(node,5012, "Recursive function has no measure");
 		}
 		else if (node.getMeasure() != null)
 		{

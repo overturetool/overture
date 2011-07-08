@@ -82,7 +82,7 @@ public class PDefinitionAssistant {
 		switch(d.kindPDefinition())
 		{
 			case STATE:
-				if (DefinitionAssistant.findName(d,name, NameScope.STATE) != null)
+				if (findName(d,name, NameScope.STATE) != null)
 				{
 					return d;
 				}
@@ -150,7 +150,7 @@ public class PDefinitionAssistant {
 	public static void unusedCheck(List<PDefinition> definitions) {
 		for (PDefinition d: definitions)
 		{
-			DefinitionAssistant.unusedCheck(d);
+			unusedCheck(d);
 		}
 		
 	}
@@ -158,8 +158,8 @@ public class PDefinitionAssistant {
 	private static void unusedCheck(PDefinition d) {
 		if (!d.getUsed())
 		{
-			DefinitionAssistant.warning(d, 5000, "Definition '" + d.getName() + "' not used");
-			DefinitionAssistant.markUsed(d);		// To avoid multiple warnings
+			warning(d, 5000, "Definition '" + d.getName() + "' not used");
+			markUsed(d);		// To avoid multiple warnings
 		}
 		
 	}
@@ -176,7 +176,7 @@ public class PDefinitionAssistant {
 
 		for (PDefinition d: singleDefinitions(definitions))
 		{
-			if (DefinitionAssistant.isFunctionOrOperation(d) && d.getName().matches(name))
+			if (isFunctionOrOperation(d) && d.getName().matches(name))
 			{
 				set.add(d);
 			}
@@ -190,7 +190,7 @@ public class PDefinitionAssistant {
 
 		for (PDefinition d: definitions)
 		{
-			all.addAll(DefinitionAssistant.getDefinitions(d));
+			all.addAll(getDefinitions(d));
 		}
 
 		return all;
@@ -211,7 +211,7 @@ public class PDefinitionAssistant {
 	}
 
 	public static void typeCheck(NodeList<PDefinition> defs,
-			 TypeCheckInfo question, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) {
+			  QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		for (PDefinition d: defs)
 		{			
 			d.apply(rootVisitor, question );
@@ -220,7 +220,7 @@ public class PDefinitionAssistant {
 	}
 
 	public static PDefinition getSelfDefinition(AExplicitFunctionDefinition node) {
-		return DefinitionAssistant.getSelfDefinition(node.getClassDefinition());
+		return getSelfDefinition(node.getClassDefinition());
 	}
 
 	private static PDefinition getSelfDefinition(
@@ -270,10 +270,5 @@ public class PDefinitionAssistant {
 		return result;
 	}
 
-	public static void typeCheck(NodeList<PDefinition> defs,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-		// TODO Auto-generated method stub
-	}
-		
+	
 }

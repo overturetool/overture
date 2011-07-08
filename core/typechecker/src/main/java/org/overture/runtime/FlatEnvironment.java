@@ -31,7 +31,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.DefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -73,7 +73,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findName(LexNameToken name, NameScope scope)
 	{
-		PDefinition def = DefinitionAssistant.findName(definitions,name, scope);
+		PDefinition def = PDefinitionAssistant.findName(definitions,name, scope);
 
 		if (def != null)
 		{
@@ -98,7 +98,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findType(LexNameToken name, String fromModule)
 	{
-		PDefinition def = DefinitionAssistant.findType(definitions,name, fromModule);
+		PDefinition def = PDefinitionAssistant.findType(definitions,name, fromModule);
 
 		if (def != null)
 		{
@@ -111,7 +111,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = DefinitionAssistant.findStateDefinition(definitions);
+		AStateDefinition def = PDefinitionAssistant.findStateDefinition(definitions);
 
 		if (def != null)
 		{
@@ -124,7 +124,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		DefinitionAssistant.unusedCheck(definitions);
+		PDefinitionAssistant.unusedCheck(definitions);
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(LexNameToken name)
 	{
-		Set<PDefinition> defs = DefinitionAssistant.findMatches(definitions,name);
+		Set<PDefinition> defs = PDefinitionAssistant.findMatches(definitions,name);
 
 		if (outer != null)
 		{
@@ -167,7 +167,7 @@ public class FlatEnvironment extends Environment
 	@Override
     public void markUsed()
     {
-		DefinitionAssistant.markUsed(definitions);
+		PDefinitionAssistant.markUsed(definitions);
     }
 
 	public void setLimitStateScope(boolean limitStateScope)
