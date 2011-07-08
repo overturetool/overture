@@ -142,7 +142,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.name + "'");
 			}
 
-			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,superclasses, members);
+			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,superclasses, members,null);
 			for (PDefinition pDefinition : def.getDefinitions())
 			{
 				pDefinition.setClassDefinition(def);
@@ -220,7 +220,7 @@ public class ClassReader extends SyntaxReader
 			}
 
 //			return new ASystemClassDefinition(className, members);
-			ASystemClassDefinition def = new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,new LexNameList(), members);
+			ASystemClassDefinition def = new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,new LexNameList(), members,null);
 			for (PDefinition pDefinition : def.getDefinitions())
 			{
 				pDefinition.setClassDefinition(def);

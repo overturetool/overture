@@ -63,13 +63,13 @@ public class PatternReader extends SyntaxReader
 			{
 				case UNION:
 					nextToken();
-					pattern = new AUnionPattern(token.location,null,pattern,readPattern());
+					pattern = new AUnionPattern(token.location,null,false,pattern,readPattern());
 					//pattern = new UnionPattern(pattern, token.location, readPattern());
 					break;
 
 				case CONCATENATE:
 					nextToken();
-					pattern = new AConcatenationPattern(token.location,null,pattern,readPattern());
+					pattern = new AConcatenationPattern(token.location,null,false,pattern,readPattern());
 //					pattern = new ConcatenationPattern(pattern, token.location, readPattern());
 					break;
 			}
@@ -88,45 +88,45 @@ public class PatternReader extends SyntaxReader
 		{
 			case NUMBER:
 				pattern = 
-					new AIntegerPattern(token.location,null,(LexIntegerToken)token);
+					new AIntegerPattern(token.location,null, false,(LexIntegerToken)token);
 				//pattern = new IntegerPattern((LexIntegerToken)token);
 				break;
 
 			case REALNUMBER:
-				pattern = new ARealPattern(token.location,null,(LexRealToken)token);
+				pattern = new ARealPattern(token.location,null, false,(LexRealToken)token);
 //				pattern = new RealPattern((LexRealToken)token);
 				break;
 
 			case CHARACTER:
-				pattern = new ACharacterPattern(token.location,null,(LexCharacterToken)token);
+				pattern = new ACharacterPattern(token.location,null, false,(LexCharacterToken)token);
 //				pattern = new CharacterPattern((LexCharacterToken)token);
 				break;
 
 			case STRING:
-				pattern = new AStringPattern(token.location,null,(LexStringToken)token);
+				pattern = new AStringPattern(token.location,null, false,(LexStringToken)token);
 //				pattern = new StringPattern((LexStringToken)token);
 				break;
 
 			case QUOTE:
-				pattern = new AQuotePattern(token.location,null,(LexQuoteToken)token);
+				pattern = new AQuotePattern(token.location,null, false,(LexQuoteToken)token);
 //				pattern = new QuotePattern((LexQuoteToken)token);
 				break;
 
 			case TRUE:
 			case FALSE:
-				pattern = new ABooleanPattern(token.location,null,(LexBooleanToken)token);
+				pattern = new ABooleanPattern(token.location,null, false,(LexBooleanToken)token);
 //				pattern = new ABooleanPattern(token.location,null,(LexBooleanToken)token);
 				break;
 
 			case NIL:
-				pattern = new ANilPattern(token.location,null);
+				pattern = new ANilPattern(token.location,null,false);
 				//pattern = new NilPattern((LexKeywordToken)token);
 				break;
 
 			case BRA:
 				nextToken();
 				ExpressionReader expr = getExpressionReader();
-				pattern = new AExpressionPattern(token.location,null,expr.readExpression());
+				pattern = new AExpressionPattern(token.location,null, false,expr.readExpression());
 //				pattern = new ExpressionPattern(expr.readExpression());
 				checkFor(VDMToken.KET, 2180, "Mismatched brackets in pattern");
 				rdtok = false;
@@ -135,12 +135,12 @@ public class PatternReader extends SyntaxReader
 			case SET_OPEN:
 				if (nextToken().is(VDMToken.SET_CLOSE))
 				{
-					pattern = new ASetPattern(token.location,null, new Vector<PPattern>());
+					pattern = new ASetPattern(token.location,null, false, new Vector<PPattern>());
 //					pattern = new SetPattern(token.location, new PatternList());
 				}
 				else
 				{
-					pattern = new ASetPattern(token.location,null,readPatternList());
+					pattern = new ASetPattern(token.location,null, false,readPatternList());
 //					pattern = new SetPattern(token.location, readPatternList());
 					checkFor(VDMToken.SET_CLOSE, 2181, "Mismatched braces in pattern");
 					rdtok = false;
@@ -150,12 +150,12 @@ public class PatternReader extends SyntaxReader
 			case SEQ_OPEN:
 				if (nextToken().is(VDMToken.SEQ_CLOSE))
 				{
-					pattern = new ASeqPattern(token.location,null, new Vector<PPattern>());
+					pattern = new ASeqPattern(token.location,null, false, new Vector<PPattern>());
 					//pattern = new SeqPattern(token.location, new PatternList());
 				}
 				else
 				{
-					pattern = new ASeqPattern(token.location,null,readPatternList());
+					pattern = new ASeqPattern(token.location,null, false,readPatternList());
 //					pattern = new SeqPattern(token.location, readPatternList());
 					checkFor(VDMToken.SEQ_CLOSE, 2182, "Mismatched square brackets in pattern");
 					rdtok = false;
@@ -176,7 +176,7 @@ public class PatternReader extends SyntaxReader
 					if (id.name.equals("mk_"))
 					{
 						checkFor(VDMToken.BRA, 2183, "Expecting '(' after mk_ tuple");
-						pattern = new ATuplePattern(token.location,null,readPatternList());
+						pattern = new ATuplePattern(token.location,null, false,readPatternList());
 //						pattern = new TuplePattern(token.location, readPatternList());
 						checkFor(VDMToken.KET, 2184, "Expecting ')' after mk_ tuple");
 					}
@@ -204,13 +204,13 @@ public class PatternReader extends SyntaxReader
 						if (lastToken().is(VDMToken.KET))
 						{
 							// An empty pattern list
-							pattern = new ARecordPattern(token.location,null,typename, new Vector<PPattern>(),null);
+							pattern = new ARecordPattern(token.location,null, false,typename, new Vector<PPattern>(),null);
 //							pattern = new RecordPattern(typename, new PatternList());
 							nextToken();
 						}
 						else
 						{
-							pattern = new ARecordPattern(token.location,null,typename, readPatternList(),null);
+							pattern = new ARecordPattern(token.location,null, false,typename, readPatternList(),null);
 //							pattern = new RecordPattern(typename, readPatternList());
 							checkFor(VDMToken.KET, 2186, "Expecting ')' after " + id + " record");
 						}
@@ -220,13 +220,13 @@ public class PatternReader extends SyntaxReader
 				}
 				else
 				{
-					pattern = new AIdentifierPattern(token.location,null,idToName(id));
+					pattern = new AIdentifierPattern(token.location,null,false,idToName(id));
 //					pattern = new IdentifierPattern(idToName(id));
 				}
 				break;
 
 			case MINUS:
-				pattern = new AIgnorePattern(token.location,null);
+				pattern = new AIgnorePattern(token.location,null,false);
 //				pattern = new IgnorePattern(token.location);
 				break;
 

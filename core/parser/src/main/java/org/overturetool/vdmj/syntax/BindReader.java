@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.ADefPatternBind;
-import org.overture.ast.patterns.AMultipleSetMultipleBind;
-import org.overture.ast.patterns.AMultipleTypeMultipleBind;
 import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -185,7 +185,7 @@ public class BindReader extends SyntaxReader
 				if (nextToken().is(VDMToken.SET))
 				{
 					nextToken();
-					mb = new AMultipleSetMultipleBind(lastToken().location,
+					mb = new ASetMultipleBind(lastToken().location,
 							plist, getExpressionReader().readExpression());
 				}
 				else
@@ -196,7 +196,7 @@ public class BindReader extends SyntaxReader
 
 			case COLON:
 				nextToken();
-				mb = new AMultipleTypeMultipleBind(lastToken().location,plist, null);
+				mb = new ATypeMultipleBind(lastToken().location,plist, null);
 				break;
 
 			default:

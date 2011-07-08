@@ -141,10 +141,10 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	public List<PField> readFieldList()
+	public List<AFieldField> readFieldList()
 		throws ParserException, LexException
 	{
-		List<PField> list = new Vector<PField>();
+		List<AFieldField> list = new Vector<AFieldField>();
 
 		while (lastToken().isNot(VDMToken.END) &&
 			   lastToken().isNot(VDMToken.SEMICOLON) &&
