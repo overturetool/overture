@@ -60,9 +60,12 @@ public class CloneWithMapMethod extends CloneMethod
 					for (Field f : fields)
 					{
 						String name = f.getName();
-						if (f.isList)
+						if (f.isList && !f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneList(" + name + ", oldToNewMap),\n");
+						}else if (f.isDoubleList)
+						{
+							tmp += ("\t\t\tcloneListList(" + name + ", oldToNewMap),\n");
 						} else
 						{
 							

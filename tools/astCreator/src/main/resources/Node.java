@@ -1,9 +1,12 @@
 package %generated.node%;
 
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.overture.ast.node.Node;
 
 import %org.overture.ast.analysis%.%IAnalysis%;
 import %org.overture.ast.analysis%.%IAnswer%;
@@ -127,6 +130,14 @@ public abstract class %Node% implements Cloneable
 		}
 		return clone;
 	}
+	
+	protected <T extends %Node%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list) {
+		LinkedList<List<T>> clone = new LinkedList< List<T>>();
+		for(List<T> n : list) {
+			clone.add( cloneList(n));
+		}
+		return clone;
+	}
 
 	/**
 	 * Returns a deep clone of {@code list}.
@@ -142,6 +153,14 @@ public abstract class %Node% implements Cloneable
 			T cloneNode = (T) n.clone(oldToNewMap);
 			oldToNewMap.put(n, cloneNode);
 			clone.add(cloneNode);
+		}
+		return clone;
+	}
+	
+	protected <T extends %Node%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list, java.util.Map<Node,Node> oldToNewMap) {
+		LinkedList<List<T>> clone = new LinkedList< List<T>>();
+		for(List<T> n : list) {
+			clone.add( cloneList(n,oldToNewMap));
 		}
 		return clone;
 	}

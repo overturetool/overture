@@ -58,9 +58,12 @@ public class CloneMethod extends Method
 						String name = f.getName();
 						// this.arguments.add(new Argument(f.getType(), name + "_"));
 
-						if (f.isList)
+						if (f.isList && !f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneList(" + name + "),\n");
+						}else if (f.isDoubleList)
+						{
+							tmp += ("\t\t\tcloneListList(" + name + "),\n");
 						} else
 						{
 							if (JavaTypes.isPrimitiveType(f.getType())|| f.type instanceof ExternalEnumJavaClassDefinition)

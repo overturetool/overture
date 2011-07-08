@@ -229,6 +229,11 @@ public class CreateOnParse
 														{
 															f.isList = true;
 														}
+														if (regex.trim().equals("**"))
+														{
+															f.isList = true;
+															f.isDoubleList = true;
+														}
 													}
 												}
 
@@ -326,6 +331,11 @@ public class CreateOnParse
 							if (regex.trim().equals("*"))
 							{
 								field.isList = true;
+							}
+							if (regex.trim().equals("**"))
+							{
+								field.isList = true;
+								field.isDoubleList = true;
 							}
 						}
 					}

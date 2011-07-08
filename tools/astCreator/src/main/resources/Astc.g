@@ -273,6 +273,7 @@ definitions
 repeat
   : '?'
   | '*'
+  | '**'
   | '+'
   ;
 

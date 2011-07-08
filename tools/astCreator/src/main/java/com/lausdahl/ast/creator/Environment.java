@@ -16,6 +16,7 @@ public class Environment
 	public final PredefinedClassDefinition node;
 	public final PredefinedClassDefinition token;
 	public final PredefinedClassDefinition nodeList;
+	public final PredefinedClassDefinition nodeListList;
 	public final PredefinedClassDefinition externalNode;
 	
 	public final String TAG_IAnalysis = "IAnalysis";
@@ -28,11 +29,13 @@ public class Environment
 		// setup env
 		node=new PredefinedClassDefinition(defaultPackage, "Node");
 		nodeList =new PredefinedClassDefinition(defaultPackage, "NodeList");
+		nodeListList =new PredefinedClassDefinition(defaultPackage, "NodeListList");
 		token =new PredefinedClassDefinition(defaultPackage, "Token");
 		externalNode=new PredefinedClassDefinition(defaultPackage, "ExternalNode");
 		// setup env
 		addClass(node);
 		addClass(nodeList);
+		addClass(nodeListList);
 		addClass(token);
 		addClass(externalNode);
 	}

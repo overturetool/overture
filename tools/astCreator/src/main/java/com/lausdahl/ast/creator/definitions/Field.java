@@ -25,6 +25,7 @@ public class Field {
 	private Environment env;
 	private String unresolvedType;
 	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
+	public boolean isDoubleList = false;
 
 	public Field(Environment env) {
 		this.env = env;
@@ -36,6 +37,10 @@ public class Field {
 			imports.add("java.util.List");
 			imports.add(getInternalType(unresolvedType).getPackageName() + "."
 					+ getInternalType(unresolvedType).getSignatureName());
+		}
+		if(isDoubleList)
+		{
+			imports.add("java.util.Collection");
 		}
 		// imports.add("java.util.List");
 
@@ -81,9 +86,14 @@ public class Field {
 		}
 		checkType(type);
 		String internaalType = type.getName();// getInternalType();
-		if (isList) {
+		if (isList && !isDoubleList) {
 
 			internaalType = env.nodeList.getSignatureName() + "<"
+					+ internaalType + ">";
+		}
+		if (isDoubleList ) {
+
+			internaalType = env.nodeListList.getSignatureName() + "<"
 					+ internaalType + ">";
 		}
 
@@ -106,9 +116,13 @@ public class Field {
 		}
 		checkType(type);
 		String internaalType = type.getName();
-		if (isList) {
+		if (isList && !isDoubleList) {
 
 			return "List<? extends " + internaalType + ">";
+		}
+		if(isDoubleList)
+		{
+			return "Collection<? extends List<"+internaalType+">>";
 		}
 		return internaalType;
 	}
