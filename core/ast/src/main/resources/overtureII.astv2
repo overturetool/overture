@@ -409,7 +409,7 @@ stm {-> package='org.overture.ast.statements'}
     =   {always} [always]:stm [body]:stm
     |   {assignment} [target]:stateDesignator [exp]:exp
     |   {atomic} [assignments]:stm.assignment*
-    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [args]:exp*
+    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [field]:LexIdentifierToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
@@ -417,7 +417,7 @@ stm {-> package='org.overture.ast.statements'}
     |   {duration} [duration]:exp [statement]:stm
     |   {elseIf} [elseIf]:exp [thenStm]:stm
     |   {error}
-    |   {exit}
+    |   {exit} [expression]:exp
     |   {forAll} [pattern]:pattern [set]:exp [statement]:stm
     |   {forIndex} [var]:LexNameToken [from]:exp [to]:exp [by]:exp [statement]:stm
     |   {forPatternBind} [patternBind]:patternBind [reverse]:java_Boolean [exp]:exp [statement]:stm
@@ -431,7 +431,7 @@ stm {-> package='org.overture.ast.statements'}
     |   {specification} [externals]:clause.external* [precondition]:exp [postcondition]:exp [errors]:case.error*
     |   {start} [obj]:exp
     |   {subclassResponsibility}
-    |   {tixe} [traps]:stmtAlternative.tixe [body]:stm
+    |   {tixe} [traps]:stmtAlternative.tixe* [body]:stm
     //|   {traceVariable} //TODO why does this have a value inside?
     |   {trap} [patternBind]:patternBind [with]:stm [body]:stm
     |   {while} [exp]:exp [statement]:stm
