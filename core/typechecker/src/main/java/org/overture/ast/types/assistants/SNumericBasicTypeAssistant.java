@@ -1,4 +1,4 @@
-package org.overture.typecheck.visitors;
+package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
@@ -6,8 +6,8 @@ import org.overture.ast.expressions.SNumericBinaryExp;
 import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeCheckerErrors;
 
 
 public class SNumericBasicTypeAssistant {
@@ -20,15 +20,15 @@ public class SNumericBasicTypeAssistant {
 
 		if (!PTypeAssistant.isNumeric(node.getLeft().getType()))
 		{
-			PExpAssistant.report(3139, "Left hand of " + node.getOp() + " is not numeric",node);
-			PExpAssistant.detail("Actual", node.getLeft().getType());
+			TypeCheckerErrors.report(3139, "Left hand of " + node.getOp() + " is not numeric",node.getLocation(),node);
+			TypeCheckerErrors.detail("Actual", node.getLeft().getType());
 			node.getLeft().setType(new ARealNumericBasicType(node.getLocation(),false));
 		}
 
 		if (!PTypeAssistant.isNumeric(node.getRight().getType()))
 		{
-			PExpAssistant.report(3140, "Right hand of " + node.getOp() + " is not numeric",node);
-			PExpAssistant.detail("Actual", node.getRight().getType());
+			TypeCheckerErrors.report(3140, "Right hand of " + node.getOp() + " is not numeric",node.getLocation(),node);
+			TypeCheckerErrors.detail("Actual", node.getRight().getType());
 			node.getRight().setType(new ARealNumericBasicType(node.getLocation(),false));
 		}
 		

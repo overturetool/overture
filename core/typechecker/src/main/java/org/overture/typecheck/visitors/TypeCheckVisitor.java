@@ -6,6 +6,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeCheckerErrors;
 
 
 
@@ -18,6 +19,7 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcExp = new TypeCheckerExpVisitor(this);
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcDefinition = new TypeCheckerDefinitionVisitor(this);
 	
+	public TypeCheckerErrors tcErrors = new TypeCheckerErrors();
 	
 	
 	public synchronized static QuestionAnswerAdaptor<TypeCheckInfo, PType> getInstance()

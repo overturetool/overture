@@ -14,12 +14,13 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.runtime.TypeChecker;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overture.typecheck.visitors.TypeCheckVisitor;
+import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -96,7 +97,7 @@ public class PDefinitionAssistant {
 		}
 	}
 
-	private static PDefinition findName(PDefinition d, LexNameToken sought,
+	public static PDefinition findName(PDefinition d, LexNameToken sought,
 			NameScope scope) {
 		if (d.getName().equals(sought))
 		{
@@ -158,16 +159,13 @@ public class PDefinitionAssistant {
 	private static void unusedCheck(PDefinition d) {
 		if (!d.getUsed())
 		{
-			warning(d, 5000, "Definition '" + d.getName() + "' not used");
+			TypeCheckerErrors.warning(d, 5000, "Definition '" + d.getName() + "' not used");
 			markUsed(d);		// To avoid multiple warnings
 		}
 		
 	}
 	
-	public static void warning(PDefinition d, int number, String msg)
-	{
-		TypeChecker.warning(number, msg, d.getLocation());
-	}
+
 
 	public static Set<PDefinition> findMatches(List<PDefinition> definitions,
 			LexNameToken name) {
@@ -268,6 +266,16 @@ public class PDefinitionAssistant {
 		}
 
 		return result;
+	}
+
+	public static boolean isStatic(PDefinition fdef) {
+		if(fdef.getAccess() instanceof AAccessSpecifierAccessSpecifier)
+		{
+			AAccessSpecifierAccessSpecifier access = (AAccessSpecifierAccessSpecifier) fdef.getAccess();
+			return access.getStatic() == null;
+		}
+		assert false : "cannot check if it isStatic";
+		return false;
 	}
 
 	

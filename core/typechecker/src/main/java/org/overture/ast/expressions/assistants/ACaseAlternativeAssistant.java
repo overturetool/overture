@@ -1,7 +1,6 @@
 package org.overture.ast.expressions.assistants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;

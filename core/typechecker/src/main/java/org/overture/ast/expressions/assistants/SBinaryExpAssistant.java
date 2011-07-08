@@ -6,6 +6,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeCheckerErrors;
 
 public class SBinaryExpAssistant {
 
@@ -20,12 +21,12 @@ public class SBinaryExpAssistant {
 
 		if (!PTypeAssistant.isType(node.getLeft().getType(),expected.getClass()))
 		{
-			PExpAssistant.report(3065, "Left hand of " + node.getOp() + " is not " + expected,node);
+			TypeCheckerErrors.report(3065, "Left hand of " + node.getOp() + " is not " + expected,node.getLocation(),node);
 		}
 
 		if (!PTypeAssistant.isType(node.getRight().getType(),expected.getClass()))
 		{
-			PExpAssistant.report(3066, "Right hand of " + node.getOp() + " is not " + expected,node);
+			TypeCheckerErrors.report(3066, "Right hand of " + node.getOp() + " is not " + expected,node.getLocation(),node);
 		}
 
 		node.setType(expected);
