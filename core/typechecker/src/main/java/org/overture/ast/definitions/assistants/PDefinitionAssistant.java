@@ -269,13 +269,7 @@ public class PDefinitionAssistant {
 	}
 
 	public static boolean isStatic(PDefinition fdef) {
-		if(fdef.getAccess() instanceof AAccessSpecifierAccessSpecifier)
-		{
-			AAccessSpecifierAccessSpecifier access = (AAccessSpecifierAccessSpecifier) fdef.getAccess();
-			return access.getStatic() == null;
-		}
-		assert false : "cannot check if it isStatic";
-		return false;
+		return PAccessSpecifierAssistant.isStatic(fdef.getAccess());
 	}
 
 	

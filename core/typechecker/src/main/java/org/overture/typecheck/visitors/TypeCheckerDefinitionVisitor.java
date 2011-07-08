@@ -24,6 +24,7 @@ import org.overture.runtime.FlatCheckedEnvironment;
 import org.overture.runtime.TypeChecker;
 import org.overture.runtime.TypeComparator;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -138,7 +139,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		if (node.getMeasure() == null && node.getRecursive())
 		{
-			PDefinitionAssistant.warning(node,5012, "Recursive function has no measure");
+			TypeCheckerErrors.warning(node,5012, "Recursive function has no measure");
 		}
 		else if (node.getMeasure() != null)
 		{

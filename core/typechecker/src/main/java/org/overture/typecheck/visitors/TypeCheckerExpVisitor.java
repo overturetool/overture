@@ -1167,12 +1167,12 @@ public class TypeCheckerExpVisitor extends
 
    				results.add(fdef.getType());
    				// At runtime, type qualifiers must match exactly
-   				memberName.setTypeQualifier(fdef.name.typeQualifier);
+   				memberName.setTypeQualifier(fdef.getName().typeQualifier);
     		}
    			else
    			{
-   				field.concern(unique,
-   					3092, "Inaccessible member " + memberName + " of class " + cls.name.name);
+   				TypeCheckerErrors.concern(unique,
+   					3092, "Inaccessible member " + memberName + " of class " + cls.getName().name,node.getField().getLocation(),node.getField());
    			}
 
    			recOrClass = true;
@@ -1182,13 +1182,15 @@ public class TypeCheckerExpVisitor extends
 		{
     		if (!recOrClass)
     		{
-    			object.report(3093, "Field '" + field.name + "' applied to non-aggregate type");
+    			TypeCheckerErrors.report(3093, "Field '" + node.getField().name + "' applied to non-aggregate type",node.getObject().getLocation(),node.getObject());
     		}
 
-    		return new UnknownType(location);
+    		node.setType(new AUnknownType(node.getLocation(),false));
+    		return node.getType();
 		}
 
-		return results.getType(location);
+		node.setType(PTypeAssistant.getType(results, node.getLocation()));
+		return node.getType();
 	}
 	
 	

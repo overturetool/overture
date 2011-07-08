@@ -4,15 +4,13 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.ClassType;
 
 
 public class SClassDefinitionAssistant {
@@ -114,32 +112,32 @@ public class SClassDefinitionAssistant {
 	}
 
 	public static boolean isAccessible( Environment env, PDefinition field,
-			boolean b) {
+			boolean needStatic) {
 		SClassDefinition self = env.findClassDefinition();
 		SClassDefinition target = field.getClassDefinition();
 
 		if (self == null)	// Not called from within a class member
 		{
 			// We're outside, so just public access
-			return (field.accessSpecifier.access == Token.PUBLIC);
+			return (PAccessSpecifierAssistant.isPublic(field.getAccess()));
 		}
 		else
 		{
-			ClassType selftype = (ClassType)self.getType();
-			ClassType targtype = (ClassType)target.getType();
+			AClassType selftype = (AClassType)self.getType();
+			AClassType targtype = (AClassType)target.getType();
 
 			if (!selftype.equals(targtype))
 			{
-				if (selftype.hasSupertype(targtype))
+				if (AClassTypeAssistant.hasSupertype(selftype,targtype))
 				{
 					// We're a subclass, so see public or protected
-					return (field.accessSpecifier.access != Token.PRIVATE);
+					return (PAccessSpecifierAssistant.isPrivate(field.getAccess()));
 				}
 				else
 				{
 					// We're outside, so just public/static access
-					return (field.accessSpecifier.access == Token.PUBLIC &&
-							(needStatic ? field.accessSpecifier.isStatic : true));
+					return (PAccessSpecifierAssistant.isPublic(field.getAccess()) &&
+							(needStatic ? PAccessSpecifierAssistant.isStatic(field.getAccess()) : true));
 				}
 			}
 			else
