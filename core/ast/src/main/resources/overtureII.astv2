@@ -69,7 +69,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
     |   {char_const} [value]:LexCharacterToken
     |   {elseIf} [elseIf]:exp [then]:exp  
-    |   {exists1}  [bind]:bind [predicate]:exp
+    |   {exists1}  [bind]:bind [predicate]:exp [def]:definition
     |   {exists} [bindList]:multipleBind* [predicate]:exp
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
@@ -207,7 +207,7 @@ modifier {-> package='org.overture.ast.expressions'}
     ;
     
 alternative {-> package='org.overture.ast.expressions'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp [defs]:definition*  [type]:type
     ;
     
 boolean_const
@@ -240,8 +240,8 @@ type {-> package='org.overture.ast.types'}
     ;
 
 #invariant {-> package='org.overture.ast.types'}
-    =   {named} [typename]:LexNameToken [type]:type [invdef]:explicitFunction //super = invariant type
-    |   {record} [typename]:LexNameToken [fields]:field* [invdef]:explicitFunction //super = invariant type
+    =   {named} [name]:LexNameToken [type]:type [invdef]:explicitFunction //super = invariant type
+    |   {record} [name]:LexNameToken [fields]:field.field* [invdef]:explicitFunction //super = invariant type
     ;
 
 #basic {-> package='org.overture.ast.types'}
@@ -301,8 +301,8 @@ bind {-> package='org.overture.ast.patterns'}
     ;
 
 multipleBind {-> package='org.overture.ast.patterns'}
-    =   {multipleSet} [plist]:pattern* [set]:exp //binds
-    |   {multipleType}  [plist]:pattern* [type]:type //binds
+    =   {set} [plist]:pattern* [set]:exp //binds
+    |   {type}  [plist]:pattern* [type]:type //binds
     ;
 
 patternBind {-> package='org.overture.ast.patterns'}
@@ -333,7 +333,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [result]:pair.patternType
                             [body]:exp 
                             [isTypeInvariant]:java_Boolean 
-                            [measure]:LexNameToken 
+                            [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
                             [isCurried]:java_Boolean 
     |   {explicitOperation} [parameterPatterns]:pattern* 
                             [result]:pair.patternType 
@@ -512,7 +512,7 @@ Aspect Declaration
 %type = [location]:location [resolved]:java_Boolean
      ; 
 
-%pattern = [location]:location [definitions]:definition*
+%pattern = [location]:location [definitions]:definition* [resolved]:java_Boolean
     ;
 
 %bind = [location]:location
@@ -525,7 +525,7 @@ Aspect Declaration
     ;
 
 %definition->#class
-    = [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition*
+    = [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition* [allInheritedDefinitions]:definition*
     ;
     
 %stm
