@@ -412,10 +412,10 @@ exports {-> package='org.overture.ast.modules'}
 
 export {-> package='org.overture.ast.modules'}
     =   {all}
-    |   {function} [nameList]:LexNameToken [exportType]:type
-    |   {operation} [nameList]:LexNameToken [exportType]:type
-    |   {type} [nameList]:LexNameToken [struct]:java_Boolean
-    |   {value} [nameList]:LexNameToken [exportType]:type
+    |   {function} [nameList]:LexNameToken* [exportType]:type
+    |   {operation} [nameList]:LexNameToken* [exportType]:type
+    |   {type} [name]:LexNameToken [struct]:java_Boolean
+    |   {value} [nameList]:LexNameToken* [exportType]:type
     ;
 //patternList {-> package='org.overture.ast.patterns'}
 //    = {pattern_inner_list} [list]:pattern*
