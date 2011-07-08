@@ -109,11 +109,11 @@ public abstract class %Node% implements Cloneable
 	
 	@SuppressWarnings("unchecked")
 	protected <T extends %ExternalNode%> T cloneNode(T node, java.util.Map<%Node%,%Node%> oldToNewMap) {
-//		if(node != null) {
-//			T clone = (T) node.clone(oldToNewMap);
+		if(node != null) {
+			T clone = (T) node.clone();//oldToNewMap);
 //			oldToNewMap.put(node,clone);
-//			return clone;
-//		}
+			return clone;
+		}
 		return null;
 	}
 
@@ -124,6 +124,15 @@ public abstract class %Node% implements Cloneable
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T extends %Node%> List<T> cloneList(List<T> list) {
+		List<T> clone = new LinkedList<T>();
+		for(T n : list) {
+			clone.add((T) n.clone());
+		}
+		return clone;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends %ExternalNode%> List<T> cloneListExternal(List<T> list) {
 		List<T> clone = new LinkedList<T>();
 		for(T n : list) {
 			clone.add((T) n.clone());
@@ -152,6 +161,17 @@ public abstract class %Node% implements Cloneable
 		for(T n : list) {
 			T cloneNode = (T) n.clone(oldToNewMap);
 			oldToNewMap.put(n, cloneNode);
+			clone.add(cloneNode);
+		}
+		return clone;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends %ExternalNode%> List<T> cloneListExternal(List<T> list, java.util.Map<%Node%,%Node%> oldToNewMap) {
+		List<T> clone = new LinkedList<T>();
+		for(T n : list) {
+			T cloneNode = (T) n.clone();//oldToNewMap);
+//			oldToNewMap.put(n, cloneNode);
 			clone.add(cloneNode);
 		}
 		return clone;

@@ -146,7 +146,13 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			sb.append("\n\t"+f.accessspecifier.syntax+" " + f.getType() + " " + f.getName() );
 			if(f.isList)
 			{
+				if(f.isTypeExternalNotNode())
+				{
+					sb.append(" = new Vector<"+f.type.getSignatureName()+">()");
+				}else
+				{
 				sb.append(" = new "+ f.getType()+"(this)");
+				}
 			}
 			sb.append(";");
 		}

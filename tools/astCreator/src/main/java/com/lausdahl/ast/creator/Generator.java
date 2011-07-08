@@ -58,7 +58,7 @@ public class Generator
 		System.out.print("Question-Answer...");
 		createQuestionAnswer(env, analysisPackageName);
 		System.out.print("Depth-First...");
-		createdepthFirstAdaptor(env, defaultPackage);
+		createdepthFirstAdaptor(env, analysisPackageName);
 		System.out.println();
 		// SourceFileWriter.write(outputFolder, env1);
 		return env;

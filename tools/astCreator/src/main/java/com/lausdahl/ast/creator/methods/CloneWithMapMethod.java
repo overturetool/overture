@@ -6,6 +6,7 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
+import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
@@ -62,7 +63,7 @@ public class CloneWithMapMethod extends CloneMethod
 						String name = f.getName();
 						if (f.isList && !f.isDoubleList)
 						{
-							tmp += ("\t\t\tcloneList(" + name + ", oldToNewMap),\n");
+							tmp += ("\t\t\tcloneList"+(f.isTypeExternalNotNode()?"External":"")+"(" + name + ", oldToNewMap),\n");
 						}else if (f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneListList(" + name + ", oldToNewMap),\n");

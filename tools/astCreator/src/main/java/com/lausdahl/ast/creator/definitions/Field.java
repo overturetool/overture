@@ -6,12 +6,15 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 
-public class Field {
-	public static enum AccessSpecifier {
+public class Field
+{
+	public static enum AccessSpecifier
+	{
 		Private("private"), Protected("protected"), Public("public");
 		public final String syntax;
 
-		private AccessSpecifier(String syntax) {
+		private AccessSpecifier(String syntax)
+		{
 			this.syntax = syntax;
 		}
 	}
@@ -27,31 +30,40 @@ public class Field {
 	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
 	public boolean isDoubleList = false;
 
-	public Field(Environment env) {
+	public Field(Environment env)
+	{
 		this.env = env;
 	}
 
-	public List<String> getRequiredImports() {
+	public List<String> getRequiredImports()
+	{
 		List<String> imports = new Vector<String>();
-		if (isList) {
+		if (isList)
+		{
 			imports.add("java.util.List");
 			imports.add(getInternalType(unresolvedType).getPackageName() + "."
 					+ getInternalType(unresolvedType).getSignatureName());
+			if (isTypeExternalNotNode())
+			{
+				imports.add("java.util.Vector");
+			}
 		}
-		if(isDoubleList)
+		if (isDoubleList)
 		{
 			imports.add("java.util.Collection");
 		}
 		// imports.add("java.util.List");
 
 		IInterfaceDefinition defIntf = env.lookUpInterface(getType());
-		if (defIntf != null) {
+		if (defIntf != null)
+		{
 			imports.add(defIntf.getPackageName() + "."
 					+ defIntf.getSignatureName());
 		}
 
 		IClassDefinition def = env.lookUp(getType());
-		if (def != null) {
+		if (def != null)
+		{
 			imports.add(def.getPackageName() + "." + def.getSignatureName());
 		}
 
@@ -59,20 +71,25 @@ public class Field {
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String name = null;
 		String typeName = null;
-		try {
+		try
+		{
 			name = getName();
 			typeName = getType();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 
 		}
 		return name + ": " + typeName;
 	}
 
-	public String getName() {
-		if (type == null) {
+	public String getName()
+	{
+		if (type == null)
+		{
 			type = getInternalType(unresolvedType);
 		}
 		String tmp = (name == null ? type.getName() : name);
@@ -80,18 +97,27 @@ public class Field {
 				+ tmp.substring(1);
 	}
 
-	public String getType() {
-		if (type == null) {
+	public String getType()
+	{
+		if (type == null)
+		{
 			type = getInternalType(unresolvedType);
 		}
 		checkType(type);
 		String internaalType = type.getName();// getInternalType();
-		if (isList && !isDoubleList) {
-
-			internaalType = env.nodeList.getSignatureName() + "<"
-					+ internaalType + ">";
+		if (isList && !isDoubleList)
+		{
+			if (isTypeExternalNotNode())
+			{
+				internaalType = "List<? extends " + internaalType + ">";
+			} else
+			{
+				internaalType = env.nodeList.getSignatureName() + "<"
+						+ internaalType + ">";
+			}
 		}
-		if (isDoubleList ) {
+		if (isDoubleList)
+		{
 
 			internaalType = env.nodeListList.getSignatureName() + "<"
 					+ internaalType + ">";
@@ -109,32 +135,38 @@ public class Field {
 		return internaalType;
 	}
 
-	public String getMethodArgumentType() {
+	public String getMethodArgumentType()
+	{
 		// String internaalType = getInternalType();
-		if (type == null) {
+		if (type == null)
+		{
 			type = getInternalType(unresolvedType);
 		}
 		checkType(type);
 		String internaalType = type.getName();
-		if (isList && !isDoubleList) {
+		if (isList && !isDoubleList)
+		{
 
 			return "List<? extends " + internaalType + ">";
 		}
-		if(isDoubleList)
+		if (isDoubleList)
 		{
-			return "Collection<? extends List<"+internaalType+">>";
+			return "Collection<? extends List<" + internaalType + ">>";
 		}
 		return internaalType;
 	}
 
 	public void checkType(IInterfaceDefinition t)
 	{
-		if (t == null) {
-			String msg = ("Unable to resolve type for field: \"" + getName()+" : "+ unresolvedType
-					+ "\" in class %s with raw type " + unresolvedType);
+		if (t == null)
+		{
+			String msg = ("Unable to resolve type for field: \"" + getName()
+					+ " : " + unresolvedType + "\" in class %s with raw type " + unresolvedType);
 			String className = "";
-			for (IClassDefinition def : env.getClasses()) {
-				if (def.getFields()!=null && def.getFields().contains(this)) {
+			for (IClassDefinition def : env.getClasses())
+			{
+				if (def.getFields() != null && def.getFields().contains(this))
+				{
 					className = def.getName();
 				}
 
@@ -145,11 +177,13 @@ public class Field {
 		}
 	}
 
-	public String getInnerTypeForList() {
-		if (type == null) {
+	public String getInnerTypeForList()
+	{
+		if (type == null)
+		{
 			type = getInternalType(unresolvedType);
 		}
-		
+
 		String internaalType = type.getName();
 		// if (isList)
 		// {
@@ -159,15 +193,18 @@ public class Field {
 		return internaalType;
 	}
 
-	protected IInterfaceDefinition getInternalType(String unresolvedTypeName) {
-		if (isTokenField) {
+	protected IInterfaceDefinition getInternalType(String unresolvedTypeName)
+	{
+		if (isTokenField)
+		{
 			return type;
 		}
 
-		
-		//First look up all tokens
-		for (IClassDefinition cd : env.getClasses()) {
-			if (cd instanceof CommonTreeClassDefinition) {
+		// First look up all tokens
+		for (IClassDefinition cd : env.getClasses())
+		{
+			if (cd instanceof CommonTreeClassDefinition)
+			{
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
 				if (c.getType() == CommonTreeClassDefinition.ClassType.Token
@@ -178,60 +215,78 @@ public class Field {
 			}
 		}
 
-		//Lookup in all root productions
-		for (IClassDefinition cd : env.getClasses()) {
-			if (cd instanceof CommonTreeClassDefinition) {
+		// Lookup in all root productions
+		for (IClassDefinition cd : env.getClasses())
+		{
+			if (cd instanceof CommonTreeClassDefinition)
+			{
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
 				// if (c.rawName.equals(unresolvedTypeName))
-				if (c.getType()==ClassType.Production && checkName(c, unresolvedTypeName, true)) {
+				if (c.getType() == ClassType.Production
+						&& checkName(c, unresolvedTypeName, true))
+				{
 					return c;
 				}
 			}
 		}
-		//Lookup in all sub productions
-		for (IClassDefinition cd : env.getClasses()) {
-			if (cd instanceof CommonTreeClassDefinition) {
+		// Lookup in all sub productions
+		for (IClassDefinition cd : env.getClasses())
+		{
+			if (cd instanceof CommonTreeClassDefinition)
+			{
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
 
 				// if (c.rawName.equals(unresolvedTypeName))
-				if (c.getType()==ClassType.SubProduction&& checkName(c, unresolvedTypeName, true)) {
-					return c;
-				}
-			}
-		}
-		
-		//Lookup in all alternatives
-		for (IClassDefinition cd : env.getClasses()) {
-			if (cd instanceof CommonTreeClassDefinition) {
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				// if (c.rawName.equals(unresolvedTypeName))
-				if (c.getType()==ClassType.Alternative && checkName(c, unresolvedTypeName, true)) {
-					return c;
-				}
-			}
-		}
-		
-		//Lookup for all raw names no matter the type
-		for (IClassDefinition cd : env.getClasses()) {
-			if (cd instanceof CommonTreeClassDefinition) {
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				// if (c.rawName.equals(unresolvedTypeName))
-				if (checkName(c, unresolvedTypeName, true)) {
+				if (c.getType() == ClassType.SubProduction
+						&& checkName(c, unresolvedTypeName, true))
+				{
 					return c;
 				}
 			}
 		}
 
-		//Lookup in all with not raw name
-		for (IClassDefinition cd : env.getClasses()) {
-			if (cd instanceof CustomClassDefinition) {
+		// Lookup in all alternatives
+		for (IClassDefinition cd : env.getClasses())
+		{
+			if (cd instanceof CommonTreeClassDefinition)
+			{
+				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
+
+				// if (c.rawName.equals(unresolvedTypeName))
+				if (c.getType() == ClassType.Alternative
+						&& checkName(c, unresolvedTypeName, true))
+				{
+					return c;
+				}
+			}
+		}
+
+		// Lookup for all raw names no matter the type
+		for (IClassDefinition cd : env.getClasses())
+		{
+			if (cd instanceof CommonTreeClassDefinition)
+			{
+				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
+
+				// if (c.rawName.equals(unresolvedTypeName))
+				if (checkName(c, unresolvedTypeName, true))
+				{
+					return c;
+				}
+			}
+		}
+
+		// Lookup in all with not raw name
+		for (IClassDefinition cd : env.getClasses())
+		{
+			if (cd instanceof CustomClassDefinition)
+			{
 				CustomClassDefinition c = (CustomClassDefinition) cd;
 
 				// if (c.name.equals(unresolvedTypeName))
-				if (checkName(c, unresolvedTypeName, false)) {
+				if (checkName(c, unresolvedTypeName, false))
+				{
 					return c;
 				}
 			}
@@ -241,25 +296,30 @@ public class Field {
 	}
 
 	private boolean checkName(IClassDefinition def, String name,
-			boolean rawNameCheck) {
-		if (name == null || name.trim().length() == 0) {
+			boolean rawNameCheck)
+	{
+		if (name == null || name.trim().length() == 0)
+		{
 			return true;
 		}
 		String nameToCheck = null;
 		String rest = null;
-		if (name.contains(".")) {
-			nameToCheck = name.substring(name.lastIndexOf('.') + 1,
-					name.length());
+		if (name.contains("."))
+		{
+			nameToCheck = name.substring(name.lastIndexOf('.') + 1, name.length());
 			rest = name.substring(0, name.lastIndexOf('.'));
-		} else {
+		} else
+		{
 			nameToCheck = name;
 		}
 
-		if (rawNameCheck && def instanceof CommonTreeClassDefinition) {
+		if (rawNameCheck && def instanceof CommonTreeClassDefinition)
+		{
 			CommonTreeClassDefinition cDef = (CommonTreeClassDefinition) def;
 			return cDef.rawName.equals(nameToCheck)
 					&& checkName(cDef.getSuperDef(), rest, rawNameCheck);
-		} else if (def instanceof CustomClassDefinition) {
+		} else if (def instanceof CustomClassDefinition)
+		{
 			CustomClassDefinition cDef = (CustomClassDefinition) def;
 			return cDef.name.equals(nameToCheck)
 					&& checkName(cDef.getSuperDef(), rest, rawNameCheck);
@@ -267,10 +327,15 @@ public class Field {
 		return false;
 	}
 
-	public void setType(String text) {
+	public void setType(String text)
+	{
 		this.unresolvedType = text;
-//		this.type = getInternalType(unresolvedType);
+		// this.type = getInternalType(unresolvedType);
 
 	}
 
+	public boolean isTypeExternalNotNode()
+	{
+		return (type instanceof ExternalJavaClassDefinition && !((ExternalJavaClassDefinition) type).extendsNode);
+	}
 }

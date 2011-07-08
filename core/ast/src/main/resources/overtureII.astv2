@@ -15,12 +15,15 @@ Tokens
   LexQuoteToken = 'java:node:org.overturetool.vdmj.lex.LexQuoteToken';
   LexRealToken = 'java:node:org.overturetool.vdmj.lex.LexRealToken';
   LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
+  //Delegate = 'java:node:org.overturetool.vdmj.util.Delegate';
+  clonableFile ='java:org.overturetool.util.ClonableFile';
   
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   plus = '+';
   java_Boolean = 'java:java.lang.Boolean';
   java_Integer = 'java:java.lang.Integer';
   java_String = 'java:java.lang.String';
+  //java_file = 'java:java.io.File';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
   
   bool = 'bool';
@@ -312,7 +315,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
-    |   {explicitFunction} [typeParams]:LexNameToken* [functionType]:function [paramPatternList]:pattern_inner_list* 
+    |   {explicitFunction} [typeParams]:LexNameToken* [functionType]:function [paramPatternList]:pattern** 
                            [precondition]:exp [predef]:explicitFunction 
                            [postcondition]:exp [postdef]:explicitFunction 
                            [body]:exp [actualResult]:type
@@ -382,24 +385,41 @@ definition {-> package='org.overture.ast.definitions'}
     ;
 
 modules {-> package='org.overture.ast.modules'}
-    = {module} [name]:LexNameToken [imports]:imports.module
-        //[exports]:moduleExports
-        [importdefs]:definition*
-        //[exportdefs]:definition*
-        [defs]:definition*
-        ;
+    = {module}  [name]:LexNameToken 
+                [imports]:imports.module*
+                [exports]:exports.module*
+                [defs]:definition*
+                [files]:clonableFile*
+                [importdefs]:definition*
+                [exportdefs]:definition*
+              // [delegate]:Delegate
+    ;
 
 imports {-> package='org.overture.ast.modules'} 
-    = {module} [name]:LexIdentifierToken [imports]:fromModule*
-    | {fromModule} [name]:LexIdentifierToken [signatures]:signatures
-    | {signatures} [importList]:import*
-    | {import} [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:module
+    = {module} [name]:LexIdentifierToken [imports]:imports.fromModule* //no root
+    | {fromModule} [name]:LexIdentifierToken [signatures]:imports.import** //no root
+//    | {signatures} [importList]:import*
+    | {import} [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:modules.module
     ;
- 
+    
+//util {-> package='org.overture.ast.util'}
+//    =   {file} [file]:java_file
+//    ;
+    
+exports {-> package='org.overture.ast.modules'}
+    =   {module} [exports]:export**
+    ;
 
-patternList {-> package='org.overture.ast.patterns'}
-    = {pattern_inner_list} [list]:pattern*
+export {-> package='org.overture.ast.modules'}
+    =   {all}
+    |   {function} [nameList]:LexNameToken [exportType]:type
+    |   {operation} [nameList]:LexNameToken [exportType]:type
+    |   {type} [nameList]:LexNameToken [struct]:java_Boolean
+    |   {value} [nameList]:LexNameToken [exportType]:type
     ;
+//patternList {-> package='org.overture.ast.patterns'}
+//    = {pattern_inner_list} [list]:pattern*
+//    ;
     
 /*
     Statements
@@ -520,4 +540,9 @@ Aspect Declaration
     =   [statements]:stm*
     ;
     
+    
+%export 
+    =   [location]:location [definition]:definition*
+    ;
+
     
