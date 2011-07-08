@@ -23,23 +23,71 @@
 
 package org.overturetool.vdmj.syntax;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
-import java.util.Arrays;
 
-import org.overture.ast.definitions.*;
+import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
+import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AMutexSyncDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AProtectedAccess;
+import org.overture.ast.definitions.APublicAccess;
+import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PAccess;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
+import org.overture.ast.definitions.traces.PTraceCoreDefinition;
+import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.tokens.TAsync;
 import org.overture.ast.node.tokens.TStatic;
-import org.overture.ast.node.tokens.TStringLiteral;
-import org.overture.ast.patterns.*;
-import org.overture.ast.statements.*;
-import org.overture.ast.types.*;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ACallObjectStm;
+import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.AErrorCase;
+import org.overture.ast.statements.AExternalClause;
+import org.overture.ast.statements.APeriodicStm;
+import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.PAccessSpecifier;
+import org.overture.ast.types.PType;
+import org.overture.ast.types.SInvariantType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
-
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -51,8 +99,8 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
-
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.util.Utils;
 
 
 
@@ -638,22 +686,18 @@ public class DefinitionReader extends SyntaxReader
 			throwMessage(2020, "Expecting '(' after function name");
 		}
 
-		List<APatternInnerListPatternList> parameters = new Vector<APatternInnerListPatternList>();
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		
 		while (lastToken().is(VDMToken.BRA))
 		{
 			if (nextToken().isNot(VDMToken.KET))
 			{
-    			parameters.add(
-    					new APatternInnerListPatternList(
-    							getPatternReader().readPatternList()));
+    			parameters.add(getPatternReader().readPatternList());
     			checkFor(VDMToken.KET, 2091, "Expecting ')' after function parameters");
     		}
     		else
     		{
-    			parameters.add(
-    					new APatternInnerListPatternList(
-    							new Vector<PPattern>()));	// empty "()"
+    			parameters.add(new Vector<PPattern>());	// empty "()"
     			nextToken();
     		}
 		}
@@ -725,7 +769,7 @@ public class DefinitionReader extends SyntaxReader
    		{
    			LexIdentifierToken rname = readIdToken("Expecting result identifier");
    	   		resultNames.add(new AIdentifierPattern(firstResult.location,
-   	   				null,idToName(rname)));
+   	   				null,false, idToName(rname)));
    	   		checkFor(VDMToken.COLON, 2094, "Missing colon in identifier/type return value");
    	   		resultTypes.add(tr.readType());
    		}
@@ -741,7 +785,7 @@ public class DefinitionReader extends SyntaxReader
    		if (resultNames.size() > 1)
    		{
    			resultPattern = new APatternTypePair(
-   	   			new ATuplePattern(firstResult.location,null,resultNames),
+   	   			new ATuplePattern(firstResult.location,null,false,resultNames),
  	   			new AProductType(firstResult.location,false, resultTypes));
    		}
    		else
@@ -789,8 +833,8 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new AImplicitFunctionDefinition(funcName.location,
-			idToName(funcName), scope,null,null,null,null,typeParams,null,parameterPatterns,
-			precondition,null,postcondition,null,resultPattern,body,null, measure,null);
+			idToName(funcName), scope,false,null,null,null,typeParams,null,parameterPatterns,
+			precondition,null,postcondition,null,resultPattern,body,null, measure,null,false, 0);
 		
 //		return new ImplicitFunctionDefinition(
 //			idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
@@ -856,7 +900,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		LexIdentifierToken name = readIdToken("Expecting identifier after 'state' definition");
 		checkFor(VDMToken.OF, 2097, "Expecting 'of' after state name");
-		List<PField> fieldList = getTypeReader().readFieldList();
+		List<AFieldField> fieldList = getTypeReader().readFieldList();
 
 		PExp invExpression = null;
 		PExp initExpression = null;
@@ -1007,7 +1051,7 @@ public class DefinitionReader extends SyntaxReader
 			do
 			{
 				LexIdentifierToken rname = readIdToken("Expecting result identifier");
-				resultNames.add(new AIdentifierPattern(rname.location,null,idToName(rname)));
+				resultNames.add(new AIdentifierPattern(rname.location,null,false,idToName(rname)));
 				checkFor(VDMToken.COLON, 2104, "Missing colon in identifier/type return value");
 				resultTypes.add(tr.readType());
 			}
@@ -1021,7 +1065,7 @@ public class DefinitionReader extends SyntaxReader
 			if (resultNames.size() > 1)
 			{
 				resultPattern = new APatternTypePair(
-					new ATuplePattern(firstResult.location,null,resultNames),
+					new ATuplePattern(firstResult.location,null,false,resultNames),
 					new AProductType(firstResult.location,false, resultTypes));
 			}
 			else
@@ -1332,9 +1376,14 @@ public class DefinitionReader extends SyntaxReader
 		LexLocation start = lastToken().location;
 		List<String> names = readTraceIdentifierList();
 		checkFor(VDMToken.COLON, 2264, "Expecting ':' after trace name(s)");
-		List<TraceDefinitionTerm> traces = readTraceDefinitionList();
+		List<List<PTraceDefinition>> traces = readTraceDefinitionList();
 
-		return new NamedTraceDefinition(start, names, traces);
+//		return new NamedTraceDefinition(start, names, traces);
+		//TODO
+		LexNameToken name = new LexNameToken(
+				start.module, Utils.listToString(names, "_"),start);
+		PAccessSpecifier access = new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
+		return new ANamedTraceDefinition(start, name, NameScope.GLOBAL, false, null, access , null, traces);
 	}
 
 	private List<String> readTraceIdentifierList()
@@ -1352,10 +1401,10 @@ public class DefinitionReader extends SyntaxReader
 		return names;
 	}
 
-	private List<TraceDefinitionTerm> readTraceDefinitionList()
+	private List<List<PTraceDefinition>> readTraceDefinitionList()
 		throws LexException, ParserException
 	{
-		List<TraceDefinitionTerm> list = new Vector<TraceDefinitionTerm>();
+		List<List<PTraceDefinition>> list = new Vector<List<PTraceDefinition>>();
 		list.add(readTraceDefinitionTerm());
 
 		while (lastToken().is(VDMToken.SEMICOLON))
@@ -1377,10 +1426,10 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private TraceDefinitionTerm readTraceDefinitionTerm()
+	private List<PTraceDefinition> readTraceDefinitionTerm()
 		throws LexException, ParserException
 	{
-		ATraceDefinitionTerm term = new ATraceDefinitionTerm();
+		List<PTraceDefinition> term = new Vector<PTraceDefinition>();
 		term.add(readTraceDefinition());
 
 		while (lastToken().is(VDMToken.PIPE))
@@ -1392,7 +1441,7 @@ public class DefinitionReader extends SyntaxReader
 		return term;
 	}
 
-	private TraceDefinition readTraceDefinition()
+	private PTraceDefinition readTraceDefinition()
 		throws LexException, ParserException
 	{
 		if (lastToken().is(VDMToken.LET))
@@ -1405,10 +1454,10 @@ public class DefinitionReader extends SyntaxReader
 		}
 	}
 
-	private TraceDefinition readTraceRepeat()
+	private PTraceDefinition readTraceRepeat()
 		throws ParserException, LexException
 	{
-       	ATraceCoreDefinition core = readCoreTraceDefinition();
+       	PTraceCoreDefinition core = readCoreTraceDefinition();
 
        	long from = 1;
        	long to = 1;
@@ -1467,10 +1516,10 @@ public class DefinitionReader extends SyntaxReader
 				break;
 		}
 
-       	return new TraceRepeatDefinition(token.location, core, from, to);
+       	return new ARepeatTraceDefinition(token.location, core, from, to);
 	}
 
-	private ATraceDefinition readTraceBinding()
+	private PTraceDefinition readTraceBinding()
 		throws ParserException, LexException
 	{
 		checkFor(VDMToken.LET, 2230, "Expecting 'let'");
@@ -1479,7 +1528,7 @@ public class DefinitionReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			ATraceDefinition def = readLetDefBinding();
+			PTraceDefinition def = readLetDefBinding();
 			reader.unpush();
 			return def;
 		}
@@ -1493,7 +1542,7 @@ public class DefinitionReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			ATraceDefinition def = readLetBeStBinding();
+			PTraceDefinition def = readLetBeStBinding();
 			reader.unpush();
 			return def;
 		}
@@ -1505,7 +1554,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 	}
 
-	private ATraceDefinition readLetDefBinding()
+	private PTraceDefinition readLetDefBinding()
 		throws ParserException, LexException
 	{
 		List<AValueDefinition> localDefs = new Vector<AValueDefinition>();
@@ -1533,12 +1582,12 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2231, "Expecting 'in' after local definitions");
-		ATraceDefinition body = readTraceDefinition();
+		PTraceDefinition body = readTraceDefinition();
 
-		return new ATraceLetDefBinding(start.location, localDefs, body);
+		return new ALetDefBindingTraceDefinition(start.location, localDefs, body);
 	}
 
-	private ATraceDefinition readLetBeStBinding()
+	private PTraceDefinition readLetBeStBinding()
 		throws ParserException, LexException
 	{
 		LexToken start = lastToken();
@@ -1553,12 +1602,12 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2233, "Expecting 'in' after bind in let statement");
-		TraceDefinition body = readTraceDefinition();
+		PTraceDefinition body = readTraceDefinition();
 
-		return new TraceLetBeStBinding(start.location, bind, stexp, body);
+		return new ALetBeStBindingTraceDefinition(start.location, bind, stexp, body, null);
 	}
 
-	private TraceCoreDefinition readCoreTraceDefinition()
+	private PTraceCoreDefinition readCoreTraceDefinition()
 		throws ParserException, LexException
 	{
 		LexToken token = lastToken();
@@ -1578,18 +1627,18 @@ public class DefinitionReader extends SyntaxReader
 						"Expecting 'obj.op(args)' or 'op(args)'", token);
 				}
 
-				return new ATraceApplyExpression(stmt, getCurrentModule());
+				return new AApplyExpressionTraceCoreDefinition(stmt.getLocation(),stmt, getCurrentModule());
 
 			case BRA:
 				nextToken();
-				List<ATraceDefinitionTerm> list = readTraceDefinitionList();
+				List<List<PTraceDefinition>> list = readTraceDefinitionList();
 				checkFor(VDMToken.KET, 2269, "Expecting '(trace definitions)'");
-				return new ATraceBracketedExpression(token.location, list);
+				return new ABracketedExpressionTraceCoreDefinition(token.location, list);
 
 			case PIPEPIPE:
 				nextToken();
 				checkFor(VDMToken.BRA, 2292, "Expecting '|| (...)'");
-				List<ATraceDefinition> defs = new Vector<ATraceDefinition>();
+				List<PTraceDefinition> defs = new Vector<PTraceDefinition>();
 				defs.add(readTraceDefinition());
 				checkFor(VDMToken.COMMA, 2293, "Expecting '|| (a, b {,...})'");
 				defs.add(readTraceDefinition());
@@ -1601,7 +1650,7 @@ public class DefinitionReader extends SyntaxReader
 				}
 
 				checkFor(VDMToken.KET, 2294, "Expecting ')' ending || clause");
-				return new ATraceConcurrentExpression(token.location, defs);
+				return new AConcurrentExpressionTraceCoreDefinition(token.location, defs);
 
 			default:
 				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);

@@ -23,6 +23,7 @@ Tokens
   java_Boolean = 'java:java.lang.Boolean';
   java_Integer = 'java:java.lang.Integer';
   java_String = 'java:java.lang.String';
+  java_Long = 'java:java.lang.Long';
   //java_file = 'java:java.io.File';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
   
@@ -315,13 +316,21 @@ definition {-> package='org.overture.ast.definitions'}
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
-    |   {explicitFunction} [typeParams]:LexNameToken* [functionType]:function [paramPatternList]:pattern** 
-                           [precondition]:exp [predef]:explicitFunction 
-                           [postcondition]:exp [postdef]:explicitFunction 
-                           [body]:exp [actualResult]:type
-                           [isTypeInvariant]:java_Boolean 
-                           [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
-                           [isCurried]:java_Boolean 
+    |   {explicitFunction}  [typeParams]:LexNameToken* 
+                            [functionType]:function 
+                            [paramPatternList]:pattern** 
+                            [precondition]:exp 
+                            [predef]:explicitFunction 
+                            [postcondition]:exp 
+                            [postdef]:explicitFunction 
+                            [body]:exp 
+                            [actualResult]:type
+                            [isTypeInvariant]:java_Boolean 
+                            [measure]:LexNameToken 
+                            [measureDef]:definition 
+                            [recursive]:java_Boolean 
+                            [measureLexical]:java_Integer
+                            [isCurried]:java_Boolean 
     |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
     |   {implicitFunction}  [typeParams]:LexNameToken* 
                             [typeFunction]:function 
@@ -333,8 +342,11 @@ definition {-> package='org.overture.ast.definitions'}
                             [result]:pair.patternType
                             [body]:exp 
                             [isTypeInvariant]:java_Boolean 
-                            [measure]:LexNameToken [measureDef]:definition [recursive]:java_Boolean [measureLexical]:java_Integer
-                            [isCurried]:java_Boolean 
+                            [measure]:LexNameToken 
+                            [measureDef]:definition 
+                            [recursive]:java_Boolean 
+                            [measureLexical]:java_Integer
+                            //[isCurried]:java_Boolean this should not be here, only exists for explicit
     |   {explicitOperation} [parameterPatterns]:pattern* 
                             [result]:pair.patternType 
                             [externals]:clause.external*
@@ -367,7 +379,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {local} 
     |   {multiBindList} [bindings]:multipleBind* [defs]:definition*
     |   {mutexSync} [operations]:LexNameToken*
-    // |    {namedTrace_def} [pathname]:string* [terms]:traceDefinitionTerm*
+    |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
     |   {perSync} [opname]:LexNameToken [guard]:exp
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
@@ -376,6 +388,23 @@ definition {-> package='org.overture.ast.definitions'}
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
     ;
+ 
+/*
+ * Trace defintions which is not definitions...
+ */   
+traceDefinition {-> package='org.overture.ast.definitions.traces'}
+    =   {instance}
+    |   {letBeStBinding} [bind]:multipleBind [stexp]:exp [body]:traceDefinition [def]:definition.multiBindList
+    |   {letDefBinding} [localDefs]:definition* [body]:traceDefinition
+    |   {repeat} [core]:traceCoreDefinition [from]:java_Long [to]:java_Long
+    ;
+    
+traceCoreDefinition {-> package='org.overture.ast.definitions.traces'}
+    =   {applyExpression} [callStatement]:stm [currentModule]:java_String
+    |   {bracketedExpression} [terms]:traceDefinition**
+    |   {concurrentExpression} [defs]:traceDefinition*
+    ;
+//trace end....
 
 #class {-> package='org.overture.ast.definitions'}
     = {bus}
@@ -385,21 +414,34 @@ definition {-> package='org.overture.ast.definitions'}
     ;
 
 modules {-> package='org.overture.ast.modules'}
-    = {module}  [name]:LexNameToken 
-                [imports]:imports.module*
-                [exports]:exports.module*
+    = {module}  [name]:LexIdentifierToken 
+                [imports]:imports.module
+                [exports]:exports.module
                 [defs]:definition*
                 [files]:clonableFile*
                 [importdefs]:definition*
                 [exportdefs]:definition*
               // [delegate]:Delegate
+                [isFlat]:java_Boolean
+                //[typeChecked]:java_Boolean
     ;
 
 imports {-> package='org.overture.ast.modules'} 
     = {module} [name]:LexIdentifierToken [imports]:imports.fromModule* //no root
-    | {fromModule} [name]:LexIdentifierToken [signatures]:imports.import** //no root
+    | {fromModule} [name]:LexIdentifierToken [signatures]:import** //no root
 //    | {signatures} [importList]:import*
-    | {import} [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:modules.module
+    ;
+    
+import {-> package='org.overture.ast.modules'}
+    =   {all}
+    |   {type} [def]:definition.type
+    |   #value
+    ;
+    
+#value {-> package='org.overture.ast.modules'}
+    =   {value}//since we cant instanciate #value
+    |   {function} [typeParams]:LexNameToken*
+    |   {operation}
     ;
     
 //util {-> package='org.overture.ast.util'}
@@ -539,10 +581,24 @@ Aspect Declaration
 %stm->#SimpleBlock 
     =   [statements]:stm*
     ;
+ 
+%import
+    =   [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:modules.module
+    ;  
     
+%import->#value 
+    = [importType]:type
+    ;
+     
     
 %export 
     =   [location]:location [definition]:definition*
     ;
 
+%traceDefinition
+    =   [location]:location
+    ;
     
+%traceCoreDefinition
+    =   [location]:location
+    ;

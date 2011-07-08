@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 public class BaseTestSuite
 {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected static Test createTestCompleteFile(String name,File testRoot,Class testCase) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
+	protected static TestSuite createTestCompleteFile(String name,File testRoot,Class testCase) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
 	{
 		Constructor ctor = testCase.getConstructor(new Class[]{File.class});
 		TestSuite suite = new TestSuite(name);
@@ -38,7 +38,7 @@ public class BaseTestSuite
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected static Test createTestSingleLineFile(String name,File testRoot,Class testCase) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, IOException
+	protected static TestSuite createTestSingleLineFile(String name,File testRoot,Class testCase) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, IOException
 	{
 		Constructor ctor = testCase.getConstructor(new Class[]{String.class,String.class});
 		TestSuite suite = new TestSuite(name);
