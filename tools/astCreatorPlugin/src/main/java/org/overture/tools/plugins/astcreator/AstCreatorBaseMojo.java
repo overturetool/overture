@@ -33,6 +33,13 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	// * @parameter
 	// */
 	// protected String packageName;
+	
+	 /**
+	 * The package of the generated classes.
+	 *
+	 * @parameter
+	 */
+	 protected String folderToDeletePreGenerate;
 
 //	/**
 //	 * My top level of tree.
