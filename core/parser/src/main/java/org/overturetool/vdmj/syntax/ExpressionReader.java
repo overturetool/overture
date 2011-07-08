@@ -1567,7 +1567,7 @@ public class ExpressionReader extends SyntaxReader
 
 		for (PPattern p: plist) 
 		{
-			alts.add(new ACaseAlternative(null, exp, p, then)); 
+			alts.add(new ACaseAlternative(null, exp, p, then,null,null)); 
 			//alts.add(new CaseAlternative(exp, p, then));
 		}
 
@@ -1675,7 +1675,7 @@ public class ExpressionReader extends SyntaxReader
 		PBind bind = getBindReader().readBind();
 //		Bind bind = getBindReader().readBind();
 		checkFor(VDMToken.AMPERSAND, 2155, "Expecting '&' after single bind in exists1");
-		return new AExists1Exp(null, start, bind, readExpression());
+		return new AExists1Exp(null, start, bind, readExpression(),null);
 //		return new Exists1Expression(start, bind, readExpression());
 	}
 

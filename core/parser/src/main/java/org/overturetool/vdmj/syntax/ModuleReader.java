@@ -27,9 +27,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.*;
 import org.overture.ast.types.*;
+import org.overturetool.util.ClonableFile;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -109,10 +111,10 @@ public class ModuleReader extends SyntaxReader
 
 	public static AFromModuleImports importAll(LexIdentifierToken from)
 	{
-		List<List<PImports>> types = new Vector<List<PImports>>();
+		List<List<PImport>> types = new Vector<List<PImport>>();
 		LexNameToken all = new LexNameToken(from.name, "all", from.location);
-		List<PImports> impAll = new Vector<PImports>();
-		impAll.add(new ImportAll(all));
+		List<PImport> impAll = new Vector<PImport>();
+		impAll.add(new AAllImport(all.location,all,all,null));
 		types.add(impAll);
 		return new AFromModuleImports(from, types);
 	}
@@ -122,7 +124,38 @@ public class ModuleReader extends SyntaxReader
 		File file = lastToken().location.file;
 		setCurrentModule("DEFAULT");
 		List<PDefinition> definitions = getDefinitionReader().readDefinitions();
-		return new AModuleModules(file, definitions);
+		
+		LexIdentifierToken name = null;
+		
+		if (definitions.isEmpty())
+		{
+			name =	defaultName(new LexLocation());
+		}
+		else
+		{
+    		name = defaultName(definitions.get(0).getLocation());
+ 		}
+		
+		List<ClonableFile> files = new Vector<ClonableFile>();
+		
+		if (file != null)
+		{
+			files.add(new ClonableFile(file));
+		}
+		
+		return new AModuleModules(name, null, null, definitions, files, null, null, true);
+	}
+	
+	/**
+	 * Generate the default module name.
+	 *
+	 * @param location	The textual location of the name
+	 * @return	The default module name.
+	 */
+
+	public static LexIdentifierToken defaultName(LexLocation location)
+	{
+		return new LexIdentifierToken("DEFAULT", false, location);
 	}
 
 	private AModuleModules readModule() throws ParserException, LexException
@@ -184,7 +217,11 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		LexLocation.addSpan(idToName(name), lastToken());
-		return new AModuleModules(name, imports, exports, defs);
+		
+		List<ClonableFile> files = new Vector<ClonableFile>();
+		files.add(new ClonableFile(name.location.file));
+		
+		return new AModuleModules(name, imports, exports, defs, files, null, null, false);
 	}
 
 	private AModuleModules readDLModule() throws ParserException, LexException
@@ -239,7 +276,8 @@ public class ModuleReader extends SyntaxReader
 			throwMessage(2051, "Expecting 'end " + name.name + "'");
 		}
 
-		return new DLModule(name, imports, exports, library);
+//		return new DLModule(name, imports, exports, library);
+		return null;//TODO
 	}
 
 	private AModuleExports readExports() throws ParserException, LexException
@@ -446,16 +484,16 @@ public class ModuleReader extends SyntaxReader
 		return new AFromModuleImports(from, readImportsFromModule(from));
 	}
 
-	private List<List<PImports>> readImportsFromModule(LexIdentifierToken from)
+	private List<List<PImport>> readImportsFromModule(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
-		List<List<PImports>> types = new Vector<List<PImports>>();
+		List<List<PImport>> types = new Vector<List<PImport>>();
 
 		if (lastToken().is(VDMToken.ALL))
 		{
 			LexNameToken all = new LexNameToken(getCurrentModule(), "all", lastToken().location);
-			List<PImports> impAll = new Vector<PImports>();
-			impAll.add(new ImportAll(all));
+			List<PImport> impAll = new Vector<PImport>();
+			impAll.add(new AAllImport(all.getLocation(),all,all,null));
 			types.add(impAll);
 			nextToken();
 			return types;
@@ -471,7 +509,7 @@ public class ModuleReader extends SyntaxReader
 		return types;
 	}
 
-	private List<PImports> readImportsOfOneType(LexIdentifierToken from)
+	private List<PImport> readImportsOfOneType(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
 		switch (lastToken().type)
@@ -497,10 +535,10 @@ public class ModuleReader extends SyntaxReader
 		return null;
 	}
 
-	private List<PImports> readImportedTypes(LexIdentifierToken from)
+	private List<PImport> readImportedTypes(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
-		List<PImports> list = new Vector<PImports>();
+		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedType(from));
 
 		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
@@ -511,7 +549,7 @@ public class ModuleReader extends SyntaxReader
 		return list;
 	}
 
-	private ImportedType readImportedType(LexIdentifierToken from)
+	private ATypeImport readImportedType(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
 		String savedModule = getCurrentModule();
@@ -520,7 +558,7 @@ public class ModuleReader extends SyntaxReader
 		{
 			reader.push();
 			setCurrentModule(from.name);	// So names are from "from" in...
-			TypeDefinition def = getDefinitionReader().readTypeDefinition();
+			ATypeDefinition def = getDefinitionReader().readTypeDefinition();
 			setCurrentModule(savedModule);	// and restore
 			reader.unpush();
 
@@ -532,7 +570,7 @@ public class ModuleReader extends SyntaxReader
 			}
 
 			ignore(VDMToken.SEMICOLON);
-			return new ImportedType(def, renamed);
+			return new ATypeImport(def.getName().getLocation(),def.getName(), renamed, null, def);
 		}
 		catch (ParserException e)
 		{
@@ -550,13 +588,14 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(VDMToken.SEMICOLON);
-		return new ImportedType(defname, renamed);
+		//return new ImportedType(defname, renamed);
+		return new ATypeImport(defname.location,defname, renamed, null, null);
 	}
 
-	private List<PImports> readImportedValues(LexIdentifierToken from)
+	private List<PImport> readImportedValues(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
-		List<PImports> list = new Vector<PImports>();
+		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedValue(from));
 
 		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
@@ -567,7 +606,7 @@ public class ModuleReader extends SyntaxReader
 		return list;
 	}
 
-	private ImportedValue readImportedValue(LexIdentifierToken from)
+	private SValueImport readImportedValue(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
 		LexNameToken name = readNameToken("Expecting imported value name");
@@ -588,13 +627,13 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(VDMToken.SEMICOLON);
-		return new ImportedValue(defname, type, renamed);
+		return new AValueValueImport(defname.location,defname, renamed, null,type);
 	}
 
-	private List<PImports> readImportedFunctions(LexIdentifierToken from)
+	private List<PImport> readImportedFunctions(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
-		List<PImports> list = new Vector<PImports>();
+		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedFunction(from));
 
 		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
@@ -605,7 +644,7 @@ public class ModuleReader extends SyntaxReader
 		return list;
 	}
 
-	private AFunctionImport readImportedFunction(LexIdentifierToken from)
+	private AFunctionValueImport readImportedFunction(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
 		LexNameToken name =	readNameToken("Expecting imported function name");
@@ -634,13 +673,13 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(VDMToken.SEMICOLON);
-		return new ImportedFunction(defname, type, typeParams, renamed);
+		return new AFunctionValueImport(defname.location, defname, renamed, null, type, typeParams);
 	}
 
-	private List<PImports> readImportedOperations(LexIdentifierToken from)
+	private List<PImport> readImportedOperations(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
-		List<PImports> list = new Vector<PImports>();
+		List<PImport> list = new Vector<PImport>();
 		list.add(readImportedOperation(from));
 
 		while (lastToken().is(VDMToken.IDENTIFIER) || lastToken().is(VDMToken.NAME))
@@ -651,7 +690,7 @@ public class ModuleReader extends SyntaxReader
 		return list;
 	}
 
-	private AOperationImport readImportedOperation(LexIdentifierToken from)
+	private AOperationValueImport readImportedOperation(LexIdentifierToken from)
 		throws ParserException, LexException
 	{
 		LexNameToken name = readNameToken("Expecting imported operation name");
@@ -672,7 +711,7 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(VDMToken.SEMICOLON);
-		return new ImportedOperation(defname, type, renamed);
+		return new AOperationValueImport(defname.location, defname, renamed, null, type);
 	}
 
 	private boolean newType() throws LexException
