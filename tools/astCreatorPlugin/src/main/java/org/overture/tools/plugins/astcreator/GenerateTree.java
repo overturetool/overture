@@ -1,11 +1,13 @@
 package org.overture.tools.plugins.astcreator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.overture.tools.plugins.astcreator.util.Util;
 
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.Main;
@@ -23,7 +25,26 @@ public class GenerateTree extends AstCreatorBaseMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		List<File> treeNames = new Vector<File>();
+
+		for (String name : asts)
+		{
+			treeNames.add(new File(getResourcesDir(), name));
+		}
+		
 		getLog().info("Preparing tree generating...");
+		
+		if(treeNames.isEmpty())
+		{
+			getLog().info("Skipping gneration no AST files specified");
+			return;
+		}
+		
+		if(isCrcEqual(treeNames.get(0)))
+		{
+			getLog().info("Nothing to generate, source already up-to-date");
+			return;
+		}
 
 		if (folderToDeletePreGenerate != null)
 		{
@@ -31,12 +52,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 			deleteDir(new File(getProjectJavaSrcDirectory(),folderToDeletePreGenerate.replace('/', File.separatorChar)));
 		}
 
-		List<File> treeNames = new Vector<File>();
-
-		for (String name : asts)
-		{
-			treeNames.add(new File(getResourcesDir(), name));
-		}
+		
 
 		for (File file : treeNames)
 		{
@@ -50,6 +66,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 				try
 				{
 					env1 = Main.create(file.getAbsolutePath(), defaultPackage, analysisPackage, "", generated, true);
+					setCrc(file);
 				} catch (Exception e)
 				{
 					getLog().error(e);
@@ -82,6 +99,41 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		// The directory is now empty so delete it
 		return dir.delete();
+	}
+	
+	public  boolean isCrcEqual(File astFile)
+	{
+		String name = astFile.getName();
+		long sourceCrc = Util.getCheckSum(astFile.getAbsolutePath());
+		
+		File crcFile = new File(getProjectOutputDirectory(),name+".crc");
+		if(!crcFile.exists())
+		{
+			return false;
+		}
+		
+		String crcString;
+		try
+		{
+			crcString = Util.readFile(crcFile);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		long destinationCrc = Long.valueOf(crcString);
+		
+		return destinationCrc==sourceCrc;
+	}
+	
+	public void setCrc(File astFile) throws IOException
+	{
+		String name = astFile.getName();
+		Long sourceCrc = Util.getCheckSum(astFile.getAbsolutePath());
+		
+		File crcFile = new File(getProjectOutputDirectory(),name+".crc");
+		Util.writeFile(crcFile, sourceCrc.toString());
 	}
 
 }

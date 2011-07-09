@@ -47,7 +47,7 @@ public class SetMethod extends Method {
 				sb.append("\t\tthis." + f.getName() + " = value;\n");
 			} else {
 
-				sb.append("\t\tif (value == this." + f.getName() + ") {\n");
+				sb.append("\t\tif (this." + f.getName() + ".equals(value)) {\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t}\n");
 				sb.append("\t\tthis." + f.getName() + ".clear();\n");
