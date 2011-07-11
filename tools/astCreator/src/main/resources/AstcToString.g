@@ -200,7 +200,7 @@ JAVANAME
   ;  
   
 root
-  : top 
+  : top EOF
   ;
   
   

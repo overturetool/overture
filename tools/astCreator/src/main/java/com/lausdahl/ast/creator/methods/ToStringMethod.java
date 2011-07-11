@@ -102,6 +102,13 @@ public class ToStringMethod extends Method
 							}
 							break;
 						case RawJava:
+							if(p.content.contains("Utils"))
+							{
+								if(!requiredImports.contains("org.overturetool.util.Utils"))//TODO currently hardcoded
+								{
+									requiredImports.add("org.overturetool.util.Utils");
+								}
+							}
 							tmp += p.content.substring(1, p.content.length() - 1);
 							break;
 						case Plus:
