@@ -76,7 +76,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.AMapType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
@@ -89,9 +89,10 @@ import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
-import org.overture.ast.types.assistants.AFunctionTypeAssistent;
+import org.overture.ast.types.assistants.AFunctionTypeAssistant;
 import org.overture.ast.types.assistants.AOperationTypeAssistant;
 import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -197,7 +198,7 @@ public class TypeCheckerExpVisitor extends
 		if (PTypeAssistant.isFunction(node.getType()))
 		{
 			AFunctionType ft = PTypeAssistant.getFunction(node.getType());
-			AFunctionTypeAssistent.typeResolve(ft, null,rootVisitor,question);
+			AFunctionTypeAssistant.typeResolve(ft, null,rootVisitor,question);
 			results.add(AApplyExpAssistant.functionApply(node,isSimple, ft));
 		}
 
@@ -225,7 +226,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (PTypeAssistant.isMap(node.getType()))
 		{
-			AMapType map = PTypeAssistant.getMap(node.getType());
+			SMapType map = PTypeAssistant.getMap(node.getType());
 			results.add(AApplyExpAssistant.mapApply(node,isSimple, map));
 		}
 
@@ -262,11 +263,11 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.report(3068, "Right hand of map 'comp' is not a map",node.getLocation(),node);
     			TypeCheckerErrors.detail("Type", node.getRight().getType());
-    			return new AMapType(node.getLocation(),false, null, null, null,null);	// Unknown types
+    			return new AMapMapType(node.getLocation(),false, null, null, null,null);	// Unknown types
     		}
 
-    		AMapType lm = PTypeAssistant.getMap(node.getLeft().getType());
-    		AMapType rm = PTypeAssistant.getMap(node.getRight().getType());
+    		SMapType lm = PTypeAssistant.getMap(node.getLeft().getType());
+    		SMapType rm = PTypeAssistant.getMap(node.getRight().getType());
 
     		if (!TypeComparator.compatible(lm.getFrom(), rm.getTo()))
     		{
@@ -274,7 +275,7 @@ public class TypeCheckerExpVisitor extends
     			TypeCheckerErrors.detail2("Dom", lm.getFrom(), "Rng", rm.getTo());
     		}
 
-    		results.add(new AMapType(node.getLocation(), false, null, rm.getFrom(), lm.getTo(), null));
+    		results.add(new AMapMapType(node.getLocation(), false, null, rm.getFrom(), lm.getTo(), null));
 		}
 
 		if (PTypeAssistant.isFunction(node.getLeft().getType()))
@@ -340,7 +341,7 @@ public class TypeCheckerExpVisitor extends
 		else
 		{
 			ASetType set = PTypeAssistant.getSet(node.getLeft().getType());
-			AMapType map = PTypeAssistant.getMap(node.getRight().getType());
+			SMapType map = PTypeAssistant.getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getFrom()))
 			{
@@ -371,7 +372,7 @@ public class TypeCheckerExpVisitor extends
 		else
 		{
 			ASetType set = PTypeAssistant.getSet(node.getLeft().getType());
-			AMapType map = PTypeAssistant.getMap(node.getRight().getType());
+			SMapType map = PTypeAssistant.getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getFrom()))
 			{
@@ -426,7 +427,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3123, "Left hand of 'munion' is not a map",node.getLocation(),node);
 			TypeCheckerErrors.detail("Type", node.getLeft().getType());
-			node.setType(new AMapType(node.getLocation(),false,null,null, null, null ));	// Unknown types
+			node.setType(new AMapMapType(node.getLocation(),false,null,null, null, null ));	// Unknown types
 			return node.getType();
 		}
 		else if (!PTypeAssistant.isMap(node.getRight().getType()))
@@ -438,15 +439,15 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{
-			AMapType ml = PTypeAssistant.getMap(node.getLeft().getType());
-			AMapType mr = PTypeAssistant.getMap(node.getRight().getType());
+			SMapType ml = PTypeAssistant.getMap(node.getLeft().getType());
+			SMapType mr = PTypeAssistant.getMap(node.getRight().getType());
 
 			Set<PType> from = new HashSet<PType>();
 			from.add(ml.getFrom()); from.add(mr.getFrom());
 			Set<PType> to =  new HashSet<PType>();
 			to.add(ml.getTo()); to.add(mr.getTo());
 
-			node.setType(new AMapType(node.getLocation(),false,null,
+			node.setType(new AMapMapType(node.getLocation(),false,null,
 					PTypeAssistant.getType(from,node.getLocation()), PTypeAssistant.getType(to,node.getLocation()), null));
 			return node.getType();
 		}
@@ -646,18 +647,18 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.concern(unique, 3141, "Right hand of '++' is not a map",node.getLocation(),node);
     			TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
-    			return new AMapType(node.getLocation(),false,null, null, null, null );	// Unknown types
+    			return new AMapMapType(node.getLocation(),false,null, null, null, null );	// Unknown types
     		}
 
-    		AMapType lm = PTypeAssistant.getMap(node.getLeft().getType());
-    		AMapType rm = PTypeAssistant.getMap(node.getRight().getType());
+    		SMapType lm = PTypeAssistant.getMap(node.getLeft().getType());
+    		SMapType rm = PTypeAssistant.getMap(node.getRight().getType());
 
     		Set<PType> domain = new HashSet<PType>();
     		domain.add(lm.getFrom()); domain.add(rm.getFrom());
     		Set<PType> range = new HashSet<PType>(); 
     		range.add(lm.getTo()); range.add(rm.getTo());
 
-    		result.add(new AMapType(node.getLocation(),false,null,
+    		result.add(new AMapMapType(node.getLocation(),false,null,
     			PTypeAssistant.getType(domain,node.getLocation()), PTypeAssistant.getType(range,node.getLocation()),false));
 		}
 			
@@ -672,7 +673,7 @@ public class TypeCheckerExpVisitor extends
     		}
     		else
     		{
-        		AMapType mr = PTypeAssistant.getMap(node.getRight().getType());
+        		SMapType mr = PTypeAssistant.getMap(node.getRight().getType());
 
         		if (!PTypeAssistant.isType(mr.getFrom(),SNumericBasicType.class))
         		{
@@ -738,7 +739,7 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{
-			AMapType map = PTypeAssistant.getMap(ltype);
+			SMapType map = PTypeAssistant.getMap(ltype);
 			ASetType set = PTypeAssistant.getSet(rtype);
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getTo()))
@@ -772,7 +773,7 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{
-			AMapType map = PTypeAssistant.getMap(ltype);
+			SMapType map = PTypeAssistant.getMap(ltype);
 			ASetType set = PTypeAssistant.getSet(rtype);
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getTo()))
@@ -1335,7 +1336,7 @@ public class TypeCheckerExpVisitor extends
     						}
     					}
     					
-    					fixed.add(PTypeAssistant.typeResolve(ptype, question.env, null, rootVisitor, question));
+    					fixed.add(PTypeAssistant.typeResolve(ptype, null, rootVisitor, question));
     				}
     					
     				node.setActualTypes(fixed);

@@ -16,7 +16,8 @@ import org.overture.ast.node.NodeList;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AMapType;
+import org.overture.ast.types.AInMapMapType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
@@ -32,6 +33,7 @@ import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -68,10 +70,10 @@ public class PTypeAssistant {
 							((AFunctionType)type).getPartial(),	polyparams, polyresult);
 				return ftype;
 			case MAP:
-				return new AMapType(location,false,definitions,
-						polymorph(((AMapType)type).getFrom(),pname, actualType), 
-						polymorph(((AMapType)type).getTo(), pname, actualType),
-						((AMapType)type).getEmpty());
+				return new AMapMapType(location,false,definitions,
+						polymorph(((AMapMapType)type).getFrom(),pname, actualType), 
+						polymorph(((AMapMapType)type).getTo(), pname, actualType),
+						((AMapMapType)type).getEmpty());
 			case OPTIONAL:
 				return new AOptionalType(location, false, definitions, 
 							polymorph(type,pname, actualType));
@@ -179,22 +181,30 @@ public class PTypeAssistant {
 
 		PType result = null;
 
-		switch (type.kindPType()) {
-		case BASIC:
+		switch (type.kindPType()) {	
 		case BRACKET:
+			if (type instanceof ABracketType) {
+				result = ABracketTypeAssistant.typeResolve(
+						(ABracketType) type,  root, rootVisitor, question);
+			}
+			break;
 		case CLASS:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			if (type instanceof AClassType) {
+				result = AClassTypeAssistant.typeResolve(
+						(AClassType) type,  root, rootVisitor, question);
+			}
 			break;
 		case FUNCTION:
 			if (type instanceof AFunctionType) {
-				result = AFunctionTypeAssistent.typeResolve(
+				result = AFunctionTypeAssistant.typeResolve(
 						(AFunctionType) type,  root, rootVisitor, question);
 			}
 			break;
-		case INMAP:
-		case INVARIANT:
 		case MAP:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			if(type instanceof SMapType)
+			{
+				result = SMapTypeAssistant.typeResolve((SMapType)type, root, rootVisitor, question);
+			}
 			break;
 		case OPERATION:
 			if (type instanceof AOperationType) {
@@ -204,6 +214,12 @@ public class PTypeAssistant {
 			}
 			break;
 		case OPTIONAL:
+			if (type instanceof AOptionalType) {
+				result = AOptionalTypeAssistant
+						.typeResolve((AOptionalType) type,  root,
+								rootVisitor, question);
+			}
+			break;
 		case PARAMETER:
 		case PRODUCT:
 		case QUOTE:
@@ -227,21 +243,29 @@ public class PTypeAssistant {
 	}
 
 	public static void unResolve(PType type) {
-		switch (type.kindPType()) {
-		case BASIC:
+		switch (type.kindPType()) {		
 		case BRACKET:
+			if (type instanceof ABracketType) {
+				ABracketTypeAssistant.unResolve((ABracketType)type);
+			}
+			break;		
 		case CLASS:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			if (type instanceof AClassType) {
+				AClassTypeAssistant.unResolve((AClassType)type);
+			}
 			break;
 		case FUNCTION:
 			if (type instanceof AFunctionType) {
-				AFunctionTypeAssistent.unResolve((AFunctionType) type);
+				AFunctionTypeAssistant.unResolve((AFunctionType) type);
 			}
-			break;
-		case INMAP:
+			break;		
+			
 		case INVARIANT:
 		case MAP:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			if(type instanceof SMapType)
+			{
+				SMapTypeAssistant.unResolve((SMapType)type);
+			}
 			break;
 		case OPERATION:
 			if (type instanceof AOperationType) {
@@ -275,8 +299,7 @@ public class PTypeAssistant {
 		case BASIC:
 		case BRACKET:
 		case CLASS:
-		case FUNCTION:
-		case INMAP:
+		case FUNCTION:	
 		case INVARIANT:
 		case MAP:
 		case OPTIONAL:
@@ -361,12 +384,16 @@ public class PTypeAssistant {
 		}
 	}
 
-	public static AMapType getMap(PType type) {
+	public static SMapType getMap(PType type) {
 		switch (type.kindPType()) {
 		case MAP:
-			if (type instanceof AMapType) {
-				return (AMapType) type;
+			if (type instanceof AMapMapType) {
+				return (AMapMapType) type;
 			}
+			else if(type instanceof AInMapMapType) {
+				return (AInMapMapType) type;
+			}
+				
 		default:
 			assert false : "Can't getMap of a non-map";
 			return null;

@@ -20,7 +20,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.AFunctionTypeAssistent;
+import org.overture.ast.types.assistants.AFunctionTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.runtime.TypeChecker;
 import org.overturetool.vdmj.lex.LexLocation;

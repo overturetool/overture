@@ -7,13 +7,12 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.runtime.Environment;
 import org.overture.runtime.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
 
 
-public class AFunctionTypeAssistent {
+public class AFunctionTypeAssistant {
 
 	public static AFunctionType typeResolve(AFunctionType ft,
 			ATypeDefinition root, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {

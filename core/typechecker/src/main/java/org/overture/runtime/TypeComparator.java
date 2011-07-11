@@ -29,16 +29,13 @@ import java.util.Vector;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AMapType;
 import org.overture.ast.types.ANamedInvariantType;
-
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1Type;
-
 import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUndefinedType;
@@ -48,6 +45,7 @@ import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.assistants.ANumericBasicTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -374,15 +372,15 @@ public class TypeComparator
 				List<PType> tb = ((AProductType)from).getTypes();
 				return allCompatible(ta, tb, paramOnly);
 			}
-			else if (to instanceof AMapType)
+			else if (to instanceof SMapType)
 			{
-				if (!(from instanceof AMapType))
+				if (!(from instanceof SMapType))
 				{
 					return Result.No;
 				}
 
-				AMapType ma = (AMapType)to;
-				AMapType mb = (AMapType)from;
+				SMapType ma = (SMapType)to;
+				SMapType mb = (SMapType)from;
 
 				return (ma.getEmpty() || mb.getEmpty() ||
 					(searchCompatible(ma.getFrom(), mb.getFrom(), paramOnly) == Result.Yes &&
@@ -772,15 +770,15 @@ public class TypeComparator
 
 				return allSubTypes(subl, supl);
 			}
-			else if (sub instanceof AMapType)
+			else if (sub instanceof SMapType)
 			{
-				if (!(sup instanceof AMapType))
+				if (!(sup instanceof SMapType))
 				{
 					return Result.No;
 				}
 
-				AMapType subm = (AMapType)sub;
-				AMapType supm = (AMapType)sup;
+				SMapType subm = (SMapType)sub;
+				SMapType supm = (SMapType)sup;
 
 				return (subm.getEmpty() || supm.getEmpty() ||
 					(searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes &&

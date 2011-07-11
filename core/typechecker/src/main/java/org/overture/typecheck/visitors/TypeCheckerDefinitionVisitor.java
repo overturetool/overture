@@ -37,7 +37,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.Type;
+
 
 
 
@@ -58,7 +58,7 @@ public class TypeCheckerDefinitionVisitor extends
 		
 		question.qualifiers = null;
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
-		node.setType(PTypeAssistant.typeResolve(node.getType(), question.env, null, rootVisitor, question));
+		node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -98,7 +98,7 @@ public class TypeCheckerDefinitionVisitor extends
 		newQuestion.scope = question.scope;
 		//TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of assignment in our tree 		
 		node.setExpType(node.getExpression().apply(rootVisitor, newQuestion));
-		node.setType(PTypeAssistant.typeResolve(node.getType(), newQuestion.env, null, rootVisitor, newQuestion));
+		node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, newQuestion));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -146,10 +146,10 @@ public class TypeCheckerDefinitionVisitor extends
 		if (pattern != null)
 		{
 			PPatternAssistant.typeResolve(pattern, rootVisitor,question);
-			defs = pattern.getDefinitions(expType, nameScope);
-			defType = expType;
+			node.setDefs(PPatternAssistant.getDefinitions(pattern,node.getExpType(), question.scope));
+			node.setDefType(node.getExpType());
 		}
-		else if (typebind != null)
+		else if (node.getTypebind() != null)
 		{
 			typebind.typeResolve(base);
 
