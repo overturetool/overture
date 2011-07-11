@@ -72,11 +72,11 @@ public class PTypeAssistant {
 		if (rtypes.size() == 1) {
 			result = rtypes.iterator().next();
 		} else {
-			result = new AUnionType(location, false, new ArrayList<PType>(
+			result = new AUnionType(location, false,null, new ArrayList<PType>(
 					rtypes));
 		}
 
-		return (optional ? new AOptionalType(location, false, result) : result);
+		return (optional ? new AOptionalType(location, false,null, result) : result);
 	}
 
 	public static boolean isUnknown(PType type) {

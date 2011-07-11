@@ -85,7 +85,7 @@ public class TypeCheckerDefinitionVisitor extends
 			info.scope = NameScope.NAMES;
 			info.qualifiers = null;
 			PType b = node.getPredef().getBody().apply(rootVisitor, question);
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),true);
+			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
 			{
@@ -107,7 +107,7 @@ public class TypeCheckerDefinitionVisitor extends
 			info.scope = NameScope.NAMES;
 			info.qualifiers = null;			
 			PType b = node.getPostdef().getBody().apply(rootVisitor, info);
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),true);
+			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
 			{

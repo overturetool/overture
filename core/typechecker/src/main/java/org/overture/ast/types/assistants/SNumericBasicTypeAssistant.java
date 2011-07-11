@@ -22,14 +22,14 @@ public class SNumericBasicTypeAssistant {
 		{
 			TypeCheckerErrors.report(3139, "Left hand of " + node.getOp() + " is not numeric",node.getLocation(),node);
 			TypeCheckerErrors.detail("Actual", node.getLeft().getType());
-			node.getLeft().setType(new ARealNumericBasicType(node.getLocation(),false));
+			node.getLeft().setType(new ARealNumericBasicType(node.getLocation(),false,null));
 		}
 
 		if (!PTypeAssistant.isNumeric(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3140, "Right hand of " + node.getOp() + " is not numeric",node.getLocation(),node);
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
-			node.getRight().setType(new ARealNumericBasicType(node.getLocation(),false));
+			node.getRight().setType(new ARealNumericBasicType(node.getLocation(),false,null));
 		}
 		
 	}
