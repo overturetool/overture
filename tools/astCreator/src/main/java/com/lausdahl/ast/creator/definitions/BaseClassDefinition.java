@@ -3,12 +3,14 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.methods.Method;
 
 public class BaseClassDefinition extends InterfaceDefinition implements
 		IClassDefinition
 {
 	protected List<Field> fields = new Vector<Field>();
+	protected List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
 	public List<IInterfaceDefinition> interfaces = new Vector<IInterfaceDefinition>();
 	public IClassDefinition superDef;
 
@@ -159,21 +161,27 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		sb.append("\n\n");
 
+		StringBuffer noneCtorMethods = new StringBuffer();
 		for (Method m : methods)
 		{
 			if (m.isConstructor)
 			{
 				sb.append(m.getJavaSourceCode() + "\n");
-			}
-		}
-
-		for (Method m : methods)
-		{
-			if (!m.isConstructor)
+			}else
 			{
-				sb.append(m.getJavaSourceCode() + "\n");
+				noneCtorMethods.append(m.getJavaSourceCode() + "\n");
 			}
 		}
+		
+		sb.append(noneCtorMethods);
+
+//		for (Method m : methods)
+//		{
+//			if (!m.isConstructor)
+//			{
+//				sb.append(m.getJavaSourceCode() + "\n");
+//			}
+//		}
 
 		sb.append("\n}\n");
 
@@ -321,6 +329,20 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	public List<IInterfaceDefinition> getInterfaces()
 	{
 		return this.interfaces;
+	}
+
+
+
+	public void addToStringAddOn(ToStringAddOn addon)
+	{
+		toStringAddOn.add(addon);
+	}
+
+
+
+	public List<ToStringAddOn> getToStringAddOns()
+	{
+		return this.toStringAddOn;
 	}
 
 }

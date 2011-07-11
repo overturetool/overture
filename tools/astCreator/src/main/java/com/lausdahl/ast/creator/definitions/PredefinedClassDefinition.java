@@ -3,6 +3,8 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.ToStringAddOn;
+
 public class PredefinedClassDefinition implements IClassDefinition
 {
 	private String packageName;
@@ -159,5 +161,15 @@ public class PredefinedClassDefinition implements IClassDefinition
 	public List<IInterfaceDefinition> getInterfaces()
 	{
 		return new Vector<IInterfaceDefinition>();
+	}
+
+	public void addToStringAddOn(ToStringAddOn addon)
+	{
+		
+	}
+
+	public List<ToStringAddOn> getToStringAddOns()
+	{
+		return new Vector<ToStringAddOn>();
 	}
 }

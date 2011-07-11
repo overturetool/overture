@@ -42,6 +42,8 @@ public class Generator
 			InstantiationException, IllegalAccessException
 	{
 		Environment env = new CreateOnParse().parse(inputFile, defaultPackage);
+		
+		new ToStringAddOnReader().readAndAdd(inputFile+".tostring", env);
 
 		System.out.println("Generating enumerations...");
 		createNodeEnum(env, defaultPackage);

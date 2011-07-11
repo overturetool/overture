@@ -260,7 +260,7 @@ public class CreateOnParse
 		return env;
 	}
 
-	private String getNameFromAspectNode(CommonTree p)
+	public static String getNameFromAspectNode(CommonTree p)
 	{
 		String topName = p.getText();
 		if (p.getChildCount() > 0)
