@@ -1,10 +1,12 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.runtime.Environment;
@@ -147,5 +149,119 @@ public class SClassDefinitionAssistant {
 			}
 		}
 	}
+	
+	public static PDefinition findType(SClassDefinition classdef,
+			LexNameToken sought, String fromModule) {
+		
+		if ((!sought.explicit && sought.name.equals(classdef.getName().name)) ||
+				sought.equals(classdef.getName().getClassName()))
+			{
+				return classdef;	// Class referred to as "A" or "CLASS`A"
+			}
 
+			PDefinition def = PDefinitionAssistant.findType(classdef.getDefinitions(), sought, null);
+
+			if (def == null)
+			{
+				for (PDefinition d: classdef.getAllInheritedDefinitions())
+				{
+					PDefinition indef = PDefinitionAssistant.findType(d,sought, null);
+
+					if (indef != null)
+					{
+						def = indef;
+						break;
+					}
+				}
+			}
+
+			return def;
+	}
+	
+	public static Set<PDefinition> findMatches(SClassDefinition classdef,
+			LexNameToken sought) {
+		
+		Set<PDefinition> set = PDefinitionAssistant.findMatches(classdef.getDefinitions(),sought);
+		set.addAll(PDefinitionAssistant.findMatches(classdef.getAllInheritedDefinitions(),sought));
+		return set;
+	}
+
+	public static void unusedCheck(SClassDefinition classdef) {
+		if (!classdef.getUsed())
+		{
+			TypeCheckerErrors.warning(classdef, 5000, "Definition '" + classdef.getName() + "' not used");
+			markUsed(classdef);		// To avoid multiple warnings
+		}
+		
+	}
+
+	private static void markUsed(SClassDefinition classdef) {
+		classdef.setUsed(true);
+		
+	}
+	
+	public static PDefinition findName(List<SClassDefinition> classes,
+			LexNameToken name, NameScope scope) {
+		
+		SClassDefinition d = get(classes, name.module);
+
+		if (d != null)
+		{
+			PDefinition def = SClassDefinitionAssistant.findName(d,name, scope);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+
+		return null;
+	}
+
+	private static SClassDefinition get(List<SClassDefinition> classes,
+			String module) {
+		
+		for (SClassDefinition sClassDefinition : classes) {
+			if(sClassDefinition.getName().module.equals(module))
+				return sClassDefinition;
+		}
+		return null;
+	}
+
+	public static PDefinition findType(List<SClassDefinition> classes,
+			LexNameToken name) {
+
+		for (SClassDefinition d: classes)
+		{
+			PDefinition def = PDefinitionAssistant.findType(d,name, null);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+
+		return null;
+	}
+
+	public static Set<PDefinition> findMatches(List<SClassDefinition> classes,
+			LexNameToken name) {
+		
+		Set<PDefinition> set = new HashSet<PDefinition>();
+
+		for (SClassDefinition d: classes)
+		{
+			set.addAll(SClassDefinitionAssistant.findMatches(d,name));
+		}
+
+		return set;
+	}
+
+	public static void unusedCheck(List<SClassDefinition> classes) {
+		for (SClassDefinition d: classes)
+		{
+			unusedCheck(d);
+		}
+		
+	}
 }

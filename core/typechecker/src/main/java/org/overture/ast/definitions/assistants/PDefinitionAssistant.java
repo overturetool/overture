@@ -17,7 +17,6 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -31,8 +30,9 @@ import org.overturetool.vdmj.typechecker.NameScope;
 
 public class PDefinitionAssistant {
 
-	public static boolean hasSupertype(SClassDefinition aClassDefDefinition, AClassType other) {
-		if (aClassDefDefinition.getType().equals(other))
+	public static boolean hasSupertype(SClassDefinition aClassDefDefinition, PType other) {
+		
+		if (PTypeAssistant.equals(aClassDefDefinition.getType(),other))
 		{
 			return true;
 		}
@@ -81,7 +81,7 @@ public class PDefinitionAssistant {
 		
 	}
 
-	private static PDefinition findType(PDefinition d, LexNameToken name,
+	public static PDefinition findType(PDefinition d, LexNameToken name,
 			String fromModule) {
 		switch(d.kindPDefinition())
 		{
@@ -300,6 +300,8 @@ public class PDefinitionAssistant {
 		
 		
 	}
+
+	
 
 	
 }

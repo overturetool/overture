@@ -15,7 +15,7 @@ import org.overture.typecheck.TypeCheckInfo;
 
 public class AFunctionTypeAssistent {
 
-	public static AFunctionType typeResolve(AFunctionType ft, Environment env,
+	public static AFunctionType typeResolve(AFunctionType ft,
 			ATypeDefinition root, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 
 		if (ft.getResolved())
@@ -28,7 +28,7 @@ public class AFunctionTypeAssistent {
 			List<PType> fixed = new ArrayList<PType>();
 
 			for (PType type : ft.getParameters()) {
-				fixed.add(PTypeAssistant.typeResolve(type,env, root,rootVisitor,question));
+				fixed.add(PTypeAssistant.typeResolve(type, root,rootVisitor,question));
 			}
 
 			ft.setParameters(fixed);

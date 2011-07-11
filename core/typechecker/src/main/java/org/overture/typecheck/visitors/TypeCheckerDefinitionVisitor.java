@@ -3,12 +3,19 @@ package org.overture.typecheck.visitors;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
+import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
@@ -17,16 +24,22 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.runtime.Environment;
 import org.overture.runtime.FlatCheckedEnvironment;
 import org.overture.runtime.TypeChecker;
 import org.overture.runtime.TypeComparator;
+import org.overture.typecheck.PrivateClassEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.Type;
+
+
 
 public class TypeCheckerDefinitionVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
@@ -37,6 +50,145 @@ public class TypeCheckerDefinitionVisitor extends
 	public TypeCheckerDefinitionVisitor(TypeCheckVisitor typeCheckVisitor) {
 		this.rootVisitor = typeCheckVisitor;
 	}
+	
+	
+	@Override
+	public PType caseAAssignmentDefinition(AAssignmentDefinition node,
+			TypeCheckInfo question) {
+		
+		question.qualifiers = null;
+		node.setExpType(node.getExpression().apply(rootVisitor, question));
+		node.setType(PTypeAssistant.typeResolve(node.getType(), question.env, null, rootVisitor, question));
+
+		if (node.getExpType() instanceof AVoidType)
+		{
+			TypeCheckerErrors.report(3048, "Expression does not return a value",node.getExpression().getLocation(),node.getExpression());
+		}
+
+		if (!TypeComparator.compatible(node.getType(), node.getExpType()))
+		{
+			TypeCheckerErrors.report(3000, "Expression does not match declared type",node.getLocation(),node);
+			TypeCheckerErrors.detail2("Declared", node.getType(), "Expression", node.getExpType());
+		}
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAInstanceVariableDefinition(
+			AInstanceVariableDefinition node, TypeCheckInfo question) {
+
+		if (node.getExpression() instanceof AUndefinedExp)
+		{
+			if (PAccessSpecifierAssistant.isStatic(node.getAccess()))
+			{
+				TypeCheckerErrors.report(3037, "Static instance variable is not initialized: " + node.getName(),node.getLocation(),node);
+			}
+		}
+
+		// Initializers can reference class members, so create a new env.
+		// We set the type qualifier to unknown so that type-based name
+		// resolution will succeed.
+
+		Environment cenv = new PrivateClassEnvironment(node.getClassDefinition(), question.env);
+		//TODO: I can see this could cause problems
+		TypeCheckInfo newQuestion = new TypeCheckInfo(); 
+		newQuestion.env = cenv;
+		newQuestion.qualifiers = null;
+		newQuestion.scope = question.scope;
+		//TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of assignment in our tree 		
+		node.setExpType(node.getExpression().apply(rootVisitor, newQuestion));
+		node.setType(PTypeAssistant.typeResolve(node.getType(), newQuestion.env, null, rootVisitor, newQuestion));
+
+		if (node.getExpType() instanceof AVoidType)
+		{
+			TypeCheckerErrors.report(3048, "Expression does not return a value",node.getExpression().getLocation(),node.getExpression());
+		}
+
+		if (!TypeComparator.compatible(node.getType(), node.getExpType()))
+		{
+			TypeCheckerErrors.report(3000, "Expression does not match declared type",node.getLocation(),node);
+			TypeCheckerErrors.detail2("Declared", node.getType(), "Expression", node.getExpType());
+		}
+		
+		return node.getType();
+		
+	}
+	
+	//TODO: No type check for classes
+	
+	@Override
+	public PType caseAClassInvariantDefinition(AClassInvariantDefinition node,
+			TypeCheckInfo question) {
+		
+		question.qualifiers = null;
+		question.scope =  NameScope.NAMESANDSTATE;
+		PType type = node.getExpression().apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isType(type,ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3013, "Class invariant is not a boolean expression",node.getLocation(),node);
+		}
+		
+		node.setType(type);
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAEqualsDefinition(AEqualsDefinition node,
+			TypeCheckInfo question) {
+		
+		question.qualifiers = null;
+		
+		node.setExpType(node.getTest().apply(rootVisitor,question));
+		PPattern pattern = node.getPattern();
+		
+		if (pattern != null)
+		{
+			PPatternAssistant.typeResolve(pattern, rootVisitor,question);
+			defs = pattern.getDefinitions(expType, nameScope);
+			defType = expType;
+		}
+		else if (typebind != null)
+		{
+			typebind.typeResolve(base);
+
+			if (!TypeComparator.compatible(typebind.type, expType))
+			{
+				typebind.report(3014, "Expression is not compatible with type bind");
+			}
+
+			defType = typebind.type;	// Effectively a cast
+			defs = typebind.pattern.getDefinitions(defType, nameScope);
+		}
+		else
+		{
+			Type st = setbind.set.typeCheck(base, null, scope);
+
+			if (!st.isSet())
+			{
+				report(3015, "Set bind is not a set type?");
+				defType = expType;
+			}
+			else
+			{
+    			Type setof = st.getSet().setof;
+
+    			if (!TypeComparator.compatible(expType, setof))
+    			{
+    				setbind.report(3016, "Expression is not compatible with set bind");
+    			}
+
+    			defType = setof;	// Effectively a cast
+			}
+
+			setbind.pattern.typeResolve(base);
+			defs = setbind.pattern.getDefinitions(defType, nameScope);
+		}
+
+		defs.typeCheck(base, scope);
+	}
+	
 	
 	@Override
 	public PType caseAExplicitFunctionDefinition(
@@ -61,8 +213,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs,question.env, question.scope);
 		
-		//TODO: access specifier not defined
-//		local.setStatic(accessSpecifier);
+		local.setStatic(PAccessSpecifierAssistant.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
 		//building the new scope for subtypechecks
@@ -72,15 +223,14 @@ public class TypeCheckerDefinitionVisitor extends
 		info.qualifiers = question.qualifiers;
 		PDefinitionAssistant.typeCheck(defs,this,info); //can be this because its a definition list
 
-		if (question.env.isVDMPP()) //TODO:Access specifier: && !accessSpecifier.isStatic)
+		if (question.env.isVDMPP() && !PAccessSpecifierAssistant.isStatic(node.getAccess())) 
 		{
 			local.add(PDefinitionAssistant.getSelfDefinition(node));
 		}
  
 		if (node.getPredef() != null)
 		{
-			//building the new scope for subtypechecks
-			
+			//building the new scope for subtypechecks			
 			info.env = local;
 			info.scope = NameScope.NAMES;
 			info.qualifiers = null;
@@ -130,12 +280,11 @@ public class TypeCheckerDefinitionVisitor extends
 			TypeChecker.report(3018, "Function returns unexpected type",node.getLocation());
 			TypeChecker.detail2("Actual", node.getActualResult(), "Expected", expectedResult);
 		}
-
-		//TODO:Access Specifier
-//		if (node.getType().narrowerThan(accessSpecifier))
-//		{
-//			report(3019, "Function parameter visibility less than function definition");
-//		}
+		
+		if (PTypeAssistant.narrowerThan(node.getType(),node.getAccess()))
+		{
+			TypeCheckerErrors.report(3019, "Function parameter visibility less than function definition",node.getLocation(),node);
+		}
 
 		if (node.getMeasure() == null && node.getRecursive())
 		{

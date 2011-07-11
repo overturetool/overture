@@ -196,14 +196,14 @@ public class TypeCheckerExpVisitor extends
 		if (PTypeAssistant.isFunction(node.getType()))
 		{
 			AFunctionType ft = PTypeAssistant.getFunction(node.getType());
-			AFunctionTypeAssistent.typeResolve(ft,question.env, null,rootVisitor,question);
+			AFunctionTypeAssistent.typeResolve(ft, null,rootVisitor,question);
 			results.add(AApplyExpAssistant.functionApply(node,isSimple, ft));
 		}
 
 		if (PTypeAssistant.isOperation(node.getType()))
 		{
 			AOperationType ot = PTypeAssistant.getOperation(node.getType());
-			AOperationTypeAssistant.typeResolve(ot,question.env, null,rootVisitor,question);
+			AOperationTypeAssistant.typeResolve(ot, null,rootVisitor,question);
 
 			if (inFunction && Settings.release == Release.VDM_10)
 			{

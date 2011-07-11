@@ -10,8 +10,10 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapType;
@@ -26,18 +28,18 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.EInvariantType;
 import org.overture.ast.types.EType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SNumericBasicType;
-import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 
 public class PTypeAssistant {
 
-	public static boolean hasSupertype(AClassType cto, AClassType other) {
+	public static boolean hasSupertype(AClassType cto, PType other) {
 		return PDefinitionAssistant.hasSupertype(cto.getClassdef(), other);
 	}
 
@@ -146,8 +148,7 @@ public class PTypeAssistant {
 	}
 
 	public static boolean isUnknown(PType type) {
-		return type.kindPType().equals(EType.UNKNOWN);// TODO: maybe needs some
-														// more here
+		return type.kindPType().equals(EType.UNKNOWN);
 	}
 
 	public static boolean isUnion(PType type) {
@@ -171,7 +172,7 @@ public class PTypeAssistant {
 		return null;
 	}
 
-	public static PType typeResolve(PType type, Environment env,
+	public static PType typeResolve(PType type,
 			ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
@@ -187,16 +188,18 @@ public class PTypeAssistant {
 		case FUNCTION:
 			if (type instanceof AFunctionType) {
 				result = AFunctionTypeAssistent.typeResolve(
-						(AFunctionType) type, env, root, rootVisitor, question);
+						(AFunctionType) type,  root, rootVisitor, question);
 			}
 			break;
 		case INMAP:
 		case INVARIANT:
 		case MAP:
+			System.out.println("PTypeAssistent : typeResolve not implemented");
+			break;
 		case OPERATION:
 			if (type instanceof AOperationType) {
 				result = AOperationTypeAssistant
-						.typeResolve((AOperationType) type, env, root,
+						.typeResolve((AOperationType) type,  root,
 								rootVisitor, question);
 			}
 			break;
@@ -228,6 +231,8 @@ public class PTypeAssistant {
 		case BASIC:
 		case BRACKET:
 		case CLASS:
+			System.out.println("PTypeAssistent : typeResolve not implemented");
+			break;
 		case FUNCTION:
 			if (type instanceof AFunctionType) {
 				AFunctionTypeAssistent.unResolve((AFunctionType) type);
@@ -236,6 +241,8 @@ public class PTypeAssistant {
 		case INMAP:
 		case INVARIANT:
 		case MAP:
+			System.out.println("PTypeAssistent : typeResolve not implemented");
+			break;
 		case OPERATION:
 			if (type instanceof AOperationType) {
 				AOperationTypeAssistant.unResolve((AOperationType) type);
@@ -274,7 +281,7 @@ public class PTypeAssistant {
 		case MAP:
 		case OPTIONAL:
 		case PARAMETER:
-		case PRODUCT:
+		case PRODUCT:		
 		case QUOTE:
 		case SEQ:
 		case SEQ1:
@@ -286,7 +293,7 @@ public class PTypeAssistant {
 		case VOID:
 		case VOIDRETURN:
 		default:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			System.out.println("PTypeAssistent : isOperation not implemented");
 			return false;
 
 		}
@@ -323,7 +330,6 @@ public class PTypeAssistant {
 			if (type instanceof ASeqType) {
 				return (ASeqType) type;
 			}
-
 		default:
 			assert false : "Can't getSeq of a non-seq";
 			return null;
@@ -483,6 +489,41 @@ public class PTypeAssistant {
 		default:
 			return false;
 		}		
+	}
+
+	public static boolean narrowerThan(PType type, PAccessSpecifier accessSpecifier) {
+		if (type.getDefinitions() != null)
+		{
+			boolean result = false;
+
+			for (PDefinition d: type.getDefinitions())
+			{
+				result = result || PAccessSpecifierAssistant.narrowerThan(d.getAccess(),accessSpecifier);
+			}
+
+			return result;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static boolean equals(PType type, PType other) {
+		
+		other = deBracket(other);
+		return type.getClass() == other.getClass();
+		
+	}
+
+	private static PType deBracket(PType other) {
+		
+		while (other instanceof ABracketType)
+		{
+			other = ((ABracketType)other).getType();
+		}
+
+		return other;
 	}
 
 }

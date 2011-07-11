@@ -17,7 +17,7 @@ import org.overture.typecheck.TypeCheckInfo;
 
 public class AOperationTypeAssistant {
 
-	public static AOperationType typeResolve(AOperationType ot, Environment env,
+	public static AOperationType typeResolve(AOperationType ot,
 			ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
@@ -30,11 +30,11 @@ public class AOperationTypeAssistant {
 
 			for (PType type: ot.getParameters())
 			{
-				fixed.add(PTypeAssistant.typeResolve(type, env, root, rootVisitor, question));
+				fixed.add(PTypeAssistant.typeResolve(type, root, rootVisitor, question));
 			}
 
 			ot.setParameters(fixed);
-			ot.setResult(PTypeAssistant.typeResolve(ot.getResult(), env, root, rootVisitor, question));
+			ot.setResult(PTypeAssistant.typeResolve(ot.getResult(), root, rootVisitor, question));
 			return ot;
 		}
 		catch (TypeCheckException e)

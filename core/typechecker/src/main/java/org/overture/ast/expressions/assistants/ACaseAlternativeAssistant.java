@@ -23,7 +23,7 @@ public class ACaseAlternativeAssistant {
 		if (c.getDefs() == null)
 		{
 			c.setDefs(new ArrayList<PDefinition>());
-			PPatternAssistant.typeResolve(c.getPattern(),question.env);
+			PPatternAssistant.typeResolve(c.getPattern(),rootVisitor,question);
 
 			if (c.getPattern() instanceof AExpressionPattern)
 			{
@@ -32,7 +32,7 @@ public class ACaseAlternativeAssistant {
 				ep.getExp().apply(rootVisitor, question);
 			}
 
-			PPatternAssistant.typeResolve(c.getPattern(),question.env);
+			PPatternAssistant.typeResolve(c.getPattern(),rootVisitor,question);
 			c.getDefs().addAll(PPatternAssistant.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
 		}
 
