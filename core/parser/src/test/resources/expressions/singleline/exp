@@ -1,0 +1,4 @@
+p(a,s)
+true
+cases true:  true -> true, others -> false end
+cases true:  true -> true, "kk"-> "kk" others -> false end

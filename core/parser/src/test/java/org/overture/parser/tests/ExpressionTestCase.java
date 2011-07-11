@@ -56,10 +56,11 @@ public class ExpressionTestCase extends BaseParserTestCase
 	{
 		Settings.dialect = Dialect.VDM_SL;
 		ExpressionReader reader = null;
-
+		PExp expression = null;
+try{
 		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
 		reader = new ExpressionReader(ltr);
-		PExp expression = (reader.readExpression());
+		 expression = (reader.readExpression());
 
 		if (reader != null && reader.getErrorCount() > 0)
 		{
@@ -74,7 +75,8 @@ public class ExpressionTestCase extends BaseParserTestCase
 			// pwarn += reader.getWarningCount();
 			reader.printWarnings(new PrintWriter(System.out));
 		}
-
-		System.out.println("Parsed: " + expression);
+}finally{
+		System.out.println("Parsed: \""+content +"\" as: "+ expression);
+}
 	}
 }
