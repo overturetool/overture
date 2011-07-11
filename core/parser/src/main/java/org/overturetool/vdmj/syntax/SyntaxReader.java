@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -191,7 +192,7 @@ public abstract class SyntaxReader
 		{
 			LexIdentifierToken id = (LexIdentifierToken)tok;
 			
-			if (id.old)
+			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
@@ -234,7 +235,7 @@ public abstract class SyntaxReader
 		{
 			LexIdentifierToken id = (LexIdentifierToken)tok;
 			
-			if (id.old)
+			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
@@ -267,7 +268,7 @@ public abstract class SyntaxReader
 			nextToken();
 			LexIdentifierToken id = (LexIdentifierToken)tok;
 			
-			if (id.old)
+			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
@@ -316,7 +317,7 @@ public abstract class SyntaxReader
 		{
 			LexIdentifierToken id = (LexIdentifierToken)tok;
 			
-			if (id.old)
+			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}

@@ -1100,42 +1100,42 @@ public class ExpressionReader extends SyntaxReader
 				switch (type) //TODO is this right? Type information is lost? If so lose the switch
 				{
 					case BOOL:
-						exp = new AMkBasicExp(new ABooleanBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ABooleanBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new BooleanType(ve.location), value);
 						break;
 
 					case NAT:
-						exp = new AMkBasicExp(new ANatNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ANatNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new NaturalType(ve.location), value);
 						break;
 
 					case NAT1:
-						exp = new AMkBasicExp(new ANatOneNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ANatOneNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new NaturalOneType(ve.location), value);
 						break;
 
 					case INT:
-						exp = new AMkBasicExp(new AIntNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new AIntNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new IntegerType(ve.location), value);
 						break;
 
 					case RAT:
-						exp = new AMkBasicExp(new ARationalNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ARationalNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new RationalType(ve.location), value);
 						break;
 
 					case REAL:
-						exp = new AMkBasicExp(new ARealNumericBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ARealNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new RealType(ve.location), value);
 						break;
 
 					case CHAR:
-						exp = new AMkBasicExp(new ACharBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ACharBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new CharacterType(ve.location), value);
 						break;
 
 					case TOKEN:
-						exp = new AMkBasicExp(new ATokenBasicType(ve.getLocation(), false), ve.getLocation(), value);
+						exp = new AMkBasicExp(new ATokenBasicType(ve.getLocation(), false,null), ve.getLocation(), value);
 //						exp = new MkBasicExpression(new TokenType(ve.location), value);
 						break;
 
@@ -1209,42 +1209,42 @@ public class ExpressionReader extends SyntaxReader
 				switch (type)
 				{
 					case BOOL: 
-						exp = new AIsExp(new ABooleanBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ABooleanBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
 						break;
 
 					case NAT:
-						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
 						break;
 
 					case NAT1:
-						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
 						break;
 
 					case INT:
-						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
 						break;
 
 					case RAT:
-						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
 						break;
 
 					case REAL:
-						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
 						break;
 
 					case CHAR:
-						exp = new AIsExp(new ACharBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ACharBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new AIsExp(new ATokenBasicType(ve.getLocation(), false), ve.getLocation(), typename, readExpression());
+						exp = new AIsExp(new ATokenBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, readExpression());
 //						exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
 						break;
 

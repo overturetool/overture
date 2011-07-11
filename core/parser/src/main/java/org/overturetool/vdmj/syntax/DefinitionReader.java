@@ -89,6 +89,8 @@ import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexIntegerToken;
@@ -351,7 +353,7 @@ public class DefinitionReader extends SyntaxReader
 //				NamedType nt = new NamedType(idToName(id), tr.readType());
 				PType type = tr.readType();
 				ANamedInvariantType nt = 
-					new ANamedInvariantType(id.location,false,idToName(id), type,null);
+					new ANamedInvariantType(id.location,false,null,idToName(id), type,null);
 
 				if (type instanceof AUnresolvedType &&
 					((AUnresolvedType)type).getTypename().equals(idToName(id)))
@@ -364,7 +366,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case COLONCOLON:
 				nextToken();
-				invtype = new ARecordInvariantType(id.location, false, idToName(id), tr.readFieldList(), null);
+				invtype = new ARecordInvariantType(id.location, false,null, idToName(id), tr.readFieldList(), null);
 				break;
 
 			default:
@@ -633,7 +635,7 @@ public class DefinitionReader extends SyntaxReader
 		PDefinition def = null;
 		LexIdentifierToken funcName = readIdToken("Expecting new function identifier");
 
-		if (funcName.name.startsWith("mk_"))
+		if (funcName.getName().startsWith("mk_"))
 		{
 			throwMessage(2016, "Function name cannot start with 'mk_'");
 		}
@@ -678,7 +680,7 @@ public class DefinitionReader extends SyntaxReader
 
 		if (!name.equals(funcName))
 		{
-			throwMessage(2019, "Expecting identifier " + funcName.name + " after type in definition");
+			throwMessage(2019, "Expecting identifier " + funcName.getName() + " after type in definition");
 		}
 
 		if (lastToken().isNot(VDMToken.BRA))
@@ -786,7 +788,7 @@ public class DefinitionReader extends SyntaxReader
    		{
    			resultPattern = new APatternTypePair(
    	   			new ATuplePattern(firstResult.location,null,false,resultNames),
- 	   			new AProductType(firstResult.location,false, resultTypes));
+ 	   			new AProductType(firstResult.location,false,null, resultTypes));
    		}
    		else
    		{
@@ -969,7 +971,7 @@ public class DefinitionReader extends SyntaxReader
 
 		if (!name.equals(funcName))
 		{
-			throwMessage(2022, "Expecting name " + funcName.name + " after type in definition");
+			throwMessage(2022, "Expecting name " + funcName.getName() + " after type in definition");
 		}
 
 		if (lastToken().isNot(VDMToken.BRA))
@@ -1066,7 +1068,7 @@ public class DefinitionReader extends SyntaxReader
 			{
 				resultPattern = new APatternTypePair(
 					new ATuplePattern(firstResult.location,null,false,resultNames),
-					new AProductType(firstResult.location,false, resultTypes));
+					new AProductType(firstResult.location,false,null, resultTypes));
 			}
 			else
 			{
@@ -1390,12 +1392,12 @@ public class DefinitionReader extends SyntaxReader
 		throws ParserException, LexException
 	{
 		List<String> names = new Vector<String>();
-		names.add(readIdToken("Expecting trace identifier").name);
+		names.add(readIdToken("Expecting trace identifier").getName());
 
 		while (lastToken().is(VDMToken.DIVIDE))
 		{
 			nextToken();
-			names.add(readIdToken("Expecting trace identifier").name);
+			names.add(readIdToken("Expecting trace identifier").getName());
 		}
 
 		return names;

@@ -32,6 +32,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.*;
 import org.overture.ast.types.*;
 import org.overturetool.util.ClonableFile;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -88,7 +90,7 @@ public class ModuleReader extends SyntaxReader
     				case IDENTIFIER:
     					LexIdentifierToken id = lastIdToken();
 
-    					if (id.name.equals("class"))
+    					if (id.getName().equals("class"))
     					{
     						throwMessage(2260, "Module starts with 'class' instead of 'module'");
     					}
@@ -112,7 +114,7 @@ public class ModuleReader extends SyntaxReader
 	public static AFromModuleImports importAll(LexIdentifierToken from)
 	{
 		List<List<PImport>> types = new Vector<List<PImport>>();
-		LexNameToken all = new LexNameToken(from.name, "all", from.location);
+		LexNameToken all = new LexNameToken(from.getName(), "all", from.location);
 		List<PImport> impAll = new Vector<PImport>();
 		impAll.add(new AAllImport(all.location,all,all,null));
 		types.add(impAll);
@@ -169,7 +171,7 @@ public class ModuleReader extends SyntaxReader
 			setCurrentModule("");
 			checkFor(VDMToken.MODULE, 2170, "Expecting 'module' at module start");
 			name = readIdToken("Expecting identifier after 'module'");
-			setCurrentModule(name.name);
+			setCurrentModule(name.getName());
 
 			if (lastToken().is(VDMToken.IMPORTS))
 			{
@@ -213,7 +215,7 @@ public class ModuleReader extends SyntaxReader
 
 		if (name != null &&	!name.equals(endname))
 		{
-			throwMessage(2049, "Expecting 'end " + name.name + "'");
+			throwMessage(2049, "Expecting 'end " + name.getName() + "'");
 		}
 
 		LexLocation.addSpan(idToName(name), lastToken());
@@ -235,7 +237,7 @@ public class ModuleReader extends SyntaxReader
 		{
 			checkFor(VDMToken.DLMODULE, 2172, "Expecting 'dlmodule' at module start");
 			name = readIdToken("Expecting identifier after 'dlmodule'");
-			setCurrentModule(name.name);
+			setCurrentModule(name.getName());
 
 			if (lastToken().is(VDMToken.IMPORTS))
 			{
@@ -273,7 +275,7 @@ public class ModuleReader extends SyntaxReader
 
 		if (name != null &&	!name.equals(endname))
 		{
-			throwMessage(2051, "Expecting 'end " + name.name + "'");
+			throwMessage(2051, "Expecting 'end " + name.getName() + "'");
 		}
 
 //		return new DLModule(name, imports, exports, library);
@@ -557,7 +559,7 @@ public class ModuleReader extends SyntaxReader
 		try
 		{
 			reader.push();
-			setCurrentModule(from.name);	// So names are from "from" in...
+			setCurrentModule(from.getName());	// So names are from "from" in...
 			ATypeDefinition def = getDefinitionReader().readTypeDefinition();
 			setCurrentModule(savedModule);	// and restore
 			reader.unpush();
@@ -733,7 +735,7 @@ public class ModuleReader extends SyntaxReader
 	{
     	if (name.module.equals(getCurrentModule()))		//ie. it was an id
     	{
-    		return new LexNameToken(impmod.name, name.name, name.location);
+    		return new LexNameToken(impmod.getName(), name.name, name.location);
     	}
 
     	return name;

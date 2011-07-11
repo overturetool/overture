@@ -34,10 +34,10 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
@@ -113,7 +113,7 @@ public class ClassReader extends SyntaxReader
 			nextToken();
 			LexIdentifierToken classId = readIdToken("Expecting class ID");
 			LexNameToken className = classId.getClassName();
-			setCurrentModule(classId.name);
+			setCurrentModule(classId.getName());
 
 			if (lastToken().is(VDMToken.IS))
 			{
@@ -139,7 +139,7 @@ public class ClassReader extends SyntaxReader
 
 			if (classId != null && !classId.equals(endname))
 			{
-				throwMessage(2007, "Expecting 'end " + classId.name + "'");
+				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
 
 			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,className, null,superclasses, members,null);
@@ -166,7 +166,7 @@ public class ClassReader extends SyntaxReader
 			nextToken();
 			LexIdentifierToken classId = readIdToken("Expecting class ID");
 			LexNameToken className = classId.getClassName();
-			setCurrentModule(classId.name);
+			setCurrentModule(classId.getName());
 
 			if (lastToken().is(VDMToken.IS))
 			{
@@ -216,7 +216,7 @@ public class ClassReader extends SyntaxReader
 
 			if (classId != null && !classId.equals(endname))
 			{
-				throwMessage(2007, "Expecting 'end " + classId.name + "'");
+				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
 
 //			return new ASystemClassDefinition(className, members);

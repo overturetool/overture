@@ -95,7 +95,7 @@ public class TypeReader extends SyntaxReader
 				throwMessage(2070, "Function type cannot return void type");
 			}
 
-			type = new AFunctionType(token.location, false,
+			type = new AFunctionType(token.location, false,null,
 				token.is(VDMToken.ARROW), productExpand(type), result);
 		}
 
@@ -114,7 +114,7 @@ public class TypeReader extends SyntaxReader
 			List<PType> list = new Vector<PType>();
 			list.add(type);
 			list.add(readComposeType());
-			type = new AUnionType(token.location, false, list);
+			type = new AUnionType(token.location, false,null, list);
 		}
 
 		return type;
@@ -130,7 +130,7 @@ public class TypeReader extends SyntaxReader
 			nextToken();
 			LexIdentifierToken id = readIdToken("Compose not followed by record identifier");
 			checkFor(VDMToken.OF, 2249, "Missing 'of' in compose type");
-			type = new ARecordInvariantType(id.location, false,idToName(id), readFieldList(),null);
+			type = new ARecordInvariantType(id.location, false,null,idToName(id), readFieldList(),null);
 			checkFor(VDMToken.END, 2250, "Missing 'end' in compose type");
 		}
 		else
@@ -246,7 +246,7 @@ public class TypeReader extends SyntaxReader
 			return type;
 		}
 
-		return new AProductType(token.location, false, productList);
+		return new AProductType(token.location, false,null, productList);
 	}
 
 	private PType readMapType()
@@ -261,14 +261,14 @@ public class TypeReader extends SyntaxReader
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2251, "Expecting 'to' in map type");
-				type = new AMapType(token.location, false, type, readMapType(),false);
+				type = new AMapType(token.location, false,null, type, readMapType(),false);
 				break;
 
 			case INMAP:
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2252, "Expecting 'to' in inmap type");
-				type = new AInMapType(token.location, false, type, readMapType());
+				type = new AInMapType(token.location, false,null, type, readMapType());
 				break;
 
 			default:
@@ -290,19 +290,19 @@ public class TypeReader extends SyntaxReader
 			case SET:
 				nextToken();
 				checkFor(VDMToken.OF, 2253, "Expecting 'of' after set");
-				type = new ASetType(token.location, false, readMapType(),false);
+				type = new ASetType(token.location, false,null, readMapType(),false);
 				break;
 
 			case SEQ:
 				nextToken();
 				checkFor(VDMToken.OF, 2254, "Expecting 'of' after seq");
-				type = new ASeqType(token.location, false, readMapType(),false);
+				type = new ASeqType(token.location, false,null, readMapType(),false);
 				break;
 
 			case SEQ1:
 				nextToken();
 				checkFor(VDMToken.OF, 2255, "Expecting 'of' after seq1");
-				type = new ASeq1Type(token.location, false, readMapType(),false);
+				type = new ASeq1Type(token.location, false,null, readMapType(),false);
 				break;
 
 			default:
@@ -323,94 +323,94 @@ public class TypeReader extends SyntaxReader
 		switch (token.type)
 		{
 			case NAT:
-				type = new ANatNumericBasicType(location, false);
+				type = new ANatNumericBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case NAT1:
-				type = new ANatOneNumericBasicType(location, false);
+				type = new ANatOneNumericBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case BOOL:
-				type = new ABooleanBasicType(location, false);
+				type = new ABooleanBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case REAL:
-				type = new ARealNumericBasicType(location, false);
+				type = new ARealNumericBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case INT:
-				type = new AIntNumericBasicType(location, false);
+				type = new AIntNumericBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case RAT:
-				type = new ARationalNumericBasicType(location, false);
+				type = new ARationalNumericBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case CHAR:
-				type = new ACharBasicType(location, false);
+				type = new ACharBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case TOKEN:
-				type = new ATokenBasicType(location, false);
+				type = new ATokenBasicType(location, false,null);
 				nextToken();
 				break;
 
 			case QUOTE:
-				type = new AQuoteType(location, false, new TStringLiteral( ((LexQuoteToken)token).value));//(LexQuoteToken)token);
+				type = new AQuoteType(location, false,null, new TStringLiteral( ((LexQuoteToken)token).value));//(LexQuoteToken)token);
 				nextToken();
 				break;
 
 			case BRA:
 				if (nextToken().is(VDMToken.KET))
 				{
-					type = new AVoidType(location, false);
+					type = new AVoidType(location, false,null);
 					nextToken();
 				}
 				else
 				{
-					type = new ABracketType(location, false, readType());
+					type = new ABracketType(location, false,null, readType());
 					checkFor(VDMToken.KET, 2256, "Bracket mismatch");
 				}
 				break;
 
 			case SEQ_OPEN:
 				nextToken();
-				type = new AOptionalType(location, false, readType());
+				type = new AOptionalType(location, false,null, readType());
 				checkFor(VDMToken.SEQ_CLOSE, 2257, "Missing close bracket after optional type");
 				break;
 
 			case NIL:
-				type = new AVoidType(location, false);
+				type = new AVoidType(location, false,null);
 				nextToken();
 				break;
 
 			case IDENTIFIER:
 				LexIdentifierToken id = (LexIdentifierToken)token;
-				type = new AUnresolvedType(location, false,idToName(id));
+				type = new AUnresolvedType(location, false,null,idToName(id));
 				nextToken();
 				break;
 
 			case NAME:
-				type = new AUnresolvedType(location, false,(LexNameToken)token);
+				type = new AUnresolvedType(location, false,null,(LexNameToken)token);
 				nextToken();
 				break;
 
 			case AT:
 				nextToken();
-				type = new AParameterType(location, false,
+				type = new AParameterType(location, false,null,
 						idToName(readIdToken("Invalid type parameter")));
 				break;
 
 			case QMARK:
 				nextToken();
-				type = new AUnknownType(location, false);	// Not strictly VDM :-)
+				type = new AUnknownType(location, false,null);	// Not strictly VDM :-)
 				break;
 
 			default:
@@ -427,7 +427,7 @@ public class TypeReader extends SyntaxReader
 		LexToken arrow = lastToken();
 		checkFor(VDMToken.OPDEF, 2258, "Expecting '==>' in explicit operation type");
 		PType resulttype = readType();
-		return new AOperationType(arrow.location, false, productExpand(paramtype), resulttype);
+		return new AOperationType(arrow.location, false,null, productExpand(paramtype), resulttype);
 	}
 
 	private List<PType> productExpand(PType parameters)
