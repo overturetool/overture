@@ -12,6 +12,7 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
@@ -36,15 +37,19 @@ import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntConstExp;
+import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
+import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
+import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
 import org.overture.ast.expressions.ARangeResToBinaryExp;
@@ -63,6 +68,7 @@ import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.expressions.assistants.AApplyExpAssistant;
 import org.overture.ast.expressions.assistants.ACaseAlternativeAssistant;
 import org.overture.ast.expressions.assistants.SBinaryExpAssistant;
+import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.assistants.PBindAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
@@ -99,13 +105,8 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-
-
-
-
-
+import org.overturetool.vdmj.typechecker.NameScope;
 
 public class TypeCheckerExpVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
@@ -1405,6 +1406,99 @@ public class TypeCheckerExpVisitor extends
 		
 		return node.getType();
 	}
+	
+	@Override
+	public PType caseAHistoryExp(AHistoryExp node,  TypeCheckInfo question)
+	{
+		SClassDefinition classdef = question.env.findClassDefinition();
+
+		for (LexNameToken opname: node.getOpnames())
+		{
+    		int found = 0;
+
+    		for (PDefinition def: classdef.getDefinitions())
+    		{
+    			if (def.getName() != null && def.getName().matches(opname))
+    			{
+    				found++;
+    				
+    				if (!PDefinitionAssistant.isCallableOperation(def))
+    				{
+    					opname.report(3105, opname + " is not an explicit operation");
+    				}
+    			}
+    		}
+
+    		if (found == 0)
+    		{
+    			opname.report(3106, opname + " is not in scope");
+    		}
+    		else if (found > 1)
+    		{
+    			opname.warning(5004, "History expression of overloaded operation");
+    		}
+
+    		if (opname.name.equals(classdef.getName().name))
+    		{
+    			opname.report(3107, "Cannot use history of a constructor");
+    		}
+		}
+
+		node.setType(new ANatNumericBasicType(node.getLocation(), false, null));
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, TypeCheckInfo question)
+	{
+		node.setType(new AUnknownType(node.getLocation(),false,null));
+		return node.getType();	// Because we terminate anyway
+	}
+		
+	@Override
+	public PType caseAPostOpExp(APostOpExp node, TypeCheckInfo question)
+	{
+		node.setType(node.getPostexpression().apply(this,question));
+		return node.getType();		
+	}
+	
+//	@Override
+//	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question)
+//	{
+//		PDefinition def = new AMultiBindListDefinition(node.getLocation()
+//				,PBindAssistant.getMultipleBind(node.getBind())
+//				,question.scope,null,question,
+//		);
+//				
+//		def.typeCheck(base, scope);
+//		PType rt = null;
+//
+//		if (bind instanceof SetBind)
+//		{
+//			SetBind sb = (SetBind)bind;
+//			rt = sb.set.typeCheck(base, null, scope);
+//
+//			if (rt.isSet())
+//			{
+//				rt = rt.getSet().setof;
+//			}
+//			else
+//			{
+//				TypeCheckerErrors.report(3112, "Iota set bind is not a set",node.getLocation(),node);
+//			}
+//		}
+//		else
+//		{
+//			ATypeBind tb = (ATypeBind)bind;
+//			rt = tb.type;
+//		}
+//
+//		Environment local = new FlatCheckedEnvironment(def, base, scope);
+//		predicate.typeCheck(local, null, scope);
+//		local.unusedCheck();
+//		return rt;
+//	}
 	
 	
 	
