@@ -8,12 +8,25 @@ To String Extensions
 %exp->#Unary->absolute ="(abs " + [exp]+")"
 
 
+%exp->#binary->#numeric->plus = [left] "+" [right]
+
+
+%exp->letBeSt = "let " [bind] + $($ [suchThat] $== null ? "" : " be st ")$+ [suchThat]  " in " [value]
+
+
+
+%exp->letDef = "let " [localDefs] " in " [expression]
+
+
+ 
+
+
 //  Patterns
 
 
 
 //  Definitions
-
+%definition->value = [pattern] " : " [expType] " = " [expression]
 
 //  Statements
 
