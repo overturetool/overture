@@ -1,0 +1,20 @@
+To String Extensions
+
+//  Expressions
+
+%exp->apply = [root] "(" $Utils.listToString($ [args] $)$  ")"
+
+//%exp->cases = [expression] [cases] [others]
+%exp->#Unary->absolute ="(abs " + [exp]+")"
+
+
+//  Patterns
+
+
+
+//  Definitions
+
+
+//  Statements
+
+
