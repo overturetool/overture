@@ -19,6 +19,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.runtime.TypeChecker;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -140,5 +141,22 @@ public class AExplicitFunctionDefinitionAssistant {
 			AExplicitFunctionDefinition efd) {
 		
 		return new LexNameList(efd.getName());
+	}
+	
+	public static AFunctionType getType(AExplicitFunctionDefinition efd, List<PType> actualTypes)
+	{
+		Iterator<PType> ti = actualTypes.iterator();
+		AFunctionType ftype = (AFunctionType)efd.getType();
+				
+		if (efd.getTypeParams() != null)
+		{
+			for (LexNameToken pname: efd.getTypeParams())
+			{
+				PType ptype = ti.next();
+				ftype = (AFunctionType) PTypeAssistant.polymorph(ftype,pname, ptype);
+			}
+		}
+
+		return ftype;
 	}
 }

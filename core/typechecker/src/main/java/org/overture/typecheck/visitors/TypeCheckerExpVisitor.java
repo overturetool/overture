@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -11,6 +12,8 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.expressions.AApplyExp;
@@ -71,6 +74,7 @@ import org.overture.ast.types.AMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -1279,80 +1283,84 @@ public class TypeCheckerExpVisitor extends
 
     			for (PDefinition def: t.getDefinitions())		// Possibly a union of several
     			{
-    				LexNameList typeParams = null;
+    				List<LexNameToken> typeParams = null;
     				def = PDefinitionAssistant.deref(def);
 
     				if (def instanceof AExplicitFunctionDefinition)
     				{
     					node.setExpdef((AExplicitFunctionDefinition)def);
-    					typeParams = expdef.typeParams;
+    					typeParams = node.getExpdef().getTypeParams();
     				}
-    				else if (def instanceof ImplicitFunctionDefinition)
+    				else if (def instanceof AImplicitFunctionDefinition)
     				{
-    					impdef = (ImplicitFunctionDefinition)def;
-    					typeParams = impdef.typeParams;
+    					node.setImpdef((AImplicitFunctionDefinition)def);
+    					typeParams = node.getImpdef().getTypeParams();
     				}
     				else
     				{
-    					report(3099, "Polymorphic function is not in scope");
+    					TypeCheckerErrors.report(3099, "Polymorphic function is not in scope", node.getLocation(), node);
     					continue;
     				}
 
     				if (typeParams == null)
     				{
-    					concern(serious, 3100, "Function has no type parameters");
+    					TypeCheckerErrors.concern(serious, 3100, "Function has no type parameters", node.getLocation(), node);
     					continue;
     				}
 
-    				if (actualTypes.size() != typeParams.size())
+    				if (node.getActualTypes().size() != typeParams.size())
     				{
-    					concern(serious, 3101, "Expecting " + typeParams.size() + " type parameters");
+    					TypeCheckerErrors.concern(serious, 3101, "Expecting " + typeParams.size() + " type parameters", node.getLocation(), node);
     					continue;
     				}
 
-    				TypeList fixed = new TypeList();
+    				List<PType> fixed = new Vector<PType>();
 
-    				for (Type ptype: actualTypes)
+    				for (PType ptype: node.getActualTypes())
     				{
-    					if (ptype instanceof ParameterType)		// Recursive polymorphism
+    					if (ptype instanceof AParameterType)		// Recursive polymorphism
     					{
-    						ParameterType pt = (ParameterType)ptype;
-    						Definition d = env.findName(pt.name, scope);
+    						AParameterType pt = (AParameterType)ptype;
+    						PDefinition d = question.env.findName( pt.getName(), question.scope);
 
     						if (d == null)
     						{
-    							report(3102, "Parameter name " + pt + " not defined");
-    							ptype = new UnknownType(location);
+    							TypeCheckerErrors.report(3102, "Parameter name " + pt + " not defined", node.getLocation(), node);
+    							ptype = new AUnknownType(node.getLocation(),false,null);
     						}
     						else
     						{
     							ptype = d.getType();
     						}
     					}
-
-    					fixed.add(ptype.typeResolve(env, null));
+    					
+    					fixed.add(PTypeAssistant.typeResolve(ptype, question.env, null, rootVisitor, question));
     				}
+    					
+    				node.setActualTypes(fixed);
 
-    				actualTypes = fixed;
+    				node.setType( node.getExpdef() == null ?
+    						AImplicitFunctionDefinitionAssistant.getType(node.getImpdef(), node.getActualTypes()) : 
+    							AExplicitFunctionDefinitionAssistant.getType(node.getExpdef(), node.getActualTypes()));
+    				
+//    				type = expdef == null ?
+//    					impdef.getType(actualTypes) : expdef.getType(actualTypes);
 
-    				type = expdef == null ?
-    					impdef.getType(actualTypes) : expdef.getType(actualTypes);
-
-    				set.add(type);
+    				set.add(node.getType());
     			}
 			}
 
 			if (!set.isEmpty())
 			{
-				return set.getType(location);
+				return PTypeAssistant.getType(set, node.getLocation());
 			}
 		}
 		else
 		{
-			report(3103, "Function instantiation does not yield a function");
+			TypeCheckerErrors.report(3103, "Function instantiation does not yield a function", node.getLocation(), node);
 		}
 
-		return new UnknownType(location);
+		return new AUnknownType(node.getLocation(),false,null);
 	}
 	
 	@Override
@@ -1384,15 +1392,15 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAIntConstExp(AIntConstExp node, TypeCheckInfo question) {
 		if (node.getValue().value < 0)
 		{
-			node.setType(new AIntNumericBasicType(node.getLocation(),true));
+			node.setType(new AIntNumericBasicType(node.getLocation(),true,null));
 		}
 		else if (node.getValue().value == 0)
 		{
-			node.setType(new ANatNumericBasicType(node.getLocation(),true));
+			node.setType(new ANatNumericBasicType(node.getLocation(),true,null));
 		}
 		else
 		{
-			node.setType(new ANatOneNumericBasicType(node.getLocation(),true));
+			node.setType(new ANatOneNumericBasicType(node.getLocation(),true,null));
 		}
 		
 		return node.getType();

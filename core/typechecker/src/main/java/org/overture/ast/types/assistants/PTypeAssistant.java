@@ -1,12 +1,17 @@
 package org.overture.ast.types.assistants;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapType;
@@ -28,6 +33,7 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class PTypeAssistant {
 
@@ -39,7 +45,67 @@ public class PTypeAssistant {
 		return typeclass.isInstance(b);
 	}
 
-	
+	public static PType polymorph(PType type, LexNameToken pname, PType actualType)
+	{				
+		LexLocation location = type.getLocation();
+		NodeList<PDefinition> definitions = type.getDefinitions();
+		
+		switch(type.kindPType())
+		{
+			case FUNCTION:
+				List<PType> polyparams = new Vector<PType>();
+
+				for (PType ptype: ((AFunctionType)type).getParameters())
+				{
+					polyparams.add(polymorph(ptype,pname, actualType));
+				}
+
+				PType polyresult = polymorph(((AFunctionType)type).getResult(),pname, actualType);
+				AFunctionType ftype =
+					new AFunctionType(location,false,definitions, 
+							((AFunctionType)type).getPartial(),	polyparams, polyresult);
+				return ftype;
+			case MAP:
+				return new AMapType(location,false,definitions,
+						polymorph(((AMapType)type).getFrom(),pname, actualType), 
+						polymorph(((AMapType)type).getTo(), pname, actualType),
+						((AMapType)type).getEmpty());
+			case OPTIONAL:
+				return new AOptionalType(location, false, definitions, 
+							polymorph(type,pname, actualType));
+			case PRODUCT:
+				List<PType> polytypes = new Vector<PType>();
+
+				for (PType ptype: ((AProductType)type).getTypes())
+				{
+					polytypes.add(polymorph(ptype,pname, actualType));
+				}
+
+				return new AProductType(location,false, definitions, polytypes);
+			
+			case SEQ:
+				return new ASeqType(location,false, definitions, 
+						polymorph( ((ASeqType)type).getSeqof(),pname, actualType),
+						((ASeqType)type).getEmpty());
+			case SET:
+				return new ASetType(location, false,definitions,
+						polymorph(((ASetType)type).getSetof(), pname, actualType),
+						((ASetType)type).getEmpty());
+			case UNION:
+				Set<PType> polytypesSet = new HashSet<PType>();
+
+				for (PType ptype: ((AUnionType)type).getTypes())
+				{					
+					polytypesSet.add(polymorph(ptype,pname, actualType));
+				}
+				
+				return new AUnionType(location,false,definitions, new Vector<PType>(polytypesSet));
+			default:
+				break;
+		}
+				
+		return type;
+	}
 
 	public static PType getType(Set<PType> rtypes, LexLocation location) {
 		// If there are any Optional(Unknowns) these are the result of
