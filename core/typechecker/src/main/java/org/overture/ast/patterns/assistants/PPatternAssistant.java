@@ -10,13 +10,14 @@ import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.ARecordPattern;
+import org.overture.ast.patterns.ASeqPattern;
+import org.overture.ast.patterns.ASetPattern;
+import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckInfo;
-
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class PPatternAssistant {
@@ -62,14 +63,28 @@ public class PPatternAssistant {
 			}
 			break;
 		case SEQ:
-			break;
+			if(pattern instanceof ASeqPattern)
+			{
+				ASeqPatternAssistant.typeResolve((ASeqPattern)pattern,rootVisitor,question);
+			}
+			break;			
 		case SET:
-			break;
-		case STRING:
-			break;
+			if(pattern instanceof ASetPattern)
+			{
+				ASetPatternAssistant.typeResolve((ASetPattern)pattern,rootVisitor,question);
+			}
+			break;		
 		case TUPLE:
+			if(pattern instanceof ATuplePattern)
+			{
+				ATuplePatternAssistant.typeResolve((ATuplePattern)pattern,rootVisitor,question);
+			}
 			break;
 		case UNION:
+			if(pattern instanceof AUnionPattern)
+			{
+				AUnionPatternAssistant.typeResolve((AUnionPattern)pattern,rootVisitor,question);
+			}
 			break;
 		default:
 			pattern.setResolved(true);
@@ -93,6 +108,30 @@ public class PPatternAssistant {
 				ARecordPatternAssistant.unResolve((ARecordPattern)pattern);
 			}
 			break;
+		case SEQ:
+			if(pattern instanceof ASeqPattern)
+			{
+				ASeqPatternAssistant.unResolve((ASeqPattern)pattern);
+			}
+			break;
+		case SET:
+			if(pattern instanceof ASetPattern)
+			{
+				ASetPatternAssistant.unResolve((ASetPattern)pattern);
+			}
+			break;
+		case TUPLE:
+			if(pattern instanceof ATuplePattern)
+			{
+				ATuplePatternAssistant.unResolve((ATuplePattern)pattern);
+			}
+			break;
+		case UNION:
+			if(pattern instanceof AUnionPattern)
+			{
+				AUnionPatternAssistant.unResolve((AUnionPattern)pattern);
+			}
+			break;		
 		default:
 			pattern.setResolved(false);
 		}
@@ -106,6 +145,13 @@ public class PPatternAssistant {
 		for (PPattern pPattern : plist) {
 			typeResolve(pPattern, rootVisitor, question);
 		}		
+	}
+
+	public static void unResolve(NodeList<PPattern> plist) {
+		
+		for (PPattern pPattern : plist) {
+			unResolve(pPattern);
+		}	
 	}
 
 }
