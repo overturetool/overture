@@ -300,8 +300,15 @@ public class PDefinitionAssistant {
 		
 		
 	}
-
 	
-
+	public static boolean isCallableOperation(PDefinition def)
+	{
+		Boolean result = false;
+		switch (def.kindPDefinition()) {
+					
+		}
+		
+		return result;
+	}
 	
 }
