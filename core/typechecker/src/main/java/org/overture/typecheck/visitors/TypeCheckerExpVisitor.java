@@ -1,6 +1,5 @@
 package org.overture.typecheck.visitors;
 
-import java.lang.instrument.ClassDefinition;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.expressions.AApplyExp;
@@ -30,6 +28,8 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AFieldNumberExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -71,6 +71,7 @@ import org.overture.ast.types.AMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1Type;
@@ -89,16 +90,13 @@ import org.overture.runtime.Environment;
 import org.overture.runtime.FlatCheckedEnvironment;
 import org.overture.runtime.TypeChecker;
 import org.overture.runtime.TypeComparator;
-import org.overture.runtime.TypeList;
 import org.overture.typecheck.LexNameTokenAssistent;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-
-
-
 
 
 
@@ -206,7 +204,7 @@ public class TypeCheckerExpVisitor extends
 			if (inFunction && Settings.release == Release.VDM_10)
 			{
 				TypeCheckerErrors.report(3300, "Operation '" + node.getRoot() + "' cannot be called from a function",node.getLocation(),node);
-				results.add(new AUnknownType(node.getLocation(),false));
+				results.add(new AUnknownType(node.getLocation(),false,null));
 			}
 			else
 			{
@@ -229,7 +227,7 @@ public class TypeCheckerExpVisitor extends
 		if (results.isEmpty())
 		{
 			TypeCheckerErrors.report(3054, "Type " + node.getType() + " cannot be applied",node.getLocation(),node);
-			return new AUnknownType(node.getLocation(),false);
+			return new AUnknownType(node.getLocation(),false,null);
 		}
 
 		node.setType(PTypeAssistant.getType(results,node.getLocation()));
@@ -241,7 +239,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) {
 		
-		SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), true),rootVisitor,question);
+		SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), true,null),rootVisitor,question);
 		return node.getType();
 		
 	}
@@ -259,7 +257,7 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.report(3068, "Right hand of map 'comp' is not a map",node.getLocation(),node);
     			TypeCheckerErrors.detail("Type", node.getRight().getType());
-    			return new AMapType(node.getLocation(),false, null, null, null);	// Unknown types
+    			return new AMapType(node.getLocation(),false, null, null, null,null);	// Unknown types
     		}
 
     		AMapType lm = PTypeAssistant.getMap(node.getLeft().getType());
@@ -271,7 +269,7 @@ public class TypeCheckerExpVisitor extends
     			TypeCheckerErrors.detail2("Dom", lm.getFrom(), "Rng", rm.getTo());
     		}
 
-    		results.add(new AMapType(node.getLocation(), false, rm.getFrom(), lm.getTo(), null));
+    		results.add(new AMapType(node.getLocation(), false, null, rm.getFrom(), lm.getTo(), null));
 		}
 
 		if (PTypeAssistant.isFunction(node.getLeft().getType()))
@@ -280,7 +278,7 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.report(3070, "Right hand of function 'comp' is not a function",node.getLocation(),node);
     			TypeCheckerErrors.detail("Type", node.getRight().getType());
-    			return new AUnknownType(node.getLocation(),false);
+    			return new AUnknownType(node.getLocation(),false,null);
     		}
     		else
     		{
@@ -304,7 +302,7 @@ public class TypeCheckerExpVisitor extends
         		}
 
         		results.add(
-        			new AFunctionType(node.getLocation(), false, true, rf.getParameters(), lf.getResult()));
+        			new AFunctionType(node.getLocation(), false,null, true, rf.getParameters(), lf.getResult()));
     		}
 		}
 
@@ -312,7 +310,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3074, "Left hand of 'comp' is neither a map nor a function",node.getLocation(),node);
 			TypeCheckerErrors.detail("Type", node.getLeft().getType());
-			return new AUnknownType(node.getLocation(),false);
+			return new AUnknownType(node.getLocation(),false,null);
 		}
 
 		node.setType( PTypeAssistant.getType(results,node.getLocation()));		
@@ -392,7 +390,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail2("Left", node.getLeft().getType(), "Right", node.getRight().getType());
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(),true));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType();
 	}
 	
@@ -407,7 +405,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3110, "Argument of 'in set' is not a set",node.getLocation(),node);
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(),true));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType();
 	}
 	
@@ -423,7 +421,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3123, "Left hand of 'munion' is not a map",node.getLocation(),node);
 			TypeCheckerErrors.detail("Type", node.getLeft().getType());
-			node.setType(new AMapType(node.getLocation(),false,null, null, null ));	// Unknown types
+			node.setType(new AMapType(node.getLocation(),false,null,null, null, null ));	// Unknown types
 			return node.getType();
 		}
 		else if (!PTypeAssistant.isMap(node.getRight().getType()))
@@ -443,7 +441,7 @@ public class TypeCheckerExpVisitor extends
 			Set<PType> to =  new HashSet<PType>();
 			to.add(ml.getTo()); to.add(mr.getTo());
 
-			node.setType(new AMapType(node.getLocation(),false,
+			node.setType(new AMapType(node.getLocation(),false,null,
 					PTypeAssistant.getType(from,node.getLocation()), PTypeAssistant.getType(to,node.getLocation()), null));
 			return node.getType();
 		}
@@ -461,7 +459,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail2("Left", node.getLeft().getType(), "Right", node.getRight().getType());
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(),true));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType();
 	}
 	
@@ -477,7 +475,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(),true));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType();
 	}
 	
@@ -487,7 +485,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question) {
 		
 		SNumericBasicTypeAssistant.checkNumeric(node,rootVisitor,question);
-		node.setType(new AIntNumericBasicType(node.getLocation(),false));
+		node.setType(new AIntNumericBasicType(node.getLocation(),false,null));
 		return node.getType() ;
 	}
 	
@@ -496,7 +494,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question) {
 		
 		SNumericBasicTypeAssistant.checkNumeric(node,rootVisitor,question);
-		node.setType(new ARealNumericBasicType(node.getLocation(),false));
+		node.setType(new ARealNumericBasicType(node.getLocation(),false,null));
 		return node.getType() ;
 	}
 	
@@ -505,7 +503,7 @@ public class TypeCheckerExpVisitor extends
 			AGreaterEqualNumericBinaryExp node, TypeCheckInfo question) {
 		
 		SNumericBasicTypeAssistant.checkNumeric(node,rootVisitor,question);
-		node.setType(new ABooleanBasicType(node.getLocation(),false));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType() ;
 	}
 	
@@ -514,7 +512,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question) {
 		
 		SNumericBasicTypeAssistant.checkNumeric(node,rootVisitor,question);
-		node.setType(new ABooleanBasicType(node.getLocation(),false));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType() ;
 	}
 	
@@ -523,7 +521,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question) {
 	
 		SNumericBasicTypeAssistant.checkNumeric(node,rootVisitor,question);
-		node.setType(new ANatNumericBasicType(node.getLocation(),false));
+		node.setType(new ANatNumericBasicType(node.getLocation(),false,null));
 		return node.getType() ;
 		
 	}
@@ -558,7 +556,7 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{
-			return new ANatOneNumericBasicType(ln.getLocation(),false);
+			return new ANatOneNumericBasicType(ln.getLocation(),false,null);
 		}
 	}
 	
@@ -568,7 +566,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question) {
 		
 		SNumericBasicTypeAssistant.checkNumeric(node,rootVisitor,question);
-		node.setType(new AIntNumericBasicType(node.getLocation(),false));
+		node.setType(new AIntNumericBasicType(node.getLocation(),false,null));
 		return node.getType() ;
 		
 	}
@@ -582,11 +580,11 @@ public class TypeCheckerExpVisitor extends
 
 		if (node.getLeft().getType() instanceof ARealNumericBasicType || node.getRight().getType() instanceof ARealNumericBasicType)
 		{
-			return new ARealNumericBasicType(node.getLocation(),false);
+			return new ARealNumericBasicType(node.getLocation(),false,null);
 		}
 		else
 		{
-			return new AIntNumericBasicType(node.getLocation(), false);
+			return new AIntNumericBasicType(node.getLocation(), false,null);
 		}
 	}
 	
@@ -621,7 +619,7 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{
-			return new ANatOneNumericBasicType(ln.getLocation(),false);
+			return new ANatOneNumericBasicType(ln.getLocation(),false,null);
 		}
 	}
 	
@@ -643,7 +641,7 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.concern(unique, 3141, "Right hand of '++' is not a map",node.getLocation(),node);
     			TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
-    			return new AMapType(node.getLocation(),false, null, null, null );	// Unknown types
+    			return new AMapType(node.getLocation(),false,null, null, null, null );	// Unknown types
     		}
 
     		AMapType lm = PTypeAssistant.getMap(node.getLeft().getType());
@@ -654,7 +652,7 @@ public class TypeCheckerExpVisitor extends
     		Set<PType> range = new HashSet<PType>(); 
     		range.add(lm.getTo()); range.add(rm.getTo());
 
-    		result.add(new AMapType(node.getLocation(),false,
+    		result.add(new AMapType(node.getLocation(),false,null,
     			PTypeAssistant.getType(domain,node.getLocation()), PTypeAssistant.getType(range,node.getLocation()),false));
 		}
 			
@@ -684,7 +682,7 @@ public class TypeCheckerExpVisitor extends
 		if (result.isEmpty())
 		{
 			TypeCheckerErrors.report(3144, "Left of '++' is neither a map nor a sequence",node.getLocation(),node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(new AUnknownType(node.getLocation(), false,null));
 			return node.getType();
 		}
 
@@ -712,7 +710,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3147, "Right hand of " + node.getOp() + " is not a set", node.getLocation(),node);
 		}
 
-		return new ABooleanBasicType(node.getLocation(),false);
+		return new ABooleanBasicType(node.getLocation(),false,null);
 	}
 	
 	@Override
@@ -795,13 +793,13 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(ltype))
 		{
 			TypeCheckerErrors.report(3157, "Left hand of '^' is not a sequence",node.getLocation(),node);
-			ltype = new ASeqType(node.getLocation(), false, new AUnknownType(node.getLocation(),false), null);
+			ltype = new ASeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
 		}
 
 		if (!PTypeAssistant.isSeq(rtype))
 		{
 			TypeCheckerErrors.report(3158, "Right hand of '^' is not a sequence",node.getLocation(),node);
-			rtype = new ASeqType(node.getLocation(), false, new AUnknownType(node.getLocation(),false), null);
+			rtype = new ASeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
 		}
 
 		PType lof = PTypeAssistant.getSeq(ltype);
@@ -814,8 +812,8 @@ public class TypeCheckerExpVisitor extends
 		ts.add(lof); ts.add(rof);
 		
 		node.setType(seq1 ?
-			new ASeq1Type(node.getLocation(), false, PTypeAssistant.getType(ts,node.getLocation()),null) :
-			new ASeqType(node.getLocation(), false, PTypeAssistant.getType(ts,node.getLocation()),null));
+			new ASeq1Type(node.getLocation(), false,null, PTypeAssistant.getType(ts,node.getLocation()),null) :
+			new ASeqType(node.getLocation(), false,null, PTypeAssistant.getType(ts,node.getLocation()),null));
 		return node.getType();
 	}
 	
@@ -943,7 +941,7 @@ public class TypeCheckerExpVisitor extends
 		else
 		{
 			TypeCheckerErrors.report(3173, "First arg of '**' must be a map, function or number",node.getLocation(),node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(new AUnknownType(node.getLocation(), false,null));
 			return node.getType();
 		}
 		
@@ -974,7 +972,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail("Type", rtype);
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(),false));
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
 		return node.getType();
 	}
 	
@@ -982,7 +980,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseABooleanConstExp(ABooleanConstExp node,
 			TypeCheckInfo question) {
-		node.setType(new ABooleanBasicType(node.getLocation(), false)); 
+		node.setType(new ABooleanBasicType(node.getLocation(), false,null)); 
 		return node.getType();
 	}
 	
@@ -1012,7 +1010,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseACharConstExp(ACharConstExp node, TypeCheckInfo question) {
 		
-		node.setType(new ACharBasicType(node.getLocation(), false));
+		node.setType(new ACharBasicType(node.getLocation(), false,null));
 		return node.getType();
 	}
 	
@@ -1042,7 +1040,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		return new ABooleanBasicType(node.getLocation(),false);
+		return new ABooleanBasicType(node.getLocation(),false,null);
 	}
 	
 	@Override
@@ -1059,7 +1057,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		return new ABooleanBasicType(node.getLocation(),false);
+		return new ABooleanBasicType(node.getLocation(),false,null);
 	}
 	
 	@Override
@@ -1185,7 +1183,7 @@ public class TypeCheckerExpVisitor extends
     			TypeCheckerErrors.report(3093, "Field '" + node.getField().name + "' applied to non-aggregate type",node.getObject().getLocation(),node.getObject());
     		}
 
-    		node.setType(new AUnknownType(node.getLocation(),false));
+    		node.setType(new AUnknownType(node.getLocation(),false,null));
     		return node.getType();
 		}
 
@@ -1193,6 +1191,169 @@ public class TypeCheckerExpVisitor extends
 		return node.getType();
 	}
 	
+	
+	@Override
+	public PType caseAFieldNumberExp(AFieldNumberExp node,
+			TypeCheckInfo question) {
+		
+		PExp tuple = node.getTuple();
+		question.qualifiers = null;
+		PType type = tuple.apply(rootVisitor, question);		
+		node.setType(type);
+
+		if (!PTypeAssistant.isProduct(type))
+		{
+			TypeCheckerErrors.report(3094, "Field '#" + node.getField() + "' applied to non-tuple type",tuple.getLocation(),tuple);
+			node.setType(new AUnknownType(node.getLocation(),false,null));
+			return node.getType();
+		}
+
+		AProductType product = PTypeAssistant.getProduct(type);
+		long fn = node.getField().value;
+
+		if (fn > product.getTypes().size() || fn < 1)
+		{
+			TypeCheckerErrors.report(3095, "Field number does not match tuple size",node.getField().location,node.getField());
+			node.setType(new AUnknownType(node.getLocation(),false,null));
+			return node.getType();
+		}
+		
+		node.setType(product.getTypes().get((int)fn - 1));
+		return node.getType();
+	}
+	
+	
+	@Override
+	public PType caseAForAllExp(AForAllExp node, TypeCheckInfo question) {
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, node.getBindList(), null);
+		def.apply(rootVisitor, question);		
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+
+		question.qualifiers = null;
+		if (!PTypeAssistant.isType(node.getPredicate().apply(rootVisitor,question),ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3097, "Predicate is not boolean",node.getPredicate().getLocation(),node.getPredicate());
+		}
+
+		local.unusedCheck();
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
+		return node.getType();
+	}
+	
+	
+	@Override
+	public PType caseAFuncInstatiationExp(AFuncInstatiationExp node,
+			TypeCheckInfo question) {
+
+		// If there are no type qualifiers passed because the poly function value
+		// is being accessed alone (not applied). In this case, the null qualifier
+		// will cause VariableExpression to search for anything that matches the
+		// name alone. If there is precisely one, it is selected; if there are
+		// several, this is an ambiguity error.
+		//
+		// Note that a poly function is hard to identify from the actual types
+		// passed here because the number of parameters may not equal the number
+		// of type parameters.
+
+		PType ftype = node.getFunction().apply(rootVisitor, question);
+
+		if (PTypeAssistant.isUnknown(ftype))
+		{
+			node.setType(ftype);
+			return ftype;
+		}
+
+		if (PTypeAssistant.isFunction(ftype))
+		{
+			AFunctionType t = PTypeAssistant.getFunction(ftype);
+			Set<PType> set = new HashSet<PType>();
+
+			if (t.getDefinitions() == null)
+			{
+				TypeCheckerErrors.report(3098, "Function value is not polymorphic",node.getLocation(),node);
+				set.add(new AUnknownType(node.getLocation(),false, null));
+			}
+			else
+			{
+    			boolean serious = (t.getDefinitions().size() == 1);
+
+    			for (PDefinition def: t.getDefinitions())		// Possibly a union of several
+    			{
+    				LexNameList typeParams = null;
+    				def = PDefinitionAssistant.deref(def);
+
+    				if (def instanceof AExplicitFunctionDefinition)
+    				{
+    					node.setExpdef((AExplicitFunctionDefinition)def);
+    					typeParams = expdef.typeParams;
+    				}
+    				else if (def instanceof ImplicitFunctionDefinition)
+    				{
+    					impdef = (ImplicitFunctionDefinition)def;
+    					typeParams = impdef.typeParams;
+    				}
+    				else
+    				{
+    					report(3099, "Polymorphic function is not in scope");
+    					continue;
+    				}
+
+    				if (typeParams == null)
+    				{
+    					concern(serious, 3100, "Function has no type parameters");
+    					continue;
+    				}
+
+    				if (actualTypes.size() != typeParams.size())
+    				{
+    					concern(serious, 3101, "Expecting " + typeParams.size() + " type parameters");
+    					continue;
+    				}
+
+    				TypeList fixed = new TypeList();
+
+    				for (Type ptype: actualTypes)
+    				{
+    					if (ptype instanceof ParameterType)		// Recursive polymorphism
+    					{
+    						ParameterType pt = (ParameterType)ptype;
+    						Definition d = env.findName(pt.name, scope);
+
+    						if (d == null)
+    						{
+    							report(3102, "Parameter name " + pt + " not defined");
+    							ptype = new UnknownType(location);
+    						}
+    						else
+    						{
+    							ptype = d.getType();
+    						}
+    					}
+
+    					fixed.add(ptype.typeResolve(env, null));
+    				}
+
+    				actualTypes = fixed;
+
+    				type = expdef == null ?
+    					impdef.getType(actualTypes) : expdef.getType(actualTypes);
+
+    				set.add(type);
+    			}
+			}
+
+			if (!set.isEmpty())
+			{
+				return set.getType(location);
+			}
+		}
+		else
+		{
+			report(3103, "Function instantiation does not yield a function");
+		}
+
+		return new UnknownType(location);
+	}
 	
 	@Override
 	public PType caseAIfExp(AIfExp node, TypeCheckInfo question) {
@@ -1215,6 +1376,8 @@ public class TypeCheckerExpVisitor extends
 		node.setType(PTypeAssistant.getType(rtypes,node.getLocation()));
 		return node.getType();
 	}
+	
+	
 	
 	
 	@Override

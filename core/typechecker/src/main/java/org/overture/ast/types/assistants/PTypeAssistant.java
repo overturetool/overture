@@ -39,13 +39,7 @@ public class PTypeAssistant {
 		return typeclass.isInstance(b);
 	}
 
-	public static AProductType getProduct(PType result) {
-		if (result instanceof AProductType) {
-			return (AProductType) result;
-		} else {
-			return null;
-		}
-	}
+	
 
 	public static PType getType(Set<PType> rtypes, LexLocation location) {
 		// If there are any Optional(Unknowns) these are the result of
@@ -400,6 +394,29 @@ public class PTypeAssistant {
 			return null;
 		}
 
+	}
+
+	public static AProductType getProduct(PType type) {
+		switch (type.kindPType()) {
+		case PRODUCT:
+			if (type instanceof AProductType) {
+				return (AProductType) type;
+			}
+		default:
+			assert false : "Can't getProduct of a non-product";
+			return null;
+		}
+	}
+	
+	public static boolean isProduct(PType type) {
+		switch (type.kindPType()) {
+		case PRODUCT:
+			if (type instanceof AProductType) {
+				return true;
+			}
+		default:
+			return false;
+		}		
 	}
 
 }

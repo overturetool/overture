@@ -9,7 +9,10 @@ import java.util.Set;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -270,6 +273,32 @@ public class PDefinitionAssistant {
 
 	public static boolean isStatic(PDefinition fdef) {
 		return PAccessSpecifierAssistant.isStatic(fdef.getAccess());
+	}
+
+	public static PDefinition deref(PDefinition def) {
+		switch (def.kindPDefinition()) {
+		case IMPORTED:
+			if( def instanceof AImportedDefinition)
+			{
+				return deref(((AImportedDefinition) def).getDef());
+			}
+			break;
+		case INHERITED:
+			if(def instanceof AInheritedDefinition)
+			{
+				return deref(((AInheritedDefinition) def).getSuperdef());
+			}		
+			break;
+		case RENAMED: 
+			if(def instanceof ARenamedDefinition)
+			{
+				return deref(((ARenamedDefinition) def).getDef());
+			}
+			break;			
+		}
+		return def;
+		
+		
 	}
 
 	

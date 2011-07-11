@@ -12,7 +12,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.patterns.APatternInnerListPatternList;
+import org.overture.ast.node.NodeListList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.types.AFunctionType;
@@ -28,18 +28,18 @@ import org.overturetool.vdmj.typechecker.NameScope;
 public class AExplicitFunctionDefinitionAssistant {
 
 	public static PType checkParams(AExplicitFunctionDefinition node,
-			ListIterator<APatternInnerListPatternList> plists,
+			ListIterator<List<PPattern>> plists,
 			AFunctionType ftype) {
 		NodeList<PType> ptypes = ftype.getParameters();
-		APatternInnerListPatternList patterns = plists.next();
+		List<PPattern> patterns = plists.next();
 
-		if (patterns.getList().size() > ptypes.size())
+		if (patterns.size() > ptypes.size())
 		{
 			TypeChecker.report(3020, "Too many parameter patterns",node.getLocation());
 			TypeChecker.detail2("Pattern(s)", patterns, "Type(s)", ptypes);
 			return ftype.getResult();
 		}
-		else if (patterns.getList().size() < ptypes.size())
+		else if (patterns.size() < ptypes.size())
 		{
 			TypeChecker.report(3021, "Too few parameter patterns",node.getLocation());
 			TypeChecker.detail2("Pattern(s)", patterns, "Type(s)", ptypes);
@@ -73,27 +73,27 @@ public class AExplicitFunctionDefinitionAssistant {
 		return ftype.getResult();
 	}
 
-	public static List<List<PDefinition>> getParamDefinitions(AExplicitFunctionDefinition node,AFunctionType type, NodeList<APatternInnerListPatternList> paramPatternList, LexLocation location)
+	public static List<List<PDefinition>> getParamDefinitions(AExplicitFunctionDefinition node,AFunctionType type, NodeListList<PPattern> paramPatternList, LexLocation location)
 	{
 		List<List<PDefinition>> defList = new ArrayList<List<PDefinition>>(); //new Vector<DefinitionList>();
 		AFunctionType ftype = type;	// Start with the overall function
-		Iterator<APatternInnerListPatternList> piter = paramPatternList.iterator();
+		Iterator<List<PPattern>> piter = paramPatternList.iterator();
 
 		while (piter.hasNext())
 		{
-			APatternInnerListPatternList plist = piter.next();
+			List<PPattern> plist = piter.next();
 			Set<PDefinition> defs = new HashSet<PDefinition>(); 
 			NodeList<PType> ptypes = ftype.getParameters();
 			Iterator<PType> titer = ptypes.iterator();
 
-			if (plist.getList().size() != ptypes.size())
+			if (plist.size() != ptypes.size())
 			{
 				// This is a type/param mismatch, reported elsewhere. But we
 				// have to create definitions to avoid a cascade of errors.
 
 				PType unknown = new AUnknownType(location,false);
 
-				for (PPattern p: plist.getList())
+				for (PPattern p: plist)
 				{
 					defs.addAll(PPatternAssistant.getDefinitions(p,unknown,NameScope.LOCAL));
 
@@ -101,7 +101,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			}
 			else
 			{
-    			for (PPattern p: plist.getList())
+    			for (PPattern p: plist)
     			{
     				defs.addAll(PPatternAssistant.getDefinitions(p,titer.next(),NameScope.LOCAL));					
     			}
