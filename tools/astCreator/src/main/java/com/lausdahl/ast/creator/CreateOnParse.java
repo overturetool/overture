@@ -15,6 +15,7 @@ import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.TokenConstructorMethod;
 import com.lausdahl.ast.creator.parser.AstcLexer;
@@ -65,8 +66,9 @@ public class CreateOnParse
 							{
 								CommonTree p = (CommonTree) production;
 								CommonTree nameNode = (CommonTree) p.getChildren().get(0);
+								String packageName = defaultPackage;
 
-								CommonTreeClassDefinition c = null;
+								IClassDefinition c = null;
 								if (nameNode.getText().equals("#"))
 								{
 									for (IClassDefinition def : env.getClasses())
@@ -77,6 +79,9 @@ public class CreateOnParse
 											c = (CommonTreeClassDefinition) def;
 										}
 									}
+								}else if(nameNode.getText().equals("NODE"))
+								{
+									c = env.node;
 								} else
 								{
 									c = new CommonTreeClassDefinition(nameNode.getText(), null, CommonTreeClassDefinition.ClassType.Production, env);
@@ -106,7 +111,7 @@ public class CreateOnParse
 													CommonTree oo = (CommonTree) o;
 													if (oo.getText().equals("package"))
 													{
-														String packageName = oo.getChild(0).getText();
+														 packageName = oo.getChild(0).getText();
 														c.setPackageName(packageName);
 													}
 												}
@@ -118,7 +123,7 @@ public class CreateOnParse
 											subAlternativeClassDef.setPackageName(defaultPackage);
 										} else
 										{
-											exstractA(c, aa, env, defaultPackage);
+											exstractA(c, aa, env, packageName);
 										}
 									}
 								}
@@ -333,12 +338,17 @@ public class CreateOnParse
 		return name;
 	}
 
-	private static void exstractA(CommonTreeClassDefinition superClass,
-			CommonTree a, Environment env, String defaultPackage)
+	private static void exstractA(IClassDefinition superClass,
+			CommonTree a, Environment env, String thisPackage)
 	{
 		// CommonTree nameNode = (CommonTree)a.getChildren().get(0);
-		CommonTreeClassDefinition c = new CommonTreeClassDefinition(a.getText(), superClass, CommonTreeClassDefinition.ClassType.Alternative, env);
-		c.setPackageName(defaultPackage);
+		CommonTreeClassDefinition.ClassType type = ClassType.Alternative;
+		if(superClass == env.node)
+		{
+			type = ClassType.Production;
+		}
+		CommonTreeClassDefinition c = new CommonTreeClassDefinition(a.getText(), superClass, type, env);
+		c.setPackageName(thisPackage);
 		if (a.getChildCount() > 0)
 		{
 			for (Object f : a.getChildren())

@@ -13,6 +13,7 @@ import org.antlr.runtime.tree.CommonTree;
 import com.lausdahl.ast.creator.ToStringAddOn.ToStringPart.ToStringPartType;
 import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.parser.AstcToStringLexer;
 import com.lausdahl.ast.creator.parser.AstcToStringParser;
 import com.lausdahl.ast.creator.parser.AstcToStringParser.root_return;
@@ -225,7 +226,7 @@ public class ToStringAddOnReader
 					name = "A";
 				}
 			}
-			name += BaseClassDefinition.firstLetterUpper(s.replace("#", ""));
+			name += InterfaceDefinition.javaClassName(BaseClassDefinition.firstLetterUpper(s.replace("#", "")));
 		}
 
 		// String name = (topName.startsWith("#") ? "S" : "P");

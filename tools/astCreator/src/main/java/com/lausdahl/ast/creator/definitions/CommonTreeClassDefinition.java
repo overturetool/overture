@@ -26,7 +26,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 	private ClassType type = ClassType.Alternative;
 	// public IClassDefinition superClass;
 	public String rawName;
-
+	
 	public CommonTreeClassDefinition(String rawName,
 			IClassDefinition superClass, ClassType type, Environment env)
 	{
@@ -236,7 +236,13 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 			case Production:
 				return super.getPackageName();
 			case Alternative:
+				if(super.getPackageName()==null || super.getPackageName().isEmpty())
+				{
 				return getSuperDef().getPackageName();
+				}else
+				{
+					return super.getPackageName();
+				}
 			case Custom:
 
 			case Token:
