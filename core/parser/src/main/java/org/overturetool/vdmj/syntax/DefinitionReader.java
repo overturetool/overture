@@ -385,7 +385,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new ATypeDefinition(id.location,idToName(id),null, 
-				null,null,null,null,invtype,invPattern,invExpression);
+				null,null,null,null,invtype,invPattern,invExpression,false);
 		
 		//return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}

@@ -32,9 +32,9 @@ import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AInMapType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.AMapType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
@@ -114,7 +114,7 @@ public class TypeReader extends SyntaxReader
 			List<PType> list = new Vector<PType>();
 			list.add(type);
 			list.add(readComposeType());
-			type = new AUnionType(token.location, false,null, list);
+			type = new AUnionType(token.location, false,null, list, false, false);
 		}
 
 		return type;
@@ -261,14 +261,14 @@ public class TypeReader extends SyntaxReader
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2251, "Expecting 'to' in map type");
-				type = new AMapType(token.location, false,null, type, readMapType(),false);
+				type = new AMapMapType(token.location, false,null, type, readMapType(),false);
 				break;
 
 			case INMAP:
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2252, "Expecting 'to' in inmap type");
-				type = new AInMapType(token.location, false,null, type, readMapType());
+				type = new AInMapMapType(token.location, false,null, type, readMapType(), false);
 				break;
 
 			default:
@@ -290,7 +290,7 @@ public class TypeReader extends SyntaxReader
 			case SET:
 				nextToken();
 				checkFor(VDMToken.OF, 2253, "Expecting 'of' after set");
-				type = new ASetType(token.location, false,null, readMapType(),false);
+				type = new ASetType(token.location, false,null, readMapType(),false,false);
 				break;
 
 			case SEQ:
