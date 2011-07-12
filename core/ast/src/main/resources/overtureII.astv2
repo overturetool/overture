@@ -222,8 +222,7 @@ type {-> package='org.overture.ast.types'}
     |   {class} [name]:LexNameToken [classdef]:definition.class 
     |   {function} [partial]:java_Boolean [parameters]:type* [result]:type 
     |   #invariant
-    |   {map}   [from]:type [to]:type [empty]:java_Boolean
-    |   {inMap} [from]:type [to]:type 
+    |   #Map 
     |   {operation} [parameters]:type* [result]:type
     |   {optional} [type]:type
     |   {parameter} [name]:LexNameToken
@@ -231,15 +230,19 @@ type {-> package='org.overture.ast.types'}
     |   {quote} [value]:string_literal //TODO whats the value type
     |   {seq} [seqof]:type [empty]:java_Boolean
     |   {seq1} [seqof]:type [empty]:java_Boolean
-    |   {set} [setof]:type [empty]:java_Boolean
+    |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
-    |   {union} [types]:type* //should be a type set
+    |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean
     |   {unknown}
     |   {unresolved} [typename]:LexNameToken
     |   {voidReturn}
     |   {void} 
     ;
 
+#Map  {-> package='org.overture.ast.types'}
+    =   {inMap} 
+    |   {map}
+    ;
 #invariant {-> package='org.overture.ast.types'}
     =   {named} [name]:LexNameToken [type]:type [invdef]:explicitFunction //super = invariant type
     |   {record} [name]:LexNameToken [fields]:field.field* [invdef]:explicitFunction //super = invariant type
@@ -384,7 +387,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp
+    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [infinite]:java_Boolean
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
     ;
@@ -590,7 +593,8 @@ Aspect Declaration
     = [importType]:type
     ;
      
-    
+%type->#Map = [from]:type [to]:type [empty]:java_Boolean
+    ;
 %export 
     =   [location]:location [definition]:definition*
     ;
