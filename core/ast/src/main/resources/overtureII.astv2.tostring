@@ -5,13 +5,50 @@ import org.overturetool.util.Utils;
 
 //  Expressions
 
-%exp->apply = [root] "("+ $Utils.listToString($ [args] $)$+  ")"
+%exp->apply = [root] "(" $Utils.listToString($ [args] $)$+  ")"
+%exp->boolean_const =  [value] 
+%exp->cases = "(cases "  [expression] + " :\n"  $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
+//
+%alternative->case ="case "  [pattern] + " -> "  [result] 
 
-//%exp->cases = [expression] [cases] [others]
-%exp->#Unary->absolute ="(abs " [exp] ")"
+%exp->#Unary->absolute ="(abs "  [exp]+")"
+%exp->#Unary->cardinality ="(card "  [exp]+")"
+%exp->#Unary->distConcat ="(conc "  [exp]+")"
+%exp->#Unary->distIntersect ="(dinter "  [exp]+")"
+%exp->#Unary->distMerge ="(merge "  [exp]+")"
+%exp->#Unary->distUnion ="(dunion "  [exp]+")"
+%exp->#Unary->elements ="(elems "  [exp]+")"
+%exp->#Unary->floor ="(floor "  [exp]+")"
+%exp->#Unary->head ="(hd "  [exp]+")"
+%exp->#Unary->indices ="(inds "  [exp]+")"
+%exp->#Unary->len ="(len "  [exp]+")"
+%exp->#Unary->mapDomain ="(dom "  [exp]+")"
+%exp->#Unary->mapInverse ="(inverse "  [exp]+")"
+%exp->#Unary->mapRange ="(rng "  [exp]+")"
+%exp->#Unary->not ="(not "  [exp]+")"
+%exp->#Unary->powerSet ="(power "  [exp]+")"
+%exp->#Unary->reverse ="(reverse "  [exp]+")"
+%exp->#Unary->tail ="(tl "  [exp]+")"
+%exp->#Unary->unaryMinus ="(- "  [exp]+")"
+%exp->#Unary->unaryPlus ="(+ "  [exp]+")"
 
+%exp->#binary->#Boolean->and = [left] "and" [right]
+%exp->#binary->#Boolean->equivalent = [left] "<=>" [right]
+%exp->#binary->#Boolean->implies = [left] "=>" [right]
+%exp->#binary->#Boolean->or = [left] "or" [right]
 
-%exp->#binary->#numeric->plus = [left] "+" [right]
+%exp->#binary->#Numeric->div = [left] "div" [right]
+%exp->#binary->#Numeric->divide = [left] "/" [right]
+%exp->#binary->#Numeric->greaterEqual = [left] ">=" [right]
+%exp->#binary->#Numeric->greater = [left] ">" [right]
+%exp->#binary->#Numeric->lessEqual = [left] "<=" [right]
+%exp->#binary->#Numeric->less = [left] "<" [right]
+%exp->#binary->#Numeric->mod = [left] "mod" [right]
+%exp->#binary->#Numeric->plus = [left] "+" [right]
+%exp->#binary->#Numeric->rem = [left] "rem" [right]
+%exp->#binary->#Numeric->substract = [left] "-" [right]
+%exp->#binary->#Numeric->times = [left] "*" [right]
+
 
 
 %exp->letBeSt = "let " [bind] + $($ [suchThat] $== null ? "" : " be st ")$+ [suchThat]  " in " [value]
