@@ -1,13 +1,14 @@
 package com.lausdahl.ast.creator.definitions;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IInterfaceDefinition
 {
 
 	public abstract String getName();
 
-	public abstract List<String> getImports();
+	public abstract Set<String> getImports();
 
 	public abstract boolean isFinal();
 

@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
@@ -41,7 +43,7 @@ public abstract class Method
 	public String body;
 	public String annotation;
 	public IClassDefinition classDefinition;
-	protected List<String> requiredImports = new Vector<String>();
+	protected Set<String> requiredImports =new HashSet<String>();
 //	private boolean isStructureFinal = false;
 	protected boolean skip = false;
 	protected boolean optionalVdmArgument = true;
@@ -98,7 +100,7 @@ public abstract class Method
 		prepare();
 	}
 
-	public List<String> getRequiredImports()
+	public Set<String> getRequiredImports()
 	{
 		internalPrepare();
 		addImportForType(returnType);

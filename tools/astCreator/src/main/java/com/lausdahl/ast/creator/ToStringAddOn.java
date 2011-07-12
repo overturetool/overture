@@ -9,7 +9,7 @@ public class ToStringAddOn
 	{
 		public enum ToStringPartType
 		{
-			String, Field, RawJava, Plus
+			String, Field, RawJava, Plus, Unknown, Import
 		};
 
 		public ToStringPartType type = ToStringPartType.String;

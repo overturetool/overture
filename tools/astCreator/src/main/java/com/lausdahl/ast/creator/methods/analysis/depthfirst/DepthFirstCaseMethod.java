@@ -31,7 +31,7 @@ public class DepthFirstCaseMethod extends Method
 				+ c.getName()
 				+ "#apply("
 				+ (c.getInterfaces().isEmpty() ? c.getSignatureName()
-						: c.getInterfaces().get(0).getSignatureName())
+						: c.getInterfaces().iterator().next().getSignatureName())
 				+ ")}.\n");
 		sb.append("\t* @param node the calling {@link " + c.getName()
 				+ "} node\n");

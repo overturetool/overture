@@ -6,11 +6,10 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
-import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
-import com.lausdahl.ast.creator.definitions.JavaTypes;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.definitions.JavaTypes;
 
 public class CloneWithMapMethod extends CloneMethod
 {

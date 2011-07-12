@@ -1,7 +1,9 @@
 package com.lausdahl.ast.creator.definitions;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.methods.Method;
@@ -9,7 +11,7 @@ import com.lausdahl.ast.creator.methods.Method;
 public class InterfaceDefinition implements IInterfaceDefinition
 {
 	public List<Method> methods = new Vector<Method>();
-	public List<IInterfaceDefinition> imports = new Vector<IInterfaceDefinition>();
+	public Set<IInterfaceDefinition> imports = new HashSet<IInterfaceDefinition>();
 	List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 	public List<String> supers = new Vector<String>();
 	protected String name;
@@ -61,27 +63,21 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getImports()
 	 */
 	
-	public List<String> getImports()
+	public Set<String> getImports()
 	{
-		List<String> imports = new Vector<String>();
+		Set<String> imports = new HashSet<String>();
 
 		for (IInterfaceDefinition i : this.imports)
 		{
 			String n = i.getPackageName() + "." + i.getSignatureName();
-			if (!imports.contains(n))
-			{
-				imports.add(n);
-			}
+			imports.add(n);
 		}
 		// imports.addAll(this.imports);
 		for (Method m : methods)
 		{
 			for (String string : m.getRequiredImports())
 			{
-				if (!imports.contains(string))
-				{
-					imports.add(string);
-				}
+				imports.add(string);
 			}
 		}
 

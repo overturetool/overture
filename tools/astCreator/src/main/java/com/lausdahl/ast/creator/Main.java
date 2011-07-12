@@ -36,37 +36,45 @@ public class Main
 	 */
 	public static void main(String[] args) throws Exception
 	{
-		if (!test)
+		try
 		{
-			System.out.println("Running with overture II");
-			generated = new File("..\\..\\core\\ast\\src\\main\\java\\");
-			System.out.println("Generator starting with input: "
-					+ INPUT_FILENAME_OVERTURE_II);
-			String defaultPackage = "org.overture.ast.node";
-			String analysisPackage = "org.overture.ast.analysis";
-			Environment env1 = create(INPUT_FILENAME_OVERTURE_II, defaultPackage, analysisPackage, "", generated, true);
-			System.out.println("\n\nGenerator completed with "
-					+ env1.getAllDefinitions().size() + " generated files.\n\n");
-		} else
-		{
-			System.out.println("TESTING...");
-			generated = new File("..\\..\\astTest\\src\\");
-			System.out.println("Generator starting with input: "
-					+ INPUT_FILENAME);
-			String defaultPackage = "org.overture.ast.node";
-			String analysisPackage = "org.overture.ast.analysis";
-			Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
-
-			if (extend)
+			if (!test)
 			{
-				defaultPackage = "org.overture.interpreter.ast.node";
-				analysisPackage = "org.overture.interpreter.ast.analysis";
-				String extendName = "Interpreter";
-				Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
+				System.out.println("Running with overture II");
+				generated = new File("..\\..\\core\\ast\\src\\main\\java\\");
+				System.out.println("Generator starting with input: "
+						+ INPUT_FILENAME_OVERTURE_II);
+				String defaultPackage = "org.overture.ast.node";
+				String analysisPackage = "org.overture.ast.analysis";
+				Environment env1 = create(INPUT_FILENAME_OVERTURE_II, defaultPackage, analysisPackage, "", generated, true);
+				System.out.println("\n\nGenerator completed with "
+						+ env1.getAllDefinitions().size()
+						+ " generated files.\n\n");
+			} else
+			{
+				System.out.println("TESTING...");
+				generated = new File("..\\..\\astTest\\src\\");
+				System.out.println("Generator starting with input: "
+						+ INPUT_FILENAME);
+				String defaultPackage = "org.overture.ast.node";
+				String analysisPackage = "org.overture.ast.analysis";
+				Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
 
-				createCopyAdaptor(env1, env2, defaultPackage, extendName, generated);
+				if (extend)
+				{
+					defaultPackage = "org.overture.interpreter.ast.node";
+					analysisPackage = "org.overture.interpreter.ast.analysis";
+					String extendName = "Interpreter";
+					Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
+
+					createCopyAdaptor(env1, env2, defaultPackage, extendName, generated);
+				}
+				System.out.println("TESTING...DONE.");
 			}
-			System.out.println("TESTING...DONE.");
+		} catch (AstCreatorException e)
+		{
+			System.err.println();
+			System.err.println(e.getMessage());
 		}
 
 	}
@@ -74,7 +82,7 @@ public class Main
 	public static Environment create(String inputFile, String defaultPackage,
 			String analysisPackage, String extendName, File outputBase,
 			boolean write) throws IOException, InstantiationException,
-			IllegalAccessException
+			IllegalAccessException, AstCreatorException
 	{
 		Environment env = new Generator().generate(inputFile, defaultPackage, analysisPackage);
 

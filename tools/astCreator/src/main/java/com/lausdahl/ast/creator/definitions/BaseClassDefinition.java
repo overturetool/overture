@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.definitions;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.ToStringAddOn;
@@ -11,7 +13,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 {
 	protected List<Field> fields = new Vector<Field>();
 	protected List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
-	public List<IInterfaceDefinition> interfaces = new Vector<IInterfaceDefinition>();
+	public Set<IInterfaceDefinition> interfaces = new HashSet<IInterfaceDefinition>();
 	public IClassDefinition superDef;
 
 	public BaseClassDefinition(String name)
@@ -38,46 +40,35 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	}
 
 	@Override
-	public List<String> getImports()
+	public Set<String> getImports()
 	{
-		List<String> imports = new Vector<String>();
+		Set<String> imports = new HashSet<String>();
 
 		if (getSuperDef() != null)
 		{
 			String n = getSuperDef().getPackageName() + "."
 					+ getSuperDef().getSignatureName();
-			if (!imports.contains(n))
-			{
+			
 				imports.add(n);
-			}
 		}
 
 		for (IInterfaceDefinition i : this.imports)
 		{
 			String n = i.getPackageName() + "." + i.getSignatureName();
-			if (!imports.contains(n))
-			{
 				imports.add(n);
-			}
 		}
 		
 		for (IInterfaceDefinition i : this.interfaces)
 		{
 			String n = i.getPackageName() + "." + i.getSignatureName();
-			if (!imports.contains(n))
-			{
 				imports.add(n);
-			}
 		}
 		// imports.addAll(this.imports);
 		for (Method m : methods)
 		{
 			for (String string : m.getRequiredImports())
 			{
-				if (!imports.contains(string))
-				{
 					imports.add(string);
-				}
 			}
 		}
 
@@ -85,10 +76,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			for (String string : m.getRequiredImports())
 			{
-				if (!imports.contains(string) /* && m.isList */)// TODO
-				{
-					imports.add(string);
-				}
+				imports.add(string);
 			}
 		}
 
@@ -326,7 +314,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 
 
-	public List<IInterfaceDefinition> getInterfaces()
+	public Set<IInterfaceDefinition> getInterfaces()
 	{
 		return this.interfaces;
 	}

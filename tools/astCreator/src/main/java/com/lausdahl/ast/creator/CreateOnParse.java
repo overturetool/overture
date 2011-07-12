@@ -23,7 +23,7 @@ import com.lausdahl.ast.creator.parser.AstcParser;
 public class CreateOnParse
 {
 	public Environment parse(String astFile, String defaultPackage)
-			throws IOException
+			throws IOException, AstCreatorException
 	{
 		Environment env = new Environment(defaultPackage);
 
@@ -32,10 +32,23 @@ public class CreateOnParse
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		AstcParser parser = new AstcParser(tokens);
+		AstcParser.root_return result = null;
+		try
+		{
+			result = parser.root();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new AstCreatorException("Exception in AST parser", e, true);
+		}
+
+		if (parser.hasErrors() || parser.hasExceptions())
+		{
+			throw new AstCreatorException("Errors in AST input file", null, true);
+		}
 
 		try
 		{
-			AstcParser.root_return result = parser.root();
 			CommonTree t = (CommonTree) result.getTree();
 
 			show(t, 0);
@@ -255,6 +268,7 @@ public class CreateOnParse
 		} catch (Exception e)
 		{
 			e.printStackTrace();
+			throw new AstCreatorException("Exception in AST parser", e, true);
 		}
 
 		return env;
@@ -292,13 +306,13 @@ public class CreateOnParse
 					name = "P";
 				}
 			}
-			name +=BaseClassDefinition.firstLetterUpper(s.replace("#", ""));
+			name += BaseClassDefinition.firstLetterUpper(s.replace("#", ""));
 		}
 
-//		String name = (topName.startsWith("#") ? "S" : "P");
-//
-//		name += BaseClassDefinition.firstLetterUpper(topName.substring(topName.startsWith("#") ? 1
-//				: 0));
+		// String name = (topName.startsWith("#") ? "S" : "P");
+		//
+		// name += BaseClassDefinition.firstLetterUpper(topName.substring(topName.startsWith("#") ? 1
+		// : 0));
 
 		return name;
 	}

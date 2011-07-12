@@ -157,6 +157,7 @@ package com.lausdahl.ast.creator.parser;
      */
      @Override
     public void emitErrorMessage(String pMessage) {
+        mHasErrors=true;
         if (mMessageCollectionEnabled) {
             mMessages.add(pMessage);
         } else {

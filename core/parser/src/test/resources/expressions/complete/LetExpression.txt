@@ -1,1 +1,1 @@
-let a : int in skip;
+let a : int=0 in false;

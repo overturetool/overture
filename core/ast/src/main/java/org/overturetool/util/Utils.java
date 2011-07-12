@@ -59,7 +59,7 @@ public class Utils
 		return sb.toString();
 	}
 
-	public static <T> String setToString(Set<T> set, String separator)
+	public static <T> String setToString(List<T> set, String separator)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");

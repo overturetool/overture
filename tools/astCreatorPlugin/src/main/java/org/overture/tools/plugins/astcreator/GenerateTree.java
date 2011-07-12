@@ -40,10 +40,15 @@ public class GenerateTree extends AstCreatorBaseMojo
 			return;
 		}
 		
+		File toStringAstFile = new File(treeNames.get(0).getAbsolutePath()+".tostring");
+		
 		if(isCrcEqual(treeNames.get(0)))
 		{
+			if(toStringAstFile.exists() && isCrcEqual(toStringAstFile))
+			{
 			getLog().info("Nothing to generate, source already up-to-date");
 			return;
+			}
 		}
 
 		if (folderToDeletePreGenerate != null)
@@ -67,6 +72,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 				{
 					env1 = Main.create(file.getAbsolutePath(), defaultPackage, analysisPackage, "", generated, true);
 					setCrc(file);
+					setCrc(toStringAstFile);
 				} catch (Exception e)
 				{
 					getLog().error(e);

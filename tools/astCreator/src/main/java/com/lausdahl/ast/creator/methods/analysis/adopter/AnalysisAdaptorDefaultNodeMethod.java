@@ -25,7 +25,7 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
 		sb.append("\t* Called by the {@link " + c.getName()
-				+ "} node from {@link " + c.getName() + "#apply("+(c.getInterfaces().isEmpty()?c.getSignatureName():c.getInterfaces().get(0).getSignatureName())+")}.\n");
+				+ "} node from {@link " + c.getName() + "#apply("+(c.getInterfaces().isEmpty()?c.getSignatureName():c.getInterfaces().iterator().next().getSignatureName())+")}.\n");
 		sb.append("\t* @param node the calling {@link " + c.getName()
 				+ "} node\n");
 		sb.append("\t*/");

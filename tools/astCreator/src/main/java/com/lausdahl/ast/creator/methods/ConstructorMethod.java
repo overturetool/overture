@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
@@ -88,14 +90,12 @@ public class ConstructorMethod extends Method
 	}
 
 	@Override
-	public List<String> getRequiredImports()
+	public Set<String> getRequiredImports()
 	{
-
-		List<String> list = new Vector<String>();
+		Set<String> list = new HashSet<String>();
 		list.addAll(super.getRequiredImports());
 		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
-
 			List<Field> fields = new Vector<Field>();
 			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
 			for (Field field : fields)
@@ -105,10 +105,8 @@ public class ConstructorMethod extends Method
 		}
 		
 		String nodelistpackage = env.nodeList.getPackageName()+"."+env.nodeList.getSignatureName();
-		if(list.contains(nodelistpackage))
-		{
-			list.remove(nodelistpackage);
-		}
+		list.remove(nodelistpackage);
+		
 		return list;
 	}
 

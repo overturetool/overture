@@ -39,12 +39,40 @@ public class Generator
 
 	public Environment generate(String inputFile, String defaultPackage,
 			String analysisPackageName) throws IOException,
-			InstantiationException, IllegalAccessException
+			InstantiationException, IllegalAccessException, AstCreatorException
 	{
-		Environment env = new CreateOnParse().parse(inputFile, defaultPackage);
-		
-		new ToStringAddOnReader().readAndAdd(inputFile+".tostring", env);
+		Environment env = null;
 
+		try
+		{
+			env = new CreateOnParse().parse(inputFile, defaultPackage);
+		} catch (AstCreatorException e)
+		{
+			if (e.fatal)
+			{
+				throw e;
+			} else
+			{
+				System.err.println(e.getMessage());
+			}
+		}
+
+		
+			try
+			{
+				ToStringAddOnReader reader=	new ToStringAddOnReader();
+				reader.readAndAdd(inputFile + ".tostring", env);
+			} catch (AstCreatorException e)
+			{
+				if (e.fatal)
+				{
+					throw e;
+				} else
+				{
+					System.err.println(e.getMessage());
+				}
+			}
+		
 		System.out.println("Generating enumerations...");
 		createNodeEnum(env, defaultPackage);
 		createProductionEnums(env, defaultPackage);
@@ -139,7 +167,7 @@ public class Generator
 	{
 		List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 		genericArguments.add(Environment.A);
-		extendedVisitor("Answer", genericArguments, AnswerAcceptMethod.class, AnswerAdaptorCaseMethod.class, AnswerAdaptorDefaultMethod.class,AnswerAdaptorDefaultNodeMethod.class, AnswerAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IAnswer);
+		extendedVisitor("Answer", genericArguments, AnswerAcceptMethod.class, AnswerAdaptorCaseMethod.class, AnswerAdaptorDefaultMethod.class, AnswerAdaptorDefaultNodeMethod.class, AnswerAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IAnswer);
 	}
 
 	private static void createQuestion(Environment env,
@@ -148,7 +176,7 @@ public class Generator
 	{
 		List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 		genericArguments.add(Environment.Q);
-		extendedVisitor("Question", genericArguments, QuestionAcceptMethod.class, QuestionAdaptorCaseMethod.class, QuestionAdaptorDefaultMethod.class,QuestionAdaptorDefaultNodeMethod.class, QuestionAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IQuestion);
+		extendedVisitor("Question", genericArguments, QuestionAcceptMethod.class, QuestionAdaptorCaseMethod.class, QuestionAdaptorDefaultMethod.class, QuestionAdaptorDefaultNodeMethod.class, QuestionAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IQuestion);
 	}
 
 	private static void createQuestionAnswer(Environment env,
@@ -158,7 +186,7 @@ public class Generator
 		List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 		genericArguments.add(Environment.Q);
 		genericArguments.add(Environment.A);
-		extendedVisitor("QuestionAnswer", genericArguments, QuestionAnswerAcceptMethod.class, QuestionAnswerAdaptorCaseMethod.class, QuestionAnswerAdaptorDefaultMethod.class,QuestionAnswerAdaptorDefaultNodeMethod.class, QuestionAnswerAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IQuestionAnswer);
+		extendedVisitor("QuestionAnswer", genericArguments, QuestionAnswerAcceptMethod.class, QuestionAnswerAdaptorCaseMethod.class, QuestionAnswerAdaptorDefaultMethod.class, QuestionAnswerAdaptorDefaultNodeMethod.class, QuestionAnswerAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IQuestionAnswer);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -224,7 +252,7 @@ public class Generator
 						answerClass.methods.add(m);
 					}
 					case Production:
-					//case SubProduction:
+						// case SubProduction:
 					{
 						// answerClass.methods.add(new AnalysisAdaptorDefaultMethod(c,env));
 						Method m = (Method) defaultCase.newInstance();
@@ -271,68 +299,69 @@ public class Generator
 		return classes;
 	}
 
-//	private void createAnalysisAdaptor(Environment env,
-//			String analysisPackageName)
-//	{
-//		CustomClassDefinition answerClass = new CustomClassDefinition("AnalysisAdaptor", env);
-//		answerClass.setPackageName(analysisPackageName);
-//		answerClass.interfaces.add(env.getTaggedDef(env.TAG_IAnalysis));
-//		answerClass.methods.add(new AnalysisAdaptorDefaultNodeMethod(env));
-//		answerClass.methods.add(new AnalysisAdaptorDefaultTokenMethod(env));
-//
-//		env.addClass(answerClass);
-//		for (IClassDefinition c : env.getClasses())
-//		{
-//			if (c instanceof CommonTreeClassDefinition)
-//			{
-//				CommonTreeClassDefinition cd = (CommonTreeClassDefinition) c;
-//				switch (cd.getType())
-//				{
-//					case Alternative:
-//					case Token:
-//						answerClass.methods.add(new AnalysisAdaptorCaseMethod(c, env));
-//						break;
-//
-//					case Production:
-//					case SubProduction:
-//						answerClass.methods.add(new AnalysisAdaptorDefaultMethod(c, env));
-//						break;
-//
-//					case Custom:
-//						break;
-//					case Unknown:
-//						break;
-//
-//				}
-//			}
-//		}
-//	}
-	private void createdepthFirstAdaptor(Environment source, String defaultPackage) 
+	// private void createAnalysisAdaptor(Environment env,
+	// String analysisPackageName)
+	// {
+	// CustomClassDefinition answerClass = new CustomClassDefinition("AnalysisAdaptor", env);
+	// answerClass.setPackageName(analysisPackageName);
+	// answerClass.interfaces.add(env.getTaggedDef(env.TAG_IAnalysis));
+	// answerClass.methods.add(new AnalysisAdaptorDefaultNodeMethod(env));
+	// answerClass.methods.add(new AnalysisAdaptorDefaultTokenMethod(env));
+	//
+	// env.addClass(answerClass);
+	// for (IClassDefinition c : env.getClasses())
+	// {
+	// if (c instanceof CommonTreeClassDefinition)
+	// {
+	// CommonTreeClassDefinition cd = (CommonTreeClassDefinition) c;
+	// switch (cd.getType())
+	// {
+	// case Alternative:
+	// case Token:
+	// answerClass.methods.add(new AnalysisAdaptorCaseMethod(c, env));
+	// break;
+	//
+	// case Production:
+	// case SubProduction:
+	// answerClass.methods.add(new AnalysisAdaptorDefaultMethod(c, env));
+	// break;
+	//
+	// case Custom:
+	// break;
+	// case Unknown:
+	// break;
+	//
+	// }
+	// }
+	// }
+	// }
+	private void createdepthFirstAdaptor(Environment source,
+			String defaultPackage)
 	{
 		CustomClassDefinition adaptor = new CustomClassDefinition("DepthFirstAnalysisAdaptor", source);
 		adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
 		adaptor.setPackageName(defaultPackage);
-//		copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
+		// copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
 		adaptor.interfaces.add(source.getTaggedDef(source.TAG_IAnalysis));
 
 		for (CommonTreeClassDefinition c : Generator.getClasses(source.getClasses()))
 		{
-			if (c.getType() == IClassDefinition.ClassType.Production /*|| c.getType()==ClassType.SubProduction*/)
+			if (c.getType() == IClassDefinition.ClassType.Production /* || c.getType()==ClassType.SubProduction */)
 			{
 				continue;
 			}
-			
+
 			Method m = new DepthFirstCaseMethod(c, source);
 			m.setClassDefinition(c);
 			m.setEnvironment(source);
 			adaptor.methods.add(m);
 
 		}
-		
-//		copyAdaptor.methods.add(new CopyNode2ExtendedNodeListHelper(source,destination));
+
+		// copyAdaptor.methods.add(new CopyNode2ExtendedNodeListHelper(source,destination));
 		adaptor.imports.addAll(source.getAllDefinitions());
-//		copyAdaptor.imports.addAll(destination.getAllDefinitions());
-		
+		// copyAdaptor.imports.addAll(destination.getAllDefinitions());
+
 		source.addClass(adaptor);
 	}
 }

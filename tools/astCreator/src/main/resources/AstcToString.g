@@ -157,6 +157,7 @@ package com.lausdahl.ast.creator.parser;
      */
      @Override
     public void emitErrorMessage(String pMessage) {
+    mHasErrors=true;
         if (mMessageCollectionEnabled) {
             mMessages.add(pMessage);
         } else {
@@ -205,12 +206,18 @@ root
   
   
 top
-  : TOSTRING_DCL^ toString_*
-  ;
-toString_
-  : '%'^ aspectName ASSIGN ( StringLiteral   | field '+'? | RawJava '+'? )*
+  : TOSTRING_DCL^ imports toString_*
   ;
   
+imports
+  : ('import'^ JAVANAME ';')*
+  ;
+  
+  
+toString_
+  : '%'^ aspectName ASSIGN ( StringLiteral ('+' RawJava)? | field ('+'? RawJava)? | '+' (StringLiteral|field) )* (';'?)!
+  ;
+  //StringLiteral    | field | StringLiteral '+' RawJava | RawJava '+' StringLiteral | RawJava '+'? field '+'? RawJava | RawJava '+' field ('+'?)!(field |StringLiteral )
 RawJava
     :  '$' ( EscapeSequence | ~('\\'|'$') )* '$'
     ; 

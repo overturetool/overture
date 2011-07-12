@@ -1,12 +1,13 @@
 package com.lausdahl.ast.creator.definitions;
 import java.util.List;
+import java.util.Set;
 
 import com.lausdahl.ast.creator.ToStringAddOn;
 
 
 public interface IClassDefinition extends IInterfaceDefinition
 {
-	List<IInterfaceDefinition> getInterfaces();
+	Set<IInterfaceDefinition> getInterfaces();
 
 	String getName();
 	

@@ -1,11 +1,14 @@
 To String Extensions
+// import packages used by external $$ java code
+import org.overturetool.util.Utils;
+
 
 //  Expressions
 
-%exp->apply = [root] "(" $Utils.listToString($ [args] $)$  ")"
+%exp->apply = [root] "("+ $Utils.listToString($ [args] $)$+  ")"
 
 //%exp->cases = [expression] [cases] [others]
-%exp->#Unary->absolute ="(abs " + [exp]+")"
+%exp->#Unary->absolute ="(abs " [exp] ")"
 
 
 %exp->#binary->#numeric->plus = [left] "+" [right]
@@ -13,21 +16,56 @@ To String Extensions
 
 %exp->letBeSt = "let " [bind] + $($ [suchThat] $== null ? "" : " be st ")$+ [suchThat]  " in " [value]
 
-
+ 
 
 %exp->letDef = "let " [localDefs] " in " [expression]
 
 
- 
+//  Types
+%type->#basic->boolean = "bool"
+%type->#basic->char="char"
+%type->#basic->token="token"
+
+%type->#basic->#numeric->int ="int"
+%type->#basic->#numeric->natOne="nat1"
+%type->#basic->#numeric->nat="nat"
+%type->#basic->#numeric->rational="rat"
+%type->#basic->#numeric->real="real"
+
+%type->bracket ="(" [type] ")"
+%type->class =[classdef]$.getName().name$
+%type->function = "(" + $($ [parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + ($[partial]$ ? " -> " : " +> ")$ + [result] + ")"
+%type->#invariant->named = [name]
+%type->#invariant->record = [name]
+//map
+%type->operation = "(" + $($[parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + " ==> "$ + [result] + ")"
+%type->optional = "[" [type] "]"
+%type->parameter = "@" [name]
+%type->product = "" +$Utils.listToString("(",$ [types] $, " * ", ")")$
+%type->quote = "<" [value] ">"
+%type->seq = ""+ $($[empty]$ ? "[]" : "seq of (" + $  [seqof] $+ ")" )$ 
+%type->seq1 = "seq1 of (" + [seqof] + ")"
+%type->set = ""+ $($[empty]$ ? "{}" : "set of (" +$ [setof]$ + ")")$
+%type->undefined = "(undefined)"
+%type->union = ""+$($[types]$.size() == 1?$ [types]$.iterator().next().toString() : Utils.setToString($[types]$, " | "))$
+%type->unknown = "?"
+%type->unresolved = "(unresolved " + [typename] + ")"
+%type->voidReturn = "(return)"
+%type->void = "()"       
+
+
+
 
 
 //  Patterns
 
-
+  
 
 //  Definitions
 %definition->value = [pattern] " : " [expType] " = " [expression]
 
 //  Statements
+
+
 
 

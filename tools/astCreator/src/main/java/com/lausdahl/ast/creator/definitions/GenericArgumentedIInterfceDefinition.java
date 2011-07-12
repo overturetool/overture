@@ -2,6 +2,7 @@ package com.lausdahl.ast.creator.definitions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 public class GenericArgumentedIInterfceDefinition implements
@@ -33,7 +34,7 @@ public class GenericArgumentedIInterfceDefinition implements
 	}
 
 	
-	public List<String> getImports()
+	public Set<String> getImports()
 	{
 		return def.getImports();
 	}

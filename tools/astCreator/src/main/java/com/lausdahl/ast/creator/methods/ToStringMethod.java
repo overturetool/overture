@@ -1,5 +1,11 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
+
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.ToStringAddOn.ToStringPart;
@@ -17,11 +23,19 @@ public class ToStringMethod extends Method
 		this.c = c;
 	}
 
+	String bodyCache = null;
+
 	@Override
 	protected void prepare()
 	{
 		this.name = "toString";
 		this.returnType = "String";
+
+		if (this.bodyCache != null)
+		{
+			this.body = this.bodyCache;
+			return;
+		}
 
 		StringBuilder sb = new StringBuilder();
 
@@ -63,11 +77,23 @@ public class ToStringMethod extends Method
 			}
 		} else
 		{
-			sb.append("\t\treturn");
+			Map<String, String> importMap = new Hashtable<String, String>();
+			for (ToStringAddOn addon : env.getToStringAddOns())
+			{
+				for (ToStringPart p : addon.parts)
+				{
+					if (p.type == ToStringPartType.Import)
+					{
+						String name = p.content.substring(p.content.lastIndexOf('.') + 1);
+						importMap.put(name, p.content);
+					}
+				}
+			}
+			sb.append("\t\treturn \"\" + ");
 
 			for (ToStringAddOn addon : c.getToStringAddOns())
 			{
-				String tmp = " ";
+				String tmp = "";
 				for (int i = 0; i < addon.parts.size(); i++)
 				{
 					ToStringPart p = addon.parts.get(i);
@@ -75,11 +101,14 @@ public class ToStringMethod extends Method
 					switch (p.type)
 					{
 						case Field:
+							boolean found = false;
 							for (Field f : c.getInheritedFields())
 							{
 								if (f.getName().equals("_" + p.content))
 								{
+
 									tmp += f.getName();
+									found = true;
 									break;
 								}
 							}
@@ -89,43 +118,48 @@ public class ToStringMethod extends Method
 								if (f.getName().equals("_" + p.content))
 								{
 									tmp += f.getName();
+									found = true;
 									break;
 								}
 							}
-
-							if (i + 1 < addon.parts.size())
+							if (!found)
 							{
-								if (addon.parts.get(i + 1).type == ToStringPartType.String)
-								{
-									tmp += "+";
-								}
+								showError("Faild to find field \"_" + p.content
+										+ "\" in class " + c.getName());
 							}
 							break;
 						case RawJava:
-							if(p.content.contains("Utils"))
+							for (Entry<String, String> entry : importMap.entrySet())
 							{
-								if(!requiredImports.contains("org.overturetool.util.Utils"))//TODO currently hardcoded
+								if (p.content.contains(entry.getKey()))
 								{
-									requiredImports.add("org.overturetool.util.Utils");
+									requiredImports.add(entry.getValue());
 								}
 							}
+
 							tmp += p.content.substring(1, p.content.length() - 1);
 							break;
 						case Plus:
-							tmp += p.content;
+							if (((getPartType(addon, i - 1) == ToStringPartType.Field || getPartType(addon, i - 1) == ToStringPartType.String) && getPartType(addon, i + 1) == ToStringPartType.RawJava)
+									||
+
+									(getPartType(addon, i - 1) == ToStringPartType.RawJava && (getPartType(addon, i + 1) == ToStringPartType.Field || getPartType(addon, i + 1) == ToStringPartType.String)))
+							{
+								tmp += p.content;
+							}
 							break;
 						case String:
 							tmp += p.content;
-
-							if (i + 1 < addon.parts.size())
-							{
-								tmp += "+";
-							}
 							break;
 
 					}
+					if ((getPartType(addon, i) == ToStringPartType.String && getPartType(addon, i + 1) == ToStringPartType.Field)
+							|| (getPartType(addon, i) == ToStringPartType.Field && getPartType(addon, i + 1) == ToStringPartType.String))
+					{
+						tmp += "+";
+					}
 				}
-//				tmp = tmp.substring(0, tmp.length() - 1);
+				// tmp = tmp.substring(0, tmp.length() - 1);
 				sb.append(tmp);
 				sb.append(";");
 				break;
@@ -133,6 +167,22 @@ public class ToStringMethod extends Method
 		}
 
 		this.body = sb.toString();
+		this.bodyCache = this.body;
+	}
+
+	private static ToStringPartType getPartType(ToStringAddOn addon, int index)
+	{
+		if (!addon.parts.isEmpty() && addon.parts.size() > index && index >= 0)
+		{
+			// ignore +
+			if (addon.parts.get(index).content.equals("+"))
+			{
+				index--;
+				return getPartType(addon, index);
+			}
+			return addon.parts.get(index).type;
+		}
+		return ToStringPartType.Unknown;
 	}
 
 	private boolean isVdmBasicType(String type)
@@ -190,5 +240,18 @@ public class ToStringMethod extends Method
 		}
 
 		this.body = sb.toString().replace('+', '^');
+	}
+
+	static List<String> reportedErrors = new Vector<String>();
+
+	private void showError(String text)
+	{
+		if (reportedErrors.contains(text))
+		{
+			return;
+		}
+		System.err.println();
+		System.err.println(text);
+		reportedErrors.add(text);
 	}
 }

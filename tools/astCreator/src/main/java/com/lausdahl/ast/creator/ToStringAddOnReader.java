@@ -19,22 +19,35 @@ import com.lausdahl.ast.creator.parser.AstcToStringParser.root_return;
 
 public class ToStringAddOnReader
 {
-	public void readAndAdd(String file, Environment env) throws IOException
+	public void readAndAdd(String file, Environment env) throws IOException,
+			AstCreatorException
 	{
-		if(!new File(file).exists())
+		if (!new File(file).exists())
 		{
 			return;
 		}
-		
+
 		ANTLRFileStream input = new ANTLRFileStream(file);
 		AstcToStringLexer lexer = new AstcToStringLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		AstcToStringParser parser = new AstcToStringParser(tokens);
+		root_return result = null;
+		try
+		{
+			result = parser.root();
+		} catch (Exception e)
+		{
+			throw new AstCreatorException("Exception in AST To String parser", e, true);
+		}
+
+		if (parser.hasErrors() || parser.hasExceptions())
+		{
+			throw new AstCreatorException("Errors in AST To String Extension input file", null, true);
+		}
 
 		try
 		{
-			root_return result = parser.root();
 			CommonTree t = (CommonTree) result.getTree();
 
 			show(t, 0);
@@ -49,11 +62,22 @@ public class ToStringAddOnReader
 					{
 						if (node.getChildren() != null)
 						{
+							ToStringAddOn envAddon = new ToStringAddOn();
 							for (Object toke : node.getChildren())
 							{
 								if (toke instanceof CommonTree)
 								{
 									CommonTree p = (CommonTree) toke;
+									
+									if(p.getText()!=null && p.getText().equals("import"))
+									{
+										ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
+										part.type = ToStringPartType.Import;
+										part.content = p.getChild(0).getText();
+										envAddon.parts.add(part);
+										continue;
+									}
+									
 									// String classDefName = "P"
 									// + BaseClassDefinition.firstLetterUpper(p.getText());
 									String classDefName = getNameFromAspectNode((CommonTree) p.getChild(0));
@@ -96,13 +120,13 @@ public class ToStringAddOnReader
 													part.type = ToStringPartType.RawJava;
 													part.content = aspectDclT.getText();
 													addon.parts.add(part);
-												}else if (aspectDclT.getText().equals("+"))
+												} else if (aspectDclT.getText().equals("+"))
 												{
 													ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 													part.type = ToStringPartType.Plus;
 													part.content = aspectDclT.getText();
 													addon.parts.add(part);
-												}else
+												} else
 												{
 													ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 													part.type = ToStringPartType.Field;
@@ -117,6 +141,7 @@ public class ToStringAddOnReader
 
 									println("To String Extensions: " + p);
 								}
+								env.addToStringAddOn(envAddon);
 							}
 						}
 					}
@@ -125,12 +150,8 @@ public class ToStringAddOnReader
 		} catch (Exception e)
 		{
 			e.printStackTrace();
+			throw new AstCreatorException("Exception in AST To String parser", e, true);
 		}
-
-//		for (IClassDefinition c : env.getClasses())
-//		{
-//			System.out.println(c);
-//		}
 	}
 
 	public static void show(CommonTree token, int level)

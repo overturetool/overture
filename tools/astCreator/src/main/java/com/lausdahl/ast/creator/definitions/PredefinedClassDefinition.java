@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.definitions;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.ToStringAddOn;
@@ -27,9 +29,9 @@ public class PredefinedClassDefinition implements IClassDefinition
 	}
 
 	
-	public List<String> getImports()
+	public Set<String> getImports()
 	{
-		return new Vector<String>();
+		return new HashSet<String>();
 	}
 
 	
@@ -158,9 +160,9 @@ public class PredefinedClassDefinition implements IClassDefinition
 	}
 
 	
-	public List<IInterfaceDefinition> getInterfaces()
+	public Set<IInterfaceDefinition> getInterfaces()
 	{
-		return new Vector<IInterfaceDefinition>();
+		return new HashSet<IInterfaceDefinition>();
 	}
 
 	public void addToStringAddOn(ToStringAddOn addon)

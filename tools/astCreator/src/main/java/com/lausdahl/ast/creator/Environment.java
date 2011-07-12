@@ -24,6 +24,8 @@ public class Environment
 	public final String TAG_IQuestion = "IQuestion";
 	public final String TAG_IQuestionAnswer = "IQuestionAnswer";
 	
+	private final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
+	
 	public Environment(String defaultPackage)
 	{
 		// setup env
@@ -183,5 +185,20 @@ public class Environment
 			}
 		}
 		return null;
+	}
+	
+	
+	
+	
+	public void addToStringAddOn(ToStringAddOn addon)
+	{
+		toStringAddOn.add(addon);
+	}
+
+
+
+	public List<ToStringAddOn> getToStringAddOns()
+	{
+		return this.toStringAddOn;
 	}
 }
