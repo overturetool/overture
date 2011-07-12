@@ -80,7 +80,7 @@ public class BaseTestSuite
 			// repeat until all lines is read
 			while ((text = reader.readLine()) != null)
 			{
-				if (text.trim().length() > 0)
+				if (text.trim().length() > 0 && !text.trim().startsWith("//"))
 				{
 					lines.add(text);
 				}

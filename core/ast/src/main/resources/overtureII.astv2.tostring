@@ -5,9 +5,51 @@ import org.overturetool.util.Utils;
 
 //  Expressions
 
-%exp->apply = [root] "("+ $Utils.listToString($ [args] $)$+  ")"
+%exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
 %exp->boolean_const =  [value] 
-%exp->cases = "(cases "  [expression] " :\n" + $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
+%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
+%exp->char_const =  [value] 
+%exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
+%exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
+%exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"
+%exp->field =  "(" [object] "." + $($ [memberName] $ == null ? $[field]$.getName() : $[memberName]$.getName())$ + ")"
+%exp->fieldNumber = "(" + [tuple] + "." + [field] + ")"
+%exp->forAll = "(forall " + $Utils.listToString($ [bindList] $)$ + " & " [predicate] ")"
+%exp->funcInstatiation = "(" [function] ")[" + $Utils.listToString($[actualTypes]$)$ + "]"
+%exp->if = "" + $Utils.ifToString($[test]$, $[then]$, $[elseList]$, $[else]$)$
+%exp->int_const = [value] 
+%exp->iota = "(iota " [bind] " & " [predicate] ")"
+%exp->is = "is_(" [test] ", " + $( $ [typeName] $ == null ? $ [basictype] $ : $ [typeName] $)$ + ")" //missing basictype
+%exp->isOfBaseClass = "isofbaseclass(" [baseClass] "," [exp] ")"
+%exp->isOfClass = "isofclass(" [className] "," [exp] ")"
+%exp->lambda = "(lambda " + [bindList] + " & " + [expression] + ")"
+%exp->letBeSt = "let " [bind] + $($[suchThat]$ == null ? "" : " be st " + $[suchThat]$)$ + " in " + [value]
+%exp->letDef = "let " + $Utils.listToString($ [localDefs] $)$ + " in " [expression]
+%exp->def = "def " + $Utils.listToString($[localDefs]$)$ + " in\n" + [expression]
+%exp->maplet = [left] + " |-> " + [right]
+%exp->mkBasic = "mk_" + [type] + "(" + [arg] + ")"
+%exp->mkType = "mk_" [typeName] "(" + $Utils.listToString($[args]$)$ + ")"
+%exp->mu  = "mu(" [recordType] ", " + $Utils.listToString($[modifiers]$)$ + ")"
+%exp->new = "new " [className] "("+ $Utils.listToString($[args]$)$ + ")"
+%exp->nil = "nil"
+%exp->postOp = [postexpression]
+%exp->pre = "pre_(" [function] + $Utils.listToString($ [args] $)$ + ")"
+%exp->preOp = [expression]
+%exp->quote_const = [value]
+%exp->real_const = [value]
+%exp->sameBaseClass = "samebaseclass(" + [left] + "," + [right] + ")"
+%exp->sameClass = "sameclass(" [left] "," + [right] + ")"
+%exp->self = "self"
+%exp->stateInit = "init " [state]$.getInitPattern()$ + " == " [state]$.getInitExpression()$
+%exp->string_const = [value]
+%exp->subclassResponsibility = "is subclass responsibility"
+%exp->subseq = "(" [seq] "(" [from] ", ... ," [to] "))"
+%exp->threadId = "threadid"
+%exp->time = "time"
+%exp->tuple = "mk_(" + $Utils.listToString($ [args] $)$ + ")"
+%exp->undefined = "(undefined)"
+%exp->variable = [name]
+
 //
 %alternative->case ="case "  [pattern] + " -> "  [result] 
 
@@ -32,6 +74,26 @@ import org.overturetool.util.Utils;
 %exp->#Unary->unaryMinus ="(- "  [exp]+")"
 %exp->#Unary->unaryPlus ="(+ "  [exp]+")"
 
+%exp->#binary->comp = "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->domainResBy = "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->domainResTo = "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->equals = "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->inSet = "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->mapUnion = "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->notEqual =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->notInSet =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->plusPlus =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->properSubset =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->rangeResBy =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->rangeResTo =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->seqConcat =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->setDifference =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->setIntersect =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->setUnion =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->starStar =  "(" [left] " " + [op] + " " + [left] + ")"
+%exp->#binary->subset =  "(" [left] " " + [op] + " " + [left] + ")"
+
+
 %exp->#binary->#Boolean->and = [left] "and" [right]
 %exp->#binary->#Boolean->equivalent = [left] "<=>" [right]
 %exp->#binary->#Boolean->implies = [left] "=>" [right]
@@ -49,15 +111,16 @@ import org.overturetool.util.Utils;
 %exp->#binary->#Numeric->substract = [left] "-" [right]
 %exp->#binary->#Numeric->times = [left] "*" [right]
 
-
-
-%exp->letBeSt = "let " [bind] + $($ [suchThat] $== null ? "" : " be st ")$+ [suchThat]  " in " [value]
-
+%exp->#Map->mapComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
+%exp->#Map->mapEnum = "{" + $Utils.listToString($[members]$)$ + "}"
  
+%exp->#Seq->seqComp = "[" [first] " | "  [setBind] + $($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
+%exp->#Seq->seqEnum = "" + $Utils.listToString("[", $[members]$, ", ", "]")$
 
-%exp->letDef = "let " [localDefs] " in " [expression]
-
-
+%exp->#Seq->setComp = "{" [first] " | " [bindings] + $($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
+%exp->#Seq->setEnum = "" + $Utils.listToString("{", $[members]$, ", ", "}")$
+%exp->#Seq->setRange = "{" [first] ", ... ," + [last] "}"
+ 
 //  Types
 %type->#basic->boolean = "bool"
 %type->#basic->char="char"

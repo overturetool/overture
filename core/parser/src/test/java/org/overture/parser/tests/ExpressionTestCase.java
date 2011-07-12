@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintWriter;
 
 import org.overture.ast.expressions.PExp;
+import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
@@ -27,6 +28,7 @@ public class ExpressionTestCase extends BaseParserTestCase
 	public void internal(File file) throws ParserException, LexException
 	{
 		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
 		ExpressionReader reader = null;
 
 		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect);
@@ -55,6 +57,7 @@ public class ExpressionTestCase extends BaseParserTestCase
 	public void internal(String content) throws ParserException, LexException
 	{
 		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
 		ExpressionReader reader = null;
 		PExp expression = null;
 try{

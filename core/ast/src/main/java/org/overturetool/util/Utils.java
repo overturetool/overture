@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.expressions.AElseIfExp;
+import org.overture.ast.expressions.PExp;
+
 public class Utils
 {
 	public static <T> String listToString(List<T> list)
@@ -77,6 +80,28 @@ public class Utils
 		}
 
 		sb.append(")");
+		return sb.toString();
+	}
+	
+	public static String ifToString(PExp ifExp, PExp thenExp, List<AElseIfExp> elseList, PExp elseExp)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("(if " + ifExp + "\nthen " + thenExp);
+	
+		for (AElseIfExp s: elseList)
+		{
+			sb.append("\n");
+			sb.append(s.toString());
+		}
+	
+		if (elseExp != null)
+		{
+			sb.append("\nelse ");
+			sb.append(elseExp.toString());
+		}
+	
+		sb.append(")");
+	
 		return sb.toString();
 	}
 }

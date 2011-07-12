@@ -80,7 +80,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {int_const} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
-    |   {is} [typeName]:LexNameToken [test]:exp
+    |   {is} [typeName]:LexNameToken [basictype]:type [test]:exp //missing basictype
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
     |   {isOfClass} [className]:LexNameToken [exp]:exp
     |   {lambda} [bindList]:bind.type* [expression]:exp    
