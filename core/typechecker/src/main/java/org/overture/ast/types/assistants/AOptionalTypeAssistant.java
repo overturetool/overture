@@ -18,5 +18,12 @@ public class AOptionalTypeAssistant {
 		if (root != null)  root.setInfinite(false);	// Could be nil
 		return type;
 	}
+	
+	
+	public static void unResolve(AOptionalType type)
+	{
+		if (!type.getResolved()) return; else { type.setResolved(false); }
+		PTypeAssistant.unResolve(type.getType());
+	}
 
 }

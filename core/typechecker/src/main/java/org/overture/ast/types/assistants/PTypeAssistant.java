@@ -20,6 +20,7 @@ import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqType;
@@ -221,13 +222,24 @@ public class PTypeAssistant {
 			}
 			break;
 		case PARAMETER:
+			if(type instanceof AParameterType)
+			{
+				result = AParameterTypeAssistant.typeResolve((AParameterType)type,root,rootVisitor,question);
+			}
+			break;
 		case PRODUCT:
-		case QUOTE:
-		case SEQ:
+			result = AProductTypeAssistant.typeResolve((AProductType)type,root,rootVisitor,question);
+			break;
+			//TODO: SEQ TYPE must be changed in AST
+		case SEQ:			
 		case SEQ1:
+			assert false : "SEQ TYPE must be changed in AST";
+			break;
 		case SET:
-		case UNDEFINED:
+			result = ASetTypeAssistant.typeResolve((ASetType)type,root,rootVisitor,question);
+			break;
 		case UNION:
+			result = AUnionTypeAssistat.typeResolve((AUnionType)type,root,rootVisitor,question);
 		case UNKNOWN:
 		case UNRESOLVED:
 		case VOID:
@@ -273,13 +285,18 @@ public class PTypeAssistant {
 			}
 			break;
 		case OPTIONAL:
-		case PARAMETER:
+			AOperationTypeAssistant.unResolve((AOperationType)type);
+			break;
 		case PRODUCT:
-		case QUOTE:
+			AProductTypeAssistant.unResolve((AProductType) type);
+			break;
 		case SEQ:
 		case SEQ1:
+			assert false : "SEQ TYPE must be changed in AST";
+			break;
 		case SET:
-		case UNDEFINED:
+			ASetTypeAssistant.unResolve((ASetType)type);
+			break;
 		case UNION:
 		case UNKNOWN:
 		case UNRESOLVED:
