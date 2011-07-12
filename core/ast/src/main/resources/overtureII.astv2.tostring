@@ -5,9 +5,9 @@ import org.overturetool.util.Utils;
 
 //  Expressions
 
-%exp->apply = [root] "(" $Utils.listToString($ [args] $)$+  ")"
+%exp->apply = [root] "("+ $Utils.listToString($ [args] $)$+  ")"
 %exp->boolean_const =  [value] 
-%exp->cases = "(cases "  [expression] + " :\n"  $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
+%exp->cases = "(cases "  [expression] " :\n" + $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
 //
 %alternative->case ="case "  [pattern] + " -> "  [result] 
 
@@ -90,11 +90,23 @@ import org.overturetool.util.Utils;
 %type->voidReturn = "(return)"
 %type->void = "()"       
 
-
-
-
-
 //  Patterns
+%pattern->boolean = [value]
+%pattern->character = [value]
+%pattern->concatenation = [left] " ^ " [right]
+%pattern->expression = "(" [exp] ")"
+%pattern->identifier = [name]
+%pattern->ignore = "-"
+%pattern->integer = [value]
+%pattern->nil = "nil"
+%pattern->quote = [value]
+%pattern->real = [value]
+%pattern->record = "mk_" [typename]  "(" + $Utils.listToString($[plist]$)$ + ")"
+%pattern->seq = "[" [plist] "]"
+%pattern->set = "{" [plist] "}"
+%pattern->string = [value]
+%pattern->tuple = "mk_"  "(" + $Utils.listToString($[plist]$)$ + ")"
+%pattern->union = [left] " union " [right]
 
   
 
