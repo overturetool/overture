@@ -140,10 +140,10 @@ public class ToStringMethod extends Method
 							tmp += p.content.substring(1, p.content.length() - 1);
 							break;
 						case Plus:
-							if (((getPartType(addon, i - 1) == ToStringPartType.Field || getPartType(addon, i - 1) == ToStringPartType.String) && getPartType(addon, i + 1) == ToStringPartType.RawJava)
+							if (((getPartType(addon, i - 1, false) == ToStringPartType.Field || getPartType(addon, i - 1, false) == ToStringPartType.String) && getPartType(addon, i + 1, true) == ToStringPartType.RawJava)
 									||
 
-									(getPartType(addon, i - 1) == ToStringPartType.RawJava && (getPartType(addon, i + 1) == ToStringPartType.Field || getPartType(addon, i + 1) == ToStringPartType.String)))
+									(getPartType(addon, i - 1, false) == ToStringPartType.RawJava && (getPartType(addon, i + 1, true) == ToStringPartType.Field || getPartType(addon, i + 1, true) == ToStringPartType.String)))
 							{
 								tmp += p.content;
 							}
@@ -153,10 +153,14 @@ public class ToStringMethod extends Method
 							break;
 
 					}
-					if ((getPartType(addon, i) == ToStringPartType.String && getPartType(addon, i + 1) == ToStringPartType.Field)
-							|| (getPartType(addon, i) == ToStringPartType.Field && getPartType(addon, i + 1) == ToStringPartType.String))
+					if ((getPartType(addon, i, false) == ToStringPartType.String && getPartType(addon, i + 1, true) == ToStringPartType.Field)
+							|| (getPartType(addon, i, false) == ToStringPartType.Field && getPartType(addon, i + 1, true) == ToStringPartType.String)
+							|| (getPartType(addon, i, false) == ToStringPartType.String && getPartType(addon, i + 1, true) == ToStringPartType.String))
 					{
-						tmp += "+";
+						if (!tmp.trim().endsWith("+"))
+						{
+							tmp += "+";
+						}
 					}
 				}
 				// tmp = tmp.substring(0, tmp.length() - 1);
@@ -170,15 +174,19 @@ public class ToStringMethod extends Method
 		this.bodyCache = this.body;
 	}
 
-	private static ToStringPartType getPartType(ToStringAddOn addon, int index)
+	private static ToStringPartType getPartType(ToStringAddOn addon, int index,
+			boolean searchForward)
 	{
 		if (!addon.parts.isEmpty() && addon.parts.size() > index && index >= 0)
 		{
 			// ignore +
 			if (addon.parts.get(index).content.equals("+"))
 			{
-				index--;
-				return getPartType(addon, index);
+				if (searchForward)
+					index++;
+				else
+					index--;
+				return getPartType(addon, index, searchForward);
 			}
 			return addon.parts.get(index).type;
 		}

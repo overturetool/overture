@@ -218,6 +218,7 @@ public class CreateOnParse
 											if (aspectDcl instanceof CommonTree)
 											{
 												CommonTree aspectDclT = (CommonTree) aspectDcl;
+												String typeName = aspectDclT.getText();
 												Field f = new Field(env);
 
 												if (aspectDclT.getChildCount() > 0)
@@ -249,9 +250,24 @@ public class CreateOnParse
 														}
 													}
 												}
+												
+												
+												for (IClassDefinition cl : env.getClasses())
+												{
+													if (cl instanceof ExternalJavaClassDefinition
+															&& ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
+													{
+														f.isTokenField = true;
+														f.type = cl;// TODO
+													}
+												}
+												if (f.type == null)
+												{
+													f.setType(typeName);
+												}
 
 												f.isAspect = true;
-												f.setType(aspectDclT.getText());
+//												f.setType(aspectDclT.getText());
 												c.addField(f);
 											}
 										}
