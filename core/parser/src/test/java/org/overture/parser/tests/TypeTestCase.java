@@ -17,7 +17,7 @@ public class TypeTestCase extends BaseParserTestCase
 	{
 		super(file);
 	}
-	
+
 	public TypeTestCase(String name, String content)
 	{
 		super(name, content);
@@ -37,10 +37,9 @@ public class TypeTestCase extends BaseParserTestCase
 		{
 			// perrs += reader.getErrorCount();
 			reader.printErrors(new PrintWriter(System.out));
-			
+
 		}
 		assertEquals(reader.getErrorCount(), 0);
-		
 
 		if (reader != null && reader.getWarningCount() > 0)
 		{
@@ -48,7 +47,7 @@ public class TypeTestCase extends BaseParserTestCase
 			reader.printWarnings(new PrintWriter(System.out));
 		}
 
-		System.out.println("Parsed: " + expression);
+		System.out.println("Parsed Type: " + expression);
 
 	}
 
@@ -66,10 +65,9 @@ public class TypeTestCase extends BaseParserTestCase
 		{
 			// perrs += reader.getErrorCount();
 			reader.printErrors(new PrintWriter(System.out));
-			
+
 		}
 		assertEquals(reader.getErrorCount(), 0);
-		
 
 		if (reader != null && reader.getWarningCount() > 0)
 		{
@@ -77,6 +75,6 @@ public class TypeTestCase extends BaseParserTestCase
 			reader.printWarnings(new PrintWriter(System.out));
 		}
 
-		System.out.println("Parsed: " + expression);
+		System.out.println("Parsed Type: " + expression);
 	}
 }

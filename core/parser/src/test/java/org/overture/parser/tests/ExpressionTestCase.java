@@ -27,7 +27,7 @@ public class ExpressionTestCase extends BaseParserTestCase
 	@Override
 	public void internal(File file) throws ParserException, LexException
 	{
-		Settings.dialect = Dialect.VDM_SL;
+		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 		ExpressionReader reader = null;
 
@@ -39,7 +39,7 @@ public class ExpressionTestCase extends BaseParserTestCase
 		{
 			// perrs += reader.getErrorCount();
 			reader.printErrors(new PrintWriter(System.out));
-			
+
 		}
 		assertEquals(reader.getErrorCount(), 0);
 
@@ -49,37 +49,40 @@ public class ExpressionTestCase extends BaseParserTestCase
 			reader.printWarnings(new PrintWriter(System.out));
 		}
 
-		System.out.println("Parsed: " + expression);
+		System.out.println("Parsed Expression: " + expression);
 
 	}
 
 	@Override
 	public void internal(String content) throws ParserException, LexException
 	{
-		Settings.dialect = Dialect.VDM_SL;
+		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 		ExpressionReader reader = null;
 		PExp expression = null;
-try{
-		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
-		reader = new ExpressionReader(ltr);
-		 expression = (reader.readExpression());
-
-		if (reader != null && reader.getErrorCount() > 0)
+		try
 		{
-			// perrs += reader.getErrorCount();
-			reader.printErrors(new PrintWriter(System.out));
-			
-		}
-		assertEquals(reader.getErrorCount(), 0);
+			LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
+			reader = new ExpressionReader(ltr);
+			expression = (reader.readExpression());
 
-		if (reader != null && reader.getWarningCount() > 0)
+			if (reader != null && reader.getErrorCount() > 0)
+			{
+				// perrs += reader.getErrorCount();
+				reader.printErrors(new PrintWriter(System.out));
+
+			}
+			assertEquals(reader.getErrorCount(), 0);
+
+			if (reader != null && reader.getWarningCount() > 0)
+			{
+				// pwarn += reader.getWarningCount();
+				reader.printWarnings(new PrintWriter(System.out));
+			}
+		} finally
 		{
-			// pwarn += reader.getWarningCount();
-			reader.printWarnings(new PrintWriter(System.out));
+			System.out.println("Parsed Expression: \"" + content + "\" as: "
+					+ expression);
 		}
-}finally{
-		System.out.println("Parsed: \""+content +"\" as: "+ expression);
-}
 	}
 }

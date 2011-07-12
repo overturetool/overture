@@ -82,6 +82,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
@@ -89,8 +90,6 @@ import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexIntegerToken;
@@ -112,6 +111,23 @@ import org.overturetool.vdmj.util.Utils;
 
 public class DefinitionReader extends SyntaxReader
 {
+	private AAccessSpecifierAccessSpecifier getDefaultAccess()
+	{
+		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
+	}
+	
+	public List<PType> getTypeList(APatternListTypePair node)
+	{
+		List<PType> list = new Vector<PType>();
+
+		for (int i=0; i<node.getPatterns().size(); i++)
+		{
+			list.add(node.getType());
+		}
+
+		return list;
+	}
+	
 	public DefinitionReader(LexTokenReader reader)
 	{
 		super(reader);
@@ -730,9 +746,9 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new AExplicitFunctionDefinition(funcName.location,
-			idToName(funcName), scope,null,null,null,t,typeParams,type,
-			 parameters,precondition,null,postcondition,null,body,null,null,measure,
-			 null,null,null,null);
+			idToName(funcName), scope,false,null,getDefaultAccess(),null,typeParams,
+			 parameters,type,body,precondition,postcondition,measure,
+			 null,null,null,null,false,false,0,null,null,false,false);
 	}
 
 	private PDefinition readImplicitFunctionDefinition(
@@ -833,11 +849,24 @@ public class DefinitionReader extends SyntaxReader
 			nextToken();
 			measure = readNameToken("Expecting name after 'measure'");
 		}
-
-		return new AImplicitFunctionDefinition(funcName.location,
-			idToName(funcName), scope,false,null,null,null,typeParams,null,parameterPatterns,
-			precondition,null,postcondition,null,resultPattern,body,null,null, measure,null,false, 0);
 		
+		List<PType> ptypes = new Vector<PType>();
+
+		for (APatternListTypePair ptp: parameterPatterns)
+		{
+			ptypes.addAll(getTypeList(ptp));
+		}
+
+		// NB: implicit functions are always +> total, apparently
+		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, resultPattern.getType());
+		// functionType.setDefinitions(value) = new DefinitionList(this);
+
+		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), null, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
+
+		List<PDefinition> defs = new Vector<PDefinition>();
+		defs.add(functionDef);
+		functionType.setDefinitions(defs);
+		return functionDef;
 //		return new ImplicitFunctionDefinition(
 //			idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
 //			body, precondition, postcondition, measure);
@@ -1009,9 +1038,11 @@ public class DefinitionReader extends SyntaxReader
 			postcondition = getExpressionReader().readExpression();
 		}
 //super(Pass.DEFS, name.location, name, NameScope.GLOBAL);
+		
+		
 		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location,
-			idToName(funcName),NameScope.GLOBAL,null,null,null, null,parameters,null,null,body,
-			precondition,postcondition,null,type,null,null,null,null,null,null,null);
+			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(), type, parameters,body,
+			precondition,postcondition,null,null,null,null,null,false);
 
 		return def;
 	}
@@ -1086,9 +1117,19 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		ASpecificationStm spec = readSpecification(funcName.location, body == null);
+		
+		List<PType> ptypes = new Vector<PType>();
+
+		for (APatternListTypePair ptp: parameterPatterns)
+		{
+			ptypes.addAll(getTypeList(ptp));
+		}
+		AOperationType operationType = new AOperationType(funcName.location, false, null, ptypes, (resultPattern == null ? new AVoidType(funcName.location, false, null)
+				: resultPattern.getType()));
+		
 		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
-			idToName(funcName),NameScope.GLOBAL,null,null,null,null,null, parameterPatterns,null,null,resultPattern,
-			body,null,null,null,null,null,null,null,null,null);
+			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(),null, parameterPatterns, resultPattern,
+			body,spec.getExternals(),spec.getPrecondition(),spec.getPostcondition(),spec.getErrors(),operationType,null,null,null,null,null,false);
 		
 		return def;
 	}

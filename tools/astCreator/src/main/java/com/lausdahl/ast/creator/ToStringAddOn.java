@@ -26,6 +26,17 @@ public class ToStringAddOn
 				return content;
 			}
 		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (obj instanceof ToStringPart)
+			{
+				return this.type.equals(((ToStringPart) obj).type)
+						&& this.content.equals(((ToStringPart) obj).content);
+			}
+			return super.equals(obj);
+		}
 	}
 
 	public List<ToStringPart> parts = new Vector<ToStringPart>();

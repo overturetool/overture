@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g 2011-07-11 23:42:08
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g 2011-07-12 21:04:01
 
 package com.lausdahl.ast.creator.parser;
 
@@ -202,7 +202,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "top"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:208:1: top : TOSTRING_DCL imports ( toString_ )* ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:208:1: top : TOSTRING_DCL ( imports )* ( toString_ )* ;
     public final AstcToStringParser.top_return top() throws RecognitionException {
         AstcToStringParser.top_return retval = new AstcToStringParser.top_return();
         retval.start = input.LT(1);
@@ -218,8 +218,8 @@ public class AstcToStringParser extends Parser {
         Object TOSTRING_DCL3_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:3: ( TOSTRING_DCL imports ( toString_ )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:5: TOSTRING_DCL imports ( toString_ )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:3: ( TOSTRING_DCL ( imports )* ( toString_ )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:5: TOSTRING_DCL ( imports )* ( toString_ )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -227,28 +227,52 @@ public class AstcToStringParser extends Parser {
             TOSTRING_DCL3_tree = (Object)adaptor.create(TOSTRING_DCL3);
             root_0 = (Object)adaptor.becomeRoot(TOSTRING_DCL3_tree, root_0);
 
-            pushFollow(FOLLOW_imports_in_top243);
-            imports4=imports();
-
-            state._fsp--;
-
-            adaptor.addChild(root_0, imports4.getTree());
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:27: ( toString_ )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:19: ( imports )*
             loop1:
             do {
                 int alt1=2;
                 int LA1_0 = input.LA(1);
 
-                if ( (LA1_0==15) ) {
+                if ( (LA1_0==13) ) {
                     alt1=1;
                 }
 
 
                 switch (alt1) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:27: toString_
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:19: imports
             	    {
-            	    pushFollow(FOLLOW_toString__in_top245);
+            	    pushFollow(FOLLOW_imports_in_top243);
+            	    imports4=imports();
+
+            	    state._fsp--;
+
+            	    adaptor.addChild(root_0, imports4.getTree());
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop1;
+                }
+            } while (true);
+
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:28: ( toString_ )*
+            loop2:
+            do {
+                int alt2=2;
+                int LA2_0 = input.LA(1);
+
+                if ( (LA2_0==15) ) {
+                    alt2=1;
+                }
+
+
+                switch (alt2) {
+            	case 1 :
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:28: toString_
+            	    {
+            	    pushFollow(FOLLOW_toString__in_top246);
             	    toString_5=toString_();
 
             	    state._fsp--;
@@ -259,7 +283,7 @@ public class AstcToStringParser extends Parser {
             	    break;
 
             	default :
-            	    break loop1;
+            	    break loop2;
                 }
             } while (true);
 
@@ -290,7 +314,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "imports"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:212:1: imports : ( 'import' JAVANAME ';' )* ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:212:1: imports : 'import' JAVANAME ';' ;
     public final AstcToStringParser.imports_return imports() throws RecognitionException {
         AstcToStringParser.imports_return retval = new AstcToStringParser.imports_return();
         retval.start = input.LT(1);
@@ -306,47 +330,20 @@ public class AstcToStringParser extends Parser {
         Object char_literal8_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:3: ( ( 'import' JAVANAME ';' )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:5: ( 'import' JAVANAME ';' )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:3: ( 'import' JAVANAME ';' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:5: 'import' JAVANAME ';'
             {
             root_0 = (Object)adaptor.nil();
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:5: ( 'import' JAVANAME ';' )*
-            loop2:
-            do {
-                int alt2=2;
-                int LA2_0 = input.LA(1);
+            string_literal6=(Token)match(input,13,FOLLOW_13_in_imports262); 
+            string_literal6_tree = (Object)adaptor.create(string_literal6);
+            root_0 = (Object)adaptor.becomeRoot(string_literal6_tree, root_0);
 
-                if ( (LA2_0==13) ) {
-                    alt2=1;
-                }
+            JAVANAME7=(Token)match(input,JAVANAME,FOLLOW_JAVANAME_in_imports265); 
+            JAVANAME7_tree = (Object)adaptor.create(JAVANAME7);
+            adaptor.addChild(root_0, JAVANAME7_tree);
 
-
-                switch (alt2) {
-            	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:6: 'import' JAVANAME ';'
-            	    {
-            	    string_literal6=(Token)match(input,13,FOLLOW_13_in_imports262); 
-            	    string_literal6_tree = (Object)adaptor.create(string_literal6);
-            	    root_0 = (Object)adaptor.becomeRoot(string_literal6_tree, root_0);
-
-            	    JAVANAME7=(Token)match(input,JAVANAME,FOLLOW_JAVANAME_in_imports265); 
-            	    JAVANAME7_tree = (Object)adaptor.create(JAVANAME7);
-            	    adaptor.addChild(root_0, JAVANAME7_tree);
-
-            	    char_literal8=(Token)match(input,14,FOLLOW_14_in_imports267); 
-            	    char_literal8_tree = (Object)adaptor.create(char_literal8);
-            	    adaptor.addChild(root_0, char_literal8_tree);
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop2;
-                }
-            } while (true);
-
+            char_literal8=(Token)match(input,14,FOLLOW_14_in_imports267); 
 
             }
 
@@ -415,17 +412,17 @@ public class AstcToStringParser extends Parser {
             {
             root_0 = (Object)adaptor.nil();
 
-            char_literal9=(Token)match(input,15,FOLLOW_15_in_toString_287); 
+            char_literal9=(Token)match(input,15,FOLLOW_15_in_toString_286); 
             char_literal9_tree = (Object)adaptor.create(char_literal9);
             root_0 = (Object)adaptor.becomeRoot(char_literal9_tree, root_0);
 
-            pushFollow(FOLLOW_aspectName_in_toString_290);
+            pushFollow(FOLLOW_aspectName_in_toString_289);
             aspectName10=aspectName();
 
             state._fsp--;
 
             adaptor.addChild(root_0, aspectName10.getTree());
-            ASSIGN11=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_toString_292); 
+            ASSIGN11=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_toString_291); 
             ASSIGN11_tree = (Object)adaptor.create(ASSIGN11);
             adaptor.addChild(root_0, ASSIGN11_tree);
 
@@ -456,7 +453,7 @@ public class AstcToStringParser extends Parser {
             	case 1 :
             	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:30: StringLiteral ( '+' RawJava )?
             	    {
-            	    StringLiteral12=(Token)match(input,StringLiteral,FOLLOW_StringLiteral_in_toString_296); 
+            	    StringLiteral12=(Token)match(input,StringLiteral,FOLLOW_StringLiteral_in_toString_295); 
             	    StringLiteral12_tree = (Object)adaptor.create(StringLiteral12);
             	    adaptor.addChild(root_0, StringLiteral12_tree);
 
@@ -475,11 +472,11 @@ public class AstcToStringParser extends Parser {
             	        case 1 :
             	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:45: '+' RawJava
             	            {
-            	            char_literal13=(Token)match(input,16,FOLLOW_16_in_toString_299); 
+            	            char_literal13=(Token)match(input,16,FOLLOW_16_in_toString_298); 
             	            char_literal13_tree = (Object)adaptor.create(char_literal13);
             	            adaptor.addChild(root_0, char_literal13_tree);
 
-            	            RawJava14=(Token)match(input,RawJava,FOLLOW_RawJava_in_toString_301); 
+            	            RawJava14=(Token)match(input,RawJava,FOLLOW_RawJava_in_toString_300); 
             	            RawJava14_tree = (Object)adaptor.create(RawJava14);
             	            adaptor.addChild(root_0, RawJava14_tree);
 
@@ -495,7 +492,7 @@ public class AstcToStringParser extends Parser {
             	case 2 :
             	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:61: field ( ( '+' )? RawJava )?
             	    {
-            	    pushFollow(FOLLOW_field_in_toString_307);
+            	    pushFollow(FOLLOW_field_in_toString_306);
             	    field15=field();
 
             	    state._fsp--;
@@ -530,7 +527,7 @@ public class AstcToStringParser extends Parser {
             	                case 1 :
             	                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:68: '+'
             	                    {
-            	                    char_literal16=(Token)match(input,16,FOLLOW_16_in_toString_310); 
+            	                    char_literal16=(Token)match(input,16,FOLLOW_16_in_toString_309); 
             	                    char_literal16_tree = (Object)adaptor.create(char_literal16);
             	                    adaptor.addChild(root_0, char_literal16_tree);
 
@@ -540,7 +537,7 @@ public class AstcToStringParser extends Parser {
 
             	            }
 
-            	            RawJava17=(Token)match(input,RawJava,FOLLOW_RawJava_in_toString_313); 
+            	            RawJava17=(Token)match(input,RawJava,FOLLOW_RawJava_in_toString_312); 
             	            RawJava17_tree = (Object)adaptor.create(RawJava17);
             	            adaptor.addChild(root_0, RawJava17_tree);
 
@@ -556,7 +553,7 @@ public class AstcToStringParser extends Parser {
             	case 3 :
             	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:85: '+' ( StringLiteral | field )
             	    {
-            	    char_literal18=(Token)match(input,16,FOLLOW_16_in_toString_319); 
+            	    char_literal18=(Token)match(input,16,FOLLOW_16_in_toString_318); 
             	    char_literal18_tree = (Object)adaptor.create(char_literal18);
             	    adaptor.addChild(root_0, char_literal18_tree);
 
@@ -580,7 +577,7 @@ public class AstcToStringParser extends Parser {
             	        case 1 :
             	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:90: StringLiteral
             	            {
-            	            StringLiteral19=(Token)match(input,StringLiteral,FOLLOW_StringLiteral_in_toString_322); 
+            	            StringLiteral19=(Token)match(input,StringLiteral,FOLLOW_StringLiteral_in_toString_321); 
             	            StringLiteral19_tree = (Object)adaptor.create(StringLiteral19);
             	            adaptor.addChild(root_0, StringLiteral19_tree);
 
@@ -590,7 +587,7 @@ public class AstcToStringParser extends Parser {
             	        case 2 :
             	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:104: field
             	            {
-            	            pushFollow(FOLLOW_field_in_toString_324);
+            	            pushFollow(FOLLOW_field_in_toString_323);
             	            field20=field();
 
             	            state._fsp--;
@@ -625,7 +622,7 @@ public class AstcToStringParser extends Parser {
                 case 1 :
                     // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:115: ';'
                     {
-                    char_literal21=(Token)match(input,14,FOLLOW_14_in_toString_331); 
+                    char_literal21=(Token)match(input,14,FOLLOW_14_in_toString_330); 
                     char_literal21_tree = (Object)adaptor.create(char_literal21);
                     adaptor.addChild(root_0, char_literal21_tree);
 
@@ -686,12 +683,12 @@ public class AstcToStringParser extends Parser {
             {
             root_0 = (Object)adaptor.nil();
 
-            char_literal22=(Token)match(input,17,FOLLOW_17_in_field425); 
-            ID23=(Token)match(input,ID,FOLLOW_ID_in_field428); 
+            char_literal22=(Token)match(input,17,FOLLOW_17_in_field424); 
+            ID23=(Token)match(input,ID,FOLLOW_ID_in_field427); 
             ID23_tree = (Object)adaptor.create(ID23);
             root_0 = (Object)adaptor.becomeRoot(ID23_tree, root_0);
 
-            char_literal24=(Token)match(input,18,FOLLOW_18_in_field431); 
+            char_literal24=(Token)match(input,18,FOLLOW_18_in_field430); 
 
             }
 
@@ -744,7 +741,7 @@ public class AstcToStringParser extends Parser {
             {
             root_0 = (Object)adaptor.nil();
 
-            ID25=(Token)match(input,ID,FOLLOW_ID_in_aspectName487); 
+            ID25=(Token)match(input,ID,FOLLOW_ID_in_aspectName486); 
             ID25_tree = (Object)adaptor.create(ID25);
             root_0 = (Object)adaptor.becomeRoot(ID25_tree, root_0);
 
@@ -763,7 +760,7 @@ public class AstcToStringParser extends Parser {
             	case 1 :
             	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:10: '->' ( ID | '#' ID )
             	    {
-            	    string_literal26=(Token)match(input,19,FOLLOW_19_in_aspectName491); 
+            	    string_literal26=(Token)match(input,19,FOLLOW_19_in_aspectName490); 
             	    string_literal26_tree = (Object)adaptor.create(string_literal26);
             	    adaptor.addChild(root_0, string_literal26_tree);
 
@@ -787,7 +784,7 @@ public class AstcToStringParser extends Parser {
             	        case 1 :
             	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:16: ID
             	            {
-            	            ID27=(Token)match(input,ID,FOLLOW_ID_in_aspectName494); 
+            	            ID27=(Token)match(input,ID,FOLLOW_ID_in_aspectName493); 
             	            ID27_tree = (Object)adaptor.create(ID27);
             	            adaptor.addChild(root_0, ID27_tree);
 
@@ -797,11 +794,11 @@ public class AstcToStringParser extends Parser {
             	        case 2 :
             	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:21: '#' ID
             	            {
-            	            char_literal28=(Token)match(input,20,FOLLOW_20_in_aspectName498); 
+            	            char_literal28=(Token)match(input,20,FOLLOW_20_in_aspectName497); 
             	            char_literal28_tree = (Object)adaptor.create(char_literal28);
             	            adaptor.addChild(root_0, char_literal28_tree);
 
-            	            ID29=(Token)match(input,ID,FOLLOW_ID_in_aspectName500); 
+            	            ID29=(Token)match(input,ID,FOLLOW_ID_in_aspectName499); 
             	            ID29_tree = (Object)adaptor.create(ID29);
             	            adaptor.addChild(root_0, ID29_tree);
 
@@ -848,32 +845,32 @@ public class AstcToStringParser extends Parser {
 
     public static final BitSet FOLLOW_top_in_root220 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_root222 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TOSTRING_DCL_in_top240 = new BitSet(new long[]{0x000000000000A000L});
-    public static final BitSet FOLLOW_imports_in_top243 = new BitSet(new long[]{0x0000000000008002L});
-    public static final BitSet FOLLOW_toString__in_top245 = new BitSet(new long[]{0x0000000000008002L});
+    public static final BitSet FOLLOW_TOSTRING_DCL_in_top240 = new BitSet(new long[]{0x000000000000A002L});
+    public static final BitSet FOLLOW_imports_in_top243 = new BitSet(new long[]{0x000000000000A002L});
+    public static final BitSet FOLLOW_toString__in_top246 = new BitSet(new long[]{0x0000000000008002L});
     public static final BitSet FOLLOW_13_in_imports262 = new BitSet(new long[]{0x0000000000000100L});
     public static final BitSet FOLLOW_JAVANAME_in_imports265 = new BitSet(new long[]{0x0000000000004000L});
-    public static final BitSet FOLLOW_14_in_imports267 = new BitSet(new long[]{0x0000000000002002L});
-    public static final BitSet FOLLOW_15_in_toString_287 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_aspectName_in_toString_290 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ASSIGN_in_toString_292 = new BitSet(new long[]{0x0000000000034202L});
-    public static final BitSet FOLLOW_StringLiteral_in_toString_296 = new BitSet(new long[]{0x0000000000034202L});
-    public static final BitSet FOLLOW_16_in_toString_299 = new BitSet(new long[]{0x0000000000000400L});
-    public static final BitSet FOLLOW_RawJava_in_toString_301 = new BitSet(new long[]{0x0000000000034202L});
-    public static final BitSet FOLLOW_field_in_toString_307 = new BitSet(new long[]{0x0000000000034602L});
-    public static final BitSet FOLLOW_16_in_toString_310 = new BitSet(new long[]{0x0000000000000400L});
-    public static final BitSet FOLLOW_RawJava_in_toString_313 = new BitSet(new long[]{0x0000000000034202L});
-    public static final BitSet FOLLOW_16_in_toString_319 = new BitSet(new long[]{0x0000000000020200L});
-    public static final BitSet FOLLOW_StringLiteral_in_toString_322 = new BitSet(new long[]{0x0000000000034202L});
-    public static final BitSet FOLLOW_field_in_toString_324 = new BitSet(new long[]{0x0000000000034202L});
-    public static final BitSet FOLLOW_14_in_toString_331 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_17_in_field425 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ID_in_field428 = new BitSet(new long[]{0x0000000000040000L});
-    public static final BitSet FOLLOW_18_in_field431 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_aspectName487 = new BitSet(new long[]{0x0000000000080002L});
-    public static final BitSet FOLLOW_19_in_aspectName491 = new BitSet(new long[]{0x0000000000100080L});
-    public static final BitSet FOLLOW_ID_in_aspectName494 = new BitSet(new long[]{0x0000000000080002L});
-    public static final BitSet FOLLOW_20_in_aspectName498 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_ID_in_aspectName500 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_14_in_imports267 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_15_in_toString_286 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_aspectName_in_toString_289 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ASSIGN_in_toString_291 = new BitSet(new long[]{0x0000000000034202L});
+    public static final BitSet FOLLOW_StringLiteral_in_toString_295 = new BitSet(new long[]{0x0000000000034202L});
+    public static final BitSet FOLLOW_16_in_toString_298 = new BitSet(new long[]{0x0000000000000400L});
+    public static final BitSet FOLLOW_RawJava_in_toString_300 = new BitSet(new long[]{0x0000000000034202L});
+    public static final BitSet FOLLOW_field_in_toString_306 = new BitSet(new long[]{0x0000000000034602L});
+    public static final BitSet FOLLOW_16_in_toString_309 = new BitSet(new long[]{0x0000000000000400L});
+    public static final BitSet FOLLOW_RawJava_in_toString_312 = new BitSet(new long[]{0x0000000000034202L});
+    public static final BitSet FOLLOW_16_in_toString_318 = new BitSet(new long[]{0x0000000000020200L});
+    public static final BitSet FOLLOW_StringLiteral_in_toString_321 = new BitSet(new long[]{0x0000000000034202L});
+    public static final BitSet FOLLOW_field_in_toString_323 = new BitSet(new long[]{0x0000000000034202L});
+    public static final BitSet FOLLOW_14_in_toString_330 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_17_in_field424 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_ID_in_field427 = new BitSet(new long[]{0x0000000000040000L});
+    public static final BitSet FOLLOW_18_in_field430 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_aspectName486 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_19_in_aspectName490 = new BitSet(new long[]{0x0000000000100080L});
+    public static final BitSet FOLLOW_ID_in_aspectName493 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_20_in_aspectName497 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_ID_in_aspectName499 = new BitSet(new long[]{0x0000000000080002L});
 
 }

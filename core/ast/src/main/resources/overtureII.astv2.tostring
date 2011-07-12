@@ -1,6 +1,7 @@
 To String Extensions
 // import packages used by external $$ java code
 import org.overturetool.util.Utils;
+import org.overturetool.util.ToStringUtil;
 
 
 //  Expressions
@@ -19,7 +20,7 @@ import org.overturetool.util.Utils;
 %exp->if = "" + $Utils.ifToString($[test]$, $[then]$, $[elseList]$, $[else]$)$
 %exp->int_const = [value] 
 %exp->iota = "(iota " [bind] " & " [predicate] ")"
-%exp->is = "is_(" [test] ", " + $( $ [typeName] $ == null ? $ [basictype] $ : $ [typeName] $)$ + ")" //missing basictype
+%exp->is = "is_(" [test] ", " + $( $ [typeName] $ == null ? $ [basicType] $ : $ [typeName] $)$ + ")"
 %exp->isOfBaseClass = "isofbaseclass(" [baseClass] "," [exp] ")"
 %exp->isOfClass = "isofclass(" [className] "," [exp] ")"
 %exp->lambda = "(lambda " + [bindList] + " & " + [expression] + ")"
@@ -117,9 +118,9 @@ import org.overturetool.util.Utils;
 %exp->#Seq->seqComp = "[" [first] " | "  [setBind] + $($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
 %exp->#Seq->seqEnum = "" + $Utils.listToString("[", $[members]$, ", ", "]")$
 
-%exp->#Seq->setComp = "{" [first] " | " [bindings] + $($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
-%exp->#Seq->setEnum = "" + $Utils.listToString("{", $[members]$, ", ", "}")$
-%exp->#Seq->setRange = "{" [first] ", ... ," + [last] "}"
+%exp->#Set->setComp = "{" [first] " | " [bindings] + $($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
+%exp->#Set->setEnum = "" + $Utils.listToString("{", $[members]$, ", ", "}")$
+%exp->#Set->setRange = "{" [first] ", ... ," + [last] "}"
  
 //  Types
 %type->#basic->boolean = "bool"
@@ -174,7 +175,45 @@ import org.overturetool.util.Utils;
   
 
 //  Definitions
-%definition->value = [pattern] " : " [expType] " = " [expression]
+%definition->assignment = [name] ":"  [type] " := " [expression]
+%definition->instanceVariable = [name] ":"  [type] " := " [expression]
+%definition->#class->bus = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getName()$ + "\n"
+%definition->#class->cpu = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getName()$ + "\n"
+%definition->#class->system = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getName()$ + "\n"
+%definition->#class->class = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getName()$ + "\n"
+%definition->classInvariant = "inv" [expression]
+%definition->equals = ""+ $($[pattern]$ != null ? $[pattern]$ : $[typebind]$ != null ? $[typebind]$ : $[setbind]$)$ + " = " + [test]
+%definition->explicitFunction = ""+$ToStringUtil.getExplicitFunctionString(this)$ 
+%definition->external = ""+$($[readOnly]$ ? "ext rd " : "ext wr ")+$  [state]$.getName()$
+%definition->implicitFunction = ""+$ToStringUtil.getImplicitFunctionString(this)$
+%definition->explicitOperation = ""+$ToStringUtil.getExplicitOperationString(this)$
+%definition->implicitOperation = ""+$ToStringUtil.getImplicitOperationString(this)$
+%definition->imported = [def]
+%definition->inherited = [superdef] 
+//%definition->local = 
+%definition->multiBindList = "def " + $Utils.listToString($[bindings]$)$
+%definition->mutexSync = "mutex(" + $($[operations]$.isEmpty() ? "all)" :
+                Utils.listToString("", $[operations]$, ", ", ")"))$
+//%definition->namedTrace = [pathname] " = " [terms]
+%definition->perSync =  "per " [opname] " => " [guard]
+%definition->renamed = [def]  " renamed " [name]
+%definition->state = "state " [name] "of\n" [fields]+$
+            ($[invPattern]$ == null ? "" : "\n\tinv " + $[invPattern]$ + " == " + $[invExpression]$) +
+            ($[initPattern]$ == null ? "" : "\n\tinit " + $[initPattern]$ + " == " + $[initExpression]$)$
+%definition->thread = "thread " [statement]
+%definition->type = [name]$.getName() + " = " + $[type]$/*.toDetailedString()*/ +
+                ($[invPattern]$ == null ? "" :
+                    "\n\tinv " + $[invPattern]$ + " == " + $[invExpression]$)$
+%definition->untyped = "Unknown type definition " [name] 
+%definition->value = [pattern] +$($[type]$ == null ? "" : ":" + $[type]$) + " = " +$ [expression]
+
+
+
+//%definition->value = [pattern] " : " [expType] " = " [expression]
 
 //  Statements
 

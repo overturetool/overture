@@ -52,7 +52,9 @@ public class ToStringAddOnReader
 			CommonTree t = (CommonTree) result.getTree();
 
 			show(t, 0);
-
+			ToStringAddOn envAddon = new ToStringAddOn();
+			env.addToStringAddOn(envAddon);
+			
 			for (Object root : t.getChildren())
 			{
 				if (root instanceof CommonTree)
@@ -63,7 +65,7 @@ public class ToStringAddOnReader
 					{
 						if (node.getChildren() != null)
 						{
-							ToStringAddOn envAddon = new ToStringAddOn();
+							
 							for (Object toke : node.getChildren())
 							{
 								if (toke instanceof CommonTree)
@@ -142,7 +144,7 @@ public class ToStringAddOnReader
 
 									println("To String Extensions: " + p);
 								}
-								env.addToStringAddOn(envAddon);
+								
 							}
 						}
 					}

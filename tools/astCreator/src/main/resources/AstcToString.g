@@ -206,11 +206,11 @@ root
   
   
 top
-  : TOSTRING_DCL^ imports toString_*
+  : TOSTRING_DCL^ imports* toString_*
   ;
   
 imports
-  : ('import'^ JAVANAME ';')*
+  : 'import'^ JAVANAME ';'!
   ;
   
   

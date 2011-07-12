@@ -38,7 +38,6 @@ public class PatternTestCase extends BaseParserTestCase
 		{
 			// perrs += reader.getErrorCount();
 			reader.printErrors(new PrintWriter(System.out));
-			
 		}
 		assertEquals(reader.getErrorCount(), 0);
 
@@ -48,7 +47,7 @@ public class PatternTestCase extends BaseParserTestCase
 			reader.printWarnings(new PrintWriter(System.out));
 		}
 
-		System.out.println("Parsed: " + expression);
+		System.out.println("Parsed pattern: " + expression);
 
 	}
 
@@ -76,6 +75,6 @@ public class PatternTestCase extends BaseParserTestCase
 			reader.printWarnings(new PrintWriter(System.out));
 		}
 
-		System.out.println("Parsed: " + expression);
+		System.out.println("Parsed pattern: " + expression);
 	}
 }

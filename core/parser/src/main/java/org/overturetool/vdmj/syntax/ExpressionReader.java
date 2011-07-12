@@ -257,7 +257,7 @@ public class ExpressionReader extends SyntaxReader
 
 			case LE:
 				nextToken();
-				exp = exp = new ALessEqualNumericBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new ALessEqualNumericBinaryExp(null, null, exp, token, readNotExpression());
 //				exp = new LessEqualExpression(exp, token, readNotExpression());
 				break;
 
@@ -1190,12 +1190,12 @@ public class ExpressionReader extends SyntaxReader
 			if (type instanceof AUnresolvedType)
 			{
 				AUnresolvedType nt = (AUnresolvedType)type;
-				exp = new AIsExp(null,nt.getLocation(), nt.getTypename(), null, test);
+				exp = new AIsExp(null,nt.getLocation(), nt.getTypename(), null, test, null);
 //				exp = new IsExpression(ve.location, nt.typename, test);
 			}
 			else
 			{
-				exp = new AIsExp(null, ve.getLocation(), null, type, test);
+				exp = new AIsExp(null, ve.getLocation(), null, type, test, null);
 //				exp = new IsExpression(ve.location, type, test);
 			}
 		}
@@ -1209,42 +1209,42 @@ public class ExpressionReader extends SyntaxReader
 				switch (type)
 				{
 					case BOOL: 
-						exp = new AIsExp(new ABooleanBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ABooleanBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
 						break;
 
 					case NAT:
-						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ANatNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
 						break;
 
 					case NAT1:
-						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ANatOneNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
 						break;
 
 					case INT:
-						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new AIntNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
 						break;
 
 					case RAT:
-						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ARationalNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
 						break;
 
 					case REAL:
-						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ARealNumericBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
 						break;
 
 					case CHAR:
-						exp = new AIsExp(new ACharBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ACharBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new AIsExp(new ATokenBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression());
+						exp = new AIsExp(new ATokenBasicType(ve.getLocation(), false,null), ve.getLocation(), typename, null, readExpression(), null);
 //						exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
 						break;
 
@@ -1254,7 +1254,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 			else
 			{
-				exp = new AIsExp(null, ve.getLocation(), typename, null, readExpression());
+				exp = new AIsExp(null, ve.getLocation(), typename, null, readExpression(), null);
 //				exp = new IsExpression(ve.location, typename, readExpression());
 			}
 		}

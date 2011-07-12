@@ -26,7 +26,7 @@ Tokens
   java_Long = 'java:java.lang.Long';
   //java_file = 'java:java.io.File';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
-  
+   
   bool = 'bool';
   char = 'char';
   int = 'int';
@@ -80,7 +80,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {int_const} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
-    |   {is} [typeName]:LexNameToken [basictype]:type [test]:exp //missing basictype
+    |   {is} [typeName]:LexNameToken [basicType]:type [test]:exp [typedef]:definition
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
     |   {isOfClass} [className]:LexNameToken [exp]:exp
     |   {lambda} [bindList]:bind.type* [expression]:exp    
@@ -315,74 +315,87 @@ patternBind {-> package='org.overture.ast.patterns'}
     
 definition {-> package='org.overture.ast.definitions'}
     =   {assignment} [expression]:exp [expType]:type
-    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:java_Boolean [oldname]:LexNameToken
+    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
     |   {explicitFunction}  [typeParams]:LexNameToken* 
-                            [functionType]:function 
-                            [paramPatternList]:pattern** 
-                            [precondition]:exp 
-                            [predef]:explicitFunction 
-                            [postcondition]:exp 
-                            [postdef]:explicitFunction 
+                            [paramPatternList]:pattern**
+                            [functionType]:type.function 
                             [body]:exp 
-                            [actualResult]:type
-                            [isTypeInvariant]:java_Boolean 
-                            [measure]:LexNameToken 
-                            [measureDef]:definition 
-                            [recursive]:java_Boolean 
-                            [measureLexical]:java_Integer
-                            [isCurried]:java_Boolean 
-    |   {external} [state]:definition [readOnly]:java_Boolean [oldname]:LexNameToken
-    |   {implicitFunction}  [typeParams]:LexNameToken*     
-                            [functionType]:function 
-                            [paramPatternList]:pair.patternListType* 
-                            [precondition]:exp 
-                            [predef]:explicitFunction 
-                            [postcondition]:exp 
-                            [postdef]:explicitFunction 
-                            [result]:pair.patternType
-                            [body]:exp 
-                            [actualResult]:type
-                            [isTypeInvariant]:java_Boolean 
-                            [measure]:LexNameToken 
-                            [measureDef]:definition 
-                            [recursive]:java_Boolean 
-                            [measureLexical]:java_Integer
-                            //[isCurried]:java_Boolean this should not be here, only exists for explicit
-    |   {explicitOperation} [parameterPatterns]:pattern* 
-                            [result]:pair.patternType 
-                            [externals]:clause.external*
-                            [body]:stm 
-                            [precondition]:exp 
-                            [postcondition]:exp 
-                            [errors]:case.error*
-                            [opType]:type.operation
-                            [predef]:definition.explicitFunction
-                            [postdef]:definition.explicitFunction
-                            [state]:definition.state
-                            [actualResult]:type
-                            [stateDefinition]:definition
-                            [isConstructor]:java_Boolean
-                            [paramDefinitions]:definition*                            
-    |   {implicitOperation} [opType]:type.operation
-                            [parameterPatternList]:pair.patternListType*
                             [precondition]:exp 
                             [postcondition]:exp
-                            [result]:pair.patternType 
-                            [body]:stm  //TODO:FIX ORDER
+                            [measure]:LexNameToken
+                            
+                            [predef]:explicitFunction 
+                            [postdef]:explicitFunction
+                            [measureDef]:definition
+                            [paramDefinitionList]:definition*
+                            
+                            [recursive]:java_Boolean
+                            [isUndefined]:java_Boolean
+                            [measureLexical]:java_Integer
+                            
+                            [expectedResult]:type
+                            [actualResult]:type
+                            
+                            [isTypeInvariant]:java_Boolean
+                            [isCurried]:java_Boolean 
+                            
+                            //[poluFuncs]:???Map<TypeList, FunctionValue>
+                            
+    |   {external} [state]:definition [readOnly]:java_Boolean [oldname]:LexNameToken
+    |   {implicitFunction}  [typeParams]:LexNameToken* 
+                            [paramPatterns]:pair.patternListType*
+                            [result]:pair.patternType
+                            [body]:exp
+                            [precondition]:exp 
+                            [postcondition]:exp 
+                            [measure]:LexNameToken 
+                             
+                            [predef]:explicitFunction 
+                            [postdef]:explicitFunction 
+                            [measureDef]:definition
+                            
+                            [recursive]:java_Boolean
+                            [isUndefined]:java_Boolean 
+                            [measureLexical]:java_Integer
+                             
+                            [actualResult]:type
+                            [typeFunction]:type.function
+                            //[poluFuncs]:???Map<TypeList, FunctionValue>
+                           
+    |   {explicitOperation} [parameterPatterns]:pattern* 
+                            [body]:stm
+                            [precondition]:exp 
+                            [postcondition]:exp 
+                            
                             [predef]:definition.explicitFunction
                             [postdef]:definition.explicitFunction
                             [paramDefinitions]:definition*
                             [state]:definition.state
+                            
                             [actualResult]:type
                             [isConstructor]:java_Boolean
-                            [stateDefinition]:definition
-                            [errors]:case.error*
+                            
+    |   {implicitOperation} [parameterPatterns]:pair.patternListType*
+                            [result]:pair.patternType
+                            [body]:stm
                             [externals]:clause.external*
+                            [precondition]:exp 
+                            [postcondition]:exp
+                            [errors]:case.error*
+                            
+                            [operationType]:type.operation
+                            [predef]:definition.explicitFunction
+                            [postdef]:definition.explicitFunction
+                            [state]:definition.state
+                            [actualResult]:type
+                            [stateDefinition]:definition
+                            [isConstructor]:java_Boolean
+                                                        
     |   {imported} [def]:definition
-    |   {inherited} [superdef]:definition [oldname]:LexNameToken
+    |   {inherited} [superdef]:definition [oldname]:LexNameToken //is access missing here
     |   {local} 
     |   {multiBindList} [bindings]:multipleBind* [defs]:definition*
     |   {mutexSync} [operations]:LexNameToken*
@@ -391,9 +404,9 @@ definition {-> package='org.overture.ast.definitions'}
     |   {renamed} [def]:definition
     |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [infinite]:java_Boolean
+    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [infinite]:java_Boolean//is access missing here
     |   {untyped}
-    |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type 
+    |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type //is access missing here
     ;
  
 /*
@@ -545,6 +558,11 @@ clause {-> package='org.overture.ast.statements'}
 case {-> package='org.overture.ast.statements'}
     = {error} [name]:LexIdentifierToken [left]:exp [right]:exp
     ;
+    
+    
+//NODE {-> package='org.overture.ast.sometest'}
+//    =   {AABBCC}
+//    ;
 
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
@@ -574,7 +592,7 @@ Aspect Declaration
     ;
 
 %definition->#class
-    = [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition* [allInheritedDefinitions]:definition* [hasContructors]:java_Boolean
+    = [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition* [allInheritedDefinitions]:definition* [hasContructors]:java_Boolean
     ;
     
 %stm
