@@ -27,6 +27,7 @@ import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.EInvariantType;
 import org.overture.ast.types.EType;
@@ -240,11 +241,9 @@ public class PTypeAssistant {
 			break;
 		case UNION:
 			result = AUnionTypeAssistat.typeResolve((AUnionType)type,root,rootVisitor,question);
-		case UNKNOWN:
+			break;
 		case UNRESOLVED:
-		case VOID:
-		case VOIDRETURN:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			result = AUnresolvedTypeAssistant.typeResolve((AUnresolvedType)type,root,rootVisitor,question);
 			break;
 		default:
 			type.setResolved(true);
@@ -298,10 +297,9 @@ public class PTypeAssistant {
 			ASetTypeAssistant.unResolve((ASetType)type);
 			break;
 		case UNION:
-		case UNKNOWN:
-		case UNRESOLVED:
-		case VOID:
-		case VOIDRETURN:
+			AUnionTypeAssistat.unResolve((AUnionType)type);
+			break;
+		
 		default:
 			System.out.println("PTypeAssistent : typeResolve not implemented");
 			break;
