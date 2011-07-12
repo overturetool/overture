@@ -44,4 +44,21 @@ public class AImplicitFunctionDefinitionAssistant {
 
 		return ftype;
 	}
+
+	public static Collection<? extends PDefinition> getTypeParamDefinitions(
+			AImplicitFunctionDefinition node) {
+		
+		List<PDefinition> defs = new ArrayList<PDefinition>();
+
+		for (LexNameToken pname: node.getTypeParams())
+		{
+			PDefinition p = new ALocalDefinition(
+				pname.location, pname, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname));
+
+			PDefinitionAssistant.markUsed(p);
+			defs.add(p);
+		}
+
+		return defs;
+	}
 }

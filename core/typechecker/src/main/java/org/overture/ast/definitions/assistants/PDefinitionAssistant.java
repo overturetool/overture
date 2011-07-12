@@ -162,7 +162,7 @@ public class PDefinitionAssistant {
 	private static void unusedCheck(PDefinition d) {
 		if (!d.getUsed())
 		{
-			TypeCheckerErrors.warning(d, 5000, "Definition '" + d.getName() + "' not used");
+			TypeCheckerErrors.warning(5000, "Definition '" + d.getName() + "' not used",d.getLocation(),d);
 			markUsed(d);		// To avoid multiple warnings
 		}
 		
@@ -211,7 +211,7 @@ public class PDefinitionAssistant {
 		
 	}
 
-	public static void typeCheck(NodeList<PDefinition> defs,
+	public static void typeCheck(List<PDefinition> defs,
 			  QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		for (PDefinition d: defs)
 		{			
@@ -220,7 +220,7 @@ public class PDefinitionAssistant {
 		
 	}
 
-	public static PDefinition getSelfDefinition(AExplicitFunctionDefinition node) {
+	public static PDefinition getSelfDefinition(PDefinition node) {
 		return getSelfDefinition(node.getClassDefinition());
 	}
 

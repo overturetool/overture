@@ -45,9 +45,9 @@ public class TypeCheckerErrors {
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
 	}
 
-	public static void warning(PDefinition d, int number, String msg)
+	public static void warning(int number, String msg, LexLocation loc, Object node)
 	{
-		TypeChecker.warning(number, msg, d.getLocation());
+		TypeChecker.warning(number, msg, loc);
 	}
 	
 }
