@@ -836,7 +836,7 @@ public class DefinitionReader extends SyntaxReader
 
 		return new AImplicitFunctionDefinition(funcName.location,
 			idToName(funcName), scope,false,null,null,null,typeParams,null,parameterPatterns,
-			precondition,null,postcondition,null,resultPattern,body,null, measure,null,false, 0);
+			precondition,null,postcondition,null,resultPattern,body,null,null, measure,null,false, 0);
 		
 //		return new ImplicitFunctionDefinition(
 //			idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
@@ -1011,7 +1011,7 @@ public class DefinitionReader extends SyntaxReader
 //super(Pass.DEFS, name.location, name, NameScope.GLOBAL);
 		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location,
 			idToName(funcName),NameScope.GLOBAL,null,null,null, null,parameters,null,null,body,
-			precondition,postcondition,null,type,null,null,null,null,null,null);
+			precondition,postcondition,null,type,null,null,null,null,null,null,null);
 
 		return def;
 	}
@@ -1088,7 +1088,7 @@ public class DefinitionReader extends SyntaxReader
 		ASpecificationStm spec = readSpecification(funcName.location, body == null);
 		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
 			idToName(funcName),NameScope.GLOBAL,null,null,null,null,null, parameterPatterns,null,null,resultPattern,
-			body,null,null,null,null,null,null);
+			body,null,null,null,null,null,null,null,null,null);
 		
 		return def;
 	}

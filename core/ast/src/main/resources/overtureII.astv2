@@ -296,7 +296,7 @@ pattern {-> package='org.overture.ast.patterns'}
     
 pair {-> package='org.overture.ast.patterns'}
     = {patternType} [pattern]:pattern [type]:type
-    | {patternListType} [pattern]:pattern* [type]:type
+    | {patternListType} [patterns]:pattern* [type]:type
     ; 
     
 bind {-> package='org.overture.ast.patterns'}
@@ -315,7 +315,7 @@ patternBind {-> package='org.overture.ast.patterns'}
     
 definition {-> package='org.overture.ast.definitions'}
     =   {assignment} [expression]:exp [expType]:type
-    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken
+    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:java_Boolean [oldname]:LexNameToken
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
@@ -334,9 +334,9 @@ definition {-> package='org.overture.ast.definitions'}
                             [recursive]:java_Boolean 
                             [measureLexical]:java_Integer
                             [isCurried]:java_Boolean 
-    |   {external} [state]:definition [readOnly]:boolean_const [oldname]:LexNameToken
-    |   {implicitFunction}  [typeParams]:LexNameToken* 
-                            [typeFunction]:function 
+    |   {external} [state]:definition [readOnly]:java_Boolean [oldname]:LexNameToken
+    |   {implicitFunction}  [typeParams]:LexNameToken*     
+                            [functionType]:function 
                             [paramPatternList]:pair.patternListType* 
                             [precondition]:exp 
                             [predef]:explicitFunction 
@@ -344,6 +344,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [postdef]:explicitFunction 
                             [result]:pair.patternType
                             [body]:exp 
+                            [actualResult]:type
                             [isTypeInvariant]:java_Boolean 
                             [measure]:LexNameToken 
                             [measureDef]:definition 
@@ -364,19 +365,22 @@ definition {-> package='org.overture.ast.definitions'}
                             [actualResult]:type
                             [stateDefinition]:definition
                             [isConstructor]:java_Boolean
+                            [paramDefinitions]:definition*                            
     |   {implicitOperation} [opType]:type.operation
                             [parameterPatternList]:pair.patternListType*
                             [precondition]:exp 
                             [postcondition]:exp
                             [result]:pair.patternType 
-                            [body]:stm 
+                            [body]:stm  //TODO:FIX ORDER
                             [predef]:definition.explicitFunction
                             [postdef]:definition.explicitFunction
                             [paramDefinitions]:definition*
                             [state]:definition.state
                             [actualResult]:type
                             [isConstructor]:java_Boolean
-                            
+                            [stateDefinition]:definition
+                            [errors]:case.error*
+                            [externals]:clause.external*
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken
     |   {local} 
@@ -570,7 +574,7 @@ Aspect Declaration
     ;
 
 %definition->#class
-    = [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition* [allInheritedDefinitions]:definition*
+    = [className]:LexNameToken [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition* [allInheritedDefinitions]:definition* [hasContructors]:java_Boolean
     ;
     
 %stm
