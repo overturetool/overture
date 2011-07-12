@@ -18,7 +18,7 @@ public class ASetTypeAssistant {
 		try
 		{
 			type.setSetof(PTypeAssistant.typeResolve(type.getSetof(), root, rootVisitor, question));
-			if (root != null) root.setInfinate(false);	// Could be empty
+			if (root != null) root.setInfinite(false);	// Could be empty
 			return type;
 		}
 		catch (TypeCheckException e)

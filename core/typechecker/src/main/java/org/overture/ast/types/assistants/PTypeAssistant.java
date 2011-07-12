@@ -96,7 +96,7 @@ public class PTypeAssistant {
 			case SET:
 				return new ASetType(location, false,definitions,
 						polymorph(((ASetType)type).getSetof(), pname, actualType),
-						((ASetType)type).getEmpty());
+						((ASetType)type).getEmpty(),false);
 			case UNION:
 				Set<PType> polytypesSet = new HashSet<PType>();
 
@@ -105,7 +105,7 @@ public class PTypeAssistant {
 					polytypesSet.add(polymorph(ptype,pname, actualType));
 				}
 				
-				return new AUnionType(location,false,definitions, new Vector<PType>(polytypesSet));
+				return new AUnionType(location,false,definitions, new Vector<PType>(polytypesSet),false,false);
 			default:
 				break;
 		}
@@ -145,7 +145,7 @@ public class PTypeAssistant {
 			result = rtypes.iterator().next();
 		} else {
 			result = new AUnionType(location, false,null, new ArrayList<PType>(
-					rtypes));
+					rtypes),false, false);
 		}
 
 		return (optional ? new AOptionalType(location, false,null, result) : result);

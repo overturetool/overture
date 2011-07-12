@@ -18,7 +18,9 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
@@ -151,43 +153,48 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 		else if (node.getTypebind() != null)
 		{
-			typebind.typeResolve(base);
-
-			if (!TypeComparator.compatible(typebind.type, expType))
+			ATypeBindAssistant.typeResolve(node.getTypebind(),rootVisitor,question);
+			ATypeBind typebind = node.getTypebind();
+			
+			if (!TypeComparator.compatible(typebind.getType(), node.getExpType()))
 			{
-				typebind.report(3014, "Expression is not compatible with type bind");
+				TypeCheckerErrors.report(3014, "Expression is not compatible with type bind",typebind.getLocation(),typebind);
 			}
 
-			defType = typebind.type;	// Effectively a cast
-			defs = typebind.pattern.getDefinitions(defType, nameScope);
+			node.setDefType(typebind.getType());	// Effectively a cast
+			node.setDefs(PPatternAssistant.getDefinitions(typebind.getPattern(), node.getDefType(), question.scope));
 		}
 		else
 		{
-			Type st = setbind.set.typeCheck(base, null, scope);
+			question.qualifiers = null;
+			PType st = node.getSetbind().getSet().apply(rootVisitor, question);
 
-			if (!st.isSet())
+			if (!PTypeAssistant.isSet(st))
 			{
-				report(3015, "Set bind is not a set type?");
-				defType = expType;
+				TypeCheckerErrors.report(3015, "Set bind is not a set type?",node.getLocation(),node);
+				node.setDefType(node.getExpType());
 			}
 			else
 			{
-    			Type setof = st.getSet().setof;
+    			PType setof = PTypeAssistant.getSet(st).getSetof();
 
-    			if (!TypeComparator.compatible(expType, setof))
+    			if (!TypeComparator.compatible(node.getExpType(), setof))
     			{
-    				setbind.report(3016, "Expression is not compatible with set bind");
+    				TypeCheckerErrors.report(3016, "Expression is not compatible with set bind",node.getSetbind().getLocation(),node.getSetbind());
     			}
 
-    			defType = setof;	// Effectively a cast
+    			node.setDefType(setof);	// Effectively a cast
 			}
 
-			setbind.pattern.typeResolve(base);
-			defs = setbind.pattern.getDefinitions(defType, nameScope);
+			PPatternAssistant.typeResolve(node.getSetbind().getPattern(), rootVisitor, question);
+			node.setDefs(PPatternAssistant.getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
 		}
 
-		defs.typeCheck(base, scope);
+		PDefinitionAssistant.typeCheck(node.getDefs(), rootVisitor, question);
+		return node.getType();
 	}
+	
+	
 	
 	
 	@Override

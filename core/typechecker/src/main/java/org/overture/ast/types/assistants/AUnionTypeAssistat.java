@@ -90,7 +90,7 @@ public class AUnionTypeAssistat {
     		}
 		}
 
-		type.setTypes(exptypes);
+		type.setTypes(new Vector<PType>(exptypes));
 		type.setExpanded(true);
 		NodeList<PDefinition> definitions = type.getDefinitions();
 

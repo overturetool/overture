@@ -40,7 +40,7 @@ public class AUnresolvedTypeAssistant {
 		return deref;
 	}
 
-	private PType dereference(AUnresolvedType type, Environment env, ATypeDefinition root)
+	private static PType dereference(AUnresolvedType type, Environment env, ATypeDefinition root)
 	{
 		PDefinition def = env.findType(type.getTypename(), type.getLocation().module);
 
@@ -91,6 +91,6 @@ public class AUnresolvedTypeAssistant {
 		return r;
 	}
 
-	}
+	
 
 }
