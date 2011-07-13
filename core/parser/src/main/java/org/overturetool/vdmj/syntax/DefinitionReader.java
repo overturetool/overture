@@ -401,7 +401,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new ATypeDefinition(id.location,idToName(id),null, 
-				null,null,null,null,invtype,invPattern,invExpression,false);
+				null,null,null,null,invtype,invPattern,invExpression,null,false);
 		
 		//return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}
@@ -956,7 +956,7 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 		return new AStateDefinition(name.location,idToName(name),null,null,null,null, 
-				null,fieldList,invPattern, invExpression, initPattern, initExpression,
+				null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,
 				null);
 	}
 
@@ -1042,7 +1042,7 @@ public class DefinitionReader extends SyntaxReader
 		
 		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location,
 			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(), type, parameters,body,
-			precondition,postcondition,null,null,null,null,null,false);
+			precondition,postcondition,type,null,null,null,null,null,false);
 
 		return def;
 	}
