@@ -13,10 +13,11 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 
-public abstract class BaseParserTestCase<T extends SyntaxReader> extends TestCase
+public abstract class BaseParserTestCase<T extends SyntaxReader> extends
+		TestCase
 {
 	File file;
-	String name ;
+	String name;
 	String content;
 
 	public BaseParserTestCase()
@@ -29,21 +30,21 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends TestCas
 		super("test");
 		this.file = file;
 	}
-	
-	public  BaseParserTestCase(String name, String content)
+
+	public BaseParserTestCase(String name, String content)
 	{
 		super("test");
 		this.content = content;
-		this.name  =name;
+		this.name = name;
 	}
 
 	@Override
 	public String getName()
 	{
-		if(name !=null)
+		if (name != null)
 		{
 			return name;
-		}else if (file != null)
+		} else if (file != null)
 		{
 			String name = file.getName();
 			if (name.contains("."))
@@ -60,18 +61,19 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends TestCas
 		if (file != null)
 		{
 			internal(new LexTokenReader(file, Settings.dialect));
-		}else if(content != null)
+		} else if (content != null)
 		{
-			internal( new LexTokenReader(content, Settings.dialect));
+			internal(new LexTokenReader(content, Settings.dialect));
 		}
 	}
-	
+
 	protected abstract T getReader(LexTokenReader ltr);
-	
-	protected abstract Object read(T reader) throws ParserException, LexException;
-	
+
+	protected abstract Object read(T reader) throws ParserException,
+			LexException;
+
 	protected abstract String getReaderTypeName();
-	
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -79,14 +81,15 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends TestCas
 		Settings.release = Release.VDM_10;
 	}
 
-	protected void internal(LexTokenReader ltr) throws ParserException, LexException
+	protected void internal(LexTokenReader ltr) throws ParserException,
+			LexException
 	{
 		T reader = null;
 		Object result = null;
 		try
 		{
 			reader = getReader(ltr);
-			 result = read(reader);
+			result = read(reader);
 
 			if (reader != null && reader.getErrorCount() > 0)
 			{
@@ -103,9 +106,22 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends TestCas
 			}
 		} finally
 		{
-			System.out.println("Parsed "+getReaderTypeName()+": \"" + content + "\" as: "
-					+ result);
+			System.out.println(pad("Parsed " + getReaderTypeName(),20) +" - "+pad(result.getClass().getSimpleName(),30)+ ": "+
+					pad(result+"",35)+" from \""+ content + "\""  );
 			System.out.flush();
 		}
+	}
+
+	public static String pad(String text, int length)
+	{
+		if (text == null)
+		{
+			text = "null";
+		}
+		while (text.length() < length)
+		{
+			text += " ";
+		}
+		return text;
 	}
 }
