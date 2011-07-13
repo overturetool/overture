@@ -305,8 +305,8 @@ bind {-> package='org.overture.ast.patterns'}
     ;
 
 multipleBind {-> package='org.overture.ast.patterns'}
-    =   {set} [plist]:pattern* [set]:exp //binds
-    |   {type}  [plist]:pattern* [type]:type //binds
+    =   {set}  [set]:exp //binds
+    |   {type} [type]:type //binds
     ;
 
 patternBind {-> package='org.overture.ast.patterns'}
@@ -315,7 +315,7 @@ patternBind {-> package='org.overture.ast.patterns'}
     
 definition {-> package='org.overture.ast.definitions'}
     =   {assignment} [expression]:exp [expType]:type
-    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:boolean_const [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
+    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
@@ -370,6 +370,8 @@ definition {-> package='org.overture.ast.definitions'}
                             [precondition]:exp 
                             [postcondition]:exp 
                             
+                            [operationType]:type.operation
+                            
                             [predef]:definition.explicitFunction
                             [postdef]:definition.explicitFunction
                             [paramDefinitions]:definition*
@@ -402,9 +404,13 @@ definition {-> package='org.overture.ast.definitions'}
     |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
     |   {perSync} [opname]:LexNameToken [guard]:exp
     |   {renamed} [def]:definition
-    |   {state} [fields]:field* [invPattern]:pattern [invExpression]:exp [initPattern]:pattern [initExpression]:exp [stateDefs]:definition*
+    |   {state} [fields]:field* 
+                [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction
+                [initPattern]:pattern [initExpression]:exp [initdef]:definition.explicitFunction
+                [stateDefs]:definition*
+                 
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [infinite]:java_Boolean//is access missing here
+    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition [infinite]:java_Boolean//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type //is access missing here
     ;
@@ -585,14 +591,19 @@ Aspect Declaration
 %bind = [location]:location
     ;
 
-%multipleBind = [location]:location
+%multipleBind = [location]:location [plist]:pattern*
     ;
     
 %definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [access]:accessSpecifier [type]:type // [pass]:pass
     ;
 
 %definition->#class
-    = [supertypes]:type* [supernames]:LexNameToken* [definitions]:definition* [allInheritedDefinitions]:definition* [hasContructors]:java_Boolean
+    =   [supertypes]:type* 
+        [supernames]:LexNameToken* 
+        [definitions]:definition* 
+        [allInheritedDefinitions]:definition*
+        [localInheritedDefinitions]:definition* 
+        [hasContructors]:java_Boolean
     ;
     
 %stm
