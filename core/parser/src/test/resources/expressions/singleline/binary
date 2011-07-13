@@ -6,7 +6,7 @@ e in set s1
 s1 union s2
 s1 <> s2
 e1 not in set s1
-i++
+i+a
 s1 psubset s2
 m2 :-> {1,2}
 m1 :> {4,9,3}

@@ -982,7 +982,7 @@ public class ExpressionReader extends SyntaxReader
 
 			case SELF:
 				nextToken();
-				return new ASelfExp(null, token.location, (LexNameToken)token);
+				return new ASelfExp(null, token.location, new LexNameToken(token.location.module, "self", token.location));
 //				return new SelfExpression(token.location);
 
 			case IS:
