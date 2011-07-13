@@ -104,6 +104,7 @@ ext rd sstate : StartState
     rd startswitch : SwitchPos
     rd aog : bool
     wr starteron : bool
+    rd fuelswitch : SwitchPos
 pre (fuelswitch = <on>) and (startswitch = <on>) and aog
 post starteron;
 
@@ -147,6 +148,12 @@ SequenceAbort ()
 ext rd fuelswitch : SwitchPos
     wr attempt : StartAttempt
     wr startaborted : bool
+    rd starter_flt : bool
+    rd ign_flt
+    rd sov_flt
+    rd n2_flt
+    rd tgt_flt
+    rd n2
 pre GroundFailureDetected (ign_flt, starter_flt, sov_flt, n2_flt, tgt_flt, n2) or
     (fuelswitch = <off>) or
     (attempt >= DVMAXNUMBERATTEMPTS)
