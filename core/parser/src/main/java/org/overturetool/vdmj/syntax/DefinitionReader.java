@@ -957,7 +957,7 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 		return new AStateDefinition(name.location,idToName(name),null,null,null,null, 
 				null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,
-				null);
+				null,null);
 	}
 
 	private PDefinition readOperationDefinition()
