@@ -435,7 +435,7 @@ public class StatementReader extends SyntaxReader
 			}
 			else
 			{
-	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), null,ofd.getFieldName(), null,args,ofd.getClassName().explicit);
+	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), null,ofd.getFieldName(), null,args,false);
 			}
 		}
 		else if (oad.getObject() instanceof AIdentifierObjectDesignator)

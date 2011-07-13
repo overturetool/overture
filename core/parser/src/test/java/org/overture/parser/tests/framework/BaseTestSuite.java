@@ -1,4 +1,4 @@
-package org.overture.parser.tests;
+package org.overture.parser.tests.framework;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,61 +12,81 @@ import java.util.Vector;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class BaseTestSuite
+public class BaseTestSuite extends TestSuite
 {
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected static TestSuite createTestCompleteFile(String name,File testRoot,Class testCase) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
+	public BaseTestSuite(String name)
 	{
-		Constructor ctor = testCase.getConstructor(new Class[]{File.class});
-		TestSuite suite = new TestSuite(name);
-		
+		super(name);
+	}
+
+	public BaseTestSuite()
+	{
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected static TestSuite createTestCompleteFile(String name,
+			File testRoot, Class testCase) throws IllegalArgumentException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException, SecurityException, NoSuchMethodException
+	{
+		Constructor ctor = testCase.getConstructor(new Class[] { File.class });
+		TestSuite suite = new BaseTestSuite(name);
+
 		if (testRoot != null && testRoot.exists())
 		{
-			
+
 			for (File file : testRoot.listFiles())
 			{
-				if(file.getName().startsWith("."))
+				if (file.getName().startsWith("."))
 				{
 					continue;
 				}
-				Object instance = ctor.newInstance(new Object[]{file});
+				Object instance = ctor.newInstance(new Object[] { file });
 				suite.addTest((Test) instance);
 			}
 		}
 		return suite;
-		
+
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected static TestSuite createTestSingleLineFile(String name,File testRoot,Class testCase) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, IOException
+	protected static TestSuite createTestSingleLineFile(String name,
+			File testRoot, Class testCase) throws IllegalArgumentException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException, SecurityException,
+			NoSuchMethodException, IOException
 	{
-		Constructor ctor = testCase.getConstructor(new Class[]{String.class,String.class});
-		TestSuite suite = new TestSuite(name);
-		
+		Constructor ctor = testCase.getConstructor(new Class[] { String.class,
+				String.class });
+		TestSuite suite = new BaseTestSuite(name);
+
 		if (testRoot != null && testRoot.exists())
 		{
 			for (File file : testRoot.listFiles())
 			{
-				if(file.getName().startsWith("."))
+				if (file.getName().startsWith("."))
 				{
 					continue;
 				}
 				List<String> lines = readFile(file);
-				if(lines!=null)
+				if (lines != null)
 				{
 					for (int i = 0; i < lines.size(); i++)
 					{
-						Object instance = ctor.newInstance(new Object[]{file.getName()+" "+i+" - "+lines.get(i),lines.get(i)});
+						Object instance = ctor.newInstance(new Object[] {
+								file.getName() + " " + i + " - " + lines.get(i),
+								lines.get(i) });
 						suite.addTest((Test) instance);
 					}
 				}
-				
+
 			}
 		}
 		return suite;
-		
+
 	}
-	
+
 	protected static List<String> readFile(File file) throws IOException
 	{
 		List<String> lines = new Vector<String>();

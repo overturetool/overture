@@ -8,18 +8,17 @@ import java.util.Enumeration;
 import org.overture.parser.tests.framework.BaseTestSuite;
 
 import junit.framework.Test;
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-public class ExpressionTestSuite extends BaseTestSuite
+public class StatementTestSuite extends BaseTestSuite
 {
 
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Parser Expression TestSuite";
-		String root = "src\\test\\resources\\expressions";
-		TestSuite test = createTestCompleteFile(name,new File(root+"\\complete"),ExpressionTestCase.class);
-		TestSuite test2 = createTestSingleLineFile(name,new File(root+"\\singleline"),ExpressionTestCase.class);
+		String name = "Parser Statement TestSuite";
+		String root = "src\\test\\resources\\statements";
+		TestSuite test = createTestCompleteFile(name,new File(root+"\\complete"),StatementTestCase.class);
+		TestSuite test2 = createTestSingleLineFile(name,new File(root+"\\singleline"),StatementTestCase.class);
 		@SuppressWarnings("unchecked")
 		Enumeration<Test> e = test2.tests();
 		while(e.hasMoreElements())
@@ -28,6 +27,7 @@ public class ExpressionTestSuite extends BaseTestSuite
 		}
 		return test;
 	}
+	
 	
 	
 }

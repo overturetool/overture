@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import org.overture.parser.tests.framework.BaseTestSuite;
+
 import junit.framework.Test;
 
 public class TypeTestSuite extends BaseTestSuite
