@@ -14,13 +14,32 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
+import org.overture.ast.definitions.AMutexSyncDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AExplicitOperationDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.ALocalDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
+import org.overture.ast.definitions.assistants.PTraceDefinitionAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
@@ -28,6 +47,7 @@ import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.APatternTypePairAssistant;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
@@ -40,6 +60,7 @@ import org.overture.ast.statements.assistants.AExternalClauseAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnknownType;
@@ -59,7 +80,6 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.typechecker.NameScope;
-
 
 
 
@@ -322,15 +342,15 @@ public class TypeCheckerDefinitionVisitor extends
 
 			if (node.getMeasureDef() == null)
 			{
-				node.getMeasure().report(3270, "Measure " + node.getMeasure() + " is not in scope");
+				TypeCheckerErrors.report(3270, "Measure " + node.getMeasure() + " is not in scope",node.getMeasure().getLocation(),node.getMeasure());
 			}
 			else if (!(node.getMeasureDef() instanceof AExplicitFunctionDefinition))
 			{
-				node.getMeasure().report(3271, "Measure " + node.getMeasure() + " is not an explicit function");
+				TypeCheckerErrors.report(3271, "Measure " + node.getMeasure() + " is not an explicit function",node.getMeasure().getLocation(),node.getMeasure());
 			}
 			else if (node.getMeasureDef() == node)
 			{
-				node.getMeasure().report(3304, "Recursive function cannot be its own measure");
+				TypeCheckerErrors.report(3304, "Recursive function cannot be its own measure",node.getMeasure().getLocation(),node.getMeasure());
 			}
 			else
 			{
@@ -338,18 +358,18 @@ public class TypeCheckerDefinitionVisitor extends
 				
 				if (node.getTypeParams() == null && efd.getTypeParams() != null)
 				{
-					node.getMeasure().report(3309, "Measure must not be polymorphic");
+					TypeCheckerErrors.report(3309, "Measure must not be polymorphic",node.getMeasure().getLocation(),node.getMeasure());
 				}
 				else if (node.getTypeParams() != null && efd.getTypeParams() == null)
 				{
-					node.getMeasure().report(3310, "Measure must also be polymorphic");
+					TypeCheckerErrors.report(3310, "Measure must also be polymorphic",node.getMeasure().getLocation(),node.getMeasure());
 				}
 				
 				AFunctionType mtype = (AFunctionType)efd.getFunctionType();
 
 				if (!TypeComparator.compatible(mtype.getParameters(), node.getFunctionType().getParameters()))
 				{
-					node.getMeasure().report(3303, "Measure parameters different to function");
+					TypeCheckerErrors.report(3303, "Measure parameters different to function",node.getMeasure().getLocation(),node.getMeasure());
 					TypeChecker.detail2(node.getMeasure().getName(), mtype.getParameters(), node.getName().getName(), node.getFunctionType().getParameters());
 				}
 
@@ -363,9 +383,9 @@ public class TypeCheckerDefinitionVisitor extends
 						{
 							if (!(t instanceof ANatNumericBasicType))
 							{
-								node.getMeasure().report(3272,
-									"Measure range is not a nat, or a nat tuple");
-								node.getMeasure().detail("Actual", mtype.getResult());
+								TypeCheckerErrors.report(3272,
+									"Measure range is not a nat, or a nat tuple",node.getMeasure().getLocation(),node.getMeasure());
+								TypeCheckerErrors.detail("Actual", mtype.getResult());
 								break;
 							}
 						}
@@ -374,9 +394,9 @@ public class TypeCheckerDefinitionVisitor extends
 					}
 					else
 					{
-						node.getMeasure().report(3272,
-							"Measure range is not a nat, or a nat tuple");
-						node.getMeasure().detail("Actual", mtype.getResult());
+						TypeCheckerErrors.report(3272,
+							"Measure range is not a nat, or a nat tuple",node.getMeasure().getLocation(),node.getMeasure());
+						TypeCheckerErrors.detail("Actual", mtype.getResult());
 					}
 				}
 			}
@@ -412,7 +432,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		Set<PDefinition> argdefs = new HashSet<PDefinition>();
 
-		for (APatternListTypePair pltp: node.getParamPatternList())
+		for (APatternListTypePair pltp: node.getParamPatterns())
 		{
 			argdefs.addAll(APatternListTypePairAssistant.getDefinitions(pltp,NameScope.LOCAL));
 		}
@@ -505,7 +525,7 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 		else if (node.getMeasure() != null)
 		{
-			if (question.env.isVDMPP()) node.getMeasure().setTypeQualifier(node.getFunctionType().getParameters());
+			if (question.env.isVDMPP()) node.getMeasure().setTypeQualifier(node.getTypeFunction().getParameters());
 			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
 
 			if (node.getBody() == null)
@@ -535,10 +555,10 @@ public class TypeCheckerDefinitionVisitor extends
 				
 				AFunctionType mtype = (AFunctionType)node.getMeasureDef().getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(),node.getFunctionType().getParameters()))
+				if (!TypeComparator.compatible(mtype.getParameters(),node.getTypeFunction().getParameters()))
 				{
 					TypeCheckerErrors.report(3303, "Measure parameters different to function",node.getMeasure().getLocation(),node.getMeasure());
-					TypeCheckerErrors.detail2(node.getMeasure().name, mtype.getParameters(), node.getName().name,node.getFunctionType().getParameters());
+					TypeCheckerErrors.detail2(node.getMeasure().name, mtype.getParameters(), node.getName().name,node.getTypeFunction().getParameters());
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType))
@@ -575,7 +595,7 @@ public class TypeCheckerDefinitionVisitor extends
 			local.unusedCheck();
 		}
 		
-		node.setType(node.getFunctionType());
+		node.setType(node.getTypeFunction());
 		return node.getType();
 	}
 	
@@ -585,7 +605,7 @@ public class TypeCheckerDefinitionVisitor extends
 			AExplicitOperationDefinition node, TypeCheckInfo question) {
 		
 		question.scope = NameScope.NAMESANDSTATE;
-		List<PType> ptypes = node.getOpType().getParameters();
+		List<PType> ptypes = node.getOperationType().getParameters();
 
 		if (node.getParameterPatterns().size() > ptypes.size())
 		{
@@ -627,20 +647,20 @@ public class TypeCheckerDefinitionVisitor extends
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'",node.getLocation(),node);
 				}
 
-				if (PTypeAssistant.isClass(node.getOpType().getResult()))
+				if (PTypeAssistant.isClass(node.getOperationType().getResult()))
 				{
-					AClassType ctype = PTypeAssistant.getClassType(node.getOpType().getResult());
+					AClassType ctype = PTypeAssistant.getClassType(node.getOperationType().getResult());
 
 					if (ctype.getClassdef() != node.getClassDefinition())
 					{
 						TypeCheckerErrors.report(3025,
-							"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOpType().getResult().getLocation(),node.getOpType().getResult());
+							"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOperationType().getResult().getLocation(),node.getOperationType().getResult());
 					}
 				}
 				else
 				{
 					TypeCheckerErrors.report(3026,
-						"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOpType().getResult().getLocation(),node.getOpType().getResult());
+						"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOperationType().getResult().getLocation(),node.getOperationType().getResult());
 				}
 			}
 		}
@@ -668,7 +688,7 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			LexNameToken result = new LexNameToken(node.getName().module, "RESULT", node.getLocation());
 			PPattern rp = new AIdentifierPattern(null, null, false, result);
-			List<PDefinition> rdefs = PPatternAssistant.getDefinitions(rp,node.getOpType().getResult(), NameScope.NAMESANDANYSTATE);
+			List<PDefinition> rdefs = PPatternAssistant.getDefinitions(rp,node.getOperationType().getResult(), NameScope.NAMESANDANYSTATE);
 			FlatEnvironment post = new FlatEnvironment(rdefs, local);
 			post.setEnclosingDefinition(node.getPostdef());
 			question.env = post;
@@ -687,21 +707,21 @@ public class TypeCheckerDefinitionVisitor extends
 		question.qualifiers = null;
 		question.scope = NameScope.NAMESANDSTATE;
 		node.setActualResult( node.getBody().apply(rootVisitor,question));
-		boolean compatible = TypeComparator.compatible(node.getOpType().getResult(), node.getActualResult());
+		boolean compatible = TypeComparator.compatible(node.getOperationType().getResult(), node.getActualResult());
 
 		if ((node.getIsConstructor() && !PTypeAssistant.isType(node.getActualResult(), AVoidType.class)  && !compatible) ||
 			(!node.getIsConstructor() && !compatible))
 		{
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type",node.getLocation(),node);
-			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getOpType().getResult());
+			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getOperationType().getResult());
 		}
 
-		if (PAccessSpecifierAssistant.isAsync(node.getAccess()) && ! PTypeAssistant.isType(node.getOpType().getResult(), AVoidType.class))
+		if (PAccessSpecifierAssistant.isAsync(node.getAccess()) && ! PTypeAssistant.isType(node.getOperationType().getResult(), AVoidType.class))
 		{
 			TypeCheckerErrors.report(3293, "Asynchronous operation " + node.getName() + " cannot return a value",node.getLocation(),node);
 		}
 
-		if (PTypeAssistant.narrowerThan(node.getOpType(), node.getAccess()))
+		if (PTypeAssistant.narrowerThan(node.getOperationType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3028, "Operation parameter visibility less than operation definition",node.getLocation(),node);
 		}
@@ -711,8 +731,8 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			local.unusedCheck();
 		}
-		node.setType(node.getOpType());
-		return node.getOpType();
+		node.setType(node.getOperationType());
+		return node.getOperationType();
 	}
 	
 	@Override
@@ -732,7 +752,7 @@ public class TypeCheckerDefinitionVisitor extends
 			node.setStateDefinition(question.env.findStateDefinition());
 		}
 
-		for (APatternListTypePair ptp: node.getParameterPatternList())
+		for (APatternListTypePair ptp: node.getParameterPatterns())
 		{
 			argdefs.addAll(APatternListTypePairAssistant.getDefinitions(ptp, NameScope.LOCAL));
 		}
@@ -742,7 +762,7 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getResult() != null)
 		{
 			defs.addAll(
-					PPatternAssistant.getDefinitions(node.getResult().getPattern(), node.getOpType().getResult(), NameScope.LOCAL));
+					PPatternAssistant.getDefinitions(node.getResult().getPattern(), node.getOperationType().getResult(), NameScope.LOCAL));
 		}
 
 		// Now we build local definitions for each of the externals, so
@@ -826,20 +846,20 @@ public class TypeCheckerDefinitionVisitor extends
     					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'",node.getLocation(),node);
     				}
 
-    				if (PTypeAssistant.isClass(node.getOpType().getResult()))
+    				if (PTypeAssistant.isClass(node.getOperationType().getResult()))
     				{
-    					AClassType ctype = PTypeAssistant.getClassType(node.getOpType().getResult());
+    					AClassType ctype = PTypeAssistant.getClassType(node.getOperationType().getResult());
 
     					if (ctype.getClassdef() != node.getClassDefinition())
     					{
     						TypeCheckerErrors.report(3025,
-    							"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOpType().getResult().getLocation(),node.getOpType().getResult());
+    							"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOperationType().getResult().getLocation(),node.getOperationType().getResult());
     					}
     				}
     				else
     				{
     					TypeCheckerErrors.report(3026,
-    						"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOpType().getLocation(),node.getOpType());
+    						"Constructor operation must have return type " + node.getClassDefinition().getName().name,node.getOperationType().getLocation(),node.getOperationType());
     				}
     			}
 			}
@@ -848,22 +868,22 @@ public class TypeCheckerDefinitionVisitor extends
 			question.scope = NameScope.NAMESANDSTATE;
 			node.setActualResult( node.getBody().apply(rootVisitor,question));
 			
-			boolean compatible = TypeComparator.compatible(node.getOpType().getResult(), node.getActualResult());
+			boolean compatible = TypeComparator.compatible(node.getOperationType().getResult(), node.getActualResult());
 
 			if ((node.getIsConstructor() && !PTypeAssistant.isType(node.getActualResult(),AVoidType.class) && !compatible) ||
 				(!node.getIsConstructor() && !compatible))
 			{
 				TypeCheckerErrors.report(3035, "Operation returns unexpected type",node.getLocation(),node);
-				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getOpType().getResult());
+				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getOperationType().getResult());
 			}
 		}
 
-		if (PAccessSpecifierAssistant.isAsync(node.getAccess()) && !PTypeAssistant.isType(node.getOpType().getResult(), AVoidType.class))
+		if (PAccessSpecifierAssistant.isAsync(node.getAccess()) && !PTypeAssistant.isType(node.getOperationType().getResult(), AVoidType.class))
 		{
 			TypeCheckerErrors.report(3293, "Asynchronous operation " + node.getName() + " cannot return a value",node.getLocation(),node);
 		}
 
-		if (PTypeAssistant.narrowerThan(node.getOpType(), node.getAccess()))
+		if (PTypeAssistant.narrowerThan(node.getOperationType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3036, "Operation parameter visibility less than operation definition",node.getLocation(),node);
 		}
@@ -956,4 +976,347 @@ public class TypeCheckerDefinitionVisitor extends
 		node.setType(node.getActualResult());
 		return node.getType();
 	}
+	
+	@Override
+	public PType caseAImportedDefinition(AImportedDefinition node,
+			TypeCheckInfo question) {
+		node.setType(node.getDef().apply(rootVisitor, question));
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAInheritedDefinition(AInheritedDefinition node,
+			TypeCheckInfo question) {
+		node.setType(node.getSuperdef().apply(rootVisitor, question));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseALocalDefinition(ALocalDefinition node,
+			TypeCheckInfo question) {
+		if (node.getType() != null)
+   		{
+   			node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, question));
+   		}
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAMultiBindListDefinition(AMultiBindListDefinition node,
+			TypeCheckInfo question) {
+	
+		List<PDefinition> defs = new Vector<PDefinition>();
+
+		for (PMultipleBind mb: node.getBindings())
+		{
+			PType type = mb.apply(rootVisitor, question);
+			defs.addAll(PMultipleBindAssistant.getDefinitions(mb,type, question));
+		}
+
+		PDefinitionAssistant.typeCheck(defs, rootVisitor, question);
+		node.setDefs(defs);
+		return null;
+	}
+	@Override
+	public PType caseAMutexSyncDefinition(AMutexSyncDefinition node,
+			TypeCheckInfo question) {
+
+		SClassDefinition classdef = question.env.findClassDefinition();
+
+		if (node.getOperations().isEmpty())
+		{
+			// Add all locally visibly callable operations for mutex(all)
+
+			for (PDefinition def: SClassDefinitionAssistant.getLocalDefinitions(node.getClassDefinition()))
+			{
+				if (PDefinitionAssistant.isCallableOperation(def) &&
+					!def.getName().name.equals(classdef.getName().name))
+				{
+					node.getOperations().add(def.getName());
+				}
+			}
+		}
+
+		for (LexNameToken opname: node.getOperations())
+		{
+			int found = 0;
+
+			for (PDefinition def: classdef.getDefinitions())
+			{
+				if (def.getName() != null && def.getName().matches(opname))
+				{
+					found++;
+
+					if (!PDefinitionAssistant.isCallableOperation(def))
+					{
+						TypeCheckerErrors.report(3038, opname + " is not an explicit operation",opname.location,opname);
+					}
+				}
+			}
+
+    		if (found == 0)
+    		{
+    			TypeCheckerErrors.report(3039, opname + " is not in scope",opname.location,opname);
+    		}
+    		else if (found > 1)
+    		{
+    			TypeCheckerErrors.warning(5002, "Mutex of overloaded operation",opname.location,opname);
+    		}
+
+    		if (opname.name.equals(classdef.getName().name))
+    		{
+    			TypeCheckerErrors.report(3040, "Cannot put mutex on a constructor",opname.location,opname);
+    		}
+
+    		for (LexNameToken other: node.getOperations())
+    		{
+    			if (opname != other && opname.equals(other))
+    			{
+    				TypeCheckerErrors.report(3041, "Duplicate mutex name",opname.location,opname);
+    			}
+    		}
+    		    		
+		}
+		return null;
+	}
+	
+	
+	@Override
+	public PType caseANamedTraceDefinition(ANamedTraceDefinition node,
+			TypeCheckInfo question) {
+		
+		if (question.env.isVDMPP())
+		{
+			question.env = new FlatEnvironment(PDefinitionAssistant.getSelfDefinition(node), question.env);
+		}
+
+		question.scope = NameScope.NAMESANDSTATE;
+		for (List<PTraceDefinition> term: node.getTerms())
+		{			
+			PTraceDefinitionAssistant.typeCheck(term, rootVisitor, question);
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public PType caseAPerSyncDefinition(APerSyncDefinition node,
+			TypeCheckInfo question) {
+		
+		Environment base = question.env;
+		
+		SClassDefinition classdef = base.findClassDefinition();
+		int opfound = 0;
+		int perfound = 0;
+
+		for (PDefinition def: classdef.getDefinitions())
+		{
+			if (def.getName() != null && def.getName().matches(node.getOpname()))
+			{
+				opfound++;
+
+				if (!PDefinitionAssistant.isCallableOperation(def))
+				{
+					TypeCheckerErrors.report(3042, node.getOpname() + " is not an explicit operation",node.getOpname().location,node.getOpname());
+				}
+			}
+
+			if (def instanceof APerSyncDefinition)
+			{
+				APerSyncDefinition psd = (APerSyncDefinition)def;
+
+				if (psd.getOpname().equals(node.getOpname()))
+				{
+					perfound++;
+				}
+			}
+		}
+
+		LexNameToken opname = node.getOpname();
+		
+		if (opfound == 0)
+		{
+			TypeCheckerErrors.report(3043, opname + " is not in scope",opname.location,opname);
+		}
+		else if (opfound > 1)
+		{
+			TypeCheckerErrors.warning(5003, "Permission guard of overloaded operation",opname.location,opname);
+		}
+
+		if (perfound != 1)
+		{
+			TypeCheckerErrors.report(3044, "Duplicate permission guard found for " + opname, opname.location,opname);
+		}
+
+		if (opname.name.equals(classdef.getName().name))
+		{
+			TypeCheckerErrors.report(3045, "Cannot put guard on a constructor", opname.location,opname);
+		}
+
+		Environment local = new FlatEnvironment(node, base);
+		local.setEnclosingDefinition(node);	// Prevent op calls
+		question.env = local;
+		question.scope = NameScope.NAMESANDSTATE;
+		PType rt = node.getGuard().apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isType(rt, ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3046, "Guard is not a boolean expression",node.getGuard().getLocation(),node.getGuard());
+		}
+		
+		node.setType(rt);
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseARenamedDefinition(ARenamedDefinition node,
+			TypeCheckInfo question) {
+
+		node.setType(node.getDef().apply(rootVisitor, question));		
+		return node.getType();			
+	}
+	
+	@Override
+	public PType caseAStateDefinition(AStateDefinition node,
+			TypeCheckInfo question) {
+		
+		Environment base = question.env;
+		
+		if (base.findStateDefinition() != node)
+		{
+			TypeCheckerErrors.report(3047, "Only one state definition allowed per module",node.getLocation(),node);
+			return null;
+		}
+
+		PDefinitionAssistant.typeCheck(node.getStateDefs(),rootVisitor, question);
+
+		if (node.getInvdef() != null)
+		{
+			node.getInvdef().apply(rootVisitor, question);
+		}
+
+		if (node.getInitdef() != null)
+		{
+			node.getInitdef().apply(rootVisitor, question);
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public PType caseAThreadDefinition(AThreadDefinition node,
+			TypeCheckInfo question) {
+		question.scope = NameScope.NAMESANDSTATE;
+		
+		PType rt = node.getStatement().apply(rootVisitor, question);
+
+		if (!(rt instanceof AVoidType) && !(rt instanceof AUnknownType))
+		{
+			TypeCheckerErrors.report(3049, "Thread statement/operation must not return a value",node.getLocation(),node);
+		}
+		
+		node.setType(rt);
+		return rt;
+	}
+	
+	@Override
+	public PType caseATypeDefinition(ATypeDefinition node,
+			TypeCheckInfo question) {
+		
+		if (node.getInvdef() != null)
+		{
+			question.scope = NameScope.NAMES;
+			node.setType(node.getInvdef().apply(rootVisitor, question));
+		}
+		return node.getType();
+		
+	}
+	
+	@Override
+	public PType caseAUntypedDefinition(AUntypedDefinition node,
+			TypeCheckInfo question) {
+		
+		assert false: "Can't type check untyped definition?";
+		return null;
+	}
+	
+	@Override
+	public PType caseAValueDefinition(AValueDefinition node,
+			TypeCheckInfo question) {
+
+		question.qualifiers = null;
+		PType expType = node.getExpression().apply(rootVisitor, question);
+		node.setExpType(expType);
+		PType type = node.getType();
+		if (expType instanceof AVoidType)
+		{
+			TypeCheckerErrors.report(3048, "Expression does not return a value",node.getExpression().getLocation(),node.getExpression());
+		}
+		else if (type != null)
+		{
+			if (!TypeComparator.compatible(type, expType))
+			{
+				TypeCheckerErrors.report(3051, "Expression does not match declared type",node.getLocation(),node);
+				TypeCheckerErrors.detail2("Declared", type, "Expression", expType);
+			}
+		}
+		else
+		{
+			type = expType;
+			node.setType(expType);
+		}
+
+		Environment base = question.env;
+		
+		if (base.isVDMPP() && type instanceof ANamedInvariantType)
+		{
+			ANamedInvariantType named = (ANamedInvariantType)type;
+    		PDefinition typedef = base.findType(named.getName(), node.getLocation().module);
+
+    		if (PAccessSpecifierAssistant.narrowerThan(typedef.getAccess(), node.getAccess()))
+    		{
+    			TypeCheckerErrors.report(3052, "Value type visibility less than value definition",node.getLocation(),node);
+    		}
+		}
+
+		PPattern pattern = node.getPattern();
+		pattern.apply(rootVisitor, question);
+		List<PDefinition> newdefs = PPatternAssistant.getDefinitions(pattern, type, question.scope);
+
+		// The untyped definitions may have had "used" markers, so we copy
+		// those into the new typed definitions, lest we get warnings. We
+		// also mark the local definitions as "ValueDefintions" (proxies),
+		// so that classes can be constructed correctly (values are statics).
+
+		for (PDefinition d: newdefs)
+		{
+			for (PDefinition u: node.getDefs())
+			{
+				if (u.getName().equals(d.getName()))
+				{
+					if (PDefinitionAssistant.isUsed(u))
+					{
+						PDefinitionAssistant.markUsed(d);
+					}
+
+					break;
+				}
+			}
+
+			ALocalDefinition ld = (ALocalDefinition)d;
+			ALocalDefinitionAssistant.setValueDefinition(ld);
+		}
+
+		node.setDefs(newdefs);
+		List<PDefinition> defs = node.getDefs();
+		PDefinitionAssistant.setAccessibility(defs,node.getAccess());
+		PDefinitionAssistant.setClassDefinition(defs,node.getClassDefinition());
+		question.qualifiers = null;
+		PDefinitionAssistant.typeCheck(defs, rootVisitor, question);
+		return null;
+	}
+		
+	
 }

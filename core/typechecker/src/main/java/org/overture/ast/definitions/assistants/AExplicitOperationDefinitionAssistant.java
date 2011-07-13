@@ -11,6 +11,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.types.PType;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
@@ -20,7 +21,7 @@ public class AExplicitOperationDefinitionAssistant {
 			AExplicitOperationDefinition node) {
 		
 		Set<PDefinition> defs = new HashSet<PDefinition>();
-		Iterator<PType> titer = node.getOpType().getParameters().iterator();
+		Iterator<PType> titer = node.getOperationType().getParameters().iterator();
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
@@ -28,6 +29,28 @@ public class AExplicitOperationDefinitionAssistant {
 		}
 
 		return new Vector<PDefinition>(defs);
+	}
+
+	public static PDefinition findName(AExplicitOperationDefinition d,
+			LexNameToken sought, NameScope scope) {
+		if (PDefinitionAssistant.findNameBaseCase(d, sought, scope) != null)
+		{
+			return d;
+		}
+
+		PDefinition predef = d.getPredef();
+		if (predef != null && PDefinitionAssistant.findName(predef, sought, scope) != null)
+		{
+			return predef;
+		}
+
+		PDefinition postdef = d.getPostdef();
+		if (postdef != null && PDefinitionAssistant.findName(postdef,sought, scope) != null)
+		{
+			return postdef;
+		}
+
+		return null;
 	}
 
 }

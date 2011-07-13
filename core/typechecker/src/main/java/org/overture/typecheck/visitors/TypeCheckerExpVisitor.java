@@ -1425,23 +1425,23 @@ public class TypeCheckerExpVisitor extends
     				
     				if (!PDefinitionAssistant.isCallableOperation(def))
     				{
-    					opname.report(3105, opname + " is not an explicit operation");
+    					TypeCheckerErrors.report(3105, opname + " is not an explicit operation",opname.location,opname);
     				}
     			}
     		}
 
     		if (found == 0)
     		{
-    			opname.report(3106, opname + " is not in scope");
+    			TypeCheckerErrors.report(3106, opname + " is not in scope",opname.location,opname);
     		}
     		else if (found > 1)
     		{
-    			opname.warning(5004, "History expression of overloaded operation");
+    			TypeCheckerErrors.warning(5004, "History expression of overloaded operation",opname.location,opname);
     		}
 
     		if (opname.name.equals(classdef.getName().name))
     		{
-    			opname.report(3107, "Cannot use history of a constructor");
+    			TypeCheckerErrors.report(3107, "Cannot use history of a constructor",opname.location,opname);
     		}
 		}
 

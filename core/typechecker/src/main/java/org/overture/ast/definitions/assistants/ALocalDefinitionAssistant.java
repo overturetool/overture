@@ -15,4 +15,11 @@ public class ALocalDefinitionAssistant {
 		return new LexNameList(ld.getName());
 	}
 
+	public static void setValueDefinition(ALocalDefinition ld) {
+		ld.setValueDefinition(true);
+		
+	}
+
+	
+
 }

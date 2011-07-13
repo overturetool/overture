@@ -3,6 +3,7 @@ package org.overture.ast.definitions.assistants;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -263,5 +264,25 @@ public class SClassDefinitionAssistant {
 			unusedCheck(d);
 		}
 		
+	}
+
+	public static List<PDefinition> getLocalDefinitions(SClassDefinition classDefinition) {
+		
+		List<PDefinition> all = new Vector<PDefinition>();
+
+		all.addAll(classDefinition.getLocalInheritedDefinitions());
+		all.addAll(PDefinitionAssistant.singleDefinitions(classDefinition.getDefinitions()));
+
+		return all;
+	}
+
+	public static List<PDefinition> getDefinitions(SClassDefinition d) {
+		
+		List<PDefinition> all = new Vector<PDefinition>();
+
+		all.addAll(d.getAllInheritedDefinitions());
+		all.addAll(PDefinitionAssistant.singleDefinitions(d.getDefinitions()));
+
+		return all;
 	}
 }

@@ -53,12 +53,35 @@ public class AImplicitFunctionDefinitionAssistant {
 		for (LexNameToken pname: node.getTypeParams())
 		{
 			PDefinition p = new ALocalDefinition(
-				pname.location, pname, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname));
+				pname.location, pname, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname),false);
 
 			PDefinitionAssistant.markUsed(p);
 			defs.add(p);
 		}
 
 		return defs;
+	}
+
+	public static PDefinition findName(AImplicitFunctionDefinition d,
+			LexNameToken sought, NameScope scope) {
+		
+		if (PDefinitionAssistant.findNameBaseCase(d, sought, scope) != null)
+		{
+			return d;
+		}
+
+		PDefinition predef = d.getPredef();
+		if (predef != null && PDefinitionAssistant.findName(predef, sought, scope) != null)
+		{
+			return predef;
+		}
+
+		PDefinition postdef = d.getPostdef();
+		if (postdef != null && PDefinitionAssistant.findName(postdef,sought, scope) != null)
+		{
+			return postdef;
+		}
+
+		return null;
 	}
 }

@@ -30,7 +30,7 @@ public class PPatternAssistant {
 				{
 					AIdentifierPattern idPattern = (AIdentifierPattern) rp;					
 					List<PDefinition> defs = new ArrayList<PDefinition>();
-					defs.add(new ALocalDefinition(idPattern.getLocation(), idPattern.getName(), scope, false, null, null, ptype));
+					defs.add(new ALocalDefinition(idPattern.getLocation(), idPattern.getName(), scope, false, null, null, ptype,false));
 					return defs;
 				}
 				break;

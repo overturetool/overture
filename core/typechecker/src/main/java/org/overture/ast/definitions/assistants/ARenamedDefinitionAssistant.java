@@ -1,0 +1,57 @@
+package org.overture.ast.definitions.assistants;
+
+import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.NameScope;
+
+public class ARenamedDefinitionAssistant {
+
+	public static PDefinition findType(ARenamedDefinition d,
+			LexNameToken sought, String fromModule) {
+		
+		// We can only find an import if it is being sought from the module that
+		// imports it.
+
+		if (fromModule != null && !d.getLocation().module.equals(fromModule))
+		{
+			return null;	// Someone else's import
+		}
+
+		PDefinition renamed = PDefinitionAssistant.findName(d,sought, NameScope.TYPENAME);
+
+		if (renamed != null && d.getDef() instanceof ATypeDefinition)
+		{
+			PDefinitionAssistant.markUsed(d.getDef());
+			return renamed;
+		}
+		else
+		{
+			return  PDefinitionAssistant.findType(d.getDef(),sought, fromModule);
+		}
+	}
+
+	public static PDefinition findName(ARenamedDefinition d,
+			LexNameToken sought, NameScope scope) {
+		
+		PDefinition renamed = PDefinitionAssistant.findNameBaseCase(d, sought, scope);
+
+		if (renamed != null)
+		{
+			PDefinitionAssistant.markUsed(d.getDef());
+			return renamed;
+		}
+		else
+		{
+			return  PDefinitionAssistant.findName(d.getDef(),sought, scope);
+		}
+	}
+
+	public static void markUsed(ARenamedDefinition d) {
+		d.setUsed(true);
+		PDefinitionAssistant.markUsed(d.getDef());
+		
+	}
+
+}
