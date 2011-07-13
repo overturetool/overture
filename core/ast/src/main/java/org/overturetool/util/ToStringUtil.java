@@ -17,6 +17,14 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.SSimpleBlockStm;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -203,5 +211,85 @@ public class ToStringUtil
 		}
 		return null;
 	}
+public static String getCasesString(ACasesStm stm)
+{
+	StringBuilder sb = new StringBuilder();
+	sb.append("cases " + stm.getExp() + " :\n");
 
+	for (ACaseAlternativeStm csa: stm.getCases())
+	{
+		sb.append("  ");
+		sb.append(csa.toString());
+	}
+
+	if (stm.getOthers() != null)
+	{
+		sb.append("  others -> ");
+		sb.append(stm.getOthers().toString());
+	}
+
+	sb.append("esac");
+	return sb.toString();
+}
+
+
+public static String getIfString(AIfStm node)
+{
+	StringBuilder sb = new StringBuilder();
+	sb.append("if " + node.getIfExp() + "\nthen\n" + node.getThenStm());
+
+	for (AElseIfStm s: node.getElseIf())
+	{
+		sb.append(s.toString());
+	}
+
+	if (node.getElseStm() != null)
+	{
+		sb.append("else\n");
+		sb.append(node.getElseStm().toString());
+	}
+
+	return sb.toString();
+}
+public static String getSimpleBlockString(SSimpleBlockStm node)
+{
+	StringBuilder sb = new StringBuilder();
+	String sep = "";
+
+	for (PStm s: node.getStatements())
+	{
+		sb.append(sep);
+		sb.append(s.toString());
+		sep = ";\n";
+	}
+
+	sb.append("\n");
+	return sb.toString();
+}
+
+public static String getBlockSimpleBlockString(ABlockSimpleBlockStm node)
+{
+	StringBuilder sb = new StringBuilder();
+	sb.append("(\n");
+
+	for (PDefinition d: node.getAssignmentDefs())
+	{
+		sb.append(d);
+		sb.append("\n");
+	}
+
+	sb.append("\n");
+	sb.append(getSimpleBlockString(node));
+	sb.append(")");
+	return sb.toString();
+}
+
+public static String getNonDeterministicSimpleBlockString(ANonDeterministicSimpleBlockStm node)
+{
+	StringBuilder sb = new StringBuilder();
+	sb.append("||(\n");
+	sb.append(getSimpleBlockString(node));
+	sb.append(")");
+	return sb.toString();
+}
 }

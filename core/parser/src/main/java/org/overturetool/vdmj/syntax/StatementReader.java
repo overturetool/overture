@@ -28,18 +28,62 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.*;
-import org.overture.ast.patterns.*;
-import org.overture.ast.statements.*;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.AUndefinedExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.PPatternBind;
+import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AApplyObjectDesignator;
+import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.AAtomicStm;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACallObjectStm;
+import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.ACyclesStm;
+import org.overture.ast.statements.ADefLetDefStm;
+import org.overture.ast.statements.ADurationStm;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AErrorStm;
+import org.overture.ast.statements.AExitStm;
+import org.overture.ast.statements.AFieldObjectDesignator;
+import org.overture.ast.statements.AFieldStateDesignator;
+import org.overture.ast.statements.AForAllStm;
+import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierObjectDesignator;
+import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.AMapSeqStateDesignator;
+import org.overture.ast.statements.ANewObjectDesignator;
+import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASelfObjectDesignator;
+import org.overture.ast.statements.ASkipStm;
+import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
+import org.overture.ast.statements.ATrapStm;
+import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PObjectDesignator;
+import org.overture.ast.statements.PStateDesignator;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.SLetDefStm;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
@@ -387,11 +431,11 @@ public class StatementReader extends SyntaxReader
 			
 			if (ofd.getClassName() != null)
 			{
-	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), ofd.getClassName(),null, args,ofd.getClassName().explicit);
+	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), ofd.getClassName(), null ,null, args,ofd.getClassName().explicit);
 			}
 			else
 			{
-	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), null,ofd.getFieldName(), args,ofd.getClassName().explicit);
+	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), null,ofd.getFieldName(), null,args,ofd.getClassName().explicit);
 			}
 		}
 		else if (oad.getObject() instanceof AIdentifierObjectDesignator)

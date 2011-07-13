@@ -194,7 +194,7 @@ import org.overturetool.util.ToStringUtil;
 %definition->implicitOperation = ""+$ToStringUtil.getImplicitOperationString(this)$
 %definition->imported = [def]
 %definition->inherited = [superdef] 
-//%definition->local = 
+%definition->local = [name]$.getName()$+ " = " [type] 
 %definition->multiBindList = "def " + $Utils.listToString($[bindings]$)$
 %definition->mutexSync = "mutex(" + $($[operations]$.isEmpty() ? "all)" :
                 Utils.listToString("", $[operations]$, ", ", ")"))$
@@ -216,6 +216,48 @@ import org.overturetool.util.ToStringUtil;
 //%definition->value = [pattern] " : " [expType] " = " [expression]
 
 //  Statements
+%stm->always = "always "  [always]  " in "  [body]
+%stm->assignment = [target] " := " [exp]
+%stm->atomic = "atomic (" + $Utils.listToString($[assignments]$)$ + ")"
+%stm->callObject = [designator]  "." +
+            $($[classname]$ != null ? $[classname]$ : $[fieldname]$) + "(" + Utils.listToString($[args]$)$ + ")"
+%stm->call = [name]$.getName() + "(" + Utils.listToString($[args]$)$ + ")"
+%stm->cases = ""+$ToStringUtil.getCasesString(this)$
+%stm->classInvariant = "instance invariant " [name]
+%stm->cycles = "cycles (" [cycles] ") " [statement]
+%stm->duration = "duration (" [duration] ") " [statement]
+%stm->elseIf = "elseif " [elseIf] "\nthen\n" [thenStm]
+%stm->error = "error"
+%stm->exit = "exit" + $($[expression]$ == null ? ";" : " (" + $[expression]$ + ")")$
+%stm->forAll = "for all " [pattern] " in set " [set] " do\n" [statement] 
+%stm->forIndex = "for " [var] " = " [from] " to " [to] +
+                    $($[by]$ == null ? "" : " by " + $[by]$)$+  "\n" [statement]
+%stm->forPatternBind = "for " [patternBind] " in " +
+            $($[reverse]$ ? " reverse " : "")$+ [exp]  " do\n" [statement]
+%stm->if = ""+$ToStringUtil.getIfString(this)$
+%stm->letBeSt = "let " [bind] +
+            $($[suchThat]$ == null ? "" : " be st " + $[suchThat]$)$ + " in " [statement]
+%stm->#LetDef = "let " [localDefs]  " in " [statement]
+%stm->#LetDef->def = "def " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
+%stm->notYetSpecified = "is not yet specified" 
+%stm->return = "return" + $($[expression]$ == null ? "" : " (" + $[expression]$ + ")")$
+%stm->#SimpleBlock = ""+$ToStringUtil.getSimpleBlockString(this)$ 
+%stm->#SimpleBlock->block = ""+$ToStringUtil.getBlockSimpleBlockString(this)$
+%stm->#SimpleBlock->nonDeterministic = ""+$ToStringUtil.getNonDeterministicSimpleBlockString(this)$
+%stm->skip = "skip"
+%stm->specification = "[" +
+            $($[externals]$.isEmpty() ? "" : "\n\text " + $[externals]$) +
+            ($[precondition]$ == null ? "" : "\n\tpre " + $[precondition]$) +
+            ($[postcondition]$ == null ? "" : "\n\tpost " + $[postcondition]$) +
+            ($[errors]$.isEmpty() ? "" : "\n\terrs " + $[errors]$)$ + "]" 
+%stm->start = "start (" [obj] ")"
+%stm->subclassResponsibility = "is subclass responsibility"
+%stm->tixe = "tixe {" [traps] "} in " [body]
+//%stm->traceVariable = 
+%stm->trap = "trap " [patternBind] " with " [with] " in " [body]
+%stm->while = "while " [exp]  " do " [statement]
+%stm->periodic = "periodic(" + $Utils.listToString($[args]$)$ + ")(" [opname] ")"
+
 
 
 

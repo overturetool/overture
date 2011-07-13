@@ -497,7 +497,7 @@ stm {-> package='org.overture.ast.statements'}
     =   {always} [always]:stm [body]:stm
     |   {assignment} [target]:stateDesignator [exp]:exp
     |   {atomic} [assignments]:stm.assignment*
-    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [field]:LexIdentifierToken [args]:exp* [explicit]:java_Boolean
+    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken [field]:LexIdentifierToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
