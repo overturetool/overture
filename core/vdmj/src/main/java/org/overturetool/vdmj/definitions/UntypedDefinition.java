@@ -76,8 +76,7 @@ public class UntypedDefinition extends Definition
 	@Override
 	public LexNameList getVariableNames()
 	{
-		assert false: "Can't get variables of untyped definition?";
-		return null;
+		return new LexNameList(name);
 	}
 
 	@Override

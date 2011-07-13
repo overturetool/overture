@@ -77,6 +77,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 	public void typeCheck(Environment base, NameScope scope)
 	{
 		def = new MultiBindListDefinition(bind.location, bind.getMultipleBindList());
+		def.typeResolve(base);
 		def.typeCheck(base, scope);
 		Environment local = new FlatCheckedEnvironment(def, base, scope);
 

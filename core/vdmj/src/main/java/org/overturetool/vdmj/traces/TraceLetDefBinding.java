@@ -78,6 +78,7 @@ public class TraceLetDefBinding extends TraceDefinition
 
 		for (Definition d: localDefs)
 		{
+			d.typeResolve(base);
 			d.typeCheck(local, scope);
 			local = new FlatCheckedEnvironment(d, local, scope);
 		}
