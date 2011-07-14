@@ -230,46 +230,46 @@ public abstract class %Node% implements Cloneable
 	 */
 	public abstract <Q,A> A apply(%IQuestionAnswer<Q,A>% caller, Q question);
 		
-	//////////////////////////////////// Try out //////////////////////////////////
-	/**
-	 * Ignored by clone
-	 */
-	final Map<String, Map<String, Object>> customFields = new Hashtable<String, Map<String, Object>>();
+//	//////////////////////////////////// Try out //////////////////////////////////
+//	/**
+//	 * Ignored by clone
+//	 */
+//	final Map<String, Map<String, Object>> customFields = new Hashtable<String, Map<String, Object>>();
+//
+//	public void setCustomField(String pluginId, String field, Object value)
+//	{
+//		if (customFields.containsKey(pluginId))
+//		{
+//			Map<String, Object> fields = customFields.get(pluginId);
+//			if (fields.containsKey(field))
+//			{
+//				fields.remove(field);
+//			}
+//			fields.put(field, value);
+//		} else
+//		{
+//			Map<String, Object> fields = new Hashtable<String, Object>();
+//			fields.put(field, value);
+//			customFields.put(pluginId, fields);
+//		}
+//	}
 
-	public void setCustomField(String pluginId, String field, Object value)
-	{
-		if (customFields.containsKey(pluginId))
-		{
-			Map<String, Object> fields = customFields.get(pluginId);
-			if (fields.containsKey(field))
-			{
-				fields.remove(field);
-			}
-			fields.put(field, value);
-		} else
-		{
-			Map<String, Object> fields = new Hashtable<String, Object>();
-			fields.put(field, value);
-			customFields.put(pluginId, fields);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T getCustomField(String pluginId, String field, T defaultValue)
-	{
-		if (customFields.containsKey(pluginId))
-		{
-			Map<String, Object> fields = customFields.get(pluginId);
-			if (fields.containsKey(field))
-			{
-				Object o = fields.get(field);
-				if(defaultValue.getClass().isInstance(o))
-				{
-					return (T) o;
-				}
-				
-			}
-		}
-		return defaultValue;
-	}
+//	@SuppressWarnings("unchecked")
+//	public <T> T getCustomField(String pluginId, String field, T defaultValue)
+//	{
+//		if (customFields.containsKey(pluginId))
+//		{
+//			Map<String, Object> fields = customFields.get(pluginId);
+//			if (fields.containsKey(field))
+//			{
+//				Object o = fields.get(field);
+//				if(defaultValue.getClass().isInstance(o))
+//				{
+//					return (T) o;
+//				}
+//				
+//			}
+//		}
+//		return defaultValue;
+//	}
 }

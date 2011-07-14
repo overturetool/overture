@@ -12,6 +12,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader>
 {
+	static boolean hasRunBefore = false;
 	public ExpressionTestCase(File file)
 	{
 		super(file);
@@ -40,5 +41,15 @@ public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader>
 		return "Expression";
 	}
 
-	
+	@Override
+	protected void setHasRunBefore(boolean b)
+	{
+		hasRunBefore = b;
+	}
+
+	@Override
+	protected boolean hasRunBefore()
+	{
+		return hasRunBefore;
+	}
 }

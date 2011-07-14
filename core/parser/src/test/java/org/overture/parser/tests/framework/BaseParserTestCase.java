@@ -2,6 +2,8 @@ package org.overture.parser.tests.framework;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -19,6 +21,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 	File file;
 	String name;
 	String content;
+	
 
 	public BaseParserTestCase()
 	{
@@ -29,6 +32,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 	{
 		super("test");
 		this.file = file;
+		this.content = file.getName();
 	}
 
 	public BaseParserTestCase(String name, String content)
@@ -86,6 +90,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 	{
 		T reader = null;
 		Object result = null;
+		String errorMessages = "";
 		try
 		{
 			reader = getReader(ltr);
@@ -94,22 +99,60 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 			if (reader != null && reader.getErrorCount() > 0)
 			{
 				// perrs += reader.getErrorCount();
-				reader.printErrors(new PrintWriter(System.out));
-
+				StringWriter s = new StringWriter();
+				reader.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
+				errorMessages ="\n"+s.toString()+"\n";
+				System.out.println(s.toString());
 			}
-			assertEquals(reader.getErrorCount(), 0);
+			assertEquals(errorMessages,reader.getErrorCount(), 0);
 
 			if (reader != null && reader.getWarningCount() > 0)
 			{
 				// pwarn += reader.getWarningCount();
-				reader.printWarnings(new PrintWriter(System.out));
+//				reader.printWarnings(new PrintWriter(System.out));
 			}
 		} finally
 		{
-			System.out.println(pad("Parsed " + getReaderTypeName(),20) +" - "+pad(result.getClass().getSimpleName(),30)+ ": "+
-					pad(result+"",35)+" from \""+ content + "\""  );
+			if(!hasRunBefore())
+			{
+				setHasRunBefore( true);
+				System.out.println("============================================================================================================");
+				
+				System.out.println("|");
+				System.out.println("|\t\t"+getReaderTypeName()+"s");
+//				System.out.println("|");
+				System.out.println("|___________________________________________________________________________________________________________");
+				
+			}
+			System.out.println(pad("Parsed " + getReaderTypeName(),20) +" - "+pad(getReturnName(result),35)+ ": "+
+					pad(result+"",35).replace('\n', ' ')+" from \""+ (content+"").replace('\n', ' ') + "\""  );
 			System.out.flush();
 		}
+	}
+
+
+	protected abstract void setHasRunBefore(boolean b);
+
+	protected abstract boolean hasRunBefore();
+
+	@SuppressWarnings("rawtypes")
+	private String getReturnName(Object result)
+	{
+		if(result == null)
+		{
+			return "null";
+		}
+		String name = result.getClass().getSimpleName();
+		if(result instanceof List)
+		{
+			try
+			{
+				name+="<"+((List)result).get(0).getClass().getSimpleName()+">";
+			} catch (Exception e)
+			{
+			}
+		}
+		return name;
 	}
 
 	public static String pad(String text, int length)

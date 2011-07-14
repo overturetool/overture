@@ -139,6 +139,8 @@ import org.overturetool.util.ToStringUtil;
 %type->#invariant->named = [name]
 %type->#invariant->record = [name]
 //map
+%type->#Map->inMap="inmap of (" [from]  ") to ("  [to] ")"
+%type->#Map->map="map (" [from]  ") to ("  [to] ")"
 %type->operation = "(" + $($[parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + " ==> "$ + [result] + ")"
 %type->optional = "[" [type] "]"
 %type->parameter = "@" [name]
@@ -258,7 +260,18 @@ import org.overturetool.util.ToStringUtil;
 %stm->while = "while " [exp]  " do " [statement]
 %stm->periodic = "periodic(" + $Utils.listToString($[args]$)$ + ")(" [opname] ")"
 
+//Other
+
+//Access
+%accessSpecifier->accessSpecifier = ""+$($[access]$==null?"":$[access]$+" ") +
+                                    ($[static]$==null?"":$[static]$+" ") +
+                                    ($[async]$==null?"":$[async]$+" ")$ 
+                                    
+%access->public ="public"
+%access->protected ="protected"
+%access->private ="private"
 
 
+%pair->patternType = [pattern]  ":" [type]
 
 

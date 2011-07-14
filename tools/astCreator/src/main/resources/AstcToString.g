@@ -215,7 +215,7 @@ imports
   
   
 toString_
-  : '%'^ aspectName ASSIGN ( StringLiteral ('+' RawJava)? | field ('+'? RawJava)? | '+' (StringLiteral|field) )* (';'?)!
+  : '%'^ aspectName ASSIGN ( StringLiteral ('+' RawJava)? | field ('+'? RawJava)? | '+' (StringLiteral|field) )* (';'!?)
   ;
   //StringLiteral    | field | StringLiteral '+' RawJava | RawJava '+' StringLiteral | RawJava '+'? field '+'? RawJava | RawJava '+' field ('+'?)!(field |StringLiteral )
 RawJava

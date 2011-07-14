@@ -1,0 +1,6 @@
+functions
+public a : int * int -> int
+a(b,c) == 1
+pre true
+post true
+measure b

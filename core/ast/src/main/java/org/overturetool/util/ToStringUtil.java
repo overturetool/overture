@@ -1,6 +1,7 @@
 package org.overturetool.util;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -16,6 +17,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
@@ -42,7 +44,7 @@ public class ToStringUtil
 		}
 
 		return d.getAccess() + d.getName().name +
-				(d.getTypeParams().isEmpty() ? ": " : "[" + d.getTypeParams() + "]: ") + d.getType() +
+				(d.getTypeParams().isEmpty() ? ": " : "[" + getTypeListString(d.getTypeParams()) + "]: ") + d.getFunctionType() +
 				"\n\t" + d.getName().name + params + " ==\n" + d.getBody() +
 				(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
 				(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition());
@@ -51,13 +53,34 @@ public class ToStringUtil
 	public static String getImplicitFunctionString(AImplicitFunctionDefinition d)
 	{
 		return	d.getAccess() + " " +	d.getName().name +
-		(d.getTypeParams().isEmpty() ? "" : "[" + d.getTypeParams() + "]") +
-		Utils.listToString("(", d.getParamPatterns(), ", ", ")") + d.getResult()+
+		(d.getTypeParams().isEmpty() ? "" : "[" + getTypeListString(d.getTypeParams()) + "]") +
+		Utils.listToString("(", getString(d.getParamPatterns()), ", ", ")") + d.getResult()+
 		(d.getBody() == null ? "" : " ==\n\t" + d.getBody()) +
 		(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
 		(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition());
 	}
 	
+	private static List<String> getString(NodeList<APatternListTypePair> node)
+	{
+		List<String> list = new Vector<String>();
+		for (APatternListTypePair pl : node)
+		{
+			list.add( "(" + getStringPattern(pl.getPatterns()) + ":" + pl.getType() + ")");	
+		}
+		return list;
+	}
+	private static String getStringPattern(NodeList<PPattern> patterns)
+	{
+		return Utils.listToString(patterns);
+	}
+
+
+
+	private static String getTypeListString(NodeList<LexNameToken> typeParams)
+	{
+		return "(" + Utils.listToString(typeParams) + ")";
+	}
+
 	public static String getExplicitOperationString(AExplicitOperationDefinition d)
 	{
 		return  d.getName() + " " + d.getType() +

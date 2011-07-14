@@ -57,6 +57,7 @@ import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.NodeList;
 import org.overture.ast.node.tokens.TAsync;
 import org.overture.ast.node.tokens.TStatic;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -122,7 +123,9 @@ public class DefinitionReader extends SyntaxReader
 
 		for (int i=0; i<node.getPatterns().size(); i++)
 		{
-			list.add(node.getType());
+			PType type =(PType) node.getType().clone();//Use clone since we don't want to make a switch for all types.
+			type.parent(null);//Create new type not in the tree yet.
+			list.add(type);
 		}
 
 		return list;
@@ -850,7 +853,7 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 		
-		List<PType> ptypes = new Vector<PType>();
+		List<PType> ptypes = new NodeList<PType>(null);
 
 		for (APatternListTypePair ptp: parameterPatterns)
 		{
@@ -858,10 +861,10 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		// NB: implicit functions are always +> total, apparently
-		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, resultPattern.getType());
+		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, (PType) resultPattern.getType().clone());
 		// functionType.setDefinitions(value) = new DefinitionList(this);
 
-		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), null, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
+		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), functionType, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(functionDef);

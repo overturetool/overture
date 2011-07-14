@@ -11,6 +11,7 @@ import org.overturetool.vdmj.syntax.TypeReader;
 
 public class TypeTestCase extends BaseParserTestCase<TypeReader>
 {
+	static boolean hasRunBefore = false;
 	public TypeTestCase(File file)
 	{
 		super(file);
@@ -39,5 +40,15 @@ public class TypeTestCase extends BaseParserTestCase<TypeReader>
 		return "Type";
 	}
 
-	
+	@Override
+	protected void setHasRunBefore(boolean b)
+	{
+		hasRunBefore = b;
+	}
+
+	@Override
+	protected boolean hasRunBefore()
+	{
+		return hasRunBefore;
+	}
 }

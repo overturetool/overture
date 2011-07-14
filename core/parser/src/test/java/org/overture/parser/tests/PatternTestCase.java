@@ -12,6 +12,7 @@ import org.overturetool.vdmj.syntax.PatternReader;
 
 public class PatternTestCase extends BaseParserTestCase<PatternReader>
 {
+	static boolean hasRunBefore = false;
 	public PatternTestCase(File file)
 	{
 		super(file);
@@ -41,6 +42,16 @@ public class PatternTestCase extends BaseParserTestCase<PatternReader>
 		return "Pattern";
 	}
 
+	@Override
+	protected void setHasRunBefore(boolean b)
+	{
+		hasRunBefore = b;
+	}
 
+	@Override
+	protected boolean hasRunBefore()
+	{
+		return hasRunBefore;
+	}
 	
 }

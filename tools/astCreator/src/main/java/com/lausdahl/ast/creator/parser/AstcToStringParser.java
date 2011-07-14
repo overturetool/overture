@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g 2011-07-12 21:04:01
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g 2011-07-14 13:07:11
 
 package com.lausdahl.ast.creator.parser;
 
@@ -611,7 +611,7 @@ public class AstcToStringParser extends Parser {
             // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:114: ( ( ';' )? )
             // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:115: ( ';' )?
             {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:115: ( ';' )?
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:118: ( ';' )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -620,12 +620,9 @@ public class AstcToStringParser extends Parser {
             }
             switch (alt8) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:115: ';'
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:118: ';'
                     {
                     char_literal21=(Token)match(input,14,FOLLOW_14_in_toString_330); 
-                    char_literal21_tree = (Object)adaptor.create(char_literal21);
-                    adaptor.addChild(root_0, char_literal21_tree);
-
 
                     }
                     break;

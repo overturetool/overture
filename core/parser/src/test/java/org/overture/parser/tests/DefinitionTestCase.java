@@ -12,6 +12,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 {
+	static boolean hasRunBefore = false;
 	public DefinitionTestCase(File file)
 	{
 		super(file);
@@ -38,6 +39,18 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 	protected String getReaderTypeName()
 	{
 		return "Definition";
+	}
+
+	@Override
+	protected void setHasRunBefore(boolean b)
+	{
+		hasRunBefore = b;
+	}
+
+	@Override
+	protected boolean hasRunBefore()
+	{
+		return hasRunBefore;
 	}
 
 	

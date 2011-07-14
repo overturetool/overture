@@ -13,6 +13,7 @@ import org.overturetool.vdmj.syntax.StatementReader;
 
 public class StatementTestCase extends BaseParserTestCase<StatementReader>
 {
+	static boolean hasRunBefore = false;
 	public StatementTestCase(File file)
 	{
 		super(file);
@@ -48,5 +49,15 @@ public class StatementTestCase extends BaseParserTestCase<StatementReader>
 		return "Statement";
 	}
 
-	
+	@Override
+	protected void setHasRunBefore(boolean b)
+	{
+		hasRunBefore = b;
+	}
+
+	@Override
+	protected boolean hasRunBefore()
+	{
+		return hasRunBefore;
+	}
 }
