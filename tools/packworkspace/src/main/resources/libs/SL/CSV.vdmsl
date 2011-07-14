@@ -1,6 +1,5 @@
 module CSV
-
--- 	Overture STANDARD LIBRARY: INPUT/OUTPUT
+--  Overture STANDARD LIBRARY: INPUT/OUTPUT
 --      --------------------------------------------
 -- 
 -- Standard library for the Overture Interpreter. When the interpreter
@@ -19,6 +18,9 @@ module CSV
 --  * A relative path is relative to the debugger or if running in the 
 --      Overture IDE relative to the project root.
 --
+imports from IO types filedirective renamed filedirective;
+exports all
+definitions
 
 functions
 /**
@@ -64,7 +66,7 @@ operations
  *
  * @return the last error message
  */
-public static ferror:()  ==> seq of char
+ferror:()  ==> seq of char
 ferror () ==
   is not yet specified;
 end CSV
