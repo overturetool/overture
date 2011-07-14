@@ -13,6 +13,7 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
+import org.overturetool.vdmj.definitions.ImportedDefinition;
 import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
@@ -159,11 +160,21 @@ public class VdmElementLabels {
 		if (element instanceof RenamedDefinition) {
 			return getRenamedDefinitionLabel((RenamedDefinition) element, flags);
 		}
+		
+		if(element instanceof ImportedDefinition) {
+			return getImportedDefinitionLabel((ImportedDefinition)element,flags);
+		}
 
 		StyledString result = new StyledString();
 		result.append("Unsupported type reached: " + element);
 		return result;
 
+	}
+
+	private static StyledString getImportedDefinitionLabel(
+			ImportedDefinition element, long flags) {
+
+		return getStyledTextLabel(element.def, flags);
 	}
 
 	private static StyledString getRenamedDefinitionLabel(
@@ -179,9 +190,11 @@ public class VdmElementLabels {
 	private static StyledString getInheritedDefinition(
 			InheritedDefinition element, long flags) {
 
-		StyledString res = getStyledTextLabel(element.superdef, flags);
+		StyledString result = new StyledString();
+		result.append(element.location.module + "`");
+		result.append(getStyledTextLabel(element.superdef, flags));		
 
-		return res;
+		return result;
 	}
 
 	private static StyledString getPerSyncDefinitionLabel(
@@ -279,7 +292,14 @@ public class VdmElementLabels {
 				result.append(" : " , StyledString.DECORATIONS_STYLER);
 			}
 			
-			result.append(type.renamed.name, StyledString.DECORATIONS_STYLER);
+			if(type.renamed == null)
+			{
+				result.append(type.name.name, StyledString.DECORATIONS_STYLER);
+			}else
+			{
+				result.append(type.renamed.name, StyledString.DECORATIONS_STYLER);
+			}
+			
 		} else if (element instanceof ImportedValue) {
 			ImportedValue value = (ImportedValue) element;
 			result.append(value.name.toString());
