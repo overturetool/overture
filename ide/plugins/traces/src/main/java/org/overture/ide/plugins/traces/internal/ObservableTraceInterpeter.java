@@ -9,11 +9,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 {
 	IProgressMonitor monitor;
 	VdmjTracesHelper console;
-	// long beginClass = 0;
-	// long beginTrace = 0;
-	// String activeClass = "";
-	// String activeTrace;
-	// int worked;
+
 	double workedUnit;
 	long testCounter;
 
@@ -28,11 +24,6 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 	@Override
 	protected void preProcessingClass(String className, Integer traceCount)
 	{
-		// beginClass = System.currentTimeMillis();
-		// activeClass = className;
-		// monitor.beginTask("Executing: " + className+ " - Trace count: "
-		// +traceCount,traceCount);
-		// worked=0;
 		monitor.subTask("Evaluating tests");
 		console.consolePrint("Executing: " + className + " - Trace count: "
 				+ traceCount);
@@ -42,10 +33,6 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 	protected void preProcessingTrace(String className, String traceName,
 			Integer testCount)
 	{
-		
-		// beginTrace = System.currentTimeMillis();
-		// activeTrace = traceName;
-
 		workedUnit = testCount.doubleValue() / 100.0;
 		int worked = 0;
 
@@ -65,28 +52,21 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 		testCounter++;
 		if (testCounter >= workedUnit)
 		{
-			monitor.worked(1);
-			// console.ConsolePrint("Worked: "+worked);
+			double incrementBy=100.0/(workedUnit*100);
+			monitor.worked((int)Math.round( incrementBy));
 			testCounter = 0;
 		}
 		if (monitor.isCanceled())
 			throw new CancellationException(
 					"Trace execution has been cancelled");
-		// console.ConsolePrint("Worked=" + testNumber);
-		// console.ConsolePrint(className+"-"+traceName + "-" + testNumber);
 	}
 
 	@Override
 	protected void preCompleted()
 	{
-
-		// printTraceStatus();
-
 		long endClass = System.currentTimeMillis();
 		console.consolePrint("Class " + activeClass + " processed in "
 				+ (double) (endClass - beginClass) / 1000 + " secs");
-
-		// monitor.done();
 	}
 	@Override
 	protected void prePrintTraceStatus()
@@ -104,14 +84,12 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 	protected void error(String message)
 	{
 		console.consolePrint(message);
-
 	}
 
 	@Override
 	protected void typeError(String message)
 	{
 		console.consolePrint(message);
-
 	}
 
 	@Override

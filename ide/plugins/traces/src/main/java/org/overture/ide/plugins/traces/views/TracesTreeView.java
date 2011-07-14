@@ -62,11 +62,10 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
-import org.overture.ide.plugins.traces.TracesConstants;
+import org.overture.ide.plugins.traces.ITracesConstants;
 import org.overture.ide.plugins.traces.debug.TraceDebugLauncher;
 import org.overture.ide.plugins.traces.internal.VdmjTracesHelper;
 import org.overture.ide.plugins.traces.views.treeView.ClassTreeNode;
@@ -84,12 +83,10 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.traces.Verdict;
 import org.xml.sax.SAXException;
 
-
-
 public class TracesTreeView extends ViewPart
 {
 	private TreeViewer viewer;
-	private DrillDownAdapter drillDownAdapter;
+	// private DrillDownAdapter drillDownAdapter;
 	private Action actionRunSelected;
 	private Action actionRunSelectedAdvanced;
 	private Action actionRunAll;
@@ -101,12 +98,12 @@ public class TracesTreeView extends ViewPart
 	private Action actionSelectToolBoxVDMJ;
 	private Action actionSelectToolBoxVDMTools;
 	private Action expandSpecInTree;
-	
+
 	private Action refreshAction;
 	private Map<String, ITracesHelper> traceHelpers;
 	final Display display = Display.getCurrent();
 
-//	private IResourceChangeListener resourceChangedListener = null;
+	// private IResourceChangeListener resourceChangedListener = null;
 	private IProject projectToUpdate = null;
 	private String VDMToolsPath = "";
 	final String VDM_TOOLS_PATH_DEFAULT = "C:\\Program Files\\The VDM++ Toolbox v8.2b\\bin";
@@ -120,14 +117,6 @@ public class TracesTreeView extends ViewPart
 
 	private void setTraceHelper(final IProject project)
 	{
-
-		// Job initCtJob = new Job("CT init")
-		// {
-		//
-		// @Override
-		// protected IStatus run(IProgressMonitor monitor)
-		// {
-
 		try
 		{
 
@@ -149,25 +138,12 @@ public class TracesTreeView extends ViewPart
 			System.out.println("CT Init Exception: " + e1.getMessage());
 			e1.printStackTrace();
 		}
-
-		// return new Status(IStatus.OK,
-		// "org.overture.ide.plugins.traces", IStatus.OK,
-		// "CT init finished", null);
-		// }
-		//
-		// };
-		//
-		// initCtJob.schedule();
-
 	}
 
 	public static boolean isValidProject(IProject project)
 	{
 		return project.isOpen() && project.isAccessible()
 				&& project.getAdapter(IVdmProject.class) != null;
-		// && (project.hasNature(VdmPpProjectNature.VDM_PP_NATURE)
-		// || project.hasNature(VdmRtProjectNature.VDM_RT_NATURE) ||
-		// project.hasNature(VdmSlProjectNature.VDM_SL_NATURE)&& AstManager.instance().getProjects().contains(project));
 	}
 
 	private void setTraceHelpers()
@@ -200,25 +176,11 @@ public class TracesTreeView extends ViewPart
 
 	private void init()
 	{
-
-		drillDownAdapter = new DrillDownAdapter(viewer);
 		setTraceHelpers();
 		viewer.setContentProvider(new ViewContentProvider(this.traceHelpers, this));
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(null);
 		viewer.setInput(getViewSite());
-
-		// viewer.setFilters(new ViewerFilter[]{okFilter,inconclusiveFilter});
-
-		// buttonSetSort = new Button(parent,SWT.TOGGLE);
-		// buttonSetSort.setImage(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT).createImage());
-
-		getSite().setSelectionProvider(viewer);
-		makeActions();
-		hookContextMenu();
-		hookDoubleClickAction();
-		hookTreeAction();
-		contributeToActionBars();
 
 		expandTraces(1000);
 	}
@@ -230,13 +192,17 @@ public class TracesTreeView extends ViewPart
 	public void createPartControl(Composite parent)
 	{
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		// PatternFilter patternFilter = new PatternFilter();
-		// viewer = new FilteredTree(parent, SWT.MULTI
-		// | SWT.H_SCROLL | SWT.V_SCROLL, patternFilter).getViewer();
+
+		getSite().setSelectionProvider(viewer);
+
+		makeActions();
+		hookContextMenu();
+		hookTreeAction();
+		contributeToActionBars();
 
 		init();
 
-		/*resourceChangedListener =*/ new IResourceChangeListener()
+		new IResourceChangeListener()
 		{
 			public void resourceChanged(IResourceChangeEvent event)
 			{
@@ -267,15 +233,11 @@ public class TracesTreeView extends ViewPart
 					}
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					OvertureTracesPlugin.log(e);
 				}
 			}
 
 		};
-		// ResourcesPlugin.getWorkspace()
-		// .addResourceChangeListener(resourceChangedListener,
-		// IResourceChangeEvent.POST_CHANGE);
-
 	}
 
 	private void expandTraces(int delay)
@@ -286,15 +248,10 @@ public class TracesTreeView extends ViewPart
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
 			{
-
-				// expandCompleted = false;
 				if (projectToUpdate != null)
 				{
 					monitor.worked(IProgressMonitor.UNKNOWN);
 					setTraceHelper(projectToUpdate);
-
-					// final IProject[] iprojects =
-					// iworkspaceRoot.getProjects();
 
 					display.asyncExec(new Runnable()
 					{
@@ -310,10 +267,8 @@ public class TracesTreeView extends ViewPart
 					expandSpecInTree.run();
 				refreshTree();
 				monitor.done();
-				// expandCompleted = true;
 
-				return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "Expand completed", null);
-
+				return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "Expand completed", null);
 			}
 
 		};
@@ -326,22 +281,15 @@ public class TracesTreeView extends ViewPart
 		boolean ret = false;
 		if (delta.getAffectedChildren().length == 0)
 		{
-
-			// int a = (delta.getFlags() & IResourceDelta.CONTENT);
-			// int b = (delta.getFlags() & IResourceDelta.MARKERS);
-			// boolean sync = (delta.getFlags() & IResourceDelta.SYNC) ==
-			// IResourceDelta.SYNC;
 			boolean add = (delta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED;
 			if ((delta.getFlags() & IResourceDelta.CONTENT) == IResourceDelta.CONTENT
-					|| add)// &&
-				// for (String ex : TracesTreeView.exts)
-				// {
-				// if (delta.getFullPath().toString().endsWith(ex))
+					|| add)
+			{
 				ret = true;
-			// }
-
-			else
+			} else
+			{
 				ret = false;
+			}
 		} else
 		{
 			for (IResourceDelta d : delta.getAffectedChildren())
@@ -377,53 +325,31 @@ public class TracesTreeView extends ViewPart
 
 	private void fillLocalPullDown(IMenuManager manager)
 	{
-		// manager.add(actionRunSelected);
-
 		manager.add(actionRunAll);
-		// manager.add(new Separator());
-		// manager.add(saveTraceResultsAction);
 		manager.add(new Separator());
 		manager.add(actionSetSort);
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
 		manager.add(actionSetInconclusiveFilter);
-//		manager.add(new Separator());
-//		manager.add(actionSelectToolBoxVDMJ);
-		// manager.add(actionSelectToolBoxVDMTools);
-
 	}
 
 	private void fillContextMenu(IMenuManager manager)
 	{
-
-		// manager.add(actionRunAll);
-
 		ISelection selection = viewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 
 		if (obj instanceof ProjectTreeNode || obj instanceof ClassTreeNode) // ||
-		// obj
-		// instanceof
-		// TraceTreeNode
 		{
 			manager.add(actionRunSelected);
-
 			manager.add(actionRunSelectedAdvanced);
 		}
 		if (obj instanceof TraceTestTreeNode)
 			if (((TraceTestTreeNode) obj).getStatus() != null)
 			{
 				manager.add(actionSendToInterpreter);
-				// if (((TraceTestTreeNode) obj).GetStatus() ==
-				// TestResultType.Inconclusive)
-				// manager.add(okTraceTestCaseAction);
-				// manager.add(failTraceTestCaseAction);
-
 			}
 
 		manager.add(new Separator());
-//		drillDownAdapter.addNavigationActions(manager);
-		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -433,19 +359,15 @@ public class TracesTreeView extends ViewPart
 		manager.add(actionSetSort);
 		manager.add(new Separator());
 		manager.add(actionRunAll);
-		// manager.add(saveTraceResultsAction);
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
 		manager.add(actionSetInconclusiveFilter);
-//		manager.add(new Separator());
-//		drillDownAdapter.addNavigationActions(manager);
 	}
 
 	private void makeActions()
 	{
 		refreshAction = new Action("Refresh")
 		{
-
 			@Override
 			public void run()
 			{
@@ -485,7 +407,6 @@ public class TracesTreeView extends ViewPart
 
 				Job executeTestJob = new Job("CT evaluating selected tests")
 				{
-
 					@Override
 					protected IStatus run(IProgressMonitor monitor)
 					{
@@ -516,34 +437,28 @@ public class TracesTreeView extends ViewPart
 									} catch (Exception e)
 									{
 										ConsoleError(e.getMessage());
-										e.printStackTrace();
-
+										OvertureTracesPlugin.log(e);
 									}
 
 								}
-monitor.done();
+								monitor.done();
 							}
 
 						} catch (Exception e)
 						{
-							e.printStackTrace();
+							OvertureTracesPlugin.log(e);
 						}
 
 						expandTraces(0);
-						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "CT Test evaluation finished", null);
+						return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
 					}
-
 				};
-
 				executeTestJob.schedule();
-
 			}
 		};
 		actionRunSelected.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
-
 		actionRunSelectedAdvanced = new Action("Filtered Evaluation")
 		{
-
 			@Override
 			public void run()
 			{
@@ -555,19 +470,25 @@ monitor.done();
 				d.pack();
 				dialog.pack();
 				Point pt = display.getCursorLocation();
-			    dialog.setLocation(pt.x-(d.getSize().x/2), pt.y-(d.getSize().y/2));
+				dialog.setLocation(pt.x - (d.getSize().x / 2), pt.y
+						- (d.getSize().y / 2));
 				dialog.open();
 				while (!dialog.isDisposed())
 				{
 					if (d.isCanceled)
+					{
 						return;
+					}
 					if (!display.readAndDispatch())
+					{
 						display.sleep();
+					}
 				}
-				
-				if (d.isCanceled)
-					return;
 
+				if (d.isCanceled)
+				{
+					return;
+				}
 				ISelection selection = viewer.getSelection();
 				final Object obj = ((IStructuredSelection) selection).getFirstElement();
 
@@ -594,7 +515,6 @@ monitor.done();
 
 				Job executeTestJob = new Job("CT evaluating selected tests")
 				{
-
 					@Override
 					protected IStatus run(IProgressMonitor monitor)
 					{
@@ -605,8 +525,9 @@ monitor.done();
 							projectToUpdate = getProject(finalProjectName);
 
 							if (finalClassTracesTestCase.size() == 0)
+							{
 								runTestProject(th, monitor);
-							else
+							} else
 							{
 								Enumeration<String> classKeys = finalClassTracesTestCase.keys();
 								while (classKeys.hasMoreElements())
@@ -626,41 +547,30 @@ monitor.done();
 									} catch (Exception e)
 									{
 										ConsoleError(e.getMessage());
-										e.printStackTrace();
-
+										OvertureTracesPlugin.log(e);
 									}
-
 								}
-
 							}
-
 						} catch (Exception e)
 						{
-							e.printStackTrace();
+							OvertureTracesPlugin.log(e);
 						}
-
 						expandTraces(0);
-						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "CT Test evaluation finished", null);
+						return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
 					}
-
 				};
-
 				executeTestJob.schedule();
-
 			}
 		};
 		actionRunSelectedAdvanced.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
-		// actionRunSelected.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 
 		actionRunAll = new Action("Run all")
 		{
 			@Override
 			public void run()
 			{
-
 				Job runAllTestsJob = new Job("CT evaluation all projects")
 				{
-
 					@Override
 					protected IStatus run(IProgressMonitor monitor)
 					{
@@ -678,30 +588,32 @@ monitor.done();
 										for (String className : th.getClassNamesWithTraces())
 										{
 											totalCount += th.getTraceDefinitions(className).size();
-
 										}
 								}
 							} catch (Exception e)
 							{
-
-								e.printStackTrace();
+								OvertureTracesPlugin.log(e);
 							}
-
 						}
 
 						for (final IProject project : iprojects)
 						{
 							if (monitor.isCanceled())
+							{
 								break;
+							}
 							try
 							{
-								if (isValidProject(project) && traceHelpers.containsKey(project.getName()))
+								if (isValidProject(project)
+										&& traceHelpers.containsKey(project.getName()))
 								{
-									ITracesHelper th = traceHelpers.get(project.getName());									
+									ITracesHelper th = traceHelpers.get(project.getName());
 									for (String className : th.getClassNamesWithTraces())
 									{
 										if (monitor.isCanceled())
+										{
 											break;
+										}
 										th.processClassTraces(className, monitor);
 									}
 								}
@@ -710,25 +622,18 @@ monitor.done();
 								ConsolePrint(e.getMessage());
 							} catch (Exception e)
 							{
-
-								e.printStackTrace();
-
+								OvertureTracesPlugin.log(e);
 							}
-
 						}
 						display.asyncExec(new Runnable()
 						{
-
 							public void run()
 							{
-
 								updateTraceTestCasesNodeStatus();
-								//saveTraceResultsAction.setEnabled(true);
 							}
-
 						});
 						refreshTree();
-						return new Status(IStatus.OK, "org.overturetool.traces", IStatus.OK, "CT Test evaluation finished", null);
+						return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
 					}
 
 				};
@@ -776,7 +681,9 @@ monitor.done();
 				for (ViewerFilter viewerFilter : filters)
 				{
 					if (viewerFilter.equals(okFilter))
+					{
 						isSet = true;
+					}
 				}
 				if (isSet)
 				{
@@ -805,7 +712,9 @@ monitor.done();
 				for (ViewerFilter viewerFilter : filters)
 				{
 					if (viewerFilter.equals(inconclusiveFilter))
+					{
 						isSet = true;
+					}
 				}
 				if (isSet)
 				{
@@ -904,8 +813,6 @@ monitor.done();
 		};
 		actionSelectToolBoxVDMTools.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_VDM_TOOLS_LOGO));
 
-	
-
 		actionSendToInterpreter = new Action("Send to Interpreter")
 		{
 			@Override
@@ -918,36 +825,28 @@ monitor.done();
 				{
 					TraceTestTreeNode traceTestNode = (TraceTestTreeNode) obj;
 
-					String projectName ="";
-					
-					TraceTreeNode traceNode=null;
+					String projectName = "";
+
+					TraceTreeNode traceNode = null;
 					ITreeNode n = traceTestNode;
-					while(n!=null  && !(n instanceof ProjectTreeNode))
+					while (n != null && !(n instanceof ProjectTreeNode))
 					{
-						if(n instanceof TraceTreeNode)
+						if (n instanceof TraceTreeNode)
 						{
 							traceNode = (TraceTreeNode) n;
 						}
 						n = n.getParent();
-						
+
 					}
-				projectName = n.getName();
-//					String className = traceTestNode.getParent().getParent().getName();
-//					String traceName = traceTestNode.getParent().getName();
+					projectName = n.getName();
 					ITracesHelper th = traceHelpers.get(projectName);
 					IVdmProject project = ((VdmjTracesHelper) th).project;
-
-					//TraceTreeNode traceNode = (TraceTreeNode) traceTestNode.getParent();
-					
-					
 					new TraceDebugLauncher().Launch(project, traceNode.getInfo(), traceTestNode.getNumber());
 				}
 			}
 		};
 
 		actionSendToInterpreter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_INTERPRETER));
-		// actionSendToInterpreter.setEnabled(false);
-
 	}
 
 	// -----------------------------update
@@ -967,9 +866,7 @@ monitor.done();
 						updateTraceTestCasesNodeStatus(th, (TraceTreeNode) traceNode);
 
 					}
-
 				}
-
 			}
 		}
 		viewer.refresh();
@@ -983,15 +880,14 @@ monitor.done();
 			traceNode.setSkippedCount(th.getSkippedCount(traceNode.getParent().getName(), traceNode.getName()));
 		} catch (SAXException e)
 		{
-
-			e.printStackTrace();
+			OvertureTracesPlugin.log(e);
 		} catch (IOException e)
 		{
-
-			e.printStackTrace();
+			OvertureTracesPlugin.log(e);
 		} catch (ClassNotFoundException e)
 		{
 			ConsolePrint(e.toString());
+			OvertureTracesPlugin.log(e);
 		}
 
 	}
@@ -1036,8 +932,7 @@ monitor.done();
 					viewer.refresh(projectNode);
 				} catch (Exception e)
 				{
-
-					e.printStackTrace();
+					OvertureTracesPlugin.log(e);
 				}
 				viewer.refresh(projectNode);
 				viewer.expandToLevel(projectNode, 2);
@@ -1057,20 +952,21 @@ monitor.done();
 	private void runTestProject(ITracesHelper th, IProgressMonitor monitor)
 			throws IOException
 	{
-
 		try
 		{
 			for (String className : th.getClassNamesWithTraces())
 			{
 				if (monitor != null && monitor.isCanceled())
+				{
 					return;
+				}
 
 				try
 				{
 					th.processClassTraces(className, monitor);
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					OvertureTracesPlugin.log(e);
 					ConsolePrint(e.getMessage());
 				}
 
@@ -1079,34 +975,10 @@ monitor.done();
 		{
 			ConsolePrint("Trace helper not initialized for project: "
 					+ e.getProjectName());
-			e.printStackTrace();
+			OvertureTracesPlugin.log(e);
 		}
 
 	}
-
-	private void hookDoubleClickAction()
-	{
-		// viewer.addDoubleClickListener(new IDoubleClickListener() {
-		// public void doubleClick(DoubleClickEvent event) {
-		// doubleClickAction.run();
-		// }
-		// });
-	}
-
-	// private IFile GetFile(IProject project, File file)
-	// {
-	// IFile f = (IFile) project.findMember(file.getName(), true);
-	// if (f == null)
-	// {
-	// for (IFile projectFile : getAllMemberFiles(project, exts))
-	// {
-	// if (projectFile.getLocation().toOSString().equals(
-	// file.getPath()))
-	// return projectFile;
-	// }
-	// }
-	// return f;
-	// }
 
 	private void hookTreeAction()
 	{
@@ -1128,21 +1000,22 @@ monitor.done();
 					if (!(selection instanceof NotYetReadyTreeNode)
 							&& !(selection instanceof TraceTestGroup)
 							&& ((TraceTestTreeNode) selection).getStatus() == null)
+					{
 						try
 						{
 							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IPageLayout.ID_PROGRESS_VIEW);
 						} catch (PartInitException e)
 						{
-							e.printStackTrace();
+							OvertureTracesPlugin.log(e);
 						}
-					else
+					} else
 						try
 						{
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(TracesConstants.TRACES_TEST_ID);
-							gotoTraceDefinition(findTraceTreeNode((TraceTestTreeNode)selection));
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITracesConstants.TRACES_TEST_ID);
+							gotoTraceDefinition(findTraceTreeNode((TraceTestTreeNode) selection));
 						} catch (PartInitException e)
 						{
-							e.printStackTrace();
+							OvertureTracesPlugin.log(e);
 						}
 
 				}
@@ -1150,23 +1023,22 @@ monitor.done();
 
 			private TraceTreeNode findTraceTreeNode(ITreeNode selection)
 			{
-				if(selection!= null)
+				if (selection != null)
 				{
-					if(selection.getParent() == null)
+					if (selection.getParent() == null)
 					{
 						return null;
-					}else if( selection.getParent() instanceof TraceTreeNode ){
+					} else if (selection.getParent() instanceof TraceTreeNode)
+					{
 						return (TraceTreeNode) selection.getParent();
-					}
-					else{
+					} else
+					{
 						return findTraceTreeNode(selection.getParent());
 					}
 				}
-				
+
 				return null;
 			}
-
-			
 
 		});
 		viewer.addTreeListener(new ITreeViewerListener()
@@ -1185,9 +1057,6 @@ monitor.done();
 				{
 					TraceTestGroup node = (TraceTestGroup) expandingElement;
 					node.unloadTests();
-					// viewer.remove(node);
-					// viewer.getTree().clearAll(true);
-					// viewer.refresh(node);
 					refreshTree();
 				}
 
@@ -1204,8 +1073,7 @@ monitor.done();
 						node.loadTests();
 					} catch (Exception e)
 					{
-
-						e.printStackTrace();
+						OvertureTracesPlugin.log(e);
 					}
 					refreshTree();
 				} else if (expandingElement instanceof TraceTestGroup)
@@ -1214,11 +1082,9 @@ monitor.done();
 					try
 					{
 						node.loadTests();
-
 					} catch (Exception e)
 					{
-
-						e.printStackTrace();
+						OvertureTracesPlugin.log(e);
 					}
 					refreshTree();
 				}
@@ -1243,8 +1109,6 @@ monitor.done();
 		});
 	}
 
-	
-
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
@@ -1253,8 +1117,6 @@ monitor.done();
 	{
 		viewer.getControl().setFocus();
 	}
-
-	
 
 	private ViewerFilter okFilter = new ViewerFilter()
 	{
@@ -1265,9 +1127,12 @@ monitor.done();
 		{
 			if (element instanceof TraceTestTreeNode
 					&& ((TraceTestTreeNode) element).getStatus() == Verdict.PASSED)
+			{
 				return false;
-			else
+			} else
+			{
 				return true;
+			}
 		}
 
 	};
@@ -1281,9 +1146,12 @@ monitor.done();
 		{
 			if (element instanceof TraceTestTreeNode
 					&& ((TraceTestTreeNode) element).getStatus() == Verdict.INCONCLUSIVE)
+			{
 				return false;
-			else
+			} else
+			{
 				return true;
+			}
 		}
 
 	};
@@ -1297,11 +1165,15 @@ monitor.done();
 			{
 				Verdict res = ((TraceTestTreeNode) element).getStatus();
 				if (res == Verdict.FAILED)
+				{
 					return 1;
-				else if (res == Verdict.INCONCLUSIVE)
+				} else if (res == Verdict.INCONCLUSIVE)
+				{
 					return 2;
-				else if (res == Verdict.PASSED)
+				} else if (res == Verdict.PASSED)
+				{
 					return 3;
+				}
 			}
 			return 3;
 			// return super.category(element);
@@ -1329,7 +1201,7 @@ monitor.done();
 					out.println(message);
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					OvertureTracesPlugin.log(e);
 				}
 			}
 		});
@@ -1356,29 +1228,31 @@ monitor.done();
 					{
 						IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
 						if (activePage != null)
+						{
 							activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_VISIBLE);
+						}
 					}
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					OvertureTracesPlugin.log(e);
 				}
 			}
 		});
 
 	}
-	
+
 	private void gotoTraceDefinition(TraceTreeNode tn)
 	{
-		if(tn == null || tn.getTraceDefinition()==null)
+		if (tn == null || tn.getTraceDefinition() == null)
 		{
-			return ;
+			return;
 		}
 		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		String projectName = tn.getParent().getParent().getName();
 		IProject iproject = iworkspaceRoot.getProject(projectName);
 
 		IVdmProject vdmProject = (IVdmProject) iproject.getAdapter(IVdmProject.class);
-		
+
 		IFile file = vdmProject.findIFile(tn.getTraceDefinition().location.file);
 
 		EditorUtility.gotoLocation(file, tn.getTraceDefinition().location, tn.getName());
@@ -1390,8 +1264,12 @@ monitor.done();
 		IConsoleManager conMan = plugin.getConsoleManager();
 		IConsole[] existing = conMan.getConsoles();
 		for (int i = 0; i < existing.length; i++)
+		{
 			if (name.equals(existing[i].getName()))
+			{
 				return (MessageConsole) existing[i];
+			}
+		}
 		// no console found, so create a new one
 		MessageConsole myConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[] { myConsole });
@@ -1406,10 +1284,10 @@ monitor.done();
 		for (final IProject project : iprojects)
 		{
 
-			if (project.isOpen()
-			// && project.getNature(VdmPpProjectNature.VDM_PP_NATURE) != null
-					&& project.getName().equals(finalProjectName))
+			if (project.isOpen() && project.getName().equals(finalProjectName))
+			{
 				return project;
+			}
 		}
 		return null;
 	}

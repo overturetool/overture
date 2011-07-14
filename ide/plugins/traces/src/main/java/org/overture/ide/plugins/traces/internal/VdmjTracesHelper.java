@@ -51,7 +51,7 @@ public class VdmjTracesHelper implements ITracesHelper
 	Map<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
 	File projectDir;
 	Dialect dialect = Dialect.VDM_PP;
-//	String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
+	// String contentTypeId = IVdmPpCoreConstants.CONTENT_TYPE;
 	Shell shell;
 
 	public VdmjTracesHelper(Shell shell, IVdmProject vdmProject, int max)
@@ -77,15 +77,14 @@ public class VdmjTracesHelper implements ITracesHelper
 		// }
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		Assert.isNotNull(project, "Project could not be adapted");
-		
+
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		
+
 		nature = this.project.getVdmNature();
-//		contentTypeId = this.project.getContentTypeIds().get(0);
+		// contentTypeId = this.project.getContentTypeIds().get(0);
 		dialect = this.project.getDialect();
 
-		this.projectDir = new File(project.getLocation().toFile(),
-				TRACE_STORE_DIR_NAME.replace('/', File.separatorChar));
+		this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME.replace('/', File.separatorChar));
 		if (!this.projectDir.exists())
 			this.projectDir.mkdirs();
 
@@ -153,8 +152,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 			} else
 			{
-				for (ClassDefinition classdef : project.getModel()
-						.getClassList())
+				for (ClassDefinition classdef : project.getModel().getClassList())
 				{
 					for (Object string : classdef.definitions)
 					{
@@ -204,8 +202,7 @@ public class VdmjTracesHelper implements ITracesHelper
 			throws IOException, SAXException
 	{
 
-		return classTraceReaders.get(className).getTraceTestResults(trace, num,
-				num).get(0);
+		return classTraceReaders.get(className).getTraceTestResults(trace, num, num).get(0);
 
 	}
 
@@ -214,8 +211,7 @@ public class VdmjTracesHelper implements ITracesHelper
 	{
 		if (classTraceReaders.containsKey(className))
 		{
-			Map<String, TraceStatusXml> traceStatus = classTraceReaders.get(
-					className).getTraceStatus();
+			Map<String, TraceStatusXml> traceStatus = classTraceReaders.get(className).getTraceStatus();
 			if (traceStatus != null && traceStatus.containsKey(traceName))
 			{
 				return traceStatus.get(traceName).getSkippedTestCount();
@@ -238,13 +234,11 @@ public class VdmjTracesHelper implements ITracesHelper
 	{
 		TraceInterpreter interpeter = null;
 		if (monitor instanceof IProgressMonitor)
-			interpeter = new ObservableTraceInterpeter(
-					(IProgressMonitor) monitor, this);
+			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor, this);
 		else
 			interpeter = new TraceInterpreter();
 
-		TraceXmlWrapper storage = new TraceXmlWrapper(projectDir
-				.getAbsolutePath()
+		TraceXmlWrapper storage = new TraceXmlWrapper(projectDir.getAbsolutePath()
 				+ File.separatorChar + className + ".xml");
 
 		buildProjectIfRequired();
@@ -253,14 +247,10 @@ public class VdmjTracesHelper implements ITracesHelper
 
 		if (dialect == Dialect.VDM_SL)
 		{
-			interpeter.processTrace(project.getModel().getModuleList(),
-					className, false, storage, dialect, project
-							.getLanguageVersion());
+			interpeter.processTrace(project.getModel().getModuleList(), className, false, storage, dialect, project.getLanguageVersion());
 		} else
 		{
-			interpeter.processTrace(project.getModel().getClassList(),
-					className, false, storage, dialect, project
-							.getLanguageVersion());
+			interpeter.processTrace(project.getModel().getClassList(), className, false, storage, dialect, project.getLanguageVersion());
 		}
 	}
 
@@ -271,33 +261,25 @@ public class VdmjTracesHelper implements ITracesHelper
 	{
 		TraceInterpreter interpeter = null;
 		if (monitor instanceof IProgressMonitor)
-			interpeter = new ObservableTraceInterpeter(
-					(IProgressMonitor) monitor, this);
+			interpeter = new ObservableTraceInterpeter((IProgressMonitor) monitor, this);
 		else
 			interpeter = new TraceInterpreter();
 
-		TraceXmlWrapper storage = new TraceXmlWrapper(projectDir
-				.getAbsolutePath()
+		TraceXmlWrapper storage = new TraceXmlWrapper(projectDir.getAbsolutePath()
 				+ File.separatorChar + className + ".xml");
 
 		buildProjectIfRequired();
 
 		if (dialect == Dialect.VDM_SL)
-			interpeter.processTrace(project.getModel().getModuleList(),
-					className, false, storage, dialect, project
-							.getLanguageVersion(), subset, traceReductionType,
-					seed);
+			interpeter.processTrace(project.getModel().getModuleList(), className, false, storage, dialect, project.getLanguageVersion(), subset, traceReductionType, seed);
 		else
-			interpeter.processTrace(project.getModel().getClassList(),
-					className, false, storage, dialect, project
-							.getLanguageVersion(), subset, traceReductionType,
-					seed);
+			interpeter.processTrace(project.getModel().getClassList(), className, false, storage, dialect, project.getLanguageVersion(), subset, traceReductionType, seed);
 
 	}
 
 	void buildProjectIfRequired()
 	{
-//		project.getModel().clean();
+		// project.getModel().clean();
 		shell.getDisplay().syncExec(new Runnable()
 		{
 
@@ -319,24 +301,6 @@ public class VdmjTracesHelper implements ITracesHelper
 			e.printStackTrace();
 		}
 
-		// RootNode root =
-		// AstManager.instance().getRootNode(project.getProject(),
-		// nature);
-		// if (root != null && root.isChecked())
-		// return;
-		// else
-		// try
-		// {
-		// IProgressMonitor progressMonitor = null;
-		//
-		// project.getProject()
-		// .build(IncrementalProjectBuilder.FULL_BUILD,
-		// progressMonitor);
-		// } catch (CoreException e)
-		// {
-		// System.out.println("Error forcing build from traces");
-		// e.printStackTrace();
-		// }
 	}
 
 	public List<NamedTraceDefinition> getTraceDefinitions(String className)
@@ -383,8 +347,7 @@ public class VdmjTracesHelper implements ITracesHelper
 			try
 			{
 				// result file exists, create reader
-				TracesXmlStoreReader reader = new TracesXmlStoreReader(
-						classTraceXmlFile, className);
+				TracesXmlStoreReader reader = new TracesXmlStoreReader(classTraceXmlFile, className);
 				classTraceReaders.put(className, reader);
 			} catch (SAXException e)
 			{
@@ -442,12 +405,7 @@ public class VdmjTracesHelper implements ITracesHelper
 
 	{
 
-		List<TraceTestResult> testStatus = classTraceReaders.get(className)
-				.getTraceTestResults(
-						trace,
-						1,
-						classTraceReaders.get(className).getTraceTestCount(
-								trace));
+		List<TraceTestResult> testStatus = classTraceReaders.get(className).getTraceTestResults(trace, 1, classTraceReaders.get(className).getTraceTestCount(trace));
 
 		return testStatus;
 
@@ -506,8 +464,7 @@ public class VdmjTracesHelper implements ITracesHelper
 			SAXException
 	{
 
-		List<TraceTestResult> list = classTraceReaders.get(className)
-				.getTraceTestResults(trace, startNumber, stopNumber);
+		List<TraceTestResult> list = classTraceReaders.get(className).getTraceTestResults(trace, startNumber, stopNumber);
 
 		return list;
 	}

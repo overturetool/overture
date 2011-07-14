@@ -1,6 +1,8 @@
 package org.overture.ide.plugins.traces;
 
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -11,7 +13,7 @@ import org.osgi.framework.BundleContext;
 public class OvertureTracesPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.overture.ide.plugins.traces";
+	public static final String PLUGIN_ID = ITracesConstants.PLUGIN_ID;
 
 	// The shared instance
 	private static OvertureTracesPlugin plugin;
@@ -99,9 +101,11 @@ public class OvertureTracesPlugin extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 	
-//	public ImageDescriptor getImageDescriptor(String key) {
-//        return getImageRegistry().getDescriptor(key);
-//	}
-//}
+	public static void log(Exception exception) {
+		getDefault().getLog().log(new Status(IStatus.ERROR,ITracesConstants.PLUGIN_ID,"TracesPlugin",exception));
+	}
+	public static void log(String message,Exception exception) {
+		getDefault().getLog().log(new Status(IStatus.ERROR,ITracesConstants.PLUGIN_ID,message,exception));
+	}
 
 }
