@@ -108,9 +108,11 @@ public class ToStringUtil
 
 		for (PDefinition d : _definitions)
 		{
-			sb.append(d.getAccess().toString());
+			if(d.getAccess()!=null)
+			{
+			sb.append(d.getAccess());
 			sb.append(" ");
-
+			}
 			sb.append(d.kindPDefinition() + " " + getVariableNames(d) + ":"
 					+ d.getType());
 			sb.append("\n");
