@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream.GetField;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -26,10 +27,11 @@ public class BaseTestSuite extends TestSuite
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteFile(String name,
-			File testRoot, Class testCase) throws IllegalArgumentException,
+			String testRootPath, Class testCase) throws IllegalArgumentException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, SecurityException, NoSuchMethodException
 	{
+		File testRoot = getFile(testRootPath);
 		Constructor ctor = testCase.getConstructor(new Class[] { File.class });
 		TestSuite suite = new BaseTestSuite(name);
 
@@ -52,11 +54,12 @@ public class BaseTestSuite extends TestSuite
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestSingleLineFile(String name,
-			File testRoot, Class testCase) throws IllegalArgumentException,
+			String testRootPath, Class testCase) throws IllegalArgumentException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, SecurityException,
 			NoSuchMethodException, IOException
 	{
+		File testRoot = getFile(testRootPath);
 		Constructor ctor = testCase.getConstructor(new Class[] { String.class,
 				String.class });
 		TestSuite suite = new BaseTestSuite(name);
@@ -118,5 +121,10 @@ public class BaseTestSuite extends TestSuite
 			{
 			}
 		}
+	}
+	
+	protected static File getFile(String pathname)
+	{
+		return new File(pathname.replace('\\', File.separatorChar).replace('/', File.separatorChar));
 	}
 }

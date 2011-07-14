@@ -1,12 +1,11 @@
 package org.overture.parser.tests;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.overture.parser.tests.framework.BaseTestSuite;
-
 import junit.framework.Test;
+
+import org.overture.parser.tests.framework.BaseTestSuite;
 
 public class PatternTestSuite extends BaseTestSuite
 {
@@ -15,6 +14,6 @@ public class PatternTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Pattern TestSuite";
 		String root = "src\\test\\resources\\patterns";
-		return createTestSingleLineFile(name,new File(root),PatternTestCase.class);
+		return createTestSingleLineFile(name,root,PatternTestCase.class);
 	}
 }

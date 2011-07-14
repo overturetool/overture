@@ -1336,7 +1336,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
-			result = new ASetCompSetExp(null, exp.getLocation(), first, bindings, exp);
+			result = new ASetCompSetExp(null, start, first, bindings, exp);
 //			result = new SetCompExpression(start, first, bindings, exp);
 		}
 		else

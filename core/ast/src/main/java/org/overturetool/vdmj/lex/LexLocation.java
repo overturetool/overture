@@ -60,8 +60,8 @@ public class LexLocation implements Serializable , ExternalNode
 //	private static Map<LexLocation,IAstNode> locationToAstNode = new Hashtable<LexLocation,IAstNode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
-//	private static Map<LexNameToken, LexLocation> nameSpans =
-//		new HashMap<LexNameToken, LexLocation>();
+	private static Map<LexNameToken, LexLocation> nameSpans =
+		new HashMap<LexNameToken, LexLocation>();//TODO
 
 	/** True if the location is executable. */
 	private boolean executable = false;
@@ -240,94 +240,94 @@ public class LexLocation implements Serializable , ExternalNode
 		}
 	}
 
-//	public static void addSpan(LexNameToken name, LexToken upto)
-//	{
-//		LexLocation span = new LexLocation(
-//			name.location.file,
-//			name.location.module,
-//			name.location.startLine,
-//			name.location.startPos,
-//			upto.location.endLine,
-//			upto.location.endPos);
-//
-//		nameSpans.put(name, span);
-//	}
-//
-//	public static LexNameList getSpanNames(File filename)
-//	{
-//		LexNameList list = new LexNameList();
-//
-//		for (LexNameToken name: nameSpans.keySet())
-//		{
-//			LexLocation span = nameSpans.get(name);
-//
-//			if (span.file.equals(filename))
-//			{
-//				list.add(name);
-//			}
-//		}
-//
-//		return list;
-//	}
+	public static void addSpan(LexNameToken name, LexToken upto)
+	{
+		LexLocation span = new LexLocation(
+			name.location.file,
+			name.location.module,
+			name.location.startLine,
+			name.location.startPos,
+			upto.location.endLine,
+			upto.location.endPos);
 
-//	public static float getSpanPercent(LexNameToken name)
-//	{
-//		int hits = 0;
-//		int misses = 0;
-//		LexLocation span = null;
-//		
-//		synchronized (nameSpans)
-//		{
-//			span = nameSpans.get(name);
-//		}
-//		
-//		synchronized (allLocations)
-//		{
-//			for (LexLocation l: allLocations)
-//			{
-//				if (l.executable && l.within(span))
-//				{
-//					if (l.hits > 0)
-//					{
-//						hits++;
-//					}
-//					else
-//					{
-//						misses++;
-//					}
-//				}
-//			}
-//		}
-//
-//		int sum = hits + misses;
-//		return sum == 0 ? 0 : (float)(1000 * hits/sum)/10;		// NN.N%
-//	}
-//
-//	public static long getSpanCalls(LexNameToken name)
-//	{
-//		// The assumption is that the first executable location in
-//		// the span for the name is hit as many time as the span is called.
-//
-//		LexLocation span = null;
-//		
-//		synchronized (nameSpans)
-//		{
-//			span = nameSpans.get(name);
-//		}
-//		
-//		synchronized (allLocations)
-//		{
-//			for (LexLocation l: allLocations)
-//			{
-//				if (l.executable && l.within(span))
-//				{
-//					return l.hits;
-//				}
-//			}
-//		}
-//
-//		return 0;
-//	}
+		nameSpans.put(name, span);
+	}
+
+	public static LexNameList getSpanNames(File filename)
+	{
+		LexNameList list = new LexNameList();
+
+		for (LexNameToken name: nameSpans.keySet())
+		{
+			LexLocation span = nameSpans.get(name);
+
+			if (span.file.equals(filename))
+			{
+				list.add(name);
+			}
+		}
+
+		return list;
+	}
+
+	public static float getSpanPercent(LexNameToken name)
+	{
+		int hits = 0;
+		int misses = 0;
+		LexLocation span = null;
+		
+		synchronized (nameSpans)
+		{
+			span = nameSpans.get(name);
+		}
+		
+		synchronized (allLocations)
+		{
+			for (LexLocation l: allLocations)
+			{
+				if (l.executable && l.within(span))
+				{
+					if (l.hits > 0)
+					{
+						hits++;
+					}
+					else
+					{
+						misses++;
+					}
+				}
+			}
+		}
+
+		int sum = hits + misses;
+		return sum == 0 ? 0 : (float)(1000 * hits/sum)/10;		// NN.N%
+	}
+
+	public static long getSpanCalls(LexNameToken name)
+	{
+		// The assumption is that the first executable location in
+		// the span for the name is hit as many time as the span is called.
+
+		LexLocation span = null;
+		
+		synchronized (nameSpans)
+		{
+			span = nameSpans.get(name);
+		}
+		
+		synchronized (allLocations)
+		{
+			for (LexLocation l: allLocations)
+			{
+				if (l.executable && l.within(span))
+				{
+					return l.hits;
+				}
+			}
+		}
+
+		return 0;
+	}
 
 	public static List<Integer> getHitList(File file)
 	{

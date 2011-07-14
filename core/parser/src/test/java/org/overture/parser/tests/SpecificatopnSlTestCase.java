@@ -3,19 +3,19 @@ package org.overture.parser.tests;
 import java.io.File;
 import java.util.List;
 
-import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.DefinitionReader;
+import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
+public class SpecificatopnSlTestCase extends BaseParserTestCase<ModuleReader>
 {
 	static boolean hasRunBefore = false;
-	public DefinitionTestCase(File file)
+	public SpecificatopnSlTestCase(File file)
 	{
 		super(file);
 	}
@@ -24,30 +24,30 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		Settings.dialect = Dialect.VDM_RT;
+		Settings.dialect = Dialect.VDM_SL;
 	}
 
-	public DefinitionTestCase(String name, String content)
+	public SpecificatopnSlTestCase(String name, String content)
 	{
 		super(name, content);
 	}
 
 	@Override
-	protected DefinitionReader getReader(LexTokenReader ltr)
+	protected ModuleReader getReader(LexTokenReader ltr)
 	{
-		return new DefinitionReader(ltr);
+		return new ModuleReader(ltr);
 	}
 
 	@Override
-	protected List<PDefinition> read(DefinitionReader reader) throws ParserException, LexException
+	protected List<AModuleModules> read(ModuleReader reader) throws ParserException, LexException
 	{
-		return reader.readDefinitions();
+		return reader.readModules();
 	}
 
 	@Override
 	protected String getReaderTypeName()
 	{
-		return "Definition";
+		return "Specificatopn SL";
 	}
 
 	@Override

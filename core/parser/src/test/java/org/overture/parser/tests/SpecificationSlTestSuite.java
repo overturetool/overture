@@ -7,13 +7,13 @@ import junit.framework.Test;
 
 import org.overture.parser.tests.framework.BaseTestSuite;
 
-public class TypeTestSuite extends BaseTestSuite
+public class SpecificationSlTestSuite extends BaseTestSuite
 {
 
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Parser Type TestSuite";
-		String root = "src\\test\\resources\\type";
-		return createTestSingleLineFile(name,root,TypeTestCase.class);
+		String name = "Parser Specification SL TestSuite";
+		String root = "src\\test\\resources\\specifications\\sl";
+		return createTestCompleteFile(name,root,SpecificatopnSlTestCase.class);
 	}
 }

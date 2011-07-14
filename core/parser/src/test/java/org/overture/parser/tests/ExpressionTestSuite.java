@@ -1,15 +1,13 @@
 package org.overture.parser.tests;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 
-import org.overture.parser.tests.framework.BaseTestSuite;
-
 import junit.framework.Test;
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
+
+import org.overture.parser.tests.framework.BaseTestSuite;
 
 public class ExpressionTestSuite extends BaseTestSuite
 {
@@ -18,8 +16,8 @@ public class ExpressionTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Expression TestSuite";
 		String root = "src\\test\\resources\\expressions";
-		TestSuite test = createTestCompleteFile(name,new File(root+"\\complete"),ExpressionTestCase.class);
-		TestSuite test2 = createTestSingleLineFile(name,new File(root+"\\singleline"),ExpressionTestCase.class);
+		TestSuite test = createTestCompleteFile(name,root+"\\complete",ExpressionTestCase.class);
+		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",ExpressionTestCase.class);
 		@SuppressWarnings("unchecked")
 		Enumeration<Test> e = test2.tests();
 		while(e.hasMoreElements())
