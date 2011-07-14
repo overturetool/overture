@@ -1,8 +1,12 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -52,6 +56,18 @@ public class ARenamedDefinitionAssistant {
 		d.setUsed(true);
 		PDefinitionAssistant.markUsed(d.getDef());
 		
+	}
+
+	public static List<PDefinition> getDefinitions(ARenamedDefinition d) {
+		List<PDefinition> result = new Vector<PDefinition>();
+		result.add(d);
+		return result;
+	}
+
+	public static LexNameList getVariableNames(ARenamedDefinition d) {
+		LexNameList both = new LexNameList(d.getName());
+		both.add(d.getDef().getName());
+		return both;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -83,5 +84,26 @@ public class AImplicitFunctionDefinitionAssistant {
 		}
 
 		return null;
+	}
+
+	public static List<PDefinition> getDefinitions(AImplicitFunctionDefinition d) {
+		List<PDefinition> defs = new Vector<PDefinition>();
+		defs.add(d);
+
+		if (d.getPredef() != null)
+		{
+			defs.add(d.getPredef());
+		}
+
+		if (d.getPostdef() != null)
+		{
+			defs.add(d.getPostdef());
+		}
+
+		return defs;
+	}
+
+	public static LexNameList getVariableNames(AImplicitFunctionDefinition d) {
+		return new LexNameList(d.getName());
 	}
 }

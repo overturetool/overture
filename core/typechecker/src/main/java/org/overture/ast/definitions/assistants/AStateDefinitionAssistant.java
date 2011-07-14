@@ -1,7 +1,10 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.List;
+
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -58,6 +61,14 @@ public class AStateDefinitionAssistant {
 	public static void unusedCheck(AStateDefinition d) {
 
 		PDefinitionAssistant.unusedCheck(d.getStateDefs());
+	}
+
+	public static List<PDefinition> getDefinitions(AStateDefinition d) {
+		return d.getStateDefs();
+	}
+
+	public static LexNameList getVariableNames(AStateDefinition d) {
+		return PDefinitionAssistant.getVariableNames(d.getStateDefs());
 	}
 
 }

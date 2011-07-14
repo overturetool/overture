@@ -1,16 +1,18 @@
 package org.overture.ast.definitions.assistants;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
+
 
 public class ALocalDefinitionAssistant {
 
 	
 
-	public static Collection<? extends LexNameToken> getVariableNames(
+	public static LexNameList getVariableNames(
 			ALocalDefinition ld) {
 		return new LexNameList(ld.getName());
 	}
@@ -18,6 +20,12 @@ public class ALocalDefinitionAssistant {
 	public static void setValueDefinition(ALocalDefinition ld) {
 		ld.setValueDefinition(true);
 		
+	}
+
+	public static List<PDefinition> getDefinitions(ALocalDefinition d) {
+		List<PDefinition> res = new Vector<PDefinition>();
+		res.add(d);
+		return res;
 	}
 
 	

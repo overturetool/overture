@@ -69,7 +69,7 @@ abstract public class Environment
 
 	protected void dupHideCheck(List<PDefinition> list, NameScope scope)
 	{
-		LexNameList allnames = PDefinitionAssistant.getVariableName(list);
+		LexNameList allnames = PDefinitionAssistant.getVariableNames(list);
 
 		for (LexNameToken n1: allnames)
 		{

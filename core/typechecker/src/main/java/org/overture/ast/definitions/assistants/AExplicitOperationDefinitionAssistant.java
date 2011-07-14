@@ -11,6 +11,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.types.PType;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -51,6 +52,30 @@ public class AExplicitOperationDefinitionAssistant {
 		}
 
 		return null;
+	}
+
+	public static List<PDefinition> getDefinitions(
+			AExplicitOperationDefinition d) {
+		
+		List<PDefinition> defs = new Vector<PDefinition>();
+		defs.add(d);
+
+		if (d.getPredef() != null)
+		{
+			defs.add(d.getPredef());
+		}
+
+		if (d.getPostdef() != null)
+		{
+			defs.add(d.getPostdef());
+		}
+
+		return defs;
+	}
+
+	public static LexNameList getVariableNames(AExplicitOperationDefinition d) {
+		
+		return new LexNameList(d.getName());
 	}
 
 }

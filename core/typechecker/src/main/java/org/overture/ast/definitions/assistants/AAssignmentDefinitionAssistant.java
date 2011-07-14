@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class AAssignmentDefinitionAssistant {
 
@@ -14,6 +16,11 @@ public class AAssignmentDefinitionAssistant {
 		List<PDefinition> res = new Vector<PDefinition>();
 		res.add(d);
 		return res;
+	}
+
+	public static LexNameList getVariableNames(AAssignmentDefinition d) {
+		
+		return new LexNameList(d.getName());
 	}
 
 }

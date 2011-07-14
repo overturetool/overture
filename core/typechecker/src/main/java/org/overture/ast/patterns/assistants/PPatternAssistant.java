@@ -18,6 +18,7 @@ import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class PPatternAssistant {
@@ -152,6 +153,28 @@ public class PPatternAssistant {
 		for (PPattern pPattern : plist) {
 			unResolve(pPattern);
 		}	
+	}
+
+	public static LexNameList getVariableNames(PPattern pattern) {
+		switch (pattern.kindPPattern()) {
+		case RECORD:
+			return ARecordPatternAssistant.getVariableNames((ARecordPattern)pattern);
+		case SEQ:
+			return ASeqPatternAssistant.getVariableNames((ASeqPattern)pattern);
+		case SET:
+			return ASetPatternAssistant.getVariableNames((ASetPattern)pattern);
+		case TUPLE:
+			return ATuplePatternAssistant.getVariableNames((ATuplePattern)pattern);
+		case UNION:
+			return AUnionPatternAssistant.getVariableNames((AUnionPattern)pattern);
+		default:
+			return getVariableNamesBaseCase(pattern);
+		}
+	}
+	
+	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
+	{
+		return new LexNameList();	
 	}
 
 }

@@ -1,8 +1,11 @@
 package org.overture.ast.definitions.assistants;
 
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -23,6 +26,18 @@ public class AExternalDefinitionAssistant {
 		d.setUsed(true);
 		PDefinitionAssistant.markUsed(d.getState());
 		
+	}
+
+	public static List<PDefinition> getDefinitions(AExternalDefinition d) {
+		
+		List<PDefinition> result =  new Vector<PDefinition>();
+		result.add(d.getState());
+	
+		return result;
+	}
+
+	public static LexNameList getVariableNames(AExternalDefinition d) {
+		return PDefinitionAssistant.getVariableNames(d.getState());
 	}
 
 }

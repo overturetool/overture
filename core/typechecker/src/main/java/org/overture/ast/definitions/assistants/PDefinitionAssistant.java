@@ -5,11 +5,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -28,6 +30,7 @@ import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -292,7 +295,7 @@ public class PDefinitionAssistant {
 		return all;
 	}
 
-	private static List<PDefinition> getDefinitions(
+	public static List<PDefinition> getDefinitions(
 			PDefinition d) {
 		
 		switch (d.kindPDefinition()) {
@@ -302,27 +305,49 @@ public class PDefinitionAssistant {
 		case CLASS:
 			return SClassDefinitionAssistant.getDefinitions((SClassDefinition)d);
 		case CLASSINVARIANT:
+			return AClassInvariantDefinitionAssistant.getDefinitions((AClassInvariantDefinition)d);
 		case EQUALS:
+			return AEqualsDefinitionAssistant.getDefinitions((AEqualsDefinition)d);
 		case EXPLICITFUNCTION:
+			return AExplicitFunctionDefinitionAssistant.getDefinitions((AExplicitFunctionDefinition)d);
 		case EXPLICITOPERATION:
+			return AExplicitOperationDefinitionAssistant.getDefinitions((AExplicitOperationDefinition)d);
 		case EXTERNAL:
+			return AExternalDefinitionAssistant.getDefinitions((AExternalDefinition)d);
 		case IMPLICITFUNCTION:
+			return AImplicitFunctionDefinitionAssistant.getDefinitions((AImplicitFunctionDefinition)d);
 		case IMPLICITOPERATION:
+			return AImplicitOperationDefinitionAssistant.getDefinitions((AImplicitOperationDefinition)d);
 		case IMPORTED:
+			return AImportedDefinitionAssistant.getDefinitions((AImportedDefinition)d);
 		case INHERITED:
+			return AInheritedDefinitionAssistant.getDefinitions((AInheritedDefinition)d);
 		case INSTANCEVARIABLE:
+			return AInstanceVariableDefinitionAssistant.getDefinitions((AInstanceVariableDefinition)d);
 		case LOCAL:
+			return ALocalDefinitionAssistant.getDefinitions((ALocalDefinition)d);
 		case MULTIBINDLIST:
+			return AMultiBindListDefinitionAssistant.getDefinitions((AMultiBindListDefinition)d);
 		case MUTEXSYNC:
+			return AMutexSyncDefinitionAssistant.getDefinitions((AMutexSyncDefinition)d);
 		case NAMEDTRACE:
+			return ANamedTraceDefinitionAssistant.getDefinitions((ANamedTraceDefinition)d);
 		case PERSYNC:
+			return APerSyncDefinitionAssistant.getDefinitions((APerSyncDefinition)d);
 		case RENAMED:
+			return ARenamedDefinitionAssistant.getDefinitions((ARenamedDefinition)d);
 		case STATE:
+			return AStateDefinitionAssistant.getDefinitions((AStateDefinition)d);
 		case THREAD:
+			return AThreadDefinitionAssistant.getDefinitions((AThreadDefinition)d);
 		case TYPE:
+			return ATypeDefinitionAssistant.getDefinitions((ATypeDefinition)d);
 		case UNTYPED:
+			return AUntypedDefinitionAssistant.getDefinitions((AUntypedDefinition)d);
 		case VALUE:
+			return AValueDefinitionAssistant.getDefinitions((AValueDefinition)d);
 		default:
+			assert false : "getDefinitions should never hit the default case";
 			return null;			
 		}
 		
@@ -345,21 +370,20 @@ public class PDefinitionAssistant {
 
 	}
 
-	public static PDefinition getSelfDefinition(PDefinition node) {
-		return getSelfDefinition(node.getClassDefinition());
+	public static PDefinition getSelfDefinition(PDefinition d) {
+		switch (d.kindPDefinition()) {
+		case CLASS:
+			SClassDefinitionAssistant.getSelfDefinition((SClassDefinition)d);
+		default:
+			return getSelfDefinition(d.getClassDefinition());
+		}
+		
 	}
 
-	private static PDefinition getSelfDefinition(
-			SClassDefinition classDefinition) {
+	
 
-		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
-				classDefinition.getName().getSelfName(), NameScope.LOCAL,
-				false, null, null, classDefinition.getType(), false);
-		markUsed(def);
-		return def;
-	}
-
-	public static LexNameList getVariableName(List<PDefinition> list) {
+	public static LexNameList getVariableNames(List<PDefinition> list) {		
+		
 		LexNameList variableNames = new LexNameList();
 
 		for (PDefinition d : list) {
@@ -369,31 +393,65 @@ public class PDefinitionAssistant {
 		return variableNames;
 	}
 
-	private static Collection<? extends LexNameToken> getVariableNames(
+	public static LexNameList getVariableNames(
 			PDefinition d) {
-		List<LexNameToken> result = new ArrayList<LexNameToken>();
-
+		
+//		List<LexNameToken> result = new Vector<LexNameToken>();
+//		result.add(d.getName());
+//		return result;
 		switch (d.kindPDefinition()) {
+		case ASSIGNMENT:
+			return AAssignmentDefinitionAssistant.getVariableNames((AAssignmentDefinition)d);
+		case CLASS:
+			return SClassDefinitionAssistant.getVariableNames((SClassDefinition)d);
+		case CLASSINVARIANT:
+			return AClassInvariantDefinitionAssistant.getVariableNames((AClassInvariantDefinition)d);
+		case EQUALS:
+			return AEqualsDefinitionAssistant.getVariableNames((AEqualsDefinition)d);
 		case EXPLICITFUNCTION:
-			if (d instanceof AExplicitFunctionDefinition) {
-				AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) d;
-				result.addAll(AExplicitFunctionDefinitionAssistant
-						.getVariableNames(efd));
-			}
-			break;
+			return AExplicitFunctionDefinitionAssistant.getVariableNames((AExplicitFunctionDefinition)d);
+		case EXPLICITOPERATION:
+			return AExplicitOperationDefinitionAssistant.getVariableNames((AExplicitOperationDefinition)d);
+		case EXTERNAL:
+			return AExternalDefinitionAssistant.getVariableNames((AExternalDefinition)d);
+		case IMPLICITFUNCTION:
+			return AImplicitFunctionDefinitionAssistant.getVariableNames((AImplicitFunctionDefinition)d);			 
+		case IMPLICITOPERATION:
+			return AImplicitOperationDefinitionAssistant.getVariableNames((AImplicitOperationDefinition)d);
+		case IMPORTED:
+			return AImportedDefinitionAssistant.getVariableNames((AImportedDefinition)d);
+		case INHERITED:
+			return AInheritedDefinitionAssistant.getVariableNames((AInheritedDefinition)d);
+		case INSTANCEVARIABLE:
+			return AInstanceVariableDefinitionAssistant.getVariableNames((AInstanceVariableDefinition)d);
 		case LOCAL:
-			if (d instanceof ALocalDefinition) {
-				ALocalDefinition ld = (ALocalDefinition) d;
-				result.addAll(ALocalDefinitionAssistant.getVariableNames(ld));
-			}
-			break;
+			return ALocalDefinitionAssistant.getVariableNames((ALocalDefinition)d);
+		case MULTIBINDLIST:
+			return AMultiBindListDefinitionAssistant.getVariableNames((AMultiBindListDefinition)d);
+		case MUTEXSYNC:
+			return AMutexSyncDefinitionAssistant.getVariableNames((AMutexSyncDefinition)d);
+		case NAMEDTRACE:
+			return ANamedTraceDefinitionAssistant.getVariableNames((ANamedTraceDefinition)d);
+		case PERSYNC:
+			return APerSyncDefinitionAssistant.getVariableNames((APerSyncDefinition)d);
+		case RENAMED:
+			return ARenamedDefinitionAssistant.getVariableNames((ARenamedDefinition)d);
+		case STATE:
+			return AStateDefinitionAssistant.getVariableNames((AStateDefinition)d);
+		case THREAD:
+			return AThreadDefinitionAssistant.getVariableNames((AThreadDefinition)d);
+		case TYPE:
+			return ATypeDefinitionAssistant.getVariableNames((ATypeDefinition)d);
+		case UNTYPED:
+			return AUntypedDefinitionAssistant.getVariableNames((AUntypedDefinition)d);
+		case VALUE:
+			return AValueDefinitionAssistant.getVariableNames((AValueDefinition)d);
 		default:
-			System.out
-					.println("DefinitionHelper : getVariableName(PDefinition)");
-			break;
+			assert false : "default case should never happen in getVariableNames";
+			return null;
 		}
 
-		return result;
+		
 	}
 
 	public static boolean isStatic(PDefinition fdef) {

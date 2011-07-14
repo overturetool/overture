@@ -1,10 +1,14 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -44,6 +48,23 @@ public class ATypeDefinitionAssistant {
 		}
 
 		return null;
+	}
+
+	public static List<PDefinition> getDefinitions(ATypeDefinition d) {
+		List<PDefinition> defs = new Vector<PDefinition>();
+		defs.add(d);
+
+		if (d.getInvdef() != null)
+		{
+			defs.add(d.getInvdef());
+		}
+
+		return defs;
+	}
+
+	public static LexNameList getVariableNames(ATypeDefinition d) {
+		// This is only used in VDM++ type inheritance
+		return new LexNameList(d.getName());
 	}
 
 }

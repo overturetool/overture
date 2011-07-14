@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AClassType;
@@ -12,6 +13,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -284,5 +286,19 @@ public class SClassDefinitionAssistant {
 		all.addAll(PDefinitionAssistant.singleDefinitions(d.getDefinitions()));
 
 		return all;
+	}
+
+	public static PDefinition getSelfDefinition(
+			SClassDefinition classDefinition) {
+
+		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
+				classDefinition.getName().getSelfName(), NameScope.LOCAL,
+				false, null, null, classDefinition.getType(), false);
+		PDefinitionAssistant.markUsed(def);
+		return def;
+	}
+
+	public static LexNameList getVariableNames(SClassDefinition d) {
+		return PDefinitionAssistant.getVariableNames(d.getDefinitions());
 	}
 }
