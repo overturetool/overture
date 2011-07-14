@@ -16,6 +16,7 @@
     	<module>ast</module>
     	<module>parser</module>
 	<module>typechecker</module>
+	<module>interpreter</module>
    
   </modules>
   <dependencies>
