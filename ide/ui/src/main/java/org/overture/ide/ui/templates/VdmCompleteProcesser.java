@@ -7,6 +7,7 @@ import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext;
@@ -23,6 +24,7 @@ import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.modules.Module;
+
 public class VdmCompleteProcesser
 {
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
@@ -48,7 +50,6 @@ public class VdmCompleteProcesser
 		boolean recordTypesOnly = info.afterMk || info.isEmpty;
 		String typeName = info.field.toString();
 
-		
 		for (IAstNode element : getAst(document))
 		{
 			if (modulesOnly)
@@ -99,29 +100,35 @@ public class VdmCompleteProcesser
 	public void completeFields(VdmCompletionContext info, VdmDocument document,
 			List<ICompletionProposal> proposals, int offset)
 	{
-		List<IAstNode> ast = getAst(document);
-		if (info.fieldType.toString().trim().length() != 0)
+		try
 		{
-			completeFromType(info.fieldType.toString(), info.proposal.toString(), proposals, offset, ast);
-		} else
-		{
-			List<IAstNode> possibleMatch = new Vector<IAstNode>();
-			for (IAstNode node : getLocalFileAst(document))
+			List<IAstNode> ast = getAst(document);
+			if (info.fieldType.toString().trim().length() != 0)
 			{
-				for (IAstNode field : getFields(node))
+				completeFromType(info.fieldType.toString(), info.proposal.toString(), proposals, offset, ast);
+			} else
+			{
+				List<IAstNode> possibleMatch = new Vector<IAstNode>();
+				for (IAstNode node : getLocalFileAst(document))
 				{
-					if (field.getName().equals(info.field.toString()))
+					for (IAstNode field : getFields(node))
 					{
-						// Ok match then complete it
-						completeFromType(getTypeName(field), info.proposal.toString(), proposals, offset, ast);
-					} else if (field.getName().startsWith(info.field.toString()))
-					{
-						possibleMatch.add(field);
+						if (field.getName().equals(info.field.toString()))
+						{
+							// Ok match then complete it
+							completeFromType(getTypeName(field), info.proposal.toString(), proposals, offset, ast);
+						} else if (field.getName().startsWith(info.field.toString()))
+						{
+							possibleMatch.add(field);
+						}
+
 					}
 
 				}
-
 			}
+		} catch (Exception e)
+		{
+			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName(), e);
 		}
 	}
 
