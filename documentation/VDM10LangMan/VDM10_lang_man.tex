@@ -4772,7 +4772,7 @@ Win (wt,lt: Team)
 ext wr gps : map GroupName to set of Score
 pre exists gp in set dom gps & 
         {wt,lt} subset {sc.team | sc in set gps(gp)}
-post exists gp in set dom} gps &
+post exists gp in set dom gps &
        {wt,lt} subset {sc.team | sc in set gps(gp)}
        and gps = gps~ ++ 
                      { gp |-> 
