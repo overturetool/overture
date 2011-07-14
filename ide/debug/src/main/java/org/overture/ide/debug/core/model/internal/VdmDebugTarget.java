@@ -76,7 +76,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	private final ListenerList listeners;
 
 	private IVdmStreamProxy streamProxy;
-	
+
 	private VdmConsoleInputListener consoleInputListener;
 
 	private IProcess process;
@@ -148,8 +148,6 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			// OK
 		}
 
-		
-		
 		this.modelId = modelId;
 
 		this.listeners = new ListenerList();
@@ -172,25 +170,25 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		{
 			targets.put(this, ""); //$NON-NLS-1$
 		}
-		
-		
+
 	}
 
-//	private IOConsole getIOConsole()
-//	{
-//		try
-//		{
-//			IOConsole console = new IOConsole(VdmLaunchConfigurationDelegate.getVdmProject(this.launch.getLaunchConfiguration()).toString(), null);
-//			console.activate();
-//			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
-//			return console;
-//		} catch (CoreException e)
-//		{
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	// private IOConsole getIOConsole()
+	// {
+	// try
+	// {
+	// IOConsole console = new
+	// IOConsole(VdmLaunchConfigurationDelegate.getVdmProject(this.launch.getLaunchConfiguration()).toString(), null);
+	// console.activate();
+	// ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+	// return console;
+	// } catch (CoreException e)
+	// {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
 
 	public void shutdown()
 	{
@@ -258,33 +256,33 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	// ITerminate
 	public boolean canTerminate()
 	{
-//		return true;
+		// return true;
 		synchronized (processLock)
 		{
-			return threadManager.canTerminate() || (process != null && process.canTerminate());
+			return threadManager.canTerminate()
+					|| (process != null && process.canTerminate());
 		}
 	}
 
 	public boolean isTerminated()
 	{
-	//	return true;
+		// return true;
 		synchronized (processLock)
 		{
-			boolean res= threadManager.isTerminated()
-			&& (process == null || process.isTerminated() || isRemote());
+			boolean res = threadManager.isTerminated()
+					&& (process == null || process.isTerminated() || isRemote());
 			try
 			{
-				//Handle the case where the debug process died because of an internal error etc.
-				res = res || (process!=null && process.isTerminated() && process.getExitValue()>0);
+				// Handle the case where the debug process died because of an internal error etc.
+				res = res
+						|| (process != null && process.isTerminated() && process.getExitValue() > 0);
 			} catch (DebugException e)
 			{
-				
+
 			}
 			return res;
 		}
 	}
-	
-	
 
 	protected static boolean waitTerminated(ITerminate terminate, int chunk,
 			long timeout)
@@ -315,7 +313,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	protected void terminate(boolean waitTermination) throws DebugException
 	{
 		fireTargetTerminating();
-		
+
 		threadManager.sendTerminationRequest();
 		if (waitTermination)
 		{
@@ -333,7 +331,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 		threadManager.removeListener(this);
 		breakpointManager.threadTerminated();
-	
+
 		DebugEventHelper.fireTerminateEvent(this);
 	}
 
@@ -438,20 +436,28 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		if (proxy != null)
 		{
 			proxy.setEncoding(getConsoleEncoding());
-			if(consoleInputListener!=null)
+			if (consoleInputListener != null)
 			{
 				consoleInputListener.stop();
 			}
-			consoleInputListener = new VdmConsoleInputListener(this,proxy);
+			consoleInputListener = new VdmConsoleInputListener(this, proxy);
 			consoleInputListener.start();
-			
-			
+
 			try
 			{
-				this.streamProxy.getStdout().write(IDebugConstants.CONSOLE_INTERACTIVE_WELCOME_MESSAGE.getBytes());
+				if (getLaunch().getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CONSOLE_ENTRY, false))
+				{
+					this.streamProxy.getStdout().write(IDebugConstants.CONSOLE_INTERACTIVE_WELCOME_MESSAGE.getBytes());
+				} else
+				{
+					this.streamProxy.getStdout().write(IDebugConstants.CONSOLE_MESSAGE.getBytes());
+				}
 			} catch (IOException e)
 			{
 				VdmDebugPlugin.logError("Fails to set welcome message in proxy console.", e);
+			} catch (CoreException e)
+			{
+				VdmDebugPlugin.logError("Fails to get value from launch config about console mode, for the set welcome message in proxy console.", e);
 			}
 		}
 	}
@@ -476,11 +482,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		try
 		{
-			if(consoleInputListener!=null)
+			if (consoleInputListener != null)
 			{
 				consoleInputListener.stop();
 			}
-			
+
 			if (streamProxy != null)
 			{
 				streamProxy.close();
@@ -773,7 +779,6 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		return getLaunch().getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, false);
 	}
 
-	
 	public static void writeFile(File outputFolder, String fileName,
 			String content) throws IOException
 	{
@@ -787,7 +792,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 	{
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		Assert.isNotNull(project, "Project could not be adapted");
-		File outputDir = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();//new File(project.getLocation().toFile(), "generated");
+		File outputDir = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();// new
+																							// File(project.getLocation().toFile(),
+																							// "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}

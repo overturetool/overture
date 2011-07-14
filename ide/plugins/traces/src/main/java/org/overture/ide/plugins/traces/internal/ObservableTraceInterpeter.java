@@ -46,7 +46,7 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 		// beginTrace = System.currentTimeMillis();
 		// activeTrace = traceName;
 
-		workedUnit = testCount.doubleValue() / 100;
+		workedUnit = testCount.doubleValue() / 100.0;
 		int worked = 0;
 
 		monitor.beginTask("Executing: " + className + " - " + traceName

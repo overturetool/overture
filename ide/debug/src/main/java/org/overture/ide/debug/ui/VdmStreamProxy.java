@@ -17,7 +17,6 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchEncoding;
@@ -27,17 +26,20 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.IVdmStreamProxy;
 
+@SuppressWarnings("restriction")
 public class VdmStreamProxy implements IVdmStreamProxy {
 	private IOConsoleInputStream input;
 	private IOConsoleOutputStream stdOut;
 	private IOConsoleOutputStream stdErr;
 
 	private boolean closed = false;
+	private boolean interactiveMode = false;
 
-	public VdmStreamProxy(IOConsole console) {
+	public VdmStreamProxy(IOConsole console, boolean interactiveMode) {
 		input = console.getInputStream();
 		stdOut = console.newOutputStream();
 		stdErr = console.newOutputStream();
+		this.interactiveMode = interactiveMode;
 
 		// TODO is there a better way to access these internal preferences??
 		final IPreferenceStore debugUIStore = DebugUIPlugin.getDefault()
@@ -115,7 +117,23 @@ public class VdmStreamProxy implements IVdmStreamProxy {
 	}
 
 	public void writeStdout(String value) {
+		if(interactiveMode)
+		{
+			if(value !=null)
+			{
+				try{
+				value = value.substring(value.indexOf(' ')+1);
+				}catch(Exception e)
+				{
+					//Don't care
+				}
+			}
+		}
 		write(stdOut, value);
+		if(interactiveMode)
+		{
+			write(stdOut, "> ");
+		}
 	}
 
 	public void writeStderr(String value) {

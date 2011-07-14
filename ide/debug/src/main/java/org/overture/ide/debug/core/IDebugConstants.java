@@ -65,7 +65,8 @@ public interface IDebugConstants
 	public static final String DBGP_SCHEME = "dbgp"; //$NON-NLS-1$
 	public static final String UNKNOWN_SCHEME = "unknown"; //$NON-NLS-1$
 	static final int ERR_DEBUGGER_PROCESS_TERMINATED = 121;
-	static final String CONSOLE_INTERACTIVE_WELCOME_MESSAGE = "**\n** Welcome to the Overture Interactive Console\n**\n\n";
+	static final String CONSOLE_INTERACTIVE_WELCOME_MESSAGE = "**\n** Welcome to the Overture Interactive Console\n**\n> ";
+	static final String CONSOLE_MESSAGE = "**\n** Overture Console\n**\n";
 	 
 	
 }
