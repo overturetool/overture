@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -40,16 +39,33 @@ public class BaseTestSuite extends TestSuite
 
 			for (File file : testRoot.listFiles())
 			{
-				if (file.getName().startsWith("."))
-				{
-					continue;
-				}
-				Object instance = ctor.newInstance(new Object[] { file });
-				suite.addTest((Test) instance);
+				createCompleteFile(suite,file,ctor);
 			}
 		}
 		return suite;
 
+	}
+	
+	
+	private static void createCompleteFile(TestSuite suite, File file, @SuppressWarnings("rawtypes") Constructor ctor) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		if (file.getName().startsWith("."))
+		{
+			return;
+		}
+		if(file.isDirectory())
+		{
+			for (File f : file.listFiles())
+			{
+				createCompleteFile(suite,f,ctor);
+			}
+		}else
+		{
+			System.out.println("Creating test for:"+ file);
+			Object instance = ctor.newInstance(new Object[] { file });
+			suite.addTest((Test) instance);
+		}
+		
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
