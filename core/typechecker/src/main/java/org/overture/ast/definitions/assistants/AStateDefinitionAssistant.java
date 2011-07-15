@@ -60,7 +60,7 @@ public class AStateDefinitionAssistant {
 
 	public static void unusedCheck(AStateDefinition d) {
 
-		PDefinitionAssistant.unusedCheck(d.getStateDefs());
+		PDefinitionListAssistant.unusedCheck(d.getStateDefs());
 	}
 
 	public static List<PDefinition> getDefinitions(AStateDefinition d) {
@@ -68,7 +68,7 @@ public class AStateDefinitionAssistant {
 	}
 
 	public static LexNameList getVariableNames(AStateDefinition d) {
-		return PDefinitionAssistant.getVariableNames(d.getStateDefs());
+		return PDefinitionListAssistant.getVariableNames(d.getStateDefs());
 	}
 
 }

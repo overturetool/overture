@@ -38,6 +38,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.runtime.Environment;
 import org.overture.runtime.TypeChecker;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -207,36 +208,11 @@ public class PDefinitionAssistant {
 		}				
 	}
 
-	public static PDefinition findName(List<PDefinition> definitions,
-			LexNameToken name, NameScope scope) {
-		for (PDefinition d : definitions) {
-			PDefinition def = findName(d, name, scope);
+	
 
-			if (def != null) {
-				return def;
-			}
-		}
+	
 
-		return null;
-	}
 
-	public static AStateDefinition findStateDefinition(
-			List<PDefinition> definitions) {
-		for (PDefinition d : definitions) {
-			if (d instanceof AStateDefinition) {
-				return (AStateDefinition) d;
-			}
-		}
-
-		return null;
-	}
-
-	public static void unusedCheck(List<PDefinition> definitions) {
-		for (PDefinition d : definitions) {
-			unusedCheck(d);
-		}
-
-	}
 	
 	public static void unusedCheck(PDefinition d) {
 		switch (d.kindPDefinition()) {		
@@ -270,30 +246,9 @@ public class PDefinitionAssistant {
 	
 	
 
-	public static Set<PDefinition> findMatches(List<PDefinition> definitions,
-			LexNameToken name) {
+	
 
-		Set<PDefinition> set = new HashSet<PDefinition>();
-
-		for (PDefinition d : singleDefinitions(definitions)) {
-			if (isFunctionOrOperation(d) && d.getName().matches(name)) {
-				set.add(d);
-			}
-		}
-
-		return set;
-	}
-
-	public static List<PDefinition> singleDefinitions(
-			List<PDefinition> definitions) {
-		List<PDefinition> all = new ArrayList<PDefinition>();
-
-		for (PDefinition d : definitions) {
-			all.addAll(getDefinitions(d));
-		}
-
-		return all;
-	}
+	
 
 	public static List<PDefinition> getDefinitions(
 			PDefinition d) {
@@ -354,21 +309,7 @@ public class PDefinitionAssistant {
 		
 	}
 
-	public static void markUsed(List<PDefinition> definitions) {
-		for (PDefinition d : definitions) {
-			markUsed(d);
-		}
-
-	}
-
-	public static void typeCheck(List<PDefinition> defs,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-		for (PDefinition d : defs) {
-			d.apply(rootVisitor, question);
-		}
-
-	}
+	
 
 	public static PDefinition getSelfDefinition(PDefinition d) {
 		switch (d.kindPDefinition()) {
@@ -379,19 +320,7 @@ public class PDefinitionAssistant {
 		}
 		
 	}
-
 	
-
-	public static LexNameList getVariableNames(List<PDefinition> list) {		
-		
-		LexNameList variableNames = new LexNameList();
-
-		for (PDefinition d : list) {
-			variableNames.addAll(getVariableNames(d));
-		}
-
-		return variableNames;
-	}
 
 	public static LexNameList getVariableNames(
 			PDefinition d) {
@@ -493,20 +422,60 @@ public class PDefinitionAssistant {
 		return u.getUsed();
 	}
 
-	public static void setAccessibility(List<PDefinition> defs,
-			PAccessSpecifier access) {
-		for (PDefinition d : defs) {
-			d.setAccess(access);
+	public static void implicitDefinitions(PDefinition d, Environment env) {
+		switch(d.kindPDefinition())
+		{
+		case CLASS:
+			SClassDefinitionAssistant.implicitDefinitions((SClassDefinition)d,env);
+			break;
+		case CLASSINVARIANT:
+			break;
+		case EQUALS:
+			break;
+		case EXPLICITFUNCTION:
+			break;
+		case EXPLICITOPERATION:
+			break;
+		case EXTERNAL:
+			break;
+		case IMPLICITFUNCTION:
+			break;
+		case IMPLICITOPERATION:
+			break;
+		case IMPORTED:
+			break;
+		case INHERITED:
+			break;
+		case INSTANCEVARIABLE:
+			break;
+		case LOCAL:
+			break;
+		case MULTIBINDLIST:
+			break;
+		case MUTEXSYNC:
+			break;
+		case NAMEDTRACE:
+			break;
+		case PERSYNC:
+			break;
+		case RENAMED:
+			break;
+		case STATE:
+			break;
+		case THREAD:
+			break;
+		case TYPE:
+			break;
+		case UNTYPED:
+			break;
+		case VALUE:
+			break;
+		default:
+			return;
 		}
-
+		
 	}
 
-	public static void setClassDefinition(List<PDefinition> defs,
-			SClassDefinition classDefinition) {
-		for (PDefinition d : defs) {
-			d.setClassDefinition(classDefinition);
-		}
-
-	}
+	
 
 }

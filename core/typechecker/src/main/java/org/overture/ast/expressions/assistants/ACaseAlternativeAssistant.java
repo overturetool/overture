@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
@@ -36,7 +37,7 @@ public class ACaseAlternativeAssistant {
 			c.getDefs().addAll(PPatternAssistant.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
 		}
 
-		PDefinitionAssistant.typeCheck(c.getDefs(),rootVisitor,question);
+		PDefinitionListAssistant.typeCheck(c.getDefs(),rootVisitor,question);
 		Environment local = new FlatCheckedEnvironment(c.getDefs(), question.env, question.scope);
 		question.env = local;
 		c.setType(c.getResult().apply(rootVisitor, question));

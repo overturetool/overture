@@ -16,7 +16,7 @@ public class AMultiBindListDefinitionAssistant {
 		
 		if (d.getDefs() != null)
 		{
-			PDefinition def = PDefinitionAssistant.findName(d.getDefs(), sought, scope);
+			PDefinition def = PDefinitionListAssistant.findName(d.getDefs(), sought, scope);
 
 			if (def != null)
 			{
@@ -30,7 +30,7 @@ public class AMultiBindListDefinitionAssistant {
 	public static void unusedCheck(AMultiBindListDefinition d) {
 		if (d.getDefs() != null)
 		{
-			PDefinitionAssistant.unusedCheck(d.getDefs());
+			PDefinitionListAssistant.unusedCheck(d.getDefs());
 		}
 		
 	}
@@ -42,7 +42,7 @@ public class AMultiBindListDefinitionAssistant {
 
 	public static LexNameList getVariableNames(AMultiBindListDefinition d) {
 		
-		return d.getDefs() == null ? new LexNameList() :  PDefinitionAssistant.getVariableNames(d.getDefs());
+		return d.getDefs() == null ? new LexNameList() :  PDefinitionListAssistant.getVariableNames(d.getDefs());
 	}
 
 }

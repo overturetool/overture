@@ -36,6 +36,7 @@ import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssist
 import org.overture.ast.definitions.assistants.ALocalDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.PTraceDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
@@ -230,7 +231,7 @@ public class TypeCheckerDefinitionVisitor extends
 			node.setDefs(PPatternAssistant.getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
 		}
 
-		PDefinitionAssistant.typeCheck(node.getDefs(), rootVisitor, question);
+		PDefinitionListAssistant.typeCheck(node.getDefs(), rootVisitor, question);
 		return node.getType();
 	}
 	
@@ -266,7 +267,7 @@ public class TypeCheckerDefinitionVisitor extends
 		info.env = local;
 		info.scope = question.scope;
 		info.qualifiers = question.qualifiers;
-		PDefinitionAssistant.typeCheck(defs,this,info); //can be this because its a definition list
+		PDefinitionListAssistant.typeCheck(defs,this,info); //can be this because its a definition list
 
 		if (question.env.isVDMPP() && !PAccessSpecifierAssistant.isStatic(node.getAccess())) 
 		{
@@ -447,7 +448,7 @@ public class TypeCheckerDefinitionVisitor extends
 		newInfo.scope = question.scope;
 		newInfo.qualifiers = null;
 		
-		PDefinitionAssistant.typeCheck(defs, rootVisitor, newInfo); 
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, newInfo); 
 
 		if (node.getBody() != null)
 		{
@@ -623,7 +624,7 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		node.setParamDefinitions(AExplicitOperationDefinitionAssistant.getParamDefinitions(node));
-		PDefinitionAssistant.typeCheck(node.getParamDefinitions(), rootVisitor, question); 
+		PDefinitionListAssistant.typeCheck(node.getParamDefinitions(), rootVisitor, question); 
 
 		FlatCheckedEnvironment local =
 			new FlatCheckedEnvironment(node.getParamDefinitions(), question.env, question.scope);
@@ -820,7 +821,7 @@ public class TypeCheckerDefinitionVisitor extends
     		limitStateScope = true;
 		}
 
-		PDefinitionAssistant.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
 		local.setLimitStateScope(limitStateScope);
@@ -1015,7 +1016,7 @@ public class TypeCheckerDefinitionVisitor extends
 			defs.addAll(PMultipleBindAssistant.getDefinitions(mb,type, question));
 		}
 
-		PDefinitionAssistant.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
 		node.setDefs(defs);
 		return null;
 	}
@@ -1190,7 +1191,7 @@ public class TypeCheckerDefinitionVisitor extends
 			return null;
 		}
 
-		PDefinitionAssistant.typeCheck(node.getStateDefs(),rootVisitor, question);
+		PDefinitionListAssistant.typeCheck(node.getStateDefs(),rootVisitor, question);
 
 		if (node.getInvdef() != null)
 		{
@@ -1311,10 +1312,10 @@ public class TypeCheckerDefinitionVisitor extends
 
 		node.setDefs(newdefs);
 		List<PDefinition> defs = node.getDefs();
-		PDefinitionAssistant.setAccessibility(defs,node.getAccess());
-		PDefinitionAssistant.setClassDefinition(defs,node.getClassDefinition());
+		PDefinitionListAssistant.setAccessibility(defs,node.getAccess());
+		PDefinitionListAssistant.setClassDefinition(defs,node.getClassDefinition());
 		question.qualifiers = null;
-		PDefinitionAssistant.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
 		return null;
 	}
 		

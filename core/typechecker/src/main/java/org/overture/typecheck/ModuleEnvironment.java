@@ -29,6 +29,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.runtime.Environment;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -69,14 +70,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findName(LexNameToken name, NameScope scope)
 	{
-		PDefinition def = PDefinitionAssistant.findName(module.getDefs(),name, scope);
+		PDefinition def = PDefinitionListAssistant.findName(module.getDefs(),name, scope);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = PDefinitionAssistant.findName(module.getImportdefs(),name, scope);
+		def = PDefinitionListAssistant.findName(module.getImportdefs(),name, scope);
 
 		if (def != null)
 		{
@@ -109,8 +110,8 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(LexNameToken name)
 	{
-		Set<PDefinition> defs = PDefinitionAssistant.findMatches(module.getDefs(),name);
-		defs.addAll(PDefinitionAssistant.findMatches(module.getImportdefs(),name));
+		Set<PDefinition> defs = PDefinitionListAssistant.findMatches(module.getDefs(),name);
+		defs.addAll(PDefinitionListAssistant.findMatches(module.getImportdefs(),name));
 		return defs;
 	}
 
@@ -125,7 +126,7 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = PDefinitionAssistant.findStateDefinition(module.getDefs());
+		AStateDefinition def = PDefinitionListAssistant.findStateDefinition(module.getDefs());
 
 		if (def != null)
 		{

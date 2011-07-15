@@ -5,16 +5,29 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.AClassInvariantStm;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.runtime.Environment;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.AClassDefinitionSettings;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
@@ -184,8 +197,8 @@ public class SClassDefinitionAssistant {
 	public static Set<PDefinition> findMatches(SClassDefinition classdef,
 			LexNameToken sought) {
 		
-		Set<PDefinition> set = PDefinitionAssistant.findMatches(classdef.getDefinitions(),sought);
-		set.addAll(PDefinitionAssistant.findMatches(classdef.getAllInheritedDefinitions(),sought));
+		Set<PDefinition> set = PDefinitionListAssistant.findMatches(classdef.getDefinitions(),sought);
+		set.addAll(PDefinitionListAssistant.findMatches(classdef.getAllInheritedDefinitions(),sought));
 		return set;
 	}
 
@@ -273,7 +286,7 @@ public class SClassDefinitionAssistant {
 		List<PDefinition> all = new Vector<PDefinition>();
 
 		all.addAll(classDefinition.getLocalInheritedDefinitions());
-		all.addAll(PDefinitionAssistant.singleDefinitions(classDefinition.getDefinitions()));
+		all.addAll(PDefinitionListAssistant.singleDefinitions(classDefinition.getDefinitions()));
 
 		return all;
 	}
@@ -283,7 +296,7 @@ public class SClassDefinitionAssistant {
 		List<PDefinition> all = new Vector<PDefinition>();
 
 		all.addAll(d.getAllInheritedDefinitions());
-		all.addAll(PDefinitionAssistant.singleDefinitions(d.getDefinitions()));
+		all.addAll(PDefinitionListAssistant.singleDefinitions(d.getDefinitions()));
 
 		return all;
 	}
@@ -299,6 +312,230 @@ public class SClassDefinitionAssistant {
 	}
 
 	public static LexNameList getVariableNames(SClassDefinition d) {
-		return PDefinitionAssistant.getVariableNames(d.getDefinitions());
+		return PDefinitionListAssistant.getVariableNames(d.getDefinitions());
+	}
+
+	public static void implicitDefinitions(SClassDefinition d, Environment publicClasses) {
+		
+		setInherited(d,publicClasses);
+		setInheritedDefinitions(d);
+
+		PDefinition invariant = getInvDefinition(d);
+
+		if (invariant != null)
+		{
+			invariant.setClassDefinition(d);
+
+			// This listener is created for static invariants. This gets called
+			// when any statics get updated, but that could affect the validity
+			// of all instances that mention the static in their inv clause.
+			// For now, we suppress the trigger for static updates... one for
+			// the LB :-)
+
+			// invlistenerlist = null;
+
+//			OperationValue invop = new OperationValue(invariant, null, null, null);
+//			invop.isStatic = true;
+//			ClassInvariantListener listener = new ClassInvariantListener(invop);
+//			invlistenerlist = new ValueListenerList(listener);
+		}
+		
+	}
+
+	private static PDefinition getInvDefinition(SClassDefinition d) {
+		
+		List<PDefinition> invdefs = getInvDefs(d);
+
+		if (invdefs.isEmpty())
+		{
+			return null;
+		}
+
+		// Location of last local invariant
+		LexLocation invloc = invdefs.get(invdefs.size() - 1).getLocation();
+
+		AOperationType type = new AOperationType(
+			invloc, false,null, new Vector<PType>(), new ABooleanBasicType(invloc,false,null));
+
+		LexNameToken invname =
+			new LexNameToken(d.getName().name, "inv_" + d.getName().name, invloc);
+
+		PStm body = new AClassInvariantStm(d.getLocation(),invname, invdefs);
+
+		
+		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
+		res.setParameterPatterns(new Vector<PPattern>());
+		
+		return res;
+		
+		
+	}
+	
+	public static List<PDefinition> getInvDefs(SClassDefinition def)
+	{
+		List<PDefinition> invdefs = new Vector<PDefinition>();
+
+		if (def.getGettingInvDefs())
+		{
+			// reported elsewhere
+			return invdefs;
+		}
+
+		def.setGettingInvDefs(true);
+
+		for (SClassDefinition d: def.getSuperDefs())
+		{
+			invdefs.addAll(getInvDefs(d));
+		}
+
+		for (PDefinition d:def.getDefinitions())
+		{
+			if (d instanceof AClassInvariantDefinition)
+			{
+				invdefs.add(d);
+			}
+		}
+
+		def.setGettingInvDefs(false);
+		return invdefs;
+	}
+
+	private static void setInheritedDefinitions(SClassDefinition definition) {
+		List<PDefinition> indefs = new Vector<PDefinition>();
+
+		for (SClassDefinition sclass: definition.getSuperDefs())
+		{
+			indefs.addAll(getInheritable(sclass));
+		}
+
+		// The inherited definitions are ordered such that the
+		// definitions, taken in order, will consider the overriding
+		// members before others.
+
+		List<PDefinition> superInheritedDefinitions = new Vector<PDefinition>();
+
+		for (PDefinition d: indefs)
+		{
+			superInheritedDefinitions.add(d);
+
+			LexNameToken localname = d.getName().getModifiedName(definition.getName().name);
+
+			if (PDefinitionListAssistant.findName(definition.getDefinitions(),localname, NameScope.NAMESANDSTATE) == null)
+			{
+				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,null,false,null, null, null, d, null);
+				definition.getLocalInheritedDefinitions().add(local);
+			}
+		}
+
+		definition.setAllInheritedDefinitions(new Vector<PDefinition>());
+		definition.getAllInheritedDefinitions().addAll(superInheritedDefinitions);
+		definition.getAllInheritedDefinitions().addAll(definition.getLocalInheritedDefinitions());
+		
+	}
+
+	private static List<PDefinition> getInheritable(
+			SClassDefinition def) {
+
+		List<PDefinition> defs = new Vector<PDefinition>();
+
+		if (def.getGettingInheritable())
+		{
+			TypeCheckerErrors.report(3009, "Circular class hierarchy detected: " + def.getName(),def.getLocation(),def);
+			return defs;
+		}
+
+		def.setGettingInheritable(true);
+
+		// The inherited definitions are ordered such that the
+		// definitions, taken in order, will consider the overriding
+		// members before others. So we add the local definitions
+		// before the inherited ones.
+
+		List<PDefinition> singles = PDefinitionListAssistant.singleDefinitions(def.getDefinitions());
+
+		for (PDefinition d: singles)
+		{
+			if (!PAccessSpecifierAssistant.isPrivate(d.getAccess()))
+			{
+				defs.add(d);
+			}
+		}
+
+		for (SClassDefinition sclass: def.getSuperDefs())
+		{
+			List<PDefinition> sdefs = getInheritable(sclass);
+
+			for (PDefinition d: sdefs)
+			{
+				defs.add(d);
+
+				LexNameToken localname = d.getName().getModifiedName(d.getName().name);
+
+				if (PDefinitionListAssistant.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
+				{
+					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),null,null,false,null,null,null,d, null);
+					defs.add(local);
+				}
+			}
+		}
+
+		def.setGettingInheritable(false);
+		return defs;
+	}
+
+	private static void setInherited(SClassDefinition d, Environment base) {
+		switch (d.getSettingHierarchy())
+		{
+			case UNSET:
+				d.setSettingHierarchy(AClassDefinitionSettings.INPROGRESS);
+				break;
+
+			case INPROGRESS:
+				TypeCheckerErrors.report(3002, "Circular class hierarchy detected: " + d.getName(),d.getLocation(),d);
+				return;
+
+			case DONE:
+				return;
+		}
+
+		PDefinitionListAssistant.implicitDefinitions(d.getDefinitions(), base);
+
+		for (LexNameToken supername: d.getSupernames())
+		{
+			PDefinition def = base.findType(supername, null);
+
+			if (def == null)
+			{
+				TypeCheckerErrors.report(3003, "Undefined superclass: " + supername,d.getLocation(),d);
+			}
+			else if (def instanceof ACpuClassDefinition)
+			{
+				TypeCheckerErrors.report(3298, "Cannot inherit from CPU",d.getLocation(),d);
+			}
+			else if (def instanceof ABusClassDefinition)
+			{
+				TypeCheckerErrors.report(3299, "Cannot inherit from BUS",d.getLocation(),d);
+			}
+			else if (def instanceof ASystemClassDefinition)
+			{
+				TypeCheckerErrors.report(3278, "Cannot inherit from system class " + supername,d.getLocation(),d);
+			}
+			else if (def instanceof SClassDefinition)
+			{
+				SClassDefinition superdef = (SClassDefinition)def;
+				setInherited(superdef, base);
+				
+				d.getSuperDefs().add(superdef);
+				d.getSupertypes().add(superdef.getType());
+			}
+			else
+			{
+				TypeCheckerErrors.report(3004, "Superclass name is not a class: " + supername,d.getLocation(),d);
+			}
+		}
+
+		d.setSettingHierarchy(AClassDefinitionSettings.DONE);
+		return;
+		
 	}
 }

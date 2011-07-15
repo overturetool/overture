@@ -12,7 +12,7 @@ import org.overture.ast.patterns.PPattern;
 
 public class ASetBindAssistant {
 
-	public static List<PMultipleBind> getMultipleBind(ASetBind bind) {
+	public static List<PMultipleBind> getMultipleBindList(ASetBind bind) {
 		
 		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.add(bind.getPattern());

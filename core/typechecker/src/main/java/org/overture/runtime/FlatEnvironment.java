@@ -32,6 +32,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -73,7 +74,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findName(LexNameToken name, NameScope scope)
 	{
-		PDefinition def = PDefinitionAssistant.findName(definitions,name, scope);
+		PDefinition def = PDefinitionListAssistant.findName(definitions,name, scope);
 
 		if (def != null)
 		{
@@ -111,7 +112,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = PDefinitionAssistant.findStateDefinition(definitions);
+		AStateDefinition def = PDefinitionListAssistant.findStateDefinition(definitions);
 
 		if (def != null)
 		{
@@ -124,7 +125,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		PDefinitionAssistant.unusedCheck(definitions);
+		PDefinitionListAssistant.unusedCheck(definitions);
 	}
 
 	@Override
@@ -154,7 +155,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(LexNameToken name)
 	{
-		Set<PDefinition> defs = PDefinitionAssistant.findMatches(definitions,name);
+		Set<PDefinition> defs = PDefinitionListAssistant.findMatches(definitions,name);
 
 		if (outer != null)
 		{
@@ -167,7 +168,7 @@ public class FlatEnvironment extends Environment
 	@Override
     public void markUsed()
     {
-		PDefinitionAssistant.markUsed(definitions);
+		PDefinitionListAssistant.markUsed(definitions);
     }
 
 	public void setLimitStateScope(boolean limitStateScope)

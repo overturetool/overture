@@ -18,7 +18,7 @@ public class AEqualsDefinitionAssistant {
 		
 		if (defs != null)
 		{
-			PDefinition def = PDefinitionAssistant.findName(defs, sought, scope);
+			PDefinition def = PDefinitionListAssistant.findName(defs, sought, scope);
 
 			if (def != null)
 			{
@@ -32,7 +32,7 @@ public class AEqualsDefinitionAssistant {
 		
 		if (d.getDefs() != null)
 		{
-			PDefinitionAssistant.unusedCheck(d.getDefs());
+			PDefinitionListAssistant.unusedCheck(d.getDefs());
 		}
 		
 	}
@@ -44,7 +44,7 @@ public class AEqualsDefinitionAssistant {
 
 	public static LexNameList getVariableNames(AEqualsDefinition d) {
 		
-		return d.getDefs() == null ? new LexNameList() : PDefinitionAssistant.getVariableNames(d.getDefs());
+		return d.getDefs() == null ? new LexNameList() : PDefinitionListAssistant.getVariableNames(d.getDefs());
 	}
 
 }

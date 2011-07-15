@@ -16,7 +16,7 @@ public class AValueDefinitionAssistant {
 
 		if (scope.matches(NameScope.NAMES))
 		{
-			return PDefinitionAssistant.findName(d.getDefs(),sought, scope);
+			return PDefinitionListAssistant.findName(d.getDefs(),sought, scope);
 		}
 
 		return null;

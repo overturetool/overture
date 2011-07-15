@@ -16,6 +16,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
@@ -42,6 +43,10 @@ import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntConstExp;
 import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfBaseClassExp;
+import org.overture.ast.expressions.AIsOfClassExp;
+import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
@@ -68,8 +73,14 @@ import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.expressions.assistants.AApplyExpAssistant;
 import org.overture.ast.expressions.assistants.ACaseAlternativeAssistant;
 import org.overture.ast.expressions.assistants.SBinaryExpAssistant;
+import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.PBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
@@ -1035,7 +1046,7 @@ public class TypeCheckerExpVisitor extends
 	
 	@Override
 	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question) {
-		node.setDef(new AMultiBindListDefinition(node.getBind().getLocation(), null, null, null, null, null, null, PBindAssistant.getMultipleBind(node.getBind()), null));
+		node.setDef(new AMultiBindListDefinition(node.getBind().getLocation(), null, null, null, null, null, null, PBindAssistant.getMultipleBindList(node.getBind()), null));
 		node.getDef().apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
@@ -1366,6 +1377,49 @@ public class TypeCheckerExpVisitor extends
 	}
 	
 	@Override
+	public PType caseAHistoryExp(AHistoryExp node,  TypeCheckInfo question)
+	{
+		SClassDefinition classdef = question.env.findClassDefinition();
+
+		for (LexNameToken opname: node.getOpnames())
+		{
+    		int found = 0;
+
+    		for (PDefinition def: classdef.getDefinitions())
+    		{
+    			if (def.getName() != null && def.getName().matches(opname))
+    			{
+    				found++;
+    				
+    				if (!PDefinitionAssistant.isCallableOperation(def))
+    				{
+    					TypeCheckerErrors.report(3105, opname + " is not an explicit operation",opname.location,opname);
+    				}
+    			}
+    		}
+
+    		if (found == 0)
+    		{
+    			TypeCheckerErrors.report(3106, opname + " is not in scope",opname.location,opname);
+    		}
+    		else if (found > 1)
+    		{
+    			TypeCheckerErrors.warning(5004, "History expression of overloaded operation",opname.location,opname);
+    		}
+
+    		if (opname.name.equals(classdef.getName().name))
+    		{
+    			TypeCheckerErrors.report(3107, "Cannot use history of a constructor",opname.location,opname);
+    		}
+		}
+
+		node.setType(new ANatNumericBasicType(node.getLocation(), false, null));
+		
+		return node.getType();
+	}
+	
+	
+	@Override
 	public PType caseAIfExp(AIfExp node, TypeCheckInfo question) {
 		
 		if (!PTypeAssistant.isType(node.getTest().apply(this, question),ABooleanBasicType.class))
@@ -1408,45 +1462,170 @@ public class TypeCheckerExpVisitor extends
 		return node.getType();
 	}
 	
+	
 	@Override
-	public PType caseAHistoryExp(AHistoryExp node,  TypeCheckInfo question)
+	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question)
 	{
-		SClassDefinition classdef = question.env.findClassDefinition();
-
-		for (LexNameToken opname: node.getOpnames())
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(),
+				null, //name
+				null, //namescope
+				false,
+				null, //classdef
+				null, //access specifier
+				null, //type
+				PBindAssistant.getMultipleBindList(node.getBind()),
+				null //defs
+				);
+				
+		
+		def.apply(rootVisitor, question);
+		
+		PType rt = null;
+		PBind bind = node.getBind();
+		
+		if (bind instanceof ASetBind)
 		{
-    		int found = 0;
+			ASetBind sb = (ASetBind)bind;
+			question.qualifiers = null;
+			rt = sb.getSet().apply(rootVisitor, question);
 
-    		for (PDefinition def: classdef.getDefinitions())
-    		{
-    			if (def.getName() != null && def.getName().matches(opname))
-    			{
-    				found++;
-    				
-    				if (!PDefinitionAssistant.isCallableOperation(def))
-    				{
-    					TypeCheckerErrors.report(3105, opname + " is not an explicit operation",opname.location,opname);
-    				}
-    			}
-    		}
-
-    		if (found == 0)
-    		{
-    			TypeCheckerErrors.report(3106, opname + " is not in scope",opname.location,opname);
-    		}
-    		else if (found > 1)
-    		{
-    			TypeCheckerErrors.warning(5004, "History expression of overloaded operation",opname.location,opname);
-    		}
-
-    		if (opname.name.equals(classdef.getName().name))
-    		{
-    			TypeCheckerErrors.report(3107, "Cannot use history of a constructor",opname.location,opname);
-    		}
+			if (PTypeAssistant.isSet(rt))
+			{
+				rt = PTypeAssistant.getSet(rt).getSetof();
+			}
+			else
+			{
+				TypeCheckerErrors.report(3112, "Iota set bind is not a set",node.getLocation(),node);
+			}
+		}
+		else
+		{
+			ATypeBind tb = (ATypeBind)bind;
+			rt = tb.getType();
 		}
 
-		node.setType(new ANatNumericBasicType(node.getLocation(), false, null));
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+		question.env = local;
+		question.qualifiers = null;
+		node.getPredicate().apply(rootVisitor, question);		
+		local.unusedCheck();
+		node.setType(rt);
+		return rt;
+	}
+	
+	@Override
+	public PType caseAIsExp(AIsExp node, TypeCheckInfo question) {
 		
+		question.qualifiers = null;
+		node.getTest().apply(rootVisitor, question);
+
+		PType basictype = node.getBasicType();
+		
+		if (basictype != null)
+		{
+			basictype = PTypeAssistant.typeResolve(basictype, null, rootVisitor, question);
+		}
+		
+		LexNameToken typename = node.getTypeName();
+		
+		if (typename != null)
+		{
+			node.setTypedef(question.env.findType(typename, node.getLocation().module));
+
+			if (node.getTypedef() == null)
+			{
+				TypeCheckerErrors.report(3113, "Unknown type name '" + typename + "'",node.getLocation(),node);
+			}
+		}
+
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
+			TypeCheckInfo question) {
+		
+		if (question.env.findType(node.getBaseClass(), null) == null)
+		{
+			TypeCheckerErrors.report(3114, "Undefined base class type: " + node.getBaseClass().name,node.getLocation(),node);
+		}
+
+		question.qualifiers = null;
+		PType rt = node.getExp().apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isClass(rt))
+		{
+			TypeCheckerErrors.report(3266, "Argument is not an object",node.getExp().getLocation(),node.getExp());
+		}
+
+		node.setType(new ABooleanBasicType(node.getLocation(),false,null));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAIsOfClassExp(AIsOfClassExp node, TypeCheckInfo question) {
+		
+		LexNameToken classname = node.getClassName();
+		PDefinition cls = question.env.findType(classname, null);
+
+		if (cls == null || !(cls instanceof SClassDefinition))
+		{
+			TypeCheckerErrors.report(3115, "Undefined class type: " + classname.name,node.getLocation(),node);
+		}
+		else
+		{
+			node.setClassType((AClassType)cls.getType());
+		}
+
+		question.qualifiers = null;
+		PType rt = node.getExp().apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isClass(rt))
+		{
+			TypeCheckerErrors.report(3266, "Argument is not an object",node.getExp().getLocation(),node.getExp());
+		}
+
+		return new ABooleanBasicType(node.getLocation(),false,null);
+	}
+	
+	@Override
+	public PType caseALambdaExp(ALambdaExp node, TypeCheckInfo question) {
+		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
+		List<PType> ptypes = new Vector<PType>();
+
+		List<PPattern> paramPatterns = new Vector<PPattern>();
+		List<PDefinition >paramDefinitions = new Vector<PDefinition>();
+
+		for (ATypeBind tb: node.getBindList())
+		{
+			mbinds.addAll(ATypeBindAssistant.getMultipleBindList(tb));
+			paramDefinitions.addAll(PPatternAssistant.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
+			paramPatterns.add(tb.getPattern());
+			ptypes.add(PTypeAssistant.typeResolve(tb.getType(), null, rootVisitor, question));
+		}
+
+		node.setParamPatterns(paramPatterns); 
+		
+		PDefinitionListAssistant.implicitDefinitions(paramDefinitions,question.env);
+		PDefinitionListAssistant.typeCheck(paramDefinitions, rootVisitor, question);
+
+		node.setParamDefinitions(paramDefinitions);
+		
+		
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(),null,null,false,null,null,null, mbinds,null);
+		def.apply(rootVisitor, question);
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+		TypeCheckInfo newInfo = new TypeCheckInfo();
+		newInfo.env = local;
+		newInfo.qualifiers = null;
+		newInfo.scope = question.scope;
+		
+		PType result = node.getExpression().apply(rootVisitor, newInfo);
+		local.unusedCheck();
+
+		
+		node.setType(new AFunctionType(node.getLocation(), false, null, true, ptypes, result));
 		return node.getType();
 	}
 	
@@ -1463,43 +1642,7 @@ public class TypeCheckerExpVisitor extends
 		node.setType(node.getPostexpression().apply(this,question));
 		return node.getType();		
 	}
-	
-//	@Override
-//	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question)
-//	{
-//		PDefinition def = new AMultiBindListDefinition(node.getLocation()
-//				,PBindAssistant.getMultipleBind(node.getBind())
-//				,question.scope,null,question,
-//		);
-//				
-//		def.typeCheck(base, scope);
-//		PType rt = null;
-//
-//		if (bind instanceof SetBind)
-//		{
-//			SetBind sb = (SetBind)bind;
-//			rt = sb.set.typeCheck(base, null, scope);
-//
-//			if (rt.isSet())
-//			{
-//				rt = rt.getSet().setof;
-//			}
-//			else
-//			{
-//				TypeCheckerErrors.report(3112, "Iota set bind is not a set",node.getLocation(),node);
-//			}
-//		}
-//		else
-//		{
-//			ATypeBind tb = (ATypeBind)bind;
-//			rt = tb.type;
-//		}
-//
-//		Environment local = new FlatCheckedEnvironment(def, base, scope);
-//		predicate.typeCheck(local, null, scope);
-//		local.unusedCheck();
-//		return rt;
-//	}
+
 	
 	
 	
