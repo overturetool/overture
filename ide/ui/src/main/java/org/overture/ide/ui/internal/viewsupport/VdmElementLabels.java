@@ -180,11 +180,16 @@ public class VdmElementLabels {
 	private static StyledString getRenamedDefinitionLabel(
 			RenamedDefinition element, long flags) {
 
-		if (element.def instanceof ExplicitOperationDefinition) {
-			return getExplicitOperationDefinitionLabel((ExplicitOperationDefinition) element.def);
-		}
+//		if (element.def instanceof ExplicitOperationDefinition) {
+//			return getExplicitOperationDefinitionLabel((ExplicitOperationDefinition) element.def);
+//		}
+//		else if(element.def instanceof TypeDefinition){
+//			return 
+//		}
+		
+		return getStyledTextLabel(element.def, flags);
 
-		return null;
+		//return null;
 	}
 
 	private static StyledString getInheritedDefinition(
