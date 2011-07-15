@@ -1,3 +1,5 @@
+//TODO1: could be nice to redifine fields in subclasses... EXAMPLE: expressions have a [type]:type but lambda expression a [type]:type.function 
+
 Tokens
 /* This section declared tokens as internal types or external classes
  * internal definitions:
@@ -17,6 +19,8 @@ Tokens
   LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
   //Delegate = 'java:node:org.overturetool.vdmj.util.Delegate';
   clonableFile ='java:org.overturetool.util.ClonableFile';
+  ClassDefinitionSettings = 'java:org.overturetool.vdmj.typechecker.AClassDefinitionSettings';
+  
   
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   plus = '+';
@@ -82,8 +86,8 @@ exp {-> package='org.overture.ast.expressions'}
     |   {iota} [bind]:bind [predicate]:exp
     |   {is} [typeName]:LexNameToken [basicType]:type [test]:exp [typedef]:definition
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
-    |   {isOfClass} [className]:LexNameToken [exp]:exp
-    |   {lambda} [bindList]:bind.type* [expression]:exp    
+    |   {isOfClass} [className]:LexNameToken [classType]:type.class [exp]:exp
+    |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* [functionType]:type.function     
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
     |   {letDef} [localDefs]:definition* [expression]:exp
     |   {def} [localDefs]:definition* [expression]:exp
@@ -603,6 +607,11 @@ Aspect Declaration
         [allInheritedDefinitions]:definition*
         [localInheritedDefinitions]:definition* 
         [hasContructors]:java_Boolean
+        [settingHierarchy]:ClassDefinitionSettings
+        [superDefs]:definition.class*
+        [gettingInheritable]:java_Boolean
+        [superInheritedDefinitions]:definition*
+        [gettingInvDefs]:java_Boolean
     ;
     
 %stm
