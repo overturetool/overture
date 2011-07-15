@@ -17,6 +17,8 @@
     	<module>parser</module>
 	<module>typechecker</module>
 	<module>interpreter</module>
+	<module>vdmjparsertest</module>
+
    
   </modules>
   <dependencies>
