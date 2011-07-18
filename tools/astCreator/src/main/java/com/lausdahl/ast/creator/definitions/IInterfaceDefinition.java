@@ -39,5 +39,7 @@ public interface IInterfaceDefinition
 	public abstract List<IInterfaceDefinition> getGenericArguments();
 	
 	public abstract void setAnnotation(String annotation);
+	
+	public abstract String getImportName();
 
 }

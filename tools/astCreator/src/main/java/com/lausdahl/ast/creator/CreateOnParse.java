@@ -79,7 +79,7 @@ public class CreateOnParse
 											c = (CommonTreeClassDefinition) def;
 										}
 									}
-								}else if(nameNode.getText().equals("NODE"))
+								} else if (nameNode.getText().equals("NODE"))
 								{
 									c = env.node;
 								} else
@@ -111,7 +111,7 @@ public class CreateOnParse
 													CommonTree oo = (CommonTree) o;
 													if (oo.getText().equals("package"))
 													{
-														 packageName = oo.getChild(0).getText();
+														packageName = oo.getChild(0).getText();
 														c.setPackageName(packageName);
 													}
 												}
@@ -200,8 +200,8 @@ public class CreateOnParse
 								if (toke instanceof CommonTree)
 								{
 									CommonTree p = (CommonTree) toke;
-									// String classDefName = "P"
-									// + BaseClassDefinition.firstLetterUpper(p.getText());
+									p = (CommonTree) p.getChild(0);
+
 									String classDefName = getNameFromAspectNode((CommonTree) p.getChild(0));
 									IClassDefinition c = env.lookUp(classDefName);
 									if (c == null)
@@ -210,75 +210,14 @@ public class CreateOnParse
 												+ p + classDefName);
 										continue;
 									}
-									boolean firstName = true;
-									if (p.getChildCount() > 0)
+
+									for (int i = 1; i < p.getChildCount(); i++)
 									{
-										for (Object aspectDcl : p.getChildren())
-										{
-											if (firstName)
-											{
-												firstName = false;
-												continue;
-											}
-											if (aspectDcl instanceof CommonTree)
-											{
-												CommonTree aspectDclT = (CommonTree) aspectDcl;
-												String typeName = aspectDclT.getText();
-												Field f = new Field(env);
-
-												if (aspectDclT.getChildCount() > 0)
-												{
-													for (Object aspectDclName : aspectDclT.getChildren())
-													{
-														if (aspectDclName instanceof CommonTree)
-														{
-															CommonTree aspectDclNameT = (CommonTree) aspectDclName;
-															f.name = aspectDclNameT.getText();
-															break;
-														}
-													}
-												}
-
-												if (aspectDclT.getChildCount() > 1)
-												{
-													if (aspectDclT.getChild(1) != null)
-													{
-														String regex = aspectDclT.getChild(1).getText();
-														if (regex.trim().equals("*"))
-														{
-															f.isList = true;
-														}
-														if (regex.trim().equals("**"))
-														{
-															f.isList = true;
-															f.isDoubleList = true;
-														}
-													}
-												}
-												
-												
-												for (IClassDefinition cl : env.getClasses())
-												{
-													if (cl instanceof ExternalJavaClassDefinition
-															&& ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
-													{
-														f.isTokenField = true;
-														f.type = cl;// TODO
-													}
-												}
-												if (f.type == null)
-												{
-													f.setType(typeName);
-												}
-
-												f.isAspect = true;
-//												f.setType(aspectDclT.getText());
-												c.addField(f);
-											}
-										}
-
+										Field f = exstractField((CommonTree) p.getChild(i), env);
+										f.isAspect = true;
+										c.addField(f);
 									}
-
+									
 									println("Aspect Decleration: " + p);
 								}
 							}
@@ -295,7 +234,7 @@ public class CreateOnParse
 		return env;
 	}
 
-	public static String getNameFromAspectNode(CommonTree p)
+	public static String unfoldName(CommonTree p)
 	{
 		String topName = p.getText();
 		if (p.getChildCount() > 0)
@@ -304,10 +243,17 @@ public class CreateOnParse
 			{
 				if (c instanceof CommonTree)
 				{
-					topName += ((CommonTree) c).getText();
+					topName += unfoldName(((CommonTree) c));
 				}
 			}
 		}
+		return topName;
+	}
+
+	public static String getNameFromAspectNode(CommonTree p)
+	{
+
+		String topName = unfoldName(p);
 
 		String[] names = topName.split("->");
 
@@ -338,12 +284,12 @@ public class CreateOnParse
 		return name;
 	}
 
-	private static void exstractA(IClassDefinition superClass,
-			CommonTree a, Environment env, String thisPackage)
+	private static void exstractA(IClassDefinition superClass, CommonTree a,
+			Environment env, String thisPackage)
 	{
 		// CommonTree nameNode = (CommonTree)a.getChildren().get(0);
 		CommonTreeClassDefinition.ClassType type = ClassType.Alternative;
-		if(superClass == env.node)
+		if (superClass == env.node)
 		{
 			type = ClassType.Production;
 		}
@@ -355,49 +301,110 @@ public class CreateOnParse
 			{
 				if (f instanceof CommonTree)
 				{
-					CommonTree fTree = (CommonTree) f;
-					Field field = new Field(env);
-					String typeName = fTree.getText();
-
-					if (fTree.getChild(0) != null)
-					{
-						field.name = fTree.getChild(0).getText();
-					}
-					if (fTree.getChildCount() > 1)
-					{
-						if (fTree.getChild(1) != null)
-						{
-							String regex = fTree.getChild(1).getText();
-							if (regex.trim().equals("*"))
-							{
-								field.isList = true;
-							}
-							if (regex.trim().equals("**"))
-							{
-								field.isList = true;
-								field.isDoubleList = true;
-							}
-						}
-					}
-
-					for (IClassDefinition cl : env.getClasses())
-					{
-						if (cl instanceof ExternalJavaClassDefinition
-								&& ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
-						{
-							field.isTokenField = true;
-							field.type = cl;// TODO
-						}
-					}
-					if (field.type == null)
-					{
-						field.setType(typeName);
-					}
+					// CommonTree fTree = (CommonTree) f;
+					// Field field = new Field(env);
+					// String typeName = fTree.getText();
+					//
+					// int SYMBOL_POS = 0;
+					// int NAME_POS = 1;
+					// if (fTree.getChildCount() > 1
+					// && fTree.getChild(NAME_POS) != null)
+					// {
+					// field.name = fTree.getChild(NAME_POS).getText();
+					// if (fTree.getChild(SYMBOL_POS) != null
+					// && fTree.getChild(SYMBOL_POS).getText().equals("("))
+					// {
+					// field.structureType = Field.StructureType.Graph;
+					// }
+					// }
+					// int REPEAT_POS = 2;
+					// if (fTree.getChildCount() > 2)
+					// {
+					// if (fTree.getChild(1) != null)
+					// {
+					// String regex = fTree.getChild(REPEAT_POS).getText();
+					// if (regex.trim().equals("*"))
+					// {
+					// field.isList = true;
+					// }
+					// if (regex.trim().equals("**"))
+					// {
+					// field.isList = true;
+					// field.isDoubleList = true;
+					// }
+					// }
+					// }
+					//
+					// for (IClassDefinition cl : env.getClasses())
+					// {
+					// if (cl instanceof ExternalJavaClassDefinition
+					// && ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
+					// {
+					// field.isTokenField = true;
+					// field.type = cl;// TODO
+					// }
+					// }
+					// if (field.type == null)
+					// {
+					// field.setType(typeName);
+					// }
+					Field field = exstractField((CommonTree) f, env);
 					c.addField(field);
 
 				}
 			}
 		}
+	}
+
+	private static Field exstractField(CommonTree fTree, Environment env)
+	{
+		// CommonTree fTree = (CommonTree) f;
+		Field field = new Field(env);
+		String typeName = fTree.getText();
+
+		int SYMBOL_POS = 0;
+		int NAME_POS = 1;
+		if (fTree.getChildCount() > 1 && fTree.getChild(NAME_POS) != null)
+		{
+			field.name = fTree.getChild(NAME_POS).getText();
+			if (fTree.getChild(SYMBOL_POS) != null
+					&& fTree.getChild(SYMBOL_POS).getText().equals("("))
+			{
+				field.structureType = Field.StructureType.Graph;
+			}
+		}
+		int REPEAT_POS = 2;
+		if (fTree.getChildCount() > 2)
+		{
+			if (fTree.getChild(1) != null)
+			{
+				String regex = fTree.getChild(REPEAT_POS).getText();
+				if (regex.trim().equals("*"))
+				{
+					field.isList = true;
+				}
+				if (regex.trim().equals("**"))
+				{
+					field.isList = true;
+					field.isDoubleList = true;
+				}
+			}
+		}
+
+		for (IClassDefinition cl : env.getClasses())
+		{
+			if (cl instanceof ExternalJavaClassDefinition
+					&& ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
+			{
+				field.isTokenField = true;
+				field.type = cl;// TODO
+			}
+		}
+		if (field.type == null)
+		{
+			field.setType(typeName);
+		}
+		return field;
 	}
 
 	public static void show(CommonTree token, int level)

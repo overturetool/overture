@@ -13,10 +13,18 @@ public class Environment
 	public static final IInterfaceDefinition A = new PredefinedClassDefinition("", "A",true);
 	public static final IInterfaceDefinition Q = new PredefinedClassDefinition("", "Q",true);
 	public static final IInterfaceDefinition stringDef = new PredefinedClassDefinition("","String");
+	
+	public static final IInterfaceDefinition listDef = new PredefinedClassDefinition("java.util","List");
+	public static final IInterfaceDefinition vectorDef = new PredefinedClassDefinition("java.util","Vector");
+	public static final IInterfaceDefinition linkedListDef = new PredefinedClassDefinition("java.util","LinkedList");
+	public static final IInterfaceDefinition collectionDef = new PredefinedClassDefinition("java.util","Collection");
+		
 	public final PredefinedClassDefinition node;
 	public final PredefinedClassDefinition token;
 	public final PredefinedClassDefinition nodeList;
 	public final PredefinedClassDefinition nodeListList;
+	public final PredefinedClassDefinition graphNodeList;
+	public final PredefinedClassDefinition graphNodeListList;
 	public final PredefinedClassDefinition externalNode;
 	
 	public final String TAG_IAnalysis = "IAnalysis";
@@ -32,6 +40,8 @@ public class Environment
 		node=new PredefinedClassDefinition(defaultPackage, "Node");
 		nodeList =new PredefinedClassDefinition(defaultPackage, "NodeList");
 		nodeListList =new PredefinedClassDefinition(defaultPackage, "NodeListList");
+		graphNodeList =new PredefinedClassDefinition(defaultPackage, "GraphNodeList");
+		graphNodeListList =new PredefinedClassDefinition(defaultPackage, "GraphNodeListList");
 		token =new PredefinedClassDefinition(defaultPackage, "Token");
 		externalNode=new PredefinedClassDefinition(defaultPackage, "ExternalNode");
 		// setup env

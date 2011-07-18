@@ -60,7 +60,7 @@ public class ToStringUtil
 		(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition());
 	}
 	
-	private static List<String> getString(NodeList<APatternListTypePair> node)
+	private static List<String> getString(List<APatternListTypePair> node)
 	{
 		List<String> list = new Vector<String>();
 		for (APatternListTypePair pl : node)
@@ -69,14 +69,14 @@ public class ToStringUtil
 		}
 		return list;
 	}
-	private static String getStringPattern(NodeList<PPattern> patterns)
+	private static String getStringPattern(List<PPattern> patterns)
 	{
 		return Utils.listToString(patterns);
 	}
 
 
 
-	private static String getTypeListString(NodeList<LexNameToken> typeParams)
+	private static String getTypeListString(List<LexNameToken> typeParams)
 	{
 		return "(" + Utils.listToString(typeParams) + ")";
 	}
@@ -210,7 +210,13 @@ public class ToStringUtil
 			case THREAD:
 				if (d instanceof AThreadDefinition)
 				{
+					if(((AThreadDefinition) d).getOperationDef() !=null)//Differnt from VDMJ
+					{
 					return new LexNameList(((AThreadDefinition) d).getOperationDef().getName());
+					}else
+					{
+						return null;
+					}
 				}
 				assert false : "Error in thread getVariableNames";
 				break;

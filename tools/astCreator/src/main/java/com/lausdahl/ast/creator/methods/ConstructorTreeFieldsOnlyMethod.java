@@ -8,12 +8,12 @@ import java.util.Vector;
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
-import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field.StructureType;
 
-public class ConstructorMethod extends Method
+public class ConstructorTreeFieldsOnlyMethod extends Method
 {
-	public ConstructorMethod(IClassDefinition c, Environment env)
+	public ConstructorTreeFieldsOnlyMethod(IClassDefinition c, Environment env)
 	{
 		super(c, env);
 	}
@@ -21,7 +21,30 @@ public class ConstructorMethod extends Method
 	@Override
 	protected void prepare()
 	{
-		skip = classDefinition.getFields().isEmpty();
+		skip = true;
+//		skip = classDefinition.getFields().isEmpty();
+//		if(!skip)
+		{
+			List<Field> allFields = new Vector<Field>();
+			if (classDefinition instanceof CommonTreeClassDefinition)
+			{
+				allFields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
+			}
+			allFields.addAll(classDefinition.getFields());
+			
+			for (Field field : allFields)
+			{
+				if(field.structureType==StructureType.Graph)
+				{
+					skip = false;
+					break;
+				}
+			}
+		}
+		if(skip)
+		{
+			return;
+		}
 		this.name = classDefinition.getSignatureName();
 
 		this.returnType = "";
@@ -45,9 +68,15 @@ public class ConstructorMethod extends Method
 			skip = skip && fields.isEmpty();
 			for (Field f : fields)
 			{
-				String name = f.getName().replaceAll("_", "") + "_";
-				this.arguments.add(new Argument(f.getMethodArgumentType(), name));
-				sb.append(name + ",");
+				if (f.structureType == StructureType.Tree)
+				{
+					String name = f.getName().replaceAll("_", "") + "_";
+					this.arguments.add(new Argument(f.getMethodArgumentType(), name));
+					sb.append(name + ",");
+				} else
+				{
+					sb.append("null" + ",");
+				}
 			}
 			if (!fields.isEmpty())
 			{
@@ -59,30 +88,22 @@ public class ConstructorMethod extends Method
 
 		for (Field f : classDefinition.getFields())
 		{
-			String name = f.getName().replaceAll("_", "");
-			this.arguments.add(new Argument(f.getMethodArgumentType(), name
-					+ "_"));
-			sb.append("\t\t");
-			sb.append("this.set");
-			sb.append(CommonTreeClassDefinition.javaClassName(f.getName()));
-			sb.append("(");
-			sb.append(name + "_");
-			sb.append(");\n");
 			if (f.structureType == StructureType.Tree)
 			{
+				String name = f.getName().replaceAll("_", "");
+				this.arguments.add(new Argument(f.getMethodArgumentType(), name
+						+ "_"));
+				sb.append("\t\t");
+				sb.append("this.set");
+				sb.append(CommonTreeClassDefinition.javaClassName(f.getName()));
+				sb.append("(");
+				sb.append(name + "_");
+				sb.append(");\n");
+
 				sbDoc.append("\t* @param " + name + " the {@link "
 						+ f.getType() + "} node for the {@code " + name
 						+ "} child of this {@link " + classDefinition.getName()
 						+ "} node\n");
-			} else
-			{
-				sbDoc.append("\t* @param " + name + " the {@link "
-						+ f.getType() + "} <b>graph</a> node for the {@code "
-						+ name + "} child of this {@link "
-						+ classDefinition.getName()
-						+ "} node.\n\t*  <i>The parent of this {@ " + name
-						+ " } will not be changed by adding it to this node.</i>\n");
-
 			}
 		}
 

@@ -67,7 +67,10 @@ public class SourceFileWriter
 		replace.put("%Node%", env.node.getName());
 		replace.put("%Token%", env.token.getName());
 		replace.put("%NodeList%", env.nodeList.getName());
+		replace.put("%GraphNodeList%", env.graphNodeList.getName());
+		
 		replace.put("%NodeListList%", env.nodeListList.getName());
+		replace.put("%GraphNodeListList%", env.graphNodeListList.getName());
 		replace.put("%ExternalNode%", env.externalNode.getName());
 		replace.put("%generated.node%", defaultPackage);
 
@@ -88,6 +91,8 @@ public class SourceFileWriter
 		copy(generated, "Token.java", replace, defaultPackage);
 		copy(generated, "NodeList.java", replace, defaultPackage);
 		copy(generated, "NodeListList.java", replace, defaultPackage);
+		copy(generated, "GraphNodeList.java", replace, defaultPackage);
+		copy(generated, "GraphNodeListList.java", replace, defaultPackage);
 		copy(generated, "ExternalNode.java", replace, defaultPackage);
 	}
 

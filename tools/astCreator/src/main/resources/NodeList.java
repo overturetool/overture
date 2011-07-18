@@ -27,7 +27,7 @@ import java.util.*;
 public class %NodeList%<E extends %Node%> extends LinkedList<E> {
 	%Node% parent;
 	
-	private void setParent(%Node% n) {
+	protected void setParent(%Node% n) {
 		%Node% p = n.parent();
 		if (p != null) {
 			p.removeChild(n);
@@ -173,7 +173,7 @@ public class %NodeList%<E extends %Node%> extends LinkedList<E> {
 	private class NodeListIterator implements ListIterator<E> {
 		ListIterator<E> iterator;
 		E last_returned;
-		boolean previous;
+//		boolean previous;
 		
 		NodeListIterator(ListIterator<E> iterator) {
 			this.iterator = iterator;
@@ -184,7 +184,7 @@ public class %NodeList%<E extends %Node%> extends LinkedList<E> {
 		}
 		
 		public E next() {
-			previous = false;
+//			previous = false;
 			return last_returned = iterator.next();
 		}
 		
@@ -193,7 +193,7 @@ public class %NodeList%<E extends %Node%> extends LinkedList<E> {
 		}
 		
 		public E previous() {
-			previous = true;
+//			previous = true;
 			return last_returned = iterator.previous();
 		}
 		

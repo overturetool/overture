@@ -24,7 +24,7 @@ public class GenericArgumentedIInterfceDefinition implements
 		String tmp =def.getSignatureName()+"<";
 		for (IInterfaceDefinition arg : arguments)
 		{
-			tmp+=arg.getSignatureName()+", ";
+			tmp+=arg.getName()+", ";
 		}
 		if(!arguments.isEmpty())
 		{
@@ -142,6 +142,12 @@ public class GenericArgumentedIInterfceDefinition implements
 	public void setAnnotation(String annotation)
 	{
 		
+	}
+
+
+	public String getImportName()
+	{
+		return getPackageName() + "." + getSignatureName();
 	}
 
 }

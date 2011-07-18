@@ -174,4 +174,9 @@ public class PredefinedClassDefinition implements IClassDefinition
 	{
 		return new Vector<ToStringAddOn>();
 	}
+
+	public String getImportName()
+	{
+		return getPackageName() + "." + getSignatureName();
+	}
 }

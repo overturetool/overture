@@ -27,7 +27,7 @@ public class GetMethod extends Method
 		this.name = "get"
 				+ CommonTreeClassDefinition.javaClassName(f.getName());
 		// this.arguments.add(new Argument(f.getType(), "value"));
-		this.returnType = f.getType();
+		this.returnType = f.getType(true);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("\t\treturn this." + f.getName() + ";");

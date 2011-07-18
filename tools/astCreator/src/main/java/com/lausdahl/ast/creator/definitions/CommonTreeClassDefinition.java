@@ -8,6 +8,7 @@ import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
 import com.lausdahl.ast.creator.methods.CloneMethod;
 import com.lausdahl.ast.creator.methods.CloneWithMapMethod;
 import com.lausdahl.ast.creator.methods.ConstructorMethod;
+import com.lausdahl.ast.creator.methods.ConstructorTreeFieldsOnlyMethod;
 import com.lausdahl.ast.creator.methods.DefaultConstructorMethod;
 import com.lausdahl.ast.creator.methods.GetMethod;
 import com.lausdahl.ast.creator.methods.KindMethod;
@@ -42,6 +43,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 //		if (type != ClassType.Production /* && !fields.isEmpty() */ && this.type != ClassType.SubProduction)
 		{
 			methods.add(new ConstructorMethod(this, env));
+			methods.add(new ConstructorTreeFieldsOnlyMethod(this, env));
 			if (type != ClassType.Token)
 			{
 				methods.add(new DefaultConstructorMethod(this, env));

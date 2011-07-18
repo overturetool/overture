@@ -19,6 +19,11 @@ public class Field
 		}
 	}
 
+	public static enum StructureType
+	{
+		Tree, Graph
+	}
+
 	public boolean isTokenField = false;
 	public boolean isAspect = false;
 	public String name;
@@ -29,6 +34,7 @@ public class Field
 	private String unresolvedType;
 	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
 	public boolean isDoubleList = false;
+	public StructureType structureType = StructureType.Tree;
 
 	public Field(Environment env)
 	{
@@ -40,31 +46,54 @@ public class Field
 		List<String> imports = new Vector<String>();
 		if (isList)
 		{
-			imports.add("java.util.List");
-			imports.add(getInternalType(unresolvedType).getPackageName() + "."
-					+ getInternalType(unresolvedType).getSignatureName());
+			imports.add(Environment.listDef.getImportName());
+			imports.add(Environment.linkedListDef.getImportName());
+			imports.add(getInternalType(unresolvedType).getImportName());
 			if (isTypeExternalNotNode())
 			{
-				imports.add("java.util.Vector");
+				imports.add(Environment.vectorDef.getImportName());
+			}
+			if(!isDoubleList)
+			{
+				switch (structureType)
+				{
+					case Graph:
+						imports.add(env.graphNodeList.getImportName());
+						break;
+					case Tree:
+						imports.add(env.nodeList.getImportName());
+						break;
+					
+				}
+				
 			}
 		}
 		if (isDoubleList)
 		{
-			imports.add("java.util.Collection");
+			imports.add(Environment.collectionDef.getImportName());
+			imports.add(Environment.linkedListDef.getImportName());
+			switch (structureType)
+			{
+				case Graph:
+					imports.add(env.graphNodeListList.getImportName());
+					break;
+				case Tree:
+					imports.add(env.nodeListList.getImportName());
+					break;
+				
+			}
 		}
-		// imports.add("java.util.List");
 
 		IInterfaceDefinition defIntf = env.lookUpInterface(getType());
 		if (defIntf != null)
 		{
-			imports.add(defIntf.getPackageName() + "."
-					+ defIntf.getSignatureName());
+			imports.add(defIntf.getImportName());
 		}
 
 		IClassDefinition def = env.lookUp(getType());
 		if (def != null)
 		{
-			imports.add(def.getPackageName() + "." + def.getSignatureName());
+			imports.add(def.getImportName());
 		}
 
 		return imports;
@@ -97,14 +126,14 @@ public class Field
 				+ tmp.substring(1);
 	}
 
-	public String getType()
+	public String getType(boolean abstractType)
 	{
 		if (type == null)
 		{
 			type = getInternalType(unresolvedType);
 		}
 		checkType(type);
-		String internaalType = type.getName();// getInternalType();
+		String internaalType = type.getName();
 		if (isList && !isDoubleList)
 		{
 			if (isTypeExternalNotNode())
@@ -112,27 +141,54 @@ public class Field
 				internaalType = "List<? extends " + internaalType + ">";
 			} else
 			{
-				internaalType = env.nodeList.getSignatureName() + "<"
-						+ internaalType + ">";
+				IInterfaceDefinition def = null;
+				if (abstractType)
+				{
+					def = Environment.linkedListDef;
+					internaalType = new GenericArgumentedIInterfceDefinition(def, type).getName();
+				} else
+				{
+					if (structureType == StructureType.Tree)
+					{
+						def = env.nodeList;
+
+					} else
+					{
+						def = env.graphNodeList;
+					}
+					internaalType = new GenericArgumentedIInterfceDefinition(def, type).getName();
+				}
+
 			}
 		}
 		if (isDoubleList)
 		{
+			IInterfaceDefinition def = null;
+			if (abstractType)
+			{
+				def = new GenericArgumentedIInterfceDefinition(Environment.linkedListDef, new GenericArgumentedIInterfceDefinition(Environment.listDef, type));
+				internaalType = def.getName();
+			} else
+			{
+				if (structureType == StructureType.Tree)
+				{
+					def = env.nodeListList;
 
-			internaalType = env.nodeListList.getSignatureName() + "<"
-					+ internaalType + ">";
+				} else
+				{
+					def = env.graphNodeListList;
+				}
+				internaalType = new GenericArgumentedIInterfceDefinition(def, type).getName();
+			}
+
 		}
 
-		// String tmp = internaalType;
-		// if(InterfaceDefinition.VDM && tmp.contains("."))
-		// {
-		// return tmp.substring(tmp.lastIndexOf('.')+1);
-		// }else
-		// {
-		// return tmp;
-		// }
-
 		return internaalType;
+	}
+
+	public String getType()
+	{
+		return getType(false);
 	}
 
 	public String getMethodArgumentType()

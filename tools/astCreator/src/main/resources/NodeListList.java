@@ -28,7 +28,7 @@ import java.util.*;
 public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 	%Node% parent;
 	
-	private void setParentOfInnterList(List<? extends E> list, %Node% parent)
+	protected void setParentOfInnterList(List<? extends E> list, %Node% parent)
 	{
 		for (E e : list)
 		{
@@ -36,7 +36,7 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		}
 	}
 	
-	private void setParent(List<? extends E> list) {
+	protected void setParent(List<? extends E> list) {
 		for (E n : list)
 		{
 			
@@ -187,7 +187,7 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 	private class NodeListIterator implements ListIterator<List<E>> {
 		ListIterator<List<E>> iterator;
 		List<E> last_returned;
-		boolean previous;
+//		boolean previous;
 		
 		NodeListIterator(ListIterator<List<E>> iterator) {
 			this.iterator = iterator;
@@ -198,7 +198,7 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		}
 		
 		public List<E> next() {
-			previous = false;
+//			previous = false;
 			return last_returned = iterator.next();
 		}
 		
@@ -207,7 +207,7 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		}
 		
 		public List<E> previous() {
-			previous = true;
+//			previous = true;
 			return last_returned = iterator.previous();
 		}
 		

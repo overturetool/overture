@@ -369,4 +369,9 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	{
 		this.annotation = annotation;
 	}
+
+	public String getImportName()
+	{
+		return getPackageName() + "." + getSignatureName();
+	}
 }

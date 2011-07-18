@@ -231,11 +231,15 @@ aspectdcl
   ;
   
 aspectdcla
-  : '%'^ aspectName ASSIGN! ((definitions)*)
+  : '%'^ dd 
+  ;
+  
+dd 
+  :aspectName ASSIGN (definitions)* -> ^(ID["ASPECT"] aspectName (definitions)*)
   ;
  
 aspectName
-  : ID^ ('->' (ID | '#' ID))*
+  : ID^ ('->' name)*
   ;
 
 
@@ -264,7 +268,8 @@ alternative
   ;
   
 definitions
-  : ('['! ID ']'! ':'!)? (ID |JAVANAME)^ (repeat)?
+  : (('[' ID ']'! ':'!)?| ('(' ID ')'! ':'!)) (ID |JAVANAME)^ (repeat)?
+  
   ;
   
 //typeName

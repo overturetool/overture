@@ -198,17 +198,18 @@ public class ToStringAddOnReader
 
 	public static String getNameFromAspectNode(CommonTree p)
 	{
-		String topName = p.getText();
-		if (p.getChildCount() > 0)
-		{
-			for (Object c : p.getChildren())
-			{
-				if (c instanceof CommonTree)
-				{
-					topName += ((CommonTree) c).getText();
-				}
-			}
-		}
+		String topName = CreateOnParse.unfoldName(p);
+//		String topName = p.getText();
+//		if (p.getChildCount() > 0)
+//		{
+//			for (Object c : p.getChildren())
+//			{
+//				if (c instanceof CommonTree)
+//				{
+//					topName += ((CommonTree) c).getText();
+//				}
+//			}
+//		}
 
 		String[] names = topName.split("->");
 

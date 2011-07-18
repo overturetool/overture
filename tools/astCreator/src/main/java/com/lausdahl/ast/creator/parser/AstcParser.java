@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-11 21:39:01
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-18 12:11:34
 
 package com.lausdahl.ast.creator.parser;
 
@@ -13,7 +13,7 @@ import org.antlr.runtime.tree.*;
 
 public class AstcParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ASSIGN", "COLON", "AST", "TOKENS", "ASPECT_DCL", "FIELD_DCL", "QUOTE", "COMMENT", "ID", "JAVANAME", "WS", "ESC_SEQ", "NormalChar", "SpecialChar", "';'", "'%'", "'#'", "'|'", "'{'", "'}'", "'['", "']'", "'?'", "'*'", "'**'", "'+'", "'||'", "'&&'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ASSIGN", "COLON", "AST", "TOKENS", "ASPECT_DCL", "FIELD_DCL", "QUOTE", "COMMENT", "ID", "JAVANAME", "WS", "ESC_SEQ", "NormalChar", "SpecialChar", "';'", "'%'", "'|'", "'#'", "'{'", "'}'", "'['", "']'", "'('", "')'", "'?'", "'*'", "'**'", "'+'", "'||'", "'&&'"
     };
     public static final int T__29=29;
     public static final int T__28=28;
@@ -35,8 +35,10 @@ public class AstcParser extends Parser {
     public static final int T__30=30;
     public static final int QUOTE=10;
     public static final int T__31=31;
+    public static final int T__32=32;
     public static final int ESC_SEQ=15;
     public static final int WS=14;
+    public static final int T__33=33;
     public static final int T__18=18;
     public static final int JAVANAME=13;
     public static final int SpecialChar=17;
@@ -255,7 +257,7 @@ public class AstcParser extends Parser {
                 int alt1=2;
                 int LA1_0 = input.LA(1);
 
-                if ( (LA1_0==ID||LA1_0==20) ) {
+                if ( (LA1_0==ID||LA1_0==21) ) {
                     alt1=1;
                 }
 
@@ -478,7 +480,7 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "aspectdcla"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:233:1: aspectdcla : '%' aspectName ASSIGN ( ( definitions )* ) ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:233:1: aspectdcla : '%' dd ;
     public final AstcParser.aspectdcla_return aspectdcla() throws RecognitionException {
         AstcParser.aspectdcla_return retval = new AstcParser.aspectdcla_return();
         retval.start = input.LT(1);
@@ -486,18 +488,14 @@ public class AstcParser extends Parser {
         Object root_0 = null;
 
         Token char_literal11=null;
-        Token ASSIGN13=null;
-        AstcParser.aspectName_return aspectName12 = null;
-
-        AstcParser.definitions_return definitions14 = null;
+        AstcParser.dd_return dd12 = null;
 
 
         Object char_literal11_tree=null;
-        Object ASSIGN13_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:3: ( '%' aspectName ASSIGN ( ( definitions )* ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:5: '%' aspectName ASSIGN ( ( definitions )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:3: ( '%' dd )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:5: '%' dd
             {
             root_0 = (Object)adaptor.nil();
 
@@ -505,49 +503,12 @@ public class AstcParser extends Parser {
             char_literal11_tree = (Object)adaptor.create(char_literal11);
             root_0 = (Object)adaptor.becomeRoot(char_literal11_tree, root_0);
 
-            pushFollow(FOLLOW_aspectName_in_aspectdcla492);
-            aspectName12=aspectName();
+            pushFollow(FOLLOW_dd_in_aspectdcla492);
+            dd12=dd();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, aspectName12.getTree());
-            ASSIGN13=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_aspectdcla494); 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:29: ( ( definitions )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:30: ( definitions )*
-            {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:30: ( definitions )*
-            loop4:
-            do {
-                int alt4=2;
-                int LA4_0 = input.LA(1);
-
-                if ( ((LA4_0>=ID && LA4_0<=JAVANAME)||LA4_0==24) ) {
-                    alt4=1;
-                }
-
-
-                switch (alt4) {
-            	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:234:31: definitions
-            	    {
-            	    pushFollow(FOLLOW_definitions_in_aspectdcla499);
-            	    definitions14=definitions();
-
-            	    state._fsp--;
-
-            	    adaptor.addChild(root_0, definitions14.getTree());
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop4;
-                }
-            } while (true);
-
-
-            }
-
+            adaptor.addChild(root_0, dd12.getTree());
 
             }
 
@@ -569,110 +530,188 @@ public class AstcParser extends Parser {
     }
     // $ANTLR end "aspectdcla"
 
+    public static class dd_return extends ParserRuleReturnScope {
+        Object tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "dd"
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:237:1: dd : aspectName ASSIGN ( definitions )* -> ^( ID[\"ASPECT\"] aspectName ( definitions )* ) ;
+    public final AstcParser.dd_return dd() throws RecognitionException {
+        AstcParser.dd_return retval = new AstcParser.dd_return();
+        retval.start = input.LT(1);
+
+        Object root_0 = null;
+
+        Token ASSIGN14=null;
+        AstcParser.aspectName_return aspectName13 = null;
+
+        AstcParser.definitions_return definitions15 = null;
+
+
+        Object ASSIGN14_tree=null;
+        RewriteRuleTokenStream stream_ASSIGN=new RewriteRuleTokenStream(adaptor,"token ASSIGN");
+        RewriteRuleSubtreeStream stream_aspectName=new RewriteRuleSubtreeStream(adaptor,"rule aspectName");
+        RewriteRuleSubtreeStream stream_definitions=new RewriteRuleSubtreeStream(adaptor,"rule definitions");
+        try {
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:3: ( aspectName ASSIGN ( definitions )* -> ^( ID[\"ASPECT\"] aspectName ( definitions )* ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:4: aspectName ASSIGN ( definitions )*
+            {
+            pushFollow(FOLLOW_aspectName_in_dd508);
+            aspectName13=aspectName();
+
+            state._fsp--;
+
+            stream_aspectName.add(aspectName13.getTree());
+            ASSIGN14=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_dd510);  
+            stream_ASSIGN.add(ASSIGN14);
+
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:22: ( definitions )*
+            loop4:
+            do {
+                int alt4=2;
+                int LA4_0 = input.LA(1);
+
+                if ( ((LA4_0>=ID && LA4_0<=JAVANAME)||LA4_0==24||LA4_0==26) ) {
+                    alt4=1;
+                }
+
+
+                switch (alt4) {
+            	case 1 :
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:23: definitions
+            	    {
+            	    pushFollow(FOLLOW_definitions_in_dd513);
+            	    definitions15=definitions();
+
+            	    state._fsp--;
+
+            	    stream_definitions.add(definitions15.getTree());
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop4;
+                }
+            } while (true);
+
+
+
+            // AST REWRITE
+            // elements: definitions, aspectName
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 238:37: -> ^( ID[\"ASPECT\"] aspectName ( definitions )* )
+            {
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:40: ^( ID[\"ASPECT\"] aspectName ( definitions )* )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(ID, "ASPECT"), root_1);
+
+                adaptor.addChild(root_1, stream_aspectName.nextTree());
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:66: ( definitions )*
+                while ( stream_definitions.hasNext() ) {
+                    adaptor.addChild(root_1, stream_definitions.nextTree());
+
+                }
+                stream_definitions.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;
+            }
+
+            retval.stop = input.LT(-1);
+
+            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "dd"
+
     public static class aspectName_return extends ParserRuleReturnScope {
         Object tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "aspectName"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:237:1: aspectName : ID ( '->' ( ID | '#' ID ) )* ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:241:1: aspectName : ID ( '->' name )* ;
     public final AstcParser.aspectName_return aspectName() throws RecognitionException {
         AstcParser.aspectName_return retval = new AstcParser.aspectName_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token ID15=null;
-        Token string_literal16=null;
-        Token ID17=null;
-        Token char_literal18=null;
-        Token ID19=null;
+        Token ID16=null;
+        Token string_literal17=null;
+        AstcParser.name_return name18 = null;
 
-        Object ID15_tree=null;
-        Object string_literal16_tree=null;
-        Object ID17_tree=null;
-        Object char_literal18_tree=null;
-        Object ID19_tree=null;
+
+        Object ID16_tree=null;
+        Object string_literal17_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:3: ( ID ( '->' ( ID | '#' ID ) )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:5: ID ( '->' ( ID | '#' ID ) )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:242:3: ( ID ( '->' name )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:242:5: ID ( '->' name )*
             {
             root_0 = (Object)adaptor.nil();
 
-            ID15=(Token)match(input,ID,FOLLOW_ID_in_aspectName516); 
-            ID15_tree = (Object)adaptor.create(ID15);
-            root_0 = (Object)adaptor.becomeRoot(ID15_tree, root_0);
+            ID16=(Token)match(input,ID,FOLLOW_ID_in_aspectName543); 
+            ID16_tree = (Object)adaptor.create(ID16);
+            root_0 = (Object)adaptor.becomeRoot(ID16_tree, root_0);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:9: ( '->' ( ID | '#' ID ) )*
-            loop6:
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:242:9: ( '->' name )*
+            loop5:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt5=2;
+                int LA5_0 = input.LA(1);
 
-                if ( (LA6_0==FIELD_DCL) ) {
-                    alt6=1;
+                if ( (LA5_0==FIELD_DCL) ) {
+                    alt5=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt5) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:10: '->' ( ID | '#' ID )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:242:10: '->' name
             	    {
-            	    string_literal16=(Token)match(input,FIELD_DCL,FOLLOW_FIELD_DCL_in_aspectName520); 
-            	    string_literal16_tree = (Object)adaptor.create(string_literal16);
-            	    adaptor.addChild(root_0, string_literal16_tree);
+            	    string_literal17=(Token)match(input,FIELD_DCL,FOLLOW_FIELD_DCL_in_aspectName547); 
+            	    string_literal17_tree = (Object)adaptor.create(string_literal17);
+            	    adaptor.addChild(root_0, string_literal17_tree);
 
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:15: ( ID | '#' ID )
-            	    int alt5=2;
-            	    int LA5_0 = input.LA(1);
+            	    pushFollow(FOLLOW_name_in_aspectName549);
+            	    name18=name();
 
-            	    if ( (LA5_0==ID) ) {
-            	        alt5=1;
-            	    }
-            	    else if ( (LA5_0==20) ) {
-            	        alt5=2;
-            	    }
-            	    else {
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 5, 0, input);
+            	    state._fsp--;
 
-            	        throw nvae;
-            	    }
-            	    switch (alt5) {
-            	        case 1 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:16: ID
-            	            {
-            	            ID17=(Token)match(input,ID,FOLLOW_ID_in_aspectName523); 
-            	            ID17_tree = (Object)adaptor.create(ID17);
-            	            adaptor.addChild(root_0, ID17_tree);
-
-
-            	            }
-            	            break;
-            	        case 2 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:238:21: '#' ID
-            	            {
-            	            char_literal18=(Token)match(input,20,FOLLOW_20_in_aspectName527); 
-            	            char_literal18_tree = (Object)adaptor.create(char_literal18);
-            	            adaptor.addChild(root_0, char_literal18_tree);
-
-            	            ID19=(Token)match(input,ID,FOLLOW_ID_in_aspectName529); 
-            	            ID19_tree = (Object)adaptor.create(ID19);
-            	            adaptor.addChild(root_0, ID19_tree);
-
-
-            	            }
-            	            break;
-
-            	    }
-
+            	    adaptor.addChild(root_0, name18.getTree());
 
             	    }
             	    break;
 
             	default :
-            	    break loop6;
+            	    break loop5;
                 }
             } while (true);
 
@@ -703,116 +742,116 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "production"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:242:1: production : name ( productionfields )? ASSIGN alternative ( '|' alternative )* ';' -> ^( ID[\"P\"] name ( productionfields )? ( alternative )* ) ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:246:1: production : name ( productionfields )? ASSIGN alternative ( '|' alternative )* ';' -> ^( ID[\"P\"] name ( productionfields )? ( alternative )* ) ;
     public final AstcParser.production_return production() throws RecognitionException {
         AstcParser.production_return retval = new AstcParser.production_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token ASSIGN22=null;
-        Token char_literal24=null;
-        Token char_literal26=null;
-        AstcParser.name_return name20 = null;
+        Token ASSIGN21=null;
+        Token char_literal23=null;
+        Token char_literal25=null;
+        AstcParser.name_return name19 = null;
 
-        AstcParser.productionfields_return productionfields21 = null;
+        AstcParser.productionfields_return productionfields20 = null;
 
-        AstcParser.alternative_return alternative23 = null;
+        AstcParser.alternative_return alternative22 = null;
 
-        AstcParser.alternative_return alternative25 = null;
+        AstcParser.alternative_return alternative24 = null;
 
 
-        Object ASSIGN22_tree=null;
-        Object char_literal24_tree=null;
-        Object char_literal26_tree=null;
-        RewriteRuleTokenStream stream_21=new RewriteRuleTokenStream(adaptor,"token 21");
+        Object ASSIGN21_tree=null;
+        Object char_literal23_tree=null;
+        Object char_literal25_tree=null;
+        RewriteRuleTokenStream stream_20=new RewriteRuleTokenStream(adaptor,"token 20");
         RewriteRuleTokenStream stream_18=new RewriteRuleTokenStream(adaptor,"token 18");
         RewriteRuleTokenStream stream_ASSIGN=new RewriteRuleTokenStream(adaptor,"token ASSIGN");
         RewriteRuleSubtreeStream stream_productionfields=new RewriteRuleSubtreeStream(adaptor,"rule productionfields");
         RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name");
         RewriteRuleSubtreeStream stream_alternative=new RewriteRuleSubtreeStream(adaptor,"rule alternative");
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:3: ( name ( productionfields )? ASSIGN alternative ( '|' alternative )* ';' -> ^( ID[\"P\"] name ( productionfields )? ( alternative )* ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:5: name ( productionfields )? ASSIGN alternative ( '|' alternative )* ';'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:3: ( name ( productionfields )? ASSIGN alternative ( '|' alternative )* ';' -> ^( ID[\"P\"] name ( productionfields )? ( alternative )* ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:5: name ( productionfields )? ASSIGN alternative ( '|' alternative )* ';'
             {
-            pushFollow(FOLLOW_name_in_production546);
-            name20=name();
+            pushFollow(FOLLOW_name_in_production565);
+            name19=name();
 
             state._fsp--;
 
-            stream_name.add(name20.getTree());
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:10: ( productionfields )?
-            int alt7=2;
-            int LA7_0 = input.LA(1);
+            stream_name.add(name19.getTree());
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:10: ( productionfields )?
+            int alt6=2;
+            int LA6_0 = input.LA(1);
 
-            if ( (LA7_0==22) ) {
-                alt7=1;
+            if ( (LA6_0==22) ) {
+                alt6=1;
             }
-            switch (alt7) {
+            switch (alt6) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:10: productionfields
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:10: productionfields
                     {
-                    pushFollow(FOLLOW_productionfields_in_production548);
-                    productionfields21=productionfields();
+                    pushFollow(FOLLOW_productionfields_in_production567);
+                    productionfields20=productionfields();
 
                     state._fsp--;
 
-                    stream_productionfields.add(productionfields21.getTree());
+                    stream_productionfields.add(productionfields20.getTree());
 
                     }
                     break;
 
             }
 
-            ASSIGN22=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_production551);  
-            stream_ASSIGN.add(ASSIGN22);
+            ASSIGN21=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_production570);  
+            stream_ASSIGN.add(ASSIGN21);
 
-            pushFollow(FOLLOW_alternative_in_production553);
-            alternative23=alternative();
+            pushFollow(FOLLOW_alternative_in_production572);
+            alternative22=alternative();
 
             state._fsp--;
 
-            stream_alternative.add(alternative23.getTree());
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:47: ( '|' alternative )*
-            loop8:
+            stream_alternative.add(alternative22.getTree());
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:47: ( '|' alternative )*
+            loop7:
             do {
-                int alt8=2;
-                int LA8_0 = input.LA(1);
+                int alt7=2;
+                int LA7_0 = input.LA(1);
 
-                if ( (LA8_0==21) ) {
-                    alt8=1;
+                if ( (LA7_0==20) ) {
+                    alt7=1;
                 }
 
 
-                switch (alt8) {
+                switch (alt7) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:48: '|' alternative
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:48: '|' alternative
             	    {
-            	    char_literal24=(Token)match(input,21,FOLLOW_21_in_production556);  
-            	    stream_21.add(char_literal24);
+            	    char_literal23=(Token)match(input,20,FOLLOW_20_in_production575);  
+            	    stream_20.add(char_literal23);
 
-            	    pushFollow(FOLLOW_alternative_in_production558);
-            	    alternative25=alternative();
+            	    pushFollow(FOLLOW_alternative_in_production577);
+            	    alternative24=alternative();
 
             	    state._fsp--;
 
-            	    stream_alternative.add(alternative25.getTree());
+            	    stream_alternative.add(alternative24.getTree());
 
             	    }
             	    break;
 
             	default :
-            	    break loop8;
+            	    break loop7;
                 }
             } while (true);
 
-            char_literal26=(Token)match(input,18,FOLLOW_18_in_production562);  
-            stream_18.add(char_literal26);
+            char_literal25=(Token)match(input,18,FOLLOW_18_in_production581);  
+            stream_18.add(char_literal25);
 
 
 
             // AST REWRITE
-            // elements: name, alternative, productionfields
+            // elements: productionfields, alternative, name
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -822,21 +861,21 @@ public class AstcParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 243:70: -> ^( ID[\"P\"] name ( productionfields )? ( alternative )* )
+            // 247:70: -> ^( ID[\"P\"] name ( productionfields )? ( alternative )* )
             {
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:73: ^( ID[\"P\"] name ( productionfields )? ( alternative )* )
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:73: ^( ID[\"P\"] name ( productionfields )? ( alternative )* )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(ID, "P"), root_1);
 
                 adaptor.addChild(root_1, stream_name.nextTree());
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:88: ( productionfields )?
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:88: ( productionfields )?
                 if ( stream_productionfields.hasNext() ) {
                     adaptor.addChild(root_1, stream_productionfields.nextTree());
 
                 }
                 stream_productionfields.reset();
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:243:106: ( alternative )*
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:106: ( alternative )*
                 while ( stream_alternative.hasNext() ) {
                     adaptor.addChild(root_1, stream_alternative.nextTree());
 
@@ -875,66 +914,66 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "name"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:246:1: name : ( ID | '#' ID -> ^( '#' ID ) );
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:250:1: name : ( ID | '#' ID -> ^( '#' ID ) );
     public final AstcParser.name_return name() throws RecognitionException {
         AstcParser.name_return retval = new AstcParser.name_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token ID27=null;
-        Token char_literal28=null;
-        Token ID29=null;
+        Token ID26=null;
+        Token char_literal27=null;
+        Token ID28=null;
 
-        Object ID27_tree=null;
-        Object char_literal28_tree=null;
-        Object ID29_tree=null;
-        RewriteRuleTokenStream stream_20=new RewriteRuleTokenStream(adaptor,"token 20");
+        Object ID26_tree=null;
+        Object char_literal27_tree=null;
+        Object ID28_tree=null;
+        RewriteRuleTokenStream stream_21=new RewriteRuleTokenStream(adaptor,"token 21");
         RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:3: ( ID | '#' ID -> ^( '#' ID ) )
-            int alt9=2;
-            int LA9_0 = input.LA(1);
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:251:3: ( ID | '#' ID -> ^( '#' ID ) )
+            int alt8=2;
+            int LA8_0 = input.LA(1);
 
-            if ( (LA9_0==ID) ) {
-                alt9=1;
+            if ( (LA8_0==ID) ) {
+                alt8=1;
             }
-            else if ( (LA9_0==20) ) {
-                alt9=2;
+            else if ( (LA8_0==21) ) {
+                alt8=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("", 9, 0, input);
+                    new NoViableAltException("", 8, 0, input);
 
                 throw nvae;
             }
-            switch (alt9) {
+            switch (alt8) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:247:5: ID
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:251:5: ID
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    ID27=(Token)match(input,ID,FOLLOW_ID_in_name596); 
-                    ID27_tree = (Object)adaptor.create(ID27);
-                    root_0 = (Object)adaptor.becomeRoot(ID27_tree, root_0);
+                    ID26=(Token)match(input,ID,FOLLOW_ID_in_name615); 
+                    ID26_tree = (Object)adaptor.create(ID26);
+                    root_0 = (Object)adaptor.becomeRoot(ID26_tree, root_0);
 
 
                     }
                     break;
                 case 2 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:248:5: '#' ID
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:252:5: '#' ID
                     {
-                    char_literal28=(Token)match(input,20,FOLLOW_20_in_name604);  
-                    stream_20.add(char_literal28);
+                    char_literal27=(Token)match(input,21,FOLLOW_21_in_name623);  
+                    stream_21.add(char_literal27);
 
-                    ID29=(Token)match(input,ID,FOLLOW_ID_in_name606);  
-                    stream_ID.add(ID29);
+                    ID28=(Token)match(input,ID,FOLLOW_ID_in_name625);  
+                    stream_ID.add(ID28);
 
 
 
                     // AST REWRITE
-                    // elements: ID, 20
+                    // elements: ID, 21
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -944,12 +983,12 @@ public class AstcParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (Object)adaptor.nil();
-                    // 248:11: -> ^( '#' ID )
+                    // 252:11: -> ^( '#' ID )
                     {
-                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:248:13: ^( '#' ID )
+                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:252:13: ^( '#' ID )
                         {
                         Object root_1 = (Object)adaptor.nil();
-                        root_1 = (Object)adaptor.becomeRoot(stream_20.nextNode(), root_1);
+                        root_1 = (Object)adaptor.becomeRoot(stream_21.nextNode(), root_1);
 
                         adaptor.addChild(root_1, stream_ID.nextNode());
 
@@ -987,65 +1026,65 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "productionfields"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:253:1: productionfields : '{' FIELD_DCL ( productionfield )* '}' ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:257:1: productionfields : '{' FIELD_DCL ( productionfield )* '}' ;
     public final AstcParser.productionfields_return productionfields() throws RecognitionException {
         AstcParser.productionfields_return retval = new AstcParser.productionfields_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token char_literal30=null;
-        Token FIELD_DCL31=null;
-        Token char_literal33=null;
-        AstcParser.productionfield_return productionfield32 = null;
+        Token char_literal29=null;
+        Token FIELD_DCL30=null;
+        Token char_literal32=null;
+        AstcParser.productionfield_return productionfield31 = null;
 
 
-        Object char_literal30_tree=null;
-        Object FIELD_DCL31_tree=null;
-        Object char_literal33_tree=null;
+        Object char_literal29_tree=null;
+        Object FIELD_DCL30_tree=null;
+        Object char_literal32_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:254:3: ( '{' FIELD_DCL ( productionfield )* '}' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:254:5: '{' FIELD_DCL ( productionfield )* '}'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:258:3: ( '{' FIELD_DCL ( productionfield )* '}' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:258:5: '{' FIELD_DCL ( productionfield )* '}'
             {
             root_0 = (Object)adaptor.nil();
 
-            char_literal30=(Token)match(input,22,FOLLOW_22_in_productionfields631); 
-            FIELD_DCL31=(Token)match(input,FIELD_DCL,FOLLOW_FIELD_DCL_in_productionfields634); 
-            FIELD_DCL31_tree = (Object)adaptor.create(FIELD_DCL31);
-            root_0 = (Object)adaptor.becomeRoot(FIELD_DCL31_tree, root_0);
+            char_literal29=(Token)match(input,22,FOLLOW_22_in_productionfields650); 
+            FIELD_DCL30=(Token)match(input,FIELD_DCL,FOLLOW_FIELD_DCL_in_productionfields653); 
+            FIELD_DCL30_tree = (Object)adaptor.create(FIELD_DCL30);
+            root_0 = (Object)adaptor.becomeRoot(FIELD_DCL30_tree, root_0);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:254:21: ( productionfield )*
-            loop10:
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:258:21: ( productionfield )*
+            loop9:
             do {
-                int alt10=2;
-                int LA10_0 = input.LA(1);
+                int alt9=2;
+                int LA9_0 = input.LA(1);
 
-                if ( (LA10_0==ID) ) {
-                    alt10=1;
+                if ( (LA9_0==ID) ) {
+                    alt9=1;
                 }
 
 
-                switch (alt10) {
+                switch (alt9) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:254:21: productionfield
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:258:21: productionfield
             	    {
-            	    pushFollow(FOLLOW_productionfield_in_productionfields637);
-            	    productionfield32=productionfield();
+            	    pushFollow(FOLLOW_productionfield_in_productionfields656);
+            	    productionfield31=productionfield();
 
             	    state._fsp--;
 
-            	    adaptor.addChild(root_0, productionfield32.getTree());
+            	    adaptor.addChild(root_0, productionfield31.getTree());
 
             	    }
             	    break;
 
             	default :
-            	    break loop10;
+            	    break loop9;
                 }
             } while (true);
 
-            char_literal33=(Token)match(input,23,FOLLOW_23_in_productionfields640); 
+            char_literal32=(Token)match(input,23,FOLLOW_23_in_productionfields659); 
 
             }
 
@@ -1073,44 +1112,44 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "productionfield"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:257:1: productionfield : ID ASSIGN QUOTE stringLiteral QUOTE ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:261:1: productionfield : ID ASSIGN QUOTE stringLiteral QUOTE ;
     public final AstcParser.productionfield_return productionfield() throws RecognitionException {
         AstcParser.productionfield_return retval = new AstcParser.productionfield_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token ID34=null;
-        Token ASSIGN35=null;
-        Token QUOTE36=null;
-        Token QUOTE38=null;
-        AstcParser.stringLiteral_return stringLiteral37 = null;
+        Token ID33=null;
+        Token ASSIGN34=null;
+        Token QUOTE35=null;
+        Token QUOTE37=null;
+        AstcParser.stringLiteral_return stringLiteral36 = null;
 
 
-        Object ID34_tree=null;
-        Object ASSIGN35_tree=null;
-        Object QUOTE36_tree=null;
-        Object QUOTE38_tree=null;
+        Object ID33_tree=null;
+        Object ASSIGN34_tree=null;
+        Object QUOTE35_tree=null;
+        Object QUOTE37_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:258:3: ( ID ASSIGN QUOTE stringLiteral QUOTE )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:258:5: ID ASSIGN QUOTE stringLiteral QUOTE
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:3: ( ID ASSIGN QUOTE stringLiteral QUOTE )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:5: ID ASSIGN QUOTE stringLiteral QUOTE
             {
             root_0 = (Object)adaptor.nil();
 
-            ID34=(Token)match(input,ID,FOLLOW_ID_in_productionfield656); 
-            ID34_tree = (Object)adaptor.create(ID34);
-            root_0 = (Object)adaptor.becomeRoot(ID34_tree, root_0);
+            ID33=(Token)match(input,ID,FOLLOW_ID_in_productionfield675); 
+            ID33_tree = (Object)adaptor.create(ID33);
+            root_0 = (Object)adaptor.becomeRoot(ID33_tree, root_0);
 
-            ASSIGN35=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_productionfield659); 
-            QUOTE36=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_productionfield662); 
-            pushFollow(FOLLOW_stringLiteral_in_productionfield665);
-            stringLiteral37=stringLiteral();
+            ASSIGN34=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_productionfield678); 
+            QUOTE35=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_productionfield681); 
+            pushFollow(FOLLOW_stringLiteral_in_productionfield684);
+            stringLiteral36=stringLiteral();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, stringLiteral37.getTree());
-            QUOTE38=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_productionfield667); 
+            adaptor.addChild(root_0, stringLiteral36.getTree());
+            QUOTE37=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_productionfield686); 
 
             }
 
@@ -1138,71 +1177,71 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "alternative"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:261:1: alternative : ( ( '{' ID '}' )? ( definitions )* -> ^( ID ( definitions )* ) | '#' ID -> ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID ) );
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:265:1: alternative : ( ( '{' ID '}' )? ( definitions )* -> ^( ID ( definitions )* ) | '#' ID -> ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID ) );
     public final AstcParser.alternative_return alternative() throws RecognitionException {
         AstcParser.alternative_return retval = new AstcParser.alternative_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token char_literal39=null;
-        Token ID40=null;
-        Token char_literal41=null;
-        Token char_literal43=null;
-        Token ID44=null;
-        AstcParser.definitions_return definitions42 = null;
+        Token char_literal38=null;
+        Token ID39=null;
+        Token char_literal40=null;
+        Token char_literal42=null;
+        Token ID43=null;
+        AstcParser.definitions_return definitions41 = null;
 
 
-        Object char_literal39_tree=null;
-        Object ID40_tree=null;
-        Object char_literal41_tree=null;
-        Object char_literal43_tree=null;
-        Object ID44_tree=null;
-        RewriteRuleTokenStream stream_20=new RewriteRuleTokenStream(adaptor,"token 20");
+        Object char_literal38_tree=null;
+        Object ID39_tree=null;
+        Object char_literal40_tree=null;
+        Object char_literal42_tree=null;
+        Object ID43_tree=null;
+        RewriteRuleTokenStream stream_21=new RewriteRuleTokenStream(adaptor,"token 21");
         RewriteRuleTokenStream stream_22=new RewriteRuleTokenStream(adaptor,"token 22");
         RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
         RewriteRuleTokenStream stream_23=new RewriteRuleTokenStream(adaptor,"token 23");
         RewriteRuleSubtreeStream stream_definitions=new RewriteRuleSubtreeStream(adaptor,"rule definitions");
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:3: ( ( '{' ID '}' )? ( definitions )* -> ^( ID ( definitions )* ) | '#' ID -> ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID ) )
-            int alt13=2;
-            int LA13_0 = input.LA(1);
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:3: ( ( '{' ID '}' )? ( definitions )* -> ^( ID ( definitions )* ) | '#' ID -> ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID ) )
+            int alt12=2;
+            int LA12_0 = input.LA(1);
 
-            if ( ((LA13_0>=ID && LA13_0<=JAVANAME)||LA13_0==18||(LA13_0>=21 && LA13_0<=22)||LA13_0==24) ) {
-                alt13=1;
+            if ( ((LA12_0>=ID && LA12_0<=JAVANAME)||LA12_0==18||LA12_0==20||LA12_0==22||LA12_0==24||LA12_0==26) ) {
+                alt12=1;
             }
-            else if ( (LA13_0==20) ) {
-                alt13=2;
+            else if ( (LA12_0==21) ) {
+                alt12=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("", 13, 0, input);
+                    new NoViableAltException("", 12, 0, input);
 
                 throw nvae;
             }
-            switch (alt13) {
+            switch (alt12) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:5: ( '{' ID '}' )? ( definitions )*
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:5: ( '{' ID '}' )? ( definitions )*
                     {
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:5: ( '{' ID '}' )?
-                    int alt11=2;
-                    int LA11_0 = input.LA(1);
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:5: ( '{' ID '}' )?
+                    int alt10=2;
+                    int LA10_0 = input.LA(1);
 
-                    if ( (LA11_0==22) ) {
-                        alt11=1;
+                    if ( (LA10_0==22) ) {
+                        alt10=1;
                     }
-                    switch (alt11) {
+                    switch (alt10) {
                         case 1 :
-                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:6: '{' ID '}'
+                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:6: '{' ID '}'
                             {
-                            char_literal39=(Token)match(input,22,FOLLOW_22_in_alternative683);  
-                            stream_22.add(char_literal39);
+                            char_literal38=(Token)match(input,22,FOLLOW_22_in_alternative702);  
+                            stream_22.add(char_literal38);
 
-                            ID40=(Token)match(input,ID,FOLLOW_ID_in_alternative685);  
-                            stream_ID.add(ID40);
+                            ID39=(Token)match(input,ID,FOLLOW_ID_in_alternative704);  
+                            stream_ID.add(ID39);
 
-                            char_literal41=(Token)match(input,23,FOLLOW_23_in_alternative687);  
-                            stream_23.add(char_literal41);
+                            char_literal40=(Token)match(input,23,FOLLOW_23_in_alternative706);  
+                            stream_23.add(char_literal40);
 
 
                             }
@@ -1210,33 +1249,33 @@ public class AstcParser extends Parser {
 
                     }
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:19: ( definitions )*
-                    loop12:
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:19: ( definitions )*
+                    loop11:
                     do {
-                        int alt12=2;
-                        int LA12_0 = input.LA(1);
+                        int alt11=2;
+                        int LA11_0 = input.LA(1);
 
-                        if ( ((LA12_0>=ID && LA12_0<=JAVANAME)||LA12_0==24) ) {
-                            alt12=1;
+                        if ( ((LA11_0>=ID && LA11_0<=JAVANAME)||LA11_0==24||LA11_0==26) ) {
+                            alt11=1;
                         }
 
 
-                        switch (alt12) {
+                        switch (alt11) {
                     	case 1 :
-                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:20: definitions
+                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:20: definitions
                     	    {
-                    	    pushFollow(FOLLOW_definitions_in_alternative692);
-                    	    definitions42=definitions();
+                    	    pushFollow(FOLLOW_definitions_in_alternative711);
+                    	    definitions41=definitions();
 
                     	    state._fsp--;
 
-                    	    stream_definitions.add(definitions42.getTree());
+                    	    stream_definitions.add(definitions41.getTree());
 
                     	    }
                     	    break;
 
                     	default :
-                    	    break loop12;
+                    	    break loop11;
                         }
                     } while (true);
 
@@ -1253,14 +1292,14 @@ public class AstcParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (Object)adaptor.nil();
-                    // 262:34: -> ^( ID ( definitions )* )
+                    // 266:34: -> ^( ID ( definitions )* )
                     {
-                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:37: ^( ID ( definitions )* )
+                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:37: ^( ID ( definitions )* )
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot(stream_ID.nextNode(), root_1);
 
-                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:262:42: ( definitions )*
+                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:42: ( definitions )*
                         while ( stream_definitions.hasNext() ) {
                             adaptor.addChild(root_1, stream_definitions.nextTree());
 
@@ -1276,13 +1315,13 @@ public class AstcParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:263:5: '#' ID
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:5: '#' ID
                     {
-                    char_literal43=(Token)match(input,20,FOLLOW_20_in_alternative711);  
-                    stream_20.add(char_literal43);
+                    char_literal42=(Token)match(input,21,FOLLOW_21_in_alternative730);  
+                    stream_21.add(char_literal42);
 
-                    ID44=(Token)match(input,ID,FOLLOW_ID_in_alternative713);  
-                    stream_ID.add(ID44);
+                    ID43=(Token)match(input,ID,FOLLOW_ID_in_alternative732);  
+                    stream_ID.add(ID43);
 
 
 
@@ -1297,9 +1336,9 @@ public class AstcParser extends Parser {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (Object)adaptor.nil();
-                    // 263:12: -> ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID )
+                    // 267:12: -> ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID )
                     {
-                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:263:15: ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID )
+                        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:15: ^( ID[\"ALTERNATIVE_SUB_ROOT\"] ID )
                         {
                         Object root_1 = (Object)adaptor.nil();
                         root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(ID, "ALTERNATIVE_SUB_ROOT"), root_1);
@@ -1340,62 +1379,121 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "definitions"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:266:1: definitions : ( '[' ID ']' ':' )? ( ID | JAVANAME ) ( repeat )? ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:270:1: definitions : ( ( '[' ID ']' ':' )? | ( '(' ID ')' ':' ) ) ( ID | JAVANAME ) ( repeat )? ;
     public final AstcParser.definitions_return definitions() throws RecognitionException {
         AstcParser.definitions_return retval = new AstcParser.definitions_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token char_literal45=null;
-        Token ID46=null;
+        Token char_literal44=null;
+        Token ID45=null;
+        Token char_literal46=null;
         Token char_literal47=null;
         Token char_literal48=null;
-        Token set49=null;
-        AstcParser.repeat_return repeat50 = null;
+        Token ID49=null;
+        Token char_literal50=null;
+        Token char_literal51=null;
+        Token set52=null;
+        AstcParser.repeat_return repeat53 = null;
 
 
-        Object char_literal45_tree=null;
-        Object ID46_tree=null;
+        Object char_literal44_tree=null;
+        Object ID45_tree=null;
+        Object char_literal46_tree=null;
         Object char_literal47_tree=null;
         Object char_literal48_tree=null;
-        Object set49_tree=null;
+        Object ID49_tree=null;
+        Object char_literal50_tree=null;
+        Object char_literal51_tree=null;
+        Object set52_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:3: ( ( '[' ID ']' ':' )? ( ID | JAVANAME ) ( repeat )? )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:5: ( '[' ID ']' ':' )? ( ID | JAVANAME ) ( repeat )?
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:3: ( ( ( '[' ID ']' ':' )? | ( '(' ID ')' ':' ) ) ( ID | JAVANAME ) ( repeat )? )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:5: ( ( '[' ID ']' ':' )? | ( '(' ID ')' ':' ) ) ( ID | JAVANAME ) ( repeat )?
             {
             root_0 = (Object)adaptor.nil();
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:5: ( '[' ID ']' ':' )?
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:5: ( ( '[' ID ']' ':' )? | ( '(' ID ')' ':' ) )
             int alt14=2;
             int LA14_0 = input.LA(1);
 
-            if ( (LA14_0==24) ) {
+            if ( ((LA14_0>=ID && LA14_0<=JAVANAME)||LA14_0==24) ) {
                 alt14=1;
+            }
+            else if ( (LA14_0==26) ) {
+                alt14=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 14, 0, input);
+
+                throw nvae;
             }
             switch (alt14) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:6: '[' ID ']' ':'
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:6: ( '[' ID ']' ':' )?
                     {
-                    char_literal45=(Token)match(input,24,FOLLOW_24_in_definitions738); 
-                    ID46=(Token)match(input,ID,FOLLOW_ID_in_definitions741); 
-                    ID46_tree = (Object)adaptor.create(ID46);
-                    adaptor.addChild(root_0, ID46_tree);
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:6: ( '[' ID ']' ':' )?
+                    int alt13=2;
+                    int LA13_0 = input.LA(1);
 
-                    char_literal47=(Token)match(input,25,FOLLOW_25_in_definitions743); 
-                    char_literal48=(Token)match(input,COLON,FOLLOW_COLON_in_definitions746); 
+                    if ( (LA13_0==24) ) {
+                        alt13=1;
+                    }
+                    switch (alt13) {
+                        case 1 :
+                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:7: '[' ID ']' ':'
+                            {
+                            char_literal44=(Token)match(input,24,FOLLOW_24_in_definitions758); 
+                            char_literal44_tree = (Object)adaptor.create(char_literal44);
+                            adaptor.addChild(root_0, char_literal44_tree);
+
+                            ID45=(Token)match(input,ID,FOLLOW_ID_in_definitions760); 
+                            ID45_tree = (Object)adaptor.create(ID45);
+                            adaptor.addChild(root_0, ID45_tree);
+
+                            char_literal46=(Token)match(input,25,FOLLOW_25_in_definitions762); 
+                            char_literal47=(Token)match(input,COLON,FOLLOW_COLON_in_definitions765); 
+
+                            }
+                            break;
+
+                    }
+
+
+                    }
+                    break;
+                case 2 :
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:27: ( '(' ID ')' ':' )
+                    {
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:27: ( '(' ID ')' ':' )
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:28: '(' ID ')' ':'
+                    {
+                    char_literal48=(Token)match(input,26,FOLLOW_26_in_definitions772); 
+                    char_literal48_tree = (Object)adaptor.create(char_literal48);
+                    adaptor.addChild(root_0, char_literal48_tree);
+
+                    ID49=(Token)match(input,ID,FOLLOW_ID_in_definitions774); 
+                    ID49_tree = (Object)adaptor.create(ID49);
+                    adaptor.addChild(root_0, ID49_tree);
+
+                    char_literal50=(Token)match(input,27,FOLLOW_27_in_definitions776); 
+                    char_literal51=(Token)match(input,COLON,FOLLOW_COLON_in_definitions779); 
+
+                    }
+
 
                     }
                     break;
 
             }
 
-            set49=(Token)input.LT(1);
-            set49=(Token)input.LT(1);
+            set52=(Token)input.LT(1);
+            set52=(Token)input.LT(1);
             if ( (input.LA(1)>=ID && input.LA(1)<=JAVANAME) ) {
                 input.consume();
-                root_0 = (Object)adaptor.becomeRoot((Object)adaptor.create(set49), root_0);
+                root_0 = (Object)adaptor.becomeRoot((Object)adaptor.create(set52), root_0);
                 state.errorRecovery=false;
             }
             else {
@@ -1403,23 +1501,23 @@ public class AstcParser extends Parser {
                 throw mse;
             }
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:42: ( repeat )?
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:63: ( repeat )?
             int alt15=2;
             int LA15_0 = input.LA(1);
 
-            if ( ((LA15_0>=26 && LA15_0<=29)) ) {
+            if ( ((LA15_0>=28 && LA15_0<=31)) ) {
                 alt15=1;
             }
             switch (alt15) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:267:43: repeat
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:271:64: repeat
                     {
-                    pushFollow(FOLLOW_repeat_in_definitions760);
-                    repeat50=repeat();
+                    pushFollow(FOLLOW_repeat_in_definitions793);
+                    repeat53=repeat();
 
                     state._fsp--;
 
-                    adaptor.addChild(root_0, repeat50.getTree());
+                    adaptor.addChild(root_0, repeat53.getTree());
 
                     }
                     break;
@@ -1453,27 +1551,27 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "repeat"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:274:1: repeat : ( '?' | '*' | '**' | '+' );
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:279:1: repeat : ( '?' | '*' | '**' | '+' );
     public final AstcParser.repeat_return repeat() throws RecognitionException {
         AstcParser.repeat_return retval = new AstcParser.repeat_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token set51=null;
+        Token set54=null;
 
-        Object set51_tree=null;
+        Object set54_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:275:3: ( '?' | '*' | '**' | '+' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:280:3: ( '?' | '*' | '**' | '+' )
             // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:
             {
             root_0 = (Object)adaptor.nil();
 
-            set51=(Token)input.LT(1);
-            if ( (input.LA(1)>=26 && input.LA(1)<=29) ) {
+            set54=(Token)input.LT(1);
+            if ( (input.LA(1)>=28 && input.LA(1)<=31) ) {
                 input.consume();
-                adaptor.addChild(root_0, (Object)adaptor.create(set51));
+                adaptor.addChild(root_0, (Object)adaptor.create(set54));
                 state.errorRecovery=false;
             }
             else {
@@ -1508,47 +1606,47 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "token"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:282:1: token : ID ASSIGN QUOTE stringLiteral QUOTE ';' ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:1: token : ID ASSIGN QUOTE stringLiteral QUOTE ';' ;
     public final AstcParser.token_return token() throws RecognitionException {
         AstcParser.token_return retval = new AstcParser.token_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token ID52=null;
-        Token ASSIGN53=null;
-        Token QUOTE54=null;
-        Token QUOTE56=null;
-        Token char_literal57=null;
-        AstcParser.stringLiteral_return stringLiteral55 = null;
+        Token ID55=null;
+        Token ASSIGN56=null;
+        Token QUOTE57=null;
+        Token QUOTE59=null;
+        Token char_literal60=null;
+        AstcParser.stringLiteral_return stringLiteral58 = null;
 
 
-        Object ID52_tree=null;
-        Object ASSIGN53_tree=null;
-        Object QUOTE54_tree=null;
-        Object QUOTE56_tree=null;
-        Object char_literal57_tree=null;
+        Object ID55_tree=null;
+        Object ASSIGN56_tree=null;
+        Object QUOTE57_tree=null;
+        Object QUOTE59_tree=null;
+        Object char_literal60_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:283:3: ( ID ASSIGN QUOTE stringLiteral QUOTE ';' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:283:5: ID ASSIGN QUOTE stringLiteral QUOTE ';'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:288:3: ( ID ASSIGN QUOTE stringLiteral QUOTE ';' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:288:5: ID ASSIGN QUOTE stringLiteral QUOTE ';'
             {
             root_0 = (Object)adaptor.nil();
 
-            ID52=(Token)match(input,ID,FOLLOW_ID_in_token815); 
-            ID52_tree = (Object)adaptor.create(ID52);
-            root_0 = (Object)adaptor.becomeRoot(ID52_tree, root_0);
+            ID55=(Token)match(input,ID,FOLLOW_ID_in_token851); 
+            ID55_tree = (Object)adaptor.create(ID55);
+            root_0 = (Object)adaptor.becomeRoot(ID55_tree, root_0);
 
-            ASSIGN53=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_token818); 
-            QUOTE54=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_token821); 
-            pushFollow(FOLLOW_stringLiteral_in_token824);
-            stringLiteral55=stringLiteral();
+            ASSIGN56=(Token)match(input,ASSIGN,FOLLOW_ASSIGN_in_token854); 
+            QUOTE57=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_token857); 
+            pushFollow(FOLLOW_stringLiteral_in_token860);
+            stringLiteral58=stringLiteral();
 
             state._fsp--;
 
-            adaptor.addChild(root_0, stringLiteral55.getTree());
-            QUOTE56=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_token826); 
-            char_literal57=(Token)match(input,18,FOLLOW_18_in_token829); 
+            adaptor.addChild(root_0, stringLiteral58.getTree());
+            QUOTE59=(Token)match(input,QUOTE,FOLLOW_QUOTE_in_token862); 
+            char_literal60=(Token)match(input,18,FOLLOW_18_in_token865); 
 
             }
 
@@ -1576,36 +1674,36 @@ public class AstcParser extends Parser {
     };
 
     // $ANTLR start "stringLiteral"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:286:1: stringLiteral : ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )* ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:291:1: stringLiteral : ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )* ;
     public final AstcParser.stringLiteral_return stringLiteral() throws RecognitionException {
         AstcParser.stringLiteral_return retval = new AstcParser.stringLiteral_return();
         retval.start = input.LT(1);
 
         Object root_0 = null;
 
-        Token ID58=null;
-        Token NormalChar59=null;
-        Token char_literal60=null;
-        Token string_literal61=null;
-        Token string_literal62=null;
+        Token ID61=null;
+        Token NormalChar62=null;
         Token char_literal63=null;
-        Token JAVANAME64=null;
+        Token string_literal64=null;
+        Token string_literal65=null;
+        Token char_literal66=null;
+        Token JAVANAME67=null;
 
-        Object ID58_tree=null;
-        Object NormalChar59_tree=null;
-        Object char_literal60_tree=null;
-        Object string_literal61_tree=null;
-        Object string_literal62_tree=null;
+        Object ID61_tree=null;
+        Object NormalChar62_tree=null;
         Object char_literal63_tree=null;
-        Object JAVANAME64_tree=null;
+        Object string_literal64_tree=null;
+        Object string_literal65_tree=null;
+        Object char_literal66_tree=null;
+        Object JAVANAME67_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:5: ( ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:11: ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:5: ( ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:11: ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )*
             {
             root_0 = (Object)adaptor.nil();
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:11: ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:11: ( ID | NormalChar | '+' | '||' | '&&' | ( ':' ) | JAVANAME )*
             loop16:
             do {
                 int alt16=8;
@@ -1620,17 +1718,17 @@ public class AstcParser extends Parser {
                     alt16=2;
                     }
                     break;
-                case 29:
+                case 31:
                     {
                     alt16=3;
                     }
                     break;
-                case 30:
+                case 32:
                     {
                     alt16=4;
                     }
                     break;
-                case 31:
+                case 33:
                     {
                     alt16=5;
                     }
@@ -1650,64 +1748,64 @@ public class AstcParser extends Parser {
 
                 switch (alt16) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:12: ID
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:12: ID
             	    {
-            	    ID58=(Token)match(input,ID,FOLLOW_ID_in_stringLiteral852); 
-            	    ID58_tree = (Object)adaptor.create(ID58);
-            	    adaptor.addChild(root_0, ID58_tree);
+            	    ID61=(Token)match(input,ID,FOLLOW_ID_in_stringLiteral888); 
+            	    ID61_tree = (Object)adaptor.create(ID61);
+            	    adaptor.addChild(root_0, ID61_tree);
 
 
             	    }
             	    break;
             	case 2 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:17: NormalChar
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:17: NormalChar
             	    {
-            	    NormalChar59=(Token)match(input,NormalChar,FOLLOW_NormalChar_in_stringLiteral856); 
-            	    NormalChar59_tree = (Object)adaptor.create(NormalChar59);
-            	    adaptor.addChild(root_0, NormalChar59_tree);
+            	    NormalChar62=(Token)match(input,NormalChar,FOLLOW_NormalChar_in_stringLiteral892); 
+            	    NormalChar62_tree = (Object)adaptor.create(NormalChar62);
+            	    adaptor.addChild(root_0, NormalChar62_tree);
 
 
             	    }
             	    break;
             	case 3 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:30: '+'
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:30: '+'
             	    {
-            	    char_literal60=(Token)match(input,29,FOLLOW_29_in_stringLiteral860); 
-            	    char_literal60_tree = (Object)adaptor.create(char_literal60);
-            	    adaptor.addChild(root_0, char_literal60_tree);
+            	    char_literal63=(Token)match(input,31,FOLLOW_31_in_stringLiteral896); 
+            	    char_literal63_tree = (Object)adaptor.create(char_literal63);
+            	    adaptor.addChild(root_0, char_literal63_tree);
 
 
             	    }
             	    break;
             	case 4 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:34: '||'
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:34: '||'
             	    {
-            	    string_literal61=(Token)match(input,30,FOLLOW_30_in_stringLiteral862); 
-            	    string_literal61_tree = (Object)adaptor.create(string_literal61);
-            	    adaptor.addChild(root_0, string_literal61_tree);
+            	    string_literal64=(Token)match(input,32,FOLLOW_32_in_stringLiteral898); 
+            	    string_literal64_tree = (Object)adaptor.create(string_literal64);
+            	    adaptor.addChild(root_0, string_literal64_tree);
 
 
             	    }
             	    break;
             	case 5 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:39: '&&'
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:39: '&&'
             	    {
-            	    string_literal62=(Token)match(input,31,FOLLOW_31_in_stringLiteral864); 
-            	    string_literal62_tree = (Object)adaptor.create(string_literal62);
-            	    adaptor.addChild(root_0, string_literal62_tree);
+            	    string_literal65=(Token)match(input,33,FOLLOW_33_in_stringLiteral900); 
+            	    string_literal65_tree = (Object)adaptor.create(string_literal65);
+            	    adaptor.addChild(root_0, string_literal65_tree);
 
 
             	    }
             	    break;
             	case 6 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:44: ( ':' )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:44: ( ':' )
             	    {
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:44: ( ':' )
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:45: ':'
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:44: ( ':' )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:45: ':'
             	    {
-            	    char_literal63=(Token)match(input,COLON,FOLLOW_COLON_in_stringLiteral867); 
-            	    char_literal63_tree = (Object)adaptor.create(char_literal63);
-            	    adaptor.addChild(root_0, char_literal63_tree);
+            	    char_literal66=(Token)match(input,COLON,FOLLOW_COLON_in_stringLiteral903); 
+            	    char_literal66_tree = (Object)adaptor.create(char_literal66);
+            	    adaptor.addChild(root_0, char_literal66_tree);
 
 
             	    }
@@ -1716,11 +1814,11 @@ public class AstcParser extends Parser {
             	    }
             	    break;
             	case 7 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:287:52: JAVANAME
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:292:52: JAVANAME
             	    {
-            	    JAVANAME64=(Token)match(input,JAVANAME,FOLLOW_JAVANAME_in_stringLiteral872); 
-            	    JAVANAME64_tree = (Object)adaptor.create(JAVANAME64);
-            	    adaptor.addChild(root_0, JAVANAME64_tree);
+            	    JAVANAME67=(Token)match(input,JAVANAME,FOLLOW_JAVANAME_in_stringLiteral908); 
+            	    JAVANAME67_tree = (Object)adaptor.create(JAVANAME67);
+            	    adaptor.addChild(root_0, JAVANAME67_tree);
 
 
             	    }
@@ -1760,66 +1858,69 @@ public class AstcParser extends Parser {
     public static final BitSet FOLLOW_toks_in_root397 = new BitSet(new long[]{0x0000000000000040L});
     public static final BitSet FOLLOW_ast_in_root399 = new BitSet(new long[]{0x0000000000000100L});
     public static final BitSet FOLLOW_aspectdcl_in_root401 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_AST_in_ast419 = new BitSet(new long[]{0x0000000000101002L});
-    public static final BitSet FOLLOW_production_in_ast424 = new BitSet(new long[]{0x0000000000101002L});
+    public static final BitSet FOLLOW_AST_in_ast419 = new BitSet(new long[]{0x0000000000201002L});
+    public static final BitSet FOLLOW_production_in_ast424 = new BitSet(new long[]{0x0000000000201002L});
     public static final BitSet FOLLOW_TOKENS_in_toks442 = new BitSet(new long[]{0x0000000000001002L});
     public static final BitSet FOLLOW_token_in_toks447 = new BitSet(new long[]{0x0000000000001002L});
     public static final BitSet FOLLOW_ASPECT_DCL_in_aspectdcl465 = new BitSet(new long[]{0x0000000000080002L});
     public static final BitSet FOLLOW_aspectdcla_in_aspectdcl469 = new BitSet(new long[]{0x0000000000040000L});
     public static final BitSet FOLLOW_18_in_aspectdcl471 = new BitSet(new long[]{0x0000000000080002L});
     public static final BitSet FOLLOW_19_in_aspectdcla489 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_aspectName_in_aspectdcla492 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ASSIGN_in_aspectdcla494 = new BitSet(new long[]{0x0000000001003002L});
-    public static final BitSet FOLLOW_definitions_in_aspectdcla499 = new BitSet(new long[]{0x0000000001003002L});
-    public static final BitSet FOLLOW_ID_in_aspectName516 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_FIELD_DCL_in_aspectName520 = new BitSet(new long[]{0x0000000000101000L});
-    public static final BitSet FOLLOW_ID_in_aspectName523 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_20_in_aspectName527 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_ID_in_aspectName529 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_name_in_production546 = new BitSet(new long[]{0x0000000000400010L});
-    public static final BitSet FOLLOW_productionfields_in_production548 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ASSIGN_in_production551 = new BitSet(new long[]{0x0000000001743000L});
-    public static final BitSet FOLLOW_alternative_in_production553 = new BitSet(new long[]{0x0000000000240000L});
-    public static final BitSet FOLLOW_21_in_production556 = new BitSet(new long[]{0x0000000001743000L});
-    public static final BitSet FOLLOW_alternative_in_production558 = new BitSet(new long[]{0x0000000000240000L});
-    public static final BitSet FOLLOW_18_in_production562 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_name596 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_20_in_name604 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_ID_in_name606 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_22_in_productionfields631 = new BitSet(new long[]{0x0000000000000200L});
-    public static final BitSet FOLLOW_FIELD_DCL_in_productionfields634 = new BitSet(new long[]{0x0000000000801000L});
-    public static final BitSet FOLLOW_productionfield_in_productionfields637 = new BitSet(new long[]{0x0000000000801000L});
-    public static final BitSet FOLLOW_23_in_productionfields640 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_productionfield656 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ASSIGN_in_productionfield659 = new BitSet(new long[]{0x0000000000000400L});
-    public static final BitSet FOLLOW_QUOTE_in_productionfield662 = new BitSet(new long[]{0x00000000E0013420L});
-    public static final BitSet FOLLOW_stringLiteral_in_productionfield665 = new BitSet(new long[]{0x0000000000000400L});
-    public static final BitSet FOLLOW_QUOTE_in_productionfield667 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_22_in_alternative683 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_ID_in_alternative685 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_alternative687 = new BitSet(new long[]{0x0000000001003002L});
-    public static final BitSet FOLLOW_definitions_in_alternative692 = new BitSet(new long[]{0x0000000001003002L});
-    public static final BitSet FOLLOW_20_in_alternative711 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_ID_in_alternative713 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_24_in_definitions738 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_ID_in_definitions741 = new BitSet(new long[]{0x0000000002000000L});
-    public static final BitSet FOLLOW_25_in_definitions743 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_COLON_in_definitions746 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_set_in_definitions751 = new BitSet(new long[]{0x000000003C000002L});
-    public static final BitSet FOLLOW_repeat_in_definitions760 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dd_in_aspectdcla492 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_aspectName_in_dd508 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ASSIGN_in_dd510 = new BitSet(new long[]{0x0000000005003002L});
+    public static final BitSet FOLLOW_definitions_in_dd513 = new BitSet(new long[]{0x0000000005003002L});
+    public static final BitSet FOLLOW_ID_in_aspectName543 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_FIELD_DCL_in_aspectName547 = new BitSet(new long[]{0x0000000000201000L});
+    public static final BitSet FOLLOW_name_in_aspectName549 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_name_in_production565 = new BitSet(new long[]{0x0000000000400010L});
+    public static final BitSet FOLLOW_productionfields_in_production567 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ASSIGN_in_production570 = new BitSet(new long[]{0x0000000005743000L});
+    public static final BitSet FOLLOW_alternative_in_production572 = new BitSet(new long[]{0x0000000000140000L});
+    public static final BitSet FOLLOW_20_in_production575 = new BitSet(new long[]{0x0000000005743000L});
+    public static final BitSet FOLLOW_alternative_in_production577 = new BitSet(new long[]{0x0000000000140000L});
+    public static final BitSet FOLLOW_18_in_production581 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_name615 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_21_in_name623 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_ID_in_name625 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_22_in_productionfields650 = new BitSet(new long[]{0x0000000000000200L});
+    public static final BitSet FOLLOW_FIELD_DCL_in_productionfields653 = new BitSet(new long[]{0x0000000000801000L});
+    public static final BitSet FOLLOW_productionfield_in_productionfields656 = new BitSet(new long[]{0x0000000000801000L});
+    public static final BitSet FOLLOW_23_in_productionfields659 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_productionfield675 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ASSIGN_in_productionfield678 = new BitSet(new long[]{0x0000000000000400L});
+    public static final BitSet FOLLOW_QUOTE_in_productionfield681 = new BitSet(new long[]{0x0000000380013420L});
+    public static final BitSet FOLLOW_stringLiteral_in_productionfield684 = new BitSet(new long[]{0x0000000000000400L});
+    public static final BitSet FOLLOW_QUOTE_in_productionfield686 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_22_in_alternative702 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_ID_in_alternative704 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_alternative706 = new BitSet(new long[]{0x0000000005003002L});
+    public static final BitSet FOLLOW_definitions_in_alternative711 = new BitSet(new long[]{0x0000000005003002L});
+    public static final BitSet FOLLOW_21_in_alternative730 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_ID_in_alternative732 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_24_in_definitions758 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_ID_in_definitions760 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_definitions762 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_COLON_in_definitions765 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_26_in_definitions772 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_ID_in_definitions774 = new BitSet(new long[]{0x0000000008000000L});
+    public static final BitSet FOLLOW_27_in_definitions776 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_COLON_in_definitions779 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_set_in_definitions784 = new BitSet(new long[]{0x00000000F0000002L});
+    public static final BitSet FOLLOW_repeat_in_definitions793 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_set_in_repeat0 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_token815 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ASSIGN_in_token818 = new BitSet(new long[]{0x0000000000000400L});
-    public static final BitSet FOLLOW_QUOTE_in_token821 = new BitSet(new long[]{0x00000000E0013420L});
-    public static final BitSet FOLLOW_stringLiteral_in_token824 = new BitSet(new long[]{0x0000000000000400L});
-    public static final BitSet FOLLOW_QUOTE_in_token826 = new BitSet(new long[]{0x0000000000040000L});
-    public static final BitSet FOLLOW_18_in_token829 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_stringLiteral852 = new BitSet(new long[]{0x00000000E0013022L});
-    public static final BitSet FOLLOW_NormalChar_in_stringLiteral856 = new BitSet(new long[]{0x00000000E0013022L});
-    public static final BitSet FOLLOW_29_in_stringLiteral860 = new BitSet(new long[]{0x00000000E0013022L});
-    public static final BitSet FOLLOW_30_in_stringLiteral862 = new BitSet(new long[]{0x00000000E0013022L});
-    public static final BitSet FOLLOW_31_in_stringLiteral864 = new BitSet(new long[]{0x00000000E0013022L});
-    public static final BitSet FOLLOW_COLON_in_stringLiteral867 = new BitSet(new long[]{0x00000000E0013022L});
-    public static final BitSet FOLLOW_JAVANAME_in_stringLiteral872 = new BitSet(new long[]{0x00000000E0013022L});
+    public static final BitSet FOLLOW_ID_in_token851 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ASSIGN_in_token854 = new BitSet(new long[]{0x0000000000000400L});
+    public static final BitSet FOLLOW_QUOTE_in_token857 = new BitSet(new long[]{0x0000000380013420L});
+    public static final BitSet FOLLOW_stringLiteral_in_token860 = new BitSet(new long[]{0x0000000000000400L});
+    public static final BitSet FOLLOW_QUOTE_in_token862 = new BitSet(new long[]{0x0000000000040000L});
+    public static final BitSet FOLLOW_18_in_token865 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_stringLiteral888 = new BitSet(new long[]{0x0000000380013022L});
+    public static final BitSet FOLLOW_NormalChar_in_stringLiteral892 = new BitSet(new long[]{0x0000000380013022L});
+    public static final BitSet FOLLOW_31_in_stringLiteral896 = new BitSet(new long[]{0x0000000380013022L});
+    public static final BitSet FOLLOW_32_in_stringLiteral898 = new BitSet(new long[]{0x0000000380013022L});
+    public static final BitSet FOLLOW_33_in_stringLiteral900 = new BitSet(new long[]{0x0000000380013022L});
+    public static final BitSet FOLLOW_COLON_in_stringLiteral903 = new BitSet(new long[]{0x0000000380013022L});
+    public static final BitSet FOLLOW_JAVANAME_in_stringLiteral908 = new BitSet(new long[]{0x0000000380013022L});
 
 }

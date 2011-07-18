@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.ToStringAddOn;
+import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.methods.Method;
 
 public class BaseClassDefinition extends InterfaceDefinition implements
@@ -19,10 +20,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	public BaseClassDefinition(String name)
 	{
 		super(name);
-		namePrefix ="";
+		namePrefix = "";
 	}
-
-
 
 	public boolean hasSuper()
 	{
@@ -46,29 +45,24 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		if (getSuperDef() != null)
 		{
-			String n = getSuperDef().getPackageName() + "."
-					+ getSuperDef().getSignatureName();
-			
-				imports.add(n);
+			imports.add(getSuperDef().getImportName());
 		}
 
 		for (IInterfaceDefinition i : this.imports)
 		{
-			String n = i.getPackageName() + "." + i.getSignatureName();
-				imports.add(n);
+			imports.add(i.getImportName());
 		}
-		
+
 		for (IInterfaceDefinition i : this.interfaces)
 		{
-			String n = i.getPackageName() + "." + i.getSignatureName();
-				imports.add(n);
+			imports.add(i.getImportName());
 		}
 		// imports.addAll(this.imports);
 		for (Method m : methods)
 		{
 			for (String string : m.getRequiredImports())
 			{
-					imports.add(string);
+				imports.add(string);
 			}
 		}
 
@@ -105,7 +99,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			sb.append("import " + importName + ";\n");
 		}
 		sb.append("\n\n");
-		
+
 		if (annotation != null && annotation.length() > 0)
 		{
 			sb.append(annotation + "\n");
@@ -133,15 +127,21 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (Field f : fields)
 		{
-			sb.append("\n\t"+f.accessspecifier.syntax+" " + f.getType() + " " + f.getName() );
-			if(f.isList)
+			if (f.structureType == StructureType.Graph)
 			{
-				if(f.isTypeExternalNotNode())
+				sb.append("\n\t/**\n\t* Graph field, parent will not be removed when added and parent \n\t*  of this field may not be this node. Also excluded for visitor.\n\t*/");
+			}
+			sb.append("\n\t" + f.accessspecifier.syntax + " " + f.getType()
+					+ " " + f.getName());
+			if (f.isList)
+			{
+				if (f.isTypeExternalNotNode())
 				{
-					sb.append(" = new Vector<"+f.type.getSignatureName()+">()");
-				}else
+					sb.append(" = new Vector<" + f.type.getSignatureName()
+							+ ">()");
+				} else
 				{
-				sb.append(" = new "+ f.getType()+"(this)");
+					sb.append(" = new " + f.getType() + "(this)");
 				}
 			}
 			sb.append(";");
@@ -155,21 +155,21 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			if (m.isConstructor)
 			{
 				sb.append(m.getJavaSourceCode() + "\n");
-			}else
+			} else
 			{
 				noneCtorMethods.append(m.getJavaSourceCode() + "\n");
 			}
 		}
-		
+
 		sb.append(noneCtorMethods);
 
-//		for (Method m : methods)
-//		{
-//			if (!m.isConstructor)
-//			{
-//				sb.append(m.getJavaSourceCode() + "\n");
-//			}
-//		}
+		// for (Method m : methods)
+		// {
+		// if (!m.isConstructor)
+		// {
+		// sb.append(m.getJavaSourceCode() + "\n");
+		// }
+		// }
 
 		sb.append("\n}\n");
 
@@ -284,7 +284,6 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return String.valueOf(name.charAt(0)).toUpperCase() + name.substring(1);
 	}
 
-	
 	public String getSuperSignatureName()
 	{
 		String n = getSuperDef().getName();
@@ -305,28 +304,20 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return n;
 	}
 
-	
 	public IClassDefinition getSuperDef()
 	{
 		return this.superDef;
 	}
-
-
-
 
 	public Set<IInterfaceDefinition> getInterfaces()
 	{
 		return this.interfaces;
 	}
 
-
-
 	public void addToStringAddOn(ToStringAddOn addon)
 	{
 		toStringAddOn.add(addon);
 	}
-
-
 
 	public List<ToStringAddOn> getToStringAddOns()
 	{

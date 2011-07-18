@@ -25,6 +25,7 @@ public class RemoveChildMethod extends Method
 
 		javaDoc = "\t/**\n";
 		javaDoc += "\t * Removes the {@link Node} {@code child} as a child of this {@link "+classDefinition.getName()+"} node.\n";
+		javaDoc += "\t * Do not call this method with any graph fields of this node. This will cause any childs\n\t * with the same reference to be removed unentiatelly or {@link RuntimeException}will be thrown.\n";
 		javaDoc += "\t * @param child the child node to be removed from this {@link "+classDefinition.getName()+"} node\n";
 		javaDoc += "\t * @throws RuntimeException if {@code child} is not a child of this {@link "+classDefinition.getName()+"} node\n";
 		javaDoc += "\t */";
