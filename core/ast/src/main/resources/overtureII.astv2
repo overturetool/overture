@@ -88,13 +88,13 @@ exp {-> package='org.overture.ast.expressions'}
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
     |   {isOfClass} [className]:LexNameToken [classType]:type.class [exp]:exp
     |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* [functionType]:type.function     
-    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp
+    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp [def]:definition.multiBindList
     |   {letDef} [localDefs]:definition* [expression]:exp
     |   {def} [localDefs]:definition* [expression]:exp
     |   #Map
     |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
-    |   {mkType} [typeName]:LexNameToken [args]:exp*
+    |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:invariant.record
     |   {mu} [recordType]:exp [modifiers]:modifier.record*
     |   {new} [className]:LexIdentifierToken [args]:exp*
     |   {nil} 
@@ -192,7 +192,7 @@ exp {-> package='org.overture.ast.expressions'}
     
 #Map {-> package='org.overture.ast.expressions'}
     =   {mapComp} [first]:maplet [bindings]:multipleBind* [predicate]:exp
-    |   {mapEnum} [members]:maplet* 
+    |   {mapEnum} [members]:maplet* [domTypes]:type* [rngTypes]:type*
     ;
     
 #Seq {-> package='org.overture.ast.expressions'}
@@ -407,10 +407,10 @@ definition {-> package='org.overture.ast.definitions'}
     |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
     |   {perSync} [opname]:LexNameToken [guard]:exp
     |   {renamed} [def]:definition
-    |   {state} [fields]:field* 
+    |   {state} [fields]:field.field* 
                 [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction
                 [initPattern]:pattern [initExpression]:exp [initdef]:definition.explicitFunction
-                [stateDefs]:definition* [recordDefinition]:definition.local
+                [stateDefs]:definition* [recordDefinition]:definition.local [recordType]:type
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
     |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition [infinite]:java_Boolean//is access missing here
@@ -612,6 +612,8 @@ Aspect Declaration
         [gettingInheritable]:java_Boolean
         [superInheritedDefinitions]:definition*
         [gettingInvDefs]:java_Boolean
+        [isAbstract]:java_Boolean
+        [isUndefined]:java_Boolean
     ;
     
 %stm
@@ -646,4 +648,8 @@ Aspect Declaration
     
 %traceCoreDefinition
     =   [location]:location
+    ;
+    
+%pair
+    = [resolved]:java_Boolean
     ;
