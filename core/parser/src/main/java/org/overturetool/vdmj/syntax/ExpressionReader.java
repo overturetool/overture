@@ -1295,7 +1295,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 			checkFor(VDMToken.SET_CLOSE, 2135, "Expecting '}' in empty map");
-			return new AMapEnumMapExp(null,token.location, null);
+			return new AMapEnumMapExp(null,token.location, null, null, null);
 //			return new MapEnumExpression(start);		// empty map
 		}
 
@@ -1423,7 +1423,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2141, "Expecting '}' after map enumeration");
-			result = new AMapEnumMapExp(null, start, members);
+			result = new AMapEnumMapExp(null, start, members, null, null);
 //			result = new MapEnumExpression(start, members);
 		}
 
@@ -1647,7 +1647,7 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2152, "Expecting 'in' after bind in let expression");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new ALetBeStExp(null, start, bind, stexp, readConnectiveExpression());
+		return new ALetBeStExp(null, start, bind, stexp, readConnectiveExpression(), null);
 //		return new LetBeStExpression(start, bind, stexp, readConnectiveExpression());
 	}
 
@@ -1694,7 +1694,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<ATypeBind> bindList = getBindReader().readTypeBindList();
 		checkFor(VDMToken.AMPERSAND, 2157, "Expecting '&' after bind list in lambda");
-		return new ALambdaExp(null, start, bindList, readExpression()); 
+		return new ALambdaExp(null, start, bindList, readExpression(),null, null, null); 
 //		return new LambdaExpression(start, bindList, readExpression());
 	}
 
@@ -1791,7 +1791,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfClassExp(null, start, classname, args.get(1));
+		return new AIsOfClassExp(null, start, classname, null, args.get(1));
 //		return new IsOfClassExpression(start, classname, args.get(1));
     }
 

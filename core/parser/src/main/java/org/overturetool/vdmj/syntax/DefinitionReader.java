@@ -770,13 +770,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			List<PPattern> pl = pr.readPatternList();
 			checkFor(VDMToken.COLON, 2093, "Missing colon after pattern/type parameter");
-			parameterPatterns.add(new APatternListTypePair(pl, tr.readType()));
+			parameterPatterns.add(new APatternListTypePair(false,pl, tr.readType()));
 
 			while (ignore(VDMToken.COMMA))
 			{
 				pl = pr.readPatternList();
 				checkFor(VDMToken.COLON, 2093, "Missing colon after pattern/type parameter");
-				parameterPatterns.add(new APatternListTypePair(pl, tr.readType()));
+				parameterPatterns.add(new APatternListTypePair(false, pl, tr.readType()));
 			}
 		}
 
@@ -805,13 +805,13 @@ public class DefinitionReader extends SyntaxReader
 
    		if (resultNames.size() > 1)
    		{
-   			resultPattern = new APatternTypePair(
+   			resultPattern = new APatternTypePair(false,
    	   			new ATuplePattern(firstResult.location,null,false,resultNames),
  	   			new AProductType(firstResult.location,false,null, resultTypes));
    		}
    		else
    		{
-   			resultPattern = new APatternTypePair(
+   			resultPattern = new APatternTypePair(false,
    	   			resultNames.get(0), resultTypes.get(0));
    		}
 
@@ -960,7 +960,7 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 		return new AStateDefinition(name.location,idToName(name),null,null,null,null, 
 				null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,
-				null,null);
+				null,null, null);
 	}
 
 	private PDefinition readOperationDefinition()
@@ -1064,13 +1064,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			List<PPattern> pl = pr.readPatternList();
 			checkFor(VDMToken.COLON, 2103, "Missing colon after pattern/type parameter");
-			parameterPatterns.add(new APatternListTypePair(pl, tr.readType()));
+			parameterPatterns.add(new APatternListTypePair(false,pl, tr.readType()));
 
 			while (ignore(VDMToken.COMMA))
 			{
 				pl = pr.readPatternList();
 				checkFor(VDMToken.COLON, 2103, "Missing colon after pattern/type parameter");
-				parameterPatterns.add(new APatternListTypePair(pl, tr.readType()));
+				parameterPatterns.add(new APatternListTypePair(false,pl, tr.readType()));
 			}
 		}
 
@@ -1100,13 +1100,13 @@ public class DefinitionReader extends SyntaxReader
 
 			if (resultNames.size() > 1)
 			{
-				resultPattern = new APatternTypePair(
+				resultPattern = new APatternTypePair(false,
 					new ATuplePattern(firstResult.location,null,false,resultNames),
 					new AProductType(firstResult.location,false,null, resultTypes));
 			}
 			else
 			{
-				resultPattern = new APatternTypePair(
+				resultPattern = new APatternTypePair(false,
 					resultNames.get(0), resultTypes.get(0));
 			}
 		}
