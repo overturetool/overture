@@ -130,7 +130,7 @@ public class TypeReader extends SyntaxReader
 			nextToken();
 			LexIdentifierToken id = readIdToken("Compose not followed by record identifier");
 			checkFor(VDMToken.OF, 2249, "Missing 'of' in compose type");
-			type = new ARecordInvariantType(id.location, false,null,idToName(id), readFieldList(),null);
+			type = new ARecordInvariantType(id.location, false,idToName(id), readFieldList(),null);
 			checkFor(VDMToken.END, 2250, "Missing 'end' in compose type");
 		}
 		else

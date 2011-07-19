@@ -585,7 +585,7 @@ Aspect Declaration
 %exp->#Binary = [left]:exp [op]:LexToken [right]:exp 
     ; 
 
-%type = [location]:location [resolved]:java_Boolean [definitions]:definition*
+%type = [location]:location [resolved]:java_Boolean (definitions):definition*
      ; 
 
 %pattern = [location]:location [definitions]:definition* [resolved]:java_Boolean

@@ -372,7 +372,7 @@ public class DefinitionReader extends SyntaxReader
 //				NamedType nt = new NamedType(idToName(id), tr.readType());
 				PType type = tr.readType();
 				ANamedInvariantType nt = 
-					new ANamedInvariantType(id.location,false,null,idToName(id), type,null);
+					new ANamedInvariantType(id.location,false,idToName(id), type,null);
 
 				if (type instanceof AUnresolvedType &&
 					((AUnresolvedType)type).getTypename().equals(idToName(id)))
@@ -385,7 +385,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case COLONCOLON:
 				nextToken();
-				invtype = new ARecordInvariantType(id.location, false,null, idToName(id), tr.readFieldList(), null);
+				invtype = new ARecordInvariantType(id.location, false, idToName(id), tr.readFieldList(), null);
 				break;
 
 			default:
