@@ -1,6 +1,7 @@
 package org.overture.ast.definitions.assistants;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -22,6 +23,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.runtime.Environment;
@@ -551,10 +553,26 @@ public class SClassDefinitionAssistant {
 		
 		TypeCheckInfo newInfo = new TypeCheckInfo();
 		newInfo.env = cenv;
-		newInfo.qualifiers = (NodeList<PType>) question.qualifiers.clone();
+		newInfo.qualifiers = (LinkedList<PType>) question.qualifiers.clone();
 		newInfo.scope = question.scope;
 		
 		PDefinitionListAssistant.typeResolve(d.getDefinitions(),rootVisitor,newInfo);
 		
 	}
+
+	public static PDefinition findConstructor(SClassDefinition classdef,
+			List<PType> argtypes) {
+		
+		LexNameToken constructor = getCtorName(classdef, argtypes);
+		return findName(classdef,constructor, NameScope.NAMES);
+	}
+
+	public static LexNameToken getCtorName(SClassDefinition classdef, List<PType> argtypes) {
+		LexNameToken name = classdef.getName();
+		LexNameToken cname = new LexNameToken(name.name, name.name, classdef.getLocation());
+   		cname.setTypeQualifier(argtypes);
+ 		return cname;
+	}
+	
+	
 }

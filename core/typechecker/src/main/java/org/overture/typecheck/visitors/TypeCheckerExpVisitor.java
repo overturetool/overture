@@ -9,10 +9,13 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
@@ -26,7 +29,7 @@ import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.ACharConstExp;
+import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
@@ -46,7 +49,7 @@ import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
-import org.overture.ast.expressions.AIntConstExp;
+import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AIsOfBaseClassExp;
@@ -62,36 +65,60 @@ import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
 import org.overture.ast.expressions.APostOpExp;
+import org.overture.ast.expressions.APreExp;
+import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
+import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
 import org.overture.ast.expressions.ARangeResToBinaryExp;
+import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASameClassExp;
+import org.overture.ast.expressions.ASelfExp;
+import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
+import org.overture.ast.expressions.AStateInitExp;
+import org.overture.ast.expressions.AStringLiteralExp;
+import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.ASubseqExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubstractNumericBinaryExp;
+import org.overture.ast.expressions.AThreadIdExp;
+import org.overture.ast.expressions.ATimeExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
+import org.overture.ast.expressions.ATupleExp;
+import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.expressions.assistants.AApplyExpAssistant;
 import org.overture.ast.expressions.assistants.ACaseAlternativeAssistant;
 import org.overture.ast.expressions.assistants.SBinaryExpAssistant;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.ASetBindAssistant;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
@@ -108,12 +135,14 @@ import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1Type;
 import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -134,7 +163,9 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.typechecker.NameScope;
+
 
 public class TypeCheckerExpVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
@@ -1041,7 +1072,7 @@ public class TypeCheckerExpVisitor extends
 	}
 	
 	@Override
-	public PType caseACharConstExp(ACharConstExp node, TypeCheckInfo question) {
+	public PType caseACharLiteralExp(ACharLiteralExp node, TypeCheckInfo question) {
 		
 		node.setType(new ACharBasicType(node.getLocation(), false,null));
 		return node.getType();
@@ -1461,7 +1492,7 @@ public class TypeCheckerExpVisitor extends
 	
 	
 	@Override
-	public PType caseAIntConstExp(AIntConstExp node, TypeCheckInfo question) {
+	public PType caseAIntLiteralExp(AIntLiteralExp node, TypeCheckInfo question) {
 		if (node.getValue().value < 0)
 		{
 			node.setType(new AIntNumericBasicType(node.getLocation(),true,null));
@@ -1930,10 +1961,82 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3132, "mu operation on non-record type",node.getLocation(),node);
 		}
-
+		node.setType(rtype);
 		return rtype;
 	}
 	
+	
+	@Override
+	public PType caseANewExp(ANewExp node, TypeCheckInfo question) {
+		
+		PDefinition cdef = question.env.findType(node.getClassName().getClassName(), null);
+
+		if (cdef == null || !(cdef instanceof SClassDefinition))
+		{
+			TypeCheckerErrors.report(3133, "Class name " + node.getClassName() + " not in scope",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(),false));
+			return node.getType();
+		}
+
+		node.setClassdef((SClassDefinition)cdef);
+
+		SClassDefinition classdef = node.getClassdef();
+		 
+		if (classdef instanceof ASystemClassDefinition)
+		{
+			TypeCheckerErrors.report(3279, "Cannot instantiate system class " + classdef.getName(),node.getLocation(),node);
+		}
+
+		List<PType> argtypes = new LinkedList<PType>();
+
+		for (PExp a: node.getArgs())
+		{
+			argtypes.add(a.apply(rootVisitor, question));
+		}
+
+		PDefinition opdef = SClassDefinitionAssistant.findConstructor(classdef,argtypes);
+
+		if (opdef == null)
+		{
+			if (!node.getArgs().isEmpty())	// Not having a default ctor is OK
+    		{
+    			TypeCheckerErrors.report(3134, "Class has no constructor with these parameter types",node.getLocation(),node);
+    			TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
+    		}
+			else if (classdef instanceof ACpuClassDefinition ||
+					 classdef instanceof ABusClassDefinition)
+			{
+				TypeCheckerErrors.report(3297, "Cannot use default constructor for this class",node.getLocation(),node);
+			}
+		}
+		else
+		{
+			if (!PDefinitionAssistant.isCallableOperation(opdef))
+    		{
+    			TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types",node.getLocation(),node);
+    			TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
+    		}
+			else if (!SClassDefinitionAssistant.isAccessible(question.env, opdef, false)) // (opdef.accessSpecifier.access == Token.PRIVATE)
+			{
+    			TypeCheckerErrors.report(3292, "Constructor is not accessible",node.getLocation(),node);
+    			TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
+			}
+			else
+			{
+				node.setCtorDefinition(opdef);
+			}
+		}
+
+		node.setType(classdef.getType());
+		return classdef.getType();
+	}
+	
+	
+	@Override
+	public PType caseANilExp(ANilExp node, TypeCheckInfo question) {
+		node.setType(new AOperationType(node.getLocation(), false, null, new AUnknownType(node.getLocation(), false)));
+		return  node.getType();
+	}
 	
 	@Override
 	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, TypeCheckInfo question)
@@ -1941,16 +2044,497 @@ public class TypeCheckerExpVisitor extends
 		node.setType(new AUnknownType(node.getLocation(),false,null));
 		return node.getType();	// Because we terminate anyway
 	}
-		
+			
 	@Override
 	public PType caseAPostOpExp(APostOpExp node, TypeCheckInfo question)
 	{
 		node.setType(node.getPostexpression().apply(this,question));
 		return node.getType();		
 	}
+	
+	@Override
+	public PType caseAPreExp(APreExp node, TypeCheckInfo question) {
+		
+		question.qualifiers = null;
+		node.getFunction().apply(rootVisitor, question);
 
+		for (PExp a: node.getArgs())
+		{
+			question.qualifiers = null;
+			a.apply(rootVisitor, question);
+		}
+
+		node.setType(new ABooleanBasicType(node.getLocation(),false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAPreOpExp(APreOpExp node, TypeCheckInfo question) {
+		question.qualifiers = null;
+		node.setType(node.getExpression().apply(rootVisitor, question));
+		return node.getType();
+	}
+
+	@Override
+	public PType caseAQuoteLiteralExp(AQuoteLiteralExp node, TypeCheckInfo question) {
+		node.setType(new AQuoteType(null, false, node.getValue()));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseARealLiteralExp(ARealLiteralExp node,
+			TypeCheckInfo question) {
+		
+		LexRealToken value = node.getValue();
+		
+		if (Math.round(value.value) == value.value)
+		{
+    		if (value.value < 0)
+    		{
+    			return new AIntNumericBasicType(node.getLocation(),false);
+    		}
+    		else if (value.value == 0)
+    		{
+    			return new ANatNumericBasicType(node.getLocation(),false);
+    		}
+    		else
+    		{
+    			return new ANatOneNumericBasicType(node.getLocation(),false);
+    		}
+		}
+		else
+		{
+			return new ARealNumericBasicType(node.getLocation(),false);
+		}
+	}
+	
+	@Override
+	public PType caseASameBaseClassExp(ASameBaseClassExp node,
+			TypeCheckInfo question) {
+		
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+		
+		question.qualifiers = null;
+		PType lt = left.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isClass(lt))
+		{
+			TypeCheckerErrors.report(3266, "Argument is not an object",left.getLocation(),left);
+		}
+
+		question.qualifiers = null;
+		PType rt = right.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isClass(rt))
+		{
+			TypeCheckerErrors.report(3266, "Argument is not an object",node.getLocation(),node);
+		}
+
+		return new ABooleanBasicType(node.getLocation(),false);
+	}
+	
+	@Override
+	public PType caseASameClassExp(ASameClassExp node, TypeCheckInfo question) {
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+		
+		question.qualifiers = null;
+		PType lt = left.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isClass(lt))
+		{
+			TypeCheckerErrors.report(3266, "Argument is not an object",left.getLocation(),left);
+		}
+
+		question.qualifiers = null;
+		PType rt = right.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isClass(rt))
+		{
+			TypeCheckerErrors.report(3266, "Argument is not an object",node.getLocation(),node);
+		}
+
+		return new ABooleanBasicType(node.getLocation(),false);
+	}
+	
+	@Override
+	public PType caseASelfExp(ASelfExp node, TypeCheckInfo question) {
+		PDefinition cdef = question.env.findName(node.getName(), question.scope);
+
+		if (cdef == null)
+		{
+			TypeCheckerErrors.report(3154, node.getName() + " not in scope",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(),false));
+			return node.getType();
+		}
+		
+		node.setType(cdef.getType());
+		return cdef.getType();
+	}
+	
+	@Override
+	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question) {
+		
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, ASetBindAssistant.getMultipleBindList(node.getSetBind()), null);
+		def.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isNumeric(def.getType()))
+		{
+			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable",node.getLocation(),node);
+		}
+
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+		question.env = local;
+		PType etype = node.getFirst().apply(rootVisitor, question);
+		
+		PExp predicate = node.getPredicate();
+		
+		if (predicate != null)
+		{
+			question.qualifiers = null;
+			if (!PTypeAssistant.isType(predicate.apply(rootVisitor, question),ABooleanBasicType.class))
+			{
+				TypeCheckerErrors.report(3156, "Predicate is not boolean",predicate.getLocation(),predicate);
+			}
+		}
+
+		local.unusedCheck();
+		return new ASeqType(node.getLocation(), null, null, etype, null);
+	}
+	
+	@Override
+	public PType caseASeqEnumSeqExp(ASeqEnumSeqExp node, TypeCheckInfo question) {
+	
+		Set<PType> ts = new HashSet<PType>();
+		node.setTypes(new LinkedList<PType>());
+		List<PType> types = node.getTypes();
+		
+		
+		for (PExp ex: node.getMembers())
+		{
+			question.qualifiers = null;
+			PType mt = ex.apply(rootVisitor, question);
+  			ts.add(mt);
+  			types.add(mt);
+		}
+
+		node.setType(ts.isEmpty() ? new ASeqType(node.getLocation(), null, null, null, null) :
+			new ASeq1Type(node.getLocation(), null, null, PTypeAssistant.getType(ts, node.getLocation()), null ));
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseASetCompSetExp(ASetCompSetExp node, TypeCheckInfo question) {
+		PDefinition def = new AMultiBindListDefinition(node.getFirst().getLocation(), null, null, null, null, null, null, node.getBindings(), null);
+		def.apply(rootVisitor, question);
+		
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+		question.env = local;
+		PType etype = node.getFirst().apply(rootVisitor, question);
+		PExp predicate = node.getPredicate();
+		
+		
+		if (predicate != null)
+		{
+			if (!PTypeAssistant.isType(predicate.apply(rootVisitor, question),ABooleanBasicType.class))
+			{
+				TypeCheckerErrors.report(3159, "Predicate is not boolean",predicate.getLocation(),predicate);
+			}
+		}
+
+		local.unusedCheck();
+		ASetType setType = new ASetType(node.getLocation(), false, etype, null, false);
+		node.setType(setType);
+		node.setSetType(setType);
+		return setType;
+	}
+	
+	@Override
+	public PType caseASetEnumSetExp(ASetEnumSetExp node, TypeCheckInfo question) {
+		Set<PType> ts = new HashSet<PType>();
+		node.setTypes(new LinkedList<PType>());
+		List<PType> types = node.getTypes();
+
+		for (PExp ex: node.getMembers())
+		{
+			question.qualifiers = null;
+			PType mt = ex.apply(rootVisitor, question);
+			ts.add(mt);
+			types.add(mt);
+		}
+		
+		node.setType(ts.isEmpty() ? new ASetType(node.getLocation(), null, null, null, null) :
+			new ASetType(node.getLocation(), false, PTypeAssistant.getType(ts, node.getLocation()), null, null));
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseASetRangeSetExp(ASetRangeSetExp node,
+			TypeCheckInfo question) {
+
+		PExp first = node.getFirst();
+		PExp last = node.getLast();
+		
+		question.qualifiers = null;
+		node.setFtype(first.apply(rootVisitor, question));
+		question.qualifiers = null;
+		node.setLtype(last.apply(rootVisitor,question));
+
+		PType ftype = node.getFtype();
+		PType ltype = node.getLtype();
+		
+		if (!PTypeAssistant.isNumeric(ftype))
+		{
+			TypeCheckerErrors.report(3166, "Set range type must be an number",ftype.getLocation(),ftype);
+		}
+
+		if (!PTypeAssistant.isNumeric(ltype))
+		{
+			TypeCheckerErrors.report(3167, "Set range type must be an number",ltype.getLocation(),ltype);
+		}
+		
+		node.setType(new ASetType(first.getLocation(), null, new AIntNumericBasicType(node.getLocation(),false), null, null));
+		return node.getType();
+	}
 	
 	
+	@Override
+	public PType caseAStateInitExp(AStateInitExp node, TypeCheckInfo question) {
+		
+		PPattern pattern = node.getState().getInitPattern();
+		PExp exp = node.getState().getInitExpression();
+		boolean canBeExecuted = false;
+
+		if (pattern instanceof AIdentifierPattern &&
+			exp instanceof AEqualsBinaryExp)
+		{
+			AEqualsBinaryExp ee = (AEqualsBinaryExp)exp;
+			question.qualifiers = null;
+			ee.getLeft().apply(rootVisitor, question);
+
+			if (ee.getLeft() instanceof AVariableExp)
+			{
+				question.qualifiers = null;
+				PType rhs = ee.getRight().apply(rootVisitor, question);
+
+				if (PTypeAssistant.isRecord(rhs))
+				{
+					ARecordInvariantType rt = PTypeAssistant.getRecord(rhs);
+					canBeExecuted = rt.getName().equals(node.getState().getName().name);
+				}
+			}
+		}
+		else
+		{
+			question.qualifiers = null;
+			exp.apply(rootVisitor, question);
+		}
+
+		if (!canBeExecuted)
+		{
+			TypeCheckerErrors.warning(5010, "State init expression cannot be executed",node.getLocation(),node);
+			TypeCheckerErrors.detail("Expected", "p == p = mk_Record(...)");
+		}
+
+		node.getState().setCanBeExecuted(canBeExecuted);
+		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		return node.getType();
+	}
 	
+	@Override
+	public PType caseAStringLiteralExp(AStringLiteralExp node,
+			TypeCheckInfo question) {
+		
+		if (node.getValue().value.isEmpty())
+		{
+			node.setType(new ASeqType(node.getLocation(), false, new ACharBasicType(node.getLocation(), false, null), null));
+			return node.getType();
+		}
+		else
+		{
+			node.setType(new ASeq1Type(node.getLocation(),false, null, new ACharBasicType(node.getLocation(),false,null), null));
+			return node.getType() ;
+		}
+	}
 	
+	@Override
+	public PType caseASubclassResponsibilityExp(
+			ASubclassResponsibilityExp node, TypeCheckInfo question) {
+		node.setType(new AUnknownType(node.getLocation(),false));
+		return node.getType();	// Because we terminate anyway
+	}
+	
+	@Override
+	public PType caseASubseqExp(ASubseqExp node, TypeCheckInfo question) {
+		question.qualifiers = null;
+		PType stype = node.getSeq().apply(rootVisitor, question);
+		question.qualifiers = null;
+		node.setFtype(node.getFrom().apply(rootVisitor,question));
+		PType ftype = node.getFtype();
+		question.qualifiers = null;
+		node.setTtype(node.getTo().apply(rootVisitor,question));
+		PType ttype = node.getTtype();		
+
+		if (!PTypeAssistant.isSeq(stype))
+		{
+			TypeCheckerErrors.report(3174, "Subsequence is not of a sequence type",node.getLocation(),node);
+		}
+
+		if (!PTypeAssistant.isNumeric(ftype))
+		{
+			TypeCheckerErrors.report(3175, "Subsequence range start is not a number",node.getLocation(),node);
+		}
+
+		if (!PTypeAssistant.isNumeric(ttype))
+		{
+			TypeCheckerErrors.report(3176, "Subsequence range end is not a number",node.getLocation(),node);
+		}
+		node.setType(stype);
+		return stype;
+	}
+	
+	@Override
+	public PType caseAThreadIdExp(AThreadIdExp node, TypeCheckInfo question) {
+		node.setType(new ANatNumericBasicType(node.getLocation(),false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseATimeExp(ATimeExp node, TypeCheckInfo question) {
+		node.setType(new ANatOneNumericBasicType(node.getLocation(),false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseATupleExp(ATupleExp node, TypeCheckInfo question) {
+		
+		node.setTypes(new LinkedList<PType>());
+		List<PType> types = node.getTypes();
+		
+		for (PExp arg: node.getArgs())
+		{
+			question.qualifiers = null;
+			types.add(arg.apply(rootVisitor, question));
+		}
+
+		node.setType(new AProductType(node.getLocation(), false, null, types));
+		return node.getType();	// NB mk_() is a product
+	}
+	
+	@Override
+	public PType caseAUndefinedExp(AUndefinedExp node, TypeCheckInfo question) {
+		node.setType(new AUndefinedType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAVariableExp(AVariableExp node, TypeCheckInfo question) {		
+		
+		Environment env = question.env;
+		LexNameToken name = node.getName();
+				
+		if (env.isVDMPP())
+		{
+			
+			name.setTypeQualifier(question.qualifiers);
+    		node.setVardef(env.findName(name, question.scope));
+    		PDefinition vardef = node.getVardef();
+    		
+    		if (vardef != null)
+    		{
+    			if (vardef.getClassDefinition() != null)
+    			{
+        			if (!SClassDefinitionAssistant.isAccessible(env, vardef, true))
+        			{
+        				TypeCheckerErrors.report(3180, "Inaccessible member " + name + " of class " +
+        					vardef.getClassDefinition().getName().name,node.getLocation(),node);
+        				node.setType(new AUnknownType(node.getLocation(),false));
+        				return node.getType();
+        			}
+        			else if (!PAccessSpecifierAssistant.isStatic(vardef.getAccess()) && env.isStatic())
+            		{
+        				TypeCheckerErrors.report(3181, "Cannot access " + name + " from a static context",node.getLocation(),node);
+        				node.setType(new AUnknownType(node.getLocation(),false));
+        				return node.getType();
+            		}
+    			}
+    		}
+    		else if (question.qualifiers != null)
+    		{
+    			// It may be an apply of a map or sequence, which would not
+    			// have the type qualifier of its arguments in the name. Or
+    			// it might be an apply of a function via a function variable
+    			// which would not be qualified.
+
+    			name.setTypeQualifier(null);
+    			vardef = env.findName(name, question.scope);
+
+    			if (vardef == null)
+    			{
+    				name.setTypeQualifier(question.qualifiers);	// Just for error text!
+    			}
+    		}
+    		else
+    		{
+    			// We may be looking for a bare function/op "x", when in fact
+    			// there is one with a qualified name "x(args)". So we check
+    			// the possible matches - if there is precisely one, we pick it,
+    			// else we raise an ambiguity error.
+
+				for (PDefinition possible: env.findMatches(name))
+				{
+					if (PDefinitionAssistant.isFunctionOrOperation(possible))
+					{
+						if (vardef != null)
+						{
+							TypeCheckerErrors.report(3269, "Ambiguous function/operation name: " + name.name,node.getLocation(),node);
+							env.listAlternatives(name);
+							break;
+						}
+
+						vardef = possible;
+
+						// Set the qualifier so that it will find it at runtime.
+
+						PType pt = possible.getType();
+
+						if (pt instanceof AFunctionType)
+						{
+							AFunctionType ft = (AFunctionType)pt;
+							name.setTypeQualifier(ft.getParameters());
+						}
+						else
+						{
+							AOperationType ot = (AOperationType)pt;
+							name.setTypeQualifier(ot.getParameters());
+						}
+					}
+				}
+    		}
+    	}
+    	else
+    	{
+    		node.setVardef(env.findName(name, question.scope));
+    	}
+
+		if (node.getVardef() == null)
+		{
+			TypeCheckerErrors.report(3182, "Name '" + name + "' is not in scope",node.getLocation(),node);
+			env.listAlternatives(name);
+			node.setType(new AUnknownType(node.getLocation(),false));
+			return node.getType();
+		}
+		else
+		{
+			// Note that we perform an extra typeResolve here. This is
+			// how forward referenced types are resolved, and is the reason
+			// we don't need to retry at the top level (assuming all names
+			// are in the environment).
+
+			return PTypeAssistant.typeResolve(node.getVardef().getType(), null, rootVisitor, question);
+		}
+	}
 }
