@@ -1145,7 +1145,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 			else
 			{
-				exp = new AMkTypeExp(null, ve.getLocation(), typename, args);
+				exp = new AMkTypeExp(null, ve.getLocation(), typename, args, null);
 //				exp = new MkTypeExpression(typename, args);
 			}
 		}
