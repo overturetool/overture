@@ -19,7 +19,7 @@ Tokens
   LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
   //Delegate = 'java:node:org.overturetool.vdmj.util.Delegate';
   clonableFile ='java:org.overturetool.util.ClonableFile';
-  ClassDefinitionSettings = 'java:org.overturetool.vdmj.typechecker.AClassDefinitionSettings';
+  ClassDefinitionSettings = 'java:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
   
   
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
