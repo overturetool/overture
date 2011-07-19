@@ -12,7 +12,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
-import org.overture.ast.node.NodeList;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -54,7 +53,7 @@ public class PTypeAssistant {
 	public static PType polymorph(PType type, LexNameToken pname, PType actualType)
 	{				
 		LexLocation location = type.getLocation();
-		NodeList<PDefinition> definitions = type.getDefinitions();
+		List<PDefinition> definitions = type.getDefinitions();
 		
 		switch(type.kindPType())
 		{

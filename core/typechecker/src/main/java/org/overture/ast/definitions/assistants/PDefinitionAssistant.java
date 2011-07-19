@@ -476,6 +476,47 @@ public class PDefinitionAssistant {
 		
 	}
 
+	public static void typeResolve(PDefinition d,QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+		switch (d.kindPDefinition()) {				
+		case CLASS:
+			SClassDefinitionAssistant.typeResolve((SClassDefinition)d,rootVisitor,question );
+			break;
+		case EXPLICITFUNCTION:
+			AExplicitFunctionDefinitionAssistant.typeResolve((AExplicitFunctionDefinition)d,rootVisitor,question);
+			break;
+		case EXPLICITOPERATION:
+			AExplicitOperationDefinitionAssistant.typeResolve((AExplicitOperationDefinition)d,rootVisitor,question);
+			break;		
+		case IMPLICITFUNCTION:
+			AImplicitFunctionDefinitionAssistant.typeResolve((AImplicitFunctionDefinition)d,rootVisitor,question);
+			break;
+		case IMPLICITOPERATION:
+			AImplicitOperationDefinitionAssistant.typeResolve((AImplicitOperationDefinition)d,rootVisitor,question);
+			break;
+		case INSTANCEVARIABLE:
+			AInstanceVariableDefinitionAssistant.typeResolve((AInstanceVariableDefinition)d,rootVisitor,question);
+			break;
+		case LOCAL:
+			ALocalDefinitionAssistant.typeResolve((ALocalDefinition)d,rootVisitor,question);
+			break;		
+		case RENAMED:
+			ARenamedDefinitionAssistant.typeResolve((ARenamedDefinition)d,rootVisitor,question);
+			break;
+		case STATE:
+			AStateDefinitionAssistant.typeResolve((AStateDefinition)d,rootVisitor,question);
+			break;
+		case TYPE:
+			ATypeDefinitionAssistant.typeResolve((ATypeDefinition)d,rootVisitor,question);
+			break;
+		case VALUE:
+			AValueDefinitionAssistant.typeResolve((AValueDefinition)d,rootVisitor,question);
+		default:
+			return;
+			
+		}
+		
+	}
+
 	
 
 }

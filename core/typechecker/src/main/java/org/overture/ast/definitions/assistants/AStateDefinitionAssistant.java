@@ -2,8 +2,15 @@ package org.overture.ast.definitions.assistants;
 
 import java.util.List;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.AFieldFieldAssistant;
+import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -69,6 +76,37 @@ public class AStateDefinitionAssistant {
 
 	public static LexNameList getVariableNames(AStateDefinition d) {
 		return PDefinitionListAssistant.getVariableNames(d.getStateDefs());
+	}
+
+	public static void typeResolve(AStateDefinition d,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+		
+		for (AFieldField f: d.getFields())
+		{
+			try
+			{
+				AFieldFieldAssistant.typeResolve(f,null,rootVisitor,question);
+			}
+			catch (TypeCheckException e)
+			{
+				AFieldFieldAssistant.unResolve(f);
+				throw e;
+			}
+		}
+
+		d.setRecordType(PTypeAssistant.typeResolve(d.getRecordType(), null, rootVisitor, question));
+
+		if (d.getInvPattern() != null)
+		{
+			PDefinitionAssistant.typeResolve(d.getInvdef(), rootVisitor, question);
+		}
+
+		if (d.getInitPattern() != null)
+		{
+			PDefinitionAssistant.typeResolve(d.getInitdef(), rootVisitor, question);
+		}
+		
 	}
 
 }

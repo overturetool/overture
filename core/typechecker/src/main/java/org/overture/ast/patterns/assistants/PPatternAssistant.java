@@ -139,7 +139,7 @@ public class PPatternAssistant {
 		
 	}
 
-	public static void typeResolve(NodeList<PPattern> plist,
+	public static void typeResolve(List<PPattern> plist,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 
@@ -148,7 +148,7 @@ public class PPatternAssistant {
 		}		
 	}
 
-	public static void unResolve(NodeList<PPattern> plist) {
+	public static void unResolve(List<PPattern> plist) {
 		
 		for (PPattern pPattern : plist) {
 			unResolve(pPattern);

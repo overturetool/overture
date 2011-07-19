@@ -9,6 +9,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.node.NodeList;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.runtime.Environment;
@@ -125,5 +126,12 @@ public class PDefinitionListAssistant {
 			d.setClassDefinition(classDefinition);
 		}
 
+	}
+
+	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+		for (PDefinition definition : definitions) {
+			PDefinitionAssistant.typeResolve(definition, rootVisitor, question);
+		}
+		
 	}
 }

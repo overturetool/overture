@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
@@ -14,6 +15,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.PStm;
@@ -23,6 +25,8 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.runtime.Environment;
+import org.overture.runtime.FlatEnvironment;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -536,6 +540,21 @@ public class SClassDefinitionAssistant {
 
 		d.setSettingHierarchy(AClassDefinitionSettings.DONE);
 		return;
+		
+	}
+
+	public static void typeResolve(SClassDefinition d,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+		
+		Environment cenv = new FlatEnvironment(d.getDefinitions(),  question.env);
+		
+		TypeCheckInfo newInfo = new TypeCheckInfo();
+		newInfo.env = cenv;
+		newInfo.qualifiers = (NodeList<PType>) question.qualifiers.clone();
+		newInfo.scope = question.scope;
+		
+		PDefinitionListAssistant.typeResolve(d.getDefinitions(),rootVisitor,newInfo);
 		
 	}
 }

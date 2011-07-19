@@ -4,10 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternListAssistant;
+import org.overture.ast.types.PType;
+import org.overture.typecheck.TypeCheckInfo;
 
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -23,6 +27,15 @@ public class APatternListTypePairAssistant {
 		}
 
 		return list;
+	}
+
+	public static void typeResolve(APatternListTypePair pltp,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+		
+		PPatternListAssistant.typeResolve(pltp.getPatterns(), rootVisitor, question);
+		pltp.setType(pltp.getType().apply(rootVisitor, question));
+		
 	}
 
 	

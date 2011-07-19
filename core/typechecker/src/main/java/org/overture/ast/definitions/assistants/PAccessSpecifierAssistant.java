@@ -2,6 +2,7 @@ package org.overture.ast.definitions.assistants;
 
 import org.overture.ast.definitions.EAccess;
 import org.overture.ast.definitions.PAccess;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 
@@ -75,5 +76,16 @@ public class PAccessSpecifierAssistant {
 		}
 		assert false : "PAccessSpecifierAssistent : narrowerThan PAccess switch is not comprehensive";
 		return false;
+	}
+
+	public static PAccessSpecifier getStatic(PDefinition d, boolean asStatic) {
+		PAccessSpecifier paccess = d.getAccess();
+		if(paccess instanceof AAccessSpecifierAccessSpecifier)
+		{
+			return new AAccessSpecifierAccessSpecifier(((AAccessSpecifierAccessSpecifier) paccess).getAccess(), asStatic ? ((AAccessSpecifierAccessSpecifier) paccess).getStatic() : null, ((AAccessSpecifierAccessSpecifier) paccess).getAsync());
+		}
+		assert false: "PAccessSpecifier must be instance of AAccessSpecifierAccessSpecifier";
+		return null;
+		
 	}
 }

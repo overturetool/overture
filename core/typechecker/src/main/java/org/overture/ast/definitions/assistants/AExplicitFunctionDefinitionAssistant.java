@@ -9,19 +9,27 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ANotYetSpecifiedExp;
+import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.node.NodeListList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.runtime.FlatCheckedEnvironment;
 import org.overture.runtime.TypeChecker;
+import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -32,7 +40,7 @@ public class AExplicitFunctionDefinitionAssistant {
 	public static PType checkParams(AExplicitFunctionDefinition node,
 			ListIterator<List<PPattern>> plists,
 			AFunctionType ftype) {
-		NodeList<PType> ptypes = ftype.getParameters();
+		List<PType> ptypes = ftype.getParameters();
 		List<PPattern> patterns = plists.next();
 
 		if (patterns.size() > ptypes.size())
@@ -75,7 +83,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		return ftype.getResult();
 	}
 
-	public static List<List<PDefinition>> getParamDefinitions(AExplicitFunctionDefinition node,AFunctionType type, NodeListList<PPattern> paramPatternList, LexLocation location)
+	public static List<List<PDefinition>> getParamDefinitions(AExplicitFunctionDefinition node,AFunctionType type, List<List<PPattern>> paramPatternList, LexLocation location)
 	{
 		List<List<PDefinition>> defList = new ArrayList<List<PDefinition>>(); //new Vector<DefinitionList>();
 		AFunctionType ftype = type;	// Start with the overall function
@@ -85,7 +93,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		{
 			List<PPattern> plist = piter.next();
 			Set<PDefinition> defs = new HashSet<PDefinition>(); 
-			NodeList<PType> ptypes = ftype.getParameters();
+			List<PType> ptypes = ftype.getParameters();
 			Iterator<PType> titer = ptypes.iterator();
 
 			if (plist.size() != ptypes.size())
@@ -199,5 +207,61 @@ public class AExplicitFunctionDefinitionAssistant {
 		}
 
 		return defs;
+	}
+
+	public static void typeResolve(AExplicitFunctionDefinition d,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+		
+		
+		
+		if (d.getTypeParams() != null)
+		{
+			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
+				AExplicitFunctionDefinitionAssistant.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
+			
+			TypeCheckInfo newQuestion = new TypeCheckInfo();
+			newQuestion.env = params;
+			newQuestion.qualifiers = null;
+			newQuestion.scope = question.scope;
+			
+			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, newQuestion));
+		}
+		else
+		{
+			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
+		}
+
+		if (question.env.isVDMPP())
+		{
+			d.getName().setTypeQualifier(d.getFunctionType().getParameters());
+
+			if (d.getBody() instanceof ASubclassResponsibilityExp)
+			{
+				d.getClassDefinition().setIsAbstract(true);
+			}
+		}
+
+		if (d.getBody() instanceof ASubclassResponsibilityExp ||
+			d.getBody() instanceof ANotYetSpecifiedExp)
+		{
+			d.setIsUndefined(true);
+		}
+
+		if (d.getPrecondition() != null)
+		{
+			PDefinitionAssistant.typeResolve(d.getPredef(),rootVisitor,question);
+		}
+
+		if (d.getPostcondition() != null)
+		{
+			PDefinitionAssistant.typeResolve(d.getPostdef(),rootVisitor,question);
+		}
+
+		for (List<PPattern> pp: d.getParamPatternList())
+		{
+			PPatternListAssistant.typeResolve(pp, rootVisitor, question);
+		}
+		
 	}
 }

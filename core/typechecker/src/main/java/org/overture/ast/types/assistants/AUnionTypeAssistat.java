@@ -1,13 +1,13 @@
 package org.overture.ast.types.assistants;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.runtime.TypeCheckException;
@@ -92,8 +92,8 @@ public class AUnionTypeAssistat {
 
 		type.setTypes(new Vector<PType>(exptypes));
 		type.setExpanded(true);
-		NodeList<PDefinition> definitions = type.getDefinitions();
-
+		List<PDefinition> definitions = type.getDefinitions();
+ 
 		for (PType t: type.getTypes())
 		{
 			if (t.getDefinitions() != null)

@@ -3,9 +3,12 @@ package org.overture.ast.definitions.assistants;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.PType;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -68,6 +71,12 @@ public class ARenamedDefinitionAssistant {
 		LexNameList both = new LexNameList(d.getName());
 		both.add(d.getDef().getName());
 		return both;
+	}
+
+	public static void typeResolve(ARenamedDefinition d,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+		PDefinitionAssistant.typeResolve(d.getDef(), rootVisitor, question);		
 	}
 
 }

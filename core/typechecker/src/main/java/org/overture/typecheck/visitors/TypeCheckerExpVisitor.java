@@ -2,6 +2,8 @@ package org.overture.typecheck.visitors;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -15,8 +17,10 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
@@ -24,6 +28,7 @@ import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharConstExp;
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.ADomainResByBinaryExp;
@@ -47,8 +52,16 @@ import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AIsOfBaseClassExp;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapCompMapExp;
+import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
+import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMkBasicExp;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
+import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
@@ -58,6 +71,7 @@ import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
 import org.overture.ast.expressions.ARangeResToBinaryExp;
+import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
@@ -88,6 +102,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
@@ -98,6 +113,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1Type;
 import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -1628,6 +1644,296 @@ public class TypeCheckerExpVisitor extends
 		node.setType(new AFunctionType(node.getLocation(), false, null, true, ptypes, result));
 		return node.getType();
 	}
+	
+	
+	@Override
+	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question) {
+		
+		
+		
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, null, null, PMultipleBindAssistant.getMultipleBindList(node.getBind()), null);
+		
+		def.apply(rootVisitor, question);
+		
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+
+		TypeCheckInfo newInfo = new TypeCheckInfo();
+		newInfo.env = local;
+		newInfo.qualifiers = question.qualifiers;
+		newInfo.scope = question.scope;
+		
+		PExp suchThat = node.getSuchThat();
+		
+		if ( suchThat != null &&
+			!PTypeAssistant.isType(suchThat.apply(rootVisitor, newInfo),ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3117, "Such that clause is not boolean",node.getLocation(),node);
+		}
+
+		newInfo.qualifiers = null;
+		PType r = node.getValue().apply(rootVisitor, newInfo);
+		local.unusedCheck();
+		node.setType(r);
+		return r;
+	}
+	
+	@Override
+	public PType caseALetDefExp(ALetDefExp node, TypeCheckInfo question) {
+		// Each local definition is in scope for later local definitions...
+
+		Environment local = question.env;
+
+		for (PDefinition d: node.getLocalDefs())
+		{
+			if (d instanceof AExplicitFunctionDefinition)
+			{
+				// Functions' names are in scope in their bodies, whereas
+				// simple variable declarations aren't
+
+				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
+				PDefinitionAssistant.implicitDefinitions(d, local);
+				TypeCheckInfo newQuestion = new TypeCheckInfo();
+				question.env = local;
+				
+				PDefinitionAssistant.typeResolve(d,rootVisitor,question);
+
+				if (question.env.isVDMPP())
+				{
+					SClassDefinition cdef = question.env.findClassDefinition();
+					d.setClassDefinition(cdef);
+					d.setAccess( PAccessSpecifierAssistant.getStatic(d,true));
+				}
+
+				
+				d.apply(rootVisitor, newQuestion);
+			}
+			else
+			{
+				PDefinitionAssistant.implicitDefinitions(d, local);
+				question.env = local;
+				PDefinitionAssistant.typeResolve(d, rootVisitor, question);
+				d.apply(rootVisitor, question);
+				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
+			}
+		}
+
+		question.qualifiers = null;
+		PType r = node.getExpression().apply(rootVisitor, question);
+		local.unusedCheck(question.env);
+		node.setType(r);
+		return r;
+	}
+
+	
+	@Override
+	public PType caseADefExp(ADefExp node, TypeCheckInfo question) {
+		// Does not have a type check
+		return super.caseADefExp(node, question);
+	}
+	
+	
+	@Override
+	public PType caseAMapCompMapExp(AMapCompMapExp node, TypeCheckInfo question) {
+		
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, null, null, node.getBindings(), null);
+		def.apply(rootVisitor, question);
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+
+		PExp predicate = node.getPredicate();
+		question.env = local;
+		if (predicate != null && !PTypeAssistant.isType(predicate.apply(rootVisitor, question), ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3118, "Predicate is not boolean",predicate.getLocation(),predicate);
+		}
+
+		
+		node.setType(node.getFirst().apply(rootVisitor, question));	// The map from/to type
+		local.unusedCheck();
+		return node.getType();
+	}
+	
+	
+	@Override
+	public PType caseAMapEnumMapExp(AMapEnumMapExp node, TypeCheckInfo question) {
+		
+		node.setDomTypes(new Vector<PType>());
+		node.setRngTypes(new Vector<PType>());
+
+		if (node.getMembers().isEmpty())
+		{
+			return new AMapMapType(node.getLocation(), false, null, null, null, null);
+		}
+
+		Set<PType> dom = new HashSet<PType>();
+		Set<PType> rng = new HashSet<PType>();
+
+		for (AMapletExp ex: node.getMembers())
+		{
+			PType mt = ex.apply(rootVisitor, question);
+
+			if (!PTypeAssistant.isMap(mt))
+			{
+				TypeCheckerErrors.report(3121, "Element is not of maplet type",node.getLocation(),node);
+			}
+			else
+			{
+				SMapType maplet = PTypeAssistant.getMap(mt);
+				dom.add(maplet.getFrom());
+				node.getDomTypes().add(maplet.getFrom());
+				rng.add(maplet.getTo());
+				node.getRngTypes().add(maplet.getTo());
+			}
+		}
+
+		return new AMapMapType(node.getLocation(), false, null, PTypeAssistant.getType(dom,node.getLocation()), PTypeAssistant.getType(rng,node.getLocation()), null);
+		
+	}
+	
+	@Override
+	public PType caseAMapletExp(AMapletExp node, TypeCheckInfo question) {
+		
+		PType ltype = node.getLeft().apply(rootVisitor, question);
+		PType rtype = node.getRight().apply(rootVisitor, question);
+
+		return new AMapMapType(node.getLocation(), false, null, ltype, rtype, null);
+	}
+	
+	@Override
+	public PType caseAMkBasicExp(AMkBasicExp node, TypeCheckInfo question) {
+		PType argtype = node.getArg().apply(rootVisitor, question);
+
+		if (!(node.getType() instanceof ATokenBasicType) && !argtype.equals(node.getType()))
+		{
+			TypeCheckerErrors.report(3125, "Argument of mk_" + node.getType() + " is the wrong type",node.getLocation(),node);
+		}
+
+		return node.getType();
+	}
+	
+	
+	@Override
+	public PType caseAMkTypeExp(AMkTypeExp node, TypeCheckInfo question) {
+		
+		PDefinition typeDef = question.env.findType(node.getTypeName(), node.getLocation().module);
+
+		if (typeDef == null)
+		{
+			TypeCheckerErrors.report(3126, "Unknown type '" + node.getTypeName() + "' in constructor",node.getLocation(),node);
+			return new AUnknownType(node.getLocation(), false, null);
+		}
+
+		PType rec = typeDef.getType();
+
+		while (rec instanceof ANamedInvariantType)
+		{
+			ANamedInvariantType nrec = (ANamedInvariantType)rec;
+			rec = nrec.getType();
+		}
+
+		if (!(rec instanceof ARecordInvariantType))
+		{
+			TypeCheckerErrors.report(3127, "Type '" + node.getTypeName() + "' is not a record type",node.getLocation(),node);
+			return rec;
+		}
+
+		node.setRecordType((ARecordInvariantType)rec);
+
+		if (node.getRecordType().getOpaque())
+		{
+			TypeCheckerErrors.report(3127, "Type '" + node.getTypeName() + "' is not a record type",node.getLocation(),node);
+			return rec;
+		}
+
+		if (node.getTypeName().explicit)
+		{
+			// If the type name is explicit, the Type ought to have an explicit
+			// name. This only really affects trace expansion.
+
+			ARecordInvariantType recordType = node.getRecordType();
+			
+			AExplicitFunctionDefinition inv = recordType.getInvdef();
+			
+			
+			recordType= new ARecordInvariantType(null, null, null, null, recordType.getName().getExplicit(true), recordType.getFields(), null);
+			recordType.setInvdef(inv);
+		}
+
+		if (node.getRecordType().getFields().size() != node.getArgs().size())
+		{
+			TypeCheckerErrors.report(3128, "Record and constructor do not have same number of fields",node.getLocation(),node);
+			return rec;
+		}
+
+		int i=0;
+		Iterator<AFieldField> fiter = node.getRecordType().getFields().iterator();
+		node.setArgTypes(new LinkedList<PType>());
+		List<PType> argTypes = node.getArgTypes();
+		
+		
+		for (PExp arg: node.getArgs())
+		{
+			PType fieldType = fiter.next().getType();
+			PType argType = arg.apply(rootVisitor, question);
+			i++;
+
+			if (!TypeComparator.compatible(fieldType, argType))
+			{
+				TypeCheckerErrors.report(3129, "Constructor field " + i + " is of wrong type",node.getLocation(),node);
+				TypeCheckerErrors.detail2("Expected", fieldType, "Actual", argType);
+			}
+
+			argTypes.add(argType);
+		}
+
+		node.setType(node.getRecordType());
+		return node.getRecordType();
+	}
+	
+	@Override
+	public PType caseAMuExp(AMuExp node, TypeCheckInfo question) {
+		
+		PType rtype = node.getRecord().apply(rootVisitor, question);
+
+		if (PTypeAssistant.isUnknown(rtype))
+		{
+			return rtype;
+		}
+
+		if (PTypeAssistant.isRecord(rtype))
+		{
+			node.setRecordType(PTypeAssistant.getRecord(rtype));
+			node.setModTypes(new LinkedList<PType>());
+
+			List<PType> modTypes = node.getModTypes(); 
+			
+    		for (ARecordModifier rm: node.getModifiers())
+    		{
+    			PType mtype = rm.getValue().apply(rootVisitor, question);
+    			modTypes.add(mtype);
+    			AFieldField f = ARecordInvariantTypeAssistant.findField(node.getRecordType(), rm.getTag().name);
+
+    			if (f != null)
+    			{
+					if (!TypeComparator.compatible(f.getType(), mtype))
+					{
+						TypeCheckerErrors.report(3130, "Modifier for " + f.getTag() + " should be " + f.getType(),node.getLocation(),node);
+						TypeCheckerErrors.detail("Actual", mtype);
+					}
+    			}
+    			else
+    			{
+    				TypeCheckerErrors.report(3131, "Modifier tag " + rm.getTag() + " not found in record",node.getLocation(),node);
+    			}
+    		}
+		}
+		else
+		{
+			TypeCheckerErrors.report(3132, "mu operation on non-record type",node.getLocation(),node);
+		}
+
+		return rtype;
+	}
+	
 	
 	@Override
 	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, TypeCheckInfo question)

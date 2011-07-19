@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.PType;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -76,6 +80,39 @@ public class AExplicitOperationDefinitionAssistant {
 	public static LexNameList getVariableNames(AExplicitOperationDefinition d) {
 		
 		return new LexNameList(d.getName());
+	}
+
+	public static void typeResolve(AExplicitOperationDefinition d,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+
+		d.setType(d.getType().apply(rootVisitor, question));
+
+		if (question.env.isVDMPP())
+		{
+			d.getName().setTypeQualifier(d.getOperationType().getParameters());
+
+			if (d.getBody() instanceof ASubclassResponsibilityStm)
+			{
+				d.getClassDefinition().setIsAbstract(true);
+			}
+		}
+
+		if (d.getPrecondition() != null)
+		{
+		    PDefinitionAssistant.typeResolve(d.getPredef(), rootVisitor, question);
+		}
+
+		if (d.getPostcondition() != null)
+		{
+			PDefinitionAssistant.typeResolve(d.getPostdef(), rootVisitor, question);
+		}
+
+		for (PPattern p: d.getParameterPatterns())
+		{
+			PPatternAssistant.typeResolve(p, rootVisitor, question);
+		}
+		
 	}
 
 }

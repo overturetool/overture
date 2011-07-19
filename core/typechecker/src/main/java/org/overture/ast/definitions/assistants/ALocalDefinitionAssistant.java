@@ -3,8 +3,12 @@ package org.overture.ast.definitions.assistants;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 
 
@@ -26,6 +30,17 @@ public class ALocalDefinitionAssistant {
 		List<PDefinition> res = new Vector<PDefinition>();
 		res.add(d);
 		return res;
+	}
+
+	public static void typeResolve(ALocalDefinition d,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) {
+		
+		if (d.getType() != null)
+   		{
+   			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
+   		}
+		
 	}
 
 	
