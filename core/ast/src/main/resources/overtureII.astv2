@@ -94,8 +94,8 @@ exp {-> package='org.overture.ast.expressions'}
     |   #Map
     |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
-    |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:invariant.record
-    |   {mu} [recordType]:exp [modifiers]:modifier.record*
+    |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:invariant.record (argTypes):type*
+    |   {mu} [record]:exp (recordType):invariant.record [modifiers]:modifier.record* (modTypes):type*
     |   {new} [className]:LexIdentifierToken [args]:exp*
     |   {nil} 
     |   {notYetSpecified} 
@@ -653,3 +653,7 @@ Aspect Declaration
 %pair
     = [resolved]:java_Boolean
     ;
+    
+%type->#invariant
+    = (opaque):java_Boolean
+    ; 
