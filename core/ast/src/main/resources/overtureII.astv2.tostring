@@ -9,7 +9,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
 %exp->boolean_const =  [value] 
 %exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
-%exp->char_const =  [value] 
+%exp->charLiteral =  [value] 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
 %exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"
@@ -18,7 +18,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->forAll = "(forall " + $Utils.listToString($ [bindList] $)$ + " & " [predicate] ")"
 %exp->funcInstatiation = "(" [function] ")[" + $Utils.listToString($[actualTypes]$)$ + "]"
 %exp->if = "" + $Utils.ifToString($[test]$, $[then]$, $[elseList]$, $[else]$)$
-%exp->int_const = [value] 
+%exp->intLiteral = [value] 
 %exp->iota = "(iota " [bind] " & " [predicate] ")"
 %exp->is = "is_(" [test] ", " + $( $ [typeName] $ == null ? $ [basicType] $ : $ [typeName] $)$ + ")"
 %exp->isOfBaseClass = "isofbaseclass(" [baseClass] "," [exp] ")"
@@ -36,13 +36,13 @@ import org.overturetool.util.ToStringUtil;
 %exp->postOp = [postexpression]
 %exp->pre = "pre_(" [function] + $Utils.listToString($ [args] $)$ + ")"
 %exp->preOp = [expression]
-%exp->quote_const = [value]
-%exp->real_const = [value]
+%exp->quoteLiteral = [value]
+%exp->realLiteral = [value]
 %exp->sameBaseClass = "samebaseclass(" + [left] + "," + [right] + ")"
 %exp->sameClass = "sameclass(" [left] "," + [right] + ")"
 %exp->self = "self"
 %exp->stateInit = "init " [state]$.getInitPattern()$ + " == " [state]$.getInitExpression()$
-%exp->string_const = [value]
+%exp->stringLiteral = [value]
 %exp->subclassResponsibility = "is subclass responsibility"
 %exp->subseq = "(" [seq] "(" [from] ", ... ," [to] "))"
 %exp->threadId = "threadid"

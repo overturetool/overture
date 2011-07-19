@@ -72,7 +72,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   #Binary
     |   {boolean_const} [value]:LexBooleanToken
     |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
-    |   {char_const} [value]:LexCharacterToken
+    |   {charLiteral} [value]:LexCharacterToken
     |   {elseIf} [elseIf]:exp [then]:exp  
     |   {exists1}  [bind]:bind [predicate]:exp [def]:definition
     |   {exists} [bindList]:multipleBind* [predicate]:exp
@@ -82,7 +82,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {funcInstatiation} [function]:exp [actualTypes]:type* [expdef]:definition.explicitFunction [impdef]:definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
-    |   {int_const} [value]:LexIntegerToken
+    |   {intLiteral} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
     |   {is} [typeName]:LexNameToken [basicType]:type [test]:exp [typedef]:definition
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
@@ -96,28 +96,28 @@ exp {-> package='org.overture.ast.expressions'}
     |   {mkBasic} [arg]:exp
     |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:invariant.record (argTypes):type*
     |   {mu} [record]:exp (recordType):invariant.record [modifiers]:modifier.record* (modTypes):type*
-    |   {new} [className]:LexIdentifierToken [args]:exp*
+    |   {new} [className]:LexIdentifierToken [args]:exp* (classdef):definition.class (ctorDefinition):definition
     |   {nil} 
     |   {notYetSpecified} 
     |   {postOp} [opname]:LexNameToken [preexpression]:exp [postexpression]:exp [errors]:case.error* [state]:definition.state [errorLocation]:location
     |   {pre} [function]:exp [args]:exp*
     |   {preOp} [opname]:LexNameToken [expression]:exp  [errors]:case.error* [state]:definition.state
-    |   {quote_const} [value]:LexQuoteToken
-    |   {real_const} [value]:LexRealToken
+    |   {quoteLiteral} [value]:LexQuoteToken
+    |   {realLiteral} [value]:LexRealToken
     |   {sameBaseClass} [left]:exp [right]:exp
     |   {sameClass} [left]:exp [right]:exp
     |   {self} [name]:LexNameToken
     |   #Seq
     |   #Set
-    |   {stateInit} [state]:state
-    |   {string_const} [value]:LexStringToken
+    |   {stateInit} [state]:state 
+    |   {stringLiteral} [value]:LexStringToken
     |   {subclassResponsibility} 
-    |   {subseq} [seq]:exp [from]:exp [to]:exp
+    |   {subseq} [seq]:exp [from]:exp [to]:exp (ftype):type (ttype):type
     |   {threadId} 
     |   {time} 
-    |   {tuple} [args]:exp*     
+    |   {tuple} [args]:exp* (types):type*
     |   {undefined}
-    |   {variable} [name]:LexNameToken           
+    |   {variable} [name]:LexNameToken (vardef):definition        
     ;
     
 #Unary {-> package='org.overture.ast.expressions'}
@@ -197,13 +197,13 @@ exp {-> package='org.overture.ast.expressions'}
     
 #Seq {-> package='org.overture.ast.expressions'}
     =   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
-    |   {seqEnum} [members]:exp*
+    |   {seqEnum} [members]:exp* (types):type*
     ;
     
 #Set {-> package='org.overture.ast.expressions'}
     =   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
-    |   {setEnum} [members]:exp*
-    |   {setRange} [first]:exp [last]:exp
+    |   {setEnum} [members]:exp* (types):type*
+    |   {setRange} [first]:exp [last]:exp (ftype):type (ltype):type
     ;
     
 modifier {-> package='org.overture.ast.expressions'}
@@ -230,7 +230,7 @@ type {-> package='org.overture.ast.types'}
     |   {optional} [type]:type
     |   {parameter} [name]:LexNameToken
     |   {product} [types]:type*
-    |   {quote} [value]:string_literal //TODO whats the value type
+    |   {quote} [value]:LexQuoteToken 
     |   {seq} [seqof]:type [empty]:java_Boolean
     |   {seq1} [seqof]:type [empty]:java_Boolean
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
@@ -411,6 +411,7 @@ definition {-> package='org.overture.ast.definitions'}
                 [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction
                 [initPattern]:pattern [initExpression]:exp [initdef]:definition.explicitFunction
                 [stateDefs]:definition* [recordDefinition]:definition.local [recordType]:type
+                (canBeExecuted):java_Boolean
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
     |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition [infinite]:java_Boolean//is access missing here
@@ -584,6 +585,10 @@ Aspect Declaration
 
 %exp->#Binary = [left]:exp [op]:LexToken [right]:exp 
     ; 
+    
+%exp->#set 
+    = (setType):type.set
+    ;
 
 %type = [location]:location [resolved]:java_Boolean (definitions):definition*
      ; 
