@@ -2,8 +2,6 @@ package org.overturetool.vdmj.typechecker;
 
 import java.io.Serializable;
 
-import org.overture.ast.node.ExternalNode;
-
 
 
 
