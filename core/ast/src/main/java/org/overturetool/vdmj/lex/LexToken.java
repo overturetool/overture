@@ -98,8 +98,7 @@ import org.overture.ast.node.NodeEnum;
 	@Override
 	public Object clone()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new LexToken(location,type);
 	}
 
 	@Override
