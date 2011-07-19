@@ -4,7 +4,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
 public class ASetTypeAssistant {

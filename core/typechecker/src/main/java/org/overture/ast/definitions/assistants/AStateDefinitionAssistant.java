@@ -9,7 +9,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFieldFieldAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;

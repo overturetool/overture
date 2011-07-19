@@ -31,9 +31,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
-import org.overture.runtime.Environment;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 

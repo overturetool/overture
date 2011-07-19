@@ -9,8 +9,8 @@ import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.runtime.TypeComparator;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overture.typecheck.TypeComparator;
 
 
 public class AApplyExpAssistant {

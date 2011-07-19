@@ -153,13 +153,13 @@ import org.overture.ast.types.assistants.AOperationTypeAssistant;
 import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
-import org.overture.runtime.Environment;
-import org.overture.runtime.FlatCheckedEnvironment;
-import org.overture.runtime.TypeChecker;
-import org.overture.runtime.TypeComparator;
+import org.overture.typecheck.Environment;
+import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.LexNameTokenAssistent;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -1882,11 +1882,11 @@ public class TypeCheckerExpVisitor extends
 
 			ARecordInvariantType recordType = node.getRecordType();
 			
-			AExplicitFunctionDefinition inv = recordType.getInvdef();
+			AExplicitFunctionDefinition inv = recordType.getInvDef();
 			
 			
-			recordType= new ARecordInvariantType(null, null, null, null, recordType.getName().getExplicit(true), recordType.getFields(), null);
-			recordType.setInvdef(inv);
+			recordType= new ARecordInvariantType(null, false,  recordType.getName().getExplicit(true), recordType.getFields());
+			recordType.setInvDef(inv);
 		}
 
 		if (node.getRecordType().getFields().size() != node.getArgs().size())

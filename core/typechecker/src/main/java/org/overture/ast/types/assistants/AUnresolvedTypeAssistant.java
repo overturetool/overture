@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ABusClassDefinition;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
@@ -14,12 +13,11 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
-import org.overture.runtime.Environment;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.Environment;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 

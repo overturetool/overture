@@ -1,5 +1,6 @@
 package org.overture.ast.definitions.assistants;
 
+import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.EAccess;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
@@ -87,5 +88,10 @@ public class PAccessSpecifierAssistant {
 		assert false: "PAccessSpecifier must be instance of AAccessSpecifierAccessSpecifier";
 		return null;
 		
+	}
+	
+	public static PAccessSpecifier getDefault()
+	{
+		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
 	}
 }

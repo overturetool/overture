@@ -13,7 +13,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 
 public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PType> {
 
-	static private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor = null;
+//	static private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor = null;
 	
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcType = new TypeCheckerTypeVisitor(this);
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcExp = new TypeCheckerExpVisitor(this);
@@ -22,19 +22,19 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 	public TypeCheckerErrors tcErrors = new TypeCheckerErrors();
 	
 	
-	public synchronized static QuestionAnswerAdaptor<TypeCheckInfo, PType> getInstance()
-	{
-		if(rootVisitor == null)
-		{
-			rootVisitor = new TypeCheckVisitor();
-		}
-		
-		return rootVisitor;
-	}
+//	public synchronized static QuestionAnswerAdaptor<TypeCheckInfo, PType> getInstance()
+//	{
+//		if(rootVisitor == null)
+//		{
+//			rootVisitor = new TypeCheckVisitor();
+//		}
+//		
+//		return rootVisitor;
+//	}
 	
 	
-	private TypeCheckVisitor() {		
-	}
+//	public TypeCheckVisitor() {		
+//	}
 	
 	@Override
 	public PType defaultPType(PType node, TypeCheckInfo question) {

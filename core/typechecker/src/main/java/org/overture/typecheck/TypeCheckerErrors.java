@@ -1,7 +1,5 @@
 package org.overture.typecheck;
 
-import org.overture.ast.definitions.PDefinition;
-import org.overture.runtime.TypeChecker;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class TypeCheckerErrors {

@@ -4,7 +4,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
 

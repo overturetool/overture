@@ -4,7 +4,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 

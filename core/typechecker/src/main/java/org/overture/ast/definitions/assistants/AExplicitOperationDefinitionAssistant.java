@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;

@@ -2,6 +2,7 @@ package org.overture.ast.definitions.assistants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -9,10 +10,9 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.node.NodeList;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
-import org.overture.runtime.Environment;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -133,5 +133,12 @@ public class PDefinitionListAssistant {
 			PDefinitionAssistant.typeResolve(definition, rootVisitor, question);
 		}
 		
+	}
+
+	public static PDefinition findType(LinkedList<PDefinition> actualDefs,
+			LexNameToken name, String module)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -3,8 +3,7 @@ package org.overture.ast.patterns.assistants;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.types.PType;
-import org.overture.runtime.Environment;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
 

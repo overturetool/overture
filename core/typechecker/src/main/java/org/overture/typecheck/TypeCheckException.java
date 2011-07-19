@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.runtime;
+package org.overture.typecheck;
 
 import org.overturetool.vdmj.lex.LexLocation;
 

@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.runtime;
+package org.overture.typecheck;
 
 import java.io.PrintWriter;
 import java.util.List;

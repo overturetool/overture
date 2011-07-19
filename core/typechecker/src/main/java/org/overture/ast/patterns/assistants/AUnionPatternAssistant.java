@@ -3,7 +3,7 @@ package org.overture.ast.patterns.assistants;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.types.PType;
-import org.overture.runtime.TypeCheckException;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 

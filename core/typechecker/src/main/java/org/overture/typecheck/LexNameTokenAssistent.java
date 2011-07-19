@@ -1,6 +1,5 @@
 package org.overture.typecheck;
 
-import org.overture.runtime.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 
 public class LexNameTokenAssistent {

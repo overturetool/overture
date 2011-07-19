@@ -1,9 +1,7 @@
 package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.SNumericBinaryExp;
-import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;

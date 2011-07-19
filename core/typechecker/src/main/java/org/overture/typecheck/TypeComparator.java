@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.runtime;
+package org.overture.typecheck;
 
 import java.util.List;
 import java.util.Vector;
@@ -664,7 +664,7 @@ public class TypeComparator
     		{
     			ANamedInvariantType nt = (ANamedInvariantType)sub;
 
-       			if (nt.getInvdef() == null)
+       			if (nt.getInvDef() == null)
        			{
         			sub = nt.getType();
         			continue;
@@ -675,7 +675,7 @@ public class TypeComparator
     		{
     			ANamedInvariantType nt = (ANamedInvariantType)sup;
 
-       			if (nt.getInvdef() == null)
+       			if (nt.getInvDef() == null)
        			{
         			sup = nt.getType();
         			continue;

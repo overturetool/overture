@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.runtime;
+package org.overture.typecheck;
 
 import java.util.ArrayList;
 import java.util.List;

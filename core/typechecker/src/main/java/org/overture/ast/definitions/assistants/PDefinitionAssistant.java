@@ -1,16 +1,9 @@
 package org.overture.ast.definitions.assistants;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-
 import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -35,12 +28,11 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.runtime.Environment;
-import org.overture.runtime.TypeChecker;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;

@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.messages;
 
-import org.overture.runtime.ContextException;
 import org.overturetool.vdmj.lex.LexLocation;
 
 
@@ -43,10 +42,10 @@ public class VDMError extends VDMMessage
 		super(ne.number, ne.getMessage(), ne.location);
 	}
 
-	public VDMError(ContextException ce)
-	{
-		super(ce.number, ce.getMessage(), ce.location);
-	}
+//	public VDMError(ContextException ce)
+//	{
+//		super(ce.number, ce.getMessage(), ce.location);
+//	}
 
 	@Override
 	public String toString()

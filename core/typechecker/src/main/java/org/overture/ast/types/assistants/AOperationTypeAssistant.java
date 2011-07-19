@@ -5,13 +5,9 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
-import org.overture.runtime.Environment;
-import org.overture.runtime.TypeCheckException;
-import org.overture.runtime.TypeComparator;
+import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
 

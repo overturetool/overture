@@ -6,7 +6,6 @@ import java.util.List;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;

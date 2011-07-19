@@ -6,7 +6,6 @@ import java.util.Vector;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
 
 public class AAssignmentDefinitionAssistant {
 

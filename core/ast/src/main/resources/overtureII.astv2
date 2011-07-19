@@ -247,8 +247,8 @@ type {-> package='org.overture.ast.types'}
     |   {map}
     ;
 #invariant {-> package='org.overture.ast.types'}
-    =   {named} [name]:LexNameToken [type]:type [invdef]:explicitFunction //super = invariant type
-    |   {record} [name]:LexNameToken [fields]:field.field* [invdef]:explicitFunction //super = invariant type
+    =   {named} [name]:LexNameToken [type]:type //[invdef]:explicitFunction //super = invariant type
+    |   {record} [name]:LexNameToken [fields]:field.field* //[invdef]:explicitFunction //super = invariant type
     ;
 
 #basic {-> package='org.overture.ast.types'}
@@ -411,7 +411,7 @@ definition {-> package='org.overture.ast.definitions'}
                 [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction
                 [initPattern]:pattern [initExpression]:exp [initdef]:definition.explicitFunction
                 [stateDefs]:definition* [recordDefinition]:definition.local [recordType]:type
-                (canBeExecuted):java_Boolean
+                (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
     |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition [infinite]:java_Boolean//is access missing here
@@ -660,5 +660,6 @@ Aspect Declaration
     ;
     
 %type->#invariant
-    = (opaque):java_Boolean
+    =   (opaque):java_Boolean
+        (invDef):definition.explicitFunction
     ; 
