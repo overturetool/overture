@@ -31,7 +31,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.typechecker.AClassDefinitionSettings;
+import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
@@ -491,7 +491,7 @@ public class SClassDefinitionAssistant {
 		switch (d.getSettingHierarchy())
 		{
 			case UNSET:
-				d.setSettingHierarchy(AClassDefinitionSettings.INPROGRESS);
+				d.setSettingHierarchy(ClassDefinitionSettings.INPROGRESS);
 				break;
 
 			case INPROGRESS:
@@ -538,7 +538,7 @@ public class SClassDefinitionAssistant {
 			}
 		}
 
-		d.setSettingHierarchy(AClassDefinitionSettings.DONE);
+		d.setSettingHierarchy(ClassDefinitionSettings.DONE);
 		return;
 		
 	}
