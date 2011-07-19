@@ -1,17 +1,15 @@
 package com.lausdahl.ast.creator.methods;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
-import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
 
-public class ConstructorTreeFieldsOnlyMethod extends Method
+public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 {
 	public ConstructorTreeFieldsOnlyMethod(IClassDefinition c, Environment env)
 	{
@@ -112,36 +110,7 @@ public class ConstructorTreeFieldsOnlyMethod extends Method
 		this.body = sb.toString();
 	}
 
-	@Override
-	public String toString()
-	{
-		if (classDefinition.getFields().isEmpty())
-		{
-			return "";
-		}
-		return super.toString();
-	}
-
-	@Override
-	public Set<String> getRequiredImports()
-	{
-		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImports());
-		if (classDefinition instanceof CommonTreeClassDefinition)
-		{
-			List<Field> fields = new Vector<Field>();
-			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
-			for (Field field : fields)
-			{
-				list.addAll(field.getRequiredImports());
-			}
-		}
-
-		String nodelistpackage = env.nodeList.getPackageName() + "."
-				+ env.nodeList.getSignatureName();
-		list.remove(nodelistpackage);
-
-		return list;
-	}
+	
+	
 
 }

@@ -36,7 +36,7 @@ public abstract class %Token% extends %Node% {
 	 * Sets the text of this token.
 	 * @param text the new text of this token
 	 */
-	public void setText(@SuppressWarnings("hiding") String text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 
@@ -52,7 +52,7 @@ public abstract class %Token% extends %Node% {
 	 * Sets the line number information of this token.
 	 * @param line the new line number information of this token
 	 */
-	public void setLine(@SuppressWarnings("hiding") int line) {
+	public void setLine(int line) {
 		this.line = line;
 	}
 
@@ -68,7 +68,7 @@ public abstract class %Token% extends %Node% {
 	 * Sets the position information of this token.
 	 * @param pos the new position information of this token
 	 */
-	public void setPos(@SuppressWarnings("hiding") int pos) {
+	public void setPos(int pos) {
 		this.pos = pos;
 	}
 
@@ -82,7 +82,7 @@ public abstract class %Token% extends %Node% {
 	 * @param child the child node to be removed from this {@link Token} node
 	 * @throws RuntimeException if {@code child} is not a child of this {@link Token} node
 	 */
-	public @Override void removeChild(@SuppressWarnings("unused") %Node% child) {
+	public @Override void removeChild(%Node% child) {
 		throw new RuntimeException("Not a child.");
 	}
 

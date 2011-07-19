@@ -46,8 +46,6 @@ public class Field
 		List<String> imports = new Vector<String>();
 		if (isList)
 		{
-			imports.add(Environment.listDef.getImportName());
-			imports.add(Environment.linkedListDef.getImportName());
 			imports.add(getInternalType(unresolvedType).getImportName());
 			if (isTypeExternalNotNode())
 			{
@@ -70,8 +68,6 @@ public class Field
 		}
 		if (isDoubleList)
 		{
-			imports.add(Environment.collectionDef.getImportName());
-			imports.add(Environment.linkedListDef.getImportName());
 			switch (structureType)
 			{
 				case Graph:

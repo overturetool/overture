@@ -108,16 +108,48 @@ public class ConstructorMethod extends Method
 		list.addAll(super.getRequiredImports());
 		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
+			
 			List<Field> fields = new Vector<Field>();
+			
 			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
 			for (Field field : fields)
 			{
 				list.addAll(field.getRequiredImports());
+				if(field.isList && !field.isDoubleList)
+				{
+					list.add(Environment.listDef.getImportName());
+				}
+				if(field.isDoubleList)
+				{
+					list.add(Environment.collectionDef.getImportName());
+					list.add(Environment.listDef.getImportName());
+				}
+			}
+			
+			List<String> removeImportsFromSuper = new Vector<String>();
+			removeImportsFromSuper.add(env.graphNodeList.getImportName());
+			removeImportsFromSuper.add(env.graphNodeListList.getImportName());
+			removeImportsFromSuper.add(env.nodeList.getImportName());
+			removeImportsFromSuper.add(env.nodeListList.getImportName());
+			
+			list.removeAll(removeImportsFromSuper);
+			
+			for (Field field : classDefinition.getFields())
+			{
+				list.addAll(field.getRequiredImports());
+				if(field.isList && !field.isDoubleList)
+				{
+					list.add(Environment.listDef.getImportName());
+				}
+				if(field.isDoubleList)
+				{
+					list.add(Environment.collectionDef.getImportName());
+					list.add(Environment.listDef.getImportName());
+				}
 			}
 		}
 
-		String nodelistpackage = env.nodeList.getPackageName() + "."
-				+ env.nodeList.getSignatureName();
+		String nodelistpackage = env.nodeList.getImportName();
 		list.remove(nodelistpackage);
 
 		return list;

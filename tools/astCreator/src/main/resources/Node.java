@@ -1,7 +1,7 @@
 package %generated.node%;
 
 import java.util.Collection;
-import java.util.Hashtable;
+//import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ public abstract class %Node% implements Cloneable
 	 * Sets the parent node of this node.
 	 * @param parent the new parent node of this node
 	 */
-	public void parent(@SuppressWarnings("hiding") %Node% parent) {
+	public void parent(%Node% parent) {
 		this.parent = parent;
 	}
 	
