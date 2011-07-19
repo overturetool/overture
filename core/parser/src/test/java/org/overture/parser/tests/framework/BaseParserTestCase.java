@@ -104,7 +104,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 				errorMessages ="\n"+s.toString()+"\n";
 				System.out.println(s.toString());
 			}
-			assertEquals(errorMessages,reader.getErrorCount(), 0);
+			assertEquals(errorMessages,0,reader.getErrorCount());
 
 			if (reader != null && reader.getWarningCount() > 0)
 			{

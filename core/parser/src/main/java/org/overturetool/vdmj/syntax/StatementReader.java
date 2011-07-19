@@ -520,7 +520,7 @@ public class StatementReader extends SyntaxReader
 		switch (token.type)
 		{
 			case SELF:
-				return new ASelfObjectDesignator(idToName((LexIdentifierToken)token));
+				return new ASelfObjectDesignator(new LexNameToken(token.location.module, "self", token.location));
 
 			case IDENTIFIER:
 				return new AIdentifierObjectDesignator(idToName((LexIdentifierToken)token),null);
