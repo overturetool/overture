@@ -865,12 +865,12 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case NUMBER:
 				nextToken();
-				return new AIntConstExp(null, token.location, (LexIntegerToken)token);
+				return new AIntLiteralExp(null, token.location, (LexIntegerToken)token);
 //				return new IntegerLiteralExpression((LexIntegerToken)token);
 
 			case REALNUMBER:
 				nextToken(); 
-				return new ARealConstExp(null, token.location, (LexRealToken)token);
+				return new ARealLiteralExp(null, token.location, (LexRealToken)token);
 //				return new RealLiteralExpression((LexRealToken)token);
 
 			case NAME:
@@ -892,17 +892,17 @@ public class ExpressionReader extends SyntaxReader
 
 			case STRING:
 				nextToken();
-				return new AStringConstExp(null, token.location, (LexStringToken)token);
+				return new AStringLiteralExp(null, token.location, (LexStringToken)token);
 //				return new StringLiteralExpression((LexStringToken)token);
 
 			case CHARACTER:
 				nextToken();
-				return new ACharConstExp(null, token.location, (LexCharacterToken)token);
+				return new ACharLiteralExp(null, token.location, (LexCharacterToken)token);
 				//return new CharLiteralExpression((LexCharacterToken)token);
 
 			case QUOTE:
 				nextToken();
-				return new AQuoteConstExp(null, token.location,(LexQuoteToken)token);
+				return new AQuoteLiteralExp(null, token.location,(LexQuoteToken)token);
 //				return new QuoteLiteralExpression((LexQuoteToken)token);
 
 			case TRUE:

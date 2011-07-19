@@ -363,7 +363,7 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case QUOTE:
-				type = new AQuoteType(location, false,null, new TStringLiteral( ((LexQuoteToken)token).value));//(LexQuoteToken)token);
+				type = new AQuoteType(location, false,null, (LexQuoteToken)token);//(LexQuoteToken)token);
 				nextToken();
 				break;
 
