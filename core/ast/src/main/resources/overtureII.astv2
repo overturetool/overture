@@ -499,14 +499,14 @@ export {-> package='org.overture.ast.modules'}
 
 stm {-> package='org.overture.ast.statements'}
     =   {always} [always]:stm [body]:stm
-    |   {assignment} [target]:stateDesignator [exp]:exp
-    |   {atomic} [assignments]:stm.assignment*
-    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken [field]:LexIdentifierToken [args]:exp* [explicit]:java_Boolean
+    |   {assignment} [target]:stateDesignator [exp]:exp [targetType]:type [expType]:type [classDefinition]:class [stateDefinition]:definition.state [inConstructor]:java_Boolean
+    |   {atomic} [assignments]:stm.assignment* [statedef]:definition.state 
+    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
-    |   {cycles} [cycles]:exp [statement]:stm
-    |   {duration} [duration]:exp [statement]:stm
+    |   {cycles} [cycles]:exp [statement]:stm [value]:java_Long
+    |   {duration} [duration]:exp [statement]:stm [step]:java_Long
     |   {elseIf} [elseIf]:exp [thenStm]:stm
     |   {error}
     |   {exit} [expression]:exp
@@ -554,7 +554,7 @@ objectDesignator {-> package='org.overture.ast.statements'}
     ;
 
 alternativeStm {-> package='org.overture.ast.statements'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm [defs]:definition*
     ;
     
 stmtAlternative {-> package='org.overture.ast.statements'}
@@ -622,7 +622,7 @@ Aspect Declaration
     ;
     
 %stm
-    = [location]:location
+    = [location]:location (type):type
     ;
     
 %stm->#LetDef
