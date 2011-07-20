@@ -1,8 +1,5 @@
 package com.lausdahl.ast.creator.definitions;
 
-import java.util.List;
-import java.util.Vector;
-
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
 import com.lausdahl.ast.creator.methods.CloneMethod;
@@ -27,7 +24,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 	private ClassType type = ClassType.Alternative;
 	// public IClassDefinition superClass;
 	public String rawName;
-	
+
 	public CommonTreeClassDefinition(String rawName,
 			IClassDefinition superClass, ClassType type, Environment env)
 	{
@@ -40,7 +37,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 		this.env = env;
 		super.name = getName();
 
-//		if (type != ClassType.Production /* && !fields.isEmpty() */ && this.type != ClassType.SubProduction)
+		// if (type != ClassType.Production /* && !fields.isEmpty() */ && this.type != ClassType.SubProduction)
 		{
 			methods.add(new ConstructorMethod(this, env));
 			methods.add(new ConstructorTreeFieldsOnlyMethod(this, env));
@@ -57,7 +54,8 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 		methods.add(new ToStringMethod(this, env));
 
-		if (this.type != ClassType.Production && this.type != ClassType.SubProduction)
+		if (this.type != ClassType.Production
+				&& this.type != ClassType.SubProduction)
 		{
 			methods.add(new CloneMethod(this, type, env));
 			methods.add(new CloneWithMapMethod(this, type, env));
@@ -68,32 +66,30 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 			methods.add(new KindNodeMethod(this, env));
 		}
 
-//		if (this.type != ClassType.Token/*&& this.type != ClassType.SubProduction*/)
-//		{
-//			methods.add(new KindMethod(this, env));
-//		}
-		
+		// if (this.type != ClassType.Token/*&& this.type != ClassType.SubProduction*/)
+		// {
+		// methods.add(new KindMethod(this, env));
+		// }
+
 		switch (this.type)
 		{
 			case Alternative:
-				
+
 			case Custom:
-				methods.add(new KindMethod(this,false,env));
+				methods.add(new KindMethod(this, false, env));
 				break;
 			case Production:
-				methods.add(new KindMethod(this,true ,env));
+				methods.add(new KindMethod(this, true, env));
 				break;
 			case SubProduction:
-				methods.add(new KindMethod(this,false,env));
-				methods.add(new KindMethod(this,true,env));
+				methods.add(new KindMethod(this, false, env));
+				methods.add(new KindMethod(this, true, env));
 				break;
 			case Token:
 				break;
-			
-			
+
 		}
 
-		
 		env.addClass(this);
 	}
 
@@ -127,7 +123,9 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 					name = "P" + name;
 					break;
 				case SubProduction:
-					name = "S" + name+ getSuperClassDefinition().getName().substring(1);;
+					name = "S" + name
+							+ getSuperClassDefinition().getName().substring(1);
+					;
 					break;
 				case Token:
 					name = "T" + name;
@@ -198,7 +196,7 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 		Method getM = new GetMethod(this, field, env);
 		methods.add(getM);
-		if(type==ClassType.Production|| type==ClassType.SubProduction)
+		if (type == ClassType.Production || type == ClassType.SubProduction)
 		{
 			field.accessspecifier = AccessSpecifier.Protected;
 		}
@@ -217,16 +215,17 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 	public String getEnumTypeName()
 	{
-		if(type==ClassType.Production)
+		if (type == ClassType.Production)
 		{
-			
-		
-		return "E" + BaseClassDefinition.firstLetterUpper(rawName)
-				+ namePostfix;
-		}else
+
+			return "E" + BaseClassDefinition.firstLetterUpper(rawName)
+					+ namePostfix;
+		} else
 		{
-			return "E" + BaseClassDefinition.firstLetterUpper(rawName)+BaseClassDefinition.firstLetterUpper(((CommonTreeClassDefinition)getSuperClassDefinition()).rawName)
-			+ namePostfix;
+			return "E"
+					+ BaseClassDefinition.firstLetterUpper(rawName)
+					+ BaseClassDefinition.firstLetterUpper(((CommonTreeClassDefinition) getSuperClassDefinition()).rawName)
+					+ namePostfix;
 		}
 	}
 
@@ -238,10 +237,11 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 			case Production:
 				return super.getPackageName();
 			case Alternative:
-				if(super.getPackageName()==null || super.getPackageName().isEmpty())
+				if (super.getPackageName() == null
+						|| super.getPackageName().isEmpty())
 				{
-				return getSuperDef().getPackageName();
-				}else
+					return getSuperDef().getPackageName();
+				} else
 				{
 					return super.getPackageName();
 				}
@@ -255,17 +255,6 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 		}
 		return super.getPackageName();
 	}
+
 	
-	public List<Field> getInheritedFields()
-	{
-		List<Field> fields = new Vector<Field>();
-		IClassDefinition sDef = getSuperDef();
-		if(sDef instanceof CommonTreeClassDefinition)
-		{
-			fields.addAll(((CommonTreeClassDefinition)sDef).getInheritedFields());
-			fields.addAll(sDef.getFields());
-		}
-		
-		return fields;
-	}
 }

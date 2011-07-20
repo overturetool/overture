@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
@@ -38,7 +40,14 @@ public class CloneMethod extends Method
 		List<Field> fields = new Vector<Field>();
 		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
-			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
+			// fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
+			for (Field field : classDefinition.getInheritedFields())
+			{
+				if (!classDefinition.refinesField(field.getName()))
+				{
+					fields.add(field);
+				}
+			}
 		}
 		fields.addAll(c.getFields());
 
@@ -56,17 +65,24 @@ public class CloneMethod extends Method
 					for (Field f : fields)
 					{
 						String name = f.getName();
-						// this.arguments.add(new Argument(f.getType(), name + "_"));
+
+						if (classDefinition.isRefinedField(f))
+						{
+							name = f.getCast() + name;
+						}
 
 						if (f.isList && !f.isDoubleList)
 						{
-							tmp += ("\t\t\tcloneList"+(f.isTypeExternalNotNode()?"External":"")+"(" + name + "),\n");
-						}else if (f.isDoubleList)
+							tmp += ("\t\t\tcloneList"
+									+ (f.isTypeExternalNotNode() ? "External"
+											: "") + "(" + name + "),\n");
+						} else if (f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneListList(" + name + "),\n");
 						} else
 						{
-							if (JavaTypes.isPrimitiveType(f.getType())|| f.type instanceof ExternalEnumJavaClassDefinition)
+							if (JavaTypes.isPrimitiveType(f.getType())
+									|| f.type instanceof ExternalEnumJavaClassDefinition)
 							{
 								tmp += ("\t\t\t" + name + ",\n");
 							} else
@@ -89,8 +105,15 @@ public class CloneMethod extends Method
 					String tmp = "";
 					for (Field f : fields)
 					{
+						String name = f.getName();
+
+						if (classDefinition.isRefinedField(f))
+						{
+							name = f.getCast() + name;
+						}
+
 						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(f.getName()) + "(), ");
+								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
@@ -109,6 +132,21 @@ public class CloneMethod extends Method
 	{
 		super(c, env);
 		this.classType = classType;
+	}
+
+	@Override
+	public Set<String> getRequiredImports()
+	{
+		Set<String> imports = new HashSet<String>();
+		 imports.addAll(super.getRequiredImports());
+		for (Field f : classDefinition.getInheritedFields())
+		{
+			if (classDefinition.isRefinedField(f))
+			{
+imports.addAll(f.getRequiredImports());
+			}
+		}
+return imports;
 	}
 
 	@Override

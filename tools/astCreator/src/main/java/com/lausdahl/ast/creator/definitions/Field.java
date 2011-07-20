@@ -390,4 +390,9 @@ public class Field
 	{
 		return (type instanceof ExternalJavaClassDefinition && !((ExternalJavaClassDefinition) type).extendsNode);
 	}
+	
+	public String getCast()
+	{
+		return "("+ getType()+")";
+	}
 }

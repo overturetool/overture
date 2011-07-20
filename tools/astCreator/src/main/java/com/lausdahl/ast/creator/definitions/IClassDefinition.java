@@ -2,6 +2,7 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Set;
 
+import com.lausdahl.ast.creator.AstCreatorException;
 import com.lausdahl.ast.creator.ToStringAddOn;
 
 
@@ -23,6 +24,16 @@ public interface IClassDefinition extends IInterfaceDefinition
 	IClassDefinition getSuperDef();
 	
 	void addField(Field field);
+	
+	boolean hasField(String name);
+	
+	boolean refinesField(String name);
+	
+	public boolean isRefinedField(Field field);
+	
+	public List<Field> getInheritedFields();
+	
+	public void checkFieldTypeHierarchy() throws AstCreatorException;
 
 	
 	public  enum ClassType

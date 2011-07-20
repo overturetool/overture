@@ -45,9 +45,16 @@ public class ConstructorMethod extends Method
 			skip = skip && fields.isEmpty();
 			for (Field f : fields)
 			{
-				String name = f.getName().replaceAll("_", "") + "_";
-				this.arguments.add(new Argument(f.getMethodArgumentType(), name));
-				sb.append(name + ",");
+				if (classDefinition.refinesField(f.getName()))
+				{
+					// This field is refined in the sub class, so skip it and null the super class field.
+					sb.append("null,");
+				} else
+				{
+					String name = f.getName().replaceAll("_", "") + "_";
+					this.arguments.add(new Argument(f.getMethodArgumentType(), name));
+					sb.append(name + ",");
+				}
 			}
 			if (!fields.isEmpty())
 			{
@@ -76,11 +83,16 @@ public class ConstructorMethod extends Method
 						+ "} node\n");
 			} else
 			{
-				sbDoc.append("\t* @param " + name + " the {@link "
-						+ f.getType() + "} <b>graph</a> node for the {@code "
-						+ name + "} child of this {@link "
+				sbDoc.append("\t* @param "
+						+ name
+						+ " the {@link "
+						+ f.getType()
+						+ "} <b>graph</a> node for the {@code "
+						+ name
+						+ "} child of this {@link "
 						+ classDefinition.getName()
-						+ "} node.\n\t*  <i>The parent of this {@ " + name
+						+ "} node.\n\t*  <i>The parent of this {@ "
+						+ name
 						+ " } will not be changed by adding it to this node.</i>\n");
 
 			}
@@ -108,40 +120,46 @@ public class ConstructorMethod extends Method
 		list.addAll(super.getRequiredImports());
 		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
-			
+
 			List<Field> fields = new Vector<Field>();
-			
+
 			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
 			for (Field field : fields)
 			{
+
+				if (classDefinition.refinesField(field.getName()))
+				{
+					continue;
+				}
+
 				list.addAll(field.getRequiredImports());
-				if(field.isList && !field.isDoubleList)
+				if (field.isList && !field.isDoubleList)
 				{
 					list.add(Environment.listDef.getImportName());
 				}
-				if(field.isDoubleList)
+				if (field.isDoubleList)
 				{
 					list.add(Environment.collectionDef.getImportName());
 					list.add(Environment.listDef.getImportName());
 				}
 			}
-			
+
 			List<String> removeImportsFromSuper = new Vector<String>();
 			removeImportsFromSuper.add(env.graphNodeList.getImportName());
 			removeImportsFromSuper.add(env.graphNodeListList.getImportName());
 			removeImportsFromSuper.add(env.nodeList.getImportName());
 			removeImportsFromSuper.add(env.nodeListList.getImportName());
-			
+
 			list.removeAll(removeImportsFromSuper);
-			
+
 			for (Field field : classDefinition.getFields())
 			{
 				list.addAll(field.getRequiredImports());
-				if(field.isList && !field.isDoubleList)
+				if (field.isList && !field.isDoubleList)
 				{
 					list.add(Environment.listDef.getImportName());
 				}
-				if(field.isDoubleList)
+				if (field.isDoubleList)
 				{
 					list.add(Environment.collectionDef.getImportName());
 					list.add(Environment.listDef.getImportName());

@@ -25,7 +25,9 @@ public class Main
 	public static final boolean extend = false;
 
 	private static final String INPUT_FILENAME_OVERTURE_II =  ".."+ File.separator+".."+File.separator+"core"+File.separator+"ast"+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"overtureII.astv2";
-	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\test.astV2";
+//	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\test.astV2";
+	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\testFieldRefine.astV2";
+	
 	private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\testExtended.astV2";
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
 	private static File generated = new File(".."+File.separator+".."+File.separator+"ast"+File.separator+"src"+File.separator);

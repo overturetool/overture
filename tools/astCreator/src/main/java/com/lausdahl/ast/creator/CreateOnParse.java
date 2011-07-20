@@ -129,7 +129,7 @@ public class CreateOnParse
 								}
 							}
 						}
-					} else if (node.getText().equals("Tokens"))
+					} else if (node.getText().equals("Tokens") && node.getChildCount()>0)
 					{
 						for (Object toke : node.getChildren())
 						{

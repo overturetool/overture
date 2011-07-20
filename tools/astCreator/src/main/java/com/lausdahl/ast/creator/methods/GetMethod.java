@@ -33,7 +33,12 @@ public class GetMethod extends Method
 		this.returnType = f.getType(true);
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("\t\treturn this." + f.getName() + ";");
+		String cast ="";
+		if(classDefinition.isRefinedField(f))
+		{
+			cast = f.getCast();
+		}
+		sb.append("\t\treturn "+cast+"this."+ f.getName() + ";");
 
 		this.body = sb.toString();
 	}

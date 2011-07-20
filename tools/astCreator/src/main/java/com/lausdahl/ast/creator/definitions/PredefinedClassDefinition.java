@@ -91,7 +91,7 @@ public class PredefinedClassDefinition implements IClassDefinition
 	
 	public List<Field> getFields()
 	{
-		return null;
+		return new Vector<Field>();
 	}
 
 	
@@ -178,5 +178,30 @@ public class PredefinedClassDefinition implements IClassDefinition
 	public String getImportName()
 	{
 		return getPackageName() + "." + getSignatureName();
+	}
+
+	public boolean hasField(String name)
+	{
+		return false;//We don't know.
+	}
+
+	public boolean refinesField(String name)
+	{
+		return false;
+	}
+
+	public boolean isRefinedField(Field field)
+	{
+		return false;
+	}
+
+	public List<Field> getInheritedFields()
+	{
+		return new Vector<Field>();
+	}
+
+	public void checkFieldTypeHierarchy()
+	{
+		
 	}
 }

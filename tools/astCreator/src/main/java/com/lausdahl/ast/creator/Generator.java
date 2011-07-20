@@ -46,6 +46,10 @@ public class Generator
 		try
 		{
 			env = new CreateOnParse().parse(inputFile, defaultPackage);
+			for (IClassDefinition def : env.getClasses())
+			{
+				def.checkFieldTypeHierarchy();
+			}
 		} catch (AstCreatorException e)
 		{
 			if (e.fatal)

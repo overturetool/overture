@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.AstCreatorException;
 import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.methods.Method;
@@ -127,6 +128,10 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (Field f : fields)
 		{
+			if (isRefinedField(f))
+			{
+				continue;
+			}
 			if (f.structureType == StructureType.Graph)
 			{
 				sb.append("\n\t/**\n\t* Graph field, parent will not be removed when added and parent \n\t*  of this field may not be this node. Also excluded for visitor.\n\t*/");
@@ -229,6 +234,10 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (Field f : fields)
 		{
+			if (isRefinedField(f))
+			{
+				continue;
+			}
 			sb.append("\n\tprivate " + f.getName() + " : ["
 					+ stripGenericArguments(f.getType()) + "] := nil;");
 		}
@@ -324,4 +333,111 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return this.toStringAddOn;
 	}
 
+	public boolean hasField(String name)
+	{
+		if (getSuperDef() != null && getSuperDef().hasField(name))
+		{
+			return true;
+		}
+		for (Field f : getFields())
+		{
+			if (f.getName().equals(name))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean refinesField(String name)
+	{
+		boolean fieldExistsInSuper = false;
+		if (getSuperDef() != null && getSuperDef().hasField(name))
+		{
+			fieldExistsInSuper = true;
+		}
+		for (Field f : getFields())
+		{
+			if (f.getName().equals(name))
+			{
+				return true && fieldExistsInSuper;
+			}
+		}
+		return false;
+	}
+
+	public boolean isRefinedField(Field field)
+	{
+		boolean existsInSuper = (getSuperDef() != null && getSuperDef().hasField(field.getName()));
+//		return hasField(field.getName()) && existsInSuper;
+		for (Field f : getFields())
+		{
+			if(f == field && existsInSuper)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public List<Field> getInheritedFields()
+	{
+		List<Field> fields = new Vector<Field>();
+		IClassDefinition sDef = getSuperDef();
+		if (sDef != null)
+		{
+			fields.addAll(sDef.getInheritedFields());
+			fields.addAll(sDef.getFields());
+		}
+		return fields;
+	}
+
+	public void checkFieldTypeHierarchy() throws AstCreatorException
+	{
+		for (Field field : getFields())
+		{
+			if (isRefinedField(field))
+			{
+				Field superField = null;
+				for (Field iField : getInheritedFields())
+				{
+					if (field.getName().equals(iField.getName()))
+					{
+						superField = iField;
+						break;
+					}
+				}
+
+				if (!isSubclassOf(field.type, superField.type))
+				{
+					String msg ="Field \"" + field.getName()
+							+ "\" in class " + getName() + " has type \""
+							+ field.getType()
+							+ "\" which is not a subclass of \""
+							+ superField.getType() + "\"";
+					throw new AstCreatorException(msg, null, true);
+				}
+			}
+		}
+		{
+
+		}
+	}
+
+	private boolean isSubclassOf(IInterfaceDefinition subclass,
+			IInterfaceDefinition superClass)
+	{
+		if (subclass == superClass)
+		{
+			return true;
+		}
+
+		if (subclass instanceof IClassDefinition
+				&& ((IClassDefinition) subclass).getSuperDef() != null
+				&& isSubclassOf(((IClassDefinition) subclass).getSuperDef(), superClass))
+		{
+			return true;
+		}
+		return false;
+	}
 }

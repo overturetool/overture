@@ -20,11 +20,12 @@ public class CloneWithMapMethod extends CloneMethod
 		this.name = "clone";
 
 		this.returnType = c.getName();
-//		this.requiredImports.add("java.util.LinkedList");
-//		this.requiredImports.add("java.util.List");
+		// this.requiredImports.add("java.util.LinkedList");
+		// this.requiredImports.add("java.util.List");
 		this.requiredImports.add("java.util.Map");
 
-		this.arguments.add(new Argument("Map<"+env.node.getName()+","+env.node.getName()+">", "oldToNewMap"));
+		this.arguments.add(new Argument("Map<" + env.node.getName() + ","
+				+ env.node.getName() + ">", "oldToNewMap"));
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");
@@ -37,14 +38,21 @@ public class CloneWithMapMethod extends CloneMethod
 		sbDoc.append("\t */");
 
 		StringBuilder sb = new StringBuilder();
-		
+
 		List<Field> fields = new Vector<Field>();
-		if(classDefinition instanceof CommonTreeClassDefinition)
+		if (classDefinition instanceof CommonTreeClassDefinition)
 		{
-			fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
+			// fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
+			for (Field field : ((CommonTreeClassDefinition) classDefinition).getInheritedFields())
+			{
+				if (!classDefinition.refinesField(field.getName()))
+				{
+					fields.add(field);
+				}
+			}
 		}
 		fields.addAll(c.getFields());
-		
+
 		switch (classType)
 		{
 			case Alternative:
@@ -60,16 +68,25 @@ public class CloneWithMapMethod extends CloneMethod
 					for (Field f : fields)
 					{
 						String name = f.getName();
+
+						if (classDefinition.isRefinedField(f))
+						{
+							name = f.getCast() + name;
+						}
+
 						if (f.isList && !f.isDoubleList)
 						{
-							tmp += ("\t\t\tcloneList"+(f.isTypeExternalNotNode()?"External":"")+"(" + name + ", oldToNewMap),\n");
-						}else if (f.isDoubleList)
+							tmp += ("\t\t\tcloneList"
+									+ (f.isTypeExternalNotNode() ? "External"
+											: "") + "(" + name + ", oldToNewMap),\n");
+						} else if (f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneListList(" + name + ", oldToNewMap),\n");
 						} else
 						{
-							
-							if (JavaTypes.isPrimitiveType(f.getType())|| f.type instanceof ExternalEnumJavaClassDefinition)
+
+							if (JavaTypes.isPrimitiveType(f.getType())
+									|| f.type instanceof ExternalEnumJavaClassDefinition)
 							{
 								tmp += ("\t\t\t" + name + ",\n");
 							} else
@@ -85,15 +102,22 @@ public class CloneWithMapMethod extends CloneMethod
 				sb.append("\t\treturn node;");
 				break;
 			case Token:
-				sb.append("\t\t"+c.getName()+" token = new " + c.getName() + "( ");
+				sb.append("\t\t" + c.getName() + " token = new " + c.getName()
+						+ "( ");
 
 				if (!c.getFields().isEmpty())
 				{
 					String tmp = "";
 					for (Field f : fields)
 					{
+						String name = f.getName();
+
+						if (classDefinition.isRefinedField(f))
+						{
+							name = f.getCast() + name;
+						}
 						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(f.getName()) + "(), ");
+								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
@@ -110,25 +134,24 @@ public class CloneWithMapMethod extends CloneMethod
 		this.body = sb.toString();
 	}
 
-	public CloneWithMapMethod(IClassDefinition c, ClassType classType,Environment env)
+	public CloneWithMapMethod(IClassDefinition c, ClassType classType,
+			Environment env)
 	{
-		super(c, classType,env);
+		super(c, classType, env);
 	}
-	
+
 	@Override
 	protected void prepareVdm()
 	{
-		
+
 		skip = true;
-		
-		
-		
+
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
 		this.returnType = c.getName();
-//		this.requiredImports.add("java.util.LinkedList");
-//		this.requiredImports.add("java.util.List");
+		// this.requiredImports.add("java.util.LinkedList");
+		// this.requiredImports.add("java.util.List");
 		this.requiredImports.add("java.util.Map");
 
 		this.arguments.add(new Argument("Map/*<Node,Node>*/", "oldToNewMap"));
@@ -151,8 +174,8 @@ public class CloneWithMapMethod extends CloneMethod
 			case Custom:
 			case Production:
 			case Unknown:
-				sb.append("\t\tdcl node : " + c.getName() + " := new " + c.getName()
-						+ "(\n");
+				sb.append("\t\tdcl node : " + c.getName() + " := new "
+						+ c.getName() + "(\n");
 
 				if (!c.getFields().isEmpty())
 				{
@@ -160,6 +183,11 @@ public class CloneWithMapMethod extends CloneMethod
 					for (Field f : c.getFields())
 					{
 						String name = f.getName();
+
+						if (classDefinition.isRefinedField(f))
+						{
+							name = f.getCast() + name;
+						}
 						if (f.isList)
 						{
 							tmp += ("\t\t\tcloneList(" + name + ", oldToNewMap),\n");
@@ -175,16 +203,21 @@ public class CloneWithMapMethod extends CloneMethod
 				sb.append("\t\treturn node;");
 				break;
 			case Token:
-				sb.append("\t\tdcl node : " + c.getName() + " := new " + c.getName()
-						+ "(");
+				sb.append("\t\tdcl node : " + c.getName() + " := new "
+						+ c.getName() + "(");
 
 				if (!c.getFields().isEmpty())
 				{
 					String tmp = "";
 					for (Field f : c.getFields())
 					{
+						String name = f.getName();
+						if (classDefinition.isRefinedField(f))
+						{
+							name = f.getCast() + name;
+						}
 						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(f.getName()) + "(), ");
+								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
