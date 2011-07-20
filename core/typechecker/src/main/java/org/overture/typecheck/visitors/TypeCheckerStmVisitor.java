@@ -1,7 +1,6 @@
 package org.overture.typecheck.visitors;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -17,11 +16,13 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
-import org.overture.ast.expressions.AIntConstExp;
-import org.overture.ast.expressions.ARealConstExp;
-import org.overture.ast.expressions.AStringConstExp;
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AExpressionPattern;
+import org.overture.ast.patterns.PPatternBind;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
@@ -40,11 +41,16 @@ import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.APeriodicStm;
+import org.overture.ast.statements.ATrapStm;
+import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.PStmtAlternative;
 import org.overture.ast.statements.assistants.ABlockSimpleBlockStmAssistant;
 import org.overture.ast.statements.assistants.ACallObjectStatementAssistant;
 import org.overture.ast.statements.assistants.ACallStmAssistant;
 import org.overture.ast.statements.assistants.PStateDesignatorAssistant;
+import org.overture.ast.statements.assistants.PStmAssistant;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
@@ -55,19 +61,20 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.PPatternBindAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.runtime.Environment;
-import org.overture.runtime.FlatCheckedEnvironment;
-import org.overture.runtime.TypeComparator;
+import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.typecheck.Environment;
+import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.PrivateClassEnvironment;
 import org.overture.typecheck.PublicClassEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
-
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
@@ -287,7 +294,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 				// Convert the variable expression to a string...
     			AVariableExp a1 = (AVariableExp)node.getArgs().get(0);
     			node.getArgs().remove(0);
-    			node.getArgs().add(0, new AStringConstExp(null, a1.getLocation(),
+    			node.getArgs().add(0, new AStringLiteralExp(null, a1.getLocation(),
     				new LexStringToken(
     					a1.getName().getExplicit(true).getName(),a1.getLocation())));
 
@@ -471,9 +478,9 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseACyclesStm(ACyclesStm node, TypeCheckInfo question) 
 	{
 		
-		if (node.getCycles() instanceof AIntConstExp)
+		if (node.getCycles() instanceof AIntLiteralExp)
 		{
-			AIntConstExp i = (AIntConstExp)node.getCycles();
+			AIntLiteralExp i = (AIntLiteralExp)node.getCycles();
 
 			if (i.getValue().value < 0)
 			{
@@ -482,9 +489,9 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 			node.setValue(i.getValue().value);
 		}
-		else if (node.getCycles() instanceof ARealConstExp)
+		else if (node.getCycles() instanceof ARealLiteralExp)
 		{
-			ARealConstExp i = (ARealConstExp)node.getCycles();
+			ARealLiteralExp i = (ARealLiteralExp)node.getCycles();
 
 			if (i.getValue().value < 0 ||
 				Math.floor(i.getValue().value) != i.getValue().value)
@@ -549,9 +556,9 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	{
 		long durationValue = 0;
 		
-		if (node.getDuration() instanceof AIntConstExp)
+		if (node.getDuration() instanceof AIntLiteralExp)
 		{
-			AIntConstExp i = (AIntConstExp)node.getDuration();
+			AIntLiteralExp i = (AIntLiteralExp)node.getDuration();
 
 			if (i.getValue().value < 0)
 			{
@@ -560,9 +567,9 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 			durationValue = i.getValue().value;
 		}
-		else if (node.getDuration() instanceof ARealConstExp)
+		else if (node.getDuration() instanceof ARealLiteralExp)
 		{
-			ARealConstExp i = (ARealConstExp)node.getDuration();
+			ARealLiteralExp i = (ARealLiteralExp)node.getDuration();
 
 			if (i.getValue().value < 0 ||
 				Math.floor(i.getValue().value) != i.getValue().value)
@@ -669,5 +676,162 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		PType rt = node.getStatement().apply(rootVisitor, question);
 		local.unusedCheck();
 		return rt;
+	}
+	
+	
+	@Override
+	public PType caseATrapStm(ATrapStm node, TypeCheckInfo question) {
+		PTypeSet rtypes = new PTypeSet();
+
+		PStm body = node.getBody();
+		
+		PType bt = body.apply(rootVisitor, question);
+		rtypes.add(bt);
+
+		PTypeSet extype = PStmAssistant.exitCheck(body);
+		PType ptype = null;
+
+		if (extype.isEmpty())
+		{
+			TypeCheckerErrors.report(3241, "Body of trap statement does not throw exceptions",node.getLocation(),node);
+			ptype = new AUnknownType(body.getLocation(),false);
+		}
+		else
+		{
+			ptype = extype.getType(body.getLocation());
+		}
+
+		node.getPatternBind().apply(rootVisitor, question);
+		//TODO: PatternBind stuff
+		List<PDefinition> defs = PPatternBindAssistant.getDefinitions(node.getPatternBind());
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
+		Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
+		question.env = local;
+		rtypes.add(node.getWith().apply(rootVisitor, question));
+		
+		node.setType(rtypes.getType(node.getLocation()));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAWhileStm(AWhileStm node, TypeCheckInfo question) {
+		question.qualifiers = null;
+		node.getExp().apply(rootVisitor, question);
+		node.setType(node.getStatement().apply(rootVisitor, question));
+		return node.getStatement().getType();
+	}
+	
+	@Override
+	public PType caseAPeriodicStm(APeriodicStm node, TypeCheckInfo question) {
+		int nargs = (Settings.dialect == Dialect.VDM_RT) ? 4 : 1;
+		Long[] values = new Long[4]; 
+		List<PExp> args = node.getArgs();
+		
+		if (args.size() != nargs)
+		{
+			TypeCheckerErrors.report(3287, "Periodic thread must have " + nargs + " argument(s)",node.getLocation(),node);
+		}
+		else
+		{
+			int i = 0;
+
+			for (PExp arg: args)
+			{
+				arg.getLocation().hit();
+				values[i] = -1L;
+
+				if (arg instanceof AIntLiteralExp)
+				{
+					AIntLiteralExp e = (AIntLiteralExp)arg;
+					values[i] = e.getValue().value;
+				}
+				else if (arg instanceof ARealLiteralExp)
+				{
+					ARealLiteralExp r = (ARealLiteralExp)arg;
+					values[i] = Math.round(r.getValue().value);
+				}
+
+				if (values[i] < 0)
+				{
+					TypeCheckerErrors.report(2027, "Expecting +ive literal number in periodic statement",arg.getLocation(),arg);
+				}
+
+				i++;
+			}
+			
+			node.setPeriod(values[0]);
+			node.setJitter(values[1]);
+			node.setDelay(values[2]);
+			node.setOffset(values[3]);
+			
+			if (values[0] == 0)
+			{
+				TypeCheckerErrors.report(3288, "Period argument must be non-zero",args.get(0).getLocation(),args.get(0));
+			}
+
+			if (args.size() == 4)
+			{
+				if (values[2] >= values[0])
+				{
+					TypeCheckerErrors.report(
+						3289, "Delay argument must be less than the period",args.get(2).getLocation(),args.get(2));
+				}
+			}
+		}
+
+		LexNameToken opname = node.getOpname();
+		
+		opname.setTypeQualifier(new LinkedList<PType>());
+		opname.getLocation().hit();
+		PDefinition opdef = question.env.findName(opname, NameScope.NAMES);
+
+		if (opdef == null)
+		{
+			TypeCheckerErrors.report(3228, opname + " is not in scope",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(), false));
+			return node.getType();
+		}
+
+		// Operation must be "() ==> ()"
+
+		AOperationType expected =
+			new AOperationType(node.getLocation(),false, new LinkedList<PType>(), new AVoidType(node.getLocation(),false));
+		
+		opdef = PDefinitionAssistant.deref(opdef);
+
+		if (opdef instanceof AExplicitOperationDefinition)
+		{
+			AExplicitOperationDefinition def = (AExplicitOperationDefinition)opdef;
+
+			if (!PTypeAssistant.equals(def.getType(), expected))
+			{
+				TypeCheckerErrors.report(3229, opname + " should have no parameters or return type",node.getLocation(),node);
+				TypeCheckerErrors.detail("Actual", def.getType());
+			}
+		}
+		else if (opdef instanceof AImplicitOperationDefinition)
+		{
+			AImplicitOperationDefinition def = (AImplicitOperationDefinition)opdef;
+
+			if (def.getBody() == null)
+			{
+				TypeCheckerErrors.report(3230, opname + " is implicit",node.getLocation(),node);
+			}
+
+			if (!PTypeAssistant.equals(def.getType(), expected))
+			{
+				TypeCheckerErrors.report(3231, opname + " should have no parameters or return type",node.getLocation(),node);
+				TypeCheckerErrors.detail("Actual", def.getType());
+			}
+		}
+		else
+		{
+			TypeCheckerErrors.report(3232, opname + " is not an operation name",node.getLocation(),node);
+		}
+
+		
+		
+		node.setType(new AVoidType(node.getLocation(),false));
+		return node.getType();
 	}
 }
