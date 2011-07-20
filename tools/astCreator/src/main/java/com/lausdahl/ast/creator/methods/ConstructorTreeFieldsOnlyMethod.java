@@ -8,6 +8,7 @@ import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.JavaTypes;
 
 public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 {
@@ -20,8 +21,8 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 	protected void prepare()
 	{
 		skip = true;
-//		skip = classDefinition.getFields().isEmpty();
-//		if(!skip)
+		// skip = classDefinition.getFields().isEmpty();
+		// if(!skip)
 		{
 			List<Field> allFields = new Vector<Field>();
 			if (classDefinition instanceof CommonTreeClassDefinition)
@@ -29,17 +30,17 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 				allFields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
 			}
 			allFields.addAll(classDefinition.getFields());
-			
+
 			for (Field field : allFields)
 			{
-				if(field.structureType==StructureType.Graph)
+				if (field.structureType == StructureType.Graph)
 				{
 					skip = false;
 					break;
 				}
 			}
 		}
-		if(skip)
+		if (skip)
 		{
 			return;
 		}
@@ -58,13 +59,17 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 
 		StringBuilder sb = new StringBuilder();
 
-		if (classDefinition instanceof CommonTreeClassDefinition)
+		sb.append("\t\tsuper(");
+		List<Field> fields = new Vector<Field>();
+		fields.addAll(classDefinition.getInheritedFields());
+		skip = skip && fields.isEmpty();
+		for (Field f : fields)
 		{
-			sb.append("\t\tsuper(");
-			List<Field> fields = new Vector<Field>();
-			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
-			skip = skip && fields.isEmpty();
-			for (Field f : fields)
+			if (classDefinition.refinesField(f.getName()))
+			{
+				// This field is refined in the sub class, so skip it and null the super class field.
+				sb.append(JavaTypes.getDefaultValue(f.getType())+",");
+			} else
 			{
 				if (f.structureType == StructureType.Tree)
 				{
@@ -73,16 +78,15 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 					sb.append(name + ",");
 				} else
 				{
-					sb.append("null" + ",");
+					sb.append(JavaTypes.getDefaultValue(f.getType())+",");
 				}
 			}
-			if (!fields.isEmpty())
-			{
-				sb.delete(sb.length() - 1, sb.length());
-			}
-			sb.append(");\n");
-
 		}
+		if (!fields.isEmpty())
+		{
+			sb.delete(sb.length() - 1, sb.length());
+		}
+		sb.append(");\n");
 
 		for (Field f : classDefinition.getFields())
 		{
@@ -102,6 +106,19 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 						+ f.getType() + "} node for the {@code " + name
 						+ "} child of this {@link " + classDefinition.getName()
 						+ "} node\n");
+			}else if(JavaTypes.isPrimitiveType(f.getType()))
+			{
+				sb.append("\t\t");
+				sb.append("this.set");
+				sb.append(CommonTreeClassDefinition.javaClassName(f.getName()));
+				sb.append("(");
+				sb.append(JavaTypes.getDefaultValue(f.getType()));
+				sb.append(");\n");
+
+//				sbDoc.append("\t* @param " + name + " the {@link "
+//						+ f.getType() + "} node for the {@code " + name
+//						+ "} child of this {@link " + classDefinition.getName()
+//						+ "} node\n");
 			}
 		}
 
@@ -109,8 +126,5 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		this.javaDoc = sbDoc.toString();
 		this.body = sb.toString();
 	}
-
-	
-	
 
 }

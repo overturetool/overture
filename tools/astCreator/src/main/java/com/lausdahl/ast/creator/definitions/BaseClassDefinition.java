@@ -411,11 +411,19 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 				if (!isSubclassOf(field.type, superField.type))
 				{
 					String msg ="Field \"" + field.getName()
-							+ "\" in class " + getName() + " has type \""
+							+ "\" in class " + getName() + " with type \""
 							+ field.getType()
-							+ "\" which is not a subclass of \""
+							+ "\" is not a subclass of \""
 							+ superField.getType() + "\"";
 					throw new AstCreatorException(msg, null, true);
+				}else
+				{
+					String msg ="Field \"" + field.getName()
+					+ "\" in class " + getName() + " with type \""
+					+ field.getType()
+					+ "\" specializes of \""
+					+ superField.getType() + "\"";
+					System.out.println("WARNING: "+msg);
 				}
 			}
 		}

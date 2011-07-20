@@ -37,32 +37,28 @@ public class ConstructorMethod extends Method
 
 		StringBuilder sb = new StringBuilder();
 
-		if (classDefinition instanceof CommonTreeClassDefinition)
+		sb.append("\t\tsuper(");
+		List<Field> fields = new Vector<Field>();
+		fields.addAll(classDefinition.getInheritedFields());
+		skip = skip && fields.isEmpty();
+		for (Field f : fields)
 		{
-			sb.append("\t\tsuper(");
-			List<Field> fields = new Vector<Field>();
-			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
-			skip = skip && fields.isEmpty();
-			for (Field f : fields)
+			if (classDefinition.refinesField(f.getName()))
 			{
-				if (classDefinition.refinesField(f.getName()))
-				{
-					// This field is refined in the sub class, so skip it and null the super class field.
-					sb.append("null,");
-				} else
-				{
-					String name = f.getName().replaceAll("_", "") + "_";
-					this.arguments.add(new Argument(f.getMethodArgumentType(), name));
-					sb.append(name + ",");
-				}
-			}
-			if (!fields.isEmpty())
+				// This field is refined in the sub class, so skip it and null the super class field.
+				sb.append("null,");
+			} else
 			{
-				sb.delete(sb.length() - 1, sb.length());
+				String name = f.getName().replaceAll("_", "") + "_";
+				this.arguments.add(new Argument(f.getMethodArgumentType(), name));
+				sb.append(name + ",");
 			}
-			sb.append(");\n");
-
 		}
+		if (!fields.isEmpty())
+		{
+			sb.delete(sb.length() - 1, sb.length());
+		}
+		sb.append(");\n");
 
 		for (Field f : classDefinition.getFields())
 		{
