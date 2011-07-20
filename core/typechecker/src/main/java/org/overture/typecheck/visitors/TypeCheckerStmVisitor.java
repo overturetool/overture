@@ -24,7 +24,13 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AExpressionPattern;
+import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.PBind;
+import org.overture.ast.patterns.assistants.ATypeBindAssistant;
+import org.overture.ast.patterns.assistants.PBindAssistant;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.patterns.assistants.PPatternBindAssistant;
 import org.overture.ast.statements.AAlwaysStm;
@@ -525,7 +531,10 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		return node.getStatement().apply(rootVisitor, question);
 	}
 	
-	@Override
+	
+	//TODO: Missing the other DefStatement
+	
+	@Override 
 	public PType caseADefLetDefStm(ADefLetDefStm node, TypeCheckInfo question) 
 	{
 		
@@ -733,7 +742,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	@Override
 	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question) 
 	{
-		
+		 
 		node.setDef(new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistant.getDefault(),
 				null, PMultipleBindAssistant.getMultipleBindList(node.getBind()), null));
 		node.getDef().apply(rootVisitor, question);
@@ -1096,4 +1105,59 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		
 		return null;
 	}
+	
+	@Override
+	public PType caseADefPatternBind(ADefPatternBind node,
+			TypeCheckInfo question) {
+		
+		node.setDefs(null);
+
+		PBind bind = node.getBind();
+		PType type = node.getType();
+		
+		if (bind != null)
+		{
+			if (bind instanceof ATypeBind)
+			{
+				ATypeBind typebind = (ATypeBind)bind;
+				ATypeBindAssistant.typeResolve(typebind, rootVisitor, question);
+
+				if (!TypeComparator.compatible(typebind.getType(), type))
+				{
+					TypeCheckerErrors.report(3198, "Type bind not compatible with expression",bind.getLocation(),bind);
+					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
+				}
+			}
+			else
+			{
+				ASetBind setbind = (ASetBind)bind;
+				ASetType settype = PTypeAssistant.getSet(setbind.getSet().apply(rootVisitor, question));
+
+				if (!TypeComparator.compatible(type, settype.getSetof()))
+				{
+					TypeCheckerErrors.report(3199, "Set bind not compatible with expression",bind.getLocation(),bind);
+					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
+				}
+			}
+
+			PDefinition def =
+				new AMultiBindListDefinition(bind.getLocation(), null, null, null, null, null, null, PBindAssistant.getMultipleBindList(bind), null);
+
+			def.apply(rootVisitor, question);
+			List<PDefinition> defs = new LinkedList<PDefinition>();
+			defs.add(def);
+			node.setDefs(defs);
+		}
+		else
+		{
+			assert (type != null) :
+					"Can't typecheck a pattern without a type";
+
+			PPatternAssistant.typeResolve(node.getPattern(), rootVisitor, question);
+			node.setDefs(PPatternAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+		}
+		return null;
+	}
+	
+	
 }
