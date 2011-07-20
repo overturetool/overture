@@ -499,17 +499,17 @@ export {-> package='org.overture.ast.modules'}
 
 stm {-> package='org.overture.ast.statements'}
     =   {always} [always]:stm [body]:stm
-    |   {assignment} [target]:stateDesignator [exp]:exp [targetType]:type [expType]:type [classDefinition]:class [stateDefinition]:definition.state [inConstructor]:java_Boolean
-    |   {atomic} [assignments]:stm.assignment* [statedef]:definition.state 
+    |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type (classDefinition):class (stateDefinition):definition.state (inConstructor):java_Boolean
+    |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
     |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
-    |   {cycles} [cycles]:exp [statement]:stm [value]:java_Long
-    |   {duration} [duration]:exp [statement]:stm [step]:java_Long
+    |   {cycles} [cycles]:exp [statement]:stm (value):java_Long
+    |   {duration} [duration]:exp [statement]:stm (step):java_Long
     |   {elseIf} [elseIf]:exp [thenStm]:stm
     |   {error}
-    |   {exit} [expression]:exp
+    |   {exit} [expression]:exp (expType):type
     |   {forAll} [pattern]:pattern [set]:exp [statement]:stm
     |   {forIndex} [var]:LexNameToken [from]:exp [to]:exp [by]:exp [statement]:stm
     |   {forPatternBind} [patternBind]:patternBind [reverse]:java_Boolean [exp]:exp [statement]:stm
@@ -527,7 +527,7 @@ stm {-> package='org.overture.ast.statements'}
     //|   {traceVariable} //TODO why does this have a value inside?
     |   {trap} [patternBind]:patternBind [with]:stm [body]:stm
     |   {while} [exp]:exp [statement]:stm
-    |   {periodic} [opname]:LexNameToken [args]:exp*
+    |   {periodic} [opname]:LexNameToken [args]:exp* (period):java_Long (jitter):java_Long (delay):java_Long (offset):java_Long
     ; 
     
 #LetDef {-> package='org.overture.ast.statements'}
@@ -554,7 +554,7 @@ objectDesignator {-> package='org.overture.ast.statements'}
     ;
 
 alternativeStm {-> package='org.overture.ast.statements'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm [defs]:definition*
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm (defs):definition*
     ;
     
 stmtAlternative {-> package='org.overture.ast.statements'}
