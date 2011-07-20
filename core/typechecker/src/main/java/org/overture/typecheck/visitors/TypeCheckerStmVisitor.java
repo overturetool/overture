@@ -11,19 +11,22 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AExpressionPattern;
-import org.overture.ast.patterns.PPatternBind;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternBindAssistant;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -37,15 +40,27 @@ import org.overture.ast.statements.ACyclesStm;
 import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AExitStm;
+import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
+import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASkipStm;
+import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.PStmtAlternative;
 import org.overture.ast.statements.assistants.ABlockSimpleBlockStmAssistant;
 import org.overture.ast.statements.assistants.ACallObjectStatementAssistant;
 import org.overture.ast.statements.assistants.ACallStmAssistant;
@@ -59,13 +74,14 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PPatternBindAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
+import org.overture.typecheck.FlatEnvironment;
 import org.overture.typecheck.PrivateClassEnvironment;
 import org.overture.typecheck.PublicClassEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
@@ -76,7 +92,6 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.typechecker.NameScope;
-
 
 
 public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, PType> 
@@ -416,6 +431,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 	}
 	
+	//TODO correct, possibly wrong typecheck implementation
 	@Override
 	public PType caseACaseAlternativeStm(ACaseAlternativeStm node,TypeCheckInfo question) 
 	{
@@ -484,7 +500,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 			if (i.getValue().value < 0)
 			{
-				TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getLocation(), node);
+				TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
 			}
 
 			node.setValue(i.getValue().value);
@@ -496,14 +512,14 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			if (i.getValue().value < 0 ||
 				Math.floor(i.getValue().value) != i.getValue().value)
 			{
-				TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getLocation(), node);
+				TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
 			}
 
 			node.setValue((long) i.getValue().value);
 		}
 		else
 		{
-			TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getLocation(), node);
+			TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
 		}
 
 		return node.getStatement().apply(rootVisitor, question);
@@ -562,7 +578,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 			if (i.getValue().value < 0)
 			{
-				TypeCheckerErrors.report(3281, "Argument to duration must be integer >= 0", node.getLocation(), node);
+				TypeCheckerErrors.report(3281, "Argument to duration must be integer >= 0", node.getDuration().getLocation(), node.getDuration());
 			}
 
 			durationValue = i.getValue().value;
@@ -574,7 +590,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			if (i.getValue().value < 0 ||
 				Math.floor(i.getValue().value) != i.getValue().value)
 			{
-				TypeCheckerErrors.report(3282, "Argument to duration must be integer >= 0", node.getLocation(), node);
+				TypeCheckerErrors.report(3282, "Argument to duration must be integer >= 0", node.getDuration().getLocation(), node.getDuration());
 			}
 
 			durationValue = (long)i.getValue().value;
@@ -623,7 +639,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAForAllStm(AForAllStm node, TypeCheckInfo question) {
+	public PType caseAForAllStm(AForAllStm node, TypeCheckInfo question) 
+	{
 		node.setType(node.getSet().apply(rootVisitor, question));
 		PPatternAssistant.typeResolve(node.getPattern(), rootVisitor, question);
 
@@ -645,7 +662,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAForIndexStm(AForIndexStm node, TypeCheckInfo question) {
+	public PType caseAForIndexStm(AForIndexStm node, TypeCheckInfo question) 
+	{
 		PType ft = node.getFrom().apply(rootVisitor,question);
 		PType tt = node.getTo().apply(rootVisitor,question);
 
@@ -678,6 +696,165 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		return rt;
 	}
 	
+	@Override
+	public PType caseAIfStm(AIfStm node, TypeCheckInfo question) 
+	{
+		
+		PType test = node.getIfExp().apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isType(test, ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getLocation(), node);
+		}
+
+		Set<PType> rtypes = new HashSet<PType>();
+		rtypes.add(node.getThenStm().apply(rootVisitor, question));
+
+		if (node.getElseIf()!= null)
+		{
+			for (AElseIfStm stmt: node.getElseIf())
+			{
+				rtypes.add(stmt.apply(rootVisitor, question));
+			}
+		}
+
+		if (node.getElseStm() != null)
+		{
+			rtypes.add(node.getElseStm().apply(rootVisitor, question));
+		}
+		else
+		{
+			rtypes.add(new AVoidType(node.getLocation(), false));
+		}
+		
+		return PTypeAssistant.getType(rtypes, node.getLocation());
+	}
+	
+	@Override
+	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question) 
+	{
+		
+		node.setDef(new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistant.getDefault(),
+				null, PMultipleBindAssistant.getMultipleBindList(node.getBind()), null));
+		node.getDef().apply(rootVisitor, question);
+		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
+
+		if (node.getSuchThat()!= null && !PTypeAssistant.isType(node.getSuchThat().apply(rootVisitor, question), ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getLocation(), node);
+		}
+
+		PType r = node.getStatement().apply(rootVisitor, question);
+		local.unusedCheck();
+		return r;
+	}
+	
+	@Override
+	public PType caseANonDeterministicSimpleBlockStm(
+			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question) 
+	{
+
+		//no type check
+		return null;
+	}
+	
+	@Override
+	public PType caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
+			TypeCheckInfo question) 
+	{
+		
+		return new AUnknownType(node.getLocation(), false);	// Because we terminate anyway
+	}
+	
+	@Override
+	public PType caseAReturnStm(AReturnStm node, TypeCheckInfo question) 
+	{
+
+		if (node.getExpression()== null)
+		{
+			return new AVoidReturnType(node.getLocation(), false);
+		}
+		else
+		{
+			return node.getExpression().apply(rootVisitor, question);
+		}
+	}
+	
+	
+	@Override
+	public PType caseASkipStm(ASkipStm node, TypeCheckInfo question) 
+	{
+		return new AVoidType(node.getLocation(), false);
+	}
+	
+	@Override
+	public PType caseASpecificationStm(ASpecificationStm node, TypeCheckInfo question) 
+	{
+
+		List<PDefinition> defs = new LinkedList<PDefinition>();
+
+		// Now we build local definitions for each of the externals, so
+		// that they can be added to the local environment, while the
+		// global state is made inaccessible.
+
+		if (node.getExternals()!= null)
+		{
+    		for (AExternalClause clause: node.getExternals())
+    		{
+    			for (LexNameToken name: clause.getIdentifiers())
+    			{
+    				if (question.env.findName(name, NameScope.STATE) == null)
+    				{
+    					TypeCheckerErrors.report(3274, "External variable is not in scope: " + name, name.getLocation(), name);
+    				}
+    				else
+    				{
+    					defs.add(new ALocalDefinition(name.location, name, NameScope.STATE, false, null, 
+    							PAccessSpecifierAssistant.getDefault(), clause.getType(), false));
+    				}
+    			}
+    		}
+		}
+
+		if (node.getErrors()!= null)
+		{
+			for (AErrorCase err: node.getErrors())
+			{
+				PType lt = err.getLeft().apply(rootVisitor, question);
+				PType rt = err.getRight().apply(rootVisitor, question);
+
+				if (!PTypeAssistant.isType(lt, ABooleanBasicType.class))
+				{
+					TypeCheckerErrors.report(3275, "Error clause must be a boolean", err.getLeft().getLocation(), err.getLeft());
+				}
+
+				if (!PTypeAssistant.isType(rt, ABooleanBasicType.class))
+				{
+					TypeCheckerErrors.report(3275, "Error clause must be a boolean", err.getRight().getLocation(), err.getRight());
+				}
+			}
+		}
+
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
+		Environment local = new FlatEnvironment(defs, question.env);	// NB. No check //Unused
+		
+		
+		if (node.getPrecondition() != null &&
+			!PTypeAssistant.isType(node.getPrecondition().apply(rootVisitor, new TypeCheckInfo(local)), ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3233, "Precondition is not a boolean expression", node.getPrecondition().getLocation(), 
+					node.getPrecondition());
+		}
+
+		if (node.getPostcondition() != null &&
+			!!PTypeAssistant.isType(node.getPostcondition().apply(rootVisitor, new TypeCheckInfo(local)), ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3234, "Postcondition is not a boolean expression", node.getPostcondition().getLocation(), 
+					node.getPostcondition());
+		}
+
+		return new AVoidType(node.getLocation(), false);
+	}
 	
 	@Override
 	public PType caseATrapStm(ATrapStm node, TypeCheckInfo question) {
@@ -833,5 +1010,90 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		
 		node.setType(new AVoidType(node.getLocation(),false));
 		return node.getType();
+	}
+
+	
+	@Override
+	public PType caseAStartStm(AStartStm node, TypeCheckInfo question) 
+	{
+		
+		PType type = node.getObj().apply(rootVisitor, question);
+
+		if (PTypeAssistant.isSet(type))
+		{
+			ASetType set = PTypeAssistant.getSet(type);
+
+			if (!PTypeAssistant.isClass(set.getSetof()))
+			{
+				TypeCheckerErrors.report(3235, "Expression is not a set of object references", node.getObj().getLocation(), node.getObj());
+			}
+			else
+			{
+				AClassType ctype = PTypeAssistant.getClassType(set.getSetof());
+				
+				if (SClassDefinitionAssistant.findThread(ctype.getClassdef()) == null)
+				{
+					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
+				}
+			}
+		}
+		else if (PTypeAssistant.isClass(type))
+		{
+			AClassType ctype = PTypeAssistant.getClassType(type);
+
+			if (SClassDefinitionAssistant.findThread(ctype.getClassdef()) == null)
+			{
+				TypeCheckerErrors.report(3237, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
+			}
+		}
+		else
+		{
+			TypeCheckerErrors.report(3238, "Expression is not an object reference or set of object references", 
+					node.getObj().getLocation(), node.getObj());
+		}
+
+		return new AVoidType(node.getLocation(), false);
+	}
+	
+	
+	@Override
+	public PType caseASubclassResponsibilityStm(ASubclassResponsibilityStm node, TypeCheckInfo question) 
+	{
+		return new AUnknownType(node.getLocation(), false);	// Because we terminate anyway
+	}
+	
+	@Override
+	public PType caseATixeStm(ATixeStm node, TypeCheckInfo question) {
+		
+		PType rt = node.getBody().apply(rootVisitor, question);
+		Set<PType> extypes = PStmAssistant.exitCheck(node.getBody());
+
+		if (!extypes.isEmpty())
+		{
+			PType union = PTypeAssistant.getType(extypes, node.getLocation());
+
+    		for (ATixeStmtAlternative tsa: node.getTraps())
+    		{
+    			tsa.apply(rootVisitor, question);
+    		}
+		}
+
+		return rt;
+	}
+	
+	@Override
+	public PType caseATixeStmtAlternative(ATixeStmtAlternative node,TypeCheckInfo question) {
+		
+		//TODO fix 
+		//patternBind.typeCheck(base, scope, ext)
+		//PPatternBindAssistant.typeCheck(node.getPatternBind(), null, rootVisitor, question);
+		//DefinitionList defs = patternBind.getDefinitions(); 
+		List<PDefinition> defs = PPatternBindAssistant.getDefinitions(node.getPatternBind());
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
+		Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
+		node.getStatement().apply(rootVisitor, question);
+		local.unusedCheck();
+		
+		return null;
 	}
 }

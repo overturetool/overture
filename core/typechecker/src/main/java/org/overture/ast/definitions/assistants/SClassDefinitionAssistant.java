@@ -557,6 +557,11 @@ public class SClassDefinitionAssistant {
 		PDefinitionListAssistant.typeResolve(d.getDefinitions(),rootVisitor,newInfo);
 		
 	}
+	
+	public static PDefinition findThread(SClassDefinition d)
+	{
+		return  SClassDefinitionAssistant.findName(d, d.getName().getThreadName(), NameScope.NAMES);
+	}
 
 	public static PDefinition findConstructor(SClassDefinition classdef,
 			List<PType> argtypes) {
