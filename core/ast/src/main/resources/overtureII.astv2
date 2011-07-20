@@ -313,7 +313,7 @@ multipleBind {-> package='org.overture.ast.patterns'}
     ;
 
 patternBind {-> package='org.overture.ast.patterns'}
-    = {def} [location]:location [pattern]:pattern [bind]:bind
+    = {def} [location]:location [pattern]:pattern [bind]:bind [defs]:definition*
     ;
     
 definition {-> package='org.overture.ast.definitions'}
@@ -514,7 +514,7 @@ stm {-> package='org.overture.ast.statements'}
     |   {forIndex} [var]:LexNameToken [from]:exp [to]:exp [by]:exp [statement]:stm
     |   {forPatternBind} [patternBind]:patternBind [reverse]:java_Boolean [exp]:exp [statement]:stm
     |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
-    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm
+    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm [def]:definition.multiBindList
     |   #LetDef
     |   {notYetSpecified} [opname]:LexNameToken [args]:exp*
     |   {return} [expression]:exp
