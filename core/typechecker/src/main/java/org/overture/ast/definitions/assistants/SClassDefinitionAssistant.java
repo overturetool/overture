@@ -544,6 +544,7 @@ public class SClassDefinitionAssistant {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {

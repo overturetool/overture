@@ -1,6 +1,5 @@
 package org.overture.ast.statements.assistants;
 
-import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.types.assistants.PTypeSet;

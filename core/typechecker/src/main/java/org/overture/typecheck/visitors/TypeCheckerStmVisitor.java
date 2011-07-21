@@ -70,7 +70,6 @@ import org.overture.ast.statements.assistants.ACallObjectStatementAssistant;
 import org.overture.ast.statements.assistants.ACallStmAssistant;
 import org.overture.ast.statements.assistants.PStateDesignatorAssistant;
 import org.overture.ast.statements.assistants.PStmAssistant;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;

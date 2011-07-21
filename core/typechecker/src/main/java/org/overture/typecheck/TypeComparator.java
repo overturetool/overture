@@ -50,7 +50,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.ANumericBasicTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 
-import com.sun.corba.se.spi.legacy.interceptor.UnknownType;
+
 
 
 

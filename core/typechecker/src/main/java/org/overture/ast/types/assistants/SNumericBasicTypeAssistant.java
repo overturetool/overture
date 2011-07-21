@@ -9,7 +9,6 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.lex.LexIntegerToken;
 import org.overturetool.vdmj.lex.LexLocation;
 
 

@@ -1,9 +1,5 @@
 package org.overture.ast.statements.assistants;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ACallObjectStm;
@@ -23,7 +19,6 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SLetDefStm;
 import org.overture.ast.statements.SSimpleBlockStm;
-import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeSet;
 
 public class PStmAssistant {
