@@ -18,6 +18,7 @@
 	<module>typechecker</module>
 	<module>interpreter</module>
 	<module>vdmjparsertest</module>
+	<module>vdmjtypecheckertest</module>
 
    
   </modules>
