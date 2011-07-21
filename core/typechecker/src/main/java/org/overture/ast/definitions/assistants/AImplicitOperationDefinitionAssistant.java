@@ -75,7 +75,7 @@ public class AImplicitOperationDefinitionAssistant {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getOperationType().getParameters());
+			d.getName().setTypeQualifier(d.getType().getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityStm)
 			{

@@ -229,7 +229,7 @@ public class AExplicitFunctionDefinitionAssistant {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getFunctionType().getParameters());
+			d.getName().setTypeQualifier(d.getType().getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)
 			{

@@ -367,7 +367,8 @@ public class SClassDefinitionAssistant {
 		PStm body = new AClassInvariantStm(d.getLocation(),invname, invdefs);
 
 		
-		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
+//		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
+		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, PAccessSpecifierAssistant.getDefault(), null, body, null, null, type, null,false);
 		res.setParameterPatterns(new Vector<PPattern>());
 		
 		return res;

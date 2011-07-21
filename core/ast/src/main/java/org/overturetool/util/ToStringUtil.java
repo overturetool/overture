@@ -44,7 +44,7 @@ public class ToStringUtil
 		}
 
 		return d.getAccess() + d.getName().name +
-				(d.getTypeParams().isEmpty() ? ": " : "[" + getTypeListString(d.getTypeParams()) + "]: ") + d.getFunctionType() +
+				(d.getTypeParams().isEmpty() ? ": " : "[" + getTypeListString(d.getTypeParams()) + "]: ") + d.getType() +
 				"\n\t" + d.getName().name + params + " ==\n" + d.getBody() +
 				(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
 				(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition());

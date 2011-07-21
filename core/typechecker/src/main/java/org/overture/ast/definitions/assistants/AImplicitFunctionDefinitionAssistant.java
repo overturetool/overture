@@ -130,7 +130,7 @@ public class AImplicitFunctionDefinitionAssistant {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getTypeFunction().getParameters());
+			d.getName().setTypeQualifier(d.getType().getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)
 			{

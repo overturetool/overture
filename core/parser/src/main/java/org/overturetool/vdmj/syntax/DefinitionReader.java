@@ -35,6 +35,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
@@ -748,10 +749,13 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 
-		return new AExplicitFunctionDefinition(funcName.location,
-			idToName(funcName), scope,false,null,getDefaultAccess(),null,typeParams,
-			 parameters,type,body,precondition,postcondition,measure,
-			 null,null,null,null,false,false,0,null,null,false,false);
+//		return new AExplicitFunctionDefinition(funcName.location,
+//			idToName(funcName), scope,false,null,getDefaultAccess(),typeParams,
+//			 parameters,type,body,precondition,postcondition,measure,
+//			 null,null,null,null,false,false,0,null,null,false,false);
+//		
+		return new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, 
+				false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
 	}
 
 	private PDefinition readImplicitFunctionDefinition(
@@ -864,8 +868,11 @@ public class DefinitionReader extends SyntaxReader
 		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, (PType) resultPattern.getType().clone());
 		// functionType.setDefinitions(value) = new DefinitionList(this);
 
-		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), functionType, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
+//		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), functionType, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
 
+		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), 
+				scope, false, getDefaultAccess(), typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, functionType);
+		
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(functionDef);
 		functionType.setDefinitions(defs);
@@ -958,9 +965,32 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
-		return new AStateDefinition(name.location,idToName(name),null,null,null,null, 
-				null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,
-				null,null, null);
+//		return new AStateDefinition(name.location,idToName(name),NameScope.STATE,null,null,null, 
+//				null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,
+//				null,null, null);
+		
+		ARecordInvariantType recordType = new ARecordInvariantType(name.location,false,idToName(name), fieldList);
+		ALocalDefinition recordDefinition = new ALocalDefinition(name.location,  idToName(name), NameScope.STATE, true, getDefaultAccess(),recordType,null);
+//		recordDefinition.markUsed();	// Can't be exported anyway
+//		statedefs.add(recordDefinition);
+		
+		AStateDefinition stateDef = new AStateDefinition(name.location, idToName(name),NameScope.STATE, false, getDefaultAccess(), null, fieldList, invPattern, invExpression, null, initPattern, initExpression, null, recordDefinition, recordType);
+		
+		stateDef.getStateDefs().add(recordDefinition);
+		
+		for (AFieldField f : fieldList)
+		{
+			stateDef.getStateDefs().add(new ALocalDefinition(
+					f.getTagname().location, f.getTagname(), NameScope.STATE, false,getDefaultAccess(),f.getType(),null));
+
+				ALocalDefinition ld = new ALocalDefinition(f.getTagname().location,
+					f.getTagname().getOldName(), NameScope.OLDSTATE, true, getDefaultAccess(),f.getType(),null);
+
+//				ld.markUsed();		// Else we moan about unused ~x names
+				stateDef.getStateDefs().add(ld);
+		}
+		
+		return stateDef;
 	}
 
 	private PDefinition readOperationDefinition()
@@ -1043,9 +1073,12 @@ public class DefinitionReader extends SyntaxReader
 //super(Pass.DEFS, name.location, name, NameScope.GLOBAL);
 		
 		
-		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location,
-			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(), type, parameters,body,
-			precondition,postcondition,type,null,null,null,null,null,false);
+//		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location,
+//			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(), type, parameters,body,
+//			precondition,postcondition,type,null,null,null,null,null,false);
+		
+		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location, idToName(funcName), 
+				NameScope.GLOBAL, false, getDefaultAccess(), parameters, body, precondition, postcondition, type, null, false);
 
 		return def;
 	}
@@ -1130,9 +1163,13 @@ public class DefinitionReader extends SyntaxReader
 		AOperationType operationType = new AOperationType(funcName.location, false, null, ptypes, (resultPattern == null ? new AVoidType(funcName.location, false, null)
 				: resultPattern.getType()));
 		
+//		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
+//			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(),null, parameterPatterns, resultPattern,
+//			body,spec.getExternals(),spec.getPrecondition(),spec.getPostcondition(),spec.getErrors(),operationType,null,null,null,null,null,false);
+		
 		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
-			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(),null, parameterPatterns, resultPattern,
-			body,spec.getExternals(),spec.getPrecondition(),spec.getPostcondition(),spec.getErrors(),operationType,null,null,null,null,null,false);
+			idToName(funcName),NameScope.GLOBAL,false, getDefaultAccess(), parameterPatterns, resultPattern, body, spec.getExternals(), spec.getPrecondition(), 
+			spec.getPostcondition(), spec.getErrors(), operationType, null, false);
 		
 		return def;
 	}

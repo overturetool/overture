@@ -25,7 +25,7 @@ public class AExplicitOperationDefinitionAssistant {
 			AExplicitOperationDefinition node) {
 		
 		Set<PDefinition> defs = new HashSet<PDefinition>();
-		Iterator<PType> titer = node.getOperationType().getParameters().iterator();
+		Iterator<PType> titer = node.getType().getParameters().iterator();
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
@@ -89,7 +89,7 @@ public class AExplicitOperationDefinitionAssistant {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getOperationType().getParameters());
+			d.getName().setTypeQualifier(d.getType().getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityStm)
 			{

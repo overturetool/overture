@@ -31,7 +31,7 @@ public class AFunctionTypeAssistant {
 			}
 
 			ft.setParameters(fixed);
-			ft.setResult(ft.getResult().apply(rootVisitor, question));
+			ft.setResult(PTypeAssistant.typeResolve(ft.getResult(), root, rootVisitor, question));
 			return ft;
 		} catch (TypeCheckException e) {
 			unResolve(ft);

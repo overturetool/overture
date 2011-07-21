@@ -45,6 +45,15 @@ public class ModuleSlTypeCheckTest extends TestCase
 		}
 		
 		assertEquals(errorMessages,0,mtc.getErrorCount());
+		
+		if (mtc != null && mtc.getWarningCount() > 0)
+		{
+			// perrs += reader.getErrorCount();
+			StringWriter s = new StringWriter();
+			mtc.printWarnings(new PrintWriter(s));//new PrintWriter(System.out));
+			String warningMessages ="\n"+s.toString()+"\n";
+			System.out.println(s.toString());
+		}
 	}
 
 	private List<AModuleModules> parse(File file) throws ParserException,

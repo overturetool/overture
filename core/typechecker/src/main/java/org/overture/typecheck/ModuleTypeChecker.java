@@ -108,8 +108,8 @@ public class ModuleTypeChecker extends TypeChecker
 				}
 			}
 
-			//if (!m1.gettypechecked)
-				nothing = false;
+//			if (!m1.gettypechecked) nothing = false;
+			/*if (!m1.gettypechecked)*/ nothing = false;
 		}
 
 		if (nothing)

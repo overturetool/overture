@@ -324,26 +324,26 @@ definition {-> package='org.overture.ast.definitions'}
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
     |   {explicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatternList]:pattern**
-                            [functionType]:type.function 
+                            [type]:type.function 
                             [body]:exp 
                             [precondition]:exp 
                             [postcondition]:exp
                             [measure]:LexNameToken
                             
-                            [predef]:explicitFunction 
-                            [postdef]:explicitFunction
-                            [measureDef]:definition
-                            [paramDefinitionList]:definition*
+                            (predef):explicitFunction 
+                            (postdef):explicitFunction
+                            (measureDef):definition
+                            (paramDefinitionList):definition*
                             
-                            [recursive]:java_Boolean
-                            [isUndefined]:java_Boolean
-                            [measureLexical]:java_Integer
+                            (recursive):java_Boolean
+                            (isUndefined):java_Boolean
+                            (measureLexical):java_Integer
                             
-                            [expectedResult]:type
-                            [actualResult]:type
+                            (expectedResult):type
+                            (actualResult):type
                             
-                            [isTypeInvariant]:java_Boolean
-                            [isCurried]:java_Boolean 
+                            (isTypeInvariant):java_Boolean
+                            (isCurried):java_Boolean 
                             
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                             
@@ -356,16 +356,16 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp 
                             [measure]:LexNameToken 
                              
-                            [predef]:explicitFunction 
-                            [postdef]:explicitFunction 
-                            [measureDef]:definition
+                            (predef):explicitFunction 
+                            (postdef):explicitFunction 
+                            (measureDef):definition
                             
-                            [recursive]:java_Boolean
-                            [isUndefined]:java_Boolean 
-                            [measureLexical]:java_Integer
+                            (recursive):java_Boolean
+                            (isUndefined):java_Boolean 
+                            (measureLexical):java_Integer
                              
-                            [actualResult]:type
-                            [typeFunction]:type.function
+                            (actualResult):type
+                            [type]:type.function
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                            
     |   {explicitOperation} [parameterPatterns]:pattern* 
@@ -373,12 +373,12 @@ definition {-> package='org.overture.ast.definitions'}
                             [precondition]:exp 
                             [postcondition]:exp 
                             
-                            [operationType]:type.operation
+                            [type]:type.operation
                             
-                            [predef]:definition.explicitFunction
-                            [postdef]:definition.explicitFunction
-                            [paramDefinitions]:definition*
-                            [state]:definition.state
+                            (predef):definition.explicitFunction
+                            (postdef):definition.explicitFunction
+                            (paramDefinitions):definition*
+                            (state):definition.state
                             
                             [actualResult]:type
                             [isConstructor]:java_Boolean
@@ -391,12 +391,12 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp
                             [errors]:case.error*
                             
-                            [operationType]:type.operation
-                            [predef]:definition.explicitFunction
-                            [postdef]:definition.explicitFunction
-                            [state]:definition.state
+                            [type]:type.operation
+                            (predef):definition.explicitFunction
+                            (postdef):definition.explicitFunction
+                            (state):definition.state
                             [actualResult]:type
-                            [stateDefinition]:definition
+                            (stateDefinition):definition
                             [isConstructor]:java_Boolean
                                                         
     |   {imported} [def]:definition
@@ -410,7 +410,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {state} [fields]:field.field* 
                 [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction
                 [initPattern]:pattern [initExpression]:exp [initdef]:definition.explicitFunction
-                [stateDefs]:definition* [recordDefinition]:definition.local [recordType]:type
+                (stateDefs):definition* [recordDefinition]:definition.local [recordType]:type
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
@@ -602,7 +602,15 @@ Aspect Declaration
 %multipleBind = [location]:location [plist]:pattern*
     ;
     
-%definition = [location]:location [name]:LexNameToken [nameScope]:nameScope [used]:java_Boolean [classDefinition]:definition.class [access]:accessSpecifier [type]:type // [pass]:pass
+%definition 
+    =   [location]:location 
+        [name]:LexNameToken 
+        [nameScope]:nameScope 
+        [used]:java_Boolean 
+        (classDefinition):definition.class 
+        [access]:accessSpecifier 
+        [type]:type 
+        // [pass]:pass
     ;
 
 %definition->#class
