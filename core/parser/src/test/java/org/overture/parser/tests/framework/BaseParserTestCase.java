@@ -25,8 +25,9 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 
 	public BaseParserTestCase()
 	{
-		super("test");
+		super("skip");
 	}
+	
 
 	public BaseParserTestCase(File file)
 	{
@@ -167,4 +168,6 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 		}
 		return text;
 	}
+	
+	public void skip(){};
 }

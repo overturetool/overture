@@ -13,9 +13,14 @@ import org.overturetool.vdmj.syntax.ParserException;
 public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader>
 {
 	static boolean hasRunBefore = false;
+
 	public ExpressionTestCase(File file)
 	{
 		super(file);
+	}
+
+	public ExpressionTestCase()
+	{
 	}
 
 	public ExpressionTestCase(String name, String content)
@@ -30,7 +35,8 @@ public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader>
 	}
 
 	@Override
-	protected List<PExp> read(ExpressionReader reader) throws ParserException, LexException
+	protected List<PExp> read(ExpressionReader reader) throws ParserException,
+			LexException
 	{
 		return reader.readExpressionList();
 	}

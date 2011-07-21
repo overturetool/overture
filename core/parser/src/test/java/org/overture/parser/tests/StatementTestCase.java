@@ -18,6 +18,11 @@ public class StatementTestCase extends BaseParserTestCase<StatementReader>
 	{
 		super(file);
 	}
+	
+	public StatementTestCase()
+	{
+	
+	}
 
 	public StatementTestCase(String name, String content)
 	{

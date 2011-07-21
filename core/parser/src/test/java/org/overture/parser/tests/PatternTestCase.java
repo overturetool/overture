@@ -13,11 +13,17 @@ import org.overturetool.vdmj.syntax.PatternReader;
 public class PatternTestCase extends BaseParserTestCase<PatternReader>
 {
 	static boolean hasRunBefore = false;
+
 	public PatternTestCase(File file)
 	{
 		super(file);
 	}
-	
+
+	public PatternTestCase()
+	{
+
+	}
+
 	public PatternTestCase(String name, String content)
 	{
 		super(name, content);
@@ -26,7 +32,7 @@ public class PatternTestCase extends BaseParserTestCase<PatternReader>
 	@Override
 	protected PatternReader getReader(LexTokenReader ltr)
 	{
-	return new PatternReader(ltr);
+		return new PatternReader(ltr);
 	}
 
 	@Override
@@ -53,5 +59,5 @@ public class PatternTestCase extends BaseParserTestCase<PatternReader>
 	{
 		return hasRunBefore;
 	}
-	
+
 }

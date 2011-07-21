@@ -12,9 +12,15 @@ import org.overturetool.vdmj.syntax.TypeReader;
 public class TypeTestCase extends BaseParserTestCase<TypeReader>
 {
 	static boolean hasRunBefore = false;
+
 	public TypeTestCase(File file)
 	{
 		super(file);
+	}
+
+	public TypeTestCase()
+	{
+
 	}
 
 	public TypeTestCase(String name, String content)

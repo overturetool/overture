@@ -20,6 +20,11 @@ public class SpecificatopnRtTestCase extends BaseParserTestCase<ClassReader>
 		super(file);
 	}
 	
+	public SpecificatopnRtTestCase()
+	{
+	
+	}
+	
 	@Override
 	protected void setUp() throws Exception
 	{

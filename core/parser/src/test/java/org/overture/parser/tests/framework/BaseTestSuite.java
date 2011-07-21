@@ -23,6 +23,8 @@ public class BaseTestSuite extends TestSuite
 	{
 
 	}
+	
+	public void test(){}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteFile(String name,

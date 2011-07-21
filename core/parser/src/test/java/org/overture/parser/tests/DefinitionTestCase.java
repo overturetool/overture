@@ -20,6 +20,11 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 		super(file);
 	}
 	
+	public DefinitionTestCase()
+	{
+	
+	}
+	
 	@Override
 	protected void setUp() throws Exception
 	{
