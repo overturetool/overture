@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ModuleTypeChecker;
+import org.overture.typecheck.TypeChecker;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -35,22 +36,22 @@ public class ModuleSlTypeCheckTest extends TestCase
 		mtc.typeCheck();
 		
 		String errorMessages = null;
-		if (mtc != null && mtc.getErrorCount() > 0)
+		if (mtc != null && TypeChecker.getErrorCount() > 0)
 		{
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
-			mtc.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
+			TypeChecker.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
 			errorMessages ="\n"+s.toString()+"\n";
 			System.out.println(s.toString());
 		}
 		
-		assertEquals(errorMessages,0,mtc.getErrorCount());
+		assertEquals(errorMessages,0,TypeChecker.getErrorCount());
 		
-		if (mtc != null && mtc.getWarningCount() > 0)
+		if (mtc != null && TypeChecker.getWarningCount() > 0)
 		{
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
-			mtc.printWarnings(new PrintWriter(s));//new PrintWriter(System.out));
+			TypeChecker.printWarnings(new PrintWriter(s));//new PrintWriter(System.out));
 			String warningMessages ="\n"+s.toString()+"\n";
 			System.out.println(s.toString());
 		}
