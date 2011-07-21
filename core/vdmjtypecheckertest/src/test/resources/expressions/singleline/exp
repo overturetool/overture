@@ -1,0 +1,4 @@
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
