@@ -2091,21 +2091,22 @@ public class TypeCheckerExpVisitor extends
 		{
     		if (value.value < 0)
     		{
-    			return new AIntNumericBasicType(node.getLocation(),false);
+    			node.setType(new AIntNumericBasicType(node.getLocation(),false));
     		}
     		else if (value.value == 0)
     		{
-    			return new ANatNumericBasicType(node.getLocation(),false);
+    			node.setType(new ANatNumericBasicType(node.getLocation(),false));
     		}
     		else
     		{
-    			return new ANatOneNumericBasicType(node.getLocation(),false);
+    			node.setType(new ANatOneNumericBasicType(node.getLocation(),false));
     		}
 		}
 		else
 		{
-			return new ARealNumericBasicType(node.getLocation(),false);
+			node.setType(new ARealNumericBasicType(node.getLocation(),false));
 		}
+		return node.getType();
 	}
 	
 	@Override

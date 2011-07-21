@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -26,9 +28,10 @@ public class BaseTestSuite extends TestSuite
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteFile(String name,
-			String testRootPath, Class testCase) throws IllegalArgumentException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException, SecurityException, NoSuchMethodException
+			String testRootPath, Class testCase)
+			throws IllegalArgumentException, InstantiationException,
+			IllegalAccessException, InvocationTargetException,
+			SecurityException, NoSuchMethodException
 	{
 		File testRoot = getFile(testRootPath);
 		Constructor ctor = testCase.getConstructor(new Class[] { File.class });
@@ -39,44 +42,46 @@ public class BaseTestSuite extends TestSuite
 
 			for (File file : testRoot.listFiles())
 			{
-				createCompleteFile(suite,file,ctor);
+				createCompleteFile(suite, file, ctor);
 			}
 		}
 		return suite;
 
 	}
-	
-	
-	private static void createCompleteFile(TestSuite suite, File file, @SuppressWarnings("rawtypes") Constructor ctor) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+
+	private static void createCompleteFile(TestSuite suite, File file,
+			@SuppressWarnings("rawtypes") Constructor ctor)
+			throws IllegalArgumentException, InstantiationException,
+			IllegalAccessException, InvocationTargetException
 	{
 		if (file.getName().startsWith("."))
 		{
 			return;
 		}
-		if(file.isDirectory())
+		if (file.isDirectory())
 		{
 			for (File f : file.listFiles())
 			{
-				createCompleteFile(suite,f,ctor);
+				createCompleteFile(suite, f, ctor);
 			}
-		}else
+		} else
 		{
-			System.out.println("Creating test for:"+ file);
+			System.out.println("Creating test for:" + file);
 			Object instance = ctor.newInstance(new Object[] { file });
 			suite.addTest((Test) instance);
 		}
-		
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected static TestSuite createTestSingleLineFile(String name,
-			String testRootPath, Class testCase) throws IllegalArgumentException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException, SecurityException,
-			NoSuchMethodException, IOException
+	protected static TestSuite createTestSingleLineFile(ParserType type,
+			String name, String testRootPath, Class testCase)
+			throws IllegalArgumentException, InstantiationException,
+			IllegalAccessException, InvocationTargetException,
+			SecurityException, NoSuchMethodException, IOException
 	{
 		File testRoot = getFile(testRootPath);
-		Constructor ctor = testCase.getConstructor(new Class[] { String.class,
+		Constructor ctor = testCase.getConstructor(new Class[] {ParserType.class, String.class,String.class,
 				String.class });
 		TestSuite suite = new BaseTestSuite(name);
 
@@ -94,8 +99,10 @@ public class BaseTestSuite extends TestSuite
 					for (int i = 0; i < lines.size(); i++)
 					{
 						Object instance = ctor.newInstance(new Object[] {
-								file.getName() + " " + i + " - " + lines.get(i),
-								lines.get(i) });
+								type,
+								file.getName() + " " + i + " - " + splitContentResult(lines.get(i))[0],
+								splitContentResult(lines.get(i))[0],
+								splitContentResult(lines.get(i))[1]});
 						suite.addTest((Test) instance);
 					}
 				}
@@ -104,6 +111,21 @@ public class BaseTestSuite extends TestSuite
 		}
 		return suite;
 
+	}
+
+	private static String[] splitContentResult(String line)
+	{
+		String[] tmp = new String[]{"",""};
+		if(line.indexOf('$')!=-1)
+		{
+			tmp[0]=line.substring(line.indexOf('$')+1).trim();
+			tmp[1]=line.substring(0,line.indexOf('$')).trim();
+		}
+		else
+		{
+			tmp[0]= line.trim();
+		}
+		return tmp;
 	}
 
 	protected static List<String> readFile(File file) throws IOException
@@ -138,7 +160,7 @@ public class BaseTestSuite extends TestSuite
 			}
 		}
 	}
-	
+
 	protected static File getFile(String pathname)
 	{
 		return new File(pathname.replace('\\', File.separatorChar).replace('/', File.separatorChar));

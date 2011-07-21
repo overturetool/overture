@@ -1,4 +1,4 @@
-package org.overture.typechecker.tests;
+package org.overture.typechecker.tests.framework;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -6,6 +6,8 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -25,7 +27,12 @@ public abstract class BasicTypeCheckTestCase extends TestCase
 {
 	public enum ParserType
 	{
-		Expression,Expressions, Module, Class, Pattern, Type, Statement, Bind
+		Expression, Expressions, Module, Class, Pattern, Type, Statement, Bind
+	}
+
+	public BasicTypeCheckTestCase(String string)
+	{
+		super(string);
 	}
 
 	@Override
@@ -145,5 +152,26 @@ public abstract class BasicTypeCheckTestCase extends TestCase
 
 		}
 		return null;
+	}
+
+	protected PType getResultType(String expectedTypeString)
+			throws ParserException, LexException
+	{
+		if (expectedTypeString != null && !expectedTypeString.trim().isEmpty())
+		{
+			PType expectedType = parse(ParserType.Type, expectedTypeString);
+			expectedType = removeBrackets(expectedType);
+			return expectedType;
+		}
+		return null;
+	}
+
+	private PType removeBrackets(PType type)
+	{
+		if (type instanceof ABracketType)
+		{
+			return removeBrackets(((ABracketType) type).getType());
+		}
+		return type;
 	}
 }
