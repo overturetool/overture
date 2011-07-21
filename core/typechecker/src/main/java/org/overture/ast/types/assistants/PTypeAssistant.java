@@ -112,43 +112,7 @@ public class PTypeAssistant {
 		return type;
 	}
 
-	public static PType getType(Set<PType> rtypes, LexLocation location) {
-		// If there are any Optional(Unknowns) these are the result of
-		// nil values, which set the overall type as optional. Other
-		// optional types stay.
-
-		Iterator<PType> tit = rtypes.iterator();
-		boolean optional = false;
-
-		while (tit.hasNext()) {
-			PType t = tit.next();
-
-			if (t instanceof AOptionalType) {
-				AOptionalType ot = (AOptionalType) t;
-
-				if (ot.getType() instanceof AUnknownType) {
-					if (rtypes.size() > 1) {
-						tit.remove();
-						optional = true;
-					} else {
-						optional = false;
-					}
-				}
-			}
-		}
-
-		assert rtypes.size() > 0 : "Getting type of empty TypeSet";
-		PType result = null;
-
-		if (rtypes.size() == 1) {
-			result = rtypes.iterator().next();
-		} else {
-			result = new AUnionType(location, false,null, new ArrayList<PType>(
-					rtypes),false, false);
-		}
-
-		return (optional ? new AOptionalType(location, false,null, result) : result);
-	}
+	
 
 	public static boolean isUnknown(PType type) {
 		return type.kindPType().equals(EType.UNKNOWN);

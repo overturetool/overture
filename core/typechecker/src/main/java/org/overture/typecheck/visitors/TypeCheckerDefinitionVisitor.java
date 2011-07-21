@@ -134,14 +134,10 @@ public class TypeCheckerDefinitionVisitor extends
 		// resolution will succeed.
 
 		Environment cenv = new PrivateClassEnvironment(node.getClassDefinition(), question.env);
-		//TODO: I can see this could cause problems
-		TypeCheckInfo newQuestion = new TypeCheckInfo(); 
-		newQuestion.env = cenv;
-		newQuestion.qualifiers = null;
-		newQuestion.scope = question.scope;
+		question.env = cenv;
 		//TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of assignment in our tree 		
-		node.setExpType(node.getExpression().apply(rootVisitor, newQuestion));
-		node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, newQuestion));
+		node.setExpType(node.getExpression().apply(rootVisitor, question));
+		node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -789,7 +785,7 @@ public class TypeCheckerDefinitionVisitor extends
     				else
     				{
     					if (!(clause.getType() instanceof AUnknownType) &&
-    						!sdef.getType().equals(clause.getType()))
+    						!PTypeAssistant.equals(sdef.getType(),clause.getType()))
         				{
         					TypeCheckerErrors.report(3032, "State variable " + exname + " is not this type",node.getLocation(),node);
         					TypeCheckerErrors.detail2("Declared", sdef.getType(), "ext type", clause.getType());

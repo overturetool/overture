@@ -4,6 +4,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -15,7 +16,7 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 
 //	static private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor = null;
 	
-	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcType = new TypeCheckerTypeVisitor(this);
+	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcStm = new TypeCheckerStmVisitor(this);
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcExp = new TypeCheckerExpVisitor(this);
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcDefinition = new TypeCheckerDefinitionVisitor(this);
 	
@@ -36,12 +37,12 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 //	public TypeCheckVisitor() {		
 //	}
 	
-	@Override
-	public PType defaultPType(PType node, TypeCheckInfo question) {
-		
-		return node.apply(tcType, question);
-	}
 	
+
+	@Override
+	public PType defaultPStm(PStm node, TypeCheckInfo question) {
+		return node.apply(tcStm, question);
+	}
 	
 	@Override
 	public PType defaultPExp(PExp node, TypeCheckInfo question) {
