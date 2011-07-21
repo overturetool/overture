@@ -23,26 +23,27 @@
 
 package org.overturetool.vdmj.lex;
 
-public class LexRealToken extends LexToken
-{
+public class LexRealToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 	public final double value;
 
-	public LexRealToken(String real, LexLocation location)
-	{
+	public LexRealToken(String real, LexLocation location) {
 		super(location, VDMToken.REALNUMBER);
 		value = Double.parseDouble(real);
 	}
 
-	public LexRealToken(double value, LexLocation location)
-	{
+	public LexRealToken(double value, LexLocation location) {
 		super(location, VDMToken.REALNUMBER);
 		this.value = value;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return Double.toString(value);
+	}
+
+	@Override
+	public Object clone() {
+		return new LexRealToken(value, location);
 	}
 }

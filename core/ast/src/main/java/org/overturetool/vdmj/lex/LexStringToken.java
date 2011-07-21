@@ -23,20 +23,22 @@
 
 package org.overturetool.vdmj.lex;
 
-public class LexStringToken extends LexToken
-{
+public class LexStringToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 	public final String value;
 
-	public LexStringToken(String value, LexLocation location)
-	{
+	public LexStringToken(String value, LexLocation location) {
 		super(location, VDMToken.STRING);
 		this.value = value;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "\"" + value + "\"";
+	}
+
+	@Override
+	public Object clone() {
+		return new LexStringToken(value, location);
 	}
 }

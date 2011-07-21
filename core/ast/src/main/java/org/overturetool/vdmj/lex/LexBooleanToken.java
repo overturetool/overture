@@ -23,26 +23,27 @@
 
 package org.overturetool.vdmj.lex;
 
-public class LexBooleanToken extends LexToken
-{
+public class LexBooleanToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 	public final boolean value;
 
-	public LexBooleanToken(VDMToken value, LexLocation location)
-	{
+	public LexBooleanToken(VDMToken value, LexLocation location) {
 		super(location, value);
 		this.value = (value == VDMToken.TRUE);
 	}
 
-	public LexBooleanToken(boolean value, LexLocation location)
-	{
+	public LexBooleanToken(boolean value, LexLocation location) {
 		super(location, value ? VDMToken.TRUE : VDMToken.FALSE);
 		this.value = value;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return Boolean.toString(value);
+	}
+
+	@Override
+	public Object clone() {
+		return new LexBooleanToken(value, location);
 	}
 }

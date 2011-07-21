@@ -45,4 +45,11 @@ public class LexIntegerToken extends LexToken
 	{
 		return Long.toString(value);
 	}
+	
+	@Override
+	public Object clone() {
+		return new LexIntegerToken(value, location);
+	}
+	
+	
 }

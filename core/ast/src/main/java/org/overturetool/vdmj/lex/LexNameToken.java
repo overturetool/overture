@@ -234,50 +234,6 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 		return copy();
 	}
 
-	@Override
-	public Node clone(Map<Node, Node> oldToNewMap) {
-		Node n = copy();
-		oldToNewMap.put(this, n);
-		return n;
-	}
-
-	@Override
-	public NodeEnum kindNode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void removeChild(Node child) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void apply(IAnalysis analysis) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public <A> A apply(IAnswer<A> caller) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 	public List<PType> getTypeQualifier() {
 		return typeQualifier;
 	}

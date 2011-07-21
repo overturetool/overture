@@ -103,44 +103,41 @@ import org.overture.ast.node.NodeEnum;
 
 	@Override
 	public Node clone(Map<Node, Node> oldToNewMap) {
-		// TODO Auto-generated method stub
-		return null;
+		Node newNode = (Node) clone();
+		oldToNewMap.put(this, newNode);
+		return newNode;
 	}
 
 	@Override
 	public void apply(IAnalysis analysis) {
-		// TODO Auto-generated method stub
-		
+		//Do not visit
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) {
-		// TODO Auto-generated method stub
+		//Do not visit
 		return null;
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) {
-		// TODO Auto-generated method stub
-		
+		//Do not visit
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
-		// TODO Auto-generated method stub
+		//Do not visit
 		return null;
 	}
 
 	@Override
 	public NodeEnum kindNode() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void removeChild(Node child) {
-		// TODO Auto-generated method stub
-		
+				
 	}
 
 }

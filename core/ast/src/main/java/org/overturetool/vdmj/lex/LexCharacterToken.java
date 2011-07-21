@@ -23,22 +23,25 @@
 
 package org.overturetool.vdmj.lex;
 
-public class LexCharacterToken extends LexToken
-{
+public class LexCharacterToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 	public final char unicode;
 
-	public LexCharacterToken(char value, LexLocation location)
-	{
+	public LexCharacterToken(char value, LexLocation location) {
 		super(location, VDMToken.CHARACTER);
 		this.unicode = value;
 	}
 
 	@Override
-	public String toString()
-	{
-		return super.toString() + " value " +
-			(Character.isISOControl(unicode) ?
-				Integer.toString(unicode) + " decimal" : "[" + unicode + "]");
+	public String toString() {
+		return super.toString()
+				+ " value "
+				+ (Character.isISOControl(unicode) ? Integer.toString(unicode)
+						+ " decimal" : "[" + unicode + "]");
+	}
+
+	@Override
+	public Object clone() {
+		return new LexCharacterToken(unicode, location);
 	}
 }

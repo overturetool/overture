@@ -312,6 +312,7 @@ bind {-> package='org.overture.ast.patterns'}
     |   {type} [pattern]:pattern [type]:type //binds
     ;
 
+//This is used in PExp and PDefinition
 multipleBind {-> package='org.overture.ast.patterns'}
     =   {set}  [set]:exp //binds
     |   {type} [type]:type //binds
