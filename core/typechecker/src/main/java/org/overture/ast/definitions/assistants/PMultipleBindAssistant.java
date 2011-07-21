@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 
@@ -31,6 +33,10 @@ public class PMultipleBindAssistant {
 		List<PMultipleBind> list = new Vector<PMultipleBind>();
 		list.add(bind);
 		return list;
+	}
+
+	public static PType getPossibleType(ASetMultipleBind node) {
+		return PPatternListAssistant.getPossibleType(node.getPlist(),node.getLocation());
 	}
 
 }

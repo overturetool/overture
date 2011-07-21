@@ -895,8 +895,8 @@ public class TypeCheckerExpVisitor extends
 		ts.add(lof); ts.add(rof);
 		
 		node.setType(seq1 ?
-			new ASeq1SeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),null) :
-			new ASeqSeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),null));
+			new ASeq1SeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),false) :
+			new ASeqSeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),false));
 		return node.getType();
 	}
 	
@@ -1537,6 +1537,8 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question)
 	{
+		
+		PBind temp = (PBind) node.getBind().clone();
 		PDefinition def = new AMultiBindListDefinition(node.getLocation(),
 				null, //name
 				null, //namescope
@@ -1544,7 +1546,7 @@ public class TypeCheckerExpVisitor extends
 				null, //classdef
 				null, //access specifier
 				null, //type
-				PBindAssistant.getMultipleBindList(node.getBind()),
+				PBindAssistant.getMultipleBindList(temp),
 				null //defs
 				);
 				
@@ -1707,7 +1709,7 @@ public class TypeCheckerExpVisitor extends
 		
 		
 		
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, null, null, PMultipleBindAssistant.getMultipleBindList(node.getBind()), null);
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistant.getDefault(), null, PMultipleBindAssistant.getMultipleBindList((PMultipleBind) node.getBind().clone()), null);
 		
 		def.apply(rootVisitor, question);
 		
@@ -2256,8 +2258,8 @@ public class TypeCheckerExpVisitor extends
   			types.add(mt);
 		}
 
-		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), null, null, null, null) :
-			new ASeq1SeqType(node.getLocation(), null, null, ts.getType(node.getLocation()), null ));
+		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), null, null, null, true) :
+			new ASeq1SeqType(node.getLocation(), null, null, ts.getType(node.getLocation()), false ));
 		
 		return node.getType();
 	}
@@ -2282,7 +2284,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		ASetType setType = new ASetType(node.getLocation(), false, etype, null, false);
+		ASetType setType = new ASetType(node.getLocation(), false, etype, false, false);
 		node.setType(setType);
 		node.setSetType(setType);
 		return setType;
@@ -2302,8 +2304,8 @@ public class TypeCheckerExpVisitor extends
 			types.add(mt);
 		}
 		
-		node.setType(ts.isEmpty() ? new ASetType(node.getLocation(), null, null, null, null) :
-			new ASetType(node.getLocation(), false, ts.getType(node.getLocation()), null, null));
+		node.setType(ts.isEmpty() ? new ASetType(node.getLocation(), null, null, true, false) :
+			new ASetType(node.getLocation(), false, ts.getType(node.getLocation()), false, false));
 		
 		return node.getType();
 	}
@@ -2333,7 +2335,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3167, "Set range type must be an number",ltype.getLocation(),ltype);
 		}
 		
-		node.setType(new ASetType(first.getLocation(), null, new AIntNumericBasicType(node.getLocation(),false), null, null));
+		node.setType(new ASetType(first.getLocation(), null, new AIntNumericBasicType(node.getLocation(),false), false, false));
 		return node.getType();
 	}
 	
@@ -2387,12 +2389,12 @@ public class TypeCheckerExpVisitor extends
 		
 		if (node.getValue().value.isEmpty())
 		{
-			node.setType(new ASeqSeqType(node.getLocation(), false, new ACharBasicType(node.getLocation(), false, null), null));
+			node.setType(new ASeqSeqType(node.getLocation(), false, new ACharBasicType(node.getLocation(), false, null), false));
 			return node.getType();
 		}
 		else
 		{
-			node.setType(new ASeq1SeqType(node.getLocation(),false, null, new ACharBasicType(node.getLocation(),false,null), null));
+			node.setType(new ASeq1SeqType(node.getLocation(),false, null, new ACharBasicType(node.getLocation(),false,null), false));
 			return node.getType() ;
 		}
 	}

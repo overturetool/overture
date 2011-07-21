@@ -2,10 +2,15 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.SNumericBinaryExp;
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overturetool.vdmj.lex.LexIntegerToken;
+import org.overturetool.vdmj.lex.LexLocation;
 
 
 public class SNumericBasicTypeAssistant {
@@ -30,6 +35,21 @@ public class SNumericBasicTypeAssistant {
 			node.getRight().setType(new ARealNumericBasicType(node.getLocation(),false,null));
 		}
 		
+	}
+
+	public static PType typeOf(long value, LexLocation location) {
+		if (value > 0)
+		{
+			return new ANatOneNumericBasicType(location,false);
+		}
+		else if (value >= 0)
+		{
+			return new ANatNumericBasicType(location,false);
+		}
+		else
+		{
+			return new AIntNumericBasicType(location,false);
+		}
 	}
 
 }

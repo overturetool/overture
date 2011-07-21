@@ -9,13 +9,27 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeList;
+import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -174,6 +188,61 @@ public class PPatternAssistant {
 	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
 	{
 		return new LexNameList();	
+	}
+
+	public static PType getPossibleType(PPattern pattern) {
+		switch (pattern.kindPPattern()) {
+		case BOOLEAN:
+			return new ABooleanBasicType(pattern.getLocation(),false);
+		case CHARACTER:
+			return new ACharBasicType(pattern.getLocation(),false);
+		case CONCATENATION:
+			return new ASeqSeqType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false),false);
+		case EXPRESSION:
+			return new AUnknownType(pattern.getLocation(),false);
+		case IDENTIFIER:
+			return new AUnknownType(pattern.getLocation(),false);
+		case IGNORE:
+			return new AUnknownType(pattern.getLocation(),false);
+		case INTEGER:
+			return SNumericBasicTypeAssistant.typeOf(((AIntegerPattern)pattern).getValue().value,pattern.getLocation());
+		case NIL:
+			return new AOptionalType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false));
+		case QUOTE:
+			return new AQuoteType(pattern.getLocation(),false, ((AQuotePattern)pattern).getValue());
+		case REAL:
+			return new ARealNumericBasicType(pattern.getLocation(), false);
+		case RECORD:
+			return ((ARecordPattern)pattern).getType();
+		case SEQ:
+			return new ASeqSeqType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false),false);
+		case SET:
+			return new ASetType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false),false, false);
+		case STRING:
+			return new ASeqSeqType(pattern.getLocation(), false,new ACharBasicType(pattern.getLocation(),false),false);
+		case TUPLE:
+			ATuplePattern tupplePattern = (ATuplePattern)pattern;
+			PTypeList list = new PTypeList();
+
+			for (PPattern p: tupplePattern.getPlist())
+			{
+				list.add(getPossibleType(p));
+			}
+
+			return  list.getType(tupplePattern.getLocation());
+		case UNION:
+			AUnionPattern unionPattern = (AUnionPattern)pattern;
+			PTypeSet set = new PTypeSet();
+
+			set.add(getPossibleType(unionPattern.getLeft()));
+			set.add(getPossibleType(unionPattern.getRight()));
+
+			PType s = set.getType(unionPattern.getLocation());
+			
+			return PTypeAssistant.isUnknown(s) ?
+				new ASetType(unionPattern.getLocation(), false, null, new AUnknownType(unionPattern.getLocation(),false), false, false) : s;		
+		}
+		return null;
 	}
 
 }
