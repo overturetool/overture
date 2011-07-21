@@ -1,6 +1,8 @@
 package org.overture.typechecker.tests.framework;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Vector;
@@ -26,6 +28,7 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 	String expectedType;
 	ParserType parserType;
 	private boolean showWarnings;
+	private boolean generateResultOutput = false;
 
 	public GeneratedTestCase()
 	{
@@ -41,11 +44,12 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 		this.expectedType = null;
 	}
 
-	public GeneratedTestCase(ParserType type, String name, String content,
+	public GeneratedTestCase(ParserType type, String name, File file, String content,
 			String expectedType)
 	{
 		super("test");
 		this.parserType = type;
+		this.file = file;
 		this.content = content;
 		this.expectedType = expectedType;
 		this.name = name;
@@ -118,7 +122,7 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
 			TypeChecker.printWarnings(new PrintWriter(s));// new PrintWriter(System.out));
-//			String warningMessages = "\n" + s.toString() + "\n";
+			// String warningMessages = "\n" + s.toString() + "\n";
 			System.out.println(s.toString());
 		}
 		//
@@ -143,5 +147,41 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 		}
 		System.out.flush();
 		System.err.flush();
+
+		if (generateResultOutput )
+		{
+			writeTestWithResult(type, expressionString);
+		}
+	}
+
+	private void writeTestWithResult(PType type, String test)
+	{
+		File outputFile = new File(file.getAbsolutePath()+ "_generated");
+		FileWriter outFile;
+		String typeName = "Error";
+		if(type != null)
+		{
+			typeName = type.toString();
+		}
+		try
+		{
+			outFile = new FileWriter(outputFile, true);
+			PrintWriter out = new PrintWriter(outFile);
+			out.println(pad(typeName,20 )+"$" + test);
+			out.close();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static String pad(String text, int length)
+	{
+		while (text.length() < length)
+		{
+			text += " ";
+		}
+		return text;
 	}
 }

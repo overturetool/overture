@@ -14,7 +14,7 @@ public class ExpressionTypeCheckTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Parser Expression TestSuite";
+		String name = "Type Check Expression TestSuite";
 		String root = "src\\test\\resources\\expressions";
 		TestSuite test = createTestSingleLineFile(ParserType.Expression,name,root+"\\singleline",GeneratedTestCase.class);
 		return test;

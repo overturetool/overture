@@ -25,6 +25,7 @@ public class BaseTestSuite extends TestSuite
 	{
 
 	}
+	public void test(){}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteFile(String name,
@@ -81,7 +82,7 @@ public class BaseTestSuite extends TestSuite
 			SecurityException, NoSuchMethodException, IOException
 	{
 		File testRoot = getFile(testRootPath);
-		Constructor ctor = testCase.getConstructor(new Class[] {ParserType.class, String.class,String.class,
+		Constructor ctor = testCase.getConstructor(new Class[] {ParserType.class, String.class,File.class,String.class,
 				String.class });
 		TestSuite suite = new BaseTestSuite(name);
 
@@ -89,7 +90,7 @@ public class BaseTestSuite extends TestSuite
 		{
 			for (File file : testRoot.listFiles())
 			{
-				if (file.getName().startsWith("."))
+				if (file.getName().startsWith(".")|| file.getName().endsWith("_generated"))
 				{
 					continue;
 				}
@@ -101,6 +102,7 @@ public class BaseTestSuite extends TestSuite
 						Object instance = ctor.newInstance(new Object[] {
 								type,
 								file.getName() + " " + i + " - " + splitContentResult(lines.get(i))[0],
+								file,
 								splitContentResult(lines.get(i))[0],
 								splitContentResult(lines.get(i))[1]});
 						suite.addTest((Test) instance);
