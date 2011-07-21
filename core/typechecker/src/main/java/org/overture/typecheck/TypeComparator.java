@@ -35,8 +35,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeq1Type;
-import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
@@ -47,8 +46,11 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.ANumericBasicTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
+
+import com.sun.corba.se.spi.legacy.interceptor.UnknownType;
 
 
 
@@ -401,17 +403,17 @@ public class TypeComparator
 						searchCompatible(sa.getSetof(), sb.getSetof(), paramOnly) == Result.Yes) ?
 							Result.Yes : Result.No;
 			}
-			else if (to instanceof ASeqType)	// Includes seq1
+			else if (to instanceof SSeqType)	// Includes seq1
 			{
-				if (!(from instanceof ASeqType))
+				if (!(from instanceof SSeqType))
 				{
 					return Result.No;
 				}
 
-				ASeqType sa = (ASeqType)to;
-				ASeqType sb = (ASeqType)from;
+				SSeqType sa = (SSeqType)to;
+				SSeqType sb = (SSeqType)from;
 
-				if (to instanceof ASeq1Type && sb.getEmpty())
+				if (to instanceof ASeq1SeqType && sb.getEmpty())
 				{
 					return Result.No;
 				}
@@ -799,15 +801,15 @@ public class TypeComparator
 						searchSubType(subs.getSetof(), sups.getSetof()) == Result.Yes) ?
 							Result.Yes : Result.No;
 			}
-			else if (sub instanceof ASeqType)	// Includes seq1
+			else if (sub instanceof SSeqType)	// Includes seq1
 			{
-				if (!(sup instanceof ASeqType))
+				if (!(sup instanceof SSeqType))
 				{
 					return Result.No;
 				}
 
-				ASeqType subs = (ASeqType)sub;
-				ASeqType sups = (ASeqType)sup;
+				SSeqType subs = (SSeqType)sub;
+				SSeqType sups = (SSeqType)sup;
 
 				if (subs.getEmpty() || sups.getEmpty())
 				{
@@ -816,8 +818,8 @@ public class TypeComparator
 
 				if (searchSubType(subs.getSeqof(), sups.getSeqof()) == Result.Yes)
 				{
-					if (!(sub instanceof ASeq1Type) &&
-						 (sup instanceof ASeq1Type))
+					if (!(sub instanceof ASeq1SeqType) &&
+						 (sup instanceof ASeq1SeqType))
 					{
 						return Result.No;
 					}

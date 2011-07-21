@@ -146,8 +146,8 @@ import org.overturetool.util.ToStringUtil;
 %type->parameter = "@" [name]
 %type->product = "" +$Utils.listToString("(",$ [types] $, " * ", ")")$
 %type->quote = "<" [value] ">"
-%type->seq = ""+ $($[empty]$ ? "[]" : "seq of (" + $  [seqof] $+ ")" )$ 
-%type->seq1 = "seq1 of (" + [seqof] + ")"
+%type->#seq->seq = ""+ $($[empty]$ ? "[]" : "seq of (" + $  [seqof] $+ ")" )$ 
+%type->#seq->seq1 = "seq1 of (" + [seqof] + ")"
 %type->set = ""+ $($[empty]$ ? "{}" : "set of (" +$ [setof]$ + ")")$
 %type->undefined = "(undefined)"
 %type->union = ""+$($[types]$.size() == 1?$ [types]$.iterator().next().toString() : Utils.setToString($[types]$, " | "))$

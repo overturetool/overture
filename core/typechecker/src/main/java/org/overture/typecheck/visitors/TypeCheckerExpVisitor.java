@@ -1,11 +1,9 @@
 package org.overture.typecheck.visitors;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -138,8 +136,8 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeq1Type;
-import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUndefinedType;
@@ -147,6 +145,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.ast.types.assistants.AFunctionTypeAssistant;
 import org.overture.ast.types.assistants.AOperationTypeAssistant;
@@ -279,7 +278,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (PTypeAssistant.isSeq(node.getType()))
 		{
-			ASeqType seq = PTypeAssistant.getSeq(node.getType());
+			SSeqType seq = PTypeAssistant.getSeq(node.getType());
 			results.add(AApplyExpAssistant.sequenceApply(node,isSimple, seq));
 		}
 
@@ -741,7 +740,7 @@ public class TypeCheckerExpVisitor extends
 			
 		if (PTypeAssistant.isSeq(node.getLeft().getType()))
 		{
-    		ASeqType st = PTypeAssistant.getSeq(node.getLeft().getType());
+    		SSeqType st = PTypeAssistant.getSeq(node.getLeft().getType());
 
     		if (!PTypeAssistant.isMap(node.getRight().getType()))
     		{
@@ -877,27 +876,27 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(ltype))
 		{
 			TypeCheckerErrors.report(3157, "Left hand of '^' is not a sequence",node.getLocation(),node);
-			ltype = new ASeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
+			ltype = new ASeqSeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
 		}
 
 		if (!PTypeAssistant.isSeq(rtype))
 		{
 			TypeCheckerErrors.report(3158, "Right hand of '^' is not a sequence",node.getLocation(),node);
-			rtype = new ASeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
+			rtype = new ASeqSeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
 		}
 
 		PType lof = PTypeAssistant.getSeq(ltype);
 		PType rof = PTypeAssistant.getSeq(rtype);
-		boolean seq1 = (lof instanceof ASeq1Type) || (rof instanceof ASeq1Type);
+		boolean seq1 = (lof instanceof ASeq1SeqType) || (rof instanceof ASeq1SeqType);
 		
-		lof = ((ASeqType)lof).getSeqof();
-		rof = ((ASeqType)rof).getSeqof();
+		lof = ((SSeqType)lof).getSeqof();
+		rof = ((SSeqType)rof).getSeqof();
 		PTypeSet ts = new PTypeSet();
 		ts.add(lof); ts.add(rof);
 		
 		node.setType(seq1 ?
-			new ASeq1Type(node.getLocation(), false,null, ts.getType(node.getLocation()),null) :
-			new ASeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),null));
+			new ASeq1SeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),null) :
+			new ASeqSeqType(node.getLocation(), false,null, ts.getType(node.getLocation()),null));
 		return node.getType();
 	}
 	
@@ -2237,7 +2236,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		node.setType(new ASeqType(node.getLocation(), null, null, etype, null));
+		node.setType(new ASeqSeqType(node.getLocation(), null, null, etype, null));
 		return node.getType();
 	}
 	
@@ -2257,8 +2256,8 @@ public class TypeCheckerExpVisitor extends
   			types.add(mt);
 		}
 
-		node.setType(ts.isEmpty() ? new ASeqType(node.getLocation(), null, null, null, null) :
-			new ASeq1Type(node.getLocation(), null, null, ts.getType(node.getLocation()), null ));
+		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), null, null, null, null) :
+			new ASeq1SeqType(node.getLocation(), null, null, ts.getType(node.getLocation()), null ));
 		
 		return node.getType();
 	}
@@ -2388,12 +2387,12 @@ public class TypeCheckerExpVisitor extends
 		
 		if (node.getValue().value.isEmpty())
 		{
-			node.setType(new ASeqType(node.getLocation(), false, new ACharBasicType(node.getLocation(), false, null), null));
+			node.setType(new ASeqSeqType(node.getLocation(), false, new ACharBasicType(node.getLocation(), false, null), null));
 			return node.getType();
 		}
 		else
 		{
-			node.setType(new ASeq1Type(node.getLocation(),false, null, new ACharBasicType(node.getLocation(),false,null), null));
+			node.setType(new ASeq1SeqType(node.getLocation(),false, null, new ACharBasicType(node.getLocation(),false,null), null));
 			return node.getType() ;
 		}
 	}

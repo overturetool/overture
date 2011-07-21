@@ -26,7 +26,6 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.node.tokens.TStringLiteral;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
@@ -45,8 +44,8 @@ import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeq1Type;
-import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnionType;
@@ -296,13 +295,13 @@ public class TypeReader extends SyntaxReader
 			case SEQ:
 				nextToken();
 				checkFor(VDMToken.OF, 2254, "Expecting 'of' after seq");
-				type = new ASeqType(token.location, false,null, readMapType(),false);
+				type = new ASeqSeqType(token.location, false,null, readMapType(),false);
 				break;
 
 			case SEQ1:
 				nextToken();
 				checkFor(VDMToken.OF, 2255, "Expecting 'of' after seq1");
-				type = new ASeq1Type(token.location, false,null, readMapType(),false);
+				type = new ASeq1SeqType(token.location, false,null, readMapType(),false);
 				break;
 
 			default:

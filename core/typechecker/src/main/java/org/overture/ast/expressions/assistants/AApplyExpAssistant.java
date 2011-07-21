@@ -5,9 +5,9 @@ import java.util.List;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.ASeqType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
@@ -81,7 +81,7 @@ public class AApplyExpAssistant {
 	}
 
 	public static PType sequenceApply(AApplyExp node, boolean isSimple,
-			ASeqType seq) {
+			SSeqType seq) {
 		if (node.getArgs().size() != 1)
 		{
 			TypeCheckerErrors.concern(isSimple, 3055, "Sequence selector must have one argument",node.getLocation(),node);

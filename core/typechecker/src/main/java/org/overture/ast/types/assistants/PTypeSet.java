@@ -1,12 +1,12 @@
 package org.overture.ast.types.assistants;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.TreeSet;
 
 import org.overture.ast.types.AOptionalType;
-import org.overture.ast.types.ASeq1Type;
-import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -16,7 +16,7 @@ import org.overturetool.vdmj.util.Utils;
 
 
 @SuppressWarnings("serial")
-public class PTypeSet extends TreeSet<PType>{
+public class PTypeSet extends HashSet<PType>{
 	
 	public PTypeSet()
 	{
@@ -38,26 +38,26 @@ public class PTypeSet extends TreeSet<PType>{
 	@Override
 	public boolean add(PType t)
 	{
-		if (t instanceof ASeq1Type)
+		if (t instanceof ASeq1SeqType)
 		{
 			// If we add a Seq1Type, and there is already a SeqType in the set
 			// we ignore the Seq1Type.
 			
-			ASeq1Type s1t = (ASeq1Type)t;
-			ASeqType st = new ASeqType(s1t.getLocation(),false, s1t.getSeqof(), null);
+			ASeq1SeqType s1t = (ASeq1SeqType)t;
+			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(),false, s1t.getSeqof(), null);
 			
 			if (contains(st))
 			{
 				return false;	// Was already there
 			}
 		}
-		else if (t instanceof ASeqType)
+		else if (t instanceof ASeqSeqType)
 		{
 			// If we add a SeqType, and there is already a Seq1Type in the set
 			// we replace the Seq1Type.
 			
-			ASeqType st = (ASeqType)t;
-			ASeq1Type s1t = new ASeq1Type(st.getLocation(),false, st.getSeqof(),null);
+			ASeqSeqType st = (ASeqSeqType)t;
+			ASeq1SeqType s1t = new ASeq1SeqType(st.getLocation(),false, st.getSeqof(),null);
 			
 			if (contains(s1t))
 			{

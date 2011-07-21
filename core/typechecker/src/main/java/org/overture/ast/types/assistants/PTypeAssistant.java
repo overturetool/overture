@@ -22,7 +22,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeqType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -36,6 +36,7 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -89,9 +90,9 @@ public class PTypeAssistant {
 				return new AProductType(location,false, definitions, polytypes);
 			
 			case SEQ:
-				return new ASeqType(location,false, definitions, 
-						polymorph( ((ASeqType)type).getSeqof(),pname, actualType),
-						((ASeqType)type).getEmpty());
+				return new ASeqSeqType(location,false, definitions, 
+						polymorph( ((SSeqType)type).getSeqof(),pname, actualType),
+						((SSeqType)type).getEmpty());
 			case SET:
 				return new ASetType(location, false,definitions,
 						polymorph(((ASetType)type).getSetof(), pname, actualType),
@@ -194,10 +195,9 @@ public class PTypeAssistant {
 		case PRODUCT:
 			result = AProductTypeAssistant.typeResolve((AProductType)type,root,rootVisitor,question);
 			break;
-			//TODO: SEQ TYPE must be changed in AST
+			
 		case SEQ:			
-		case SEQ1:
-			assert false : "SEQ TYPE must be changed in AST";
+			result = SSeqTypeAssistant.typeResolve((SSeqType)type,root,rootVisitor,question);
 			break;
 		case SET:
 			result = ASetTypeAssistant.typeResolve((ASetType)type,root,rootVisitor,question);
@@ -253,8 +253,7 @@ public class PTypeAssistant {
 			AProductTypeAssistant.unResolve((AProductType) type);
 			break;
 		case SEQ:
-		case SEQ1:
-			assert false : "SEQ TYPE must be changed in AST";
+			SSeqTypeAssistant.unResolve((SSeqType)type);			
 			break;
 		case SET:
 			ASetTypeAssistant.unResolve((ASetType)type);
@@ -285,7 +284,6 @@ public class PTypeAssistant {
 		case PRODUCT:		
 		case QUOTE:
 		case SEQ:
-		case SEQ1:
 		case SET:
 		case UNDEFINED:
 		case UNION:
@@ -317,20 +315,16 @@ public class PTypeAssistant {
 	public static boolean isSeq(PType type) {
 		switch (type.kindPType()) {
 		case SEQ:
-		case SEQ1:
 			return true;
 		default:
 			return false;
 		}
 	}
 
-	public static ASeqType getSeq(PType type) {
+	public static SSeqType getSeq(PType type) {
 		switch (type.kindPType()) {
-		case SEQ:
-		case SEQ1:
-			if (type instanceof ASeqType) {
-				return (ASeqType) type;
-			}
+		case SEQ:					
+				return (SSeqType) type;		
 		default:
 			assert false : "Can't getSeq of a non-seq";
 			return null;

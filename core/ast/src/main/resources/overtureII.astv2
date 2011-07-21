@@ -1,4 +1,4 @@
-//TODO1: could be nice to redifine fields in subclasses... EXAMPLE: expressions have a [type]:type but lambda expression a [type]:type.function 
+//TODO1: maybe generate classes with the Comparable interface 
 
 Tokens
 /* This section declared tokens as internal types or external classes
@@ -231,8 +231,7 @@ type {-> package='org.overture.ast.types'}
     |   {parameter} [name]:LexNameToken
     |   {product} [types]:type*
     |   {quote} [value]:LexQuoteToken 
-    |   {seq} [seqof]:type [empty]:java_Boolean
-    |   {seq1} [seqof]:type [empty]:java_Boolean
+    |   #seq 
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
     |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean
@@ -240,6 +239,12 @@ type {-> package='org.overture.ast.types'}
     |   {unresolved} [typename]:LexNameToken
     |   {voidReturn}
     |   {void} 
+    ;
+
+
+#seq {-> package='org.overture.ast.types'}
+    =   {seq} 
+    |   {seq1} 
     ;
 
 #Map  {-> package='org.overture.ast.types'}
@@ -671,3 +676,7 @@ Aspect Declaration
     =   (opaque):java_Boolean
         (invDef):definition.explicitFunction
     ; 
+    
+%type->#seq
+    = [seqof]:type [empty]:java_Boolean
+    ;
