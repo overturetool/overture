@@ -193,7 +193,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 			if (notreached)
 			{
-				TypeCheckerErrors.warning(5006, "Statement will not be reached", node.getLocation(), node);
+				TypeCheckerErrors.warning(5006, "Statement will not be reached", stmt.getLocation(), stmt);
 			}
 			else
 			{
