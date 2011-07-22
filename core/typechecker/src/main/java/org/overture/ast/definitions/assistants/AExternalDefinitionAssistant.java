@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.PType;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -38,6 +39,10 @@ public class AExternalDefinitionAssistant {
 
 	public static LexNameList getVariableNames(AExternalDefinition d) {
 		return PDefinitionAssistant.getVariableNames(d.getState());
+	}
+
+	public static PType getType(AExternalDefinition def) {
+		return PDefinitionAssistant.getType(def.getState());
 	}
 
 }

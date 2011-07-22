@@ -6,6 +6,7 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.PType;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -80,6 +81,11 @@ public class AInheritedDefinitionAssistant {
 				d.setSuperdef(PDefinitionAssistant.findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
 			}
 		}
+	}
+
+	public static PType getType(AInheritedDefinition def) {
+		checkSuperDefinition(def);
+		return PDefinitionAssistant.getType(def.getSuperdef());
 	}
 
 }

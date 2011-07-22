@@ -931,7 +931,7 @@ public class DefinitionReader extends SyntaxReader
     	}
 
  		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
- 		return new AValueDefinition(lastToken().location,null,scope,null,
+ 		return new AValueDefinition(lastToken().location,null,scope,false,
 				null,null,type,p,getExpressionReader().readExpression(),null,null);
 //		return new ValueDefinition(
 //			p, scope, type, getExpressionReader().readExpression());

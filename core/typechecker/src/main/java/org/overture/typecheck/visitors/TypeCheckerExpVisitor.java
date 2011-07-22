@@ -23,90 +23,7 @@ import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.ACharLiteralExp;
-import org.overture.ast.expressions.ACompBinaryExp;
-import org.overture.ast.expressions.ADefExp;
-import org.overture.ast.expressions.ADivNumericBinaryExp;
-import org.overture.ast.expressions.ADivideNumericBinaryExp;
-import org.overture.ast.expressions.ADomainResByBinaryExp;
-import org.overture.ast.expressions.ADomainResToBinaryExp;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AExists1Exp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AFieldExp;
-import org.overture.ast.expressions.AFieldNumberExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AFuncInstatiationExp;
-import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
-import org.overture.ast.expressions.AGreaterNumericBinaryExp;
-import org.overture.ast.expressions.AHistoryExp;
-import org.overture.ast.expressions.AIfExp;
-import org.overture.ast.expressions.AInSetBinaryExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.AIotaExp;
-import org.overture.ast.expressions.AIsExp;
-import org.overture.ast.expressions.AIsOfBaseClassExp;
-import org.overture.ast.expressions.AIsOfClassExp;
-import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapCompMapExp;
-import org.overture.ast.expressions.AMapEnumMapExp;
-import org.overture.ast.expressions.AMapUnionBinaryExp;
-import org.overture.ast.expressions.AMapletExp;
-import org.overture.ast.expressions.AMkBasicExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.AModNumericBinaryExp;
-import org.overture.ast.expressions.AMuExp;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.ANilExp;
-import org.overture.ast.expressions.ANotEqualBinaryExp;
-import org.overture.ast.expressions.ANotInSetBinaryExp;
-import org.overture.ast.expressions.ANotYetSpecifiedExp;
-import org.overture.ast.expressions.APlusNumericBinaryExp;
-import org.overture.ast.expressions.APlusPlusBinaryExp;
-import org.overture.ast.expressions.APostOpExp;
-import org.overture.ast.expressions.APreExp;
-import org.overture.ast.expressions.APreOpExp;
-import org.overture.ast.expressions.AProperSubsetBinaryExp;
-import org.overture.ast.expressions.AQuoteLiteralExp;
-import org.overture.ast.expressions.ARangeResByBinaryExp;
-import org.overture.ast.expressions.ARangeResToBinaryExp;
-import org.overture.ast.expressions.ARealLiteralExp;
-import org.overture.ast.expressions.ARecordModifier;
-import org.overture.ast.expressions.ARemNumericBinaryExp;
-import org.overture.ast.expressions.ASameBaseClassExp;
-import org.overture.ast.expressions.ASameClassExp;
-import org.overture.ast.expressions.ASelfExp;
-import org.overture.ast.expressions.ASeqCompSeqExp;
-import org.overture.ast.expressions.ASeqConcatBinaryExp;
-import org.overture.ast.expressions.ASeqEnumSeqExp;
-import org.overture.ast.expressions.ASetCompSetExp;
-import org.overture.ast.expressions.ASetDifferenceBinaryExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
-import org.overture.ast.expressions.ASetIntersectBinaryExp;
-import org.overture.ast.expressions.ASetRangeSetExp;
-import org.overture.ast.expressions.ASetUnionBinaryExp;
-import org.overture.ast.expressions.AStarStarBinaryExp;
-import org.overture.ast.expressions.AStateInitExp;
-import org.overture.ast.expressions.AStringLiteralExp;
-import org.overture.ast.expressions.ASubclassResponsibilityExp;
-import org.overture.ast.expressions.ASubseqExp;
-import org.overture.ast.expressions.ASubsetBinaryExp;
-import org.overture.ast.expressions.ASubstractNumericBinaryExp;
-import org.overture.ast.expressions.AThreadIdExp;
-import org.overture.ast.expressions.ATimeExp;
-import org.overture.ast.expressions.ATimesNumericBinaryExp;
-import org.overture.ast.expressions.ATupleExp;
-import org.overture.ast.expressions.AUndefinedExp;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.SBooleanBinaryExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.expressions.assistants.AApplyExpAssistant;
 import org.overture.ast.expressions.assistants.ACaseAlternativeAssistant;
 import org.overture.ast.expressions.assistants.SBinaryExpAssistant;
@@ -131,6 +48,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
@@ -300,13 +218,12 @@ public class TypeCheckerExpVisitor extends
 	
 	
 	@Override
-	public PType caseSBooleanBinaryExp(SBooleanBinaryExp node,
+	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) {
-		
-		SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), true,null),rootVisitor,question);
+		node.setType(SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), true,null),rootVisitor,question));
 		return node.getType();
-		
 	}
+	
 	
 	@Override
 	public PType caseACompBinaryExp(ACompBinaryExp node, TypeCheckInfo question) {
@@ -321,7 +238,7 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.report(3068, "Right hand of map 'comp' is not a map",node.getLocation(),node);
     			TypeCheckerErrors.detail("Type", node.getRight().getType());
-    			node.setType(new AMapMapType(node.getLocation(),false, null, null, null,null));	// Unknown types
+    			node.setType(new AMapMapType(node.getLocation(),false, null, null, null,true));	// Unknown types
     			return node.getType(); 
     		}
 
@@ -334,7 +251,7 @@ public class TypeCheckerExpVisitor extends
     			TypeCheckerErrors.detail2("Dom", lm.getFrom(), "Rng", rm.getTo());
     		}
 
-    		results.add(new AMapMapType(node.getLocation(), false, null, rm.getFrom(), lm.getTo(), null));
+    		results.add(new AMapMapType(node.getLocation(), false, null, rm.getFrom(), lm.getTo(), false));
 		}
 
 		if (PTypeAssistant.isFunction(node.getLeft().getType()))
@@ -488,7 +405,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3123, "Left hand of 'munion' is not a map",node.getLocation(),node);
 			TypeCheckerErrors.detail("Type", node.getLeft().getType());
-			node.setType(new AMapMapType(node.getLocation(),false,null,null, null, null ));	// Unknown types
+			node.setType(new AMapMapType(node.getLocation(),false,null,null, null, true ));	// Unknown types
 			return node.getType();
 		}
 		else if (!PTypeAssistant.isMap(node.getRight().getType()))
@@ -509,7 +426,7 @@ public class TypeCheckerExpVisitor extends
 			to.add(ml.getTo()); to.add(mr.getTo());
 
 			node.setType(new AMapMapType(node.getLocation(),false,null,
-					from.getType(node.getLocation()), to.getType(node.getLocation()), null));
+					from.getType(node.getLocation()), to.getType(node.getLocation()), false));
 			return node.getType();
 		}
 	}
@@ -722,7 +639,7 @@ public class TypeCheckerExpVisitor extends
     		{
     			TypeCheckerErrors.concern(unique, 3141, "Right hand of '++' is not a map",node.getLocation(),node);
     			TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
-    			node.setType(new AMapMapType(node.getLocation(),false,null, null, null, null));	// Unknown types
+    			node.setType(new AMapMapType(node.getLocation(),false,null, null, null, true));	// Unknown types
     			return node.getType();
     		}
 
@@ -1785,8 +1702,49 @@ public class TypeCheckerExpVisitor extends
 	
 	@Override
 	public PType caseADefExp(ADefExp node, TypeCheckInfo question) {
-		// Does not have a type check
-		return super.caseADefExp(node, question);
+		// Each local definition is in scope for later local definitions...
+
+		Environment local = question.env;
+
+		for (PDefinition d: node.getLocalDefs())
+		{
+			if (d instanceof AExplicitFunctionDefinition)
+			{
+				// Functions' names are in scope in their bodies, whereas
+				// simple variable declarations aren't
+
+				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
+				PDefinitionAssistant.implicitDefinitions(d, local);
+				TypeCheckInfo newQuestion = new TypeCheckInfo();
+				question.env = local;
+				
+				PDefinitionAssistant.typeResolve(d,rootVisitor,question);
+
+				if (question.env.isVDMPP())
+				{
+					SClassDefinition cdef = question.env.findClassDefinition();
+					d.setClassDefinition(cdef);
+					d.setAccess( PAccessSpecifierAssistant.getStatic(d,true));
+				}
+
+				
+				d.apply(rootVisitor, newQuestion);
+			}
+			else
+			{
+				PDefinitionAssistant.implicitDefinitions(d, local);
+				question.env = local;
+				PDefinitionAssistant.typeResolve(d, rootVisitor, question);
+				d.apply(rootVisitor, question);
+				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
+			}
+		}
+
+		question.qualifiers = null;
+		PType r = node.getExpression().apply(rootVisitor, question);
+		local.unusedCheck(question.env);
+		node.setType(r);
+		return r;
 	}
 	
 	
@@ -1819,7 +1777,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (node.getMembers().isEmpty())
 		{
-			return new AMapMapType(node.getLocation(), false, null, null, null, null);
+			return new AMapMapType(node.getLocation(), false, null, null, null, true);
 		}
 
 		PTypeSet dom = new PTypeSet();
@@ -1842,7 +1800,7 @@ public class TypeCheckerExpVisitor extends
 				node.getRngTypes().add(maplet.getTo());
 			}
 		}
-		node.setType(new AMapMapType(node.getLocation(), false, null, dom.getType(node.getLocation()), rng.getType(node.getLocation()), null));
+		node.setType(new AMapMapType(node.getLocation(), false, null, dom.getType(node.getLocation()), rng.getType(node.getLocation()), false));
 		return node.getType();
 		
 	}
@@ -1852,7 +1810,7 @@ public class TypeCheckerExpVisitor extends
 		
 		PType ltype = node.getLeft().apply(rootVisitor, question);
 		PType rtype = node.getRight().apply(rootVisitor, question);
-		node.setType(new AMapMapType(node.getLocation(), false, null, ltype, rtype, null));
+		node.setType(new AMapMapType(node.getLocation(), false, null, ltype, rtype, false));
 		return node.getType();
 	}
 	
@@ -2066,7 +2024,7 @@ public class TypeCheckerExpVisitor extends
 	
 	@Override
 	public PType caseANilExp(ANilExp node, TypeCheckInfo question) {
-		node.setType(new AOperationType(node.getLocation(), false, null, new AUnknownType(node.getLocation(), false)));
+		node.setType(new AOptionalType(node.getLocation(), false, null, new AUnknownType(node.getLocation(), false)));
 		return  node.getType();
 	}
 	
@@ -2214,10 +2172,10 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question) {
 		
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, ASetBindAssistant.getMultipleBindList(node.getSetBind()), null);
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, ASetBindAssistant.getMultipleBindList(node.getSetBind().clone()), null);
 		def.apply(rootVisitor, question);
 
-		if (!PTypeAssistant.isNumeric(def.getType()))
+		if (!PTypeAssistant.isNumeric(PDefinitionAssistant.getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable",node.getLocation(),node);
 		}
@@ -2575,5 +2533,413 @@ public class TypeCheckerExpVisitor extends
 			node.setType(PTypeAssistant.typeResolve(node.getVardef().getType(), null, rootVisitor, question));
 			return node.getType();
 		}
+	}
+	
+	
+	
+	/**
+	 * BINARY Expressions
+	 * 
+	 * 
+	 */
+	@Override
+	public PType caseALessEqualNumericBinaryExp(
+			ALessEqualNumericBinaryExp node, TypeCheckInfo question) {
+	
+		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		return new ABooleanBasicType(node.getLocation(),false);
+	}
+	
+	@Override
+	public PType caseALessNumericBinaryExp(ALessNumericBinaryExp node,
+			TypeCheckInfo question) {
+		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		return new ABooleanBasicType(node.getLocation(),false);
+	}
+	
+	
+	/**
+	 * UNARY Expressions
+	 * 
+	 * 
+	 */
+	@Override
+	public PType caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
+			TypeCheckInfo question) {
+		question.qualifiers = null;
+		PType t = node.getExp().apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isNumeric(t))
+		{
+			TypeCheckerErrors.report(3053, "Argument of 'abs' is not numeric",node.getLocation(),node);
+		}
+		else if (t instanceof AIntNumericBasicType)
+		{
+			t = new ANatNumericBasicType(t.getLocation(),false);
+		}
+
+		node.setType(t);
+		return t;
+	}
+	
+	@Override
+	public PType caseACardinalityUnaryExp(ACardinalityUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		if (!PTypeAssistant.isSet(exp.apply(rootVisitor, question)))
+		{
+			TypeCheckerErrors.report(3067, "Argument of 'card' is not a set",exp.getLocation(),exp);
+		}
+
+		node.setType(new ANatNumericBasicType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	
+	
+	@Override
+	public PType caseADistConcatUnaryExp(ADistConcatUnaryExp node,
+			TypeCheckInfo question) {
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		PType result = exp.apply(rootVisitor, question);
+
+		if (PTypeAssistant.isSeq(result))
+		{
+			PType inner = PTypeAssistant.getSeq(result).getSeqof();
+
+			if (PTypeAssistant.isSeq(inner))
+			{
+				node.setType(PTypeAssistant.getSeq(inner));
+				return node.getType();
+			}
+		}
+
+		TypeCheckerErrors.report(3075, "Argument of 'conc' is not a seq of seq",node.getLocation(),node);
+		node.setType(new AUnknownType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
+			TypeCheckInfo question) {
+
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType arg = exp.apply(rootVisitor, question);
+
+		if (PTypeAssistant.isSet(arg))
+		{
+			ASetType set = PTypeAssistant.getSet(arg);
+
+			if (set.getEmpty() || PTypeAssistant.isSet(set.getSetof()))
+			{
+				node.setType(set.getSetof());
+				return set.getSetof();
+			}
+		}
+
+		TypeCheckerErrors.report(3076, "Argument of 'dinter' is not a set of sets",node.getLocation(),node);
+		node.setType(new AUnknownType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseADistMergeUnaryExp(ADistMergeUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType arg = exp.apply(rootVisitor, question);
+
+		if (PTypeAssistant.isSet(arg))
+		{
+			ASetType set = PTypeAssistant.getSet(arg);
+
+			if (!set.getEmpty() && PTypeAssistant.isMap(set.getSetof()))
+			{
+				node.setType(set.getSetof());
+				return set.getSetof();
+			}
+		}
+
+		TypeCheckerErrors.report(3077, "Merge argument is not a set of maps",node.getLocation(),node);
+		return new AMapMapType(node.getLocation(),false,null,null,true);	// Unknown types
+	}
+	
+	@Override
+	public PType caseADistUnionUnaryExp(ADistUnionUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType type = exp.apply(rootVisitor,question);
+
+		if (PTypeAssistant.isSet(type))
+		{
+			ASetType set = PTypeAssistant.getSet(type);
+
+			if (PTypeAssistant.isSet(set.getSetof()))
+			{
+				node.setType(set.getSetof());
+				return set.getSetof();
+			}
+		}
+
+		TypeCheckerErrors.report(3078, "dunion argument is not a set of sets",node.getLocation(),node);
+		node.setType(new ASetType(node.getLocation(),false, new AUnknownType(node.getLocation(),false),false, false));
+		return node.getType(); 
+	}
+	
+	@Override
+	public PType caseAFloorUnaryExp(AFloorUnaryExp node, TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		if (!PTypeAssistant.isNumeric(exp.apply(rootVisitor, question)))
+		{
+			TypeCheckerErrors.report(3096, "Argument to floor is not numeric",node.getLocation(),node);
+		}
+
+		node.setType(new AIntNumericBasicType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAHeadUnaryExp(AHeadUnaryExp node, TypeCheckInfo question) {
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSeq(etype))
+		{
+			TypeCheckerErrors.report(3104, "Argument to 'hd' is not a sequence",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(), false));
+			return node.getType();
+		}
+
+		node.setType(PTypeAssistant.getSeq(etype).getSeqof());
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAIndicesUnaryExp(AIndicesUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSeq(etype))
+		{
+			TypeCheckerErrors.report(3109, "Argument to 'inds' is not a sequence",node.getLocation(),node);
+			TypeCheckerErrors.detail("Actual type", etype);
+		}
+
+		node.setType(new ASetType(node.getLocation(),false, new ANatNumericBasicType(node.getLocation(),false),false,false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseALenUnaryExp(ALenUnaryExp node, TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSeq(etype))
+		{
+			TypeCheckerErrors.report(3116, "Argument to 'len' is not a sequence",node.getLocation(),node);
+		}
+
+		node.setType(new ANatNumericBasicType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isMap(etype))
+		{
+			TypeCheckerErrors.report(3120, "Argument to 'dom' is not a map",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(), false));
+			return node.getType();
+		}
+
+		SMapType mt = PTypeAssistant.getMap(etype);
+		node.setType(new ASetType(node.getLocation(),false,mt.getFrom(),false,false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isMap(etype))
+		{
+			TypeCheckerErrors.report(3111, "Argument to 'inverse' is not a map",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(), false));
+			return node.getType();
+		}
+
+		//TODO:NOT SURE ABOUT THIS ONE:
+		node.setMapType(PTypeAssistant.getMap(etype));
+		node.setType(new AMapMapType(node.getLocation(), false, node.getMapType().getTo(), node.getMapType().getFrom() , false));
+		
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
+			TypeCheckInfo question) {
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isMap(etype))
+		{
+			TypeCheckerErrors.report(3122, "Argument to 'rng' is not a map",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(), false));
+			return node.getType();
+		}
+
+		SMapType mt = PTypeAssistant.getMap(etype);
+		return new ASetType(node.getLocation(),false, null, mt.getTo(), false, false);
+	}
+	
+	@Override
+	public PType caseANotUnaryExp(ANotUnaryExp node, TypeCheckInfo question) {
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType t = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isType(t, ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3137, "Not expression is not a boolean",node.getLocation(),node);
+		}
+
+		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAPowerSetUnaryExp(APowerSetUnaryExp node,
+			TypeCheckInfo question) {
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSet(etype))
+		{
+			TypeCheckerErrors.report(3145, "Argument to 'power' is not a set",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(), false));
+			return node.getType();
+		}
+
+		node.setType(new ASetType(node.getLocation(), false, etype, false, false));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAReverseUnaryExp(AReverseUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSeq(etype))
+		{
+			TypeCheckerErrors.report(3295, "Argument to 'reverse' is not a sequence",node.getLocation(),node);
+			node.setType(new ASeqSeqType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true));
+			return node.getType();
+		}
+
+		node.setType(etype);
+		return etype;
+	}
+	
+	@Override
+	public PType caseATailUnaryExp(ATailUnaryExp node, TypeCheckInfo question) {
+		PExp exp = node.getExp();
+		question.qualifiers = null;
+		
+		PType etype = exp.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSeq(etype))
+		{
+			TypeCheckerErrors.report(3179, "Argument to 'tl' is not a sequence",node.getLocation(),node);
+			node.setType(new ASeqSeqType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true));
+			return node.getType();
+		}
+
+		return etype;
+	}
+	
+	@Override
+	public PType caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
+			TypeCheckInfo question) {
+		question.qualifiers = null;
+		PType t = node.getExp().apply(rootVisitor,question);
+
+		if (t instanceof ANatNumericBasicType || t instanceof ANatOneNumericBasicType)
+		{
+			t = new AIntNumericBasicType(node.getLocation(),false);
+		}
+
+		node.setType(t);
+		return t;
+	}
+	
+	@Override
+	public PType caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
+			TypeCheckInfo question) {
+		question.qualifiers = null;
+		node.setType(node.getExp().apply(rootVisitor, question));
+		return node.getType();
+	}
+	
+	@Override
+	public PType caseAElementsUnaryExp(AElementsUnaryExp node,
+			TypeCheckInfo question) {
+		
+		PExp etype = node.getExp();
+		question.qualifiers = null;
+		
+		PType arg = etype.apply(rootVisitor, question);
+
+		if (!PTypeAssistant.isSeq(arg))
+		{
+			TypeCheckerErrors.report(3085, "Argument of 'elems' is not a sequence",node.getLocation(),node);
+			node.setType(new ASetType(node.getLocation(),false,new AUnknownType(node.getLocation(), false),true,false));
+			return node.getType();
+		}
+
+		SSeqType seq = PTypeAssistant.getSeq(arg);
+		return seq.getEmpty()? new ASetType(node.getLocation(),false,new AUnknownType(node.getLocation(), false),true,false) : new ASetType(node.getLocation(),false, seq.getSeqof(),false,false);
 	}
 }

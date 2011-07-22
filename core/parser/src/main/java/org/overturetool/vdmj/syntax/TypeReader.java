@@ -113,7 +113,7 @@ public class TypeReader extends SyntaxReader
 			List<PType> list = new Vector<PType>();
 			list.add(type);
 			list.add(readComposeType());
-			type = new AUnionType(token.location, false,null, list, false, false);
+			type = new AUnionType(token.location, false, list, false, false);
 		}
 
 		return type;

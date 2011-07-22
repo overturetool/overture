@@ -100,7 +100,7 @@ public class TypeComparator
 			if (other instanceof TypePair)
 			{
 				TypePair to = (TypePair)other;
-				return a == to.a && b == to.b;
+				return PTypeAssistant.equals(a, to.a) && PTypeAssistant.equals(b, to.b);
 			}
 
 			return false;
@@ -251,7 +251,7 @@ public class TypeComparator
 			throw new TypeCheckException("Unknown type: " + from, from.getLocation());
 		}
 
-		if (to == from)
+		if (PTypeAssistant.equals(to, from))
 		{
 			return Result.Yes;	// Same object!
 		}
@@ -462,7 +462,7 @@ public class TypeComparator
 				ARecordInvariantType rf = (ARecordInvariantType)from;
 				ARecordInvariantType rt = (ARecordInvariantType)to;
 
-				return rf.equals(rt) ? Result.Yes : Result.No;
+				return PTypeAssistant.equals(rf, rt) ? Result.Yes : Result.No;
 			}
 			else if (to instanceof AClassType)
 			{
@@ -506,7 +506,7 @@ public class TypeComparator
 			}
 			else
 			{
-				return to.equals(from) ? Result.Yes : Result.No;
+				return PTypeAssistant.equals(to, from) ? Result.Yes : Result.No;
 			}
 		}
 
@@ -869,7 +869,7 @@ public class TypeComparator
 				ARecordInvariantType subr = (ARecordInvariantType)sub;
 				ARecordInvariantType supr = (ARecordInvariantType)sup;
 
-				return subr.equals(supr) ? Result.Yes : Result.No;
+				return PTypeAssistant.equals(subr,supr) ? Result.Yes : Result.No;
 			}
 			else if (sub instanceof AClassType)
 			{
@@ -888,7 +888,7 @@ public class TypeComparator
 			}
 			else
 			{
-				return sub.equals(sup) ? Result.Yes : Result.No;
+				return PTypeAssistant.equals(sub, sup) ? Result.Yes : Result.No;
 			}
 		}
 

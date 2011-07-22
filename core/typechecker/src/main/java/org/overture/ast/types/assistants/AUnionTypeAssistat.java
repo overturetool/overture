@@ -8,10 +8,17 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexLocation;
 
 
 public class AUnionTypeAssistat {
@@ -102,6 +109,80 @@ public class AUnionTypeAssistat {
 			}
 		}
 		
+	}
+
+	public static SSeqType getSeq(AUnionType type) {
+		if (!type.getSeqDone())
+		{
+	   		type.setSeqDone(true);		// Mark early to avoid recursion.
+	   		type.setSeqType(PTypeAssistant.getSeq(new AUnknownType(type.getLocation(),false)));
+
+	   		PTypeSet set = new PTypeSet();
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isSeq(t))
+    			{
+    				set.add(PTypeAssistant.getSeq(t).getSeqof());
+    			}
+    		}
+
+    		type.setSeqType(set.isEmpty() ? null :
+    			new ASeqSeqType(type.getLocation(),false, set.getType(type.getLocation()),false));
+ 		}
+
+		return type.getSeqType();
+	}
+
+	public static ASetType getSet(AUnionType type) {
+		
+		LexLocation location = type.getLocation();
+		
+		if (!type.getSetDone())
+		{
+    		type.setSetDone(true);	// Mark early to avoid recursion.
+    		type.setSetType(PTypeAssistant.getSet(new AUnknownType(location,false)));
+
+    		PTypeSet set = new PTypeSet();
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isSet(t))
+    			{
+    				set.add(PTypeAssistant.getSet(t).getSetof());
+    			}
+    		}
+
+    		type.setSetType(set.isEmpty() ? null : new ASetType(location,false, set.getType(location),false,false));
+		}
+
+		return type.getSetType();
+	}
+
+	public static SMapType getMap(AUnionType type) {
+		LexLocation location = type.getLocation();
+		
+		if (!type.getMapDone())
+		{
+    		type.setMapDone(true);		// Mark early to avoid recursion.
+    		type.setMapType( PTypeAssistant.getMap(new AUnknownType(location,false)));
+
+    		PTypeSet from = new PTypeSet();
+    		PTypeSet to = new PTypeSet();
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isMap(t))
+    			{
+    				from.add(PTypeAssistant.getMap(t).getFrom());
+    				to.add(PTypeAssistant.getMap(t).getTo());
+    			}
+    		}
+
+    		type.setMapType(from.isEmpty() ? null : new AMapMapType(location, false, from.getType(location), to.getType(location), false));
+		}
+
+		return type.getMapType();
 	}
 	
 

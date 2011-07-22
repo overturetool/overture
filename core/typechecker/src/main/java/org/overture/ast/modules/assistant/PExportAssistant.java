@@ -10,6 +10,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AFunctionExport;
 import org.overture.ast.modules.AOperationExport;
@@ -49,7 +50,7 @@ public class PExportAssistant
 					}
 					else
 					{
-						PType act = def.getType();
+						PType act = PDefinitionAssistant.getType(def);
 						PType type = ((AFunctionExport)exp).getExportType();
 
 						if (act != null && !PTypeAssistant.equals(act, type))

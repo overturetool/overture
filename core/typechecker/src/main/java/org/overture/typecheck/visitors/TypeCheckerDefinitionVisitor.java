@@ -101,7 +101,7 @@ public class TypeCheckerDefinitionVisitor extends
 		
 		question.qualifiers = null;
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
-		node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, question));
+		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistant.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -137,17 +137,17 @@ public class TypeCheckerDefinitionVisitor extends
 		question.env = cenv;
 		//TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of assignment in our tree 		
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
-		node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, question));
+		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistant.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
 			TypeCheckerErrors.report(3048, "Expression does not return a value",node.getExpression().getLocation(),node.getExpression());
 		}
 
-		if (!TypeComparator.compatible(node.getType(), node.getExpType()))
+		if (!TypeComparator.compatible(PDefinitionAssistant.getType(node), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3000, "Expression does not match declared type",node.getLocation(),node);
-			TypeCheckerErrors.detail2("Declared", node.getType(), "Expression", node.getExpType());
+			TypeCheckerErrors.detail2("Declared", PDefinitionAssistant.getType(node), "Expression", node.getExpType());
 		}
 		
 		return node.getType();
@@ -462,7 +462,7 @@ public class TypeCheckerDefinitionVisitor extends
 			}
 		}
 
-		if (PTypeAssistant.narrowerThan(node.getType(),node.getAccess()))
+		if (PTypeAssistant.narrowerThan(PDefinitionAssistant.getType(node),node.getAccess()))
 		{
 			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition",node.getLocation(),node);
 		}
@@ -1246,7 +1246,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(rootVisitor, question);
 		node.setExpType(expType);
-		PType type = node.getType();
+		PType type = PDefinitionAssistant.getType(node);
 		if (expType instanceof AVoidType)
 		{
 			TypeCheckerErrors.report(3048, "Expression does not return a value",node.getExpression().getLocation(),node.getExpression());

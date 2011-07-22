@@ -117,7 +117,7 @@ public class PTypeSet extends HashSet<PType>{
 		if (this.size() == 1) {
 			result = this.iterator().next();
 		} else {
-			result = new AUnionType(location, false,null, new ArrayList<PType>(
+			result = new AUnionType(location, false, new ArrayList<PType>(
 					this),false, false);
 		}
 

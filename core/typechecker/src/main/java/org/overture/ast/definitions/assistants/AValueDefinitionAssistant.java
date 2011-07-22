@@ -6,6 +6,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
@@ -54,11 +55,16 @@ public class AValueDefinitionAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
-		if (d.getType() != null)
+		if (getType(d) != null)
 		{
-			 d.setType(PTypeAssistant.typeResolve(d.getType(),null,rootVisitor,question));
+			 d.setType(PTypeAssistant.typeResolve(getType(d),null,rootVisitor,question));
 		}
 		
+	}
+
+	public static PType getType(AValueDefinition def) {
+		return def.getType() != null ? def.getType() :
+			(def.getExpType() != null ? def.getExpType() : new AUnknownType(def.getLocation(),false));
 	}
 
 	

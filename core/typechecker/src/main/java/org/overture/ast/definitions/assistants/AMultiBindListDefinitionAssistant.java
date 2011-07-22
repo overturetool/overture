@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.PType;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -43,6 +45,15 @@ public class AMultiBindListDefinitionAssistant {
 	public static LexNameList getVariableNames(AMultiBindListDefinition d) {
 		
 		return d.getDefs() == null ? new LexNameList() :  PDefinitionListAssistant.getVariableNames(d.getDefs());
+	}
+
+	public static PType getType(AMultiBindListDefinition def) {
+		if (def.getDefs() != null && def.getDefs().size() == 1)
+		{
+			return PDefinitionAssistant.getType(def.getDefs().get(0));
+		}
+
+		return new AUnknownType(def.getLocation(),false);
 	}
 
 }

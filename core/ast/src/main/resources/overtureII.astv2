@@ -133,7 +133,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {indices}  
     |   {len} 
     |   {mapDomain} 
-    |   {mapInverse} 
+    |   {mapInverse} (mapType):type.Map
     |   {mapRange} 
     |   {not}  
     |   {powerSet} 
@@ -234,7 +234,7 @@ type {-> package='org.overture.ast.types'}
     |   #seq 
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
-    |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean
+    |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean (seqDone):java_Boolean (seqType):type.seq (setDone):java_Boolean (setType):type.set (mapDone):java_Boolean (mapType):type.Map
     |   {unknown}
     |   {unresolved} [typename]:LexNameToken
     |   {voidReturn}
@@ -633,6 +633,7 @@ Aspect Declaration
         [gettingInvDefs]:java_Boolean
         [isAbstract]:java_Boolean
         [isUndefined]:java_Boolean
+        (classtype):type
     ;
     
 %stm

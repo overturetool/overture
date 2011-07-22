@@ -578,6 +578,15 @@ public class SClassDefinitionAssistant {
    		cname.setTypeQualifier(argtypes);
  		return cname;
 	}
+
+	public static PType getType(SClassDefinition def) {
+		if (def.getClasstype() == null)
+		{
+			def.setClasstype(new AClassType(def.getLocation(), false, null, def));
+		}
+
+		return def.getClasstype();
+	}
 	
 	
 }

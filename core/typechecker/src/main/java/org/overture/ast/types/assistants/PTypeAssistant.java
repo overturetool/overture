@@ -15,6 +15,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
@@ -23,6 +24,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.EInvariantType;
@@ -102,7 +104,9 @@ public class PTypeAssistant {
 					polytypesSet.add(polymorph(ptype,pname, actualType));
 				}
 				
-				return new AUnionType(location,false,definitions, new Vector<PType>(polytypesSet),false,false);
+				AUnionType uType = new AUnionType(location,false,new Vector<PType>(polytypesSet),false,false);
+				uType.setDefinitions(definitions);
+				return uType;
 			default:
 				break;
 		}
@@ -312,6 +316,16 @@ public class PTypeAssistant {
 	public static boolean isSeq(PType type) {
 		switch (type.kindPType()) {
 		case SEQ:
+			return true;	
+		case BRACKET:
+			return isSeq(((ABracketType)type).getType());
+		case OPTIONAL:
+			return isSeq(((AOptionalType)type).getType());
+		case PARAMETER:
+			return true;
+		case UNION:
+			return getSeq(type) != null;
+		case UNKNOWN:
 			return true;
 		default:
 			return false;
@@ -322,6 +336,16 @@ public class PTypeAssistant {
 		switch (type.kindPType()) {
 		case SEQ:					
 				return (SSeqType) type;		
+		case BRACKET:
+			return getSeq(((ABracketType)type).getType());				
+		case OPTIONAL:
+			return getSeq(((AOptionalType)type).getType());
+		case PARAMETER:
+			return new ASeqSeqType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true);		
+		case UNION:
+			return AUnionTypeAssistat.getSeq((AUnionType)type);
+		case UNKNOWN:
+			return new ASeqSeqType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true);					
 		default:
 			assert false : "Can't getSeq of a non-seq";
 			return null;
@@ -348,6 +372,23 @@ public class PTypeAssistant {
 		switch (type.kindPType()) {
 		case MAP:
 			return true;
+		case BRACKET:
+			return isMap(((ABracketType)type).getType());		
+		case INVARIANT:
+			switch (((SInvariantType) type).kindSInvariantType()) {
+			case NAMED:
+				return isMap(((ANamedInvariantType)type).getType());
+			default:				
+				return false;
+			}			
+		case OPTIONAL:
+			return isMap(((AOptionalType)type).getType());	
+		case PARAMETER:
+			return true;	
+		case UNION:
+			return getMap(type) != null;
+		case UNKNOWN:
+			return true;
 		default:
 			return false;
 		}
@@ -361,8 +402,25 @@ public class PTypeAssistant {
 			}
 			else if(type instanceof AInMapMapType) {
 				return (AInMapMapType) type;
-			}
-				
+			}		
+		case BRACKET:
+			return getMap(((ABracketType)type).getType());		
+		case INVARIANT:
+			switch (((SInvariantType) type).kindSInvariantType()) {
+			case NAMED:
+				return getMap(((ANamedInvariantType)type).getType());
+			default:
+				assert false : "Can't getMap of a non-map";
+				return null;
+			}			
+		case OPTIONAL:
+			return getMap(((AOptionalType)type).getType());	
+		case PARAMETER:
+			return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);	
+		case UNION:
+			return AUnionTypeAssistat.getMap((AUnionType)type);
+		case UNKNOWN:
+			return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);						
 		default:
 			assert false : "Can't getMap of a non-map";
 			return null;
@@ -373,6 +431,16 @@ public class PTypeAssistant {
 		switch (type.kindPType()) {
 		case SET:
 			return true;
+		case BRACKET:
+			return isSet(((ABracketType)type).getType());		
+		case OPTIONAL:
+			return isSet(((AOptionalType)type).getType());
+		case PARAMETER:
+			return true;
+		case UNION:
+			return getSet((AUnionType)type) != null;
+		case UNKNOWN:
+			return true;
 		default:
 			return false;
 		}
@@ -380,10 +448,18 @@ public class PTypeAssistant {
 
 	public static ASetType getSet(PType type) {
 		switch (type.kindPType()) {
-		case SET:
-			if (type instanceof ASetType) {
-				return (ASetType) type;
-			}
+		case SET:			
+			return (ASetType) type;		
+		case BRACKET:
+			return getSet(((ABracketType)type).getType());		
+		case OPTIONAL:
+			return getSet(((AOptionalType)type).getType());
+		case PARAMETER:
+			return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);		
+		case UNION:
+			return AUnionTypeAssistat.getSet((AUnionType)type);
+		case UNKNOWN:
+			return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);		
 		default:
 			assert false : "Can't getSet of a non-set";
 			return null;

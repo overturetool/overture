@@ -27,7 +27,10 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
@@ -43,7 +46,7 @@ public class PDefinitionAssistant {
 	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
 			PType other) {
 
-		if (PTypeAssistant.equals(aClassDefDefinition.getType(), other)) {
+		if (PTypeAssistant.equals(PDefinitionAssistant.getType(aClassDefDefinition), other)) {
 			return true;
 		} else {
 			for (PType type : aClassDefDefinition.getSupertypes()) {
@@ -507,6 +510,61 @@ public class PDefinitionAssistant {
 			
 		}
 		
+	}
+
+	public static PType getType(PDefinition def) {
+		switch (def.kindPDefinition()) {	
+		case ASSIGNMENT:
+			return def.getType();
+		case CLASS:
+			return SClassDefinitionAssistant.getType((SClassDefinition)def);
+		case CLASSINVARIANT:
+			return new ABooleanBasicType(def.getLocation(),false);
+		case EQUALS:
+			return AEqualsDefinitionAssistant.getType((AEqualsDefinition)def);
+		case EXPLICITFUNCTION:
+			return def.getType();
+		case EXPLICITOPERATION:
+			return def.getType();
+		case EXTERNAL:
+			return AExternalDefinitionAssistant.getType((AExternalDefinition)def);
+		case IMPLICITFUNCTION:
+			return def.getType();
+		case IMPLICITOPERATION:
+			return def.getType();
+		case IMPORTED:
+			return getType(((AImportedDefinition)def).getDef());
+		case INHERITED:
+			return AInheritedDefinitionAssistant.getType((AInheritedDefinition)def);
+		case INSTANCEVARIABLE:
+			return def.getType();
+		case LOCAL:
+			return def.getType() == null ? new AUnknownType(def.getLocation(),false) : def.getType();
+		case MULTIBINDLIST:
+			return AMultiBindListDefinitionAssistant.getType((AMultiBindListDefinition)def);
+		case MUTEXSYNC:
+			return new AUnknownType(def.getLocation(),false);
+		case NAMEDTRACE:
+			return new AOperationType(def.getLocation(),false,null,null);
+		case PERSYNC:
+			return new ABooleanBasicType(def.getLocation(),false);
+		case RENAMED:
+			return getType(((ARenamedDefinition)def).getDef());
+		case STATE:
+			return ((AStateDefinition)def).getRecordType();
+		case THREAD:
+			return new AUnknownType(def.getLocation(),false);
+		case TYPE:
+			return def.getType();
+		case UNTYPED:
+			return new AUnknownType(def.getLocation(),false);
+		case VALUE:
+			return AValueDefinitionAssistant.getType((AValueDefinition)def);
+		default:
+			assert false : "should never go in this case";
+			return null;			
+		}
+
 	}
 
 	
