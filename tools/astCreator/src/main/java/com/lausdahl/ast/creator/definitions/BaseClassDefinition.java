@@ -360,7 +360,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			if (f.getName().equals(name))
 			{
-				return true && fieldExistsInSuper;
+				return fieldExistsInSuper;
 			}
 		}
 		return false;

@@ -44,7 +44,7 @@ public class PTypeSet extends HashSet<PType>{
 			// we ignore the Seq1Type.
 			
 			ASeq1SeqType s1t = (ASeq1SeqType)t;
-			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(),false, s1t.getSeqof(), null);
+			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(),false, s1t.getSeqof(), false);
 			
 			if (contains(st))
 			{

@@ -876,13 +876,13 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(ltype))
 		{
 			TypeCheckerErrors.report(3157, "Left hand of '^' is not a sequence",node.getLocation(),node);
-			ltype = new ASeqSeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
+			ltype = new ASeqSeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), false);
 		}
 
 		if (!PTypeAssistant.isSeq(rtype))
 		{
 			TypeCheckerErrors.report(3158, "Right hand of '^' is not a sequence",node.getLocation(),node);
-			rtype = new ASeqSeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), null);
+			rtype = new ASeqSeqType(node.getLocation(), false,null, new AUnknownType(node.getLocation(),false,null), false);
 		}
 
 		PType lof = PTypeAssistant.getSeq(ltype);
@@ -2238,7 +2238,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		node.setType(new ASeqSeqType(node.getLocation(), null, null, etype, null));
+		node.setType(new ASeqSeqType(node.getLocation(), false, null, etype, false));
 		return node.getType();
 	}
 	
@@ -2258,8 +2258,8 @@ public class TypeCheckerExpVisitor extends
   			types.add(mt);
 		}
 
-		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), null, null, null, true) :
-			new ASeq1SeqType(node.getLocation(), null, null, ts.getType(node.getLocation()), false ));
+		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), false, null, null, true) :
+			new ASeq1SeqType(node.getLocation(), false, null, ts.getType(node.getLocation()), false ));
 		
 		return node.getType();
 	}

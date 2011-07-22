@@ -11,17 +11,13 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
 
-public class CloneWithMapMethod extends CloneMethod
-{
+public class CloneWithMapMethod extends CloneMethod {
 	@Override
-	protected void prepare()
-	{
+	protected void prepare() {
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
 		this.returnType = c.getName();
-		// this.requiredImports.add("java.util.LinkedList");
-		// this.requiredImports.add("java.util.List");
 		this.requiredImports.add("java.util.Map");
 
 		this.arguments.add(new Argument("Map<" + env.node.getName() + ","
@@ -40,93 +36,78 @@ public class CloneWithMapMethod extends CloneMethod
 		StringBuilder sb = new StringBuilder();
 
 		List<Field> fields = new Vector<Field>();
-		if (classDefinition instanceof CommonTreeClassDefinition)
-		{
-			// fields.addAll(((CommonTreeClassDefinition)classDefinition).getInheritedFields());
-			for (Field field : ((CommonTreeClassDefinition) classDefinition).getInheritedFields())
-			{
-				if (!classDefinition.refinesField(field.getName()))
-				{
-					fields.add(field);
-				}
+
+		for (Field field : ((CommonTreeClassDefinition) classDefinition)
+				.getInheritedFields()) {
+			if (!classDefinition.refinesField(field.getName())) {
+				fields.add(field);
 			}
 		}
+
 		fields.addAll(c.getFields());
 
-		switch (classType)
-		{
-			case Alternative:
-			case Custom:
-			case Production:
-			case Unknown:
-				sb.append("\t\t" + c.getName() + " node = new " + c.getName()
-						+ "(\n");
+		switch (classType) {
+		case Alternative:
+		case Custom:
+		case Production:
+		case Unknown:
+			sb.append("\t\t" + c.getName() + " node = new " + c.getName()
+					+ "(\n");
 
-				if (!c.getFields().isEmpty())
-				{
-					String tmp = "";
-					for (Field f : fields)
-					{
-						String name = f.getName();
+			if (!fields.isEmpty()) {
+				String tmp = "";
+				for (Field f : fields) {
+					String name = f.getName();
 
-						if (classDefinition.isRefinedField(f))
-						{
-							name = f.getCast() + name;
-						}
+					if (classDefinition.isRefinedField(f)) {
+						name = f.getCast() + name;
+					}
 
-						if (f.isList && !f.isDoubleList)
-						{
-							tmp += ("\t\t\tcloneList"
-									+ (f.isTypeExternalNotNode() ? "External"
-											: "") + "(" + name + ", oldToNewMap),\n");
-						} else if (f.isDoubleList)
-						{
-							tmp += ("\t\t\tcloneListList(" + name + ", oldToNewMap),\n");
-						} else
-						{
+					if (f.isList && !f.isDoubleList) {
+						tmp += ("\t\t\tcloneList"
+								+ (f.isTypeExternalNotNode() ? "External" : "")
+								+ "(" + name + ", oldToNewMap),\n");
+					} else if (f.isDoubleList) {
+						tmp += ("\t\t\tcloneListList(" + name + ", oldToNewMap),\n");
+					} else {
 
-							if (JavaTypes.isPrimitiveType(f.getType())
-									|| f.type instanceof ExternalEnumJavaClassDefinition)
-							{
-								tmp += ("\t\t\t" + name + ",\n");
-							} else
-							{
-								tmp += ("\t\t\tcloneNode(" + name + ", oldToNewMap),\n");
-							}
+						if (JavaTypes.isPrimitiveType(f.getType())
+								|| f.type instanceof ExternalEnumJavaClassDefinition) {
+							tmp += ("\t\t\t" + name + ",\n");
+						} else {
+							tmp += ("\t\t\tcloneNode(" + name + ", oldToNewMap),\n");
 						}
 					}
-					sb.append(tmp.substring(0, tmp.length() - 2) + "\n");
 				}
-				sb.append("\t\t);\n");
-				sb.append("\t\toldToNewMap.put(this, node);\n");
-				sb.append("\t\treturn node;");
-				break;
-			case Token:
-				sb.append("\t\t" + c.getName() + " token = new " + c.getName()
-						+ "( ");
+				sb.append(tmp.substring(0, tmp.length() - 2) + "\n");
+			}
+			sb.append("\t\t);\n");
+			sb.append("\t\toldToNewMap.put(this, node);\n");
+			sb.append("\t\treturn node;");
+			break;
+		case Token:
+			sb.append("\t\t" + c.getName() + " token = new " + c.getName()
+					+ "( ");
 
-				if (!c.getFields().isEmpty())
-				{
-					String tmp = "";
-					for (Field f : fields)
-					{
-						String name = f.getName();
+			if (!fields.isEmpty()) {
+				String tmp = "";
+				for (Field f : fields) {
+					String name = f.getName();
 
-						if (classDefinition.isRefinedField(f))
-						{
-							name = f.getCast() + name;
-						}
-						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
+					if (classDefinition.isRefinedField(f)) {
+						name = f.getCast() + name;
 					}
-					sb.append(tmp.substring(0, tmp.length() - 2));
+					tmp += ("get"
+							+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
 				}
+				sb.append(tmp.substring(0, tmp.length() - 2));
+			}
 
-				sb.append(");\n");
-				sb.append("\t\toldToNewMap.put(this, token);\n");
-				sb.append("\t\treturn token;");
+			sb.append(");\n");
+			sb.append("\t\toldToNewMap.put(this, token);\n");
+			sb.append("\t\treturn token;");
 
-				break;
+			break;
 
 		}
 
@@ -135,14 +116,12 @@ public class CloneWithMapMethod extends CloneMethod
 	}
 
 	public CloneWithMapMethod(IClassDefinition c, ClassType classType,
-			Environment env)
-	{
+			Environment env) {
 		super(c, classType, env);
 	}
 
 	@Override
-	protected void prepareVdm()
-	{
+	protected void prepareVdm() {
 
 		skip = true;
 
@@ -168,65 +147,56 @@ public class CloneWithMapMethod extends CloneMethod
 		sbDoc.append("\t */");
 
 		StringBuilder sb = new StringBuilder();
-		switch (classType)
-		{
-			case Alternative:
-			case Custom:
-			case Production:
-			case Unknown:
-				sb.append("\t\tdcl node : " + c.getName() + " := new "
-						+ c.getName() + "(\n");
+		switch (classType) {
+		case Alternative:
+		case Custom:
+		case Production:
+		case Unknown:
+			sb.append("\t\tdcl node : " + c.getName() + " := new "
+					+ c.getName() + "(\n");
 
-				if (!c.getFields().isEmpty())
-				{
-					String tmp = "";
-					for (Field f : c.getFields())
-					{
-						String name = f.getName();
+			if (!c.getFields().isEmpty()) {
+				String tmp = "";
+				for (Field f : c.getFields()) {
+					String name = f.getName();
 
-						if (classDefinition.isRefinedField(f))
-						{
-							name = f.getCast() + name;
-						}
-						if (f.isList)
-						{
-							tmp += ("\t\t\tcloneList(" + name + ", oldToNewMap),\n");
-						} else
-						{
-							tmp += ("\t\t\tcloneNode(" + name + ", oldToNewMap),\n");
-						}
+					if (classDefinition.isRefinedField(f)) {
+						name = f.getCast() + name;
 					}
-					sb.append(tmp.substring(0, tmp.length() - 2) + "\n");
-				}
-				sb.append("\t\t);\n");
-				sb.append("\t\toldToNewMap.put(this, node);\n");
-				sb.append("\t\treturn node;");
-				break;
-			case Token:
-				sb.append("\t\tdcl node : " + c.getName() + " := new "
-						+ c.getName() + "(");
-
-				if (!c.getFields().isEmpty())
-				{
-					String tmp = "";
-					for (Field f : c.getFields())
-					{
-						String name = f.getName();
-						if (classDefinition.isRefinedField(f))
-						{
-							name = f.getCast() + name;
-						}
-						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
+					if (f.isList) {
+						tmp += ("\t\t\tcloneList(" + name + ", oldToNewMap),\n");
+					} else {
+						tmp += ("\t\t\tcloneNode(" + name + ", oldToNewMap),\n");
 					}
-					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
+				sb.append(tmp.substring(0, tmp.length() - 2) + "\n");
+			}
+			sb.append("\t\t);\n");
+			sb.append("\t\toldToNewMap.put(this, node);\n");
+			sb.append("\t\treturn node;");
+			break;
+		case Token:
+			sb.append("\t\tdcl node : " + c.getName() + " := new "
+					+ c.getName() + "(");
 
-				sb.append(");\n");
-				sb.append("\t\toldToNewMap.put(this, token);\n");
-				sb.append("\t\treturn token;");
+			if (!c.getFields().isEmpty()) {
+				String tmp = "";
+				for (Field f : c.getFields()) {
+					String name = f.getName();
+					if (classDefinition.isRefinedField(f)) {
+						name = f.getCast() + name;
+					}
+					tmp += ("get"
+							+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
+				}
+				sb.append(tmp.substring(0, tmp.length() - 2));
+			}
 
-				break;
+			sb.append(");\n");
+			sb.append("\t\toldToNewMap.put(this, token);\n");
+			sb.append("\t\treturn token;");
+
+			break;
 
 		}
 
