@@ -27,6 +27,7 @@ public class ModuleSlTypeCheckTest extends TestCase
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
+	
 	public void test01() throws ParserException, LexException
 	{
 		String root = "src\\test\\resources\\test1";

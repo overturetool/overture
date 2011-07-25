@@ -21,13 +21,19 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.AFunctionTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
+import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.patterns.IdentifierPattern;
+import org.overturetool.vdmj.patterns.Pattern;
+import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class AExplicitFunctionDefinitionAssistant {
@@ -259,4 +265,83 @@ public class AExplicitFunctionDefinitionAssistant {
 		}
 		
 	}
+
+	public static void implicitDefinitions(AExplicitFunctionDefinition d,
+			Environment env) {
+		
+		if (d.getPrecondition() != null)
+		{
+			d.setPredef(getPreDefinition(d));
+			PDefinitionAssistant.markUsed(d.getPredef());
+		}
+		else
+		{
+			d.setPredef(null);
+		}
+
+		if (d.getPostcondition() != null)
+		{
+			d.setPostdef(getPostDefinition(d));
+			PDefinitionAssistant.markUsed(d.getPostdef());
+		}
+		else
+		{
+			d.setPostdef(null);
+		}
+		
+	}
+
+	private static AExplicitFunctionDefinition getPostDefinition(
+			AExplicitFunctionDefinition d) {
+		
+		PatternList last = new PatternList();
+		int psize = d.getParamPatternList().size();
+
+		for (Pattern p: paramPatternList.get(psize - 1))
+		{
+			last.add(p);
+		}
+
+		LexNameToken result = new LexNameToken(name.module, "RESULT", location);
+		last.add(new IdentifierPattern(result));
+
+		List<PatternList> parameters = new Vector<PatternList>();
+
+		if (psize > 1)
+		{
+			parameters.addAll(paramPatternList.subList(0, psize - 1));
+		}
+
+		parameters.add(last);
+
+		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
+			name.getPostName(postcondition.location), NameScope.GLOBAL,
+			typeParams, type.getCurriedPostType(isCurried),
+			parameters, postcondition, null, null, false, null);
+
+		def.setAccessSpecifier(accessSpecifier);
+		def.classDefinition = classDefinition;
+		return def;
+	}
+
+	private static AExplicitFunctionDefinition getPreDefinition(
+			AExplicitFunctionDefinition d) {
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+				d.getPrecondition().getLocation(),
+				d.getName().getPreName(d.getPrecondition().getLocation()), //name
+				NameScope.GLOBAL, //namescope 
+				false, 
+				d.getAccess(), 
+				d.getTypeParams(), 
+				d.getParamPatternList(), 
+				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), //type 
+				d.getPrecondition(), 
+				null, null, null);
+		
+		def.setClassDefinition(d.getClassDefinition());
+		
+		return def;
+	}
+
+
 }

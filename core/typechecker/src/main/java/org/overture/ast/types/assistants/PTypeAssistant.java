@@ -150,48 +150,43 @@ public class PTypeAssistant {
 
 		switch (type.kindPType()) {	
 		case BRACKET:
-			if (type instanceof ABracketType) {
-				result = ABracketTypeAssistant.typeResolve(
+			result = ABracketTypeAssistant.typeResolve(
 						(ABracketType) type,  root, rootVisitor, question);
-			}
+			
 			break;
 		case CLASS:
-			if (type instanceof AClassType) {
 				result = AClassTypeAssistant.typeResolve(
 						(AClassType) type,  root, rootVisitor, question);
-			}
 			break;
 		case FUNCTION:
-			if (type instanceof AFunctionType) {
 				result = AFunctionTypeAssistant.typeResolve(
 						(AFunctionType) type,  root, rootVisitor, question);
-			}
 			break;
-		case MAP:
-			if(type instanceof SMapType)
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
 			{
-				result = SMapTypeAssistant.typeResolve((SMapType)type, root, rootVisitor, question);
+				result = ANamedInvariantTypeAssistant.typeResolve((ANamedInvariantType)type, root, rootVisitor, question);
+			} else if(type instanceof ARecordInvariantType)
+			{
+				result = ARecordInvariantTypeAssistant.typeResolve((ARecordInvariantType)type, root, rootVisitor, question);
 			}
+			 break;
+		case MAP:
+				result = SMapTypeAssistant.typeResolve((SMapType)type, root, rootVisitor, question);
 			break;
 		case OPERATION:
-			if (type instanceof AOperationType) {
 				result = AOperationTypeAssistant
 						.typeResolve((AOperationType) type,  root,
 								rootVisitor, question);
-			}
 			break;
-		case OPTIONAL:
-			if (type instanceof AOptionalType) {
+		case OPTIONAL:			
 				result = AOptionalTypeAssistant
 						.typeResolve((AOptionalType) type,  root,
 								rootVisitor, question);
-			}
 			break;
 		case PARAMETER:
-			if(type instanceof AParameterType)
-			{
-				result = AParameterTypeAssistant.typeResolve((AParameterType)type,root,rootVisitor,question);
-			}
+			result = AParameterTypeAssistant.typeResolve((AParameterType)type,root,rootVisitor,question);
+			
 			break;
 		case PRODUCT:
 			result = AProductTypeAssistant.typeResolve((AProductType)type,root,rootVisitor,question);
@@ -220,27 +215,25 @@ public class PTypeAssistant {
 	public static void unResolve(PType type) {
 		switch (type.kindPType()) {		
 		case BRACKET:
-			if (type instanceof ABracketType) {
-				ABracketTypeAssistant.unResolve((ABracketType)type);
-			}
+			ABracketTypeAssistant.unResolve((ABracketType)type);
 			break;		
 		case CLASS:
-			if (type instanceof AClassType) {
-				AClassTypeAssistant.unResolve((AClassType)type);
-			}
+			AClassTypeAssistant.unResolve((AClassType)type);
 			break;
 		case FUNCTION:
-			if (type instanceof AFunctionType) {
-				AFunctionTypeAssistant.unResolve((AFunctionType) type);
-			}
+			AFunctionTypeAssistant.unResolve((AFunctionType) type);
 			break;		
-			
 		case INVARIANT:
-		case MAP:
-			if(type instanceof SMapType)
+			if(type instanceof ANamedInvariantType)
 			{
-				SMapTypeAssistant.unResolve((SMapType)type);
+				ANamedInvariantTypeAssistant.unResolve((ANamedInvariantType)type);
+			} else if(type instanceof ARecordInvariantType)
+			{
+				ARecordInvariantTypeAssistant.unResolve((ARecordInvariantType)type);
 			}
+			 break;
+		case MAP:
+			SMapTypeAssistant.unResolve((SMapType)type);
 			break;
 		case OPERATION:
 			if (type instanceof AOperationType) {
@@ -261,10 +254,9 @@ public class PTypeAssistant {
 			break;
 		case UNION:
 			AUnionTypeAssistat.unResolve((AUnionType)type);
-			break;
-		
+			break;		
 		default:
-			System.out.println("PTypeAssistent : typeResolve not implemented");
+			type.setResolved(false);
 			break;
 		}
 
@@ -597,5 +589,7 @@ public class PTypeAssistant {
 
 		return other;
 	}
+
+	
 
 }

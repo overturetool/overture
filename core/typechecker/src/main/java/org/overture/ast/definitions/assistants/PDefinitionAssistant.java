@@ -167,10 +167,9 @@ public class PDefinitionAssistant {
 	public static PDefinition findNameBaseCase(PDefinition d, LexNameToken sought,
 			NameScope scope) {
 		if (d.getName().equals(sought)) {
-			if ((d.getNameScope() == NameScope.STATE && !scope
-					.matches(NameScope.STATE))
-					|| (d.getNameScope() == NameScope.OLDSTATE && !scope
-							.matches(NameScope.OLDSTATE))) {
+			if ((d.getNameScope() == NameScope.STATE && !scope.matches(NameScope.STATE)) 
+					|| (d.getNameScope() == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE))) {
+				
 				TypeChecker.report(3302, "State variable '" + sought.getName()
 						+ "' cannot be accessed from this context",
 						sought.getLocation());
@@ -428,43 +427,26 @@ public class PDefinitionAssistant {
 		case EQUALS:
 			break;
 		case EXPLICITFUNCTION:
+			AExplicitFunctionDefinitionAssistant.implicitDefinitions((AExplicitFunctionDefinition)d,env);
 			break;
 		case EXPLICITOPERATION:
-			break;
-		case EXTERNAL:
+			AExplicitOperationDefinitionAssistant.implicitDefinitions((AExplicitOperationDefinition)d,env);
 			break;
 		case IMPLICITFUNCTION:
+			AImplicitFunctionDefinitionAssistant.implicitDefinitions((AImplicitFunctionDefinition)d,env);
 			break;
 		case IMPLICITOPERATION:
-			break;
-		case IMPORTED:
-			break;
-		case INHERITED:
-			break;
-		case INSTANCEVARIABLE:
-			break;
-		case LOCAL:
-			break;
-		case MULTIBINDLIST:
-			break;
-		case MUTEXSYNC:
-			break;
-		case NAMEDTRACE:
-			break;
-		case PERSYNC:
-			break;
-		case RENAMED:
-			break;
+			AImplicitOperationDefinitionAssistant.implicitDefinitions((AImplicitOperationDefinition)d,env);
+			break;		
 		case STATE:
+			AStateDefinitionAssistant.implicitDefinitions((AStateDefinition)d,env);
 			break;
 		case THREAD:
+			AThreadDefinitionAssistant.implicitDefinitions((AThreadDefinition)d,env);
 			break;
 		case TYPE:
-			break;
-		case UNTYPED:
-			break;
-		case VALUE:
-			break;
+			ATypeDefinitionAssistant.implicitDefinitions((ATypeDefinition)d,env);
+			break;		
 		default:
 			return;
 		}

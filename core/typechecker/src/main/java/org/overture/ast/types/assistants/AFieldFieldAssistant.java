@@ -1,6 +1,7 @@
 package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -9,7 +10,7 @@ import org.overture.typecheck.TypeCheckInfo;
 
 public class AFieldFieldAssistant {
 
-	public static void typeResolve(AFieldField f, Object object,
+	public static void typeResolve(AFieldField f, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		

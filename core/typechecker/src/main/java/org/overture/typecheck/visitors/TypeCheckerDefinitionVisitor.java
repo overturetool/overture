@@ -235,7 +235,6 @@ public class TypeCheckerDefinitionVisitor extends
 	@Override
 	public PType caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, TypeCheckInfo question) {
-		System.out.println("Visiting Explicit Function Def: " + node.getName());
 		
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
 
@@ -315,7 +314,7 @@ public class TypeCheckerDefinitionVisitor extends
 		info.scope = question.scope;
 		info.qualifiers = null;		
 		
-		node.setActualResult(node.getBody().apply(rootVisitor,question));
+		node.setActualResult(node.getBody().apply(rootVisitor,info));
 
 		if (!TypeComparator.compatible(expectedResult, node.getActualResult()))
 		{

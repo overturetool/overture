@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
@@ -49,6 +50,30 @@ public class AFunctionTypeAssistant {
 		}
 
 		PTypeAssistant.unResolve(ft.getResult());
+	}
+
+	public static AFunctionType getCurriedPreType(AFunctionType t,
+			Boolean isCurried) {
+		
+		if (isCurried && t.getResult() instanceof AFunctionType)
+		{
+			AFunctionType ft = (AFunctionType)t.getResult();
+			AFunctionType type = new AFunctionType(t.getLocation(),
+				false, false, t.getParameters(), getCurriedPreType(ft,isCurried));
+			type.setDefinitions(t.getDefinitions());
+			return type;
+		}
+		else
+		{
+			return getPreType(t);
+		}
+	}
+
+	private static AFunctionType getPreType(AFunctionType t) {
+			AFunctionType type =
+				new AFunctionType(t.getLocation(), false,false, t.getParameters(), new ABooleanBasicType(t.getLocation(),false));
+			type.setDefinitions(t.getDefinitions());
+			return type;
 	}
 
 }

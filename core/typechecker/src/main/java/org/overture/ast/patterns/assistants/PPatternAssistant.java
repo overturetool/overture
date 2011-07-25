@@ -152,21 +152,7 @@ public class PPatternAssistant {
 		
 	}
 
-	public static void typeResolve(List<PPattern> plist,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-
-		for (PPattern pPattern : plist) {
-			typeResolve(pPattern, rootVisitor, question);
-		}		
-	}
-
-	public static void unResolve(List<PPattern> plist) {
-		
-		for (PPattern pPattern : plist) {
-			unResolve(pPattern);
-		}	
-	}
+	
 
 	public static LexNameList getVariableNames(PPattern pattern) {
 		switch (pattern.kindPPattern()) {

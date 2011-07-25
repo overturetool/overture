@@ -80,7 +80,7 @@ public class ATypeDefinitionAssistant {
 		try
 		{
 			d.setInfinite(false);
-			d.setType(PTypeAssistant.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
+			d.setInvType((SInvariantType) PTypeAssistant.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
 
 			if (d.getInfinite())
 			{
@@ -92,10 +92,12 @@ public class ATypeDefinitionAssistant {
 				PDefinitionAssistant.typeResolve(d.getInvdef(), rootVisitor, question);
 				PPatternAssistant.typeResolve(d.getInvPattern(), rootVisitor, question);
 			}
+			
+			d.setType(d.getInvType());
 		}
 		catch (TypeCheckException e)
 		{
-			PTypeAssistant.unResolve(d.getType());
+			PTypeAssistant.unResolve(d.getInvType());
 			throw e;
 		}
 	}
