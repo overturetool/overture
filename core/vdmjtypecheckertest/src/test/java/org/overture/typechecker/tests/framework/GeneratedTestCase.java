@@ -35,14 +35,15 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 		super("test");
 	}
 
-	public GeneratedTestCase(ParserType type, File file)
+	public GeneratedTestCase(File file)
 	{
 		super("test");
-		this.parserType = type;
+		this.parserType = ParserType.Module;
 		this.file = file;
 		this.content = file.getName();
 		this.expectedType = null;
 	}
+		
 
 	public GeneratedTestCase(ParserType type, String name, File file, String content,
 			String expectedType)
