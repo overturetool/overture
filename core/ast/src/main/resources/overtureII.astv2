@@ -253,7 +253,7 @@ type {-> package='org.overture.ast.types'}
     ;
 #invariant {-> package='org.overture.ast.types'}
     =   {named} [name]:LexNameToken [type]:type //[invdef]:explicitFunction //super = invariant type
-    |   {record} [name]:LexNameToken [fields]:field.field* //[invdef]:explicitFunction //super = invariant type
+    |   {record} [name]:LexNameToken [fields]:field.field* (infinite):java_Boolean //[invdef]:explicitFunction //super = invariant type
     ;
 
 #basic {-> package='org.overture.ast.types'}

@@ -184,9 +184,9 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 	public boolean matches(LexNameToken other)
 	{
-		return module.equals(other.getModule()) &&
-				name.equals(other.getName()) &&
-				old == other.isOld();
+		return module.equals(other.module) &&
+				name.equals(other.name) &&
+				old == other.old;
 	}
 
 	@Override
