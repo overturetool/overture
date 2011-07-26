@@ -32,6 +32,8 @@ import org.overture.interpreter.ast.analysis.IQuestionInterpreter;
 import org.overture.interpreter.ast.node.NodeEnumInterpreter;
 import org.overture.interpreter.ast.node.NodeInterpreter;
 import org.overturetool.vdmj.lex.VDMToken;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 
 
 
@@ -99,6 +101,15 @@ import org.overturetool.vdmj.lex.VDMToken;
 		return new LexToken(location,type);
 	}
 
+	/**
+	 * @see org.overturetool.vdmj.definitions.Definition#abort
+	 */
+
+	public void abort(int number, String msg, Context ctxt)
+	{
+		throw new ContextException(number, msg, location, ctxt);
+	}
+	
 	@Override
 	public NodeInterpreter clone(Map<NodeInterpreter, NodeInterpreter> oldToNewMap) {
 		NodeInterpreter newNode = (NodeInterpreter) clone();
