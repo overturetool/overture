@@ -146,14 +146,14 @@ public abstract class Method
 		{
 			tmp += "\t" + annotation + "\n";
 		}
-		tmp += getSignature() + "\n";
+		tmp += getSignature();
 
 		if (isAbstract)
 		{
-			tmp += ";";
+			tmp += ";\n";
 		} else
 		{
-			tmp += "\t{\n";
+			tmp += "\n\t{\n";
 
 			if (body != null)
 			{

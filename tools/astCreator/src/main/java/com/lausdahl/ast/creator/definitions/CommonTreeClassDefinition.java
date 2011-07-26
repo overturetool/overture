@@ -54,8 +54,8 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 		methods.add(new ToStringMethod(this, env));
 
-		if (this.type != ClassType.Production
-				&& this.type != ClassType.SubProduction)
+//		if (this.type != ClassType.Production
+//				&& this.type != ClassType.SubProduction)
 		{
 			methods.add(new CloneMethod(this, type, env));
 			methods.add(new CloneWithMapMethod(this, type, env));
