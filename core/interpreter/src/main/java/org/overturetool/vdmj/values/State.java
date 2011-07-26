@@ -77,8 +77,8 @@ public class State implements ValueListener
 				// so that calls to init_sigma can test their arguments without
 				// changing state. See StateInitExpression.
 
-				if (!definition.canBeExecuted ||
-					!(definition.initExpression instanceof EqualsExpression))
+				if (!definition.getCanBeExecuted() ||
+					!(definition.getInitExpression() instanceof AEqualsBinaryExpInterpreter))
 				{
 					throw new ValueException(
 						4144, "State init expression cannot be executed", globals);
@@ -124,15 +124,15 @@ public class State implements ValueListener
 
 	public void changedValue(LexLocation location, Value changed, Context ctxt)
 	{
-		if (doInvariantChecks && definition.invfunc != null && Settings.invchecks)
+		if (doInvariantChecks && definition.getInvfunc() != null && Settings.invchecks)
 		{
     		try
     		{
-    			if (!definition.invfunc.eval(
-    				definition.invfunc.location, recordValue, ctxt).boolValue(ctxt))
+    			if (!definition.getInvfunc().eval(
+    				definition.getInvfunc().location, recordValue, ctxt).boolValue(ctxt))
     			{
     				throw new ContextException(
-    					4131, "State invariant violated: " + definition.invfunc.name, location, ctxt);
+    					4131, "State invariant violated: " + definition.getInvfunc().name, location, ctxt);
     			}
     		}
     		catch (ValueException e)

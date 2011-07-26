@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
@@ -57,7 +58,7 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.util.Utils;
 
 
-public class FunctionValue extends Value
+public class FunctionValue extends Value implements ExternalNodeInterpreter
 {
 	private static final long serialVersionUID = 1L;
 	public final LexLocation location;

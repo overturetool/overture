@@ -33,6 +33,7 @@ import org.overture.interpreter.ast.definitions.AImplicitOperationDefinitionInte
 import org.overture.interpreter.ast.definitions.AStateDefinitionInterpreter;
 import org.overture.interpreter.ast.definitions.ASystemClassDefinitionInterpreter;
 import org.overture.interpreter.ast.definitions.SClassDefinitionInterpreter;
+import org.overture.interpreter.ast.expressions.AAndBooleanBinaryExpInterpreter;
 import org.overture.interpreter.ast.expressions.PExpInterpreter;
 import org.overture.interpreter.ast.patterns.APatternListTypePairInterpreter;
 import org.overture.interpreter.ast.patterns.PPatternInterpreter;
@@ -40,6 +41,7 @@ import org.overture.interpreter.ast.statements.PStmInterpreter;
 import org.overture.interpreter.ast.types.AAccessSpecifierAccessSpecifierInterpreter;
 import org.overture.interpreter.ast.types.AOperationTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.types.assistant.PTypeAssistant;
 import org.overturetool.interpreter.vdmj.lex.LexKeywordToken;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
@@ -194,7 +196,7 @@ public class OperationValue extends Value
 			
 			LexLocation where = isMutex ? guard.getLocation() : add.getLocation();
 
-			guard = new AndExpression(guard,
+			guard = new AAndBooleanBinaryExpInterpreter(null,where,null,guard,
 				new LexKeywordToken(VDMToken.AND, where), add);
 		}
 	}
@@ -560,7 +562,7 @@ public class OperationValue extends Value
 	@Override
 	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to.isType(AOperationTypeInterpreter.class))
+		if (PTypeAssistant.isType(to, AOperationTypeInterpreter.class))
 		{
 			return this;
 		}

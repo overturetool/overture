@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import org.overture.interpreter.ast.types.ATokenBasicTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.types.assistant.PTypeAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 
@@ -79,7 +80,7 @@ public class TokenValue extends Value
 	@Override
 	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to.isType(ATokenBasicTypeInterpreter.class))
+		if (PTypeAssistant.isType(to, ATokenBasicTypeInterpreter.class))
 		{
 			return this;
 		}

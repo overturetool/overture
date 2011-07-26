@@ -58,7 +58,7 @@ public class RecordValue extends Value
 		for (Value v: values)
 		{
 			AFieldFieldInterpreter f = fi.next();
-			fieldmap.add(f.getTag(), v.convertValueTo(f.getType(), ctxt), !f.equalityAbstration);
+			fieldmap.add(f.getTag(), v.convertValueTo(f.getType(), ctxt), !f.getEqualityAbstraction());
 		}
 
 		if (invariant != null &&
@@ -93,7 +93,7 @@ public class RecordValue extends Value
 				abort(4081, "Field not defined: " + f.getTag(), ctxt);
 			}
 
-			fieldmap.add(f.getTag(), v.convertValueTo(f.getType(), ctxt), !f.equalityAbstration);
+			fieldmap.add(f.getTag(), v.convertValueTo(f.getType(), ctxt), !f.getEqualityAbstraction());
 		}
 
 		if (invariant != null &&
@@ -121,7 +121,7 @@ public class RecordValue extends Value
 		for (NameValuePair nvp: mapvalues)
 		{
 			AFieldFieldInterpreter f = type.findField(nvp.name.name);
-			this.fieldmap.add(nvp.name.name, nvp.value, !f.equalityAbstration);
+			this.fieldmap.add(nvp.name.name, nvp.value, !f.getEqualityAbstraction());
 		}
 	}
 
@@ -171,7 +171,7 @@ public class RecordValue extends Value
 			{
 				for (AFieldFieldInterpreter f: type.getFields())
 				{
-					if (!f.equalityAbstration)
+					if (!f.getEqualityAbstraction())
 					{
 						Value fv = fieldmap.get(f.getTag());
 						Value ofv = ot.fieldmap.get(f.getTag());

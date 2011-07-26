@@ -23,7 +23,10 @@ Tokens
   //Delegate = 'java:node:org.overturetool.vdmj.util.Delegate';
   clonableFile ='java:org.overturetool.interpreter.util.ClonableFile';
   ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
+  
+  
   Breakpoint ='java:node:org.overturetool.vdmj.runtime.Breakpoint';
+  FunctionValue = 'java:org.overturetool.vdmj.values.FunctionValue';
   
   location = 'java:org.overturetool.interpreter.vdmj.lex.LexLocation';
   plus = '+';
@@ -146,6 +149,7 @@ patternBind {-> package='org.overture.interpreter.ast.patterns'}
     
 definition {-> package='org.overture.interpreter.ast.definitions'}
   =#class
+  | {state} [invfunc]:FunctionValue [initfunc]:FunctionValue //(canBeExecuted):java_Boolean
     ;
  
 /*
