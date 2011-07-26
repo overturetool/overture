@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,15 +35,24 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
+
+import org.overture.interpreter.ast.definitions.AClassClassDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.AExplicitFunctionDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.AImplicitFunctionDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.SClassDefinitionInterpreter;
+import org.overture.interpreter.ast.expressions.PExpInterpreter;
+import org.overture.interpreter.ast.patterns.AExpressionPatternInterpreter;
+import org.overture.interpreter.ast.patterns.APatternListTypePairInterpreter;
+import org.overture.interpreter.ast.patterns.PPatternInterpreter;
+import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.definitions.assistant.AExplicitFunctionDefinitionAssistant;
+import org.overture.interpreter.definitions.assistant.AImplicitFunctionDefinitionAssistant;
+import org.overture.interpreter.types.assistant.PTypeAssistant;
+import org.overture.interpreter.types.assistant.PTypeInterpreterList;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -51,10 +61,6 @@ import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.PatternListTypePair;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -64,9 +70,9 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 	public final LexLocation location;
 	public final String name;
 	public NameValuePairList typeValues;
-	public FunctionType type;
-	public final List<PatternList> paramPatternList;
-	public final Expression body;
+	public AFunctionTypeInterpreter type;
+	public final List<List<PPatternInterpreter>> paramPatternList;  //TODO list of list?
+	public final PExpInterpreter body; 
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
 	public final Context freeVariables;
@@ -86,10 +92,10 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 	public ObjectValue self = null;
 	public boolean isStatic = false;
 	public boolean uninstantiated = false;
-	private ClassDefinition classdef = null;
+	private SClassDefinitionInterpreter classdef = null;
 
-	public FunctionValue(LexLocation location, String name, FunctionType type,
-		List<PatternList> paramPatternList, Expression body,
+	public FunctionValue(LexLocation location, String name, AFunctionTypeInterpreter type,
+		List<List<PPatternInterpreter>> paramPatternList, PExpInterpreter body,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables, boolean checkInvariants)
 	{
@@ -105,14 +111,14 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		this.checkInvariants = checkInvariants;
 	}
 
-	public FunctionValue(LexLocation location, String name, FunctionType type,
-		PatternList paramPatterns, Expression body, Context freeVariables)
+	public FunctionValue(LexLocation location, String name, AFunctionTypeInterpreter type,
+			List<PPatternInterpreter> paramPatterns, PExpInterpreter body, Context freeVariables)
 	{
 		this.location = location;
 		this.name = name;
 		this.typeValues = null;
 		this.type = type;
-		this.paramPatternList = new Vector<PatternList>();
+		this.paramPatternList = new Vector<List<PPatternInterpreter>>();
 		this.body = body;
 		this.precondition = null;
 		this.postcondition = null;
@@ -122,92 +128,92 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		paramPatternList.add(paramPatterns);
 	}
 
-	public FunctionValue(ExplicitFunctionDefinition def,
+	public FunctionValue(AExplicitFunctionDefinitionInterpreter def,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables)
-	{
-		this.location = def.location;
-		this.name = def.name.name;
+	{  
+		this.location = def.getLocation();
+		this.name = def.getName().name;
 		this.typeValues = null;
-		this.type = (FunctionType)def.getType();
-		this.paramPatternList = def.paramPatternList;
-		this.body = def.body;
+		this.type = (AFunctionTypeInterpreter)def.getType();
+		this.paramPatternList = def.getParamPatternList();
+		this.body = def.getBody();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
-		this.checkInvariants = !def.isTypeInvariant;
-		this.classdef = def.classDefinition;
+		this.checkInvariants = !def.getIsTypeInvariant();
+		this.classdef = def.getClassDefinition();
 
-		if (Settings.measureChecks && def.measuredef != null)
+		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
-			measureName = def.measuredef.name;
+			measureName = def.getMeasureDef().getName();
 			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
 		}
 	}
 
-	public FunctionValue(ImplicitFunctionDefinition def,
+	public FunctionValue(AImplicitFunctionDefinitionInterpreter def,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables)
 	{
-		this.location = def.location;
-		this.name = def.name.name;
+		this.location = def.getLocation();
+		this.name = def.getName().name;
 		this.typeValues = null;
-		this.type = (FunctionType)def.getType();
+		this.type = (AFunctionTypeInterpreter)def.getType();
 
-		this.paramPatternList = new Vector<PatternList>();
-		PatternList plist = new PatternList();
+		this.paramPatternList = new Vector<List<PPatternInterpreter>>();
+		List<PPatternInterpreter> plist = new LinkedList<PPatternInterpreter>();
 
-		for (PatternListTypePair ptp: def.parameterPatterns)
+		for (APatternListTypePairInterpreter ptp: def.getParamPatterns())
 		{
-			plist.addAll(ptp.patterns);
+			plist.addAll(ptp.getPatterns());
 		}
 
 		this.paramPatternList.add(plist);
 
-		this.body = def.body;
+		this.body = def.getBody();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
 		this.checkInvariants = true;
-		this.classdef = def.classDefinition;
+		this.classdef = def.getClassDefinition();
 
-		if (Settings.measureChecks && def.measuredef != null)
+		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
-			measureName = def.measuredef.name;
+			measureName = def.getMeasureDef().getName();
 			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
 		}
 	}
 
-	public FunctionValue(ImplicitFunctionDefinition fdef,
-		TypeList actualTypes, FunctionValue precondition,
+	public FunctionValue(AImplicitFunctionDefinitionInterpreter fdef,
+		PTypeInterpreterList actualTypes, FunctionValue precondition,
 		FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = fdef.getType(actualTypes);
+		this.type =  AImplicitFunctionDefinitionAssistant.getType(fdef, actualTypes);
 
-		Iterator<Type> ti = actualTypes.iterator();
+		Iterator<PTypeInterpreter> ti = actualTypes.iterator();
 
-		for (LexNameToken pname: fdef.typeParams)
+		for (LexNameToken pname: fdef.getTypeParams())
 		{
-			Type ptype = ti.next();
+			PTypeInterpreter ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
 		}
 	}
 
-	public FunctionValue(ExplicitFunctionDefinition fdef,
-		TypeList actualTypes, FunctionValue precondition,
+	public FunctionValue(AExplicitFunctionDefinitionInterpreter fdef,
+		PTypeInterpreterList actualTypes, FunctionValue precondition,
 		FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = fdef.getType(actualTypes);
+		this.type = AExplicitFunctionDefinitionAssistant.getType(fdef, actualTypes);
 
-		Iterator<Type> ti = actualTypes.iterator();
+		Iterator<PTypeInterpreter> ti = actualTypes.iterator();
 
-		for (LexNameToken pname: fdef.typeParams)
+		for (LexNameToken pname: fdef.getTypeParams())
 		{
-			Type ptype = ti.next();
+			PTypeInterpreter ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
 		}
 	}
@@ -215,7 +221,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 	// This constructor is used by IterFunctionValue and CompFunctionValue
 	// The methods which matter are overridden in those classes.
 
-	public FunctionValue(LexLocation location, FunctionType type, String name)
+	public FunctionValue(LexLocation location, AFunctionTypeInterpreter type, String name)
 	{
 		this.location = location;
 		this.name = name;
@@ -261,7 +267,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		}
 	}
 
-	public void setClass(ClassDefinition classdef)
+	public void setClass(SClassDefinitionInterpreter classdef)
 	{
 		this.classdef = classdef;
 	}
@@ -279,7 +285,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 			abort(3033, "Polymorphic function has not been instantiated: " + name, ctxt);
 		}
 
-		PatternList paramPatterns = paramPatternList.get(0);
+		List<PPatternInterpreter> paramPatterns = paramPatternList.get(0);
 		RootContext evalContext = newContext(from, toTitle(), ctxt, sctxt);
 
 		if (typeValues != null)
@@ -294,10 +300,10 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		}
 
 		Iterator<Value> valIter = argValues.iterator();
-		Iterator<Type> typeIter = type.parameters.iterator();
+		Iterator<PTypeInterpreter> typeIter = type.getParameters().iterator();
 		NameValuePairMap args = new NameValuePairMap();
 
-		for (Pattern p: paramPatterns)
+		for (PPatternInterpreter p: paramPatterns)
 		{
 			Value pv = valIter.next();
 
@@ -371,11 +377,12 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 					measure = evalContext.lookup(measureName).functionValue(ctxt);
 
 					if (typeValues != null)		// Function is polymorphic, so measure copies type args
-					{
+					{ 
 						measure = (FunctionValue)measure.clone();
 						measure.uninstantiated = false;
-						measure.type = new FunctionType(
-							measure.location, measure.type.partial, type.parameters, measure.type.result);
+						measure.type = new AFunctionTypeInterpreter(measure.location, false, measure.type.getPartial(), 
+									type.getParameters(), measure.type.getResult());
+						
 						measure.typeValues = typeValues;
 					}
 
@@ -411,7 +418,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 				stack.push(mv);
 			}
 
-    		Value rv = body.eval(evalContext).convertValueTo(type.result, evalContext);
+    		Value rv = body.eval(evalContext).convertValueTo(type.getResult(), evalContext);
 
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
     		{
@@ -453,7 +460,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		}
 		else	// This is a curried function
 		{
-			if (type.result instanceof FunctionType)
+			if (type.getResult() instanceof AFunctionTypeInterpreter)
 			{
 				// If a curried function has a pre/postcondition, then the
 				// result of a partial application has a pre/post condition
@@ -480,7 +487,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 				}
 
     			FunctionValue rv = new FunctionValue(location, "curried",
-    				(FunctionType)type.result,
+    				(AFunctionTypeInterpreter)type.getResult(),
     				paramPatternList.subList(1, paramPatternList.size()),
     				body, newpre, newpost, evalContext, false);
 
@@ -557,10 +564,10 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		return this;
 	}
 
-	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	@Override 
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to.isType(FunctionType.class))
+		if (PTypeAssistant.isType(to, AFunctionTypeInterpreter.class))
 		{
 			return this;
 		}
@@ -575,7 +582,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 		// Remove first set of parameters, and set the free variables instead.
 		// And adjust the return type to be the result type (a function).
 
-		return new FunctionValue(location, name, (FunctionType)type.result,
+		return new FunctionValue(location, name, (AFunctionTypeInterpreter)type.getResult(),
 			paramPatternList.subList(1, paramPatternList.size()),
 			body, precondition, postcondition, newFreeVariables, false);
 	}
@@ -593,7 +600,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 
 	public String toTitle()
 	{
-		PatternList paramPatterns = paramPatternList.get(0);
+		List<PPatternInterpreter> paramPatterns = paramPatternList.get(0);
 		return name + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }
