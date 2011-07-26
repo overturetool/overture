@@ -15,6 +15,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
@@ -297,7 +298,7 @@ public class AExplicitFunctionDefinitionAssistant {
 
 		for (PPattern p: d.getParamPatternList().get(psize - 1))
 		{
-			last.add(p);
+			last.add(p.clone());
 		}
 
 		LexNameToken result = new LexNameToken(d.getName().module, "RESULT", d.getLocation());
@@ -307,7 +308,17 @@ public class AExplicitFunctionDefinitionAssistant {
 
 		if (psize > 1)
 		{
-			parameters.addAll(d.getParamPatternList().subList(0, psize - 1));
+			
+			for (List<PPattern> pPatternList : d.getParamPatternList().subList(0, psize - 1))
+			{
+				NodeList<PPattern> tmpList = new NodeList<PPattern>(null);
+				for (PPattern pPattern2 : pPatternList)
+				{
+					tmpList.add(pPattern2.clone());
+				}
+				parameters.add(tmpList);
+			}
+//			parameters.addAll(d.getParamPatternList().subList(0, psize - 1));
 		}
 
 		parameters.add(last);
