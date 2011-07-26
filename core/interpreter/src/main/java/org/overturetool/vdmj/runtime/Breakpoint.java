@@ -36,9 +36,7 @@ import org.overture.interpreter.ast.expressions.PExpInterpreter;
 import org.overture.interpreter.ast.node.NodeEnumInterpreter;
 import org.overture.interpreter.ast.node.NodeInterpreter;
 import org.overturetool.interpreter.vdmj.lex.Dialect;
-import org.overturetool.interpreter.vdmj.lex.LexIntegerToken;
-import org.overturetool.interpreter.vdmj.lex.LexLocation;
-import org.overturetool.interpreter.vdmj.lex.LexToken;
+
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;

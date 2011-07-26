@@ -25,13 +25,14 @@ package org.overturetool.vdmj.scheduler;
 
 import java.util.Random;
 
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;

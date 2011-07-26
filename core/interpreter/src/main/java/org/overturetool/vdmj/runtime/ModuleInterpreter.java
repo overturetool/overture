@@ -31,7 +31,7 @@ import java.util.Vector;
 import org.overturetool.interpreter.vdmj.lex.Dialect;
 import org.overturetool.interpreter.vdmj.lex.LexIdentifierToken;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
-import org.overturetool.interpreter.vdmj.lex.LexTokenReader;
+
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
 import org.overturetool.vdmj.expressions.Expression;

@@ -23,11 +23,12 @@
 
 package org.overturetool.vdmj.scheduler;
 
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.debug.DBGPReason;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ObjectContext;

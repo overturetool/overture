@@ -31,10 +31,11 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
 import org.overturetool.vdmj.messages.rtlog.RTLogger;

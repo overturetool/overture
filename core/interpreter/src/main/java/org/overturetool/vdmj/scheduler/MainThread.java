@@ -25,7 +25,7 @@ package org.overturetool.vdmj.scheduler;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.expressions.Expression;
+
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Context;

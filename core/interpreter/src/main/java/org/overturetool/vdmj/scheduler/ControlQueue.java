@@ -27,7 +27,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overturetool.vdmj.lex.LexLocation;
+
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 
 public class ControlQueue implements Serializable

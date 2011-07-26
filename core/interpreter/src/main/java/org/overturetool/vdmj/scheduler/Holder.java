@@ -25,7 +25,8 @@ package org.overturetool.vdmj.scheduler;
 
 import java.io.Serializable;
 
-import org.overturetool.vdmj.lex.LexLocation;
+
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 
 public class Holder<T> implements Serializable

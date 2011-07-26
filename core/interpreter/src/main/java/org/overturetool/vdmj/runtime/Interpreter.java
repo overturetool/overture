@@ -36,12 +36,12 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.overturetool.interpreter.vdmj.lex.Dialect;
-import org.overturetool.interpreter.vdmj.lex.LexException;
+
 import org.overturetool.interpreter.vdmj.lex.LexIdentifierToken;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.interpreter.vdmj.lex.LexToken;
-import org.overturetool.interpreter.vdmj.lex.LexTokenReader;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.definitions.ClassDefinition;
