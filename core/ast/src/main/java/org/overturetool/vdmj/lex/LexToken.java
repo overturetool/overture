@@ -110,29 +110,27 @@ import org.overture.ast.node.NodeEnum;
 
 	@Override
 	public void apply(IAnalysis analysis) {
-		//Do not visit
+		analysis.caseLexToken(this);
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) {
-		//Do not visit
-		return null;
+		return caller.caseLexToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) {
-		//Do not visit
+		caller.caseLexToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
-		//Do not visit
-		return null;
+		return caller.caseLexToken(this, question);
 	}
 
 	@Override
 	public NodeEnum kindNode() {
-		return null;
+		return NodeEnum.ExternalDefined;
 	}
 
 	@Override

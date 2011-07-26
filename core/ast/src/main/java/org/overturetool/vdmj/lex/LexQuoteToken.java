@@ -23,6 +23,11 @@
 
 package org.overturetool.vdmj.lex;
 
+import org.overture.ast.analysis.IAnalysis;
+import org.overture.ast.analysis.IAnswer;
+import org.overture.ast.analysis.IQuestion;
+import org.overture.ast.analysis.IQuestionAnswer;
+
 public class LexQuoteToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 	public final String value;
@@ -40,5 +45,25 @@ public class LexQuoteToken extends LexToken {
 	@Override
 	public Object clone() {
 		return new LexQuoteToken(value, location);
+	}
+	
+	@Override
+	public void apply(IAnalysis analysis) {
+		analysis.caseLexQuoteToken(this);
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> caller) {
+		return caller.caseLexQuoteToken(this);
+	}
+
+	@Override
+	public <Q> void apply(IQuestion<Q> caller, Q question) {
+		caller.caseLexQuoteToken(this, question);
+	}
+
+	@Override
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+		return caller.caseLexQuoteToken(this, question);
 	}
 }

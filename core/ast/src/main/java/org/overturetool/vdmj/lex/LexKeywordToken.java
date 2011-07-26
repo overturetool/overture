@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.lex;
 
+
 public class LexKeywordToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 
@@ -34,4 +35,24 @@ public class LexKeywordToken extends LexToken {
 	public Object clone() {
 		return new LexKeywordToken(type, location);
 	}
+	
+//	@Override
+//	public void apply(IAnalysis analysis) {
+//		analysis.caselexk(this);
+//	}
+//
+//	@Override
+//	public <A> A apply(IAnswer<A> caller) {
+//		return caller.caseLexKeywordToken(this);
+//	}
+//
+//	@Override
+//	public <Q> void apply(IQuestion<Q> caller, Q question) {
+//		caller.caseLexKeywordToken(this, question);
+//	}
+//
+//	@Override
+//	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+//		return caller.caseLexKeywordToken(this, question);
+//	}
 }

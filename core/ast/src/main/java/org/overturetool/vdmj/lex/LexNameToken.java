@@ -2,14 +2,11 @@ package org.overturetool.vdmj.lex;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import org.overture.ast.analysis.IAnalysis;
 import org.overture.ast.analysis.IAnswer;
 import org.overture.ast.analysis.IQuestion;
 import org.overture.ast.analysis.IQuestionAnswer;
-import org.overture.ast.node.Node;
-import org.overture.ast.node.NodeEnum;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.messages.InternalException;
 
@@ -241,5 +238,26 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 	
 	public boolean isOld() {
 		return old;
+	}
+	
+	
+	@Override
+	public void apply(IAnalysis analysis) {
+		analysis.caseLexNameToken(this);
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> caller) {
+		return caller.caseLexNameToken(this);
+	}
+
+	@Override
+	public <Q> void apply(IQuestion<Q> caller, Q question) {
+		caller.caseLexNameToken(this, question);
+	}
+
+	@Override
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+		return caller.caseLexNameToken(this, question);
 	}
 }

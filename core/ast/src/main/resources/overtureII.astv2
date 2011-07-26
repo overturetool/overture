@@ -1,5 +1,8 @@
 //TODO1: maybe generate classes with the Comparable interface 
-
+Packages
+base org.overture.ast.node;
+analysis org.overture.ast.analysis;
+ 
 Tokens
 /* This section declared tokens as internal types or external classes
  * internal definitions:

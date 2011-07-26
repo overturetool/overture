@@ -13,9 +13,6 @@
 	<name>The Overture Abstract Syntax</name>
 	<build>
 		<plugins>
-			<!--plugin> <groupId>org.overturetool.tools</groupId> <artifactId>vdmt</artifactId> 
-				<configuration> <excludePackages> </excludePackages> <excludeClasses> </excludeClasses> 
-				<importPackages> </importPackages> </configuration> </plugin -->
 			<plugin>
 				<groupId>org.overturetoolv2.tools</groupId>
 				<artifactId>astcreatorplugin</artifactId>
@@ -32,9 +29,7 @@
 				</executions>
 				<configuration>
 				<folderToDeletePreGenerate>org/overture/ast</folderToDeletePreGenerate>
-					<asts>
-						<param>overtureII.astv2</param>
-					</asts>
+					<ast>overtureII.astv2</ast>
 					<names>
 						<param>VDM</param>
 					</names>

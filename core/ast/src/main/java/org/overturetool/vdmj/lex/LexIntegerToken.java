@@ -23,6 +23,11 @@
 
 package org.overturetool.vdmj.lex;
 
+import org.overture.ast.analysis.IAnalysis;
+import org.overture.ast.analysis.IAnswer;
+import org.overture.ast.analysis.IQuestion;
+import org.overture.ast.analysis.IQuestionAnswer;
+
 public class LexIntegerToken extends LexToken
 {
 	private static final long serialVersionUID = 1L;
@@ -51,5 +56,23 @@ public class LexIntegerToken extends LexToken
 		return new LexIntegerToken(value, location);
 	}
 	
-	
+	@Override
+	public void apply(IAnalysis analysis) {
+		analysis.caseLexIntegerToken(this);
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> caller) {
+		return caller.caseLexIntegerToken(this);
+	}
+
+	@Override
+	public <Q> void apply(IQuestion<Q> caller, Q question) {
+		caller.caseLexIntegerToken(this, question);
+	}
+
+	@Override
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+		return caller.caseLexIntegerToken(this, question);
+	}
 }

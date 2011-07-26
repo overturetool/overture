@@ -1,5 +1,10 @@
 package org.overturetool.vdmj.lex;
 
+import org.overture.ast.analysis.IAnalysis;
+import org.overture.ast.analysis.IAnswer;
+import org.overture.ast.analysis.IQuestion;
+import org.overture.ast.analysis.IQuestionAnswer;
+
 public class LexIdentifierToken extends LexToken {
 	private static final long serialVersionUID = 1L;
 	public final String name;
@@ -58,5 +63,25 @@ public class LexIdentifierToken extends LexToken {
 	@Override
 	public Object clone() {
 		return new LexIdentifierToken(name, old, location);
+	}
+	
+	@Override
+	public void apply(IAnalysis analysis) {
+		analysis.caseLexIdentifierToken(this);
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> caller) {
+		return caller.caseLexIdentifierToken(this);
+	}
+
+	@Override
+	public <Q> void apply(IQuestion<Q> caller, Q question) {
+		caller.caseLexIdentifierToken(this, question);
+	}
+
+	@Override
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+		return caller.caseLexIdentifierToken(this, question);
 	}
 }

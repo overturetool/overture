@@ -1,9 +1,8 @@
 package org.overture.tools.plugins.astcreator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -25,67 +24,84 @@ public class GenerateTree extends AstCreatorBaseMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
-		List<File> treeNames = new Vector<File>();
+		File treeName = null;
 
-		for (String name : asts)
-		{
-			treeNames.add(new File(getResourcesDir(), name));
-		}
-		
+		treeName = new File(getResourcesDir(), ast);
+
 		getLog().info("Preparing tree generating...");
-		
-		if(treeNames.isEmpty())
+
+		File toStringAstFile = new File(treeName.getAbsolutePath()
+				+ ".tostring");
+
+		if (isCrcEqual(treeName))
 		{
-			getLog().info("Skipping gneration no AST files specified");
-			return;
-		}
-		
-		File toStringAstFile = new File(treeNames.get(0).getAbsolutePath()+".tostring");
-		
-		if(isCrcEqual(treeNames.get(0)))
-		{
-			if(toStringAstFile.exists() && isCrcEqual(toStringAstFile))
+			if (toStringAstFile.exists() && isCrcEqual(toStringAstFile))
 			{
-			getLog().info("Nothing to generate, source already up-to-date");
-			return;
+				if (extendedast == null || extendedast.isEmpty()
+						|| isCrcEqual(new File(getResourcesDir(), extendedast)))
+				{
+					getLog().info("Nothing to generate, source already up-to-date");
+					return;
+				}
 			}
 		}
 
 		if (folderToDeletePreGenerate != null)
 		{
 			getLog().info("Deleteting folder: " + folderToDeletePreGenerate);
-			deleteDir(new File(getProjectJavaSrcDirectory(),folderToDeletePreGenerate.replace('/', File.separatorChar)));
+			deleteDir(new File(getProjectJavaSrcDirectory(), folderToDeletePreGenerate.replace('/', File.separatorChar)));
 		}
 
-		
-
-		for (File file : treeNames)
+		if (treeName.exists())
 		{
-			if (file.exists())
+			File generated = getProjectJavaSrcDirectory();
+			getLog().info("Generator starting with input: " + treeName);
+			Environment env1 = null;
+			if (extendedast == null)
 			{
-				File generated = getProjectJavaSrcDirectory();
-				getLog().info("Generator starting with input: " + file);
-				String defaultPackage = "org.overture.ast.node";
-				String analysisPackage = "org.overture.ast.analysis";
-				Environment env1 = null;
+				generateSingleAst(treeName, toStringAstFile, generated, env1);
+			} else 
+			{
+				File extendedAstFile = new File(getResourcesDir(), extendedast);
+				if (!extendedAstFile.exists())
+				{
+					getLog().equals("Extended AST file does not exist: "
+							+ extendedAstFile.getAbsolutePath());
+					return;
+				}
 				try
 				{
-					env1 = Main.create(file.getAbsolutePath(), defaultPackage, analysisPackage, "", generated, true);
-					setCrc(file);
-					setCrc(toStringAstFile);
+					Main.create(treeName, extendedAstFile, generated, "Interpreter");
 				} catch (Exception e)
 				{
 					getLog().error(e);
 				}
-				if (env1 != null)
-				{
-					getLog().info("Generator completed with "
-							+ env1.getAllDefinitions().size()
-							+ " generated files.\n\n");
-				}
 			}
+		}else
+		{
+			getLog().error("Cannot find input file: "+treeName.getAbsolutePath());
+			
 		}
 
+	}
+
+	public void generateSingleAst(File treeName, File toStringAstFile,
+			File generated, Environment env1)
+	{
+		try
+		{
+			env1 = Main.create(treeName.getAbsolutePath(), generated, true);
+			setCrc(treeName);
+			setCrc(toStringAstFile);
+		} catch (Exception e)
+		{
+			getLog().error(e);
+		}
+		if (env1 != null)
+		{
+			getLog().info("Generator completed with "
+					+ env1.getAllDefinitions().size() + " generated files.\n\n");
+		}
 	}
 
 	public static boolean deleteDir(File dir)
@@ -106,18 +122,18 @@ public class GenerateTree extends AstCreatorBaseMojo
 		// The directory is now empty so delete it
 		return dir.delete();
 	}
-	
-	public  boolean isCrcEqual(File astFile)
+
+	public boolean isCrcEqual(File astFile)
 	{
 		String name = astFile.getName();
 		long sourceCrc = Util.getCheckSum(astFile.getAbsolutePath());
-		
-		File crcFile = new File(getProjectOutputDirectory(),name+".crc");
-		if(!crcFile.exists())
+
+		File crcFile = new File(getProjectOutputDirectory(), name + ".crc");
+		if (!crcFile.exists())
 		{
 			return false;
 		}
-		
+
 		String crcString;
 		try
 		{
@@ -127,18 +143,18 @@ public class GenerateTree extends AstCreatorBaseMojo
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		long destinationCrc = Long.valueOf(crcString);
-		
-		return destinationCrc==sourceCrc;
+
+		return destinationCrc == sourceCrc;
 	}
-	
+
 	public void setCrc(File astFile) throws IOException
 	{
 		String name = astFile.getName();
 		Long sourceCrc = Util.getCheckSum(astFile.getAbsolutePath());
-		
-		File crcFile = new File(getProjectOutputDirectory(),name+".crc");
+
+		File crcFile = new File(getProjectOutputDirectory(), name + ".crc");
 		Util.writeFile(crcFile, sourceCrc.toString());
 	}
 

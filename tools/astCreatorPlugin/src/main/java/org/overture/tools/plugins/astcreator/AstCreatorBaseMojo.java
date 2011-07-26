@@ -1,15 +1,10 @@
 package org.overture.tools.plugins.astcreator;
 
-
-
-
 import java.io.File;
-import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
 /**
  * Says "Hi" to the user.
  * 
@@ -25,8 +20,14 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 * @parameter
 	 * @required
 	 */
-	protected List<String> asts;
+	protected String ast;
 
+	/**
+	 * The prefix of the generated classes.
+	 * 
+	 * @parameter
+	 */
+	protected String extendedast;
 	// /**
 	// * The package of the generated classes.
 	// *
