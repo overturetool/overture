@@ -5,7 +5,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.interpreter.ast.definitions.PDefinitionInterpreter;
+import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
+import org.overture.interpreter.ast.types.AMapMapTypeInterpreter;
+import org.overture.interpreter.ast.types.AOptionalTypeInterpreter;
+import org.overture.interpreter.ast.types.AProductTypeInterpreter;
+import org.overture.interpreter.ast.types.ASeqSeqTypeInterpreter;
+import org.overture.interpreter.ast.types.ASetTypeInterpreter;
+import org.overture.interpreter.ast.types.AUnionTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.ast.types.SSeqTypeInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 
 
 
@@ -19,69 +30,69 @@ public class PTypeAssistant {
 		return typeclass.isInstance(b);
 	}
 
-//	public static PType polymorph(PType type, LexNameToken pname, PType actualType)
-//	{				
-//		LexLocation location = type.getLocation();
-//		List<PDefinition> definitions = type.getDefinitions();
-//		
-//		switch(type.kindPType())
-//		{
-//			case FUNCTION:
-//				List<PType> polyparams = new Vector<PType>();
-//
-//				for (PType ptype: ((AFunctionType)type).getParameters())
-//				{
-//					polyparams.add(polymorph(ptype,pname, actualType));
-//				}
-//
-//				PType polyresult = polymorph(((AFunctionType)type).getResult(),pname, actualType);
-//				AFunctionType ftype =
-//					new AFunctionType(location,false,definitions, 
-//							((AFunctionType)type).getPartial(),	polyparams, polyresult);
-//				return ftype;
-//			case MAP:
-//				return new AMapMapType(location,false,definitions,
-//						polymorph(((AMapMapType)type).getFrom(),pname, actualType), 
-//						polymorph(((AMapMapType)type).getTo(), pname, actualType),
-//						((AMapMapType)type).getEmpty());
-//			case OPTIONAL:
-//				return new AOptionalType(location, false, definitions, 
-//							polymorph(type,pname, actualType));
-//			case PRODUCT:
-//				List<PType> polytypes = new Vector<PType>();
-//
-//				for (PType ptype: ((AProductType)type).getTypes())
-//				{
-//					polytypes.add(polymorph(ptype,pname, actualType));
-//				}
-//
-//				return new AProductType(location,false, definitions, polytypes);
-//			
-//			case SEQ:
-//				return new ASeqSeqType(location,false, definitions, 
-//						polymorph( ((SSeqType)type).getSeqof(),pname, actualType),
-//						((SSeqType)type).getEmpty());
-//			case SET:
-//				return new ASetType(location, false,definitions,
-//						polymorph(((ASetType)type).getSetof(), pname, actualType),
-//						((ASetType)type).getEmpty(),false);
-//			case UNION:
-//				Set<PType> polytypesSet = new HashSet<PType>();
-//
-//				for (PType ptype: ((AUnionType)type).getTypes())
-//				{					
-//					polytypesSet.add(polymorph(ptype,pname, actualType));
-//				}
-//				
-//				AUnionType uType = new AUnionType(location,false,new Vector<PType>(polytypesSet),false,false);
-//				uType.setDefinitions(definitions);
-//				return uType;
-//			default:
-//				break;
-//		}
-//				
-//		return type;
-//	}
+	public static PTypeInterpreter polymorph(PTypeInterpreter type, LexNameToken pname, PTypeInterpreter actualType)
+	{				
+		LexLocation location = type.getLocation();
+		List<PDefinitionInterpreter> definitions = type.getDefinitions();
+		
+		switch(type.kindPTypeInterpreter())
+		{
+			case FUNCTION:
+				List<PTypeInterpreter> polyparams = new Vector<PTypeInterpreter>();
+
+				for (PTypeInterpreter ptype: ((AFunctionTypeInterpreter)type).getParameters())
+				{
+					polyparams.add(polymorph(ptype,pname, actualType));
+				}
+
+				PTypeInterpreter polyresult = polymorph(((AFunctionTypeInterpreter)type).getResult(),pname, actualType);
+				AFunctionTypeInterpreter ftype =
+					new AFunctionTypeInterpreter(location,false,definitions, 
+							((AFunctionTypeInterpreter)type).getPartial(),	polyparams, polyresult);
+				return ftype;
+			case MAP:
+				return new AMapMapTypeInterpreter(location,false,definitions,
+						polymorph(((AMapMapTypeInterpreter)type).getFrom(),pname, actualType), 
+						polymorph(((AMapMapTypeInterpreter)type).getTo(), pname, actualType),
+						((AMapMapTypeInterpreter)type).getEmpty());
+			case OPTIONAL:
+				return new AOptionalTypeInterpreter(location, false, definitions, 
+							polymorph(type,pname, actualType));
+			case PRODUCT:
+				List<PTypeInterpreter> polytypes = new Vector<PTypeInterpreter>();
+
+				for (PTypeInterpreter ptype: ((AProductTypeInterpreter)type).getTypes())
+				{
+					polytypes.add(polymorph(ptype,pname, actualType));
+				}
+
+				return new AProductTypeInterpreter(location,false, definitions, polytypes);
+			
+			case SEQ:
+				return new ASeqSeqTypeInterpreter(location,false, definitions, 
+						polymorph( ((SSeqTypeInterpreter)type).getSeqof(),pname, actualType),
+						((SSeqTypeInterpreter)type).getEmpty());
+			case SET:
+				return new ASetTypeInterpreter(location, false,definitions,
+						polymorph(((ASetTypeInterpreter)type).getSetof(), pname, actualType),
+						((ASetTypeInterpreter)type).getEmpty(),false);
+			case UNION:
+				Set<PTypeInterpreter> polytypesSet = new HashSet<PTypeInterpreter>();
+
+				for (PTypeInterpreter ptype: ((AUnionTypeInterpreter)type).getTypes())
+				{					
+					polytypesSet.add(polymorph(ptype,pname, actualType));
+				}
+				
+				AUnionTypeInterpreter uType = new AUnionTypeInterpreter(location,false,new Vector<PTypeInterpreter>(polytypesSet),false,false);
+				uType.setDefinitions(definitions);
+				return uType;
+			default:
+				break;
+		}
+				
+		return type;
+	}
 //
 //	
 //

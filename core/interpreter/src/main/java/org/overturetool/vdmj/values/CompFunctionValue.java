@@ -26,8 +26,6 @@ package org.overturetool.vdmj.values;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.FunctionType;
-
 
 
 public class CompFunctionValue extends FunctionValue
@@ -48,7 +46,7 @@ public class CompFunctionValue extends FunctionValue
 	@Override
 	public String toString()
 	{
-		return ff2.type.parameters + " -> " + ff1.type.result;
+		return ff1.type.parameters + " -> " + ff1.type.result;
 	}
 
 	@Override

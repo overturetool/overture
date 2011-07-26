@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.interpreter.ast.types.AClassTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.scheduler.BusThread;
@@ -37,7 +38,6 @@ import org.overturetool.vdmj.scheduler.MessageResponse;
 import org.overturetool.vdmj.scheduler.BUSResource;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.scheduler.SchedulingPolicy;
-import org.overturetool.vdmj.types.ClassType;
 
 public class BUSValue extends ObjectValue
 {
@@ -48,7 +48,7 @@ public class BUSValue extends ObjectValue
 	public static BUSValue vBUS = null;
 	public final BUSResource resource;
 
-	public BUSValue(ClassType classtype, NameValuePairMap map, ValueList argvals)
+	public BUSValue(AClassTypeInterpreter classtype, NameValuePairMap map, ValueList argvals)
 	{
 		super(classtype, map, new Vector<ObjectValue>(), null, null);
 
@@ -71,7 +71,7 @@ public class BUSValue extends ObjectValue
 		busses.add(this);
 	}
 
-	public BUSValue(ClassType type, ValueSet cpus)
+	public BUSValue(AClassTypeInterpreter type, ValueSet cpus)
 	{
 		super(type, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
 		List<CPUResource> cpulist = new Vector<CPUResource>();

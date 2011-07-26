@@ -23,10 +23,11 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.ABooleanBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.types.assistant.PTypeAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.BooleanType;
-import org.overturetool.vdmj.types.Type;
 
 public class BooleanValue extends Value
 {
@@ -80,9 +81,9 @@ public class BooleanValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to.isType(BooleanType.class))
+		if (PTypeAssistant.isType(to, ABooleanBasicTypeInterpreter.class))
 		{
 			return this;
 		}

@@ -26,13 +26,14 @@ package org.overturetool.vdmj.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.definitions.CPUClassDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.interpreter.ast.definitions.ACpuClassDefinitionInterpreter;
+import org.overture.interpreter.ast.types.AClassTypeInterpreter;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.scheduler.FCFSPolicy;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.scheduler.SchedulingPolicy;
 import org.overturetool.vdmj.scheduler.CPUResource;
-import org.overturetool.vdmj.types.ClassType;
 
 public class CPUValue extends ObjectValue
 {
@@ -41,7 +42,7 @@ public class CPUValue extends ObjectValue
 	private final List<ObjectValue> deployed;
 	public static CPUValue vCPU;
 
-	public CPUValue(ClassType classtype, NameValuePairMap map, ValueList argvals)
+	public CPUValue(AClassTypeInterpreter classtype, NameValuePairMap map, ValueList argvals)
 	{
 		super(classtype, map, new Vector<ObjectValue>(), null, null);
 
@@ -53,7 +54,7 @@ public class CPUValue extends ObjectValue
 		deployed = new Vector<ObjectValue>();
 	}
 
-	public CPUValue(ClassType classtype)	// for virtual CPUs
+	public CPUValue(AClassTypeInterpreter classtype)	// for virtual CPUs
 	{
 		super(classtype, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
 		resource = new CPUResource(new FCFSPolicy(), 0);
@@ -131,10 +132,10 @@ public class CPUValue extends ObjectValue
 	public static void init(ResourceScheduler scheduler)
 	{
 		try
-		{
+		{ 
 			CPUResource.init();
-			CPUClassDefinition def = new CPUClassDefinition();
-			vCPU = new CPUValue((ClassType)def.getType());
+			ACpuClassDefinitionInterpreter def = new ACpuClassDefinitionInterpreter();
+			vCPU = new CPUValue((AClassTypeInterpreter)def.getType());
 			vCPU.setup(scheduler, "vCPU");
 		}
 		catch (Exception e)

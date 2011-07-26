@@ -26,10 +26,13 @@ package org.overturetool.vdmj.values;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
+import org.overture.ast.types.PType;
+import org.overture.interpreter.ast.types.ACharBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.types.assistant.PTypeAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.CharacterType;
-import org.overturetool.vdmj.types.Type;
+
 
 public class CharacterValue extends Value
 {
@@ -107,9 +110,9 @@ public class CharacterValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to.isType(CharacterType.class))
+		if (PTypeAssistant.isType(to, ACharBasicTypeInterpreter.class))
 		{
 			return this;
 		}
