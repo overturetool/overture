@@ -24,16 +24,35 @@
 package org.overturetool.vdmj.values;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Vector;
 
 import org.overture.interpreter.ast.definitions.AExplicitOperationDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.AImplicitOperationDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.AStateDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.ASystemClassDefinitionInterpreter;
+import org.overture.interpreter.ast.definitions.SClassDefinitionInterpreter;
+import org.overture.interpreter.ast.expressions.PExpInterpreter;
+import org.overture.interpreter.ast.patterns.APatternListTypePairInterpreter;
+import org.overture.interpreter.ast.patterns.PPatternInterpreter;
+import org.overture.interpreter.ast.statements.PStmInterpreter;
+import org.overture.interpreter.ast.types.AAccessSpecifierAccessSpecifierInterpreter;
+import org.overture.interpreter.ast.types.AOperationTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexKeywordToken;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexKeywordToken;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.VDMToken;
+import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
+import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
+
 
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
@@ -60,15 +79,15 @@ public class OperationValue extends Value
 {
 	private static final long serialVersionUID = 1L;
 	public final AExplicitOperationDefinitionInterpreter expldef;
-	public final ImplicitOperationDefinition impldef;
+	public final AImplicitOperationDefinitionInterpreter impldef;
 	public final LexNameToken name;
-	public final OperationType type;
-	public final PatternList paramPatterns;
-	public final Statement body;
+	public final AOperationTypeInterpreter type;
+	public final List<PPatternInterpreter> paramPatterns;
+	public final PStmInterpreter body;
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
-	public final StateDefinition state;
-	public final ClassDefinition classdef;
+	public final AStateDefinitionInterpreter state;
+	public final SClassDefinitionInterpreter classdef;
 
 	private LexNameToken stateName = null;
 	private Context stateContext = null;
@@ -78,7 +97,7 @@ public class OperationValue extends Value
 	public boolean isStatic = false;
 	public boolean isAsync = false;
 
-	private Expression guard = null;
+	private PExpInterpreter guard = null;
 
 	public int hashAct = 0; // Number of activations
 	public int hashFin = 0; // Number of finishes
@@ -87,60 +106,60 @@ public class OperationValue extends Value
 	private long priority = 0;
 	private boolean traceRT = true;
 
-	public OperationValue(ExplicitOperationDefinition def,
+	public OperationValue(AExplicitOperationDefinitionInterpreter def,
 		FunctionValue precondition, FunctionValue postcondition,
-		StateDefinition state)
+		AStateDefinitionInterpreter state)
 	{
 		this.expldef = def;
 		this.impldef = null;
-		this.name = def.name;
-		this.type = (OperationType)def.getType();
-		this.paramPatterns = def.parameterPatterns;
-		this.body = def.body;
+		this.name = def.getName();
+		this.type = def.getType();
+		this.paramPatterns = def.getParameterPatterns();
+		this.body = def.getBody();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.state = state;
-		this.classdef = def.classDefinition;
-		this.isAsync = def.accessSpecifier.isAsync;
+		this.classdef = def.getClassDefinition();
+		this.isAsync = ((AAccessSpecifierAccessSpecifierInterpreter)def.getAccess()).getAsync()!=null;//TODO can we change this
 
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
-			!(classdef instanceof SystemDefinition) &&
-			!classdef.name.name.equals("CPU") &&
-			!classdef.name.name.equals("BUS") &&
+			!(classdef instanceof ASystemClassDefinitionInterpreter) &&
+			!classdef.getName().name.equals("CPU") &&
+			!classdef.getName().name.equals("BUS") &&
 			!name.name.equals("thread") &&
 			!name.name.startsWith("inv_");
 	}
 
-	public OperationValue(ImplicitOperationDefinition def,
+	public OperationValue(AImplicitOperationDefinitionInterpreter def,
 		FunctionValue precondition, FunctionValue postcondition,
-		StateDefinition state)
+		AStateDefinitionInterpreter state)
 	{
 		this.impldef = def;
 		this.expldef = null;
-		this.name = def.name;
-		this.type = (OperationType)def.getType();
-		this.paramPatterns = new PatternList();
+		this.name = def.getName();
+		this.type = def.getType();
+		this.paramPatterns = new Vector<PPatternInterpreter>();
 
-		for (PatternListTypePair ptp : def.parameterPatterns)
+		for (APatternListTypePairInterpreter ptp : def.getParameterPatterns())
 		{
-			paramPatterns.addAll(ptp.patterns);
+			paramPatterns.addAll(ptp.getPatterns());
 		}
 
-		this.body = def.body;
+		this.body = def.getBody();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.state = state;
-		this.classdef = def.classDefinition;
-		this.isAsync = def.accessSpecifier.isAsync;
+		this.classdef = def.getClassDefinition();
+		this.isAsync = ((AAccessSpecifierAccessSpecifierInterpreter)def.getAccess()).getAsync()!=null;//TODO can we change this
 
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
-			!(classdef instanceof SystemDefinition) &&
-			!classdef.name.name.equals("CPU") &&
-			!classdef.name.name.equals("BUS") &&
+			!(classdef instanceof ASystemClassDefinitionInterpreter) &&
+			!classdef.getName().name.equals("CPU") &&
+			!classdef.getName().name.equals("BUS") &&
 			!name.name.equals("thread");
 	}
 
@@ -163,7 +182,7 @@ public class OperationValue extends Value
 		return self;
 	}
 
-	public void setGuard(Expression add, boolean isMutex)
+	public void setGuard(PExpInterpreter add, boolean isMutex)
 	{
 		if (guard == null)
 		{
@@ -173,10 +192,10 @@ public class OperationValue extends Value
 		{
 			// Create "old and new" expression
 			
-			LexLocation where = isMutex ? guard.location : add.location;
+			LexLocation where = isMutex ? guard.getLocation() : add.getLocation();
 
 			guard = new AndExpression(guard,
-				new LexKeywordToken(Token.AND, where), add);
+				new LexKeywordToken(VDMToken.AND, where), add);
 		}
 	}
 
@@ -225,7 +244,7 @@ public class OperationValue extends Value
 
 		if (state != null && stateName == null)
 		{
-			stateName = state.name;
+			stateName = state.getName();
 			stateContext = state.getStateContext();
 		}
 
@@ -251,10 +270,10 @@ public class OperationValue extends Value
 		}
 
 		ListIterator<Value> valIter = argValues.listIterator();
-		Iterator<Type> typeIter = type.parameters.iterator();
+		Iterator<PTypeInterpreter> typeIter = type.getParameters().iterator();
 		NameValuePairMap args = new NameValuePairMap();
 
-		for (Pattern p : paramPatterns)
+		for (PPatternInterpreter p : paramPatterns)
 		{
 			try
 			{
@@ -342,7 +361,7 @@ public class OperationValue extends Value
     		}
     		else
     		{
-    			rv = rv.convertValueTo(type.result, argContext);
+    			rv = rv.convertValueTo(type.getResult(), argContext);
     		}
 
     		if (postcondition != null && Settings.postchecks)
@@ -408,7 +427,7 @@ public class OperationValue extends Value
 			return;		// Probably during initialization.
 		}
 
-		self.guardLock.lock(ctxt, guard.location);
+		self.guardLock.lock(ctxt, guard.getLocation());
 
 		while (true)
 		{
@@ -437,7 +456,7 @@ public class OperationValue extends Value
 
 			debug("guard WAIT");
 			ctxt.guardOp = this;
-			self.guardLock.block(ctxt, guard.location);
+			self.guardLock.block(ctxt, guard.getLocation());
 			ctxt.guardOp = null;
 			debug("guard WAKE");
 		}
@@ -539,9 +558,9 @@ public class OperationValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to.isType(OperationType.class))
+		if (to.isType(AOperationTypeInterpreter.class))
 		{
 			return this;
 		}

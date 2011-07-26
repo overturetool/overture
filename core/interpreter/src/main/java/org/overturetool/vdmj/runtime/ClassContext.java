@@ -25,26 +25,27 @@ package org.overturetool.vdmj.runtime;
 
 import java.io.PrintWriter;
 
+
+import org.overture.interpreter.ast.definitions.SClassDefinitionInterpreter;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.values.Value;
 
 @SuppressWarnings("serial")
 public class ClassContext extends RootContext
 {
-	public final ClassDefinition classdef;
+	public final SClassDefinitionInterpreter classdef;
 
 	public ClassContext(LexLocation location,
 		String title, Context freeVariables, Context outer,
-		ClassDefinition classdef)
+		SClassDefinitionInterpreter classdef)
 	{
 		super(location, title, freeVariables, outer);
 		this.classdef = classdef;
 	}
 
 	public ClassContext(LexLocation location,
-		String title, Context outer, ClassDefinition classdef)
+		String title, Context outer, SClassDefinitionInterpreter classdef)
 	{
 		this(location, title, null, outer, classdef);
 	}
