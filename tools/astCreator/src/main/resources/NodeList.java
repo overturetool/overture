@@ -89,13 +89,12 @@ public class %NodeList%<E extends %Node%> extends LinkedList<E> {
 		super.clear();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public @Override Object clone() {
-		LinkedList<List<E>> clone = new LinkedList<List<E>>();
-		for (List<E> list : clone)
+		LinkedList<E> clone = new LinkedList<E>();
+		for (E n : this)
 		{
-			NodeList<E> ll = new NodeList<E>(null);
-			ll.addAll(list);
-			clone.add((List<E>) ll.clone());
+			clone.add((E) n.clone());
 		}
 		return clone;
 	}

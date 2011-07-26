@@ -3,6 +3,8 @@ package %generated.node%;
 
 import java.util.*;
 
+import org.overture.ast.node.NodeList;
+
 /** A list of AST nodes where all operations preserve the
  *  single-parent property of the AST.<p>
  *  A node list is always a child list of some parent node.<p>
@@ -102,9 +104,15 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		super.clear();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public @Override Object clone() {
 		LinkedList<List<E>> clone = new LinkedList<List<E>>();
-		clone.addAll(this);
+		for (List<E> list : clone)
+		{
+			NodeList<E> ll = new NodeList<E>(null);
+			ll.addAll(list);
+			clone.add((List<E>) ll.clone());
+		}
 		return clone;
 	}
 	
