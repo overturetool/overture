@@ -1,21 +1,25 @@
 package org.overture.ast.definitions.assistants;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.APatternTypePairAssistant;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.AFunctionTypeAssistant;
 import org.overture.ast.types.assistants.APatternListTypePairAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
@@ -164,7 +168,84 @@ public class AImplicitFunctionDefinitionAssistant {
 
 	public static void implicitDefinitions(AImplicitFunctionDefinition d,
 			Environment env) {
-		// TODO Auto-generated method stub
 		
+		if (d.getPrecondition() != null)
+		{
+			d.setPredef(getPreDefinition(d));
+			PDefinitionAssistant.markUsed(d.getPredef());
+		}
+		else
+		{
+			d.setPredef(null);
+		}
+
+		if (d.getPostcondition() != null)
+		{
+			d.setPostdef(getPostDefinition(d));
+			PDefinitionAssistant.markUsed(d.getPostdef());
+		}
+		else
+		{
+			d.setPostdef(null);
+		}
+		
+	}
+
+	private static AExplicitFunctionDefinition getPostDefinition(
+			AImplicitFunctionDefinition d) {
+		
+		List<List<PPattern>> parameters = getParamPatternList(d);
+		parameters.get(0).add(d.getResult().getPattern());
+
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+			d.getPostcondition().getLocation(),
+			d.getName().getPostName(d.getPostcondition().getLocation()), 
+			NameScope.GLOBAL,
+			false,
+			PAccessSpecifierAssistant.getDefault(),
+			d.getTypeParams(), 
+			parameters,
+			AFunctionTypeAssistant.getPostType(d.getType()),
+			d.getPostcondition(), 
+			null, null, null);
+
+		def.setAccess(d.getAccess());
+		def.setClassDefinition(d.getClassDefinition());
+		return def;
+	}
+
+	private static AExplicitFunctionDefinition getPreDefinition(
+			AImplicitFunctionDefinition d) {
+		
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+				d.getPrecondition().getLocation(),
+				d.getName().getPreName(d.getPrecondition().getLocation()), 
+				NameScope.GLOBAL,
+				false,
+				PAccessSpecifierAssistant.getDefault(),
+				d.getTypeParams(), 
+				getParamPatternList(d),
+				AFunctionTypeAssistant.getPreType(d.getType()),
+				d.getPrecondition(), 
+				null, null, null);
+
+			def.setAccess(d.getAccess());
+			def.setClassDefinition(d.getClassDefinition());
+			return def;
+	}
+
+	private static List<List<PPattern>> getParamPatternList(
+			AImplicitFunctionDefinition d) {
+		
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		List<PPattern> plist = new Vector<PPattern>();
+
+		for (APatternListTypePair pl: d.getParamPatterns())
+		{
+			plist.addAll(pl.getPatterns());
+		}
+
+		parameters.add(plist);
+		return parameters;
 	}
 }

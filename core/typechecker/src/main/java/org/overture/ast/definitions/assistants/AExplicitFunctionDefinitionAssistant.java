@@ -3,6 +3,7 @@ package org.overture.ast.definitions.assistants;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -330,6 +331,8 @@ public class AExplicitFunctionDefinitionAssistant {
 
 	private static AExplicitFunctionDefinition getPreDefinition(
 			AExplicitFunctionDefinition d) {
+		LinkedList<List<PPattern>> paramPatterns = (LinkedList<List<PPattern>>) d.getParamPatternList().clone();
+		
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 				d.getPrecondition().getLocation(),
 				d.getName().getPreName(d.getPrecondition().getLocation()), //name
@@ -337,7 +340,7 @@ public class AExplicitFunctionDefinitionAssistant {
 				false, 
 				d.getAccess(), 
 				d.getTypeParams(), 
-				d.getParamPatternList(), 
+				paramPatterns, 
 				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), //type 
 				d.getPrecondition(), 
 				null, null, null);

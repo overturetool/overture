@@ -1,17 +1,27 @@
 package org.overture.ast.definitions.assistants;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AStateInitExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFieldFieldAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeList;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -111,8 +121,84 @@ public class AStateDefinitionAssistant {
 	}
 
 	public static void implicitDefinitions(AStateDefinition d, Environment env) {
-		// TODO Auto-generated method stub
+		if (d.getInvPattern() != null)
+		{
+			d.setInvdef(getInvDefinition(d));
+		}
+
+		if (d.getInitPattern() != null)
+		{
+			d.setInitdef(getInitDefinition(d));
+		}
 		
+	}
+
+	private static AExplicitFunctionDefinition getInitDefinition(AStateDefinition d) {
+		LexLocation loc = d.getInitPattern().getLocation();
+		List<PPattern> params = new Vector<PPattern>();
+		params.add(d.getInitPattern());
+
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		parameters.add(params);
+
+		PTypeList ptypes = new PTypeList();
+		ptypes.add(new AUnresolvedType(d.getLocation(),false,d.getName()));
+		AFunctionType ftype =
+			new AFunctionType(loc, false, null, ptypes, new ABooleanBasicType(loc,false));
+
+		PExp body = new AStateInitExp(null,d.getLocation(),d);
+
+		AExplicitFunctionDefinition def =
+			new AExplicitFunctionDefinition(
+					loc,
+					d.getName().getInitName(loc), 
+					NameScope.GLOBAL,
+					false,
+					PAccessSpecifierAssistant.getDefault(),
+					null,
+					parameters,
+					ftype,
+					body, 
+					null, null, null);
+
+		List<PDefinition> defList = new Vector<PDefinition>();
+		defList.add(def);
+		ftype.setDefinitions(defList);
+		return def;
+	}
+
+	private static AExplicitFunctionDefinition getInvDefinition(
+			AStateDefinition d) {
+		
+		LexLocation loc = d.getInvPattern().getLocation();
+		List<PPattern> params = new Vector<PPattern>();
+		params.add(d.getInvPattern());
+
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
+		parameters.add(params);
+
+		PTypeList ptypes = new PTypeList();
+		ptypes.add(new AUnresolvedType(d.getLocation(),false, d.getName()));
+		AFunctionType ftype =
+			new AFunctionType(loc, false, false, ptypes, new ABooleanBasicType(loc,false));
+
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+				loc,
+				d.getName().getInvName(loc),
+				NameScope.GLOBAL,
+				false,
+				PAccessSpecifierAssistant.getDefault(),
+				null,
+				parameters,
+				ftype, 
+				d.getInvExpression(), 
+				null, null, null);
+		def.setTypeInvariant(true);
+
+		List<PDefinition> defList = new Vector<PDefinition>();
+		defList.add(def);
+		ftype.setDefinitions(defList);
+		return def;
 	}
 
 }

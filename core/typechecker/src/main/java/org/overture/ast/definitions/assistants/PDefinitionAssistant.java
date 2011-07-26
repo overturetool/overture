@@ -432,7 +432,6 @@ public class PDefinitionAssistant {
 		case EXPLICITOPERATION:
 			AExplicitOperationDefinitionAssistant.implicitDefinitions((AExplicitOperationDefinition)d,env);
 			break;
-			//TODO: all until the end
 		case IMPLICITFUNCTION:
 			AImplicitFunctionDefinitionAssistant.implicitDefinitions((AImplicitFunctionDefinition)d,env);
 			break;

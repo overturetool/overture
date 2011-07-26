@@ -112,7 +112,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {self} [name]:LexNameToken
     |   #Seq
     |   #Set
-    |   {stateInit} [state]:state 
+    |   {stateInit} (state):definition.state 
     |   {stringLiteral} [value]:LexStringToken
     |   {subclassResponsibility} 
     |   {subseq} [seq]:exp [from]:exp [to]:exp (ftype):type (ttype):type
@@ -354,6 +354,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (isTypeInvariant):java_Boolean
                             (isCurried):java_Boolean 
                             
+                            (typeInvariant):java_Boolean
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                             
     |   {external} [state]:definition [readOnly]:java_Boolean [oldname]:LexNameToken
@@ -417,13 +418,13 @@ definition {-> package='org.overture.ast.definitions'}
     |   {perSync} [opname]:LexNameToken [guard]:exp
     |   {renamed} [def]:definition
     |   {state} [fields]:field.field* 
-                [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction
-                [initPattern]:pattern [initExpression]:exp [initdef]:definition.explicitFunction
+                [invPattern]:pattern [invExpression]:exp (invdef):definition.explicitFunction
+                [initPattern]:pattern [initExpression]:exp (initdef):definition.explicitFunction
                 (stateDefs):definition* [recordDefinition]:definition.local [recordType]:type
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition [infinite]:java_Boolean//is access missing here
+    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type //is access missing here
     ;

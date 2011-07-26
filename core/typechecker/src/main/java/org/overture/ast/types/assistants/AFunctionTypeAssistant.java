@@ -69,7 +69,7 @@ public class AFunctionTypeAssistant {
 		}
 	}
 
-	private static AFunctionType getPreType(AFunctionType t) {
+	public static AFunctionType getPreType(AFunctionType t) {
 			AFunctionType type =
 				new AFunctionType(t.getLocation(), false,false, t.getParameters(), new ABooleanBasicType(t.getLocation(),false));
 			type.setDefinitions(t.getDefinitions());
@@ -93,7 +93,7 @@ public class AFunctionTypeAssistant {
 		}
 	}
 
-	private static AFunctionType getPostType(AFunctionType t) {
+	public static AFunctionType getPostType(AFunctionType t) {
 		List<PType> params = new PTypeList();
 		params.addAll(t.getParameters());
 		params.add(t.getResult());

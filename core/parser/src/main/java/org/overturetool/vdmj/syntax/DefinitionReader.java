@@ -974,7 +974,20 @@ public class DefinitionReader extends SyntaxReader
 //		recordDefinition.markUsed();	// Can't be exported anyway
 //		statedefs.add(recordDefinition);
 		
-		AStateDefinition stateDef = new AStateDefinition(name.location, idToName(name),NameScope.STATE, false, getDefaultAccess(), null, fieldList, invPattern, invExpression, null, initPattern, initExpression, null, recordDefinition, recordType);
+		AStateDefinition stateDef = new AStateDefinition(
+				name.location, 
+				idToName(name),
+				NameScope.STATE, 
+				false, 
+				getDefaultAccess(), 
+				null, 
+				fieldList, 
+				invPattern, 
+				invExpression, 
+				initPattern, 
+				initExpression, 
+				recordDefinition, 
+				recordType);
 		
 		stateDef.getStateDefs().add(recordDefinition);
 		

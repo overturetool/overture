@@ -11,6 +11,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -82,10 +83,29 @@ public class AOperationTypeAssistant {
 	}
 
 	public static AFunctionType getPostType(AOperationType type,
-			AStateDefinition state, SClassDefinition classDefinition,
-			boolean static1) {
-		// TODO Auto-generated method stub
-		return null;
+			AStateDefinition state, SClassDefinition classname,
+			boolean isStatic) {
+		
+		PTypeList params = new PTypeList();
+		params.addAll(type.getParameters());
+
+		if (!(type.getResult() instanceof AVoidType))
+		{
+			params.add(type.getResult());
+		}
+		
+		if (state != null)
+		{
+			params.add(new AUnresolvedType(state.getLocation(),false, state.getName()));
+			params.add(new AUnresolvedType(state.getLocation(),false, state.getName()));
+		}
+		else if (classname != null && !isStatic)
+		{
+			params.add(new AUnresolvedType(classname.getLocation(),false,classname.getName()));
+			params.add(new AUnresolvedType(classname.getLocation(),false,classname.getName()));
+		}
+
+		return new AFunctionType(type.getLocation(), false, false, params, new ABooleanBasicType(type.getLocation(),false));
 	}
 
 	

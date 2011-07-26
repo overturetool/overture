@@ -51,6 +51,11 @@ public class ModuleTestCase extends TestCase {
 	}
 
 	@Override
+	public String getName() {
+		return this.content;
+	}
+	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		Settings.dialect = Dialect.VDM_SL;
