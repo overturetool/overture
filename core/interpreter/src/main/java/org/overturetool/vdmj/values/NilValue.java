@@ -23,10 +23,11 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.AOptionalTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.OptionalType;
-import org.overturetool.vdmj.types.Type;
+
 
 public class NilValue extends Value
 {
@@ -63,11 +64,11 @@ public class NilValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		// Note, don't use isType, as this skips the OptionalType wrapper.
 
-		if (to instanceof OptionalType)
+		if (to instanceof AOptionalTypeInterpreter)
 		{
 			return this;
 		}

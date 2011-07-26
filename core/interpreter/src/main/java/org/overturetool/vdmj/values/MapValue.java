@@ -23,11 +23,12 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.ast.types.AMapMapType;
+import org.overture.interpreter.ast.types.AInMapMapTypeInterpreter;
+import org.overture.interpreter.ast.types.AMapMapTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.InMapType;
-import org.overturetool.vdmj.types.MapType;
-import org.overturetool.vdmj.types.Type;
 
 public class MapValue extends Value
 {
@@ -112,23 +113,23 @@ public class MapValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to instanceof MapType)
+		if (to instanceof AMapMapTypeInterpreter)
 		{
-			if (to instanceof InMapType && !values.isInjective())
+			if (to instanceof AInMapMapTypeInterpreter && !values.isInjective())
 			{
 				abort(4062, "Cannot convert non-injective map to an inmap", ctxt);
 			}
 
-			MapType mapto = to.getMap();
+			AMapMapTypeInterpreter mapto = to.getMap();
 			ValueMap nm = new ValueMap();
 
 			for (Value k: values.keySet())
 			{
 				Value v = values.get(k);
-				Value dom = k.convertValueTo(mapto.from, ctxt);
-				Value rng = v.convertValueTo(mapto.to, ctxt);
+				Value dom = k.convertValueTo(mapto.getFrom(), ctxt);
+				Value rng = v.convertValueTo(mapto.getTo(), ctxt);
 
 				Value old = nm.put(dom, rng);
 

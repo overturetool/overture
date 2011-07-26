@@ -23,14 +23,15 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.AIntNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.ANatNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.ANatOneNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.ARationalNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.ARealNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.IntegerType;
-import org.overturetool.vdmj.types.NaturalOneType;
-import org.overturetool.vdmj.types.NaturalType;
-import org.overturetool.vdmj.types.RationalType;
-import org.overturetool.vdmj.types.RealType;
-import org.overturetool.vdmj.types.Type;
+
 
 public abstract class NumericValue extends Value
 {
@@ -97,9 +98,9 @@ public abstract class NumericValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to instanceof RealType)
+		if (to instanceof ARealNumericBasicTypeInterpreter)
 		{
 			try
 			{
@@ -110,7 +111,7 @@ public abstract class NumericValue extends Value
 				throw new ValueException(4134, e.getMessage(), ctxt);
 			}
 		}
-		else if (to instanceof RationalType)
+		else if (to instanceof ARationalNumericBasicTypeInterpreter)
 		{
 			try
 			{
@@ -121,11 +122,11 @@ public abstract class NumericValue extends Value
 				throw new ValueException(4134, e.getMessage(), ctxt);
 			}
 		}
-		else if (to instanceof IntegerType)
+		else if (to instanceof AIntNumericBasicTypeInterpreter)
 		{
 			return new IntegerValue(intValue(ctxt));
 		}
-		else if (to instanceof NaturalType)
+		else if (to instanceof ANatNumericBasicTypeInterpreter)
 		{
 			try
 			{
@@ -136,7 +137,7 @@ public abstract class NumericValue extends Value
 				return abort(4065, e.getMessage(), ctxt);
 			}
 		}
-		else if (to instanceof NaturalOneType)
+		else if (to instanceof ANatOneNumericBasicTypeInterpreter)
 		{
 			try
 			{

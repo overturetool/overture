@@ -26,7 +26,9 @@ package org.overturetool.vdmj.values;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
+
+
 
 @SuppressWarnings("serial")
 public class NameValuePairMap extends HashMap<LexNameToken, Value>

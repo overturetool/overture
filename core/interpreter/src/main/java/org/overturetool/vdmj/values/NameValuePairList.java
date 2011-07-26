@@ -25,7 +25,8 @@ package org.overturetool.vdmj.values;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexNameToken;
+
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.util.Utils;
 
 

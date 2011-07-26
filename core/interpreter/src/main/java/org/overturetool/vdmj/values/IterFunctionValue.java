@@ -23,7 +23,8 @@
 
 package org.overturetool.vdmj.values;
 
-import org.overturetool.vdmj.lex.LexLocation;
+
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 

@@ -23,11 +23,12 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.ANatNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.NaturalType;
-import org.overturetool.vdmj.types.Type;
+
 
 public class NaturalValue extends IntegerValue
 {
@@ -50,9 +51,9 @@ public class NaturalValue extends IntegerValue
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to instanceof NaturalType)
+		if (to instanceof ANatNumericBasicTypeInterpreter)
 		{
 			return this;
 		}

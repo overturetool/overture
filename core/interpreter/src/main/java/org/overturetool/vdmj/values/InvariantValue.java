@@ -28,8 +28,7 @@ import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.NamedType;
-import org.overturetool.vdmj.types.Type;
+
 
 public class InvariantValue extends ReferenceValue
 {
