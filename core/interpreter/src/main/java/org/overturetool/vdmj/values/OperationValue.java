@@ -26,26 +26,15 @@ package org.overturetool.vdmj.values;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import org.overture.interpreter.ast.definitions.AExplicitOperationDefinitionInterpreter;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.StateDefinition;
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.expressions.AndExpression;
-import org.overturetool.vdmj.expressions.Expression;
+
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
+
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -63,17 +52,14 @@ import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MessageRequest;
 import org.overturetool.vdmj.scheduler.MessageResponse;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.PatternListTypePair;
-import org.overturetool.vdmj.types.Type;
+
 import org.overturetool.vdmj.util.Utils;
 
 
 public class OperationValue extends Value
 {
 	private static final long serialVersionUID = 1L;
-	public final ExplicitOperationDefinition expldef;
+	public final AExplicitOperationDefinitionInterpreter expldef;
 	public final ImplicitOperationDefinition impldef;
 	public final LexNameToken name;
 	public final OperationType type;

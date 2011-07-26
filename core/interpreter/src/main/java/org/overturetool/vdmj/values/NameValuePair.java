@@ -25,7 +25,9 @@ package org.overturetool.vdmj.values;
 
 import java.io.Serializable;
 
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
+
+
 
 /**
  * A class to hold a name and a runtime value pair.

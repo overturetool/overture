@@ -23,17 +23,18 @@
 
 package org.overturetool.vdmj.values;
 
-import org.overturetool.vdmj.patterns.Pattern;
+
+import org.overture.interpreter.ast.patterns.PPatternInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 
 public class Quantifier
 {
-	public final Pattern pattern;
+	public final PPatternInterpreter pattern;
 	public final ValueList values;
 	private NameValuePairList[] nvlist;
 
-	public Quantifier(Pattern pattern, ValueList values)
+	public Quantifier(PPatternInterpreter pattern, ValueList values)
 	{
 		this.pattern = pattern;
 		this.values = values;
