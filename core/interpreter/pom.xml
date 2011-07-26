@@ -14,6 +14,30 @@
 
 	<build>
 		<plugins>
+		<plugin>
+                <groupId>org.overturetoolv2.tools</groupId>
+                <artifactId>astcreatorplugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>java</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>astcreate</goal>
+
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                <folderToDeletePreGenerate>org/overture/interpreter/ast</folderToDeletePreGenerate>
+                    <ast>../../../../ast/src/main/resources/overtureII.astv2</ast>
+                    <extendedast>overtureII.astv2</extendedast>
+                    <names>
+                        <param>VDM</param>
+                    </names>
+
+                </configuration>
+            </plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -34,6 +58,11 @@
 		<dependency>
 			<groupId>org.overturetoolv2.core</groupId>
 			<artifactId>astv_2</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetoolv2.core</groupId>
+			<artifactId>typechecker</artifactId>
 			<version>2.0.1</version>
 		</dependency>
 	</dependencies>
