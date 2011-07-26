@@ -19,7 +19,7 @@ public class ASeqPatternAssistant {
 
 		try
 		{
-			PPatternAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
+			PPatternListAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -30,7 +30,7 @@ public class ASeqPatternAssistant {
 	}
 
 	public static void unResolve(ASeqPattern pattern) {
-		PPatternAssistant.unResolve(pattern.getPlist());
+		PPatternListAssistant.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 		
 	}

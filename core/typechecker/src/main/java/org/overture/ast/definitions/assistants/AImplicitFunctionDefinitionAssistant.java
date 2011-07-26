@@ -18,6 +18,7 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.APatternListTypePairAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -158,6 +159,12 @@ public class AImplicitFunctionDefinitionAssistant {
 		{
 			APatternListTypePairAssistant.typeResolve(pltp,rootVisitor,question);
 		}
+		
+	}
+
+	public static void implicitDefinitions(AImplicitFunctionDefinition d,
+			Environment env) {
+		// TODO Auto-generated method stub
 		
 	}
 }

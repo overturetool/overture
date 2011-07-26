@@ -11,6 +11,7 @@ import org.overture.ast.patterns.assistants.APatternTypePairAssistant;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.APatternListTypePairAssistant;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -97,6 +98,12 @@ public class AImplicitOperationDefinitionAssistant {
 		{
 			APatternListTypePairAssistant.typeResolve(ptp, rootVisitor, question);
 		}
+		
+	}
+
+	public static void implicitDefinitions(AImplicitOperationDefinition d,
+			Environment env) {
+		// TODO Auto-generated method stub
 		
 	}
 

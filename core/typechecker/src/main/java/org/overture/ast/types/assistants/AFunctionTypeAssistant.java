@@ -76,4 +76,31 @@ public class AFunctionTypeAssistant {
 			return type;
 	}
 
+	public static AFunctionType getCurriedPostType(AFunctionType type,
+			Boolean isCurried) {
+		
+		if (isCurried && type.getResult() instanceof AFunctionType)
+		{
+			AFunctionType ft = (AFunctionType)type.getResult();
+			AFunctionType t = new AFunctionType(type.getLocation(),false,
+				false, type.getParameters(), getCurriedPostType(ft,isCurried));
+			t.setDefinitions(type.getDefinitions());
+			return t;
+		}
+		else
+		{
+			return getPostType(type);
+		}
+	}
+
+	private static AFunctionType getPostType(AFunctionType t) {
+		List<PType> params = new PTypeList();
+		params.addAll(t.getParameters());
+		params.add(t.getResult());
+		AFunctionType type =
+			new AFunctionType(t.getLocation(),false, false, params, new ABooleanBasicType(t.getLocation(),false));
+		type.setDefinitions(t.getDefinitions());
+		return type;
+	}
+
 }

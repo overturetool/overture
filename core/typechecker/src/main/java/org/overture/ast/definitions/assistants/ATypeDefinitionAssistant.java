@@ -12,6 +12,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -100,6 +101,11 @@ public class ATypeDefinitionAssistant {
 			PTypeAssistant.unResolve(d.getInvType());
 			throw e;
 		}
+	}
+
+	public static void implicitDefinitions(ATypeDefinition d, Environment env) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

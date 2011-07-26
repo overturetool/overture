@@ -9,6 +9,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFieldFieldAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -106,6 +107,11 @@ public class AStateDefinitionAssistant {
 		{
 			PDefinitionAssistant.typeResolve(d.getInitdef(), rootVisitor, question);
 		}
+		
+	}
+
+	public static void implicitDefinitions(AStateDefinition d, Environment env) {
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -23,6 +23,14 @@ public class PPatternListAssistant {
 		
 	}
 
+
+	public static void unResolve(List<PPattern> pp) {
+		
+		for (PPattern pPattern : pp) {
+			PPatternAssistant.unResolve(pPattern);
+		}	
+	}
+
 	public static PType getPossibleType(LinkedList<PPattern> plist,
 			LexLocation location) {
 		

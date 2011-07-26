@@ -18,7 +18,7 @@ public class ATuplePatternAssistant {
 
 		try
 		{
-			PPatternAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
+			PPatternListAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -30,7 +30,7 @@ public class ATuplePatternAssistant {
 
 	public static void unResolve(ATuplePattern pattern) {
 
-		PPatternAssistant.unResolve(pattern.getPlist());
+		PPatternListAssistant.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 		
 	}

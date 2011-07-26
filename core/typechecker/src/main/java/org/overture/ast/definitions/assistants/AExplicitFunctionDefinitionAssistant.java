@@ -14,6 +14,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.patterns.assistants.PPatternListAssistant;
@@ -27,13 +28,9 @@ import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class AExplicitFunctionDefinitionAssistant {
@@ -294,33 +291,40 @@ public class AExplicitFunctionDefinitionAssistant {
 	private static AExplicitFunctionDefinition getPostDefinition(
 			AExplicitFunctionDefinition d) {
 		
-		PatternList last = new PatternList();
+		List<PPattern> last = new Vector<PPattern>();
 		int psize = d.getParamPatternList().size();
 
-		for (Pattern p: paramPatternList.get(psize - 1))
+		for (PPattern p: d.getParamPatternList().get(psize - 1))
 		{
 			last.add(p);
 		}
 
-		LexNameToken result = new LexNameToken(name.module, "RESULT", location);
-		last.add(new IdentifierPattern(result));
+		LexNameToken result = new LexNameToken(d.getName().module, "RESULT", d.getLocation());
+		last.add(new AIdentifierPattern(d.getLocation(),null,false,result));
 
-		List<PatternList> parameters = new Vector<PatternList>();
+		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 
 		if (psize > 1)
 		{
-			parameters.addAll(paramPatternList.subList(0, psize - 1));
+			parameters.addAll(d.getParamPatternList().subList(0, psize - 1));
 		}
 
 		parameters.add(last);
 
-		ExplicitFunctionDefinition def = new ExplicitFunctionDefinition(
-			name.getPostName(postcondition.location), NameScope.GLOBAL,
-			typeParams, type.getCurriedPostType(isCurried),
-			parameters, postcondition, null, null, false, null);
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+			d.getPostcondition().getLocation(),
+			d.getName().getPostName(d.getPostcondition().getLocation()), 
+			NameScope.GLOBAL,
+			false,
+			PAccessSpecifierAssistant.getDefault(),
+			d.getTypeParams(), 
+			parameters,
+			AFunctionTypeAssistant.getCurriedPostType(d.getType(),d.getIsCurried()),
+			d.getPostcondition(), 
+			null, null, null);
 
-		def.setAccessSpecifier(accessSpecifier);
-		def.classDefinition = classDefinition;
+		def.setAccess(d.getAccess());
+		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
 
