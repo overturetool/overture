@@ -37,15 +37,13 @@ import com.lausdahl.ast.creator.methods.analysis.depthfirst.DepthFirstCaseMethod
 public class Generator
 {
 
-	public Environment generate(String inputFile, String defaultPackage,
-			String analysisPackageName) throws IOException,
-			InstantiationException, IllegalAccessException, AstCreatorException
+	public Environment generate(String inputFile) throws IOException, AstCreatorException 
 	{
 		Environment env = null;
 
 		try
 		{
-			env = new CreateOnParse().parse(inputFile, defaultPackage);
+			env = new CreateOnParse().parse(inputFile);
 			for (IClassDefinition def : env.getClasses())
 			{
 				def.checkFieldTypeHierarchy();
@@ -77,33 +75,40 @@ public class Generator
 				}
 			}
 		
-		System.out.println("Generating enumerations...");
-		createNodeEnum(env, defaultPackage);
-		createProductionEnums(env, defaultPackage);
-
-		System.out.println("Generating analysis visitors...");
-		System.out.print("Analysis...");
-		createAnalysis(env, analysisPackageName);
-		// createAnalysisAdaptor(env,analysisPackageName);
-		System.out.print("Answer...");
-		createAnswer(env, analysisPackageName);
-		System.out.print("Question...");
-		createQuestion(env, analysisPackageName);
-		System.out.print("Question-Answer...");
-		createQuestionAnswer(env, analysisPackageName);
-		System.out.print("Depth-First...");
-		createdepthFirstAdaptor(env, analysisPackageName);
-		System.out.println();
+		
 		// SourceFileWriter.write(outputFolder, env1);
 		return env;
 	}
+	
+	
+	public void runPostGeneration(Environment env) throws InstantiationException, IllegalAccessException
+	{
+		System.out.println("Generating enumerations...");
+		createNodeEnum(env);
+		createProductionEnums(env);
 
-	private static void createNodeEnum(Environment env, String packageName)
+		System.out.println("Generating analysis visitors...");
+		System.out.print("Analysis...");
+		createAnalysis(env);
+		// createAnalysisAdaptor(env,analysisPackageName);
+		System.out.print("Answer...");
+		createAnswer(env);
+		System.out.print("Question...");
+		createQuestion(env);
+		System.out.print("Question-Answer...");
+		createQuestionAnswer(env);
+		System.out.print("Depth-First...");
+		createdepthFirstAdaptor(env);
+		System.out.println();
+	}
+
+	private static void createNodeEnum(Environment env)
 	{
 		EnumDefinition eDef = new EnumDefinition("NodeEnum");
-		eDef.setPackageName(packageName);
+		eDef.setPackageName(env.getDefaultPackage());
 		env.addClass(eDef);
 		eDef.elements.add("TOKEN");
+		eDef.elements.add("ExternalDefined");
 		for (IClassDefinition d : env.getClasses())
 		{
 			if (d instanceof CommonTreeClassDefinition)
@@ -118,8 +123,7 @@ public class Generator
 		}
 	}
 
-	private static void createProductionEnums(Environment env,
-			String packageName)
+	private static void createProductionEnums(Environment env)
 	{
 		List<EnumDefinition> enums = new Vector<EnumDefinition>();
 
@@ -130,7 +134,8 @@ public class Generator
 				CommonTreeClassDefinition c = (CommonTreeClassDefinition) d;
 				if (c.getType() == ClassType.Production)
 				{
-					EnumDefinition eDef = new EnumDefinition(c.getEnumTypeName());
+					EnumDefinition eDef = new EnumDefinition(c.getEnumTypeNameNoPostfix());
+					eDef.setNamePostfix(c.getNamePostfix());
 					eDef.setPackageName(c.getPackageName());
 					enums.add(eDef);
 
@@ -140,7 +145,8 @@ public class Generator
 					}
 				} else if (c.getType() == ClassType.SubProduction)
 				{
-					EnumDefinition eDef = new EnumDefinition(c.getEnumTypeName());
+					EnumDefinition eDef = new EnumDefinition(c.getEnumTypeNameNoPostfix());
+					eDef.setNamePostfix(c.getNamePostfix());
 					eDef.setPackageName(c.getPackageName());
 					enums.add(eDef);
 
@@ -158,39 +164,36 @@ public class Generator
 		}
 	}
 
-	private static void createAnalysis(Environment env,
-			String analysisPackageName) throws InstantiationException,
+	private static void createAnalysis(Environment env) throws InstantiationException,
 			IllegalAccessException
 	{
 
-		extendedVisitor("Analysis", new Vector<IInterfaceDefinition>(), AnalysisAcceptMethod.class, AnalysisAdaptorCaseMethod.class, AnalysisAdaptorDefaultMethod.class, AnalysisAdaptorDefaultNodeMethod.class, AnalysisAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IAnalysis);
+		extendedVisitor("Analysis", new Vector<IInterfaceDefinition>(), AnalysisAcceptMethod.class, AnalysisAdaptorCaseMethod.class, AnalysisAdaptorDefaultMethod.class, AnalysisAdaptorDefaultNodeMethod.class, AnalysisAdaptorDefaultTokenMethod.class, env,  env.TAG_IAnalysis);
 	}
 
-	private static void createAnswer(Environment env, String analysisPackageName)
+	private static void createAnswer(Environment env)
 			throws InstantiationException, IllegalAccessException
 	{
 		List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 		genericArguments.add(Environment.A);
-		extendedVisitor("Answer", genericArguments, AnswerAcceptMethod.class, AnswerAdaptorCaseMethod.class, AnswerAdaptorDefaultMethod.class, AnswerAdaptorDefaultNodeMethod.class, AnswerAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IAnswer);
+		extendedVisitor("Answer", genericArguments, AnswerAcceptMethod.class, AnswerAdaptorCaseMethod.class, AnswerAdaptorDefaultMethod.class, AnswerAdaptorDefaultNodeMethod.class, AnswerAdaptorDefaultTokenMethod.class, env,  env.TAG_IAnswer);
 	}
 
-	private static void createQuestion(Environment env,
-			String analysisPackageName) throws InstantiationException,
+	private static void createQuestion(Environment env) throws InstantiationException,
 			IllegalAccessException
 	{
 		List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 		genericArguments.add(Environment.Q);
-		extendedVisitor("Question", genericArguments, QuestionAcceptMethod.class, QuestionAdaptorCaseMethod.class, QuestionAdaptorDefaultMethod.class, QuestionAdaptorDefaultNodeMethod.class, QuestionAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IQuestion);
+		extendedVisitor("Question", genericArguments, QuestionAcceptMethod.class, QuestionAdaptorCaseMethod.class, QuestionAdaptorDefaultMethod.class, QuestionAdaptorDefaultNodeMethod.class, QuestionAdaptorDefaultTokenMethod.class, env,  env.TAG_IQuestion);
 	}
 
-	private static void createQuestionAnswer(Environment env,
-			String analysisPackageName) throws InstantiationException,
+	private static void createQuestionAnswer(Environment env) throws InstantiationException,
 			IllegalAccessException
 	{
 		List<IInterfaceDefinition> genericArguments = new Vector<IInterfaceDefinition>();
 		genericArguments.add(Environment.Q);
 		genericArguments.add(Environment.A);
-		extendedVisitor("QuestionAnswer", genericArguments, QuestionAnswerAcceptMethod.class, QuestionAnswerAdaptorCaseMethod.class, QuestionAnswerAdaptorDefaultMethod.class, QuestionAnswerAdaptorDefaultNodeMethod.class, QuestionAnswerAdaptorDefaultTokenMethod.class, env, analysisPackageName, env.TAG_IQuestionAnswer);
+		extendedVisitor("QuestionAnswer", genericArguments, QuestionAnswerAcceptMethod.class, QuestionAnswerAdaptorCaseMethod.class, QuestionAnswerAdaptorDefaultMethod.class, QuestionAnswerAdaptorDefaultNodeMethod.class, QuestionAnswerAdaptorDefaultTokenMethod.class, env,  env.TAG_IQuestionAnswer);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -198,12 +201,12 @@ public class Generator
 			List<IInterfaceDefinition> genericArguments, Class accept,
 			Class caseM, Class defaultCase, Class defaultNodeMethod,
 			Class defaultTokenMethod, Environment env,
-			String analysisPackageName, String tag)
+			 String tag)
 			throws InstantiationException, IllegalAccessException
 	{
 		InterfaceDefinition answerIntf = new InterfaceDefinition(intfName);
 		answerIntf.setTag(tag);
-		answerIntf.setPackageName(analysisPackageName);
+		answerIntf.setPackageName(env.getAnalysisPackage());
 		answerIntf.setGenericArguments(genericArguments.toArray(new IInterfaceDefinition[0]));
 		env.addInterface(answerIntf);
 
@@ -227,7 +230,7 @@ public class Generator
 
 		CustomClassDefinition answerClass = new CustomClassDefinition(answerIntf.getSignatureName().substring(1)
 				+ "Adaptor", env);
-		answerClass.setPackageName(analysisPackageName);
+		answerClass.setPackageName(env.getAnalysisPackage());
 		answerClass.setGenericArguments(answerIntf.getGenericArguments());
 		answerClass.interfaces.add(answerIntf);
 		// answerClass.methods.addAll(answerIntf.methods);
@@ -339,12 +342,11 @@ public class Generator
 	// }
 	// }
 	// }
-	private void createdepthFirstAdaptor(Environment source,
-			String defaultPackage)
+	private void createdepthFirstAdaptor(Environment source)
 	{
 		CustomClassDefinition adaptor = new CustomClassDefinition("DepthFirstAnalysisAdaptor", source);
 		adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
-		adaptor.setPackageName(defaultPackage);
+		adaptor.setPackageName(source.getAnalysisPackage());
 		// copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
 		adaptor.interfaces.add(source.getTaggedDef(source.TAG_IAnalysis));
 

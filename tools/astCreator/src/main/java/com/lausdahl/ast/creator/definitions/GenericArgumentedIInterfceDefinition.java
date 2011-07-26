@@ -73,14 +73,14 @@ public class GenericArgumentedIInterfceDefinition implements
 	}
 
 	
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(StringBuilder sb)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	
-	public String getVdmSourceCode()
+	public String getVdmSourceCode(StringBuilder sb)
 	{
 		// TODO Auto-generated method stub
 		return null;

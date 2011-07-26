@@ -125,7 +125,6 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 				case SubProduction:
 					name = "S" + name
 							+ getSuperClassDefinition().getName().substring(1);
-					;
 					break;
 				case Token:
 					name = "T" + name;
@@ -215,17 +214,23 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 
 	public String getEnumTypeName()
 	{
+		return getEnumTypeNameNoPostfix()+ namePostfix;
+		
+	}
+	
+	public String getEnumTypeNameNoPostfix()
+	{
 		if (type == ClassType.Production)
 		{
 
 			return "E" + BaseClassDefinition.firstLetterUpper(rawName)
-					+ namePostfix;
+					;
 		} else
 		{
 			return "E"
 					+ BaseClassDefinition.firstLetterUpper(rawName)
 					+ BaseClassDefinition.firstLetterUpper(((CommonTreeClassDefinition) getSuperClassDefinition()).rawName)
-					+ namePostfix;
+					;
 		}
 	}
 
@@ -256,5 +261,10 @@ public class CommonTreeClassDefinition extends BaseClassDefinition implements
 		return super.getPackageName();
 	}
 
-	
+	@Override
+	public void updateEnvironment(Environment env)
+	{
+		this.env = env;
+			super.updateEnvironment(env);
+	}
 }

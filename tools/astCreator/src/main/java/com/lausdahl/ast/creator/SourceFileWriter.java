@@ -22,15 +22,14 @@ import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 
 public class SourceFileWriter
 {
-	public static void write(File outputFolder, Environment env,
-			String defaultPackage, String analysisPackageName)
+	public static void write(File outputFolder, Environment env)
 	{
 		File generatedVdm = new File(new File(new File(outputFolder, "vdm"), "generated"), "node");
 		outputFolder.mkdirs();
 		generatedVdm.mkdirs();
 
 		System.out.println("Copying base classes to destination...");
-		copyBaseClasses(outputFolder, defaultPackage, analysisPackageName, env);
+		copyBaseClasses(outputFolder, env.getDefaultPackage(), env.getAnalysisPackage(), env);
 		System.out.println("Writing source files.:");
 		long startTime = System.currentTimeMillis();
 		int i = 80;
@@ -184,13 +183,13 @@ public class SourceFileWriter
 			if (writeJava)
 			{
 				name = def.getName();
-				content = def.getJavaSourceCode();
+				content = def.getJavaSourceCode(new StringBuilder());
 			} else
 			{
 				InterfaceDefinition.VDM = true;
 				String tmp = Field.fieldPrefic;
 				Field.fieldPrefic = "m_";
-				content = def.getVdmSourceCode();
+				content = def.getVdmSourceCode(new StringBuilder());
 				Field.fieldPrefic = tmp;
 				name = def.getName();
 				InterfaceDefinition.VDM = false;

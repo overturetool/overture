@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g 2011-07-14 13:07:11
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g 2011-07-22 11:56:57
 
 package com.lausdahl.ast.creator.parser;
 
@@ -146,7 +146,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "root"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:203:1: root : top EOF ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:205:1: root : top EOF ;
     public final AstcToStringParser.root_return root() throws RecognitionException {
         AstcToStringParser.root_return retval = new AstcToStringParser.root_return();
         retval.start = input.LT(1);
@@ -160,8 +160,8 @@ public class AstcToStringParser extends Parser {
         Object EOF2_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:204:3: ( top EOF )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:204:5: top EOF
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:206:3: ( top EOF )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:206:5: top EOF
             {
             root_0 = (Object)adaptor.nil();
 
@@ -202,7 +202,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "top"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:208:1: top : TOSTRING_DCL ( imports )* ( toString_ )* ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:210:1: top : TOSTRING_DCL ( imports )* ( toString_ )* ;
     public final AstcToStringParser.top_return top() throws RecognitionException {
         AstcToStringParser.top_return retval = new AstcToStringParser.top_return();
         retval.start = input.LT(1);
@@ -218,8 +218,8 @@ public class AstcToStringParser extends Parser {
         Object TOSTRING_DCL3_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:3: ( TOSTRING_DCL ( imports )* ( toString_ )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:5: TOSTRING_DCL ( imports )* ( toString_ )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:211:3: ( TOSTRING_DCL ( imports )* ( toString_ )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:211:5: TOSTRING_DCL ( imports )* ( toString_ )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -227,7 +227,7 @@ public class AstcToStringParser extends Parser {
             TOSTRING_DCL3_tree = (Object)adaptor.create(TOSTRING_DCL3);
             root_0 = (Object)adaptor.becomeRoot(TOSTRING_DCL3_tree, root_0);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:19: ( imports )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:211:19: ( imports )*
             loop1:
             do {
                 int alt1=2;
@@ -240,7 +240,7 @@ public class AstcToStringParser extends Parser {
 
                 switch (alt1) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:19: imports
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:211:19: imports
             	    {
             	    pushFollow(FOLLOW_imports_in_top243);
             	    imports4=imports();
@@ -257,7 +257,7 @@ public class AstcToStringParser extends Parser {
                 }
             } while (true);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:28: ( toString_ )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:211:28: ( toString_ )*
             loop2:
             do {
                 int alt2=2;
@@ -270,7 +270,7 @@ public class AstcToStringParser extends Parser {
 
                 switch (alt2) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:209:28: toString_
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:211:28: toString_
             	    {
             	    pushFollow(FOLLOW_toString__in_top246);
             	    toString_5=toString_();
@@ -314,7 +314,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "imports"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:212:1: imports : 'import' JAVANAME ';' ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:214:1: imports : 'import' JAVANAME ';' ;
     public final AstcToStringParser.imports_return imports() throws RecognitionException {
         AstcToStringParser.imports_return retval = new AstcToStringParser.imports_return();
         retval.start = input.LT(1);
@@ -330,8 +330,8 @@ public class AstcToStringParser extends Parser {
         Object char_literal8_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:3: ( 'import' JAVANAME ';' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:213:5: 'import' JAVANAME ';'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:215:3: ( 'import' JAVANAME ';' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:215:5: 'import' JAVANAME ';'
             {
             root_0 = (Object)adaptor.nil();
 
@@ -371,7 +371,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "toString_"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:217:1: toString_ : '%' aspectName ASSIGN ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )* ( ( ';' )? ) ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:219:1: toString_ : '%' aspectName ASSIGN ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )* ( ( ';' )? ) ;
     public final AstcToStringParser.toString__return toString_() throws RecognitionException {
         AstcToStringParser.toString__return retval = new AstcToStringParser.toString__return();
         retval.start = input.LT(1);
@@ -407,8 +407,8 @@ public class AstcToStringParser extends Parser {
         Object char_literal21_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:3: ( '%' aspectName ASSIGN ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )* ( ( ';' )? ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:5: '%' aspectName ASSIGN ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )* ( ( ';' )? )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:3: ( '%' aspectName ASSIGN ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )* ( ( ';' )? ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:5: '%' aspectName ASSIGN ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )* ( ( ';' )? )
             {
             root_0 = (Object)adaptor.nil();
 
@@ -426,7 +426,7 @@ public class AstcToStringParser extends Parser {
             ASSIGN11_tree = (Object)adaptor.create(ASSIGN11);
             adaptor.addChild(root_0, ASSIGN11_tree);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:28: ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:28: ( StringLiteral ( '+' RawJava )? | field ( ( '+' )? RawJava )? | '+' ( StringLiteral | field ) )*
             loop7:
             do {
                 int alt7=4;
@@ -451,13 +451,13 @@ public class AstcToStringParser extends Parser {
 
                 switch (alt7) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:30: StringLiteral ( '+' RawJava )?
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:30: StringLiteral ( '+' RawJava )?
             	    {
             	    StringLiteral12=(Token)match(input,StringLiteral,FOLLOW_StringLiteral_in_toString_295); 
             	    StringLiteral12_tree = (Object)adaptor.create(StringLiteral12);
             	    adaptor.addChild(root_0, StringLiteral12_tree);
 
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:44: ( '+' RawJava )?
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:44: ( '+' RawJava )?
             	    int alt3=2;
             	    int LA3_0 = input.LA(1);
 
@@ -470,7 +470,7 @@ public class AstcToStringParser extends Parser {
             	    }
             	    switch (alt3) {
             	        case 1 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:45: '+' RawJava
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:45: '+' RawJava
             	            {
             	            char_literal13=(Token)match(input,16,FOLLOW_16_in_toString_298); 
             	            char_literal13_tree = (Object)adaptor.create(char_literal13);
@@ -490,7 +490,7 @@ public class AstcToStringParser extends Parser {
             	    }
             	    break;
             	case 2 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:61: field ( ( '+' )? RawJava )?
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:61: field ( ( '+' )? RawJava )?
             	    {
             	    pushFollow(FOLLOW_field_in_toString_306);
             	    field15=field();
@@ -498,7 +498,7 @@ public class AstcToStringParser extends Parser {
             	    state._fsp--;
 
             	    adaptor.addChild(root_0, field15.getTree());
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:67: ( ( '+' )? RawJava )?
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:67: ( ( '+' )? RawJava )?
             	    int alt5=2;
             	    int LA5_0 = input.LA(1);
 
@@ -514,9 +514,9 @@ public class AstcToStringParser extends Parser {
             	    }
             	    switch (alt5) {
             	        case 1 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:68: ( '+' )? RawJava
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:68: ( '+' )? RawJava
             	            {
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:68: ( '+' )?
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:68: ( '+' )?
             	            int alt4=2;
             	            int LA4_0 = input.LA(1);
 
@@ -525,7 +525,7 @@ public class AstcToStringParser extends Parser {
             	            }
             	            switch (alt4) {
             	                case 1 :
-            	                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:68: '+'
+            	                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:68: '+'
             	                    {
             	                    char_literal16=(Token)match(input,16,FOLLOW_16_in_toString_309); 
             	                    char_literal16_tree = (Object)adaptor.create(char_literal16);
@@ -551,13 +551,13 @@ public class AstcToStringParser extends Parser {
             	    }
             	    break;
             	case 3 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:85: '+' ( StringLiteral | field )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:85: '+' ( StringLiteral | field )
             	    {
             	    char_literal18=(Token)match(input,16,FOLLOW_16_in_toString_318); 
             	    char_literal18_tree = (Object)adaptor.create(char_literal18);
             	    adaptor.addChild(root_0, char_literal18_tree);
 
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:89: ( StringLiteral | field )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:89: ( StringLiteral | field )
             	    int alt6=2;
             	    int LA6_0 = input.LA(1);
 
@@ -575,7 +575,7 @@ public class AstcToStringParser extends Parser {
             	    }
             	    switch (alt6) {
             	        case 1 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:90: StringLiteral
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:90: StringLiteral
             	            {
             	            StringLiteral19=(Token)match(input,StringLiteral,FOLLOW_StringLiteral_in_toString_321); 
             	            StringLiteral19_tree = (Object)adaptor.create(StringLiteral19);
@@ -585,7 +585,7 @@ public class AstcToStringParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:104: field
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:104: field
             	            {
             	            pushFollow(FOLLOW_field_in_toString_323);
             	            field20=field();
@@ -608,10 +608,10 @@ public class AstcToStringParser extends Parser {
                 }
             } while (true);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:114: ( ( ';' )? )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:115: ( ';' )?
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:114: ( ( ';' )? )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:115: ( ';' )?
             {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:118: ( ';' )?
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:118: ( ';' )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -620,7 +620,7 @@ public class AstcToStringParser extends Parser {
             }
             switch (alt8) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:218:118: ';'
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:220:118: ';'
                     {
                     char_literal21=(Token)match(input,14,FOLLOW_14_in_toString_330); 
 
@@ -659,7 +659,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "field"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:229:1: field : '[' ID ']' ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:231:1: field : '[' ID ']' ;
     public final AstcToStringParser.field_return field() throws RecognitionException {
         AstcToStringParser.field_return retval = new AstcToStringParser.field_return();
         retval.start = input.LT(1);
@@ -675,8 +675,8 @@ public class AstcToStringParser extends Parser {
         Object char_literal24_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:230:3: ( '[' ID ']' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:230:5: '[' ID ']'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:232:3: ( '[' ID ']' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:232:5: '[' ID ']'
             {
             root_0 = (Object)adaptor.nil();
 
@@ -713,7 +713,7 @@ public class AstcToStringParser extends Parser {
     };
 
     // $ANTLR start "aspectName"
-    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:253:1: aspectName : ID ( '->' ( ID | '#' ID ) )* ;
+    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:255:1: aspectName : ID ( '->' ( ID | '#' ID ) )* ;
     public final AstcToStringParser.aspectName_return aspectName() throws RecognitionException {
         AstcToStringParser.aspectName_return retval = new AstcToStringParser.aspectName_return();
         retval.start = input.LT(1);
@@ -733,8 +733,8 @@ public class AstcToStringParser extends Parser {
         Object ID29_tree=null;
 
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:3: ( ID ( '->' ( ID | '#' ID ) )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:5: ID ( '->' ( ID | '#' ID ) )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:3: ( ID ( '->' ( ID | '#' ID ) )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:5: ID ( '->' ( ID | '#' ID ) )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -742,7 +742,7 @@ public class AstcToStringParser extends Parser {
             ID25_tree = (Object)adaptor.create(ID25);
             root_0 = (Object)adaptor.becomeRoot(ID25_tree, root_0);
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:9: ( '->' ( ID | '#' ID ) )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:9: ( '->' ( ID | '#' ID ) )*
             loop10:
             do {
                 int alt10=2;
@@ -755,13 +755,13 @@ public class AstcToStringParser extends Parser {
 
                 switch (alt10) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:10: '->' ( ID | '#' ID )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:10: '->' ( ID | '#' ID )
             	    {
             	    string_literal26=(Token)match(input,19,FOLLOW_19_in_aspectName490); 
             	    string_literal26_tree = (Object)adaptor.create(string_literal26);
             	    adaptor.addChild(root_0, string_literal26_tree);
 
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:15: ( ID | '#' ID )
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:15: ( ID | '#' ID )
             	    int alt9=2;
             	    int LA9_0 = input.LA(1);
 
@@ -779,7 +779,7 @@ public class AstcToStringParser extends Parser {
             	    }
             	    switch (alt9) {
             	        case 1 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:16: ID
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:16: ID
             	            {
             	            ID27=(Token)match(input,ID,FOLLOW_ID_in_aspectName493); 
             	            ID27_tree = (Object)adaptor.create(ID27);
@@ -789,7 +789,7 @@ public class AstcToStringParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:254:21: '#' ID
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\AstcToString.g:256:21: '#' ID
             	            {
             	            char_literal28=(Token)match(input,20,FOLLOW_20_in_aspectName497); 
             	            char_literal28_tree = (Object)adaptor.create(char_literal28);

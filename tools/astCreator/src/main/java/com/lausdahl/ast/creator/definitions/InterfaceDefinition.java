@@ -127,7 +127,14 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	@Override
 	public String toString()
 	{
-		return getJavaSourceCode();
+		StringBuilder sb = new StringBuilder();
+		try{
+		return getJavaSourceCode(sb);
+		}catch(Throwable e)
+		{
+			
+		}
+		return sb.toString();
 	}
 
 	/*
@@ -150,9 +157,9 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getJavaSourceCode()
 	 */
 	
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(StringBuilder sb)
 	{
-		StringBuilder sb = new StringBuilder();
+		
 
 		sb.append(IClassDefinition.classHeader + "\n");
 
@@ -203,10 +210,8 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getVdmSourceCode()
 	 */
 	
-	public String getVdmSourceCode()
+	public String getVdmSourceCode(StringBuilder sb)
 	{
-		StringBuilder sb = new StringBuilder();
-
 		sb.append(IClassDefinition.classHeader + "\n");
 
 		if (getPackageName() != null)

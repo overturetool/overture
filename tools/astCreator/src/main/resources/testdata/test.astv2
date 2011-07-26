@@ -8,6 +8,8 @@ Tokens
  */
   lextoken = 'java:org.overturetool.vdmj.lex.LexToken';
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
+//  LexToken1 = 'java:node:org.overturetool.vdmj.lex.LexToken';
+  tok = 'java:enum:org.overturetool.vdmj.lex.KK';
   plus = '+';
   int = 'int';
   real = 'real';
@@ -17,7 +19,7 @@ Tokens
   and_and = '&&';
   or_or = '||';
   numbers_literal = 'some regex for numbers';
-   minus='_';
+   minus='_'; 
 
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
@@ -46,7 +48,18 @@ exp {-> package='org.overture.ast.expressions'}
     |   {int_const} numbers_literal
     |   {boolean_const} boolean
     |   {apply} [root]:exp [args]:exp*
+    |   {testexpp} [tt]:tok
+    |   {kenneth} [ff]:exp** (graf):exp (glist):exp* (glistlist):exp** 
+    | #dd
     ;
+#dd
+ = {gg}
+| #kk
+ ;
+ 
+ #kk
+ ={sub2}
+ ;
     
 boolean
     =   {true}
@@ -61,6 +74,9 @@ type
 
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
-exp = [type]:type*
+%exp = [type]:type* [tokenLL]:location
     ;
     
+%exp->#dd = [kkkk]:type;
+
+%exp->#dd->#kk = [lll]:type;

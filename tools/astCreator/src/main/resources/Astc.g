@@ -8,6 +8,7 @@ options{
 tokens {
 	ASSIGN = '=';
 	COLON =':';
+	PACKAGES='Packages';
 	AST = 'Abstract Syntax Tree';
 	TOKENS ='Tokens';
 	ASPECT_DCL='Aspect Declaration';
@@ -19,6 +20,8 @@ package com.lausdahl.ast.creator.parser;
 }  
 
 @lexer::members{
+    @SuppressWarnings({ "unused", "rawtypes" })
+    private Stack myStack = null;
     private boolean mMessageCollectionEnabled = false;
     private boolean mHasErrors = false;
    
@@ -215,7 +218,11 @@ ESC_SEQ
     
   
 root
-  : toks ast aspectdcl   
+  : pkg toks ast aspectdcl   
+  ;
+  
+pkg
+  : PACKAGES^ ('base' JAVANAME ';'! )? ('analysis' JAVANAME ';'! )?
   ;
   
 ast
@@ -244,7 +251,7 @@ aspectName
 
 
 production
-  : name productionfields? ASSIGN alternative ('|' alternative)* ';' -> ^(ID["P"] name productionfields? (alternative)*) 
+  : name productionfields? (ASSIGN alternative ('|' alternative)*)? ';' -> ^(ID["P"] name productionfields? (alternative)*) 
   ;
   
 name 

@@ -14,17 +14,18 @@ public class CustomClassDefinition extends BaseClassDefinition
 {
 
 	public static List<CustomClassDefinition> classes = new Vector<CustomClassDefinition>();
-	
+
 	// public String interfaceName;
 	// public List<Field> fields = new Vector<Field>();
 
 	public Object tag;
 	Environment env;
+	public boolean isAbstract = false;
 
 	public CustomClassDefinition(String name, Environment env)
 	{
 		super(name);
-		
+
 		this.env = env;
 		methods.add(new ConstructorMethod(this, env));
 		methods.add(new DefaultConstructorMethod(this, env));
@@ -42,6 +43,19 @@ public class CustomClassDefinition extends BaseClassDefinition
 		Method getM = new GetMethod(this, field, env);
 		methods.add(getM);
 
+	}
+
+	@Override
+	public boolean isAbstract()
+	{
+		return this.isAbstract;
+	}
+
+	@Override
+	public void updateEnvironment(Environment env)
+	{
+		this.env = env;
+		super.updateEnvironment(env);
 	}
 
 }

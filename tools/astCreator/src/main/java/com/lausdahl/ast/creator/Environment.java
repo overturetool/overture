@@ -1,23 +1,26 @@
 package com.lausdahl.ast.creator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 
 public class Environment
 {
-	public static final IInterfaceDefinition voidDef = new PredefinedClassDefinition("", "void");
+	public static final IInterfaceDefinition voidDef = new PredefinedClassDefinition("", "void",true);
 	public static final IInterfaceDefinition A = new PredefinedClassDefinition("", "A",true);
 	public static final IInterfaceDefinition Q = new PredefinedClassDefinition("", "Q",true);
-	public static final IInterfaceDefinition stringDef = new PredefinedClassDefinition("","String");
+	public static final IInterfaceDefinition stringDef = new PredefinedClassDefinition("","String",true);
 	
-	public static final IInterfaceDefinition listDef = new PredefinedClassDefinition("java.util","List");
-	public static final IInterfaceDefinition vectorDef = new PredefinedClassDefinition("java.util","Vector");
-	public static final IInterfaceDefinition linkedListDef = new PredefinedClassDefinition("java.util","LinkedList");
-	public static final IInterfaceDefinition collectionDef = new PredefinedClassDefinition("java.util","Collection");
+	public static final IInterfaceDefinition listDef = new PredefinedClassDefinition("java.util","List",true);
+	public static final IInterfaceDefinition vectorDef = new PredefinedClassDefinition("java.util","Vector",true);
+	public static final IInterfaceDefinition linkedListDef = new PredefinedClassDefinition("java.util","LinkedList",true);
+	public static final IInterfaceDefinition collectionDef = new PredefinedClassDefinition("java.util","Collection",true);
 		
 	public final PredefinedClassDefinition node;
 	public final PredefinedClassDefinition token;
@@ -34,8 +37,12 @@ public class Environment
 	
 	private final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
 	
-	public Environment(String defaultPackage)
+	private String defaultPackage = "org.overture.ast.node";
+	private String analysisPackage = "org.overture.ast.analysis";
+	
+	public Environment()
 	{
+//		this.defaultPackage = defaultPackage;
 		// setup env
 		node=new PredefinedClassDefinition(defaultPackage, "Node");
 		nodeList =new PredefinedClassDefinition(defaultPackage, "NodeList");
@@ -51,6 +58,67 @@ public class Environment
 		addClass(token);
 		addClass(externalNode);
 	}
+	
+	public void setDefaultPackages(String defaultPackages)
+	{
+		String oldPackage = this.defaultPackage;
+		this.defaultPackage = defaultPackages;
+		node.setPackageName(defaultPackage);
+		nodeList.setPackageName(defaultPackage);
+		nodeListList.setPackageName(defaultPackage);
+		graphNodeList.setPackageName(defaultPackage);
+		graphNodeListList.setPackageName(defaultPackage);
+		token.setPackageName(defaultPackage);
+		externalNode.setPackageName(defaultPackage);
+		
+		for (IClassDefinition c : classes)
+		{
+			if(c.getPackageName().equals(oldPackage))
+			{
+				c.setPackageName(defaultPackage);
+			}
+		}
+		
+		for (IInterfaceDefinition c : interfaces)
+		{
+			if(c.getPackageName().equals(oldPackage))
+			{
+				c.setPackageName(defaultPackage);
+			}
+		}
+	}
+	
+	public void setAnalysisPackages(String analysisPackage)
+	{
+		String oldPackage = this.analysisPackage;
+		this.analysisPackage = analysisPackage;
+		for (IClassDefinition c : classes)
+		{
+			if(c.getPackageName().equals(oldPackage))
+			{
+				c.setPackageName(analysisPackage);
+			}
+		}
+		
+		for (IInterfaceDefinition c : interfaces)
+		{
+			if(c.getPackageName().equals(oldPackage))
+			{
+				c.setPackageName(analysisPackage);
+			}
+		}
+	}
+	
+	public String getDefaultPackage()
+	{
+		return this.defaultPackage;
+	}
+	
+	public String getAnalysisPackage()
+	{
+		return this.analysisPackage;
+	}
+	
 	private final List<IClassDefinition> classes = new Vector<IClassDefinition>();
 	private final List<IInterfaceDefinition> interfaces = new Vector<IInterfaceDefinition>();
 
@@ -211,4 +279,111 @@ public class Environment
 	{
 		return this.toStringAddOn;
 	}
+	
+	
+	public Environment extendWith(Environment env)
+	{
+		setDefaultPackages(env.getDefaultPackage());
+		setAnalysisPackages(env.getAnalysisPackage());
+		List<IClassDefinition> extendedClasses = new Vector<IClassDefinition>();
+		//not matched classes
+		List<IClassDefinition> notMatchedClasses = new Vector<IClassDefinition>();
+		notMatchedClasses.addAll(classes);
+		
+		
+		//first extend all existing classes
+		for (IClassDefinition c : classes)
+		{
+			for (IClassDefinition cNew : env.classes)
+			{
+				if(c.getName().equals(cNew.getName()))
+				{
+					extendWith(this,c,cNew);
+					extendedClasses.add(cNew);
+					notMatchedClasses.remove(c);
+					break;
+				}
+			}
+		}
+		
+		//set package for all alternatives not matched
+		for (IClassDefinition c : notMatchedClasses)
+		{
+			if(c instanceof CommonTreeClassDefinition )
+			{
+				switch (((CommonTreeClassDefinition) c).getType())
+				{
+					case Alternative:
+						c.setPackageName(c.getSuperDef().getPackageName());
+						break;
+					case Custom:
+						break;
+					case Production:
+						break;
+					case SubProduction:
+						break;
+					case Token:
+						c.setPackageName(defaultPackage+".tokens");
+						break;
+					case Unknown:
+						break;
+					
+				}
+				
+			}
+		}
+		
+		//add new classes
+		List<IClassDefinition> newClasses = new Vector<IClassDefinition>();
+		newClasses.addAll(env.classes);
+		newClasses.removeAll(extendedClasses);
+		this.classes.addAll(newClasses);
+		
+		//for new we skip the interfaces
+		
+		//update env for all
+		for (IClassDefinition def : classes)
+		{
+			def.updateEnvironment(this);
+		}
+		
+		return this;
+	}
+
+	private void extendWith(Environment env,IClassDefinition c, IClassDefinition cNew)
+	{
+		c.setPackageName(cNew.getPackageName());
+		
+		List<Field> fields = new ArrayList<Field>(c.getFields());
+		List<Field> matchedFields = new Vector<Field>();
+		for (Field f : fields)
+		{
+			for (Field newF : cNew.getFields())
+			{
+				if(f.getName().equals(newF.getName()))
+				{
+					f.setType(newF.getUnresolvedType());
+					matchedFields.add(newF);
+				}
+			}
+		}
+		
+		
+		List<Field> newFields = new Vector<Field>();
+		newFields.addAll(cNew.getFields());
+		newFields.removeAll(matchedFields);
+		for (Field field : newFields)
+		{
+			field.updateEnvironment(env);
+			c.addField(field);
+		}
+		
+//		//tryout
+//		for (Field field : c.getFields())
+//		{
+//			field.updateEnvironment(env);
+//		}
+	}
+
+
 }

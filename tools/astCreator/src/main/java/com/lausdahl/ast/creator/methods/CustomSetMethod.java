@@ -9,9 +9,10 @@ public class CustomSetMethod extends Method
 {
 	Field f;
 	CustomClassDefinition c;
-	public CustomSetMethod(CustomClassDefinition c, Field f,Environment env)
+
+	public CustomSetMethod(CustomClassDefinition c, Field f, Environment env)
 	{
-		super(c,env);
+		super(c, env);
 		this.c = c;
 		this.f = f;
 	}
@@ -40,17 +41,7 @@ public class CustomSetMethod extends Method
 
 		StringBuilder sb = new StringBuilder();
 
-	
-		if (c.getName().equals("TypeChecker") || c.getName().equals("Eval"))
-		{
-			sb.append("\t\tif (value != null) {\n");
-			sb.append("\t\t\tvalue.parent(this);\n");
-			sb.append("\t\t}\n");
-			sb.append("\t\tthis." + f.getName() + " = value;");
-		} else if (f.isTokenField)
-		{
-			sb.append("\t\tthis." + f.getName() + " = value;");
-		}
+		sb.append("\t\tthis." + f.getName() + " = value;");
 
 		sbDoc.append("\t*/");
 		this.javaDoc = sbDoc.toString();

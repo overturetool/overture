@@ -1,20 +1,21 @@
 package %generated.node%;
 
+import java.io.Serializable;
 import java.util.Collection;
 //import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.overture.ast.node.Node;
-
 import %org.overture.ast.analysis%.%IAnalysis%;
 import %org.overture.ast.analysis%.%IAnswer%;
 import %org.overture.ast.analysis%.%IQuestion%;
 import %org.overture.ast.analysis%.%IQuestionAnswer%;
 
-public abstract class %Node% implements Cloneable
+public abstract class %Node% implements Cloneable, Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private %Node% parent;
 	
 	public @Override abstract Object clone();
@@ -177,7 +178,7 @@ public abstract class %Node% implements Cloneable
 		return clone;
 	}
 	
-	protected <T extends %Node%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list, java.util.Map<Node,Node> oldToNewMap) {
+	protected <T extends %Node%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list, java.util.Map<%Node%,%Node%> oldToNewMap) {
 		LinkedList<List<T>> clone = new LinkedList< List<T>>();
 		for(List<T> n : list) {
 			clone.add( cloneList(n,oldToNewMap));

@@ -1,5 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 
@@ -36,6 +39,17 @@ public class KindNodeMethod extends Method
 		// @Override public NodeEnum kindNode() {
 		// return NodeEnum._BINOP;
 		// }
+	}
+	
+	@Override
+	public Set<String> getRequiredImports()
+	{
+		Set<String> imports = new HashSet<String>();
+		imports.addAll(super.getRequiredImports());
+		
+		imports.add(env.getDefaultPackage()+".NodeEnum"+c.getNamePostfix());
+		
+		return imports;
 	}
 	
 	@Override

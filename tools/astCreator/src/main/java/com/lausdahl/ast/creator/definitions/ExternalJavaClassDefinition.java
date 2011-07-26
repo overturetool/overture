@@ -6,48 +6,50 @@ public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
 {
 	String name;
 	public final boolean extendsNode;
-	public ExternalJavaClassDefinition(String rawName ,
-			IClassDefinition superClass, ClassType type, String name,boolean extendsNode,Environment env)
+
+	public ExternalJavaClassDefinition(String rawName,
+			IClassDefinition superClass, ClassType type, String name,
+			boolean extendsNode, Environment env)
 	{
-		super(rawName, superClass, type,env);
+		super(rawName, superClass, type, env);
 		this.extendsNode = extendsNode;
-		if(name.contains("."))
+		if (name.contains("."))
 		{
-			setPackageName(name.substring(0,name.lastIndexOf(".")));
-			this.name=name.substring(name.lastIndexOf(".")+1);
-		}else
+			setPackageName(name.substring(0, name.lastIndexOf(".")));
+			this.name = name.substring(name.lastIndexOf(".") + 1);
+		} else
 		{
-		this.name = name;
+			this.name = name;
 		}
 	}
 
 	@Override
 	public String getName()
 	{
-		return name ;
+		return name;
 	}
 
 	@Override
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(StringBuilder sb)
 	{
 		return "";
 	}
 
 	@Override
-	public String getVdmSourceCode()
+	public String getVdmSourceCode(StringBuilder sb)
 	{
 		return "";
 	}
-	
+
 	@Override
 	public String toString()
 	{
-			return getName();
+		return getName();
 	}
-	
+
 	@Override
 	public boolean hasSuper()
 	{
-	return false;
+		return false;
 	}
 }

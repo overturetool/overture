@@ -12,17 +12,11 @@ public class EnumDefinition extends BaseClassDefinition
 		super(name);
 	}
 	
-	@Override
-	public String getName()
-	{
-		return super.getName();
-	}
+
 	
 	@Override
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(StringBuilder sb)
 	{
-		StringBuilder sb = new StringBuilder();
-
 		sb.append(IClassDefinition.classHeader + "\n");
 
 		if (getPackageName() != null)

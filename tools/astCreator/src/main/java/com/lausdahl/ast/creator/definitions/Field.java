@@ -343,6 +343,14 @@ public class Field
 				}
 			}
 		}
+		
+		for (IClassDefinition c : env.getClasses())
+		{
+			if(c.getName().equals(unresolvedTypeName))
+			{
+				return c;
+			}
+		}
 
 		return null;// "%" + type;
 	}
@@ -394,5 +402,19 @@ public class Field
 	public String getCast()
 	{
 		return "("+ getType()+")";
+	}
+	
+	/**
+	 * Only use this to merge unresolved fields
+	 * @return
+	 */
+	public String getUnresolvedType()
+	{
+		return this.unresolvedType;
+	}
+	
+	public void updateEnvironment(Environment env)
+	{
+		this.env = env;
 	}
 }

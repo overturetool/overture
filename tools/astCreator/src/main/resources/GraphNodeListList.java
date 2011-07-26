@@ -37,11 +37,11 @@ public class %GraphNodeListList%<E extends %Node%> extends %NodeListList%<E> {
 		//Don't change the structure for Graph fields
 	}
 	
-	public GraphNodeListList(%Node% parent) {
+	public %GraphNodeListList%(%Node% parent) {
 		super(null);
 	}
 	
-	public GraphNodeListList(%Node% parent, Collection<List<E>> c) {
+	public %GraphNodeListList%(%Node% parent, Collection<List<E>> c) {
 		this(parent);
 		addAll(c);
 	}

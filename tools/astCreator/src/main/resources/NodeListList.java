@@ -48,12 +48,12 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		}
 	}
 	
-	public NodeListList(%Node% parent) {
+	public %NodeListList%(%Node% parent) {
 		super();
 		this.parent = parent;
 	}
 	
-	public NodeListList(%Node% parent, Collection<List<E>> c) {
+	public %NodeListList%(%Node% parent, Collection<List<E>> c) {
 		this(parent);
 		addAll(c);
 	}

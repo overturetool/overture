@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.AstCreatorException;
+import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.methods.Method;
@@ -78,15 +79,15 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return imports;
 	}
 
-	@Override
-	public String toString()
-	{
-		return getJavaSourceCode();
-	}
+//	@Override
+//	public String toString()
+//	{
+//		return getJavaSourceCode();
+//	}
 
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(StringBuilder sb)
 	{
-		StringBuilder sb = new StringBuilder();
+		
 
 		sb.append(IClassDefinition.classHeader + "\n");
 
@@ -125,6 +126,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		}
 
 		sb.append("\n{");
+		
+		sb.append("\n\tprivate static final long serialVersionUID = 1L;\n");
 
 		for (Field f : fields)
 		{
@@ -181,10 +184,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return sb.toString();
 	}
 
-	public String getVdmSourceCode()
+	public String getVdmSourceCode(StringBuilder sb)
 	{
-		StringBuilder sb = new StringBuilder();
-
 		sb.append(IClassDefinition.classHeader + "\n");
 
 		if (getPackageName() != null)
@@ -447,5 +448,13 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			return true;
 		}
 		return false;
+	}
+
+	public void updateEnvironment(Environment env)
+	{
+		for (Field f : getFields())
+		{
+			f.updateEnvironment(env);
+		}
 	}
 }

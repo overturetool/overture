@@ -1,6 +1,8 @@
 package %generated.node%;
 
-public interface %ExternalNode% extends Cloneable
+import java.io.Serializable;
+
+public interface %ExternalNode% extends Cloneable, Serializable
 {
 	public Object clone();
 }

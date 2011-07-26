@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.ToStringAddOn;
 
 public class PredefinedClassDefinition implements IClassDefinition
@@ -20,146 +21,124 @@ public class PredefinedClassDefinition implements IClassDefinition
 		this.packageName = packageName;
 		this.name = name;
 	}
-	
-	public PredefinedClassDefinition(String packageName, String name,boolean frozenName)
+
+	public PredefinedClassDefinition(String packageName, String name,
+			boolean frozenName)
 	{
 		this.packageName = packageName;
 		this.name = name;
 		this.frozenName = frozenName;
 	}
 
-	
 	public Set<String> getImports()
 	{
 		return new HashSet<String>();
 	}
 
-	
 	public boolean isFinal()
 	{
 		return false;
 	}
 
-	
 	public boolean isAbstract()
 	{
 		return false;
 	}
 
-	
 	public String getPackageName()
 	{
 		return packageName;
 	}
 
-	
 	public void setPackageName(String packageName)
 	{
-
+		this.packageName = packageName;
 	}
 
-	
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(StringBuilder sb)
 	{
 		return "";
 	}
 
-	
-	public String getVdmSourceCode()
+	public String getVdmSourceCode(StringBuilder sb)
 	{
 		return "";
 	}
 
-	
 	public String getName()
 	{
-		return name + (frozenName?"":getNamePostfix());
+		return name + (frozenName ? "" : getNamePostfix());
 	}
 
-	
 	public String getSignatureName()
 	{
 		return getName();
 	}
 
-	
 	public String getSuperSignatureName()
 	{
 		return null;
 	}
 
-	
 	public List<Field> getFields()
 	{
 		return new Vector<Field>();
 	}
 
-	
 	public boolean hasSuper()
 	{
 		return false;
 	}
 
-	
 	public void addField(Field field)
 	{
 	}
 
-	
 	public void setNamePostfix(String postfix)
 	{
 		this.namePostfix = postfix;
 	}
 
-	
 	public String getNamePostfix()
 	{
 		return namePostfix;
 	}
 
-	
 	public IClassDefinition getSuperDef()
 	{
 		return null;
 	}
 
-	
 	public void setTag(String tag)
 	{
 		this.tag = tag;
 	}
 
-	
 	public String getTag()
 	{
 		return this.tag;
 	}
 
-	
 	public void setGenericArguments(IInterfaceDefinition... arguments)
 	{
-		
+
 	}
 
-	
 	public List<IInterfaceDefinition> getGenericArguments()
 	{
 		return new Vector<IInterfaceDefinition>();
 	}
 
-	
 	public void setGenericArguments(List<IInterfaceDefinition> arguments)
 	{
-		
+
 	}
 
-	
 	public void setAnnotation(String annotation)
 	{
-		
+
 	}
 
-	
 	public Set<IInterfaceDefinition> getInterfaces()
 	{
 		return new HashSet<IInterfaceDefinition>();
@@ -167,7 +146,7 @@ public class PredefinedClassDefinition implements IClassDefinition
 
 	public void addToStringAddOn(ToStringAddOn addon)
 	{
-		
+
 	}
 
 	public List<ToStringAddOn> getToStringAddOns()
@@ -182,7 +161,7 @@ public class PredefinedClassDefinition implements IClassDefinition
 
 	public boolean hasField(String name)
 	{
-		return false;//We don't know.
+		return false;// We don't know.
 	}
 
 	public boolean refinesField(String name)
@@ -201,6 +180,11 @@ public class PredefinedClassDefinition implements IClassDefinition
 	}
 
 	public void checkFieldTypeHierarchy()
+	{
+
+	}
+
+	public void updateEnvironment(Environment environment)
 	{
 		
 	}

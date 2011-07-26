@@ -7,30 +7,39 @@ import java.util.Vector;
 
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
-import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
+import com.lausdahl.ast.creator.methods.CheckCacheMethod;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.analysis.CopyNode2ExtendedNode;
 import com.lausdahl.ast.creator.methods.analysis.CopyNode2ExtendedNodeListHelper;
+import com.lausdahl.ast.creator.methods.analysis.CopyNode2ExtendedNodeListListHelper;
 
 public class Main
 {
+	public enum RunType
+	{
+		OvertureII, OvertureII_Interpreter, Test
+	}
+
 	/**
 	 * Set this to false to generate the overture II AST
 	 */
-	public static final boolean test = false;
+	public static boolean test = false;
 
-	public static final boolean extend = false;
-
-	private static final String INPUT_FILENAME_OVERTURE_II =  ".."+ File.separator+".."+File.separator+"core"+File.separator+"ast"+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"overtureII.astv2";
-//	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\test.astV2";
-	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\testFieldRefine.astV2";
-	
-	private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\testExtended.astV2";
+	private static final String INPUT_FILENAME_OVERTURE_II = "..\\..\\core\\ast\\src\\main\\resources\\overtureII.astv2".replace('\\', File.separatorChar);
+	private static final String INPUT_FILENAME_OVERTURE_II_INTERPRETER = "..\\..\\core\\interpreter\\src\\main\\resources\\overtureII.astv2".replace('\\', File.separatorChar);
+	private static final String INPUT_FILENAME_TEST = "src\\main\\resources\\testdata\\test.astV2";
+//	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\extend\\t1.astV2";
+//
+//	private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\extend\\t2.astV2";
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
-	private static File generated = new File(".."+File.separator+".."+File.separator+"ast"+File.separator+"src"+File.separator);
+	private static File generated = null;
+
+	public final static RunType run = RunType.OvertureII_Interpreter;
 
 	/**
 	 * @param args
@@ -38,41 +47,94 @@ public class Main
 	 */
 	public static void main(String[] args) throws Exception
 	{
+		String input1 = null;
+		String input2 = null;
+		String output = null;
+		switch (run)
+		{
+			case OvertureII:
+				output = "..\\..\\core\\ast\\src\\main\\java\\";
+				input1 = INPUT_FILENAME_OVERTURE_II;
+				input2 = null;
+				break;
+			case OvertureII_Interpreter:
+				output = "..\\..\\core\\interpreter\\src\\main\\java\\";
+				input1 = INPUT_FILENAME_OVERTURE_II;
+				input2 = INPUT_FILENAME_OVERTURE_II_INTERPRETER;
+				break;
+			case Test:
+				output = "..\\..\\astTest\\src\\";
+				input1 = INPUT_FILENAME_TEST;
+				input2 = null;
+				test = true;
+				break;
+
+		}
 		try
 		{
-			if (!test)
+			input1 = input1.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+			if (input2 != null)
 			{
-				System.out.println("Running with overture II");
-				generated = new File(".."+File.separator+".."+File.separator+"core"+File.separator+"ast"+File.separator+"src"+File.separator+"main"+File.separator+"java"+File.separator);
-				System.out.println("Generator starting with input: "
-						+ INPUT_FILENAME_OVERTURE_II);
-				String defaultPackage = "org.overture.ast.node";
-				String analysisPackage = "org.overture.ast.analysis";
-				Environment env1 = create(INPUT_FILENAME_OVERTURE_II, defaultPackage, analysisPackage, "", generated, true);
-				System.out.println("\n\nGenerator completed with "
-						+ env1.getAllDefinitions().size()
-						+ " generated files.\n\n");
-			} else
-			{
-				System.out.println("TESTING...");
-				generated = new File("..\\..\\astTest\\src\\");
-				System.out.println("Generator starting with input: "
-						+ INPUT_FILENAME);
-				String defaultPackage = "org.overture.ast.node";
-				String analysisPackage = "org.overture.ast.analysis";
-				Environment env1 = create(INPUT_FILENAME, defaultPackage, analysisPackage, "", generated, true);
-
-				if (extend)
-				{
-					defaultPackage = "org.overture.interpreter.ast.node";
-					analysisPackage = "org.overture.interpreter.ast.analysis";
-					String extendName = "Interpreter";
-					Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName, generated, true);
-
-					createCopyAdaptor(env1, env2, defaultPackage, extendName, generated);
-				}
-				System.out.println("TESTING...DONE.");
+				input2 = input2.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 			}
+			generated = new File(output.replace('/', File.separatorChar).replace('\\', File.separatorChar));
+
+			
+			System.out.println("Output location set to: "+ generated.getAbsolutePath());
+			switch (run)
+			{
+				case OvertureII:
+				{
+						System.out.println("Generator starting with input: "
+							+ input1);
+
+					Environment env1 = create(input1, generated, true);
+					System.out.println("\n\nGenerator completed with "
+							+ env1.getAllDefinitions().size()
+							+ " generated files.\n\n");
+				}
+					break;
+				case OvertureII_Interpreter:
+				{
+					System.out.println("Generator starting with input: "
+							+ input1);
+					Main.create(new File(input1), new File(input2), generated, "Interpreter");
+					System.out.println("Done.");
+				}
+					break;
+				case Test:
+				{
+					System.out.println("TESTING...");
+					// Main.create(new File(INPUT_FILENAME), new File(INPUT_FILENAME2), generated, "Interpreter");
+					// System.out.println("Generator starting with input: "
+					// + INPUT_FILENAME);
+					// // String defaultPackage = "org.overture.ast.node";
+					// // String analysisPackage = "org.overture.ast.analysis";
+					// Environment env1 = create(INPUT_FILENAME, generated, true);
+					//
+					// if (extend)
+					// {
+					// // defaultPackage = "org.overture.interpreter.ast.node";
+					// // analysisPackage = "org.overture.interpreter.ast.analysis";
+					// String extendName = "Interpreter";
+					// // Environment env2 = create(INPUT_FILENAME2, defaultPackage, analysisPackage, extendName,
+					// // generated, true);
+					// Generator generator = new Generator();
+					// Environment env2 = generator.generate(INPUT_FILENAME);
+					// Environment env2Extension = generator.generate(INPUT_FILENAME2);
+					// env2 = env2.extendWith(env2Extension);
+					// generator.runPostGeneration(env2);
+					// setExtendName(env2, extendName);
+					//
+					// SourceFileWriter.write(generated, env2);
+					//
+					// createCopyAdaptor(env1, env2, extendName, generated);
+					// }
+					System.out.println("TESTING...DONE.");
+				}
+					break;
+			}
+
 		} catch (AstCreatorException e)
 		{
 			System.err.println();
@@ -81,34 +143,68 @@ public class Main
 
 	}
 
-	public static Environment create(String inputFile, String defaultPackage,
-			String analysisPackage, String extendName, File outputBase,
+	public static Environment create(String inputFile, File outputBase,
 			boolean write) throws IOException, InstantiationException,
 			IllegalAccessException, AstCreatorException
 	{
-		Environment env = new Generator().generate(inputFile, defaultPackage, analysisPackage);
+		Generator generator = new Generator();
+		Environment env = generator.generate(inputFile);
+		generator.runPostGeneration(env);
 
+		if (write)
+		{
+			SourceFileWriter.write(outputBase, env);
+		}
+		return env;
+	}
+
+	public static void create(File ast1, File ast2, File generated,
+			String extendName) throws Exception
+	{
+		System.out.println("TESTING...");
+
+		System.out.println("Generator starting with input: " + ast1);
+		Environment env1 = create(ast1.getAbsolutePath(), generated, false);
+
+		System.out.println("Generator starting with input: " + ast2);
+		Generator generator = new Generator();
+		Environment env2 = generator.generate(ast1.getAbsolutePath());
+		Environment env2Extension = generator.generate(ast2.getAbsolutePath());
+		env2 = env2.extendWith(env2Extension);
+
+		setExtendName(env2, extendName);
+		generator.runPostGeneration(env2);
+		setExtendName(env2, extendName);
+
+		SourceFileWriter.write(generated, env2);
+
+		createCopyAdaptor(env1, env2, extendName, generated);
+
+	}
+
+	public static void setExtendName(Environment env, String extendName)
+	{
 		String namePostfix = extendName == null ? "" : extendName;
 		for (IInterfaceDefinition def : env.getAllDefinitions())
 		{
 			def.setNamePostfix(namePostfix);
 		}
-		if (write)
-		{
-			SourceFileWriter.write(outputBase, env, defaultPackage, analysisPackage);
-		}
-		return env;
 	}
 
 	public static void createCopyAdaptor(Environment source,
-			Environment destination, String defaultPackage, String namePostfix,
-			File outputFolder) throws Exception
+			Environment destination, String namePostfix, File outputFolder)
+			throws Exception
 	{
+		CustomClassDefinition convertFactory = new CustomClassDefinition("ConvertFactory", destination);
+		convertFactory.setNamePostfix(namePostfix);
+		convertFactory.setPackageName(destination.getDefaultPackage());
+		convertFactory.isAbstract = true;
+
 		List<Method> methods = new Vector<Method>();
 		for (CommonTreeClassDefinition c : Generator.getClasses(source.getClasses()))
 		{
 			if (c.getType() == IClassDefinition.ClassType.Production
-					|| c.getType() == ClassType.SubProduction)
+			/* || c.getType() == ClassType.SubProduction */)
 			{
 				continue;
 			}
@@ -128,7 +224,7 @@ public class Main
 				System.err.println(destination);
 				throw new Exception("Tree match error on copy");
 			}
-			Method m = new CopyNode2ExtendedNode(c, destDef, source, destination);
+			Method m = new CopyNode2ExtendedNode(c, destDef, source, destination, convertFactory);
 			m.setClassDefinition(c);
 			m.setEnvironment(source);
 			methods.add(m);
@@ -136,17 +232,33 @@ public class Main
 		}
 
 		CustomClassDefinition copyAdaptor = new CustomClassDefinition("CopyAdaptor", destination);
-		copyAdaptor.setAnnotation("@SuppressWarnings(\"unused\")");
-		copyAdaptor.setPackageName(defaultPackage);
+		Field converFactoryField = new Field(destination);
+		converFactoryField.name = "factory";
+		converFactoryField.type = convertFactory;
+		copyAdaptor.addField(converFactoryField);
+
+		Field cacheField = new Field(destination);
+		cacheField.name = "cache";
+		cacheField.setType("Hashtable");
+		destination.addClass(new PredefinedClassDefinition("java.util", "Hashtable", true));
+		copyAdaptor.addField(cacheField);
+
+		copyAdaptor.setAnnotation("@SuppressWarnings({\"unused\",\"unchecked\",\"rawtypes\"})");
+		copyAdaptor.setPackageName(destination.getDefaultPackage());
 		// copyAdaptor.interfaces.add(source.getTaggedDef(destination.TAG_IAnswer).getSignatureName()+"<"+destination.node.getSignatureName()+">");
 		copyAdaptor.interfaces.add(new GenericArgumentedIInterfceDefinition(source.getTaggedDef(destination.TAG_IAnswer), destination.node));
 		copyAdaptor.methods.addAll(methods);
 		copyAdaptor.methods.add(new CopyNode2ExtendedNodeListHelper(source, destination));
-		copyAdaptor.imports.addAll(source.getAllDefinitions());
-		copyAdaptor.imports.addAll(destination.getAllDefinitions());
+		copyAdaptor.methods.add(new CopyNode2ExtendedNodeListListHelper(source, destination));
+		copyAdaptor.methods.add(new CheckCacheMethod(copyAdaptor, destination));
+		// copyAdaptor.methods.add(new ConstructorMethod(copyAdaptor,destination));
+		// copyAdaptor.imports.addAll(source.getAllDefinitions());
+		// copyAdaptor.imports.addAll(destination.getAllDefinitions());
 		copyAdaptor.setNamePostfix(namePostfix);
 		destination.addClass(copyAdaptor);
 		SourceFileWriter.write(outputFolder, copyAdaptor);
+		SourceFileWriter.write(outputFolder, convertFactory);
+
 	}
 
 }

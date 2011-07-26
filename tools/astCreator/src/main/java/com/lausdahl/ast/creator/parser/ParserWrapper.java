@@ -127,14 +127,14 @@ public abstract class ParserWrapper<T>
 			msg = "mismatched character "+lexer.getCharErrorDisplay(e.c)+" expecting "+lexer.getCharErrorDisplay(mte.expecting);
 		}
 		else if ( e instanceof NoViableAltException ) {
-			NoViableAltException nvae = (NoViableAltException)e;
+//			NoViableAltException nvae = (NoViableAltException)e;
 			// for development, can add "decision=<<"+nvae.grammarDecisionDescription+">>"
 			// and "(decision="+nvae.decisionNumber+") and
 			// "state "+nvae.stateNumber
 			msg = "no viable alternative at character "+lexer.getCharErrorDisplay(e.c);
 		}
 		else if ( e instanceof EarlyExitException ) {
-			EarlyExitException eee = (EarlyExitException)e;
+//			EarlyExitException eee = (EarlyExitException)e;
 			// for development, can add "(decision="+eee.decisionNumber+")"
 			msg = "required (...)+ loop did not match anything at character "+lexer.getCharErrorDisplay(e.c);
 		}

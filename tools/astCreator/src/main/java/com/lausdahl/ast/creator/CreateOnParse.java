@@ -23,10 +23,10 @@ import com.lausdahl.ast.creator.parser.AstcParser;
 
 public class CreateOnParse
 {
-	public Environment parse(String astFile, String defaultPackage)
+	public Environment parse(String astFile)
 			throws IOException, AstCreatorException
 	{
-		Environment env = new Environment(defaultPackage);
+		Environment env = new Environment();
 
 		ANTLRFileStream input = new ANTLRFileStream(astFile);
 		AstcLexer lexer = new AstcLexer(input);
@@ -66,7 +66,7 @@ public class CreateOnParse
 							{
 								CommonTree p = (CommonTree) production;
 								CommonTree nameNode = (CommonTree) p.getChildren().get(0);
-								String packageName = defaultPackage;
+								String packageName = env.getDefaultPackage();
 
 								IClassDefinition c = null;
 								if (nameNode.getText().equals("#"))
@@ -85,7 +85,7 @@ public class CreateOnParse
 								} else
 								{
 									c = new CommonTreeClassDefinition(nameNode.getText(), null, CommonTreeClassDefinition.ClassType.Production, env);
-									c.setPackageName(defaultPackage);
+									c.setPackageName(env.getDefaultPackage());
 								}
 
 								boolean foundNameNode = true;
@@ -120,7 +120,7 @@ public class CreateOnParse
 												&& aa.getText().equals("ALTERNATIVE_SUB_ROOT"))
 										{
 											CommonTreeClassDefinition subAlternativeClassDef = new CommonTreeClassDefinition(aa.getChild(0).getText(), c, CommonTreeClassDefinition.ClassType.SubProduction, env);
-											subAlternativeClassDef.setPackageName(defaultPackage);
+											subAlternativeClassDef.setPackageName(env.getDefaultPackage());
 										} else
 										{
 											exstractA(c, aa, env, packageName);
@@ -129,7 +129,8 @@ public class CreateOnParse
 								}
 							}
 						}
-					} else if (node.getText().equals("Tokens") && node.getChildCount()>0)
+					} else if (node.getText().equals("Tokens")
+							&& node.getChildCount() > 0)
 					{
 						for (Object toke : node.getChildren())
 						{
@@ -170,7 +171,7 @@ public class CreateOnParse
 								if (!externalJavaType)
 								{
 									c = new CommonTreeClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, env);
-									c.setPackageName(defaultPackage + ".tokens");
+									c.setPackageName(env.getDefaultPackage() + ".tokens");
 								} else if (enumType)
 								{
 									c = new ExternalEnumJavaClassDefinition(p.getText(), null, CommonTreeClassDefinition.ClassType.Token, idT.getText(), env);
@@ -217,8 +218,42 @@ public class CreateOnParse
 										f.isAspect = true;
 										c.addField(f);
 									}
-									
+
 									println("Aspect Decleration: " + p);
+								}
+							}
+						}
+					} else if (node.getText() != null
+							&& node.getText().equals("Packages"))
+					{
+						if (node.getChildren() != null)
+						{
+							for (Object toke : node.getChildren())
+							{
+								if (toke instanceof CommonTree)
+								{
+									CommonTree p = (CommonTree) toke;
+									if (p.getText() != null
+											&& p.getText().equals("base")
+											&& node.getChildCount() > p.getChildIndex() + 1)
+									{
+										Object n = node.getChild(p.getChildIndex() + 1);
+										if (n instanceof CommonTree)
+										{
+											env.setDefaultPackages(((CommonTree) n).getText());
+											continue;
+										}
+									}else if (p.getText() != null
+											&& p.getText().equals("analysis")
+											&& node.getChildCount() > p.getChildIndex() + 1)
+									{
+										Object n = node.getChild(p.getChildIndex() + 1);
+										if (n instanceof CommonTree)
+										{
+											env.setAnalysisPackages(((CommonTree) n).getText());
+											continue;
+										}
+									}
 								}
 							}
 						}
@@ -301,53 +336,6 @@ public class CreateOnParse
 			{
 				if (f instanceof CommonTree)
 				{
-					// CommonTree fTree = (CommonTree) f;
-					// Field field = new Field(env);
-					// String typeName = fTree.getText();
-					//
-					// int SYMBOL_POS = 0;
-					// int NAME_POS = 1;
-					// if (fTree.getChildCount() > 1
-					// && fTree.getChild(NAME_POS) != null)
-					// {
-					// field.name = fTree.getChild(NAME_POS).getText();
-					// if (fTree.getChild(SYMBOL_POS) != null
-					// && fTree.getChild(SYMBOL_POS).getText().equals("("))
-					// {
-					// field.structureType = Field.StructureType.Graph;
-					// }
-					// }
-					// int REPEAT_POS = 2;
-					// if (fTree.getChildCount() > 2)
-					// {
-					// if (fTree.getChild(1) != null)
-					// {
-					// String regex = fTree.getChild(REPEAT_POS).getText();
-					// if (regex.trim().equals("*"))
-					// {
-					// field.isList = true;
-					// }
-					// if (regex.trim().equals("**"))
-					// {
-					// field.isList = true;
-					// field.isDoubleList = true;
-					// }
-					// }
-					// }
-					//
-					// for (IClassDefinition cl : env.getClasses())
-					// {
-					// if (cl instanceof ExternalJavaClassDefinition
-					// && ((ExternalJavaClassDefinition) cl).rawName.equals(typeName))
-					// {
-					// field.isTokenField = true;
-					// field.type = cl;// TODO
-					// }
-					// }
-					// if (field.type == null)
-					// {
-					// field.setType(typeName);
-					// }
 					Field field = exstractField((CommonTree) f, env);
 					c.addField(field);
 

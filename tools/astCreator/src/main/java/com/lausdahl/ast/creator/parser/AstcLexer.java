@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-18 12:11:34
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-22 11:56:59
   
 package com.lausdahl.ast.creator.parser;
 
@@ -19,28 +19,33 @@ public class AstcLexer extends Lexer {
     public static final int T__22=22;
     public static final int T__21=21;
     public static final int T__20=20;
-    public static final int TOKENS=7;
-    public static final int NormalChar=16;
-    public static final int ID=12;
-    public static final int ASPECT_DCL=8;
+    public static final int TOKENS=8;
+    public static final int NormalChar=17;
+    public static final int ID=13;
+    public static final int ASPECT_DCL=9;
     public static final int EOF=-1;
     public static final int COLON=5;
     public static final int T__30=30;
     public static final int T__19=19;
     public static final int T__31=31;
-    public static final int QUOTE=10;
+    public static final int QUOTE=11;
     public static final int T__32=32;
     public static final int T__33=33;
-    public static final int WS=14;
-    public static final int ESC_SEQ=15;
-    public static final int T__18=18;
-    public static final int JAVANAME=13;
+    public static final int WS=15;
+    public static final int ESC_SEQ=16;
+    public static final int T__34=34;
+    public static final int T__35=35;
+    public static final int T__36=36;
+    public static final int JAVANAME=14;
     public static final int ASSIGN=4;
-    public static final int SpecialChar=17;
-    public static final int AST=6;
-    public static final int COMMENT=11;
-    public static final int FIELD_DCL=9;
+    public static final int SpecialChar=18;
+    public static final int PACKAGES=6;
+    public static final int AST=7;
+    public static final int COMMENT=12;
+    public static final int FIELD_DCL=10;
 
+        @SuppressWarnings({ "unused", "rawtypes" })
+        private Stack myStack = null;
         private boolean mMessageCollectionEnabled = false;
         private boolean mHasErrors = false;
        
@@ -140,8 +145,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = ASSIGN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:92:8: ( '=' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:92:10: '='
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:94:8: ( '=' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:94:10: '='
             {
             match('='); 
 
@@ -160,8 +165,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = COLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:93:7: ( ':' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:93:9: ':'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:95:7: ( ':' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:95:9: ':'
             {
             match(':'); 
 
@@ -175,13 +180,34 @@ public class AstcLexer extends Lexer {
     }
     // $ANTLR end "COLON"
 
+    // $ANTLR start "PACKAGES"
+    public final void mPACKAGES() throws RecognitionException {
+        try {
+            int _type = PACKAGES;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:96:10: ( 'Packages' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:96:12: 'Packages'
+            {
+            match("Packages"); 
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "PACKAGES"
+
     // $ANTLR start "AST"
     public final void mAST() throws RecognitionException {
         try {
             int _type = AST;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:94:5: ( 'Abstract Syntax Tree' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:94:7: 'Abstract Syntax Tree'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:97:5: ( 'Abstract Syntax Tree' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:97:7: 'Abstract Syntax Tree'
             {
             match("Abstract Syntax Tree"); 
 
@@ -201,8 +227,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = TOKENS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:95:8: ( 'Tokens' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:95:10: 'Tokens'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:98:8: ( 'Tokens' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:98:10: 'Tokens'
             {
             match("Tokens"); 
 
@@ -222,8 +248,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = ASPECT_DCL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:96:12: ( 'Aspect Declaration' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:96:14: 'Aspect Declaration'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:99:12: ( 'Aspect Declaration' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:99:14: 'Aspect Declaration'
             {
             match("Aspect Declaration"); 
 
@@ -243,8 +269,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = FIELD_DCL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:97:11: ( '->' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:97:13: '->'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:100:11: ( '->' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:100:13: '->'
             {
             match("->"); 
 
@@ -259,35 +285,16 @@ public class AstcLexer extends Lexer {
     }
     // $ANTLR end "FIELD_DCL"
 
-    // $ANTLR start "T__18"
-    public final void mT__18() throws RecognitionException {
-        try {
-            int _type = T__18;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:98:7: ( ';' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:98:9: ';'
-            {
-            match(';'); 
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "T__18"
-
     // $ANTLR start "T__19"
     public final void mT__19() throws RecognitionException {
         try {
             int _type = T__19;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:99:7: ( '%' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:99:9: '%'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:101:7: ( 'base' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:101:9: 'base'
             {
-            match('%'); 
+            match("base"); 
+
 
             }
 
@@ -304,10 +311,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:100:7: ( '|' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:100:9: '|'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:102:7: ( ';' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:102:9: ';'
             {
-            match('|'); 
+            match(';'); 
 
             }
 
@@ -324,10 +331,11 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__21;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:101:7: ( '#' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:101:9: '#'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:103:7: ( 'analysis' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:103:9: 'analysis'
             {
-            match('#'); 
+            match("analysis"); 
+
 
             }
 
@@ -344,10 +352,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__22;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:102:7: ( '{' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:102:9: '{'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:104:7: ( '%' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:104:9: '%'
             {
-            match('{'); 
+            match('%'); 
 
             }
 
@@ -364,10 +372,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__23;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:103:7: ( '}' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:103:9: '}'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:105:7: ( '|' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:105:9: '|'
             {
-            match('}'); 
+            match('|'); 
 
             }
 
@@ -384,10 +392,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:104:7: ( '[' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:104:9: '['
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:106:7: ( '#' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:106:9: '#'
             {
-            match('['); 
+            match('#'); 
 
             }
 
@@ -404,10 +412,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:105:7: ( ']' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:105:9: ']'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:107:7: ( '{' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:107:9: '{'
             {
-            match(']'); 
+            match('{'); 
 
             }
 
@@ -424,10 +432,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:106:7: ( '(' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:106:9: '('
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:108:7: ( '}' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:108:9: '}'
             {
-            match('('); 
+            match('}'); 
 
             }
 
@@ -444,10 +452,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:107:7: ( ')' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:107:9: ')'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:109:7: ( '[' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:109:9: '['
             {
-            match(')'); 
+            match('['); 
 
             }
 
@@ -464,10 +472,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:108:7: ( '?' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:108:9: '?'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:110:7: ( ']' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:110:9: ']'
             {
-            match('?'); 
+            match(']'); 
 
             }
 
@@ -484,10 +492,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:109:7: ( '*' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:109:9: '*'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:111:7: ( '(' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:111:9: '('
             {
-            match('*'); 
+            match('('); 
 
             }
 
@@ -504,11 +512,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:110:7: ( '**' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:110:9: '**'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:112:7: ( ')' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:112:9: ')'
             {
-            match("**"); 
-
+            match(')'); 
 
             }
 
@@ -525,10 +532,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:111:7: ( '+' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:111:9: '+'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:113:7: ( '?' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:113:9: '?'
             {
-            match('+'); 
+            match('?'); 
 
             }
 
@@ -545,11 +552,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:112:7: ( '||' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:112:9: '||'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:114:7: ( '*' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:114:9: '*'
             {
-            match("||"); 
-
+            match('*'); 
 
             }
 
@@ -566,10 +572,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:113:7: ( '&&' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:113:9: '&&'
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:115:7: ( '**' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:115:9: '**'
             {
-            match("&&"); 
+            match("**"); 
 
 
             }
@@ -582,13 +588,75 @@ public class AstcLexer extends Lexer {
     }
     // $ANTLR end "T__33"
 
+    // $ANTLR start "T__34"
+    public final void mT__34() throws RecognitionException {
+        try {
+            int _type = T__34;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:116:7: ( '+' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:116:9: '+'
+            {
+            match('+'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__34"
+
+    // $ANTLR start "T__35"
+    public final void mT__35() throws RecognitionException {
+        try {
+            int _type = T__35;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:117:7: ( '||' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:117:9: '||'
+            {
+            match("||"); 
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__35"
+
+    // $ANTLR start "T__36"
+    public final void mT__36() throws RecognitionException {
+        try {
+            int _type = T__36;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:118:7: ( '&&' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:118:9: '&&'
+            {
+            match("&&"); 
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__36"
+
     // $ANTLR start "QUOTE"
     public final void mQUOTE() throws RecognitionException {
         try {
             int _type = QUOTE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:189:9: ( '\\'' )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:189:16: '\\''
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:9: ( '\\'' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:16: '\\''
             {
             match('\''); 
 
@@ -607,7 +675,7 @@ public class AstcLexer extends Lexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:5: ( '--' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )? | '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )? | '/*' ( options {greedy=false; } : . )* '*/' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:5: ( '--' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )? | '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )? | '/*' ( options {greedy=false; } : . )* '*/' )
             int alt8=3;
             int LA8_0 = input.LA(1);
 
@@ -638,11 +706,11 @@ public class AstcLexer extends Lexer {
             }
             switch (alt8) {
                 case 1 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:9: '--' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )?
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:9: '--' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )?
                     {
                     match("--"); 
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:14: (~ ( '\\n' | '\\r' ) )*
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:14: (~ ( '\\n' | '\\r' ) )*
                     loop1:
                     do {
                         int alt1=2;
@@ -655,7 +723,7 @@ public class AstcLexer extends Lexer {
 
                         switch (alt1) {
                     	case 1 :
-                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:14: ~ ( '\\n' | '\\r' )
+                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:14: ~ ( '\\n' | '\\r' )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -675,7 +743,7 @@ public class AstcLexer extends Lexer {
                         }
                     } while (true);
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:28: ( '\\r' )?
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:28: ( '\\r' )?
                     int alt2=2;
                     int LA2_0 = input.LA(1);
 
@@ -684,7 +752,7 @@ public class AstcLexer extends Lexer {
                     }
                     switch (alt2) {
                         case 1 :
-                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:28: '\\r'
+                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:28: '\\r'
                             {
                             match('\r'); 
 
@@ -693,7 +761,7 @@ public class AstcLexer extends Lexer {
 
                     }
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:34: ( '\\n' )?
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:34: ( '\\n' )?
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
@@ -702,7 +770,7 @@ public class AstcLexer extends Lexer {
                     }
                     switch (alt3) {
                         case 1 :
-                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:192:34: '\\n'
+                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:195:34: '\\n'
                             {
                             match('\n'); 
 
@@ -716,11 +784,11 @@ public class AstcLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:9: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )?
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:9: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? ( '\\n' )?
                     {
                     match("//"); 
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:14: (~ ( '\\n' | '\\r' ) )*
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:14: (~ ( '\\n' | '\\r' ) )*
                     loop4:
                     do {
                         int alt4=2;
@@ -733,7 +801,7 @@ public class AstcLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:14: ~ ( '\\n' | '\\r' )
+                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:14: ~ ( '\\n' | '\\r' )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -753,7 +821,7 @@ public class AstcLexer extends Lexer {
                         }
                     } while (true);
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:28: ( '\\r' )?
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:28: ( '\\r' )?
                     int alt5=2;
                     int LA5_0 = input.LA(1);
 
@@ -762,7 +830,7 @@ public class AstcLexer extends Lexer {
                     }
                     switch (alt5) {
                         case 1 :
-                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:28: '\\r'
+                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:28: '\\r'
                             {
                             match('\r'); 
 
@@ -771,7 +839,7 @@ public class AstcLexer extends Lexer {
 
                     }
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:34: ( '\\n' )?
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:34: ( '\\n' )?
                     int alt6=2;
                     int LA6_0 = input.LA(1);
 
@@ -780,7 +848,7 @@ public class AstcLexer extends Lexer {
                     }
                     switch (alt6) {
                         case 1 :
-                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:193:34: '\\n'
+                            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:196:34: '\\n'
                             {
                             match('\n'); 
 
@@ -794,11 +862,11 @@ public class AstcLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:194:9: '/*' ( options {greedy=false; } : . )* '*/'
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:197:9: '/*' ( options {greedy=false; } : . )* '*/'
                     {
                     match("/*"); 
 
-                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:194:14: ( options {greedy=false; } : . )*
+                    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:197:14: ( options {greedy=false; } : . )*
                     loop7:
                     do {
                         int alt7=2;
@@ -823,7 +891,7 @@ public class AstcLexer extends Lexer {
 
                         switch (alt7) {
                     	case 1 :
-                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:194:42: .
+                    	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:197:42: .
                     	    {
                     	    matchAny(); 
 
@@ -856,8 +924,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:197:5: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:197:7: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:200:5: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:200:7: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -868,7 +936,7 @@ public class AstcLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:197:31: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:200:31: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
             loop9:
             do {
                 int alt9=2;
@@ -917,11 +985,11 @@ public class AstcLexer extends Lexer {
         try {
             int _type = JAVANAME;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:201:3: ( ID ( '.' ID )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:201:5: ID ( '.' ID )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:3: ( ID ( '.' ID )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:5: ID ( '.' ID )*
             {
             mID(); 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:201:8: ( '.' ID )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:8: ( '.' ID )*
             loop10:
             do {
                 int alt10=2;
@@ -934,7 +1002,7 @@ public class AstcLexer extends Lexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:201:9: '.' ID
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:9: '.' ID
             	    {
             	    match('.'); 
             	    mID(); 
@@ -963,8 +1031,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:5: ( ( ' ' | '\\t' | '\\r' | '\\n' ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:9: ( ' ' | '\\t' | '\\r' | '\\n' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:207:5: ( ( ' ' | '\\t' | '\\r' | '\\n' ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:207:9: ( ' ' | '\\t' | '\\r' | '\\n' )
             {
             if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
                 input.consume();
@@ -990,8 +1058,8 @@ public class AstcLexer extends Lexer {
     // $ANTLR start "ESC_SEQ"
     public final void mESC_SEQ() throws RecognitionException {
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:213:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:213:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:216:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:216:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' )
             {
             match('\\'); 
             if ( input.LA(1)=='\"'||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -1017,7 +1085,7 @@ public class AstcLexer extends Lexer {
         try {
             int _type = SpecialChar;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:296:5: ( '\"' | '\\\\' | '$' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:303:5: ( '\"' | '\\\\' | '$' )
             // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:
             {
             if ( input.LA(1)=='\"'||input.LA(1)=='$'||input.LA(1)=='\\' ) {
@@ -1045,10 +1113,10 @@ public class AstcLexer extends Lexer {
         try {
             int _type = NormalChar;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:299:5: (~ SpecialChar )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:299:10: ~ SpecialChar
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:306:5: (~ SpecialChar )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:306:10: ~ SpecialChar
             {
-            if ( (input.LA(1)>='\u0000' && input.LA(1)<='\u0010')||(input.LA(1)>='\u0012' && input.LA(1)<='\uFFFF') ) {
+            if ( (input.LA(1)>='\u0000' && input.LA(1)<='\u0011')||(input.LA(1)>='\u0013' && input.LA(1)<='\uFFFF') ) {
                 input.consume();
 
             }
@@ -1069,8 +1137,8 @@ public class AstcLexer extends Lexer {
     // $ANTLR end "NormalChar"
 
     public void mTokens() throws RecognitionException {
-        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:8: ( ASSIGN | COLON | AST | TOKENS | ASPECT_DCL | FIELD_DCL | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | QUOTE | COMMENT | ID | JAVANAME | WS | SpecialChar | NormalChar )
-        int alt11=29;
+        // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:8: ( ASSIGN | COLON | PACKAGES | AST | TOKENS | ASPECT_DCL | FIELD_DCL | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | QUOTE | COMMENT | ID | JAVANAME | WS | SpecialChar | NormalChar )
+        int alt11=32;
         alt11 = dfa11.predict(input);
         switch (alt11) {
             case 1 :
@@ -1088,189 +1156,210 @@ public class AstcLexer extends Lexer {
                 }
                 break;
             case 3 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:23: AST
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:23: PACKAGES
+                {
+                mPACKAGES(); 
+
+                }
+                break;
+            case 4 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:32: AST
                 {
                 mAST(); 
 
                 }
                 break;
-            case 4 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:27: TOKENS
+            case 5 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:36: TOKENS
                 {
                 mTOKENS(); 
 
                 }
                 break;
-            case 5 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:34: ASPECT_DCL
+            case 6 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:43: ASPECT_DCL
                 {
                 mASPECT_DCL(); 
 
                 }
                 break;
-            case 6 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:45: FIELD_DCL
+            case 7 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:54: FIELD_DCL
                 {
                 mFIELD_DCL(); 
 
                 }
                 break;
-            case 7 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:55: T__18
-                {
-                mT__18(); 
-
-                }
-                break;
             case 8 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:61: T__19
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:64: T__19
                 {
                 mT__19(); 
 
                 }
                 break;
             case 9 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:67: T__20
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:70: T__20
                 {
                 mT__20(); 
 
                 }
                 break;
             case 10 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:73: T__21
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:76: T__21
                 {
                 mT__21(); 
 
                 }
                 break;
             case 11 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:79: T__22
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:82: T__22
                 {
                 mT__22(); 
 
                 }
                 break;
             case 12 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:85: T__23
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:88: T__23
                 {
                 mT__23(); 
 
                 }
                 break;
             case 13 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:91: T__24
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:94: T__24
                 {
                 mT__24(); 
 
                 }
                 break;
             case 14 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:97: T__25
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:100: T__25
                 {
                 mT__25(); 
 
                 }
                 break;
             case 15 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:103: T__26
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:106: T__26
                 {
                 mT__26(); 
 
                 }
                 break;
             case 16 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:109: T__27
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:112: T__27
                 {
                 mT__27(); 
 
                 }
                 break;
             case 17 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:115: T__28
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:118: T__28
                 {
                 mT__28(); 
 
                 }
                 break;
             case 18 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:121: T__29
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:124: T__29
                 {
                 mT__29(); 
 
                 }
                 break;
             case 19 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:127: T__30
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:130: T__30
                 {
                 mT__30(); 
 
                 }
                 break;
             case 20 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:133: T__31
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:136: T__31
                 {
                 mT__31(); 
 
                 }
                 break;
             case 21 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:139: T__32
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:142: T__32
                 {
                 mT__32(); 
 
                 }
                 break;
             case 22 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:145: T__33
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:148: T__33
                 {
                 mT__33(); 
 
                 }
                 break;
             case 23 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:151: QUOTE
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:154: T__34
+                {
+                mT__34(); 
+
+                }
+                break;
+            case 24 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:160: T__35
+                {
+                mT__35(); 
+
+                }
+                break;
+            case 25 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:166: T__36
+                {
+                mT__36(); 
+
+                }
+                break;
+            case 26 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:172: QUOTE
                 {
                 mQUOTE(); 
 
                 }
                 break;
-            case 24 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:157: COMMENT
+            case 27 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:178: COMMENT
                 {
                 mCOMMENT(); 
 
                 }
                 break;
-            case 25 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:165: ID
+            case 28 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:186: ID
                 {
                 mID(); 
 
                 }
                 break;
-            case 26 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:168: JAVANAME
+            case 29 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:189: JAVANAME
                 {
                 mJAVANAME(); 
 
                 }
                 break;
-            case 27 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:177: WS
+            case 30 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:198: WS
                 {
                 mWS(); 
 
                 }
                 break;
-            case 28 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:180: SpecialChar
+            case 31 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:201: SpecialChar
                 {
                 mSpecialChar(); 
 
                 }
                 break;
-            case 29 :
-                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:192: NormalChar
+            case 32 :
+                // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:213: NormalChar
                 {
                 mNormalChar(); 
 
@@ -1284,72 +1373,53 @@ public class AstcLexer extends Lexer {
 
     protected DFA11 dfa11 = new DFA11(this);
     static final String DFA11_eotS =
-        "\3\uffff\2\36\1\31\2\uffff\1\47\10\uffff\1\61\1\uffff\1\31\1\uffff"+
-        "\1\31\1\36\5\uffff\2\36\1\uffff\1\36\1\uffff\1\36\24\uffff\13\36"+
-        "\1\104\1\36\2\uffff\1\36\1\uffff";
+        "\3\uffff\3\41\1\34\1\41\1\uffff\1\41\1\uffff\1\55\10\uffff\1\67"+
+        "\1\uffff\1\34\1\uffff\1\34\1\41\5\uffff\2\41\2\uffff\3\41\2\uffff"+
+        "\1\41\1\uffff\1\41\21\uffff\12\41\1\114\5\41\1\uffff\4\41\1\126"+
+        "\3\41\2\uffff\1\41\1\133\1\41\1\135\3\uffff";
     static final String DFA11_eofS =
-        "\107\uffff";
+        "\136\uffff";
     static final String DFA11_minS =
-        "\1\0\2\uffff\2\56\1\55\2\uffff\1\174\10\uffff\1\52\1\uffff\1\46"+
-        "\1\uffff\1\52\1\56\5\uffff\2\56\1\uffff\1\56\1\uffff\1\56\24\uffff"+
-        "\12\56\1\40\2\56\2\uffff\1\40\1\uffff";
+        "\1\0\2\uffff\3\56\1\55\1\56\1\uffff\1\56\1\uffff\1\174\10\uffff"+
+        "\1\52\1\uffff\1\46\1\uffff\1\52\1\56\5\uffff\2\56\2\uffff\3\56\2"+
+        "\uffff\1\56\1\uffff\1\56\21\uffff\20\56\1\uffff\3\56\1\40\4\56\2"+
+        "\uffff\2\56\1\40\1\56\3\uffff";
     static final String DFA11_maxS =
-        "\1\uffff\2\uffff\2\172\1\76\2\uffff\1\174\10\uffff\1\52\1\uffff"+
-        "\1\46\1\uffff\1\57\1\172\5\uffff\2\172\1\uffff\1\172\1\uffff\1\172"+
-        "\24\uffff\15\172\2\uffff\1\172\1\uffff";
+        "\1\uffff\2\uffff\3\172\1\76\1\172\1\uffff\1\172\1\uffff\1\174\10"+
+        "\uffff\1\52\1\uffff\1\46\1\uffff\1\57\1\172\5\uffff\2\172\2\uffff"+
+        "\3\172\2\uffff\1\172\1\uffff\1\172\21\uffff\20\172\1\uffff\10\172"+
+        "\2\uffff\4\172\3\uffff";
     static final String DFA11_acceptS =
-        "\1\uffff\1\1\1\2\3\uffff\1\7\1\10\1\uffff\1\12\1\13\1\14\1\15\1"+
-        "\16\1\17\1\20\1\21\1\uffff\1\24\1\uffff\1\27\2\uffff\1\33\1\34\1"+
-        "\35\1\1\1\2\2\uffff\1\31\1\uffff\1\32\1\uffff\1\6\1\30\1\7\1\10"+
-        "\1\25\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\23\1\22\1\24"+
-        "\1\26\1\27\1\33\15\uffff\1\5\1\4\1\uffff\1\3";
+        "\1\uffff\1\1\1\2\5\uffff\1\11\1\uffff\1\13\1\uffff\1\15\1\16\1"+
+        "\17\1\20\1\21\1\22\1\23\1\24\1\uffff\1\27\1\uffff\1\32\2\uffff\1"+
+        "\36\1\37\1\40\1\1\1\2\2\uffff\1\34\1\35\3\uffff\1\7\1\33\1\uffff"+
+        "\1\11\1\uffff\1\13\1\30\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23"+
+        "\1\24\1\26\1\25\1\27\1\31\1\32\1\36\20\uffff\1\10\10\uffff\1\6\1"+
+        "\5\4\uffff\1\3\1\4\1\12";
     static final String DFA11_specialS =
-        "\1\0\106\uffff}>";
+        "\1\0\135\uffff}>";
     static final String[] DFA11_transitionS = {
-            "\11\31\2\27\2\31\1\27\22\31\1\27\1\31\1\30\1\11\1\30\1\7\1"+
-            "\23\1\24\1\16\1\17\1\21\1\22\1\31\1\5\1\31\1\25\12\31\1\2\1"+
-            "\6\1\31\1\1\1\31\1\20\1\31\1\3\22\26\1\4\6\26\1\14\1\30\1\15"+
-            "\1\31\1\26\1\31\32\26\1\12\1\10\1\13\uff82\31",
+            "\11\34\2\32\2\34\1\32\22\34\1\32\1\34\1\33\1\14\1\33\1\12\1"+
+            "\26\1\27\1\21\1\22\1\24\1\25\1\34\1\6\1\34\1\30\12\34\1\2\1"+
+            "\10\1\34\1\1\1\34\1\23\1\34\1\4\16\31\1\3\3\31\1\5\6\31\1\17"+
+            "\1\33\1\20\1\34\1\31\1\34\1\11\1\7\30\31\1\15\1\13\1\16\uff82"+
+            "\34",
             "",
             "",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\1\37"+
-            "\1\34\20\37\1\35\7\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\16"+
-            "\37\1\41\13\37",
-            "\1\43\20\uffff\1\42",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\1\37"+
+            "\31\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\1\40"+
+            "\1\43\20\40\1\44\7\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\16"+
+            "\40\1\45\13\40",
+            "\1\47\20\uffff\1\46",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\1\50"+
+            "\31\40",
             "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\15"+
+            "\40\1\52\14\40",
             "",
-            "\1\46",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "\1\60",
-            "",
-            "\1\63",
-            "",
-            "\1\43\4\uffff\1\43",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\32"+
-            "\37",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\22"+
-            "\37\1\66\7\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\17"+
-            "\37\1\67\12\37",
-            "",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\32"+
-            "\37",
-            "",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\12"+
-            "\37\1\70\17\37",
+            "\1\54",
             "",
             "",
             "",
@@ -1358,6 +1428,37 @@ public class AstcLexer extends Lexer {
             "",
             "",
             "",
+            "\1\66",
+            "",
+            "\1\71",
+            "",
+            "\1\47\4\uffff\1\47",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\32"+
+            "\40",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\2\40"+
+            "\1\74\27\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\32"+
+            "\40",
+            "",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\22"+
+            "\40\1\75\7\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\17"+
+            "\40\1\76\12\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\12"+
+            "\40\1\77\17\40",
+            "",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\22"+
+            "\40\1\100\7\40",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\1\101"+
+            "\31\40",
             "",
             "",
             "",
@@ -1370,36 +1471,72 @@ public class AstcLexer extends Lexer {
             "",
             "",
             "",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\23"+
-            "\37\1\71\6\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\4\37"+
-            "\1\72\25\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\4\37"+
-            "\1\73\25\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\21"+
-            "\37\1\74\10\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\2\37"+
-            "\1\75\27\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\15"+
-            "\37\1\76\14\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\1\77"+
-            "\31\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\23"+
-            "\37\1\100\6\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\22"+
-            "\37\1\101\7\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\2\37"+
-            "\1\102\27\37",
-            "\1\103\15\uffff\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1"+
-            "\37\1\uffff\32\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\32"+
-            "\37",
-            "\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1\37\1\uffff\23"+
-            "\37\1\105\6\37",
             "",
             "",
-            "\1\106\15\uffff\1\40\1\uffff\12\37\7\uffff\32\37\4\uffff\1"+
-            "\37\1\uffff\32\37",
+            "",
+            "",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\12"+
+            "\40\1\102\17\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\23"+
+            "\40\1\103\6\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\4\40"+
+            "\1\104\25\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\4\40"+
+            "\1\105\25\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\4\40"+
+            "\1\106\25\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\13"+
+            "\40\1\107\16\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\1\110"+
+            "\31\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\21"+
+            "\40\1\111\10\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\2\40"+
+            "\1\112\27\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\15"+
+            "\40\1\113\14\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\32"+
+            "\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\30"+
+            "\40\1\115\1\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\6\40"+
+            "\1\116\23\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\1\117"+
+            "\31\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\23"+
+            "\40\1\120\6\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\22"+
+            "\40\1\121\7\40",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\22"+
+            "\40\1\122\7\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\4\40"+
+            "\1\123\25\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\2\40"+
+            "\1\124\27\40",
+            "\1\125\15\uffff\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1"+
+            "\40\1\uffff\32\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\32"+
+            "\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\10"+
+            "\40\1\127\21\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\22"+
+            "\40\1\130\7\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\23"+
+            "\40\1\131\6\40",
+            "",
+            "",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\22"+
+            "\40\1\132\7\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\32"+
+            "\40",
+            "\1\134\15\uffff\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1"+
+            "\40\1\uffff\32\40",
+            "\1\42\1\uffff\12\40\7\uffff\32\40\4\uffff\1\40\1\uffff\32"+
+            "\40",
+            "",
+            "",
             ""
     };
 
@@ -1433,7 +1570,7 @@ public class AstcLexer extends Lexer {
             this.transition = DFA11_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( ASSIGN | COLON | AST | TOKENS | ASPECT_DCL | FIELD_DCL | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | QUOTE | COMMENT | ID | JAVANAME | WS | SpecialChar | NormalChar );";
+            return "1:1: Tokens : ( ASSIGN | COLON | PACKAGES | AST | TOKENS | ASPECT_DCL | FIELD_DCL | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | QUOTE | COMMENT | ID | JAVANAME | WS | SpecialChar | NormalChar );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -1447,51 +1584,57 @@ public class AstcLexer extends Lexer {
 
                         else if ( (LA11_0==':') ) {s = 2;}
 
-                        else if ( (LA11_0=='A') ) {s = 3;}
+                        else if ( (LA11_0=='P') ) {s = 3;}
 
-                        else if ( (LA11_0=='T') ) {s = 4;}
+                        else if ( (LA11_0=='A') ) {s = 4;}
 
-                        else if ( (LA11_0=='-') ) {s = 5;}
+                        else if ( (LA11_0=='T') ) {s = 5;}
 
-                        else if ( (LA11_0==';') ) {s = 6;}
+                        else if ( (LA11_0=='-') ) {s = 6;}
 
-                        else if ( (LA11_0=='%') ) {s = 7;}
+                        else if ( (LA11_0=='b') ) {s = 7;}
 
-                        else if ( (LA11_0=='|') ) {s = 8;}
+                        else if ( (LA11_0==';') ) {s = 8;}
 
-                        else if ( (LA11_0=='#') ) {s = 9;}
+                        else if ( (LA11_0=='a') ) {s = 9;}
 
-                        else if ( (LA11_0=='{') ) {s = 10;}
+                        else if ( (LA11_0=='%') ) {s = 10;}
 
-                        else if ( (LA11_0=='}') ) {s = 11;}
+                        else if ( (LA11_0=='|') ) {s = 11;}
 
-                        else if ( (LA11_0=='[') ) {s = 12;}
+                        else if ( (LA11_0=='#') ) {s = 12;}
 
-                        else if ( (LA11_0==']') ) {s = 13;}
+                        else if ( (LA11_0=='{') ) {s = 13;}
 
-                        else if ( (LA11_0=='(') ) {s = 14;}
+                        else if ( (LA11_0=='}') ) {s = 14;}
 
-                        else if ( (LA11_0==')') ) {s = 15;}
+                        else if ( (LA11_0=='[') ) {s = 15;}
 
-                        else if ( (LA11_0=='?') ) {s = 16;}
+                        else if ( (LA11_0==']') ) {s = 16;}
 
-                        else if ( (LA11_0=='*') ) {s = 17;}
+                        else if ( (LA11_0=='(') ) {s = 17;}
 
-                        else if ( (LA11_0=='+') ) {s = 18;}
+                        else if ( (LA11_0==')') ) {s = 18;}
 
-                        else if ( (LA11_0=='&') ) {s = 19;}
+                        else if ( (LA11_0=='?') ) {s = 19;}
 
-                        else if ( (LA11_0=='\'') ) {s = 20;}
+                        else if ( (LA11_0=='*') ) {s = 20;}
 
-                        else if ( (LA11_0=='/') ) {s = 21;}
+                        else if ( (LA11_0=='+') ) {s = 21;}
 
-                        else if ( ((LA11_0>='B' && LA11_0<='S')||(LA11_0>='U' && LA11_0<='Z')||LA11_0=='_'||(LA11_0>='a' && LA11_0<='z')) ) {s = 22;}
+                        else if ( (LA11_0=='&') ) {s = 22;}
 
-                        else if ( ((LA11_0>='\t' && LA11_0<='\n')||LA11_0=='\r'||LA11_0==' ') ) {s = 23;}
+                        else if ( (LA11_0=='\'') ) {s = 23;}
 
-                        else if ( (LA11_0=='\"'||LA11_0=='$'||LA11_0=='\\') ) {s = 24;}
+                        else if ( (LA11_0=='/') ) {s = 24;}
 
-                        else if ( ((LA11_0>='\u0000' && LA11_0<='\b')||(LA11_0>='\u000B' && LA11_0<='\f')||(LA11_0>='\u000E' && LA11_0<='\u001F')||LA11_0=='!'||LA11_0==','||LA11_0=='.'||(LA11_0>='0' && LA11_0<='9')||LA11_0=='<'||LA11_0=='>'||LA11_0=='@'||LA11_0=='^'||LA11_0=='`'||(LA11_0>='~' && LA11_0<='\uFFFF')) ) {s = 25;}
+                        else if ( ((LA11_0>='B' && LA11_0<='O')||(LA11_0>='Q' && LA11_0<='S')||(LA11_0>='U' && LA11_0<='Z')||LA11_0=='_'||(LA11_0>='c' && LA11_0<='z')) ) {s = 25;}
+
+                        else if ( ((LA11_0>='\t' && LA11_0<='\n')||LA11_0=='\r'||LA11_0==' ') ) {s = 26;}
+
+                        else if ( (LA11_0=='\"'||LA11_0=='$'||LA11_0=='\\') ) {s = 27;}
+
+                        else if ( ((LA11_0>='\u0000' && LA11_0<='\b')||(LA11_0>='\u000B' && LA11_0<='\f')||(LA11_0>='\u000E' && LA11_0<='\u001F')||LA11_0=='!'||LA11_0==','||LA11_0=='.'||(LA11_0>='0' && LA11_0<='9')||LA11_0=='<'||LA11_0=='>'||LA11_0=='@'||LA11_0=='^'||LA11_0=='`'||(LA11_0>='~' && LA11_0<='\uFFFF')) ) {s = 28;}
 
                         if ( s>=0 ) return s;
                         break;

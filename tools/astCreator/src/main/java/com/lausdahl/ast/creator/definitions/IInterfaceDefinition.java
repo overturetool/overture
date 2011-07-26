@@ -20,9 +20,9 @@ public interface IInterfaceDefinition
 
 	public abstract String getSignatureName();
 
-	public abstract String getJavaSourceCode();
+	public abstract String getJavaSourceCode(StringBuilder sb);
 
-	public abstract String getVdmSourceCode();
+	public abstract String getVdmSourceCode(StringBuilder sb);
 	
 	public abstract void setNamePostfix(String postfix);
 	

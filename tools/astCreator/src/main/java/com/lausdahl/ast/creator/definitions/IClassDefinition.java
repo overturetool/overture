@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.lausdahl.ast.creator.AstCreatorException;
+import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.ToStringAddOn;
 
 
@@ -46,4 +47,6 @@ public interface IClassDefinition extends IInterfaceDefinition
 	void addToStringAddOn(ToStringAddOn addon);
 	
 	List<ToStringAddOn> getToStringAddOns();
+
+	void updateEnvironment(Environment environment);
 }

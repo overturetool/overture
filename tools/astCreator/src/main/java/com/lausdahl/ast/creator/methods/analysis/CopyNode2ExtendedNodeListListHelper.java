@@ -6,17 +6,17 @@ import java.util.Set;
 import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.methods.Method;
 
-public class CopyNode2ExtendedNodeListHelper extends Method
+public class CopyNode2ExtendedNodeListListHelper extends Method
 {
 	Environment env;
 	Environment envDest;
 
-	public CopyNode2ExtendedNodeListHelper()
+	public CopyNode2ExtendedNodeListListHelper()
 	{
 		super(null, null);
 	}
 
-	public CopyNode2ExtendedNodeListHelper(Environment env, Environment envDest)
+	public CopyNode2ExtendedNodeListListHelper(Environment env, Environment envDest)
 	{
 		super(null, env);
 		this.env = env;
@@ -26,21 +26,21 @@ public class CopyNode2ExtendedNodeListHelper extends Method
 	@Override
 	protected void prepare()
 	{
-		this.name = "copyList";
+		this.name = "copyListList";
 		this.arguments.add(new Argument(Environment.listDef.getImportName()
 				+ "<? extends "
-				+ env.node.getImportName() + ">", "list"));
-//		this.annotation = "@SuppressWarnings({ \"rawtypes\"/*, \"unchecked\" */})";
-		this.returnType = envDest.nodeList.getImportName();
+				+ Environment.listDef.getImportName()
+				+"<? extends "
+				+ env.node.getImportName()+ ">>", "list"));
+//		this.annotation = "@SuppressWarnings({ \"rawtypes\"/*, \"unchecked\"*/ })";
+		this.returnType = envDest.nodeListList.getImportName();
 		StringBuilder bodySb = new StringBuilder();
 
 		bodySb.append("\t\t" + this.returnType + " newList = new "
-				+ this.returnType + "<" + envDest.node.getPackageName() + "."
-				+ envDest.node.getName() + ">(null);\n");
-		bodySb.append("\t\t" + "for( " + env.node.getPackageName() + "."
-				+ env.node.getName() + " n : list)\n");
+				+ this.returnType + "<" + envDest.node.getImportName() + ">(null);\n");
+		bodySb.append("\t\t" + "for( "+Environment.listDef.getImportName()+"<? extends " + env.node.getImportName()+ "> innerList : list)\n");
 		bodySb.append("\t\t" + "{\n");
-		bodySb.append("\t\t" + "\tnewList.add(checkCache(n,n.apply(this)));\n");
+		bodySb.append("\t\t" + "\tnewList.add(copyList(innerList));\n");
 		bodySb.append("\t\t" + "}\n");
 		bodySb.append("\t\t" + "return newList;");
 		this.body = bodySb.toString();
@@ -52,7 +52,7 @@ public class CopyNode2ExtendedNodeListHelper extends Method
 	{
 		Set<String> imports = new HashSet<String>();
 		imports.addAll(super.getRequiredImports());
-		imports.add(Environment.listDef.getImportName());
+		imports.add(Environment.linkedListDef.getImportName());
 		return imports;
 	}
 

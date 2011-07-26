@@ -19,6 +19,8 @@ package com.lausdahl.ast.creator.parser;
 }  
 
 @lexer::members{
+    @SuppressWarnings({ "unused", "rawtypes" })
+    private Stack myStack = null;
     private boolean mMessageCollectionEnabled = false;
     private boolean mHasErrors = false;
    
