@@ -23,10 +23,11 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.ARationalNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.RationalType;
-import org.overturetool.vdmj.types.Type;
+
 
 public class RationalValue extends RealValue
 {
@@ -49,9 +50,9 @@ public class RationalValue extends RealValue
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to instanceof RationalType)
+		if (to instanceof ARationalNumericBasicTypeInterpreter)
 		{
 			return this;
 		}

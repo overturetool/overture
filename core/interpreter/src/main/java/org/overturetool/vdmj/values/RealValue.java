@@ -23,10 +23,11 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.ARealNumericBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.RealType;
-import org.overturetool.vdmj.types.Type;
+
 
 public class RealValue extends NumericValue
 {
@@ -133,9 +134,9 @@ public class RealValue extends NumericValue
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to instanceof RealType)
+		if (to instanceof ARealNumericBasicTypeInterpreter)
 		{
 			return this;
 		}

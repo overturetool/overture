@@ -23,13 +23,15 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Type;
+
 
 /**
  * A class to hold an updatable value. This is almost identical to a
@@ -89,7 +91,7 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public synchronized Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
 	}

@@ -23,9 +23,10 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Type;
+
 
 abstract public class ReferenceValue extends Value
 {
@@ -43,7 +44,7 @@ abstract public class ReferenceValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		return value.convertValueTo(to, ctxt);
 	}

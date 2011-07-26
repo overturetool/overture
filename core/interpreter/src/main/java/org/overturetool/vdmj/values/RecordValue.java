@@ -25,39 +25,40 @@ package org.overturetool.vdmj.values;
 
 import java.util.Iterator;
 
+import org.overture.interpreter.ast.types.AFieldFieldInterpreter;
+import org.overture.interpreter.ast.types.ARecordInvariantTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Field;
-import org.overturetool.vdmj.types.RecordType;
-import org.overturetool.vdmj.types.Type;
+
 
 
 public class RecordValue extends Value
 {
 	private static final long serialVersionUID = 1L;
-	public final RecordType type;
+	public final ARecordInvariantTypeInterpreter type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
 
 	// mk_ expressions
-	public RecordValue(RecordType type,	ValueList values, Context ctxt)
+	public RecordValue(ARecordInvariantTypeInterpreter type,	ValueList values, Context ctxt)
 		throws ValueException
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
 		this.invariant = type.getInvariant(ctxt);
 
-		if (values.size() != type.fields.size())
+		if (values.size() != type.getFields().size())
 		{
-			abort(4078, "Wrong number of fields for " + type.name, ctxt);
+			abort(4078, "Wrong number of fields for " + type.getName(), ctxt);
 		}
 
-		Iterator<Field> fi = type.fields.iterator();
+		Iterator<AFieldFieldInterpreter> fi = type.getFields().iterator();
 
 		for (Value v: values)
 		{
-			Field f = fi.next();
-			fieldmap.add(f.tag, v.convertValueTo(f.type, ctxt), !f.equalityAbstration);
+			AFieldFieldInterpreter f = fi.next();
+			fieldmap.add(f.getTag(), v.convertValueTo(f.getType(), ctxt), !f.equalityAbstration);
 		}
 
 		if (invariant != null &&
@@ -68,31 +69,31 @@ public class RecordValue extends Value
 	}
 
 	// mu_ expressions
-	public RecordValue(RecordType type,	FieldMap mapvalues, Context ctxt)
+	public RecordValue(ARecordInvariantTypeInterpreter type,	FieldMap mapvalues, Context ctxt)
 		throws ValueException
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
 		this.invariant = type.getInvariant(ctxt);
 
-		if (mapvalues.size() != type.fields.size())
+		if (mapvalues.size() != type.getFields().size())
 		{
-			abort(4080, "Wrong number of fields for " + type.name, ctxt);
+			abort(4080, "Wrong number of fields for " + type.getName(), ctxt);
 		}
 
-		Iterator<Field> fi = type.fields.iterator();
+		Iterator<AFieldFieldInterpreter> fi = type.getFields().iterator();
 
 		while (fi.hasNext())
 		{
-			Field f = fi.next();
-			Value v = mapvalues.get(f.tag);
+			AFieldFieldInterpreter f = fi.next();
+			Value v = mapvalues.get(f.getTag());
 
 			if (v == null)
 			{
-				abort(4081, "Field not defined: " + f.tag, ctxt);
+				abort(4081, "Field not defined: " + f.getTag(), ctxt);
 			}
 
-			fieldmap.add(f.tag, v.convertValueTo(f.type, ctxt), !f.equalityAbstration);
+			fieldmap.add(f.getTag(), v.convertValueTo(f.getType(), ctxt), !f.equalityAbstration);
 		}
 
 		if (invariant != null &&
@@ -103,7 +104,7 @@ public class RecordValue extends Value
 	}
 
 	// Only called by clone()
-	private RecordValue(RecordType type, FieldMap mapvalues, FunctionValue invariant)
+	private RecordValue(ARecordInvariantTypeInterpreter type, FieldMap mapvalues, FunctionValue invariant)
 	{
 		this.type = type;
 		this.invariant = invariant;
@@ -111,7 +112,7 @@ public class RecordValue extends Value
 	}
 
 	// State records - invariant handled separately
-	public RecordValue(RecordType type, NameValuePairList mapvalues)
+	public RecordValue(ARecordInvariantTypeInterpreter type, NameValuePairList mapvalues)
 	{
 		this.type = type;
 		this.invariant = null;
@@ -119,7 +120,7 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			Field f = type.findField(nvp.name.name);
+			AFieldFieldInterpreter f = type.findField(nvp.name.name);
 			this.fieldmap.add(nvp.name.name, nvp.value, !f.equalityAbstration);
 		}
 	}
@@ -168,12 +169,12 @@ public class RecordValue extends Value
 
 			if (ot.type.equals(type))
 			{
-				for (Field f: type.fields)
+				for (AFieldFieldInterpreter f: type.getFields())
 				{
 					if (!f.equalityAbstration)
 					{
-						Value fv = fieldmap.get(f.tag);
-						Value ofv = ot.fieldmap.get(f.tag);
+						Value fv = fieldmap.get(f.getTag());
+						Value ofv = ot.fieldmap.get(f.getTag());
 
 						if (fv == null || ofv == null)
 						{
@@ -200,18 +201,18 @@ public class RecordValue extends Value
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("mk_" + type.name + "(");
+		sb.append("mk_" + type.getName() + "(");
 
-		Iterator<Field> fi = type.fields.iterator();
+		Iterator<AFieldFieldInterpreter> fi = type.getFields().iterator();
 
 		if (fi.hasNext())
 		{
-    		String ftag = fi.next().tag;
+    		String ftag = fi.next().getTag();
     		sb.append(fieldmap.get(ftag));
 
     		while (fi.hasNext())
     		{
-    			ftag = fi.next().tag;
+    			ftag = fi.next().getTag();
     			sb.append(", " + fieldmap.get(ftag));
     		}
 		}
@@ -223,7 +224,7 @@ public class RecordValue extends Value
 	@Override
 	public int hashCode()
 	{
-		return type.name.hashCode() + fieldmap.hashCode();
+		return type.getName().hashCode() + fieldmap.hashCode();
 	}
 
 	@Override
@@ -233,7 +234,7 @@ public class RecordValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		if (to.equals(type))
 		{

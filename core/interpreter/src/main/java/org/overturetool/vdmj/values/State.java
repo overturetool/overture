@@ -23,41 +23,44 @@
 
 package org.overturetool.vdmj.values;
 
+import org.overture.interpreter.ast.definitions.AStateDefinitionInterpreter;
+import org.overture.interpreter.ast.expressions.AEqualsBinaryExpInterpreter;
+import org.overture.interpreter.ast.types.AFieldFieldInterpreter;
+import org.overture.interpreter.ast.types.ARecordInvariantTypeInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.StateDefinition;
-import org.overturetool.vdmj.expressions.EqualsExpression;
-import org.overturetool.vdmj.lex.LexLocation;
+
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Field;
-import org.overturetool.vdmj.types.RecordType;
+
 
 public class State implements ValueListener
 {
-	public final StateDefinition definition;
+	public final AStateDefinitionInterpreter definition;
 	public final UpdatableValue recordValue;
 	public final Context context;
 
 	public boolean doInvariantChecks = true;
 
-	public State(StateDefinition definition)
+	public State(AStateDefinitionInterpreter definition)
 	{
 		this.definition = definition;
 		NameValuePairList fieldvalues = new NameValuePairList();
 
-		for (Field f: definition.fields)
+		for (AFieldFieldInterpreter f: definition.getFields())
 		{
-			fieldvalues.add(new NameValuePair(f.tagname,
+			fieldvalues.add(new NameValuePair(f.getTagname(),
 				UpdatableValue.factory(new ValueListenerList(this))));
 		}
 
-		RecordType rt = (RecordType)definition.getType();
+		ARecordInvariantTypeInterpreter rt = (ARecordInvariantTypeInterpreter)definition.getType();
 		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues),
 			new ValueListenerList(this));
 
-		this.context = new Context(definition.location, "module state", null);
-		this.context.put(definition.name, recordValue);
+		this.context = new Context(definition.getLocation(), "module state", null);
+		this.context.put(definition.getName(), recordValue);
 		this.context.putList(fieldvalues);
 	}
 
@@ -68,7 +71,7 @@ public class State implements ValueListener
 			// We can't check the invariant while we're initializing fields
 			doInvariantChecks = false;
 
-			if (definition.initPattern != null)
+			if (definition.getInitPattern() != null)
 			{
 				// Note that we don't call the initfunc FunctionValue. This is
 				// so that calls to init_sigma can test their arguments without
@@ -81,10 +84,10 @@ public class State implements ValueListener
 						4144, "State init expression cannot be executed", globals);
 				}
 
-				EqualsExpression ee = (EqualsExpression)definition.initExpression;
-				ee.location.hit();
-				ee.left.location.hit();
-				Value v = ee.right.eval(globals);
+				AEqualsBinaryExpInterpreter ee = (AEqualsBinaryExpInterpreter)definition.getInitExpression();
+				ee.getLocation().hit();
+				ee.getLeft().getLocation().hit();
+				Value v = ee.getRight().eval(globals);
 
 				if (!(v instanceof RecordValue))
 				{
@@ -94,19 +97,19 @@ public class State implements ValueListener
 
 				RecordValue iv = (RecordValue)v;
 
-				for (Field f: definition.fields)
+				for (AFieldFieldInterpreter f: definition.getFields())
 				{
-					Value sv = context.get(f.tagname);
-					sv.set(ee.location, iv.fieldmap.get(f.tag), globals);
+					Value sv = context.get(f.getTagname());
+					sv.set(ee.getLocation(), iv.fieldmap.get(f.getTag()), globals);
 				}
 
 				doInvariantChecks = true;
-				changedValue(ee.location, null, globals);
+				changedValue(ee.getLocation(), null, globals);
 			}
 		}
 		catch (ValueException e)
 		{
-			throw new ContextException(e, definition.location);
+			throw new ContextException(e, definition.getLocation());
 		}
 		finally
 		{

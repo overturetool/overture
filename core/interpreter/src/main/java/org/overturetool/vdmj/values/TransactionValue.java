@@ -27,12 +27,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.types.Type;
+
 
 /**
  * A class to hold an updatable value that can be modified by VDM-RT
@@ -80,7 +82,7 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public synchronized Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		return select().convertValueTo(to, ctxt).getUpdatable(listeners);
 	}

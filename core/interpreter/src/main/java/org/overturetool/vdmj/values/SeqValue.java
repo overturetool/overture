@@ -26,12 +26,12 @@ package org.overturetool.vdmj.values;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
+import org.overture.interpreter.ast.types.ASeq1SeqTypeInterpreter;
+import org.overture.interpreter.ast.types.ASeqSeqTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Seq1Type;
-import org.overturetool.vdmj.types.SeqType;
-import org.overturetool.vdmj.types.Type;
 
 public class SeqValue extends Value
 {
@@ -158,25 +158,25 @@ public class SeqValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		// We can't use the isSeq method as it plucks out one sequence
 		// value from a union. We need to try all union members. So we
 		// only test for pure SeqTypes.
 
-		if (to instanceof SeqType)
+		if (to instanceof ASeqSeqTypeInterpreter)
 		{
-			if (to instanceof Seq1Type && values.isEmpty())
+			if (to instanceof ASeq1SeqTypeInterpreter && values.isEmpty())
 			{
 				abort(4084, "Cannot convert empty sequence to seq1", ctxt);
 			}
 
-			SeqType seqto = (SeqType)to;
+			ASeqSeqTypeInterpreter seqto = (ASeqSeqTypeInterpreter)to;
 			ValueList nl = new ValueList();
 
 			for (Value v: values)
 			{
-				nl.add(v.convertValueTo(seqto.seqof, ctxt));
+				nl.add(v.convertValueTo(seqto.getSeqof(), ctxt));
 			}
 
 			return new SeqValue(nl);

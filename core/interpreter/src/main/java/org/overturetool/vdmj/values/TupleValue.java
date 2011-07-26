@@ -25,10 +25,10 @@ package org.overturetool.vdmj.values;
 
 import java.util.Iterator;
 
+import org.overture.interpreter.ast.types.AProductTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.ProductType;
-import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -129,13 +129,13 @@ public class TupleValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (to instanceof ProductType)
+		if (to instanceof AProductTypeInterpreter)
 		{
-			ProductType pto = (ProductType)to;
+			AProductTypeInterpreter pto = (AProductTypeInterpreter)to;
 
-			if (pto.types.size() != values.size())
+			if (pto.getTypes().size() != values.size())
 			{
 				abort(4085, "Cannot convert tuple to " + to, ctxt);
 			}
@@ -143,7 +143,7 @@ public class TupleValue extends Value
 			ValueList nl = new ValueList();
 			Iterator<Value> vi = values.iterator();
 
-			for (Type pt: pto.types)
+			for (PTypeInterpreter pt: pto.getTypes())
 			{
 				nl.add(vi.next().convertValueTo(pt, ctxt));
 			}

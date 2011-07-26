@@ -25,7 +25,8 @@ package org.overturetool.vdmj.values;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexLocation;
+
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 
 public class ValueListenerList extends Vector<ValueListener>

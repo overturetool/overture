@@ -36,8 +36,9 @@ import org.overture.interpreter.ast.types.AParameterTypeInterpreter;
 import org.overture.interpreter.ast.types.AUnionTypeInterpreter;
 import org.overture.interpreter.ast.types.AUnknownTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 
