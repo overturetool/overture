@@ -10,6 +10,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.util.Utils;
 
 
 
@@ -101,6 +102,27 @@ public class AFunctionTypeAssistant {
 			new AFunctionType(t.getLocation(),false, false, params, new ABooleanBasicType(t.getLocation(),false));
 		type.setDefinitions(t.getDefinitions());
 		return type;
+	}
+
+	public static String toDisplay(AFunctionType exptype) {
+		List<PType> parameters = exptype.getParameters();
+		String params = (parameters.isEmpty() ?
+				"()" : Utils.listToString(parameters, " * "));
+		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
+	}
+
+	public static boolean equals(AFunctionType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (!(other instanceof AFunctionType))
+		{
+			return false;
+		}
+
+		AFunctionType fo = (AFunctionType)other;
+		return (type.getPartial() == fo.getPartial() &&
+				PTypeAssistant.equals(type.getResult(),fo.getResult()) &&
+				PTypeAssistant.equals(type.getParameters(),fo.getParameters()));
 	}
 
 }

@@ -10,6 +10,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.Environment;
@@ -113,7 +114,7 @@ public class PDefinitionListAssistant {
 	}
 	
 	public static void setAccessibility(List<PDefinition> defs,
-			PAccessSpecifier access) {
+			AAccessSpecifierAccessSpecifier access) {
 		for (PDefinition d : defs) {
 			d.setAccess(access);
 		}

@@ -109,7 +109,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 //			exp = new ABinopExp(null, null, exp, new AEquivalentBinop(token.location), readConnectiveExpression());
-			exp = new AEquivalentBooleanBinaryExp(null, null, exp, token, readConnectiveExpression());
+			exp = new AEquivalentBooleanBinaryExp(null, token.location, exp, token, readConnectiveExpression());
 //			exp = new AEquivalentBinop(exp, token, readConnectiveExpression());
 		}
 
@@ -124,7 +124,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.IMPLIES))
 		{
 			nextToken();
-			exp = new AImpliesBooleanBinaryExp(null, null, exp, token, readImpliesExpression());
+			exp = new AImpliesBooleanBinaryExp(null, token.location, exp, token, readImpliesExpression());
 //			exp = new ImpliesExpression(exp, token, readImpliesExpression());
 		}
 
@@ -140,7 +140,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.OR))
 		{
 			nextToken();
-			exp = new AOrBooleanBinaryExp(null, null, exp, token, readOrExpression());
+			exp = new AOrBooleanBinaryExp(null, token.location, exp, token, readOrExpression());
 //			exp = new OrExpression(exp, token, readOrExpression());
 		}
 
@@ -155,7 +155,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.AND))
 		{
 			nextToken();
-			exp = new AAndBooleanBinaryExp(null, null, exp, token, readAndExpression());
+			exp = new AAndBooleanBinaryExp(null, token.location, exp, token, readAndExpression());
 //			exp = new AndExpression(exp, token, readAndExpression());
 		}
 
@@ -193,7 +193,7 @@ public class ExpressionReader extends SyntaxReader
 
 		if (readToken().is(VDMToken.EQUALS))
 		{
-			return new AEqualsBinaryExp(null, null, exp, token, readEvaluatorP1Expression());
+			return new AEqualsBinaryExp(null, token.location, exp, token, readEvaluatorP1Expression());
 //			return new EqualsExpression(exp, token, readEvaluatorP1Expression());
 		}
 
@@ -251,61 +251,61 @@ public class ExpressionReader extends SyntaxReader
 			case LT:
 				nextToken();
 				
-				exp = new ALessNumericBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new ALessNumericBinaryExp(null, token.location, exp, token, readNotExpression());
 				//exp = new LessExpression(exp, token, readNotExpression());
 				break;
 
 			case LE:
 				nextToken();
-				exp = new ALessEqualNumericBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new ALessEqualNumericBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new LessEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case GT:
 				nextToken();
-				exp = new AGreaterNumericBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new AGreaterNumericBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new GreaterExpression(exp, token, readNotExpression());
 				break;
 
 			case GE:
 				nextToken();
-				exp = new AGreaterEqualNumericBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new AGreaterEqualNumericBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new GreaterEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case NE:
 				nextToken();
-				exp = new ANotEqualBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new ANotEqualBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new NotEqualExpression(exp, token, readNotExpression());
 				break;
 
 			case EQUALS:
 				nextToken();
-				exp = new AEqualsBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new AEqualsBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new EqualsExpression(exp, token, readNotExpression());
 				break;
 
 			case SUBSET:
 				nextToken();
-				exp = new ASubsetBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new ASubsetBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new SubsetExpression(exp, token, readNotExpression());
 				break;
 
 			case PSUBSET:
 				nextToken();
-				exp = new AProperSubsetBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new AProperSubsetBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new ProperSubsetExpression(exp, token, readNotExpression());
 				break;
 
 			case INSET:
 				nextToken();
-				exp = new AInSetBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new AInSetBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new InSetExpression(exp, token, readNotExpression());
 				break;
 
 			case NOTINSET:
 				nextToken();
-				exp = new ANotInSetBinaryExp(null, null, exp, token, readNotExpression());
+				exp = new ANotInSetBinaryExp(null, token.location, exp, token, readNotExpression());
 //				exp = new NotInSetExpression(exp, token, readNotExpression());
 				break;
 		}
@@ -329,43 +329,43 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case PLUS:
 					nextToken();
-					exp = new APlusNumericBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new APlusNumericBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new PlusExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MINUS:
 					nextToken();
-					exp = new ASubstractNumericBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new ASubstractNumericBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new SubtractExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case UNION:
 					nextToken();
-					exp = new ASetUnionBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new ASetUnionBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new SetUnionExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case SETDIFF:
 					nextToken();
-					exp = new ASetDifferenceBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new ASetDifferenceBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new SetDifferenceExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MUNION:
 					nextToken();
-					exp = new AMapUnionBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new AMapUnionBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new MapUnionExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case PLUSPLUS:
 					nextToken();
-					exp = new APlusPlusBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new APlusPlusBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new PlusPlusExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case CONCATENATE:
 					nextToken();
-					exp = new ASeqConcatBinaryExp(null, null, exp, token, readEvaluatorP2Expression());
+					exp = new ASeqConcatBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
 //					exp = new SeqConcatExpression(exp, token, readEvaluatorP2Expression());
 					break;
 
@@ -392,37 +392,37 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case TIMES:
 					nextToken();
-					exp = new ATimesNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
+					exp = new ATimesNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
 //					exp = new TimesExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIVIDE:
 					nextToken();
-					exp = new ADivideNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
+					exp = new ADivideNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
 //					exp = new DivideExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case REM:
 					nextToken();
-					exp = new ARemNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
+					exp = new ARemNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
 //					exp = new RemExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case MOD:
 					nextToken();
-					exp = new AModNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
+					exp = new AModNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
 //					exp = new ModExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIV:
 					nextToken();
-					exp = new ADivNumericBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
+					exp = new ADivNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
 //					exp = new DivExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case INTER:
 					nextToken();
-					exp = new ASetIntersectBinaryExp(null, null, exp, token, readEvaluatorP3Expression());
+					exp = new ASetIntersectBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
 //					exp = new SetIntersectExpression(exp, token, readEvaluatorP3Expression());
 					break;
 
@@ -470,13 +470,13 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case DOMRESTO:
 					nextToken();
-					exp = new ADomainResToBinaryExp(null, null, exp, token, readEvaluatorP5Expression());
+					exp = new ADomainResToBinaryExp(null, token.location, exp, token, readEvaluatorP5Expression());
 //					exp = new DomainResToExpression(exp, token, readEvaluatorP5Expression());
 					break;
 
 				case DOMRESBY:
 					nextToken();
-					exp = new ADomainResByBinaryExp(null, null, exp, token, readEvaluatorP5Expression());
+					exp = new ADomainResByBinaryExp(null, token.location, exp, token, readEvaluatorP5Expression());
 //					exp = new DomainResByExpression(exp, token, readEvaluatorP5Expression());
 					break;
 
@@ -503,13 +503,13 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case RANGERESTO:
 					nextToken();
-					exp = new ARangeResToBinaryExp(null, null, exp, token, readEvaluatorP6Expression());
+					exp = new ARangeResToBinaryExp(null, token.location, exp, token, readEvaluatorP6Expression());
 //					exp = new RangeResToExpression(exp, token, readEvaluatorP6Expression());
 					break;
 
 				case RANGERESBY:
 					nextToken();
-					exp = new ARangeResByBinaryExp(null, null, exp, token, readEvaluatorP6Expression());
+					exp = new ARangeResByBinaryExp(null, token.location, exp, token, readEvaluatorP6Expression());
 //					exp = new RangeResByExpression(exp, token, readEvaluatorP6Expression());
 					break;
 
@@ -842,14 +842,14 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.COMP))
 		{
 			nextToken();
-			return new ACompBinaryExp(null, null, exp, token, readApplicatorExpression());
+			return new ACompBinaryExp(null, token.location, exp, token, readApplicatorExpression());
 //			return new CompExpression(exp, token, readApplicatorExpression());
 		}
 
 		if (token.is(VDMToken.STARSTAR))
 		{
 			nextToken();
-			return new AStarStarBinaryExp(null, null, exp, token, readEvaluatorP6Expression());
+			return new AStarStarBinaryExp(null, token.location, exp, token, readEvaluatorP6Expression());
 //			return new StarStarExpression(exp, token, readEvaluatorP6Expression());
 		}
 

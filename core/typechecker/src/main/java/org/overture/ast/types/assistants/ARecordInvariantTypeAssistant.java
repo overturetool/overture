@@ -63,4 +63,34 @@ public class ARecordInvariantTypeAssistant {
 		return type;
 	}
 
+	public static String toDisplay(ARecordInvariantType exptype) {
+		return exptype.getName().toString();
+	}
+
+	public static PType isType(ARecordInvariantType exptype, String typename) {
+		if (exptype.getOpaque()) return null;
+
+		if (typename.indexOf('`') > 0)
+		{
+			return (exptype.getName().getName().equals(typename)) ? exptype : null;
+		}
+		else
+		{
+			// Local typenames aren't qualified with the local module name
+			return (exptype.getName().name.equals(typename)) ? exptype : null;
+		}
+	}
+
+	public static boolean equals(ARecordInvariantType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof ARecordInvariantType)
+		{
+			ARecordInvariantType rother = (ARecordInvariantType)other;
+			return type.getName().equals(rother.getName());	// NB. identical
+		}
+
+		return false;
+	}
+
 }

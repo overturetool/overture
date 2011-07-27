@@ -14,6 +14,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.Environment;
@@ -82,11 +83,38 @@ public class AUnresolvedTypeAssistant {
 			TypeCheckerErrors.report(3296, "Cannot use '" + type.getTypename() + "' outside system class",type.getLocation(),type);
 		}
 
-		PType r = def.getType();
+		PType r = def.getType().clone();
 		List<PDefinition> tempDefs = new Vector<PDefinition>();
 		tempDefs.add(def);
 		r.setDefinitions(tempDefs);
 		return r;
+	}
+
+	public static String toDisplay(AUnresolvedType exptype) {
+		return "(unresolved " + exptype.getTypename() + ")";
+		
+	}
+
+	public static PType isType(AUnresolvedType exptype, String typename) {
+		return exptype.getTypename().getName().equals(typename) ? exptype : null;
+	}
+
+	public static boolean equals(AUnresolvedType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof AUnresolvedType)
+		{
+			AUnresolvedType nother = (AUnresolvedType)other;
+			return type.getTypename().equals(nother.getTypename());
+		}
+
+		if (other instanceof ANamedInvariantType)
+		{
+			ANamedInvariantType nother = (ANamedInvariantType)other;
+			return type.getTypename().equals(nother.getName());
+		}
+
+		return false;
 	}
 
 	

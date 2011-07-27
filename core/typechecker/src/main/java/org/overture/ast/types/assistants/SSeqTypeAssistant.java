@@ -33,4 +33,17 @@ public class SSeqTypeAssistant {
 		}
 	}
 
+	public static boolean equals(SSeqType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof SSeqType)
+		{
+			SSeqType os = (SSeqType)other;
+			// NB. Empty sequence is the same type as any sequence
+			return type.getEmpty() || os.getEmpty() ||	PTypeAssistant.equals(type.getSeqof(), os.getSeqof());
+		}
+
+		return false;
+	}
+
 }

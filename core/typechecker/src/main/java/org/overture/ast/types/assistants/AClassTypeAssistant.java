@@ -15,7 +15,6 @@ import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-
 public class AClassTypeAssistant {
 
 	public static LexNameToken getMemberName(AClassType cls,
@@ -88,6 +87,22 @@ public class AClassTypeAssistant {
     		}
 		}
 		
+	}
+
+	public static String toDisplay(AClassType exptype) {
+		return exptype.getClassdef().getName().name;
+	}
+
+	public static boolean equals(AClassType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof AClassType)
+		{
+			AClassType oc = (AClassType)other;
+			return type.getName().equals(oc.getName());		// NB. name only
+		}
+
+		return false;
 	}
 
 }

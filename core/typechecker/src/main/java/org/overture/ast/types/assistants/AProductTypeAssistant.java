@@ -9,6 +9,7 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.util.Utils;
 
 public class AProductTypeAssistant {
 
@@ -45,6 +46,30 @@ public class AProductTypeAssistant {
 		{
 			PTypeAssistant.unResolve(t);
 		}		
+	}
+
+	public static String toDisplay(AProductType exptype) {
+		return Utils.listToString("(", exptype.getTypes(), " * ", ")");
+	}
+
+	public static boolean isProduct(AProductType type, int size) {
+		return size == 0 || type.getTypes().size() == size;
+	}
+
+	public static AProductType getProduct(AProductType type, int n) {
+		return n == 0 || type.getTypes().size() == n ? type : null;
+	}
+
+	public static boolean equals(AProductType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof AProductType)
+		{
+			AProductType pother = (AProductType)other;
+			return PTypeAssistant.equals(type.getTypes(),pother.getTypes());
+		}
+
+		return false;
 	}
 
 }

@@ -353,7 +353,7 @@ public class AExplicitFunctionDefinitionAssistant {
 				d.getTypeParams(), 
 				paramPatterns, 
 				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), //type 
-				d.getPrecondition(), 
+				d.getPrecondition().clone(), 
 				null, null, null);
 		
 		def.setClassDefinition(d.getClassDefinition());

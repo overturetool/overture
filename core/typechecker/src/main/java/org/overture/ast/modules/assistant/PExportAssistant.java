@@ -17,6 +17,7 @@ import org.overture.ast.modules.AOperationExport;
 import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -118,18 +119,18 @@ public class PExportAssistant
 							if (type instanceof ANamedInvariantType)
 							{
 								ANamedInvariantType ntype = (ANamedInvariantType)type;
-								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,ntype.getName(), ntype.getType());
+								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,ntype.getName().clone(), ntype.getType().clone());
 								copy.setOpaque(true);
 								copy.setInvDef(ntype.getInvDef());
-								list.add(new ATypeDefinition(def.getName().location,def.getName(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy,	null, null,null,null,false));
+								list.add(new ATypeDefinition(def.getName().location,def.getName().clone(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy, null,null,null,false));
 							}
 							else if (type instanceof ARecordInvariantType)
 							{
 								ARecordInvariantType rtype = (ARecordInvariantType)type;
-								SInvariantType copy = new ARecordInvariantType(rtype.getName().location,false, rtype.getName(), rtype.getFields());
+								SInvariantType copy = new ARecordInvariantType(rtype.getName().location,false, rtype.getName().clone(), (List<? extends AFieldField>) rtype.getFields().clone());
 								copy.setOpaque(true);
 								copy.setInvDef(rtype.getInvDef());
-								list.add(new ATypeDefinition(def.getName().location,def.getName(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy,	null, null,null,null,false));
+								list.add(new ATypeDefinition(def.getName().location,def.getName().clone(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy,null,null,null,false));
 							}
 							else
 							{
@@ -147,7 +148,7 @@ public class PExportAssistant
 				for (LexNameToken name: ((AValueExport)exp).getNameList())
 				{
 					PDefinition def = PDefinitionListAssistant.findName(actualDefs,name, NameScope.NAMES);
-					PType type = ((AValueExport)exp).getExportType();
+					PType type = ((AValueExport)exp).getExportType().clone();
 
 					if (def == null)
 					{
@@ -156,7 +157,7 @@ public class PExportAssistant
 					else if (def instanceof AUntypedDefinition)
 					{
 						AUntypedDefinition untyped = (AUntypedDefinition)def;
-						list.add(new ALocalDefinition(untyped.getLocation(), untyped.getName(), NameScope.GLOBAL, false,null,PAccessSpecifierAssistant.getDefault(),type, null));
+						list.add(new ALocalDefinition(untyped.getLocation(), untyped.getName().clone(), NameScope.GLOBAL, false,null,PAccessSpecifierAssistant.getDefault(),type, null));
 					}
 					else
 					{

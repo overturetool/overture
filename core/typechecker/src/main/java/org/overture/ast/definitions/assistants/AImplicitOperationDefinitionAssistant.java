@@ -15,6 +15,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.APatternTypePairAssistant;
+import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AOperationTypeAssistant;
@@ -158,7 +159,7 @@ public class AImplicitOperationDefinitionAssistant {
 		}
 
 		parameters.add(plist);
-		PExp postop = new APostOpExp(null, d.getLocation(),d.getName(), d.getPrecondition(), d.getPostcondition(), d.getErrors(), state, null);
+		PExp postop = new APostOpExp(null, d.getLocation(),d.getName().clone(), d.getPrecondition(), d.getPostcondition(), d.getErrors(), state, null);
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 				d.getPostcondition().getLocation(),
@@ -204,7 +205,7 @@ public class AImplicitOperationDefinitionAssistant {
 		}
 
 		parameters.add(plist);
-		PExp preop = new APreOpExp(null,d.getLocation(),d.getName(), d.getPrecondition(), d.getErrors(), state);
+		PExp preop = new APreOpExp(null,d.getLocation(),(LexNameToken) d.getName().clone(), d.getPrecondition(), d.getErrors(), state);
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 			d.getPrecondition().getLocation(),

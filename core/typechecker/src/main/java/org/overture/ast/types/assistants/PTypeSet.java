@@ -3,6 +3,7 @@ package org.overture.ast.types.assistants;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -35,6 +36,10 @@ public class PTypeSet extends HashSet<PType>{
 	}
 
 	
+	public PTypeSet(List<PType> types) {
+		super(types);
+	}
+
 	@Override
 	public boolean add(PType t)
 	{
@@ -117,8 +122,10 @@ public class PTypeSet extends HashSet<PType>{
 		if (this.size() == 1) {
 			result = this.iterator().next();
 		} else {
-			result = new AUnionType(location, false, new ArrayList<PType>(
+			AUnionType uType = new AUnionType(location, false, new ArrayList<PType>(
 					this),false, false);
+			uType.setProdCard(-1);
+			result = uType;
 		}
 
 		return (optional ? new AOptionalType(location, false,null, result) : result);

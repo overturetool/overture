@@ -405,7 +405,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new ATypeDefinition(id.location,idToName(id),null, 
-				null,null,null,null,invtype,invPattern,invExpression,null,false);
+				null,null,null,invtype,invPattern,invExpression,null,false);
 		
 		//return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}
@@ -979,15 +979,15 @@ public class DefinitionReader extends SyntaxReader
 				idToName(name),
 				NameScope.STATE, 
 				false, 
-				getDefaultAccess(), 
+				null, getDefaultAccess(), 
 				null, 
 				fieldList, 
 				invPattern, 
 				invExpression, 
-				initPattern, 
+				null, initPattern, 
 				initExpression, 
-				recordDefinition, 
-				recordType);
+				null, null, recordDefinition, 
+				recordType, null);
 		
 		stateDef.getStateDefs().add(recordDefinition);
 		
@@ -1478,7 +1478,7 @@ public class DefinitionReader extends SyntaxReader
 		//TODO
 		LexNameToken name = new LexNameToken(
 				start.module, Utils.listToString(names, "_"),start);
-		PAccessSpecifier access = new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
+		AAccessSpecifierAccessSpecifier access = new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
 		return new ANamedTraceDefinition(start, name, NameScope.GLOBAL, false, null, access , null, traces);
 	}
 

@@ -180,8 +180,6 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{
-//				d.typeResolve(env);
-				//TODO???
 				PDefinitionAssistant.typeResolve(d, tc, new TypeCheckInfo(env));
 			}
 			catch (TypeCheckException te)

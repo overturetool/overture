@@ -49,7 +49,7 @@ public class ATypeDefinitionAssistant {
 			}
 		}
 
-		return PDefinitionAssistant.findName(d,sought, NameScope.TYPENAME);
+		return PDefinitionAssistant.findNameBaseCase(d,sought, NameScope.TYPENAME);
 	}
 
 	public static PDefinition findName(ATypeDefinition d, LexNameToken sought,
@@ -88,7 +88,7 @@ public class ATypeDefinitionAssistant {
 		try
 		{
 			d.setInfinite(false);
-			d.setInvType((SInvariantType) PTypeAssistant.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
+			d.setType((SInvariantType) PTypeAssistant.typeResolve((SInvariantType)d.getType(), d, rootVisitor, question));
 
 			if (d.getInfinite())
 			{
@@ -101,11 +101,11 @@ public class ATypeDefinitionAssistant {
 				PPatternAssistant.typeResolve(d.getInvPattern(), rootVisitor, question);
 			}
 			
-			d.setType(d.getInvType());
+			d.setType(d.getType());
 		}
 		catch (TypeCheckException e)
 		{
-			PTypeAssistant.unResolve(d.getInvType());
+			PTypeAssistant.unResolve(d.getType());
 			throw e;
 		}
 	}
@@ -114,7 +114,7 @@ public class ATypeDefinitionAssistant {
 		if (d.getInvPattern() != null)
 		{
     		d.setInvdef(getInvDefinition(d));
-    		d.getInvType().setInvDef(d.getInvdef());
+    		d.getType().setInvDef(d.getInvdef());
 		}
 		else
 		{
@@ -128,23 +128,23 @@ public class ATypeDefinitionAssistant {
 		
 		LexLocation loc = d.getInvPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
-		params.add(d.getInvPattern());
+		params.add(d.getInvPattern().clone());
 
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
 
-		if (d.getInvType() instanceof ARecordInvariantType)
+		if (d.getType() instanceof ARecordInvariantType)
 		{
 			// Records are inv_R: R +> bool
-			ptypes.add(new AUnresolvedType(d.getLocation(),false, d.getName()));
+			ptypes.add(new AUnresolvedType(d.getLocation(),false, d.getName().clone()));
 		}
 		else
 		{
 			// Named types are inv_T: x +> bool, for T = x
-			ANamedInvariantType nt = (ANamedInvariantType) d.getInvType();
-			ptypes.add(nt.getType());
+			ANamedInvariantType nt = (ANamedInvariantType) d.getType();
+			ptypes.add(nt.getType().clone());
 		}
 
 		AFunctionType ftype =
@@ -159,11 +159,11 @@ public class ATypeDefinitionAssistant {
 				null,
 				parameters,
 				ftype, 
-				d.getInvExpression(),
+				d.getInvExpression().clone(),
 				null, null, null);
 		def.setTypeInvariant(true);
 
-		def.setAccess(d.getAccess());	// Same as type's
+		def.setAccess(d.getAccess().clone());	// Same as type's
 		def.setClassDefinition(d.getClassDefinition());
 		
 		List<PDefinition> defList = new Vector<PDefinition>();

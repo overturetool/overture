@@ -79,18 +79,18 @@ public class PAccessSpecifierAssistant {
 		return false;
 	}
 
-	public static PAccessSpecifier getStatic(PDefinition d, boolean asStatic) {
-		PAccessSpecifier paccess = d.getAccess();
+	public static AAccessSpecifierAccessSpecifier getStatic(PDefinition d, boolean asStatic) {
+		AAccessSpecifierAccessSpecifier paccess = d.getAccess();
 		if(paccess instanceof AAccessSpecifierAccessSpecifier)
-		{
-			return new AAccessSpecifierAccessSpecifier(((AAccessSpecifierAccessSpecifier) paccess).getAccess(), asStatic ? ((AAccessSpecifierAccessSpecifier) paccess).getStatic() : null, ((AAccessSpecifierAccessSpecifier) paccess).getAsync());
+		{			
+			return new AAccessSpecifierAccessSpecifier(paccess.getAccess().clone(), asStatic && paccess.getStatic() != null ?  paccess.getStatic().clone() : null, paccess.getAsync() != null ?  paccess.getAsync().clone() : null);
 		}
 		assert false: "PAccessSpecifier must be instance of AAccessSpecifierAccessSpecifier";
 		return null;
 		
 	}
 	
-	public static PAccessSpecifier getDefault()
+	public static AAccessSpecifierAccessSpecifier getDefault()
 	{
 		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
 	}

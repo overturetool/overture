@@ -34,4 +34,21 @@ public class ASetTypeAssistant {
 		
 	}
 
+	public static String toDisplay(ASetType exptype) {
+		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
+	}
+
+	public static boolean equals(ASetType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof ASetType)
+		{
+			ASetType os = (ASetType)other;
+			// NB empty set same type as any set
+			return type.getEmpty() || os.getEmpty() || PTypeAssistant.equals(type.getSetof(), os.getSetof());
+		}
+
+		return false;
+	}
+
 }

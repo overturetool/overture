@@ -43,4 +43,16 @@ public class SMapTypeAssistant {
 		}
 	}
 
+	public static boolean equals(SMapType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (other instanceof SMapType)
+		{
+			SMapType mt = (SMapType)other;
+			return PTypeAssistant.equals(type.getFrom(),mt.getFrom()) && PTypeAssistant.equals(type.getTo(), mt.getTo());
+		}
+
+		return false;
+	}
+
 }

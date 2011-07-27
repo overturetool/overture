@@ -2,6 +2,7 @@ package org.overture.ast.patterns.assistants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -39,21 +40,38 @@ public class PPatternAssistant {
 	public static List<PDefinition> getDefinitions(PPattern rp,
 			PType ptype, NameScope scope) {		
 		switch (rp.kindPPattern()) {		
-			case IDENTIFIER:
-				if(rp instanceof AIdentifierPattern)
-				{
-					AIdentifierPattern idPattern = (AIdentifierPattern) rp;					
-					List<PDefinition> defs = new ArrayList<PDefinition>();
-					defs.add(new ALocalDefinition(idPattern.getLocation(), idPattern.getName(), scope, false, null, null, ptype,false));
-					return defs;
-				}
-				break;
+		case IDENTIFIER:
+			AIdentifierPattern idPattern = (AIdentifierPattern) rp;					
+			List<PDefinition> defs = new ArrayList<PDefinition>();
+			defs.add(new ALocalDefinition(idPattern.getLocation(), idPattern.getName(), scope, false, null, null, ptype,false));
+			return defs;					
+		case BOOLEAN:
+		case CHARACTER:
+		case EXPRESSION:
+		case IGNORE:
+		case INTEGER:
+		case NIL:
+		case QUOTE:
+		case REAL:
+		case STRING:
+			return new Vector<PDefinition>();				
+		case CONCATENATION:
+			return AConcatenationPatternAssistant.getDefinitions((AConcatenationPattern)rp,ptype,scope);
+		case RECORD:
+			return ARecordPatternAssistant.getDefinitions((ARecordPattern)rp,ptype,scope);		
+		case SEQ:
+			return ASeqPatternAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
+		case SET:
+			return ASetPatternAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
+		case TUPLE:
+			return ATuplePatternAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
+		case UNION:
+			return AUnionPatternAssistant.getDefinitions((AUnionPattern)rp,ptype,scope);
 			default:
-				System.out.println("HelperPattern : getDefinitions not implemented");
-				break;
+				assert false : "PPatternAssistant.getDefinitions - should not hit this case";
+				return null;
 		}
-
-		return null;
+		
 	}
 
 	public static void typeResolve(PPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {

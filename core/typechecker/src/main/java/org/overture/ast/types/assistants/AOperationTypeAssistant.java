@@ -10,11 +10,13 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.util.Utils;
 
 
 public class AOperationTypeAssistant {
@@ -106,6 +108,26 @@ public class AOperationTypeAssistant {
 		}
 
 		return new AFunctionType(type.getLocation(), false, false, params, new ABooleanBasicType(type.getLocation(),false));
+	}
+
+	public static String toDisplay(AOperationType exptype) {
+		List<PType> parameters = exptype.getParameters();
+		String params = (parameters.isEmpty() ?
+				"()" : Utils.listToString(parameters, " * "));
+		return "(" + params + " ==> " + exptype.getResult() + ")";
+	}
+
+	public static boolean equals(AOperationType type, PType other) {
+		other = PTypeAssistant.deBracket(other);
+
+		if (!(other instanceof AOperationType))
+		{
+			return false;
+		}
+
+		AOperationType oother = (AOperationType)other;
+		return (PTypeAssistant.equals(type.getResult(),oother.getResult()) &&
+				PTypeAssistant.equals(type.getParameters(), oother.getParameters()));
 	}
 
 	
