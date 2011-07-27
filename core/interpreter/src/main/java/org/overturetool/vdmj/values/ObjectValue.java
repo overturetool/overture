@@ -32,15 +32,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.lex.LexNameToken;
+
+
+import org.overture.interpreter.ast.definitions.ASystemClassDefinitionInterpreter;
+import org.overture.interpreter.ast.types.AClassTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.definitions.assistant.SClassDefinitionInterpreterAssistant;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.Lock;
-import org.overturetool.vdmj.types.ClassType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
+
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -51,7 +54,7 @@ public class ObjectValue extends Value
 	private static int nextObjectReference = 0;
 
 	public final int objectReference;
-	public final ClassType type;
+	public final AClassTypeInterpreter type;
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
 
@@ -73,7 +76,7 @@ public class ObjectValue extends Value
 	 */
 	public ObjectValue creator;
 
-	public ObjectValue(ClassType type,
+	public ObjectValue(AClassTypeInterpreter type,
 		NameValuePairMap members, List<ObjectValue> superobjects, CPUValue cpu, ObjectValue creator)
 	{
 		this.objectReference = getReference();
@@ -131,9 +134,9 @@ public class ObjectValue extends Value
 		return this;
 	}
 
-	public TypeList getBaseTypes()
+	public List<PTypeInterpreter> getBaseTypes()
 	{
-		TypeList basetypes = new TypeList();
+		List<PTypeInterpreter> basetypes = new Vector<PTypeInterpreter>();
 
 		if (superobjects.isEmpty())
 		{
@@ -163,7 +166,7 @@ public class ObjectValue extends Value
 
 	public OperationValue getThreadOperation(Context ctxt) throws ValueException
 	{
-		return get(type.classdef.name.getThreadName(), false).operationValue(ctxt);
+		return get(type.getClassdef().getName().getThreadName(), false).operationValue(ctxt);
 	}
 
 	public synchronized int incPeriodicCount()
@@ -185,7 +188,7 @@ public class ObjectValue extends Value
 	public synchronized Value get(LexNameToken field, boolean explicit)
 	{
 		LexNameToken localname =
-			explicit ? field : field.getModifiedName(type.name.name);
+			explicit ? field : field.getModifiedName(type.getName().name);
 
 		// This is another case where we have to iterate with equals()
 		// rather than using the map's hash, because the hash doesn't
@@ -352,7 +355,7 @@ public class ObjectValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
 		Value conv = convertToHierarchy(to);
 
@@ -365,7 +368,7 @@ public class ObjectValue extends Value
 		return super.convertValueTo(to, ctxt);
 	}
 
-	private Value convertToHierarchy(Type to)
+	private Value convertToHierarchy(PTypeInterpreter to)
 	{
 		if (to.equals(type))
 		{
@@ -490,11 +493,11 @@ public class ObjectValue extends Value
 
 	public boolean hasDelegate()
 	{
-		if (type.classdef.hasDelegate())
+		if (SClassDefinitionInterpreterAssistant.hasDelegate(type.getClassdef()))
 		{
 			if (delegateObject == null)
 			{
-				delegateObject = type.classdef.newInstance();
+				delegateObject = SClassDefinitionInterpreterAssistant.newInstance(type.getClassdef());
 			}
 
 			return true;
@@ -505,7 +508,7 @@ public class ObjectValue extends Value
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		return type.classdef.invokeDelegate(delegateObject, ctxt);
+		return SClassDefinitionInterpreterAssistant.invokeDelegate(type.getClassdef(),delegateObject, ctxt);
 	}
 
 	public static void init()
@@ -529,7 +532,7 @@ public class ObjectValue extends Value
 		//Do not set the creator if created by the system class. The System contains
 		// fields with references to Thread instances which are not Serializable and
 		// will fail a deep copy with a NotSerializableExpection for Thread
-		if(newCreator!= null && newCreator.type.classdef instanceof SystemDefinition)
+		if(newCreator!= null && newCreator.type.getClassdef() instanceof ASystemClassDefinitionInterpreter)
 		{
 			return;
 		}

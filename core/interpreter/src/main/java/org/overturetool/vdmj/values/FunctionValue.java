@@ -48,7 +48,7 @@ import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overture.interpreter.definitions.assistant.AExplicitFunctionDefinitionAssistant;
 import org.overture.interpreter.definitions.assistant.AImplicitFunctionDefinitionAssistant;
-import org.overture.interpreter.types.assistant.PTypeAssistant;
+import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overture.interpreter.types.assistant.PTypeInterpreterList;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
@@ -296,7 +296,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 
 		if (argValues.size() != paramPatterns.size())
 		{
-			type.abort(4052, "Wrong number of arguments passed to " + name, ctxt);
+		PTypeInterpreterAssistant.abort(type,4052, "Wrong number of arguments passed to " + name, ctxt);
 		}
 
 		Iterator<Value> valIter = argValues.iterator();
@@ -418,7 +418,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 				stack.push(mv);
 			}
 
-    		Value rv = body.eval(evalContext).convertValueTo(type.getResult(), evalContext);
+    		Value rv = body.apply(evaluator, evalContext).convertValueTo(type.getResult(), evalContext);
 
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
     		{
@@ -496,7 +496,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
         		return rv;
 			}
 
-			type.abort(4057, "Curried function return type is not a function", ctxt);
+			PTypeInterpreter.abort(type, 4057, "Curried function return type is not a function", ctxt);
 			return null;
 		}
 	}
@@ -567,7 +567,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 	@Override 
 	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistant.isType(to, AFunctionTypeInterpreter.class))
+		if (PTypeInterpreterAssistant.isType(to, AFunctionTypeInterpreter.class))
 		{
 			return this;
 		}

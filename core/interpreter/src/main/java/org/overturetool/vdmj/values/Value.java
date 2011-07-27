@@ -29,6 +29,7 @@ import java.util.FormattableFlags;
 import java.util.Formatter;
 
 
+import org.overture.interpreter.ast.analysis.QuestionAnswerAdaptorInterpreter;
 import org.overture.interpreter.ast.types.ABracketTypeInterpreter;
 import org.overture.interpreter.ast.types.ANamedInvariantTypeInterpreter;
 import org.overture.interpreter.ast.types.AOptionalTypeInterpreter;
@@ -41,6 +42,7 @@ import org.overturetool.vdmj.Settings;
 
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.values.evaluation.StatementEvaluator;
 
 
 /**
@@ -50,6 +52,8 @@ import org.overturetool.vdmj.runtime.ValueException;
 abstract public class Value implements Comparable<Value>, Serializable, Formattable, Cloneable
 {
 	private static final long serialVersionUID = 1L;
+	
+	public final static QuestionAnswerAdaptorInterpreter<Context, Value> evaluator = new StatementEvaluator();
 
 	@Override
 	abstract public String toString();

@@ -6,7 +6,7 @@ import java.util.List;
 import org.overture.interpreter.ast.definitions.AExplicitFunctionDefinitionInterpreter;
 import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
-import org.overture.interpreter.types.assistant.PTypeAssistant;
+import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overture.interpreter.types.assistant.PTypeInterpreterList;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 
@@ -137,7 +137,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			for (LexNameToken pname: efd.getTypeParams())
 			{
 				PTypeInterpreter ptype = ti.next();
-				ftype = (AFunctionTypeInterpreter) PTypeAssistant.polymorph(ftype,pname, ptype);
+				ftype = (AFunctionTypeInterpreter) PTypeInterpreterAssistant.polymorph(ftype,pname, ptype);
 			}
 		}
 

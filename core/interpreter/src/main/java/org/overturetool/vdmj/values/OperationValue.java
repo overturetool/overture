@@ -41,7 +41,8 @@ import org.overture.interpreter.ast.statements.PStmInterpreter;
 import org.overture.interpreter.ast.types.AAccessSpecifierAccessSpecifierInterpreter;
 import org.overture.interpreter.ast.types.AOperationTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
-import org.overture.interpreter.types.assistant.PTypeAssistant;
+import org.overture.interpreter.definitions.assistant.AStateDefinitionInterpreterAssistant;
+import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overturetool.interpreter.vdmj.lex.LexKeywordToken;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
@@ -247,7 +248,7 @@ public class OperationValue extends Value
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
-			stateContext = state.getStateContext();
+			stateContext = AStateDefinitionInterpreterAssistant.getStateContext(state);
 		}
 
 		RootContext argContext = newContext(from, toTitle(), ctxt);
@@ -355,7 +356,7 @@ public class OperationValue extends Value
     			ctxt.setPrepost(0, null);
     		}
 
-    		rv = body.eval(argContext);
+    		rv = body.apply(evaluator,argContext);
 
     		if (isConstructor)
     		{
@@ -441,7 +442,7 @@ public class OperationValue extends Value
 
 				debug("guard TEST");
 				ctxt.threadState.setAtomic(true);
-    			boolean ok = guard.eval(ctxt).boolValue(ctxt);
+    			boolean ok = guard.apply(evaluator,ctxt).boolValue(ctxt);
     			ctxt.threadState.setAtomic(false);
 
     			if (ok)
@@ -562,7 +563,7 @@ public class OperationValue extends Value
 	@Override
 	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistant.isType(to, AOperationTypeInterpreter.class))
+		if (PTypeInterpreterAssistant.isType(to, AOperationTypeInterpreter.class))
 		{
 			return this;
 		}

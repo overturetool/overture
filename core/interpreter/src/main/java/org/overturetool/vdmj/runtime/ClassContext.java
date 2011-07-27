@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 
 
 import org.overture.interpreter.ast.definitions.SClassDefinitionInterpreter;
+import org.overture.interpreter.definitions.assistant.SClassDefinitionInterpreterAssistant;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.values.Value;
@@ -82,7 +83,7 @@ public class ClassContext extends RootContext
 			}
 		}
 
-		v = classdef.getStatic(name);
+		v = SClassDefinitionInterpreterAssistant.getStatic(classdef, name);
 
 		if (v != null)
 		{

@@ -27,6 +27,7 @@ import org.overturetool.interpreter.vdmj.lex.LexException;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.values.Value;
 
 /**
  * A breakpoint where something is displayed.
@@ -63,7 +64,7 @@ public class Tracepoint extends Breakpoint
 		}
 		else
 		{
-			String s = trace + " = " + parsed.eval(ctxt) + " at [" + number + "]";
+			String s = trace + " = " + parsed.apply(Value.evaluator, ctxt) + " at [" + number + "]";
 
 			if (Settings.usingDBGP)
 			{

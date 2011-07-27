@@ -115,7 +115,7 @@ public class PeriodicThread extends SchedulablePoolThread
 	protected void body()
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
-		LexLocation from = object.type.classdef.location;
+		LexLocation from = object.type.getClassdef().getLocation();
 		Context ctxt = new ObjectContext(from, "async", global, object);
 
 		if (Settings.dialect == Dialect.VDM_PP)

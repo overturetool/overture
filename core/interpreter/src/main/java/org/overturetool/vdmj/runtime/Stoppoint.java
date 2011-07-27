@@ -30,6 +30,7 @@ import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.values.Value;
 
 /**
  * A breakpoint where execution must stop.
@@ -69,7 +70,7 @@ public class Stoppoint extends Breakpoint
 				RootContext rootContext = ctxt.threadState.nextctxt;
 				LexLocation stepline = ctxt.threadState.stepline;
 				ctxt.threadState.init();
-				shouldBreak = parsed.eval(ctxt).boolValue(ctxt);
+				shouldBreak = parsed.apply(Value.evaluator, ctxt).boolValue(ctxt);
 				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
 			}
 

@@ -32,11 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overturetool.interpreter.vdmj.lex.BacktrackInputReader;
-import org.overturetool.interpreter.vdmj.lex.LexLocation;
-import org.overturetool.interpreter.vdmj.lex.LexNameList;
-import org.overturetool.interpreter.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.VDMJ;
+
 import org.overturetool.vdmj.config.Properties;
 
 /**

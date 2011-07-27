@@ -7,7 +7,7 @@ import java.util.List;
 import org.overture.interpreter.ast.definitions.AImplicitFunctionDefinitionInterpreter;
 import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
-import org.overture.interpreter.types.assistant.PTypeAssistant;
+import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 
 
@@ -22,7 +22,7 @@ public class AImplicitFunctionDefinitionAssistant {
 		{
 			PTypeInterpreter ptype = ti.next();
 			//AFunctionTypeAssistent.
-			ftype = (AFunctionTypeInterpreter)PTypeAssistant.polymorph(ftype,pname, ptype);
+			ftype = (AFunctionTypeInterpreter)PTypeInterpreterAssistant.polymorph(ftype,pname, ptype);
 		}
 
 		return ftype;

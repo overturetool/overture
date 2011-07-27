@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import org.overture.interpreter.ast.types.ANamedInvariantTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.ast.types.SInvariantTypeInterpreterAssistant;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -41,7 +42,7 @@ public class InvariantValue extends ReferenceValue
 		super(value);
 		this.type = type;
 
-		FunctionValue invariant = type.getInvariant(ctxt);
+		FunctionValue invariant = SInvariantTypeInterpreterAssistant.getInvariant(type,ctxt);
 
 		if (invariant != null && Settings.invchecks &&
 			!invariant.eval(invariant.location, value, ctxt).boolValue(ctxt))

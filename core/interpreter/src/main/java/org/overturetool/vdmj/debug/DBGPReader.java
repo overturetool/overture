@@ -47,6 +47,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
@@ -63,13 +64,7 @@ import org.overturetool.vdmj.definitions.PerSyncDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.HistoryExpression;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexToken;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
+
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.messages.rtlog.RTLogger;

@@ -17,10 +17,13 @@ import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overture.interpreter.ast.types.SSeqTypeInterpreter;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
+import org.overturetool.vdmj.runtime.ValueException;
 
 
 
-public class PTypeAssistant {
+public class PTypeInterpreterAssistant {
 
 //	public static boolean hasSupertype(AClassType cto, PType other) {
 //		return PDefinitionAssistant.hasSupertype(cto.getClassdef(), other);
@@ -570,6 +573,15 @@ public class PTypeAssistant {
 //		return other;
 //	}
 
-	
+	public static void abort(PTypeInterpreter type, ValueException ve)
+	{
+		throw new ContextException(ve, type.getLocation());
+	}
+
+	public static void abort(AFunctionTypeInterpreter type, int number,
+			String msg, Context ctxt)
+	{
+		throw new ContextException(number, msg, type.getLocation(), ctxt);
+	}
 
 }

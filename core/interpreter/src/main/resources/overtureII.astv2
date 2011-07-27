@@ -27,6 +27,8 @@ Tokens
   
   Breakpoint ='java:node:org.overturetool.vdmj.runtime.Breakpoint';
   FunctionValue = 'java:org.overturetool.vdmj.values.FunctionValue';
+  State = 'java:org.overturetool.vdmj.values.State';
+  Delegate ='java:org.overturetool.vdmj.util.Delegate';
   
   location = 'java:org.overturetool.interpreter.vdmj.lex.LexLocation';
   plus = '+';
@@ -150,6 +152,7 @@ patternBind {-> package='org.overture.interpreter.ast.patterns'}
 definition {-> package='org.overture.interpreter.ast.definitions'}
   =#class
   | {state} [invfunc]:FunctionValue [initfunc]:FunctionValue //(canBeExecuted):java_Boolean
+            [moduleState]:State
     ;
  
 /*
@@ -248,4 +251,8 @@ Aspect Declaration
 
 
 %exp = [breakpoint]:Breakpoint
+    ;
+    
+%definition->#class
+    = [delegate]:Delegate 
     ;

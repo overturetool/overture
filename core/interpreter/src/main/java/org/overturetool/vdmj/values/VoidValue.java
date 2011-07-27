@@ -25,7 +25,7 @@ package org.overturetool.vdmj.values;
 
 import org.overture.interpreter.ast.types.AVoidTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
-import org.overture.interpreter.types.assistant.PTypeAssistant;
+import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 
@@ -73,7 +73,7 @@ public class VoidValue extends Value
 	@Override
 	public Value convertValueTo(PTypeInterpreter to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistant.isType(to, AVoidTypeInterpreter.class))
+		if (PTypeInterpreterAssistant.isType(to, AVoidTypeInterpreter.class))
 		{
 			return new VoidValue();
 		}

@@ -29,7 +29,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.interpreter.ast.definitions.ACpuClassDefinitionInterpreter;
 import org.overture.interpreter.ast.types.AClassTypeInterpreter;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.scheduler.FCFSPolicy;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
 import org.overturetool.vdmj.scheduler.SchedulingPolicy;

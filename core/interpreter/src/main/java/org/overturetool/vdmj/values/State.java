@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import org.overture.interpreter.ast.definitions.AStateDefinitionInterpreter;
 import org.overture.interpreter.ast.expressions.AEqualsBinaryExpInterpreter;
+import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
 import org.overture.interpreter.ast.types.AFieldFieldInterpreter;
 import org.overture.interpreter.ast.types.ARecordInvariantTypeInterpreter;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
@@ -36,8 +37,12 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 
 
-public class State implements ValueListener
+public class State implements ValueListener, ExternalNodeInterpreter
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public final AStateDefinitionInterpreter definition;
 	public final UpdatableValue recordValue;
 	public final Context context;
@@ -87,7 +92,7 @@ public class State implements ValueListener
 				AEqualsBinaryExpInterpreter ee = (AEqualsBinaryExpInterpreter)definition.getInitExpression();
 				ee.getLocation().hit();
 				ee.getLeft().getLocation().hit();
-				Value v = ee.getRight().eval(globals);
+				Value v = ee.getRight().apply(Value.evaluator,globals);
 
 				if (!(v instanceof RecordValue))
 				{
@@ -140,5 +145,11 @@ public class State implements ValueListener
     			throw new ContextException(e, location);
     		}
 		}
+	}
+	
+	@Override
+	public Object clone() 
+	{
+		return null;//TODO
 	}
 }

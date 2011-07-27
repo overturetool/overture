@@ -28,6 +28,8 @@ import java.util.Iterator;
 import org.overture.interpreter.ast.types.AFieldFieldInterpreter;
 import org.overture.interpreter.ast.types.ARecordInvariantTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.ast.types.SInvariantTypeInterpreterAssistant;
+import org.overture.interpreter.types.assistant.ARecordInvariantTypeInterpreterAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 
@@ -46,7 +48,7 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
-		this.invariant = type.getInvariant(ctxt);
+		this.invariant = SInvariantTypeInterpreterAssistant.getInvariant(type, ctxt);
 
 		if (values.size() != type.getFields().size())
 		{
@@ -74,7 +76,7 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
-		this.invariant = type.getInvariant(ctxt);
+		this.invariant = SInvariantTypeInterpreterAssistant.getInvariant(type, ctxt);
 
 		if (mapvalues.size() != type.getFields().size())
 		{
@@ -120,7 +122,7 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			AFieldFieldInterpreter f = type.findField(nvp.name.name);
+			AFieldFieldInterpreter f = ARecordInvariantTypeInterpreterAssistant.findField(type,nvp.name.name);
 			this.fieldmap.add(nvp.name.name, nvp.value, !f.getEqualityAbstraction());
 		}
 	}

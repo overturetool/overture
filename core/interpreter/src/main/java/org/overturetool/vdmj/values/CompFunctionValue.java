@@ -23,7 +23,12 @@
 
 package org.overturetool.vdmj.values;
 
-import org.overturetool.vdmj.lex.LexLocation;
+
+import java.util.List;
+
+import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
+import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 
@@ -37,8 +42,8 @@ public class CompFunctionValue extends FunctionValue
 	public CompFunctionValue(FunctionValue f1, FunctionValue f2)
 	{
 		super(f1.location,
-			new FunctionType(f1.location,
-				f1.type.partial || f2.type.partial, f2.type.parameters, f1.type.result), "comp");
+			new AFunctionTypeInterpreter(f1.location,false,
+				f1.type.getPartial() || f2.type.getPartial(), (List<PTypeInterpreter>)f2.type.getParameters().clone(), f1.type.getResult().clone()), "comp");
 		this.ff1 = f1;
 		this.ff2 = f2;
 	}
@@ -46,7 +51,7 @@ public class CompFunctionValue extends FunctionValue
 	@Override
 	public String toString()
 	{
-		return ff1.type.parameters + " -> " + ff1.type.result;
+		return ff1.type.getParameters() + " -> " + ff1.type.getResult();
 	}
 
 	@Override

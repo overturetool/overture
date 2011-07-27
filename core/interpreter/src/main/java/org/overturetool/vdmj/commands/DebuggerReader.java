@@ -27,9 +27,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.ExitStatus;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Breakpoint;

@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.scheduler;
 
+import org.overture.interpreter.ast.expressions.PExpInterpreter;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 
@@ -43,12 +44,12 @@ public class MainThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
 	public final Context ctxt;
-	public final Expression expression;
+	public final PExpInterpreter expression;
 
 	private Value result = new UndefinedValue();
 	private Exception exception = null;
 
-	public MainThread(Expression expr, Context ctxt)
+	public MainThread(PExpInterpreter expr, Context ctxt)
 	{
 		super(CPUResource.vCPU, null, 0, false, 0);
 
@@ -82,7 +83,7 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.eval(ctxt);
+			result = expression.apply(Value.evaluator, ctxt);
 		}
 		catch (ContextException e)
 		{
@@ -105,7 +106,7 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.eval(ctxt);
+			result = expression.apply(Value.evaluator, ctxt);
 		}
 		catch (ContextException e)
 		{
