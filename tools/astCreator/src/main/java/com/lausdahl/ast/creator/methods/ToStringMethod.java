@@ -113,13 +113,16 @@ public class ToStringMethod extends Method
 								}
 							}
 
-							for (Field f : c.getFields())
+							if (!found)
 							{
-								if (f.getName().equals("_" + p.content))
+								for (Field f : c.getFields())
 								{
-									tmp += f.getName();
-									found = true;
-									break;
+									if (f.getName().equals("_" + p.content))
+									{
+										tmp += f.getName();
+										found = true;
+										break;
+									}
 								}
 							}
 							if (!found)
