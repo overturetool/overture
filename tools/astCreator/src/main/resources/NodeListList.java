@@ -107,11 +107,13 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 	@SuppressWarnings("unchecked")
 	public @Override Object clone() {
 		LinkedList<List<E>> clone = new LinkedList<List<E>>();
-		for (List<E> list : clone)
+		for (List<E> list : this)
 		{
-			NodeList<E> ll = new NodeList<E>(null);
-			ll.addAll(list);
-			clone.add((List<E>) ll.clone());
+			%NodeList%<E> ll = new %NodeList%<E>(null);
+			for (E e : list) {
+				ll.add((E) e.clone());
+			}
+			clone.add(ll);
 		}
 		return clone;
 	}

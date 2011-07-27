@@ -39,7 +39,7 @@ public class Main
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
 	private static File generated = null;
 
-	public final static RunType run = RunType.OvertureII_Interpreter;
+	public final static RunType run = RunType.OvertureII;
 
 	/**
 	 * @param args
