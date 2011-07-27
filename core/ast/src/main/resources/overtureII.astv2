@@ -2,7 +2,7 @@
 Packages
 base org.overture.ast.node;
 analysis org.overture.ast.analysis;
- 
+  
 Tokens
 /* This section declared tokens as internal types or external classes
  * internal definitions:
@@ -102,9 +102,9 @@ exp {-> package='org.overture.ast.expressions'}
     |   {new} [className]:LexIdentifierToken [args]:exp* (classdef):definition.class (ctorDefinition):definition
     |   {nil} 
     |   {notYetSpecified} 
-    |   {postOp} [opname]:LexNameToken [preexpression]:exp [postexpression]:exp [errors]:case.error* [state]:definition.state [errorLocation]:location
+    |   {postOp} [opname]:LexNameToken (preexpression):exp (postexpression):exp (errors):case.error* (state):definition.state [errorLocation]:location
     |   {pre} [function]:exp [args]:exp*
-    |   {preOp} [opname]:LexNameToken [expression]:exp  [errors]:case.error* [state]:definition.state
+    |   {preOp} [opname]:LexNameToken (expression):exp  (errors):case.error* (state):definition.state
     |   {quoteLiteral} [value]:LexQuoteToken
     |   {realLiteral} [value]:LexRealToken
     |   {sameBaseClass} [left]:exp [right]:exp
@@ -237,7 +237,12 @@ type {-> package='org.overture.ast.types'}
     |   #seq 
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
-    |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean (seqDone):java_Boolean (seqType):type.seq (setDone):java_Boolean (setType):type.set (mapDone):java_Boolean (mapType):type.Map
+    |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean 
+        (seqDone):java_Boolean (seqType):type.seq 
+        (setDone):java_Boolean (setType):type.set 
+        (mapDone):java_Boolean (mapType):type.Map
+        (prodCard):java_Integer (prodType):type.product
+        (funcDone):java_Boolean (funcType):type.function
     |   {unknown}
     |   {unresolved} [typename]:LexNameToken
     |   {voidReturn}
@@ -275,7 +280,7 @@ type {-> package='org.overture.ast.types'}
     ;
 
 field {-> package='org.overture.ast.types'}
-    =   {field} [access]:accessSpecifier [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
+    =   {field} [access]:accessSpecifier.accessSpecifier [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
     ;
 accessSpecifier  {-> package='org.overture.ast.types'}
   = {accessSpecifier} [access]:access [static]:static [async]:async 
@@ -424,7 +429,7 @@ definition {-> package='org.overture.ast.definitions'}
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
+    |   {type} [type]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type //is access missing here
     ;
@@ -618,7 +623,7 @@ Aspect Declaration
         [nameScope]:nameScope 
         [used]:java_Boolean 
         (classDefinition):definition.class 
-        [access]:accessSpecifier 
+        [access]:accessSpecifier.accessSpecifier
         [type]:type 
         // [pass]:pass
     ;
