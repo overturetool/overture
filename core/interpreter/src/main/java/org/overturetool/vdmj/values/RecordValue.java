@@ -28,8 +28,8 @@ import java.util.Iterator;
 import org.overture.interpreter.ast.types.AFieldFieldInterpreter;
 import org.overture.interpreter.ast.types.ARecordInvariantTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
-import org.overture.interpreter.ast.types.SInvariantTypeInterpreterAssistant;
 import org.overture.interpreter.types.assistant.ARecordInvariantTypeInterpreterAssistant;
+import org.overture.interpreter.types.assistant.SInvariantTypeInterpreterAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 

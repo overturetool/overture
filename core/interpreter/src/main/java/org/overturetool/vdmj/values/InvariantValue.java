@@ -25,7 +25,7 @@ package org.overturetool.vdmj.values;
 
 import org.overture.interpreter.ast.types.ANamedInvariantTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
-import org.overture.interpreter.ast.types.SInvariantTypeInterpreterAssistant;
+import org.overture.interpreter.types.assistant.SInvariantTypeInterpreterAssistant;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
