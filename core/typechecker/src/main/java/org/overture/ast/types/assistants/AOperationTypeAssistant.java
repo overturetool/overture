@@ -13,6 +13,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -128,6 +129,20 @@ public class AOperationTypeAssistant {
 		AOperationType oother = (AOperationType)other;
 		return (PTypeAssistant.equals(type.getResult(),oother.getResult()) &&
 				PTypeAssistant.equals(type.getParameters(), oother.getParameters()));
+	}
+
+	public static boolean narrowerThan(AOperationType type,
+			PAccessSpecifier accessSpecifier) {
+		
+		for (PType t: type.getParameters())
+		{
+			if (PTypeAssistant.narrowerThan(t, accessSpecifier))
+			{
+				return true;
+			}
+		}
+
+		return PTypeAssistant.narrowerThan(type.getResult(),accessSpecifier);
 	}
 
 	

@@ -1,9 +1,27 @@
 package org.overture.ast.types.assistants;
 
+import java.util.Vector;
+
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class AUnknownTypeAssistant {
 
@@ -40,4 +58,73 @@ public class AUnknownTypeAssistant {
 		return true;
 	}
 
+	public static AFunctionType getFunction(AUnknownType type) {
+		return new AFunctionType(
+				type.getLocation(),false, true, new NodeList<PType>(null), new AUnknownType(type.getLocation(),false));
+	}
+
+	public static boolean isOperation(AUnknownType type) {
+		return true;
+	}
+	
+	public static AOperationType getOperation(AUnknownType type) {
+		return new AOperationType(
+			type.getLocation(),false, new PTypeList(), new AUnknownType(type.getLocation(),false));
+	}
+
+	public static boolean isSeq(AUnknownType type) {
+		return true;
+	}
+	
+	public static SSeqType getSeq(AUnknownType type)
+	{
+		return new ASeqSeqType(type.getLocation(),false, null, true);	// empty
+	}
+
+	public static boolean isNumeric(AUnknownType type) {
+		return true;
+	}
+	
+	public static ARealNumericBasicType getNumeric(AUnknownType type) {
+		return new ARealNumericBasicType(type.getLocation(), false);
+	}
+
+	public static boolean isMap(AUnknownType type) {
+		return true;
+	}
+
+	public static SMapType getMap(AUnknownType type) {
+		return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);
+	}
+
+	public static boolean isSet(AUnknownType type) {
+		return true;
+	}
+
+	public static ASetType getSet(AUnknownType type) {
+		return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);
+	}
+
+	public static boolean isClass(AUnknownType type) {
+		return true;
+	}
+	
+	public static AClassType getClassType(AUnknownType type){
+		return new AClassType(type.getLocation(),false, null, 
+				new AClassClassDefinition(
+						new LexLocation(),
+						new LexNameToken("CLASS", "DEFAULT", new LexLocation()),
+				null, 
+				false, 
+				null, 
+				null, 
+				null, 
+				new LexNameList(), new Vector<PDefinition>(), null, null, null, null, null, null, null, null, null, null));
+	}
+
+	public static boolean narrowerThan(AUnknownType type,
+			PAccessSpecifier accessSpecifier) {		
+		return false;
+	}
+	
 }

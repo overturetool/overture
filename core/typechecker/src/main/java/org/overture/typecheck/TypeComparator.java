@@ -47,8 +47,8 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.ANumericBasicTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 
 
 
@@ -756,7 +756,7 @@ public class TypeComparator
 					SNumericBasicType subn = (SNumericBasicType)sub;
 					SNumericBasicType supn = (SNumericBasicType)sup;
 
-					return (ANumericBasicTypeAssistant.getWeight(subn) <= ANumericBasicTypeAssistant.getWeight(supn)) ?
+					return (SNumericBasicTypeAssistant.getWeight(subn) <= SNumericBasicTypeAssistant.getWeight(supn)) ?
 						Result.Yes : Result.No;
 				}
 			}

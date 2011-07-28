@@ -3,6 +3,7 @@ package org.overture.ast.types.assistants;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -49,6 +50,19 @@ public class ASetTypeAssistant {
 		}
 
 		return false;
+	}
+
+	public static boolean isSet(ASetType type) {
+		return true;
+	}
+
+	public static ASetType getSet(ASetType type) {
+		return type;
+	}
+
+	public static boolean narrowerThan(ASetType type,
+			PAccessSpecifier accessSpecifier) {
+		return PTypeAssistant.narrowerThan(type.getSetof(),accessSpecifier);
 	}
 
 }

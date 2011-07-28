@@ -93,4 +93,13 @@ public class ARecordInvariantTypeAssistant {
 		return false;
 	}
 
+	public static boolean isRecord(ARecordInvariantType type) {
+		if (type.getOpaque()) return false;
+		return true;
+	}
+	
+	public static ARecordInvariantType getRecord(ARecordInvariantType type) {		
+		return type;
+	}
+
 }

@@ -67,9 +67,9 @@ public class PPatternAssistant {
 			return ATuplePatternAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
 		case UNION:
 			return AUnionPatternAssistant.getDefinitions((AUnionPattern)rp,ptype,scope);
-			default:
-				assert false : "PPatternAssistant.getDefinitions - should not hit this case";
-				return null;
+		default:
+			assert false : "PPatternAssistant.getDefinitions - should not hit this case";
+			return null;
 		}
 		
 	}

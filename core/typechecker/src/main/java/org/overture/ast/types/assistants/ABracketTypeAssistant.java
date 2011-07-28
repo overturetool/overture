@@ -3,8 +3,17 @@ package org.overture.ast.types.assistants;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
@@ -81,5 +90,68 @@ public class ABracketTypeAssistant {
 	public static boolean isFunction(ABracketType type) {
 		return PTypeAssistant.isFunction(type.getType());
 	}
+
+	public static AFunctionType getFunction(ABracketType type) {
+		return PTypeAssistant.getFunction(type.getType());
+	}
+
+	public static boolean isOperation(ABracketType type) {
+		return PTypeAssistant.isOperation(type.getType());
+	}
+	
+	public static AOperationType getOperation(ABracketType type) {
+		return PTypeAssistant.getOperation(type.getType());
+	}
+
+	public static boolean isSeq(ABracketType type) {
+		return PTypeAssistant.isSeq(type.getType());
+	}
+	public static SSeqType getSeq(ABracketType type) {
+		return PTypeAssistant.getSeq(type.getType());
+	}
+
+	public static boolean isNumeric(ABracketType type) {
+		return PTypeAssistant.isNumeric(type.getType());
+		
+	}
+
+	public static SNumericBasicType getNumeric(ABracketType type) {
+		return PTypeAssistant.getNumeric(type.getType());
+	}
+
+	public static boolean isMap(ABracketType type) {
+		return PTypeAssistant.isMap(type.getType());
+	}
+	
+	public static SMapType getMap(ABracketType type){
+		return PTypeAssistant.getMap(type.getType());
+	}
+
+	public static boolean isSet(ABracketType type) {
+		return PTypeAssistant.isSet(type.getType());
+	}
+	
+	public static ASetType getSet(ABracketType type) {
+		return PTypeAssistant.getSet(type.getType());
+	}
+
+	public static boolean isRecord(ABracketType type) {
+		return PTypeAssistant.isRecord(type.getType());
+	}
+
+	public static ARecordInvariantType getRecord(ABracketType type) {
+		return PTypeAssistant.getRecord(type.getType());
+	}
+
+	public static AUnionType getUnion(ABracketType type) {
+		return PTypeAssistant.getUnion(type.getType());
+	}
+
+	public static boolean narrowerThan(ABracketType type,
+			PAccessSpecifier accessSpecifier) {
+		return PTypeAssistant.narrowerThan(type.getType(), accessSpecifier);
+	}
+	
+	
 
 }

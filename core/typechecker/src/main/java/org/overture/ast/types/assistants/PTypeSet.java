@@ -75,7 +75,7 @@ public class PTypeSet extends HashSet<PType>{
 			{
 				if (x instanceof SNumericBasicType)
 				{
-					if ( ANumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < ANumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)) )
+					if ( SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)) )
 					{
 						remove(x);
 						break;

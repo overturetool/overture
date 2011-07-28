@@ -11,7 +11,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
-import org.overture.ast.node.tokens.TPlus;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -34,8 +33,6 @@ import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.EBasicType;
-import org.overture.ast.types.EInvariantType;
-import org.overture.ast.types.EType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -46,7 +43,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.util.Utils;
 
 public class PTypeAssistant {
 
@@ -167,11 +163,33 @@ public class PTypeAssistant {
 			}
 			break;		
 		case UNION:
-			return true;
+			return AUnionTypeAssistant.isUnion((AUnionType)type);
+		default:
+			break;
 		}
 		return false;
 	}
 
+	public static AUnionType getUnion(PType type) {
+		switch(type.kindPType())
+		{		
+		case BRACKET:
+			return ABracketTypeAssistant.getUnion((ABracketType) type);
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getUnion((ANamedInvariantType)type);
+			}
+			break;		
+		case UNION:
+			return AUnionTypeAssistant.getUnion((AUnionType)type);
+		default:
+			break;
+		}
+		assert false : " cannot getUnion from non-union";
+		return null;
+	}
+	
 	public static boolean isFunction(PType type) {
 		switch (type.kindPType()) {		
 		case BRACKET:
@@ -199,17 +217,28 @@ public class PTypeAssistant {
 	}
 
 	
-	//TODO: still needs to fill some of this is/get functions
 	public static AFunctionType getFunction(PType type) {
 		switch (type.kindPType()) {
+		case BRACKET: 
+			return ABracketTypeAssistant.getFunction((ABracketType)type);
 		case FUNCTION:
-			if (type instanceof AFunctionType) {
-				return (AFunctionType) type;
+			return (AFunctionType) type;
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getFunction((ANamedInvariantType)type); 
 			}
 			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.getFunction((AOptionalType)type);
+		case UNION:
+			return AUnionTypeAssistant.getFunction((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.getFunction((AUnknownType)type);
 		default:
-			assert false : "Can't getFunction of a non-function";
+			break;
 		}
+		assert false : "Can't getFunction of a non-function";
 		return null;
 	}
 
@@ -335,46 +364,56 @@ public class PTypeAssistant {
 	}
 
 	public static boolean isOperation(PType type) {
-		switch (type.kindPType()) {
+		switch (type.kindPType()) {		
+		case BRACKET:
+			return ABracketTypeAssistant.isOperation((ABracketType)type);
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isOperation((ANamedInvariantType)type);
+			} 		
+			break;
 		case OPERATION:
 			return true;
-		case BASIC:
-		case BRACKET:
-		case CLASS:
-		case FUNCTION:	
-		case INVARIANT:
-		case MAP:
 		case OPTIONAL:
+			return AOptionalTypeAssistant.isOperation((AOptionalType)type);
 		case PARAMETER:
-		case PRODUCT:		
-		case QUOTE:
-		case SEQ:
-		case SET:
-		case UNDEFINED:
+			return AParameterTypeAssistant.isOperation((AParameterType)type);		
 		case UNION:
+			return AUnionTypeAssistant.isOperation((AUnionType)type);
 		case UNKNOWN:
-		case UNRESOLVED:
-		case VOID:
-		case VOIDRETURN:
-		default:
-			System.out.println("PTypeAssistent : isOperation not implemented");
-			return false;
-
+			return AUnknownTypeAssistant.isOperation((AUnknownType)type);		
+		default:			
+			break;
 		}
+		return false;
 	}
 
 	public static AOperationType getOperation(PType type) {
 		switch (type.kindPType()) {
+		case BRACKET:
+			return ABracketTypeAssistant.getOperation((ABracketType)type);
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getOperation((ANamedInvariantType)type);
+			} 		
+			break;
 		case OPERATION:
-			if (type instanceof AOperationType) {
-				return (AOperationType) type;
-			}
-
-		default:
-			assert false : "Can't getOperation of a non-operation";
-			return null;
-
+			return (AOperationType)type;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.getOperation((AOptionalType)type);			
+		case UNION:
+			return AUnionTypeAssistant.getOperation((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.getOperation((AUnknownType)type);		
+		default:			
+			break;
 		}
+		assert false : "Can't getOperation of a non-operation";
+		return null;
+
+
 	}
 
 	public static boolean isSeq(PType type) {
@@ -382,18 +421,25 @@ public class PTypeAssistant {
 		case SEQ:
 			return true;	
 		case BRACKET:
-			return isSeq(((ABracketType)type).getType());
+			return ABracketTypeAssistant.isSeq((ABracketType)type);		
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isSeq((ANamedInvariantType)type);
+			} 		
+			break;
 		case OPTIONAL:
-			return isSeq(((AOptionalType)type).getType());
+			return AOptionalTypeAssistant.isSeq((AOptionalType)type);
 		case PARAMETER:
-			return true;
+			return AParameterTypeAssistant.isSeq((AParameterType)type);
 		case UNION:
-			return getSeq(type) != null;
+			return AUnionTypeAssistant.isSeq((AUnionType)type); 
 		case UNKNOWN:
-			return true;
+			return AUnknownTypeAssistant.isSeq((AUnknownType)type);
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
 
 	public static SSeqType getSeq(PType type) {
@@ -401,194 +447,280 @@ public class PTypeAssistant {
 		case SEQ:					
 				return (SSeqType) type;		
 		case BRACKET:
-			return getSeq(((ABracketType)type).getType());				
+			return ABracketTypeAssistant.getSeq((ABracketType)type);		
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getSeq((ANamedInvariantType)type);
+			} 		
+			break;
 		case OPTIONAL:
-			return getSeq(((AOptionalType)type).getType());
+			return AOptionalTypeAssistant.getSeq((AOptionalType)type);
 		case PARAMETER:
-			return new ASeqSeqType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true);		
+			return AParameterTypeAssistant.getSeq((AParameterType)type);
 		case UNION:
-			return AUnionTypeAssistant.getSeq((AUnionType)type);
+			return AUnionTypeAssistant.getSeq((AUnionType)type); 
 		case UNKNOWN:
-			return new ASeqSeqType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true);					
+			return AUnknownTypeAssistant.getSeq((AUnknownType)type);
 		default:
-			assert false : "Can't getSeq of a non-seq";
-			return null;
+			break;
 		}
+		assert false : "cannot getSeq from non-seq";
+		return null;
+		
 	}
 
 	public static boolean isNumeric(PType type) {
 		switch (type.kindPType()) {
-		case BASIC:
-			if (type instanceof SBasicType) {
-				SBasicType bType = (SBasicType) type;
-				if (bType.kindSBasicType() == EBasicType.NUMERIC) {
-					return true;
-				} else
-					return false;
-
+		case BASIC:			
+			SBasicType bType = (SBasicType) type;
+			if (bType.kindSBasicType() == EBasicType.NUMERIC) {
+				return true;
+			} else
+			{
+				return false;
 			}
+		case BRACKET:
+			return ABracketTypeAssistant.isNumeric((ABracketType) type);
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType)type);
+			} 		
+			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.isNumeric((AOptionalType)type);
+		case PARAMETER:
+			return AParameterTypeAssistant.isNumeric((AParameterType)type);
+		case UNION:
+			return AUnionTypeAssistant.isNumeric((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.isNumeric((AUnknownType)type);
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
+	
+	public static SNumericBasicType getNumeric(PType type) {
+		switch (type.kindPType()) {
+		case BASIC:			
+			SBasicType bType = (SBasicType) type;
+			if (bType.kindSBasicType() == EBasicType.NUMERIC) {
+				if (type instanceof SNumericBasicType) {
+					return (SNumericBasicType) type;
+				}
+			}
+			break;
+		case BRACKET:
+			return ABracketTypeAssistant.getNumeric((ABracketType) type);
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType)type);
+			} 		
+			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.getNumeric((AOptionalType)type);
+		case PARAMETER:
+			return AParameterTypeAssistant.getNumeric((AParameterType)type);
+		case UNION:
+			return AUnionTypeAssistant.getNumeric((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.getNumeric((AUnknownType)type);
+		default:
+			break;
+		}
+		assert false : "Can't getNumeric of a non-numeric";
+		return null;
+	}
+	
 
 	public static boolean isMap(PType type) {
 		switch (type.kindPType()) {
 		case MAP:
-			return true;
+			return SMapTypeAssistant.isMap((SMapType)type);
 		case BRACKET:
-			return isMap(((ABracketType)type).getType());		
+			return  ABracketTypeAssistant.isMap((ABracketType)type);		
 		case INVARIANT:
-			switch (((SInvariantType) type).kindSInvariantType()) {
-			case NAMED:
-				return isMap(((ANamedInvariantType)type).getType());
-			default:				
-				return false;
-			}			
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isMap((ANamedInvariantType)type);
+			} 		
+			break;
 		case OPTIONAL:
-			return isMap(((AOptionalType)type).getType());	
+			return AOptionalTypeAssistant.isMap((AOptionalType)type);	
 		case PARAMETER:
-			return true;	
+			return AParameterTypeAssistant.isMap((AParameterType)type);
 		case UNION:
-			return getMap(type) != null;
+			return AUnionTypeAssistant.isMap((AUnionType)type);
 		case UNKNOWN:
-			return true;
+			return AUnknownTypeAssistant.isMap((AUnknownType)type);
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
 
 	public static SMapType getMap(PType type) {
 		switch (type.kindPType()) {
 		case MAP:
-			if (type instanceof AMapMapType) {
-				return (AMapMapType) type;
-			}
-			else if(type instanceof AInMapMapType) {
-				return (AInMapMapType) type;
-			}		
+			return SMapTypeAssistant.getMap((SMapType)type);	
 		case BRACKET:
-			return getMap(((ABracketType)type).getType());		
+			return ABracketTypeAssistant.getMap(((ABracketType)type));		
 		case INVARIANT:
-			switch (((SInvariantType) type).kindSInvariantType()) {
-			case NAMED:
-				return getMap(((ANamedInvariantType)type).getType());
-			default:
-				assert false : "Can't getMap of a non-map";
-				return null;
-			}			
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getMap((ANamedInvariantType)type);
+			} 		
+			break;		
 		case OPTIONAL:
-			return getMap(((AOptionalType)type).getType());	
+			return AOptionalTypeAssistant.getMap((AOptionalType)type);	
 		case PARAMETER:
-			return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);	
+			return AParameterTypeAssistant.getMap((AParameterType)type);
 		case UNION:
 			return AUnionTypeAssistant.getMap((AUnionType)type);
 		case UNKNOWN:
-			return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);						
+			return AUnknownTypeAssistant.getMap((AUnknownType)type);
 		default:
-			assert false : "Can't getMap of a non-map";
-			return null;
+			break;
 		}
+		assert false : "Can't getMap of a non-map";
+		return null;
 	}
 
 	public static boolean isSet(PType type) {
 		switch (type.kindPType()) {
 		case SET:
-			return true;
+			return ASetTypeAssistant.isSet((ASetType)type);
 		case BRACKET:
-			return isSet(((ABracketType)type).getType());		
+			return ABracketTypeAssistant.isSet((ABracketType)type);	
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isSet((ANamedInvariantType)type);
+			} 		
+			break;	
 		case OPTIONAL:
-			return isSet(((AOptionalType)type).getType());
+			return AOptionalTypeAssistant.isSet((AOptionalType)type);
 		case PARAMETER:
-			return true;
+			return AParameterTypeAssistant.isSet((AParameterType)type);
 		case UNION:
-			return getSet((AUnionType)type) != null;
+			return AUnionTypeAssistant.isSet((AUnionType)type);
 		case UNKNOWN:
-			return true;
+			return AUnknownTypeAssistant.isSet((AUnknownType)type);
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
 
 	public static ASetType getSet(PType type) {
 		switch (type.kindPType()) {
 		case SET:			
-			return (ASetType) type;		
+			return ASetTypeAssistant.getSet((ASetType) type);		
 		case BRACKET:
-			return getSet(((ABracketType)type).getType());		
+			return ABracketTypeAssistant.getSet((ABracketType)type); 	
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getSet((ANamedInvariantType)type);
+			} 		
+			break;	
 		case OPTIONAL:
-			return getSet(((AOptionalType)type).getType());
+			return AOptionalTypeAssistant.getSet((AOptionalType)type);
 		case PARAMETER:
-			return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);		
+			return AParameterTypeAssistant.getSet((AParameterType)type);
 		case UNION:
 			return AUnionTypeAssistant.getSet((AUnionType)type);
 		case UNKNOWN:
-			return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);		
+			return AUnknownTypeAssistant.getSet((AUnknownType)type);
 		default:
-			assert false : "Can't getSet of a non-set";
-			return null;
+			break;
 		}
+		assert false : "Can't getSet of a non-set";
+		return null;
 	}
 
-	public static SNumericBasicType getNumeric(PType type) {
-		switch (type.kindPType()) {
-		case BASIC:
-			if (type instanceof SBasicType) {
-				SBasicType bType = (SBasicType) type;
-				if (bType.kindSBasicType() == EBasicType.NUMERIC) {
-					if (type instanceof SNumericBasicType) {
-						return (SNumericBasicType) type;
-					}
-				}
-			}
-		default:
-			assert false : "Can't getNumeric of a non-numeric";
-			return null;
-		}
-	}
+	
 
 	public static boolean isRecord(PType type) {
 		switch (type.kindPType()) {
+		case BRACKET:
+			return ABracketTypeAssistant.isRecord((ABracketType)type);
 		case INVARIANT:
-			if (type instanceof SInvariantType) {
-				SInvariantType iType = (SInvariantType) type;
-				if (iType.kindSInvariantType() == EInvariantType.RECORD) {
-					if (type instanceof ARecordInvariantType) {
-						return true;
-					}
-				}
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isRecord((ANamedInvariantType)type);
+			} else if(type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistant.isRecord((ARecordInvariantType)type);
 			}
+			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.isRecord((AOptionalType)type);
+		case PARAMETER:
+			return AParameterTypeAssistant.isRecord((AParameterType)type);
+		case UNION:
+			return AUnionTypeAssistant.isRecord((AUnionType)type);
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
 
 	public static ARecordInvariantType getRecord(PType type) {
 		switch (type.kindPType()) {
+		
+		case BRACKET:
+			return ABracketTypeAssistant.getRecord((ABracketType)type);
 		case INVARIANT:
-			if (type instanceof SInvariantType) {
-				SInvariantType iType = (SInvariantType) type;
-				if (iType.kindSInvariantType() == EInvariantType.RECORD) {
-					if (type instanceof ARecordInvariantType) {
-						return (ARecordInvariantType) type;
-					}
-				}
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getRecord((ANamedInvariantType)type);
+				
+			} else if(type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistant.getRecord((ARecordInvariantType)type);
 			}
+			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.getRecord((AOptionalType)type);
+		case PARAMETER:
+			return AParameterTypeAssistant.getRecord((AParameterType)type);
+		case UNION:
+			return AUnionTypeAssistant.getRecord((AUnionType)type);
 		default:
-			assert false : "Can't getRecord of a non-record";
-			return null;
+			break;
 		}
+		assert false : "Can't getRecord of a non-record";
+		return null;
 	}
 
 	public static boolean isClass(PType type) {
 		switch (type.kindPType()) {
+		
 		case CLASS:
-			if (type instanceof AClassType) {
-				return true;
+			return AClassTypeAssistant.isClass((AClassType)type);
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.isClass((ANamedInvariantType)type);
+				
 			}
+			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.isClass((AOptionalType)type);
+		case PARAMETER:
+			return AParameterTypeAssistant.isClass((AParameterType)type);
+		case UNION:
+			return AUnionTypeAssistant.isClass((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.isClass((AUnknownType)type);
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
 
 	public static AClassType getClassType(PType type) {
@@ -597,10 +729,26 @@ public class PTypeAssistant {
 			if (type instanceof AClassType) {
 				return (AClassType) type;
 			}
+		case INVARIANT:
+			if(type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistant.getClassType((ANamedInvariantType)type);
+				
+			}
+			break;
+		case OPTIONAL:
+			return AOptionalTypeAssistant.getClassType((AOptionalType)type);
+		case PARAMETER:
+			return AParameterTypeAssistant.getClassType((AParameterType)type);
+		case UNION:
+			return AUnionTypeAssistant.getClassType((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.getClassType((AUnknownType)type);
 		default:
-			assert false : "Can't getClass of a non-class";
-			return null;
+			break;
 		}
+		assert false : "Can't getClass of a non-class";
+		return null;
 
 	}
 
@@ -613,25 +761,22 @@ public class PTypeAssistant {
 			{
 				return ANamedInvariantTypeAssistant.getProduct((ANamedInvariantType)type);
 			}
-			else 
-			{
-				assert false : "cannot getProduct from non-product type";
-				return null;
-			}				
+			break;
 		case OPTIONAL:
 			return AOptionalTypeAssistant.getProduct((AOptionalType)type); 
 		case PARAMETER:
 			return AParameterTypeAssistant.getProduct((AProductType)type);
 		case PRODUCT:
-			return (AProductType) type;
+			return AProductTypeAssistant.getProduct((AProductType)type);
 		case UNION:
 			return AUnionTypeAssistant.getProduct((AUnionType)type);
 		case UNKNOWN:
 			return AUnknownTypeAssistant.getProduct((AUnknownType)type);
 		default:
-			assert false : "cannot getProduct from non-product type";
-			return null;
+			break;
 		}
+		assert false : "cannot getProduct from non-product type";
+		return null;
 	}
 	
 	public static boolean isProduct(PType type) {
@@ -643,33 +788,56 @@ public class PTypeAssistant {
 			{
 				return ANamedInvariantTypeAssistant.isProduct((ANamedInvariantType)type);
 			}
-			else 
-				return false;
+			break;
 		case OPTIONAL:
 			return AOptionalTypeAssistant.isProduct((AOptionalType)type); 
 		case PARAMETER:
-			return true;
+			return AParameterTypeAssistant.isProduct((AParameterType)type);
 		case PRODUCT:
-			return true;
+			return AProductTypeAssistant.isProduct((AProductType)type);
 		case UNION:
 			return AUnionTypeAssistant.isProduct((AUnionType)type);
 		case UNKNOWN:
 			return true;
 		default:
-			return false;
+			break;
 		}
+		return false;
 	}
 
 	public static boolean narrowerThan(PType type, PAccessSpecifier accessSpecifier) {
+		switch (type.kindPType()) {				
+		case BRACKET:
+			return ABracketTypeAssistant.narrowerThan((ABracketType)type,accessSpecifier);		
+		case FUNCTION:
+			return AFunctionTypeAssistant.narrowerThan((AFunctionType)type,accessSpecifier);				
+		case OPERATION:
+			return AOperationTypeAssistant.narrowerThan((AOperationType)type,accessSpecifier);
+		case OPTIONAL:
+			return AOptionalTypeAssistant.narrowerThan((AOptionalType)type,accessSpecifier);
+		case PARAMETER:
+			return AParameterTypeAssistant.narrowerThan((AParameterType)type,accessSpecifier);
+		case SEQ:
+			return SSeqTypeAssistant.narrowerThan((SSeqType)type,accessSpecifier);
+		case SET:
+			return ASetTypeAssistant.narrowerThan((ASetType)type,accessSpecifier);
+		case UNION:
+			return AUnionTypeAssistant.narrowerThan((AUnionType)type,accessSpecifier);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.narrowerThan((AUnknownType)type,accessSpecifier);
+		default:
+			return narrowerThanBaseCase(type, accessSpecifier);
+		}
+	}
+
+	public static boolean narrowerThanBaseCase(PType type, PAccessSpecifier accessSpecifier) {
 		if (type.getDefinitions() != null)
 		{
 			boolean result = false;
-
 			for (PDefinition d: type.getDefinitions())
 			{
 				result = result || PAccessSpecifierAssistant.narrowerThan(d.getAccess(),accessSpecifier);
 			}
-
 			return result;
 		}
 		else
@@ -677,7 +845,7 @@ public class PTypeAssistant {
 			return false;
 		}
 	}
-
+	
 	public static boolean equals(PType type, PType other) {
 		switch (type.kindPType()) {		
 		case BRACKET:

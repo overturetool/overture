@@ -7,11 +7,11 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.util.Utils;
-
 
 
 public class AFunctionTypeAssistant {
@@ -123,6 +123,20 @@ public class AFunctionTypeAssistant {
 		return (type.getPartial() == fo.getPartial() &&
 				PTypeAssistant.equals(type.getResult(),fo.getResult()) &&
 				PTypeAssistant.equals(type.getParameters(),fo.getParameters()));
+	}
+
+	public static boolean narrowerThan(AFunctionType type,
+			PAccessSpecifier accessSpecifier) {
+		
+		for (PType t: type.getParameters())
+		{
+			if (PTypeAssistant.narrowerThan(t, accessSpecifier))
+			{
+				return true;
+			}
+		}
+
+		return  PTypeAssistant.narrowerThan(type.getResult(),accessSpecifier);
 	}
 
 }

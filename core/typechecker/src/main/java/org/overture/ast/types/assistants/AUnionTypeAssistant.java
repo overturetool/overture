@@ -8,21 +8,36 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -316,7 +331,7 @@ public class AUnionTypeAssistant {
 		return getFunction(type) != null;
 	}
 
-	private static AFunctionType getFunction(AUnionType type) {
+	public static AFunctionType getFunction(AUnionType type) {
 		if (!type.getFuncDone())
 		{
     		type.setFuncDone(true);
@@ -374,6 +389,283 @@ public class AUnionTypeAssistant {
 
 		return type.getFuncType();
 	}
+
+	public static boolean isOperation(AUnionType type) {
+		return getOperation(type) != null;
+	}
+
+	public static AOperationType getOperation(AUnionType type) {
+		
+		if (!type.getOpDone())
+		{
+    		type.setOpDone(true);
+    		type.setOpType(PTypeAssistant.getOperation(new AUnknownType(type.getLocation(), false)));
+    		
+       		PTypeSet result = new PTypeSet();
+       		Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
+			List<PDefinition> defs = new Vector<PDefinition>();
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isOperation(t))
+    			{
+    				if (t.getDefinitions() != null) defs.addAll(t.getDefinitions());
+    				AOperationType op = PTypeAssistant.getOperation(t);
+    				result.add(op.getResult());
+
+    				for (int p=0; p < op.getParameters().size(); p++)
+    				{
+    					PType pt = op.getParameters().get(p);
+    					PTypeSet pset = params.get(p);
+
+    					if (pset == null)
+    					{
+    						pset = new PTypeSet(pt);
+    						params.put(p, pset);
+    					}
+    					else
+    					{
+    						pset.add(pt);
+    					}
+    				}
+    			}
+    		}
+
+    		if (!result.isEmpty())
+    		{
+    			PType rtype = result.getType(type.getLocation());
+       			PTypeList plist = new PTypeList();
+
+    			for (int i=0; i<params.size(); i++)
+    			{
+    				PType pt = params.get(i).getType(type.getLocation());
+    				plist.add(pt);
+    			}
+
+    			type.setOpType(new AOperationType(type.getLocation(),false, plist, rtype));
+    			type.getOpType().setDefinitions(defs);
+    		}
+    		else
+    		{
+    			type.setOpType(null);
+    		}
+    	}
+
+		return type.getOpType();
+	}
+
+	public static boolean isSeq(AUnionType type) {
+		return getSeq(type) != null;
+	}
+
+	public static boolean isNumeric(AUnionType type) {
+		return getNumeric(type) != null;
+	}
+
+	public static SNumericBasicType getNumeric(AUnionType type) {
+		if (!type.getNumDone())
+		{
+    		type.setNumDone(true);
+			type.setNumType(new ANatNumericBasicType(type.getLocation(),false));		// lightest default
+			boolean found = false;
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isNumeric(t))
+    			{
+    				SNumericBasicType nt = PTypeAssistant.getNumeric(t);
+
+    				if (SNumericBasicTypeAssistant.getWeight(nt) > SNumericBasicTypeAssistant.getWeight(type.getNumType()))
+    				{
+    					type.setNumType(nt);
+    				}
+
+    				found = true;
+    			}
+    		}
+    		
+    		if (!found) type.setNumType(null);
+		}
+
+		return type.getNumType();
+	}
+
+	public static boolean isMap(AUnionType type) {
+		return getMap(type) != null;
+	}
+
+	public static boolean isSet(AUnionType type) {
+		 return getSet(type) != null;
+	}
+
+	public static boolean isRecord(AUnionType type) {
+		return getRecord(type) != null;
+	}
+
+	public static ARecordInvariantType getRecord(AUnionType type) {
+		if (!type.getRecDone())
+		{
+    		type.setRecDone(true);		// Mark early to avoid recursion.
+    		type.setRecType(PTypeAssistant.getRecord(new AUnknownType(type.getLocation(), false)));
+    		
+    		// Build a record type with the common fields of the contained
+    		// record types, making the field types the union of the original
+    		// fields' types...
+
+    		Map<String, PTypeSet> common = new HashMap<String, PTypeSet>();
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isRecord(t))
+    			{
+    				for (AFieldField f: PTypeAssistant.getRecord(t).getFields())
+    				{
+    					PTypeSet current = common.get(f.getTag());
+
+    					if (current == null)
+    					{
+    						common.put(f.getTag(), new PTypeSet(f.getType()));
+    					}
+    					else
+    					{
+    						current.add(f.getType());
+    					}
+    				}
+    			}
+    		}
+
+    		List<AFieldField> fields = new Vector<AFieldField>();
+
+    		for (String tag: common.keySet())
+    		{
+				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
+				fields.add(new AFieldField(null, tagname, tag, common.get(tag).getType(type.getLocation()), false));
+    		}
+
+    		type.setRecType(fields.isEmpty() ? null : new ARecordInvariantType(type.getLocation(), false, new LexNameToken("?", "?", type.getLocation()), fields));
+		}
+
+		return type.getRecType();
+	}
+
+	public static boolean isClass(AUnionType type) {
+		return getClassType(type) != null;
+	}
+
+	public static AClassType getClassType(AUnionType type) {
+		if (!type.getClassDone())
+		{
+    		type.setClassDone(true);	// Mark early to avoid recursion.
+    		type.setClassType(PTypeAssistant.getClassType(new AUnknownType(type.getLocation(),false)));
+
+    		// Build a class type with the common fields of the contained
+    		// class types, making the field types the union of the original
+    		// fields' types...
+
+    		Map<LexNameToken, PTypeSet> common = new HashMap<LexNameToken, PTypeSet>();
+    		Map<LexNameToken, AAccessSpecifierAccessSpecifier> access = new HashMap<LexNameToken, AAccessSpecifierAccessSpecifier>();
+    		LexNameToken classname = null;
+
+    		for (PType t: type.getTypes())
+    		{
+    			if (PTypeAssistant.isClass(t))
+    			{
+    				AClassType ct = PTypeAssistant.getClassType(t);
+
+    				if (classname == null)
+    				{
+    					classname = ct.getClassdef().getName();
+    				}
+
+    				for (PDefinition f: SClassDefinitionAssistant.getDefinitions(ct.getClassdef()))
+    				{
+    					// TypeSet current = common.get(f.name);
+    					LexNameToken synthname = f.getName().getModifiedName(classname.name);
+    					PTypeSet current = null;
+
+    					for (LexNameToken n: common.keySet())
+    					{
+    						if (n.name.equals(synthname.name))
+    						{
+    							current = common.get(n);
+    							break;
+    						}
+    					}
+
+    					PType ftype = f.getType();
+
+    					if (current == null)
+    					{
+    						common.put(synthname, new PTypeSet(ftype));
+    					}
+    					else
+    					{
+    						current.add(ftype);
+    					}
+
+    					PAccessSpecifier curracc = access.get(synthname);
+
+    					if (curracc == null)
+    					{
+    						access.put(synthname, f.getAccess());
+    					}
+    					else
+    					{
+    						if (PAccessSpecifierAssistant.narrowerThan(curracc, f.getAccess()))
+    						{
+    							access.put(synthname, f.getAccess());
+    						}
+    					}
+    				}
+    			}
+    		}
+
+    		List<PDefinition> newdefs = new Vector<PDefinition>();
+
+    		// Note that the pseudo-class is named after one arbitrary
+    		// member of the union, even though it has all the distinct
+    		// fields of the set of classes within the union.
+
+    		for (LexNameToken synthname: common.keySet())
+    		{
+    			PDefinition def = new ALocalDefinition(synthname.location,
+					synthname, NameScope.GLOBAL, false, null, common.get(synthname).getType(type.getLocation()), null);
+
+    			def.setAccess(access.get(synthname));
+				newdefs.add(def);
+    		}
+
+    		type.setClassType((classname == null) ? null :
+    			new AClassType(type.getLocation(),false,classname,
+    				new AClassClassDefinition(classname.getLocation(), classname,
+    					null, false, null, type, null, new LexNameList(), newdefs, null, null, null, null, null, null, newdefs, null, null, null)));
+		}
+
+		return type.getClassType();
+	}
+
+	public static boolean isUnion(AUnionType type) {
+		return true;
+	}
+
+	public static AUnionType getUnion(AUnionType type) {
+		return type;
+	}
+
+	public static boolean narrowerThan(AUnionType type,
+			PAccessSpecifier accessSpecifier) {
+		
+		for (PType t: type.getTypes())
+		{
+			if (PTypeAssistant.narrowerThan(t,accessSpecifier))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	
 
 }

@@ -4,6 +4,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -105,4 +106,13 @@ public class AClassTypeAssistant {
 		return false;
 	}
 
+	public static boolean isClass(AClassType type) {
+		return true;
+	}
+
+	public static SClassDefinition getClass(SClassDefinition type)
+	{
+		return type;
+	}
+	
 }
