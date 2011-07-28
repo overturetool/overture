@@ -97,9 +97,9 @@ exp {-> package='org.overture.ast.expressions'}
     |   #Map
     |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
-    |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:invariant.record (argTypes):type*
-    |   {mu} [record]:exp (recordType):invariant.record [modifiers]:modifier.record* (modTypes):type*
-    |   {new} [className]:LexIdentifierToken [args]:exp* (classdef):definition.class (ctorDefinition):definition
+    |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:type.#invariant.record (argTypes):type*
+    |   {mu} [record]:exp (recordType):type.#invariant.record [modifiers]:modifier.record* (modTypes):type*
+    |   {new} [className]:LexIdentifierToken [args]:exp* (classdef):definition.#class (ctorDefinition):definition
     |   {nil} 
     |   {notYetSpecified} 
     |   {postOp} [opname]:LexNameToken (preexpression):exp (postexpression):exp (errors):case.error* (state):definition.state [errorLocation]:location
@@ -136,7 +136,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {indices}  
     |   {len} 
     |   {mapDomain} 
-    |   {mapInverse} (mapType):type.Map
+    |   {mapInverse} (mapType):type.#Map
     |   {mapRange} 
     |   {not}  
     |   {powerSet} 
@@ -194,8 +194,8 @@ exp {-> package='org.overture.ast.expressions'}
     ;
     
 #Map {-> package='org.overture.ast.expressions'}
-    =   {mapComp} [first]:maplet [bindings]:multipleBind* [predicate]:exp
-    |   {mapEnum} [members]:maplet* [domTypes]:type* [rngTypes]:type*
+    =   {mapComp} [first]:exp.maplet [bindings]:multipleBind* [predicate]:exp
+    |   {mapEnum} [members]:exp.maplet* [domTypes]:type* [rngTypes]:type*
     ;
     
 #Seq {-> package='org.overture.ast.expressions'}
@@ -225,7 +225,7 @@ boolean_const
 type {-> package='org.overture.ast.types'}
     =   #basic
     |   {bracket} [type]:type
-    |   {class} [name]:LexNameToken [classdef]:definition.class 
+    |   {class} [name]:LexNameToken [classdef]:definition.#class 
     |   {function} [partial]:java_Boolean [parameters]:type* [result]:type 
     |   #invariant
     |   #Map 
@@ -238,16 +238,19 @@ type {-> package='org.overture.ast.types'}
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
     |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean 
-        (seqDone):java_Boolean (seqType):type.seq 
+        (seqDone):java_Boolean (seqType):type.#seq 
         (setDone):java_Boolean (setType):type.set 
-        (mapDone):java_Boolean (mapType):type.Map
+        (mapDone):java_Boolean (mapType):type.#Map
         (prodCard):java_Integer (prodType):type.product
         (funcDone):java_Boolean (funcType):type.function
+        (opDone):java_Boolean (opType):type.operation
+        (numDone):java_Boolean (numType):type.#basic.#numeric
+        (recDone):java_Boolean (recType):type.#invariant.record
     |   {unknown}
     |   {unresolved} [typename]:LexNameToken
     |   {voidReturn}
     |   {void} 
-    ;
+    ; 
 
 
 #seq {-> package='org.overture.ast.types'}
@@ -429,7 +432,7 @@ definition {-> package='org.overture.ast.definitions'}
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [type]:invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
+    |   {type} [type]:type.#invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type //is access missing here
     ;
@@ -622,7 +625,7 @@ Aspect Declaration
         [name]:LexNameToken 
         [nameScope]:nameScope 
         [used]:java_Boolean 
-        (classDefinition):definition.class 
+        (classDefinition):definition.#class 
         [access]:accessSpecifier.accessSpecifier
         [type]:type 
         // [pass]:pass
@@ -636,7 +639,7 @@ Aspect Declaration
         [localInheritedDefinitions]:definition* 
         [hasContructors]:java_Boolean
         [settingHierarchy]:ClassDefinitionSettings
-        [superDefs]:definition.class*
+        [superDefs]:definition.#class*
         [gettingInheritable]:java_Boolean
         [superInheritedDefinitions]:definition*
         [gettingInvDefs]:java_Boolean
