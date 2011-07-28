@@ -23,9 +23,10 @@
 
 package org.overturetool.vdmj.runtime;
 
-import org.overturetool.interpreter.vdmj.lex.LexException;
+
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.values.Value;
 

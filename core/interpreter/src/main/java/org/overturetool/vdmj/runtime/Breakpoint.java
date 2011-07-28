@@ -26,8 +26,6 @@ package org.overturetool.vdmj.runtime;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.overture.ast.expressions.PExp;
-
 import org.overture.interpreter.ast.analysis.IAnalysisInterpreter;
 import org.overture.interpreter.ast.analysis.IAnswerInterpreter;
 import org.overture.interpreter.ast.analysis.IQuestionAnswerInterpreter;
@@ -35,12 +33,12 @@ import org.overture.interpreter.ast.analysis.IQuestionInterpreter;
 import org.overture.interpreter.ast.expressions.PExpInterpreter;
 import org.overture.interpreter.ast.node.NodeEnumInterpreter;
 import org.overture.interpreter.ast.node.NodeInterpreter;
-import org.overturetool.interpreter.vdmj.lex.Dialect;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
-
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.VDMToken;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.syntax.ParserException;
 
 
@@ -96,36 +94,7 @@ public class Breakpoint extends NodeInterpreter implements Serializable
 
 		if (trace != null)
 		{
-			LexTokenReader ltr = new LexTokenReader(trace, Dialect.VDM_SL);
-
-			ltr.push();
-			LexToken tok = ltr.nextToken();
-
-			switch (tok.type)
-			{
-				case EQUALS:
-					parsed = readHitCondition(ltr, BreakpointCondition.EQ);
-					break;
-
-				case GT:
-					parsed = readHitCondition(ltr, BreakpointCondition.GT);
-					break;
-
-				case GE:
-					parsed = readHitCondition(ltr, BreakpointCondition.GE);
-					break;
-
-				case MOD:
-					parsed = readHitCondition(ltr, BreakpointCondition.MOD);
-					break;
-
-				default:
-					ltr.pop();
-					ExpressionReader reader = new ExpressionReader(ltr);
-        			reader.setCurrentModule(location.module);
-        			parsed = reader.readExpression();
-        			break;
-			}
+			parsed = BreakpointParser.parse(trace, location);
 		}
 		else
 		{
@@ -133,20 +102,7 @@ public class Breakpoint extends NodeInterpreter implements Serializable
 		}
 	}
 
-	private PExp readHitCondition(
-		LexTokenReader ltr, BreakpointCondition cond)
-		throws ParserException, LexException
-	{
-		LexToken arg = ltr.nextToken();
-
-		if (arg.isNot(VDMToken.NUMBER))
-		{
-			throw new ParserException(2279, "Invalid breakpoint hit condition", location, 0);
-		}
-
-		LexIntegerToken num = (LexIntegerToken)arg;
-		return new BreakpointExpression(this, cond, num.value);
-	}
+	
 
 	@Override
 	public String toString()

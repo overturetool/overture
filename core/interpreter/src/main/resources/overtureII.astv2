@@ -26,6 +26,7 @@ Tokens
   
   
   Breakpoint ='java:node:org.overturetool.vdmj.runtime.Breakpoint';
+  BreakpointCondition = 'java:enum:org.overturetool.vdmj.runtime.BreakpointCondition';
   FunctionValue = 'java:org.overturetool.vdmj.values.FunctionValue';
   State = 'java:org.overturetool.vdmj.values.State';
   Delegate ='java:org.overturetool.vdmj.util.Delegate';
@@ -48,7 +49,12 @@ Abstract Syntax Tree
     Expressions
 */    
 exp {-> package='org.overture.interpreter.ast.expressions'}
-        =#Unary |   #Binary | #Map| #Seq|#Set
+    =   #Unary 
+    |   #Binary 
+    |   #Map
+    |   #Seq
+    |   #Set
+    |   {breakpoint} [cond]:BreakpointCondition [arg]:java_Long
     ;
     
 #Unary {-> package='org.overture.interpreter.ast.expressions'}
