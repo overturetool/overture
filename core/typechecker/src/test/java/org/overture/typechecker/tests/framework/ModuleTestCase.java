@@ -193,6 +193,11 @@ public class ModuleTestCase extends TestCase {
 			line = br.readLine();
 			if (line.startsWith(tcHeader)) {
 				line = line.substring(tcHeader.length()).trim();
+				if(line.equals(""))
+				{
+					more = false;
+					break;
+				}
 				String[] errors = line.split(" ");
 				for (String error : errors) {
 					String[] parsedError = error.split(":");
