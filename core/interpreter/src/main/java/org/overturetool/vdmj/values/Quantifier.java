@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 
 import org.overture.interpreter.ast.patterns.PPatternInterpreter;
+import org.overture.interpreter.patterns.assistant.PPatternInterpreterAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 
@@ -56,7 +57,7 @@ public class Quantifier
 
 		if (nvlist[index] == null)
 		{
-			nvlist[index] = pattern.getNamedValues(values.get(index), ctxt);
+			nvlist[index] = PPatternInterpreterAssistant.getNamedValues(pattern, values.get(index), ctxt);
 		}
 
 		return nvlist[index];

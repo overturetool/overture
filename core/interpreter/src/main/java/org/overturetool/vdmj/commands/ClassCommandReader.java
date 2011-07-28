@@ -30,8 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
+
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.rtlog.RTLogger;
 import org.overturetool.vdmj.runtime.ClassInterpreter;

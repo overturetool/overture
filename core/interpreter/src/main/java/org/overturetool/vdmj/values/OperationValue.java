@@ -42,21 +42,20 @@ import org.overture.interpreter.ast.types.AAccessSpecifierAccessSpecifierInterpr
 import org.overture.interpreter.ast.types.AOperationTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overture.interpreter.definitions.assistant.AStateDefinitionInterpreterAssistant;
+import org.overture.interpreter.expressions.assistant.PExpInterpreterAssiatant;
+import org.overture.interpreter.patterns.assistant.PPatternInterpreterAssistant;
 import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overturetool.interpreter.vdmj.lex.LexKeywordToken;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
-
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
 import org.overturetool.vdmj.messages.rtlog.RTLogger;
 import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
 import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
-
-
 import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -74,7 +73,6 @@ import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MessageRequest;
 import org.overturetool.vdmj.scheduler.MessageResponse;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
-
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -208,7 +206,7 @@ public class OperationValue extends Value
 		{
 			ValueListener vl = new GuardValueListener(self);
 
-			for (Value v: guard.getValues(ctxt))
+			for (Value v: PExpInterpreterAssiatant.getValues(guard, ctxt))
 			{
 				UpdatableValue uv = (UpdatableValue)v;
 				uv.addListener(vl);
@@ -283,7 +281,7 @@ public class OperationValue extends Value
 				// Note args cannot be Updateable, so we deref them here
 				Value pv = valIter.next().deref().convertValueTo(typeIter.next(), ctxt);
 
-				for (NameValuePair nvp : p.getNamedValues(pv, ctxt))
+				for (NameValuePair nvp : PPatternInterpreterAssistant.getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 

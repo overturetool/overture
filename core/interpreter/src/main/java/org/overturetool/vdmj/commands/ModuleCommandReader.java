@@ -25,7 +25,7 @@ package org.overturetool.vdmj.commands;
 
 import java.util.List;
 
-import org.overturetool.vdmj.modules.Module;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ModuleInterpreter;
 

@@ -27,6 +27,8 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.interpreter.ast.types.AInMapMapTypeInterpreter;
 import org.overture.interpreter.ast.types.AMapMapTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.ast.types.SMapTypeInterpreter;
+import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 
@@ -122,7 +124,7 @@ public class MapValue extends Value
 				abort(4062, "Cannot convert non-injective map to an inmap", ctxt);
 			}
 
-			AMapMapTypeInterpreter mapto = to.getMap();
+			SMapTypeInterpreter mapto = PTypeInterpreterAssistant.getMap(to);
 			ValueMap nm = new ValueMap();
 
 			for (Value k: values.keySet())

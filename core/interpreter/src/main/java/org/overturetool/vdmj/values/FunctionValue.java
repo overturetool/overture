@@ -34,20 +34,18 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
-
-import org.overture.interpreter.ast.definitions.AClassClassDefinitionInterpreter;
 import org.overture.interpreter.ast.definitions.AExplicitFunctionDefinitionInterpreter;
 import org.overture.interpreter.ast.definitions.AImplicitFunctionDefinitionInterpreter;
 import org.overture.interpreter.ast.definitions.SClassDefinitionInterpreter;
 import org.overture.interpreter.ast.expressions.PExpInterpreter;
-import org.overture.interpreter.ast.patterns.AExpressionPatternInterpreter;
+import org.overture.interpreter.ast.node.ExternalNodeInterpreter;
 import org.overture.interpreter.ast.patterns.APatternListTypePairInterpreter;
 import org.overture.interpreter.ast.patterns.PPatternInterpreter;
 import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
 import org.overture.interpreter.definitions.assistant.AExplicitFunctionDefinitionAssistant;
 import org.overture.interpreter.definitions.assistant.AImplicitFunctionDefinitionAssistant;
+import org.overture.interpreter.patterns.assistant.PPatternInterpreterAssistant;
 import org.overture.interpreter.types.assistant.PTypeInterpreterAssistant;
 import org.overture.interpreter.types.assistant.PTypeInterpreterList;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
@@ -314,7 +312,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
 
 			try
 			{
-				for (NameValuePair nvp: p.getNamedValues(pv, ctxt))
+				for (NameValuePair nvp: PPatternInterpreterAssistant.getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
@@ -496,7 +494,7 @@ public class FunctionValue extends Value implements ExternalNodeInterpreter
         		return rv;
 			}
 
-			PTypeInterpreter.abort(type, 4057, "Curried function return type is not a function", ctxt);
+			PTypeInterpreterAssistant.abort(type, 4057, "Curried function return type is not a function", ctxt);
 			return null;
 		}
 	}

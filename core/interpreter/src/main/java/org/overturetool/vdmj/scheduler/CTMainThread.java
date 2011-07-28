@@ -26,15 +26,19 @@ package org.overturetool.vdmj.scheduler;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.interpreter.ast.statements.PStmInterpreter;
+import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.lex.LexLocation;
+
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.statements.Statement;
+
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.traces.TraceVariableStatement;
+
 import org.overturetool.vdmj.traces.Verdict;
+import org.overturetool.vdmj.values.Value;
 
 /**
  * A class representing the main VDM thread.
@@ -69,16 +73,16 @@ public class CTMainThread extends MainThread
 	{
 		try
 		{
-			for (Statement statement: test)
+			for (PStmInterpreter statement: test)
 			{
 				if (statement instanceof TraceVariableStatement)
 				{
 					// Just update the context...
-					statement.eval(ctxt);
+					statement.apply(Value.evaluator, ctxt);
 				}
 				else
 				{
- 					result.add(statement.eval(ctxt));
+ 					result.add(statement.apply(Value.evaluator, ctxt));
 				}
 			}
 
