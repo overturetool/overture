@@ -246,6 +246,7 @@ type {-> package='org.overture.ast.types'}
         (opDone):java_Boolean (opType):type.operation
         (numDone):java_Boolean (numType):type.#basic.#numeric
         (recDone):java_Boolean (recType):type.#invariant.record
+        (classDone):java_Boolean (classType):type.class
     |   {unknown}
     |   {unresolved} [typename]:LexNameToken
     |   {voidReturn}
@@ -517,7 +518,7 @@ export {-> package='org.overture.ast.modules'}
 
 stm {-> package='org.overture.ast.statements'}
     =   {always} [always]:stm [body]:stm
-    |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type (classDefinition):class (stateDefinition):definition.state (inConstructor):java_Boolean
+    |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type (classDefinition):definition.#class (stateDefinition):definition.state (inConstructor):java_Boolean
     |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
     |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*

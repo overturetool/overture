@@ -36,7 +36,9 @@ public class ModuleTestCase extends TestCase {
 	private boolean showWarnings;
 	private boolean generateResultOutput = true;
 	private TCStructList tcHeaderList = null;
-
+	private boolean isParseOk = true;
+	
+	
 	public ModuleTestCase() {
 		super("test");
 
@@ -75,43 +77,57 @@ public class ModuleTestCase extends TestCase {
 		System.err.flush();
 
 		parseFileHeader(file);
-
-		List<AModuleModules> modules = parse(file);
-
-		ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
-		mtc.typeCheck();
-
-		String errorMessages = null;
-		if (mtc != null && TypeChecker.getErrorCount() > 0) {
-
-			for (VDMError error : TypeChecker.getErrors()) {
-				tcHeaderList.markTCStruct(error);
+		List<AModuleModules> modules = null;
+		try
+		{
+		modules = parse(file);
+		}
+		catch(ParserException e)
+		{
+			isParseOk = false;
+		}
+		catch(LexException e)
+		{
+			isParseOk = false;
+		}
+		
+		if(isParseOk)
+		{
+			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
+			mtc.typeCheck();
+	
+			String errorMessages = null;
+			if (mtc != null && TypeChecker.getErrorCount() > 0) {
+	
+				for (VDMError error : TypeChecker.getErrors()) {
+					tcHeaderList.markTCStruct(error);
+				}
+				
+				// perrs += reader.getErrorCount();
+				StringWriter s = new StringWriter();
+				TypeChecker.printErrors(new PrintWriter(s));// new
+															// PrintWriter(System.out));
+				errorMessages = "\n" + s.toString() + "\n";			
+				System.out.println(s.toString());
+	
+			}
+	
+			if (mtc != null && TypeChecker.getWarningCount() > 0) {
+				for (VDMWarning warning : TypeChecker.getWarnings()) {
+					tcHeaderList.markTCStruct(warning);
+				}
+				// perrs += reader.getErrorCount();
+				StringWriter s = new StringWriter();
+				TypeChecker.printWarnings(new PrintWriter(s));// new
+																// PrintWriter(System.out));
+				String warningMessages = "\n" + s.toString() + "\n";
+				System.out.println(s.toString());
 			}
 			
-			// perrs += reader.getErrorCount();
-			StringWriter s = new StringWriter();
-			TypeChecker.printErrors(new PrintWriter(s));// new
-														// PrintWriter(System.out));
-			errorMessages = "\n" + s.toString() + "\n";			
-			System.out.println(s.toString());
-
+			//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
+			assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());			
 		}
-
-		if (mtc != null && TypeChecker.getWarningCount() > 0) {
-			for (VDMWarning warning : TypeChecker.getWarnings()) {
-				tcHeaderList.markTCStruct(warning);
-			}
-			// perrs += reader.getErrorCount();
-			StringWriter s = new StringWriter();
-			TypeChecker.printWarnings(new PrintWriter(s));// new
-															// PrintWriter(System.out));
-			String warningMessages = "\n" + s.toString() + "\n";
-			System.out.println(s.toString());
-		}
-		
-		//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
-		assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());
-		
+	
 	}
 
 	

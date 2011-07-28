@@ -314,7 +314,9 @@ public class TypeCheckerDefinitionVisitor extends
 		info.scope = question.scope;
 		info.qualifiers = null;		
 		
-		node.setActualResult(node.getBody().apply(rootVisitor,info));
+		PType actualResult = node.getBody().apply(rootVisitor,info);
+		
+		node.setActualResult(actualResult);
 
 		if (!TypeComparator.compatible(expectedResult, node.getActualResult()))
 		{

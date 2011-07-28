@@ -227,7 +227,7 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 	}
 
 	@Override
-	public Object clone() {
+	public LexNameToken clone() {
 		return copy();
 	}
 

@@ -173,7 +173,7 @@ public class AUnionTypeAssistant {
     			}
     		}
 
-    		type.setSetType(set.isEmpty() ? null : new ASetType(location,false, set.getType(location),false,false));
+    		type.setSetType(set.isEmpty() ? null : new ASetType(location,false, set.getType(location).clone(),false,false));
 		}
 
 		return type.getSetType();

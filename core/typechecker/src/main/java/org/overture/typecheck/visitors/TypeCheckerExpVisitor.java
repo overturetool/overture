@@ -2637,7 +2637,7 @@ public class TypeCheckerExpVisitor extends
 
 			if (set.getEmpty() || PTypeAssistant.isSet(set.getSetof()))
 			{
-				node.setType(set.getSetof());
+				node.setType(set.getSetof().clone());
 				return set.getSetof();
 			}
 		}
