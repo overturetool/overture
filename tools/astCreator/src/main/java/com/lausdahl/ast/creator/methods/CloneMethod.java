@@ -24,7 +24,7 @@ public class CloneMethod extends Method
 		this.name = "clone";
 
 		this.returnType = c.getName();
-		this.requiredImports.add("java.util.Map");
+//		this.requiredImports.add("java.util.Map");
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");

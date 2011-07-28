@@ -43,6 +43,11 @@ public class CreateOnParse
 			throw new AstCreatorException("Exception in AST parser", e, true);
 		}
 
+		if (lexer.hasErrors() || lexer.hasExceptions())
+		{
+			throw new AstCreatorException("Errors in AST input file", null, true);
+		}
+		
 		if (parser.hasErrors() || parser.hasExceptions())
 		{
 			throw new AstCreatorException("Errors in AST input file", null, true);
@@ -74,7 +79,7 @@ public class CreateOnParse
 									for (IClassDefinition def : env.getClasses())
 									{
 										if (def instanceof CommonTreeClassDefinition
-												&& ((CommonTreeClassDefinition) def).rawName.equals(nameNode.getChild(0).getText()))
+												&& ((CommonTreeClassDefinition) def).rawName.equals("#"+nameNode.getChild(0).getText()))
 										{
 											c = (CommonTreeClassDefinition) def;
 										}
@@ -119,7 +124,7 @@ public class CreateOnParse
 										} else if (aa.getText() != null
 												&& aa.getText().equals("ALTERNATIVE_SUB_ROOT"))
 										{
-											CommonTreeClassDefinition subAlternativeClassDef = new CommonTreeClassDefinition(aa.getChild(0).getText(), c, CommonTreeClassDefinition.ClassType.SubProduction, env);
+											CommonTreeClassDefinition subAlternativeClassDef = new CommonTreeClassDefinition("#"+aa.getChild(0).getText(), c, CommonTreeClassDefinition.ClassType.SubProduction, env);
 											subAlternativeClassDef.setPackageName(env.getDefaultPackage());
 										} else
 										{

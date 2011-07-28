@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.Environment;
@@ -53,7 +55,7 @@ public class CloneWithMapMethod extends CloneMethod
 		{
 			case Production:
 			case SubProduction:
-				this.annotation ="@Override";
+				this.annotation = "@Override";
 				this.isAbstract = true;
 				break;
 			case Alternative:
@@ -232,5 +234,15 @@ public class CloneWithMapMethod extends CloneMethod
 
 		this.javaDoc = sbDoc.toString();
 		this.body = sb.toString();
+	}
+
+	@Override
+	public Set<String> getRequiredImports()
+	{
+		Set<String> imports = new HashSet<String>();
+		imports.addAll(super.getRequiredImports());
+		imports.add(env.node.getImportName());
+		imports.add("java.util.Map");
+		return imports;
 	}
 }

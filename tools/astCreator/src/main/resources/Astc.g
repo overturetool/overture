@@ -201,8 +201,14 @@ ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
 JAVANAME 
-  : ID ('.' ID)*
+  : ID ('.' '#'? ID)*
   ;    
+  
+  
+//FIELDNAME
+//  : JAVANAME 
+//  | '#' ID ('.' FIELDNAME)*
+//  ;
  
 WS  :   ( ' '
         | '\t'
@@ -275,9 +281,15 @@ alternative
   ;
   
 definitions
-  : (('[' ID ']'! ':'!)?| ('(' ID ')'! ':'!)) (ID |JAVANAME)^ (repeat)?
+  : (('[' ID ']'! ':'!)?| ('(' ID ')'! ':'!)) ( ID |JAVANAME)^ (repeat)?
   
-  ;
+  ; 
+   
+//subname
+//  : '.#' ID 
+//  | JAVANAME
+//  | ID
+//  ;
   
 //typeName
 //  : ID '.' ID

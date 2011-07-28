@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-22 11:56:59
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-28 13:30:51
   
 package com.lausdahl.ast.creator.parser;
 
@@ -985,33 +985,51 @@ public class AstcLexer extends Lexer {
         try {
             int _type = JAVANAME;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:3: ( ID ( '.' ID )* )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:5: ID ( '.' ID )*
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:3: ( ID ( '.' ( '#' )? ID )* )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:5: ID ( '.' ( '#' )? ID )*
             {
             mID(); 
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:8: ( '.' ID )*
-            loop10:
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:8: ( '.' ( '#' )? ID )*
+            loop11:
             do {
-                int alt10=2;
-                int LA10_0 = input.LA(1);
+                int alt11=2;
+                int LA11_0 = input.LA(1);
 
-                if ( (LA10_0=='.') ) {
-                    alt10=1;
+                if ( (LA11_0=='.') ) {
+                    alt11=1;
                 }
 
 
-                switch (alt10) {
+                switch (alt11) {
             	case 1 :
-            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:9: '.' ID
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:9: '.' ( '#' )? ID
             	    {
             	    match('.'); 
+            	    // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:13: ( '#' )?
+            	    int alt10=2;
+            	    int LA10_0 = input.LA(1);
+
+            	    if ( (LA10_0=='#') ) {
+            	        alt10=1;
+            	    }
+            	    switch (alt10) {
+            	        case 1 :
+            	            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:204:13: '#'
+            	            {
+            	            match('#'); 
+
+            	            }
+            	            break;
+
+            	    }
+
             	    mID(); 
 
             	    }
             	    break;
 
             	default :
-            	    break loop10;
+            	    break loop11;
                 }
             } while (true);
 
@@ -1031,8 +1049,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:207:5: ( ( ' ' | '\\t' | '\\r' | '\\n' ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:207:9: ( ' ' | '\\t' | '\\r' | '\\n' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:213:5: ( ( ' ' | '\\t' | '\\r' | '\\n' ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:213:9: ( ' ' | '\\t' | '\\r' | '\\n' )
             {
             if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
                 input.consume();
@@ -1058,8 +1076,8 @@ public class AstcLexer extends Lexer {
     // $ANTLR start "ESC_SEQ"
     public final void mESC_SEQ() throws RecognitionException {
         try {
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:216:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' ) )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:216:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:222:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' ) )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:222:9: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\\\' )
             {
             match('\\'); 
             if ( input.LA(1)=='\"'||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -1085,7 +1103,7 @@ public class AstcLexer extends Lexer {
         try {
             int _type = SpecialChar;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:303:5: ( '\"' | '\\\\' | '$' )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:315:5: ( '\"' | '\\\\' | '$' )
             // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:
             {
             if ( input.LA(1)=='\"'||input.LA(1)=='$'||input.LA(1)=='\\' ) {
@@ -1113,8 +1131,8 @@ public class AstcLexer extends Lexer {
         try {
             int _type = NormalChar;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:306:5: (~ SpecialChar )
-            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:306:10: ~ SpecialChar
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:318:5: (~ SpecialChar )
+            // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:318:10: ~ SpecialChar
             {
             if ( (input.LA(1)>='\u0000' && input.LA(1)<='\u0011')||(input.LA(1)>='\u0013' && input.LA(1)<='\uFFFF') ) {
                 input.consume();
@@ -1138,9 +1156,9 @@ public class AstcLexer extends Lexer {
 
     public void mTokens() throws RecognitionException {
         // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:8: ( ASSIGN | COLON | PACKAGES | AST | TOKENS | ASPECT_DCL | FIELD_DCL | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | QUOTE | COMMENT | ID | JAVANAME | WS | SpecialChar | NormalChar )
-        int alt11=32;
-        alt11 = dfa11.predict(input);
-        switch (alt11) {
+        int alt12=32;
+        alt12 = dfa12.predict(input);
+        switch (alt12) {
             case 1 :
                 // C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g:1:10: ASSIGN
                 {
@@ -1371,34 +1389,34 @@ public class AstcLexer extends Lexer {
     }
 
 
-    protected DFA11 dfa11 = new DFA11(this);
-    static final String DFA11_eotS =
+    protected DFA12 dfa12 = new DFA12(this);
+    static final String DFA12_eotS =
         "\3\uffff\3\41\1\34\1\41\1\uffff\1\41\1\uffff\1\55\10\uffff\1\67"+
         "\1\uffff\1\34\1\uffff\1\34\1\41\5\uffff\2\41\2\uffff\3\41\2\uffff"+
         "\1\41\1\uffff\1\41\21\uffff\12\41\1\114\5\41\1\uffff\4\41\1\126"+
         "\3\41\2\uffff\1\41\1\133\1\41\1\135\3\uffff";
-    static final String DFA11_eofS =
+    static final String DFA12_eofS =
         "\136\uffff";
-    static final String DFA11_minS =
+    static final String DFA12_minS =
         "\1\0\2\uffff\3\56\1\55\1\56\1\uffff\1\56\1\uffff\1\174\10\uffff"+
         "\1\52\1\uffff\1\46\1\uffff\1\52\1\56\5\uffff\2\56\2\uffff\3\56\2"+
         "\uffff\1\56\1\uffff\1\56\21\uffff\20\56\1\uffff\3\56\1\40\4\56\2"+
         "\uffff\2\56\1\40\1\56\3\uffff";
-    static final String DFA11_maxS =
+    static final String DFA12_maxS =
         "\1\uffff\2\uffff\3\172\1\76\1\172\1\uffff\1\172\1\uffff\1\174\10"+
         "\uffff\1\52\1\uffff\1\46\1\uffff\1\57\1\172\5\uffff\2\172\2\uffff"+
         "\3\172\2\uffff\1\172\1\uffff\1\172\21\uffff\20\172\1\uffff\10\172"+
         "\2\uffff\4\172\3\uffff";
-    static final String DFA11_acceptS =
+    static final String DFA12_acceptS =
         "\1\uffff\1\1\1\2\5\uffff\1\11\1\uffff\1\13\1\uffff\1\15\1\16\1"+
         "\17\1\20\1\21\1\22\1\23\1\24\1\uffff\1\27\1\uffff\1\32\2\uffff\1"+
         "\36\1\37\1\40\1\1\1\2\2\uffff\1\34\1\35\3\uffff\1\7\1\33\1\uffff"+
         "\1\11\1\uffff\1\13\1\30\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23"+
         "\1\24\1\26\1\25\1\27\1\31\1\32\1\36\20\uffff\1\10\10\uffff\1\6\1"+
         "\5\4\uffff\1\3\1\4\1\12";
-    static final String DFA11_specialS =
+    static final String DFA12_specialS =
         "\1\0\135\uffff}>";
-    static final String[] DFA11_transitionS = {
+    static final String[] DFA12_transitionS = {
             "\11\34\2\32\2\34\1\32\22\34\1\32\1\34\1\33\1\14\1\33\1\12\1"+
             "\26\1\27\1\21\1\22\1\24\1\25\1\34\1\6\1\34\1\30\12\34\1\2\1"+
             "\10\1\34\1\1\1\34\1\23\1\34\1\4\16\31\1\3\3\31\1\5\6\31\1\17"+
@@ -1540,34 +1558,34 @@ public class AstcLexer extends Lexer {
             ""
     };
 
-    static final short[] DFA11_eot = DFA.unpackEncodedString(DFA11_eotS);
-    static final short[] DFA11_eof = DFA.unpackEncodedString(DFA11_eofS);
-    static final char[] DFA11_min = DFA.unpackEncodedStringToUnsignedChars(DFA11_minS);
-    static final char[] DFA11_max = DFA.unpackEncodedStringToUnsignedChars(DFA11_maxS);
-    static final short[] DFA11_accept = DFA.unpackEncodedString(DFA11_acceptS);
-    static final short[] DFA11_special = DFA.unpackEncodedString(DFA11_specialS);
-    static final short[][] DFA11_transition;
+    static final short[] DFA12_eot = DFA.unpackEncodedString(DFA12_eotS);
+    static final short[] DFA12_eof = DFA.unpackEncodedString(DFA12_eofS);
+    static final char[] DFA12_min = DFA.unpackEncodedStringToUnsignedChars(DFA12_minS);
+    static final char[] DFA12_max = DFA.unpackEncodedStringToUnsignedChars(DFA12_maxS);
+    static final short[] DFA12_accept = DFA.unpackEncodedString(DFA12_acceptS);
+    static final short[] DFA12_special = DFA.unpackEncodedString(DFA12_specialS);
+    static final short[][] DFA12_transition;
 
     static {
-        int numStates = DFA11_transitionS.length;
-        DFA11_transition = new short[numStates][];
+        int numStates = DFA12_transitionS.length;
+        DFA12_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA11_transition[i] = DFA.unpackEncodedString(DFA11_transitionS[i]);
+            DFA12_transition[i] = DFA.unpackEncodedString(DFA12_transitionS[i]);
         }
     }
 
-    class DFA11 extends DFA {
+    class DFA12 extends DFA {
 
-        public DFA11(BaseRecognizer recognizer) {
+        public DFA12(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 11;
-            this.eot = DFA11_eot;
-            this.eof = DFA11_eof;
-            this.min = DFA11_min;
-            this.max = DFA11_max;
-            this.accept = DFA11_accept;
-            this.special = DFA11_special;
-            this.transition = DFA11_transition;
+            this.decisionNumber = 12;
+            this.eot = DFA12_eot;
+            this.eof = DFA12_eof;
+            this.min = DFA12_min;
+            this.max = DFA12_max;
+            this.accept = DFA12_accept;
+            this.special = DFA12_special;
+            this.transition = DFA12_transition;
         }
         public String getDescription() {
             return "1:1: Tokens : ( ASSIGN | COLON | PACKAGES | AST | TOKENS | ASPECT_DCL | FIELD_DCL | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | QUOTE | COMMENT | ID | JAVANAME | WS | SpecialChar | NormalChar );";
@@ -1577,70 +1595,70 @@ public class AstcLexer extends Lexer {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA11_0 = input.LA(1);
+                        int LA12_0 = input.LA(1);
 
                         s = -1;
-                        if ( (LA11_0=='=') ) {s = 1;}
+                        if ( (LA12_0=='=') ) {s = 1;}
 
-                        else if ( (LA11_0==':') ) {s = 2;}
+                        else if ( (LA12_0==':') ) {s = 2;}
 
-                        else if ( (LA11_0=='P') ) {s = 3;}
+                        else if ( (LA12_0=='P') ) {s = 3;}
 
-                        else if ( (LA11_0=='A') ) {s = 4;}
+                        else if ( (LA12_0=='A') ) {s = 4;}
 
-                        else if ( (LA11_0=='T') ) {s = 5;}
+                        else if ( (LA12_0=='T') ) {s = 5;}
 
-                        else if ( (LA11_0=='-') ) {s = 6;}
+                        else if ( (LA12_0=='-') ) {s = 6;}
 
-                        else if ( (LA11_0=='b') ) {s = 7;}
+                        else if ( (LA12_0=='b') ) {s = 7;}
 
-                        else if ( (LA11_0==';') ) {s = 8;}
+                        else if ( (LA12_0==';') ) {s = 8;}
 
-                        else if ( (LA11_0=='a') ) {s = 9;}
+                        else if ( (LA12_0=='a') ) {s = 9;}
 
-                        else if ( (LA11_0=='%') ) {s = 10;}
+                        else if ( (LA12_0=='%') ) {s = 10;}
 
-                        else if ( (LA11_0=='|') ) {s = 11;}
+                        else if ( (LA12_0=='|') ) {s = 11;}
 
-                        else if ( (LA11_0=='#') ) {s = 12;}
+                        else if ( (LA12_0=='#') ) {s = 12;}
 
-                        else if ( (LA11_0=='{') ) {s = 13;}
+                        else if ( (LA12_0=='{') ) {s = 13;}
 
-                        else if ( (LA11_0=='}') ) {s = 14;}
+                        else if ( (LA12_0=='}') ) {s = 14;}
 
-                        else if ( (LA11_0=='[') ) {s = 15;}
+                        else if ( (LA12_0=='[') ) {s = 15;}
 
-                        else if ( (LA11_0==']') ) {s = 16;}
+                        else if ( (LA12_0==']') ) {s = 16;}
 
-                        else if ( (LA11_0=='(') ) {s = 17;}
+                        else if ( (LA12_0=='(') ) {s = 17;}
 
-                        else if ( (LA11_0==')') ) {s = 18;}
+                        else if ( (LA12_0==')') ) {s = 18;}
 
-                        else if ( (LA11_0=='?') ) {s = 19;}
+                        else if ( (LA12_0=='?') ) {s = 19;}
 
-                        else if ( (LA11_0=='*') ) {s = 20;}
+                        else if ( (LA12_0=='*') ) {s = 20;}
 
-                        else if ( (LA11_0=='+') ) {s = 21;}
+                        else if ( (LA12_0=='+') ) {s = 21;}
 
-                        else if ( (LA11_0=='&') ) {s = 22;}
+                        else if ( (LA12_0=='&') ) {s = 22;}
 
-                        else if ( (LA11_0=='\'') ) {s = 23;}
+                        else if ( (LA12_0=='\'') ) {s = 23;}
 
-                        else if ( (LA11_0=='/') ) {s = 24;}
+                        else if ( (LA12_0=='/') ) {s = 24;}
 
-                        else if ( ((LA11_0>='B' && LA11_0<='O')||(LA11_0>='Q' && LA11_0<='S')||(LA11_0>='U' && LA11_0<='Z')||LA11_0=='_'||(LA11_0>='c' && LA11_0<='z')) ) {s = 25;}
+                        else if ( ((LA12_0>='B' && LA12_0<='O')||(LA12_0>='Q' && LA12_0<='S')||(LA12_0>='U' && LA12_0<='Z')||LA12_0=='_'||(LA12_0>='c' && LA12_0<='z')) ) {s = 25;}
 
-                        else if ( ((LA11_0>='\t' && LA11_0<='\n')||LA11_0=='\r'||LA11_0==' ') ) {s = 26;}
+                        else if ( ((LA12_0>='\t' && LA12_0<='\n')||LA12_0=='\r'||LA12_0==' ') ) {s = 26;}
 
-                        else if ( (LA11_0=='\"'||LA11_0=='$'||LA11_0=='\\') ) {s = 27;}
+                        else if ( (LA12_0=='\"'||LA12_0=='$'||LA12_0=='\\') ) {s = 27;}
 
-                        else if ( ((LA11_0>='\u0000' && LA11_0<='\b')||(LA11_0>='\u000B' && LA11_0<='\f')||(LA11_0>='\u000E' && LA11_0<='\u001F')||LA11_0=='!'||LA11_0==','||LA11_0=='.'||(LA11_0>='0' && LA11_0<='9')||LA11_0=='<'||LA11_0=='>'||LA11_0=='@'||LA11_0=='^'||LA11_0=='`'||(LA11_0>='~' && LA11_0<='\uFFFF')) ) {s = 28;}
+                        else if ( ((LA12_0>='\u0000' && LA12_0<='\b')||(LA12_0>='\u000B' && LA12_0<='\f')||(LA12_0>='\u000E' && LA12_0<='\u001F')||LA12_0=='!'||LA12_0==','||LA12_0=='.'||(LA12_0>='0' && LA12_0<='9')||LA12_0=='<'||LA12_0=='>'||LA12_0=='@'||LA12_0=='^'||LA12_0=='`'||(LA12_0>='~' && LA12_0<='\uFFFF')) ) {s = 28;}
 
                         if ( s>=0 ) return s;
                         break;
             }
             NoViableAltException nvae =
-                new NoViableAltException(getDescription(), 11, _s, input);
+                new NoViableAltException(getDescription(), 12, _s, input);
             error(nvae);
             throw nvae;
         }

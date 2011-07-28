@@ -337,6 +337,18 @@ public class Environment
 		List<IClassDefinition> newClasses = new Vector<IClassDefinition>();
 		newClasses.addAll(env.classes);
 		newClasses.removeAll(extendedClasses);
+		
+		
+		for (IClassDefinition def : newClasses)
+		{
+			if(def instanceof CommonTreeClassDefinition && def.getSuperDef()!=null && def.getSuperDef() instanceof CommonTreeClassDefinition)
+			{
+				IClassDefinition oldSuper = def.getSuperDef();
+				((CommonTreeClassDefinition)def).imports.remove(oldSuper);
+				((CommonTreeClassDefinition)def).setSuperClass(this.lookUp(oldSuper.getName()));
+				def.updateEnvironment(this);
+			}
+		}
 		this.classes.addAll(newClasses);
 		
 		//for new we skip the interfaces

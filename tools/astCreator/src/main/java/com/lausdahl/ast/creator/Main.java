@@ -32,7 +32,7 @@ public class Main
 
 	private static final String INPUT_FILENAME_OVERTURE_II = "..\\..\\core\\ast\\src\\main\\resources\\overtureII.astv2".replace('\\', File.separatorChar);
 	private static final String INPUT_FILENAME_OVERTURE_II_INTERPRETER = "..\\..\\core\\interpreter\\src\\main\\resources\\overtureII.astv2".replace('\\', File.separatorChar);
-	private static final String INPUT_FILENAME_TEST = "src\\main\\resources\\testdata\\test.astV2";
+	private static final String INPUT_FILENAME_TEST = "src\\main\\resources\\testdata\\nested1.astV2";
 //	private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\extend\\t1.astV2";
 //
 //	private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\extend\\t2.astV2";
@@ -105,6 +105,7 @@ public class Main
 				case Test:
 				{
 					System.out.println("TESTING...");
+					Environment env1 = create(input1, generated, true);
 					// Main.create(new File(INPUT_FILENAME), new File(INPUT_FILENAME2), generated, "Interpreter");
 					// System.out.println("Generator starting with input: "
 					// + INPUT_FILENAME);

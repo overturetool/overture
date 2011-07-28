@@ -456,5 +456,10 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			f.updateEnvironment(env);
 		}
+		
+		for (Method m : methods)
+		{
+			m.setEnvironment(env);
+		}
 	}
 }

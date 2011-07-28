@@ -10,7 +10,7 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition;
 public class RemoveChildMethod extends Method
 {
 	List<Field> fields;
-	Environment env;
+	
 
 	public RemoveChildMethod(IClassDefinition c, List<Field> fields,Environment env)
 	{

@@ -2,7 +2,6 @@ package %generated.node%;
 
 import java.util.*;
 
-import org.overture.ast.node.NodeList;
 
 /** A list of AST nodes where all operations preserve the
  *  single-parent property of the AST.<p>
