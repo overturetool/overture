@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.types.EBasicType;
+import org.overture.ast.types.PType;
+import org.overture.ast.types.SBasicType;
+import org.overture.ast.types.SNumericBasicType;
 import org.overture.interpreter.ast.definitions.PDefinitionInterpreter;
 import org.overture.interpreter.ast.types.ABracketTypeInterpreter;
 import org.overture.interpreter.ast.types.AFunctionTypeInterpreter;
@@ -16,9 +20,13 @@ import org.overture.interpreter.ast.types.ASeqSeqTypeInterpreter;
 import org.overture.interpreter.ast.types.ASetTypeInterpreter;
 import org.overture.interpreter.ast.types.AUnionTypeInterpreter;
 import org.overture.interpreter.ast.types.AUnknownTypeInterpreter;
+import org.overture.interpreter.ast.types.EBasicTypeInterpreter;
+import org.overture.interpreter.ast.types.ETypeInterpreter;
 import org.overture.interpreter.ast.types.PTypeInterpreter;
+import org.overture.interpreter.ast.types.SBasicTypeInterpreter;
 import org.overture.interpreter.ast.types.SInvariantTypeInterpreter;
 import org.overture.interpreter.ast.types.SMapTypeInterpreter;
+import org.overture.interpreter.ast.types.SNumericBasicTypeInterpreter;
 import org.overture.interpreter.ast.types.SSeqTypeInterpreter;
 import org.overturetool.interpreter.vdmj.lex.LexLocation;
 import org.overturetool.interpreter.vdmj.lex.LexNameToken;
@@ -98,9 +106,9 @@ public class PTypeInterpreterAssistant
 	//
 	//
 	//
-	// public static boolean isUnknown(PType type) {
-	// return type.kindPType().equals(EType.UNKNOWN);
-	// }
+	 public static boolean isUnknown(PTypeInterpreter type) {
+	 return type.kindPTypeInterpreter().equals(ETypeInterpreter.UNKNOWN);
+	 }
 	//
 	// public static boolean isUnion(PType type) {
 	// return type.kindPType().equals(EType.UNION);
@@ -442,22 +450,22 @@ public class PTypeInterpreterAssistant
 	// }
 	// }
 	//
-	// public static SNumericBasicType getNumeric(PType type) {
-	// switch (type.kindPType()) {
-	// case BASIC:
-	// if (type instanceof SBasicType) {
-	// SBasicType bType = (SBasicType) type;
-	// if (bType.kindSBasicType() == EBasicType.NUMERIC) {
-	// if (type instanceof SNumericBasicType) {
-	// return (SNumericBasicType) type;
-	// }
-	// }
-	// }
-	// default:
-	// assert false : "Can't getNumeric of a non-numeric";
-	// return null;
-	// }
-	// }
+	public static SNumericBasicTypeInterpreter getNumeric(PTypeInterpreter type) {
+		switch (type.kindPTypeInterpreter()) {
+		case BASIC:
+			if (type instanceof SBasicTypeInterpreter) {
+				SBasicTypeInterpreter bType = (SBasicTypeInterpreter) type;
+				if (bType.kindSBasicTypeInterpreter() == EBasicTypeInterpreter.NUMERIC) {
+					if (type instanceof SNumericBasicTypeInterpreter) {
+						return (SNumericBasicTypeInterpreter) type;
+					}
+				}
+			}
+		default:
+			assert false : "Can't getNumeric of a non-numeric";
+			return null;
+		}
+	}
 	//
 	// public static boolean isRecord(PType type) {
 	// switch (type.kindPType()) {
