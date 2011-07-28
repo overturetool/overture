@@ -52,8 +52,9 @@ public class ObservableTraceInterpeter extends TraceInterpreter
 		testCounter++;
 		if (testCounter >= workedUnit)
 		{
-			double incrementBy=100.0/(workedUnit*100);
-			monitor.worked((int)Math.round( incrementBy));
+//			double incrementBy=100.0/(workedUnit*100);
+//			monitor.worked((int)Math.round( incrementBy));
+			monitor.worked(1);
 			testCounter = 0;
 		}
 		if (monitor.isCanceled())
