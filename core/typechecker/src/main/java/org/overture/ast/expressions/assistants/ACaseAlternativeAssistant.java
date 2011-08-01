@@ -20,9 +20,9 @@ public class ACaseAlternativeAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question, PType expType) {
 
-		if (c.getDefs() == null)
+		if (c.getDefs().size() == 0)
 		{
-			c.setDefs(new ArrayList<PDefinition>());
+			//c.setDefs(new ArrayList<PDefinition>());
 			PPatternAssistant.typeResolve(c.getPattern(),rootVisitor,question);
 
 			if (c.getPattern() instanceof AExpressionPattern)

@@ -30,7 +30,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.modules.assistant.AModuleModulesAssistante;
+import org.overture.ast.modules.assistant.AModuleModulesAssistant;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
@@ -134,7 +134,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 //			if (!m.typechecked)
 			{
-				AModuleModulesAssistante.processExports(m);			// Populate exportDefs
+				AModuleModulesAssistant.processExports(m);			// Populate exportDefs
 			}
 		}
 
@@ -146,7 +146,7 @@ public class ModuleTypeChecker extends TypeChecker
 //			if (!m.typechecked)
 			{
 				//TODO
-				//m.processImports(modules);	// Populate importDefs
+				AModuleModulesAssistant.processImports(m,modules);	// Populate importDefs
 			}
 		}
 
@@ -201,6 +201,7 @@ public class ModuleTypeChecker extends TypeChecker
 
     				for (PDefinition d: m.getDefs())
     				{
+    					//System.out.println("Starting checking def: " + d.getName().toString() + " defs number is: " + m.getDefs().size());
 //    					if (d.pass == pass)//TODO we properly need to add this to all definitions
     					{
     						try
@@ -213,6 +214,7 @@ public class ModuleTypeChecker extends TypeChecker
     							report(3431, te.getMessage(), te.location);
     						}
     					}
+    					//System.out.println("Finishing checking def: " + d.getName().toString() + " defs number is: " + m.getDefs().size());
     				}
 				}
 			}

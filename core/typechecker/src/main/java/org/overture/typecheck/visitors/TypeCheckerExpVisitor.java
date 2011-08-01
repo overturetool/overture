@@ -1228,10 +1228,10 @@ public class TypeCheckerExpVisitor extends
 	
 	@Override
 	public PType caseAForAllExp(AForAllExp node, TypeCheckInfo question) {
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, node.getBindList(), null);
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null,  node.getBindList(), null);
 		def.apply(rootVisitor, question);		
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
-
+		question.env = local;
 		question.qualifiers = null;
 		if (!PTypeAssistant.isType(node.getPredicate().apply(rootVisitor,question),ABooleanBasicType.class))
 		{
@@ -1777,7 +1777,8 @@ public class TypeCheckerExpVisitor extends
 
 		if (node.getMembers().isEmpty())
 		{
-			return new AMapMapType(node.getLocation(), false, null, null, null, true);
+			node.setType(new AMapMapType(node.getLocation(), false, null, null, null, true));
+			return node.getType();
 		}
 
 		PTypeSet dom = new PTypeSet();
@@ -1810,7 +1811,7 @@ public class TypeCheckerExpVisitor extends
 		
 		PType ltype = node.getLeft().apply(rootVisitor, question);
 		PType rtype = node.getRight().apply(rootVisitor, question);
-		node.setType(new AMapMapType(node.getLocation(), false, null, ltype, rtype, false));
+		node.setType(new AMapMapType(node.getLocation(), false, null, ltype.clone(), rtype.clone(), false));
 		return node.getType();
 	}
 	
@@ -2067,7 +2068,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAQuoteLiteralExp(AQuoteLiteralExp node, TypeCheckInfo question) {
-		node.setType(new AQuoteType(null, false, node.getValue()));
+		node.setType(new AQuoteType(node.getLocation(), false, node.getValue().clone()));
 		return node.getType();
 	}
 	
@@ -2514,7 +2515,7 @@ public class TypeCheckerExpVisitor extends
     	}
     	else
     	{
-    		node.setVardef(env.findName(name, question.scope));
+    		node.setVardef(env.findName(name, question.scope).clone());
     	}
 
 		if (node.getVardef() == null)
