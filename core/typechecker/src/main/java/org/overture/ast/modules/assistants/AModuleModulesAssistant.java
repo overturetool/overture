@@ -37,7 +37,7 @@ public class AModuleModulesAssistant
 		
 		for (AModuleModules m: allModules)
 		{
-			if (m.getName().name.equals(sought))
+			if (m.getName().equals(sought))
 			{
 				return m;
 			}

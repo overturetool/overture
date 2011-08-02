@@ -418,7 +418,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (stateDefinition):definition
                             [isConstructor]:java_Boolean
                                                         
-    |   {imported} [def]:definition
+    |   {imported} (def):definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken //is access missing here
     |   {local} [valueDefinition]:java_Boolean
     |   {multiBindList} (bindings):multipleBind* (defs):definition*
@@ -468,8 +468,8 @@ modules {-> package='org.overture.ast.modules'}
                 [exports]:exports.module
                 [defs]:definition*
                 [files]:clonableFile*
-                [importdefs]:definition*
-                [exportdefs]:definition*
+                (importdefs):definition*
+                (exportdefs):definition*
               // [delegate]:Delegate
                 [isFlat]:java_Boolean
                 //[typeChecked]:java_Boolean

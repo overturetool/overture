@@ -215,7 +215,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		
 		
 		
-		if (d.getTypeParams() != null)
+		if (d.getTypeParams().size() != 0)
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AExplicitFunctionDefinitionAssistant.getTypeParamDefinitions(d), question.env, NameScope.NAMES);

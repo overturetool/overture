@@ -56,7 +56,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case STRING:
 			return new Vector<PDefinition>();				
 		case CONCATENATION:
-			return AConcatenationPatternAssistant.getDefinitions((AConcatenationPattern)rp,ptype,scope);
+			return AConcatenationPatternTCAssistant.getDefinitions((AConcatenationPattern)rp,ptype,scope);
 		case RECORD:
 			return ARecordPatternTCAssistant.getDefinitions((ARecordPattern)rp,ptype,scope);		
 		case SEQ:
@@ -79,7 +79,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case CONCATENATION:
 			if(pattern instanceof AConcatenationPattern)
 			{
-				AConcatenationPatternAssistant.typeResolve((AConcatenationPattern)pattern,rootVisitor,question);
+				AConcatenationPatternTCAssistant.typeResolve((AConcatenationPattern)pattern,rootVisitor,question);
 			}
 			break;
 		case EXPRESSION:
@@ -131,7 +131,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case CONCATENATION:
 			if(pattern instanceof AConcatenationPattern)
 			{
-				AConcatenationPatternAssistant.unResolve((AConcatenationPattern)pattern);
+				AConcatenationPatternTCAssistant.unResolve((AConcatenationPattern)pattern);
 			}
 			break;
 		case RECORD:

@@ -9,6 +9,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PImport;
+import org.overture.ast.modules.SValueImport;
 
 public class PImportAssistant {
 
@@ -20,7 +21,7 @@ public class PImportAssistant {
 		case TYPE:
 			return ATypeImportAssistant.getDefinitions((ATypeImport)imp,from);
 		case VALUE:
-			return AValueValueImportAssistant.getDefinitions((AValueValueImport)imp,from);
+			return SValueImportAssistant.getDefinitions((SValueImport)imp,from);
 		default:
 			assert false : "PImport.getDefinitions should never hit this case";
 			return null;			

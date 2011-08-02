@@ -25,7 +25,7 @@ public class AAllImportAssistant {
 
 		for (PDefinition d: imp.getFrom().getExportdefs())
 		{
-			imported.add(new AImportedDefinition(imp.getLocation(), d.getName(), d.getNameScope(), false, PAccessSpecifierAssistant.getDefault(), null, d));
+			imported.add(new AImportedDefinition(imp.getLocation(), d.getName(), d.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, d));
 		}
 
 		return imported;	// The lot!

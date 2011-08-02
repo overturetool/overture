@@ -11,7 +11,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
-public class AConcatenationPatternAssistant {
+public class AConcatenationPatternTCAssistant extends AConcatenationPatternAssistant{
 
 	public static void typeResolve(AConcatenationPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		

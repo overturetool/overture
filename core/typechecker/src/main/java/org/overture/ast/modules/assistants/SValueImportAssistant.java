@@ -8,17 +8,18 @@ import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.modules.AValueValueImport;
+import org.overture.ast.modules.SValueImport;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class AValueValueImportAssistant {
+public class SValueImportAssistant {
 
-	public static List<PDefinition> getDefinitions(AValueValueImport imp,
+	public static List<PDefinition> getDefinitions(SValueImport imp,
 			AModuleModules module) {
-		
+
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
 		LexNameToken name = imp.getName();

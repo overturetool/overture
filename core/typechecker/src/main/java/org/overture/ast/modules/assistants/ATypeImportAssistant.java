@@ -33,7 +33,7 @@ public class ATypeImportAssistant {
 			}
 			else
 			{
-				expdef = new AImportedDefinition(imp.getName().location, expdef.getName(), expdef.getNameScope(), false, PAccessSpecifierAssistant.getDefault(), null, expdef);
+				expdef = new AImportedDefinition(imp.getName().location, expdef.getName(), expdef.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, expdef);
 			}
 
 			list.add(expdef);

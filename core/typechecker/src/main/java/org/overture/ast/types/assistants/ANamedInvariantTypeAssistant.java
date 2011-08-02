@@ -29,7 +29,7 @@ public class ANamedInvariantTypeAssistant {
 
 		try
 		{
-			type.setType( PTypeAssistant.typeResolve(type.getType(),root, rootVisitor, question).clone());
+			type.setType( PTypeAssistant.typeResolve(type.getType(),root, rootVisitor, question));
 			return type;
 		}
 		catch (TypeCheckException e)

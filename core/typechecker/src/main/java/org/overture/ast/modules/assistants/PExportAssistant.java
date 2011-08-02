@@ -119,7 +119,7 @@ public class PExportAssistant
 							if (type instanceof ANamedInvariantType)
 							{
 								ANamedInvariantType ntype = (ANamedInvariantType)type;
-								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,ntype.getName().clone(), ntype.getType().clone());
+								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,list, false, null, ntype.getName().clone(), ntype.getType());
 								copy.setOpaque(true);
 								copy.setInvDef(ntype.getInvDef());
 								list.add(new ATypeDefinition(def.getName().location,def.getName().clone(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy, null,null,null,false));
