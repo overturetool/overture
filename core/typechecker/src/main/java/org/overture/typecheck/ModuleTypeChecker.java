@@ -30,7 +30,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.modules.assistant.AModuleModulesAssistant;
+import org.overture.ast.modules.assistants.AModuleModulesAssistant;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;

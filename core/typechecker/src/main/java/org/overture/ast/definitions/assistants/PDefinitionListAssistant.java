@@ -137,9 +137,18 @@ public class PDefinitionListAssistant {
 	}
 
 	public static PDefinition findType(LinkedList<PDefinition> actualDefs,
-			LexNameToken name, String module)
+			LexNameToken name, String fromModule)
 	{
-		// TODO Auto-generated method stub
+		for (PDefinition d: actualDefs)
+		{
+			PDefinition def =  PDefinitionAssistant.findType(d,name, fromModule);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+
 		return null;
 	}
 }
