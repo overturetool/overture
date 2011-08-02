@@ -14,7 +14,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class AUnionPatternAssistant {
+public class AUnionPatternTCAssistant {
 
 	public static void typeResolve(AUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -24,8 +24,8 @@ public class AUnionPatternAssistant {
 
 		try
 		{
-			PPatternAssistant.typeResolve(pattern.getLeft(), rootVisitor, question);
-			PPatternAssistant.typeResolve(pattern.getRight(), rootVisitor, question);
+			PPatternTCAssistant.typeResolve(pattern.getLeft(), rootVisitor, question);
+			PPatternTCAssistant.typeResolve(pattern.getRight(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -36,20 +36,20 @@ public class AUnionPatternAssistant {
 	}
 
 	public static void unResolve(AUnionPattern pattern) {
-		PPatternAssistant.unResolve(pattern.getLeft());
-		PPatternAssistant.unResolve(pattern.getRight());
+		PPatternTCAssistant.unResolve(pattern.getLeft());
+		PPatternTCAssistant.unResolve(pattern.getRight());
 		pattern.setResolved(false);
 		
 	}
 
-	public static LexNameList getVariableNames(AUnionPattern pattern) {
-		LexNameList list = new LexNameList();
-
-		list.addAll(PPatternAssistant.getVariableNames(pattern.getLeft()));
-		list.addAll(PPatternAssistant.getVariableNames(pattern.getRight()));
-
-		return list;
-	}
+//	public static LexNameList getVariableNames(AUnionPattern pattern) {
+//		LexNameList list = new LexNameList();
+//
+//		list.addAll(PPatternTCAssistant.getVariableNames(pattern.getLeft()));
+//		list.addAll(PPatternTCAssistant.getVariableNames(pattern.getRight()));
+//
+//		return list;
+//	}
 
 	public static List<PDefinition> getDefinitions(AUnionPattern rp,
 			PType type, NameScope scope) {
@@ -61,8 +61,8 @@ public class AUnionPatternAssistant {
 			TypeCheckerErrors.report(3206, "Matching expression is not a set type",rp.getLocation(),rp);
 		}
 
-		defs.addAll(PPatternAssistant.getDefinitions(rp.getLeft(),type, scope));
-		defs.addAll(PPatternAssistant.getDefinitions(rp.getRight(),type, scope));
+		defs.addAll(PPatternTCAssistant.getDefinitions(rp.getLeft(),type, scope));
+		defs.addAll(PPatternTCAssistant.getDefinitions(rp.getRight(),type, scope));
 
 		return defs;
 	}

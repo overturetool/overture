@@ -141,7 +141,7 @@ public class SClassDefinitionAssistant {
 		if (self == null)	// Not called from within a class member
 		{
 			// We're outside, so just public access
-			return (PAccessSpecifierAssistant.isPublic(field.getAccess()));
+			return (PAccessSpecifierTCAssistant.isPublic(field.getAccess()));
 		}
 		else
 		{
@@ -153,13 +153,13 @@ public class SClassDefinitionAssistant {
 				if (AClassTypeAssistant.hasSupertype(selftype,targtype))
 				{
 					// We're a subclass, so see public or protected
-					return (PAccessSpecifierAssistant.isPrivate(field.getAccess()));
+					return (PAccessSpecifierTCAssistant.isPrivate(field.getAccess()));
 				}
 				else
 				{
 					// We're outside, so just public/static access
-					return (PAccessSpecifierAssistant.isPublic(field.getAccess()) &&
-							(needStatic ? PAccessSpecifierAssistant.isStatic(field.getAccess()) : true));
+					return (PAccessSpecifierTCAssistant.isPublic(field.getAccess()) &&
+							(needStatic ? PAccessSpecifierTCAssistant.isStatic(field.getAccess()) : true));
 				}
 			}
 			else
@@ -368,7 +368,7 @@ public class SClassDefinitionAssistant {
 
 		
 //		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
-		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, PAccessSpecifierAssistant.getDefault(), null, body, null, null, type, null,false);
+		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, PAccessSpecifierTCAssistant.getDefault(), null, body, null, null, type, null,false);
 		res.setParameterPatterns(new Vector<PPattern>());
 		
 		return res;
@@ -460,7 +460,7 @@ public class SClassDefinitionAssistant {
 
 		for (PDefinition d: singles)
 		{
-			if (!PAccessSpecifierAssistant.isPrivate(d.getAccess()))
+			if (!PAccessSpecifierTCAssistant.isPrivate(d.getAccess()))
 			{
 				defs.add(d);
 			}

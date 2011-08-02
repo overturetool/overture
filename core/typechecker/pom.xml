@@ -42,5 +42,10 @@
 			<artifactId>parserv2</artifactId>
 			<version>2.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.overturetoolv2.core</groupId>
+			<artifactId>ast_assistance</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -70,7 +70,7 @@ Abstract Syntax Tree
     Expressions
 */    
 exp {-> package='org.overture.ast.expressions'}
-    =   {apply} [root]:exp [args]:exp* [argtypes]:type* [recursive]:definition
+    =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition
     |   #Unary
     |   #Binary
     |   {boolean_const} [value]:LexBooleanToken
@@ -421,7 +421,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {imported} [def]:definition
     |   {inherited} [superdef]:definition [oldname]:LexNameToken //is access missing here
     |   {local} [valueDefinition]:java_Boolean
-    |   {multiBindList} [bindings]:multipleBind* [defs]:definition*
+    |   {multiBindList} (bindings):multipleBind* (defs):definition*
     |   {mutexSync} [operations]:LexNameToken*
     |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
     |   {perSync} [opname]:LexNameToken [guard]:exp
@@ -435,7 +435,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
     |   {type} [type]:type.#invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
     |   {untyped}
-    |   {value} [pattern]:pattern [expression]:exp [defs]:definition* [expType]:type //is access missing here
+    |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
     ;
  
 /*

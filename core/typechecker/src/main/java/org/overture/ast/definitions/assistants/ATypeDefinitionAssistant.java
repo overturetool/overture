@@ -8,7 +8,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -98,7 +98,7 @@ public class ATypeDefinitionAssistant {
 			if (d.getInvdef() != null)
 			{
 				PDefinitionAssistant.typeResolve(d.getInvdef(), rootVisitor, question);
-				PPatternAssistant.typeResolve(d.getInvPattern(), rootVisitor, question);
+				PPatternTCAssistant.typeResolve(d.getInvPattern(), rootVisitor, question);
 			}
 			
 			d.setType(d.getType());

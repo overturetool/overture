@@ -18,7 +18,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
@@ -36,7 +36,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.ASetBindAssistant;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
@@ -1591,7 +1591,7 @@ public class TypeCheckerExpVisitor extends
 		for (ATypeBind tb: node.getBindList())
 		{
 			mbinds.addAll(ATypeBindAssistant.getMultipleBindList(tb));
-			paramDefinitions.addAll(PPatternAssistant.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
+			paramDefinitions.addAll(PPatternTCAssistant.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(PTypeAssistant.typeResolve(tb.getType(), null, rootVisitor, question));
 		}
@@ -1626,7 +1626,7 @@ public class TypeCheckerExpVisitor extends
 		
 		
 		
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistant.getDefault(), null, PMultipleBindAssistant.getMultipleBindList((PMultipleBind) node.getBind().clone()), null);
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierTCAssistant.getDefault(), null, PMultipleBindAssistant.getMultipleBindList((PMultipleBind) node.getBind().clone()), null);
 		
 		def.apply(rootVisitor, question);
 		
@@ -1676,7 +1676,7 @@ public class TypeCheckerExpVisitor extends
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
 					d.setClassDefinition(cdef);
-					d.setAccess( PAccessSpecifierAssistant.getStatic(d,true));
+					d.setAccess( PAccessSpecifierTCAssistant.getStatic(d,true));
 				}
 
 				
@@ -1724,7 +1724,7 @@ public class TypeCheckerExpVisitor extends
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
 					d.setClassDefinition(cdef);
-					d.setAccess( PAccessSpecifierAssistant.getStatic(d,true));
+					d.setAccess( PAccessSpecifierTCAssistant.getStatic(d,true));
 				}
 
 				
@@ -2452,7 +2452,7 @@ public class TypeCheckerExpVisitor extends
         				node.setType(new AUnknownType(node.getLocation(),false));
         				return node.getType();
         			}
-        			else if (!PAccessSpecifierAssistant.isStatic(vardef.getAccess()) && env.isStatic())
+        			else if (!PAccessSpecifierTCAssistant.isStatic(vardef.getAccess()) && env.isStatic())
             		{
         				TypeCheckerErrors.report(3181, "Cannot access " + name + " from a static context",node.getLocation(),node);
         				node.setType(new AUnknownType(node.getLocation(),false));

@@ -18,7 +18,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class ARecordPatternAssistant {
+public class ARecordPatternTCAssistant {
 
 	public static void typeResolve(ARecordPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -43,17 +43,17 @@ public class ARecordPatternAssistant {
 		pattern.setResolved(false);		
 	}
 
-	public static LexNameList getVariableNames(ARecordPattern pattern) {
-		LexNameList list = new LexNameList();
-
-		for (PPattern p: pattern.getPlist())
-		{
-			list.addAll(PPatternAssistant.getVariableNames(p));
-		}
-
-		return list;
-		
-	}
+//	public static LexNameList getVariableNames(ARecordPattern pattern) {
+//		LexNameList list = new LexNameList();
+//
+//		for (PPattern p: pattern.getPlist())
+//		{
+//			list.addAll(PPatternTCAssistant.getVariableNames(p));
+//		}
+//
+//		return list;
+//		
+//	}
 
 	public static List<PDefinition> getDefinitions(ARecordPattern rp,
 			PType exptype, NameScope scope) {
@@ -93,7 +93,7 @@ public class ARecordPatternAssistant {
     		{
     			AFieldField pf = patfi.next();
     			// defs.addAll(p.getDefinitions(usingrec.findField(pf.tag).type, scope));
-    			defs.addAll(PPatternAssistant.getDefinitions(p,pf.getType(), scope));
+    			defs.addAll(PPatternTCAssistant.getDefinitions(p,pf.getType(), scope));
     		}
 		}
 

@@ -18,7 +18,7 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
@@ -105,7 +105,7 @@ public class AExplicitFunctionDefinitionAssistant {
 
 				for (PPattern p: plist)
 				{
-					defs.addAll(PPatternAssistant.getDefinitions(p,unknown,NameScope.LOCAL));
+					defs.addAll(PPatternTCAssistant.getDefinitions(p,unknown,NameScope.LOCAL));
 
 				}
 			}
@@ -113,7 +113,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			{
     			for (PPattern p: plist)
     			{
-    				defs.addAll(PPatternAssistant.getDefinitions(p,titer.next(),NameScope.LOCAL));					
+    				defs.addAll(PPatternTCAssistant.getDefinitions(p,titer.next(),NameScope.LOCAL));					
     			}
 			}
 

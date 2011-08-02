@@ -9,7 +9,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -836,7 +836,7 @@ public class PTypeAssistant {
 			boolean result = false;
 			for (PDefinition d: type.getDefinitions())
 			{
-				result = result || PAccessSpecifierAssistant.narrowerThan(d.getAccess(),accessSpecifier);
+				result = result || PAccessSpecifierTCAssistant.narrowerThan(d.getAccess(),accessSpecifier);
 			}
 			return result;
 		}

@@ -30,7 +30,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -76,7 +76,7 @@ public class PublicClassEnvironment extends Environment
 	{
 		PDefinition def = SClassDefinitionAssistant.findName(classes,name, scope);
 
-		if (def != null && PAccessSpecifierAssistant.isPublic(def.getAccess()))
+		if (def != null && PAccessSpecifierTCAssistant.isPublic(def.getAccess()))
 		{
 			return def;
 		}
@@ -89,7 +89,7 @@ public class PublicClassEnvironment extends Environment
 	{
 		PDefinition def = SClassDefinitionAssistant.findType(classes,name);
 
-		if (def != null && PAccessSpecifierAssistant.isPublic(def.getAccess()))
+		if (def != null && PAccessSpecifierTCAssistant.isPublic(def.getAccess()))
 		{
 			return def;
 		}

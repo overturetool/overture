@@ -12,7 +12,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
@@ -611,7 +611,7 @@ public class AUnionTypeAssistant {
     					}
     					else
     					{
-    						if (PAccessSpecifierAssistant.narrowerThan(curracc, f.getAccess()))
+    						if (PAccessSpecifierTCAssistant.narrowerThan(curracc, f.getAccess()))
     						{
     							access.put(synthname, f.getAccess());
     						}

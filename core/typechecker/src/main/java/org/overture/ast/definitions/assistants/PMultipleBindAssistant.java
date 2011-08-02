@@ -8,7 +8,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
@@ -22,7 +22,7 @@ public class PMultipleBindAssistant {
 
 		for (PPattern p: mb.getPlist())
 		{
-			defs.addAll(PPatternAssistant.getDefinitions(p, type, question.scope));
+			defs.addAll(PPatternTCAssistant.getDefinitions(p, type, question.scope));
 		}
 
 		return defs;

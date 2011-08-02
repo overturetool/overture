@@ -1,13 +1,12 @@
 package org.overture.ast.definitions.assistants;
 
-import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.EAccess;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 
-public class PAccessSpecifierAssistant {
+public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
 
 	public static boolean isPublic(PAccessSpecifier access) {
 		if(access instanceof AAccessSpecifierAccessSpecifier)
@@ -90,8 +89,5 @@ public class PAccessSpecifierAssistant {
 		
 	}
 	
-	public static AAccessSpecifierAccessSpecifier getDefault()
-	{
-		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
-	}
+
 }

@@ -43,7 +43,7 @@ public class LexQuoteToken extends LexToken {
 	}
 
 	@Override
-	public Object clone() {
+	public LexQuoteToken clone() {
 		return new LexQuoteToken(value, location);
 	}
 	

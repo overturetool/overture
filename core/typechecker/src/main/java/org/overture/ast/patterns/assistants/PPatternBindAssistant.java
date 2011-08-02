@@ -63,8 +63,8 @@ public class PPatternBindAssistant {
 			assert (type != null) :
 					"Can't typecheck a pattern without a type";
 
-			PPatternAssistant.typeResolve(node.getPattern(), rootVisitor, question);
-			node.setDefs(PPatternAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
+			node.setDefs(PPatternTCAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		
 	}

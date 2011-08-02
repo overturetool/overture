@@ -378,7 +378,7 @@ public class PDefinitionAssistant {
 	}
 
 	public static boolean isStatic(PDefinition fdef) {
-		return PAccessSpecifierAssistant.isStatic(fdef.getAccess());
+		return PAccessSpecifierTCAssistant.isStatic(fdef.getAccess());
 	}
 
 	public static PDefinition deref(PDefinition def) {

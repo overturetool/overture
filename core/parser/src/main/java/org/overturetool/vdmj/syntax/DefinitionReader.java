@@ -45,9 +45,11 @@ import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
@@ -69,6 +71,7 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AErrorCase;
@@ -931,8 +934,17 @@ public class DefinitionReader extends SyntaxReader
     	}
 
  		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
+ 		
+ 		
+ 		List<PDefinition> defs = new Vector<PDefinition>();
+ 		
+ 		for (LexNameToken var: PPatternAssistant.getVariableNames(p))
+		{
+			defs.add(new AUntypedDefinition(lastToken().location, var, scope, false, null, PAccessSpecifierAssistant.getDefault(), null));
+		}
+ 		
  		return new AValueDefinition(lastToken().location,null,scope,false,
-				null,null,type,p,getExpressionReader().readExpression(),null,null);
+				null,null,type,p,getExpressionReader().readExpression(),defs,null);
 //		return new ValueDefinition(
 //			p, scope, type, getExpressionReader().readExpression());
 	}

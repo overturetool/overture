@@ -15,7 +15,7 @@ import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
@@ -38,7 +38,7 @@ public class AExplicitOperationDefinitionAssistant {
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
-   			defs.addAll(PPatternAssistant.getDefinitions(p,titer.next(), NameScope.LOCAL));
+   			defs.addAll(PPatternTCAssistant.getDefinitions(p,titer.next(), NameScope.LOCAL));
 		}
 
 		return new Vector<PDefinition>(defs);
@@ -118,7 +118,7 @@ public class AExplicitOperationDefinitionAssistant {
 
 		for (PPattern p: d.getParameterPatterns())
 		{
-			PPatternAssistant.typeResolve(p, rootVisitor, question);
+			PPatternTCAssistant.typeResolve(p, rootVisitor, question);
 		}
 		
 	}
@@ -163,7 +163,7 @@ public class AExplicitOperationDefinitionAssistant {
 			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName().getOldName()));
 			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName()));
 		}
-		else if (base.isVDMPP() && !PAccessSpecifierAssistant.isStatic(d.getAccess()))
+		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
 			// Two arguments called "self~" and "self"
 			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName().getOldName()));
@@ -181,14 +181,14 @@ public class AExplicitOperationDefinitionAssistant {
 				PAccessSpecifierAssistant.getDefault(),
 				null,
 				parameters,
-				AOperationTypeAssistant.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistant.isStatic(d.getAccess())),
+				AOperationTypeAssistant.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
 				postop, null, null, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistant.getStatic(d,false));
+		def.setAccess(PAccessSpecifierTCAssistant.getStatic(d,false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 		
@@ -205,7 +205,7 @@ public class AExplicitOperationDefinitionAssistant {
 		{
 			plist.add(new AIdentifierPattern(d.getLocation(),null, false, d.getState().getName()));
 		}
-		else if (base.isVDMPP() && !PAccessSpecifierAssistant.isStatic(d.getAccess()))
+		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
 			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName()));
 		}
@@ -221,7 +221,7 @@ public class AExplicitOperationDefinitionAssistant {
 			PAccessSpecifierAssistant.getDefault(),
 			null,
 			parameters,
-			AOperationTypeAssistant.getPreType(d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierAssistant.isStatic(d.getAccess())),
+			AOperationTypeAssistant.getPreType(d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
 			preop, 
 			null, null, null);
 
@@ -229,7 +229,7 @@ public class AExplicitOperationDefinitionAssistant {
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistant.getStatic(def, false));
+		def.setAccess(PAccessSpecifierTCAssistant.getStatic(def, false));
 		def.setClassDefinition(def.getClassDefinition());
 		return def;
 	}

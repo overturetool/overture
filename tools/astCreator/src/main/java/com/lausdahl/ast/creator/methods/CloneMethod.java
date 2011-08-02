@@ -9,6 +9,7 @@ import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
@@ -72,7 +73,10 @@ public class CloneMethod extends Method
 							name = f.getCast() + name;
 						}
 
-						if (f.isList && !f.isDoubleList)
+						if(f.structureType==StructureType.Graph)
+						{
+							tmp += ("\t\t\t" + name + ",\n");
+						}else if (f.isList && !f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneList"
 									+ (f.isTypeExternalNotNode() ? "External"

@@ -5,7 +5,7 @@ import java.util.List;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternTypePair;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
@@ -15,7 +15,7 @@ public class APatternTypePairAssistant {
 
 	public static List<PDefinition> getDefinitions(APatternTypePair result) {
 		
-		return PPatternAssistant.getDefinitions(result.getPattern(), result.getType(),NameScope.LOCAL);
+		return PPatternTCAssistant.getDefinitions(result.getPattern(), result.getType(),NameScope.LOCAL);
 	}
 
 	public static void typeResolve(APatternTypePair result,

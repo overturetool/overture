@@ -35,7 +35,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class PPatternAssistant {
+public class PPatternTCAssistant extends PPatternAssistant {
 
 	public static List<PDefinition> getDefinitions(PPattern rp,
 			PType ptype, NameScope scope) {		
@@ -58,15 +58,15 @@ public class PPatternAssistant {
 		case CONCATENATION:
 			return AConcatenationPatternAssistant.getDefinitions((AConcatenationPattern)rp,ptype,scope);
 		case RECORD:
-			return ARecordPatternAssistant.getDefinitions((ARecordPattern)rp,ptype,scope);		
+			return ARecordPatternTCAssistant.getDefinitions((ARecordPattern)rp,ptype,scope);		
 		case SEQ:
-			return ASeqPatternAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
+			return ASeqPatternTCAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
 		case SET:
-			return ASetPatternAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
+			return ASetPatternTCAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
 		case TUPLE:
 			return ATuplePatternAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
 		case UNION:
-			return AUnionPatternAssistant.getDefinitions((AUnionPattern)rp,ptype,scope);
+			return AUnionPatternTCAssistant.getDefinitions((AUnionPattern)rp,ptype,scope);
 		default:
 			assert false : "PPatternAssistant.getDefinitions - should not hit this case";
 			return null;
@@ -91,19 +91,19 @@ public class PPatternAssistant {
 		case RECORD:
 			if(pattern instanceof ARecordPattern)
 			{
-				ARecordPatternAssistant.typeResolve((ARecordPattern)pattern,rootVisitor,question);
+				ARecordPatternTCAssistant.typeResolve((ARecordPattern)pattern,rootVisitor,question);
 			}
 			break;
 		case SEQ:
 			if(pattern instanceof ASeqPattern)
 			{
-				ASeqPatternAssistant.typeResolve((ASeqPattern)pattern,rootVisitor,question);
+				ASeqPatternTCAssistant.typeResolve((ASeqPattern)pattern,rootVisitor,question);
 			}
 			break;			
 		case SET:
 			if(pattern instanceof ASetPattern)
 			{
-				ASetPatternAssistant.typeResolve((ASetPattern)pattern,rootVisitor,question);
+				ASetPatternTCAssistant.typeResolve((ASetPattern)pattern,rootVisitor,question);
 			}
 			break;		
 		case TUPLE:
@@ -115,7 +115,7 @@ public class PPatternAssistant {
 		case UNION:
 			if(pattern instanceof AUnionPattern)
 			{
-				AUnionPatternAssistant.typeResolve((AUnionPattern)pattern,rootVisitor,question);
+				AUnionPatternTCAssistant.typeResolve((AUnionPattern)pattern,rootVisitor,question);
 			}
 			break;
 		default:
@@ -137,19 +137,19 @@ public class PPatternAssistant {
 		case RECORD:
 			if(pattern instanceof ARecordPattern)
 			{
-				ARecordPatternAssistant.unResolve((ARecordPattern)pattern);
+				ARecordPatternTCAssistant.unResolve((ARecordPattern)pattern);
 			}
 			break;
 		case SEQ:
 			if(pattern instanceof ASeqPattern)
 			{
-				ASeqPatternAssistant.unResolve((ASeqPattern)pattern);
+				ASeqPatternTCAssistant.unResolve((ASeqPattern)pattern);
 			}
 			break;
 		case SET:
 			if(pattern instanceof ASetPattern)
 			{
-				ASetPatternAssistant.unResolve((ASetPattern)pattern);
+				ASetPatternTCAssistant.unResolve((ASetPattern)pattern);
 			}
 			break;
 		case TUPLE:
@@ -161,7 +161,7 @@ public class PPatternAssistant {
 		case UNION:
 			if(pattern instanceof AUnionPattern)
 			{
-				AUnionPatternAssistant.unResolve((AUnionPattern)pattern);
+				AUnionPatternTCAssistant.unResolve((AUnionPattern)pattern);
 			}
 			break;		
 		default:
@@ -172,27 +172,27 @@ public class PPatternAssistant {
 
 	
 
-	public static LexNameList getVariableNames(PPattern pattern) {
-		switch (pattern.kindPPattern()) {
-		case RECORD:
-			return ARecordPatternAssistant.getVariableNames((ARecordPattern)pattern);
-		case SEQ:
-			return ASeqPatternAssistant.getVariableNames((ASeqPattern)pattern);
-		case SET:
-			return ASetPatternAssistant.getVariableNames((ASetPattern)pattern);
-		case TUPLE:
-			return ATuplePatternAssistant.getVariableNames((ATuplePattern)pattern);
-		case UNION:
-			return AUnionPatternAssistant.getVariableNames((AUnionPattern)pattern);
-		default:
-			return getVariableNamesBaseCase(pattern);
-		}
-	}
-	
-	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
-	{
-		return new LexNameList();	
-	}
+//	public static LexNameList getVariableNames(PPattern pattern) {
+//		switch (pattern.kindPPattern()) {
+//		case RECORD:
+//			return ARecordPatternAssistant.getVariableNames((ARecordPattern)pattern);
+//		case SEQ:
+//			return ASeqPatternAssistant.getVariableNames((ASeqPattern)pattern);
+//		case SET:
+//			return ASetPatternAssistant.getVariableNames((ASetPattern)pattern);
+//		case TUPLE:
+//			return ATuplePatternAssistant.getVariableNames((ATuplePattern)pattern);
+//		case UNION:
+//			return AUnionPatternAssistant.getVariableNames((AUnionPattern)pattern);
+//		default:
+//			return getVariableNamesBaseCase(pattern);
+//		}
+//	}
+//	
+//	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
+//	{
+//		return new LexNameList();	
+//	}
 
 	public static PType getPossibleType(PPattern pattern) {
 		switch (pattern.kindPPattern()) {

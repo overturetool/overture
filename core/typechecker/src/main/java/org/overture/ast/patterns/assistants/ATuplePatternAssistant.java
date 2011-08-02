@@ -44,16 +44,16 @@ public class ATuplePatternAssistant {
 		
 	}
 
-	public static LexNameList getVariableNames(ATuplePattern pattern) {
-		LexNameList list = new LexNameList();
-
-		for (PPattern p: pattern.getPlist())
-		{
-			list.addAll(PPatternAssistant.getVariableNames(p));
-		}
-
-		return list;
-	}
+//	public static LexNameList getVariableNames(ATuplePattern pattern) {
+//		LexNameList list = new LexNameList();
+//
+//		for (PPattern p: pattern.getPlist())
+//		{
+//			list.addAll(PPatternTCAssistant.getVariableNames(p));
+//		}
+//
+//		return list;
+//	}
 
 	public static List<PDefinition> getDefinitions(ATuplePattern rp,
 			PType type, NameScope scope) {
@@ -72,7 +72,7 @@ public class ATuplePatternAssistant {
 
 		for (PPattern p: rp.getPlist())
 		{
-			defs.addAll(PPatternAssistant.getDefinitions(p,ti.next(), scope));
+			defs.addAll(PPatternTCAssistant.getDefinitions(p,ti.next(), scope));
 		}
 
 		return defs;

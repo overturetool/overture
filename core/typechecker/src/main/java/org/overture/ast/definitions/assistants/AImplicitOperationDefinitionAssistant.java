@@ -152,7 +152,7 @@ public class AImplicitOperationDefinitionAssistant {
 			plist.add(new AIdentifierPattern(state.getLocation(), null, false, state.getName().getOldName()));
 			plist.add(new AIdentifierPattern(state.getLocation(), null, false, state.getName()));
 		}
-		else if (base.isVDMPP() && !PAccessSpecifierAssistant.isStatic(d.getAccess()))
+		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
 			plist.add(new AIdentifierPattern(state.getLocation(), null, false, d.getName().getSelfName().getOldName()));
 			plist.add(new AIdentifierPattern(state.getLocation(), null, false, d.getName().getSelfName()));
@@ -166,10 +166,10 @@ public class AImplicitOperationDefinitionAssistant {
 				d.getName().getPostName(d.getPostcondition().getLocation()), 
 				NameScope.GLOBAL,
 				false,
-				PAccessSpecifierAssistant.getDefault(),
+				PAccessSpecifierTCAssistant.getDefault(),
 				null,
 				parameters,
-				AOperationTypeAssistant.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistant.isStatic(d.getAccess())),
+				AOperationTypeAssistant.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
 				postop, 
 				null, null, null);
 
@@ -177,7 +177,7 @@ public class AImplicitOperationDefinitionAssistant {
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistant.getStatic(d, false));
+		def.setAccess(PAccessSpecifierTCAssistant.getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
@@ -199,7 +199,7 @@ public class AImplicitOperationDefinitionAssistant {
 		{
 			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName()));
 		}
-		else if (base.isVDMPP() && !PAccessSpecifierAssistant.isStatic(d.getAccess()))
+		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
 			plist.add(new AIdentifierPattern(state.getLocation(),null, false,d.getName().getSelfName()));
 		}
@@ -212,10 +212,10 @@ public class AImplicitOperationDefinitionAssistant {
 			d.getName().getPreName(d.getPrecondition().getLocation()), 
 			NameScope.GLOBAL,
 			false,
-			PAccessSpecifierAssistant.getDefault(),
+			PAccessSpecifierTCAssistant.getDefault(),
 			null,
 			parameters,
-			AOperationTypeAssistant.getPreType(d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistant.isStatic(d.getAccess())),
+			AOperationTypeAssistant.getPreType(d.getType(), state, d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
 			preop, 
 			null, null, null);
 
@@ -223,7 +223,7 @@ public class AImplicitOperationDefinitionAssistant {
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistant.getStatic(d, false));
+		def.setAccess(PAccessSpecifierTCAssistant.getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
