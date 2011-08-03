@@ -982,7 +982,7 @@ public class DefinitionReader extends SyntaxReader
 //				null,null, null);
 		
 		ARecordInvariantType recordType = new ARecordInvariantType(name.location,false,idToName(name), fieldList);
-		ALocalDefinition recordDefinition = new ALocalDefinition(name.location,  idToName(name), NameScope.STATE, true, getDefaultAccess(),recordType,null);
+		ALocalDefinition recordDefinition = new ALocalDefinition(name.location, NameScope.STATE, false, null, getDefaultAccess(),recordType,null,idToName(name));
 //		recordDefinition.markUsed();	// Can't be exported anyway
 //		statedefs.add(recordDefinition);
 		
@@ -1006,10 +1006,10 @@ public class DefinitionReader extends SyntaxReader
 		for (AFieldField f : fieldList)
 		{
 			stateDef.getStateDefs().add(new ALocalDefinition(
-					f.getTagname().location, f.getTagname(), NameScope.STATE, false,getDefaultAccess(),f.getType(),null));
+					f.getTagname().location, NameScope.STATE, false,null, getDefaultAccess(),f.getType(),null,f.getTagname()));
 
 				ALocalDefinition ld = new ALocalDefinition(f.getTagname().location,
-					f.getTagname().getOldName(), NameScope.OLDSTATE, true, getDefaultAccess(),f.getType(),null);
+					 NameScope.OLDSTATE, true, null, getDefaultAccess(),f.getType(),null,f.getTagname().getOldName());
 
 //				ld.markUsed();		// Else we moan about unused ~x names
 				stateDef.getStateDefs().add(ld);
