@@ -418,9 +418,9 @@ definition {-> package='org.overture.ast.definitions'}
                             (stateDefinition):definition
                             [isConstructor]:java_Boolean
                                                         
-    |   {imported} (def):definition
+    |   {imported} (def):definition (name):LexNameToken
     |   {inherited} [superdef]:definition [oldname]:LexNameToken //is access missing here
-    |   {local} [valueDefinition]:java_Boolean
+    |   {local} [valueDefinition]:java_Boolean (name):LexNameToken
     |   {multiBindList} (bindings):multipleBind* (defs):definition*
     |   {mutexSync} [operations]:LexNameToken*
     |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
