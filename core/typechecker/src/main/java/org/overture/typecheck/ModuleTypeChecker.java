@@ -108,8 +108,7 @@ public class ModuleTypeChecker extends TypeChecker
 				}
 			}
 
-//			if (!m1.gettypechecked) nothing = false;
-			/*if (!m1.gettypechecked)*/ nothing = false;
+			if (!m1.getTypeChecked()) nothing = false;
 		}
 
 		if (nothing)
@@ -121,7 +120,7 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (AModuleModules m: modules)
 		{
-//			if (!m.typechecked)
+			if (!m.getTypeChecked())
 			{
 				Environment env = new ModuleEnvironment(m);
 				PDefinitionListAssistant.implicitDefinitions(m.getDefs(), env);
@@ -132,7 +131,7 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (AModuleModules m: modules)
 		{
-//			if (!m.typechecked)
+			if (!m.getTypeChecked())
 			{
 				AModuleModulesAssistant.processExports(m);			// Populate exportDefs
 			}
@@ -143,9 +142,8 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (AModuleModules m: modules)
 		{
-//			if (!m.typechecked)
+			if (!m.getTypeChecked())
 			{
-				//TODO
 				AModuleModulesAssistant.processImports(m,modules);	// Populate importDefs
 			}
 		}
@@ -161,18 +159,17 @@ public class ModuleTypeChecker extends TypeChecker
 			for (PDefinition d: m.getImportdefs())
 			{
 				alldefs.add(d);
-				/*if (!m.typechecked)*/	checkDefs.add(d);
+				if (!m.getTypeChecked())	checkDefs.add(d);
 			}
 
 			for (PDefinition d: m.getDefs())
 			{
 				alldefs.add(d);
-				/*if (!m.typechecked)*/ checkDefs.add(d);
+				if (!m.getTypeChecked()) checkDefs.add(d);
 			}
 		}
 
 		// Attempt type resolution of unchecked definitions from all modules.
-		System.out.println();
 		Environment env =
 			new FlatCheckedEnvironment(alldefs, NameScope.NAMESANDSTATE);
 		TypeCheckVisitor tc = new TypeCheckVisitor();
@@ -195,13 +192,12 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			for (AModuleModules m: modules)
 			{
-//				if (!m.typechecked)
+				if (!m.getTypeChecked())
 				{
     				Environment e = new ModuleEnvironment(m);
 
     				for (PDefinition d: m.getDefs())
     				{
-    					//System.out.println("Starting checking def: " + d.getName().toString() + " defs number is: " + m.getDefs().size());
 //    					if (d.pass == pass)//TODO we properly need to add this to all definitions
     					{
     						try
@@ -214,7 +210,6 @@ public class ModuleTypeChecker extends TypeChecker
     							report(3431, te.getMessage(), te.location);
     						}
     					}
-    					//System.out.println("Finishing checking def: " + d.getName().toString() + " defs number is: " + m.getDefs().size());
     				}
 				}
 			}
@@ -225,14 +220,15 @@ public class ModuleTypeChecker extends TypeChecker
 
 		for (AModuleModules m: modules)
 		{
-//			if (!m.typechecked)
+			if (!m.getTypeChecked())
 			{
 				//TODO
-//    			m.processImports(modules);		// Re-populate importDefs
+				//AModuleModulesAssistant.processImports(m,modules); // Re-populate importDefs
 
     			try
     			{
     				//TODO
+    				//AModuleModulesAssistant.typeCheckImports(m);
 //    				m.typeCheckImports();		// Imports compared to exports
     			}
     			catch (TypeCheckException te)
@@ -247,12 +243,11 @@ public class ModuleTypeChecker extends TypeChecker
 
     	for (AModuleModules m: modules)
 		{
-//			if (!m.typechecked)
+			if (!m.getTypeChecked())
 			{
-//				m.getImportdefs().unusedCheck();
+				System.out.println("Checking unused defs in module " + m.getName() );
 				PDefinitionListAssistant.unusedCheck(m.getImportdefs());
 				PDefinitionListAssistant.unusedCheck(m.getDefs());
-//				m.getDefs().unusedCheck();
 			}
 		}
 	}

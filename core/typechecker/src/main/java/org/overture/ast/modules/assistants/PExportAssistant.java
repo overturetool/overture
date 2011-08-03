@@ -119,10 +119,10 @@ public class PExportAssistant
 							if (type instanceof ANamedInvariantType)
 							{
 								ANamedInvariantType ntype = (ANamedInvariantType)type;
-								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,list, false, null, ntype.getName().clone(), ntype.getType());
+								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,list, false, null, ntype.getName().clone(), ntype.getType().clone());
 								copy.setOpaque(true);
 								copy.setInvDef(ntype.getInvDef());
-								list.add(new ATypeDefinition(def.getName().location,def.getName().clone(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy, null,null,null,false));
+								list.add(new ATypeDefinition(def.getName().location, NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy, null,null,null,false,def.getName()));
 							}
 							else if (type instanceof ARecordInvariantType)
 							{
@@ -130,7 +130,7 @@ public class PExportAssistant
 								SInvariantType copy = new ARecordInvariantType(rtype.getName().location,false, rtype.getName().clone(), (List<? extends AFieldField>) rtype.getFields().clone());
 								copy.setOpaque(true);
 								copy.setInvDef(rtype.getInvDef());
-								list.add(new ATypeDefinition(def.getName().location,def.getName().clone(), NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(), copy,null,null,null,false));
+								list.add(new ATypeDefinition(def.getName().location, NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy,null,null,null,false,def.getName()));
 							}
 							else
 							{

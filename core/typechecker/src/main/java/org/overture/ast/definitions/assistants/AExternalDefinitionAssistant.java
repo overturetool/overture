@@ -45,4 +45,9 @@ public class AExternalDefinitionAssistant {
 		return PDefinitionAssistant.getType(def.getState());
 	}
 
+	public static boolean isUsed(AExternalDefinition u) {
+		return PDefinitionAssistant.isUsed(u.getState());
+		
+	}
+
 }

@@ -376,7 +376,7 @@ public class DefinitionReader extends SyntaxReader
 //				NamedType nt = new NamedType(idToName(id), tr.readType());
 				PType type = tr.readType();
 				ANamedInvariantType nt = 
-					new ANamedInvariantType(id.location,false,idToName(id), type);
+					new ANamedInvariantType(id.location,false,null, false, null, idToName(id), type);
 
 				if (type instanceof AUnresolvedType &&
 					((AUnresolvedType)type).getTypename().equals(idToName(id)))
@@ -407,8 +407,8 @@ public class DefinitionReader extends SyntaxReader
 			invExpression = getExpressionReader().readExpression();
 		}
 
-		return new ATypeDefinition(id.location,idToName(id),null, 
-				null,null,null,invtype,invPattern,invExpression,null,false);
+		return new ATypeDefinition(id.location,null, 
+				null,null,null,null,invtype, invPattern,invExpression,null,false,idToName(id));
 		
 		//return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}

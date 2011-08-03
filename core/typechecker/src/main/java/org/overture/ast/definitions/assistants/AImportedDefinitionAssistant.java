@@ -39,7 +39,7 @@ public class AImportedDefinitionAssistant {
 
 		if (def != null)
 		{
-			PDefinitionAssistant.markUsed(def);
+			PDefinitionAssistant.markUsed(d);
 		}
 
 		return def;
@@ -60,6 +60,11 @@ public class AImportedDefinitionAssistant {
 
 	public static LexNameList getVariableNames(AImportedDefinition d) {
 		return PDefinitionAssistant.getVariableNames(d.getDef());
+	}
+
+	public static boolean isUsed(AImportedDefinition u) {
+		return PDefinitionAssistant.isUsed(u.getDef());
+		
 	}
 
 }

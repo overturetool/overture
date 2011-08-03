@@ -67,7 +67,7 @@ public class TypeCheckerImportsVisitor extends
 	}
 	
 	@Override
-	public PType caseSValueImport(SValueImport node, TypeCheckInfo question) {
+	public PType defaultSValueImport(SValueImport node, TypeCheckInfo question) {
 		PType type = node.getImportType();
 		AModuleModules from = node.getFrom();
 		LexNameToken name = node.getName();
@@ -118,7 +118,7 @@ public class TypeCheckerImportsVisitor extends
     			defs, question.env, NameScope.NAMES);
 
     		question.env = params;
-    		caseSValueImport(node, question);
+    		defaultSValueImport(node, question);
 		}
 		return null;
 	}

@@ -114,7 +114,7 @@ public class ATypeDefinitionAssistant {
 		if (d.getInvPattern() != null)
 		{
     		d.setInvdef(getInvDefinition(d));
-    		d.getType().setInvDef(d.getInvdef());
+    		d.getInvType().setInvDef(d.getInvdef());
 		}
 		else
 		{
@@ -143,7 +143,7 @@ public class ATypeDefinitionAssistant {
 		else
 		{
 			// Named types are inv_T: x +> bool, for T = x
-			ANamedInvariantType nt = (ANamedInvariantType) d.getType();
+			ANamedInvariantType nt = (ANamedInvariantType) d.getInvType();
 			ptypes.add(nt.getType().clone());
 		}
 

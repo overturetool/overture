@@ -160,7 +160,7 @@ public class ModuleReader extends SyntaxReader
 			files.add(new ClonableFile(file));
 		}
 		
-		return new AModuleModules(name, null, null, definitions, files, null, null, true);
+		return new AModuleModules(name, null, null, definitions, files, null, null, true, false);
 	}
 	
 	/**
@@ -238,7 +238,7 @@ public class ModuleReader extends SyntaxReader
 		List<ClonableFile> files = new Vector<ClonableFile>();
 		files.add(new ClonableFile(name.location.file));
 		
-		return new AModuleModules(name, imports, exports, defs, files, null, null, false);
+		return new AModuleModules(name, imports, exports, defs, files, null, null, false,false);
 	}
 
 	private AModuleModules readDLModule() throws ParserException, LexException

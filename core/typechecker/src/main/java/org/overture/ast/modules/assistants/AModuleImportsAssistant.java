@@ -1,6 +1,5 @@
 package org.overture.ast.modules.assistants;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -8,6 +7,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.typecheck.ModuleEnvironment;
 import org.overture.typecheck.TypeCheckerErrors;
 
 public class AModuleImportsAssistant {
@@ -37,6 +37,16 @@ public class AModuleImportsAssistant {
 		}
 
 		return defs;
+	}
+
+	public static void typeCheck(AModuleImports imports,
+			ModuleEnvironment env) {
+		
+		for (AFromModuleImports ifm: imports.getImports())
+		{
+			AFromModuleImportsAssistant.typeCheck(ifm,env);
+		}
+		
 	}
 
 }

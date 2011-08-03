@@ -210,6 +210,7 @@ public class SClassDefinitionAssistant {
 		if (!classdef.getUsed())
 		{
 			TypeCheckerErrors.warning(5000, "Definition '" + classdef.getName() + "' not used",classdef.getLocation(),classdef);
+			System.out.println("Definition '" + classdef.getName() + "' not used");
 			markUsed(classdef);		// To avoid multiple warnings
 		}
 		

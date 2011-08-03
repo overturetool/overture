@@ -64,7 +64,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case SET:
 			return ASetPatternTCAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
 		case TUPLE:
-			return ATuplePatternAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
+			return ATuplePatternTCAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
 		case UNION:
 			return AUnionPatternTCAssistant.getDefinitions((AUnionPattern)rp,ptype,scope);
 		default:
@@ -109,7 +109,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case TUPLE:
 			if(pattern instanceof ATuplePattern)
 			{
-				ATuplePatternAssistant.typeResolve((ATuplePattern)pattern,rootVisitor,question);
+				ATuplePatternTCAssistant.typeResolve((ATuplePattern)pattern,rootVisitor,question);
 			}
 			break;
 		case UNION:
@@ -155,7 +155,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case TUPLE:
 			if(pattern instanceof ATuplePattern)
 			{
-				ATuplePatternAssistant.unResolve((ATuplePattern)pattern);
+				ATuplePatternTCAssistant.unResolve((ATuplePattern)pattern);
 			}
 			break;
 		case UNION:

@@ -233,6 +233,8 @@ public class PDefinitionAssistant {
 		if (!d.getUsed()) {
 			TypeCheckerErrors.warning(5000, "Definition '" + d.getName()
 					+ "' not used", d.getLocation(), d);
+			System.out.println("Definition '" + d.getName()
+					+ "' not used");
 			markUsed(d); // To avoid multiple warnings
 		}
 
@@ -413,7 +415,20 @@ public class PDefinitionAssistant {
 	}
 
 	public static boolean isUsed(PDefinition u) {
-		return u.getUsed();
+		switch(u.kindPDefinition())
+		{	
+		case EXTERNAL:
+			return AExternalDefinitionAssistant.isUsed((AExternalDefinition)u);
+		case IMPORTED:
+			return AImportedDefinitionAssistant.isUsed((AImportedDefinition)u);
+		case INHERITED:
+			return AInheritedDefinitionAssistant.isUsed((AInheritedDefinition)u);		
+		case RENAMED:
+			return ARenamedDefinitionAssistant.isUsed((ARenamedDefinition)u);		
+		default:
+			return u.getUsed();		
+		}
+		
 	}
 
 	public static void implicitDefinitions(PDefinition d, Environment env) {

@@ -17,7 +17,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class ATuplePatternAssistant {
+public class ATuplePatternTCAssistant extends ATuplePatternAssistant{
 
 	public static void typeResolve(ATuplePattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,

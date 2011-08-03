@@ -264,7 +264,7 @@ type {-> package='org.overture.ast.types'}
     |   {map}
     ;
 #invariant {-> package='org.overture.ast.types'}
-    =   {named} [name]:LexNameToken [type]:type //[invdef]:explicitFunction //super = invariant type
+    =   {named} (name):LexNameToken (type):type //[invdef]:explicitFunction //super = invariant type
     |   {record} [name]:LexNameToken [fields]:field.field* (infinite):java_Boolean //[invdef]:explicitFunction //super = invariant type
     ;
 
@@ -433,7 +433,7 @@ definition {-> package='org.overture.ast.definitions'}
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [type]:type.#invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean//is access missing here
+    |   {type} [invType]:type.#invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean (name):LexNameToken//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
     ;
@@ -472,7 +472,7 @@ modules {-> package='org.overture.ast.modules'}
                 (exportdefs):definition*
               // [delegate]:Delegate
                 [isFlat]:java_Boolean
-                //[typeChecked]:java_Boolean
+                (typeChecked):java_Boolean
     ;
 
 imports {-> package='org.overture.ast.modules'} 

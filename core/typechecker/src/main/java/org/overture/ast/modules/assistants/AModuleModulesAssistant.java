@@ -3,6 +3,7 @@ package org.overture.ast.modules.assistants;
 import java.util.List;
 
 import org.overture.ast.modules.AModuleModules;
+import org.overture.typecheck.ModuleEnvironment;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 
 public class AModuleModulesAssistant
@@ -44,6 +45,14 @@ public class AModuleModulesAssistant
 		}
 
    		return null;
+	}
+
+	public static void typeCheckImports(AModuleModules m) {
+		if (m.getImports() != null)
+		{
+			AModuleImportsAssistant.typeCheck(m.getImports(),new ModuleEnvironment(m));	
+		}
+		
 	}
 
 }

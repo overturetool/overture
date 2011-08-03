@@ -88,4 +88,8 @@ public class AInheritedDefinitionAssistant {
 		return PDefinitionAssistant.getType(def.getSuperdef());
 	}
 
+	public static boolean isUsed(AInheritedDefinition u) {
+		return PDefinitionAssistant.isUsed(u.getSuperdef());
+	}
+
 }

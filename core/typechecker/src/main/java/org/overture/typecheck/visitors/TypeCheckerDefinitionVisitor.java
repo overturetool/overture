@@ -1226,7 +1226,7 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getInvdef() != null)
 		{
 			question.scope = NameScope.NAMES;
-			node.setType(node.getInvdef().apply(rootVisitor, question));
+			node.getInvdef().apply(rootVisitor, question);
 		}
 		return node.getType();
 		

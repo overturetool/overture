@@ -79,4 +79,8 @@ public class ARenamedDefinitionAssistant {
 		PDefinitionAssistant.typeResolve(d.getDef(), rootVisitor, question);		
 	}
 
+	public static boolean isUsed(ARenamedDefinition u) {
+		return PDefinitionAssistant.isUsed(u.getDef());
+	}
+
 }
