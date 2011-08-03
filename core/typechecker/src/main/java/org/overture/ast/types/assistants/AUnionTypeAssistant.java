@@ -629,7 +629,7 @@ public class AUnionTypeAssistant {
     		for (LexNameToken synthname: common.keySet())
     		{
     			PDefinition def = new ALocalDefinition(synthname.location,
-					synthname, NameScope.GLOBAL, false, null, common.get(synthname).getType(type.getLocation()), null);
+					NameScope.GLOBAL, false, null, null, common.get(synthname).getType(type.getLocation()), null,synthname);
 
     			def.setAccess(access.get(synthname));
 				newdefs.add(def);

@@ -172,7 +172,7 @@ public class ModuleTypeChecker extends TypeChecker
 		}
 
 		// Attempt type resolution of unchecked definitions from all modules.
-
+		System.out.println();
 		Environment env =
 			new FlatCheckedEnvironment(alldefs, NameScope.NAMESANDSTATE);
 		TypeCheckVisitor tc = new TypeCheckVisitor();

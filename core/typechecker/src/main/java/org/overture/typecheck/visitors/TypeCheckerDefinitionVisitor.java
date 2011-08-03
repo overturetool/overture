@@ -272,9 +272,9 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getPredef() != null)
 		{
 			//building the new scope for subtypechecks			
-			info.env = local;
-			info.scope = NameScope.NAMES;
-			info.qualifiers = null;
+			question.scope = NameScope.NAMES;
+			question.qualifiers = null;
+			question.env = local;
 			PType b = node.getPredef().getBody().apply(rootVisitor, question);
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 

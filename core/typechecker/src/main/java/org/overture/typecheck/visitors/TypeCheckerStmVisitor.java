@@ -717,8 +717,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			}
 		}
 		
-		PDefinition vardef = new ALocalDefinition(node.getVar().getLocation(), node.getVar().getClassName(), 
-				NameScope.LOCAL, false, null, PAccessSpecifierTCAssistant.getDefault(), ft, false);
+		PDefinition vardef = new ALocalDefinition(node.getVar().getLocation(), 
+				NameScope.LOCAL, false, null, PAccessSpecifierTCAssistant.getDefault(), ft, false,node.getVar().getClassName());
 		Environment local = new FlatCheckedEnvironment(vardef, question.env, question.scope);
 		PType rt = node.getStatement().apply(rootVisitor, question);
 		local.unusedCheck();
@@ -844,8 +844,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
     				}
     				else
     				{
-    					defs.add(new ALocalDefinition(name.location, name, NameScope.STATE, false, null, 
-    							PAccessSpecifierTCAssistant.getDefault(), clause.getType(), false));
+    					defs.add(new ALocalDefinition(name.location, NameScope.STATE, false, null, 
+    							PAccessSpecifierTCAssistant.getDefault(), clause.getType(), false,name));
     				}
     			}
     		}

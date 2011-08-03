@@ -29,7 +29,7 @@ public class AImportedDefinitionAssistant {
 			PDefinitionAssistant.markUsed(d);
 		}
 
-		return d;
+		return def;
 	}
 
 	public static PDefinition findName(AImportedDefinition d,

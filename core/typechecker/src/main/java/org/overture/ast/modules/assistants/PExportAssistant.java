@@ -157,7 +157,7 @@ public class PExportAssistant
 					else if (def instanceof AUntypedDefinition)
 					{
 						AUntypedDefinition untyped = (AUntypedDefinition)def;
-						list.add(new ALocalDefinition(untyped.getLocation(), untyped.getName().clone(), NameScope.GLOBAL, false,null,PAccessSpecifierAssistant.getDefault(),type, null));
+						list.add(new ALocalDefinition(untyped.getLocation(), NameScope.GLOBAL, false,null,PAccessSpecifierAssistant.getDefault(),type, null,untyped.getName()));
 					}
 					else
 					{

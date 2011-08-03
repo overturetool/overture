@@ -1692,6 +1692,7 @@ public class TypeCheckerExpVisitor extends
 			}
 		}
 
+		question.env = local;
 		question.qualifiers = null;
 		PType r = node.getExpression().apply(rootVisitor, question);
 		local.unusedCheck(question.env);
@@ -2515,7 +2516,8 @@ public class TypeCheckerExpVisitor extends
     	}
     	else
     	{
-    		node.setVardef(env.findName(name, question.scope).clone());
+    		PDefinition temp = env.findName(name, question.scope);
+    		node.setVardef(temp == null ? null : temp.clone());
     	}
 
 		if (node.getVardef() == null)

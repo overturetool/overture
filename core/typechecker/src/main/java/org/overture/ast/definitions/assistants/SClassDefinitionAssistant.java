@@ -309,8 +309,8 @@ public class SClassDefinitionAssistant {
 			SClassDefinition classDefinition) {
 
 		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
-				classDefinition.getName().getSelfName(), NameScope.LOCAL,
-				false, null, null, classDefinition.getType(), false);
+				NameScope.LOCAL,
+				false, null, null, classDefinition.getType(), false,classDefinition.getName().getSelfName());
 		PDefinitionAssistant.markUsed(def);
 		return def;
 	}

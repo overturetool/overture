@@ -108,7 +108,7 @@ public class TypeCheckerImportsVisitor extends
     		for (LexNameToken pname: node.getTypeParams())
     		{
     			PDefinition p = new ALocalDefinition(
-    				pname.location, pname, NameScope.NAMES, false, PAccessSpecifierTCAssistant.getDefault(), new AParameterType(pname.getLocation(),false,pname), null);
+    				pname.location, NameScope.NAMES, false, null, PAccessSpecifierTCAssistant.getDefault(), new AParameterType(pname.getLocation(),false,pname), null,pname);
 
     			PDefinitionAssistant.markUsed(p);
     			defs.add(p);

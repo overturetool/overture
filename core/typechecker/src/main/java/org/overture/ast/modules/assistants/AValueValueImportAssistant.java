@@ -37,7 +37,7 @@ public class AValueValueImportAssistant {
 			}
 			else
 			{
-				expdef = new AImportedDefinition(expdef.getLocation(), expdef.getName(), expdef.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, expdef);
+				expdef = new AImportedDefinition(expdef.getLocation(), expdef.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, expdef, expdef.getName());
 			}
 
 			list.add(expdef);

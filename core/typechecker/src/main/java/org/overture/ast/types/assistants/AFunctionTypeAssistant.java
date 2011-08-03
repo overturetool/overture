@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PAccessSpecifier;
@@ -60,8 +61,8 @@ public class AFunctionTypeAssistant {
 		{
 			AFunctionType ft = (AFunctionType)t.getResult();
 			AFunctionType type = new AFunctionType(t.getLocation(),
-				false, false, t.getParameters(), getCurriedPreType(ft,isCurried));
-			type.setDefinitions(t.getDefinitions());
+				false, false, (List<PType>) t.getParameters().clone(), getCurriedPreType(ft,isCurried));
+			type.setDefinitions((List<PDefinition>)t.getDefinitions().clone());
 			return type;
 		}
 		else
@@ -72,8 +73,8 @@ public class AFunctionTypeAssistant {
 
 	public static AFunctionType getPreType(AFunctionType t) {
 			AFunctionType type =
-				new AFunctionType(t.getLocation(), false,false, t.getParameters(), new ABooleanBasicType(t.getLocation(),false));
-			type.setDefinitions(t.getDefinitions());
+				new AFunctionType(t.getLocation().clone(), false,false, (List<PType>) t.getParameters().clone(), new ABooleanBasicType(t.getLocation().clone(),false));
+			type.setDefinitions((List<PDefinition>)t.getDefinitions().clone());
 			return type;
 	}
 
