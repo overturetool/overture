@@ -142,7 +142,7 @@ public class AStateDefinitionAssistant {
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
-		ptypes.add(new AUnresolvedType(d.getLocation(),false,d.getName()));
+		ptypes.add(new AUnresolvedType(d.getLocation(),false,null, d.getName()));
 		AFunctionType ftype =
 			new AFunctionType(loc, false, null, ptypes, new ABooleanBasicType(loc,false));
 
@@ -172,13 +172,13 @@ public class AStateDefinitionAssistant {
 		
 		LexLocation loc = d.getInvPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
-		params.add(d.getInvPattern());
+		params.add(d.getInvPattern().clone());
 
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
-		ptypes.add(new AUnresolvedType(d.getLocation(),false, d.getName()));
+		ptypes.add(new AUnresolvedType(d.getLocation(),false, null, d.getName()));
 		AFunctionType ftype =
 			new AFunctionType(loc, false, false, ptypes, new ABooleanBasicType(loc,false));
 
@@ -191,7 +191,7 @@ public class AStateDefinitionAssistant {
 				null,
 				parameters,
 				ftype, 
-				d.getInvExpression(), 
+				d.getInvExpression().clone(), 
 				null, null, null);
 		def.setTypeInvariant(true);
 

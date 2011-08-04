@@ -93,14 +93,14 @@ public class ModuleEnvironment extends Environment
 
 		if (def != null)
 		{
-			return def;
+			return def.clone();
 		}
 
 		def =  PDefinitionAssistant.findType(module.getImportdefs(),name,module.getName().getName());
 
 		if (def != null)
 		{
-			return def;
+			return def.clone();
 		}
 
 		return null;	// Modules are always bottom of the env chain

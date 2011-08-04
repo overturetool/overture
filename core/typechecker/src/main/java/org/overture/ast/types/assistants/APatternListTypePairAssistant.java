@@ -34,7 +34,8 @@ public class APatternListTypePairAssistant {
 			TypeCheckInfo question) {
 		
 		PPatternListAssistant.typeResolve(pltp.getPatterns(), rootVisitor, question);
-		pltp.setType(pltp.getType().apply(rootVisitor, question));
+		PType type = PTypeAssistant.typeResolve(pltp.getType(),null,rootVisitor,question);
+		pltp.setType(type);
 		
 	}
 

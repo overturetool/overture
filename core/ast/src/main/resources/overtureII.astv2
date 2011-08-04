@@ -248,7 +248,7 @@ type {-> package='org.overture.ast.types'}
         (recDone):java_Boolean (recType):type.#invariant.record
         (classDone):java_Boolean (classType):type.class
     |   {unknown}
-    |   {unresolved} [typename]:LexNameToken
+    |   {unresolved} (name):LexNameToken 
     |   {voidReturn}
     |   {void} 
     ; 

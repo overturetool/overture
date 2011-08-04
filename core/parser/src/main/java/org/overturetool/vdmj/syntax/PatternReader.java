@@ -25,7 +25,9 @@ package org.overturetool.vdmj.syntax;
 
 import java.util.*;
 
+import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.patterns.*;
+import org.overture.ast.types.AUnresolvedType;
 
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
@@ -204,13 +206,13 @@ public class PatternReader extends SyntaxReader
 						if (lastToken().is(VDMToken.KET))
 						{
 							// An empty pattern list
-							pattern = new ARecordPattern(token.location,null, false,typename, new Vector<PPattern>(),null);
+							pattern = new ARecordPattern(token.location,null, false,typename, new Vector<PPattern>(),new AUnresolvedType(token.location, false, null, typename));
 //							pattern = new RecordPattern(typename, new PatternList());
 							nextToken();
 						}
 						else
 						{
-							pattern = new ARecordPattern(token.location,null, false,typename, readPatternList(),null);
+							pattern = new ARecordPattern(token.location,null, false,typename, readPatternList(),new AUnresolvedType(token.location, false, null, typename));
 //							pattern = new RecordPattern(typename, readPatternList());
 							checkFor(VDMToken.KET, 2186, "Expecting ')' after " + id + " record");
 						}

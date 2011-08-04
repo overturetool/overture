@@ -329,7 +329,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			NameScope.GLOBAL,
 			false,
 			PAccessSpecifierAssistant.getDefault(),
-			d.getTypeParams(), 
+			(List<LexNameToken>)d.getTypeParams().clone(), 
 			parameters,
 			AFunctionTypeAssistant.getCurriedPostType(d.getType(),d.getIsCurried()),
 			d.getPostcondition(), 

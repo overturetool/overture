@@ -1,6 +1,7 @@
 package org.overture.ast.types.assistants;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -68,15 +69,15 @@ public class AOperationTypeAssistant {
 		if (state != null)
 		{
 			PTypeList params = new PTypeList();
-			params.addAll(type.getParameters());
-			params.add(new AUnresolvedType(type.getLocation(),false, state.getName()));
+			params.addAll((LinkedList<PType>) type.getParameters().clone());
+			params.add(new AUnresolvedType(type.getLocation(),false, null, state.getName()));
 			return new AFunctionType(type.getLocation(), false, false, params, new ABooleanBasicType(type.getLocation(),false));
 		}
 		else if (classname != null && !isStatic)
 		{
 			PTypeList params = new PTypeList();
 			params.addAll(type.getParameters());
-			params.add(new AUnresolvedType(type.getLocation(),false,classname.getName()));
+			params.add(new AUnresolvedType(type.getLocation(),false,null,classname.getName()));
 			return new AFunctionType(type.getLocation(), false,false, params, new ABooleanBasicType(type.getLocation(),false));
 		}
 		else
@@ -90,22 +91,22 @@ public class AOperationTypeAssistant {
 			boolean isStatic) {
 		
 		PTypeList params = new PTypeList();
-		params.addAll(type.getParameters());
+		params.addAll((LinkedList<PType>) type.getParameters().clone());
 
 		if (!(type.getResult() instanceof AVoidType))
 		{
-			params.add(type.getResult());
+			params.add(type.getResult().clone());
 		}
 		
 		if (state != null)
 		{
-			params.add(new AUnresolvedType(state.getLocation(),false, state.getName()));
-			params.add(new AUnresolvedType(state.getLocation(),false, state.getName()));
+			params.add(new AUnresolvedType(state.getLocation(),false, null, state.getName()));
+			params.add(new AUnresolvedType(state.getLocation(),false, null, state.getName()));
 		}
 		else if (classname != null && !isStatic)
 		{
-			params.add(new AUnresolvedType(classname.getLocation(),false,classname.getName()));
-			params.add(new AUnresolvedType(classname.getLocation(),false,classname.getName()));
+			params.add(new AUnresolvedType(classname.getLocation(),false,null, classname.getName()));
+			params.add(new AUnresolvedType(classname.getLocation(),false,null, classname.getName()));
 		}
 
 		return new AFunctionType(type.getLocation(), false, false, params, new ABooleanBasicType(type.getLocation(),false));

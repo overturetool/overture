@@ -30,11 +30,11 @@ public class AFunctionTypeAssistant {
 			List<PType> fixed = new ArrayList<PType>();
 
 			for (PType type : ft.getParameters()) {
-				fixed.add(PTypeAssistant.typeResolve(type, root,rootVisitor,question));
+				fixed.add(PTypeAssistant.typeResolve(type, root,rootVisitor,question).clone());
 			}
 
 			ft.setParameters(fixed);
-			ft.setResult(PTypeAssistant.typeResolve(ft.getResult(), root, rootVisitor, question));
+			ft.setResult(PTypeAssistant.typeResolve(ft.getResult(), root, rootVisitor, question).clone());
 			return ft;
 		} catch (TypeCheckException e) {
 			unResolve(ft);
@@ -83,9 +83,9 @@ public class AFunctionTypeAssistant {
 		
 		if (isCurried && type.getResult() instanceof AFunctionType)
 		{
-			AFunctionType ft = (AFunctionType)type.getResult();
+			AFunctionType ft = (AFunctionType)type.getResult().clone();
 			AFunctionType t = new AFunctionType(type.getLocation(),false,
-				false, type.getParameters(), getCurriedPostType(ft,isCurried));
+				false, (List<PType>)type.getParameters().clone(), getCurriedPostType(ft,isCurried));
 			t.setDefinitions(type.getDefinitions());
 			return t;
 		}
@@ -97,8 +97,8 @@ public class AFunctionTypeAssistant {
 
 	public static AFunctionType getPostType(AFunctionType t) {
 		List<PType> params = new PTypeList();
-		params.addAll(t.getParameters());
-		params.add(t.getResult());
+		params.addAll((List<PType>)t.getParameters().clone());
+		params.add((PType)t.getResult().clone());
 		AFunctionType type =
 			new AFunctionType(t.getLocation(),false, false, params, new ABooleanBasicType(t.getLocation(),false));
 		type.setDefinitions(t.getDefinitions());

@@ -13,7 +13,9 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
@@ -220,7 +222,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) {
-		node.setType(SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), true,null),rootVisitor,question));
+		node.setType(SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), false,null),rootVisitor,question));
 		return node.getType();
 	}
 	
@@ -1052,7 +1054,7 @@ public class TypeCheckerExpVisitor extends
 		def.apply(rootVisitor, question);
 
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
-
+		question.env = local;
 		if (!PTypeAssistant.isType(node.getPredicate().apply(rootVisitor, question),ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3089, "Predicate is not boolean",node.getPredicate().getLocation(),node.getPredicate());
@@ -1232,7 +1234,7 @@ public class TypeCheckerExpVisitor extends
 		def.apply(rootVisitor, question);		
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
 		question.env = local;
-		question.qualifiers = null;
+		question.qualifiers = null;		
 		if (!PTypeAssistant.isType(node.getPredicate().apply(rootVisitor,question),ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3097, "Predicate is not boolean",node.getPredicate().getLocation(),node.getPredicate());
@@ -1520,7 +1522,7 @@ public class TypeCheckerExpVisitor extends
 		
 		if (typename != null)
 		{
-			node.setTypedef(question.env.findType(typename, node.getLocation().module));
+			node.setTypedef(question.env.findType(typename, node.getLocation().module).clone());
 
 			if (node.getTypedef() == null)
 			{
@@ -1841,7 +1843,19 @@ public class TypeCheckerExpVisitor extends
 			return node.getType();
 		}
 
-		PType rec = typeDef.getType();
+		PType rec = null;
+		if(typeDef instanceof ATypeDefinition)
+		{
+			rec = ((ATypeDefinition)typeDef).getInvType().clone();
+		}
+		else if(typeDef instanceof AStateDefinition)
+		{
+			rec = ((AStateDefinition)typeDef).getRecordType().clone();
+		} else
+		{
+			rec = typeDef.getType().clone();
+		}
+		
 
 		while (rec instanceof ANamedInvariantType)
 		{
@@ -2550,14 +2564,16 @@ public class TypeCheckerExpVisitor extends
 			ALessEqualNumericBinaryExp node, TypeCheckInfo question) {
 	
 		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
-		return new ABooleanBasicType(node.getLocation(),false);
+		node.setType(new ABooleanBasicType(node.getLocation(),false));
+		return node.getType();
 	}
 	
 	@Override
 	public PType caseALessNumericBinaryExp(ALessNumericBinaryExp node,
 			TypeCheckInfo question) {
 		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
-		return new ABooleanBasicType(node.getLocation(),false);
+		node.setType( new ABooleanBasicType(node.getLocation(),false));
+		return node.getType();
 	}
 	
 	

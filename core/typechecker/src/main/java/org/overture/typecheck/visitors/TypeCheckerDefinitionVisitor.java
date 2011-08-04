@@ -258,11 +258,11 @@ public class TypeCheckerDefinitionVisitor extends
 		local.setEnclosingDefinition(node);
 
 		//building the new scope for subtypechecks
-		TypeCheckInfo info = new TypeCheckInfo();
-		info.env = local;
-		info.scope = question.scope;
-		info.qualifiers = question.qualifiers;
-		PDefinitionListAssistant.typeCheck(defs,this,info); //can be this because its a definition list
+		
+		question.env = local;
+		question.scope = question.scope;
+		question.qualifiers = question.qualifiers;
+		PDefinitionListAssistant.typeCheck(defs,this,question); //can be this because its a definition list
 
 		if (question.env.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(node.getAccess())) 
 		{
@@ -294,10 +294,10 @@ public class TypeCheckerDefinitionVisitor extends
 				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
 
 			//building the new scope for subtypechecks
-			info.env = post;
-			info.scope = NameScope.NAMES;
-			info.qualifiers = null;			
-			PType b = node.getPostdef().getBody().apply(rootVisitor, info);
+			question.env = post;
+			question.scope = NameScope.NAMES;
+			question.qualifiers = null;			
+			PType b = node.getPostdef().getBody().apply(rootVisitor, question);
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
@@ -310,11 +310,11 @@ public class TypeCheckerDefinitionVisitor extends
 		// This check returns the type of the function body in the case where
 		// all of the curried parameter sets are provided.
 
-		info.env = local;
-		info.scope = question.scope;
-		info.qualifiers = null;		
+		question.env = local;
+		question.scope = question.scope;
+		question.qualifiers = null;		
 		
-		PType actualResult = node.getBody().apply(rootVisitor,info);
+		PType actualResult = node.getBody().apply(rootVisitor,question);
 		
 		node.setActualResult(actualResult);
 
@@ -440,12 +440,9 @@ public class TypeCheckerDefinitionVisitor extends
 		local.setStatic(PAccessSpecifierTCAssistant.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
-		TypeCheckInfo newInfo = new TypeCheckInfo();
-		newInfo.env = local;
-		newInfo.scope = question.scope;
-		newInfo.qualifiers = null;
+		question.env = local;		
 		
-		PDefinitionListAssistant.typeCheck(defs, rootVisitor, newInfo); 
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question); 
 
 		if (node.getBody() != null)
 		{
@@ -454,7 +451,7 @@ public class TypeCheckerDefinitionVisitor extends
 				local.add(PDefinitionAssistant.getSelfDefinition(node));
 			}
 
-			node.setActualResult(node.getBody().apply(rootVisitor, newInfo));
+			node.setActualResult(node.getBody().apply(rootVisitor, question));
 
 			if (!TypeComparator.compatible(node.getResult().getType(), node.getActualResult()))
 			{
@@ -470,8 +467,8 @@ public class TypeCheckerDefinitionVisitor extends
 
 		if (node.getPredef() != null)
 		{
-			newInfo.qualifiers = null;
-			newInfo.scope = NameScope.NAMES;
+			question.qualifiers = null;
+			question.scope = NameScope.NAMES;
 			PType b = node.getPredef().getBody().apply(rootVisitor, question);
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false, null);
 
@@ -495,17 +492,16 @@ public class TypeCheckerDefinitionVisitor extends
 	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMES);
 	    		post.setStatic(PAccessSpecifierTCAssistant.isStatic(node.getAccess()));
 	    		post.setEnclosingDefinition(node);
-	    		newInfo.env = post;
-	    		newInfo.qualifiers = null;
-	    		newInfo.scope = NameScope.NAMES;
+	    		question.env = post;
+	    		question.scope = NameScope.NAMES;
 				b = node.getPostdef().getBody().apply(rootVisitor, question);
 				post.unusedCheck();
 			}
 			else
 			{
-				newInfo.qualifiers = null;
-				newInfo.scope = NameScope.NAMES;
-				b = node.getPostdef().getBody().apply(rootVisitor, newInfo);
+				question.qualifiers = null;
+				question.scope = NameScope.NAMES;
+				b = node.getPostdef().getBody().apply(rootVisitor, question);
 			}
 
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);

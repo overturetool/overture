@@ -103,7 +103,7 @@ public class FlatEnvironment extends Environment
 
 		if (def != null)
 		{
-			return def;
+			return def.clone();
 		}
 
 		return (outer == null) ? null : outer.findType(name, fromModule);

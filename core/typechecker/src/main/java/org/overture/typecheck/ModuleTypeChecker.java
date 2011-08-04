@@ -176,8 +176,9 @@ public class ModuleTypeChecker extends TypeChecker
 		for (PDefinition d: checkDefs)
 		{
 			try
-			{
+			{				
 				PDefinitionAssistant.typeResolve(d, tc, new TypeCheckInfo(env));
+				System.out.println();
 			}
 			catch (TypeCheckException te)
 			{
@@ -198,11 +199,12 @@ public class ModuleTypeChecker extends TypeChecker
 
     				for (PDefinition d: m.getDefs())
     				{
+//    					System.out.println("Number of Defs: " + m.getDefs().size());
+//    					System.out.println("Def to typecheck: " + d.getName());
 //    					if (d.pass == pass)//TODO we properly need to add this to all definitions
     					{
     						try
     						{
-//    							d.typeCheck(e, NameScope.NAMES);
     							d.apply(tc,new TypeCheckInfo(e,NameScope.NAMES));
     						}
     						catch (TypeCheckException te)
@@ -210,6 +212,7 @@ public class ModuleTypeChecker extends TypeChecker
     							report(3431, te.getMessage(), te.location);
     						}
     					}
+//    					System.out.println("Number of Defs: " + m.getDefs().size());
     				}
 				}
 			}

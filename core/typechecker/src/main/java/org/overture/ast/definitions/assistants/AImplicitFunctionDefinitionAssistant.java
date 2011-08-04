@@ -115,17 +115,13 @@ public class AImplicitFunctionDefinitionAssistant {
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AImplicitFunctionDefinitionAssistant.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
-
-			TypeCheckInfo newQuestion = new TypeCheckInfo();
-			newQuestion.env = params;
-			
-			
-			d.setType(d.getType().apply(rootVisitor, question));;
+			question.env = params;
+			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
 		}
 		else
 		{
 			question.qualifiers = null;
-			d.setType(d.getType().apply(rootVisitor, question));
+			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
 		}
 
 		if (d.getResult() != null)
@@ -195,7 +191,7 @@ public class AImplicitFunctionDefinitionAssistant {
 			AImplicitFunctionDefinition d) {
 		
 		List<List<PPattern>> parameters = getParamPatternList(d);
-		parameters.get(0).add(d.getResult().getPattern());
+		parameters.get(0).add(d.getResult().getPattern().clone());
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 			d.getPostcondition().getLocation(),
@@ -203,13 +199,13 @@ public class AImplicitFunctionDefinitionAssistant {
 			NameScope.GLOBAL,
 			false,
 			PAccessSpecifierAssistant.getDefault(),
-			d.getTypeParams(), 
+			(List<LexNameToken>)d.getTypeParams().clone(), 
 			parameters,
 			AFunctionTypeAssistant.getPostType(d.getType()),
 			d.getPostcondition(), 
 			null, null, null);
 
-		def.setAccess(d.getAccess());
+		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
@@ -242,7 +238,7 @@ public class AImplicitFunctionDefinitionAssistant {
 
 		for (APatternListTypePair pl: d.getParamPatterns())
 		{
-			plist.addAll(pl.getPatterns());
+			plist.addAll((List<PPattern>)pl.getPatterns().clone());
 		}
 
 		parameters.add(plist);

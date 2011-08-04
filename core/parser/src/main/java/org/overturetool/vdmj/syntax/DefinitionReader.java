@@ -379,7 +379,7 @@ public class DefinitionReader extends SyntaxReader
 					new ANamedInvariantType(id.location,false,null, false, null, idToName(id), type);
 
 				if (type instanceof AUnresolvedType &&
-					((AUnresolvedType)type).getTypename().equals(idToName(id)))
+					((AUnresolvedType)type).getName().equals(idToName(id)))
 				{
 					throwMessage(2014, "Recursive type declaration");
 				}
@@ -999,7 +999,7 @@ public class DefinitionReader extends SyntaxReader
 				null, initPattern, 
 				initExpression, 
 				null, null, recordDefinition, 
-				recordType, null);
+				recordType.clone(), null);
 		
 		stateDef.getStateDefs().add(recordDefinition);
 		

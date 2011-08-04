@@ -1,5 +1,7 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,6 +22,7 @@ import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AOperationTypeAssistant;
 import org.overture.ast.types.assistants.APatternListTypePairAssistant;
+import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -76,7 +79,7 @@ public class AImplicitOperationDefinitionAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
-		d.setType(d.getType().apply(rootVisitor, question));
+		d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
 
 		if (d.getResult() != null)
 		{
@@ -135,7 +138,7 @@ public class AImplicitOperationDefinitionAssistant {
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
 
-		for (APatternListTypePair pl: d.getParameterPatterns())
+		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns().clone())
 		{
 			plist.addAll(pl.getPatterns());
 		}
@@ -150,7 +153,7 @@ public class AImplicitOperationDefinitionAssistant {
 		if (state != null)
 		{
 			plist.add(new AIdentifierPattern(state.getLocation(), null, false, state.getName().getOldName()));
-			plist.add(new AIdentifierPattern(state.getLocation(), null, false, state.getName()));
+			plist.add(new AIdentifierPattern(state.getLocation(), null, false, state.getName().clone()));
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
@@ -188,9 +191,9 @@ public class AImplicitOperationDefinitionAssistant {
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
 
-		for (APatternListTypePair pl: d.getParameterPatterns())
+		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns().clone())
 		{
-			plist.addAll(pl.getPatterns());
+			plist.addAll((Collection<? extends PPattern>) pl.getPatterns());
 		}
 
 		AStateDefinition state = d.getState();
@@ -201,7 +204,7 @@ public class AImplicitOperationDefinitionAssistant {
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
-			plist.add(new AIdentifierPattern(state.getLocation(),null, false,d.getName().getSelfName()));
+			plist.add(new AIdentifierPattern(d.getName().getLocation(),null, false,d.getName().getSelfName()));
 		}
 
 		parameters.add(plist);
@@ -215,7 +218,7 @@ public class AImplicitOperationDefinitionAssistant {
 			PAccessSpecifierTCAssistant.getDefault(),
 			null,
 			parameters,
-			AOperationTypeAssistant.getPreType(d.getType(), state, d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
+		    AOperationTypeAssistant.getPreType(d.getType(), state, d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
 			preop, 
 			null, null, null);
 

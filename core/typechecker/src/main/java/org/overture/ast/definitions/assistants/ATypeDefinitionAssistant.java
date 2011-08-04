@@ -88,7 +88,7 @@ public class ATypeDefinitionAssistant {
 		try
 		{
 			d.setInfinite(false);
-			d.setType((SInvariantType) PTypeAssistant.typeResolve((SInvariantType)d.getType(), d, rootVisitor, question));
+			d.setInvType((SInvariantType) PTypeAssistant.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
 
 			if (d.getInfinite())
 			{
@@ -135,10 +135,10 @@ public class ATypeDefinitionAssistant {
 
 		PTypeList ptypes = new PTypeList();
 
-		if (d.getType() instanceof ARecordInvariantType)
+		if (d.getInvType() instanceof ARecordInvariantType)
 		{
 			// Records are inv_R: R +> bool
-			ptypes.add(new AUnresolvedType(d.getLocation(),false, d.getName().clone()));
+			ptypes.add(new AUnresolvedType(d.getLocation(),false, null, d.getName().clone()));
 		}
 		else
 		{

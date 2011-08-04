@@ -1190,7 +1190,7 @@ public class ExpressionReader extends SyntaxReader
 			if (type instanceof AUnresolvedType)
 			{
 				AUnresolvedType nt = (AUnresolvedType)type;
-				exp = new AIsExp(null,nt.getLocation(), nt.getTypename(), null, test, null);
+				exp = new AIsExp(null,nt.getLocation(), nt.getName(), null, test, null);
 //				exp = new IsExpression(ve.location, nt.typename, test);
 			}
 			else

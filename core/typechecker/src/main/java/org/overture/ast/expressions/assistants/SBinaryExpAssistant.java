@@ -15,7 +15,7 @@ public class SBinaryExpAssistant {
 			ABooleanBasicType expected,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
-	
+
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
 

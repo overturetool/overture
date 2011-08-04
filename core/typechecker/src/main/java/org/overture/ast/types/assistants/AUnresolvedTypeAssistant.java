@@ -36,17 +36,17 @@ public class AUnresolvedTypeAssistant {
 			deref = PTypeAssistant.typeResolve(deref, root, rootVisitor, question);
 		}
 
-		return deref;
+		return deref.clone();
 	}
 
 	private static PType dereference(AUnresolvedType type, Environment env, ATypeDefinition root)
 	{
-		PDefinition def = env.findType(type.getTypename(), type.getLocation().module);
+		PDefinition def = env.findType(type.getName(), type.getLocation().module);
 
 		if (def == null)
 		{
 			throw new TypeCheckException(
-				"Unable to resolve type name '" + type.getTypename() + "'", type.getLocation());
+				"Unable to resolve type name '" + type.getName() + "'", type.getLocation());
 		}
 
 		if (def instanceof AImportedDefinition)
@@ -66,7 +66,7 @@ public class AUnresolvedTypeAssistant {
 			!(def instanceof SClassDefinition) &&
 			!(def instanceof AInheritedDefinition))
 		{
-			TypeCheckerErrors.report(3434, "'" + type.getTypename() + "' is not the name of a type definition",type.getLocation(),type);
+			TypeCheckerErrors.report(3434, "'" + type.getName() + "' is not the name of a type definition",type.getLocation(),type);
 		}
 
 		if (def instanceof ATypeDefinition)
@@ -80,10 +80,22 @@ public class AUnresolvedTypeAssistant {
 		if ((def instanceof ACpuClassDefinition ||
 			 def instanceof ABusClassDefinition) && !env.isSystem())
 		{
-			TypeCheckerErrors.report(3296, "Cannot use '" + type.getTypename() + "' outside system class",type.getLocation(),type);
+			TypeCheckerErrors.report(3296, "Cannot use '" + type.getName() + "' outside system class",type.getLocation(),type);
 		}
 
-		PType r = def.getType().clone();
+		PType r = null;
+		if(def instanceof ATypeDefinition)
+		{
+			r = ((ATypeDefinition)def).getInvType().clone();
+		}
+		else if(def instanceof AStateDefinition)
+		{
+			r = ((AStateDefinition)def).getRecordType().clone();
+		} else
+		{
+			r = def.getType().clone();
+		}
+		
 		List<PDefinition> tempDefs = new Vector<PDefinition>();
 		tempDefs.add(def);
 		r.setDefinitions(tempDefs);
@@ -91,12 +103,12 @@ public class AUnresolvedTypeAssistant {
 	}
 
 	public static String toDisplay(AUnresolvedType exptype) {
-		return "(unresolved " + exptype.getTypename() + ")";
+		return "(unresolved " + exptype.getName() + ")";
 		
 	}
 
 	public static PType isType(AUnresolvedType exptype, String typename) {
-		return exptype.getTypename().getName().equals(typename) ? exptype : null;
+		return exptype.getName().getName().equals(typename) ? exptype : null;
 	}
 
 	public static boolean equals(AUnresolvedType type, PType other) {
@@ -105,13 +117,13 @@ public class AUnresolvedTypeAssistant {
 		if (other instanceof AUnresolvedType)
 		{
 			AUnresolvedType nother = (AUnresolvedType)other;
-			return type.getTypename().equals(nother.getTypename());
+			return type.getName().equals(nother.getName());
 		}
 
 		if (other instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType nother = (ANamedInvariantType)other;
-			return type.getTypename().equals(nother.getName());
+			return type.getName().equals(nother.getName());
 		}
 
 		return false;
