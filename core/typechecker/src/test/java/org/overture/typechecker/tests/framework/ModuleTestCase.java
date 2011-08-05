@@ -93,10 +93,16 @@ public class ModuleTestCase extends TestCase {
 		
 		if(isParseOk)
 		{
+			System.out.println("----------- Type checking starting for... " + file.getName() + " -----------");
 			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
 			mtc.typeCheck();
 	
 			String errorMessages = null;
+			if (mtc != null)
+			{
+				System.out.println("Errors/Warnings... by VDMJ: " + tcHeaderList.size() + " / by TCv2: " + TypeChecker.getErrorCount() + TypeChecker.getWarningCount());
+			}
+			
 			if (mtc != null && TypeChecker.getErrorCount() > 0) {
 	
 				for (VDMError error : TypeChecker.getErrors()) {
@@ -104,11 +110,11 @@ public class ModuleTestCase extends TestCase {
 				}
 				
 				// perrs += reader.getErrorCount();
-				StringWriter s = new StringWriter();
-				TypeChecker.printErrors(new PrintWriter(s));// new
-															// PrintWriter(System.out));
-				errorMessages = "\n" + s.toString() + "\n";			
-				System.out.println(s.toString());
+//				StringWriter s = new StringWriter();
+//				TypeChecker.printErrors(new PrintWriter(s));// new
+//															// PrintWriter(System.out));
+//				errorMessages = "\n" + s.toString() + "\n";			
+//				System.out.println(s.toString());
 	
 			}
 	
@@ -117,15 +123,16 @@ public class ModuleTestCase extends TestCase {
 					tcHeaderList.markTCStruct(warning);
 				}
 				// perrs += reader.getErrorCount();
-				StringWriter s = new StringWriter();
-				TypeChecker.printWarnings(new PrintWriter(s));// new
-																// PrintWriter(System.out));
-				String warningMessages = "\n" + s.toString() + "\n";
-				System.out.println(s.toString());
+//				StringWriter s = new StringWriter();
+//				TypeChecker.printWarnings(new PrintWriter(s));// new
+//																// PrintWriter(System.out));
+//				String warningMessages = "\n" + s.toString() + "\n";
+//				System.out.println(s.toString());
 			}
-			
+			System.out.println("Errors/Warning left ... " + tcHeaderList.size() );
 			//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
-			assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());			
+			assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());		
+			System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
 		}
 	
 	}

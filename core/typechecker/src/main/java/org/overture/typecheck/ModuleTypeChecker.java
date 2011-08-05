@@ -178,7 +178,6 @@ public class ModuleTypeChecker extends TypeChecker
 			try
 			{				
 				PDefinitionAssistant.typeResolve(d, tc, new TypeCheckInfo(env));
-				System.out.println();
 			}
 			catch (TypeCheckException te)
 			{

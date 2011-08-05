@@ -366,7 +366,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (typeInvariant):java_Boolean
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                             
-    |   {external} [state]:definition [readOnly]:java_Boolean [oldname]:LexNameToken
+    |   {external} (state):definition [readOnly]:java_Boolean (oldname):LexNameToken
     |   {implicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatterns]:pair.patternListType*
                             [result]:pair.patternType

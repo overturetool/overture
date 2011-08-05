@@ -55,10 +55,10 @@ public class AValueDefinitionAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
-		if (getType(d) != null)
-		{
-			 d.setType(PTypeAssistant.typeResolve(getType(d),null,rootVisitor,question));
-		}
+		 //d.setType(getType(d));
+		if(d.getType() != null)
+			d.setType(PTypeAssistant.typeResolve(d.getType(),null,rootVisitor,question));
+		
 		
 	}
 

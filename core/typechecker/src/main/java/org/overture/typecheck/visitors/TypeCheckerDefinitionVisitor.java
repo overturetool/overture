@@ -967,7 +967,7 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			local.unusedCheck();
 		}
-		node.setType(node.getActualResult());
+		//node.setType(node.getActualResult());
 		return node.getType();
 	}
 	
@@ -1243,7 +1243,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(rootVisitor, question);
 		node.setExpType(expType);
-		PType type = PDefinitionAssistant.getType(node);
+		PType type = node.getType();//PDefinitionAssistant.getType(node);
 		if (expType instanceof AVoidType)
 		{
 			TypeCheckerErrors.report(3048, "Expression does not return a value",node.getExpression().getLocation(),node.getExpression());
@@ -1276,7 +1276,7 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		PPattern pattern = node.getPattern();
-		pattern.apply(rootVisitor, question);
+		PPatternTCAssistant.typeResolve(pattern, rootVisitor, question);
 		List<PDefinition> newdefs = PPatternTCAssistant.getDefinitions(pattern, type, question.scope);
 
 		// The untyped definitions may have had "used" markers, so we copy

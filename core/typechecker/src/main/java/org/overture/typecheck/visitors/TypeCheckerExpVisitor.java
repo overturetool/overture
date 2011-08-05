@@ -2547,7 +2547,7 @@ public class TypeCheckerExpVisitor extends
 			// how forward referenced types are resolved, and is the reason
 			// we don't need to retry at the top level (assuming all names
 			// are in the environment).
-			node.setType(PTypeAssistant.typeResolve(node.getVardef().getType(), null, rootVisitor, question));
+			node.setType(PTypeAssistant.typeResolve(PDefinitionAssistant.getType(node.getVardef()), null, rootVisitor, question));
 			return node.getType();
 		}
 	}
