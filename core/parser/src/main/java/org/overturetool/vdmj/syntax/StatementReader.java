@@ -824,7 +824,7 @@ public class StatementReader extends SyntaxReader
 		}
 
 		AAssignmentDefinition assignmentDefinition = new AAssignmentDefinition(name.location, idToName(name)
-							,NameScope.STATE,null,null,null,null,exp,type); 
+							,NameScope.STATE,false,null,null,type,exp,null); 
 		assignmentDefinition.getLocation().executable(false);
 		
 		return assignmentDefinition;

@@ -65,6 +65,7 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.statements.assistants.ABlockSimpleBlockStmAssistant;
 import org.overture.ast.statements.assistants.ACallObjectStatementAssistant;
 import org.overture.ast.statements.assistants.ACallStmAssistant;
@@ -121,8 +122,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseAAssignmentStm(AAssignmentStm node, TypeCheckInfo question) 
 	{
 		
-		node.setTargetType(node.getTarget().apply(rootVisitor, question));
-		node.setExpType(node.getExp().apply(rootVisitor, question));
+		node.setTargetType(node.getTarget().apply(rootVisitor, new TypeCheckInfo(question.env)));
+		node.setExpType(node.getExp().apply(rootVisitor, new TypeCheckInfo(question.env,question.scope)));
 		
 		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType()))
 		{
@@ -181,8 +182,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, TypeCheckInfo question) 
-	{
+	public PType caseSSimpleBlockStm(SSimpleBlockStm node,
+			TypeCheckInfo question) {
 		boolean notreached = false;
 		PTypeSet rtypes = new PTypeSet();
 		PType last = null;
@@ -241,6 +242,32 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		node.setType(rtypes.isEmpty() ?
 				new AVoidType(node.getLocation(), false) : rtypes.getType(node.getLocation()));
 		return node.getType();
+	}
+	
+	
+	
+	@Override
+	public PType caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, TypeCheckInfo question) 
+	{
+		// Each dcl definition is in scope for later definitions...
+
+		Environment local = question.env;
+
+		for (PDefinition d: node.getAssignmentDefs())
+		{
+			local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
+			PDefinitionAssistant.implicitDefinitions(d, local);
+			d.apply(rootVisitor,new TypeCheckInfo(local, question.scope));
+		}
+
+		// For type checking purposes, the definitions are treated as
+		// local variables. At runtime (below) they have to be treated
+		// more like (updatable) state.
+
+		PType r = caseSSimpleBlockStm(node,new TypeCheckInfo(local,question.scope));
+		local.unusedCheck(question.env);
+		node.setType(r);
+		return r;
 	}
 	
 	@Override

@@ -205,6 +205,7 @@ public class ModuleTypeChecker extends TypeChecker
     						try
     						{
     							d.apply(tc,new TypeCheckInfo(e,NameScope.NAMES));
+    							System.out.println();
     						}
     						catch (TypeCheckException te)
     						{
