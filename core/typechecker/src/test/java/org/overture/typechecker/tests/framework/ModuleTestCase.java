@@ -110,11 +110,11 @@ public class ModuleTestCase extends TestCase {
 				}
 				
 				// perrs += reader.getErrorCount();
-//				StringWriter s = new StringWriter();
-//				TypeChecker.printErrors(new PrintWriter(s));// new
-//															// PrintWriter(System.out));
-//				errorMessages = "\n" + s.toString() + "\n";			
-//				System.out.println(s.toString());
+				StringWriter s = new StringWriter();
+				TypeChecker.printErrors(new PrintWriter(s));// new
+															// PrintWriter(System.out));
+				errorMessages = "\n" + s.toString() + "\n";			
+				System.out.println(s.toString());
 	
 			}
 	
@@ -123,11 +123,11 @@ public class ModuleTestCase extends TestCase {
 					tcHeaderList.markTCStruct(warning);
 				}
 				// perrs += reader.getErrorCount();
-//				StringWriter s = new StringWriter();
-//				TypeChecker.printWarnings(new PrintWriter(s));// new
-//																// PrintWriter(System.out));
-//				String warningMessages = "\n" + s.toString() + "\n";
-//				System.out.println(s.toString());
+				StringWriter s = new StringWriter();
+				TypeChecker.printWarnings(new PrintWriter(s));// new
+																// PrintWriter(System.out));
+				//String warningMessages = "\n" + s.toString() + "\n";
+				System.out.println(s.toString());
 			}
 			System.out.println("Errors/Warning left ... " + tcHeaderList.size() );
 			//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());

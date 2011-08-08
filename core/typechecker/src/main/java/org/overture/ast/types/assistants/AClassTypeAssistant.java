@@ -63,7 +63,7 @@ public class AClassTypeAssistant {
 						continue;	// Skip polymorphic functions
 					}
 				}
-				question.env = self;
+				question = new TypeCheckInfo(self,question.scope,question.qualifiers);				
 				PTypeAssistant.typeResolve(d.getType(), root, rootVisitor, question);
 			}
 

@@ -117,8 +117,7 @@ public class TypeCheckerImportsVisitor extends
     		FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
     			defs, question.env, NameScope.NAMES);
 
-    		question.env = params;
-    		defaultSValueImport(node, question);
+    		defaultSValueImport(node, new TypeCheckInfo(params,question.scope,question.qualifiers));
 		}
 		return null;
 	}

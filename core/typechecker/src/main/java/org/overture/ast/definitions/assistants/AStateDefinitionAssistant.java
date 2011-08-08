@@ -136,7 +136,7 @@ public class AStateDefinitionAssistant {
 	private static AExplicitFunctionDefinition getInitDefinition(AStateDefinition d) {
 		LexLocation loc = d.getInitPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
-		params.add(d.getInitPattern());
+		params.add(d.getInitPattern().clone());
 
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		parameters.add(params);

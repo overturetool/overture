@@ -230,11 +230,9 @@ public class PDefinitionAssistant {
 	
 
 	public static void unusedCheckBaseCase(PDefinition d) {
-		if (!d.getUsed()) {
+		if (!PDefinitionAssistant.isUsed(d)) {
 			TypeCheckerErrors.warning(5000, "Definition '" + d.getName()
-					+ "' not used", d.getLocation(), d);
-			System.out.println("Definition '" + d.getName()
-					+ "' not used");
+					+ "' not used", d.getLocation(), d);			
 			markUsed(d); // To avoid multiple warnings
 		}
 
@@ -562,6 +560,26 @@ public class PDefinitionAssistant {
 			return null;			
 		}
 
+	}
+	
+	public static boolean isUpdatable(PDefinition d)
+	{
+		switch (d.kindPDefinition()) {
+		case ASSIGNMENT:
+		case INSTANCEVARIABLE:
+		case EXTERNAL:
+			return true;
+		case IMPORTED:
+			return PDefinitionAssistant.isUpdatable(((AImportedDefinition)d).getDef());
+		case INHERITED:
+			return PDefinitionAssistant.isUpdatable(((AInheritedDefinition)d).getSuperdef());
+		case LOCAL:
+			return ((ALocalDefinition)d).getNameScope().matches(NameScope.STATE);
+		case RENAMED:
+			return PDefinitionAssistant.isUpdatable(((ARenamedDefinition)d).getDef());
+		default:
+			return false;
+		}
 	}
 
 	

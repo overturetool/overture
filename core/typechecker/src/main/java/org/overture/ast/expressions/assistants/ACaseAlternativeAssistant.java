@@ -38,7 +38,7 @@ public class ACaseAlternativeAssistant {
 
 		PDefinitionListAssistant.typeCheck(c.getDefs(),rootVisitor,question);
 		Environment local = new FlatCheckedEnvironment(c.getDefs(), question.env, question.scope);
-		question.env = local;
+		question  = new TypeCheckInfo(local, question.scope,question.qualifiers);
 		c.setType(c.getResult().apply(rootVisitor, question).clone());
 		local.unusedCheck();
 		return c.getType();

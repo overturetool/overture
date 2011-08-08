@@ -48,7 +48,7 @@ public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getAsync() == null;
+			return a.getAsync() != null;
 		}		
 		return false;
 	}

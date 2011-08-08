@@ -134,7 +134,7 @@ public class TypeCheckerDefinitionVisitor extends
 		// resolution will succeed.
 
 		Environment cenv = new PrivateClassEnvironment(node.getClassDefinition(), question.env);
-		question.env = cenv;
+		question = new TypeCheckInfo(cenv,question.scope,question.qualifiers);
 		//TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of assignment in our tree 		
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
 		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistant.getType(node), null, rootVisitor, question));
@@ -259,10 +259,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		//building the new scope for subtypechecks
 		
-		question.env = local;
-		question.scope = question.scope;
-		question.qualifiers = question.qualifiers;
-		PDefinitionListAssistant.typeCheck(defs,this,question); //can be this because its a definition list
+		PDefinitionListAssistant.typeCheck(defs,this,new TypeCheckInfo(local,question.scope,question.qualifiers)); //can be this because its a definition list
 
 		if (question.env.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(node.getAccess())) 
 		{
@@ -272,10 +269,9 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getPredef() != null)
 		{
 			//building the new scope for subtypechecks			
-			question.scope = NameScope.NAMES;
-			question.qualifiers = null;
-			question.env = local;
-			PType b = node.getPredef().getBody().apply(rootVisitor, question);
+			
+			
+			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(local,NameScope.NAMES));
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
@@ -293,11 +289,8 @@ public class TypeCheckerDefinitionVisitor extends
 			FlatCheckedEnvironment post =
 				new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
 
-			//building the new scope for subtypechecks
-			question.env = post;
-			question.scope = NameScope.NAMES;
-			question.qualifiers = null;			
-			PType b = node.getPostdef().getBody().apply(rootVisitor, question);
+			//building the new scope for subtypechecks			
+			PType b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post,NameScope.NAMES));
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
@@ -310,11 +303,7 @@ public class TypeCheckerDefinitionVisitor extends
 		// This check returns the type of the function body in the case where
 		// all of the curried parameter sets are provided.
 
-		question.env = local;
-		question.scope = question.scope;
-		question.qualifiers = null;		
-		
-		PType actualResult = node.getBody().apply(rootVisitor,question);
+		PType actualResult = node.getBody().apply(rootVisitor,new TypeCheckInfo(local,question.scope));
 		
 		node.setActualResult(actualResult);
 
@@ -439,10 +428,9 @@ public class TypeCheckerDefinitionVisitor extends
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
 		local.setStatic(PAccessSpecifierTCAssistant.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
-
-		question.env = local;		
 		
-		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question); 
+		
+		PDefinitionListAssistant.typeCheck(defs, rootVisitor, new TypeCheckInfo(local,question.scope,question.qualifiers)); 
 
 		if (node.getBody() != null)
 		{
@@ -451,7 +439,7 @@ public class TypeCheckerDefinitionVisitor extends
 				local.add(PDefinitionAssistant.getSelfDefinition(node));
 			}
 
-			node.setActualResult(node.getBody().apply(rootVisitor, question));
+			node.setActualResult(node.getBody().apply(rootVisitor, new TypeCheckInfo(local,question.scope,question.qualifiers)));
 
 			if (!TypeComparator.compatible(node.getResult().getType(), node.getActualResult()))
 			{
@@ -466,10 +454,8 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		if (node.getPredef() != null)
-		{
-			question.qualifiers = null;
-			question.scope = NameScope.NAMES;
-			PType b = node.getPredef().getBody().apply(rootVisitor, question);
+		{			
+			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false, null);
 
 			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
@@ -491,17 +477,13 @@ public class TypeCheckerDefinitionVisitor extends
 	    		FlatCheckedEnvironment post =
 	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMES);
 	    		post.setStatic(PAccessSpecifierTCAssistant.isStatic(node.getAccess()));
-	    		post.setEnclosingDefinition(node);
-	    		question.env = post;
-	    		question.scope = NameScope.NAMES;
-				b = node.getPostdef().getBody().apply(rootVisitor, question);
+	    		post.setEnclosingDefinition(node);	    		
+				b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post,NameScope.NAMES));
 				post.unusedCheck();
 			}
 			else
 			{
-				question.qualifiers = null;
-				question.scope = NameScope.NAMES;
-				b = node.getPostdef().getBody().apply(rootVisitor, question);
+				b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(local,NameScope.NAMES));
 			}
 
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
@@ -598,7 +580,6 @@ public class TypeCheckerDefinitionVisitor extends
 	public PType caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, TypeCheckInfo question) {
 		
-		question.scope = NameScope.NAMESANDSTATE;
 		List<PType> ptypes = node.getType().getParameters();
 
 		if (node.getParameterPatterns().size() > ptypes.size())
@@ -617,7 +598,7 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		node.setParamDefinitions(AExplicitOperationDefinitionAssistant.getParamDefinitions(node));
-		PDefinitionListAssistant.typeCheck(node.getParamDefinitions(), rootVisitor, question); 
+		PDefinitionListAssistant.typeCheck(node.getParamDefinitions(), rootVisitor, new TypeCheckInfo(question.env,NameScope.NAMESANDSTATE, question.qualifiers)); 
 
 		FlatCheckedEnvironment local =
 			new FlatCheckedEnvironment(node.getParamDefinitions(), question.env, question.scope);
@@ -663,11 +644,8 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			FlatEnvironment pre = new FlatEnvironment(new Vector<PDefinition>(), local);
 			pre.setEnclosingDefinition(node.getPredef());
-			
-			question.env = pre;
-			question.qualifiers = null;
-			question.scope = NameScope.NAMESANDSTATE;
-			PType b = node.getPredef().getBody().apply(rootVisitor, question);
+						
+			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(pre,NameScope.NAMESANDSTATE));
 			
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
@@ -685,10 +663,7 @@ public class TypeCheckerDefinitionVisitor extends
 			List<PDefinition> rdefs = PPatternTCAssistant.getDefinitions(rp,node.getType().getResult(), NameScope.NAMESANDANYSTATE);
 			FlatEnvironment post = new FlatEnvironment(rdefs, local);
 			post.setEnclosingDefinition(node.getPostdef());
-			question.env = post;
-			question.qualifiers = null;
-			question.scope = NameScope.NAMESANDANYSTATE;
-			PType b = node.getPostdef().getBody().apply(rootVisitor, question);
+			PType b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post,NameScope.NAMESANDANYSTATE));
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
@@ -697,10 +672,7 @@ public class TypeCheckerDefinitionVisitor extends
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
 			}
 		}
-		question.env = local;
-		question.qualifiers = null;
-		question.scope = NameScope.NAMESANDSTATE;
-		node.setActualResult( node.getBody().apply(rootVisitor,question));
+		node.setActualResult( node.getBody().apply(rootVisitor,new TypeCheckInfo(local, NameScope.NAMESANDSTATE)));
 		boolean compatible = TypeComparator.compatible(node.getType().getResult(), node.getActualResult());
 
 		if ((node.getIsConstructor() && !PTypeAssistant.isType(node.getActualResult(), AVoidType.class)  && !compatible) ||
@@ -732,8 +704,8 @@ public class TypeCheckerDefinitionVisitor extends
 	@Override
 	public PType caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, TypeCheckInfo question) {
-
-		question.scope = NameScope.NAMESANDSTATE;
+		
+		question = new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE, question.qualifiers);
 		List<PDefinition> defs = new Vector<PDefinition>();
 		Set<PDefinition> argdefs = new HashSet<PDefinition>();
 
@@ -819,8 +791,8 @@ public class TypeCheckerDefinitionVisitor extends
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
 		local.setLimitStateScope(limitStateScope);
 		local.setStatic(PAccessSpecifierTCAssistant.isStatic(node.getAccess()));
-		local.setEnclosingDefinition(node);
-
+		local.setEnclosingDefinition(node);		
+		
 		if (node.getBody() != null)
 		{
 			if (node.getClassDefinition() != null && !PAccessSpecifierTCAssistant.isStatic(node.getAccess()))
@@ -857,10 +829,8 @@ public class TypeCheckerDefinitionVisitor extends
     				}
     			}
 			}
-			question.env = local;
-			question.qualifiers = null;
-			question.scope = NameScope.NAMESANDSTATE;
-			node.setActualResult( node.getBody().apply(rootVisitor,question));
+		
+			node.setActualResult( node.getBody().apply(rootVisitor,new TypeCheckInfo(local, NameScope.NAMESANDSTATE)));
 			
 			boolean compatible = TypeComparator.compatible(node.getType().getResult(), node.getActualResult());
 
@@ -886,10 +856,7 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			FlatEnvironment pre = new FlatEnvironment(new Vector<PDefinition>(), local);
 			pre.setEnclosingDefinition(node.getPredef());
-			question.env = pre;
-			question.qualifiers = null;
-			question.scope = NameScope.NAMESANDSTATE;
-			PType b = node.getPredef().getBody().apply(rootVisitor, question); 
+			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(pre, NameScope.NAMESANDSTATE)); 
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
 
 			if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
@@ -912,20 +879,14 @@ public class TypeCheckerDefinitionVisitor extends
 	    			new FlatCheckedEnvironment(postdefs, local, NameScope.NAMESANDANYSTATE);
 	    		post.setStatic(PAccessSpecifierTCAssistant.isStatic(node.getAccess()));
 	    		post.setEnclosingDefinition(node.getPostdef());	    		
-	    		question.env = post;
-	    		question.qualifiers = null;
-	    		question.scope = NameScope.NAMESANDANYSTATE;
-				b = node.getPostdef().getBody().apply(rootVisitor,question);
+				b = node.getPostdef().getBody().apply(rootVisitor,new TypeCheckInfo(post, NameScope.NAMESANDANYSTATE));
 				post.unusedCheck();
 			}
 			else
 			{
 	    		FlatEnvironment post = new FlatEnvironment(new Vector<PDefinition>(), local);
 	    		post.setEnclosingDefinition(node.getPostdef());
-	    		question.env = post;
-	    		question.qualifiers = null;
-	    		question.scope = NameScope.NAMESANDANYSTATE;
-	    		b = node.getPostdef().getBody().apply(rootVisitor,question);
+	    		b = node.getPostdef().getBody().apply(rootVisitor,new TypeCheckInfo(post, NameScope.NAMESANDANYSTATE));
 			}
 
 			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(),false,null);
@@ -941,19 +902,16 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			for (AErrorCase error: node.getErrors())
 			{
-				question.env = local;
-				question.qualifiers = null;
-				question.scope = NameScope.NAMESANDSTATE;
-				
-				PType a = error.getLeft().apply(rootVisitor,question);
+				TypeCheckInfo newQuestion = new TypeCheckInfo(local, NameScope.NAMESANDSTATE);
+				PType a = error.getLeft().apply(rootVisitor,newQuestion);
 
 				if (!PTypeAssistant.isType(a,ABooleanBasicType.class))
 				{
 					TypeCheckerErrors.report(3307, "Errs clause is not bool -> bool",error.getLeft().getLocation(),error.getLeft());
 				}
 
-				question.scope = NameScope.NAMESANDANYSTATE;
-				PType b = error.getRight().apply(rootVisitor,question);
+				newQuestion.scope = NameScope.NAMESANDANYSTATE;
+				PType b = error.getRight().apply(rootVisitor,newQuestion);
 
 				if (!PTypeAssistant.isType(b,ABooleanBasicType.class))
 				{
@@ -1083,13 +1041,12 @@ public class TypeCheckerDefinitionVisitor extends
 		
 		if (question.env.isVDMPP())
 		{
-			question.env = new FlatEnvironment(PDefinitionAssistant.getSelfDefinition(node), question.env);
+			question = new TypeCheckInfo(new FlatEnvironment(PDefinitionAssistant.getSelfDefinition(node), question.env),question.scope,question.qualifiers);
 		}
 
-		question.scope = NameScope.NAMESANDSTATE;
 		for (List<PTraceDefinition> term: node.getTerms())
 		{			
-			PTraceDefinitionAssistant.typeCheck(term, rootVisitor, question);
+			PTraceDefinitionAssistant.typeCheck(term, rootVisitor, new TypeCheckInfo(question.env,NameScope.NAMESANDSTATE));
 		}
 		
 		return null;
@@ -1151,9 +1108,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		Environment local = new FlatEnvironment(node, base);
 		local.setEnclosingDefinition(node);	// Prevent op calls
-		question.env = local;
-		question.scope = NameScope.NAMESANDSTATE;
-		PType rt = node.getGuard().apply(rootVisitor, question);
+		PType rt = node.getGuard().apply(rootVisitor, new TypeCheckInfo(local, NameScope.NAMESANDSTATE));
 
 		if (!PTypeAssistant.isType(rt, ABooleanBasicType.class))
 		{

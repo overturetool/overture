@@ -552,13 +552,8 @@ public class SClassDefinitionAssistant {
 		
 		Environment cenv = new FlatEnvironment(d.getDefinitions(),  question.env);
 		
-		TypeCheckInfo newInfo = new TypeCheckInfo();
-		newInfo.env = cenv;
-		newInfo.qualifiers = (LinkedList<PType>) question.qualifiers.clone();
-		newInfo.scope = question.scope;
-		
+		TypeCheckInfo newInfo = new TypeCheckInfo(cenv, question.scope, (LinkedList<PType>) question.qualifiers.clone());
 		PDefinitionListAssistant.typeResolve(d.getDefinitions(),rootVisitor,newInfo);
-		
 	}
 	
 	public static PDefinition findThread(SClassDefinition d)

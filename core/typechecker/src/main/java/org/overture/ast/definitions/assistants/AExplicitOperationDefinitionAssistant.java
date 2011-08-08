@@ -21,6 +21,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AOperationTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -94,7 +95,7 @@ public class AExplicitOperationDefinitionAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 
-		d.setType(d.getType().apply(rootVisitor, question));
+		d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
 
 		if (question.env.isVDMPP())
 		{
@@ -147,7 +148,7 @@ public class AExplicitOperationDefinitionAssistant {
 		
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
-		plist.addAll(d.getParameterPatterns());
+		plist.addAll((List<PPattern>)d.getParameterPatterns().clone());
 
 		if (!(d.getType().getResult() instanceof AVoidType))
 		{
@@ -199,7 +200,7 @@ public class AExplicitOperationDefinitionAssistant {
 		
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
-		plist.addAll(d.getParameterPatterns());
+		plist.addAll((List<PPattern>)d.getParameterPatterns().clone());
 
 		if (d.getState() != null)
 		{
@@ -211,7 +212,7 @@ public class AExplicitOperationDefinitionAssistant {
 		}
 
 		parameters.add(plist);
-		APreOpExp preop = new APreOpExp(null,d.getLocation(),d.getName(), d.getPrecondition(), null, d.getState());
+		APreOpExp preop = new APreOpExp(null,d.getLocation(),d.getName().clone(), d.getPrecondition(), null, d.getState());
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 			d.getPrecondition().getLocation(),

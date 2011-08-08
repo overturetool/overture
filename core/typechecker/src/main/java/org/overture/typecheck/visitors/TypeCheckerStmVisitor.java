@@ -124,7 +124,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		node.setTargetType(node.getTarget().apply(rootVisitor, question));
 		node.setExpType(node.getExp().apply(rootVisitor, question));
 		
-		if (!TypeComparator.compatible(node.getType(), node.getExp().getType()))
+		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3239, "Incompatible types in assignment", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Target", node.getTarget(), "Expression", node.getExp());
@@ -566,7 +566,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
 				PDefinitionAssistant.implicitDefinitions(d, local);
-				PDefinitionAssistant.typeResolve(d, rootVisitor, question);
+				PDefinitionAssistant.typeResolve(d, rootVisitor, new TypeCheckInfo(local));
 				
 				if (question.env.isVDMPP())
 				{
@@ -575,18 +575,18 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 					d.setAccess(PAccessSpecifierTCAssistant.getStatic(d, true));
 				}
 				
-				d.apply(rootVisitor, question);
+				d.apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 			}
 			else
 			{
 				PDefinitionAssistant.implicitDefinitions(d, local);
 				PDefinitionAssistant.typeResolve(d, rootVisitor, question);
-				d.apply(rootVisitor, question);
+				d.apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
 			}
 		}
 
-		PType r = node.getStatement().apply(rootVisitor, question);
+		PType r = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 		local.unusedCheck(question.env);
 		node.setType(r);
 		return r;
@@ -770,12 +770,12 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		node.getDef().apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
-		if (node.getSuchThat()!= null && !PTypeAssistant.isType(node.getSuchThat().apply(rootVisitor, question), ABooleanBasicType.class))
+		if (node.getSuchThat()!= null && !PTypeAssistant.isType(node.getSuchThat().apply(rootVisitor, new TypeCheckInfo(local,question.scope)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getLocation(), node);
 		}
 
-		PType r = node.getStatement().apply(rootVisitor, question);
+		PType r = node.getStatement().apply(rootVisitor,  new TypeCheckInfo(local,question.scope));
 		local.unusedCheck();
 		node.setType(r);
 		return r;
@@ -919,8 +919,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		List<PDefinition> defs = PPatternBindAssistant.getDefinitions(node.getPatternBind());
 		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
-		question.env = local;
-		rtypes.add(node.getWith().apply(rootVisitor, question));
+		rtypes.add(node.getWith().apply(rootVisitor, new TypeCheckInfo(local,question.scope,question.qualifiers)));
 		
 		node.setType(rtypes.getType(node.getLocation()));
 		return node.getType();
