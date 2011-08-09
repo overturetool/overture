@@ -53,7 +53,7 @@ public class ASetPatternTCAssistant extends ASetPatternAssistant {
 //		return list;
 //	}
 
-	public static List<PDefinition> getDefinitions(ASeqPattern rp, PType type,
+	public static List<PDefinition> getDefinitions(ASetPattern rp, PType type,
 			NameScope scope) {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();

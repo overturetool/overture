@@ -31,6 +31,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.PPatternBind;
@@ -262,7 +263,7 @@ public class StatementReader extends SyntaxReader
 
 		while (lastToken().isNot(VDMToken.SET_CLOSE))
 		{
-			PPatternBind patternBind = br.readPatternOrBind();
+			ADefPatternBind patternBind = br.readPatternOrBind();
 			checkFor(VDMToken.MAPLET, 2193, "Expecting '|->' after pattern bind");
 			PStm result = readStatement();
 			traps.add(new ATixeStmtAlternative(patternBind, result));
@@ -280,7 +281,7 @@ public class StatementReader extends SyntaxReader
 		throws ParserException, LexException
 	{
 		checkFor(VDMToken.TRAP, 2195, "Expecting 'trap'");
-		PPatternBind patternBind = getBindReader().readPatternOrBind();
+		ADefPatternBind patternBind = getBindReader().readPatternOrBind();
 		checkFor(VDMToken.WITH, 2196, "Expecting 'with' in trap statement");
 		PStm with = getStatementReader().readStatement();
 		checkFor(VDMToken.IN, 2197, "Expecting 'in' in trap statement");
@@ -622,7 +623,7 @@ public class StatementReader extends SyntaxReader
 	private PStm readForPatternBindStatement(LexLocation token)
 		throws ParserException, LexException
 	{
-		PPatternBind pb = getBindReader().readPatternOrBind();
+		ADefPatternBind pb = getBindReader().readPatternOrBind();
 		checkFor(VDMToken.IN, 2214, "Expecting 'in' after pattern bind");
 
 		// The old syntax used to include a "reverse" keyword as part
@@ -716,7 +717,7 @@ public class StatementReader extends SyntaxReader
 		LexNameToken name =
 			readNameToken("Expecting name in assignment statement");
 
-		PStateDesignator sd = new AIdentifierStateDesignator(name);
+		PStateDesignator sd = new AIdentifierStateDesignator(name.location,null,name);
 
 		while (lastToken().is(VDMToken.POINT) || lastToken().is(VDMToken.BRA))
 		{
@@ -727,7 +728,7 @@ public class StatementReader extends SyntaxReader
 					throwMessage(2068, "Expecting field identifier");
 				}
 
-				sd = new AFieldStateDesignator(sd, lastIdToken());
+				sd = new AFieldStateDesignator(sd.getLocation(),null, sd, lastIdToken());
 				nextToken();
 			}
 			else
@@ -735,7 +736,7 @@ public class StatementReader extends SyntaxReader
 				nextToken();
 				PExp exp = getExpressionReader().readExpression();
 				checkFor(VDMToken.KET, 2223, "Expecting ')' after map/seq reference");
-				sd = new AMapSeqStateDesignator(sd, exp);
+				sd = new AMapSeqStateDesignator(sd.getLocation(),null, sd, exp);
 			}
 		}
 
@@ -971,7 +972,7 @@ public class StatementReader extends SyntaxReader
 
     	for (PPattern p: plist)
     	{
-    		alts.add(new ACaseAlternativeStm(p.getLocation(), null, p, result));
+    		alts.add(new ACaseAlternativeStm(p.getLocation(), null, p.clone(), result.clone()));
     	}
 
     	return alts;

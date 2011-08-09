@@ -12,7 +12,7 @@ import %org.overture.ast.analysis%.%IAnswer%;
 import %org.overture.ast.analysis%.%IQuestion%;
 import %org.overture.ast.analysis%.%IQuestionAnswer%;
 
-public abstract class %Node% implements Cloneable, Serializable
+public abstract class %Node% implements Cloneable, Serializable, Comparable<%Node%>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -273,4 +273,8 @@ public abstract class %Node% implements Cloneable, Serializable
 //		}
 //		return defaultValue;
 //	}
+	
+	public int compareTo(%Node% o) {
+		return toString().compareTo(o.toString());
+}
 }

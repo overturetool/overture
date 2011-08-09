@@ -2,10 +2,13 @@ package org.overture.typecheck.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PAlternative;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPatternBind;
+import org.overture.ast.statements.PAlternativeStm;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
@@ -44,6 +47,11 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 //	}
 	
 	@Override
+	public PType defaultPPatternBind(PPatternBind node, TypeCheckInfo question) {
+		return node.apply(tcOthers, question);
+	}
+	
+	@Override
 	public PType defaultPStateDesignator(PStateDesignator node,
 			TypeCheckInfo question) {
 		return node.apply(tcOthers,question);
@@ -56,6 +64,12 @@ public class TypeCheckVisitor  extends QuestionAnswerAdaptor<TypeCheckInfo, PTyp
 	
 	@Override
 	public PType defaultPStm(PStm node, TypeCheckInfo question) {
+		return node.apply(tcStm, question);
+	}
+	
+	@Override
+	public PType defaultPAlternativeStm(PAlternativeStm node,
+			TypeCheckInfo question) {
 		return node.apply(tcStm, question);
 	}
 	

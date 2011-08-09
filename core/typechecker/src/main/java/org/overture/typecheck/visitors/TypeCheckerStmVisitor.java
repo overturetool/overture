@@ -29,8 +29,8 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.patterns.assistants.PPatternBindAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -50,6 +50,7 @@ import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
@@ -179,6 +180,32 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		
 		node.setType(new AVoidType(node.getLocation(),false));
 		return node.getType();
+	}
+	
+	@Override
+	public PType caseAForPatternBindStm(AForPatternBindStm node,
+			TypeCheckInfo question) {
+		
+		PType stype = node.getExp().apply(rootVisitor, new TypeCheckInfo(question.env,question.scope));
+		Environment local = question.env;
+
+		if (PTypeAssistant.isSeq(stype))
+		{
+			node.setSeqType(PTypeAssistant.getSeq(stype));
+			node.getPatternBind().apply(rootVisitor,new TypeCheckInfo(question.env,question.scope));
+			List<PDefinition> defs = PPatternBindAssistant.getDefinitions(node.getPatternBind());
+			PDefinitionListAssistant.typeCheck(defs, rootVisitor, new TypeCheckInfo(question.env, question.scope));
+			local = new FlatCheckedEnvironment(defs, question.env, question.scope);
+		}
+		else
+		{
+			TypeCheckerErrors.report(3223, "Expecting sequence type after 'in'",node.getLocation(),node);
+		}
+
+		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
+		local.unusedCheck();
+		node.setType(rt);
+		return rt;
 	}
 	
 	@Override
@@ -481,7 +508,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseACaseAlternativeStm(ACaseAlternativeStm node,TypeCheckInfo question) 
 	{
 
-		if (node.getDefs() == null)
+		if (node.getDefs().size() == 0)
 		{
 			node.setDefs(new LinkedList<PDefinition>());
 			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
@@ -501,11 +528,13 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		
 		PDefinitionListAssistant.typeCheck(node.getDefs(), rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDefs(), question.env, question.scope);
-		PType r = node.getResult().apply(rootVisitor, question);
+		PType r = node.getResult().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 		local.unusedCheck();
 		
 		return r;
 	}
+	
+	
 	
 	@Override
 	public PType caseACasesStm(ACasesStm node, TypeCheckInfo question) 

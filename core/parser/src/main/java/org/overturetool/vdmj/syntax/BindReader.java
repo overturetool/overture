@@ -50,7 +50,7 @@ public class BindReader extends SyntaxReader
 		super(reader);
 	}
 
-	public PPatternBind readPatternOrBind() throws ParserException, LexException
+	public ADefPatternBind readPatternOrBind() throws ParserException, LexException
 	{
 		ParserException bindError = null;
 

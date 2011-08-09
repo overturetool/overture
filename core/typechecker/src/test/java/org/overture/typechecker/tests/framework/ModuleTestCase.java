@@ -98,11 +98,12 @@ public class ModuleTestCase extends TestCase {
 			mtc.typeCheck();
 	
 			String errorMessages = null;
-			if (mtc != null)
-			{
-				System.out.println("Errors/Warnings... by VDMJ: " + tcHeaderList.size() + " / by TCv2: " + TypeChecker.getErrorCount() + TypeChecker.getWarningCount());
-			}
 			
+			int tcV2found = tcHeaderList.size();
+			int total = TypeChecker.getErrorCount() + TypeChecker.getWarningCount();
+			System.out.println("Errors/Warnings... by VDMJ: " + tcV2found + " / by TCv2: " + total + (tcV2found == total ? " ... OK" : " ... WRONG"));
+			
+		
 			if (mtc != null && TypeChecker.getErrorCount() > 0) {
 	
 				for (VDMError error : TypeChecker.getErrors()) {
@@ -128,10 +129,12 @@ public class ModuleTestCase extends TestCase {
 																// PrintWriter(System.out));
 				//String warningMessages = "\n" + s.toString() + "\n";
 				System.out.println(s.toString());
-			}
-			System.out.println("Errors/Warning left ... " + tcHeaderList.size() );
+			}			
 			//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
-			assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());		
+//			assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());
+			
+			assertTrue("TEST FAILED: difference in errors: " +  Math.abs(total- tcV2found) , tcHeaderList.size() == 0 && total == tcV2found);
+			//assertEquals("Difference in errors detected: " + Math.abs(total- tcHeaderList.size()), total, tcHeaderList.size());
 			System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
 		}
 	

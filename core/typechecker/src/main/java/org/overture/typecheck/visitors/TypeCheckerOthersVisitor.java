@@ -1,16 +1,41 @@
 package org.overture.typecheck.visitors;
 
+import java.util.LinkedList;
+
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExternalDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.node.Node;
+import org.overture.ast.patterns.ADefPatternBind;
+import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.assistants.PBindAssistant;
+import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.statements.AFieldStateDesignator;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.ast.statements.AMapSeqStateDesignator;
+import org.overture.ast.statements.ATixeStmtAlternative;
+import org.overture.ast.statements.ATrapStm;
+
+import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overture.typecheck.TypeComparator;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -24,6 +49,130 @@ public class TypeCheckerOthersVisitor extends
 		this.rootVisitor = typeCheckVisitor;
 	}
 	
+	
+	@Override
+	public PType caseADefPatternBind(ADefPatternBind node,
+			TypeCheckInfo question) {
+		node.setDefs(null);
+		
+		PType type = null;
+		
+		Node parent = node.getAncestor(AForPatternBindStm.class);
+		if(parent != null)
+		{
+			type = ((AForPatternBindStm)parent).getSeqType();
+		}else if((parent = node.getAncestor(ATrapStm.class))!=null)
+		{
+				//type = ((ATixeStm)parent).getType();
+				assert false:"not implemented";
+		}else if((parent = node.getAncestor(ATixeStmtAlternative.class))!=null)
+		{
+//			type = ((ATixeStmtAlternative)parent).get.getType();
+			assert false:"not implemented";
+		}
+	
+		
+
+		if (node.getBind() != null)
+		{
+			if (node.getBind() instanceof ATypeBind)
+			{
+				ATypeBind typebind = (ATypeBind)node.getBind();
+				typebind.apply(rootVisitor, question);
+
+				if (!TypeComparator.compatible(typebind.getType(), type))
+				{
+					TypeCheckerErrors.report(3198, "Type bind not compatible with expression", node.getBind().getLocation(), node.getBind());
+					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
+				}
+			}
+			else
+			{
+				ASetBind setbind = (ASetBind)node.getBind();
+				ASetType settype = PTypeAssistant.getSet(setbind.getSet().apply(rootVisitor, question));
+				if (!TypeComparator.compatible(type, settype.getSetof()))
+				{
+					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
+					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
+				}
+			}
+
+			PDefinition def =new AMultiBindListDefinition(node.getBind().getLocation(), null, null, false, null, 
+					PAccessSpecifierAssistant.getDefault(), null, PBindAssistant.getMultipleBindList(node.getBind()), null);
+
+			def.apply(rootVisitor, question);
+			LinkedList<PDefinition> defs = new LinkedList<PDefinition>();
+			defs.add(def);
+			node.setDefs(defs);
+		}
+		else
+		{
+			assert (type != null) :
+					"Can't typecheck a pattern without a type";
+
+			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
+			node.setDefs(PPatternTCAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public PType caseAFieldStateDesignator(AFieldStateDesignator node,
+			TypeCheckInfo question) {
+		
+		PType type = node.getObject().apply(rootVisitor,question);
+		PTypeSet result = new PTypeSet();
+		boolean unique = !PTypeAssistant.isUnion(type);
+		LexIdentifierToken field = node.getField();
+		
+		if (PTypeAssistant.isRecord(type))
+		{
+			
+    		ARecordInvariantType rec = PTypeAssistant.getRecord(type);
+    		AFieldField rf = ARecordInvariantTypeAssistant.findField(rec, field.name);
+
+    		if (rf == null)
+    		{
+    			TypeCheckerErrors.concern(unique, 3246, "Unknown field name, '" + field + "'",node.getLocation(),field);
+    			result.add(new AUnknownType(field.location,false));
+    		}
+    		else
+    		{
+    			result.add(rf.getType());
+    		}
+		}
+
+		if (PTypeAssistant.isClass(type))
+		{
+			AClassType ctype = PTypeAssistant.getClassType(type);
+			String cname = ctype.getName().name;
+
+			node.setObjectfield( new LexNameToken(cname, field.name, node.getObject().getLocation()));
+			PDefinition fdef = SClassDefinitionAssistant.findName(ctype.getClassdef(),node.getObjectfield(), NameScope.STATE);
+
+			if (fdef == null)
+			{
+				TypeCheckerErrors.concern(unique, 3260, "Unknown class field name, '" + field + "'",node.getLocation(),node);
+				result.add(new AUnknownType(node.getLocation(),false));
+			}
+			else
+			{
+				result.add(fdef.getType());
+			}
+		}
+
+		if (result.isEmpty())
+		{
+			TypeCheckerErrors.report(3245, "Field assignment is not of a record or object type",node.getLocation(),node);
+			TypeCheckerErrors.detail2("Expression", node.getObject(), "Type", type);
+			node.setType(new AUnknownType(field.location,false));
+			return node.getType();
+		}
+
+		node.setType(result.getType(node.getLocation()));
+		return node.getType();
+	}
 	
 	@Override
 	public PType caseAIdentifierStateDesignator(
@@ -41,13 +190,15 @@ public class TypeCheckerOthersVisitor extends
 
 			if (def == null)
 			{
-				TypeCheckerErrors.report(3247, "Unknown variable '" + name + "' in assignment",name.getLocation(),name);				
-				return new AUnknownType(name.getLocation(),false);
+				TypeCheckerErrors.report(3247, "Unknown variable '" + name + "' in assignment",name.getLocation(),name);
+				node.setType(new AUnknownType(name.getLocation(),false));
+				return node.getType();
 			}
 			else if (!PDefinitionAssistant.isUpdatable(def))
 			{
 				TypeCheckerErrors.report(3301, "Variable '" + name + "' in scope is not updatable",name.getLocation(),name);
-				return new AUnknownType(name.getLocation(),false);
+				node.setType(new AUnknownType(name.getLocation(),false));
+				return node.getType();
 			}
 			else if (def.getClassDefinition() != null)
 			{
@@ -55,16 +206,19 @@ public class TypeCheckerOthersVisitor extends
     			{
     				TypeCheckerErrors.report(3180, "Inaccessible member '" + name + "' of class " +
     					def.getClassDefinition().getName().name,name.getLocation(),name);
-    				return new AUnknownType(name.getLocation(),false);
+    				node.setType(new AUnknownType(name.getLocation(),false));
+    				return node.getType();
     			}
     			else if (!PDefinitionAssistant.isStatic(def) && env.isStatic())
     			{
     				TypeCheckerErrors.report(3181, "Cannot access " + name + " from a static context",name.getLocation(),name);
-    				return new AUnknownType(name.getLocation(),false);
+    				node.setType(new AUnknownType(name.getLocation(),false));
+    				return node.getType();
     			}
 			}
 
-			return PDefinitionAssistant.getType(def);
+			node.setType(PDefinitionAssistant.getType(def));
+			return node.getType(); 
 		}
 		else
 		{
@@ -74,12 +228,14 @@ public class TypeCheckerOthersVisitor extends
 			if (def == null)
 			{
 				TypeCheckerErrors.report(3247, "Unknown state variable '" + name + "' in assignment",name.getLocation(),name);
-				return new AUnknownType(name.location,false);
+				node.setType(new AUnknownType(name.getLocation(),false));
+				return node.getType();
 			}
 			else if (!PDefinitionAssistant.isUpdatable(def))
 			{
 				TypeCheckerErrors.report(3301, "Variable '" + name + "' in scope is not updatable",name.getLocation(),name);
-				return new AUnknownType(name.location,false);
+				node.setType(new AUnknownType(name.getLocation(),false));
+				return node.getType();
 			}
 			else if (def instanceof AExternalDefinition)
 			{
@@ -92,8 +248,57 @@ public class TypeCheckerOthersVisitor extends
 			}
 			// else just state access in (say) an explicit operation
 
-			return def.getType();
+			node.setType(PDefinitionAssistant.getType(def));
+			return node.getType();
 		}
 	}
 
+	@Override
+	public PType caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
+			TypeCheckInfo question) {
+		PType etype = node.getExp().apply(rootVisitor, new TypeCheckInfo(question.env,NameScope.NAMESANDSTATE));
+		PType rtype = node.getMapseq().apply(rootVisitor, new TypeCheckInfo(question.env));
+		PTypeSet result = new PTypeSet();
+
+		if (PTypeAssistant.isMap(rtype))
+		{
+			node.setMapType(PTypeAssistant.getMap(rtype));
+
+			if (!TypeComparator.compatible(node.getMapType().getFrom(), etype))
+			{
+				TypeCheckerErrors.report(3242, "Map element assignment of wrong type",node.getLocation(),node);
+				TypeCheckerErrors.detail2("Expect", node.getMapType().getFrom(), "Actual", etype);
+			}
+			else
+			{
+				result.add(node.getMapType().getTo());
+			}
+		}
+
+		if (PTypeAssistant.isSeq(rtype))
+		{
+			node.setSeqType(PTypeAssistant.getSeq(rtype));
+
+			if (!PTypeAssistant.isNumeric(etype))
+			{
+				TypeCheckerErrors.report(3243, "Seq element assignment is not numeric",node.getLocation(),node);
+				TypeCheckerErrors.detail("Actual", etype);
+			}
+			else
+			{
+				result.add(node.getSeqType().getSeqof());
+			}
+		}
+
+		if (result.isEmpty())
+		{
+			TypeCheckerErrors.report(3244, "Expecting a map or a sequence",node.getLocation(),node);
+			node.setType(new AUnknownType(node.getLocation(),false));
+			return node.getType();
+		}
+
+		node.setType(result.getType(node.getLocation()));
+		return node.getType();
+	}
+	
 }

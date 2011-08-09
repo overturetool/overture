@@ -28,9 +28,9 @@ public class AUnresolvedTypeAssistant {
 	public static PType typeResolve(AUnresolvedType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
-		
+		System.out.println(type.toString());
 		PType deref = dereference(type,question.env, root);
-
+		
 		if (!(deref instanceof AClassType))
 		{
 			deref = PTypeAssistant.typeResolve(deref, root, rootVisitor, question);

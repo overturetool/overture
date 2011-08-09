@@ -1567,7 +1567,7 @@ public class ExpressionReader extends SyntaxReader
 
 		for (PPattern p: plist) 
 		{
-			alts.add(new ACaseAlternative(null, exp, p, then,null,null)); 
+			alts.add(new ACaseAlternative(null, exp.clone(), p.clone(), then.clone(),null,null)); 
 			//alts.add(new CaseAlternative(exp, p, then));
 		}
 

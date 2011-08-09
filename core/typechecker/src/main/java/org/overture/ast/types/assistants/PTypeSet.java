@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.Vector;
 
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -17,7 +19,7 @@ import org.overturetool.vdmj.util.Utils;
 
 
 @SuppressWarnings("serial")
-public class PTypeSet extends HashSet<PType>{
+public class PTypeSet extends TreeSet<PType>{
 	
 	public PTypeSet()
 	{
@@ -122,8 +124,14 @@ public class PTypeSet extends HashSet<PType>{
 		if (this.size() == 1) {
 			result = this.iterator().next();
 		} else {
-			AUnionType uType = new AUnionType(location, false, new ArrayList<PType>(
-					this),false, false);
+			
+			Vector<PType> types = new Vector<PType>();
+			
+			for (PType pType : this) {
+				types.add(pType.clone());
+			}
+			
+			AUnionType uType = new AUnionType(location, false, types,false, false);
 			uType.setProdCard(-1);
 			result = uType;
 		}

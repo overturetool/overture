@@ -34,6 +34,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
+import org.overture.typecheck.Pass;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -579,6 +580,43 @@ public class PDefinitionAssistant {
 			return PDefinitionAssistant.isUpdatable(((ARenamedDefinition)d).getDef());
 		default:
 			return false;
+		}
+	}
+
+	public static Pass getPass(PDefinition d) {
+		switch(d.kindPDefinition())
+		{
+		case ASSIGNMENT:
+		case INSTANCEVARIABLE:
+		case VALUE:
+			return Pass.VALUES;			
+		case CLASS:
+		case CLASSINVARIANT:
+		case EQUALS:
+		case EXPLICITFUNCTION:
+		case EXPLICITOPERATION:
+		case IMPLICITFUNCTION:
+		case IMPLICITOPERATION:
+		case EXTERNAL:
+		case IMPORTED:
+		case LOCAL:
+		case MULTIBINDLIST:
+		case MUTEXSYNC:
+		case NAMEDTRACE:
+		case PERSYNC:
+		case THREAD:
+		case UNTYPED:
+			return Pass.DEFS;
+		case INHERITED:
+			return getPass(((AInheritedDefinition) d).getSuperdef());
+		case RENAMED:
+			return getPass(((ARenamedDefinition) d).getDef());
+		case STATE:
+		case TYPE:
+			return Pass.TYPES;
+		default: 
+			assert false : "should never happen";
+			return null;
 		}
 	}
 

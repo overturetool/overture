@@ -62,7 +62,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case SEQ:
 			return ASeqPatternTCAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
 		case SET:
-			return ASetPatternTCAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
+			return ASetPatternTCAssistant.getDefinitions((ASetPattern)rp,ptype,scope);
 		case TUPLE:
 			return ATuplePatternTCAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
 		case UNION:
@@ -221,7 +221,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case SEQ:
 			return new ASeqSeqType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false),false);
 		case SET:
-			return new ASetType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false),false, false);
+			return new ASetType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(),false),true, false);
 		case STRING:
 			return new ASeqSeqType(pattern.getLocation(), false,new ACharBasicType(pattern.getLocation(),false),false);
 		case TUPLE:
@@ -244,7 +244,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 			PType s = set.getType(unionPattern.getLocation());
 			
 			return PTypeAssistant.isUnknown(s) ?
-				new ASetType(unionPattern.getLocation(), false, null, new AUnknownType(unionPattern.getLocation(),false), false, false) : s;		
+				new ASetType(unionPattern.getLocation(), false, null, new AUnknownType(unionPattern.getLocation(),false), true, false) : s;		
 		}
 		return null;
 	}

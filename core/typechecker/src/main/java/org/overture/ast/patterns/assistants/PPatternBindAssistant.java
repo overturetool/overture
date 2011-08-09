@@ -24,58 +24,14 @@ public class PPatternBindAssistant {
 
 	public static void typeCheck(ADefPatternBind node, PType type, TypeCheckVisitor rootVisitor, TypeCheckInfo question)
 	{
-		node.setDefs(null);
-
-		if (node.getBind() != null)
-		{
-			if (node.getBind() instanceof ATypeBind)
-			{
-				ATypeBind typebind = (ATypeBind)node.getBind();
-				typebind.apply(rootVisitor, question);
-
-				if (!TypeComparator.compatible(typebind.getType(), type))
-				{
-					TypeCheckerErrors.report(3198, "Type bind not compatible with expression", node.getBind().getLocation(), node.getBind());
-					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
-				}
-			}
-			else
-			{
-				ASetBind setbind = (ASetBind)node.getBind();
-				ASetType settype = PTypeAssistant.getSet(setbind.getSet().apply(rootVisitor, question));
-				if (!TypeComparator.compatible(type, settype.getSetof()))
-				{
-					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
-					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
-				}
-			}
-
-			PDefinition def =new AMultiBindListDefinition(node.getBind().getLocation(), null, null, false, null, 
-					PAccessSpecifierAssistant.getDefault(), null, PBindAssistant.getMultipleBindList(node.getBind()), null);
-
-			def.apply(rootVisitor, question);
-			LinkedList<PDefinition> defs = new LinkedList<PDefinition>();
-			defs.add(def);
-			node.setDefs(defs);
-		}
-		else
-		{
-			assert (type != null) :
-					"Can't typecheck a pattern without a type";
-
-			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
-			node.setDefs(PPatternTCAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
-		}
 		
 	}
 	
-	public static List<PDefinition> getDefinitions(PPatternBind patternBind) {
-		assert false: "INVESTIGATE PATTERN BIND"; 
-		return null;
-//		assert (patternBind.getDefs() != null) :
-//			"PatternBind must be type checked before getDefinitions";
-//
-//		return patternBind.getDefs();
+	public static List<PDefinition> getDefinitions(ADefPatternBind patternBind) {
+				assert (patternBind.getDefs() != null) :
+			"PatternBind must be type checked before getDefinitions";
+
+		return patternBind.getDefs();
 	}
 	
 }

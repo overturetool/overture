@@ -531,7 +531,7 @@ stm {-> package='org.overture.ast.statements'}
     |   {exit} [expression]:exp (expType):type
     |   {forAll} [pattern]:pattern [set]:exp [statement]:stm
     |   {forIndex} [var]:LexNameToken [from]:exp [to]:exp [by]:exp [statement]:stm
-    |   {forPatternBind} [patternBind]:patternBind [reverse]:java_Boolean [exp]:exp [statement]:stm
+    |   {forPatternBind} [patternBind]:patternBind.def [reverse]:java_Boolean [exp]:exp [statement]:stm (seqType):type.#seq
     |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm (def):definition.multiBindList
     |   #LetDef
@@ -544,7 +544,7 @@ stm {-> package='org.overture.ast.statements'}
     |   {subclassResponsibility}
     |   {tixe} [traps]:stmtAlternative.tixe* [body]:stm
     //|   {traceVariable} //TODO why does this have a value inside?
-    |   {trap} [patternBind]:patternBind [with]:stm [body]:stm
+    |   {trap} [patternBind]:patternBind.def [with]:stm [body]:stm
     |   {while} [exp]:exp [statement]:stm
     |   {periodic} [opname]:LexNameToken [args]:exp* (period):java_Long (jitter):java_Long (delay):java_Long (offset):java_Long
     ; 
@@ -559,9 +559,9 @@ stm {-> package='org.overture.ast.statements'}
     ;
     
 stateDesignator {-> package='org.overture.ast.statements'}
-    =   {field} [object]:stateDesignator [field]:LexIdentifierToken
+    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
     |   {identifier} [name]:LexNameToken
-    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp
+    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#Map (seqType):type.#seq
     ;
     
 objectDesignator {-> package='org.overture.ast.statements'}
@@ -577,7 +577,7 @@ alternativeStm {-> package='org.overture.ast.statements'}
     ;
     
 stmtAlternative {-> package='org.overture.ast.statements'}
-    = {tixe} [patternBind]:patternBind [statement]:stm
+    = {tixe} [patternBind]:patternBind.def [statement]:stm
     ;
     
 clause {-> package='org.overture.ast.statements'}
@@ -694,4 +694,8 @@ Aspect Declaration
     
 %type->#seq
     = [seqof]:type [empty]:java_Boolean
+    ;
+    
+%stateDesignator 
+    = [location]:location [type]:type
     ;

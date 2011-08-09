@@ -55,7 +55,7 @@ abstract public class TypeChecker
 	public static void report(int number, String problem, LexLocation location)
 	{
 		VDMError error = new VDMError(number, problem, location);
-		System.out.println(error.toString());
+		//System.out.println(error.toString());
 		errors.add(error);
 		lastMessage = error;
 

@@ -145,7 +145,7 @@ public class AImplicitOperationDefinitionAssistant {
 
 		if (d.getResult() != null)
 		{
-			plist.add(d.getResult().getPattern());
+			plist.add(d.getResult().getPattern().clone());
 		}
 
 		AStateDefinition state = d.getState();

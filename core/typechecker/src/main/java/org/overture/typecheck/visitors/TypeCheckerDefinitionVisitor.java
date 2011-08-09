@@ -100,7 +100,7 @@ public class TypeCheckerDefinitionVisitor extends
 			TypeCheckInfo question) {
 		
 		question.qualifiers = null;
-		node.setExpType(node.getExpression().apply(rootVisitor, question));
+		node.setExpType(node.getExpression().apply(rootVisitor, question).clone());
 		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistant.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
@@ -179,7 +179,7 @@ public class TypeCheckerDefinitionVisitor extends
 		
 		question.qualifiers = null;
 		
-		node.setExpType(node.getTest().apply(rootVisitor,question));
+		node.setExpType(node.getTest().apply(rootVisitor,question).clone());
 		PPattern pattern = node.getPattern();
 		
 		if (pattern != null)
@@ -672,7 +672,9 @@ public class TypeCheckerDefinitionVisitor extends
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
 			}
 		}
-		node.setActualResult( node.getBody().apply(rootVisitor,new TypeCheckInfo(local, NameScope.NAMESANDSTATE)));
+		
+		PType actualResult = node.getBody().apply(rootVisitor,new TypeCheckInfo(local, NameScope.NAMESANDSTATE));
+		node.setActualResult(actualResult.clone());
 		boolean compatible = TypeComparator.compatible(node.getType().getResult(), node.getActualResult());
 
 		if ((node.getIsConstructor() && !PTypeAssistant.isType(node.getActualResult(), AVoidType.class)  && !compatible) ||

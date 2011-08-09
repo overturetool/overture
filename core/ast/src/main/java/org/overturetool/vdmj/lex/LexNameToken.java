@@ -10,7 +10,7 @@ import org.overture.ast.analysis.IQuestionAnswer;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.messages.InternalException;
 
-public class LexNameToken extends LexToken implements Serializable, Comparable<LexNameToken>
+public class LexNameToken extends LexToken implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -211,6 +211,7 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 		return c;
 	}
 
+	
 	public int compareTo(LexNameToken o)
 	{
 		return toString().compareTo(o.toString());

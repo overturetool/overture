@@ -86,6 +86,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PAccessSpecifier;
@@ -408,7 +409,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return new ATypeDefinition(id.location,null, 
-				null,null,null,null,invtype, invPattern,invExpression,null,false,idToName(id));
+				false,null,null,null,invtype, invPattern,invExpression,null,false,idToName(id));
 		
 		//return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}
@@ -1186,7 +1187,7 @@ public class DefinitionReader extends SyntaxReader
 			ptypes.addAll(getTypeList(ptp));
 		}
 		AOperationType operationType = new AOperationType(funcName.location, false, null, ptypes, (resultPattern == null ? new AVoidType(funcName.location, false, null)
-				: resultPattern.getType()));
+				: resultPattern.getType().clone()));
 		
 //		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
 //			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(),null, parameterPatterns, resultPattern,
@@ -1297,7 +1298,7 @@ public class DefinitionReader extends SyntaxReader
 			type = getTypeReader().readType();
 		}
 
-		return new AExternalClause(mode, names, type);
+		return new AExternalClause(mode, names, (type == null) ? new AUnknownType(names.get(0).location,false) : type);
 	}
 
 	public AEqualsDefinition readEqualsDefinition()
