@@ -1,0 +1,11 @@
+types
+
+Operation :: MonOperation | BinaryOperation;
+
+MonOperation :: MonOpMonOperand ;
+
+MonOpMonOperand :: operator : MonOp
+                   operand : MonOperation;
+
+MonOp = <numabs> | <unaryminus> | <not> | <odd> |
+        <round> | <float> | <mantissa> | <exponent> | <discard>;
