@@ -1,0 +1,61 @@
+% Overture Language Manual
+\documentclass{overturerepchap}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{ifthen}
+\usepackage{makeidx}
+\usepackage{fancyhdr}
+\usepackage{qtree}
+
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{VDM-10 Language Manual}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{logo.jpg}}}
+\fancyfoot[C]{\thepage}
+\makeindex
+
+\begin{document}
+ 
+\title{VDM-10 Language Manual}
+\author{ Kenneth Lausdah \and Augusto Ribeiro}
+
+\date{August 2011}
+\reportno{TR-002}     
+
+\pagenumbering{roman}
+\maketitle
+
+
+{\textbf{Document history}}
+
+\begin{tabular}{|l|l|l|l|}\hline
+Month   & Year & Version \\ \hline
+April   & 2010 &    \\ \hline
+\end{tabular}
+
+%\addtocounter{page}{2}
+\tableofcontents
+\newpage
+\mbox{}
+\newpage
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+
+\chapter{Introduction}
+
+\include{syntax}
+
+
+\end{document}
+
+
