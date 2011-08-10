@@ -1,6 +1,6 @@
 types
 
-Operation :: MonOperation | BinaryOperation;
+Operation :: MonOperation;
 
 MonOperation :: MonOpMonOperand ;
 
