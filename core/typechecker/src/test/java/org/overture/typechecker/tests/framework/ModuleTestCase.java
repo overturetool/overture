@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -14,6 +15,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
+import org.overture.typechecker.tests.framework.TCStruct.Type;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -37,6 +39,8 @@ public class ModuleTestCase extends TestCase {
 	private boolean generateResultOutput = true;
 	private TCStructList tcHeaderList = null;
 	private boolean isParseOk = true;
+	List<VDMError> errors = new Vector<VDMError>();
+	List<VDMWarning> warnings = new Vector<VDMWarning>();
 	
 	
 	public ModuleTestCase() {
@@ -99,43 +103,67 @@ public class ModuleTestCase extends TestCase {
 	
 			String errorMessages = null;
 			
+			
 			int tcV2found = tcHeaderList.size();
 			int total = TypeChecker.getErrorCount() + TypeChecker.getWarningCount();
-			System.out.println("Errors/Warnings... by VDMJ: " + tcV2found + " / by TCv2: " + total + (tcV2found == total ? " ... OK" : " ... WRONG"));
+			String status = "Errors/Warnings: %s"   + 
+					"\n by VDMJ: " + tcHeaderList.getErrorCount() + "/" + tcHeaderList.getWarningCount()
+					 + "\n by TCv2: " + TypeChecker.getErrorCount() + "/" + TypeChecker.getWarningCount() ;
 			
 		
 			if (mtc != null && TypeChecker.getErrorCount() > 0) {
 	
 				for (VDMError error : TypeChecker.getErrors()) {
-					tcHeaderList.markTCStruct(error);
+					if(!tcHeaderList.markTCStruct(error))
+					{
+						errors.add(error);
+					}
 				}
-				
-				// perrs += reader.getErrorCount();
-				StringWriter s = new StringWriter();
-				TypeChecker.printErrors(new PrintWriter(s));// new
-															// PrintWriter(System.out));
-				errorMessages = "\n" + s.toString() + "\n";			
-				System.out.println(s.toString());
-	
 			}
 	
 			if (mtc != null && TypeChecker.getWarningCount() > 0) {
 				for (VDMWarning warning : TypeChecker.getWarnings()) {
-					tcHeaderList.markTCStruct(warning);
-				}
-				// perrs += reader.getErrorCount();
-				StringWriter s = new StringWriter();
-				TypeChecker.printWarnings(new PrintWriter(s));// new
-																// PrintWriter(System.out));
-				//String warningMessages = "\n" + s.toString() + "\n";
-				System.out.println(s.toString());
-			}			
-			//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
-//			assertEquals("Errors/Warnings not detected: \n" + tcHeaderList.toString(), 0, tcHeaderList.size());
+					if(!tcHeaderList.markTCStruct(warning))
+					{
+						warnings.add(warning);
+					}
+				}				
+			}
 			
+			
+			if( !(tcHeaderList.size() == 0 && total == tcV2found)  )
+			{
+				System.out.println(status.format(status, "WRONG"));
+				for (VDMError error : errors) {
+					System.out.println(error.toString());
+				}
+
+				for (VDMWarning warning : warnings) {
+					System.out.println(warning.toString());
+				}
+//				if (mtc != null && TypeChecker.getErrorCount() > 0) {
+//					StringWriter s = new StringWriter();
+//					TypeChecker.printErrors(new PrintWriter(s));// new
+//																// PrintWriter(System.out));
+//					errorMessages = "\n" + s.toString() + "\n";			
+//					System.out.println(s.toString());
+//				}
+//		
+//				if (mtc != null && TypeChecker.getWarningCount() > 0) {
+//					StringWriter s = new StringWriter();
+//					TypeChecker.printWarnings(new PrintWriter(s));// new
+//					System.out.println(s.toString());
+//				}
+			
+				System.out.println("Missing errors/warnings:");
+				System.out.println(tcHeaderList.toString());
+			}
+			else{
+				System.out.println(status.format(status, "OK"));	
+			}
+			
+//			System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
 			assertTrue("TEST FAILED: difference in errors: " +  Math.abs(total- tcV2found) , tcHeaderList.size() == 0 && total == tcV2found);
-			//assertEquals("Difference in errors detected: " + Math.abs(total- tcHeaderList.size()), total, tcHeaderList.size());
-			System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
 		}
 	
 	}
@@ -227,10 +255,11 @@ public class ModuleTestCase extends TestCase {
 				String[] errors = line.split(" ");
 				for (String error : errors) {
 					String[] parsedError = error.split(":");
-					String[] parsedLocation = parsedError[1].split(",");
+					String[] parsedLocation = parsedError[2].split(",");
 					
 					tcHeaderList.add(new TCStruct(
-							Integer.parseInt(parsedError[0]), 
+							Type.valueOf(parsedError[0]),
+							Integer.parseInt(parsedError[1]), 
 							Integer.parseInt(parsedLocation[0]), 
 							Integer.parseInt(parsedLocation[1])));
 				}

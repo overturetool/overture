@@ -67,7 +67,7 @@ public class BaseTestSuite extends TestSuite
 			}
 		} else
 		{
-			System.out.println("Creating test for:" + file);
+			//System.out.println("Creating test for:" + file);
 			Object instance = ctor.newInstance(new Object[] { file });
 			suite.addTest((Test) instance);
 		}

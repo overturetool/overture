@@ -177,9 +177,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{	
-				System.out.println("Checking: " + d.toString());
 				PDefinitionAssistant.typeResolve(d, tc, new TypeCheckInfo(env));
-				System.out.println("Checked: " + d.toString());
 				
 			}
 			catch (TypeCheckException te)
@@ -250,7 +248,6 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				System.out.println("Checking unused defs in module " + m.getName() );
 				PDefinitionListAssistant.unusedCheck(m.getImportdefs());
 				PDefinitionListAssistant.unusedCheck(m.getDefs());
 			}

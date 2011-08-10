@@ -6,13 +6,14 @@ import org.overturetool.vdmj.messages.VDMWarning;
 public class TCStruct {
 
 
-	
+	public enum Type { ERROR, WARNING};
+	public Type type;
 	public int number;
 	public int line;
 	public int column;
 
-	public TCStruct(int number, int line, int column) {
-		
+	public TCStruct(Type type,int number, int line, int column) {
+		this.type = type;
 		this.number = number;
 		this.line = line;
 		this.column = column;
@@ -41,6 +42,6 @@ public class TCStruct {
 	
 	@Override
 	public String toString() {
-		return number + ":" + line + "," + column;
+		return type + ":" + number + ":" + line + "," + column;
 	}
 }

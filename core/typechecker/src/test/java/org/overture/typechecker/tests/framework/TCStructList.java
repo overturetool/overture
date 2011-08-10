@@ -2,6 +2,7 @@ package org.overture.typechecker.tests.framework;
 
 import java.util.Vector;
 
+import org.overture.typechecker.tests.framework.TCStruct.Type;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
@@ -9,7 +10,7 @@ import org.overturetool.vdmj.messages.VDMWarning;
 public class TCStructList extends Vector<TCStruct> {
 
 	
-	public void markTCStruct(VDMError error) {
+	public boolean markTCStruct(VDMError error) {
 		
 		TCStruct s = null;
 		
@@ -17,14 +18,16 @@ public class TCStructList extends Vector<TCStruct> {
 			if(element.is(error))
 			{
 				s = element;
-				break;
+				this.remove(s);
+				return true;
 			}
 		}
-		this.remove(s);
+		return false;
+		
 
 	}
 	
-	public void markTCStruct(VDMWarning error) {
+	public boolean markTCStruct(VDMWarning error) {
 		
 		TCStruct s = null;
 		
@@ -32,10 +35,11 @@ public class TCStructList extends Vector<TCStruct> {
 			if(element.is(error))
 			{
 				s = element;
-				break;
+				this.remove(s);
+				return true;				
 			}
 		}
-		this.remove(s);
+		return false;		
 	}
 	
 	@Override
@@ -49,6 +53,28 @@ public class TCStructList extends Vector<TCStruct> {
 		}
 		
 		return sb.toString();
+	}
+	
+	public int getErrorCount()
+	{
+		int res = 0;
+		
+		for (TCStruct e : this) {
+			if(e.type == Type.ERROR)
+				res++;
+		}
+		return res;
+	}
+	
+	public int getWarningCount()
+	{
+		int res = 0;
+		
+		for (TCStruct e : this) {
+			if(e.type == Type.WARNING)
+				res++;
+		}
+		return res;
 	}
 	
 }
