@@ -425,7 +425,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {mutexSync} [operations]:LexNameToken*
     |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
     |   {perSync} [opname]:LexNameToken [guard]:exp
-    |   {renamed} [def]:definition
+    |   {renamed}  (def):definition 
     |   {state} [fields]:field.field* 
                 [invPattern]:pattern [invExpression]:exp (invdef):definition.explicitFunction
                 [initPattern]:pattern [initExpression]:exp (initdef):definition.explicitFunction
