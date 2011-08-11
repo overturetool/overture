@@ -33,7 +33,7 @@ public class AValueValueImportAssistant {
 		{
 			if (imp.getRenamed() != null)
 			{
-				expdef =  new ARenamedDefinition(imp.getRenamed().location, imp.getRenamed(), expdef.getNameScope(), false, PAccessSpecifierAssistant.getDefault(), null, expdef);
+				expdef =  new ARenamedDefinition(imp.getRenamed().location, imp.getRenamed(),expdef.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, expdef);
 			}
 			else
 			{

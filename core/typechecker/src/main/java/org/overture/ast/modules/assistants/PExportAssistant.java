@@ -114,7 +114,7 @@ public class PExportAssistant
 						}
 						else
 						{
-							PType type = def.getType();
+							PType type = PDefinitionAssistant.getType(def);
 
 							if (type instanceof ANamedInvariantType)
 							{

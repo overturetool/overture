@@ -551,7 +551,7 @@ public class PDefinitionAssistant {
 		case THREAD:
 			return new AUnknownType(def.getLocation(),false);
 		case TYPE:
-			return def.getType();
+			return ((ATypeDefinition)def).getInvType();
 		case UNTYPED:
 			return new AUnknownType(def.getLocation(),false);
 		case VALUE:

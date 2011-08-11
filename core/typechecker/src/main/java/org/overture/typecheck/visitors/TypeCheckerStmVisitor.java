@@ -734,7 +734,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			List<PDefinition> defs = PPatternTCAssistant.getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
 
 			Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
-			PType rt = node.getStatement().apply(rootVisitor, question);
+			PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local, question.scope));
 			local.unusedCheck();
 			node.setType(rt);
 			return rt;
@@ -774,9 +774,9 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		
 		PDefinition vardef = new ALocalDefinition(node.getVar().getLocation(), 
-				NameScope.LOCAL, false, null, PAccessSpecifierTCAssistant.getDefault(), ft, false,node.getVar().getClassName());
+				NameScope.LOCAL, false, null, PAccessSpecifierTCAssistant.getDefault(), ft, false,node.getVar());
 		Environment local = new FlatCheckedEnvironment(vardef, question.env, question.scope);
-		PType rt = node.getStatement().apply(rootVisitor, question);
+		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 		local.unusedCheck();
 		node.setType(rt);
 		return rt;

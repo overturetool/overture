@@ -60,7 +60,7 @@ public class TypeCheckerOthersVisitor extends
 		Node parent = node.getAncestor(AForPatternBindStm.class);
 		if(parent != null)
 		{
-			type = ((AForPatternBindStm)parent).getSeqType();
+			type = ((AForPatternBindStm)parent).getSeqType().getSeqof();
 		}else if((parent = node.getAncestor(ATrapStm.class))!=null)
 		{
 				//type = ((ATixeStm)parent).getType();

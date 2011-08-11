@@ -29,6 +29,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 public class ModuleTestCase extends TestCase {
 
 	public static final String tcHeader = "-- TCErrors:";
+	public static final Boolean printOks = false;
 
 	File file;
 	String name;
@@ -97,7 +98,7 @@ public class ModuleTestCase extends TestCase {
 		
 		if(isParseOk)
 		{
-			System.out.println("----------- Type checking starting for... " + file.getName() + " -----------");
+			
 			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
 			mtc.typeCheck();
 	
@@ -133,6 +134,7 @@ public class ModuleTestCase extends TestCase {
 			
 			if( !(tcHeaderList.size() == 0 && total == tcV2found)  )
 			{
+				System.out.println("----------- Type checking starting for... " + file.getName() + " -----------");
 				System.out.println(status.format(status, "WRONG"));
 				for (VDMError error : errors) {
 					System.out.println(error.toString());
@@ -159,7 +161,11 @@ public class ModuleTestCase extends TestCase {
 				System.out.println(tcHeaderList.toString());
 			}
 			else{
-				System.out.println(status.format(status, "OK"));	
+				if(printOks)
+				{
+					System.out.println("----------- Type checking starting for... " + file.getName() + " -----------");
+					System.out.println(status.format(status, "OK"));
+				}
 			}
 			
 //			System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");

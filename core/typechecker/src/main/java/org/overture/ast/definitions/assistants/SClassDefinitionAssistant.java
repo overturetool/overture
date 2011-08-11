@@ -205,16 +205,16 @@ public class SClassDefinitionAssistant {
 		set.addAll(PDefinitionListAssistant.findMatches(classdef.getAllInheritedDefinitions(),sought));
 		return set;
 	}
-
-	public static void unusedCheck(SClassDefinition classdef) {
-		if (!classdef.getUsed())
-		{
-			TypeCheckerErrors.warning(5000, "Definition '" + classdef.getName() + "' not used",classdef.getLocation(),classdef);
-			//System.out.println("Definition '" + classdef.getName() + "' not used");
-			markUsed(classdef);		// To avoid multiple warnings
-		}
-		
-	}
+//
+//	public static void unusedCheck(SClassDefinition classdef) {
+//		if (!classdef.getUsed())
+//		{
+//			TypeCheckerErrors.warning(5000, "Definition '" + classdef.getName() + "' not used",classdef.getLocation(),classdef);
+//			//System.out.println("Definition '" + classdef.getName() + "' not used");
+//			markUsed(classdef);		// To avoid multiple warnings
+//		}
+//		
+//	}
 
 	private static void markUsed(SClassDefinition classdef) {
 		classdef.setUsed(true);
@@ -281,7 +281,7 @@ public class SClassDefinitionAssistant {
 	public static void unusedCheck(List<SClassDefinition> classes) {
 		for (SClassDefinition d: classes)
 		{
-			unusedCheck(d);
+			PDefinitionAssistant.unusedCheck(d);
 		}
 		
 	}

@@ -1874,7 +1874,7 @@ public class TypeCheckerExpVisitor extends
 			AExplicitFunctionDefinition inv = recordType.getInvDef();
 			
 			
-			recordType= new ARecordInvariantType(null, false,  recordType.getName().getExplicit(true), recordType.getFields());
+			recordType= new ARecordInvariantType(null, false,  recordType.getName().getExplicit(true), (List<AFieldField>) recordType.getFields().clone());
 			recordType.setInvDef(inv);
 		}
 
@@ -1906,7 +1906,7 @@ public class TypeCheckerExpVisitor extends
 			argTypes.add(argType);
 		}
 
-		node.setType(node.getRecordType());
+		node.setType(node.getRecordType().clone());
 		return node.getRecordType();
 	}
 	
