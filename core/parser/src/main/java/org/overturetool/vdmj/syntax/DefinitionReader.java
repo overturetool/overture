@@ -944,7 +944,7 @@ public class DefinitionReader extends SyntaxReader
 			defs.add(new AUntypedDefinition(lastToken().location, var, scope, false, null, PAccessSpecifierAssistant.getDefault(), null));
 		}
  		
- 		return new AValueDefinition(lastToken().location,null,scope,false,
+ 		return new AValueDefinition(p.getLocation(),null,scope,false,
 				null,null,type,p,getExpressionReader().readExpression(),defs,null);
 //		return new ValueDefinition(
 //			p, scope, type, getExpressionReader().readExpression());

@@ -185,7 +185,7 @@ public class BindReader extends SyntaxReader
 				if (nextToken().is(VDMToken.SET))
 				{
 					nextToken();
-					mb = new ASetMultipleBind(lastToken().location,
+					mb = new ASetMultipleBind(plist.get(0).getLocation(),
 							plist, getExpressionReader().readExpression());
 				}
 				else
@@ -196,7 +196,7 @@ public class BindReader extends SyntaxReader
 
 			case COLON:
 				nextToken();
-				mb = new ATypeMultipleBind(lastToken().location,plist, getTypeReader().readType());
+				mb = new ATypeMultipleBind(plist.get(0).getLocation(),plist, getTypeReader().readType());
 				break;
 
 			default:

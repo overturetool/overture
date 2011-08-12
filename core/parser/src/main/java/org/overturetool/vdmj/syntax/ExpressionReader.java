@@ -1288,14 +1288,14 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.SET_CLOSE))
 		{
 			nextToken();
-			return new ASetEnumSetExp(null, token.location, null); //TODO
+			return new ASetEnumSetExp(null, start, null); //TODO
 //			return new SetEnumExpression(start);		// empty set
 		}
 		else if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
 			checkFor(VDMToken.SET_CLOSE, 2135, "Expecting '}' in empty map");
-			return new AMapEnumMapExp(null,token.location, null, null, null);
+			return new AMapEnumMapExp(null,start, null, null, null);
 //			return new MapEnumExpression(start);		// empty map
 		}
 
@@ -1508,7 +1508,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2040, "Expecting 'else' in 'if' expression");
 		}
 
-		return new AIfExp(null, exp.getLocation(), exp, thenExp, elseList, elseExp);
+		return new AIfExp(null, start, exp, thenExp, elseList, elseExp);
 //		return new IfExpression(start, exp, thenExp, elseList, elseExp);
 	}
 
@@ -1552,7 +1552,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.END, 2148, "Expecting 'end' after cases");
-		return new ACasesExp(null, exp.getLocation(), exp, cases, others);
+		return new ACasesExp(null, start, exp, cases, others);
 //		return new CasesExpression(start, exp, cases, others);
 	}
 
@@ -1869,7 +1869,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				checkFor(VDMToken.KET, 2169, "Expecting " + s + "(name(s))");
-				return new AHistoryExp(null, op.location, op, opnames);
+				return new AHistoryExp(null, location, op, opnames);
 //				return new HistoryExpression(location, op.type, opnames);
 
 			default:
