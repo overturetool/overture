@@ -19,14 +19,17 @@ public class TestMain {
 
 	public static void main(String[] args) throws FileNotFoundException, CGException, IOException, ParseException
 
-	{ if (args.length == 0) {
-		System.out.println("Please enter the location of the file and output directory :-)");
-	}
-	  File file = new File(args[0]);
-	  File file1 = new File(args[1]);
-	  TestMain.toJava(file1, file);
-	  System.out.println("A Java source file has been generated from VDM++ file '"+args[0]+"' in directory '"+args[1]+"'");
+	{ 
+		if (args.length == 0) {
+			System.out.println("Please enter the location of the file and output directory :-)");
 		}
+		else {
+			File file = new File(args[0]);
+			File file1 = new File(args[1]);
+			TestMain.toJava(file1, file);
+			System.out.println("A Java source file has been generated from VDM++ file '"+args[0]+"' in directory '"+args[1]+"'");
+		}		
+	}
 	
 	public static void toJava(File outputDirectory, File file) throws FileNotFoundException, CGException, IOException, ParseException
 	{
