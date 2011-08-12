@@ -82,7 +82,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp [actualTypes]:type* [expdef]:definition.explicitFunction [impdef]:definition.implicitFunction
+    |   {funcInstatiation} [function]:exp [actualTypes]:type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken
@@ -237,7 +237,7 @@ type {-> package='org.overture.ast.types'}
     |   #seq 
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
-    |   {union} [types]:type* [infinite]:java_Boolean [expanded]:java_Boolean 
+    |   {union} (types):type* [infinite]:java_Boolean [expanded]:java_Boolean 
         (seqDone):java_Boolean (seqType):type.#seq 
         (setDone):java_Boolean (setType):type.set 
         (mapDone):java_Boolean (mapType):type.#Map
