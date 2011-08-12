@@ -42,7 +42,7 @@ public class AParameterTypeAssistant {
 
 		if (p == null || !(p.getType() instanceof AParameterType))
 		{
-			TypeCheckerErrors.report(3433, "Parameter type @" + type.getName() + " not defined",p.getLocation(),p);
+			TypeCheckerErrors.report(3433, "Parameter type @" + type.getName() + " not defined",type.getLocation(),type);
 		}
 
 		return type;

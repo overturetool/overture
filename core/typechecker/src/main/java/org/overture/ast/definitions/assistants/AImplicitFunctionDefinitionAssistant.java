@@ -54,7 +54,7 @@ public class AImplicitFunctionDefinitionAssistant {
 		for (LexNameToken pname: node.getTypeParams())
 		{
 			PDefinition p = new ALocalDefinition(
-				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname),false,pname);
+				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
 			PDefinitionAssistant.markUsed(p);
 			defs.add(p);
@@ -141,7 +141,7 @@ public class AImplicitFunctionDefinitionAssistant {
 		if (d.getBody() instanceof ASubclassResponsibilityExp ||
 				d.getBody() instanceof ANotYetSpecifiedExp)
 		{
-			d.getClassDefinition().setIsUndefined(true);
+			d.setIsUndefined(true);
 		}
 
 		if (d.getPrecondition() != null)

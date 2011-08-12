@@ -137,7 +137,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		for (LexNameToken pname: node.getTypeParams())
 		{
 			PDefinition p = new ALocalDefinition(
-				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname),false,pname);
+				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
 			PDefinitionAssistant.markUsed(p);
 			defs.add(p);

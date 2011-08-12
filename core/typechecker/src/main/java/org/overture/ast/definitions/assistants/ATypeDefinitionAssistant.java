@@ -101,11 +101,11 @@ public class ATypeDefinitionAssistant {
 				PPatternTCAssistant.typeResolve(d.getInvPattern(), rootVisitor, question);
 			}
 			
-			d.setType(d.getType());
+			d.setType(d.getInvType());
 		}
 		catch (TypeCheckException e)
 		{
-			PTypeAssistant.unResolve(d.getType());
+			PTypeAssistant.unResolve(d.getInvType());
 			throw e;
 		}
 	}

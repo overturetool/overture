@@ -86,14 +86,14 @@ public class AUnresolvedTypeAssistant {
 		PType r = null;
 		if(def instanceof ATypeDefinition)
 		{
-			r = ((ATypeDefinition)def).getInvType().clone();
+			r = ((ATypeDefinition)def).getInvType();
 		}
 		else if(def instanceof AStateDefinition)
 		{
-			r = ((AStateDefinition)def).getRecordType().clone();
+			r = ((AStateDefinition)def).getRecordType();
 		} else
 		{
-			r = def.getType().clone();
+			r = def.getType();
 		}
 		
 		List<PDefinition> tempDefs = new Vector<PDefinition>();

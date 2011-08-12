@@ -129,10 +129,11 @@ public class PTypeAssistant {
 					polytypesSet.add(polymorph(ptype,pname, actualType));
 				}
 				
-				AUnionType uType = new AUnionType(location,false,new Vector<PType>(polytypesSet),false,false);
-				uType.setDefinitions(definitions);
-				uType.setProdCard(-1);
-				return uType;
+//				AUnionType uType = new AUnionType(location,false,new Vector<PType>(polytypesSet),false,false);
+//				uType.setDefinitions(definitions);
+//				uType.setProdCard(-1);
+//				return uType;
+				return null;//TODO
 			default:
 				break;
 		}
@@ -342,7 +343,7 @@ public class PTypeAssistant {
 			}
 			break;
 		case OPTIONAL:
-			AOperationTypeAssistant.unResolve((AOperationType)type);
+			AOptionalTypeAssistant.unResolve((AOptionalType)type);
 			break;
 		case PRODUCT:
 			AProductTypeAssistant.unResolve((AProductType) type);
@@ -690,6 +691,8 @@ public class PTypeAssistant {
 			return AParameterTypeAssistant.getRecord((AParameterType)type);
 		case UNION:
 			return AUnionTypeAssistant.getRecord((AUnionType)type);
+		case UNKNOWN:
+			return AUnknownTypeAssistant.getRecord((AUnknownType)type);
 		default:
 			break;
 		}

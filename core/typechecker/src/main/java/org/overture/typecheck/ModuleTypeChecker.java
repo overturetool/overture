@@ -178,7 +178,7 @@ public class ModuleTypeChecker extends TypeChecker
 			try
 			{	
 				PDefinitionAssistant.typeResolve(d, tc, new TypeCheckInfo(env));
-				
+//				System.out.println(d.getName()==null?"":d.getName());
 			}
 			catch (TypeCheckException te)
 			{
@@ -206,6 +206,7 @@ public class ModuleTypeChecker extends TypeChecker
     						try
     						{
     							d.apply(tc,new TypeCheckInfo(e,NameScope.NAMES));
+//    							System.out.println();
     						}
     						catch (TypeCheckException te)
     						{

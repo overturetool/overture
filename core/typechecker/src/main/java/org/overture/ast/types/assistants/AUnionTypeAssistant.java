@@ -13,6 +13,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
@@ -66,7 +67,7 @@ public class AUnionTypeAssistant {
 				if (root != null)
 					root.setInfinite(false);
 
-				fixed.add(PTypeAssistant.typeResolve(t, root, rootVisitor, question).clone());
+				fixed.add(PTypeAssistant.typeResolve(t, root, rootVisitor, question));
 
 				if (root != null)
 					type.setInfinite(type.getInfinite() && root.getInfinite());
@@ -539,7 +540,7 @@ public class AUnionTypeAssistant {
     		for (String tag: common.keySet())
     		{
 				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
-				fields.add(new AFieldField(null, tagname, tag, common.get(tag).getType(type.getLocation()), false));
+				fields.add(new AFieldField(null, tagname, tag, common.get(tag).getType(type.getLocation()).clone(), false));
     		}
 
     		type.setRecType(fields.isEmpty() ? null : new ARecordInvariantType(type.getLocation(), false, new LexNameToken("?", "?", type.getLocation()), fields));
@@ -592,7 +593,7 @@ public class AUnionTypeAssistant {
     						}
     					}
 
-    					PType ftype = f.getType();
+    					PType ftype = PDefinitionAssistant.getType(f);
 
     					if (current == null)
     					{

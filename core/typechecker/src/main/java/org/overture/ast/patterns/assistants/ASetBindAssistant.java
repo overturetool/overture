@@ -17,7 +17,7 @@ public class ASetBindAssistant {
 		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.add(bind.getPattern().clone());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		mblist.add(new ASetMultipleBind(bind.getLocation(), plist, bind.getSet().clone()));
+		mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist, bind.getSet().clone()));
 		return mblist;
 	}
 

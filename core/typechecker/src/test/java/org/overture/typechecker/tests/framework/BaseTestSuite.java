@@ -55,7 +55,7 @@ public class BaseTestSuite extends TestSuite
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException
 	{
-		if (file.getName().startsWith("."))
+		if (file.getName().startsWith(".") || file.getName().endsWith(".vdmj") || file.getName().endsWith(".assert"))
 		{
 			return;
 		}

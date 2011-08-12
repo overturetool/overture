@@ -1662,9 +1662,8 @@ public class TypeCheckerExpVisitor extends
 
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
 				PDefinitionAssistant.implicitDefinitions(d, local);
-				TypeCheckInfo newQuestion = new TypeCheckInfo(local,question.scope,question.qualifiers);
 				
-				PDefinitionAssistant.typeResolve(d,rootVisitor,question);
+				PDefinitionAssistant.typeResolve(d,rootVisitor,new TypeCheckInfo(local,question.scope,question.qualifiers));
 
 				if (question.env.isVDMPP())
 				{
@@ -1672,9 +1671,8 @@ public class TypeCheckerExpVisitor extends
 					d.setClassDefinition(cdef);
 					d.setAccess( PAccessSpecifierTCAssistant.getStatic(d,true));
 				}
-
 				
-				d.apply(rootVisitor, newQuestion);
+				d.apply(rootVisitor, new TypeCheckInfo(local,question.scope,question.qualifiers));
 			}
 			else
 			{
@@ -1838,7 +1836,7 @@ public class TypeCheckerExpVisitor extends
 			rec = ((AStateDefinition)typeDef).getRecordType().clone();
 		} else
 		{
-			rec = typeDef.getType().clone();
+			rec = PDefinitionAssistant.getType(typeDef).clone();
 		}
 		
 

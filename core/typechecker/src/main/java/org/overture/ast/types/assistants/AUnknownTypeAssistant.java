@@ -4,14 +4,15 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
@@ -125,6 +126,10 @@ public class AUnknownTypeAssistant {
 	public static boolean narrowerThan(AUnknownType type,
 			PAccessSpecifier accessSpecifier) {		
 		return false;
+	}
+
+	public static ARecordInvariantType getRecord(AUnknownType type) {
+		return new ARecordInvariantType(type.getLocation(), false,  new LexNameToken("?", "?", type.getLocation()), new Vector<AFieldField>()); 
 	}
 	
 }

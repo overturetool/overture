@@ -931,14 +931,14 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		
 		
 		if (node.getPrecondition() != null &&
-			!PTypeAssistant.isType(node.getPrecondition().apply(rootVisitor, new TypeCheckInfo(local)), ABooleanBasicType.class))
+			!PTypeAssistant.isType(node.getPrecondition().apply(rootVisitor, new TypeCheckInfo(local,NameScope.NAMESANDSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3233, "Precondition is not a boolean expression", node.getPrecondition().getLocation(), 
 					node.getPrecondition());
 		}
 
 		if (node.getPostcondition() != null &&
-			!!PTypeAssistant.isType(node.getPostcondition().apply(rootVisitor, new TypeCheckInfo(local)), ABooleanBasicType.class))
+			!!PTypeAssistant.isType(node.getPostcondition().apply(rootVisitor, new TypeCheckInfo(local,NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3234, "Postcondition is not a boolean expression", node.getPostcondition().getLocation(), 
 					node.getPostcondition());

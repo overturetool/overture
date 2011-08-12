@@ -24,9 +24,9 @@ public class ATypeBindAssistant {
 
 	public static List<PMultipleBind> getMultipleBindList(ATypeBind bind) {
 		List<PPattern> plist = new Vector<PPattern>();
-		plist.add(bind.getPattern());
+		plist.add(bind.getPattern().clone());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		mblist.add(new ATypeMultipleBind(bind.getLocation(),plist, bind.getType()));
+		mblist.add(new ATypeMultipleBind(bind.getLocation(),plist, bind.getType().clone()));
 		return mblist;
 	}
 

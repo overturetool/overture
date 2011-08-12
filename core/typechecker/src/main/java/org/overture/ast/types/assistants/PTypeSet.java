@@ -128,10 +128,12 @@ public class PTypeSet extends TreeSet<PType>{
 			Vector<PType> types = new Vector<PType>();
 			
 			for (PType pType : this) {
-				types.add(pType.clone());
+				types.add(pType);//.clone()
 			}
-			
-			AUnionType uType = new AUnionType(location, false, types,false, false);
+			//TODO
+			//AUnionType uType = new AUnionType(location, false, types,false, false);
+			AUnionType uType = new AUnionType(location, false, false, false);
+			uType.setTypes(types);
 			uType.setProdCard(-1);
 			result = uType;
 		}
