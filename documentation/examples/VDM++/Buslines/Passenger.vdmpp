@@ -31,7 +31,10 @@ class Passenger
 
 		public GotOnBus : () ==> () 
 		GotOnBus()== 
+		(
+			World`graphics.passengerGotOnBus(passengerId);
 			pickedUp := true;
+		);
 
 		public IsAnnoyedOfWaiting : () ==> bool
 		IsAnnoyedOfWaiting() == return annoyanceLimit < World`timerRef.GetTime() 
@@ -45,11 +48,15 @@ class Passenger
 			(
 				alreadyAnnoyed := true;
 				World`env.handleEvent("Passenger " ^ Printer`natToString(passengerId) ^ " heading for " ^ 
-				 VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](goal.GetId()) ^ " is annoyed of waiting.");
-
+				 VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](goal.GetId()) ^ " is annoyed of waiting.");			
 				World`env.AnnoyedPassengers(1);
+				World`graphics.passengerAnnoyed(passengerId);
 			)
 		);
+
+		public Id : () ==> nat
+		Id()== 
+			return passengerId;
 	
 		private GetNextId : () ==> nat
 		GetNextId() ==

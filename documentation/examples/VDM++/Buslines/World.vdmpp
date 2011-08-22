@@ -31,6 +31,7 @@
 class World
 
 instance variables
+public static graphics : gui_Graphics:= new gui_Graphics();
 
 public static env : [Environment] := new Environment("inputvalues.txt");
 public static timerRef : TimeStamp := new TimeStamp();  
@@ -47,6 +48,7 @@ operations
 	public Run: () ==> ()
 	Run() == 
 	(
+		graphics.init();
 		env.run();
 	  	env.isFinished();
 
@@ -54,6 +56,8 @@ operations
 
 	  	Printer`Out("End of this world");
 	);
+
+
 
 
 end World

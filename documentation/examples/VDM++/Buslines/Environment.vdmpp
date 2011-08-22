@@ -77,7 +77,7 @@ operations
 		city.addRoad(wp1, d, <R14>, 30);
 		city.addRoad(f, wp4, <R15>, 20);
 		city.addRoad(wp1, wp3, <R16>, 40);
-		city.addRoad(a, city.getCentralStation(), <HW1>, 310, Config`DefaultRoadSpeedLimit + 5);
+		city.addRoad(a, city.getCentralStation(), <HW1>, 310, Config`DefaultRoadSpeedLimit + 10);
 	);	
 
   
@@ -126,9 +126,8 @@ operations
 				    if event.t <= curtime
 					then
 					(
-				    	Printer`OutWithTS("Environment: " 
-				    					  ^ "Inflow changed to " ^ Printer`natToString(event.flow));
-				     
+						SetInflow(event.flow);
+				    	
 				     	eventOccurred := true;
 				     )
 			    ),
@@ -187,6 +186,35 @@ operations
 	   outlines := outlines ^ Printer`natToString(World`timerRef.GetTime()) ^ ": " ^ s ^ "\n"; 
 	);
 
+	private SetInflow : nat  ==> ()
+	SetInflow(flow)== 
+	(
+		Printer`OutWithTS("Environment: " 
+		  ^ "Inflow changed to " ^ Printer`natToString(flow));
+				     
+		city.setInflow(flow);
+	);
+
+	public IncreaseInflow : () ==> ()
+	IncreaseInflow() ==
+	(
+		let flow = city.getInflow() in 
+		(
+			if(flow < Config`MaxInflow) then
+				SetInflow(flow +1);
+		)
+	);
+
+	public DecreaseInflow : () ==> ()
+	DecreaseInflow() ==
+	(
+		let flow = city.getInflow() in 
+		(
+			if(flow > 0) then
+				SetInflow(flow -1);
+		)
+	);
+
 	public TransportedPassengers : nat ==> ()
 	TransportedPassengers(number)== 
 		passengersTransported := passengersTransported + number;
@@ -224,7 +252,7 @@ operations
 	run() ==
 	(
     	start(self);
-	)
+	);
 
 thread
 (
@@ -235,6 +263,8 @@ thread
 		World`timerRef.WaitRelative(0);
 		World`timerRef.NotifyAndIncTime();
     	World`timerRef.Awake();
+		World`graphics.move();
+		World`graphics.sleep();
  	);
  
  	Printer`Out("No more events;");

@@ -105,6 +105,8 @@ class City
 				(
 					--add to mapping
 					buses := buses munion {lineNumber |-> bus};
+					--
+					World`graphics.busAdded(lineNumber);
 					return bus;
 				)	
 			);
@@ -124,7 +126,11 @@ class City
 
 		--passenger inflow
 		public setInflow : nat ==> ()
-		setInflow(flow) ==	inflow := flow; 
+		setInflow(flow) ==	
+		(			
+			inflow := flow;
+			World`graphics.inflowChanged(inflow);
+		);
 
 		public getInflow : () ==> nat
 		getInflow()==
@@ -143,7 +149,8 @@ class City
 		ThreadStarted() == skip;
 
 	sync
-		mutex(setInflow, getInflow);
+		--mutex(setInflow);
+		--mutex(setInflow, getInflow);
 		per WaitForThreadStart => #fin(ThreadStarted) > 0
 
 	thread
@@ -152,14 +159,17 @@ class City
 		while true do
 		(
 			--add passengers to central station
-				for all i in set {1,...,getInflow()} do
+				for all x in set {1,...,getInflow()} do
 				(
 					--random find stop for passenger to get off
-					let stopSeq = VDMUtil`set2seq[Waypoint`BusStops](dom stops) in
-					let i = MATH`rand(World`timerRef.GetTime()) mod len stopSeq  in
-						let pass = new Passenger(stops(stopSeq(i+1))) in --TODO
-						--let pass = new Passenger(stops(<A>)) in
-							central.AddPassenger(pass);
+					let stopSeq = VDMUtil`set2seq[Waypoint`BusStops](dom stops) in  --TODO exclude central
+						let i = MATH`rand(World`timerRef.GetTime()) mod len stopSeq  in
+							let pass = new Passenger(stops(stopSeq(i+1))) in 
+							(
+								--let pass = new Passenger(stops(<A>)) in --TODO
+								central.AddPassenger(pass);
+								World`graphics.passengerAtCentral(pass.Id());
+							)
 				);
 
 			World`env.handleEvent(Printer`natToString(central.GetWaitingCount()) ^ " passengers waiting a central station");
@@ -168,7 +178,7 @@ class City
 			for all pass in set central.GetWaiting() do
 				pass.AnnoyedOfWaiting();
 
-			World`timerRef.WaitRelative(10);
+			World`timerRef.WaitRelative(5);
    			World`timerRef.NotifyAll();
    			World`timerRef.Awake();
 		) 

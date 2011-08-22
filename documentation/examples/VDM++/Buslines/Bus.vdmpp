@@ -34,11 +34,18 @@ class Bus
 
 		public GetOn : set of Passenger ==> ()
 		GetOn(ps) == 
-			seats := seats union ps
+		(
+			seats := seats union ps;
+			World`graphics.busPassengerCountChanged(line, card seats);
+		)
 		pre card seats + card ps <= Config`BusCapacity; 
 
 		public GotOff : set of Passenger ==> ()
-		GotOff(p) == seats := seats \ p
+		GotOff(p) == 	
+		(
+			seats := seats \ p;
+			World`graphics.busPassengerCountChanged(line, card seats);
+		)
 		pre p inter seats <> {};
 
 		public GetWaypoints : () ==> seq of Waypoint
@@ -88,10 +95,29 @@ class Bus
 	(
 		dcl passGettingOn : set of Passenger;
 		ThreadStarted();
-		
+		let - = NextWaypoint() in skip; --prevent return
+
 		--loop which moves bus along route, and lets passengers on and off at stops
 		while true do
 		(
+			Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ ": running on " ^ 
+									VDMUtil`val2seq_of_char[Road`RoadNumber](currentRoad.GetRoadNumber()) ^
+									" with length " ^ Printer`natToString(currentRoad.GetLength()) ^ " and speedlimit " ^
+									 Printer`natToString(currentRoad.GetSpeedLimit()) ^
+									 " Next: " ^ VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](nextWP.GetId()) ^
+									 " Time: " ^ Printer`natToString(currentRoad.GetTimePenalty())
+							);
+ 
+			World`graphics.busInRouteTo(line,
+				VDMUtil`val2seq_of_char[Road`RoadNumber](currentRoad.GetRoadNumber()), 
+				VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](nextWP.GetId()),
+				currentRoad.GetTimePenalty());
+
+			--add to penalty for moving along road
+			World`timerRef.WaitRelative(currentRoad.GetTimePenalty());
+   			World`timerRef.NotifyAll();
+   			World`timerRef.Awake();
+
 			--next on bus route
 			let next = NextWaypoint() in
 			( 	
@@ -128,7 +154,13 @@ class Bus
 									for all p in set passGettingOn do p.GotOnBus();
 
 									Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ ": " ^ 
-										Printer`natToString(card passGettingOn) ^ " got on")
+										Printer`natToString(card passGettingOn) ^ " got on");
+
+									--add to time penalty for stopping
+									World`graphics.busStopping(line);
+									World`timerRef.WaitRelative(5);
+			   						World`timerRef.NotifyAll();
+			   						World`timerRef.Awake();
 								)
 							);
 						);
@@ -144,24 +176,18 @@ class Bus
 									Printer`natToString(card gettingOff) ^ " got off");
 								
 								World`env.TransportedPassengers(card gettingOff);
-							)
 
-						--add to time penalty for stopping?
-						--??
+								--add to time penalty for stopping
+								World`graphics.busStopping(line);
+								World`timerRef.WaitRelative(5);
+		   						World`timerRef.NotifyAll();
+		   						World`timerRef.Awake();
+							);
 					);
 				);
 			);
 
-			Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ ": running on " ^ 
-									VDMUtil`val2seq_of_char[Road`RoadNumber](currentRoad.GetRoadNumber()) ^
-									" with length " ^ Printer`natToString(currentRoad.GetLength()) ^ " and speedlimit " ^
-									Printer`natToString(currentRoad.GetSpeedLimit()));
- 
-			--add to penalty for moving along road
-			World`timerRef.WaitRelative(currentRoad.GetTimePenalty());
-   			World`timerRef.NotifyAll();
-   			World`timerRef.Awake();
-		) 
+		);
 	);
 
 	operations
