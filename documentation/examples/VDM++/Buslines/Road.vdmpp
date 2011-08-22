@@ -1,0 +1,74 @@
+class Road
+	types
+		public RoadNumber = <R1> | <R2> | <R3> | <R4> | <R5> | <R6> | <R7> | <R8> 
+			| <R9> | <R10> | <R11> | <R12> | <R13> |<R14> | <R15> | <R16> | <HW1>;
+	values
+
+	instance variables
+		roadNmbr  : RoadNumber;		
+		roadLength : nat;
+		speedlimit : nat;
+		wps : set of Waypoint := {};
+		timePenalty : nat;
+		inv card wps > 1;
+
+	operations
+		public Road : RoadNumber * set of Waypoint * nat ==> Road
+		Road(roadnumber, waypoints, length) ==
+		(
+			atomic 
+			(
+			roadNmbr := roadnumber;
+			roadLength := length;
+			speedlimit := Config`DefaultRoadSpeedLimit;
+			wps := waypoints;
+			timePenalty := floor(roadLength / speedlimit);
+			)
+		)
+		pre card waypoints > 1;
+
+		public Road : RoadNumber *  set of Waypoint * nat * nat ==> Road
+		Road(roadnumber, waypoints, length, limit) ==
+		(
+			roadNmbr := roadnumber;
+			roadLength := length;
+			speedlimit := limit;
+			wps := waypoints;
+			--time cost of driving on the road
+			timePenalty := floor(roadLength / speedlimit);
+		)
+		pre card waypoints > 1;
+
+		public Covers : set of Waypoint ==> bool
+		Covers(waypoints) == 
+			 return {w.GetId() | w in set waypoints} = {w.GetId() | w in set wps};  --does road cover the waypoints in arg
+
+		public GetWaypoints : () ==> set of Waypoint
+		GetWaypoints()==
+				return wps;
+
+		public OppositeEnd : Waypoint ==> Waypoint
+		OppositeEnd(wp)==
+				 let opposite in set wps \ {wp} in return opposite
+		pre wp in set wps; 	-- if the waypoint is not found on the road
+						-- it may indicate that the route is not connected 
+						-- by the same waypoint
+
+		
+		public GetSpeedLimit : () ==> nat
+		GetSpeedLimit()==
+				return speedlimit;
+
+		public GetLength : () ==> nat
+		GetLength() == 
+			return roadLength;
+
+		public GetRoadNumber : () ==> RoadNumber
+		GetRoadNumber()== 
+				return roadNmbr;
+
+		public GetTimePenalty : () ==> nat
+		GetTimePenalty()== 
+				return timePenalty;
+
+end Road

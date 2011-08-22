@@ -1,0 +1,247 @@
+\section{Environment Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Environment
+-- Description: 	Environment class in the VeMo project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Environment
+
+instance variables
+
+	public city : City;
+	private io : IO := new IO();
+	private inlines : seq of inline := [];
+	private outlines : seq of char := [];
+	private busy : bool := true;
+	private simulating : bool := false;
+
+	private passengersTransported : nat := 0;
+	private passengersAnnoyed : nat := 0;
+	private passengersCount : nat :=0;
+
+types   
+	inline  = Types`Event;
+	InputTP   = seq of inline;
+
+operations
+
+	public Environment: seq of char ==> Environment
+	Environment(filename) ==
+	(
+		city := new City();
+
+		def mk_(-,input) = io.freadval[InputTP](filename) in
+		(
+			inlines := input;
+		);	 
+
+		BuildCityMap();
+	);
+
+	private BuildCityMap : () ==> ()
+	BuildCityMap() ==
+	(
+		dcl a : Busstop, b : Busstop, c : Busstop, d : Busstop, e : Busstop, f :Busstop;
+		dcl wp1 : Waypoint, wp2 : Waypoint, wp3 : Waypoint, wp4 : Waypoint;
+
+		a := city.addBusstop(<A>);
+		b := city.addBusstop(<B>);
+		c := city.addBusstop(<C>);
+		d := city.addBusstop(<D>);
+		e := city.addBusstop(<E>);
+		f := city.addBusstop(<F>);
+
+		wp1 := city.addWaypoint(<WP1>);
+		wp2 := city.addWaypoint(<WP2>);
+		wp3 := city.addWaypoint(<WP3>);
+		wp4 := city.addWaypoint(<WP4>);
+		
+		city.addRoad(a, b, <R1>, 40);
+		city.addRoad(b, wp1, <R2>, 80);
+		city.addRoad(b, wp2, <R3>, 50);
+		city.addRoad(a, wp2, <R4>, 90);
+		city.addRoad(wp2, c, <R5>, 60);
+		city.addRoad(c, d, <R6>, 40);
+		city.addRoad(c, f, <R7>, 60);
+		city.addRoad(f, city.getCentralStation(), <R8>, 100);
+		city.addRoad(city.getCentralStation(), wp3, <R9>, 50);
+		city.addRoad(wp3, wp4, <R10>, 30);
+		city.addRoad(d, wp4, <R11>, 40);
+		city.addRoad(wp3, e, <R12>, 40);
+		city.addRoad(e, wp1, <R13>, 40);
+		city.addRoad(wp1, d, <R14>, 30);
+		city.addRoad(f, wp4, <R15>, 20);
+		city.addRoad(wp1, wp3, <R16>, 40);
+		city.addRoad(a, city.getCentralStation(), <HW1>, 310, Config`DefaultRoadSpeedLimit + 5);
+	);	
+
+  
+	public Events: () ==> ()
+	Events() ==
+	(
+	   if inlines <> []
+	   then 
+	   (  
+	    dcl done : bool := false, 
+	    eventOccurred : bool := false,
+	    curtime : Types`Time := World`timerRef.GetTime();
+	
+		while not done do
+		(
+	     def event = hd inlines in      
+			cases event:
+				mk_Types`BusRoute(-,-,-) ->
+				(
+					if event.t <= curtime
+					then
+					(
+					    Printer`OutWithTS("Environment: Bus route "
+					     					 ^ Printer`natToString(event.ID)); 
+
+						let b = city.addBus(event.ID, event.route) in  
+						( 
+							Printer`Out("Waypoints:");
+							let wps = b.GetWaypoints() in 
+								let wpsIds = [wps(i).GetId() | i in set inds wps] in 
+									IO`print(wpsIds);
+
+							Printer`Out("\nStops:");
+
+							let wps = b.GetStops() in 
+								let wpsIds = [wps(i).GetId() | i in set inds wps] in 
+									IO`print(wpsIds);
+							Printer`Out("\n");
+						);
+
+				    	 eventOccurred := true;
+					)
+			    ),
+			    mk_Types`Inflow(-,-) ->
+			    (
+				    if event.t <= curtime
+					then
+					(
+				    	Printer`OutWithTS("Environment: " 
+				    					  ^ "Inflow changed to " ^ Printer`natToString(event.flow));
+				     
+				     	eventOccurred := true;
+				     )
+			    ),
+			    mk_Types`Simulate(-) ->
+			    (
+			    	if event.t <= curtime
+					then
+					(
+						if not simulating then
+						(
+							Printer`OutWithTS("Environment: " 
+				    					  ^ "Simulation started");
+							simulating := true;
+							start(city);
+							city.WaitForThreadStart();
+							for all bus in set city.getBuses() do 
+							(
+								start(bus);
+								bus.WaitForThreadStart();
+							);
+
+						); 
+						eventOccurred := true;
+					) 
+			    ),
+			    mk_Types`WasteTime(-) ->
+			    (
+			    	if event.t <= curtime
+					then
+					(		
+					 Printer`OutWithTS("Environment: Wasting time");	    
+				     eventOccurred := true;
+				    )
+			    ),
+			    others -> Printer`OutWithTS("Environment: No match found")
+			end;
+	
+			if eventOccurred then
+		  	(
+		  		inlines := tl inlines;
+		  		done := len inlines = 0;  
+		  	) 
+		  	else 
+				done := true;
+			  
+			eventOccurred := false;
+	    	);
+		  )
+	      else busy := false;
+	);
+   
+	public handleEvent : seq of char ==> ()
+	handleEvent(s) ==
+	(
+	   Printer`OutWithTS("#Environment handled System Event: " ^ s);
+	   outlines := outlines ^ Printer`natToString(World`timerRef.GetTime()) ^ ": " ^ s ^ "\n"; 
+	);
+
+	public TransportedPassengers : nat ==> ()
+	TransportedPassengers(number)== 
+		passengersTransported := passengersTransported + number;
+
+	public AnnoyedPassengers : nat ==> ()
+	AnnoyedPassengers(number)== 
+		passengersAnnoyed := passengersAnnoyed + number;
+
+	public PassengerCount : () ==> ()
+	PassengerCount()== 
+		passengersCount := passengersCount + 1;
+	
+	public report : () ==> ()
+	report() ==
+	(
+		Printer`Out("\n\nHowever beautiful the strategy," ^ 
+	  					"you should occasionally look at the results.");
+	  	Printer`Out("**************RESULT**************");
+	  	Printer`Out("**********************************");
+	  	--Printer`Out(outlines);
+	  	Printer`Out(" " ^ VDMUtil`val2seq_of_char[nat](passengersCount) ^ "\t passengers in total. (transported and at central)");	
+		Printer`Out(" " ^ VDMUtil`val2seq_of_char[nat](passengersTransported) ^ "\t passengers transported.");
+		Printer`Out(" " ^ VDMUtil`val2seq_of_char[nat](passengersAnnoyed) ^ "\t passengers got annoyed.");	
+	  	Printer`Out("\n**********************************");
+		Printer`Out("**********************************");
+	);
+   
+	public isFinished : () ==> () 
+  	isFinished() == skip;
+
+  	public goEnvironment : () ==> () 
+	goEnvironment() == skip;
+
+	public run : () ==> ()
+	run() ==
+	(
+    	start(self);
+	)
+
+thread
+(
+	start(new ClockTick());
+	while busy do
+  	(
+   		Events();
+		World`timerRef.WaitRelative(0);
+		World`timerRef.NotifyAndIncTime();
+    	World`timerRef.Awake();
+ 	);
+ 
+ 	Printer`Out("No more events;");
+)
+
+sync
+	per isFinished => not busy;
+	mutex(handleEvent)
+
+end Environment
