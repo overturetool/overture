@@ -14,7 +14,7 @@ class Config
 values
 
 --max passengers on bus
-public static BusCapacity : nat = 20;
+public static BusCapacity : nat = 15;
 --speed limit on road, buses will always drive to the limit   		
 public static DefaultRoadSpeedLimit : nat = 10;   			
 --amount of waiting time beofre passengers become annoyed

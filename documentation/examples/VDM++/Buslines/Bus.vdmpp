@@ -158,7 +158,7 @@ class Bus
 
 									--add to time penalty for stopping
 									World`graphics.busStopping(line);
-									World`timerRef.WaitRelative(5);
+									World`timerRef.WaitRelative(3);
 			   						World`timerRef.NotifyAll();
 			   						World`timerRef.Awake();
 								)
@@ -179,7 +179,7 @@ class Bus
 
 								--add to time penalty for stopping
 								World`graphics.busStopping(line);
-								World`timerRef.WaitRelative(5);
+								World`timerRef.WaitRelative(3);
 		   						World`timerRef.NotifyAll();
 		   						World`timerRef.Awake();
 							);

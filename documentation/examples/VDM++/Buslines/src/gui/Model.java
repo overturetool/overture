@@ -21,12 +21,14 @@ class Model extends Observable implements Serializable {
     transient Map<String, Waypoint> waypoints = new HashMap<String, Waypoint>();
     
 	int inflow;
+	int delay;
     
     public Model() {
     	inflow = 0;
+    	delay = 0;
     	
-        BuildWaypoints();
-        BuildRoads();
+        buildWaypoints();
+        buildRoads();
     }
     
     public void move(){
@@ -52,16 +54,6 @@ class Model extends Observable implements Serializable {
 		
 		passengers.put(id, new Passenger(id));
 		
-		//remove passenger that got on a bus
-		if(!passengersOnBus.isEmpty()) {
-			
-			for (int i : passengersOnBus) {
-				passengers.remove(i);
-			}
-			
-			passengersOnBus.clear();
-		}
-		
 		setChanged();
         notifyObservers("passengerAdded");
 	}
@@ -79,8 +71,36 @@ class Model extends Observable implements Serializable {
 		passengers.get(id).gotOnBus();
 		passengersOnBus.add(id);
 		
+		Thread runner = new Thread(new Runnable(){
+			 public void run(){
+				 
+				 try {
+						Thread.sleep(750);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				 
+			    	//remove passenger that got on a bus
+					if(!passengersOnBus.isEmpty()) {
+						
+						for (int i : passengersOnBus) {
+							passengers().remove(i);
+						}
+						
+						passengersOnBus.clear();
+					}
+			 }
+
+		});
+		runner.start();
+		
 		setChanged();
         notifyObservers("passengerGotOnBus");
+	}
+	
+	private synchronized Map<Integer, Passenger> passengers() {
+		return passengers;
 	}
 	
 	public synchronized void inflowChanged(int flow) {
@@ -121,7 +141,7 @@ class Model extends Observable implements Serializable {
 	}
 	
 	
-	public Collection<Passenger> getPassengers(){
+	public synchronized Collection<Passenger> getPassengers(){
 		return passengers.values();
 	}
 	
@@ -150,7 +170,7 @@ class Model extends Observable implements Serializable {
 		return waypoints.values();
 	}
 	
-	private void BuildRoads() {
+	private void buildRoads() {
 		Road tRoad;
         //R1
         tRoad = new Road("R1", waypoints.get("A"), waypoints.get("B"));
@@ -236,7 +256,7 @@ class Model extends Observable implements Serializable {
 	}
 	
     
-    private void BuildWaypoints() {
+    private void buildWaypoints() {
 		Waypoint tWp;
         
         tWp = new Waypoint("A", new Point(0, 5), true);

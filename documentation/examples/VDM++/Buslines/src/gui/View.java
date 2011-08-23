@@ -20,6 +20,7 @@ class View extends JPanel implements Observer {
     Model model;
    
     int resFactor;
+    Font font12, font16;
     
     transient Collection<Bus> buses;
     transient Collection<Waypoint> waypoints;
@@ -32,6 +33,9 @@ class View extends JPanel implements Observer {
     	super();
         this.model = model;
         this.setBackground(Color.WHITE);
+        font12 =  new Font("Lucida Sans Typewriter", Font.BOLD, 12);
+        font16 = new Font("Lucida Sans Typewriter", Font.BOLD, 16);
+        
         inflow = 0;
         
         buses = model.getBuses();
@@ -116,6 +120,8 @@ class View extends JPanel implements Observer {
         //draw buses
         int bX, bY;
         Point p;
+        
+		g2.setFont(font12);
         for (Bus b : buses) {
         	
         	g2.setColor(Color.RED);
@@ -125,11 +131,10 @@ class View extends JPanel implements Observer {
             g2.fillRect(bX - 7, bY - 7, 15, 15);
             g2.setColor(Color.black);
             g2.drawString("Pass: " + b.passengerCount(), bX +5,bY -10); 
-            g2.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 12));
             g2.drawString(Integer.toString(b.lineNr()), bX - 5, bY +5); 
 		}
         
-        g2.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 16));
+        g2.setFont(font16);
         g2.drawString("Inflow: " + inflow, this.getWidth() / 2, this.getHeight() ); 
     }
     

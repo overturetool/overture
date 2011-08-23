@@ -5,6 +5,9 @@ need to be planned to service the passenger in the best possible way.
 The number and routes of buses as wells as the inflow of passengers are 
 variables. 
  
+ Remote Debugger must be set to remote class:
+	gui.BuslinesRemote
+ 
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------

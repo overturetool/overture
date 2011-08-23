@@ -159,7 +159,7 @@ class City
 		while true do
 		(
 			--add passengers to central station
-				for all x in set {1,...,getInflow()} do
+				for all - in set {1,...,getInflow()} do
 				(
 					--random find stop for passenger to get off
 					let stopSeq = VDMUtil`set2seq[Waypoint`BusStops](dom stops) in  --TODO exclude central
