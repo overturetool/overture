@@ -13,10 +13,10 @@ class gui_Graphics
 		public sleep : () ==> ()
 		sleep() == is not yet specified;
 	
-		public passengerAtCentral : nat ==> ()
-		passengerAtCentral(id) == is not yet specified;
+		public passengerAtCentral : nat * seq of char  ==> ()
+		passengerAtCentral(id, waypoint) == is not yet specified;
 
-		public passengerAnnoyed : nat ==> ()
+		public passengerAnnoyed : nat==> ()
 		passengerAnnoyed(id) == is not yet specified;
 	
 		public passengerGotOnBus : nat ==> ()

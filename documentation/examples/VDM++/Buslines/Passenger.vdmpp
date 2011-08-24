@@ -49,7 +49,7 @@ class Passenger
 				alreadyAnnoyed := true;
 				World`env.handleEvent("Passenger " ^ Printer`natToString(passengerId) ^ " heading for " ^ 
 				 VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](goal.GetId()) ^ " is annoyed of waiting.");			
-				World`env.AnnoyedPassengers(1);
+				World`env.AnnoyedPassenger(1, goal.GetId());
 				World`graphics.passengerAnnoyed(passengerId);
 			)
 		);

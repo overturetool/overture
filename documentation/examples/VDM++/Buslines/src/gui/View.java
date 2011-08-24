@@ -25,8 +25,10 @@ class View extends JPanel implements Observer {
     transient Collection<Bus> buses;
     transient Collection<Waypoint> waypoints;
     transient Collection<Road> roads;
+    transient Collection<Passenger> passengers;
     
     int inflow; 
+    Object lock; 
     
     View(Model model) throws IOException {
     	
@@ -35,12 +37,13 @@ class View extends JPanel implements Observer {
         this.setBackground(Color.WHITE);
         font12 =  new Font("Lucida Sans Typewriter", Font.BOLD, 12);
         font16 = new Font("Lucida Sans Typewriter", Font.BOLD, 16);
-        
+        lock = new Object();
         inflow = 0;
         
         buses = model.getBuses();
         waypoints = model.getWaypoints();
         roads = model.getRoads();
+        passengers = model.getPassengers();
         
 		this.setLayout(null);
         this.setBackground(Color.WHITE);  
@@ -93,29 +96,32 @@ class View extends JPanel implements Observer {
         //draw passengers waiting
         //these positions fit
         double h = 0, v = 0;
-        for (Passenger p : model.getPassengers()) {
-			
-    		if(p.isAnnoyed())
-        		g2.setColor(Color.RED);
-        	else
-        		g2.setColor(Color.GREEN);
-        	
-    		if(p.isOnBus())
-    			g2.fillOval(l(21.4), l(2 + v), 10, 10);
-    		else
-    			g2.fillOval(l(22.5 + h), l(2 + v), 10, 10);
-        	 
-        	 //calc grid
-        	 v += 0.5;
-        	 //start new row a 5 vertical
-        	 if(v % 5 == 0){
-        		 h += 0.5;
-        		 v = 0;
-        		 
-        		 //limit to 5 horizontal rows
-        		 if(h >= 5) break;
-        	 }
-		}
+        
+        synchronized (lock) {
+	        for (Passenger p : passengers) {
+				
+	    		if(p.isAnnoyed())
+	        		g2.setColor(Color.RED);
+	        	else
+	        		g2.setColor(Color.GREEN);
+	        	
+	    		if(p.isOnBus())
+	    			g2.fillOval(l(21.4), l(2 + v), 10, 10);
+	    		else
+	    			g2.fillOval(l(22.5 + h), l(2 + v), 10, 10);
+	        	 
+	        	 //calc grid
+	        	 v += 0.5;
+	        	 //start new row a 5 vertical
+	        	 if(v % 5 == 0){
+	        		 h += 0.5;
+	        		 v = 0;
+	        		 
+	        		 //limit to 5 horizontal rows
+	        		 if(h >= 5) break;
+	        	 }
+			}
+        }
         
         //draw buses
         int bX, bY;
@@ -148,6 +154,9 @@ class View extends JPanel implements Observer {
         	resFactor = (int) (this.getWidth() / (GRID_SIZE));
         	
         } else if(arg == "passengerAdded"){
+        	synchronized (lock) {
+        		passengers = model.getPassengers();
+        	}
     		repaint();
         } else if(arg == "passengerAnnoyed"){
             repaint();
@@ -166,7 +175,6 @@ class View extends JPanel implements Observer {
         }  else if (arg == "busPassengerCount"){
         	repaint();
         }  
-  
     }
 	
     private int l(double steps)

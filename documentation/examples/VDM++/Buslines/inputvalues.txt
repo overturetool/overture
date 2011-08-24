@@ -11,5 +11,6 @@ mk_Types`Inflow(1, 3),
 mk_Types`Simulate(5), 
 mk_Types`Inflow(3, 75),
 mk_Types`Inflow(5, 125),
-mk_Types`WasteTime(500)
+mk_Types`Inflow(0, 150),
+mk_Types`WasteTime(220)
 ]

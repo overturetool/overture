@@ -13,8 +13,8 @@ public class Bus {
 	int currentRouteIndex;
 	int currentRouteStepSize;
 	
-	Bus(int busId, Point initialPoint){
-		id = busId;
+	Bus(int busline, Point initialPoint){
+		id = busline;
 		passCount = 0;
 		currentRoute = new LinkedList<Point>();
 		currentRouteIndex = 0;
@@ -22,11 +22,11 @@ public class Bus {
 		currentPoint = initialPoint;
 	}
 	
-	public void setPassengerCount(int passengerCount){
+	public synchronized void  setPassengerCount(int passengerCount){
 		passCount = passengerCount;
 	}
 	
-	public int passengerCount() {
+	public synchronized int passengerCount() {
 		return passCount;
 	}
 	
@@ -44,11 +44,12 @@ public class Bus {
 	}
 	
 	public synchronized void busArrived(){
+		
 		currentRouteIndex = currentRoute.size();
 		currentPoint = currentRoute.get(currentRoute.size() -1);
 	}
 	
-	public void setRoute(List<Point> route, int timeToMove)
+	public synchronized void setRoute(List<Point> route, int timeToMove)
 	{
 		currentRoute = route;
 		currentRouteIndex = 0;
@@ -56,7 +57,7 @@ public class Bus {
 		currentRouteStepSize = 	(int) Math.floor(route.size() / timeToMove);
 	}
 	
-	public Point getBusPosition(){
+	public synchronized Point  getBusPosition(){
 		
 		return currentPoint;
 	}

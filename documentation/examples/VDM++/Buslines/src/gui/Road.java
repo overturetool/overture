@@ -75,10 +75,8 @@ public class Road {
 		
 		if(roadPoints.get(0).equals(wp.point())){
 			Collections.reverse(roadPoints);
-			return roadPoints;
-		} else {
-			return roadPoints;
 		}
+		return new LinkedList<Point>(roadPoints);
 	}
 	
 	private List<Point> interpolateRoad(Line2D.Double rp)

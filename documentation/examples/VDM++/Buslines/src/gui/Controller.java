@@ -55,14 +55,15 @@ public class Controller extends JFrame  {
     	increaseInflowBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-            	buslinesControl.IncreaseInflow();
+            	System.out.println("FOOOOOO");
+            	//buslinesControl.IncreaseInflow();
             }
         });	
     	
     	decreaseInflowBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-            	buslinesControl.DecreaseInflow();
+            	//buslinesControl.DecreaseInflow();
             }
         });	
     	
@@ -89,7 +90,7 @@ public class Controller extends JFrame  {
         buttonPanel.add(increaseInflowBtn);
         buttonPanel.add(decreaseInflowBtn);
     	this.add(BorderLayout.CENTER, view);
-    	DisableButtons();
+    	//DisableButtons();
     	
 		this.setVisible(true);
     }

@@ -58,10 +58,16 @@ public class Graphics implements Serializable  {
 		return new VoidValue();
     }
 
-    public Value passengerAtCentral(Value id) throws ValueException{
+    public Value passengerAtCentral(Value id, Value goal) throws ValueException{
 
     	final Value temp = id;
-    	model.passengerAtCentral((int) temp.intValue(null));
+    	String wp = goal.stringValue(null);
+		if(wp.startsWith("<"))
+		{
+    		wp =  wp.substring(1, wp.length()-1);
+		}
+    	
+    	model.passengerAtCentral((int) temp.intValue(null), wp);
     	
     	 return new VoidValue();
     }
@@ -110,21 +116,4 @@ public class Graphics implements Serializable  {
 		
 		return new VoidValue();
 	}
-	
-	
-	
-    
-//  public Value tableCleared()  {
-//      
-//  	Thread runner = new Thread(new Runnable(){
-//			 public void run(){
-//			         sleep();
-//			         model.tableCleared();
-//			 }
-//		});
-//  	runner.start();
-//     
-//      return new VoidValue();
-//  }
-  
 }

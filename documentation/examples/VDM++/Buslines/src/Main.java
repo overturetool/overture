@@ -83,6 +83,7 @@ public class Main {
 //    	g.inflowChanged(new IntegerValue(8));
     	
     	g.busInRouteTo(new IntegerValue(2), new SeqValue("<R9>"), new SeqValue("<WP3>"), new IntegerValue(5));
+    	g.busInRouteTo(new IntegerValue(1), new SeqValue("<R8>"), new SeqValue("<F>"), new IntegerValue(5));
     	g.move();
     	g.sleep();
     	g.move();
@@ -94,6 +95,7 @@ public class Main {
     	g.move();
     	g.sleep();
     	g.busInRouteTo(new IntegerValue(2), new SeqValue("R10"), new SeqValue("WP4"), new IntegerValue(3));
+    	g.busInRouteTo(new IntegerValue(1), new SeqValue("<R15>"), new SeqValue("<WP4>"), new IntegerValue(5));
        	g.move();
     	g.sleep();
     	g.move();
@@ -109,6 +111,7 @@ public class Main {
     	g.move();
     	g.busStopping(new IntegerValue(2));
     	g.busInRouteTo(new IntegerValue(2), new SeqValue("R8"), new SeqValue("Central"), new IntegerValue(10));
+    	g.busInRouteTo(new IntegerValue(1), new SeqValue("<R10>"), new SeqValue("<WP3>"), new IntegerValue(5));
     	for (int i = 0; i < 11; i++) {
          	g.move();
         	g.sleep();

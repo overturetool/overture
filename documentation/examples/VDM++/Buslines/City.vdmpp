@@ -168,7 +168,9 @@ class City
 							(
 								--let pass = new Passenger(stops(<A>)) in --TODO
 								central.AddPassenger(pass);
-								World`graphics.passengerAtCentral(pass.Id());
+								World`graphics.passengerAtCentral(pass.Id(), 
+									VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum]
+									(pass.GetDestination().GetId()));
 							)
 				);
 

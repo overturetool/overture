@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -20,18 +21,18 @@ class Model extends Observable implements Serializable {
     transient Map<Integer, Bus> buses = new HashMap<Integer, Bus>();
     transient Map<String, Waypoint> waypoints = new HashMap<String, Waypoint>();
     
-	int inflow;
-	int delay;
+	Object lock;
+    int inflow;
     
     public Model() {
     	inflow = 0;
-    	delay = 0;
+    	lock = new Object();
     	
         buildWaypoints();
         buildRoads();
     }
     
-    public void move(){
+    public synchronized void move(){
     	
     	for (Bus b : buses.values()) {
 			b.move();
@@ -50,9 +51,9 @@ class Model extends Observable implements Serializable {
     	b.setRoute(coords, time);
     }
     
-	public synchronized void passengerAtCentral(int id) {
+	public synchronized void passengerAtCentral(int id, String goal) {
 		
-		passengers.put(id, new Passenger(id));
+		passengers.put(id, new Passenger(id, goal));
 		
 		setChanged();
         notifyObservers("passengerAdded");
@@ -69,26 +70,31 @@ class Model extends Observable implements Serializable {
 	public synchronized void passengerGotOnBus(int id) {
 		
 		passengers.get(id).gotOnBus();
-		passengersOnBus.add(id);
 		
+		synchronized (lock) {
+			passengersOnBus.add(id);
+		}
+
 		Thread runner = new Thread(new Runnable(){
 			 public void run(){
 				 
-				 try {
+				 try{
 						Thread.sleep(750);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				 
-			    	//remove passenger that got on a bus
-					if(!passengersOnBus.isEmpty()) {
-						
-						for (int i : passengersOnBus) {
-							passengers().remove(i);
+					synchronized (lock) {
+				    	//remove passenger that got on a bus
+						if(!passengersOnBus.isEmpty()) {
+							
+							for (int i : passengersOnBus) {
+									passengers.remove(i);
+							}
+							
+							passengersOnBus.clear();
 						}
-						
-						passengersOnBus.clear();
 					}
 			 }
 
@@ -97,10 +103,6 @@ class Model extends Observable implements Serializable {
 		
 		setChanged();
         notifyObservers("passengerGotOnBus");
-	}
-	
-	private synchronized Map<Integer, Passenger> passengers() {
-		return passengers;
 	}
 	
 	public synchronized void inflowChanged(int flow) {
@@ -142,7 +144,7 @@ class Model extends Observable implements Serializable {
 	
 	
 	public synchronized Collection<Passenger> getPassengers(){
-		return passengers.values();
+		return new LinkedList<Passenger>(passengers.values());
 	}
 	
 	public synchronized int getInflow()
@@ -158,7 +160,10 @@ class Model extends Observable implements Serializable {
        notifyObservers("limits");
    }
 
-	public Collection<Bus> getBuses() {
+	public synchronized Collection<Bus> getBuses() {
+		
+		
+		
 		return buses.values();
 	}
 	

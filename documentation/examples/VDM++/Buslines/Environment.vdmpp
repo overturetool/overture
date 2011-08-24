@@ -23,6 +23,7 @@ instance variables
 	private passengersTransported : nat := 0;
 	private passengersAnnoyed : nat := 0;
 	private passengersCount : nat :=0;
+	private passengersAnnoyedStops :  map Waypoint`WaypointsEnum to nat := {|->};
 
 types   
 	inline  = Types`Event;
@@ -219,9 +220,20 @@ operations
 	TransportedPassengers(number)== 
 		passengersTransported := passengersTransported + number;
 
-	public AnnoyedPassengers : nat ==> ()
-	AnnoyedPassengers(number)== 
+	--public AnnoyedPassenger : nat * Waypoint`WaypointsEnum ==> ()
+	--AnnoyedPassenger(number, waypoint)== 
+	public AnnoyedPassenger : nat * Waypoint`WaypointsEnum ==> ()
+	AnnoyedPassenger(number, goal)==
+	(
 		passengersAnnoyed := passengersAnnoyed + number;
+
+		if(goal not in set dom passengersAnnoyedStops) then 
+		(
+			passengersAnnoyedStops := passengersAnnoyedStops ++ {goal |-> number};
+		)
+		else
+			passengersAnnoyedStops := passengersAnnoyedStops ++ {goal |-> passengersAnnoyedStops(goal) + number};
+	);
 
 	public PassengerCount : () ==> ()
 	PassengerCount()== 
@@ -231,13 +243,20 @@ operations
 	report() ==
 	(
 		Printer`Out("\n\nHowever beautiful the strategy," ^ 
-	  					"you should occasionally look at the results.");
+	  					" you should occasionally look at the results.");
 	  	Printer`Out("**************RESULT**************");
 	  	Printer`Out("**********************************");
 	  	--Printer`Out(outlines);
 	  	Printer`Out(" " ^ VDMUtil`val2seq_of_char[nat](passengersCount) ^ "\t passengers in total. (transported and at central)");	
 		Printer`Out(" " ^ VDMUtil`val2seq_of_char[nat](passengersTransported) ^ "\t passengers transported.");
 		Printer`Out(" " ^ VDMUtil`val2seq_of_char[nat](passengersAnnoyed) ^ "\t passengers got annoyed.");	
+
+		
+		for all waypoint in set dom passengersAnnoyedStops do
+		(	
+			Printer`Out("\t" ^ VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](waypoint) ^ " : " ^ VDMUtil`val2seq_of_char[nat](passengersAnnoyedStops(waypoint)));
+
+		);
 	  	Printer`Out("\n**********************************");
 		Printer`Out("**********************************");
 	);
