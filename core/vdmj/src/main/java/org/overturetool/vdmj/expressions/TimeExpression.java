@@ -28,7 +28,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.types.NaturalOneType;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NaturalValue;
@@ -73,6 +73,6 @@ public class TimeExpression extends Expression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		return new NaturalOneType(location);
+		return new NaturalType(location);
 	}
 }
