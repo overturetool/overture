@@ -63,15 +63,7 @@ public class PDefinitionAssistant {
 	}
 
 	public static boolean isFunctionOrOperation(PDefinition possible) {
-		switch (possible.kindPDefinition()) {
-		case EXPLICITFUNCTION:
-		case IMPLICITFUNCTION:
-		case EXPLICITOPERATION:
-		case IMPLICITOPERATION:
-			return true;
-		default:
-			return false;
-		}
+		return isFunction(possible) || isOperation(possible);
 	}
 
 	public static PDefinition findType(List<PDefinition> definitions,
@@ -617,6 +609,97 @@ public class PDefinitionAssistant {
 		default: 
 			assert false : "should never happen";
 			return null;
+		}
+	}
+
+	public static String kind(PDefinition d) {
+		switch(d.kindPDefinition())
+		{
+		case ASSIGNMENT:
+			return "assignable variable";
+		case CLASS:
+			return "class";
+		case CLASSINVARIANT:
+			return "invariant";
+		case EQUALS:
+			return "equals";
+		case EXPLICITFUNCTION:
+			return "explicit function";
+		case EXPLICITOPERATION:
+			return "explicit operation";
+		case EXTERNAL:
+			return "external";
+		case IMPLICITFUNCTION:
+			return "implicit function";
+		case IMPLICITOPERATION:
+			return "implicit operation";
+		case IMPORTED:
+			return "import";
+		case INHERITED:
+			return kind(((AInheritedDefinition)d).getSuperdef());
+		case INSTANCEVARIABLE:
+			return "instance variable";
+		case LOCAL:
+			return "local";
+		case MULTIBINDLIST:
+			return "bind";
+		case MUTEXSYNC:
+			return "mutex predicate";
+		case NAMEDTRACE:
+			return "trace";
+		case PERSYNC:
+			return "permission predicate";
+		case RENAMED:
+			return kind(((ARenamedDefinition)d).getDef());
+		case STATE:
+			return "state";
+		case THREAD:
+			return "thread";
+		case TYPE:
+			return "type";
+		case UNTYPED:
+			return "untyped";
+		case VALUE:
+			return "value";
+		default:
+			return null;
+		}
+		
+	}
+
+	public static boolean isFunction(PDefinition def) {
+		switch (def.kindPDefinition()) {
+		case EXPLICITFUNCTION:
+		case IMPLICITFUNCTION:
+			return true;				
+		case IMPORTED:
+			return isFunction(((AImportedDefinition)def).getDef());
+		case INHERITED:
+			return isFunction(((AInheritedDefinition)def).getSuperdef());		
+		case LOCAL:
+			return ALocalDefinitionAssistant.isFunction((ALocalDefinition)def);		
+		case RENAMED:
+			return isFunction(((ARenamedDefinition)def).getDef());		
+		default:
+			return false;
+		}
+	}
+
+	public static boolean isOperation(PDefinition def) {
+		switch (def.kindPDefinition()) {		
+		case EXPLICITOPERATION:
+		case IMPLICITOPERATION:			
+		case NAMEDTRACE:
+		case THREAD:
+			return true;
+		case IMPORTED:
+			return isOperation(((AImportedDefinition)def).getDef());
+		case INHERITED:
+			return isOperation(((AInheritedDefinition)def).getSuperdef());				
+		case RENAMED:
+			return isOperation(((ARenamedDefinition)def).getDef());				
+		default:
+			return false;
 		}
 	}
 

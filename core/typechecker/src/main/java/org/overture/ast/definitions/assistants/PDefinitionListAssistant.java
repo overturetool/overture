@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -151,5 +152,17 @@ public class PDefinitionListAssistant {
 		}
 
 		return null;
+	}
+
+	public static void initializedCheck(LinkedList<PDefinition> definitions) {
+		for (PDefinition d: definitions)
+		{
+			if (d instanceof AInstanceVariableDefinition)
+			{
+				AInstanceVariableDefinition ivd = (AInstanceVariableDefinition)d;
+				AInstanceVariableDefinitionAssistant.initializedCheck(ivd);
+			}
+		}
+		
 	}
 }

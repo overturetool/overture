@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
@@ -41,6 +42,10 @@ public class ALocalDefinitionAssistant {
    			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
    		}
 		
+	}
+
+	public static boolean isFunction(ALocalDefinition def) {
+		return (def.getValueDefinition() || PTypeAssistant.isType(def.getType(),AParameterType.class)) ? false : PTypeAssistant.isFunction(def.getType());
 	}
 
 	

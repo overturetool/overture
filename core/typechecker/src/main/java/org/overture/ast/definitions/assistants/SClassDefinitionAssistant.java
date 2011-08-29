@@ -13,6 +13,7 @@ import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -26,8 +27,11 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatEnvironment;
+import org.overture.typecheck.Pass;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overture.typecheck.TypeComparator;
+import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -582,6 +586,207 @@ public class SClassDefinitionAssistant {
 		}
 
 		return def.getClasstype();
+	}
+
+	public static void checkOver(SClassDefinition c) {
+		int inheritedThreads = 0;
+		checkOverloads(c);
+
+		List<List<PDefinition>> superlist = new Vector<List<PDefinition>>();
+
+		for (PDefinition def: c.getSuperDefs())
+		{
+			SClassDefinition superdef = (SClassDefinition)def;
+			List<PDefinition> inheritable = SClassDefinitionAssistant.getInheritable(superdef);
+			superlist.add(inheritable);
+
+			if (checkOverrides(c,inheritable))
+			{
+				inheritedThreads++;
+			}
+		}
+
+		if (inheritedThreads > 1)
+		{
+			TypeCheckerErrors.report(3001, "Class inherits thread definition from multiple supertypes",c.getLocation(),c);
+		}
+
+		checkAmbiguities(c,superlist);
+		
+	}
+
+	private static void checkAmbiguities(SClassDefinition c, List<List<PDefinition>> superlist) {
+		int count = superlist.size();
+
+		for (int i=0; i<count; i++)
+		{
+			List<PDefinition> defs = superlist.get(i);
+
+			for (int j=i+1; j<count; j++)
+			{
+				List<PDefinition> defs2 = superlist.get(j);
+				checkAmbiguities(c,defs, defs2);
+    		}
+		}
+		
+	}
+
+	private static void checkAmbiguities(SClassDefinition c, List<PDefinition> defs,
+			List<PDefinition> defs2) {
+		
+		for (PDefinition indef: defs)
+		{
+			LexNameToken localName = indef.getName().getModifiedName(c.getName().name);
+
+			for (PDefinition indef2: defs2)
+			{
+    			if (!indef.getLocation().equals(indef2.getLocation()) &&
+    				PDefinitionAssistant.kind(indef).equals(PDefinitionAssistant.kind(indef2)))
+    			{
+    				LexNameToken localName2 = indef2.getName().getModifiedName(c.getName().name);
+
+    				if (localName.equals(localName2))
+    				{
+    					PDefinition override =
+    						PDefinitionListAssistant.findName(c.getDefinitions(),localName,	NameScope.NAMESANDSTATE);
+
+    					if (override == null)	// OK if we override the ambiguity
+    					{
+        					TypeCheckerErrors.report(3276, "Ambiguous definitions inherited by " + c.getName().name,c.getLocation(),c);
+        					TypeCheckerErrors.detail("1", indef.getName() + " " + indef.getLocation());
+        					TypeCheckerErrors.detail("2", indef2.getName() + " " + indef2.getLocation());
+    					}
+    				}
+    			}
+			}
+		}
+		
+	}
+
+	private static boolean checkOverrides(SClassDefinition c,
+			List<PDefinition> inheritable) {
+		boolean inheritedThread = false;
+
+		for (PDefinition indef: inheritable)
+		{
+			if (indef.getName().name.equals("thread"))
+			{
+				inheritedThread = true;
+				continue;	// No other checks needed for threads
+			}
+
+			LexNameToken localName = indef.getName().getModifiedName(c.getName().name);
+
+			PDefinition override =
+				PDefinitionListAssistant.findName(c.getDefinitions(),localName,NameScope.NAMESANDSTATE);
+
+			if (override == null)
+			{
+				override = PDefinitionListAssistant.findType(c.getDefinitions(),localName, null);
+			}
+
+			if (override != null)
+			{
+				if (!PDefinitionAssistant.kind(indef).equals(PDefinitionAssistant.kind(override)))
+				{
+					TypeCheckerErrors.report(3005, "Overriding a superclass member of a different kind: " + override.getName(),override.getLocation(),override);
+					TypeCheckerErrors.detail2("This", PDefinitionAssistant.kind(override), "Super", PDefinitionAssistant.kind(indef));
+				}
+				else if (PAccessSpecifierTCAssistant.narrowerThan(override.getAccess(),indef.getAccess()))
+				{
+					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility",override.getLocation(),override);
+					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
+				}
+				else
+				{
+					PType to = indef.getType();
+					PType from = override.getType();
+
+					// Note this uses the "parameters only" comparator option
+
+					if (!TypeComparator.compatible(to, from, true))
+					{
+						TypeCheckerErrors.report(3007, "Overriding member incompatible type: " + override.getName().name,override.getLocation(),override);
+						TypeCheckerErrors.detail2("This", override.getType(), "Super", indef.getType());
+					}
+				}
+			}
+		}
+
+		return inheritedThread;
+	}
+
+	private static void checkOverloads(SClassDefinition c) {
+		List<String> done = new Vector<String>();
+
+		List<PDefinition> singles = PDefinitionListAssistant.singleDefinitions(c.getDefinitions());
+
+		for (PDefinition def1: singles)
+		{
+			for (PDefinition def2: singles)
+			{
+				if (def1 != def2 &&
+					def1.getName() != null && def2.getName() != null &&
+					def1.getName().name.equals(def2.getName().name) &&
+					!done.contains(def1.getName().name))
+				{
+					if ((PDefinitionAssistant.isFunction(def1)  && PDefinitionAssistant.isFunction(def2)) ||
+						(PDefinitionAssistant.isOperation(def1) && PDefinitionAssistant.isOperation(def2)))
+					{
+    					PType to = def1.getType();
+    					PType from = def2.getType();
+
+    					// Note this uses the "parameters only" comparator option
+
+    					if (TypeComparator.compatible(to, from, true))
+    					{
+    						TypeCheckerErrors.report(3008, "Overloaded members indistinguishable: " + def1.getName().name,def1.getLocation(),def1);
+    						TypeCheckerErrors.detail2(def1.getName().name, def1.getType(), def2.getName().name, def2.getType());
+    						done.add(def1.getName().name);
+    					}
+					}
+					else
+					{
+						// Class invariants can duplicate if there are several
+						// "inv" clauses in one class...
+
+						if (!(def1 instanceof AClassInvariantDefinition) &&
+							!(def2 instanceof AClassInvariantDefinition) &&
+							!(def1 instanceof APerSyncDefinition) &&
+							!(def2 instanceof APerSyncDefinition))
+						{
+    						TypeCheckerErrors.report(3017, "Duplicate definitions for " + def1.getName().name,def1.getLocation(),def1);
+    						TypeCheckerErrors.detail2(def1.getName().name, def1.getLocation(), def2.getName().name, def2.getLocation());
+    						done.add(def1.getName().name);
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	public static void typeCheckPass(SClassDefinition c, Pass p,
+			Environment base, TypeCheckVisitor tc) {
+		if (c.getIsTypeChecked()) return;
+
+		for (PDefinition d: c.getDefinitions())
+		{
+			if (PDefinitionAssistant.getPass(d)== p)
+			{
+				d.apply(tc,new TypeCheckInfo(base, NameScope.NAMES));
+			}
+		}
+
+		if (c.getInvariant() != null && PDefinitionAssistant.getPass(c.getInvariant()) == p)
+		{
+			c.getInvariant().apply(tc,new TypeCheckInfo(base, NameScope.NAMES));
+		}
+		
+	}
+
+	public static void initializedCheck(SClassDefinition c) {
+		PDefinitionListAssistant.initializedCheck(c.getDefinitions());		
 	}
 	
 	

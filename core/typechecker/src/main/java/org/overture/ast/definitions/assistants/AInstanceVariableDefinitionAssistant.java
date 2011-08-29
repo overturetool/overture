@@ -10,6 +10,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -49,6 +50,14 @@ public class AInstanceVariableDefinitionAssistant {
 		{
 			PTypeAssistant.unResolve(d.getType());
 			throw e;
+		}
+		
+	}
+
+	public static void initializedCheck(AInstanceVariableDefinition ivd) {
+		if (!ivd.getInitialized() && !PAccessSpecifierTCAssistant.isStatic(ivd.getAccess()))
+		{
+			TypeCheckerErrors.warning(5001, "Instance variable '" + ivd.getName() + "' is not initialized",ivd.getLocation(),ivd);
 		}
 		
 	}

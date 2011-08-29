@@ -475,6 +475,7 @@ modules {-> package='org.overture.ast.modules'}
                 (typeChecked):java_Boolean
     ;
 
+
 imports {-> package='org.overture.ast.modules'} 
     = {module} [name]:LexIdentifierToken [imports]:imports.fromModule* //no root
     | {fromModule} [name]:LexIdentifierToken [signatures]:import** //no root
@@ -647,6 +648,8 @@ Aspect Declaration
         [isAbstract]:java_Boolean
         [isUndefined]:java_Boolean
         (classtype):type
+        (isTypeChecked):java_Boolean
+        (invariant):definition.explicitOperation
     ;
     
 %stm
