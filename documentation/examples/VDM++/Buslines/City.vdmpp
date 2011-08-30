@@ -56,8 +56,9 @@ class City
 			);
 		)
 		pre roadNmbr not in set dom roads --road number not used before
-		and forall r in set rng roads & not r.Covers({wp1, wp2}) --  waypoint not connected before
-		and wp1 <> wp2;	--not the same wp, a road to the same wp is not a road
+		and wp1 <> wp2	--not the same wp, a road to the same wp is not a road
+		and forall r in set rng roads & not r.Covers({wp1, wp2}); --  waypoint not connected before
+
 
 
 		--overloaded addRoad, which allows for the speedlimit of the road to be change from
