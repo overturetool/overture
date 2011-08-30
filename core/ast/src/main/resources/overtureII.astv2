@@ -419,7 +419,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [isConstructor]:java_Boolean
                                                         
     |   {imported} (def):definition (name):LexNameToken
-    |   {inherited} [superdef]:definition [oldname]:LexNameToken //is access missing here
+    |   {inherited} (superdef):definition [oldname]:LexNameToken //is access missing here
     |   {local} [valueDefinition]:java_Boolean (name):LexNameToken
     |   {multiBindList} (bindings):multipleBind* (defs):definition*
     |   {mutexSync} [operations]:LexNameToken*
@@ -634,16 +634,16 @@ Aspect Declaration
     ;
 
 %definition->#class
-    =   [supertypes]:type* 
+    =   (supertypes):type* 
         [supernames]:LexNameToken* 
         [definitions]:definition* 
-        [allInheritedDefinitions]:definition*
-        [localInheritedDefinitions]:definition* 
+        (allInheritedDefinitions):definition*
+        (localInheritedDefinitions):definition* 
         [hasContructors]:java_Boolean
         [settingHierarchy]:ClassDefinitionSettings
-        [superDefs]:definition.#class*
+        (superDefs):definition.#class*
         [gettingInheritable]:java_Boolean
-        [superInheritedDefinitions]:definition*
+        (superInheritedDefinitions):definition*
         [gettingInvDefs]:java_Boolean
         [isAbstract]:java_Boolean
         [isUndefined]:java_Boolean

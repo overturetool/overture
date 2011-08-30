@@ -40,7 +40,7 @@ public abstract class BasicTypeCheckTestCase extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		Settings.dialect = Dialect.VDM_SL;
+		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 	}
 

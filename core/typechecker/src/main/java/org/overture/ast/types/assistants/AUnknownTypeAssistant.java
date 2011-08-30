@@ -120,7 +120,7 @@ public class AUnknownTypeAssistant {
 				null, 
 				null, 
 				null, 
-				new LexNameList(), new Vector<PDefinition>(), null, null, null, null, null, null, null, null, null, null));
+				null, new LexNameList(), new Vector<PDefinition>(), null, null, null, null, null, null, null, null, null, null, null, null, null));
 	}
 
 	public static boolean narrowerThan(AUnknownType type,

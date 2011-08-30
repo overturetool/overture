@@ -59,6 +59,7 @@ import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.node.tokens.TAsync;
@@ -1399,7 +1400,7 @@ public class DefinitionReader extends SyntaxReader
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
 			AInstanceVariableDefinition ivd =
 				new AInstanceVariableDefinition(token.location, def.getName(),null,null,null,access, 
-					null, def.getExpression(),def.getType(),null,null);
+						def.getType(), def.getExpression(),null,!(def.getExpression() instanceof AUndefinedExp),null);
 			ivd.setAccess(access);
 			return ivd;
 		}

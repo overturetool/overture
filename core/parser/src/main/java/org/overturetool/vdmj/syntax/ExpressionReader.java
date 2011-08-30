@@ -786,7 +786,8 @@ public class ExpressionReader extends SyntaxReader
     					case NAME:
     						if (dialect != Dialect.VDM_SL)
     						{
-    							exp = new AFieldExp(null, exp.getLocation(), exp, lastNameToken(), null);
+    							LexNameToken field = lastNameToken();
+    							exp = new AFieldExp(null, exp.getLocation(), exp, field, new LexIdentifierToken(field.name, field.old, field.location));
 //        						exp = new FieldExpression(exp, lastNameToken());
     						}
     						else

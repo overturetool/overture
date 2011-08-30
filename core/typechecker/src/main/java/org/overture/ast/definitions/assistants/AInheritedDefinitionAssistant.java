@@ -10,6 +10,7 @@ import org.overture.ast.types.PType;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.util.HelpLexNameToken;
 
 public class AInheritedDefinitionAssistant {
 
@@ -32,7 +33,7 @@ public class AInheritedDefinitionAssistant {
 		LexNameToken name = d.getName();
 		name.setTypeQualifier(d.getSuperdef().getName().typeQualifier);
 
-		if (name.equals(sought))
+		if (HelpLexNameToken.isEqual(name, sought))
 		{
 			return d;
 		}

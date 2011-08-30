@@ -107,8 +107,7 @@ public class TypeCheckerExpVisitor extends
 			node.getArgtypes().add(a.apply(rootVisitor, question));
 		}
 
-		question.qualifiers = node.getArgtypes();
-		node.setType(node.getRoot().apply(rootVisitor, question));
+		node.setType(node.getRoot().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope, node.getArgtypes())));
 
 		if (PTypeAssistant.isUnknown(node.getType()))
 		{
@@ -2472,6 +2471,11 @@ public class TypeCheckerExpVisitor extends
     			{
     				name.setTypeQualifier(question.qualifiers);	// Just for error text!
     			}
+    			else
+    			{
+    				node.setVardef(vardef);
+    			}
+    			
     		}
     		else
     		{
@@ -2492,7 +2496,7 @@ public class TypeCheckerExpVisitor extends
 						}
 
 						vardef = possible;
-
+						node.setVardef(vardef);
 						// Set the qualifier so that it will find it at runtime.
 
 						PType pt = possible.getType();

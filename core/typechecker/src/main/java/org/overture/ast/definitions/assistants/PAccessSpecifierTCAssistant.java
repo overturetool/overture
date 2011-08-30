@@ -35,13 +35,9 @@ public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
 		return false;
 	}
 
-	public static boolean isStatic(PAccessSpecifier access) {
-		if(access instanceof AAccessSpecifierAccessSpecifier)
-		{
-			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getStatic() == null;
-		}		
-		return false;
+	public static boolean isStatic(AAccessSpecifierAccessSpecifier access) {
+		
+		return access.getStatic() != null;
 	}
 	
 	public static boolean isAsync(PAccessSpecifier access) {

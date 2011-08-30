@@ -636,10 +636,12 @@ public class AUnionTypeAssistant {
 				newdefs.add(def);
     		}
 
-    		type.setClassType((classname == null) ? null :
-    			new AClassType(type.getLocation(),false,classname,
-    				new AClassClassDefinition(classname.getLocation(), classname,
-    					null, false, null, type, null, new LexNameList(), newdefs, null, null, null, null, null, null, newdefs, null, null, null)));
+    		AClassClassDefinition class_ = new AClassClassDefinition(classname.getLocation(), classname,
+					null, false, null, null, type, null, new LexNameList(), newdefs, null, null, null, null, null, null, newdefs, null, null, null, null, null, null);
+    		for (PDefinition pDefinition : newdefs) {
+				pDefinition.setClassDefinition(class_);
+			}
+    		type.setClassType((classname == null) ? null : new AClassType(type.getLocation(),false,classname,class_));
 		}
 
 		return type.getClassType();

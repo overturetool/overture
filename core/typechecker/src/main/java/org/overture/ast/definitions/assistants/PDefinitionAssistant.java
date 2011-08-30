@@ -41,6 +41,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.util.HelpLexNameToken;
 
 public class PDefinitionAssistant {
 
@@ -159,7 +160,7 @@ public class PDefinitionAssistant {
 	
 	public static PDefinition findNameBaseCase(PDefinition d, LexNameToken sought,
 			NameScope scope) {
-		if (d.getName().equals(sought)) {
+		if (HelpLexNameToken.isEqual(d.getName(), sought)) {
 			if ((d.getNameScope() == NameScope.STATE && !scope.matches(NameScope.STATE)) 
 					|| (d.getNameScope() == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE))) {
 				
@@ -301,7 +302,8 @@ public class PDefinitionAssistant {
 	public static PDefinition getSelfDefinition(PDefinition d) {
 		switch (d.kindPDefinition()) {
 		case CLASS:
-			SClassDefinitionAssistant.getSelfDefinition((SClassDefinition)d);
+			return SClassDefinitionAssistant.getSelfDefinition((SClassDefinition)d);
+			
 		default:
 			return getSelfDefinition(d.getClassDefinition());
 		}

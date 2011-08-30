@@ -13,6 +13,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnresolvedType;
@@ -84,17 +85,17 @@ public class AUnresolvedTypeAssistant {
 		}
 
 		PType r = null;
-		if(def instanceof ATypeDefinition)
-		{
-			r = ((ATypeDefinition)def).getInvType();
-		}
-		else if(def instanceof AStateDefinition)
-		{
-			r = ((AStateDefinition)def).getRecordType();
-		} else
-		{
-			r = def.getType();
-		}
+//		if(def instanceof ATypeDefinition)
+//		{
+//			r = ((ATypeDefinition)def).getInvType();
+//		}
+//		else if(def instanceof AStateDefinition)
+//		{
+//			r = ((AStateDefinition)def).getRecordType();
+//		} else
+//		{
+			r = PDefinitionAssistant.getType(def);
+//		}
 		
 		List<PDefinition> tempDefs = new Vector<PDefinition>();
 		tempDefs.add(def);

@@ -25,6 +25,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatEnvironment;
 import org.overture.typecheck.Pass;
@@ -37,6 +38,7 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.util.HelpLexNameToken;
 
 
 public class SClassDefinitionAssistant {
@@ -117,7 +119,7 @@ public class SClassDefinitionAssistant {
 	public static boolean hasSupertype(SClassDefinition classDefinition,
 			PType other) {
 		
-		if (classDefinition.getType().equals(other))
+		if (PTypeAssistant.equals(getType(classDefinition),other))
 		{
 			return true;
 		}
@@ -149,10 +151,10 @@ public class SClassDefinitionAssistant {
 		}
 		else
 		{
-			AClassType selftype = (AClassType)self.getType();
-			AClassType targtype = (AClassType)target.getType();
+			AClassType selftype =  (AClassType) getType(self);
+			AClassType targtype = (AClassType) getType(target);
 
-			if (!selftype.equals(targtype))
+			if (!PTypeAssistant.equals(selftype, targtype))
 			{
 				if (AClassTypeAssistant.hasSupertype(selftype,targtype))
 				{
@@ -315,7 +317,7 @@ public class SClassDefinitionAssistant {
 
 		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
 				NameScope.LOCAL,
-				false, null, null, classDefinition.getType(), false,classDefinition.getName().getSelfName());
+				false, null, null, PDefinitionAssistant.getType(classDefinition), false,classDefinition.getName().getSelfName());
 		PDefinitionAssistant.markUsed(def);
 		return def;
 	}
@@ -432,7 +434,7 @@ public class SClassDefinitionAssistant {
 
 			if (PDefinitionListAssistant.findName(definition.getDefinitions(),localname, NameScope.NAMESANDSTATE) == null)
 			{
-				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,null,false,null, null, null, d, null);
+				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,null,false,d.getClassDefinition(), null, null, d, null);
 				definition.getLocalInheritedDefinitions().add(local);
 			}
 		}
@@ -483,7 +485,7 @@ public class SClassDefinitionAssistant {
 
 				if (PDefinitionListAssistant.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
-					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),null,null,false,null,null,null,d, null);
+					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),null,null,false,d.getClassDefinition(),null,null,d, null);
 					defs.add(local);
 				}
 			}
@@ -555,9 +557,7 @@ public class SClassDefinitionAssistant {
 			TypeCheckInfo question) {
 		
 		Environment cenv = new FlatEnvironment(d.getDefinitions(),  question.env);
-		
-		TypeCheckInfo newInfo = new TypeCheckInfo(cenv, question.scope, (LinkedList<PType>) question.qualifiers.clone());
-		PDefinitionListAssistant.typeResolve(d.getDefinitions(),rootVisitor,newInfo);
+		PDefinitionListAssistant.typeResolve(d.getDefinitions(),rootVisitor,new TypeCheckInfo(cenv));
 	}
 	
 	public static PDefinition findThread(SClassDefinition d)
@@ -582,7 +582,7 @@ public class SClassDefinitionAssistant {
 	public static PType getType(SClassDefinition def) {
 		if (def.getClasstype() == null)
 		{
-			def.setClasstype(new AClassType(def.getLocation(), false, null, def));
+			def.setClasstype(new AClassType(def.getLocation(), false, def.getName().clone(), def));
 		}
 
 		return def.getClasstype();
@@ -645,7 +645,7 @@ public class SClassDefinitionAssistant {
     			{
     				LexNameToken localName2 = indef2.getName().getModifiedName(c.getName().name);
 
-    				if (localName.equals(localName2))
+    				if (HelpLexNameToken.isEqual(localName, localName2))
     				{
     					PDefinition override =
     						PDefinitionListAssistant.findName(c.getDefinitions(),localName,	NameScope.NAMESANDSTATE);
