@@ -676,7 +676,7 @@ public class VdmProject implements IVdmProject
 		for (IContainer src : modelpath.getModelSrcPaths())
 		{
 			// Check model path
-			if (src.getLocation().isPrefixOf(file.getLocation()))
+			if (src.getFullPath().isPrefixOf(file.getFullPath()))//TODO check this, does it break something? not using the actual location. This was changed to do linked files.
 			{
 				//Check content type
 				for (IContentType contentType : getContentTypeIds())
@@ -695,6 +695,7 @@ public class VdmProject implements IVdmProject
 
 		return false;
 	}
+	
 
 	/***
 	 * Gets the IFile from the Eclipse filesystem from a normal file placed in a project
