@@ -376,10 +376,10 @@ public class AUnionTypeAssistant {
     			for (int i=0; i<params.size(); i++)
     			{
     				PType pt = params.get(i).getType(type.getLocation());
-    				plist.add(pt);
+    				plist.add(pt.clone());
     			}
 
-    			type.setFuncType(new AFunctionType(type.getLocation(), false, true, plist, rtype));
+    			type.setFuncType(new AFunctionType(type.getLocation(), false, true, plist, rtype.clone()));
     			type.getFuncType().setDefinitions(defs);
     		}
     		else

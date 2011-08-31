@@ -87,13 +87,13 @@ public class PTypeAssistant {
 
 				for (PType ptype: ((AFunctionType)type).getParameters())
 				{
-					polyparams.add(polymorph(ptype,pname, actualType));
+					polyparams.add(polymorph(ptype,pname, actualType).clone());
 				}
 
 				PType polyresult = polymorph(((AFunctionType)type).getResult(),pname, actualType);
 				AFunctionType ftype =
 					new AFunctionType(location,false,definitions, 
-							((AFunctionType)type).getPartial(),	polyparams, polyresult);
+							((AFunctionType)type).getPartial(),	polyparams, polyresult.clone());
 				return ftype;
 			case MAP:
 				return new AMapMapType(location,false,definitions,

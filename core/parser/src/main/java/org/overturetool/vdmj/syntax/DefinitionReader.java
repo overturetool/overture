@@ -1399,7 +1399,7 @@ public class DefinitionReader extends SyntaxReader
 			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
 			AInstanceVariableDefinition ivd =
-				new AInstanceVariableDefinition(token.location, def.getName(),null,null,null,access, 
+				new AInstanceVariableDefinition(token.location, def.getName(),NameScope.STATE,null,null,access, 
 						def.getType(), def.getExpression(),null,!(def.getExpression() instanceof AUndefinedExp),null);
 			ivd.setAccess(access);
 			return ivd;

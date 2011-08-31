@@ -636,7 +636,7 @@ Aspect Declaration
 %definition->#class
     =   (supertypes):type* 
         [supernames]:LexNameToken* 
-        [definitions]:definition* 
+        (definitions):definition* 
         (allInheritedDefinitions):definition*
         (localInheritedDefinitions):definition* 
         [hasContructors]:java_Boolean

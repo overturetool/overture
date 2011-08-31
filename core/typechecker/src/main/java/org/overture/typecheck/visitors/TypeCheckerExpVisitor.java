@@ -2015,8 +2015,9 @@ public class TypeCheckerExpVisitor extends
 			}
 		}
 
-		node.setType(classdef.getType());
-		return classdef.getType();
+		PType type = PDefinitionAssistant.getType(classdef);
+		node.setType(type.clone());
+		return type;
 	}
 	
 	
