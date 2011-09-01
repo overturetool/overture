@@ -157,8 +157,8 @@ public class AImplicitOperationDefinitionAssistant {
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
 		{
-			plist.add(new AIdentifierPattern(state.getLocation(), null, false, d.getName().getSelfName().getOldName()));
-			plist.add(new AIdentifierPattern(state.getLocation(), null, false, d.getName().getSelfName()));
+			plist.add(new AIdentifierPattern(d.getName().getLocation(), null, false, d.getName().getSelfName().getOldName()));
+			plist.add(new AIdentifierPattern(d.getName().getLocation(), null, false, d.getName().getSelfName()));
 		}
 
 		parameters.add(plist);

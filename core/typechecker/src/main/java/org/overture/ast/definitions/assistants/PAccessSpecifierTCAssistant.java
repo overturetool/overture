@@ -17,13 +17,8 @@ public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
 		return false;
 	}
 	
-	public static boolean isPrivate(PAccessSpecifier access) {
-		if(access instanceof AAccessSpecifierAccessSpecifier)
-		{
-			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getAccess().kindPAccess() == EAccess.PRIVATE;
-		}		
-		return false;
+	public static boolean isPrivate(AAccessSpecifierAccessSpecifier access) {
+		return access.getAccess().kindPAccess() == EAccess.PRIVATE;
 	}
 	
 	public static boolean isProtected(PAccessSpecifier access) {

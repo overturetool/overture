@@ -72,46 +72,37 @@ public class ClassTestCase extends BasicTypeCheckTestCase {
 		System.err.flush();
 		insertTCHeader();
 
-		printFile(file);
+		
 		ClassList classes = parse(ParserType.Class, file);
 
 		ClassTypeChecker moduleTC = new ClassTypeChecker(classes);
 		moduleTC.typeCheck();
 
-		String errorMessages = null;
-		if (TypeChecker.getErrorCount() > 0) {
-			// perrs += reader.getErrorCount();
-			StringWriter s = new StringWriter();
-			TypeChecker.printErrors(new PrintWriter(s));// new
-														// PrintWriter(System.out));
-			errorMessages = "\n" + s.toString() + "\n";
-			System.out.println(s.toString());
-		}
+//		String errorMessages = null;
+//		if (TypeChecker.getErrorCount() > 0) {
+//			// perrs += reader.getErrorCount();
+//			StringWriter s = new StringWriter();
+//			TypeChecker.printErrors(new PrintWriter(s));// new
+//														// PrintWriter(System.out));
+//			errorMessages = "\n" + s.toString() + "\n";
+//			System.out.println(s.toString());
+//		}
 
 		//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
 
-		if (showWarnings && TypeChecker.getWarningCount() > 0) {
-			// perrs += reader.getErrorCount();
-			StringWriter s = new StringWriter();
-			TypeChecker.printWarnings(new PrintWriter(s));// new
-															// PrintWriter(System.out));
-			// String warningMessages = "\n" + s.toString() + "\n";
-			System.out.println(s.toString());
-		}
+//		if (showWarnings && TypeChecker.getWarningCount() > 0) {
+//			// perrs += reader.getErrorCount();
+//			StringWriter s = new StringWriter();
+//			TypeChecker.printWarnings(new PrintWriter(s));// new
+//															// PrintWriter(System.out));
+//			// String warningMessages = "\n" + s.toString() + "\n";
+//			System.out.println(s.toString());
+//		}
 
 		printTCHeader();
 
 	}
-
-	private void printFile(File file) throws IOException {
-		FileReader in = new FileReader(file);
-		BufferedReader br = new BufferedReader(in);
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			System.out.println(line);
-		}
-
-	}
+	
 
 	private void insertTCHeader() throws IOException {
 		if (!file.exists())

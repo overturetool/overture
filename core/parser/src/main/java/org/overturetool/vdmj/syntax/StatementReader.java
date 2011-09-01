@@ -30,11 +30,11 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.AUndefinedExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.PPatternBind;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
@@ -432,11 +432,11 @@ public class StatementReader extends SyntaxReader
 			
 			if (ofd.getClassName() != null)
 			{
-	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), ofd.getClassName(), null ,null, args,ofd.getClassName().explicit);
+	    		return new ACallObjectStm(ofd.getLocation(),ofd.getObject(), ofd.getClassName(), null ,null, args,ofd.getClassName().explicit);
 			}
 			else
 			{
-	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), null,ofd.getFieldName(), null,args,false);
+	    		return new ACallObjectStm(ofd.getFieldName().location,ofd.getObject(), null,(LexIdentifierToken) ofd.getFieldName().clone(), null,args,false);
 			}
 		}
 		else if (oad.getObject() instanceof AIdentifierObjectDesignator)
@@ -471,11 +471,11 @@ public class StatementReader extends SyntaxReader
 					switch (field.type)
 					{
 						case IDENTIFIER:
-							des = new AFieldObjectDesignator(des, null,(LexIdentifierToken)field);
+							des = new AFieldObjectDesignator(des.getLocation(),des, null,(LexIdentifierToken)field);
 							break;
 
 						case NAME:
-							des = new AFieldObjectDesignator(des, (LexNameToken)field,null);
+							des = new AFieldObjectDesignator(des.getLocation(),des, (LexNameToken)field,null);
 							break;
 
 						default:
@@ -501,7 +501,7 @@ public class StatementReader extends SyntaxReader
 			    	}
 
 			    	checkFor(VDMToken.KET, 2124, "Expecting ')' after args");
-					des = new AApplyObjectDesignator(des, args);
+					des = new AApplyObjectDesignator(des.getLocation(), des, args);
 					break;
 
 				default:
@@ -521,13 +521,13 @@ public class StatementReader extends SyntaxReader
 		switch (token.type)
 		{
 			case SELF:
-				return new ASelfObjectDesignator(new LexNameToken(token.location.module, "self", token.location));
+				return new ASelfObjectDesignator(token.location,new LexNameToken(token.location.module, "self", token.location));
 
 			case IDENTIFIER:
-				return new AIdentifierObjectDesignator(idToName((LexIdentifierToken)token),null);
+				return new AIdentifierObjectDesignator(token.location,idToName((LexIdentifierToken)token),new AVariableExp(null, token.location, idToName((LexIdentifierToken)token).getExplicit(true)));
 
 			case NAME:
-				return new AIdentifierObjectDesignator((LexNameToken)token,null);
+				return new AIdentifierObjectDesignator(token.location,(LexNameToken)token,new AVariableExp(null, token.location, ((LexNameToken)token).getExplicit(true)));
 
 			case NEW:
 				LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
@@ -548,7 +548,7 @@ public class StatementReader extends SyntaxReader
 
 		    	checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
 		    	
-				return new ANewObjectDesignator(
+				return new ANewObjectDesignator(name.location,
 						new ANewExp(null,name.location,name, args));
 
 			default:

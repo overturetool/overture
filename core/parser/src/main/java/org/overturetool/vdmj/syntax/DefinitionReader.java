@@ -462,6 +462,14 @@ public class DefinitionReader extends SyntaxReader
 
 				// Force all values to be static
 				def.setAccess(access);
+				
+				if(def instanceof AValueDefinition)
+				{
+					for (PDefinition pDefinition : ((AValueDefinition) def).getDefs()) {
+						pDefinition.setAccess(access.clone());
+					}
+				}
+				
 				list.add(def);
 
 				if (!newSection())
@@ -1105,7 +1113,7 @@ public class DefinitionReader extends SyntaxReader
 //			precondition,postcondition,type,null,null,null,null,null,false);
 		
 		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location, idToName(funcName), 
-				NameScope.GLOBAL, false, getDefaultAccess(), parameters, body, precondition, postcondition, type, null, false);
+				NameScope.GLOBAL, false, null, getDefaultAccess(), parameters, body, precondition, postcondition, type, null, null, null, null, null, false);
 
 		return def;
 	}
@@ -1195,8 +1203,8 @@ public class DefinitionReader extends SyntaxReader
 //			body,spec.getExternals(),spec.getPrecondition(),spec.getPostcondition(),spec.getErrors(),operationType,null,null,null,null,null,false);
 		
 		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
-			idToName(funcName),NameScope.GLOBAL,false, getDefaultAccess(), parameterPatterns, resultPattern, body, spec.getExternals(), spec.getPrecondition(), 
-			spec.getPostcondition(), spec.getErrors(), operationType, null, false);
+			idToName(funcName),NameScope.GLOBAL,false, null, getDefaultAccess(), parameterPatterns, resultPattern, body, spec.getExternals(), spec.getPrecondition(), 
+			spec.getPostcondition(), spec.getErrors(), operationType, null, null, null, null, null, false);
 		
 		return def;
 	}
@@ -1399,7 +1407,7 @@ public class DefinitionReader extends SyntaxReader
 			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
 			AInstanceVariableDefinition ivd =
-				new AInstanceVariableDefinition(token.location, def.getName(),NameScope.STATE,null,null,access, 
+				new AInstanceVariableDefinition(def.getName().location, def.getName(),NameScope.STATE,null,null,access, 
 						def.getType(), def.getExpression(),null,!(def.getExpression() instanceof AUndefinedExp),null);
 			ivd.setAccess(access);
 			return ivd;

@@ -48,11 +48,11 @@ public class AThreadDefinitionAssistant {
 				d.getOperationName(), 
 				NameScope.GLOBAL,
 				false,
-				PAccessSpecifierAssistant.getDefault(),
+				null, PAccessSpecifierAssistant.getDefault(),
 				new Vector<PPattern>(),
 				d.getStatement(),
 				null, null, type,
-				null, false);
+				null, null, null, null, null, false);
 
 		def.setAccess(d.getAccess());
 		def.setClassDefinition(d.getClassDefinition());

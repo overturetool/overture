@@ -159,7 +159,7 @@ public class SClassDefinitionAssistant {
 				if (AClassTypeAssistant.hasSupertype(selftype,targtype))
 				{
 					// We're a subclass, so see public or protected
-					return (PAccessSpecifierTCAssistant.isPrivate(field.getAccess()));
+					return (!PAccessSpecifierTCAssistant.isPrivate(field.getAccess()));
 				}
 				else
 				{
@@ -231,7 +231,6 @@ public class SClassDefinitionAssistant {
 			LexNameToken name, NameScope scope) {
 		
 		SClassDefinition d = get(classes, name.module);
-
 		if (d != null)
 		{
 			PDefinition def = SClassDefinitionAssistant.findName(d,name, scope);
@@ -249,7 +248,7 @@ public class SClassDefinitionAssistant {
 			String module) {
 		
 		for (SClassDefinition sClassDefinition : classes) {
-			if(sClassDefinition.getName().module.equals(module))
+			if(sClassDefinition.getName().name.equals(module))
 				return sClassDefinition;
 		}
 		return null;
@@ -375,7 +374,7 @@ public class SClassDefinitionAssistant {
 
 		
 //		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
-		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, PAccessSpecifierTCAssistant.getDefault(), null, body, null, null, type, null,false);
+		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, d, PAccessSpecifierTCAssistant.getDefault(), null, body, null, null, type, null,null, invdefs, null, null, false);
 		res.setParameterPatterns(new Vector<PPattern>());
 		
 		return res;
@@ -434,7 +433,7 @@ public class SClassDefinitionAssistant {
 
 			if (PDefinitionListAssistant.findName(definition.getDefinitions(),localname, NameScope.NAMESANDSTATE) == null)
 			{
-				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,null,false,d.getClassDefinition(), null, null, d, null);
+				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,null,false,d.getClassDefinition(), d.getAccess().clone(), null, d, null);
 				definition.getLocalInheritedDefinitions().add(local);
 			}
 		}
@@ -485,7 +484,7 @@ public class SClassDefinitionAssistant {
 
 				if (PDefinitionListAssistant.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
-					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),null,null,false,d.getClassDefinition(),null,null,d, null);
+					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(),d.getAccess().clone(),null,d, null);
 					defs.add(local);
 				}
 			}
@@ -538,7 +537,7 @@ public class SClassDefinitionAssistant {
 				setInherited(superdef, base);
 				
 				d.getSuperDefs().add(superdef);
-				d.getSupertypes().add(superdef.getType());
+				d.getSupertypes().add(PDefinitionAssistant.getType(superdef));
 			}
 			else
 			{
@@ -699,8 +698,8 @@ public class SClassDefinitionAssistant {
 				}
 				else
 				{
-					PType to = indef.getType();
-					PType from = override.getType();
+					PType to = PDefinitionAssistant.getType(indef);
+					PType from = PDefinitionAssistant.getType(override);
 
 					// Note this uses the "parameters only" comparator option
 

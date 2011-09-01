@@ -440,10 +440,10 @@ public class AUnionTypeAssistant {
     			for (int i=0; i<params.size(); i++)
     			{
     				PType pt = params.get(i).getType(type.getLocation());
-    				plist.add(pt);
+    				plist.add(pt.clone());
     			}
 
-    			type.setOpType(new AOperationType(type.getLocation(),false, plist, rtype));
+    			type.setOpType(new AOperationType(type.getLocation(),false, plist, rtype.clone()));
     			type.getOpType().setDefinitions(defs);
     		}
     		else

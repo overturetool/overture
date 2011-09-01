@@ -48,4 +48,5 @@ public class TypeCheckerErrors {
 		TypeChecker.warning(number, msg, loc);
 	}
 	
+	
 }

@@ -1167,7 +1167,7 @@ public class TypeCheckerExpVisitor extends
 					// warning(5005, "Should access member " + field + " from a static context");
 				}
 
-   				results.add(fdef.getType());
+   				results.add(PDefinitionAssistant.getType(fdef));
    				// At runtime, type qualifiers must match exactly
    				memberName.setTypeQualifier(fdef.getName().typeQualifier);
     		}
@@ -1191,7 +1191,8 @@ public class TypeCheckerExpVisitor extends
     		return node.getType();
 		}
 
-		node.setType(results.getType(node.getLocation()).clone());
+		PType resType = results.getType(node.getLocation());
+		node.setType(resType.clone());
 		return node.getType();
 	}
 	
@@ -2121,7 +2122,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (!PTypeAssistant.isClass(rt))
 		{
-			TypeCheckerErrors.report(3266, "Argument is not an object",node.getLocation(),node);
+			TypeCheckerErrors.report(3266, "Argument is not an object",right.getLocation(),right);
 		}
 
 		node.setType(new ABooleanBasicType(node.getLocation(),false));
@@ -2146,7 +2147,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (!PTypeAssistant.isClass(rt))
 		{
-			TypeCheckerErrors.report(3266, "Argument is not an object",node.getLocation(),node);
+			TypeCheckerErrors.report(3266, "Argument is not an object",right.getLocation(),right);
 		}
 
 		node.setType(new ABooleanBasicType(node.getLocation(),false));

@@ -336,7 +336,7 @@ patternBind {-> package='org.overture.ast.patterns'}
     
 definition {-> package='org.overture.ast.definitions'}
     =   {assignment} [expression]:exp [expType]:type
-    |   {instanceVariable} [expression]:exp [expType]:type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
+    |   {instanceVariable} [expression]:exp (expType):type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
@@ -399,7 +399,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (paramDefinitions):definition*
                             (state):definition.state
                             
-                            [actualResult]:type
+                            (actualResult):type
                             [isConstructor]:java_Boolean
                             
     |   {implicitOperation} [parameterPatterns]:pair.patternListType*
@@ -414,7 +414,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
                             (state):definition.state
-                            [actualResult]:type
+                            (actualResult):type
                             (stateDefinition):definition
                             [isConstructor]:java_Boolean
                                                         
@@ -567,7 +567,7 @@ stateDesignator {-> package='org.overture.ast.statements'}
     
 objectDesignator {-> package='org.overture.ast.statements'}
     =   {apply} [object]:objectDesignator [args]:exp*
-    |   {field} [object]:objectDesignator [className]:LexNameToken [fieldName]:LexIdentifierToken
+    |   {field} [object]:objectDesignator [className]:LexNameToken [fieldName]:LexIdentifierToken (field):LexNameToken
     |   {identifier} [name]:LexNameToken [expression]:exp.variable
     |   {new} [expression]:exp.new
     |   {self} [self]:LexNameToken
@@ -701,4 +701,8 @@ Aspect Declaration
     
 %stateDesignator 
     = [location]:location [type]:type
+    ;
+    
+%objectDesignator
+    = [location]:location
     ;

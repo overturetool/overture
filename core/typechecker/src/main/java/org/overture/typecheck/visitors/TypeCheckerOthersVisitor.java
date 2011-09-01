@@ -9,25 +9,35 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.Node;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.assistants.PBindAssistant;
 import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.statements.AApplyObjectDesignator;
+import org.overture.ast.statements.AFieldObjectDesignator;
 import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
+import org.overture.ast.statements.ANewObjectDesignator;
+import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
-
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.assistants.AApplyObjectDesignatorAssistant;
 import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
@@ -301,4 +311,144 @@ public class TypeCheckerOthersVisitor extends
 		return node.getType();
 	}
 	
+	@Override
+	public PType caseASelfObjectDesignator(ASelfObjectDesignator node,
+			TypeCheckInfo question) {
+		PDefinition def = question.env.findName(node.getSelf(), NameScope.NAMES);
+
+		if (def == null)
+		{
+			TypeCheckerErrors.report(3263, "Cannot reference 'self' from here",node.getSelf().location,node.getSelf());
+			return new AUnknownType(node.getSelf().location,false);
+		}
+
+		return PDefinitionAssistant.getType(def);
+	}
+	
+	@Override
+	public PType caseAApplyObjectDesignator(AApplyObjectDesignator node,
+			TypeCheckInfo question) {
+		LinkedList<PType> argtypes = new LinkedList<PType>();
+
+		for (PExp a: node.getArgs())
+		{
+			argtypes.add(a.apply(rootVisitor, new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE)));
+		}
+
+		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, null, argtypes));
+		boolean unique = !PTypeAssistant.isUnion(type);
+		PTypeSet result = new PTypeSet();
+
+		if (PTypeAssistant.isMap(type))
+		{
+			SMapType map = PTypeAssistant.getMap(type);
+			result.add(AApplyObjectDesignatorAssistant.mapApply(node,map, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+		}
+
+		if (PTypeAssistant.isSeq(type))
+		{
+			SSeqType seq = PTypeAssistant.getSeq(type);
+			result.add(AApplyObjectDesignatorAssistant.seqApply(node,seq, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+		}
+
+		if (PTypeAssistant.isFunction(type))
+		{
+			AFunctionType ft = PTypeAssistant.getFunction(type);
+			PTypeAssistant.typeResolve(ft, null, rootVisitor, new TypeCheckInfo(question.env));
+			result.add(AApplyObjectDesignatorAssistant.functionApply(node,ft, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+		}
+
+		if (PTypeAssistant.isOperation(type))
+		{
+			AOperationType ot = PTypeAssistant.getOperation(type);
+			PTypeAssistant.typeResolve(ot, null, rootVisitor, new TypeCheckInfo(question.env));
+			result.add(AApplyObjectDesignatorAssistant.operationApply(node,ot, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+		}
+
+		if (result.isEmpty())
+		{
+			TypeCheckerErrors.report(3249, "Object designator is not a map, sequence, function or operation",node.getLocation(),node);
+			TypeCheckerErrors.detail2("Designator", node.getObject(), "Type", type);
+			return new AUnknownType(node.getLocation(),false);
+		}
+
+		return result.getType(node.getLocation());
+	}
+	
+	@Override
+	public PType caseANewObjectDesignator(ANewObjectDesignator node,
+			TypeCheckInfo question) {
+		return node.getExpression().apply(rootVisitor, new TypeCheckInfo(question.env,  NameScope.NAMESANDSTATE, question.qualifiers));
+	}
+	
+	@Override
+	public PType caseAIdentifierObjectDesignator(
+			AIdentifierObjectDesignator node, TypeCheckInfo question) {
+		return node.getExpression().apply(rootVisitor, new TypeCheckInfo(question.env,  NameScope.NAMESANDSTATE, question.qualifiers));
+	}
+	
+	@Override
+	public PType caseAFieldObjectDesignator(AFieldObjectDesignator node,
+			TypeCheckInfo question) {
+		
+		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, null, question.qualifiers));
+		PTypeSet result = new PTypeSet();
+		boolean unique = !PTypeAssistant.isUnion(type);
+
+		if (PTypeAssistant.isClass(type))
+		{
+			AClassType ctype = PTypeAssistant.getClassType(type);
+			
+			if (node.getClassName() == null)
+			{
+				node.setField(new LexNameToken(
+					ctype.getName().name, node.getFieldName().name, node.getFieldName().location));
+			}
+			else
+			{
+				node.setField(node.getClassName());
+			}
+
+			LexNameToken field = node.getField();
+			field.setTypeQualifier(question.qualifiers);
+			PDefinition fdef = PDefinitionAssistant.findName(ctype.getClassdef(), field, NameScope.NAMESANDSTATE);
+
+			if (fdef == null)
+			{
+				TypeCheckerErrors.concern(unique, 3260, "Unknown class member name, '" + field + "'",node.getLocation(),node);
+				result.add(new AUnknownType(node.getLocation(),false));
+			}
+			else
+			{
+				result.add(PDefinitionAssistant.getType(fdef));
+			}
+		}
+
+		if (PTypeAssistant.isRecord(type))
+		{
+			String sname = (node.getFieldName() != null) ? node.getFieldName().name : node.getClassName().toString();
+			ARecordInvariantType rec = PTypeAssistant.getRecord(type);
+			AFieldField rf = ARecordInvariantTypeAssistant.findField(rec, sname);
+
+			if (rf == null)
+			{
+				TypeCheckerErrors.concern(unique, 3261, "Unknown field name, '" + sname + "'",node.getLocation(),node);
+				result.add(new AUnknownType(node.getLocation(),false));
+			}
+			else
+			{
+				result.add(rf.getType());
+			}
+		}
+
+		if (result.isEmpty())
+		{
+			TypeCheckerErrors.report(3262, "Field assignment is not of a class or record type",node.getLocation(),node);
+			TypeCheckerErrors.detail2("Expression", node.getObject(), "Type", type);
+			return new AUnknownType(node.getLocation(),false);
+		}
+
+		return result.getType(node.getLocation());
+		
+	}
 }

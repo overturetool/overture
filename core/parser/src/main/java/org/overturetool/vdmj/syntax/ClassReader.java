@@ -146,7 +146,7 @@ public class ClassReader extends SyntaxReader
 			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,null, superclasses, members,null,null,false,ClassDefinitionSettings.UNSET , null, false, null, false,false,false, null,false,null);
 			for (PDefinition pDefinition : def.getDefinitions())
 			{
-				pDefinition.setClassDefinition(def);
+				PDefinitionAssistant.setClassDefinition(pDefinition,def);
 			}
 			return def;
 

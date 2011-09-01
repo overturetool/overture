@@ -1764,7 +1764,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfBaseClassExp(null, start, classname, args.get(1));
+		return new AIsOfBaseClassExp(null, start,  classname.getExplicit(false), args.get(1));
 //		return new IsOfBaseClassExpression(start, classname, args.get(1));
     }
 
@@ -1792,7 +1792,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfClassExp(null, start, classname, null, args.get(1));
+		return new AIsOfClassExp(null, start, classname.getExplicit(false), null, args.get(1));
 //		return new IsOfClassExpression(start, classname, args.get(1));
     }
 
