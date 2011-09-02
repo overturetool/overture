@@ -14,7 +14,7 @@ public class ANamedTraceDefinitionAssistant {
 	public static PDefinition findName(ANamedTraceDefinition d,
 			LexNameToken sought, NameScope scope) {
 		
-		if (PDefinitionAssistant.findNameBaseCase(d, sought, scope) != null)
+		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}

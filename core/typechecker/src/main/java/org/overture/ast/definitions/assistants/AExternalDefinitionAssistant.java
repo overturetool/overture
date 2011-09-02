@@ -25,7 +25,7 @@ public class AExternalDefinitionAssistant {
 
 	public static void markUsed(AExternalDefinition d) {
 		d.setUsed(true);
-		PDefinitionAssistant.markUsed(d.getState());
+		PDefinitionAssistantTC.markUsed(d.getState());
 		
 	}
 
@@ -38,15 +38,15 @@ public class AExternalDefinitionAssistant {
 	}
 
 	public static LexNameList getVariableNames(AExternalDefinition d) {
-		return PDefinitionAssistant.getVariableNames(d.getState());
+		return PDefinitionAssistantTC.getVariableNames(d.getState());
 	}
 
 	public static PType getType(AExternalDefinition def) {
-		return PDefinitionAssistant.getType(def.getState());
+		return PDefinitionAssistantTC.getType(def.getState());
 	}
 
 	public static boolean isUsed(AExternalDefinition u) {
-		return PDefinitionAssistant.isUsed(u.getState());
+		return PDefinitionAssistantTC.isUsed(u.getState());
 		
 	}
 

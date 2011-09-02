@@ -1,23 +1,25 @@
 package org.overture.ast.patterns.assistants;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.patterns.ASeqPattern;
+import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
+public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 
-public class ASeqPatternTCAssistant extends ASeqPatternAssistant {
-
-	public static void typeResolve(ASeqPattern pattern,
+	public static void typeResolve(ATuplePattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
@@ -35,13 +37,14 @@ public class ASeqPatternTCAssistant extends ASeqPatternAssistant {
 		
 	}
 
-	public static void unResolve(ASeqPattern pattern) {
+	public static void unResolve(ATuplePattern pattern) {
+
 		PPatternListAssistant.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 		
 	}
 
-//	public static LexNameList getVariableNames(ASeqPattern pattern) {
+//	public static LexNameList getVariableNames(ATuplePattern pattern) {
 //		LexNameList list = new LexNameList();
 //
 //		for (PPattern p: pattern.getPlist())
@@ -52,23 +55,24 @@ public class ASeqPatternTCAssistant extends ASeqPatternAssistant {
 //		return list;
 //	}
 
-	public static List<PDefinition> getDefinitions(ASeqPattern rp, PType type,
-			NameScope scope) {
+	public static List<PDefinition> getDefinitions(ATuplePattern rp,
+			PType type, NameScope scope) {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistant.isSeq(type))
+		if (!PTypeAssistant.isProduct(type, rp.getPlist().size()))
 		{
-			TypeCheckerErrors.report(3203, "Sequence pattern is matched against " + type,rp.getLocation(),rp);
+			TypeCheckerErrors.report(3205, "Matching expression is not a product of cardinality " + rp.getPlist().size(),rp.getLocation(),rp);
+			TypeCheckerErrors.detail("Actual", type);
+			return defs;
 		}
-		else
-		{
-			PType elem = PTypeAssistant.getSeq(type).getSeqof();
 
-    		for (PPattern p: rp.getPlist())
-    		{
-    			defs.addAll(PPatternTCAssistant.getDefinitions(p, elem, scope));
-    		}
+		AProductType product = PTypeAssistant.getProduct(type, rp.getPlist().size());
+		Iterator<PType> ti = product.getTypes().iterator();
+
+		for (PPattern p: rp.getPlist())
+		{
+			defs.addAll(PPatternAssistantTC.getDefinitions(p,ti.next(), scope));
 		}
 
 		return defs;

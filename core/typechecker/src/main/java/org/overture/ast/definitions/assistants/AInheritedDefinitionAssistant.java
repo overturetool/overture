@@ -47,19 +47,19 @@ public class AInheritedDefinitionAssistant {
 
 	public static void markUsed(AInheritedDefinition d) {
 		d.setUsed(true);
-		PDefinitionAssistant.markUsed(d.getSuperdef());		
+		PDefinitionAssistantTC.markUsed(d.getSuperdef());		
 	}
 
 	public static List<PDefinition> getDefinitions(AInheritedDefinition d) {
 
-		return PDefinitionAssistant.getDefinitions(d.getSuperdef());
+		return PDefinitionAssistantTC.getDefinitions(d.getSuperdef());
 	}
 
 	public static LexNameList getVariableNames(AInheritedDefinition d) {
 		LexNameList names = new LexNameList();
 		checkSuperDefinition(d);
 
-		for (LexNameToken vn: PDefinitionAssistant.getVariableNames(d.getSuperdef()))
+		for (LexNameToken vn: PDefinitionAssistantTC.getVariableNames(d.getSuperdef()))
 		{
 			names.add(vn.getModifiedName(d.getName().module));
 		}
@@ -79,18 +79,18 @@ public class AInheritedDefinitionAssistant {
 		{
 			if (d.getClassDefinition() != null)
 			{
-				d.setSuperdef(PDefinitionAssistant.findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
+				d.setSuperdef(PDefinitionAssistantTC.findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
 			}
 		}
 	}
 
 	public static PType getType(AInheritedDefinition def) {
 		checkSuperDefinition(def);
-		return PDefinitionAssistant.getType(def.getSuperdef());
+		return PDefinitionAssistantTC.getType(def.getSuperdef());
 	}
 
 	public static boolean isUsed(AInheritedDefinition u) {
-		return PDefinitionAssistant.isUsed(u.getSuperdef());
+		return PDefinitionAssistantTC.isUsed(u.getSuperdef());
 	}
 
 }

@@ -18,9 +18,10 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -105,7 +106,7 @@ public class AExplicitFunctionDefinitionAssistant {
 
 				for (PPattern p: plist)
 				{
-					defs.addAll(PPatternTCAssistant.getDefinitions(p,unknown,NameScope.LOCAL));
+					defs.addAll(PPatternAssistantTC.getDefinitions(p,unknown,NameScope.LOCAL));
 
 				}
 			}
@@ -113,7 +114,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			{
     			for (PPattern p: plist)
     			{
-    				defs.addAll(PPatternTCAssistant.getDefinitions(p,titer.next(),NameScope.LOCAL));					
+    				defs.addAll(PPatternAssistantTC.getDefinitions(p,titer.next(),NameScope.LOCAL));					
     			}
 			}
 
@@ -139,7 +140,7 @@ public class AExplicitFunctionDefinitionAssistant {
 			PDefinition p = new ALocalDefinition(
 				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistant.markUsed(p);
+			PDefinitionAssistantTC.markUsed(p);
 			defs.add(p);
 		}
 
@@ -171,19 +172,19 @@ public class AExplicitFunctionDefinitionAssistant {
 
 	public static PDefinition findName(AExplicitFunctionDefinition d,
 			LexNameToken sought, NameScope scope) {
-		if (PDefinitionAssistant.findNameBaseCase(d, sought, scope) != null)
+		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}
 
 		PDefinition predef = d.getPredef();
-		if (predef != null && PDefinitionAssistant.findName(predef, sought, scope) != null)
+		if (predef != null && PDefinitionAssistantTC.findName(predef, sought, scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = d.getPostdef();
-		if (postdef != null && PDefinitionAssistant.findName(postdef,sought, scope) != null)
+		if (postdef != null && PDefinitionAssistantTC.findName(postdef,sought, scope) != null)
 		{
 			return postdef;
 		}
@@ -222,16 +223,17 @@ public class AExplicitFunctionDefinitionAssistant {
 			
 			TypeCheckInfo newQuestion = new TypeCheckInfo(params,question.scope);			
 			
-			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, newQuestion));
+			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, newQuestion));
 		}
 		else
 		{
-			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
+			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
 		}
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getType().getParameters());
+			AFunctionType fType = (AFunctionType) PDefinitionAssistantTC.getType(d);
+			d.getName().setTypeQualifier(fType.getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)
 			{
@@ -247,12 +249,12 @@ public class AExplicitFunctionDefinitionAssistant {
 
 		if (d.getPrecondition() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getPredef(),rootVisitor,question);
+			PDefinitionAssistantTC.typeResolve(d.getPredef(),rootVisitor,question);
 		}
 
 		if (d.getPostcondition() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getPostdef(),rootVisitor,question);
+			PDefinitionAssistantTC.typeResolve(d.getPostdef(),rootVisitor,question);
 		}
 
 		for (List<PPattern> pp: d.getParamPatternList())
@@ -268,7 +270,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		if (d.getPrecondition() != null)
 		{
 			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistant.markUsed(d.getPredef());
+			PDefinitionAssistantTC.markUsed(d.getPredef());
 		}
 		else
 		{
@@ -278,7 +280,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		if (d.getPostcondition() != null)
 		{
 			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistant.markUsed(d.getPostdef());
+			PDefinitionAssistantTC.markUsed(d.getPostdef());
 		}
 		else
 		{

@@ -8,6 +8,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -133,7 +134,7 @@ public class AOperationTypeAssistant {
 	}
 
 	public static boolean narrowerThan(AOperationType type,
-			PAccessSpecifier accessSpecifier) {
+			AAccessSpecifierAccessSpecifier accessSpecifier) {
 		
 		for (PType t: type.getParameters())
 		{

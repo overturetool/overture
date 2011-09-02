@@ -28,7 +28,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -89,14 +89,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findType(LexNameToken name, String fromModule)
 	{
-		PDefinition def = PDefinitionAssistant.findType(module.getDefs(), name,module.getName().getName());
+		PDefinition def = PDefinitionAssistantTC.findType(module.getDefs(), name,module.getName().getName());
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def =  PDefinitionAssistant.findType(module.getImportdefs(),name,module.getName().getName());
+		def =  PDefinitionAssistantTC.findType(module.getImportdefs(),name,module.getName().getName());
 
 		if (def != null)
 		{

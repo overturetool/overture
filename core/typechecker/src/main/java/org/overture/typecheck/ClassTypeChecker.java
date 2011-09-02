@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
 
@@ -150,7 +150,7 @@ public class ClassTypeChecker extends TypeChecker
 			if (!c.getIsTypeChecked())
 			{
 				SClassDefinitionAssistant.initializedCheck(c);
-				PDefinitionAssistant.unusedCheck(c);
+				PDefinitionAssistantTC.unusedCheck(c);
 			}
 		}
 	}

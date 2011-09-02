@@ -15,7 +15,7 @@ import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
@@ -39,7 +39,7 @@ public class AExplicitOperationDefinitionAssistant {
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
-   			defs.addAll(PPatternTCAssistant.getDefinitions(p,titer.next(), NameScope.LOCAL));
+   			defs.addAll(PPatternAssistantTC.getDefinitions(p,titer.next(), NameScope.LOCAL));
 		}
 
 		return new Vector<PDefinition>(defs);
@@ -47,19 +47,19 @@ public class AExplicitOperationDefinitionAssistant {
 
 	public static PDefinition findName(AExplicitOperationDefinition d,
 			LexNameToken sought, NameScope scope) {
-		if (PDefinitionAssistant.findNameBaseCase(d, sought, scope) != null)
+		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}
 
 		PDefinition predef = d.getPredef();
-		if (predef != null && PDefinitionAssistant.findName(predef, sought, scope) != null)
+		if (predef != null && PDefinitionAssistantTC.findName(predef, sought, scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = d.getPostdef();
-		if (postdef != null && PDefinitionAssistant.findName(postdef,sought, scope) != null)
+		if (postdef != null && PDefinitionAssistantTC.findName(postdef,sought, scope) != null)
 		{
 			return postdef;
 		}
@@ -109,17 +109,17 @@ public class AExplicitOperationDefinitionAssistant {
 
 		if (d.getPrecondition() != null)
 		{
-		    PDefinitionAssistant.typeResolve(d.getPredef(), rootVisitor, question);
+		    PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 		}
 
 		if (d.getPostcondition() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getPostdef(), rootVisitor, question);
+			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 		}
 
 		for (PPattern p: d.getParameterPatterns())
 		{
-			PPatternTCAssistant.typeResolve(p, rootVisitor, question);
+			PPatternAssistantTC.typeResolve(p, rootVisitor, question);
 		}
 		
 	}
@@ -132,13 +132,13 @@ public class AExplicitOperationDefinitionAssistant {
 		if (d.getPrecondition() != null)
 		{
 			d.setPredef(getPreDefinition(d,base));
-			PDefinitionAssistant.markUsed(d.getPredef());
+			PDefinitionAssistantTC.markUsed(d.getPredef());
 		}
 
 		if (d.getPostcondition() != null)
 		{
 			d.setPostdef(getPostDefinition(d,base));
-			PDefinitionAssistant.markUsed(d.getPostdef());
+			PDefinitionAssistantTC.markUsed(d.getPostdef());
 		}
 		
 	}
@@ -164,7 +164,7 @@ public class AExplicitOperationDefinitionAssistant {
 			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName().getOldName()));
 			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName()));
 		}
-		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
+		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
 			// Two arguments called "self~" and "self"
 			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName().getOldName()));
@@ -182,14 +182,14 @@ public class AExplicitOperationDefinitionAssistant {
 				PAccessSpecifierAssistant.getDefault(),
 				null,
 				parameters,
-				AOperationTypeAssistant.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
+				AOperationTypeAssistant.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
 				postop, null, null, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierTCAssistant.getStatic(d,false));
+		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d,false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 		
@@ -206,7 +206,7 @@ public class AExplicitOperationDefinitionAssistant {
 		{
 			plist.add(new AIdentifierPattern(d.getLocation(),null, false, d.getState().getName()));
 		}
-		else if (base.isVDMPP() && !PAccessSpecifierTCAssistant.isStatic(d.getAccess()))
+		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
 			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName()));
 		}
@@ -222,7 +222,7 @@ public class AExplicitOperationDefinitionAssistant {
 			PAccessSpecifierAssistant.getDefault(),
 			null,
 			parameters,
-			AOperationTypeAssistant.getPreType(d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierTCAssistant.isStatic(d.getAccess())),
+			AOperationTypeAssistant.getPreType(d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
 			preop, 
 			null, null, null);
 
@@ -230,7 +230,7 @@ public class AExplicitOperationDefinitionAssistant {
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierTCAssistant.getStatic(def, false));
+		def.setAccess(PAccessSpecifierAssistantTC.getStatic(def, false));
 		def.setClassDefinition(def.getClassDefinition());
 		return def;
 	}

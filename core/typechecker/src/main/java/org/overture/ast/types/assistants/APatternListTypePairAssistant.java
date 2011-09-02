@@ -8,7 +8,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
@@ -23,7 +23,7 @@ public class APatternListTypePairAssistant {
 
 		for (PPattern p: pltp.getPatterns())
 		{
-			list.addAll(PPatternTCAssistant.getDefinitions(p, pltp.getType(), scope));
+			list.addAll(PPatternAssistantTC.getDefinitions(p, pltp.getType(), scope));
 		}
 
 		return list;

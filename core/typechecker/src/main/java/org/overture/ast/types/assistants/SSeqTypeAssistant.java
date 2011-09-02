@@ -2,6 +2,7 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -48,7 +49,7 @@ public class SSeqTypeAssistant {
 	}
 
 	public static boolean narrowerThan(SSeqType type,
-			PAccessSpecifier accessSpecifier) {
+			AAccessSpecifierAccessSpecifier accessSpecifier) {
 		return PTypeAssistant.narrowerThan(type.getSeqof(),accessSpecifier);
 	}
 

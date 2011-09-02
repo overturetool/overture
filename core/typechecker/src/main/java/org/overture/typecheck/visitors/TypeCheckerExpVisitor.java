@@ -20,8 +20,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
-import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
@@ -38,7 +38,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.ASetBindAssistant;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
@@ -1131,7 +1131,7 @@ public class TypeCheckerExpVisitor extends
 
 				for (PDefinition possible: question.env.findMatches(memberName))
 				{
-					if (PDefinitionAssistant.isFunctionOrOperation(possible))
+					if (PDefinitionAssistantTC.isFunctionOrOperation(possible))
 					{
 						if (fdef != null)
 						{
@@ -1162,12 +1162,12 @@ public class TypeCheckerExpVisitor extends
 				// to values as though they are fields of self in the CSK test
 				// suite, so commented out for now.
 
-				if (PDefinitionAssistant.isStatic(fdef))// && !env.isStatic())
+				if (PDefinitionAssistantTC.isStatic(fdef))// && !env.isStatic())
 				{
 					// warning(5005, "Should access member " + field + " from a static context");
 				}
 
-   				results.add(PDefinitionAssistant.getType(fdef));
+   				results.add(PDefinitionAssistantTC.getType(fdef));
    				// At runtime, type qualifiers must match exactly
    				memberName.setTypeQualifier(fdef.getName().typeQualifier);
     		}
@@ -1283,7 +1283,7 @@ public class TypeCheckerExpVisitor extends
     			for (PDefinition def: t.getDefinitions())		// Possibly a union of several
     			{
     				List<LexNameToken> typeParams = null;
-    				def = PDefinitionAssistant.deref(def);
+    				def = PDefinitionAssistantTC.deref(def);
 
     				if (def instanceof AExplicitFunctionDefinition)
     				{
@@ -1379,7 +1379,7 @@ public class TypeCheckerExpVisitor extends
     			{
     				found++;
     				
-    				if (!PDefinitionAssistant.isCallableOperation(def))
+    				if (!PDefinitionAssistantTC.isCallableOperation(def))
     				{
     					TypeCheckerErrors.report(3105, opname + " is not an explicit operation",opname.location,opname);
     				}
@@ -1592,7 +1592,7 @@ public class TypeCheckerExpVisitor extends
 		for (ATypeBind tb: node.getBindList())
 		{
 			mbinds.addAll(ATypeBindAssistant.getMultipleBindList(tb));
-			paramDefinitions.addAll(PPatternTCAssistant.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
+			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(PTypeAssistant.typeResolve(tb.getType(), null, rootVisitor, question));
 		}
@@ -1624,7 +1624,7 @@ public class TypeCheckerExpVisitor extends
 		
 		
 		
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierTCAssistant.getDefault(), null, PMultipleBindAssistant.getMultipleBindList((PMultipleBind) node.getBind().clone()), null);
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistantTC.getDefault(), null, PMultipleBindAssistant.getMultipleBindList((PMultipleBind) node.getBind().clone()), null);
 		
 		def.apply(rootVisitor, question);
 		
@@ -1661,23 +1661,23 @@ public class TypeCheckerExpVisitor extends
 				// simple variable declarations aren't
 
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
-				PDefinitionAssistant.implicitDefinitions(d, local);
+				PDefinitionAssistantTC.implicitDefinitions(d, local);
 				
-				PDefinitionAssistant.typeResolve(d,rootVisitor,new TypeCheckInfo(local,question.scope,question.qualifiers));
+				PDefinitionAssistantTC.typeResolve(d,rootVisitor,new TypeCheckInfo(local,question.scope,question.qualifiers));
 
 				if (question.env.isVDMPP())
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
 					d.setClassDefinition(cdef);
-					d.setAccess( PAccessSpecifierTCAssistant.getStatic(d,true));
+					d.setAccess( PAccessSpecifierAssistantTC.getStatic(d,true));
 				}
 				
 				d.apply(rootVisitor, new TypeCheckInfo(local,question.scope,question.qualifiers));
 			}
 			else
 			{
-				PDefinitionAssistant.implicitDefinitions(d, local);
-				PDefinitionAssistant.typeResolve(d, rootVisitor, new TypeCheckInfo(local, question.scope,question.qualifiers));
+				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				PDefinitionAssistantTC.typeResolve(d, rootVisitor, new TypeCheckInfo(local, question.scope,question.qualifiers));
 				d.apply(rootVisitor, new TypeCheckInfo(local, question.scope));
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
 			}
@@ -1704,16 +1704,16 @@ public class TypeCheckerExpVisitor extends
 				// simple variable declarations aren't
 
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
-				PDefinitionAssistant.implicitDefinitions(d, local);
+				PDefinitionAssistantTC.implicitDefinitions(d, local);
 				TypeCheckInfo newQuestion = new TypeCheckInfo(local,question.scope);
 				
-				PDefinitionAssistant.typeResolve(d,rootVisitor,question);
+				PDefinitionAssistantTC.typeResolve(d,rootVisitor,question);
 
 				if (question.env.isVDMPP())
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
 					d.setClassDefinition(cdef);
-					d.setAccess( PAccessSpecifierTCAssistant.getStatic(d,true));
+					d.setAccess( PAccessSpecifierAssistantTC.getStatic(d,true));
 				}
 
 				
@@ -1721,8 +1721,8 @@ public class TypeCheckerExpVisitor extends
 			}
 			else
 			{
-				PDefinitionAssistant.implicitDefinitions(d, local);
-				PDefinitionAssistant.typeResolve(d, rootVisitor, new TypeCheckInfo(local, question.scope, question.qualifiers));
+				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				PDefinitionAssistantTC.typeResolve(d, rootVisitor, new TypeCheckInfo(local, question.scope, question.qualifiers));
 				d.apply(rootVisitor, question);
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
 			}
@@ -1836,7 +1836,7 @@ public class TypeCheckerExpVisitor extends
 			rec = ((AStateDefinition)typeDef).getRecordType().clone();
 		} else
 		{
-			rec = PDefinitionAssistant.getType(typeDef).clone();
+			rec = PDefinitionAssistantTC.getType(typeDef).clone();
 		}
 		
 
@@ -2000,7 +2000,7 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{
-			if (!PDefinitionAssistant.isCallableOperation(opdef))
+			if (!PDefinitionAssistantTC.isCallableOperation(opdef))
     		{
     			TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types",node.getLocation(),node);
     			TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
@@ -2016,7 +2016,7 @@ public class TypeCheckerExpVisitor extends
 			}
 		}
 
-		PType type = PDefinitionAssistant.getType(classdef);
+		PType type = PDefinitionAssistantTC.getType(classdef);
 		node.setType(type.clone());
 		return type;
 	}
@@ -2175,7 +2175,7 @@ public class TypeCheckerExpVisitor extends
 		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, ASetBindAssistant.getMultipleBindList(node.getSetBind().clone()), null);
 		def.apply(rootVisitor, question);
 
-		if (!PTypeAssistant.isNumeric(PDefinitionAssistant.getType(def)))
+		if (!PTypeAssistant.isNumeric(PDefinitionAssistantTC.getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable",node.getLocation(),node);
 		}
@@ -2451,7 +2451,7 @@ public class TypeCheckerExpVisitor extends
         				node.setType(new AUnknownType(node.getLocation(),false));
         				return node.getType();
         			}
-        			else if (!PAccessSpecifierTCAssistant.isStatic(vardef.getAccess()) && env.isStatic())
+        			else if (!PAccessSpecifierAssistantTC.isStatic(vardef.getAccess()) && env.isStatic())
             		{
         				TypeCheckerErrors.report(3181, "Cannot access " + name + " from a static context",node.getLocation(),node);
         				node.setType(new AUnknownType(node.getLocation(),false));
@@ -2488,7 +2488,7 @@ public class TypeCheckerExpVisitor extends
 
 				for (PDefinition possible: env.findMatches(name))
 				{
-					if (PDefinitionAssistant.isFunctionOrOperation(possible))
+					if (PDefinitionAssistantTC.isFunctionOrOperation(possible))
 					{
 						if (vardef != null)
 						{
@@ -2536,7 +2536,7 @@ public class TypeCheckerExpVisitor extends
 			// how forward referenced types are resolved, and is the reason
 			// we don't need to retry at the top level (assuming all names
 			// are in the environment).
-			node.setType(PTypeAssistant.typeResolve(PDefinitionAssistant.getType(node.getVardef()), null, rootVisitor, question));
+			node.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(node.getVardef()), null, rootVisitor, question));
 			return node.getType();
 		}
 	}

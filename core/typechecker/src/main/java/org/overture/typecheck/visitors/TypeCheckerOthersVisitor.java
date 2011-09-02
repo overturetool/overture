@@ -7,7 +7,7 @@ import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.Node;
@@ -15,7 +15,7 @@ import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.assistants.PBindAssistant;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AFieldObjectDesignator;
 import org.overture.ast.statements.AFieldStateDesignator;
@@ -120,8 +120,8 @@ public class TypeCheckerOthersVisitor extends
 			assert (type != null) :
 					"Can't typecheck a pattern without a type";
 
-			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
-			node.setDefs(PPatternTCAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		
 		return null;
@@ -204,7 +204,7 @@ public class TypeCheckerOthersVisitor extends
 				node.setType(new AUnknownType(name.getLocation(),false));
 				return node.getType();
 			}
-			else if (!PDefinitionAssistant.isUpdatable(def))
+			else if (!PDefinitionAssistantTC.isUpdatable(def))
 			{
 				TypeCheckerErrors.report(3301, "Variable '" + name + "' in scope is not updatable",name.getLocation(),name);
 				node.setType(new AUnknownType(name.getLocation(),false));
@@ -219,7 +219,7 @@ public class TypeCheckerOthersVisitor extends
     				node.setType(new AUnknownType(name.getLocation(),false));
     				return node.getType();
     			}
-    			else if (!PDefinitionAssistant.isStatic(def) && env.isStatic())
+    			else if (!PDefinitionAssistantTC.isStatic(def) && env.isStatic())
     			{
     				TypeCheckerErrors.report(3181, "Cannot access " + name + " from a static context",name.getLocation(),name);
     				node.setType(new AUnknownType(name.getLocation(),false));
@@ -227,7 +227,7 @@ public class TypeCheckerOthersVisitor extends
     			}
 			}
 
-			node.setType(PDefinitionAssistant.getType(def));
+			node.setType(PDefinitionAssistantTC.getType(def));
 			return node.getType(); 
 		}
 		else
@@ -241,7 +241,7 @@ public class TypeCheckerOthersVisitor extends
 				node.setType(new AUnknownType(name.getLocation(),false));
 				return node.getType();
 			}
-			else if (!PDefinitionAssistant.isUpdatable(def))
+			else if (!PDefinitionAssistantTC.isUpdatable(def))
 			{
 				TypeCheckerErrors.report(3301, "Variable '" + name + "' in scope is not updatable",name.getLocation(),name);
 				node.setType(new AUnknownType(name.getLocation(),false));
@@ -258,7 +258,7 @@ public class TypeCheckerOthersVisitor extends
 			}
 			// else just state access in (say) an explicit operation
 
-			node.setType(PDefinitionAssistant.getType(def));
+			node.setType(PDefinitionAssistantTC.getType(def));
 			return node.getType();
 		}
 	}
@@ -322,7 +322,7 @@ public class TypeCheckerOthersVisitor extends
 			return new AUnknownType(node.getSelf().location,false);
 		}
 
-		return PDefinitionAssistant.getType(def);
+		return PDefinitionAssistantTC.getType(def);
 	}
 	
 	@Override
@@ -411,7 +411,7 @@ public class TypeCheckerOthersVisitor extends
 
 			LexNameToken field = node.getField();
 			field.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = PDefinitionAssistant.findName(ctype.getClassdef(), field, NameScope.NAMESANDSTATE);
+			PDefinition fdef = PDefinitionAssistantTC.findName(ctype.getClassdef(), field, NameScope.NAMESANDSTATE);
 
 			if (fdef == null)
 			{
@@ -420,7 +420,7 @@ public class TypeCheckerOthersVisitor extends
 			}
 			else
 			{
-				result.add(PDefinitionAssistant.getType(fdef));
+				result.add(PDefinitionAssistantTC.getType(fdef));
 			}
 		}
 

@@ -31,7 +31,7 @@ public class AStateDefinitionAssistant {
 	public static PDefinition findType(AStateDefinition d, LexNameToken sought,
 			String fromModule) {
 		
-		if (PDefinitionAssistant.findName(d,sought, NameScope.STATE) != null)
+		if (PDefinitionAssistantTC.findName(d,sought, NameScope.STATE) != null)
 		{
 			return d;
 		}
@@ -46,26 +46,26 @@ public class AStateDefinitionAssistant {
 		{
 			PDefinition invdef = definition.getInvdef();
 			
-    		if (invdef != null && PDefinitionAssistant.findName(invdef, sought, scope) != null)
+    		if (invdef != null && PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
     		{
     			return invdef;
     		}
 
     		PDefinition initdef = definition.getInitdef();
-    		if (initdef != null && PDefinitionAssistant.findName(initdef,sought, scope) != null)
+    		if (initdef != null && PDefinitionAssistantTC.findName(initdef,sought, scope) != null)
     		{
     			return initdef;
     		}
 		}
 		
-		if ( PDefinitionAssistant.findName(definition.getRecordDefinition(), sought, scope) != null)
+		if ( PDefinitionAssistantTC.findName(definition.getRecordDefinition(), sought, scope) != null)
 		{
 			return definition.getRecordDefinition();
 		}
 
 		for (PDefinition d: definition.getStateDefs())
 		{
-			PDefinition def = PDefinitionAssistant.findName(d, sought, scope);
+			PDefinition def = PDefinitionAssistantTC.findName(d, sought, scope);
 
 			if (def != null)
 			{
@@ -110,12 +110,12 @@ public class AStateDefinitionAssistant {
 
 		if (d.getInvPattern() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getInvdef(), rootVisitor, question);
+			PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
 		}
 
 		if (d.getInitPattern() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getInitdef(), rootVisitor, question);
+			PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
 		}
 		
 	}

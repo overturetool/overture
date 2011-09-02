@@ -26,7 +26,7 @@ public class PDefinitionListAssistant {
 			Environment env) {
 		for (PDefinition d: paramDefinitions)
 		{
-			PDefinitionAssistant.implicitDefinitions(d,env);
+			PDefinitionAssistantTC.implicitDefinitions(d,env);
 		//	System.out.println();
 		}
 		
@@ -35,7 +35,7 @@ public class PDefinitionListAssistant {
 	public static PDefinition findName(List<PDefinition> definitions,
 			LexNameToken name, NameScope scope) {
 		for (PDefinition d : definitions) {
-			PDefinition def = PDefinitionAssistant.findName(d, name, scope);
+			PDefinition def = PDefinitionAssistantTC.findName(d, name, scope);
 
 			if (def != null) {
 				return def;
@@ -59,7 +59,7 @@ public class PDefinitionListAssistant {
 	
 	public static void unusedCheck(List<PDefinition> definitions) {
 		for (PDefinition d : definitions) {
-			PDefinitionAssistant.unusedCheck(d);
+			PDefinitionAssistantTC.unusedCheck(d);
 		}
 
 	}
@@ -70,7 +70,7 @@ public class PDefinitionListAssistant {
 		Set<PDefinition> set = new HashSet<PDefinition>();
 
 		for (PDefinition d : singleDefinitions(definitions)) {
-			if (PDefinitionAssistant.isFunctionOrOperation(d) && d.getName().matches(name)) {
+			if (PDefinitionAssistantTC.isFunctionOrOperation(d) && d.getName().matches(name)) {
 				set.add(d);
 			}
 		}
@@ -83,7 +83,7 @@ public class PDefinitionListAssistant {
 		List<PDefinition> all = new ArrayList<PDefinition>();
 
 		for (PDefinition d : definitions) {
-			all.addAll(PDefinitionAssistant.getDefinitions(d));
+			all.addAll(PDefinitionAssistantTC.getDefinitions(d));
 		}
 
 		return all;
@@ -91,7 +91,7 @@ public class PDefinitionListAssistant {
 	
 	public static void markUsed(List<PDefinition> definitions) {
 		for (PDefinition d : definitions) {
-			PDefinitionAssistant.markUsed(d);
+			PDefinitionAssistantTC.markUsed(d);
 		}
 
 	}
@@ -109,7 +109,7 @@ public class PDefinitionListAssistant {
 		LexNameList variableNames = new LexNameList();
 
 		for (PDefinition d : list) {
-			variableNames.addAll(PDefinitionAssistant.getVariableNames(d));
+			variableNames.addAll(PDefinitionAssistantTC.getVariableNames(d));
 		}
 
 		return variableNames;
@@ -133,7 +133,7 @@ public class PDefinitionListAssistant {
 
 	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		for (PDefinition definition : definitions) {
-			PDefinitionAssistant.typeResolve(definition, rootVisitor, question);
+			PDefinitionAssistantTC.typeResolve(definition, rootVisitor, question);
 		}
 		
 	}
@@ -143,7 +143,7 @@ public class PDefinitionListAssistant {
 	{
 		for (PDefinition d: actualDefs)
 		{
-			PDefinition def =  PDefinitionAssistant.findType(d,name, fromModule);
+			PDefinition def =  PDefinitionAssistantTC.findType(d,name, fromModule);
 
 			if (def != null)
 			{

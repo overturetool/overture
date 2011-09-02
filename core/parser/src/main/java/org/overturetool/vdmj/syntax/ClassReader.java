@@ -31,6 +31,7 @@ import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -144,10 +145,9 @@ public class ClassReader extends SyntaxReader
 			}
 
 			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,null, superclasses, members,null,null,false,ClassDefinitionSettings.UNSET , null, false, null, false,false,false, null,false,null);
-			for (PDefinition pDefinition : def.getDefinitions())
-			{
-				PDefinitionAssistant.setClassDefinition(pDefinition,def);
-			}
+			
+			PDefinitionAssistant.setClassDefinition(def,def);
+			
 			return def;
 
 		}

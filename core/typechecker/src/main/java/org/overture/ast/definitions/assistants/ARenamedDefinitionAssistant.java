@@ -26,38 +26,38 @@ public class ARenamedDefinitionAssistant {
 			return null;	// Someone else's import
 		}
 
-		PDefinition renamed = PDefinitionAssistant.findName(d,sought, NameScope.TYPENAME);
+		PDefinition renamed = PDefinitionAssistantTC.findName(d,sought, NameScope.TYPENAME);
 
 		if (renamed != null && d.getDef() instanceof ATypeDefinition)
 		{
-			PDefinitionAssistant.markUsed(d.getDef());
+			PDefinitionAssistantTC.markUsed(d.getDef());
 			return renamed;
 		}
 		else
 		{
-			return  PDefinitionAssistant.findType(d.getDef(),sought, fromModule);
+			return  PDefinitionAssistantTC.findType(d.getDef(),sought, fromModule);
 		}
 	}
 
 	public static PDefinition findName(ARenamedDefinition d,
 			LexNameToken sought, NameScope scope) {
 		
-		PDefinition renamed = PDefinitionAssistant.findNameBaseCase(d, sought, scope);
+		PDefinition renamed = PDefinitionAssistantTC.findNameBaseCase(d, sought, scope);
 
 		if (renamed != null)
 		{
-			PDefinitionAssistant.markUsed(d.getDef());
+			PDefinitionAssistantTC.markUsed(d.getDef());
 			return renamed;
 		}
 		else
 		{
-			return  PDefinitionAssistant.findName(d.getDef(),sought, scope);
+			return  PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
 		}
 	}
 
 	public static void markUsed(ARenamedDefinition d) {
 		d.setUsed(true);
-		PDefinitionAssistant.markUsed(d.getDef());
+		PDefinitionAssistantTC.markUsed(d.getDef());
 		
 	}
 
@@ -76,11 +76,11 @@ public class ARenamedDefinitionAssistant {
 	public static void typeResolve(ARenamedDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
-		PDefinitionAssistant.typeResolve(d.getDef(), rootVisitor, question);		
+		PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);		
 	}
 
 	public static boolean isUsed(ARenamedDefinition u) {
-		return PDefinitionAssistant.isUsed(u.getDef());
+		return PDefinitionAssistantTC.isUsed(u.getDef());
 	}
 
 }

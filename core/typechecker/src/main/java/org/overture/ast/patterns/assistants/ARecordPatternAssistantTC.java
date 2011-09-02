@@ -18,7 +18,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class ARecordPatternTCAssistant {
+public class ARecordPatternAssistantTC {
 
 	public static void typeResolve(ARecordPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -93,7 +93,7 @@ public class ARecordPatternTCAssistant {
     		{
     			AFieldField pf = patfi.next();
     			// defs.addAll(p.getDefinitions(usingrec.findField(pf.tag).type, scope));
-    			defs.addAll(PPatternTCAssistant.getDefinitions(p,pf.getType(), scope));
+    			defs.addAll(PPatternAssistantTC.getDefinitions(p,pf.getType(), scope));
     		}
 		}
 

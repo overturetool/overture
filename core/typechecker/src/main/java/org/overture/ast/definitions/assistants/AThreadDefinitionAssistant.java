@@ -20,7 +20,7 @@ public class AThreadDefinitionAssistant {
 	public static PDefinition findName(AThreadDefinition definition,
 			LexNameToken sought, NameScope scope) {
 		
-		return PDefinitionAssistant.findName(definition.getOperationDef(),sought, scope);
+		return PDefinitionAssistantTC.findName(definition.getOperationDef(),sought, scope);
 	}
 
 	public static List<PDefinition> getDefinitions(AThreadDefinition d) {

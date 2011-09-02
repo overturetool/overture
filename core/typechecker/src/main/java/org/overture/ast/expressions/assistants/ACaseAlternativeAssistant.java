@@ -7,7 +7,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.patterns.AExpressionPattern;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
@@ -23,7 +23,7 @@ public class ACaseAlternativeAssistant {
 		if (c.getDefs().size() == 0)
 		{
 			//c.setDefs(new ArrayList<PDefinition>());
-			PPatternTCAssistant.typeResolve(c.getPattern(),rootVisitor,question);
+			PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,question);
 
 			if (c.getPattern() instanceof AExpressionPattern)
 			{
@@ -32,8 +32,8 @@ public class ACaseAlternativeAssistant {
 				ep.getExp().apply(rootVisitor, question);
 			}
 
-			PPatternTCAssistant.typeResolve(c.getPattern(),rootVisitor,question);
-			c.getDefs().addAll(PPatternTCAssistant.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
+			PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,question);
+			c.getDefs().addAll(PPatternAssistantTC.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
 		}
 
 		PDefinitionListAssistant.typeCheck(c.getDefs(),rootVisitor,question);

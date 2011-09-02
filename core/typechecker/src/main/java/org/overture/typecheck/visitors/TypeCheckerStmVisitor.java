@@ -12,8 +12,8 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
@@ -30,7 +30,7 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
 import org.overture.ast.patterns.assistants.PPatternBindAssistant;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -283,7 +283,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		for (PDefinition d: node.getAssignmentDefs())
 		{
 			local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
-			PDefinitionAssistant.implicitDefinitions(d, local);
+			PDefinitionAssistantTC.implicitDefinitions(d, local);
 			d.apply(rootVisitor,new TypeCheckInfo(local, question.scope));
 		}
 
@@ -316,7 +316,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		Environment classenv = null;
 		
 
-		if (self == classdef || PDefinitionAssistant.hasSupertype(self, classdef.getType()))
+		if (self == classdef || PDefinitionAssistantTC.hasSupertype(self, classdef.getType()))
 		{
 			// All fields visible. Note that protected fields are inherited
 			// into "locals" so they are effectively private
@@ -392,7 +392,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			node.setType(new AUnknownType(node.getLocation(), false));
 			return node.getType();
 		}
-		else if (PDefinitionAssistant.isStatic(fdef) && !question.env.isStatic())
+		else if (PDefinitionAssistantTC.isStatic(fdef) && !question.env.isStatic())
 		{
 			// warning(5005, "Should invoke member " + field + " from a static context");
 		}
@@ -448,14 +448,14 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			return node.getType();
 		}
 
-		if (!PDefinitionAssistant.isStatic(opdef) && question.env.isStatic())
+		if (!PDefinitionAssistantTC.isStatic(opdef) && question.env.isStatic())
 		{
 			TypeCheckerErrors.report(3214, "Cannot call " + node.getName() + " from static context", node.getLocation(), node);
 			node.setType(new AUnknownType(node.getLocation(),false));
 			return node.getType();
 		}
 
-		PType type = opdef.getType();
+		PType type = PDefinitionAssistantTC.getType(opdef);
 
 		if (PTypeAssistant.isOperation(type))
 		{
@@ -511,7 +511,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		if (node.getDefs().size() == 0)
 		{
 			node.setDefs(new LinkedList<PDefinition>());
-			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
 
 			if (node.getPattern() instanceof AExpressionPattern)
 			{
@@ -520,10 +520,10 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 				ep.getExp().apply(rootVisitor, question);
 			}
 			
-			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
 			
 			ACasesStm stm = (ACasesStm) node.parent();		
-			node.getDefs().addAll(PPatternTCAssistant.getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
+			node.getDefs().addAll(PPatternAssistantTC.getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
 		}
 		
 		PDefinitionListAssistant.typeCheck(node.getDefs(), rootVisitor, question);
@@ -621,22 +621,22 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 				// simple variable declarations aren't
 
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
-				PDefinitionAssistant.implicitDefinitions(d, local);
-				PDefinitionAssistant.typeResolve(d, rootVisitor, new TypeCheckInfo(local));
+				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				PDefinitionAssistantTC.typeResolve(d, rootVisitor, new TypeCheckInfo(local));
 				
 				if (question.env.isVDMPP())
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
 					d.setClassDefinition(cdef);
-					d.setAccess(PAccessSpecifierTCAssistant.getStatic(d, true));
+					d.setAccess(PAccessSpecifierAssistantTC.getStatic(d, true));
 				}
 				
 				d.apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 			}
 			else
 			{
-				PDefinitionAssistant.implicitDefinitions(d, local);
-				PDefinitionAssistant.typeResolve(d, rootVisitor, question);
+				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				PDefinitionAssistantTC.typeResolve(d, rootVisitor, question);
 				d.apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 				local = new FlatCheckedEnvironment(d, local, question.scope);	// cumulative
 			}
@@ -726,12 +726,12 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseAForAllStm(AForAllStm node, TypeCheckInfo question) 
 	{
 		node.setType(node.getSet().apply(rootVisitor, question));
-		PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
+		PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
 
 		if (PTypeAssistant.isSet(node.getType()))
 		{
 			ASetType st = PTypeAssistant.getSet(node.getType());
-			List<PDefinition> defs = PPatternTCAssistant.getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
+			List<PDefinition> defs = PPatternAssistantTC.getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
 
 			Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
 			PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local, question.scope));
@@ -774,7 +774,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		
 		PDefinition vardef = new ALocalDefinition(node.getVar().getLocation(), 
-				NameScope.LOCAL, false, null, PAccessSpecifierTCAssistant.getDefault(), ft, false,node.getVar());
+				NameScope.LOCAL, false, null, PAccessSpecifierAssistantTC.getDefault(), ft, false,node.getVar());
 		Environment local = new FlatCheckedEnvironment(vardef, question.env, question.scope);
 		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 		local.unusedCheck();
@@ -821,7 +821,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question) 
 	{
 		 
-		node.setDef(new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierTCAssistant.getDefault(),
+		node.setDef(new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistantTC.getDefault(),
 				null, PMultipleBindAssistant.getMultipleBindList(node.getBind()), null));
 		node.getDef().apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
@@ -901,7 +901,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
     				else
     				{
     					defs.add(new ALocalDefinition(name.location, NameScope.STATE, false, null, 
-    							PAccessSpecifierTCAssistant.getDefault(), clause.getType(), false,name));
+    							PAccessSpecifierAssistantTC.getDefault(), clause.getType(), false,name));
     				}
     			}
     		}
@@ -1065,7 +1065,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		AOperationType expected =
 			new AOperationType(node.getLocation(),false, new LinkedList<PType>(), new AVoidType(node.getLocation(),false));
 		
-		opdef = PDefinitionAssistant.deref(opdef);
+		opdef = PDefinitionAssistantTC.deref(opdef);
 
 		if (opdef instanceof AExplicitOperationDefinition)
 		{
@@ -1237,8 +1237,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			assert (type != null) :
 					"Can't typecheck a pattern without a type";
 
-			PPatternTCAssistant.typeResolve(node.getPattern(), rootVisitor, question);
-			node.setDefs(PPatternTCAssistant.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		return null;
 	}

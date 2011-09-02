@@ -30,7 +30,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -169,7 +169,7 @@ abstract public class Environment
 	{
 		for (PDefinition possible: findMatches(name))
 		{
-			if (PDefinitionAssistant.isFunctionOrOperation(possible))
+			if (PDefinitionAssistantTC.isFunctionOrOperation(possible))
 			{
 				TypeChecker.detail("Possible", possible.getName());
 			}

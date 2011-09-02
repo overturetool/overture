@@ -10,4 +10,6 @@ public class PAccessSpecifierAssistant {
 	{
 		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
 	}
+	
+	
 }

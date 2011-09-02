@@ -50,7 +50,7 @@ public class AMultiBindListDefinitionAssistant {
 	public static PType getType(AMultiBindListDefinition def) {
 		if (def.getDefs() != null && def.getDefs().size() == 1)
 		{
-			return PDefinitionAssistant.getType(def.getDefs().get(0));
+			return PDefinitionAssistantTC.getType(def.getDefs().get(0));
 		}
 
 		return new AUnknownType(def.getLocation(),false);

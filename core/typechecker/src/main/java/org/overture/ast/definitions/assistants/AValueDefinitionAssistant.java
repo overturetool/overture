@@ -5,7 +5,7 @@ import java.util.List;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -37,7 +37,7 @@ public class AValueDefinitionAssistant {
 		{
     		for (PDefinition def: d.getDefs())
     		{
-    			PDefinitionAssistant.unusedCheck(def);
+    			PDefinitionAssistantTC.unusedCheck(def);
     		}
 		}
 		
@@ -48,7 +48,7 @@ public class AValueDefinitionAssistant {
 	}
 
 	public static LexNameList getVariableNames(AValueDefinition d) {
-		return PPatternTCAssistant.getVariableNames(d.getPattern());
+		return PPatternAssistantTC.getVariableNames(d.getPattern());
 	}
 
 	public static void typeResolve(AValueDefinition d,

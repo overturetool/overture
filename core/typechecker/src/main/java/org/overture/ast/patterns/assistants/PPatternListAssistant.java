@@ -18,7 +18,7 @@ public class PPatternListAssistant {
 			TypeCheckInfo question) {
 		
 		for (PPattern pattern : pp) {
-			PPatternTCAssistant.typeResolve(pattern, rootVisitor, question);
+			PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);
 		}
 		
 	}
@@ -27,7 +27,7 @@ public class PPatternListAssistant {
 	public static void unResolve(List<PPattern> pp) {
 		
 		for (PPattern pPattern : pp) {
-			PPatternTCAssistant.unResolve(pPattern);
+			PPatternAssistantTC.unResolve(pPattern);
 		}	
 	}
 
@@ -40,14 +40,14 @@ public class PPatternListAssistant {
 				return new AUnknownType(location,false);
 
 			case 1:
-				return PPatternTCAssistant.getPossibleType(plist.get(0));
+				return PPatternAssistantTC.getPossibleType(plist.get(0));
 
 			default:
         		PTypeSet list = new PTypeSet();
 
         		for (PPattern p: plist)
         		{
-        			list.add(PPatternTCAssistant.getPossibleType(p));
+        			list.add(PPatternAssistantTC.getPossibleType(p));
         		}
 
         		return list.getType(location);		// NB. a union of types

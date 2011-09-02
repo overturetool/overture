@@ -6,7 +6,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 
-public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
+public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 
 	public static boolean isPublic(PAccessSpecifier access) {
 		if(access instanceof AAccessSpecifierAccessSpecifier)
@@ -44,15 +44,11 @@ public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
 		return false;
 	}
 
-	public static boolean narrowerThan(PAccessSpecifier access,
-			PAccessSpecifier other) {
-		if(access instanceof AAccessSpecifierAccessSpecifier && other instanceof AAccessSpecifierAccessSpecifier)
-		{
-			return narrowerThan(((AAccessSpecifierAccessSpecifier)access).getAccess(),((AAccessSpecifierAccessSpecifier)other).getAccess());
-		}
-		
-		assert false : "PAccessSpecifierAssistent : narrowerThan arguments are not access specifiers";
-		return false;
+	public static boolean narrowerThan(AAccessSpecifierAccessSpecifier access,
+			AAccessSpecifierAccessSpecifier other) {		
+			return narrowerThan(access.getAccess(),other.getAccess());
+	
+				
 		
 	}
 
@@ -61,9 +57,9 @@ public class PAccessSpecifierTCAssistant extends PAccessSpecifierAssistant{
 		case PRIVATE:
 			return other.kindPAccess() != EAccess.PRIVATE;
 		case PROTECTED:
-			return other.kindPAccess() != EAccess.PROTECTED;
+			return other.kindPAccess() == EAccess.PUBLIC;
 		case PUBLIC:
-			return other.kindPAccess() != EAccess.PUBLIC;		
+			return false;		
 		}
 		assert false : "PAccessSpecifierAssistent : narrowerThan PAccess switch is not comprehensive";
 		return false;

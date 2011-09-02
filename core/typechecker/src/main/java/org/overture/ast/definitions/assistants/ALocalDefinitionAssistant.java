@@ -45,7 +45,7 @@ public class ALocalDefinitionAssistant {
 	}
 
 	public static boolean isFunction(ALocalDefinition def) {
-		return (def.getValueDefinition() || PTypeAssistant.isType(def.getType(),AParameterType.class)) ? false : PTypeAssistant.isFunction(def.getType());
+		return (def.getValueDefinition() || PTypeAssistant.isType(PDefinitionAssistantTC.getType(def),AParameterType.class)) ? false : PTypeAssistant.isFunction(def.getType());
 	}
 
 	

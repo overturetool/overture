@@ -954,7 +954,7 @@ public class DefinitionReader extends SyntaxReader
 		}
  		
  		return new AValueDefinition(p.getLocation(),null,scope,false,
-				null,null,type,p,getExpressionReader().readExpression(),defs,null);
+				null,PAccessSpecifierAssistant.getDefault(),type,p,getExpressionReader().readExpression(),defs,null);
 //		return new ValueDefinition(
 //			p, scope, type, getExpressionReader().readExpression());
 	}

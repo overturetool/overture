@@ -14,7 +14,7 @@ import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class AUnionPatternTCAssistant {
+public class AUnionPatternAssistantTC {
 
 	public static void typeResolve(AUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -24,8 +24,8 @@ public class AUnionPatternTCAssistant {
 
 		try
 		{
-			PPatternTCAssistant.typeResolve(pattern.getLeft(), rootVisitor, question);
-			PPatternTCAssistant.typeResolve(pattern.getRight(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -36,8 +36,8 @@ public class AUnionPatternTCAssistant {
 	}
 
 	public static void unResolve(AUnionPattern pattern) {
-		PPatternTCAssistant.unResolve(pattern.getLeft());
-		PPatternTCAssistant.unResolve(pattern.getRight());
+		PPatternAssistantTC.unResolve(pattern.getLeft());
+		PPatternAssistantTC.unResolve(pattern.getRight());
 		pattern.setResolved(false);
 		
 	}
@@ -61,8 +61,8 @@ public class AUnionPatternTCAssistant {
 			TypeCheckerErrors.report(3206, "Matching expression is not a set type",rp.getLocation(),rp);
 		}
 
-		defs.addAll(PPatternTCAssistant.getDefinitions(rp.getLeft(),type, scope));
-		defs.addAll(PPatternTCAssistant.getDefinitions(rp.getRight(),type, scope));
+		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getLeft(),type, scope));
+		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),type, scope));
 
 		return defs;
 	}

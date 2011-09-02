@@ -2,6 +2,7 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -148,7 +149,7 @@ public class ABracketTypeAssistant {
 	}
 
 	public static boolean narrowerThan(ABracketType type,
-			PAccessSpecifier accessSpecifier) {
+			AAccessSpecifierAccessSpecifier accessSpecifier) {
 		return PTypeAssistant.narrowerThan(type.getType(), accessSpecifier);
 	}
 	

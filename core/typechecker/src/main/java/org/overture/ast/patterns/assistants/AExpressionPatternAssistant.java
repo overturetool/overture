@@ -22,7 +22,7 @@ public class AExpressionPatternAssistant {
 		}
 		catch (TypeCheckException e)
 		{
-			PPatternTCAssistant.unResolve(pattern);
+			PPatternAssistantTC.unResolve(pattern);
 			throw e;
 		}
 		

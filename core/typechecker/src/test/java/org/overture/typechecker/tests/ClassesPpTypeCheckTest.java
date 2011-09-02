@@ -14,7 +14,7 @@ public class ClassesPpTypeCheckTest extends BaseTestSuite
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		String name = "Type Check Modules TestSuite";
-		String root = "src\\test\\resources\\classes\\exprtest\\PP\\exprpp\\subaccess1";
+		String root = "src\\test\\resources\\classes";
 		TestSuite test =  createTestCompleteFile(name, root, ClassTestCase.class);
 		return test;
 	}

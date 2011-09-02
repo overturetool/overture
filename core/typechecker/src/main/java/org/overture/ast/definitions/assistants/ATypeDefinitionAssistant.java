@@ -8,7 +8,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternTCAssistant;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -49,7 +49,7 @@ public class ATypeDefinitionAssistant {
 			}
 		}
 
-		return PDefinitionAssistant.findNameBaseCase(d,sought, NameScope.TYPENAME);
+		return PDefinitionAssistantTC.findNameBaseCase(d,sought, NameScope.TYPENAME);
 	}
 
 	public static PDefinition findName(ATypeDefinition d, LexNameToken sought,
@@ -57,7 +57,7 @@ public class ATypeDefinitionAssistant {
 
 		PDefinition invdef = d.getInvdef();
 		
-		if (invdef != null &&  PDefinitionAssistant.findName(invdef, sought, scope)  != null)
+		if (invdef != null &&  PDefinitionAssistantTC.findName(invdef, sought, scope)  != null)
 		{
 			return invdef;
 		}
@@ -97,8 +97,8 @@ public class ATypeDefinitionAssistant {
 
 			if (d.getInvdef() != null)
 			{
-				PDefinitionAssistant.typeResolve(d.getInvdef(), rootVisitor, question);
-				PPatternTCAssistant.typeResolve(d.getInvPattern(), rootVisitor, question);
+				PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
+				PPatternAssistantTC.typeResolve(d.getInvPattern(), rootVisitor, question);
 			}
 			
 			d.setType(d.getInvType());

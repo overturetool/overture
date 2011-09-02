@@ -56,7 +56,7 @@ public class AImplicitFunctionDefinitionAssistant {
 			PDefinition p = new ALocalDefinition(
 				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistant.markUsed(p);
+			PDefinitionAssistantTC.markUsed(p);
 			defs.add(p);
 		}
 
@@ -66,19 +66,19 @@ public class AImplicitFunctionDefinitionAssistant {
 	public static PDefinition findName(AImplicitFunctionDefinition d,
 			LexNameToken sought, NameScope scope) {
 		
-		if (PDefinitionAssistant.findNameBaseCase(d, sought, scope) != null)
+		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}
 
 		PDefinition predef = d.getPredef();
-		if (predef != null && PDefinitionAssistant.findName(predef, sought, scope) != null)
+		if (predef != null && PDefinitionAssistantTC.findName(predef, sought, scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = d.getPostdef();
-		if (postdef != null && PDefinitionAssistant.findName(postdef,sought, scope) != null)
+		if (postdef != null && PDefinitionAssistantTC.findName(postdef,sought, scope) != null)
 		{
 			return postdef;
 		}
@@ -115,12 +115,12 @@ public class AImplicitFunctionDefinitionAssistant {
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AImplicitFunctionDefinitionAssistant.getTypeParamDefinitions(d), question.env, NameScope.NAMES);			
-			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, new TypeCheckInfo(params, question.scope,question.qualifiers)));
+			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, new TypeCheckInfo(params, question.scope,question.qualifiers)));
 		}
 		else
 		{
 			question.qualifiers = null;
-			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
+			d.setType(PTypeAssistant.typeResolve( PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
 		}
 
 		if (d.getResult() != null)
@@ -130,7 +130,8 @@ public class AImplicitFunctionDefinitionAssistant {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getType().getParameters());
+			AFunctionType fType = (AFunctionType) PDefinitionAssistantTC.getType(d);
+			d.getName().setTypeQualifier(fType.getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)
 			{
@@ -146,12 +147,12 @@ public class AImplicitFunctionDefinitionAssistant {
 
 		if (d.getPrecondition() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getPredef(), rootVisitor, question);
+			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 		}
 
 		if (d.getPostcondition() != null)
 		{
-			PDefinitionAssistant.typeResolve(d.getPostdef(), rootVisitor, question);
+			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 		}
 
 		for (APatternListTypePair pltp: d.getParamPatterns())
@@ -167,7 +168,7 @@ public class AImplicitFunctionDefinitionAssistant {
 		if (d.getPrecondition() != null)
 		{
 			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistant.markUsed(d.getPredef());
+			PDefinitionAssistantTC.markUsed(d.getPredef());
 		}
 		else
 		{
@@ -177,7 +178,7 @@ public class AImplicitFunctionDefinitionAssistant {
 		if (d.getPostcondition() != null)
 		{
 			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistant.markUsed(d.getPostdef());
+			PDefinitionAssistantTC.markUsed(d.getPostdef());
 		}
 		else
 		{
@@ -201,7 +202,7 @@ public class AImplicitFunctionDefinitionAssistant {
 			(List<LexNameToken>)d.getTypeParams().clone(), 
 			parameters,
 			AFunctionTypeAssistant.getPostType(d.getType()),
-			d.getPostcondition(), 
+			d.getPostcondition().clone(), 
 			null, null, null);
 
 		def.setAccess(d.getAccess().clone());
@@ -221,7 +222,7 @@ public class AImplicitFunctionDefinitionAssistant {
 				d.getTypeParams(), 
 				getParamPatternList(d),
 				AFunctionTypeAssistant.getPreType(d.getType()),
-				d.getPrecondition(), 
+				d.getPrecondition().clone(), 
 				null, null, null);
 
 			def.setAccess(d.getAccess());

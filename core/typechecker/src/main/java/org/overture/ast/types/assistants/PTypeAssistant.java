@@ -9,8 +9,9 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -47,7 +48,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 public class PTypeAssistant {
 
 	public static boolean hasSupertype(AClassType cto, PType other) {
-		return PDefinitionAssistant.hasSupertype(cto.getClassdef(), other);
+		return PDefinitionAssistantTC.hasSupertype(cto.getClassdef(), other);
 	}
 
 	public static boolean isType(PType b, Class<? extends PType> typeclass) {
@@ -808,7 +809,7 @@ public class PTypeAssistant {
 		return false;
 	}
 
-	public static boolean narrowerThan(PType type, PAccessSpecifier accessSpecifier) {
+	public static boolean narrowerThan(PType type, AAccessSpecifierAccessSpecifier accessSpecifier) {
 		switch (type.kindPType()) {				
 		case BRACKET:
 			return ABracketTypeAssistant.narrowerThan((ABracketType)type,accessSpecifier);		
@@ -833,13 +834,13 @@ public class PTypeAssistant {
 		}
 	}
 
-	public static boolean narrowerThanBaseCase(PType type, PAccessSpecifier accessSpecifier) {
+	public static boolean narrowerThanBaseCase(PType type, AAccessSpecifierAccessSpecifier accessSpecifier) {
 		if (type.getDefinitions() != null)
 		{
 			boolean result = false;
 			for (PDefinition d: type.getDefinitions())
 			{
-				result = result || PAccessSpecifierTCAssistant.narrowerThan(d.getAccess(),accessSpecifier);
+				result = result || PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(),accessSpecifier);
 			}
 			return result;
 		}

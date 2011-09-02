@@ -35,7 +35,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-public class PPatternTCAssistant extends PPatternAssistant {
+public class PPatternAssistantTC extends PPatternAssistant {
 
 	public static List<PDefinition> getDefinitions(PPattern rp,
 			PType ptype, NameScope scope) {		
@@ -56,17 +56,17 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case STRING:
 			return new Vector<PDefinition>();				
 		case CONCATENATION:
-			return AConcatenationPatternTCAssistant.getDefinitions((AConcatenationPattern)rp,ptype,scope);
+			return AConcatenationPatternAssistantTC.getDefinitions((AConcatenationPattern)rp,ptype,scope);
 		case RECORD:
-			return ARecordPatternTCAssistant.getDefinitions((ARecordPattern)rp,ptype,scope);		
+			return ARecordPatternAssistantTC.getDefinitions((ARecordPattern)rp,ptype,scope);		
 		case SEQ:
-			return ASeqPatternTCAssistant.getDefinitions((ASeqPattern)rp,ptype,scope);
+			return ASeqPatternAssistantTC.getDefinitions((ASeqPattern)rp,ptype,scope);
 		case SET:
-			return ASetPatternTCAssistant.getDefinitions((ASetPattern)rp,ptype,scope);
+			return ASetPatternAssistantTC.getDefinitions((ASetPattern)rp,ptype,scope);
 		case TUPLE:
-			return ATuplePatternTCAssistant.getDefinitions((ATuplePattern)rp,ptype,scope);
+			return ATuplePatternAssistantTC.getDefinitions((ATuplePattern)rp,ptype,scope);
 		case UNION:
-			return AUnionPatternTCAssistant.getDefinitions((AUnionPattern)rp,ptype,scope);
+			return AUnionPatternAssistantTC.getDefinitions((AUnionPattern)rp,ptype,scope);
 		default:
 			assert false : "PPatternAssistant.getDefinitions - should not hit this case";
 			return null;
@@ -79,7 +79,7 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case CONCATENATION:
 			if(pattern instanceof AConcatenationPattern)
 			{
-				AConcatenationPatternTCAssistant.typeResolve((AConcatenationPattern)pattern,rootVisitor,question);
+				AConcatenationPatternAssistantTC.typeResolve((AConcatenationPattern)pattern,rootVisitor,question);
 			}
 			break;
 		case EXPRESSION:
@@ -91,31 +91,31 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case RECORD:
 			if(pattern instanceof ARecordPattern)
 			{
-				ARecordPatternTCAssistant.typeResolve((ARecordPattern)pattern,rootVisitor,question);
+				ARecordPatternAssistantTC.typeResolve((ARecordPattern)pattern,rootVisitor,question);
 			}
 			break;
 		case SEQ:
 			if(pattern instanceof ASeqPattern)
 			{
-				ASeqPatternTCAssistant.typeResolve((ASeqPattern)pattern,rootVisitor,question);
+				ASeqPatternAssistantTC.typeResolve((ASeqPattern)pattern,rootVisitor,question);
 			}
 			break;			
 		case SET:
 			if(pattern instanceof ASetPattern)
 			{
-				ASetPatternTCAssistant.typeResolve((ASetPattern)pattern,rootVisitor,question);
+				ASetPatternAssistantTC.typeResolve((ASetPattern)pattern,rootVisitor,question);
 			}
 			break;		
 		case TUPLE:
 			if(pattern instanceof ATuplePattern)
 			{
-				ATuplePatternTCAssistant.typeResolve((ATuplePattern)pattern,rootVisitor,question);
+				ATuplePatternAssistantTC.typeResolve((ATuplePattern)pattern,rootVisitor,question);
 			}
 			break;
 		case UNION:
 			if(pattern instanceof AUnionPattern)
 			{
-				AUnionPatternTCAssistant.typeResolve((AUnionPattern)pattern,rootVisitor,question);
+				AUnionPatternAssistantTC.typeResolve((AUnionPattern)pattern,rootVisitor,question);
 			}
 			break;
 		default:
@@ -131,37 +131,37 @@ public class PPatternTCAssistant extends PPatternAssistant {
 		case CONCATENATION:
 			if(pattern instanceof AConcatenationPattern)
 			{
-				AConcatenationPatternTCAssistant.unResolve((AConcatenationPattern)pattern);
+				AConcatenationPatternAssistantTC.unResolve((AConcatenationPattern)pattern);
 			}
 			break;
 		case RECORD:
 			if(pattern instanceof ARecordPattern)
 			{
-				ARecordPatternTCAssistant.unResolve((ARecordPattern)pattern);
+				ARecordPatternAssistantTC.unResolve((ARecordPattern)pattern);
 			}
 			break;
 		case SEQ:
 			if(pattern instanceof ASeqPattern)
 			{
-				ASeqPatternTCAssistant.unResolve((ASeqPattern)pattern);
+				ASeqPatternAssistantTC.unResolve((ASeqPattern)pattern);
 			}
 			break;
 		case SET:
 			if(pattern instanceof ASetPattern)
 			{
-				ASetPatternTCAssistant.unResolve((ASetPattern)pattern);
+				ASetPatternAssistantTC.unResolve((ASetPattern)pattern);
 			}
 			break;
 		case TUPLE:
 			if(pattern instanceof ATuplePattern)
 			{
-				ATuplePatternTCAssistant.unResolve((ATuplePattern)pattern);
+				ATuplePatternAssistantTC.unResolve((ATuplePattern)pattern);
 			}
 			break;
 		case UNION:
 			if(pattern instanceof AUnionPattern)
 			{
-				AUnionPatternTCAssistant.unResolve((AUnionPattern)pattern);
+				AUnionPatternAssistantTC.unResolve((AUnionPattern)pattern);
 			}
 			break;		
 		default:

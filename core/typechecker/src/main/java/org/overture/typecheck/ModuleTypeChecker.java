@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.assistants.AModuleModulesAssistant;
@@ -177,7 +177,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{	
-				PDefinitionAssistant.typeResolve(d, tc, new TypeCheckInfo(env));
+				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(env));
 //				System.out.println(d.getName()==null?"":d.getName());
 			}
 			catch (TypeCheckException te)
@@ -201,7 +201,7 @@ public class ModuleTypeChecker extends TypeChecker
     				{
 //    					System.out.println("Number of Defs: " + m.getDefs().size());
 //    					System.out.println("Def to typecheck: " + d.getName());
-    					if (PDefinitionAssistant.getPass(d) == pass)//TODO we properly need to add this to all definitions
+    					if (PDefinitionAssistantTC.getPass(d) == pass)//TODO we properly need to add this to all definitions
     					{
     						try
     						{

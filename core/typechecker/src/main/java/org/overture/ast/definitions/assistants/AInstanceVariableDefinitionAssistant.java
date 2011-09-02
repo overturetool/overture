@@ -20,7 +20,7 @@ public class AInstanceVariableDefinitionAssistant {
 	public static PDefinition findName(AInstanceVariableDefinition d, LexNameToken sought,
 			NameScope scope) {
 		
-		PDefinition found = PDefinitionAssistant.findNameBaseCase(d, sought, scope);
+		PDefinition found = PDefinitionAssistantTC.findNameBaseCase(d, sought, scope);
 		if (found != null) return found;
 		return scope.matches(NameScope.OLDSTATE) &&
 				d.getOldname().equals(sought) ? d : null;
@@ -55,7 +55,7 @@ public class AInstanceVariableDefinitionAssistant {
 	}
 
 	public static void initializedCheck(AInstanceVariableDefinition ivd) {
-		if (!ivd.getInitialized() && !PAccessSpecifierTCAssistant.isStatic(ivd.getAccess()))
+		if (!ivd.getInitialized() && !PAccessSpecifierAssistantTC.isStatic(ivd.getAccess()))
 		{
 			TypeCheckerErrors.warning(5001, "Instance variable '" + ivd.getName() + "' is not initialized",ivd.getLocation(),ivd);
 		}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PAccessSpecifier;
@@ -127,7 +128,7 @@ public class AFunctionTypeAssistant {
 	}
 
 	public static boolean narrowerThan(AFunctionType type,
-			PAccessSpecifier accessSpecifier) {
+			AAccessSpecifierAccessSpecifier accessSpecifier) {
 		
 		for (PType t: type.getParameters())
 		{

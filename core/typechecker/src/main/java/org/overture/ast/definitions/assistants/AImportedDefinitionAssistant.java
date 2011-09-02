@@ -22,11 +22,11 @@ public class AImportedDefinitionAssistant {
 		}
 
 		
-		PDefinition def = PDefinitionAssistant.findType(d.getDef(), sought, fromModule);
+		PDefinition def = PDefinitionAssistantTC.findType(d.getDef(), sought, fromModule);
 
 		if (def != null)
 		{
-			PDefinitionAssistant.markUsed(d);
+			PDefinitionAssistantTC.markUsed(d);
 		}
 
 		return def;
@@ -35,11 +35,11 @@ public class AImportedDefinitionAssistant {
 	public static PDefinition findName(AImportedDefinition d,
 			LexNameToken sought, NameScope scope) {
 		
-		PDefinition def =  PDefinitionAssistant.findName(d.getDef(), sought, scope);
+		PDefinition def =  PDefinitionAssistantTC.findName(d.getDef(), sought, scope);
 
 		if (def != null)
 		{
-			PDefinitionAssistant.markUsed(d);
+			PDefinitionAssistantTC.markUsed(d);
 		}
 
 		return def;
@@ -47,7 +47,7 @@ public class AImportedDefinitionAssistant {
 
 	public static void markUsed(AImportedDefinition d) {
 		d.setUsed(true);
-		PDefinitionAssistant.markUsed(d.getDef());
+		PDefinitionAssistantTC.markUsed(d.getDef());
 		
 	}
 
@@ -59,11 +59,11 @@ public class AImportedDefinitionAssistant {
 	}
 
 	public static LexNameList getVariableNames(AImportedDefinition d) {
-		return PDefinitionAssistant.getVariableNames(d.getDef());
+		return PDefinitionAssistantTC.getVariableNames(d.getDef());
 	}
 
 	public static boolean isUsed(AImportedDefinition u) {
-		return PDefinitionAssistant.isUsed(u.getDef());
+		return PDefinitionAssistantTC.isUsed(u.getDef());
 		
 	}
 

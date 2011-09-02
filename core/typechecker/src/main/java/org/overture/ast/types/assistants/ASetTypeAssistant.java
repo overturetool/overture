@@ -2,6 +2,7 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
@@ -61,7 +62,7 @@ public class ASetTypeAssistant {
 	}
 
 	public static boolean narrowerThan(ASetType type,
-			PAccessSpecifier accessSpecifier) {
+			AAccessSpecifierAccessSpecifier accessSpecifier) {
 		return PTypeAssistant.narrowerThan(type.getSetof(),accessSpecifier);
 	}
 

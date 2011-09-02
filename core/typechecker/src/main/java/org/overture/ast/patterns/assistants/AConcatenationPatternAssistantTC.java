@@ -11,7 +11,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
-public class AConcatenationPatternTCAssistant extends AConcatenationPatternAssistant{
+public class AConcatenationPatternAssistantTC extends AConcatenationPatternAssistant{
 
 	public static void typeResolve(AConcatenationPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		
@@ -19,8 +19,8 @@ public class AConcatenationPatternTCAssistant extends AConcatenationPatternAssis
 
 		try
 		{
-			PPatternTCAssistant.typeResolve(pattern.getLeft(),rootVisitor,question);
-			PPatternTCAssistant.typeResolve(pattern.getRight(),rootVisitor,question);
+			PPatternAssistantTC.typeResolve(pattern.getLeft(),rootVisitor,question);
+			PPatternAssistantTC.typeResolve(pattern.getRight(),rootVisitor,question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -31,16 +31,16 @@ public class AConcatenationPatternTCAssistant extends AConcatenationPatternAssis
 	}
 
 	public static void unResolve(AConcatenationPattern pattern) {
-		PPatternTCAssistant.unResolve(pattern.getLeft());
-		PPatternTCAssistant.unResolve(pattern.getRight());
+		PPatternAssistantTC.unResolve(pattern.getLeft());
+		PPatternAssistantTC.unResolve(pattern.getRight());
 		pattern.setResolved(false);
 		
 	}
 
 	public static List<PDefinition> getDefinitions(AConcatenationPattern rp, PType ptype,
 			NameScope scope) {
-		List<PDefinition> list = PPatternTCAssistant.getDefinitions(rp.getLeft(),ptype, scope);
-		list.addAll(PPatternTCAssistant.getDefinitions(rp.getRight(),ptype, scope));
+		List<PDefinition> list = PPatternAssistantTC.getDefinitions(rp.getLeft(),ptype, scope);
+		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),ptype, scope));
 		return list;
 		
 	}

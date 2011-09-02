@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
 
@@ -30,7 +30,7 @@ public class AModuleExportsAssistant
 
 		for (PDefinition d: exportDefs)
 		{
-			PDefinitionAssistant.markUsed(d);
+			PDefinitionAssistantTC.markUsed(d);
 		}
 
 		return exportDefs;

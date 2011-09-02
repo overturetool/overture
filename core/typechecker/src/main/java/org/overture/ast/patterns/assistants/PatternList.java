@@ -17,14 +17,14 @@ public class PatternList extends Vector<PPattern>{
 			TypeCheckInfo question) {
 
 		for (PPattern pPattern : this) {
-			PPatternTCAssistant.typeResolve(pPattern, rootVisitor, question);
+			PPatternAssistantTC.typeResolve(pPattern, rootVisitor, question);
 		}		
 	}
 
 	public void unResolve() {
 		
 		for (PPattern pPattern : this) {
-			PPatternTCAssistant.unResolve(pPattern);
+			PPatternAssistantTC.unResolve(pPattern);
 		}	
 	}
 	

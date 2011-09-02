@@ -32,7 +32,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -98,7 +98,7 @@ public class PrivateClassEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		PDefinitionAssistant.unusedCheck(classdef);
+		PDefinitionAssistantTC.unusedCheck(classdef);
 	}
 
 	@Override

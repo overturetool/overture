@@ -12,8 +12,8 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierTCAssistant;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
@@ -593,7 +593,7 @@ public class AUnionTypeAssistant {
     						}
     					}
 
-    					PType ftype = PDefinitionAssistant.getType(f);
+    					PType ftype = PDefinitionAssistantTC.getType(f);
 
     					if (current == null)
     					{
@@ -604,7 +604,7 @@ public class AUnionTypeAssistant {
     						current.add(ftype);
     					}
 
-    					PAccessSpecifier curracc = access.get(synthname);
+    					AAccessSpecifierAccessSpecifier curracc = access.get(synthname);
 
     					if (curracc == null)
     					{
@@ -612,7 +612,7 @@ public class AUnionTypeAssistant {
     					}
     					else
     					{
-    						if (PAccessSpecifierTCAssistant.narrowerThan(curracc, f.getAccess()))
+    						if (PAccessSpecifierAssistantTC.narrowerThan(curracc, f.getAccess()))
     						{
     							access.put(synthname, f.getAccess());
     						}
@@ -656,7 +656,7 @@ public class AUnionTypeAssistant {
 	}
 
 	public static boolean narrowerThan(AUnionType type,
-			PAccessSpecifier accessSpecifier) {
+			AAccessSpecifierAccessSpecifier accessSpecifier) {
 		
 		for (PType t: type.getTypes())
 		{
