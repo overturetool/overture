@@ -406,8 +406,8 @@ public class TypeReader extends SyntaxReader
 
 			case AT:
 				nextToken();
-				type = new AParameterType(location, false,null,
-						idToName(readIdToken("Invalid type parameter")));
+				LexNameToken name = idToName(readIdToken("Invalid type parameter"));
+				type = new AParameterType(name.location, false,null,name);
 				break;
 
 			case QMARK:

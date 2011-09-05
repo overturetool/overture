@@ -135,9 +135,9 @@ public class TypeCheckerDefinitionVisitor extends
 		// resolution will succeed.
 
 		Environment cenv = new PrivateClassEnvironment(node.getClassDefinition(), question.env);
-		question = new TypeCheckInfo(cenv,question.scope,question.qualifiers);
+		
 		//TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of assignment in our tree 		
-		node.setExpType(node.getExpression().apply(rootVisitor, question));
+		node.setExpType(node.getExpression().apply(rootVisitor, new TypeCheckInfo(cenv,NameScope.NAMESANDSTATE,question.qualifiers)));
 		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
@@ -602,7 +602,7 @@ public class TypeCheckerDefinitionVisitor extends
 		PDefinitionListAssistant.typeCheck(node.getParamDefinitions(), rootVisitor, new TypeCheckInfo(question.env,NameScope.NAMESANDSTATE, question.qualifiers)); 
 
 		FlatCheckedEnvironment local =
-			new FlatCheckedEnvironment(node.getParamDefinitions(), question.env, question.scope);
+			new FlatCheckedEnvironment(node.getParamDefinitions(), question.env, NameScope.NAMESANDSTATE);
 		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 

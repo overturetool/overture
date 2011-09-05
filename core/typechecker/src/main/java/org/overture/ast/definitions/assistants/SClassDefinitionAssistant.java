@@ -480,7 +480,7 @@ public class SClassDefinitionAssistant {
 			{
 				defs.add(d);
 
-				LexNameToken localname = d.getName().getModifiedName(d.getName().name);
+				LexNameToken localname = d.getName().getModifiedName(def.getName().name);
 
 				if (PDefinitionListAssistant.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
@@ -688,12 +688,12 @@ public class SClassDefinitionAssistant {
 			{
 				if (!PDefinitionAssistantTC.kind(indef).equals(PDefinitionAssistantTC.kind(override)))
 				{
-					TypeCheckerErrors.report(3005, "Overriding a superclass member of a different kind: " + override.getName(),override.getLocation(),override);
+					TypeCheckerErrors.report(3005, "Overriding a superclass member of a different kind: " + override.getName(),override.getName().location,override);
 					TypeCheckerErrors.detail2("This", PDefinitionAssistantTC.kind(override), "Super", PDefinitionAssistantTC.kind(indef));
 				}
 				else if (PAccessSpecifierAssistantTC.narrowerThan(override.getAccess(),indef.getAccess()))
 				{
-					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility",override.getLocation(),override);
+					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility",override.getName().getLocation(),override);
 					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
 				}
 				else
@@ -754,7 +754,7 @@ public class SClassDefinitionAssistant {
 							!(def1 instanceof APerSyncDefinition) &&
 							!(def2 instanceof APerSyncDefinition))
 						{
-    						TypeCheckerErrors.report(3017, "Duplicate definitions for " + def1.getName().name,def1.getLocation(),def1);
+    						TypeCheckerErrors.report(3017, "Duplicate definitions for " + def1.getName().name,def1.getName().getLocation(),def1);
     						TypeCheckerErrors.detail2(def1.getName().name, def1.getLocation(), def2.getName().name, def2.getLocation());
     						done.add(def1.getName().name);
 						}

@@ -73,8 +73,8 @@ public class TypeCheckerOthersVisitor extends
 			type = ((AForPatternBindStm)parent).getSeqType().getSeqof();
 		}else if((parent = node.getAncestor(ATrapStm.class))!=null)
 		{
-				//type = ((ATixeStm)parent).getType();
-				assert false:"not implemented";
+				type = ((ATrapStm)parent).getType();
+				//assert false:"not implemented";
 		}else if((parent = node.getAncestor(ATixeStmtAlternative.class))!=null)
 		{
 //			type = ((ATixeStmtAlternative)parent).get.getType();

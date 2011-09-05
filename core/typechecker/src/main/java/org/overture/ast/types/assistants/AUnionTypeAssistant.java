@@ -564,7 +564,7 @@ public class AUnionTypeAssistant {
     		// fields' types...
 
     		Map<LexNameToken, PTypeSet> common = new HashMap<LexNameToken, PTypeSet>();
-    		Map<LexNameToken, AAccessSpecifierAccessSpecifier> access = new HashMap<LexNameToken, AAccessSpecifierAccessSpecifier>();
+    		Map<LexNameToken, AAccessSpecifierAccessSpecifier> access = new HashMap<LexNameToken,AAccessSpecifierAccessSpecifier>();
     		LexNameToken classname = null;
 
     		for (PType t: type.getTypes())

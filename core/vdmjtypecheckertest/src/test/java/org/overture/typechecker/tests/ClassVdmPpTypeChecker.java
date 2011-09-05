@@ -14,7 +14,7 @@ public class ClassVdmPpTypeChecker extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		String name = "Type Check Class TestSuite";
-		String root = "src\\test\\resources\\classes\\fulltest\\PP\\fundefpp";
+		String root = "src\\test\\resources\\classes\\fulltest\\PP\\stmtpp\\casesstmt";
 		TestSuite test = createTestCompleteFile(name, root, ClassTestCase.class);
 		return test;
 	}

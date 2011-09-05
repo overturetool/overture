@@ -1,5 +1,7 @@
 package org.overturetool.vdmj.util;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 
@@ -31,4 +33,14 @@ public class HelpLexNameToken {
 		
 	}
 	
+	public static boolean isEqual(Object one, Object other)
+	{
+		
+		if(one instanceof LexNameToken)
+		{
+			return isEqual((LexNameToken)one, other);
+		}
+		return false;
+		
+	}
 }

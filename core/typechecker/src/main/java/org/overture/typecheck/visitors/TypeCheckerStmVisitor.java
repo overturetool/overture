@@ -397,7 +397,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			// warning(5005, "Should invoke member " + field + " from a static context");
 		}
 
-		PType type = fdef.getType();
+		PType type = PDefinitionAssistantTC.getType(fdef);
 
 		if (PTypeAssistant.isOperation(type))
 		{
@@ -710,7 +710,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	{
 		if (node.getExpression() != null)
 		{
-			node.setType(node.getExpression().apply(rootVisitor, question));
+			node.setExpType(node.getExpression().apply(rootVisitor, question));
 		}
 
 		// This is unknown because the statement doesn't actually return a
@@ -938,7 +938,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 
 		if (node.getPostcondition() != null &&
-			!!PTypeAssistant.isType(node.getPostcondition().apply(rootVisitor, new TypeCheckInfo(local,NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
+			!PTypeAssistant.isType(node.getPostcondition().apply(rootVisitor, new TypeCheckInfo(local,NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3234, "Postcondition is not a boolean expression", node.getPostcondition().getLocation(), 
 					node.getPostcondition());
@@ -969,7 +969,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		{
 			ptype = extype.getType(body.getLocation());
 		}
-
+		node.setType(ptype);
 		node.getPatternBind().apply(rootVisitor, question);
 		//TODO: PatternBind stuff
 		List<PDefinition> defs = PPatternBindAssistant.getDefinitions(node.getPatternBind());
@@ -1242,6 +1242,9 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		return null;
 	}
+	
+	
+	
 	
 	
 }

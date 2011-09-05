@@ -100,7 +100,7 @@ public class TypeComparator
 			if (other instanceof TypePair)
 			{
 				TypePair to = (TypePair)other;
-				return PTypeAssistant.equals(a, to.a) && PTypeAssistant.equals(b, to.b);
+				return a == to.a && b == to.b;
 			}
 
 			return false;
