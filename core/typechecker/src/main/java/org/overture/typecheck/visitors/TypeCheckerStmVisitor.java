@@ -1166,7 +1166,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			PType union = extypes.getType(node.getLocation());
 
     		for (ATixeStmtAlternative tsa: node.getTraps())
-    		{
+    		{    			
+    			tsa.setExp(union);
     			tsa.apply(rootVisitor, question);
     		}
 		}
@@ -1180,11 +1181,12 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		//TODO fix 
 		//patternBind.typeCheck(base, scope, ext)
 		//PPatternBindAssistant.typeCheck(node.getPatternBind(), null, rootVisitor, question);
-		//DefinitionList defs = patternBind.getDefinitions(); 
+		//DefinitionList defs = patternBind.getDefinitions();
+		node.getPatternBind().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope));
 		List<PDefinition> defs = PPatternBindAssistant.getDefinitions(node.getPatternBind());
 		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
-		node.getStatement().apply(rootVisitor, question);
+		node.getStatement().apply(rootVisitor, new TypeCheckInfo(local, question.scope,question.qualifiers));
 		local.unusedCheck();
 		
 		return null;
@@ -1242,6 +1244,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		return null;
 	}
+	
 	
 	
 	

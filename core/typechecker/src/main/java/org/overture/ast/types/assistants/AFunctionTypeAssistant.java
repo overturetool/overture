@@ -2,6 +2,7 @@ package org.overture.ast.types.assistants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -13,6 +14,7 @@ import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -141,4 +143,24 @@ public class AFunctionTypeAssistant {
 		return  PTypeAssistant.narrowerThan(type.getResult(),accessSpecifier);
 	}
 
+	public static PType polymorph(AFunctionType type, LexNameToken pname,
+			PType actualType) {
+		
+		List<PType> polyparams = new Vector<PType>();
+
+		for (PType ptype: type.getParameters())
+		{
+			polyparams.add(PTypeAssistant.polymorph(ptype,pname, actualType).clone());
+		}
+
+		PType polyresult = PTypeAssistant.polymorph(((AFunctionType)type).getResult(),pname, actualType);
+		AFunctionType ftype =
+			new AFunctionType(type.getLocation(),false,type.getDefinitions(), 
+					((AFunctionType)type).getPartial(),	polyparams, polyresult.clone());
+		return ftype;
+		
+	}
+
+	
+	
 }

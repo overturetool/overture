@@ -1271,7 +1271,7 @@ public class TypeCheckerExpVisitor extends
 			AFunctionType t = PTypeAssistant.getFunction(ftype);
 			PTypeSet set = new PTypeSet();
 
-			if (t.getDefinitions() == null)
+			if (t.getDefinitions().size() == 0)
 			{
 				TypeCheckerErrors.report(3098, "Function value is not polymorphic",node.getLocation(),node);
 				set.add(new AUnknownType(node.getLocation(),false, null));
@@ -1301,7 +1301,7 @@ public class TypeCheckerExpVisitor extends
     					continue;
     				}
 
-    				if (typeParams == null)
+    				if (typeParams.size() == 0)
     				{
     					TypeCheckerErrors.concern(serious, 3100, "Function has no type parameters", node.getLocation(), node);
     					continue;

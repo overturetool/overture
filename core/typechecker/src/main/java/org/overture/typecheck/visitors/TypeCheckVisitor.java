@@ -12,6 +12,7 @@ import org.overture.ast.statements.PAlternativeStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.PStmtAlternative;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -96,7 +97,6 @@ public class TypeCheckVisitor extends
 
 	@Override
 	public PType caseAModuleModules(AModuleModules node, TypeCheckInfo question) {
-		System.out.println("Visiting Module: " + node.getName());
 		for (PDefinition def : node.getDefs()) {
 			def.apply(this, question);
 		}
@@ -109,4 +109,9 @@ public class TypeCheckVisitor extends
 		return node.apply(patternDefinition, question);
 	}
 
+	@Override
+	public PType defaultPStmtAlternative(PStmtAlternative node,
+			TypeCheckInfo question) {
+		return node.apply(tcStm, question);
+	}
 }

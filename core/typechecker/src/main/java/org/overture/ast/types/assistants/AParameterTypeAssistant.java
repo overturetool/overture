@@ -156,4 +156,9 @@ public class AParameterTypeAssistant {
 		return false;
 	}
 
+	public static PType polymorph(AParameterType type, LexNameToken pname,
+			PType actualType) {
+		return (type.getName().equals(pname)) ? actualType : type;
+	}
+
 }

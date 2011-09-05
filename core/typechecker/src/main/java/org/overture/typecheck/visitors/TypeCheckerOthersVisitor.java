@@ -77,8 +77,8 @@ public class TypeCheckerOthersVisitor extends
 				//assert false:"not implemented";
 		}else if((parent = node.getAncestor(ATixeStmtAlternative.class))!=null)
 		{
-//			type = ((ATixeStmtAlternative)parent).get.getType();
-			assert false:"not implemented";
+			type = ((ATixeStmtAlternative)parent).getExp();
+//			assert false:"not implemented";
 		}
 	
 		

@@ -767,8 +767,10 @@ public class DefinitionReader extends SyntaxReader
 //			 parameters,type,body,precondition,postcondition,measure,
 //			 null,null,null,null,false,false,0,null,null,false,false);
 //		
-		return new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, 
+		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, 
 				false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
+		type.getDefinitions().add(res);
+		return res;
 	}
 
 	private PDefinition readImplicitFunctionDefinition(

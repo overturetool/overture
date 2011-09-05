@@ -578,7 +578,7 @@ alternativeStm {-> package='org.overture.ast.statements'}
     ;
     
 stmtAlternative {-> package='org.overture.ast.statements'}
-    = {tixe} [patternBind]:patternBind.def [statement]:stm
+    = {tixe} [patternBind]:patternBind.def [statement]:stm (exp):PType
     ;
     
 clause {-> package='org.overture.ast.statements'}

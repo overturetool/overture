@@ -49,6 +49,7 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
+import org.overture.typecheck.TypeCheckException;
 
 
 

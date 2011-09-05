@@ -83,19 +83,13 @@ public class PTypeAssistant {
 		
 		switch(type.kindPType())
 		{
+		case PARAMETER:
+			return AParameterTypeAssistant.polymorph((AParameterType)type,pname,actualType);
+		
 			case FUNCTION:
-				List<PType> polyparams = new Vector<PType>();
-
-				for (PType ptype: ((AFunctionType)type).getParameters())
-				{
-					polyparams.add(polymorph(ptype,pname, actualType).clone());
-				}
-
-				PType polyresult = polymorph(((AFunctionType)type).getResult(),pname, actualType);
-				AFunctionType ftype =
-					new AFunctionType(location,false,definitions, 
-							((AFunctionType)type).getPartial(),	polyparams, polyresult.clone());
-				return ftype;
+				return AFunctionTypeAssistant.polymorph((AFunctionType)type,pname,actualType);
+				
+				
 			case MAP:
 				return new AMapMapType(location,false,definitions,
 						polymorph(((AMapMapType)type).getFrom(),pname, actualType), 
@@ -136,10 +130,10 @@ public class PTypeAssistant {
 //				return uType;
 				return null;//TODO
 			default:
-				break;
+				return type;
 		}
 				
-		return type;
+		
 	}
 
 	
