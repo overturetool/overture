@@ -214,7 +214,7 @@ modifier {-> package='org.overture.ast.expressions'}
     ;
     
 alternative {-> package='org.overture.ast.expressions'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp [defs]:definition*  [type]:type
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp [defs]:definition*  [type]:type (expType):type
     ;
     
 boolean_const
@@ -574,7 +574,7 @@ objectDesignator {-> package='org.overture.ast.statements'}
     ;
 
 alternativeStm {-> package='org.overture.ast.statements'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm (defs):definition*
+    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm (defs):definition* (ctype):type 
     ;
     
 stmtAlternative {-> package='org.overture.ast.statements'}
