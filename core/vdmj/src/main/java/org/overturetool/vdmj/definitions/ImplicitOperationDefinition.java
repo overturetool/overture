@@ -321,6 +321,19 @@ public class ImplicitOperationDefinition extends Definition
 				report(3035, "Operation returns unexpected type");
 				detail2("Actual", actualResult, "Expected", type.result);
 			}
+			else if (!isConstructor && !actualResult.isUnknown())
+			{
+				if (type.result.isVoid() && !actualResult.isVoid())
+	    		{
+	    			report(3312, "Void operation returns non-void value");
+	    			detail2("Actual", actualResult, "Expected", type.result);
+	    		}
+	    		else if (!type.result.isVoid() && actualResult.hasVoid())
+	    		{
+	    			report(3313, "Operation returns void value");
+	    			detail2("Actual", actualResult, "Expected", type.result);
+	    		}
+			}
 		}
 
 		if (accessSpecifier.isAsync && !type.result.isType(VoidType.class))

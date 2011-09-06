@@ -216,6 +216,16 @@ public abstract class Type implements Comparable<Type>, Serializable, IAstNode
 		return false;	// Parameter types and type check errors are unknown.
 	}
 
+	public boolean isVoid()
+	{
+		return false;	// VoidType and VoidReturnType are void.
+	}
+
+	public boolean hasVoid()
+	{
+		return false;	// VoidType and VoidReturnType are void.
+	}
+
 	public boolean isSeq()
 	{
 		return false;

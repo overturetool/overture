@@ -135,6 +135,48 @@ public class UnionType extends Type
 	}
 
 	@Override
+	public boolean isUnknown()
+	{
+		for (Type t: types)
+		{
+			if (t.isUnknown())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isVoid()
+	{
+		for (Type t: types)
+		{
+			if (!t.isVoid())
+			{
+				return false;		// NB. Only true if ALL void, not ANY void (see hasVoid)
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean hasVoid()
+	{
+		for (Type t: types)
+		{
+			if (t.isVoid())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean isUnion()
 	{
 		return true;
@@ -448,7 +490,7 @@ public class UnionType extends Type
     				found = true;
     			}
     		}
-    		
+
     		if (!found) numType = null;
 		}
 

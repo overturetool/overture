@@ -43,6 +43,18 @@ public class VoidType extends Type
 	}
 
 	@Override
+	public boolean isVoid()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean hasVoid()
+	{
+		return true;
+	}
+
+	@Override
 	public String toDisplay()
 	{
 		return "()";

@@ -656,6 +656,9 @@ as the expected and actual values.
 3309, "Measure must not be polymorphic"
 3310, "Measure must also be polymorphic"
 3311, "Pattern cannot match"
+3312, "Void operation returns non-void value"
+3313, "Operation returns void value"
+
 
 4000, "Cannot instantiate abstract class <class>"
 4002, "Expression value is not in set bind"
