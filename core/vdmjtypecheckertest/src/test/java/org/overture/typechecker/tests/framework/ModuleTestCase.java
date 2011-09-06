@@ -11,9 +11,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -55,6 +58,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}
 
@@ -70,9 +75,11 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		System.err.flush();
 		insertTCHeader();
 
-		printFile(file);
+		//printFile(file);
+	
 		ModuleList modules = parse(ParserType.Module, file);
-
+		
+		
 		ModuleTypeChecker moduleTC = new ModuleTypeChecker(modules);
 		moduleTC.typeCheck();
 
