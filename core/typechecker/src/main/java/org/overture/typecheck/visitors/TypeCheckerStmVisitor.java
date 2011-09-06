@@ -527,6 +527,12 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		
 		PDefinitionListAssistant.typeCheck(node.getDefs(), rootVisitor, question);
+		
+		if (!PPatternAssistantTC.matches(node.getPattern(), node.getCtype()))
+		{
+			TypeCheckerErrors.report(3311, "Pattern cannot match",node.getPattern().getLocation(),node.getPattern());
+		}
+		
 		Environment local = new FlatCheckedEnvironment(node.getDefs(), question.env, question.scope);
 		PType r = node.getResult().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 		local.unusedCheck();
@@ -540,12 +546,13 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseACasesStm(ACasesStm node, TypeCheckInfo question) 
 	{
 		
-		node.setType(node.getExp().apply(rootVisitor, question));
+		PType expType = node.getExp().apply(rootVisitor, question);
 
 		PTypeSet rtypes = new PTypeSet();
 
 		for (ACaseAlternativeStm c: node.getCases())
 		{
+			c.setCtype(expType);
 			rtypes.add(c.apply(rootVisitor, question));
 		}
 

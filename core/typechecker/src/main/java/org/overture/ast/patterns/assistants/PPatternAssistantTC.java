@@ -32,6 +32,7 @@ import org.overture.ast.types.assistants.PTypeList;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -247,6 +248,10 @@ public class PPatternAssistantTC extends PPatternAssistant {
 				new ASetType(unionPattern.getLocation(), false, null, new AUnknownType(unionPattern.getLocation(),false), true, false) : s;		
 		}
 		return null;
+	}
+
+	public static boolean matches(PPattern pattern, PType expType) {
+		return TypeComparator.compatible(getPossibleType(pattern), expType);
 	}
 
 }

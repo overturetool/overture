@@ -262,7 +262,7 @@ public class AUnionTypeAssistant {
 
     		for (int i=0; i<result.size(); i++)
     		{
-    			list.add(result.get(i).getType(type.getLocation()));
+    			list.add(result.get(i).getType(type.getLocation()).clone());
     		}
 
     		type.setProdType(list.isEmpty() ? null : new AProductType(type.getLocation(), false, list));

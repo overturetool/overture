@@ -79,7 +79,7 @@ public class AUnknownTypeAssistant {
 	
 	public static SSeqType getSeq(AUnknownType type)
 	{
-		return new ASeqSeqType(type.getLocation(),false, null, true);	// empty
+		return new ASeqSeqType(type.getLocation(),false, new AUnknownType(type.getLocation(), false), true);	// empty
 	}
 
 	public static boolean isNumeric(AUnknownType type) {
