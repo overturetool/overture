@@ -28,11 +28,11 @@ public class ACallStmAssistant {
 		return types;
 	}
 	
-	public static void checkArgTypes(PType type, List<PType> ptypes, List<PType> atypes)
+	public static void checkArgTypes(ACallStm node, PType type, List<PType> ptypes, List<PType> atypes)
 	{
 		if (ptypes.size() != atypes.size())
 		{
-			TypeCheckerErrors.report(3216, "Expecting " + ptypes.size() + " arguments", type.getLocation(), type);
+			TypeCheckerErrors.report(3216, "Expecting " + ptypes.size() + " arguments", node.getLocation(), node);
 		}
 		else
 		{
@@ -44,7 +44,7 @@ public class ACallStmAssistant {
 
 				if (!TypeComparator.compatible(ptype, atype))
 				{
-					TypeCheckerErrors.report(3217, "Unexpected type for argument " + i, type.getLocation(), type);
+					TypeCheckerErrors.report(3217, "Unexpected type for argument " + i, node.getLocation(), type);
 					TypeCheckerErrors.detail2("Expected", ptype, "Actual", atype);
 				}
 			}

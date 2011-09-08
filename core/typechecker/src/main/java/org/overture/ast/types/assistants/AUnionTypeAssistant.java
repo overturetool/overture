@@ -376,10 +376,10 @@ public class AUnionTypeAssistant {
     			for (int i=0; i<params.size(); i++)
     			{
     				PType pt = params.get(i).getType(type.getLocation());
-    				plist.add(pt.clone());
+    				plist.add(pt);
     			}
 
-    			type.setFuncType(new AFunctionType(type.getLocation(), false, true, plist, rtype.clone()));
+    			type.setFuncType(new AFunctionType(type.getLocation(), false, null, true, plist, rtype));
     			type.getFuncType().setDefinitions(defs);
     		}
     		else
@@ -440,11 +440,11 @@ public class AUnionTypeAssistant {
     			for (int i=0; i<params.size(); i++)
     			{
     				PType pt = params.get(i).getType(type.getLocation());
-    				plist.add(pt.clone());
+    				plist.add(pt);
     			}
 
-    			type.setOpType(new AOperationType(type.getLocation(),false, plist, rtype.clone()));
-    			type.getOpType().setDefinitions(defs);
+    			type.setOpType(new AOperationType(type.getLocation(),false, defs, plist, rtype));
+    			//type.getOpType().setDefinitions(defs);
     		}
     		else
     		{
@@ -630,7 +630,7 @@ public class AUnionTypeAssistant {
     		for (LexNameToken synthname: common.keySet())
     		{
     			PDefinition def = new ALocalDefinition(synthname.location,
-					NameScope.GLOBAL, false, null, null, common.get(synthname).getType(type.getLocation()), null,synthname);
+					NameScope.GLOBAL, false, null, null, common.get(synthname).getType(type.getLocation()), false,synthname);
 
     			def.setAccess(access.get(synthname));
 				newdefs.add(def);

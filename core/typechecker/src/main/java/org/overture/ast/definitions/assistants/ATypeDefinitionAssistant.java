@@ -148,7 +148,7 @@ public class ATypeDefinitionAssistant {
 		}
 
 		AFunctionType ftype =
-			new AFunctionType(loc, false, false, ptypes, new ABooleanBasicType(loc,false));
+			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 				loc,

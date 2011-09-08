@@ -923,21 +923,21 @@ public class TypeCheckerExpVisitor extends
 			if (!PTypeAssistant.isNumeric(rtype))
 			{
 				//rtype.report(3170, "Map iterator expects nat as right hand arg");
-				TypeCheckerErrors.report(3170, "Map iterator expects nat as right hand arg", node.getLocation(),node);
+				TypeCheckerErrors.report(3170, "Map iterator expects nat as right hand arg", rtype.getLocation(),rtype);
 			}
 		}
 		else if (PTypeAssistant.isFunction(ltype))
 		{
 			if (!PTypeAssistant.isNumeric(rtype))
 			{
-				TypeCheckerErrors.report(3171, "Function iterator expects nat as right hand arg",node.getLocation(),node);
+				TypeCheckerErrors.report(3171, "Function iterator expects nat as right hand arg",rtype.getLocation(),rtype);
 			}
 		}
 		else if (PTypeAssistant.isNumeric(ltype))
 		{
 			if (!PTypeAssistant.isNumeric(rtype))
 			{
-				TypeCheckerErrors.report(3172, "'**' expects number as right hand arg",node.getLocation(),node);
+				TypeCheckerErrors.report(3172, "'**' expects number as right hand arg",rtype.getLocation(),rtype);
 			}
 		}
 		else
@@ -1093,7 +1093,7 @@ public class TypeCheckerExpVisitor extends
    			else
    			{
    				TypeCheckerErrors.concern(unique,
-   					3090, "Unknown field " + node.getField().name + " in record " + rec.getName(),node.getLocation(),node);
+   					3090, "Unknown field " + node.getField().name + " in record " + rec.getName(),node.getField().getLocation(),node.getField());
    			}
 
    			recOrClass = true;
@@ -1287,7 +1287,7 @@ public class TypeCheckerExpVisitor extends
 
     				if (def instanceof AExplicitFunctionDefinition)
     				{
-    					node.setExpdef((AExplicitFunctionDefinition)def);
+    					node.setExpdef((AExplicitFunctionDefinition)def.clone());
     					typeParams = node.getExpdef().getTypeParams();
     				}
     				else if (def instanceof AImplicitFunctionDefinition)

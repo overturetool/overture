@@ -226,10 +226,10 @@ type {-> package='org.overture.ast.types'}
     =   #basic
     |   {bracket} [type]:type
     |   {class} [name]:LexNameToken [classdef]:definition.#class 
-    |   {function} [partial]:java_Boolean [parameters]:type* [result]:type 
+    |   {function} [partial]:java_Boolean (parameters):type* (result):type 
     |   #invariant
     |   #Map 
-    |   {operation} [parameters]:type* [result]:type
+    |   {operation} (parameters):type* (result):type
     |   {optional} [type]:type
     |   {parameter} [name]:LexNameToken
     |   {product} [types]:type*

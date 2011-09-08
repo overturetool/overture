@@ -64,7 +64,7 @@ public class AFunctionTypeAssistant {
 		{
 			AFunctionType ft = (AFunctionType)t.getResult();
 			AFunctionType type = new AFunctionType(t.getLocation(),
-				false, false, (List<PType>) t.getParameters().clone(), getCurriedPreType(ft,isCurried));
+				false, null, false, t.getParameters(), getCurriedPreType(ft,isCurried));
 			type.setDefinitions((List<PDefinition>)t.getDefinitions().clone());
 			return type;
 		}
@@ -76,7 +76,7 @@ public class AFunctionTypeAssistant {
 
 	public static AFunctionType getPreType(AFunctionType t) {
 			AFunctionType type =
-				new AFunctionType(t.getLocation().clone(), false,false, (List<PType>) t.getParameters().clone(), new ABooleanBasicType(t.getLocation().clone(),false));
+				new AFunctionType(t.getLocation().clone(), false,null, false,  t.getParameters(), new ABooleanBasicType(t.getLocation(),false));
 			type.setDefinitions((List<PDefinition>)t.getDefinitions().clone());
 			return type;
 	}
@@ -88,7 +88,7 @@ public class AFunctionTypeAssistant {
 		{
 			AFunctionType ft = (AFunctionType)type.getResult().clone();
 			AFunctionType t = new AFunctionType(type.getLocation(),false,
-				false, (List<PType>)type.getParameters().clone(), getCurriedPostType(ft,isCurried));
+				null, false, type.getParameters(), getCurriedPostType(ft,isCurried));
 			t.setDefinitions(type.getDefinitions());
 			return t;
 		}
@@ -100,10 +100,10 @@ public class AFunctionTypeAssistant {
 
 	public static AFunctionType getPostType(AFunctionType t) {
 		List<PType> params = new PTypeList();
-		params.addAll((List<PType>)t.getParameters().clone());
+		params.addAll((List<PType>)t.getParameters());
 		params.add((PType)t.getResult().clone());
 		AFunctionType type =
-			new AFunctionType(t.getLocation(),false, false, params, new ABooleanBasicType(t.getLocation(),false));
+			new AFunctionType(t.getLocation(),false, null, false, params, new ABooleanBasicType(t.getLocation(),false));
 		type.setDefinitions(t.getDefinitions());
 		return type;
 	}
@@ -156,7 +156,7 @@ public class AFunctionTypeAssistant {
 		PType polyresult = PTypeAssistant.polymorph(((AFunctionType)type).getResult(),pname, actualType);
 		AFunctionType ftype =
 			new AFunctionType(type.getLocation(),false,type.getDefinitions(), 
-					((AFunctionType)type).getPartial(),	polyparams, polyresult.clone());
+					((AFunctionType)type).getPartial(),	polyparams, polyresult);
 		return ftype;
 		
 	}

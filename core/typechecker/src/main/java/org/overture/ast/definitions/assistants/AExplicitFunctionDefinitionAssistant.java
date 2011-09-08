@@ -349,7 +349,7 @@ public class AExplicitFunctionDefinitionAssistant {
 				NameScope.GLOBAL, //namescope 
 				false, 
 				d.getAccess(), 
-				d.getTypeParams(), 
+				(List<LexNameToken>) d.getTypeParams().clone(), 
 				paramPatterns, 
 				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), //type 
 				d.getPrecondition().clone(), 

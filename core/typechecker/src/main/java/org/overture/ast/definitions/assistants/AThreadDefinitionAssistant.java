@@ -41,7 +41,7 @@ public class AThreadDefinitionAssistant {
 	private static AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d) {
 		PTypeList parameters = new PTypeList();
 		AVoidType result = new AVoidType(d.getLocation(),false);
-		AOperationType type = new AOperationType(d.getLocation(),false,parameters,result);	// () ==> ()
+		AOperationType type = new AOperationType(d.getLocation(),false,null, parameters,result);	// () ==> ()
 
 		AExplicitOperationDefinition def = new AExplicitOperationDefinition(
 				d.getLocation(),

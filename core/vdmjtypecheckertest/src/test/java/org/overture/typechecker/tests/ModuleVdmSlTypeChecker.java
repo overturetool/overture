@@ -14,7 +14,7 @@ public class ModuleVdmSlTypeChecker extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		String name = "Type Check Module TestSuite";
-		String root = "src\\test\\resources\\modules\\tc";
+		String root = "src\\test\\resources\\modules\\tc\\problem";
 		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class);
 		return test;
 	}

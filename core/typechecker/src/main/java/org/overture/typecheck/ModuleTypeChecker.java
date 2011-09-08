@@ -178,10 +178,10 @@ public class ModuleTypeChecker extends TypeChecker
 			try
 			{	
 				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(env));
-//				System.out.println(d.getName()==null?"":d.getName());
 			}
 			catch (TypeCheckException te)
 			{
+				System.out.println(d.toString());
 				report(3430, te.getMessage(), te.location);
 			}
 		}
@@ -227,12 +227,12 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				//TODO
-				//AModuleModulesAssistant.processImports(m,modules); // Re-populate importDefs
+				AModuleModulesAssistant.processImports(m,modules); // Re-populate importDefs
 
     			try
     			{
     				//TODO
-    				//AModuleModulesAssistant.typeCheckImports(m);
+    				AModuleModulesAssistant.typeCheckImports(m);
 //    				m.typeCheckImports();		// Imports compared to exports
     			}
     			catch (TypeCheckException te)

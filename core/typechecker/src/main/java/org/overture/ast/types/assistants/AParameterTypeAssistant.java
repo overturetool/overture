@@ -6,6 +6,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
@@ -40,7 +41,7 @@ public class AParameterTypeAssistant {
 
 		PDefinition p = question.env.findName(type.getName(), NameScope.NAMES);
 
-		if (p == null || !(p.getType() instanceof AParameterType))
+		if (p == null || !(PDefinitionAssistantTC.getType(p) instanceof AParameterType))
 		{
 			TypeCheckerErrors.report(3433, "Parameter type @" + type.getName() + " not defined",type.getLocation(),type);
 		}

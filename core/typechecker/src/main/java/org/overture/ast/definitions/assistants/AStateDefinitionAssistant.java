@@ -144,7 +144,7 @@ public class AStateDefinitionAssistant {
 		PTypeList ptypes = new PTypeList();
 		ptypes.add(new AUnresolvedType(d.getLocation(),false,null, d.getName()));
 		AFunctionType ftype =
-			new AFunctionType(loc, false, null, ptypes, new ABooleanBasicType(loc,false));
+			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
 
 		PExp body = new AStateInitExp(null,d.getLocation(),d);
 
@@ -180,7 +180,7 @@ public class AStateDefinitionAssistant {
 		PTypeList ptypes = new PTypeList();
 		ptypes.add(new AUnresolvedType(d.getLocation(),false, null, d.getName()));
 		AFunctionType ftype =
-			new AFunctionType(loc, false, false, ptypes, new ABooleanBasicType(loc,false));
+			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
 				loc,

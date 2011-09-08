@@ -72,7 +72,7 @@ public class TypeCheckerPatternVisitor extends
 
 		if (!TypeComparator.compatible(ptype, type))
 		{
-			TypeCheckerErrors.report(3265, "At least one bind cannot match this type",node.getLocation(),node);
+			TypeCheckerErrors.report(3265, "At least one bind cannot match this type",type.getLocation(),type);
 			TypeCheckerErrors.detail2("Binds", ptype, "Type", type);
 		}
 

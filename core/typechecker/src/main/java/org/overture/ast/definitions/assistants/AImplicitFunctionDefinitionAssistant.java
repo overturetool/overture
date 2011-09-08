@@ -3,6 +3,7 @@ package org.overture.ast.definitions.assistants;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -111,7 +112,7 @@ public class AImplicitFunctionDefinitionAssistant {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
-		if (d.getTypeParams() != null)
+		if (d.getTypeParams().size() > 0)
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AImplicitFunctionDefinitionAssistant.getTypeParamDefinitions(d), question.env, NameScope.NAMES);			
@@ -204,7 +205,9 @@ public class AImplicitFunctionDefinitionAssistant {
 			AFunctionTypeAssistant.getPostType(d.getType()),
 			d.getPostcondition().clone(), 
 			null, null, null);
-
+		List<PDefinition> defsList = new LinkedList<PDefinition>();
+		defsList.add(def);
+		def.getType().setDefinitions(defsList);
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
@@ -219,12 +222,14 @@ public class AImplicitFunctionDefinitionAssistant {
 				NameScope.GLOBAL,
 				false,
 				PAccessSpecifierAssistant.getDefault(),
-				d.getTypeParams(), 
+				(List<LexNameToken>) d.getTypeParams().clone(), 
 				getParamPatternList(d),
 				AFunctionTypeAssistant.getPreType(d.getType()),
 				d.getPrecondition().clone(), 
 				null, null, null);
-
+			List<PDefinition> defsList = new LinkedList<PDefinition>();
+			defsList.add(def);
+			def.getType().setDefinitions(defsList);
 			def.setAccess(d.getAccess());
 			def.setClassDefinition(d.getClassDefinition());
 			return def;

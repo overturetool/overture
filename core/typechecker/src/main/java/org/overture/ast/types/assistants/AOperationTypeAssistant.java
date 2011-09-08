@@ -70,20 +70,20 @@ public class AOperationTypeAssistant {
 		if (state != null)
 		{
 			PTypeList params = new PTypeList();
-			params.addAll((LinkedList<PType>) type.getParameters().clone());
+			params.addAll((LinkedList<PType>) type.getParameters());
 			params.add(new AUnresolvedType(type.getLocation(),false, null, state.getName()));
-			return new AFunctionType(type.getLocation(), false, false, params, new ABooleanBasicType(type.getLocation(),false));
+			return new AFunctionType(type.getLocation(), false, null, false, params, new ABooleanBasicType(type.getLocation(),false));
 		}
 		else if (classname != null && !isStatic)
 		{
 			PTypeList params = new PTypeList();
 			params.addAll(type.getParameters());
 			params.add(new AUnresolvedType(type.getLocation(),false,null,classname.getName()));
-			return new AFunctionType(type.getLocation(), false,false, params, new ABooleanBasicType(type.getLocation(),false));
+			return new AFunctionType(type.getLocation(), false,null, false, params, new ABooleanBasicType(type.getLocation(),false));
 		}
 		else
 		{
-			return new AFunctionType(type.getLocation(), false, false, type.getParameters(), new ABooleanBasicType(type.getLocation(),false));
+			return new AFunctionType(type.getLocation(), false, null, false, (List<PType>) type.getParameters(), new ABooleanBasicType(type.getLocation(),false));
 		}
 	}
 
@@ -110,7 +110,7 @@ public class AOperationTypeAssistant {
 			params.add(new AUnresolvedType(classname.getLocation(),false,null, classname.getName()));
 		}
 
-		return new AFunctionType(type.getLocation(), false, false, params, new ABooleanBasicType(type.getLocation(),false));
+		return new AFunctionType(type.getLocation(), false,null, false, params, new ABooleanBasicType(type.getLocation(),false));
 	}
 
 	public static String toDisplay(AOperationType exptype) {

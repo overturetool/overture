@@ -616,7 +616,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		case MUTEXSYNC:
 			return new AUnknownType(def.getLocation(), false);
 		case NAMEDTRACE:
-			return new AOperationType(def.getLocation(), false, null, null);
+			return new AOperationType(def.getLocation(), false, null, null, null);
 		case PERSYNC:
 			return new ABooleanBasicType(def.getLocation(), false);
 		case RENAMED:

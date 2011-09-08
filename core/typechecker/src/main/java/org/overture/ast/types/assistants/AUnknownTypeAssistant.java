@@ -61,7 +61,7 @@ public class AUnknownTypeAssistant {
 
 	public static AFunctionType getFunction(AUnknownType type) {
 		return new AFunctionType(
-				type.getLocation(),false, true, new NodeList<PType>(null), new AUnknownType(type.getLocation(),false));
+				type.getLocation(),false, null, true, new NodeList<PType>(null), new AUnknownType(type.getLocation(),false));
 	}
 
 	public static boolean isOperation(AUnknownType type) {
@@ -70,7 +70,7 @@ public class AUnknownTypeAssistant {
 	
 	public static AOperationType getOperation(AUnknownType type) {
 		return new AOperationType(
-			type.getLocation(),false, new PTypeList(), new AUnknownType(type.getLocation(),false));
+			type.getLocation(),false, null, new PTypeList(), new AUnknownType(type.getLocation(),false));
 	}
 
 	public static boolean isSeq(AUnknownType type) {

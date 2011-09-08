@@ -471,7 +471,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
     			node.getName().setTypeQualifier(optype.getParameters());
     		}
 
-    		ACallStmAssistant.checkArgTypes(optype, optype.getParameters(), atypes);
+    		ACallStmAssistant.checkArgTypes(node,optype, optype.getParameters(), atypes);
     		node.setType(optype.getResult());
     		return optype.getResult();
 		}
@@ -491,7 +491,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
     			node.getName().setTypeQualifier(ftype.getParameters());
     		}
 
-    		ACallStmAssistant.checkArgTypes(ftype, ftype.getParameters(), atypes);
+    		ACallStmAssistant.checkArgTypes(node,ftype, ftype.getParameters(), atypes);
     		node.setType(ftype.getResult());
     		return ftype.getResult();
 		}
@@ -797,7 +797,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 		if (!PTypeAssistant.isType(test, ABooleanBasicType.class))
 		{
-			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getLocation(), node);
+			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getIfExp().getLocation(), node.getIfExp());
 		}
 
 		PTypeSet rtypes = new PTypeSet();
@@ -848,9 +848,11 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseANonDeterministicSimpleBlockStm(
 			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question) 
 	{
-
-		//no type check
-		return null;
+		
+		PType r = caseSSimpleBlockStm(node,question);
+		
+		node.setType(r);
+		return r;
 	}
 	
 	@Override
@@ -1070,7 +1072,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		// Operation must be "() ==> ()"
 
 		AOperationType expected =
-			new AOperationType(node.getLocation(),false, new LinkedList<PType>(), new AVoidType(node.getLocation(),false));
+			new AOperationType(node.getLocation(),false, null, new LinkedList<PType>(), new AVoidType(node.getLocation(),false));
 		
 		opdef = PDefinitionAssistantTC.deref(opdef);
 

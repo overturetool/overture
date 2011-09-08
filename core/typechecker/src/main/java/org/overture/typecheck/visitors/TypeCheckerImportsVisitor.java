@@ -48,7 +48,7 @@ public class TypeCheckerImportsVisitor extends
 			PDefinition def = node.getDef();
 			LexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
-			def.setType((SInvariantType)PTypeAssistant.typeResolve(def.getType(),null,rootVisitor,question));
+			def.setType((SInvariantType)PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(def),null,rootVisitor,question));
 			PDefinition expdef = PDefinitionListAssistant.findType(from.getExportdefs(),name, null);
 
 			if (expdef != null)
@@ -99,7 +99,7 @@ public class TypeCheckerImportsVisitor extends
 		//TODO: This might need to be made in another way
 		if (node.getTypeParams().size() == 0)
 		{
-			caseSValueImport(node, question);
+			defaultSValueImport(node, question);
 		}
 		else
 		{
@@ -108,7 +108,7 @@ public class TypeCheckerImportsVisitor extends
     		for (LexNameToken pname: node.getTypeParams())
     		{
     			PDefinition p = new ALocalDefinition(
-    				pname.location, NameScope.NAMES, false, null, PAccessSpecifierAssistantTC.getDefault(), new AParameterType(pname.getLocation(),false,pname), null,pname);
+    				pname.location, NameScope.NAMES, false, null, PAccessSpecifierAssistantTC.getDefault(), new AParameterType(pname.getLocation(),false,pname.clone()), false,pname.clone());
 
     			PDefinitionAssistantTC.markUsed(p);
     			defs.add(p);
@@ -125,7 +125,6 @@ public class TypeCheckerImportsVisitor extends
 	@Override
 	public PType caseAOperationValueImport(AOperationValueImport node,
 			TypeCheckInfo question) {
-		assert false : "Not implemented";
-		return super.caseAOperationValueImport(node, question);
+		return defaultSValueImport(node, question);
 	}
 }

@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.syntax;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -129,8 +130,8 @@ public class DefinitionReader extends SyntaxReader
 
 		for (int i=0; i<node.getPatterns().size(); i++)
 		{
-			PType type =(PType) node.getType().clone();//Use clone since we don't want to make a switch for all types.
-			type.parent(null);//Create new type not in the tree yet.
+			PType type =(PType) node.getType();//.clone();//Use clone since we don't want to make a switch for all types.
+			//type.parent(null);//Create new type not in the tree yet.
 			list.add(type);
 		}
 
@@ -808,8 +809,9 @@ public class DefinitionReader extends SyntaxReader
    		do
    		{
    			LexIdentifierToken rname = readIdToken("Expecting result identifier");
-   	   		resultNames.add(new AIdentifierPattern(firstResult.location,
-   	   				null,false, idToName(rname)));
+   			LexNameToken tempName = idToName(rname);
+   	   		resultNames.add(new AIdentifierPattern(tempName.location,
+   	   				null,false, tempName));
    	   		checkFor(VDMToken.COLON, 2094, "Missing colon in identifier/type return value");
    	   		resultTypes.add(tr.readType());
    		}
@@ -872,7 +874,7 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 		
-		List<PType> ptypes = new NodeList<PType>(null);
+		List<PType> ptypes = new LinkedList<PType>();
 
 		for (APatternListTypePair ptp: parameterPatterns)
 		{
@@ -880,7 +882,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		// NB: implicit functions are always +> total, apparently
-		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, (PType) resultPattern.getType().clone());
+		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, (PType) resultPattern.getType());
 		// functionType.setDefinitions(value) = new DefinitionList(this);
 
 //		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), functionType, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
@@ -994,7 +996,7 @@ public class DefinitionReader extends SyntaxReader
 //				null,null, null);
 		
 		ARecordInvariantType recordType = new ARecordInvariantType(name.location,false,idToName(name), fieldList);
-		ALocalDefinition recordDefinition = new ALocalDefinition(name.location, NameScope.STATE, false, null, getDefaultAccess(),recordType,null,idToName(name));
+		ALocalDefinition recordDefinition = new ALocalDefinition(name.location, NameScope.STATE, true, null, getDefaultAccess(),recordType,false,idToName(name));
 //		recordDefinition.markUsed();	// Can't be exported anyway
 //		statedefs.add(recordDefinition);
 		
@@ -1018,11 +1020,11 @@ public class DefinitionReader extends SyntaxReader
 		for (AFieldField f : fieldList)
 		{
 			stateDef.getStateDefs().add(new ALocalDefinition(
-					f.getTagname().location, NameScope.STATE, false,null, getDefaultAccess(),f.getType(),null,f.getTagname()));
+					f.getTagname().location, NameScope.STATE, false,null, getDefaultAccess(),f.getType(),false,f.getTagname()));
 
 				ALocalDefinition ld = new ALocalDefinition(f.getTagname().location,
-					 NameScope.OLDSTATE, true, null, getDefaultAccess(),f.getType(),null,f.getTagname().getOldName());
-
+					 NameScope.OLDSTATE, true, null, getDefaultAccess(),f.getType(),false,f.getTagname().getOldName());
+				
 //				ld.markUsed();		// Else we moan about unused ~x names
 				stateDef.getStateDefs().add(ld);
 		}
@@ -1198,7 +1200,7 @@ public class DefinitionReader extends SyntaxReader
 			ptypes.addAll(getTypeList(ptp));
 		}
 		AOperationType operationType = new AOperationType(funcName.location, false, null, ptypes, (resultPattern == null ? new AVoidType(funcName.location, false, null)
-				: resultPattern.getType().clone()));
+				: resultPattern.getType()));
 		
 //		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
 //			idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(),null, parameterPatterns, resultPattern,
