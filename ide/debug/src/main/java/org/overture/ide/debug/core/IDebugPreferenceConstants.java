@@ -4,7 +4,7 @@ public class IDebugPreferenceConstants {
 
 	public static final int DBGP_DEFAULT_PORT = 9000;
 	public static final int DBGP_AVAILABLE_PORT = -1;
-	public static final int DBGP_DEFAULT_CONNECTION_TIMEOUT = 3000;
+	public static final int DBGP_DEFAULT_CONNECTION_TIMEOUT = 5000;
 	
 	public static final String DBGP_AUTODETECT_BIND_ADDRESS = "autodetect"; //$NON-NLS-1$
 
