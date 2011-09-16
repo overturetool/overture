@@ -29,6 +29,10 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 
 			try
 			{
+				if(!resource.exists())
+				{
+					return;//Nothing to do then.
+				}
 				IMarker[] markers = resource.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 				if (markers.length > 0)
 				{
