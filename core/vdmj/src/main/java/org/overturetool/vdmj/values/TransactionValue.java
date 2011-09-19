@@ -62,7 +62,7 @@ public class TransactionValue extends UpdatableValue
 
 	private Value select()
 	{
-		if (newthreadid > 0 &&
+		if (newthreadid > 0 && BasicSchedulableThread.getThread(Thread.currentThread()) != null &&
 				BasicSchedulableThread.getThread(Thread.currentThread()).getId() == newthreadid)
 		{
 			return newvalue;
