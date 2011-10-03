@@ -28,7 +28,7 @@ public class PMultipleBindAssistant {
 		return defs;
 	}
 
-	public static List<? extends PMultipleBind> getMultipleBindList(
+	public static List<PMultipleBind> getMultipleBindList(
 			PMultipleBind bind) {
 		List<PMultipleBind> list = new Vector<PMultipleBind>();
 		list.add(bind);

@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -33,7 +34,6 @@ import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeComparator;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class PPatternAssistantTC extends PPatternAssistant {
@@ -252,6 +252,57 @@ public class PPatternAssistantTC extends PPatternAssistant {
 
 	public static boolean matches(PPattern pattern, PType expType) {
 		return TypeComparator.compatible(getPossibleType(pattern), expType);
+	}
+
+	public static Object getMatchingExpressionList(List<PPattern> pl) {
+		List<PExp> list = new Vector<PExp>();
+
+		for (PPattern p: pl)
+		{
+			list.add(getMatchingExpression(p));
+		}
+
+		return list;
+	}
+
+	public static PExp getMatchingExpression(PPattern p) {
+		switch (p.kindNode()) {
+		case ACCESS:
+		case ACCESSSPECIFIER:
+		case ALTERNATIVE:
+		case ALTERNATIVESTM:
+		case BIND:
+		case BOOLEANCONST:
+		case CASE:
+		case CLAUSE:
+		case DEFINITION:
+		case EXP:
+		case EXPORT:
+		case EXPORTS:
+		case ExternalDefined:
+		case FIELD:
+		case IMPORT:
+		case IMPORTS:
+		case MODIFIER:
+		case MODULES:
+		case MULTIPLEBIND:
+		case OBJECTDESIGNATOR:
+		case PAIR:
+		case PATTERN:
+		case PATTERNBIND:
+		case STATEDESIGNATOR:
+		case STM:
+		case STMTALTERNATIVE:
+		case TOKEN:
+		case TRACECOREDEFINITION:
+		case TRACEDEFINITION:
+		case TYPE:
+		default:
+			//TODO: NOT IMPLEMENTED
+			System.out.println("PPatternAssistantTC - getMatchingExpression - NOT IMPLEMENTED");
+			assert(false);
+			return null;
+		}
 	}
 
 }
