@@ -23,19 +23,19 @@
 
 package org.overture.pog.obligations;
 
-import org.overturetool.vdmj.expressions.FieldNumberExpression;
-import org.overturetool.vdmj.types.ProductType;
+import org.overture.ast.expressions.AFieldNumberExp;
+import org.overture.ast.types.AProductType;
 
 public class TupleSelectObligation extends ProofObligation
 {
 	public TupleSelectObligation(
-		FieldNumberExpression exp, ProductType type, POContextStack ctxt)
+		AFieldNumberExp exp, AProductType type, POContextStack ctxt)
 	{
-		super(exp.location, POType.TUPLE_SELECT, ctxt);
+		super(exp.getLocation(), POType.TUPLE_SELECT, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("not is_(");
-		sb.append(exp.tuple);
+		sb.append(exp.getTuple());
 		sb.append(", ");
 		sb.append(type);
 		sb.append(")");

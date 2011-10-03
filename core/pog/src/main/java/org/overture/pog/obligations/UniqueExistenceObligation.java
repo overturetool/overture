@@ -23,19 +23,20 @@
 
 package org.overture.pog.obligations;
 
-import org.overturetool.vdmj.expressions.IotaExpression;
+import org.overture.ast.expressions.AIotaExp;
+
 
 public class UniqueExistenceObligation extends ProofObligation
 {
-	public UniqueExistenceObligation(IotaExpression iota, POContextStack ctxt)
+	public UniqueExistenceObligation(AIotaExp iota, POContextStack ctxt)
 	{
-		super(iota.location, POType.UNIQUE_EXISTENCE, ctxt);
+		super(iota.getLocation(), POType.UNIQUE_EXISTENCE, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("exists1 ");
-		sb.append(iota.bind);
+		sb.append(iota.getBind());
 		sb.append(" & ");
-		sb.append(iota.predicate);
+		sb.append(iota.getPredicate());
 
 		value = ctxt.getObligation(sb.toString());
 	}

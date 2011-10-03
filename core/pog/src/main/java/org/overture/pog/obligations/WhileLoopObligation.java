@@ -23,13 +23,13 @@
 
 package org.overture.pog.obligations;
 
-import org.overturetool.vdmj.statements.WhileStatement;
+import org.overture.ast.statements.AWhileStm;
 
 public class WhileLoopObligation extends ProofObligation
 {
-	public WhileLoopObligation(WhileStatement stmt, POContextStack ctxt)
+	public WhileLoopObligation(AWhileStm stmt, POContextStack ctxt)
 	{
-		super(stmt.location, POType.WHILE_LOOP, ctxt);
-		value = ctxt.getObligation("while " + stmt.exp + " do ...");
+		super(stmt.getLocation(), POType.WHILE_LOOP, ctxt);
+		value = ctxt.getObligation("while " + stmt.getExp() + " do ...");
 	}
 }

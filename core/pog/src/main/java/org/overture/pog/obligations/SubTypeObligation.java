@@ -32,8 +32,17 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACharLiteralExp;
+import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.ASubseqExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -42,7 +51,28 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SBasicType;
+import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
+import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 
 public class SubTypeObligation extends ProofObligation
@@ -175,14 +205,14 @@ public class SubTypeObligation extends ProofObligation
 		StringBuilder sb = new StringBuilder();
 		String prefix = "";
 
-		etype = etype.deBracket();
+		etype = PTypeAssistant.deBracket(etype);
 
-		if (etype instanceof UnionType)
+		if (etype instanceof AUnionType)
 		{
-			UnionType ut = (UnionType)etype;
-			TypeSet possibles = new TypeSet();
+			AUnionType ut = (AUnionType)etype;
+			PTypeSet possibles = new PTypeSet();
 
-			for (PType pos: ut.types)
+			for (PType pos: ut.getTypes())
 			{
 				if (atype == null || TypeComparator.compatible(pos, atype))
 				{
@@ -211,14 +241,14 @@ public class SubTypeObligation extends ProofObligation
 				prefix = " or\n";
 			}
 		}
-		else if (etype instanceof InvariantType)
+		else if (etype instanceof SInvariantType)
 		{
-			InvariantType et = (InvariantType)etype;
+			SInvariantType et = (SInvariantType)etype;
 			prefix = "";
 
-			if (et.invdef != null)
+			if (et.getInvDef() != null)
 			{
-    			sb.append(et.invdef.name.name);
+    			sb.append(et.getInvDef().getName().name);
     			sb.append("(");
 
 //				This needs to be put back if/when we change the inv_R signature to take
@@ -237,20 +267,20 @@ public class SubTypeObligation extends ProofObligation
     			prefix = " and ";
 			}
 
-			if (etype instanceof NamedType)
+			if (etype instanceof ANamedInvariantType)
 			{
-				NamedType nt = (NamedType)etype;
+				ANamedInvariantType nt = (ANamedInvariantType)etype;
 
-				if (atype instanceof NamedType)
+				if (atype instanceof ANamedInvariantType)
 				{
-					atype = ((NamedType)atype).type;
+					atype = ((ANamedInvariantType)atype).getType();
 				}
 				else
 				{
 					atype = null;
 				}
 
-				String s = oneType(true, exp, nt.type, atype);
+				String s = oneType(true, exp, nt.getType(), atype);
 
 				if (s.length() > 0)
 				{
@@ -260,21 +290,21 @@ public class SubTypeObligation extends ProofObligation
 					sb.append(")");
 				}
 			}
-			else if (etype instanceof RecordType)
+			else if (etype instanceof ARecordInvariantType)
 			{
-				if (exp instanceof MkTypeExpression)
+				if (exp instanceof AMkTypeExp)
 				{
-					RecordType rt = (RecordType)etype;
-					MkTypeExpression mk = (MkTypeExpression)exp;
+					ARecordInvariantType rt = (ARecordInvariantType)etype;
+					AMkTypeExp mk = (AMkTypeExp)exp;
 
-					if (rt.fields.size() == mk.args.size())
+					if (rt.getFields().size() == mk.getArgs().size())
 					{
-    					Iterator<Field> fit = rt.fields.iterator();
-    					Iterator<PType> ait = mk.argTypes.iterator();
+    					Iterator<AFieldField> fit = rt.getFields().iterator();
+    					Iterator<PType> ait = mk.getArgTypes().iterator();
 
-    					for (PExp e: mk.args)
+    					for (PExp e: mk.getArgs())
     					{
-    						String s = oneType(true, e, fit.next().type, ait.next());
+    						String s = oneType(true, e, fit.next().getType(), ait.next());
 
     						if (s.length() > 0)
     						{
@@ -299,26 +329,26 @@ public class SubTypeObligation extends ProofObligation
 				addIs(sb, exp, etype);
 			}
 		}
-		else if (etype instanceof SeqType)
+		else if (etype instanceof SSeqType)
 		{
 			prefix = "";
 
-			if (etype instanceof Seq1Type)
+			if (etype instanceof ASeq1SeqType)
 			{
     			sb.append(exp);
     			sb.append(" <> []");
     			prefix = " and ";
 			}
 
-			if (exp instanceof SeqEnumExpression)
+			if (exp instanceof ASeqEnumSeqExp)
 			{
-				SeqType stype = (SeqType)etype;
-				SeqEnumExpression seq = (SeqEnumExpression)exp;
-				Iterator<PType> it = seq.types.iterator();
+				SSeqType stype = (SSeqType)etype;
+				ASeqEnumSeqExp seq = (ASeqEnumSeqExp)exp;
+				Iterator<PType> it = seq.getTypes().iterator();
 
-				for (PExp m: seq.members)
+				for (PExp m: seq.getMembers())
 				{
-					String s = oneType(true, m, stype.seqof, it.next());
+					String s = oneType(true, m, stype.getSeqof(), it.next());
 
 					if (s.length() > 0)
 					{
@@ -330,11 +360,11 @@ public class SubTypeObligation extends ProofObligation
 					}
 				}
 			}
-			else if (exp instanceof SubseqExpression)
+			else if (exp instanceof ASubseqExp)
 			{
-				SubseqExpression subseq = (SubseqExpression)exp;
-				PType itype = new NaturalOneType(exp.location);
-				String s = oneType(true, subseq.from, itype, subseq.ftype);
+				ASubseqExp subseq = (ASubseqExp)exp;
+				PType itype = new ANatOneNumericBasicType(exp.getLocation(), false);
+				String s = oneType(true, subseq.getFrom(), itype, subseq.getFtype());
 
 				if (s.length() > 0)
 				{
@@ -344,7 +374,7 @@ public class SubTypeObligation extends ProofObligation
 					sb.append(" and ");
 				}
 
-				s = oneType(true, subseq.to, itype, subseq.ttype);
+				s = oneType(true, subseq.getTo(), itype, subseq.getTtype());
 
 				if (s.length() > 0)
 				{
@@ -354,9 +384,9 @@ public class SubTypeObligation extends ProofObligation
 					sb.append(" and ");
 				}
 
-				sb.append(subseq.to);
+				sb.append(subseq.getTo());
 				sb.append(" <= len ");
-				sb.append(subseq.seq);
+				sb.append(subseq.getSeq());
 
 				sb.append(" and ");
 				addIs(sb, exp, etype);		// Like set range does
@@ -367,19 +397,19 @@ public class SubTypeObligation extends ProofObligation
 				addIs(sb, exp, etype);
 			}
 		}
-		else if (etype instanceof MapType)
+		else if (etype instanceof SMapType)
 		{
-			if (exp instanceof MapEnumExpression)
+			if (exp instanceof AMapEnumMapExp)
 			{
-				MapType mtype = (MapType)etype;
-				MapEnumExpression seq = (MapEnumExpression)exp;
-				Iterator<PType> dit = seq.domtypes.iterator();
-				Iterator<PType> rit = seq.rngtypes.iterator();
+				SMapType mtype = (SMapType)etype;
+				AMapEnumMapExp seq = (AMapEnumMapExp)exp;
+				Iterator<PType> dit = seq.getDomTypes().iterator();
+				Iterator<PType> rit = seq.getRngTypes().iterator();
 				prefix = "";
 
-				for (MapletExpression m: seq.members)
+				for (AMapletExp m: seq.getMembers())
 				{
-					String s = oneType(true, m.left, mtype.from, dit.next());
+					String s = oneType(true, m.getLeft(), mtype.getFrom(), dit.next());
 
 					if (s.length() > 0)
 					{
@@ -390,7 +420,7 @@ public class SubTypeObligation extends ProofObligation
 						prefix = "\nand ";
 					}
 
-					s = oneType(true, m.right, mtype.to, rit.next());
+					s = oneType(true, m.getRight(), mtype.getTo(), rit.next());
 
 					if (s.length() > 0)
 					{
@@ -407,18 +437,18 @@ public class SubTypeObligation extends ProofObligation
 				addIs(sb, exp, etype);
 			}
 		}
-		else if (etype instanceof SetType)
+		else if (etype instanceof ASetType)
 		{
-			if (exp instanceof SetEnumExpression)
+			if (exp instanceof ASetEnumSetExp)
 			{
-				SetType stype = (SetType)etype;
-				SetEnumExpression set = (SetEnumExpression)exp;
-				Iterator<PType> it = set.types.iterator();
+				ASetType stype = (ASetType)etype;
+				ASetEnumSetExp set = (ASetEnumSetExp)exp;
+				Iterator<PType> it = set.getTypes().iterator();
 				prefix = "";
 
-				for (PExp m: set.members)
+				for (PExp m: set.getMembers())
 				{
-					String s = oneType(true, m, stype.setof, it.next());
+					String s = oneType(true, m, stype.getSetof(), it.next());
 
 					if (s.length() > 0)
 					{
@@ -432,14 +462,14 @@ public class SubTypeObligation extends ProofObligation
 
 				sb.append("\nand ");
 			}
-			else if (exp instanceof SetRangeExpression)
+			else if (exp instanceof ASetRangeSetExp)
 			{
-				SetType stype = (SetType)etype;
-				SetRangeExpression range = (SetRangeExpression)exp;
-				PType itype = new IntegerType(exp.location);
+				ASetType stype = (ASetType)etype;
+				ASetRangeSetExp range = (ASetRangeSetExp)exp;
+				PType itype = new AIntNumericBasicType(exp.getLocation(), false);
 				prefix = "";
 
-				String s = oneType(true, range.first, itype, range.ftype);
+				String s = oneType(true, range.getFirst(), itype, range.getFtype());
 
 				if (s.length() > 0)
 				{
@@ -450,7 +480,7 @@ public class SubTypeObligation extends ProofObligation
 					prefix = "\nand ";
 				}
 
-				s = oneType(true, range.first, stype.setof, range.ftype);
+				s = oneType(true, range.getFirst(), stype.getSetof(), range.getFtype());
 
 				if (s.length() > 0)
 				{
@@ -461,7 +491,7 @@ public class SubTypeObligation extends ProofObligation
 					prefix = "\nand ";
 				}
 
-				s = oneType(true, range.last, itype, range.ltype);
+				s = oneType(true, range.getLast(), itype, range.getLtype());
 
 				if (s.length() > 0)
 				{
@@ -472,7 +502,7 @@ public class SubTypeObligation extends ProofObligation
 					prefix = "\nand ";
 				}
 
-				s = oneType(true, range.last, stype.setof, range.ltype);
+				s = oneType(true, range.getLast(), stype.getSetof(), range.getLtype());
 
 				if (s.length() > 0)
 				{
@@ -487,17 +517,17 @@ public class SubTypeObligation extends ProofObligation
 			sb.append(prefix);
 			addIs(sb, exp, etype);
 		}
-		else if (etype instanceof ProductType)
+		else if (etype instanceof AProductType)
 		{
-			if (exp instanceof TupleExpression)
+			if (exp instanceof ATupleExp)
 			{
-				ProductType pt = (ProductType)etype;
-				TupleExpression te = (TupleExpression)exp;
-				Iterator<PType> eit = pt.types.iterator();
-				Iterator<PType> ait = te.types.iterator();
+				AProductType pt = (AProductType)etype;
+				ATupleExp te = (ATupleExp)exp;
+				Iterator<PType> eit = pt.getTypes().iterator();
+				Iterator<PType> ait = te.getTypes().iterator();
 				prefix = "";
 
-				for (PExp e: te.args)
+				for (PExp e: te.getArgs())
 				{
 					String s = oneType(true, e, eit.next(), ait.next());
 
@@ -516,24 +546,24 @@ public class SubTypeObligation extends ProofObligation
 				addIs(sb, exp, etype);
 			}
 		}
-		else if (etype instanceof BasicType)
+		else if (etype instanceof SBasicType)
 		{
-    		if (etype instanceof NumericType)
+    		if (etype instanceof SNumericBasicType)
     		{
-    			NumericType nt = (NumericType)etype;
+    			SNumericBasicType nt = (SNumericBasicType)etype;
 
-    			if (atype instanceof NumericType)
+    			if (atype instanceof SNumericBasicType)
     			{
-    				NumericType ant = (NumericType)atype;
+    				SNumericBasicType ant = (SNumericBasicType)atype;
 
-    				if (ant.getWeight() > nt.getWeight())
+    				if (SNumericBasicTypeAssistant.getWeight(ant) > SNumericBasicTypeAssistant.getWeight(nt))
     				{
-            			if (nt instanceof NaturalOneType)
+            			if (nt instanceof ANatOneNumericBasicType)
             			{
           					sb.append(exp);
            					sb.append(" > 0");
             			}
-            			else if (nt instanceof NaturalType)
+            			else if (nt instanceof ANatNumericBasicType)
             			{
            					sb.append(exp);
            					sb.append(" >= 0");
@@ -557,16 +587,16 @@ public class SubTypeObligation extends ProofObligation
         			sb.append(")");
     			}
     		}
-    		else if (etype instanceof BooleanType)
+    		else if (etype instanceof ABooleanBasicType)
     		{
-    			if (!(exp instanceof BooleanLiteralExpression))
+    			if (!(exp instanceof ABooleanConstExp))
     			{
         			addIs(sb, exp, etype);
     			}
     		}
-    		else if (etype instanceof CharacterType)
+    		else if (etype instanceof ACharBasicType)
     		{
-    			if (!(exp instanceof CharLiteralExpression))
+    			if (!(exp instanceof ACharLiteralExp))
     			{
         			addIs(sb, exp, etype);
     			}

@@ -23,52 +23,53 @@
 
 package org.overture.pog.obligations;
 
-import org.overturetool.vdmj.definitions.EqualsDefinition;
-import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.types.Type;
+import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.PType;
+
 
 public class ValueBindingObligation extends ProofObligation
 {
-	public ValueBindingObligation(ValueDefinition def, POContextStack ctxt)
+	public ValueBindingObligation(AValueDefinition def, POContextStack ctxt)
 	{
-		super(def.location, POType.VALUE_BINDING, ctxt);
+		super(def.getLocation(), POType.VALUE_BINDING, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("exists ");
-		sb.append(def.pattern);
+		sb.append(def.getPattern());
 		sb.append(":");
-		sb.append(def.type);
+		sb.append(def.getType());
 		sb.append(" & ");
-		sb.append(def.pattern);
+		sb.append(def.getPattern());
 		sb.append(" = ");
-		sb.append(def.exp);
+		sb.append(def.getExpression());
 
 		value = ctxt.getObligation(sb.toString());
 	}
 
-	public ValueBindingObligation(EqualsDefinition def, POContextStack ctxt)
+	public ValueBindingObligation(AEqualsDefinition def, POContextStack ctxt)
 	{
-		super(def.location, POType.VALUE_BINDING, ctxt);
+		super(def.getLocation(), POType.VALUE_BINDING, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("exists ");
-		sb.append(def.pattern);
+		sb.append(def.getPattern());
 		sb.append(":");
-		sb.append(def.expType);
+		sb.append(def.getExpType());
 		sb.append(" & ");
-		sb.append(def.pattern);
+		sb.append(def.getPattern());
 		sb.append(" = ");
-		sb.append(def.test);
+		sb.append(def.getTest());
 
 		value = ctxt.getObligation(sb.toString());
 	}
 
 	public ValueBindingObligation(
-		Pattern p, Type t, Expression e, POContextStack ctxt)
+		PPattern p, PType t, PExp e, POContextStack ctxt)
 	{
-		super(p.location, POType.VALUE_BINDING, ctxt);
+		super(p.getLocation(), POType.VALUE_BINDING, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("exists ");
