@@ -31,25 +31,16 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.AExplicitOperationDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AImplicitOperationDefinitionAssistant;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeList;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.IgnorePattern;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
 
 public class ParameterPatternObligation extends ProofObligation
 {
@@ -70,7 +61,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), def.getType().getParameters(), def.getType().getResult()));
+			generate(AImplicitFunctionDefinitionAssistant.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -79,7 +70,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), def.getType().getParameters(), def.getType().getResult()));
+			generate( AExplicitOperationDefinitionAssistant.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -88,7 +79,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(def.getListParamPatternList(), def.getType().getParameters(), def.getType().getResult()));
+			generate( AImplicitOperationDefinitionAssistant.getListParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	private String generate(List<List<PPattern>> plist, List<PType> params, PType result)
@@ -122,7 +113,7 @@ public class ParameterPatternObligation extends ProofObligation
 					argnames.append(fprefix);
 					argnames.append(aname);
 
-					Expression pmatch = p.getMatchingExpression();
+					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
 					exists.append(eprefix);
 					exists.append("(exists ");
 					exists.append(pmatch);

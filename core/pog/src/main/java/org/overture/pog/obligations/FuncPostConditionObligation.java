@@ -27,6 +27,8 @@ import java.util.List;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AImplicitOperationDefinitionAssistant;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.patterns.PPattern;
@@ -76,9 +78,9 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		StringBuilder params = new StringBuilder();
 
-		for (PatternList pl: func.getParamPatternList())
+		for (List<PPattern> pl: AImplicitFunctionDefinitionAssistant.getParamPatternList(func))
 		{
-			params.append(pl.getMatchingExpressionList());
+			params.append(PPatternAssistantTC.getMatchingExpressionList(pl));
 		}
 
 		String body = null;

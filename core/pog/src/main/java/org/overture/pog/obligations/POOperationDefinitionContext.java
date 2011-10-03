@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.AImplicitOperationDefinitionAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
@@ -52,7 +53,7 @@ public class POOperationDefinitionContext extends POContext
 		this.name = definition.getName();
 		this.deftype = definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = definition.getParamPatternList();
+		this.paramPatternList = AImplicitOperationDefinitionAssistant.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
 	}
