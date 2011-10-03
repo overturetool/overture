@@ -14,12 +14,12 @@
   <modules>
   
     	<module>ast</module>
-    	<module>parser</module>
-	<module>typechecker</module>
-	<module>interpreter</module>
+	<module>ast_assistance</module>    	
+	<module>parser</module>
+	<module>typechecker</module>	
 	<module>vdmjparsertest</module>
-	<module>vdmjtypecheckertest</module>
-
+	<module>vdmjtypecheckertest</module>		
+	<module>pog</module>
    
   </modules>
   <dependencies>
