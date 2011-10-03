@@ -1,5 +1,6 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -17,7 +19,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.APatternTypePairAssistant;
-import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AOperationTypeAssistant;
@@ -229,6 +230,31 @@ public class AImplicitOperationDefinitionAssistant {
 		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
+	}
+
+	public static List<PPattern> getParamPatternList(AImplicitOperationDefinition definition)
+	{
+		List<PPattern> plist = new ArrayList<PPattern>();
+
+		for (APatternListTypePair pl: definition.getParameterPatterns() )
+		{
+			plist.addAll(pl.getPatterns());
+		}
+
+		return plist;
+	}
+	
+	public static List<List<PPattern>> getListParamPatternList(AImplicitOperationDefinition func) {
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<PPattern> plist = new ArrayList<PPattern>();
+
+		for (APatternListTypePair pl: func.getParameterPatterns())
+		{
+			plist.addAll(pl.getPatterns());
+		}
+
+		parameters.add(plist);
+		return parameters;
 	}
 
 }

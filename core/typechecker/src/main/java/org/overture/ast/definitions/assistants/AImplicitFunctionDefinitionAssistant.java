@@ -235,15 +235,15 @@ public class AImplicitFunctionDefinitionAssistant {
 			return def;
 	}
 
-	private static List<List<PPattern>> getParamPatternList(
+	public static List<List<PPattern>> getParamPatternList(
 			AImplicitFunctionDefinition d) {
 		
-		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
-		List<PPattern> plist = new Vector<PPattern>();
+		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
+		List<PPattern> plist = new ArrayList<PPattern>();
 
 		for (APatternListTypePair pl: d.getParamPatterns())
 		{
-			plist.addAll((List<PPattern>)pl.getPatterns().clone());
+			plist.addAll(pl.getPatterns());
 		}
 
 		parameters.add(plist);
