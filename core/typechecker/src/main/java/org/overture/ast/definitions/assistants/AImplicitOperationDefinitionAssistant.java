@@ -139,9 +139,9 @@ public class AImplicitOperationDefinitionAssistant {
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
 
-		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns().clone())
+		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns())
 		{
-			plist.addAll(pl.getPatterns());
+			plist.addAll((Collection<PPattern>) pl.getPatterns().clone());
 		}
 
 		if (d.getResult() != null)
@@ -192,9 +192,9 @@ public class AImplicitOperationDefinitionAssistant {
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
 
-		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns().clone())
+		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns())
 		{
-			plist.addAll((Collection<? extends PPattern>) pl.getPatterns());
+			plist.addAll((Collection<PPattern>) pl.getPatterns().clone());
 		}
 
 		AStateDefinition state = d.getState();

@@ -243,7 +243,7 @@ public class AImplicitFunctionDefinitionAssistant {
 
 		for (APatternListTypePair pl: d.getParamPatterns())
 		{
-			plist.addAll(pl.getPatterns());
+			plist.addAll((Collection<PPattern>) pl.getPatterns().clone());
 		}
 
 		parameters.add(plist);
