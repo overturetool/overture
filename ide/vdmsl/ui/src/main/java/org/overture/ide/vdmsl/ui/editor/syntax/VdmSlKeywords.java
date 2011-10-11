@@ -11,7 +11,7 @@ public class VdmSlKeywords implements IVdmKeywords {
 			"end", "error", "errs", "exists", "exists1", "exit", "exports",
 			"ext", "false", "floor", "for", "forall", "from", "functions",
 			"hd", "if", "imports", "in", "inds", "init", "inmap", "int",
-			"inter", "inv", "inverse", "iota", "lambda", "len", "let", "map",
+			"inter", "inv", "inverse", "iota", "is","lambda", "len", "let", "map",
 			"measure", "merge", "mod", "module", "mu", "munion", "nat", "nat1",
 			"nil", "not", "of", "operations", "or", "others", "post", "power",
 			"pre", "psubset", "rat", "rd", "real", "rem", "renamed", "return",
