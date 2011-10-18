@@ -45,6 +45,7 @@ public class RemoteInterpreter
 	private final Interpreter interpreter;
 	private final DBGPReader dbgp;
 	private boolean running = false;
+	private Thread vdmExecuteThread;
 
 	public RemoteInterpreter(Interpreter interpreter, DBGPReader dbgp)
 	{
@@ -185,6 +186,10 @@ public class RemoteInterpreter
 	public void finish()
 	{
 		isFinished = true;
+		if(vdmExecuteThread != null)
+		{
+			vdmExecuteThread.interrupt();
+		}
 	}
 	
 	ArrayBlockingQueue<Call> executionQueueRequest = new ArrayBlockingQueue<Call>(1);
@@ -231,6 +236,7 @@ public class RemoteInterpreter
 		}
 		
 		running = true;
+		vdmExecuteThread = Thread.currentThread();
 		while(!isFinished)
 		{
 			try

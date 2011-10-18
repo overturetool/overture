@@ -1174,10 +1174,6 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			try {
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
-//				remoteControl.run(new RemoteInterpreter(interpreter, this));
-//				stdout("\nRemote control completed");
-//				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-				
 				final RemoteInterpreter remoteInterpreter = new RemoteInterpreter(interpreter, this);
 				Thread remoteThread = new Thread(new Runnable()
 				{
@@ -1198,12 +1194,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				remoteThread.setName("RemoteControl runner");
 				remoteThread.setDaemon(true);
 				remoteThread.start();
-//				InitThread initThread = new InitThread(Thread.currentThread());
-//				BasicSchedulableThread.add(initThread);
 				remoteInterpreter.processRemoteCalls();
-//				remoteControl.run(new RemoteInterpreter(interpreter, this));
 				stdout("Remote control completed");
 				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+				run();
 				
 			} catch (Exception e) {
 				status = DBGPStatus.STOPPED;
