@@ -1521,9 +1521,9 @@ In order to use the VDM Types the Java implementation must have the VDMJ java li
 
 \newpage
 \subsection{Remote Control}
-To enable the GUI to interact with the model the ``Remote Control'' technique is utilized, by implementing the \textit{RemoteControl} interface, as shown in Listing~\ref{SmokersRemoteControl}. The \textit{RemoteControl} interface also requires the VDMJ Java library to be included in the Java build path, as explained above. From listing~\ref{SmokersRemoteControl} it can be seen that the \textit{RemoteControl} interface supplies direct access to the VDM interpreter, that is passed to the \textit{SmokingControl} object which functions as the bridge between the GUI and the running VDM model. The \textit{SmokingControl} class is specific for this example, and its implementation could essentially be implemented directly in the \textit{RemoteControl} realization. 
+To enable the GUI to interact with the model the ``Remote Control'' technique is utilized, by implementing the \textit{RemoteControl} interface, as shown in Listing~\ref{SmokersRemoteControl}. The \textit{RemoteControl} interface also requires the VDMJ Java library to be included in the Java build path, as explained above. From listing~\ref{SmokersRemoteControl} it can be seen that the \textit{RemoteControl} interface supplies protected access to the VDM interpreter, that is passed to the \textit{SmokingControl} object which functions as the bridge between the GUI and the running VDM model. The \textit{SmokingControl} class is specific for this example, and its implementation could essentially be implemented directly in the \textit{RemoteControl} realization. 
 
-It is important the \textit{run} method does not run out of scope before the modelled scenario has finished, as this will terminate the execution of the model.  
+It is important the \textit{finish} method is called on the interpreter when the GUI is disposed, this will allow Overture to do a controlled shut-down of the remote interpretation, keeping the debugger alive for post execution communication such as coverage writing.  
 
 \begin{lstlisting}[language=Java,label=SmokersRemoteControl,caption=Java implementation of the RemoteControl interface, captionpos=b]
 public class SmokerRemote implements RemoteControl {
@@ -1539,7 +1539,7 @@ public class SmokerRemote implements RemoteControl {
 }
 \end{lstlisting}
 
-The implementation of the \textit{SmokingControl} is shown in Listing~\ref{SmokersSmokingControl}. In the \textit{init} method it can be seen how VDM statements are executed as strings commands, the \textit{World} class is created and the \textit{Run} operation is invoked.  This is the basic way of interacting with a model through the remote control functionality. The \textit{AddPaper} method shows how the variables defined in the \textit{init} method can be used for invoking an operation. The \textit{AddPaper} method is called directly from the GUI Button click action, as shown in Listing~\ref{SmokersButtonClickAction}.
+The implementation of the \textit{SmokingControl} is shown in Listing~\ref{SmokersSmokingControl}. In the \textit{init} method it can be seen how VDM statements are executed as strings commands, the \textit{World} class is created and the \textit{Run} operation is invoked.  This is the basic way of interacting with a model through the remote control functionality. The \texttt{finish} method informs the interpreter that the remote GUI is being disposed and that execution should be stopped. The \textit{AddPaper} method shows how the variables defined in the \textit{init} method can be used for invoking an operation. The \textit{AddPaper} method is called directly from the GUI Button click action, as shown in Listing~\ref{SmokersButtonClickAction}.
 
 \begin{lstlisting}[language=Java,label=SmokersSmokingControl,caption=Java implementation of the bridge between the GUI and the interpreter executing the VDM model, captionpos=b]
 public class SmokingControl {
@@ -1558,6 +1558,10 @@ public class SmokingControl {
  public void AddPaper() {
     interpreter.valueExecute("w.agent.AddPaper()");
    }
+
+public void finish(){
+   interpreter.finish();
+}
 ! \ldots !
 }
 \end{lstlisting}
@@ -1571,7 +1575,23 @@ addPaperButton.addActionListener(new ActionListener() {
 \end{lstlisting}
 
 The last thing to note in Listing~\ref{SmokersSmokingControl} is the constructor which adds itself to a public static field in the \textit{Controller} class. This step is necessary to brigde the objects created by the ``Remote Control'' technique with the objects created in connection with the ``External Java Library'' technique. 
-To understand why this construct is needed, some insight into the initialization steps is necessary. Firstly the entire VDM model, and thereby the \textit{Graphics} object, is created via the \textit{RemoteControl} interface by \textit{SmokingControl}. Now recall from Listing~\ref{SmokersVDMInterfaceJavaImpl} that the \textit{Controller} class, of the MVC pattern, is created when the \textit{init} method of the \textit{Graphics} class is invoked from the VDM model, meaning that the actual graphical Java components, are also created when \textit{init} is called. Now in order to connect a click on the GUI buttons with the commands that can be executed in the model, the \textit{Controller} needs to have access to the interpreter, i.e. the \textit{SmokingControl} object. Meanwhile the Graphics object is created deep inside the VDM model and the \textit{SmokingControl} object cannot be passed to it through the interpreters execute method. Instead the bridge between the \textit{Controller} and the \textit{SmokingControl} object is kept in Java, and the insider knowledge that the \textit{Controller} object will eventually be created from inside the model, is used  to justify the static reference. This is a special case when combining the ``Remote Control'' technique with the ``External Java Library'' method. \\
+To understand why this construct is needed, some insight into the initialization steps is necessary. Firstly the entire VDM model, and thereby the \textit{Graphics} object, is created via the \textit{RemoteControl} interface by \textit{SmokingControl}. Now recall from Listing~\ref{SmokersVDMInterfaceJavaImpl} that the \textit{Controller} class, of the MVC pattern, is created when the \textit{init} method of the \textit{Graphics} class is invoked from the VDM model, meaning that the actual graphical Java components, are also created when \textit{init} is called. Now in order to connect a click on the GUI buttons with the commands that can be executed in the model, the \textit{Controller} needs to have access to the interpreter, i.e. the \textit{SmokingControl} object. Meanwhile the Graphics object is created deep inside the VDM model and the \textit{SmokingControl} object cannot be passed to it through the interpreters execute method. Instead the bridge between the \textit{Controller} and the \textit{SmokingControl} object is kept in Java, and the insider knowledge that the \textit{Controller} object will eventually be created from inside the model, is used  to justify the static reference. This is a special case when combining the ``Remote Control'' technique with the ``External Java Library'' method.
+
+\subsubsection{Example of how to shut-down a JFrame when using the remote controller interface}
+It is important that the execution of a remote GUI is stopped in a controlled manner e.g. not just by calling \texttt{System.exit(0)}. One way to allow the finish method to be called from a \texttt{JFrame} is shown in listing~\ref{RemoteControllerShutdown}; The in the constructor of the \texttt{JFrame} a the default close operation is changed to be \texttt{DISPOSE\_ON\_CLOSE}, this will change the closing of the window so that the \texttt{dispose} method is called where call to the interpreter finish can be placed.
+
+\begin{lstlisting}[language=Java,label=RemoteControllerShutdown,caption=Java implementation of a \texttt{finish} method for a \texttt{JFrame}., captionpos=b]
+public MyJFrame() {
+// Allow Overture to do a controlled shutdown 
+setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+! \ldots !
+}
+! \ldots !
+@Override
+public void dispose(){
+  interpreter.finish();
+}
+\end{lstlisting}
 
 \subsection{Deployment of the Java Program to Overture}
 Once the Java program has been implemented, it must be exported to a Jar file and placed in the lib directory in the Overture/VDM projects directory, in order for Overture to find it.
