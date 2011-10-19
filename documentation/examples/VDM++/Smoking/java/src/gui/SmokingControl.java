@@ -3,53 +3,68 @@ package gui;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
 import org.overturetool.vdmj.values.Value;
 
-public class SmokingControl implements ISmokingControl {
+public class SmokingControl implements ISmokingControl
+{
 
-	RemoteInterpreter interpreter;
-	public SmokingControl(RemoteInterpreter intrprtr) {
+	private RemoteInterpreter interpreter;
+
+	public SmokingControl(RemoteInterpreter intrprtr)
+	{
 		interpreter = intrprtr;
 		Controller.smoke = this;
 	}
-	
-	public void init() {
-		try {
+
+	public void init()
+	{
+		try
+		{
 			execute("create w := new World()");
 			execute("w.Run()");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-	}
-	
-	@Override
-	public void AddPaper() {
-		try {
-			execute("w.agent.AddPaper()");
-			execute("w.Yield()");			//Optimization for thread fairness  
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void AddMatch() {
-		try {
+	public void AddPaper()
+	{
+		try
+		{
+			execute("w.agent.AddPaper()");
+			execute("w.Yield()"); // Optimization for thread fairness
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void AddMatch()
+	{
+		try
+		{
 			execute("w.agent.AddMatch()");
 			execute("w.Yield()");
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void AddTobacco() {
-		try {
+	public void AddTobacco()
+	{
+		try
+		{
 			execute("w.agent.AddTobacco()");
 			execute("w.Yield()");
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private Value execute(String arguments) throws Exception
 	{
 		String cmd = arguments;
@@ -62,20 +77,31 @@ public class SmokingControl implements ISmokingControl {
 			System.out.println("CREATE:  var: " + name + " exp: " + exp);
 			interpreter.create(name, exp);
 			return null;
-		} else if (cmd.toLowerCase().startsWith("debug")||cmd.toLowerCase().startsWith("print"))
+		} else if (cmd.toLowerCase().startsWith("debug")
+				|| cmd.toLowerCase().startsWith("print"))
 		{
-			cmd = /*"p" +*/ cmd.substring(cmd.indexOf(" "));
+			cmd = /* "p" + */cmd.substring(cmd.indexOf(" "));
 
 			cmd = cmd.trim();
 		}
 
-		try{
-			System.out.println("Calling VDMJ with: "+cmd);
+		try
+		{
+			System.out.println("Calling VDMJ with: " + cmd);
 			Value result = interpreter.valueExecute(cmd);
-			return result; 
-		}catch(Exception e)
+			return result;
+		} catch (Exception e)
 		{
 			throw e;
 		}
+	}
+
+	/**
+	 * Notifies Overture that the remote interface is being disposed and that interpretation is finished. After this
+	 * Overture is allowed to terminate the current process.
+	 */
+	public void finish()
+	{
+		this.interpreter.finish();
 	}
 }

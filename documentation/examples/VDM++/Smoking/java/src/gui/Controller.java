@@ -1,13 +1,16 @@
 package gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 public class Controller extends JFrame  {
     /**
@@ -24,7 +27,8 @@ public class Controller extends JFrame  {
     public static SmokingControl smoke; 
 
     public Controller() {
-    	
+    	// Allow Overture to do a controlled shutdown 
+    	setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     	this.model = new Model();
     	
     	//add buttons
@@ -45,7 +49,6 @@ public class Controller extends JFrame  {
         }
         
       attachListenersToComponents();
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       layOutComponents();
       // Connect model and view
       model.addObserver(view);
@@ -106,5 +109,14 @@ public class Controller extends JFrame  {
      */
     public Model getModel() {
         return model;
+    }
+    
+    /**
+     * Notify the smoke controller that the JFrame is going down
+     */
+    @Override
+    public void dispose()
+    {
+    	smoke.finish();
     }
 }
