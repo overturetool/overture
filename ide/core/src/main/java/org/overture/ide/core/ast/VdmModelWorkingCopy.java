@@ -1,9 +1,5 @@
 package org.overture.ide.core.ast;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
-
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.resources.VdmSourceUnitWorkingCopy;
