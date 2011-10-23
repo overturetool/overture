@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.debug.internal.ui.viewers.update;
 
 import java.util.HashMap;
@@ -14,7 +32,7 @@ import org.eclipse.debug.internal.ui.viewers.update.ThreadEventHandler;
 import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState.InterpreterThreadStatus;
 import org.overture.ide.debug.core.model.IVdmThread;
 
-@SuppressWarnings( { "restriction", "unchecked" })
+@SuppressWarnings( { "restriction" })
 public class VdmThreadEventHandler extends ThreadEventHandler
 {
 	/**
@@ -22,7 +40,7 @@ public class VdmThreadEventHandler extends ThreadEventHandler
 	 */
 	public final static boolean DEBUG = false;
 
-	private Map fLastTopFrame = new HashMap();
+	private Map<IThread,IStackFrame> fLastTopFrame = new HashMap<IThread,IStackFrame>();
 
 	public VdmThreadEventHandler(AbstractModelProxy proxy)
 	{

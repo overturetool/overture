@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.debug.logging;
 
 import java.util.Arrays;
@@ -23,7 +41,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
-import org.overture.ide.debug.core.dbgp.IDbgpRawListener;
 import org.overture.ide.debug.core.dbgp.IDbgpRawPacket;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.DbgpRawPacket;
@@ -174,9 +191,10 @@ public class LogView extends ViewPart
 				}
 			}
 		};
-		
-		scrollLockAction = new Action("Scroll Lock", SWT.TOGGLE){
-			
+
+		scrollLockAction = new Action("Scroll Lock", SWT.TOGGLE)
+		{
+
 		};
 	}
 
@@ -274,7 +292,7 @@ public class LogView extends ViewPart
 					if (table.isDisposed() || table.getDisplay().isDisposed())
 						return;
 					final int itemCount = table.getItemCount();
-					if (itemCount > 0 &&!scrollLockAction.isChecked())
+					if (itemCount > 0 && !scrollLockAction.isChecked())
 					{
 						table.showItem(table.getItem(itemCount - 1));
 					}
@@ -288,41 +306,46 @@ public class LogView extends ViewPart
 	private static final String RESPONSE_TAG = "response"; //$NON-NLS-1$
 	private static final String STREAM_TAG = "stream"; //$NON-NLS-1$
 	private static final String NOTIFY_TAG = "notify"; //$NON-NLS-1$
-	
-	public void dbgpPacketReceived(int sessionId, IDbgpRawPacket content) {
-		
-		try {
-			Document doc = ((DbgpRawPacket)content).getParsedXml();
+
+	public void dbgpPacketReceived(int sessionId, IDbgpRawPacket content)
+	{
+
+		try
+		{
+			Document doc = ((DbgpRawPacket) content).getParsedXml();
 			Element element = (Element) doc.getFirstChild();
 			String tag = element.getTagName();
-			
-			if (tag.equals(INIT_TAG)) {
+
+			if (tag.equals(INIT_TAG))
+			{
 				DbgpResponsePacket responsePacket = new DbgpResponsePacket(element, -1);
-			} else if (tag.equals(RESPONSE_TAG)) {
-				DbgpResponsePacket packet = DbgpXmlPacketParser
-						.parseResponsePacket(element);			
+			} else if (tag.equals(RESPONSE_TAG))
+			{
+				DbgpResponsePacket packet = DbgpXmlPacketParser.parseResponsePacket(element);
 				System.out.println(packet.toString());
-				
-				this.log(new LogItem(new Integer(sessionId).toString(),RESPONSE_TAG,"",false,""));
-				
-				
-			} else if (tag.equals(STREAM_TAG)) {
+
+				this.log(new LogItem(new Integer(sessionId).toString(), RESPONSE_TAG, "", false, ""));
+
+			} else if (tag.equals(STREAM_TAG))
+			{
 				DbgpStreamPacket streamPacket = DbgpXmlPacketParser.parseStreamPacket(element);
-			} else if (tag.equals(NOTIFY_TAG)) {
+			} else if (tag.equals(NOTIFY_TAG))
+			{
 				DbgpNotifyPacket notifyPacket = DbgpXmlPacketParser.parseNotifyPacket(element);
 			}
-			
-		} catch (DbgpException e) {
+
+		} catch (DbgpException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
-	public void dbgpPacketSent(int sessionId, IDbgpRawPacket content) {
+	public void dbgpPacketSent(int sessionId, IDbgpRawPacket content)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

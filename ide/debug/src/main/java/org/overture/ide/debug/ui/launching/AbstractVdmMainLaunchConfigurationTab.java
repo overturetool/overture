@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.debug.ui.launching;
 
 import java.io.File;
@@ -406,11 +424,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 						}
 					}
 
-					@SuppressWarnings("unchecked")
 					@Override
 					public Object[] getElements(Object element)
 					{
-						List elements = new Vector();
+						List<IProject> elements = new Vector<IProject>();
 						Object[] arr = super.getElements(element);
 						if (arr != null)
 						{
@@ -422,7 +439,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 											&& (((IProject) object).getAdapter(IVdmProject.class) != null)
 											&& isSupported((IProject) object))
 									{
-										elements.add(object);
+										elements.add((IProject) object);
 									}
 								} catch (CoreException e)
 								{

@@ -1,8 +1,27 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.debug.ui.launchconfigurations;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -32,10 +51,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	 * Main list label provider
 	 */
 	public class DebugTypeLabelProvider implements ILabelProvider {
-		@SuppressWarnings("unchecked")
-		HashMap fImageMap = new HashMap();
+		Map<ImageDescriptor,Image> fImageMap = new HashMap<ImageDescriptor,Image>();
 
-		@SuppressWarnings("unchecked")
 		public Image getImage(Object element) {
 			if(element instanceof IAdaptable) {
 				IWorkbenchAdapter adapter = (IWorkbenchAdapter) ((IAdaptable)element).getAdapter(IWorkbenchAdapter.class);
@@ -237,9 +254,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#getItemsComparator()
 	 */
-	@SuppressWarnings("unchecked")
-	protected Comparator getItemsComparator() {
-		Comparator comp = new Comparator() {
+	protected Comparator<Object> getItemsComparator() {
+		Comparator<Object> comp = new Comparator<Object>() {
             public int compare(Object o1, Object o2) {
             	if(o1 instanceof IAstNode && o2 instanceof IAstNode) {
             		return ((IAstNode)o1).getName().compareTo(((IAstNode)o2).getName());
