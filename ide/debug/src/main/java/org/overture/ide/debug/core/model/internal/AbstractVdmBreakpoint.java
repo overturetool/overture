@@ -115,7 +115,7 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 
 	private String debugModelId;
 
-	protected void addVdmBreakpointAttributes(Map attributes,
+	protected void addVdmBreakpointAttributes(Map<String,Object> attributes,
 			String debugModelId, boolean enabled) {
 		this.debugModelId = debugModelId;
 		attributes.put(IBreakpoint.ID, debugModelId);
@@ -146,7 +146,7 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 		int hitCount = -1;
 	}
 
-	private final Map sessions = new IdentityHashMap(1);
+	private final Map<IDbgpSession,PerSessionInfo> sessions = new IdentityHashMap<IDbgpSession,PerSessionInfo>(1);
 
 	/*
 	 * @see IScriptBreakpoint#getId(IDbgpSession)
@@ -273,7 +273,7 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 				return -1;
 			}
 			int result = 0;
-			for (Iterator i = sessions.values().iterator(); i.hasNext();) {
+			for (Iterator<PerSessionInfo> i = sessions.values().iterator(); i.hasNext();) {
 				PerSessionInfo info = (PerSessionInfo) i.next();
 				if (info.hitCount > 0) {
 					result += info.hitCount;

@@ -19,7 +19,7 @@ public interface IDbgpContextCommands {
 	int GLOBAL_CONTEXT_ID = 1;
 	int CLASS_CONTEXT_ID = 2;
 
-	Map getContextNames(int stackDepth) throws DbgpException;
+	Map<Integer,String> getContextNames(int stackDepth) throws DbgpException;
 
 	IDbgpProperty[] getContextProperties(int stackDepth) throws DbgpException;
 

@@ -104,7 +104,7 @@ public class VdmStackFrame extends VdmDebugElement implements
 				.getCoreCommands();
 
 		((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "REQUEST", true, "getContextNames"));
-		final Map names = commands.getContextNames(getLevel());
+		final Map<Integer,String> names = commands.getContextNames(getLevel());
 		((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "getContextNames"));
 		final VdmVariableContainer result = new VdmVariableContainer();
 		if (thread.retrieveLocalVariables()
@@ -139,7 +139,7 @@ public class VdmStackFrame extends VdmDebugElement implements
 		VdmVariableWrapper classesWrapper = null;
 
 		VdmVariableContainer sort(IDebugTarget target) {
-			final Comparator variableComparator = VdmDebugManager
+			final Comparator<Object> variableComparator = VdmDebugManager
 					.getInstance().getVariableNameComparator();
 			if (locals != null) {
 				Arrays.sort(locals, variableComparator);
@@ -421,7 +421,7 @@ public class VdmStackFrame extends VdmDebugElement implements
 	static IVariable[] refreshVariables(IVariable[] newVars, IVariable[] oldVars)
 			throws DebugException {
 		if (oldVars != null) {
-			final Map map = new HashMap();
+			final Map<String, IVariable> map = new HashMap<String, IVariable>();
 			for (int i = 0; i < oldVars.length; ++i) {
 				final IVariable variable = oldVars[i];
 				if (variable instanceof IRefreshableVdmVariable) {

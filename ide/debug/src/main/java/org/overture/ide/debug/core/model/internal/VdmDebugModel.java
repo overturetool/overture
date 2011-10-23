@@ -9,13 +9,11 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.overture.ide.debug.core.VdmDebugManager;
 import org.overture.ide.debug.core.model.IVdmLineBreakpoint;
 import org.overture.ide.debug.core.model.IVdmMethodEntryBreakpoint;
 import org.overture.ide.debug.core.model.IVdmWatchpoint;
@@ -35,7 +33,7 @@ public class VdmDebugModel {
 
 	public static IVdmLineBreakpoint createLineBreakpoint(
 			IResource resource, IPath path, int lineNumber, int charStart,
-			int charEnd, boolean register, Map attributes) throws CoreException {
+			int charEnd, boolean register, Map<String,Object> attributes) throws CoreException {
 
 		return new VdmLineBreakpoint(getDebugModelId(resource), resource,
 				path, lineNumber, charStart, charEnd, register);
@@ -44,7 +42,7 @@ public class VdmDebugModel {
 	public static IVdmLineBreakpoint createLineBreakpoint(
 			String debugModelId, IResource resource, IPath path,
 			int lineNumber, int charStart, int charEnd, boolean register,
-			Map attributes) throws CoreException {
+			Map<String,Object> attributes) throws CoreException {
 
 		return new VdmLineBreakpoint(debugModelId, resource, path,
 				lineNumber, charStart, charEnd, register);
@@ -59,7 +57,7 @@ public class VdmDebugModel {
 
 	public static IVdmMethodEntryBreakpoint createMethodEntryBreakpoint(
 			IResource resource, IPath path, int lineNumber, int charStart,
-			int charEnd, boolean register, Map attributes, String methodName)
+			int charEnd, boolean register, Map<String,Object> attributes, String methodName)
 			throws CoreException {
 
 		return new VdmMethodEntryBreakpoint(getDebugModelId(resource),

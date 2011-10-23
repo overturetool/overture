@@ -2,7 +2,6 @@ package org.overture.ide.debug.core.model.internal;
 
 import org.overture.ide.debug.core.model.ArrayVdmType;
 import org.overture.ide.debug.core.model.AtomicVdmType;
-import org.overture.ide.debug.core.model.CollectionVdmType;
 import org.overture.ide.debug.core.model.ComplexVdmType;
 import org.overture.ide.debug.core.model.HashVdmType;
 import org.overture.ide.debug.core.model.IVdmType;

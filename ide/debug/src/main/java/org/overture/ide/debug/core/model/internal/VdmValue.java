@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.eclipse.core.runtime.Assert;
@@ -26,13 +25,11 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.AtomicVdmType;
 import org.overture.ide.debug.core.model.CollectionVdmType;
 import org.overture.ide.debug.core.model.ComplexVdmType;
-import org.overture.ide.debug.core.model.IVdmDebugTarget;
 import org.overture.ide.debug.core.model.IVdmStackFrame;
 import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.IVdmType;
 import org.overture.ide.debug.core.model.IVdmTypeFactory;
 import org.overture.ide.debug.core.model.IVdmValue;
-import org.overture.ide.debug.core.model.SetVdmType;
 import org.overture.ide.debug.core.model.StringVdmType;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationCommand;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationEngine;
@@ -145,19 +142,19 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 		Assert.isLegal(pageSize > 0 || properties.length == variables.length);
 	}
 
-	private IDbgpProperty[]  filterProperties(IDbgpProperty[] properties) {
-		
-		ArrayList<IDbgpProperty> ret = new ArrayList<IDbgpProperty>();
-		
-		for (IDbgpProperty iDbgpProperty : properties) {
-			if(iDbgpProperty.getName().startsWith("Maplet"))
-				ret.add(iDbgpProperty);
-		}
-		
-		
-		return (IDbgpProperty[]) ret.toArray(new IDbgpProperty[ret.size()]);
-		
-	}
+//	private IDbgpProperty[]  filterProperties(IDbgpProperty[] properties) {
+//		
+//		ArrayList<IDbgpProperty> ret = new ArrayList<IDbgpProperty>();
+//		
+//		for (IDbgpProperty iDbgpProperty : properties) {
+//			if(iDbgpProperty.getName().startsWith("Maplet"))
+//				ret.add(iDbgpProperty);
+//		}
+//		
+//		
+//		return (IDbgpProperty[]) ret.toArray(new IDbgpProperty[ret.size()]);
+//		
+//	}
 
 	private int getPageOffset(int page) {
 		if (pageSize <= 0)
@@ -294,8 +291,7 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 		return variables;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IIndexedValue.class && type.isCollection()) {
 			return this;
 		}

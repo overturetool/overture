@@ -34,7 +34,7 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 		return VdmMarkerFactory.LINE_BREAKPOINT_MARKER_ID;
 	}
 
-	protected void addLineBreakpointAttributes(Map<String, Comparable> attributes, IPath path,
+	protected void addLineBreakpointAttributes(Map<String, Object> attributes, IPath path,
 			int lineNumber, int charStart, int charEnd) {
 		if (path != null) {
 			attributes.put(IMarker.LOCATION, path.toPortableString());
@@ -61,7 +61,7 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 				setMarker(marker);//getMarkerId()));
 
 				// add attributes
-				final Map attributes = new HashMap<String, Comparable>();
+				final Map<String,Object> attributes = new HashMap<String, Object>();
 				addVdmBreakpointAttributes(attributes, debugModelId, true);
 				addLineBreakpointAttributes(attributes, path, lineNumber,
 						charStart, charEnd);

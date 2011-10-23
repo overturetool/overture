@@ -5,7 +5,7 @@ import java.util.Comparator;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 
-public class VariableNameComparator implements Comparator {
+public class VariableNameComparator implements Comparator<Object> {
 
 	public int compare(Object o1, Object o2) {
 		int result = 0;

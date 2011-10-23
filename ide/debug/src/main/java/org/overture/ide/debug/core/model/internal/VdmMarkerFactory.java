@@ -21,7 +21,7 @@ public class VdmMarkerFactory {
 	public static final String WATCHPOINT_MARKER_ID = "org.overture.ide.debug.vdmWatchPointMarker"; //$NON-NLS-1$
 	
 
-	public static IMarker makeMarker(IResource resource, Map attributes,
+	public static IMarker makeMarker(IResource resource, @SuppressWarnings("rawtypes") Map attributes,
 			String id) throws CoreException {
 		IMarker marker = resource.createMarker(id);
 		marker.setAttributes(attributes);

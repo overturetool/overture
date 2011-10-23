@@ -183,7 +183,6 @@ public class BreakpointConditionEditor
 			} else
 			{
 				fPage.removeErrorMessage(fErrorMessage);
-				fPage.removeErrorMessage(fSyntaxErrorMessage);
 				if(validateSyntax())
 				{
 				fPage.removeErrorMessage(fSyntaxErrorMessage);

@@ -44,7 +44,7 @@ public class VdmWatchpoint extends VdmLineBreakpoint implements
 				// create the marker
 				setMarker(resource.createMarker(getMarkerId()));
 
-				final Map attributes = new HashMap();
+				final Map<String,Object> attributes = new HashMap<String,Object>();
 				// add attributes
 				addVdmBreakpointAttributes(attributes, debugModelId, true);
 				addLineBreakpointAttributes(attributes, path, lineNumber,

@@ -288,39 +288,39 @@ public class VdmBreakpointManager implements IBreakpointListener,
 		return NO_CHANGES;
 	}
 
-	private static int hasSpawnpointChanges(IMarkerDelta delta,
-			IVdmBreakpoint breakpoint) {
-		final String[] attrs = breakpoint.getUpdatableAttributes();
-		try {
-			final IMarker marker = delta.getMarker();
-			for (int i = 0; i < attrs.length; ++i) {
-				final String attr = attrs[i];
-				if (IBreakpoint.ENABLED.equals(attr)
-						|| IMarker.LINE_NUMBER.equals(attr)) {
-					final Object oldValue = delta.getAttribute(attr);
-					final Object newValue = marker.getAttribute(attr);
-					if (oldValue == null) {
-						if (newValue != null) {
-							return IMarker.LINE_NUMBER.equals(attr) ? MAJOR_CHANGE
-									: MINOR_CHANGE;
-						}
-						continue;
-					}
-					if (newValue == null) {
-						return IMarker.LINE_NUMBER.equals(attr) ? MAJOR_CHANGE
-								: MINOR_CHANGE;
-					}
-					if (!oldValue.equals(newValue)) {
-						return IMarker.LINE_NUMBER.equals(attr) ? MAJOR_CHANGE
-								: MINOR_CHANGE;
-					}
-				}
-			}
-		} catch (CoreException e) {
-			VdmDebugPlugin.log(e);
-		}
-		return NO_CHANGES;
-	}
+//	private static int hasSpawnpointChanges(IMarkerDelta delta,
+//			IVdmBreakpoint breakpoint) {
+//		final String[] attrs = breakpoint.getUpdatableAttributes();
+//		try {
+//			final IMarker marker = delta.getMarker();
+//			for (int i = 0; i < attrs.length; ++i) {
+//				final String attr = attrs[i];
+//				if (IBreakpoint.ENABLED.equals(attr)
+//						|| IMarker.LINE_NUMBER.equals(attr)) {
+//					final Object oldValue = delta.getAttribute(attr);
+//					final Object newValue = marker.getAttribute(attr);
+//					if (oldValue == null) {
+//						if (newValue != null) {
+//							return IMarker.LINE_NUMBER.equals(attr) ? MAJOR_CHANGE
+//									: MINOR_CHANGE;
+//						}
+//						continue;
+//					}
+//					if (newValue == null) {
+//						return IMarker.LINE_NUMBER.equals(attr) ? MAJOR_CHANGE
+//								: MINOR_CHANGE;
+//					}
+//					if (!oldValue.equals(newValue)) {
+//						return IMarker.LINE_NUMBER.equals(attr) ? MAJOR_CHANGE
+//								: MINOR_CHANGE;
+//					}
+//				}
+//			}
+//		} catch (CoreException e) {
+//			VdmDebugPlugin.log(e);
+//		}
+//		return NO_CHANGES;
+//	}
 
 	private int classifyBreakpointChange(IMarkerDelta delta,
 			IVdmBreakpoint breakpoint, String attr) throws CoreException {
@@ -486,7 +486,7 @@ public class VdmBreakpointManager implements IBreakpointListener,
 
 	private static class TemporaryBreakpoint implements IDebugEventSetListener {
 		final VdmBreakpointManager manager;
-		final Map ids = new IdentityHashMap(1);
+		final Map<IDbgpSession,String> ids = new IdentityHashMap<IDbgpSession,String>(1);
 
 		/**
 		 * @param manager

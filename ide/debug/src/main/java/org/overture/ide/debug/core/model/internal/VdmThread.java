@@ -61,7 +61,7 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 	private IVdmEvaluationEngine evalEngine;
 
-	private int currentStackLevel;
+//	private int currentStackLevel;
 
 	private boolean terminated = false;
 
@@ -403,7 +403,7 @@ public class VdmThread extends VdmDebugElement implements IVdmThread,
 
 	public void stepIntoInner() throws DebugException
 	{
-		currentStackLevel = this.stack.getFrames().length;
+//		currentStackLevel = this.stack.getFrames().length;
 		stateManager.stepInto();
 		this.target.printLog(new LogItem(this.session.getInfo(), "REQUEST",
 				true, "Step Into"));
