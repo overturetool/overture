@@ -1,9 +1,26 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.core.builder;
 
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
@@ -43,9 +60,8 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	protected final IProject[] build(int kind, Map args,
+	protected final IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args,
 			IProgressMonitor monitor) throws CoreException
 	{
 		if (!validateProject())
