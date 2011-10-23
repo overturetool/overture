@@ -51,10 +51,10 @@ public class DEFAULT implements Serializable
 		return IO.fwriteval(fval, tval, dval);
 	}
 
-	public static Value freadval(Value fval)
-	{
-		return IO.freadval(fval);
-	}
+//	public static Value freadval(Value fval)
+//	{
+//		return IO.freadval(fval);
+//	}
 
 	public static Value fecho(Value fval, Value tval, Value dval)
 	{

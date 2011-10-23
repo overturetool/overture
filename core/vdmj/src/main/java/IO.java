@@ -38,7 +38,6 @@ import org.overturetool.vdmj.runtime.Interpreter;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.values.BooleanValue;
-import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.CharacterValue;
 import org.overturetool.vdmj.values.NilValue;
 import org.overturetool.vdmj.values.SeqValue;
@@ -89,7 +88,11 @@ public class IO implements Serializable
 		return new BooleanValue(true);
 	}
 
-	public static Value freadval(Value fval)
+	// Note that this method is not callable via the native interface, since it
+	// need access to the Context to call any type invariants involved while
+	// reading the data.
+	
+	public static Value freadval(Value fval, Context ctxt)
 	{
 		ValueList result = new ValueList();
 
@@ -101,23 +104,11 @@ public class IO implements Serializable
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("IO");
 			Expression exp = reader.readExpression();
-			boolean success = false;
-			try
-			{
-				Interpreter ip = Interpreter.getInstance();
-				ip.typeCheck(exp, ip.getGlobalEnvironment());
-				success = true;
-			}
-			catch (Exception e)
-			{
-				success = false;
-				// OK
-			}
 
-			result.add(new BooleanValue(success));
-			Context ectxt = new Context(null, "freadval", null);
-			ectxt.setThreadState(null, CPUValue.vCPU);
-			result.add(exp.eval(ectxt));
+			Interpreter ip = Interpreter.getInstance();
+			ip.typeCheck(exp, ip.getGlobalEnvironment());
+			result.add(new BooleanValue(true));
+			result.add(exp.eval(ctxt));
 		}
 		catch (Exception e)
 		{

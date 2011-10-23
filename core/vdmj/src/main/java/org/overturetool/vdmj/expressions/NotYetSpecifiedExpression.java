@@ -23,10 +23,15 @@
 
 package org.overturetool.vdmj.expressions;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
@@ -90,6 +95,33 @@ public class NotYetSpecifiedExpression extends Expression
 
     			return get_file_pos(ctxt);
     		}
+		}
+
+		if (location.module.equals("IO") ||
+			location.module.equals("DEFAULT"))
+		{
+			if (ctxt.title.equals("freadval(filename)"))
+			{
+				// This needs type invariant information from the context, so we
+				// can't just call down to a native method for this one.
+
+				try
+				{
+					LexNameToken arg = new LexNameToken("IO", "filename", location);
+					Value fval = ctxt.get(arg);
+					
+					// We can't link with the IO class directly because it's in the default
+					// package, so we reflect our way over to it.
+					
+					Class io = Class.forName("IO");
+					Method m = io.getMethod("freadval", new Class[] {Value.class, Context.class});
+					return (Value)m.invoke(io.newInstance(), new Object[] {fval, ctxt});
+				}
+				catch (Exception e)
+				{
+					throw new InternalException(62, "Cannot invoke native method: " + e.getMessage());
+				}
+			}
 		}
 
 		if (Settings.dialect == Dialect.VDM_SL)
