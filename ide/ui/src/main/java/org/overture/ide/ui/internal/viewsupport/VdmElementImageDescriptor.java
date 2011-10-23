@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.internal.viewsupport;
 
 import org.eclipse.core.runtime.Assert;
@@ -191,15 +209,15 @@ public class VdmElementImageDescriptor extends CompositeImageDescriptor {
 		}
 	}
 
-	private void addBottomLeftImage(ImageDescriptor desc, Point pos) {
-		ImageData data = getImageData(desc);
-		int x = pos.x;
-		int y = pos.y - data.height;
-		if (x + data.width < getSize().x && y >= 0) {
-			drawImage(data, x, y);
-			pos.x = x + data.width;
-		}
-	}
+//	private void addBottomLeftImage(ImageDescriptor desc, Point pos) {
+//		ImageData data = getImageData(desc);
+//		int x = pos.x;
+//		int y = pos.y - data.height;
+//		if (x + data.width < getSize().x && y >= 0) {
+//			drawImage(data, x, y);
+//			pos.x = x + data.width;
+//		}
+//	}
 
 	private void drawTopRight() {
 		Point pos = new Point(getSize().x, 0);

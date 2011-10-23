@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.HashMap;
@@ -29,7 +47,6 @@ import org.overturetool.vdmj.definitions.SystemDefinition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.definitions.UntypedDefinition;
 import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.modules.ImportFromModule;
 import org.overturetool.vdmj.modules.ImportedOperation;
 import org.overturetool.vdmj.modules.Module;
@@ -531,17 +548,17 @@ public class VdmElementImageProvider {
 
 	}
 
-	private static boolean showOverlayIcons(int flags) {
-		return (flags & OVERLAY_ICONS) != 0;
-	}
+//	private static boolean showOverlayIcons(int flags) {
+//		return (flags & OVERLAY_ICONS) != 0;
+//	}
 
 	private static boolean useSmallSize(int flags) {
 		return (flags & SMALL_ICONS) != 0;
 	}
 
-	private static boolean useLightIcons(int flags) {
-		return (flags & LIGHT_TYPE_ICONS) != 0;
-	}
+//	private static boolean useLightIcons(int flags) {
+//		return (flags & LIGHT_TYPE_ICONS) != 0;
+//	}
 
 	/**
 	 * Returns an image descriptor for a compilation unit not on the class path.

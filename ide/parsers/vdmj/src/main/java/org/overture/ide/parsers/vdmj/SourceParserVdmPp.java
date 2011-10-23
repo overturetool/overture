@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.parsers.vdmj;
 
 import java.util.List;
@@ -44,10 +62,6 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 				e1.printStackTrace();
 			}
 		}
-//		Settings.dynamictypechecks = file.getProject().hasDynamictypechecks();
-//		Settings.invchecks = file.getProject().hasInvchecks();
-//		Settings.postchecks = file.getProject().hasPostchecks();
-//		Settings.prechecks = file.getProject().hasPrechecks();
 		
 		Properties.init();
 		Properties.parser_tabstop = 1;
@@ -55,8 +69,6 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 		ClassList classes = new ClassList();
 		classes.clear();
 		LexLocation.resetLocations();
-//		int perrs = 0;
-//		int pwarn = 0;
 
 		ClassReader reader = null;
 		ParseResult result = new ParseResult();
@@ -66,10 +78,6 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			ReaderType streamReaderType = findStreamReaderType(file.getFile());
 			
 			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset,streamReaderType);
-//			LexTokenReader ltr = new LexTokenReader(source,
-//					Settings.dialect,
-//					file.getSystemFile(),
-//					charset);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
 			List<IAstNode> nodes = new Vector<IAstNode>();
@@ -82,33 +90,27 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 				result.setAst(nodes);
 			} else
 			{
-//				perrs++;
 				result.setFatalError(new Exception("No VDM source in file"));
 			}
 
 		} catch (InternalException e)
 		{
 
-//			perrs++;
 			result.setFatalError(e);
 		} catch (Throwable e)
 		{
 
-//			perrs++;
 			result.setFatalError(e);
 		}
 
 		if (reader != null && reader.getErrorCount() > 0)
 		{
-//			perrs += reader.getErrorCount();
 
 			result.setErrors(reader.getErrors());
 		}
 
 		if (reader != null && reader.getWarningCount() > 0)
 		{
-//			pwarn += reader.getWarningCount();
-
 			result.setWarnings(reader.getWarnings());
 		}
 

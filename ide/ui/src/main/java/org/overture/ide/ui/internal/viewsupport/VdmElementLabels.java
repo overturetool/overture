@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.HashMap;
@@ -5,7 +23,6 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
-import org.eclipse.swt.custom.StyledText;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
@@ -13,7 +30,6 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImportedDefinition;
 import org.overturetool.vdmj.definitions.InheritedDefinition;
 import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
 import org.overturetool.vdmj.definitions.LocalDefinition;
@@ -26,7 +42,6 @@ import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.modules.Import;
 import org.overturetool.vdmj.modules.ImportAll;
 import org.overturetool.vdmj.modules.ImportFromModule;
-import org.overturetool.vdmj.modules.ImportedOperation;
 import org.overturetool.vdmj.modules.ImportedType;
 import org.overturetool.vdmj.modules.ImportedValue;
 import org.overturetool.vdmj.modules.Module;
@@ -160,10 +175,6 @@ public class VdmElementLabels {
 		if (element instanceof RenamedDefinition) {
 			return getRenamedDefinitionLabel((RenamedDefinition) element, flags);
 		}
-		
-		if(element instanceof ImportedDefinition) {
-			return getImportedDefinitionLabel((ImportedDefinition)element,flags);
-		}
 
 		StyledString result = new StyledString();
 		result.append("Unsupported type reached: " + element);
@@ -171,35 +182,22 @@ public class VdmElementLabels {
 
 	}
 
-	private static StyledString getImportedDefinitionLabel(
-			ImportedDefinition element, long flags) {
-
-		return getStyledTextLabel(element.def, flags);
-	}
-
 	private static StyledString getRenamedDefinitionLabel(
 			RenamedDefinition element, long flags) {
 
-//		if (element.def instanceof ExplicitOperationDefinition) {
-//			return getExplicitOperationDefinitionLabel((ExplicitOperationDefinition) element.def);
-//		}
-//		else if(element.def instanceof TypeDefinition){
-//			return 
-//		}
-		
-		return getStyledTextLabel(element.def, flags);
+		if (element.def instanceof ExplicitOperationDefinition) {
+			return getExplicitOperationDefinitionLabel((ExplicitOperationDefinition) element.def);
+		}
 
-		//return null;
+		return null;
 	}
 
 	private static StyledString getInheritedDefinition(
 			InheritedDefinition element, long flags) {
 
-		StyledString result = new StyledString();
-		result.append(element.location.module + "`");
-		result.append(getStyledTextLabel(element.superdef, flags));		
+		StyledString res = getStyledTextLabel(element.superdef, flags);
 
-		return result;
+		return res;
 	}
 
 	private static StyledString getPerSyncDefinitionLabel(
@@ -297,14 +295,7 @@ public class VdmElementLabels {
 				result.append(" : " , StyledString.DECORATIONS_STYLER);
 			}
 			
-			if(type.renamed == null)
-			{
-				result.append(type.name.name, StyledString.DECORATIONS_STYLER);
-			}else
-			{
-				result.append(type.renamed.name, StyledString.DECORATIONS_STYLER);
-			}
-			
+			result.append(type.renamed.name, StyledString.DECORATIONS_STYLER);
 		} else if (element instanceof ImportedValue) {
 			ImportedValue value = (ImportedValue) element;
 			result.append(value.name.toString());

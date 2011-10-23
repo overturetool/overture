@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.property;
 
 import java.util.List;
@@ -59,7 +77,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 			return false;
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public Object[] getElements(Object inputElement)
 		{
 			if(inputElement instanceof ModelBuildPath)
@@ -144,11 +162,10 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 						return false;
 					}
 
-					@SuppressWarnings("unchecked")
 					@Override
 					public Object[] getElements(Object element)
 					{
-						List elements = new Vector();
+						List<IFolder> elements = new Vector<IFolder>();
 						Object[] arr = super.getElements(element);
 						if (arr != null)
 						{
@@ -157,7 +174,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 								if (// object instanceof IFile ||
 								object instanceof IFolder)
 								{
-									elements.add(object);
+									elements.add((IFolder) object);
 								}
 							}
 							return elements.toArray();
@@ -165,11 +182,10 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 						return null;
 					}
 
-					@SuppressWarnings("unchecked")
 					@Override
 					public Object[] getChildren(Object element)
 					{
-						List elements = new Vector();
+						List<IFolder> elements = new Vector<IFolder>();
 						Object[] arr = super.getChildren(element);
 						if (arr != null)
 						{
@@ -178,7 +194,7 @@ public class VdmBuildPathPropertyPage extends PropertyPage implements
 								if (// object instanceof IFile ||
 								object instanceof IFolder)
 								{
-									elements.add(object);
+									elements.add((IFolder) object);
 								}
 							}
 							return elements.toArray();

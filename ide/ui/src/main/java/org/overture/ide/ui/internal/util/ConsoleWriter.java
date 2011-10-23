@@ -1,25 +1,32 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.internal.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.progress.UIJob;
 import org.overture.ide.ui.VdmUIPlugin;
 
 public class ConsoleWriter extends PrintWriter {
@@ -45,33 +52,6 @@ public class ConsoleWriter extends PrintWriter {
 
 		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(
 				myConsole);
-
-		// This Pin Console was a experience to make the debug console appear always on top of the process 
-		// console, but it doesnt work and it backfires because its not desirable in general that consoles get pinned
-//		UIJob uiJob = new UIJob("Console pin") {
-//
-//			@Override
-//			public IStatus runInUIThread(IProgressMonitor monitor) {
-//				IWorkbench w = PlatformUI.getWorkbench();
-//				IWorkbenchWindow[] wws = w.getWorkbenchWindows();
-//				String id = IConsoleConstants.ID_CONSOLE_VIEW;
-//				for (IWorkbenchWindow iWorkbenchWindow : wws) {
-//					try {
-//
-//						IWorkbenchPage page = iWorkbenchWindow.getActivePage();
-//						IConsoleView view = (IConsoleView) page.showView(id);
-////						view.display(myConsole);
-//						view.setPinned(true);
-//						
-//					} catch (PartInitException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//				return new Status(IStatus.OK, "pluginId", "OK");
-//			}
-//		};
-//		uiJob.schedule();
 
 	}
 

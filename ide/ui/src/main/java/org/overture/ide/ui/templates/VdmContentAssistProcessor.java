@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.templates;
 
 import java.util.ArrayList;
@@ -6,32 +24,15 @@ import java.util.List;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext.SearchType;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.modules.Module;
 
 public abstract class VdmContentAssistProcessor extends
 		VdmTemplateAssistProcessor
 {
 
-	// private VdmEditor editor;
-
-	// public VdmContentAssistProcessor(VdmEditor editor) {
-	// this.editor = editor;
-	// }
 	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 	VdmCompleteProcesser processer = new VdmCompleteProcesser();
 
@@ -46,7 +47,6 @@ public abstract class VdmContentAssistProcessor extends
 		List<ICompletionProposal> modList = new ArrayList<ICompletionProposal>();
 		ICompletionProposal[] completionProposals = null;
 
-		
 		// IEditorInput editorInput = editor.getEditorInput();
 		// String text = viewer.getTextWidget().getText();
 
@@ -61,8 +61,8 @@ public abstract class VdmContentAssistProcessor extends
 				}
 
 			}
-			}
-		
+		}
+
 		if (viewer.getDocument() instanceof VdmDocument)
 		{
 			processer.computeCompletionProposals(computeVdmCompletionContext(viewer.getDocument(), offset), (VdmDocument) viewer.getDocument(), modList, offset);
@@ -184,7 +184,7 @@ public abstract class VdmContentAssistProcessor extends
 
 						}
 
-						if (index > 0 && length<index)
+						if (index > 0 && length < index)
 						{
 
 							String tmp2 = tmp.substring(length, index);

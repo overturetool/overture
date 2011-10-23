@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overture.ide.ui.editor.core;
 
 import java.io.IOException;
@@ -6,7 +24,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -16,7 +33,6 @@ import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,7 +54,6 @@ import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.ui.actions.ToggleCommentAction;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.definitions.MutexSyncDefinition;
@@ -132,11 +147,11 @@ public abstract class VdmEditor extends TextEditor {
 		setOutlinePageInput(page, getEditorInput());
 		page.addSelectionChangedListener(new ISelectionChangedListener() {
 
-			@SuppressWarnings("unchecked")
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection s = event.getSelection();
 				if (s instanceof IStructuredSelection) {
 					IStructuredSelection ss = (IStructuredSelection) s;
+					@SuppressWarnings("rawtypes")
 					List elements = ss.toList();
 					if (!elements.isEmpty()) {
 						if (elements.get(0) instanceof IAstNode) {
@@ -840,16 +855,16 @@ public abstract class VdmEditor extends TextEditor {
 	// configureToggleCommentAction();
 	// }
 
-	/**
-	 * Configure actions
-	 */
-	private void configureToggleCommentAction() {
-		IAction action = getAction("ToggleComment"); //$NON-NLS-1$
-		if (action instanceof ToggleCommentAction) {
-			ISourceViewer sourceViewer = getSourceViewer();
-			SourceViewerConfiguration configuration = getSourceViewerConfiguration();
-			((ToggleCommentAction) action).configure(sourceViewer,
-					configuration);
-		}
-	}
+//	/**
+//	 * Configure actions
+//	 */
+//	private void configureToggleCommentAction() {
+//		IAction action = getAction("ToggleComment"); //$NON-NLS-1$
+//		if (action instanceof ToggleCommentAction) {
+//			ISourceViewer sourceViewer = getSourceViewer();
+//			SourceViewerConfiguration configuration = getSourceViewerConfiguration();
+//			((ToggleCommentAction) action).configure(sourceViewer,
+//					configuration);
+//		}
+//	}
 }
