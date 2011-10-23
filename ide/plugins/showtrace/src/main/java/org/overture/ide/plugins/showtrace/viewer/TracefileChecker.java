@@ -35,7 +35,7 @@ import org.overturetool.traceviewer.visitor.OmlVisitor;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            TracefileMarker
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class TracefileChecker extends OmlVisitor
 {
 

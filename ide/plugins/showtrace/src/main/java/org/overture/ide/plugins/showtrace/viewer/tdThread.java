@@ -12,7 +12,7 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, TraceData, tdObject
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class tdThread extends tdHistory
 {
 

@@ -24,7 +24,7 @@ import org.overturetool.traceviewer.parser.TraceParser;
 //            ValidationTable, GenericTabItem, TracefileMarker, TracefileViewerPlugin, 
 //            SelectTimeDialog, TracefileVisitor, TracefileParser, TracefileChecker, 
 //            tdCPU
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class TracefileViewer extends ViewPart implements IViewCallback
 {
 

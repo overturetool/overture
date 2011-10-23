@@ -14,7 +14,7 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.overturetool.traceviewer.ast.itf.IOmlTraceEvent;
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public abstract class tdHistory
 {
 

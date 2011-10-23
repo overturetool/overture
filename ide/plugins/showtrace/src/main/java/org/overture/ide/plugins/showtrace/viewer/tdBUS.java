@@ -14,7 +14,7 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdResource, TraceData, tdMessage
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class tdBUS extends tdResource
 {
 

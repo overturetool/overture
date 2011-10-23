@@ -44,7 +44,7 @@ import org.overturetool.traceviewer.visitor.OmlVisitor;
 //            TraceData, tdCPU, GenericTabItem, NormalLabel, 
 //            RectangleLabelFigure, tdBUS, Line, tdThread, 
 //            tdObject, RotatedLabel, tdResource, tdMessage
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class TracefileVisitor extends OmlVisitor
 {
     private static class ConjectureLimit

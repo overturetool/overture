@@ -17,7 +17,7 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, tdBUS, tdThread, 
 //            tdMessage, tdObject
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class TraceData extends tdHistory
 {
 

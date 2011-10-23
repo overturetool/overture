@@ -13,7 +13,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class SelectTimeDialog extends TitleAreaDialog
 {
 
