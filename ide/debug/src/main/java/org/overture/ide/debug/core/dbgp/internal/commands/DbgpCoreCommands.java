@@ -25,7 +25,6 @@ import org.overture.ide.debug.core.dbgp.commands.IDbgpContinuationCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpCoreCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpDataTypeCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpFeatureCommands;
-import org.overture.ide.debug.core.dbgp.commands.IDbgpOvertureCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpPropertyCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpSourceCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpStackCommands;
@@ -157,7 +156,7 @@ public class DbgpCoreCommands implements IDbgpCoreCommands {
 		return continuationCommands.stop();
 	}
 
-	public Map getTypeMap() throws DbgpException {
+	public Map<String,Integer> getTypeMap() throws DbgpException {
 		return dataTypeCommands.getTypeMap();
 	}
 
@@ -190,7 +189,7 @@ public class DbgpCoreCommands implements IDbgpCoreCommands {
 		return stackCommands.getStackDepth();
 	}
 
-	public Map getContextNames(int stackDepth) throws DbgpException {
+	public Map<Integer,String> getContextNames(int stackDepth) throws DbgpException {
 		return contextCommands.getContextNames(stackDepth);
 	}
 

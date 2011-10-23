@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-
-import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.DebugOption;
-import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.IDebugOptions;
 import org.overture.ide.debug.core.dbgp.DbgpBaseCommands;
 import org.overture.ide.debug.core.dbgp.DbgpRequest;
@@ -59,7 +56,7 @@ public class DbgpDebuggingEngineCommunicator implements IDbgpCommunicator {
 //				IDebugConstants.PREF_DBGP_RESPONSE_TIMEOUT);
 	}
 
-	private final Map activeRequests = new IdentityHashMap();
+	private final Map<DbgpRequest,DbgpRequest> activeRequests = new IdentityHashMap<DbgpRequest,DbgpRequest>();
 
 	public Element communicate(DbgpRequest request) throws DbgpException {
 		try {

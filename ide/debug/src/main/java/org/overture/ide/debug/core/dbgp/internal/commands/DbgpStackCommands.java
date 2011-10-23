@@ -50,7 +50,7 @@ public class DbgpStackCommands extends DbgpBaseCommands implements
 		return list;
 	}
 
-	private static final Comparator STACK_LEVEL_COMPARATOR = new Comparator() {
+	private static final Comparator<Object> STACK_LEVEL_COMPARATOR = new Comparator<Object>() {
 
 		public int compare(Object o1, Object o2) {
 			final IDbgpStackLevel level1 = (IDbgpStackLevel) o1;

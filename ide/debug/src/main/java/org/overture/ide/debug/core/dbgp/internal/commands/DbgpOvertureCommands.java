@@ -5,12 +5,8 @@ import java.io.File;
 import org.overture.ide.debug.core.dbgp.DbgpBaseCommands;
 import org.overture.ide.debug.core.dbgp.DbgpRequest;
 import org.overture.ide.debug.core.dbgp.IDbgpCommunicator;
-import org.overture.ide.debug.core.dbgp.commands.IDbgpCommands;
-import org.overture.ide.debug.core.dbgp.commands.IDbgpCoreCommands;
-import org.overture.ide.debug.core.dbgp.commands.IDbgpExtendedCommands;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpOvertureCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
-import org.overture.ide.debug.utils.communication.DBGPProxyException;
 import org.overturetool.vdmj.util.Base64;
 
 public class DbgpOvertureCommands extends DbgpBaseCommands implements

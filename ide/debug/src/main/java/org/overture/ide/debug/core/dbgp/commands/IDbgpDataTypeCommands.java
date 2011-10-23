@@ -25,5 +25,5 @@ public interface IDbgpDataTypeCommands {
 	final int OBJECT_TYPE = 8;
 	final int RESOURCE_TYPE = 9;
 
-	Map getTypeMap() throws DbgpException;
+	Map<String,Integer> getTypeMap() throws DbgpException;
 }
