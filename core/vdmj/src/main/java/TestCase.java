@@ -1,7 +1,7 @@
 import org.overturetool.vdmj.runtime.ClassInterpreter;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ExitException;
 import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
@@ -12,7 +12,7 @@ import org.overturetool.vdmj.values.VoidValue;
 public class TestCase
 {
 	public static Value reflectionRunTest(Value obj, Value name)
-			throws ValueException
+			throws Exception
 	{
 		String methodName = name.toString().replaceAll("\"", "").trim();
 
@@ -29,7 +29,16 @@ public class TestCase
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					// mainContext.putAll(ClassInterpreter.getInstance().);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
+					try{
 					opVal.eval(p.name.location, new ValueList(), mainContext);
+					}catch(Exception e)
+					{
+						if(e instanceof ExitException)
+						{
+							throw e;
+						}
+						return ClassInterpreter.getInstance().evaluate("Error`throw(\""+e.getMessage().replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'").replaceAll("\\\\", "\\\\\\\\")+"\")", mainContext);
+					}
 				}
 			}
 		}
