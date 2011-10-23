@@ -89,25 +89,27 @@ public class VdmTools
 		File generated = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();// new File(location,
 		// "generated");
 		generated.mkdirs();
+		
+		String projectFileName = vdmProject.getName().trim();
 
-		PluginFolderInclude.writeFile(generated, vdmProject.getName() + ".prj", sb.toString());
+		PluginFolderInclude.writeFile(generated, projectFileName + ".prj", sb.toString());
 		VdmToolsOptions options = new VdmToolsOptions();
-		options.JCG_PACKAGE = (vdmProject.getName().replaceAll(" ", "") + "." + "model").toLowerCase();
+		options.JCG_PACKAGE = (projectFileName.replaceAll(" ", "") + "." + "model").toLowerCase();
 		// options.DTC = vdmProject.hasDynamictypechecks();
 		// options.INV = vdmProject.hasInvchecks();
 		// options.POST = vdmProject.hasPostchecks();
 		// options.PRE = vdmProject.hasPrechecks();
 
-		options.Save(generated, vdmProject.getName());
+		options.Save(generated, projectFileName);
 
-		String projectFileName = vdmProject.getName() + ".prj";
+//		String projectFileName = projectFileName + ".prj";
 
 		String vdmToolsPath = getVdmToolsPath(shell, vdmProject);
 
 		if (vdmToolsPath != null)
 		{
 			Runtime.getRuntime().exec(toPlatformPath(vdmToolsPath) + " "
-					+ projectFileName, null, generated);
+					+ toPlatformPath(projectFileName+".prj"), null, generated);
 		}
 	}
 
