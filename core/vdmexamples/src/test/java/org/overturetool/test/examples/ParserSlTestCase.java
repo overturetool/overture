@@ -6,10 +6,14 @@ import java.util.List;
 import org.overturetool.test.examples.vdmj.ParserProxy;
 import org.overturetool.test.examples.vdmj.VdmjFactories;
 import org.overturetool.test.framework.examples.ExamplesTestCase;
+import org.overturetool.test.framework.examples.IResultCombiner;
+import org.overturetool.test.framework.examples.Result;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.syntax.ModuleReader;
 
 public class ParserSlTestCase extends ExamplesTestCase
 {
@@ -30,8 +34,17 @@ public class ParserSlTestCase extends ExamplesTestCase
 			return;
 		}
 		
-		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmParserfactory, getSpecFiles("vdmpp", file));
-		compareResults(parser.parse());
+		ParserProxy<ModuleReader, List<Module>> parser = new ParserProxy<ModuleReader, List<Module>>(VdmjFactories.vdmSlParserfactory, getSpecFiles("vdmpp", file));
+		Result<List<Module>> res = mergeResults(parser.parse(),new IResultCombiner<List<Module>>()
+				{
+
+					public List<Module> combine(List<Module> a,
+							List<Module> b)
+					{
+						return null;
+					}
+				});
+				compareResults(res.warnings,res.errors,res.result);
 	}
 
 
@@ -40,6 +53,6 @@ public class ParserSlTestCase extends ExamplesTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_SL;
 	}
 }

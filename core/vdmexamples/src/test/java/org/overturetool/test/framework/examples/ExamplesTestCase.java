@@ -68,10 +68,27 @@ public class ExamplesTestCase extends BaseTestCase
 		return new VdmReadme(readme, name, true);
 	}
 
-	
-	protected void compareResults(Set<Result<List<ClassDefinition>>> parse)
+	protected void compareResults(Set<IMessage> warnings, Set<IMessage> errors, Object result)
 	{
-		
-		
+		// TODO Auto-generated method stub
+		int i = 0;
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected <T>Result mergeResults(
+			Set<? extends Result<T>> parse,IResultCombiner<T> c)
+	{
+		Set<IMessage> warnings = new HashSet<IMessage>();
+		Set<IMessage> errors = new HashSet<IMessage>();
+		T result = null;
+		
+		for (Result<T> r : parse)
+		{
+			warnings.addAll(r.warnings);
+			errors.addAll(r.errors);
+			result = c.combine(result, r.result);
+		}
+		return new Result(result, warnings, errors);
+	}
+	
 }

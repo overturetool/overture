@@ -6,6 +6,8 @@ import java.util.List;
 import org.overturetool.test.examples.vdmj.ParserProxy;
 import org.overturetool.test.examples.vdmj.VdmjFactories;
 import org.overturetool.test.framework.examples.ExamplesTestCase;
+import org.overturetool.test.framework.examples.IResultCombiner;
+import org.overturetool.test.framework.examples.Result;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
@@ -30,9 +32,22 @@ public class ParserPpTestCase extends ExamplesTestCase
 			return;
 		}
 		
-		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmParserfactory, getSpecFiles("vdmpp", file));
-		compareResults(parser.parse());
+		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmPpParserfactory, getSpecFiles("vdmpp", file));
+		Result<List<ClassDefinition>> res = mergeResults(parser.parse(),new IResultCombiner<List<ClassDefinition>>()
+		{
+
+			public List<ClassDefinition> combine(List<ClassDefinition> a,
+					List<ClassDefinition> b)
+			{
+				return null;
+			}
+		});
+		compareResults(res.warnings,res.errors,res.result);
 	}
+
+	
+	
+
 
 
 
