@@ -19,25 +19,20 @@
 package org.overturetool.test.examples;
 
 import java.io.File;
-import java.util.List;
+import java.util.HashSet;
 
-import org.overturetool.test.examples.vdmj.ParserProxy;
-import org.overturetool.test.examples.vdmj.VdmjFactories;
-import org.overturetool.test.framework.examples.ExamplesTestCase;
+import org.overturetool.test.framework.examples.IMessage;
 import org.overturetool.test.framework.examples.Result;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.pog.ProofObligationList;
 
-public class TypeCheckerPpTestCase extends ExamplesTestCase
+public class ProofObligationRtTestCase extends TypeCheckRtTestCase
 {
-	public TypeCheckerPpTestCase()
+	public ProofObligationRtTestCase()
 	{
 	}
 
-	public TypeCheckerPpTestCase(File file)
+	public ProofObligationRtTestCase(File file)
 	{
 		super(file);
 	}
@@ -50,19 +45,17 @@ public class TypeCheckerPpTestCase extends ExamplesTestCase
 			return;
 		}
 
-		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmPpParserfactory, getSpecFiles("vdmpp", file));
-
-		ClassList list = new ClassList();
-		for (Result<List<ClassDefinition>> res : parser.parse())
+		Result<ClassList> resTc = typeCheck();
+		
+		if(resTc.errors.size()>0)
 		{
-			list.addAll(res.result);
+			return;
 		}
+		
+		Result<ProofObligationList> res = new Result<ProofObligationList>( resTc.result.getProofObligations(),new HashSet<IMessage>(),new HashSet<IMessage>());
+
+		
+		compareResults(res.warnings, res.errors, res.result,"typechecker.results");
 	}
 
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
-	}
 }
