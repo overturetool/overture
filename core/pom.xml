@@ -27,6 +27,7 @@
     <module>vdmjc</module>
     <module>showtrace</module>
     <module>xmljunit</module>
+<module>vdmexamples</module>
   </modules>
   <dependencies>
     <dependency>
@@ -73,6 +74,11 @@
        <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.3.3-SNAPSHOT</version>
       </plugin>
     </plugins>
   </reporting>
