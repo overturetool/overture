@@ -1,9 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 Overture Team and others.
+ *
+ * Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
+ * 	
+ * The Overture Tool web-site: http://overturetool.org/
+ *******************************************************************************/
 package org.overturetool.test.examples.vdmj;
 
 import java.io.File;
 import java.util.List;
 
 import org.overturetool.test.framework.examples.IMessage;
+import org.overturetool.test.framework.examples.IResultCombiner;
 import org.overturetool.test.framework.examples.Message;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
@@ -18,18 +37,20 @@ import org.overturetool.vdmj.syntax.SyntaxReader;
 
 public class VdmjFactories
 {
-	public interface ParserFactory<T extends SyntaxReader, R>
+	public interface ParserFactory<T extends SyntaxReader, R> extends IMessageConverter
 	{
 		R read(T reader) throws ParserException, LexException;
 
 		T createReader(LexTokenReader ltr);
 
-		IMessage convertMessage(Object m);
-
 		LexTokenReader createTokenReader(File file);
 
 	}
 	
+	public interface IMessageConverter{
+		IMessage convertMessage(Object m);
+	}
+
 	public final static ParserFactory<ClassReader, List<ClassDefinition>> vdmPpParserfactory = new ParserFactory<ClassReader, List<ClassDefinition>>()
 	{
 
@@ -47,7 +68,7 @@ public class VdmjFactories
 		public IMessage convertMessage(Object m)
 		{
 			VDMMessage msg = (VDMMessage) m;
-			return new Message(msg.number,msg.location.startLine,msg.location.endPos,msg.message);
+			return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 		}
 
 		public LexTokenReader createTokenReader(File file)
@@ -55,12 +76,12 @@ public class VdmjFactories
 			return new LexTokenReader(file, Settings.dialect);
 		}
 	};
-	
+
 	public final static ParserFactory<ModuleReader, List<Module>> vdmSlParserfactory = new ParserFactory<ModuleReader, List<Module>>()
 	{
 
-		public List<Module> read(ModuleReader reader)
-				throws ParserException, LexException
+		public List<Module> read(ModuleReader reader) throws ParserException,
+				LexException
 		{
 			return reader.readModules();
 		}
@@ -73,12 +94,41 @@ public class VdmjFactories
 		public IMessage convertMessage(Object m)
 		{
 			VDMMessage msg = (VDMMessage) m;
-			return new Message(msg.number,msg.location.startLine,msg.location.endPos,msg.message);
+			return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 		}
 
 		public LexTokenReader createTokenReader(File file)
 		{
 			return new LexTokenReader(file, Settings.dialect);
+		}
+	};
+
+	public static IResultCombiner<List<ClassDefinition>> vdmPpParserResultCombiner = new IResultCombiner<List<ClassDefinition>>()
+	{
+
+		public List<ClassDefinition> combine(List<ClassDefinition> a,
+				List<ClassDefinition> b)
+		{
+			if(a== null)
+			{
+				return b;
+			}
+			a.addAll(b);
+			return a;
+		}
+	};
+
+	public static IResultCombiner<List<Module>> vdmSlParserResultCombiner = new IResultCombiner<List<Module>>()
+	{
+
+		public List<Module> combine(List<Module> a, List<Module> b)
+		{
+			if(a== null)
+			{
+				return b;
+			}
+			a.addAll(b);
+			return a;
 		}
 	};
 }

@@ -21,26 +21,28 @@ package org.overturetool.test.examples;
 import java.io.File;
 import java.util.List;
 
-import org.overturetool.test.examples.vdmj.ParserProxy;
-import org.overturetool.test.examples.vdmj.VdmjFactories;
-import org.overturetool.test.framework.examples.ExamplesTestCase;
+import org.overturetool.test.examples.vdmj.TypeCheckerProxy;
+import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
+import org.overturetool.test.framework.examples.IMessage;
+import org.overturetool.test.framework.examples.Message;
 import org.overturetool.test.framework.examples.Result;
-import org.overturetool.test.framework.examples.VdmReadme;
-import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.messages.VDMMessage;
+import org.overturetool.vdmj.typechecker.ClassTypeChecker;
+import org.overturetool.vdmj.typechecker.TypeChecker;
 
-public class ParserPpTestCase extends ExamplesTestCase
+public class TypeCheckRtTestCase extends ParserRtTestCase
 {
-	protected String extension = "vdmpp";
-
-	public ParserPpTestCase()
+	public TypeCheckRtTestCase()
 	{
 	}
 
-	public ParserPpTestCase(File file)
+	public TypeCheckRtTestCase(File file)
 	{
 		super(file);
 	}
@@ -53,26 +55,35 @@ public class ParserPpTestCase extends ExamplesTestCase
 			return;
 		}
 
-		Result<List<ClassDefinition>> res = parse();
-		compareResults(res.warnings, res.errors, res.result);
-	}
+		Result<List<ClassDefinition>> parserRes =parse();
 
-	protected Result<List<ClassDefinition>> parse() throws Exception
-	{
-		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmPpParserfactory, getSpecFiles(extension, file));
-		Result<List<ClassDefinition>> res = mergeResults(parser.parse(), VdmjFactories.vdmPpParserResultCombiner);
-		return res;
+		ClassList classes = new ClassList();
+		if(parserRes.result==null)
+		{
+			fail("No output from parser");
+		}
+		classes.addAll(parserRes.result);
+		classes.add(new CPUClassDefinition());
+		classes.add(new BUSClassDefinition());
+
+		Result<Object> res = TypeCheckerProxy.typeCheck(new ClassTypeChecker(classes), new IMessageConverter()
+		{
+
+			public IMessage convertMessage(Object m)
+			{
+				VDMMessage msg = (VDMMessage) m;
+				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
+			}
+		});
+
+		compareResults(res.warnings, res.errors, res.result);
 	}
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
-		VdmReadme settings = getReadme();
-		if (settings != null)
-		{
-			Settings.release = Release.lookup(settings.getLanguageVersion());
-		}
+		Settings.dialect = Dialect.VDM_RT;
+		TypeChecker.clearErrors();
 	}
 }

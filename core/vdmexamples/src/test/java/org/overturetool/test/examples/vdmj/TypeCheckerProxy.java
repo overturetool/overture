@@ -16,21 +16,35 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overturetool.test.framework.examples;
+package org.overturetool.test.examples.vdmj;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
+import org.overturetool.test.framework.examples.IMessage;
+import org.overturetool.test.framework.examples.Result;
+import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
+import org.overturetool.vdmj.typechecker.TypeChecker;
 
-public class Result<R>
+public class TypeCheckerProxy
 {
-	public final R result;
-	public final Set<IMessage> warnings;
-	public final Set<IMessage> errors;
-
-	public Result(R result, Set<IMessage> warnings, Set<IMessage> errors)
+	public static Result<Object> typeCheck(TypeChecker checker, IMessageConverter factory)
 	{
-		this.result = result;
-		this.warnings = warnings;
-		this.errors = errors;
+		checker.typeCheck();
+		Set<IMessage> warnings = new HashSet<IMessage>();
+		Set<IMessage> errors = new HashSet<IMessage>();
+		for (VDMError m : TypeChecker.getErrors())
+		{
+			errors.add(factory.convertMessage(m));
+		}
+
+		for (VDMWarning m : TypeChecker.getWarnings())
+		{
+			errors.add(factory.convertMessage(m));
+		}
+
+		return new Result<Object>(null, warnings, errors);
 	}
 }

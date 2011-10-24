@@ -21,26 +21,26 @@ package org.overturetool.test.examples;
 import java.io.File;
 import java.util.List;
 
-import org.overturetool.test.examples.vdmj.ParserProxy;
-import org.overturetool.test.examples.vdmj.VdmjFactories;
-import org.overturetool.test.framework.examples.ExamplesTestCase;
+import org.overturetool.test.examples.vdmj.TypeCheckerProxy;
+import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
+import org.overturetool.test.framework.examples.IMessage;
+import org.overturetool.test.framework.examples.Message;
 import org.overturetool.test.framework.examples.Result;
-import org.overturetool.test.framework.examples.VdmReadme;
-import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.messages.VDMMessage;
+import org.overturetool.vdmj.modules.Module;
+import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
+import org.overturetool.vdmj.typechecker.TypeChecker;
 
-public class ParserPpTestCase extends ExamplesTestCase
+public class TypeCheckSlTestCase extends ParserSlTestCase
 {
-	protected String extension = "vdmpp";
-
-	public ParserPpTestCase()
+	public TypeCheckSlTestCase()
 	{
 	}
 
-	public ParserPpTestCase(File file)
+	public TypeCheckSlTestCase(File file)
 	{
 		super(file);
 	}
@@ -48,20 +48,32 @@ public class ParserPpTestCase extends ExamplesTestCase
 	@Override
 	public void test() throws Exception
 	{
-		if (mode == ContentModed.None)
+		if(mode==ContentModed.None)
 		{
 			return;
 		}
-
-		Result<List<ClassDefinition>> res = parse();
-		compareResults(res.warnings, res.errors, res.result);
-	}
-
-	protected Result<List<ClassDefinition>> parse() throws Exception
-	{
-		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmPpParserfactory, getSpecFiles(extension, file));
-		Result<List<ClassDefinition>> res = mergeResults(parser.parse(), VdmjFactories.vdmPpParserResultCombiner);
-		return res;
+		
+		Result<List<Module>> parserRes = parse();
+		
+		ModuleList modules = new ModuleList();
+		if(parserRes.result==null)
+		{
+			fail("No output from parser");
+		}
+		modules.addAll(parserRes.result);
+		
+		Result<Object> res = TypeCheckerProxy.typeCheck(new ModuleTypeChecker(modules), new IMessageConverter()
+		{
+			
+			public IMessage convertMessage(Object m)
+			{
+				VDMMessage msg = (VDMMessage) m;
+				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
+			}
+		});
+		
+		
+		compareResults(res.warnings,res.errors,res.result);
 	}
 
 	@Override
@@ -69,10 +81,6 @@ public class ParserPpTestCase extends ExamplesTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_PP;
-		VdmReadme settings = getReadme();
-		if (settings != null)
-		{
-			Settings.release = Release.lookup(settings.getLanguageVersion());
-		}
+		TypeChecker.clearErrors();
 	}
 }
