@@ -52,7 +52,7 @@ public class ParserSlTestCase extends ExamplesTestCase
 		}
 
 		Result<List<Module>> res = parse();
-		compareResults(res.warnings, res.errors, res.result);
+		compareResults(res.warnings, res.errors, res.result,"parser.results");
 	}
 
 	protected Result<List<Module>> parse() throws Exception

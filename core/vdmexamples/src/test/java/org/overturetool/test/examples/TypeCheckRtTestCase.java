@@ -85,6 +85,8 @@ public class TypeCheckRtTestCase extends ParserRtTestCase
 				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 			}
 		});
+
+		compareResults(res.warnings, res.errors, res.result,"typechecker.results");
 		
 		res.result = classes;
 		return res;

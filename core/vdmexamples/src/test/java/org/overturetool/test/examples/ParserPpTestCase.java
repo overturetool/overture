@@ -54,7 +54,7 @@ public class ParserPpTestCase extends ExamplesTestCase
 		}
 
 		Result<List<ClassDefinition>> res = parse();
-		compareResults(res.warnings, res.errors, res.result);
+		compareResults(res.warnings, res.errors, res.result,"parser.results");
 	}
 
 	protected Result<List<ClassDefinition>> parse() throws Exception

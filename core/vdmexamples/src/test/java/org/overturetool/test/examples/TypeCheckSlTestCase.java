@@ -80,6 +80,8 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 			}
 		});
 		
+		
+		compareResults(res.warnings,res.errors,res.result,"typechecker.results");
 		res.result = modules;
 		return res;
 	}
