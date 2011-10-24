@@ -59,7 +59,7 @@ public class TypeCheckRtTestCase extends ParserRtTestCase
 
 		Result<ClassList> res = typeCheck();
 
-		compareResults(res.warnings, res.errors, res.result);
+		compareResults(res.warnings, res.errors, res.result,"typechecker.results");
 	}
 
 	public Result<ClassList> typeCheck() throws Exception, ParserException,
@@ -86,8 +86,6 @@ public class TypeCheckRtTestCase extends ParserRtTestCase
 			}
 		});
 
-		compareResults(res.warnings, res.errors, res.result,"typechecker.results");
-		
 		res.result = classes;
 		return res;
 	}

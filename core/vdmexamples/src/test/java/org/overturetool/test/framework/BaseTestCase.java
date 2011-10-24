@@ -74,7 +74,7 @@ public abstract class BaseTestCase extends
 				newName= file.getName();	
 			}
 			
-			return newName+" ("+file.getParentFile().getName()+")";
+			return newName+" <"+file.getParentFile().getName()+">";
 			
 		}
 		return "Generic Base Test";

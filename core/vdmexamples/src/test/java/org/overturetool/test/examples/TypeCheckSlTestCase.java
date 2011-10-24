@@ -56,7 +56,7 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 		Result<ModuleList> res = typeCheck();
 		
 		
-		compareResults(res.warnings,res.errors,res.result);
+		compareResults(res.warnings,res.errors,res.result,"typechecker.results");
 	}
 
 	public Result<ModuleList> typeCheck() throws Exception
@@ -69,6 +69,7 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 			fail("No output from parser");
 		}
 		modules.addAll(parserRes.result);
+		modules.combineDefaults();
 		
 		Result<ModuleList> res = TypeCheckerProxy.typeCheck(new ModuleTypeChecker(modules), new IMessageConverter()
 		{
@@ -80,8 +81,6 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 			}
 		});
 		
-		
-		compareResults(res.warnings,res.errors,res.result,"typechecker.results");
 		res.result = modules;
 		return res;
 	}

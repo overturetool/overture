@@ -12,6 +12,7 @@ package org.overturetool.test.examples;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overturetool.test.framework.examples.IMessage;
 import org.overturetool.test.framework.examples.IResultCombiner;
@@ -21,9 +22,16 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
+import org.overturetool.vdmj.values.Value;
 
 public class InterpreterPpTestCase extends TypeCheckPpTestCase
 {
+	static Set<String> ignoreList = new HashSet<String>();
+	static
+	{
+		ignoreList.add("SAFERProof <VDM++>");
+	}
+
 	public InterpreterPpTestCase()
 	{
 	}
@@ -41,33 +49,48 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 			return;
 		}
 
+		if (ignoreList.contains(getName()))
+		{
+			fail("Ignored");
+return;
+		}
+
 		VdmReadme settings = getReadme();
 		Set<Result<String>> results = new HashSet<Result<String>>();
 		for (String expression : settings.getEntryPoints())
 		{
-			results.add( interpret(expression));
+			results.add(interpret(expression));
 		}
 		Result<String> res = mergeResults(results, new IResultCombiner<String>()
 		{
 
 			public String combine(String a, String b)
 			{
-				return a+b;
+				return a + b;
 			}
 		});
 
-		compareResults(res.warnings, res.errors, res.result);
+		compareResults(res.warnings, res.errors, res.result, "interpreter.results");
 	}
-	
+
 	protected Result<String> interpret(String expression) throws Exception
 	{
 		Result<ClassList> res = typeCheck();
-		
-		ClassInterpreter intepreter = new ClassInterpreter(res.result);
-		return new Result<String>(intepreter.execute(expression, null).toString(),new HashSet<IMessage>(),new HashSet<IMessage>());
-	}
+		if (res.errors.size() > 0)
+		{
+			fail("Type check errors");
+		}
 
-	
+		ClassInterpreter interpreter = new ClassInterpreter(res.result);
+		interpreter.init(null);
+		// if(interpreter.initialContext!=null)
+		// {
+		// interpreter.initialContext.size()
+		// }
+
+		Value value = interpreter.execute(expression, null);
+		return new Result<String>(value == null ? null : value.toString(), new HashSet<IMessage>(), new HashSet<IMessage>());
+	}
 
 	@Override
 	protected void setUp() throws Exception

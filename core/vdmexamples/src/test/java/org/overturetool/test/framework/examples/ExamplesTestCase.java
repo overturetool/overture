@@ -81,10 +81,10 @@ public class ExamplesTestCase extends BaseTestCase
 		{
 			return null;
 		}
-		return new VdmReadme(readme, name, true);
+		return new VdmReadme(readme, getName(), true);
 	}
 
-	protected void compareResults(Set<IMessage> warnings, Set<IMessage> errors, Object result)
+	protected void compareResults(Set<IMessage> warnings, Set<IMessage> errors, Object result, String string)
 	{
 		// TODO Auto-generated method stub
 		int i = 0;
