@@ -10,28 +10,25 @@
 package org.overturetool.test.examples;
 
 import java.io.File;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.overturetool.test.examples.vdmj.TypeCheckerProxy;
-import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
 import org.overturetool.test.framework.examples.IMessage;
-import org.overturetool.test.framework.examples.Message;
+import org.overturetool.test.framework.examples.IResultCombiner;
 import org.overturetool.test.framework.examples.Result;
+import org.overturetool.test.framework.examples.VdmReadme;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.VDMMessage;
-import org.overturetool.vdmj.typechecker.ClassTypeChecker;
-import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.overturetool.vdmj.runtime.ClassInterpreter;
 
-public class TypeCheckPpTestCase extends ParserPpTestCase
+public class InterpreterPpTestCase extends TypeCheckPpTestCase
 {
-	public TypeCheckPpTestCase()
+	public InterpreterPpTestCase()
 	{
 	}
 
-	public TypeCheckPpTestCase(File file)
+	public InterpreterPpTestCase(File file)
 	{
 		super(file);
 	}
@@ -44,40 +41,38 @@ public class TypeCheckPpTestCase extends ParserPpTestCase
 			return;
 		}
 
-		Result<ClassList> res = typeCheck();
+		VdmReadme settings = getReadme();
+		Set<Result<String>> results = new HashSet<Result<String>>();
+		for (String expression : settings.getEntryPoints())
+		{
+			results.add( interpret(expression));
+		}
+		Result<String> res = mergeResults(results, new IResultCombiner<String>()
+		{
+
+			public String combine(String a, String b)
+			{
+				return a+b;
+			}
+		});
 
 		compareResults(res.warnings, res.errors, res.result);
 	}
-
-	public Result<ClassList> typeCheck() throws Exception
+	
+	protected Result<String> interpret(String expression) throws Exception
 	{
-		Result<List<ClassDefinition>> parserRes = parse();
-
-		ClassList classes = new ClassList();
-		if (parserRes.result == null)
-		{
-			fail("No output from parser");
-		}
-		classes.addAll(parserRes.result);
-
-		Result<ClassList> res = TypeCheckerProxy.typeCheck(new ClassTypeChecker(classes), new IMessageConverter()
-		{
-
-			public IMessage convertMessage(Object m)
-			{
-				VDMMessage msg = (VDMMessage) m;
-				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
-			}
-		});
-		res.result = classes;
-		return res;
+		Result<ClassList> res = typeCheck();
+		
+		ClassInterpreter intepreter = new ClassInterpreter(res.result);
+		return new Result<String>(intepreter.execute(expression, null).toString(),new HashSet<IMessage>(),new HashSet<IMessage>());
 	}
+
+	
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_PP;
-		TypeChecker.clearErrors();
 	}
 }

@@ -30,7 +30,7 @@ import org.overturetool.vdmj.typechecker.TypeChecker;
 
 public class TypeCheckerProxy
 {
-	public static Result<Object> typeCheck(TypeChecker checker, IMessageConverter factory)
+	public static <R>Result<R> typeCheck(TypeChecker checker, IMessageConverter factory)
 	{
 		checker.typeCheck();
 		Set<IMessage> warnings = new HashSet<IMessage>();
@@ -45,6 +45,6 @@ public class TypeCheckerProxy
 			errors.add(factory.convertMessage(m));
 		}
 
-		return new Result<Object>(null, warnings, errors);
+		return new Result<R>(null, warnings, errors);
 	}
 }

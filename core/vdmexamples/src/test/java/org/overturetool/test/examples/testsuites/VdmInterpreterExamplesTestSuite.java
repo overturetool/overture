@@ -24,22 +24,21 @@ import java.util.Enumeration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overturetool.test.examples.InterpreterPpTestCase;
 import org.overturetool.test.examples.TypeCheckPpTestCase;
 import org.overturetool.test.examples.TypeCheckRtTestCase;
 import org.overturetool.test.examples.TypeCheckSlTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
 
 
-public class VdmTypeCheckExamplesTestSuite extends BaseTestSuite
+public class VdmInterpreterExamplesTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Interpreter Examples TestSuite";
+		String name = "TypeCheck Examples TestSuite";
 		String root = "../../documentation/examples/";
-		TestSuite test = createTestCompleteDirectory(name,root+"VDM++",InterpreterPpTestCase.class);
-//		add(test,createTestCompleteDirectory(name,root+"VDMSL",InterpreterSlTestCase.class));
-//		add(test,createTestCompleteDirectory(name,root+"VDMRT",InterpreterRtTestCase.class));
+		TestSuite test = createTestCompleteDirectory(name,root+"VDM++",TypeCheckPpTestCase.class);
+		add(test,createTestCompleteDirectory(name,root+"VDMSL",TypeCheckSlTestCase.class));
+		add(test,createTestCompleteDirectory(name,root+"VDMRT",TypeCheckRtTestCase.class));
 		return test;
 	}
 

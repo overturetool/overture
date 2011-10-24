@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class Result<R>
 {
-	public final R result;
+	public  R result;
 	public final Set<IMessage> warnings;
 	public final Set<IMessage> errors;
 

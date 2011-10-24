@@ -32,7 +32,9 @@ import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.messages.VDMMessage;
+import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
@@ -55,6 +57,14 @@ public class TypeCheckRtTestCase extends ParserRtTestCase
 			return;
 		}
 
+		Result<ClassList> res = typeCheck();
+
+		compareResults(res.warnings, res.errors, res.result);
+	}
+
+	public Result<ClassList> typeCheck() throws Exception, ParserException,
+			LexException
+	{
 		Result<List<ClassDefinition>> parserRes =parse();
 
 		ClassList classes = new ClassList();
@@ -66,7 +76,7 @@ public class TypeCheckRtTestCase extends ParserRtTestCase
 		classes.add(new CPUClassDefinition());
 		classes.add(new BUSClassDefinition());
 
-		Result<Object> res = TypeCheckerProxy.typeCheck(new ClassTypeChecker(classes), new IMessageConverter()
+		Result<ClassList> res = TypeCheckerProxy.typeCheck(new ClassTypeChecker(classes), new IMessageConverter()
 		{
 
 			public IMessage convertMessage(Object m)
@@ -75,8 +85,9 @@ public class TypeCheckRtTestCase extends ParserRtTestCase
 				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 			}
 		});
-
-		compareResults(res.warnings, res.errors, res.result);
+		
+		res.result = classes;
+		return res;
 	}
 
 	@Override
