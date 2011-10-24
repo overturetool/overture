@@ -85,7 +85,7 @@ public interface IVdmBreakpoint extends IBreakpoint {
 	 * 
 	 * @throws CoreException
 	 * 
-	 * @deprecated
+	 * 
 	 */
 
 	void setHitCount(int value) throws CoreException;

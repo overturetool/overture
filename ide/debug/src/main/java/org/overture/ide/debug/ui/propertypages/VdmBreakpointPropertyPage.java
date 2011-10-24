@@ -24,7 +24,6 @@ import java.util.List;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.swt.SWT;
@@ -43,10 +42,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.IVdmBreakpoint;
 
+@SuppressWarnings("restriction")
 public class VdmBreakpointPropertyPage extends PropertyPage {
 
 	//protected JavaElementLabelProvider fJavaLabelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT);
@@ -226,20 +225,20 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 		return mainComposite;
 	}
 	
-    /**
-     * Returns the name of the given element.
-     * 
-     * @param element the element
-     * @return the name of the element
-     */
-    private String getName(IAdaptable element) {
-        IWorkbenchAdapter adapter = (IWorkbenchAdapter) element.getAdapter(IWorkbenchAdapter.class);
-        if (adapter != null) {
-            return adapter.getLabel(element);
-        } 
-        return EMPTY_STRING;
-    }	
-	
+//    /**
+//     * Returns the name of the given element.
+//     * 
+//     * @param element the element
+//     * @return the name of the element
+//     */
+//    private String getName(IAdaptable element) {
+//        IWorkbenchAdapter adapter = (IWorkbenchAdapter) element.getAdapter(IWorkbenchAdapter.class);
+//        if (adapter != null) {
+//            return adapter.getLabel(element);
+//        } 
+//        return EMPTY_STRING;
+//    }	
+//	
 	/**
 	 * Creates the labels displayed for the breakpoint.
 	 * @param parent
@@ -432,6 +431,7 @@ public class VdmBreakpointPropertyPage extends PropertyPage {
 	 * @param text the label of the returned radio button
 	 * @return a fully configured radio button
 	 */
+	
 	protected Button createRadioButton(Composite parent, String text) {
 		return SWTFactory.createRadioButton(parent, text);
 	}
