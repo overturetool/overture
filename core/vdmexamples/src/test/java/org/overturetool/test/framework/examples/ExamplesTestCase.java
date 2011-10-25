@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overturetool.test.framework.BaseTestCase;
+import org.overturetool.test.util.MessageReaderWritter;
 
 public class ExamplesTestCase extends BaseTestCase
 {
@@ -84,10 +85,44 @@ public class ExamplesTestCase extends BaseTestCase
 		return new VdmReadme(readme, getName(), true);
 	}
 
-	protected void compareResults(Set<IMessage> warnings, Set<IMessage> errors, Object result, String string)
+	protected File getFile(String filename)
 	{
-		// TODO Auto-generated method stub
-		int i = 0;
+		
+		if (file != null)
+		{
+
+			for (File chld : file.listFiles())
+			{
+				if (chld.getName().equals(filename))
+				{
+					return chld;
+				}
+			}
+		}
+	
+		return null;
+	}
+	
+	protected void compareResults(Set<IMessage> warnings, Set<IMessage> errors, Object result,String filename)
+	{
+		File file = getFile(filename);
+		
+		assertNotNull("Result file " + filename + " does not exist", file);
+		
+		
+		MessageReaderWritter mrw = new MessageReaderWritter();
+		boolean parsed = mrw.readFromFile(file);
+		
+		if(parsed)
+		{
+			
+		}
+		else
+		{
+			assert false : "Could not read result file: " + file.getName();
+		}
+		
+		
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
