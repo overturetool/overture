@@ -1,3 +1,4 @@
+\begin{vdm_al}
 class Test1
 
 instance variables
@@ -28,3 +29,4 @@ Run() ==
     return mk_(periods,expert);
 
 end Test1
+\end{vdm_al}

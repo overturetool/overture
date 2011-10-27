@@ -1,3 +1,4 @@
+\begin{vdm_al}
 class Plant
 
 instance variables
@@ -37,7 +38,9 @@ post let expert = RESULT
      in
        expert in set schedule(p) and
        a.GetReqQuali() in set expert.GetQuali();
-
+\end{vdm_al}
+	 
+\begin{vdm_al}
 public NumberOfExperts: Period ==> nat
 NumberOfExperts(p) ==
   return card schedule(p)
@@ -57,3 +60,4 @@ Plant(als,sch) ==
 pre PlantInv(als,sch);
 
 end Plant
+\end{vdm_al}
