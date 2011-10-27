@@ -103,6 +103,7 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_PP;
+		Settings.DGBPbaseDir = file;
 		Console.out = new StdoutRedirector(new OutputStreamWriter(new NullOutputStream()));
 		Console.err = new StderrRedirector(new OutputStreamWriter(new NullOutputStream()));
 	}

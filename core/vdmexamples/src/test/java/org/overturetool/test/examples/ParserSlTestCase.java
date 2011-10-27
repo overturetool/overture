@@ -21,6 +21,7 @@ package org.overturetool.test.examples;
 import java.io.File;
 import java.util.List;
 
+import org.overturetool.test.examples.testsuites.VdmParserExamplesTestSuite;
 import org.overturetool.test.examples.vdmj.ParserProxy;
 import org.overturetool.test.examples.vdmj.VdmjFactories;
 import org.overturetool.test.framework.examples.ExamplesTestCase;
@@ -52,6 +53,12 @@ public class ParserSlTestCase extends ExamplesTestCase
 		}
 
 		Result<List<Module>> res = parse();
+		
+		if(VdmParserExamplesTestSuite.failTestWithParseErrors && res.errors.size()>0)
+		{
+			fail("Parse completed with errors:\n"+res);
+		}
+		
 		compareResults(res.warnings, res.errors, res.result,"parser.result");
 	}
 

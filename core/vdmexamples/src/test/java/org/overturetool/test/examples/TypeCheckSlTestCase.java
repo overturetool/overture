@@ -21,6 +21,7 @@ package org.overturetool.test.examples;
 import java.io.File;
 import java.util.List;
 
+import org.overturetool.test.examples.testsuites.VdmTypeCheckExamplesTestSuite;
 import org.overturetool.test.examples.vdmj.TypeCheckerProxy;
 import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
 import org.overturetool.test.framework.examples.IMessage;
@@ -52,11 +53,9 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 		}
 		
 		Result<ModuleList> res = typeCheck();
-		if(res.errors.size()>0)
+		if(VdmTypeCheckExamplesTestSuite.failTestWithTcErrors && res.errors.size()>0)
 		{
-			System.out.println(getName());
-			System.out.println(res);
-			fail("TC fail");
+			fail("TC completed with errors:\n"+res);
 		}
 		
 		compareResults(res.warnings,res.errors,res.result,"typechecker.result");
@@ -80,7 +79,7 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 			public IMessage convertMessage(Object m)
 			{
 				VDMMessage msg = (VDMMessage) m;
-				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.toProblemString());
+				return new Message(msg.location.file.getName(),msg.number, msg.location.startLine, msg.location.endPos, msg.toProblemString());
 			}
 		});
 		

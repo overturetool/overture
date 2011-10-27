@@ -129,7 +129,7 @@ public class ExamplesTestCase extends BaseTestCase
 	public void checkMessages(String typeName, Set<IMessage> expectedList,
 			Set<IMessage> list)
 	{
-		assertEquals("Number of " + typeName + "s do not match expected.", expectedList.size(), list.size());
+//		assertEquals("Number of " + typeName + "s do not match expected.", expectedList.size(), list.size());
 		String TypeName = typeName.toUpperCase().toCharArray()[0]
 				+ typeName.substring(1);
 		for (IMessage w : list)

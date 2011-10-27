@@ -84,5 +84,6 @@ public class InterpreterRtTestCase extends TypeCheckRtTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_RT;
+		Settings.DGBPbaseDir = file;
 	}
 }

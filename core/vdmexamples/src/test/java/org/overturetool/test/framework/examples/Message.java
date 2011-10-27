@@ -18,9 +18,12 @@ public class Message implements IMessage
 	private int col;
 
 	private String message;
+	
+	private String resource;
 
-	public Message(int number, int line, int col, String message)
+	public Message(String resource, int number, int line, int col, String message)
 	{
+		this.resource = resource;
 		this.number = number;
 		this.line = line;
 		this.col = col;
@@ -73,7 +76,7 @@ public class Message implements IMessage
 		if (obj instanceof IMessage)
 		{
 			IMessage other = (IMessage) obj;
-			return this.number == other.getNumber()
+			return this.resource.equals(other.getResource()) && this.number == other.getNumber()
 					&& this.col == other.getCol()
 					&& this.line == other.getLine();
 		}
@@ -83,7 +86,17 @@ public class Message implements IMessage
 	@Override
 	public String toString()
 	{
-		return number + ":" + line + "-" + col + " " + message;
+		return resource+ " "+number + ":" + line + "-" + col + " " + message;
+	}
+
+	public void setResource(String resource)
+	{
+		this.resource = resource;
+	}
+
+	public String getResource()
+	{
+		return resource;
 	}
 
 }

@@ -32,6 +32,7 @@ import org.overturetool.test.framework.BaseTestSuite;
 
 public class VdmTypeCheckExamplesTestSuite extends BaseTestSuite
 {
+	public static final boolean failTestWithTcErrors = false;
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		String name = "Type Check Examples TestSuite";

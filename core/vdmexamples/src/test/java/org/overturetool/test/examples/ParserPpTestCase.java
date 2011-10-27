@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import org.overturetool.test.examples.testsuites.VdmParserExamplesTestSuite;
 import org.overturetool.test.examples.vdmj.ParserProxy;
 import org.overturetool.test.examples.vdmj.VdmjFactories;
 import org.overturetool.test.framework.examples.ExamplesTestCase;
@@ -46,6 +47,12 @@ public class ParserPpTestCase extends ExamplesTestCase
 		}
 
 		Result<List<ClassDefinition>> res = parse();
+		
+		if(VdmParserExamplesTestSuite.failTestWithParseErrors && res.errors.size()>0)
+		{
+			fail("Parse completed with errors:\n"+res);
+		}
+		
 		compareResults(res.warnings, res.errors, res.result, "parser.result");
 	}
 

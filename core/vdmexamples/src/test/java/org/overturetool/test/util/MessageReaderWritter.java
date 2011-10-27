@@ -99,14 +99,14 @@ public class MessageReaderWritter
 
 				String[] splitLine = line.split(":");
 
-				if (splitLine.length != 3)
+				if (splitLine.length != 4)
 				{
 					return false;
 				}
 
-				int number = Integer.parseInt(splitLine[0]);
+				int number = Integer.parseInt(splitLine[1]);
 
-				String[] position = splitLine[1].split(",");
+				String[] position = splitLine[2].split(",");
 
 				if (position.length != 2)
 				{
@@ -116,9 +116,10 @@ public class MessageReaderWritter
 				int startLine = Integer.parseInt(position[0]);
 				int startCol = Integer.parseInt(position[1]);
 
-				String message = splitLine[2];
+				String message = splitLine[3];
+				String resource = splitLine[0];
 
-				IMessage msg = new Message(number, startLine, startCol, message);
+				IMessage msg = new Message(resource,number, startLine, startCol, message);
 
 				switch (type)
 				{
@@ -148,37 +149,9 @@ public class MessageReaderWritter
 		try
 		{
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			for (IMessage warning : warnings)
-			{
-				StringBuffer sb = new StringBuffer();
-				sb.append(WARNING_LABEL);
-				sb.append(":");
-				sb.append(warning.getNumber());
-				sb.append(":");
-				sb.append(warning.getLine());
-				sb.append(",");
-				sb.append(warning.getCol());
-				sb.append(":");
-				sb.append(warning.getMessage());
-				out.write(sb.toString());
-				out.newLine();
-			}
-
-			for (IMessage error : errors)
-			{
-				StringBuffer sb = new StringBuffer();
-				sb.append(ERROR_LABEL);
-				sb.append(":");
-				sb.append(error.getNumber());
-				sb.append(":");
-				sb.append(error.getLine());
-				sb.append(",");
-				sb.append(error.getCol());
-				sb.append(":");
-				sb.append(error.getMessage());
-				out.write(sb.toString());
-				out.newLine();
-			}
+		
+			writeMessageSet(out,WARNING_LABEL,warnings);
+			writeMessageSet(out,ERROR_LABEL,errors);
 
 			out.flush();
 			out.close();
@@ -188,6 +161,27 @@ public class MessageReaderWritter
 		}
 
 		return true;
+	}
+
+	public void writeMessageSet(BufferedWriter out, String label, Set<IMessage> list) throws IOException
+	{
+		for (IMessage m : list)
+		{
+			StringBuffer sb = new StringBuffer();
+			sb.append(label);
+			sb.append(":");
+			sb.append(m.getResource());
+			sb.append(":");
+			sb.append(m.getNumber());
+			sb.append(":");
+			sb.append(m.getLine());
+			sb.append(",");
+			sb.append(m.getCol());
+			sb.append(":");
+			sb.append(m.getMessage().replace(':', '\''));
+			out.write(sb.toString());
+			out.newLine();
+		}
 	}
 
 }

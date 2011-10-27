@@ -32,6 +32,8 @@ import org.overturetool.test.framework.BaseTestSuite;
 
 public class VdmParserExamplesTestSuite extends BaseTestSuite
 {
+	public static final boolean failTestWithParseErrors = true;
+
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		String name = "Parser Examples TestSuite";

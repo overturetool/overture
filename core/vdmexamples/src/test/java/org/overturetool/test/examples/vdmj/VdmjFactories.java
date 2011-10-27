@@ -68,7 +68,7 @@ public class VdmjFactories
 		public IMessage convertMessage(Object m)
 		{
 			VDMMessage msg = (VDMMessage) m;
-			return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
+			return new Message(msg.location.file.getName(),msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 		}
 
 		public LexTokenReader createTokenReader(File file)
@@ -94,7 +94,7 @@ public class VdmjFactories
 		public IMessage convertMessage(Object m)
 		{
 			VDMMessage msg = (VDMMessage) m;
-			return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
+			return new Message(msg.location.file.getName(),msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 		}
 
 		public LexTokenReader createTokenReader(File file)

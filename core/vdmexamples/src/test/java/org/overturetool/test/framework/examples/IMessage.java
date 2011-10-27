@@ -27,4 +27,6 @@ public interface IMessage
 	public int getCol();
 
 	public String getMessage();
+	
+	public String getResource();
 }
