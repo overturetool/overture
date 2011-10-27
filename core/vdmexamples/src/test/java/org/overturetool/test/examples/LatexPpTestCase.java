@@ -56,6 +56,7 @@ public class LatexPpTestCase extends TypeCheckPpTestCase
 		super(file);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void test() throws Exception
 	{
@@ -68,6 +69,7 @@ public class LatexPpTestCase extends TypeCheckPpTestCase
 		if (res.errors.size() > 0)
 		{
 			fail("Type check errors");
+//			compareResults(res.warnings, res.errors, res.result, "interpreter.result");
 		}
 
 		File output = new File(file, "output");
@@ -152,7 +154,7 @@ public class LatexPpTestCase extends TypeCheckPpTestCase
 		}
 	}
 
-	// compareResults(res.warnings, res.errors, res.result, "interpreter.results");
+	// compareResults(res.warnings, res.errors, res.result, "interpreter.result");
 
 	public String saveDocument(File projectRoot, String name, String author,
 			File latexRoot) throws IOException

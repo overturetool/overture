@@ -42,7 +42,7 @@ public class TypeCheckerProxy
 
 		for (VDMWarning m : TypeChecker.getWarnings())
 		{
-			errors.add(factory.convertMessage(m));
+			warnings.add(factory.convertMessage(m));
 		}
 
 		return new Result<R>(null, warnings, errors);

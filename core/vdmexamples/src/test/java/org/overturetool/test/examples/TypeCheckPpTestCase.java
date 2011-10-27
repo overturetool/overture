@@ -26,10 +26,8 @@ import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
 import org.overturetool.test.framework.examples.IMessage;
 import org.overturetool.test.framework.examples.Message;
 import org.overturetool.test.framework.examples.Result;
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.VDMMessage;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
@@ -54,8 +52,8 @@ public class TypeCheckPpTestCase extends ParserPpTestCase
 		}
 
 		Result<ClassList> res = typeCheck();
-
-		compareResults(res.warnings, res.errors, res.result,"typechecker.results");
+		
+		compareResults(res.warnings, res.errors, res.result,"typechecker.result");
 	}
 
 	public Result<ClassList> typeCheck() throws Exception
@@ -75,7 +73,7 @@ public class TypeCheckPpTestCase extends ParserPpTestCase
 			public IMessage convertMessage(Object m)
 			{
 				VDMMessage msg = (VDMMessage) m;
-				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
+				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.toProblemString());
 			}
 		});
 		
@@ -87,7 +85,6 @@ public class TypeCheckPpTestCase extends ParserPpTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
 		TypeChecker.clearErrors();
 	}
 }

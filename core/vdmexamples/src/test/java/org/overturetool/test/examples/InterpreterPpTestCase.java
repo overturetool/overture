@@ -1,20 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
+ * Copyright (c) 2009, 2011 Overture Team and others. Overture is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version. Overture is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details. You should have received a copy of the GNU General Public
+ * License along with Overture. If not, see <http://www.gnu.org/licenses/>. The Overture Tool web-site:
+ * http://overturetool.org/
  *******************************************************************************/
 package org.overturetool.test.examples;
 
@@ -24,7 +15,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
 import org.overturetool.test.framework.examples.IMessage;
 import org.overturetool.test.framework.examples.IResultCombiner;
@@ -67,7 +57,7 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 		if (ignoreList.contains(getName()))
 		{
 			fail("Ignored");
-return;
+			return;
 		}
 
 		VdmReadme settings = getReadme();
@@ -76,6 +66,7 @@ return;
 		{
 			results.add(interpret(expression));
 		}
+		@SuppressWarnings("unchecked")
 		Result<String> res = mergeResults(results, new IResultCombiner<String>()
 		{
 
@@ -85,7 +76,7 @@ return;
 			}
 		});
 
-		compareResults(res.warnings, res.errors, res.result, "interpreter.results");
+		compareResults(res.warnings, res.errors, res.result, "interpreter.result");
 	}
 
 	protected Result<String> interpret(String expression) throws Exception
@@ -115,11 +106,13 @@ return;
 		Console.out = new StdoutRedirector(new OutputStreamWriter(new NullOutputStream()));
 		Console.err = new StderrRedirector(new OutputStreamWriter(new NullOutputStream()));
 	}
-	
-	/**Writes to nowhere*/
-	public class NullOutputStream extends OutputStream {
-	  @Override
-	  public void write(int b) throws IOException {
-	  }
+
+	/** Writes to nowhere */
+	public class NullOutputStream extends OutputStream
+	{
+		@Override
+		public void write(int b) throws IOException
+		{
+		}
 	}
 }

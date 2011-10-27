@@ -52,12 +52,13 @@ public class ParserSlTestCase extends ExamplesTestCase
 		}
 
 		Result<List<Module>> res = parse();
-		compareResults(res.warnings, res.errors, res.result,"parser.results");
+		compareResults(res.warnings, res.errors, res.result,"parser.result");
 	}
 
 	protected Result<List<Module>> parse() throws Exception
 	{
 		ParserProxy<ModuleReader, List<Module>> parser = new ParserProxy<ModuleReader, List<Module>>(VdmjFactories.vdmSlParserfactory, getSpecFiles("vdmsl", file));
+		@SuppressWarnings("unchecked")
 		Result<List<Module>> res = mergeResults(parser.parse(), VdmjFactories.vdmSlParserResultCombiner);
 		return res;
 	}

@@ -56,6 +56,7 @@ public class InterpreterSlTestCase extends TypeCheckSlTestCase
 		{
 			results.add( interpret(expression));
 		}
+		@SuppressWarnings("unchecked")
 		Result<String> res = mergeResults(results, new IResultCombiner<String>()
 		{
 
@@ -65,7 +66,7 @@ public class InterpreterSlTestCase extends TypeCheckSlTestCase
 			}
 		});
 
-		compareResults(res.warnings, res.errors, res.result,"interpreter.results");
+		compareResults(res.warnings, res.errors, res.result,"interpreter.result");
 	}
 	
 	protected Result<String> interpret(String expression) throws Exception

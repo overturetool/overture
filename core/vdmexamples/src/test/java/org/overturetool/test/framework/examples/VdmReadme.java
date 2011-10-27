@@ -61,7 +61,7 @@ public class VdmReadme
 	private List<String> libs = new Vector<String>();
 	private List<String> vmArguments = new Vector<String>();
 	private String name = "";
-	private boolean settingsParsed = false;
+//	private boolean settingsParsed = false;
 	private String content = "";
 	private String release;
 
@@ -111,7 +111,7 @@ public class VdmReadme
 		String[] data = line.split("=");
 		if (data.length > 1)
 		{
-			settingsParsed = true;
+//			settingsParsed = true;
 			if (data[0].equals(LANGUAGE_VERSION))
 				setLanguageVersion(data[1]);
 			else if (data[0].equals(INV_CHECKS))
@@ -169,36 +169,36 @@ public class VdmReadme
 
 
 
+//
+//	private String getBuilderArguments()
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("\n"
+//				+ getArgument(this.DYNAMIC_TYPE_CHECKS, dynamicTypeChecks));
+//		sb.append("\n" + getArgument(this.INV_CHECKS, invChecks));
+//		sb.append("\n" + getArgument(this.POST_CHECKS, postChecks));
+//		sb.append("\n" + getArgument(this.PRE_CHECKS, preChecks));
+//		sb.append("\n" + getArgument(this.SUPPRESS_WARNINGS, suppressWarnings));
+//		return sb.toString();
+//	}
 
-	private String getBuilderArguments()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n"
-				+ getArgument(this.DYNAMIC_TYPE_CHECKS, dynamicTypeChecks));
-		sb.append("\n" + getArgument(this.INV_CHECKS, invChecks));
-		sb.append("\n" + getArgument(this.POST_CHECKS, postChecks));
-		sb.append("\n" + getArgument(this.PRE_CHECKS, preChecks));
-		sb.append("\n" + getArgument(this.SUPPRESS_WARNINGS, suppressWarnings));
-		return sb.toString();
-	}
-
-	private String getArgument(String key, Object value)
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n\t\t\t\t<dictionary>");
-		sb.append("\n\t\t\t\t\t<key>" + key + "</key>");
-		sb.append("\n\t\t\t\t\t<value>" + value + "</value>");
-		sb.append("\n\t\t\t\t</dictionary>");
-		return sb.toString();
-	}
-
-
-
-
-	private static String escapeXml(String data)
-	{
-		return data.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", " &gt;").replace("'", "&apos;").replace(" ", "");
-	}
+//	private String getArgument(String key, Object value)
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("\n\t\t\t\t<dictionary>");
+//		sb.append("\n\t\t\t\t\t<key>" + key + "</key>");
+//		sb.append("\n\t\t\t\t\t<value>" + value + "</value>");
+//		sb.append("\n\t\t\t\t</dictionary>");
+//		return sb.toString();
+//	}
+//
+//
+//
+//
+//	private static String escapeXml(String data)
+//	{
+//		return data.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", " &gt;").replace("'", "&apos;").replace(" ", "");
+//	}
 
 	@Override
 	public String toString()

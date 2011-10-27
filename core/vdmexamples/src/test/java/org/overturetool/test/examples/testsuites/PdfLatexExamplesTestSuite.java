@@ -25,9 +25,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overturetool.test.examples.LatexPpTestCase;
-import org.overturetool.test.examples.TypeCheckPpTestCase;
-import org.overturetool.test.examples.TypeCheckRtTestCase;
-import org.overturetool.test.examples.TypeCheckSlTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
 
 

@@ -26,8 +26,6 @@ import org.overturetool.test.examples.vdmj.VdmjFactories.IMessageConverter;
 import org.overturetool.test.framework.examples.IMessage;
 import org.overturetool.test.framework.examples.Message;
 import org.overturetool.test.framework.examples.Result;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.VDMMessage;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
@@ -54,9 +52,14 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 		}
 		
 		Result<ModuleList> res = typeCheck();
+		if(res.errors.size()>0)
+		{
+			System.out.println(getName());
+			System.out.println(res);
+			fail("TC fail");
+		}
 		
-		
-		compareResults(res.warnings,res.errors,res.result,"typechecker.results");
+		compareResults(res.warnings,res.errors,res.result,"typechecker.result");
 	}
 
 	public Result<ModuleList> typeCheck() throws Exception
@@ -77,7 +80,7 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 			public IMessage convertMessage(Object m)
 			{
 				VDMMessage msg = (VDMMessage) m;
-				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.message);
+				return new Message(msg.number, msg.location.startLine, msg.location.endPos, msg.toProblemString());
 			}
 		});
 		
@@ -89,7 +92,6 @@ public class TypeCheckSlTestCase extends ParserSlTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
 		TypeChecker.clearErrors();
 	}
 }
