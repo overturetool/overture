@@ -1,0 +1,37 @@
+WARNING:simulator1.vdmsl:5008:264,35:troms at 237'35 hidden by troms.
+WARNING:simulator1.vdmsl:5012:393,19:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:865,22:Definition 'trom' not used.
+WARNING:simulator1.vdmsl:5000:380,44:Definition 'lsllib' not used.
+WARNING:simulator1.vdmsl:5008:66,37:substates at 63'38 hidden by substates.
+WARNING:simulator1.vdmsl:5000:44,22:Definition 'label' not used.
+WARNING:simulator1.vdmsl:5012:350,30:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5012:311,22:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:167,68:Definition 'assignmentvector' not used.
+WARNING:simulator1.vdmsl:5000:309,64:Definition 'clock' not used.
+WARNING:simulator1.vdmsl:5012:65,27:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5010:299,13:State init expression cannot be executed. Expected' p == p = mk_Record(...)
+WARNING:simulator1.vdmsl:5000:165,18:Definition 'label' not used.
+WARNING:simulator1.vdmsl:5000:839,39:Definition 'trom' not used.
+WARNING:simulator1.vdmsl:5000:100,28:Definition 'label' not used.
+WARNING:simulator1.vdmsl:5000:100,62:Definition 'dstates' not used.
+WARNING:simulator1.vdmsl:5012:319,26:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:729,45:Definition 'se' not used.
+WARNING:simulator1.vdmsl:5012:253,22:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5012:477,29:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5012:429,15:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5012:242,27:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:63,36:Definition 'isinitial' not used.
+WARNING:simulator1.vdmsl:5012:443,19:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:380,22:Definition 'subsys' not used.
+WARNING:simulator1.vdmsl:5000:63,19:Definition 'label' not used.
+WARNING:simulator1.vdmsl:5000:100,39:Definition 'transition' not used.
+WARNING:simulator1.vdmsl:5000:883,36:Definition 'se' not used.
+WARNING:simulator1.vdmsl:5000:165,28:Definition 'tromclass' not used.
+WARNING:simulator1.vdmsl:5000:305,11:Definition 'LSLLIBRARY' not used.
+WARNING:simulator1.vdmsl:5012:271,25:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:793,37:Definition 'trom' not used.
+WARNING:simulator1.vdmsl:5000:930,35:Definition 'se' not used.
+WARNING:simulator1.vdmsl:5000:757,36:Definition 'trom' not used.
+WARNING:simulator1.vdmsl:5012:368,24:Recursive function has no measure.
+WARNING:simulator1.vdmsl:5000:52,19:Definition 'label' not used.
+WARNING:simulator1.vdmsl:5012:495,23:Recursive function has no measure.

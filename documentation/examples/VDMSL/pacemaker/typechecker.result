@@ -1,0 +1,30 @@
+WARNING:PacemakerAOOR.vdmsl:5007:134,4:Duplicate definition' MED.
+WARNING:PacemakerDOO.vdmsl:5000:72,19:Definition 'inp' not used.
+WARNING:PacemakerDDD.vdmsl:5012:32,3:Recursive function has no measure.
+WARNING:RateController.vdmsl:5000:99,9:Definition 'Simulate' not used.
+WARNING:PacemakerAOO.vdmsl:5000:102,10:Definition 'Pacemaker' not used.
+WARNING:PacemakerDDD.vdmsl:5000:7,4:Definition 'LRL' not used.
+WARNING:PacemakerAOOR.vdmsl:5007:136,4:Duplicate definition' MED.
+WARNING:PacemakerAOOR.vdmsl:5007:136,4:Duplicate definition' MED.
+WARNING:PacemakerAAT.vdmsl:5000:57,5:Definition 'Time' not used.
+WARNING:PacemakerAOOR.vdmsl:5000:86,16:Definition 'ReactionTime' not used.
+WARNING:PacemakerAAT.vdmsl:5000:46,4:Definition 'ARP' not used.
+WARNING:PacemakerDOO.vdmsl:5000:72,10:Definition 'Pacemaker' not used.
+WARNING:PacemakerAOOR.vdmsl:5000:87,16:Definition 'RecoveryTime' not used.
+WARNING:PacemakerAOOR.vdmsl:5000:139,11:Definition 'sensedData' not used.
+WARNING:PacemakerAOOR.vdmsl:5007:136,4:Duplicate definition' MED.
+WARNING:PacemakerAOOR.vdmsl:5000:136,4:Definition 'MED' not used.
+WARNING:PacemakerAOOR.vdmsl:5000:81,7:Definition 'LRL' not used.
+WARNING:PacemakerAAI.vdmsl:5000:71,10:Definition 'Pacemaker' not used.
+WARNING:RateController.vdmsl:5008:104,14:t at 101'13 hidden by t.
+WARNING:PacemakerAOOR.vdmsl:5007:134,4:Duplicate definition' MED.
+WARNING:PacemakerAOOR.vdmsl:5007:136,4:Duplicate definition' MED.
+WARNING:PacemakerAAT.vdmsl:5000:73,10:Definition 'Pacemaker' not used.
+WARNING:PacemakerDDD.vdmsl:5000:28,10:Definition 'Pacemaker' not used.
+WARNING:PacemakerAOOR.vdmsl:5007:136,4:Duplicate definition' MED.
+WARNING:PacemakerAOOR.vdmsl:5000:135,4:Definition 'LOW' not used.
+WARNING:PacemakerAOOR.vdmsl:5007:134,4:Duplicate definition' MED.
+WARNING:PacemakerAOOR.vdmsl:5000:84,7:Definition 'MSR' not used.
+WARNING:PacemakerAOOR.vdmsl:5007:134,4:Duplicate definition' MED.
+WARNING:PacemakerAOOR.vdmsl:5007:134,4:Duplicate definition' MED.
+WARNING:RateController.vdmsl:5000:90,18:Definition 'ResponseFactor' not used.

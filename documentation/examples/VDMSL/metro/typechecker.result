@@ -1,0 +1,7 @@
+WARNING:metro.vdmsl:5000:212,28:Definition 'int1' not used.
+WARNING:metro.vdmsl:5000:216,24:Definition 'int2' not used.
+WARNING:metro.vdmsl:5000:212,33:Definition 'int2' not used.
+WARNING:metro.vdmsl:5000:216,19:Definition 'int1' not used.
+WARNING:metro.vdmsl:5000:99,32:Definition 'bellon' not used.
+ERROR:metro.vdmsl:3302:66,0:State variable 'Metro1a`trainmoving' cannot be accessed from this context.
+ERROR:metro.vdmsl:3302:57,0:State variable 'Metro1a`doorsopen' cannot be accessed from this context.

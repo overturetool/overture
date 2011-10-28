@@ -1,0 +1,17 @@
+WARNING:stv.vdmsl:5012:148,4:Recursive function has no measure.
+WARNING:stv.vdmsl:5008:239,39:total_value at 346'1 hidden by total_value.
+WARNING:stv.vdmsl:5008:246,42:total_value at 346'1 hidden by total_value.
+WARNING:stv.vdmsl:5012:429,20:Recursive function has no measure.
+WARNING:stv.vdmsl:5012:278,14:Recursive function has no measure.
+WARNING:stv.vdmsl:5012:368,4:Recursive function has no measure.
+WARNING:stv.vdmsl:5012:417,19:Recursive function has no measure.
+WARNING:stv.vdmsl:5012:266,13:Recursive function has no measure.
+WARNING:stv.vdmsl:5000:300,44:Definition 'discontinuing' not used.
+WARNING:stv.vdmsl:5012:104,11:Recursive function has no measure.
+WARNING:stv.vdmsl:5000:471,17:Definition 's' not used.
+WARNING:stv.vdmsl:5000:270,9:Definition 'e' not used.
+WARNING:stv.vdmsl:5008:537,36:i at 501'8 hidden by i.
+WARNING:stv.vdmsl:5012:412,11:Recursive function has no measure.
+WARNING:stv.vdmsl:5000:421,9:Definition 'e' not used.
+WARNING:stv.vdmsl:5012:288,8:Recursive function has no measure.
+WARNING:stv.vdmsl:5008:233,38:total_value at 346'1 hidden by total_value.

@@ -1,0 +1,3 @@
+ERROR:2078:21,32:Missing ';' after type definition
+ERROR:2079:37,15:Missing ';' after function definition
+ERROR:2154:45,35:Expecting '&' after bind list in exists

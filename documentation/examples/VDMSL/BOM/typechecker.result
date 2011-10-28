@@ -1,0 +1,11 @@
+WARNING:bom.vdmsl:5008:41,15:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:60,14:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:55,10:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:5,8:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:22,13:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:27,14:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5012:45,5:Recursive function has no measure.
+WARNING:bom.vdmsl:5008:46,9:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:65,16:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:37,12:bom at 13'1 hidden by bom.
+WARNING:bom.vdmsl:5008:71,18:bom at 13'1 hidden by bom.

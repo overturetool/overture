@@ -1,0 +1,2 @@
+WARNING:labgraphs.vdmsl:5000:8,16:Definition 'AcyclicLabGraph' not used.
+WARNING:graphs.vdmsl:5012:32,11:Recursive function has no measure.

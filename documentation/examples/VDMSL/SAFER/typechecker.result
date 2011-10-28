@@ -1,0 +1,4 @@
+WARNING:test.vdmsl:3264:43,41:Empty set used in bind.
+WARNING:test.vdmsl:3264:39,59:Empty set used in bind.
+WARNING:test.vdmsl:3264:48,59:Empty set used in bind.
+WARNING:test.vdmsl:5012:88,14:Recursive function has no measure.

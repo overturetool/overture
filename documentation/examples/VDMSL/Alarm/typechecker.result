@@ -1,0 +1,4 @@
+WARNING:alarm.vdmsl:5008:5,31:alarms in 'DEFAULT' (..\..\documentation\examples\VDMSL\Alarm\testalarm.vdmsl) at line 39'3 hidden by alarms.
+WARNING:alarm.vdmsl:5008:48,22:exs in 'DEFAULT' (..\..\documentation\examples\VDMSL\Alarm\testalarm.vdmsl) at line 27'3 hidden by exs.
+WARNING:alarm.vdmsl:5008:12,14:exs in 'DEFAULT' (..\..\documentation\examples\VDMSL\Alarm\testalarm.vdmsl) at line 27'3 hidden by exs.
+WARNING:changeexpert.vdmsl:5008:5,34:alarms in 'DEFAULT' (..\..\documentation\examples\VDMSL\Alarm\testalarm.vdmsl) at line 39'3 hidden by alarms.

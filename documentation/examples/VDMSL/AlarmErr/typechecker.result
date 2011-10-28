@@ -1,0 +1,3 @@
+WARNING:alarmerr.vdmsl:5000:11,29:Definition 'exs' not used.
+ERROR:alarmerr.vdmsl:3182:11,56:Name 'DEFAULT`exss' is not in scope.
+ERROR:alarmerr.vdmsl:3182:8,25:Name 'QualificationOK' is not in scope.

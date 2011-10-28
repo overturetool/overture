@@ -1,0 +1,13 @@
+WARNING:adt.vdmsl:5012:1199,23:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:1510,19:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:692,15:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:1478,15:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:468,14:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:234,19:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:481,16:Recursive function has no measure.
+WARNING:adt.vdmsl:5012:711,15:Recursive function has no measure.
+WARNING:adt.vdmsl:5000:1778,20:Definition 'charQueue' not used.
+WARNING:adt.vdmsl:5000:1779,20:Definition 'charStack' not used.
+WARNING:adt.vdmsl:5008:1159,50:data at 1157'35 hidden by data.
+WARNING:adt.vdmsl:5008:1159,60:position at 1157'41 hidden by position.
+WARNING:adt.vdmsl:5012:455,10:Recursive function has no measure.

@@ -1,0 +1,25 @@
+WARNING:maa.vdmsl:5012:403,22:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:107,15:Recursive function has no measure.
+WARNING:maa.vdmsl:5008:193,5:C at 20'4 hidden by C.
+WARNING:maa.vdmsl:5008:179,5:C at 20'4 hidden by C.
+WARNING:maa.vdmsl:5012:318,13:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:130,6:Recursive function has no measure.
+WARNING:maa.vdmsl:5008:253,9:D at 21'4 hidden by D.
+WARNING:maa.vdmsl:5012:124,7:Recursive function has no measure.
+WARNING:maa.vdmsl:5008:167,5:C at 20'4 hidden by C.
+WARNING:maa.vdmsl:5008:230,21:B at 19'4 hidden by B.
+WARNING:maa.vdmsl:5012:262,18:Recursive function has no measure.
+WARNING:maa.vdmsl:5000:94,34:Definition 'M' not used.
+WARNING:maa.vdmsl:5008:191,9:D at 21'4 hidden by D.
+WARNING:maa.vdmsl:5008:216,12:B at 19'4 hidden by B.
+WARNING:maa.vdmsl:5012:142,7:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:368,12:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:389,20:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:396,22:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:99,28:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:382,20:Recursive function has no measure.
+WARNING:maa.vdmsl:5008:177,53:D at 21'4 hidden by D.
+WARNING:maa.vdmsl:5012:215,8:Recursive function has no measure.
+WARNING:maa.vdmsl:5012:246,27:Recursive function has no measure.
+WARNING:maa.vdmsl:5008:239,13:B at 19'4 hidden by B.
+WARNING:maa.vdmsl:5012:222,22:Recursive function has no measure.

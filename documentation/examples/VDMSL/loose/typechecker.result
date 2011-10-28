@@ -1,0 +1,14 @@
+WARNING:expr.vdmsl:5008:39,48:expr in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 183'2 hidden by expr.
+WARNING:expr.vdmsl:5008:143,29:pat in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 180'2 hidden by pat.
+WARNING:expr.vdmsl:5008:47,36:pat in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 180'2 hidden by pat.
+WARNING:auxil.vdmsl:5012:48,11:Recursive function has no measure.
+WARNING:auxil.vdmsl:5012:62,10:Recursive function has no measure.
+WARNING:expr.vdmsl:5008:256,16:pat in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 180'2 hidden by pat.
+WARNING:pat.vdmsl:5000:19,39:Definition 'm' not used.
+WARNING:auxil.vdmsl:5008:80,17:pat in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 180'2 hidden by pat.
+WARNING:env.vdmsl:5008:152,29:expr in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 183'2 hidden by expr.
+WARNING:expr.vdmsl:5008:22,21:expr in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 183'2 hidden by expr.
+WARNING:env.vdmsl:5012:276,7:Recursive function has no measure.
+WARNING:expr.vdmsl:5008:47,41:expr in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 183'2 hidden by expr.
+WARNING:auxil.vdmsl:5012:79,13:Recursive function has no measure.
+WARNING:env.vdmsl:5008:152,24:pat in 'DEFAULT' (..\..\documentation\examples\VDMSL\loose\as.vdmsl) at line 180'2 hidden by pat.

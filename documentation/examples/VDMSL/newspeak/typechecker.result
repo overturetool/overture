@@ -1,0 +1,201 @@
+WARNING:newspeak.vdmsl:5012:1886,10:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5008:2512,34:abserr at 920'1 hidden by abserr.
+WARNING:newspeak.vdmsl:5008:2009,36:fl at 1999'37 hidden by fl.
+WARNING:newspeak.vdmsl:5000:2411,31:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:2066,19:Definition 'nls' not used.
+WARNING:newspeak.vdmsl:5000:2804,37:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:1331,18:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2065,23:Definition 'expr' not used.
+WARNING:newspeak.vdmsl:5000:2843,22:Definition 'd' not used.
+WARNING:newspeak.vdmsl:5012:1057,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1369,18:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:1092,22:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:2067,23:Definition 'type' not used.
+WARNING:newspeak.vdmsl:5000:2029,44:Definition 'v' not used.
+WARNING:newspeak.vdmsl:5000:2065,18:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5012:984,15:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2804,39:Definition 'v' not used.
+WARNING:newspeak.vdmsl:5000:2178,22:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:2177,19:Definition 'rs' not used.
+WARNING:newspeak.vdmsl:5000:2613,34:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5012:2964,8:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5012:2973,9:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1352,17:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:1094,23:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:1089,18:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:2430,33:Definition 'mt' not used.
+WARNING:newspeak.vdmsl:5000:1718,21:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:2174,22:Definition 'p' not used.
+WARNING:newspeak.vdmsl:5000:1343,15:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2708,58:Definition 'i1' not used.
+WARNING:newspeak.vdmsl:5008:814,38:range at 809'12 hidden by range.
+WARNING:newspeak.vdmsl:5000:1373,20:Definition 'exp' not used.
+WARNING:newspeak.vdmsl:5008:849,18:abserr at 920'1 hidden by abserr.
+WARNING:newspeak.vdmsl:5000:2830,51:Definition 'i' not used.
+WARNING:newspeak.vdmsl:5000:2468,23:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:2577,43:Definition 'skel' not used.
+WARNING:newspeak.vdmsl:5000:1371,14:Definition 's' not used.
+WARNING:newspeak.vdmsl:5008:2009,33:tp at 1999'40 hidden by tp.
+WARNING:newspeak.vdmsl:5000:1381,25:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2479,21:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:1694,19:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2744,29:Definition 'actions' not used.
+WARNING:newspeak.vdmsl:5000:2613,32:Definition 's' not used.
+WARNING:newspeak.vdmsl:5000:1334,15:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2029,23:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2708,62:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:693,8:Definition 'c' not used.
+WARNING:newspeak.vdmsl:5000:1090,17:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:2699,41:Definition 'v' not used.
+WARNING:newspeak.vdmsl:5000:1349,16:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2614,37:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5008:790,38:range at 784'7 hidden by range.
+WARNING:newspeak.vdmsl:5012:1162,7:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2175,19:Definition 'rs' not used.
+WARNING:newspeak.vdmsl:5000:1368,19:Definition 'op' not used.
+WARNING:newspeak.vdmsl:5000:1325,20:Definition 'm' not used.
+WARNING:newspeak.vdmsl:5000:1319,16:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:1373,23:Definition 'tp' not used.
+WARNING:newspeak.vdmsl:5000:2742,19:Definition 'inc' not used.
+WARNING:newspeak.vdmsl:5008:2770,40:inc at 2765'19 hidden by inc.
+WARNING:newspeak.vdmsl:5000:2844,26:Definition 'm' not used.
+WARNING:newspeak.vdmsl:5000:1669,39:Definition 'op' not used.
+WARNING:newspeak.vdmsl:5000:1730,26:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:2428,50:Definition 'v' not used.
+WARNING:newspeak.vdmsl:5012:2306,25:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5012:1196,3:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1374,24:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:2066,22:Definition 'ph' not used.
+WARNING:newspeak.vdmsl:5000:1727,24:Definition 'n' not used.
+WARNING:newspeak.vdmsl:5000:2833,50:Definition 'i' not used.
+WARNING:newspeak.vdmsl:5000:2614,39:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1729,25:Definition 'i' not used.
+WARNING:newspeak.vdmsl:5008:819,35:range at 809'12 hidden by range.
+WARNING:newspeak.vdmsl:5000:2743,19:Definition 'ovs' not used.
+WARNING:newspeak.vdmsl:5012:2435,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5008:1739,22:l at 1736'27 hidden by l.
+WARNING:newspeak.vdmsl:5000:2415,23:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1730,24:Definition 'n' not used.
+WARNING:newspeak.vdmsl:5008:816,38:range at 809'12 hidden by range.
+WARNING:newspeak.vdmsl:5000:2598,37:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:1911,21:Definition 'range' not used.
+WARNING:newspeak.vdmsl:5000:1915,19:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:2479,18:Definition 's' not used.
+WARNING:newspeak.vdmsl:5000:2066,27:Definition 'expr' not used.
+WARNING:newspeak.vdmsl:5000:1911,25:Definition 'tpe' not used.
+WARNING:newspeak.vdmsl:5000:2063,26:Definition 'expr' not used.
+WARNING:newspeak.vdmsl:5000:2178,24:Definition 'r' not used.
+WARNING:newspeak.vdmsl:5000:2422,55:Definition 't' not used.
+WARNING:newspeak.vdmsl:5008:835,18:abserr at 920'1 hidden by abserr.
+WARNING:newspeak.vdmsl:5000:2477,17:Definition 'r' not used.
+WARNING:newspeak.vdmsl:5000:1693,22:Definition 't' not used.
+WARNING:newspeak.vdmsl:5008:2476,14:t at 2474'42 hidden by t.
+WARNING:newspeak.vdmsl:5000:1730,28:Definition 'i' not used.
+WARNING:newspeak.vdmsl:5012:558,4:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5012:973,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2030,24:Definition 'p' not used.
+WARNING:newspeak.vdmsl:5000:1727,27:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:1912,21:Definition 'tps' not used.
+WARNING:newspeak.vdmsl:5008:836,18:relerr at 925'1 hidden by relerr.
+WARNING:newspeak.vdmsl:5008:2029,23:l at 2026'38 hidden by l.
+WARNING:newspeak.vdmsl:5008:770,38:range at 766'12 hidden by range.
+WARNING:newspeak.vdmsl:5008:2577,43:skel at 2575'29 hidden by skel.
+WARNING:newspeak.vdmsl:5000:1370,19:Definition 'a' not used.
+WARNING:newspeak.vdmsl:5012:1274,17:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1346,19:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2476,14:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1095,27:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5008:788,38:range at 784'7 hidden by range.
+WARNING:newspeak.vdmsl:5008:2012,24:fl at 1999'37 hidden by fl.
+WARNING:newspeak.vdmsl:5000:2845,23:Definition 'd' not used.
+WARNING:newspeak.vdmsl:5008:1959,42:abserr at 920'1 hidden by abserr.
+WARNING:newspeak.vdmsl:5012:1862,14:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5008:850,18:relerr at 925'1 hidden by relerr.
+WARNING:newspeak.vdmsl:5008:2006,23:fl at 1999'37 hidden by fl.
+WARNING:newspeak.vdmsl:5012:2051,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1093,25:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:2743,27:Definition 'actions' not used.
+WARNING:newspeak.vdmsl:5000:1728,25:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:2176,22:Definition 'r' not used.
+WARNING:newspeak.vdmsl:5000:1322,19:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2702,57:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:2067,18:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:2417,45:Definition 'v' not used.
+WARNING:newspeak.vdmsl:5000:1585,17:Definition 'opr' not used.
+WARNING:newspeak.vdmsl:5000:2809,35:Definition 't' not used.
+WARNING:newspeak.vdmsl:5008:2008,32:fl at 1999'37 hidden by fl.
+WARNING:newspeak.vdmsl:5000:2597,34:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:1913,28:Definition 'tpe' not used.
+WARNING:newspeak.vdmsl:5008:2214,46:relerr at 925'1 hidden by relerr.
+WARNING:newspeak.vdmsl:5000:1729,23:Definition 'n' not used.
+WARNING:newspeak.vdmsl:5000:1381,30:Definition 'r' not used.
+WARNING:newspeak.vdmsl:5000:1728,22:Definition 'n' not used.
+WARNING:newspeak.vdmsl:5000:2508,26:Definition 'rs' not used.
+WARNING:newspeak.vdmsl:5000:1913,24:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5012:1005,12:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2699,39:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:2578,47:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1328,14:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:1263,22:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5000:2179,14:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1692,21:Definition 'c' not used.
+WARNING:newspeak.vdmsl:5000:2568,30:Definition 'tp' not used.
+WARNING:newspeak.vdmsl:5000:2597,32:Definition 's' not used.
+WARNING:newspeak.vdmsl:5000:2064,17:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5008:2521,34:relerr at 925'1 hidden by relerr.
+WARNING:newspeak.vdmsl:5012:2646,13:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2502,35:Definition 'range' not used.
+WARNING:newspeak.vdmsl:5000:2481,19:Definition 's' not used.
+WARNING:newspeak.vdmsl:5008:750,38:range at 746'12 hidden by range.
+WARNING:newspeak.vdmsl:5008:1155,15:lub at 1099'1 hidden by lub.
+WARNING:newspeak.vdmsl:5000:2832,45:Definition 'i' not used.
+WARNING:newspeak.vdmsl:5008:2214,39:abserr at 920'1 hidden by abserr.
+WARNING:newspeak.vdmsl:5000:2734,51:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1340,15:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5008:1959,49:relerr at 925'1 hidden by relerr.
+WARNING:newspeak.vdmsl:5000:1372,23:Definition 'i' not used.
+WARNING:newspeak.vdmsl:5000:1380,23:Definition 'mo' not used.
+WARNING:newspeak.vdmsl:5012:1025,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1914,19:Definition 'tps' not used.
+WARNING:newspeak.vdmsl:5008:752,38:range at 746'12 hidden by range.
+WARNING:newspeak.vdmsl:5012:1251,13:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5008:2011,28:fl at 1999'37 hidden by fl.
+WARNING:newspeak.vdmsl:5000:2063,21:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:2467,19:Definition 's' not used.
+WARNING:newspeak.vdmsl:5000:1372,21:Definition 'd' not used.
+WARNING:newspeak.vdmsl:5000:2062,21:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5000:2477,20:Definition 'er' not used.
+WARNING:newspeak.vdmsl:5012:1014,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5008:772,38:range at 766'12 hidden by range.
+WARNING:newspeak.vdmsl:5000:2468,26:Definition 'tp' not used.
+WARNING:newspeak.vdmsl:5012:550,4:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1091,21:Definition 'f' not used.
+WARNING:newspeak.vdmsl:5000:2062,24:Definition 'tp' not used.
+WARNING:newspeak.vdmsl:5012:1312,7:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2843,24:Definition 'e' not used.
+WARNING:newspeak.vdmsl:5000:2468,29:Definition 'fl' not used.
+WARNING:newspeak.vdmsl:5000:2176,20:Definition 'range' not used.
+WARNING:newspeak.vdmsl:5000:1910,23:Definition 'p' not used.
+WARNING:newspeak.vdmsl:5000:2497,30:Definition 'range' not used.
+WARNING:newspeak.vdmsl:5000:2844,24:Definition 'd' not used.
+WARNING:newspeak.vdmsl:5012:1170,7:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:2734,47:Definition 'id' not used.
+WARNING:newspeak.vdmsl:5012:996,11:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1403,27:Definition 'o' not used.
+WARNING:newspeak.vdmsl:5000:1325,18:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5008:2007,28:fl at 1999'37 hidden by fl.
+WARNING:newspeak.vdmsl:5000:2598,39:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:1381,28:Definition 'bo' not used.
+WARNING:newspeak.vdmsl:5000:2480,17:Definition 's' not used.
+WARNING:newspeak.vdmsl:5000:2462,22:Definition 't' not used.
+WARNING:newspeak.vdmsl:5000:2844,28:Definition 'e' not used.
+WARNING:newspeak.vdmsl:5012:1755,16:Recursive function has no measure.
+WARNING:newspeak.vdmsl:5000:1337,16:Definition 'l' not used.
+WARNING:newspeak.vdmsl:5008:502,33:tp at 496'12 hidden by tp.
+WARNING:newspeak.vdmsl:5000:1372,25:Definition 'o' not used.
+WARNING:newspeak.vdmsl:5000:2845,25:Definition 'e' not used.
+WARNING:newspeak.vdmsl:5000:1977,11:Definition 'e' not used.
+WARNING:newspeak.vdmsl:5000:1693,20:Definition 'exp' not used.
+WARNING:newspeak.vdmsl:5000:2742,27:Definition 'actions' not used.
+WARNING:newspeak.vdmsl:5000:2478,19:Definition 's' not used.
+WARNING:newspeak.vdmsl:5000:2744,21:Definition 'time' not used.

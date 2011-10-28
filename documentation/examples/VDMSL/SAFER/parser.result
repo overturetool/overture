@@ -1,0 +1,2 @@
+ERROR:5015:2,9:LaTeX source should start with %comment, \document, \section or \subsection
+ERROR:5015:1,9:LaTeX source should start with %comment, \document, \section or \subsection

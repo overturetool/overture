@@ -199,7 +199,7 @@ made.
   
   LoopParInc: AST`Variable * AST`Value * AST`Stmt * DynEnv -> nat
   LoopParInc(mk_AST`Variable(id), val, -, denv) ==
-    val.val - denv(id).val;
+    val - denv(id).val;
 \end{vdm_al}
 The evaluation of binary expressions is straightforward. An 
 exception is the

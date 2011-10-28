@@ -54,7 +54,6 @@ end
 operations
   Accelerate() 
   ext wr trainmoving
-      rd doorsopen
   pre not doorsopen
   post trainmoving;
 
@@ -64,7 +63,6 @@ operations
 
   Open()
   ext wr doorsopen
-      rd trainmoving
   pre not trainmoving
   post doorsopen;
 

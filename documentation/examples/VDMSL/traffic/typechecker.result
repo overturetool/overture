@@ -1,0 +1,10 @@
+WARNING:traffic.vdmsl:5008:79,37:conflicts at 24'3 hidden by conflicts.
+WARNING:traffic.vdmsl:5008:73,28:p1 at 10'3 hidden by p1.
+WARNING:traffic.vdmsl:5008:73,31:p2 at 12'3 hidden by p2.
+WARNING:traffic.vdmsl:5000:41,7:Definition 'Time' not used.
+WARNING:traffic.vdmsl:5008:86,39:conflicts at 24'3 hidden by conflicts.
+WARNING:traffic.vdmsl:5008:86,29:lights at 18'3 hidden by lights.
+WARNING:traffic.vdmsl:5008:69,39:conflicts at 24'3 hidden by conflicts.
+WARNING:traffic.vdmsl:5008:91,18:lights at 18'3 hidden by lights.
+WARNING:traffic.vdmsl:5008:69,29:lights at 18'3 hidden by lights.
+WARNING:traffic.vdmsl:5008:79,27:lights at 18'3 hidden by lights.

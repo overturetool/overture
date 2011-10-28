@@ -1,0 +1,2 @@
+WARNING:planner.vdmsl:5012:69,7:Recursive function has no measure.
+WARNING:planner.vdmsl:5008:60,35:A at 58'12 hidden by A.

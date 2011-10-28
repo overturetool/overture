@@ -1,0 +1,8 @@
+WARNING:library.vdmsl:5012:204,9:Recursive function has no measure.
+WARNING:library.vdmsl:5012:224,13:Recursive function has no measure.
+WARNING:library.vdmsl:5012:214,12:Recursive function has no measure.
+WARNING:library.vdmsl:5008:350,38:x at 349'16 hidden by x.
+WARNING:library.vdmsl:5012:159,12:Recursive function has no measure.
+WARNING:library.vdmsl:5008:185,19:field at 97'1 hidden by field.
+WARNING:library.vdmsl:5012:181,13:Recursive function has no measure.
+WARNING:library.vdmsl:5012:172,13:Recursive function has no measure.
