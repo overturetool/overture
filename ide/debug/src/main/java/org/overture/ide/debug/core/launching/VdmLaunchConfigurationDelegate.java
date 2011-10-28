@@ -37,7 +37,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
@@ -148,11 +147,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			debugSessionId = 1;
 			// debugComm.removeSession(debugSessionId.toString());
 		}
-
-		// Storing the debug session id
-		ILaunchConfigurationWorkingCopy lcwc = configuration.getWorkingCopy();
-		lcwc.setAttribute(IDebugConstants.VDM_DEBUG_SESSION_ID, debugSessionId);
-		lcwc.doSave();
 
 		commandList = new ArrayList<String>();
 
@@ -316,7 +310,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 	private synchronized int getSessionId()
 	{
-
 		return (sessionId++);
 	}
 

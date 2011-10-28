@@ -54,7 +54,7 @@ public interface IDebugConstants
 	
 	static final String VDM_LAUNCH_CONFIG_OVERRIDE_PORT = "vdm_launch_config_override_port";
 	
-	final static String VDM_DEBUG_SESSION_ID = "vdm_debug_session_id";
+//	final static String VDM_DEBUG_SESSION_ID = "vdm_debug_session_id";
 
 	public static final String ID_VDM_DEBUG_MODEL = "org.overture.ide.debug.vdm";
 	public static final String ATTR_VDM_PROGRAM = ID_VDM_DEBUG_MODEL
