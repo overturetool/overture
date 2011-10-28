@@ -9,6 +9,8 @@ with the toolbox, is presented.
 \begin{vdm_al}
 module SOCCER_IMPL
 
+exports all
+
 definitions
 \end{vdm_al}
 
@@ -352,6 +354,8 @@ This appendix provides an explicit specification to the Referee's Book specifica
 
 \begin{vdm_al}
 module SOCCER_EXPL
+
+exports all
 
 definitions
 
