@@ -18,7 +18,7 @@ import org.overturetool.test.util.MessageReaderWritter;
 
 public class ExamplesTestCase extends BaseTestCase
 {
-	public static boolean recordTestResults = true;
+	public static boolean recordTestResults = false;
 
 	public ExamplesTestCase()
 	{

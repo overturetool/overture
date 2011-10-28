@@ -30,6 +30,7 @@ import org.overturetool.test.framework.examples.VdmReadme;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.syntax.ModuleReader;
 
@@ -74,6 +75,7 @@ public class ParserSlTestCase extends ExamplesTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		LexLocation.resetLocations();
 		Settings.dialect = Dialect.VDM_SL;
 		VdmReadme settings = getReadme();
 		if (settings != null)

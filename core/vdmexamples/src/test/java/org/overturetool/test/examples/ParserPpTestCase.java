@@ -23,6 +23,7 @@ import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.syntax.ClassReader;
 
 public class ParserPpTestCase extends ExamplesTestCase
@@ -92,6 +93,7 @@ public class ParserPpTestCase extends ExamplesTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		LexLocation.resetLocations();
 		Settings.dialect = Dialect.VDM_PP;
 		VdmReadme settings = getReadme();
 		if (settings != null)
