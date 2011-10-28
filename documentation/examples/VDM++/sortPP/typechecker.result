@@ -1,0 +1,3 @@
+WARNING:sortmachine.vdmpp:5008:45,23:srt at 9'3 hidden by srt.
+WARNING:mergesort.vdmpp:5008:49,15:i at 48'14 hidden by i.
+WARNING:mergesort.vdmpp:5000:19,9:Definition 'e' not used.

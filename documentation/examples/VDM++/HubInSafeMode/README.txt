@@ -21,6 +21,6 @@ the Report.pdf file included in the zip file with the source files.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=new WindTurbine().Run()
+#ENTRY_POINT=new World().Run()
 #EXPECTED_RESULT=NO_ERROR_INTERPRETER
 #******************************************************

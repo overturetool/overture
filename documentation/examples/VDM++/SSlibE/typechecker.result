@@ -1,0 +1,126 @@
+WARNING:Sequence.vdmpp:5012:92,24:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:160,23:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:254,24:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:234,24:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:196,19:Recursive function has no measure.
+WARNING:Function.vdmpp:5012:8,21:Recursive function has no measure.
+WARNING:Function.vdmpp:5012:18,18:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:51,21:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:426,20:Recursive function has no measure.
+WARNING:Set.vdmpp:5012:35,14:Recursive function has no measure.
+WARNING:StringT.vdmpp:5000:279,19:Definition 'err' not used.
+WARNING:Sequence.vdmpp:5012:76,19:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:256,16:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:197,27:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:407,27:Recursive function has no measure.
+WARNING:Hashtable.vdmpp:5012:170,24:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:268,19:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:153,28:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:308,20:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:367,23:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:171,24:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:221,20:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:217,23:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:318,20:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:146,27:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:244,26:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:185,24:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:237,23:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:329,23:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:207,28:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:445,19:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:100,19:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:185,24:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:41,18:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:130,24:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:174,23:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:119,23:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:163,23:Recursive function has no measure.
+WARNING:FHashtable.vdmpp:5012:34,24:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:148,20:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:229,20:Recursive function has no measure.
+WARNING:Function.vdmpp:5012:13,21:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:127,23:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:339,26:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:309,19:Recursive function has no measure.
+WARNING:FSequence.vdmpp:5012:62,18:Recursive function has no measure.
+WARNING:Sequence.vdmpp:5012:107,20:Recursive function has no measure.
+ERROR:Time.vdmpp:3134:90,19:Class has no constructor with these parameter types. Called' Time(Calendar, int, int, int, int, int, int, int)
+ERROR:Term.vdmpp:3302:18,58:State variable 'endTime' cannot be accessed from this context.
+ERROR:TimeT.vdmpp:3134:184,88:Class has no constructor with these parameter types. Called' Time(SBCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:121,16:Name 'Real`EQ(real)' is not in scope.
+ERROR:RealT.vdmpp:3182:160,31:Name 'Real`integrate((real +> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:101,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:106,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:100,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:103,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat1)' is not in scope.
+ERROR:RealT.vdmpp:3133:50,16:Class name Real not in scope.
+ERROR:TermT.vdmpp:3134:24,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:CommonDefinition.vdmpp:3133:20,18:Class name Real not in scope.
+ERROR:RealT.vdmpp:3182:20,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:100,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat1)' is not in scope.
+ERROR:TimeT.vdmpp:3134:47,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:SBCalendarT.vdmpp:3134:32,30:Class has no constructor with these parameter types. Called' Time(SBCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:99,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat1)' is not in scope.
+ERROR:TimeT.vdmpp:3134:20,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3133:35,16:Class name Real not in scope.
+ERROR:RealT.vdmpp:3182:159,31:Name 'Real`integrate((real +> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:158,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:105,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat)' is not in scope.
+ERROR:RealT.vdmpp:3182:120,16:Name 'Real`EQ(real)' is not in scope.
+ERROR:TimeT.vdmpp:3134:151,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:TermT.vdmpp:3134:17,23:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:101,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat1)' is not in scope.
+ERROR:RealT.vdmpp:3182:106,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat)' is not in scope.
+ERROR:RealT.vdmpp:3182:102,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:105,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TimeT.vdmpp:3134:122,16:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:RealT.vdmpp:3182:122,16:Name 'Real`EQ(real)' is not in scope.
+ERROR:TermT.vdmpp:3134:21,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:158,31:Name 'Real`integrate((real +> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:139,31:Name 'Real`integrate((real -> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:161,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TimeT.vdmpp:3134:19,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:TermT.vdmpp:3134:25,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:Term.vdmpp:3302:14,46:State variable 'endTime' cannot be accessed from this context.
+ERROR:Term.vdmpp:3302:13,23:State variable 'startTime' cannot be accessed from this context.
+ERROR:TimeT.vdmpp:3134:46,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:TermT.vdmpp:3134:26,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:Term.vdmpp:3302:14,21:State variable 'endTime' cannot be accessed from this context.
+ERROR:TermT.vdmpp:3134:23,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:37,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:104,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TermT.vdmpp:3134:20,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:Term.vdmpp:3302:18,40:State variable 'startTime' cannot be accessed from this context.
+ERROR:TermT.vdmpp:3134:22,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:SBCalendarT.vdmpp:3134:22,24:Class has no constructor with these parameter types. Called' Time(SBCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:139,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:104,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat1)' is not in scope.
+ERROR:RealT.vdmpp:3182:99,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3182:162,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:Time.vdmpp:3134:268,28:Class has no constructor with these parameter types. Called' Time(Calendar, int, int, int)
+ERROR:TermT.vdmpp:3134:19,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:138,31:Name 'Real`integrate((real -> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:138,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TimeT.vdmpp:3134:153,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:Term.vdmpp:3302:18,77:State variable 'endTime' cannot be accessed from this context.
+ERROR:RealT.vdmpp:3182:140,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TimeT.vdmpp:3134:44,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:Term.vdmpp:3302:18,19:State variable 'startTime' cannot be accessed from this context.
+ERROR:RealT.vdmpp:3182:159,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:RealT.vdmpp:3133:74,16:Class name Real not in scope.
+ERROR:TimeT.vdmpp:3134:76,16:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:TimeT.vdmpp:3134:45,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1)
+ERROR:TimeT.vdmpp:3134:152,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:Term.vdmpp:3302:13,50:State variable 'startTime' cannot be accessed from this context.
+ERROR:RealT.vdmpp:3182:161,31:Name 'Real`integrate((real +> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:103,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TimeT.vdmpp:3134:150,17:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat)
+ERROR:TermT.vdmpp:3134:16,25:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:160,16:Name 'Real`EQ(?)' is not in scope.
+ERROR:TermT.vdmpp:3134:18,24:Class has no constructor with these parameter types. Called' Time(JapaneseCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)
+ERROR:RealT.vdmpp:3182:140,31:Name 'Real`integrate((real -> real))' is not in scope.
+ERROR:RealT.vdmpp:3182:162,31:Name 'Real`integrate((real +> real))' is not in scope.
+ERROR:RealT.vdmpp:3133:18,16:Class name Real not in scope.
+ERROR:RealT.vdmpp:3182:102,51:Name 'Real`roundAterDecimalPointByNdigit(real, nat1)' is not in scope.
+ERROR:TimeT.vdmpp:3134:183,29:Class has no constructor with these parameter types. Called' Time(SBCalendar, nat1, nat1, nat1, nat1, nat1, nat1, nat1)

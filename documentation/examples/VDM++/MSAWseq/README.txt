@@ -7,7 +7,7 @@ of the Minimum Safety Altitude Warning System (MSAW) example.
 #------------------------------------------------------
 #AUTHOR= Augusto Ribeiro
 #LIB= IO; MATH
-#LANGUAGE_VERSION=vdm10
+#LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
 #PRE_CHECKS=true

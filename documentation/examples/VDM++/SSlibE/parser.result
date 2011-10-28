@@ -1,0 +1,22 @@
+ERROR:1009:25,36:Unexpected character '¡' (code 0xa1)
+ERROR:1009:25,40:Unexpected character '°' (code 0xb0)
+ERROR:2060:37,11:Expecting new operation identifier
+ERROR:2021:36,13:Expecting ''' or '(' after name in operation definition
+ERROR:1009:35,57:Unexpected character '¥' (code 0xa5)
+ERROR:2060:25,41:Expecting new function identifier
+ERROR:2021:44,13:Expecting ''' or '(' after name in operation definition
+ERROR:2060:35,58:Expecting new operation identifier
+ERROR:2060:31,8:Expecting 'end <name>' after class members
+ERROR:1009:29,64:Unexpected character '°' (code 0xb0)
+ERROR:1009:115,84:Unexpected character '®' (code 0xae)
+ERROR:1009:41,27:Unexpected character '¥' (code 0xa5)
+ERROR:1009:29,60:Unexpected character '¡' (code 0xa1)
+ERROR:2021:115,101:Expecting ''' or '(' after name in operation definition
+ERROR:1009:43,57:Unexpected character '¥' (code 0xa5)
+ERROR:1009:28,23:Unexpected character '¡' (code 0xa1)
+ERROR:1009:107,15:Unexpected character '®' (code 0xae)
+ERROR:2060:43,58:Expecting new operation identifier
+ERROR:1009:37,36:Unexpected character '¡' (code 0xa1)
+ERROR:2060:45,11:Expecting new operation identifier
+ERROR:1009:33,27:Unexpected character '¥' (code 0xa5)
+ERROR:1009:28,27:Unexpected character '°' (code 0xb0)

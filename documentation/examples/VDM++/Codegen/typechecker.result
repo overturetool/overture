@@ -1,0 +1,5 @@
+WARNING:nativetest.vdmpp:5000:28,14:Definition 'd' not used.
+WARNING:nativetest.vdmpp:5000:27,14:Definition 'c' not used.
+WARNING:Compiler.vdmpp:5000:155,12:Definition 'exp' not used.
+WARNING:Compiler.vdmpp:5000:159,18:Definition 'type' not used.
+WARNING:Compiler.vdmpp:5012:173,17:Recursive function has no measure.

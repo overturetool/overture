@@ -1,0 +1,8 @@
+WARNING:Sensor.vdmpp:5001:8,16:Instance variable 'Env' is not initialized.
+WARNING:Sensor.vdmpp:5001:7,16:Instance variable 'Value' is not initialized.
+WARNING:Actuator.vdmpp:5001:7,15:Instance variable 'Corr' is not initialized.
+WARNING:Actuator.vdmpp:5001:6,15:Instance variable 'Type' is not initialized.
+WARNING:Actuator.vdmpp:5001:8,16:Instance variable 'Env' is not initialized.
+WARNING:Sensor.vdmpp:5001:6,16:Instance variable 'Type' is not initialized.
+WARNING:Actuator.vdmpp:5001:5,13:Instance variable 'ID' is not initialized.
+WARNING:Sensor.vdmpp:5001:5,16:Instance variable 'ID' is not initialized.

@@ -1,0 +1,3 @@
+ERROR:2153:17,14:Expecting '&' after bind list in forall
+ERROR:2084:6,9:Missing ';' after instance variable definition
+ERROR:2078:9,36:Missing ';' after type definition

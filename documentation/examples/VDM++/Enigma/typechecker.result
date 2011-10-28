@@ -1,0 +1,5 @@
+WARNING:Configuration.vdmpp:5001:5,19:Instance variable 'config' is not initialized.
+WARNING:PlugboardTest.vdmpp:5001:15,7:Instance variable 'alph' is not initialized.
+WARNING:Component.vdmpp:5001:5,17:Instance variable 'alph' is not initialized.
+WARNING:RotorTest.vdmpp:5001:13,7:Instance variable 'alph' is not initialized.
+WARNING:ReflectorTest.vdmpp:5001:10,7:Instance variable 'alph' is not initialized.

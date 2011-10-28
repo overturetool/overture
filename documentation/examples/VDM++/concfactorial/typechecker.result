@@ -1,0 +1,4 @@
+WARNING:concfactorial.vdmpp:5001:24,6:Instance variable 'k' is not initialized.
+WARNING:concfactorial.vdmpp:5001:25,11:Instance variable 'result' is not initialized.
+WARNING:concfactorial.vdmpp:5001:22,6:Instance variable 'i' is not initialized.
+WARNING:concfactorial.vdmpp:5001:23,6:Instance variable 'j' is not initialized.

@@ -1,0 +1,14 @@
+WARNING:pop3clienthandler.vdmpp:5012:155,8:Recursive function has no measure.
+WARNING:pop3test.vdmpp:5008:138,18:listen1 at 94'4 hidden by listen1.
+WARNING:pop3test.vdmpp:5008:110,13:server at 87'4 hidden by server.
+WARNING:pop3test.vdmpp:5008:128,13:server at 87'4 hidden by server.
+WARNING:pop3test.vdmpp:5008:136,16:send1 at 92'4 hidden by send1.
+WARNING:pop3test.vdmpp:5008:100,19:server at 87'4 hidden by server.
+WARNING:pop3test.vdmpp:5008:131,14:mc2 at 90'4 hidden by mc2.
+WARNING:pop3test.vdmpp:5008:137,16:send2 at 93'4 hidden by send2.
+WARNING:pop3test.vdmpp:5008:127,9:ch at 88'4 hidden by ch.
+WARNING:pop3test.vdmpp:5008:130,14:mc1 at 89'4 hidden by mc1.
+WARNING:pop3clienthandler.vdmpp:5001:38,7:Instance variable 'user' is not initialized.
+WARNING:pop3test.vdmpp:5008:109,9:ch at 88'4 hidden by ch.
+WARNING:pop3test.vdmpp:5008:139,18:listen2 at 95'4 hidden by listen2.
+WARNING:pop3clienthandler.vdmpp:5001:43,5:Instance variable 'id' is not initialized.

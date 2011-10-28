@@ -1,0 +1,13 @@
+WARNING:HandControlUnit.vdmpp:5001:14,9:Instance variable 'roll_z' is not initialized.
+WARNING:SixDOfCommand.vdmpp:5001:7,6:Instance variable 'hcu' is not initialized.
+WARNING:ThrusterControl.vdmpp:5001:102,9:Instance variable 'intcmd' is not initialized.
+WARNING:AAH.vdmpp:5001:15,6:Instance variable 'hcu' is not initialized.
+WARNING:HandControlUnit.vdmpp:5001:16,13:Instance variable 'modeswitch' is not initialized.
+WARNING:HandControlUnit.vdmpp:5001:13,8:Instance variable 'yaw_y' is not initialized.
+WARNING:ThrusterControl.vdmpp:5001:101,6:Instance variable 'vda' is not initialized.
+WARNING:HandControlUnit.vdmpp:5001:15,12:Instance variable 'aahbutton' is not initialized.
+WARNING:IntegratedCommand.vdmpp:5001:7,6:Instance variable 'aah' is not initialized.
+WARNING:HandControlUnit.vdmpp:5001:12,8:Instance variable 'pitch' is not initialized.
+WARNING:AAH.vdmpp:5001:19,10:Instance variable 'gripcmd' is not initialized.
+WARNING:HandControlUnit.vdmpp:5001:11,4:Instance variable 'x' is not initialized.
+WARNING:AAH.vdmpp:5001:16,8:Instance variable 'clock' is not initialized.

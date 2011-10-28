@@ -1,0 +1,16 @@
+WARNING:plant.vdmpp:3264:28,29:Empty set used in bind.
+ERROR:test1.vdmpp:3134:8,21:Class has no constructor with these parameter types. Called' Expert(set of (<Elec>))
+ERROR:plant.vdmpp:3182:7,29:Name 'Plant`schedule' is not in scope.
+ERROR:plant.vdmpp:3182:33,0:Name 'Plant`schedule' is not in scope.
+ERROR:plant.vdmpp:3182:42,26:Name 'Plant`schedule' is not in scope.
+ERROR:plant.vdmpp:3182:41,23:Name 'schedule(Period)' is not in scope.
+ERROR:test1.vdmpp:3134:10,21:Class has no constructor with these parameter types. Called' Expert(set of ((<Chem> | <Elec>)))
+ERROR:plant.vdmpp:3247:53,11:Unknown variable 'schedule' in assignment.
+ERROR:plant.vdmpp:3182:55,13:Name 'PlantInv(set of (Alarm), map (Period) to (set of (Expert)))' is not in scope.
+ERROR:test1.vdmpp:3134:6,21:Class has no constructor with these parameter types. Called' Alarm(<Chem>, seq1 of (char))
+ERROR:plant.vdmpp:3182:28,29:Name 'schedule(Period)' is not in scope.
+ERROR:plant.vdmpp:3182:46,36:Name 'Plant`schedule' is not in scope.
+ERROR:alarm.vdmpp:3027:14,13:Operation returns unexpected type. Actual' nat1 Expected' Alarm
+ERROR:plant.vdmpp:3182:36,30:Name 'schedule(Period)' is not in scope.
+ERROR:plant.vdmpp:3182:7,13:Name 'PlantInv(set of (Alarm), ?)' is not in scope.
+ERROR:plant.vdmpp:3182:47,33:Name 'schedule(?)' is not in scope.

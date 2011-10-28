@@ -1,0 +1,5 @@
+WARNING:GLOBAL.vdmpp:5000:32,34:Definition 'p5' not used.
+WARNING:GLOBAL.vdmpp:5000:32,31:Definition 'p4' not used.
+WARNING:Stock.vdmpp:5012:84,18:Recursive function has no measure.
+WARNING:GLOBAL.vdmpp:5000:32,28:Definition 'p3' not used.
+WARNING:GLOBAL.vdmpp:5000:32,22:Definition 'p1' not used.
