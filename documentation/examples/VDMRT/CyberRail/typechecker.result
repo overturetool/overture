@@ -1,0 +1,18 @@
+WARNING:Customer.vdmrt:5001:8,18:Instance variable 'cyberrail' is not initialized
+WARNING:RailwayGrid.vdmrt:5008:114,16:grid at 9'9 hidden by grid
+WARNING:TokenDevice.vdmrt:5001:11,20:Instance variable 'q_Env_out' is not initialized
+WARNING:TransportPlan.vdmrt:5001:10,19:Instance variable 'totalFee' is not initialized
+WARNING:ActivePlanManager.vdmrt:5000:88,27:Definition 'plan' not used
+WARNING:RailwayGrid.vdmrt:5008:61,13:grid at 9'9 hidden by grid
+WARNING:ActivePlanManager.vdmrt:5001:20,17:Instance variable 'q_CR_out' is not initialized
+WARNING:ActivePlanManager.vdmrt:5001:22,21:Instance variable 'tokenDevices' is not initialized
+WARNING:CyberRail.vdmrt:5001:14,18:Instance variable 'q_APM_out' is not initialized
+WARNING:CyberRail.vdmrt:5000:49,45:Definition 'tokenDevice' not used
+WARNING:Company.vdmrt:5000:31,36:Definition 'tid' not used
+WARNING:Company.vdmrt:5000:31,32:Definition 'nav' not used
+WARNING:Company.vdmrt:5001:9,20:Instance variable 'cyberrail' is not initialized
+WARNING:Customer.vdmrt:5000:48,28:Definition 'curtime' not used
+WARNING:CyberRail.vdmrt:5000:206,26:Definition 'id_Route' not used
+WARNING:TransportPlan.vdmrt:5001:11,24:Instance variable 'totalDuration' is not initialized
+WARNING:TokenDevice.vdmrt:5001:12,20:Instance variable 'q_APM_out' is not initialized
+WARNING:CyberRail.vdmrt:5001:13,16:Instance variable 'railway' is not initialized

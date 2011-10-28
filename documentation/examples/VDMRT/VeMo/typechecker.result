@@ -1,0 +1,10 @@
+WARNING:TestController.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:Environment.vdmrt:5001:19,17:Instance variable 'vemoCtrl' is not initialized
+WARNING:TestVeMoController.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:TestTraffic.vdmrt:5001:19,12:Instance variable 'pos' is not initialized
+WARNING:TestTrafficLight.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:TestVehicle.vdmrt:5001:20,12:Instance variable 'pos' is not initialized
+WARNING:TestVeMoComplete.vdmrt:5000:27,14:Definition 'w' not used
+WARNING:TestTraffic.vdmrt:5008:89,10:traf at 83'6 hidden by traf
+WARNING:TestVehicle.vdmrt:5001:19,12:Instance variable 'dir' is not initialized
+WARNING:TestTrafficData.vdmrt:5001:18,12:Instance variable 'pos' is not initialized

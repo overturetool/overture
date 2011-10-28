@@ -1,0 +1,10 @@
+WARNING:TestTrafficLight.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:TestVDMComplete.vdmrt:5000:27,14:Definition 'w' not used
+WARNING:Environment.vdmrt:5001:19,16:Instance variable 'vdmCtrl' is not initialized
+WARNING:TestTrafficData.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:TestVehicle.vdmrt:5001:19,12:Instance variable 'dir' is not initialized
+WARNING:TestController.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:TestTraffic.vdmrt:5008:89,10:traf at 83'6 hidden by traf
+WARNING:TestVDMController.vdmrt:5001:18,12:Instance variable 'pos' is not initialized
+WARNING:TestVehicle.vdmrt:5001:20,12:Instance variable 'pos' is not initialized
+WARNING:TestTraffic.vdmrt:5001:19,12:Instance variable 'pos' is not initialized

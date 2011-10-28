@@ -1,0 +1,9 @@
+WARNING:Storage.vdmrt:5001:21,9:Instance variable 'counter' is not initialized
+WARNING:Storage.vdmrt:5008:72,21:dest at 17'9 hidden by dest
+WARNING:SteeringController.vdmrt:5001:13,22:Instance variable 'workingGrid' is not initialized
+WARNING:SteeringController.vdmrt:5001:12,14:Instance variable 'dest' is not initialized
+WARNING:Robot.vdmrt:5001:25,14:Instance variable 'name' is not initialized
+WARNING:Storage.vdmrt:5001:17,13:Instance variable 'dest' is not initialized
+WARNING:Enviroment.vdmrt:5001:6,30:Instance variable 'currentRobotPosition' is not initialized
+WARNING:Storage.vdmrt:5001:140,21:Instance variable 'completeGrid' is not initialized
+WARNING:NextMoveController.vdmrt:5001:4,4:Instance variable 'obs' is not initialized

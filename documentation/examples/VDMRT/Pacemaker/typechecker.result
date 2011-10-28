@@ -1,0 +1,2 @@
+WARNING:Environment.vdmrt:5001:46,14:Instance variable 'accelerometer' is not initialized
+WARNING:RateController.vdmrt:5001:9,10:Instance variable 'rateplan' is not initialized

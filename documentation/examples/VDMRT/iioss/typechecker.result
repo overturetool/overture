@@ -1,0 +1,2 @@
+WARNING:IIOSSTestCase2.vdmrt:5001:5,11:Instance variable 'stbCtr' is not initialized
+WARNING:IIOSSTestCase2.vdmrt:5001:4,10:Instance variable 'world' is not initialized

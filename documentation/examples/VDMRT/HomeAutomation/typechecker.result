@@ -1,0 +1,6 @@
+WARNING:Actuator.vdmrt:5001:20,17:Instance variable 'Corr' is not initialized
+WARNING:Sensor.vdmrt:5001:19,17:Instance variable 'Type' is not initialized
+WARNING:Actuator.vdmrt:5001:19,17:Instance variable 'Type' is not initialized
+WARNING:Sensor.vdmrt:5001:20,18:Instance variable 'Value' is not initialized
+WARNING:Actuator.vdmrt:5001:18,15:Instance variable 'ID' is not initialized
+WARNING:Sensor.vdmrt:5001:18,15:Instance variable 'ID' is not initialized
