@@ -135,13 +135,7 @@ public class IO implements Serializable
 
 		if (!file.isAbsolute())
 		{
-			if (Settings.usingDBGP)
-			{
-				file = new File(Settings.DGBPbaseDir, path);
-			}else
-			{
-				file = new File(new File(".").getParentFile(), file.getAbsolutePath());
-			}
+			file = new File(Settings.baseDir, path);
 		}
 		return file;
 	}
@@ -242,5 +236,11 @@ public class IO implements Serializable
 		Console.out.printf(format, values.toArray());
 		Console.out.flush();
 		return new VoidValue();
+	}
+	
+	public static Value toString(Value v)
+	{
+		String text = v.toString().replaceAll("\"", "");
+		return new SeqValue(text);
 	}
 }

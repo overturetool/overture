@@ -136,7 +136,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		Settings.usingDBGP = true;
-		Settings.DGBPbaseDir = new File(".").getParentFile();
+		Settings.baseDir = new File(".").getParentFile();
 
 		String host = null;
 		int port = -1;
@@ -299,7 +299,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			}else if (arg.equals("-baseDir")) {
 				if (i.hasNext()) {
 					try {
-						Settings.DGBPbaseDir = new File(new URI(i.next()));
+						Settings.baseDir = new File(new URI(i.next()));
 					} catch (URISyntaxException e) {
 						usage(e.getMessage() + ": " + arg);
 					} catch (IllegalArgumentException e) {
