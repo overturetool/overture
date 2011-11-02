@@ -28,7 +28,10 @@
     <module>showtrace</module>
     <module>xmljunit</module>
 <module>vdmexamples</module>
+<module>vdm2java</module>
+
   </modules>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
