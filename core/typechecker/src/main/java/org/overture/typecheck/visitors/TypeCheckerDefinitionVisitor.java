@@ -245,7 +245,7 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		PType expectedResult = AExplicitFunctionDefinitionAssistant.checkParams(node,node.getParamPatternList().listIterator(), node.getType());
-
+		node.setExpectedResult(expectedResult);
 		List<List<PDefinition>> paramDefinitionList = AExplicitFunctionDefinitionAssistant.getParamDefinitions(node,node.getType(), node.getParamPatternList(),node.getLocation());
 
 		for (List<PDefinition> pdef: paramDefinitionList)
