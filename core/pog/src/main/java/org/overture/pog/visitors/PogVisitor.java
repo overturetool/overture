@@ -765,10 +765,15 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 	}
 
 	@Override
-	// RWL 
+	// RWL see [1] pg. 179 A.5.4 Unary Expressions
 	public ProofObligationList caseSUnaryExp(SUnaryExp node,
 			POContextStack question) {
-		return super.caseSUnaryExp(node, question);
+		
+		ProofObligationList obligations = new ProofObligationList();
+		
+		
+		
+		return obligations;
 	}
 
 	@Override
