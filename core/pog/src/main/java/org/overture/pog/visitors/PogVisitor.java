@@ -5,6 +5,8 @@ package org.overture.pog.visitors;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.RootPaneContainer;
+
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.ABusClassDefinition;
@@ -218,6 +220,8 @@ import org.overture.pog.assistants.PDefinitionAssistantPOG;
 import org.overture.pog.obligations.CasesExhaustiveObligation;
 import org.overture.pog.obligations.FiniteMapObligation;
 import org.overture.pog.obligations.FuncPostConditionObligation;
+import org.overture.pog.obligations.FunctionApplyObligation;
+import org.overture.pog.obligations.MapApplyObligation;
 import org.overture.pog.obligations.MapSetOfCompatibleObligation;
 import org.overture.pog.obligations.NonEmptySeqObligation;
 import org.overture.pog.obligations.POContextStack;
@@ -228,6 +232,8 @@ import org.overture.pog.obligations.POFunctionResultContext;
 import org.overture.pog.obligations.ParameterPatternObligation;
 import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pog.obligations.RecursiveObligation;
+import org.overture.pog.obligations.SeqApplyObligation;
 import org.overture.pog.obligations.SubTypeObligation;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.util.ClonableFile;
@@ -676,18 +682,92 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 		return super.defaultPExp(node, question);
 	}
 
+	
 	@Override
-	// RWL
+	// RWL see [1] pg. 57: 6.12 Apply Expressions
 	public ProofObligationList caseAApplyExp(AApplyExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAApplyExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+		
+		PType type = node.getType();
+		if (type instanceof SMapType )
+		{
+			SMapType mapType = (SMapType)type;
+			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
+			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
+			
+			if (!TypeComparator.isSubType(aType, mapType.getFrom()))
+			{
+				obligations.add(new SubTypeObligation(node.getArgs().get(0), mapType.getFrom(), aType, question));
+			}
+		}
+		
+		if (! (type instanceof AUnknownType) && (type instanceof AFunctionType) )
+		{
+			AFunctionType funcType = (AFunctionType)type;
+			// TODO Fix this get the name of the precondition
+			String prename = "Precond";
+			if (prename == null || !prename.equals(""))
+			{
+				obligations.add(new FunctionApplyObligation(node.getRoot(), node.getArgs(), prename, question));
+			}
+			
+			int i = 0;
+			List<PType> argTypes = node.getArgtypes();
+			List<PExp> argList = node.getArgs();
+			for(PType argType : argTypes)
+			{
+				argType = question.checkType(argList.get(i), argType);
+				PType pt = funcType.getParameters().get(i);
+				
+				if (!TypeComparator.isSubType(argType, pt))
+					obligations.add(new SubTypeObligation(argList.get(i), pt, argType, question));
+				i++;
+			}
+			
+			PDefinition recursive = node.getRecursive();
+			if (recursive != null)
+			{
+				if (recursive instanceof AExplicitFunctionDefinition)
+				{
+					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition)recursive;
+					if (def.getMeasure() != null)
+					{
+						obligations.add(new RecursiveObligation(def, node, question));
+					}
+				}
+				else if (recursive instanceof AImplicitFunctionDefinition)
+				{
+					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition)recursive;
+					if (def.getMeasure() != null)
+					{
+						obligations.add(new RecursiveObligation(def,node, question));
+					}
+					
+				}
+			}
+		}
+		
+		if (type instanceof SSeqType)
+		{
+			obligations.add(new SeqApplyObligation(node.getRoot(), node.getArgs().get(0), question));
+		}
+		
+		obligations.addAll(node.getRoot().apply(this, question));
+		
+		for(PExp arg: node.getArgs())
+		{
+			obligations.addAll(arg.apply(this, question));
+		}
+		
+		return obligations;
 	}
 
 	@Override
+	// RWL 
 	public ProofObligationList caseSUnaryExp(SUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
 		return super.caseSUnaryExp(node, question);
 	}
 
