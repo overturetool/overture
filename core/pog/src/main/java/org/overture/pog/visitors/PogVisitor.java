@@ -120,7 +120,14 @@ import org.overturetool.vdmj.typechecker.NameScope;
  */
 public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
 
+	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this); 
+	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this); 
+	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(this); 
+	private PogImportVisitor pogImportVisitor = new PogImportVisitor(this);
+	private PogTypeVisitor pogTypeVisitor = new PogTypeVisitor(this);
+	private PogPatternVisitor pogPatternVisitor  = new PogPatternVisitor(this);
 	
+		
 	@Override
 	// See [1] pg. 167 for the definition
 	public ProofObligationList caseAModuleModules(AModuleModules node,
@@ -380,8 +387,8 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 
 	@Override
 	public ProofObligationList defaultPExp(PExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPExp(node, question);
+		
+		return node.apply(pogExpVisitor,question);
 	}
 
 	@Override
@@ -435,8 +442,8 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 
 	@Override
 	public ProofObligationList defaultPType(PType node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPType(node, question);
+
+		return node.apply(pogTypeVisitor,question);
 	}
 
 	@Override
@@ -498,8 +505,7 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 	@Override
 	public ProofObligationList defaultPPattern(PPattern node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPPattern(node, question);
+		return node.apply(pogPatternVisitor ,question);
 	}
 
 	@Override
@@ -592,10 +598,9 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 	}
 
 	@Override
-	public ProofObligationList defaultPImports(PImports node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPImports(node, question);
+	public ProofObligationList defaultPImports(PImports node, POContextStack question) {
+
+		return node.apply(pogImportVisitor,question);
 	}
 	
 	@Override
@@ -656,8 +661,8 @@ public class PogVisitor extends QuestionAnswerAdaptor<POContextStack, ProofOblig
 
 	@Override
 	public ProofObligationList defaultPStm(PStm node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPStm(node, question);
+	
+		return node.apply(pogStmVisitor,question);
 	}
 
 	@Override
