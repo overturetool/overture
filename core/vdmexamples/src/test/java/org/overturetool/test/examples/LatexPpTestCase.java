@@ -68,8 +68,9 @@ public class LatexPpTestCase extends TypeCheckPpTestCase
 		Result<ClassList> res = typeCheck();
 		if (res.errors.size() > 0)
 		{
-			fail("Type check errors");
-//			compareResults(res.warnings, res.errors, res.result, "interpreter.result");
+//			fail("Type check errors");
+			compareResults(res.warnings, res.errors, res.result, "latex.result");
+			return;
 		}
 
 		File output = new File(file, "output");

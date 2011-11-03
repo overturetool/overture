@@ -84,6 +84,6 @@ public class InterpreterSlTestCase extends TypeCheckSlTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_RT;
-		Settings.DGBPbaseDir = file;
+		Settings.baseDir = file;
 	}
 }

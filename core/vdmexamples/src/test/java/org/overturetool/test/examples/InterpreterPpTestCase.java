@@ -93,7 +93,18 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 		// {
 		// interpreter.initialContext.size()
 		// }
-
+		expression = expression.trim();
+		String defaultModule = null;
+		if (expression.startsWith("new"))
+		{
+			defaultModule = expression.substring(expression.indexOf(' ')).trim();
+			defaultModule = defaultModule.substring(0, defaultModule.indexOf('('));
+		} else
+		{
+			defaultModule = expression.substring(0, expression.indexOf('`')).trim();
+		}
+		System.out.println("Default is: "+ defaultModule);
+		interpreter.setDefaultName(defaultModule);
 		Value value = interpreter.execute(expression, null);
 		return new Result<String>(value == null ? null : value.toString(), new HashSet<IMessage>(), new HashSet<IMessage>());
 	}
@@ -103,7 +114,7 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_PP;
-		Settings.DGBPbaseDir = file;
+		Settings.baseDir = file;
 		Console.out = new StdoutRedirector(new OutputStreamWriter(new NullOutputStream()));
 		Console.err = new StderrRedirector(new OutputStreamWriter(new NullOutputStream()));
 	}
