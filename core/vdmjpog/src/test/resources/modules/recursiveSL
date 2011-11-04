@@ -1,0 +1,161 @@
+-- TCErrors: WARNING:5012:37,1 WARNING:5000:100,3 WARNING:5000:117,1 WARNING:5000:156,3 PROOFOBLIGATION: QVN5bmNHcmFwaCwwLChmb3JhbGwgYXN5bmNnOkdyYXBoICYKICAoZm9yYWxsIGlkIGluIHNldCAoZG9tIGFzeW5jZykgJgogICAgcHJlX1RyYW5zQ2xvcyhhc3luY2csIGlkKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: UGF0aHMsIGNoaWxkcmVuLDAsKGZvcmFsbCBnOkFTeW5jR3JhcGgsIGlkOklkICYgKGlkIGluIHNldCAoZG9tIGcpKSA9PgogIGlkIGluIHNldCBkb20gZykKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: UGF0aHMsMCwoZm9yYWxsIGc6QVN5bmNHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKGxldCBjaGlsZHJlbjpzZXQgb2YgKElkKSA9IGcoaWQpIGluCiAgICAobm90IChjaGlsZHJlbiA9IHt9KSA9PgogICAgICAoZm9yYWxsIGMgaW4gc2V0IGNoaWxkcmVuICYKICAgICAgICBwcmVfUGF0aHMoZywgYykpKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: UGF0aHMsMCwoZm9yYWxsIGc6QVN5bmNHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKGxldCBjaGlsZHJlbjpzZXQgb2YgKElkKSA9IGcoaWQpIGluCiAgICAobm90IChjaGlsZHJlbiA9IHt9KSA9PgogICAgICAoZm9yYWxsIGMgaW4gc2V0IGNoaWxkcmVuICYKICAgICAgICBtZWFzdXJlVHJhbnNDbG9zKGcsIGlkKSA+IG1lYXN1cmVUcmFuc0Nsb3MoZywgYykpKSkpCixyZWN1cnNpdmUgZnVuY3Rpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bWVhc3VyZVRyYW5zQ2xvcywwLChmb3JhbGwgZzpBU3luY0dyYXBoLCBpZDpJZCAmCiAgcHJlX1RyYW5zQ2xvcyhnLCBpZCkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: TGluZWFyUGF0aCwwLChmb3JhbGwgZzpHcmFwaCwgaWQ6SWQgJgogICgoaWQgaW4gc2V0IChkb20gZykpID0+CiAgICBwcmVfVHJhbnNDbG9zKGcsIGlkKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: TGluZWFyUGF0aCwgY2hpbGRyZW4sMCwoZm9yYWxsIGc6R3JhcGgsIGlkOklkICYgKChpZCBpbiBzZXQgKGRvbSBnKSkgYW5kIChpZCBub3QgaW4gc2V0IFRyYW5zQ2xvcyhnLCBpZCkpKSA9PgogIGlkIGluIHNldCBkb20gZykKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: TGluZWFyUGF0aCwwLChmb3JhbGwgZzpHcmFwaCwgaWQ6SWQgJiAoKGlkIGluIHNldCAoZG9tIGcpKSBhbmQgKGlkIG5vdCBpbiBzZXQgVHJhbnNDbG9zKGcsIGlkKSkpID0+CiAgKGxldCBjaGlsZHJlbjpzZXQgb2YgKElkKSA9IGcoaWQpIGluCiAgICAobm90ICgoY2FyZCBjaGlsZHJlbikgPD4gMSkgPT4KICAgICAgKGZvcmFsbCBwYXJlbnQgaW4gc2V0IChkb20gZykgJgogICAgICAgICgocGFyZW50IDw+IGlkKSA9PgogICAgICAgICAgcGFyZW50IGluIHNldCBkb20gZykpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: TGluZWFyUGF0aCwwLChmb3JhbGwgZzpHcmFwaCwgaWQ6SWQgJiAoKGlkIGluIHNldCAoZG9tIGcpKSBhbmQgKGlkIG5vdCBpbiBzZXQgVHJhbnNDbG9zKGcsIGlkKSkpID0+CiAgKGxldCBjaGlsZHJlbjpzZXQgb2YgKElkKSA9IGcoaWQpIGluCiAgICAobm90ICgoKGNhcmQgY2hpbGRyZW4pIDw+IDEpIG9yIChleGlzdHMgW3BhcmVudCBpbiBzZXQgKGRvbSBnKV0gJiAoKHBhcmVudCA8PiBpZCkgYW5kIChjaGlsZHJlbiBzdWJzZXQgZyhwYXJlbnQpKSkpKSA9PgogICAgICBleGlzdHMgY2hpbGQgaW4gc2V0IGNoaWxkcmVuKSkpCixsZXQgYmUgc3QgZXhpc3RlbmNlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: TGluZWFyUGF0aCwwLChmb3JhbGwgZzpHcmFwaCwgaWQ6SWQgJiAoKGlkIGluIHNldCAoZG9tIGcpKSBhbmQgKGlkIG5vdCBpbiBzZXQgVHJhbnNDbG9zKGcsIGlkKSkpID0+CiAgKGxldCBjaGlsZHJlbjpzZXQgb2YgKElkKSA9IGcoaWQpIGluCiAgICAobm90ICgoKGNhcmQgY2hpbGRyZW4pIDw+IDEpIG9yIChleGlzdHMgW3BhcmVudCBpbiBzZXQgKGRvbSBnKV0gJiAoKHBhcmVudCA8PiBpZCkgYW5kIChjaGlsZHJlbiBzdWJzZXQgZyhwYXJlbnQpKSkpKSA9PgogICAgICAoZm9yYWxsIGNoaWxkIGluIHNldCBjaGlsZHJlbiAmCiAgICAgICAgcHJlX0xpbmVhclBhdGgoZywgY2hpbGQpKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJhbnNDbG9zLDAsKGZvcmFsbCBnOkdyYXBoLCBpZDpJZCAmIChpZCBpbiBzZXQgKGRvbSBnKSkgPT4KICAoZm9yYWxsIGMgaW4gc2V0IGcoaWQpICYKICAgIHByZV9UcmFuc0Nsb3NBdXgoZywgYywge30pKSkKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: VHJhbnNDbG9zLDAsKGZvcmFsbCBnOkdyYXBoLCBpZDpJZCAmIChpZCBpbiBzZXQgKGRvbSBnKSkgPT4KICBpZCBpbiBzZXQgZG9tIGcpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJhbnNDbG9zQXV4LDAsKGZvcmFsbCBnOkdyYXBoLCBpZDpJZCwgcmVhY2hlZDpzZXQgb2YgKElkKSAmIChpZCBpbiBzZXQgKGRvbSBnKSkgPT4KICAobm90IChpZCBpbiBzZXQgcmVhY2hlZCkgPT4KICAgIChmb3JhbGwgYyBpbiBzZXQgZyhpZCkgJgogICAgICBwcmVfVHJhbnNDbG9zQXV4KGcsIGMsIChyZWFjaGVkIHVuaW9uIHtpZH0pKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJhbnNDbG9zQXV4LDAsKGZvcmFsbCBnOkdyYXBoLCBpZDpJZCwgcmVhY2hlZDpzZXQgb2YgKElkKSAmIChpZCBpbiBzZXQgKGRvbSBnKSkgPT4KICAobm90IChpZCBpbiBzZXQgcmVhY2hlZCkgPT4KICAgIChmb3JhbGwgYyBpbiBzZXQgZyhpZCkgJgogICAgICBtZWFzdXJlR3JhcGhSZWFjaGVkKGcsIGlkLCByZWFjaGVkKSA+IG1lYXN1cmVHcmFwaFJlYWNoZWQoZywgYywgKHJlYWNoZWQgdW5pb24ge2lkfSkpKSkpCixyZWN1cnNpdmUgZnVuY3Rpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJhbnNDbG9zQXV4LDAsKGZvcmFsbCBnOkdyYXBoLCBpZDpJZCwgcmVhY2hlZDpzZXQgb2YgKElkKSAmIChpZCBpbiBzZXQgKGRvbSBnKSkgPT4KICAobm90IChpZCBpbiBzZXQgcmVhY2hlZCkgPT4KICAgIGlkIGluIHNldCBkb20gZykpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bWVhc3VyZUdyYXBoUmVhY2hlZCwwLChmb3JhbGwgZzpHcmFwaCwgcmVhY2hlZDpJZCAmCiAgKChjYXJkIChkb20gZykpIC0gKGNhcmQgcmVhY2hlZCkpID49IDApCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QXN5Y0Rlc2NlbmRlbnRzLDAsKGZvcmFsbCBnOkFjeWNsaWNHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKGZvcmFsbCBjIGluIHNldCBnKGlkKSAmCiAgICBwcmVfQXN5Y0Rlc2NlbmRlbnRzKGcsIGMpKSkKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QXN5Y0Rlc2NlbmRlbnRzLDAsKGZvcmFsbCBnOkFjeWNsaWNHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKGZvcmFsbCBjIGluIHNldCBnKGlkKSAmCiAgICBtZWFzdXJlVHJhbnNDbG9zKGcsIGlkKSA+IG1lYXN1cmVUcmFuc0Nsb3MoZywgYykpKQoscmVjdXJzaXZlIGZ1bmN0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QXN5Y0Rlc2NlbmRlbnRzLDAsKGZvcmFsbCBnOkFjeWNsaWNHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgaWQgaW4gc2V0IGRvbSBnKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: RGVzY2VuZGVudHMsMCwoZm9yYWxsIGc6R3JhcGgsIGlkOklkLCByZWFjaGVkOnNldCBvZiAoSWQpICYgKGlkIGluIHNldCAoZG9tIGcpKSA9PgogIChub3QgKGlkIGluIHNldCByZWFjaGVkKSA9PgogICAgKGZvcmFsbCBjIGluIHNldCBnKGlkKSAmCiAgICAgIHByZV9EZXNjZW5kZW50cyhnLCBjLCAocmVhY2hlZCB1bmlvbiB7aWR9KSkpKSkKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: RGVzY2VuZGVudHMsMCwoZm9yYWxsIGc6R3JhcGgsIGlkOklkLCByZWFjaGVkOnNldCBvZiAoSWQpICYgKGlkIGluIHNldCAoZG9tIGcpKSA9PgogIChub3QgKGlkIGluIHNldCByZWFjaGVkKSA9PgogICAgKGZvcmFsbCBjIGluIHNldCBnKGlkKSAmCiAgICAgIG1lYXN1cmVHcmFwaFJlYWNoZWQoZywgaWQsIHJlYWNoZWQpID4gbWVhc3VyZUdyYXBoUmVhY2hlZChnLCBjLCAocmVhY2hlZCB1bmlvbiB7aWR9KSkpKSkKLHJlY3Vyc2l2ZSBmdW5jdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: RGVzY2VuZGVudHMsMCwoZm9yYWxsIGc6R3JhcGgsIGlkOklkLCByZWFjaGVkOnNldCBvZiAoSWQpICYgKGlkIGluIHNldCAoZG9tIGcpKSA9PgogIChub3QgKGlkIGluIHNldCByZWFjaGVkKSA9PgogICAgaWQgaW4gc2V0IGRvbSBnKSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QWxsRGVzYywwLChmb3JhbGwgZzpHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKGZvcmFsbCBjIGluIHNldCBnKGlkKSAmCiAgICBwcmVfVHJhbnNDbG9zQXV4KGcsIGMsIHt9KSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QWxsRGVzYywwLChmb3JhbGwgZzpHcmFwaCwgaWQ6SWQgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgaWQgaW4gc2V0IGRvbSBnKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QWN5Y2xpY0dyYXBoLDAsKGZvcmFsbCBhY2c6R3JhcGggJgogIChmb3JhbGwgaWQgaW4gc2V0IChkb20gYWNnKSAmCiAgICBwcmVfQWxsRGVzYyhhY2csIGlkKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Z3JhcGgsMCxmb3JhbGwgbTEsIG0yIGluIHNldCB7ezEgfC0+IHsyLCAzfX0sIHsyIHwtPiB7NH19LCB7MyB8LT4gezV9fSwgezQgfC0+IHs2fX0sIHs1IHwtPiB7Nn19LCB7NiB8LT4ge319fSAmCiAgZm9yYWxsIGQzIGluIHNldCBkb20gbTEsIGQ0IGluIHNldCBkb20gbTIgJgogICAgZDMgPSBkNCA9PiBtMShkMykgPSBtMihkNCkKLG1hcCBzZXF1ZW5jZSBjb21wYXRpYmxlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Z3JhcGgsMCxpbnZfR3JhcGgoezEgfC0+IHsyLCAzfSwgMiB8LT4gezR9LCAzIHwtPiB7NX0sIDQgfC0+IHs2fSwgNSB8LT4gezZ9LCA2IHwtPiB7fX0pCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QWN5Y2xpY0xhYkdyYXBoLDAsKGZvcmFsbCBhY2c6TGFiR3JhcGggJgogIChmb3JhbGwgaWQgaW4gc2V0IChkb20gYWNnKSAmCiAgICBwcmVfQWxsTGFiRGVzYyhhY2csIGlkKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QWxsTGFiRGVzYywwLChmb3JhbGwgZzpMYWJHcmFwaCwgaWQ6Tm9kZUlkICYgKGlkIGluIHNldCAoZG9tIGcpKSA9PgogIChmb3JhbGwgYyBpbiBzZXQgKHJuZyBnKGlkKSkgJgogICAgcHJlX0xhYkRlc2NlbmRlbnRzKGcsIGMsIHt9KSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QWxsTGFiRGVzYywwLChmb3JhbGwgZzpMYWJHcmFwaCwgaWQ6Tm9kZUlkICYgKGlkIGluIHNldCAoZG9tIGcpKSA9PgogIGlkIGluIHNldCBkb20gZykKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bWVhc3VyZUxhYkdyYXBoUmVhY2hlZCwwLChmb3JhbGwgZzpMYWJHcmFwaCwgcmVhY2hlZDpJZCAmCiAgKChjYXJkIChkb20gZykpIC0gKGNhcmQgcmVhY2hlZCkpID49IDApCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: TGFiRGVzY2VuZGVudHMsMCwoZm9yYWxsIGc6TGFiR3JhcGgsIGlkOk5vZGVJZCwgcmVhY2hlZDpzZXQgb2YgKE5vZGVJZCkgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKG5vdCAoaWQgaW4gc2V0IHJlYWNoZWQpID0+CiAgICAoZm9yYWxsIGMgaW4gc2V0IChybmcgZyhpZCkpICYKICAgICAgcHJlX0xhYkRlc2NlbmRlbnRzKGcsIGMsIChyZWFjaGVkIHVuaW9uIHtpZH0pKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: TGFiRGVzY2VuZGVudHMsMCwoZm9yYWxsIGc6TGFiR3JhcGgsIGlkOk5vZGVJZCwgcmVhY2hlZDpzZXQgb2YgKE5vZGVJZCkgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKG5vdCAoaWQgaW4gc2V0IHJlYWNoZWQpID0+CiAgICAoZm9yYWxsIGMgaW4gc2V0IChybmcgZyhpZCkpICYKICAgICAgbWVhc3VyZUxhYkdyYXBoUmVhY2hlZChnLCBpZCwgcmVhY2hlZCkgPiBtZWFzdXJlTGFiR3JhcGhSZWFjaGVkKGcsIGMsIChyZWFjaGVkIHVuaW9uIHtpZH0pKSkpKQoscmVjdXJzaXZlIGZ1bmN0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: TGFiRGVzY2VuZGVudHMsMCwoZm9yYWxsIGc6TGFiR3JhcGgsIGlkOk5vZGVJZCwgcmVhY2hlZDpzZXQgb2YgKE5vZGVJZCkgJiAoaWQgaW4gc2V0IChkb20gZykpID0+CiAgKG5vdCAoaWQgaW4gc2V0IHJlYWNoZWQpID0+CiAgICBpZCBpbiBzZXQgZG9tIGcpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: VW5pcXVlQXJjSWRzLCBtLDAsKGZvcmFsbCBnOm1hcCAoTm9kZUlkKSB0byAobWFwIChBcmNJZCkgdG8gKE5vZGVJZCkpICYKICBmb3JhbGwgbTEsIG0yIGluIHNldCB7e25pZCB8LT4gKGRvbSBnKG5pZCkpfSB8IG5pZCBpbiBzZXQgKGRvbSBnKX0gJgogICAgZm9yYWxsIGQzIGluIHNldCBkb20gbTEsIGQ0IGluIHNldCBkb20gbTIgJgogICAgICBkMyA9IGQ0ID0+IG0xKGQzKSA9IG0yKGQ0KSkKLG1hcCBzZXQgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: VW5pcXVlQXJjSWRzLCBtLDAsKGZvcmFsbCBnOm1hcCAoTm9kZUlkKSB0byAobWFwIChBcmNJZCkgdG8gKE5vZGVJZCkpICYKICAoZm9yYWxsIG5pZCBpbiBzZXQgKGRvbSBnKSAmCiAgICBuaWQgaW4gc2V0IGRvbSBnKSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: VW5pcXVlQXJjSWRzLDAsKGZvcmFsbCBnOm1hcCAoTm9kZUlkKSB0byAobWFwIChBcmNJZCkgdG8gKE5vZGVJZCkpICYKICAobGV0IG06bWFwIChOb2RlSWQpIHRvIChzZXQgb2YgKEFyY0lkKSkgPSB7bmlkIHwtPiAoZG9tIGcobmlkKSkgfCBuaWQgaW4gc2V0IChkb20gZyl9IGluCiAgICAoZm9yYWxsIG5pZDEsIG5pZDIgaW4gc2V0IChkb20gbSkgJgogICAgICBuaWQxIGluIHNldCBkb20gbSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: VW5pcXVlQXJjSWRzLDAsKGZvcmFsbCBnOm1hcCAoTm9kZUlkKSB0byAobWFwIChBcmNJZCkgdG8gKE5vZGVJZCkpICYKICAobGV0IG06bWFwIChOb2RlSWQpIHRvIChzZXQgb2YgKEFyY0lkKSkgPSB7bmlkIHwtPiAoZG9tIGcobmlkKSkgfCBuaWQgaW4gc2V0IChkb20gZyl9IGluCiAgICAoZm9yYWxsIG5pZDEsIG5pZDIgaW4gc2V0IChkb20gbSkgJgogICAgICBuaWQyIGluIHNldCBkb20gbSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bGdyYXBoLDAsZm9yYWxsIG0xLCBtMiBpbiBzZXQge3sxIHwtPiAyfSwgezIgfC0+IDN9fSAmCiAgZm9yYWxsIGQzIGluIHNldCBkb20gbTEsIGQ0IGluIHNldCBkb20gbTIgJgogICAgZDMgPSBkNCA9PiBtMShkMykgPSBtMihkNCkKLG1hcCBzZXF1ZW5jZSBjb21wYXRpYmxlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bGdyYXBoLDAsZm9yYWxsIG0xLCBtMiBpbiBzZXQge3sxIHwtPiB7MSB8LT4gMiwgMiB8LT4gM319LCB7MiB8LT4gezMgfC0+IDR9fSwgezMgfC0+IHs0IHwtPiA1fX0sIHs0IHwtPiB7NSB8LT4gNn19LCB7NSB8LT4gezYgfC0+IDZ9fSwgezYgfC0+IHt9fX0gJgogIGZvcmFsbCBkMyBpbiBzZXQgZG9tIG0xLCBkNCBpbiBzZXQgZG9tIG0yICYKICAgIGQzID0gZDQgPT4gbTEoZDMpID0gbTIoZDQpCixtYXAgc2VxdWVuY2UgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bGdyYXBoLDAsaW52X0xhYkdyYXBoKHsxIHwtPiB7MSB8LT4gMiwgMiB8LT4gM30sIDIgfC0+IHszIHwtPiA0fSwgMyB8LT4gezQgfC0+IDV9LCA0IHwtPiB7NSB8LT4gNn0sIDUgfC0+IHs2IHwtPiA2fSwgNiB8LT4ge319KQosc3VidHlwZSxudWxsLFVucHJvdmVkLA==
+
+
+--graphs.vdmsl
+
+types
+
+Graph = map Id to set of Id
+inv g == dunion rng g subset dom g;
+
+ASyncGraph = Graph
+inv asyncg == 
+  forall id in set dom asyncg & 
+     id not in set TransClos(asyncg,id);
+
+Path = seq of Id;
+
+Id = nat
+
+functions
+
+Paths: ASyncGraph * Id -> set of Path
+Paths(g,id) ==
+  let children = g(id)
+  in
+    if children = {}
+    then {[id]}
+    else dunion {{[id] ^ p | p in set Paths(g,c)} 
+                | c in set children}  
+pre id in set dom g
+measure measureTransClos;
+
+measureTransClos : ASyncGraph * Id -> nat
+measureTransClos(g,id) == 
+  card TransClos(g,id);
+
+LinearPath: Graph * Id -> Path
+LinearPath(g,id) ==
+  let children = g(id)
+  in
+    if card children <> 1 or 
+       exists parent in set dom g & 
+          parent <> id and children subset g(parent)
+    then [id]
+    else let child in set children
+         in
+           [id] ^ LinearPath(g,child)
+pre id in set dom g and
+    id not in set TransClos(g,id);
+   
+TransClos: Graph * Id -> set of Id
+TransClos(g,id) ==
+  dunion {TransClosAux(g,c,{})| c in set g(id)}
+pre id in set dom g;
+
+TransClosAux: Graph * Id * set of Id -> set of Id
+TransClosAux(g,id,reached) ==
+  if id in set reached
+  then {}
+  else {id} union
+       dunion {TransClosAux(g,c,reached union {id}) 
+              | c in set g(id)}
+pre id in set dom g
+measure measureGraphReached;
+
+measureGraphReached : Graph * Id * set of Id -> nat
+measureGraphReached(g,-,reached) ==
+  card dom g - card reached;
+
+AsycDescendents: AcyclicGraph * Id -> set of Id
+AsycDescendents(g,id) == 
+  {id} union dunion {AsycDescendents(g,c) | c in set  g(id)}
+pre id in set dom g
+measure measureTransClos;
+
+Descendents: Graph * Id * set of Id -> set of Id
+Descendents(g,id,reached) ==
+  if id in set reached
+  then {}
+  else {id} union
+       dunion {Descendents(g,c,reached union {id}) 
+              | c in set g(id)}
+pre id in set dom g
+measure measureGraphReached;
+
+AllDesc: Graph * Id -> set of Id
+AllDesc(g,id) ==
+  dunion {TransClosAux(g,c,{})| c in set g(id)}
+pre id in set dom g;
+
+types
+
+AcyclicGraph = Graph
+inv acg == 
+  not exists id in set dom acg & 
+     id in set AllDesc(acg,id);
+
+values
+
+  graph : Graph = {1 |-> {2,3},
+                   2 |-> {4},
+                   3 |-> {5},
+                   4 |-> {6},
+                   5 |-> {6},
+                   6 |-> {}}
+
+
+--labgraphs.vdmsl
+
+types
+
+LabGraph = map NodeId to (map ArcId to NodeId)
+inv g == 
+  UniqueArcIds(g) and
+  forall m in set rng g & rng m subset dom g;
+
+AcyclicLabGraph = LabGraph
+inv acg == 
+  not exists id in set dom acg & 
+     id in set AllLabDesc(acg,id);
+
+NodeId = nat;
+
+ArcId = nat
+
+functions
+
+AllLabDesc: LabGraph * NodeId -> set of NodeId
+AllLabDesc(g,id) ==
+  dunion {LabDescendents(g,c,{})| c in set rng g(id)}
+pre id in set dom g;
+
+measureLabGraphReached : LabGraph * Id * set of Id -> nat
+measureLabGraphReached(g,-,reached) ==
+  card dom g - card reached;
+
+LabDescendents: LabGraph * NodeId * set of NodeId -> set of NodeId
+LabDescendents(g,id,reached) ==
+  if id in set reached
+  then {}
+  else {id} union
+       dunion {LabDescendents(g,c,reached union {id}) 
+              | c in set rng g(id)}
+pre id in set dom g
+measure measureLabGraphReached;
+
+UniqueArcIds: map NodeId to (map ArcId to NodeId) -> bool
+UniqueArcIds(g) ==
+  let m = {nid |-> dom g(nid) | nid in set dom g}
+  in
+    forall nid1, nid2 in set dom m &
+       nid1 <> nid2 => m(nid1) inter m(nid2) = {}
+
+values
+
+  lgraph : LabGraph = {1 |-> {1 |-> 2,2 |-> 3},
+                       2 |-> {3 |-> 4},
+                       3 |-> {4 |-> 5},
+                       4 |-> {5 |-> 6},
+                       5 |-> {6 |-> 6},
+                       6 |-> {|->}}

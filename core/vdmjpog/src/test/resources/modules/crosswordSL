@@ -1,0 +1,483 @@
+-- TCErrors: WARNING:5010:95,8 WARNING:5000:294,1 WARNING:5000:329,1 WARNING:5000:354,1 WARNING:5000:420,1 WARNING:5000:437,1 WARNING:5000:459,1 PROOFOBLIGATION: Z3JpZCwwLChmb3JhbGwgZ3I6bWFwIChwb3NpdGlvbikgdG8gKGNoYXIpICYKICAoKChybmcgZ3IpIHN1YnNldCAobGV0dGVycyB1bmlvbiB7d2hpdGUsIGJsYWNrfSkpID0+CiAgICAoZm9yYWxsIGkgaW4gc2V0IHsxLCAuLi4gLHNpemV9LCBqIGluIHNldCB7MSwgLi4uICxzaXplfSAmCiAgICAgIGludl9wb3MoaSkgYW5kIChpc19uYXQxKGkpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Z3JpZCwwLChmb3JhbGwgZ3I6bWFwIChwb3NpdGlvbikgdG8gKGNoYXIpICYKICAoKChybmcgZ3IpIHN1YnNldCAobGV0dGVycyB1bmlvbiB7d2hpdGUsIGJsYWNrfSkpID0+CiAgICAoZm9yYWxsIGkgaW4gc2V0IHsxLCAuLi4gLHNpemV9LCBqIGluIHNldCB7MSwgLi4uICxzaXplfSAmCiAgICAgIGludl9wb3MoaikgYW5kIChpc19uYXQxKGopKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: SE9SX1dPUkRTLDAsKGZvcmFsbCBnOmdyaWQgJgogIChmb3JhbGwgaSBpbiBzZXQgezEsIC4uLiAsc2l6ZX0gJgogICAgaW52X3BvcyhpKSBhbmQgKGlzX25hdDEoaSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VkVSX1dPUkRTLDAsKGZvcmFsbCBnOmdyaWQgJgogIChmb3JhbGwgaSBpbiBzZXQgezEsIC4uLiAsc2l6ZX0gJgogICAgaW52X3BvcyhpKSBhbmQgKGlzX25hdDEoaSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: TElORSwwLChmb3JhbGwgaTpwb3MsIGc6Z3JpZCAmCiAgKGZvcmFsbCBjIGluIHNldCB7MSwgLi4uICxzaXplfSAmCiAgICBta19wb3NpdGlvbihpLCBjKSBpbiBzZXQgZG9tIGcpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: TElORSwwLChmb3JhbGwgaTpwb3MsIGc6Z3JpZCAmCiAgKGZvcmFsbCBjIGluIHNldCB7MSwgLi4uICxzaXplfSAmCiAgICBpbnZfcG9zKGMpIGFuZCAoaXNfbmF0MShjKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Q09MLDAsKGZvcmFsbCBpOnBvcywgZzpncmlkICYKICAoZm9yYWxsIGwgaW4gc2V0IHsxLCAuLi4gLHNpemV9ICYKICAgIG1rX3Bvc2l0aW9uKGwsIGkpIGluIHNldCBkb20gZykpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Q09MLDAsKGZvcmFsbCBpOnBvcywgZzpncmlkICYKICAoZm9yYWxsIGwgaW4gc2V0IHsxLCAuLi4gLHNpemV9ICYKICAgIGludl9wb3MobCkgYW5kIChpc19uYXQxKGwpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: V09SRFNfT0ZfU0VRLDAsKGZvcmFsbCBzOnNlcSBvZiAoY2hhcikgJgogIGV4aXN0cyBmaW5tYXAxOm1hcCBuYXQgdG8gKHdvcmQpICYKICAgIGZvcmFsbCB3OndvcmQgJgogICAgICAoZXhpc3RzIFtzMSwgczI6c2VxIG9mIChjaGFyKV0gJiAoKHMgPSAoKHMxIF4gdykgXiBzMikpIGFuZCAoKChzMSA9IFtdKSBvciAoKHMxKChsZW4gczEpKSA9IGJsYWNrKSBvciAoczEoKGxlbiBzMSkpID0gd2hpdGUpKSkgYW5kICgoczIgPSBbXSkgb3IgKChzMigxKSA9IGJsYWNrKSBvciAoczIoMSkgPSB3aGl0ZSkpKSkpKSA9PiBleGlzdHMgZmluZGV4MiBpbiBzZXQgZG9tIGZpbm1hcDEgJiBmaW5tYXAxKGZpbmRleDIpID0gdykKLGZpbml0ZSBzZXQsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: V09SRFNfT0ZfU0VRLDAsKGZvcmFsbCBzOnNlcSBvZiAoY2hhcikgJgogIChmb3JhbGwgdzp3b3JkICYKICAgIChmb3JhbGwgczEsIHMyOnNlcSBvZiAoY2hhcikgJgogICAgICAoKHMgPSAoKHMxIF4gdykgXiBzMikpID0+CiAgICAgICAgKG5vdCAoczEgPSBbXSkgPT4KICAgICAgICAgIChsZW4gczEpIGluIHNldCBpbmRzIHMxKSkpKSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: V09SRFNfT0ZfU0VRLDAsKGZvcmFsbCBzOnNlcSBvZiAoY2hhcikgJgogIChmb3JhbGwgdzp3b3JkICYKICAgIChmb3JhbGwgczEsIHMyOnNlcSBvZiAoY2hhcikgJgogICAgICAoKHMgPSAoKHMxIF4gdykgXiBzMikpID0+CiAgICAgICAgKG5vdCAoczEgPSBbXSkgPT4KICAgICAgICAgIChub3QgKHMxKChsZW4gczEpKSA9IGJsYWNrKSA9PgogICAgICAgICAgICAobGVuIHMxKSBpbiBzZXQgaW5kcyBzMSkpKSkpKQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: V09SRFNfT0ZfU0VRLDAsKGZvcmFsbCBzOnNlcSBvZiAoY2hhcikgJgogIChmb3JhbGwgdzp3b3JkICYKICAgIChmb3JhbGwgczEsIHMyOnNlcSBvZiAoY2hhcikgJgogICAgICAoKHMgPSAoKHMxIF4gdykgXiBzMikpID0+CiAgICAgICAgKCgoczEgPSBbXSkgb3IgKChzMSgobGVuIHMxKSkgPSBibGFjaykgb3IgKHMxKChsZW4gczEpKSA9IHdoaXRlKSkpID0+CiAgICAgICAgICAobm90IChzMiA9IFtdKSA9PgogICAgICAgICAgICAxIGluIHNldCBpbmRzIHMyKSkpKSkpCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: V09SRFNfT0ZfU0VRLDAsKGZvcmFsbCBzOnNlcSBvZiAoY2hhcikgJgogIChmb3JhbGwgdzp3b3JkICYKICAgIChmb3JhbGwgczEsIHMyOnNlcSBvZiAoY2hhcikgJgogICAgICAoKHMgPSAoKHMxIF4gdykgXiBzMikpID0+CiAgICAgICAgKCgoczEgPSBbXSkgb3IgKChzMSgobGVuIHMxKSkgPSBibGFjaykgb3IgKHMxKChsZW4gczEpKSA9IHdoaXRlKSkpID0+CiAgICAgICAgICAobm90IChzMiA9IFtdKSA9PgogICAgICAgICAgICAobm90IChzMigxKSA9IGJsYWNrKSA9PgogICAgICAgICAgICAgIDEgaW4gc2V0IGluZHMgczIpKSkpKSkpCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICBta19wb3NpdGlvbigoKChwLmgpICsgaSkgLSAxKSwgKHAudikpIGluIHNldCBkb20gZykpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICBpbnZfcG9zKCgoKHAuaCkgKyBpKSAtIDEpKSBhbmQgKGlzX25hdDEoKCgocC5oKSArIGkpIC0gMSkpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICAobm90IChnKG1rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkpID0gd2hpdGUpID0+CiAgICAgICAgbWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSBpbiBzZXQgZG9tIGcpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICAobm90IChnKG1rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkpID0gd2hpdGUpID0+CiAgICAgICAgaW52X3BvcygoKChwLmgpICsgaSkgLSAxKSkgYW5kIChpc19uYXQxKCgoKHAuaCkgKyBpKSAtIDEpKSkpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICAobm90IChnKG1rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkpID0gd2hpdGUpID0+CiAgICAgICAgaSBpbiBzZXQgaW5kcyB3KSkpKQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+ICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgYW5kIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3aGl0ZSkgb3IgKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3KGkpKSkpKSkgPT4KICAgICgoKCgocC52KSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgICAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmCiAgICAgICAgbWtfcG9zaXRpb24oKHAuaCksICgoKHAudikgKyBpKSAtIDEpKSBpbiBzZXQgZG9tIGcpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+ICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgYW5kIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3aGl0ZSkgb3IgKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3KGkpKSkpKSkgPT4KICAgICgoKCgocC52KSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgICAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmCiAgICAgICAgaW52X3BvcygoKChwLnYpICsgaSkgLSAxKSkgYW5kIChpc19uYXQxKCgoKHAudikgKyBpKSAtIDEpKSkpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+ICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgYW5kIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3aGl0ZSkgb3IgKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3KGkpKSkpKSkgPT4KICAgICgoKCgocC52KSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgICAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmCiAgICAgICAgKG5vdCAoZyhta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpKSA9IHdoaXRlKSA9PgogICAgICAgICAgbWtfcG9zaXRpb24oKHAuaCksICgoKHAudikgKyBpKSAtIDEpKSBpbiBzZXQgZG9tIGcpKSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+ICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgYW5kIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3aGl0ZSkgb3IgKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3KGkpKSkpKSkgPT4KICAgICgoKCgocC52KSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgICAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmCiAgICAgICAgKG5vdCAoZyhta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpKSA9IHdoaXRlKSA9PgogICAgICAgICAgaW52X3BvcygoKChwLnYpICsgaSkgLSAxKSkgYW5kIChpc19uYXQxKCgoKHAudikgKyBpKSAtIDEpKSkpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Q09NUEFUSUJMRSwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+ICgoKCgocC5oKSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgYW5kIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3aGl0ZSkgb3IgKGcobWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSkgPSB3KGkpKSkpKSkgPT4KICAgICgoKCgocC52KSArIChsZW4gdykpIC0gMSkgPD0gc2l6ZSkgPT4KICAgICAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmCiAgICAgICAgKG5vdCAoZyhta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpKSA9IHdoaXRlKSA9PgogICAgICAgICAgaSBpbiBzZXQgaW5kcyB3KSkpKSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SVNfTE9DQVRFRCwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgbWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSBpbiBzZXQgZG9tIGcpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SVNfTE9DQVRFRCwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgaW52X3BvcygoKChwLmgpICsgaSkgLSAxKSkgYW5kIChpc19uYXQxKCgoKHAuaCkgKyBpKSAtIDEpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: SVNfTE9DQVRFRCwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgaSBpbiBzZXQgaW5kcyB3KSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SVNfTE9DQVRFRCwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+IChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoZyhta19wb3NpdGlvbigoKChwLmgpICsgaSkgLSAxKSwgKHAudikpKSA9IHcoaSkpKSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICBta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpIGluIHNldCBkb20gZykpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SVNfTE9DQVRFRCwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+IChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoZyhta19wb3NpdGlvbigoKChwLmgpICsgaSkgLSAxKSwgKHAudikpKSA9IHcoaSkpKSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICBpbnZfcG9zKCgoKHAudikgKyBpKSAtIDEpKSBhbmQgKGlzX25hdDEoKCgocC52KSArIGkpIC0gMSkpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: SVNfTE9DQVRFRCwwLChmb3JhbGwgZzpncmlkLCB3OndvcmQsIHA6cG9zaXRpb24sIGQ6SFYgJgogICgoKGQgPSA8SD4pID0+IChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJiAoZyhta19wb3NpdGlvbigoKChwLmgpICsgaSkgLSAxKSwgKHAudikpKSA9IHcoaSkpKSkgPT4KICAgIChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogICAgICBpIGluIHNldCBpbmRzIHcpKSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SU5fV09SRCwwLChmb3JhbGwgZzpncmlkLCBwOnBvc2l0aW9uLCBkOkhWICYKICAoZm9yYWxsIGksIGo6cG9zICYKICAgICgoaSA8PSAocC5oKSkgPT4KICAgICAgKChqID49IChwLmgpKSA9PgogICAgICAgICgoaSA8IGopID0+CiAgICAgICAgICAoZm9yYWxsIGsgaW4gc2V0IHtpLCAuLi4gLGp9ICYKICAgICAgICAgICAgbWtfcG9zaXRpb24oaywgKHAudikpIGluIHNldCBkb20gZykpKSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SU5fV09SRCwwLChmb3JhbGwgZzpncmlkLCBwOnBvc2l0aW9uLCBkOkhWICYKICAoZm9yYWxsIGksIGo6cG9zICYKICAgICgoaSA8PSAocC5oKSkgPT4KICAgICAgKChqID49IChwLmgpKSA9PgogICAgICAgICgoaSA8IGopID0+CiAgICAgICAgICAoZm9yYWxsIGsgaW4gc2V0IHtpLCAuLi4gLGp9ICYKICAgICAgICAgICAgaW52X3BvcyhrKSBhbmQgKGlzX25hdDEoaykpKSkpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: SU5fV09SRCwwLChmb3JhbGwgZzpncmlkLCBwOnBvc2l0aW9uLCBkOkhWICYKICAoKChkID0gPEg+KSA9PiAoZXhpc3RzIFtpLCBqOnBvc10gJiAoKGkgPD0gKHAuaCkpIGFuZCAoKGogPj0gKHAuaCkpIGFuZCAoKGkgPCBqKSBhbmQgKGZvcmFsbCBrIGluIHNldCB7aSwgLi4uICxqfSAmIChnKG1rX3Bvc2l0aW9uKGssIChwLnYpKSkgaW4gc2V0IGxldHRlcnMpKSkpKSkpID0+CiAgICAoZm9yYWxsIGksIGo6cG9zICYKICAgICAgKChpIDw9IChwLnYpKSA9PgogICAgICAgICgoaiA+PSAocC52KSkgPT4KICAgICAgICAgICgoaSA8IGopID0+CiAgICAgICAgICAgIChmb3JhbGwgayBpbiBzZXQge2ksIC4uLiAsan0gJgogICAgICAgICAgICAgIG1rX3Bvc2l0aW9uKChwLmgpLCBrKSBpbiBzZXQgZG9tIGcpKSkpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: SU5fV09SRCwwLChmb3JhbGwgZzpncmlkLCBwOnBvc2l0aW9uLCBkOkhWICYKICAoKChkID0gPEg+KSA9PiAoZXhpc3RzIFtpLCBqOnBvc10gJiAoKGkgPD0gKHAuaCkpIGFuZCAoKGogPj0gKHAuaCkpIGFuZCAoKGkgPCBqKSBhbmQgKGZvcmFsbCBrIGluIHNldCB7aSwgLi4uICxqfSAmIChnKG1rX3Bvc2l0aW9uKGssIChwLnYpKSkgaW4gc2V0IGxldHRlcnMpKSkpKSkpID0+CiAgICAoZm9yYWxsIGksIGo6cG9zICYKICAgICAgKChpIDw9IChwLnYpKSA9PgogICAgICAgICgoaiA+PSAocC52KSkgPT4KICAgICAgICAgICgoaSA8IGopID0+CiAgICAgICAgICAgIChmb3JhbGwgayBpbiBzZXQge2ksIC4uLiAsan0gJgogICAgICAgICAgICAgIGludl9wb3MoaykgYW5kIChpc19uYXQxKGspKSkpKSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VkFMSURBVEVfV09SRCwwLCgodmFsaWRfd29yZHMgPSAodmFsaWRfd29yZHN+IHVuaW9uIHt3fSkpIGFuZCAod2FpdGluZ193b3JkcyA9ICh3YWl0aW5nX3dvcmRzfiBcIHt3fSkpKQosb3BlcmF0aW9uIHBvc3QgY29uZGl0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: VkFMSURBVEVfV09SRCwwLChmb3JhbGwgdzp3b3JkLCBvbGRzdGF0ZTpjcm9zc3dvcmRzICYKICBwcmVfVkFMSURBVEVfV09SRCh3LCBvbGRzdGF0ZSkgPT4KICBwb3N0X1ZBTElEQVRFX1dPUkQodywgb2xkc3RhdGUsIG5ld3N0YXRlKSkKLG9wZXJhdGlvbiBzYXRpZmlhYmlsaXR5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QUREX1dPUkQsMCxmb3JhbGwgbTEsIG0yIGluIHNldCB7e21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHcoaSl9IHwgaSBpbiBzZXQgKGluZHMgdyl9ICYKICBmb3JhbGwgZDMgaW4gc2V0IGRvbSBtMSwgZDQgaW4gc2V0IGRvbSBtMiAmCiAgICBkMyA9IGQ0ID0+IG0xKGQzKSA9IG0yKGQ0KQosbWFwIHNldCBjb21wYXRpYmxlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QUREX1dPUkQsMCwoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYKICBpbnZfcG9zKCgoKHAuaCkgKyBpKSAtIDEpKSBhbmQgKGlzX25hdDEoKCgocC5oKSArIGkpIC0gMSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: QUREX1dPUkQsMCwoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYKICBpIGluIHNldCBpbmRzIHcpCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QUREX1dPUkQsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHcoaSkgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgPT4KICBmb3JhbGwgbTEsIG0yIGluIHNldCB7e21rX3Bvc2l0aW9uKChwLmgpLCAoKChwLnYpICsgaSkgLSAxKSkgfC0+IHcoaSl9IHwgaSBpbiBzZXQgKGluZHMgdyl9ICYKICAgIGZvcmFsbCBkMyBpbiBzZXQgZG9tIG0xLCBkNCBpbiBzZXQgZG9tIG0yICYKICAgICAgZDMgPSBkNCA9PiBtMShkMykgPSBtMihkNCkpCixtYXAgc2V0IGNvbXBhdGlibGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: QUREX1dPUkQsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHcoaSkgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgPT4KICAoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYKICAgIGludl9wb3MoKCgocC52KSArIGkpIC0gMSkpIGFuZCAoaXNfbmF0MSgoKChwLnYpICsgaSkgLSAxKSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: QUREX1dPUkQsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHcoaSkgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgPT4KICAoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYKICAgIGkgaW4gc2V0IGluZHMgdykpCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QUREX1dPUkQsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHcoaSkgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgYW5kICgoKGQgPSA8Vj4pID0+IChjd2dyaWQgPSAoY3dncmlkfiArKyB7bWtfcG9zaXRpb24oKHAuaCksICgoKHAudikgKyBpKSAtIDEpKSB8LT4gdyhpKSB8IGkgaW4gc2V0IChpbmRzIHcpfSkpKSBhbmQgQ1dfSU5WQVJJQU5UKGN3Z3JpZCwgdmFsaWRfd29yZHMsIHdhaXRpbmdfd29yZHMpKSkKLG9wZXJhdGlvbiBwb3N0IGNvbmRpdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QUREX1dPUkQsMCwoZm9yYWxsIHc6d29yZCwgcDpwb3NpdGlvbiwgZDpIViwgb2xkc3RhdGU6Y3Jvc3N3b3JkcyAmCiAgcHJlX0FERF9XT1JEKHcsIHAsIGQsIG9sZHN0YXRlKSA9PgogIHBvc3RfQUREX1dPUkQodywgcCwgZCwgb2xkc3RhdGUsIG5ld3N0YXRlKSkKLG9wZXJhdGlvbiBzYXRpZmlhYmlsaXR5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QUREX0JMQUNLLDAscCBpbiBzZXQgZG9tIGN3Z3JpZAosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QUREX0JMQUNLLDAsKGN3Z3JpZCA9IChjd2dyaWR+ICsrIHtwIHwtPiBibGFja30pKQosb3BlcmF0aW9uIHBvc3QgY29uZGl0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QUREX0JMQUNLLDAsKGZvcmFsbCBwOnBvc2l0aW9uLCBvbGRzdGF0ZTpjcm9zc3dvcmRzICYKICBwcmVfQUREX0JMQUNLKHAsIG9sZHN0YXRlKSA9PgogIHBvc3RfQUREX0JMQUNLKHAsIG9sZHN0YXRlLCBuZXdzdGF0ZSkpCixvcGVyYXRpb24gc2F0aWZpYWJpbGl0eSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: REVMRVRFX0JMQUNLLDAscCBpbiBzZXQgZG9tIGN3Z3JpZAosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: REVMRVRFX0JMQUNLLDAsKGN3Z3JpZCA9IChjd2dyaWR+ICsrIHtwIHwtPiB3aGl0ZX0pKQosb3BlcmF0aW9uIHBvc3QgY29uZGl0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: REVMRVRFX0JMQUNLLDAsKGZvcmFsbCBwOnBvc2l0aW9uLCBvbGRzdGF0ZTpjcm9zc3dvcmRzICYKICBwcmVfREVMRVRFX0JMQUNLKHAsIG9sZHN0YXRlKSA9PgogIHBvc3RfREVMRVRFX0JMQUNLKHAsIG9sZHN0YXRlLCBuZXdzdGF0ZSkpCixvcGVyYXRpb24gc2F0aWZpYWJpbGl0eSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: U1RST05HX0RFTEVURSwwLGZvcmFsbCBtMSwgbTIgaW4gc2V0IHt7bWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSB8LT4gd2hpdGV9IHwgaSBpbiBzZXQgKGluZHMgdyl9ICYKICBmb3JhbGwgZDMgaW4gc2V0IGRvbSBtMSwgZDQgaW4gc2V0IGRvbSBtMiAmCiAgICBkMyA9IGQ0ID0+IG0xKGQzKSA9IG0yKGQ0KQosbWFwIHNldCBjb21wYXRpYmxlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: U1RST05HX0RFTEVURSwwLChmb3JhbGwgaSBpbiBzZXQgKGluZHMgdykgJgogIGludl9wb3MoKCgocC5oKSArIGkpIC0gMSkpIGFuZCAoaXNfbmF0MSgoKChwLmgpICsgaSkgLSAxKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: U1RST05HX0RFTEVURSwwLCgoKGQgPSA8SD4pID0+IChjd2dyaWQgPSAoY3dncmlkfiArKyB7bWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSB8LT4gd2hpdGUgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgPT4KICBmb3JhbGwgbTEsIG0yIGluIHNldCB7e21rX3Bvc2l0aW9uKChwLmgpLCAoKChwLnYpICsgaSkgLSAxKSkgfC0+IHdoaXRlfSB8IGkgaW4gc2V0IChpbmRzIHcpfSAmCiAgICBmb3JhbGwgZDMgaW4gc2V0IGRvbSBtMSwgZDQgaW4gc2V0IGRvbSBtMiAmCiAgICAgIGQzID0gZDQgPT4gbTEoZDMpID0gbTIoZDQpKQosbWFwIHNldCBjb21wYXRpYmxlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: U1RST05HX0RFTEVURSwwLCgoKGQgPSA8SD4pID0+IChjd2dyaWQgPSAoY3dncmlkfiArKyB7bWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSB8LT4gd2hpdGUgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgPT4KICAoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYKICAgIGludl9wb3MoKCgocC52KSArIGkpIC0gMSkpIGFuZCAoaXNfbmF0MSgoKChwLnYpICsgaSkgLSAxKSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: U1RST05HX0RFTEVURSwwLCgoKGQgPSA8SD4pID0+IChjd2dyaWQgPSAoY3dncmlkfiArKyB7bWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSB8LT4gd2hpdGUgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgYW5kICgoKGQgPSA8Vj4pID0+IChjd2dyaWQgPSAoY3dncmlkfiArKyB7bWtfcG9zaXRpb24oKHAuaCksICgoKHAudikgKyBpKSAtIDEpKSB8LT4gd2hpdGUgfCBpIGluIHNldCAoaW5kcyB3KX0pKSkgYW5kIENXX0lOVkFSSUFOVChjd2dyaWQsIHZhbGlkX3dvcmRzLCB3YWl0aW5nX3dvcmRzKSkpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: U1RST05HX0RFTEVURSwwLChmb3JhbGwgdzp3b3JkLCBwOnBvc2l0aW9uLCBkOkhWLCBvbGRzdGF0ZTpjcm9zc3dvcmRzICYKICBwcmVfU1RST05HX0RFTEVURSh3LCBwLCBkLCBvbGRzdGF0ZSkgPT4KICBwb3N0X1NUUk9OR19ERUxFVEUodywgcCwgZCwgb2xkc3RhdGUsIG5ld3N0YXRlKSkKLG9wZXJhdGlvbiBzYXRpZmlhYmlsaXR5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: U09GVF9ERUxFVEUsMCxmb3JhbGwgbTEsIG0yIGluIHNldCB7e21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHdoaXRlfSB8IGkgaW4gc2V0IChpbmRzIHcpICYgKG5vdCBJTl9XT1JEKGN3Z3JpZH4sIG1rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSksIDxWPikpfSAmCiAgZm9yYWxsIGQzIGluIHNldCBkb20gbTEsIGQ0IGluIHNldCBkb20gbTIgJgogICAgZDMgPSBkNCA9PiBtMShkMykgPSBtMihkNCkKLG1hcCBzZXQgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYgKG5vdCBJTl9XT1JEKGN3Z3JpZH4sIG1rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSksIDxWPikpID0+CiAgaW52X3BvcygoKChwLmgpICsgaSkgLSAxKSkgYW5kIChpc19uYXQxKCgoKHAuaCkgKyBpKSAtIDEpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoZm9yYWxsIGkgaW4gc2V0IChpbmRzIHcpICYKICBpbnZfcG9zKCgoKHAuaCkgKyBpKSAtIDEpKSBhbmQgKGlzX25hdDEoKCgocC5oKSArIGkpIC0gMSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHdoaXRlIHwgaSBpbiBzZXQgKGluZHMgdykgJiAobm90IElOX1dPUkQoY3dncmlkfiwgbWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSwgPFY+KSl9KSkpID0+CiAgZm9yYWxsIG0xLCBtMiBpbiBzZXQge3tta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpIHwtPiB3aGl0ZX0gfCBpIGluIHNldCAoaW5kcyB3KSAmIChub3QgSU5fV09SRChjd2dyaWR+LCBta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpLCA8SD4pKX0gJgogICAgZm9yYWxsIGQzIGluIHNldCBkb20gbTEsIGQ0IGluIHNldCBkb20gbTIgJgogICAgICBkMyA9IGQ0ID0+IG0xKGQzKSA9IG0yKGQ0KSkKLG1hcCBzZXQgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHdoaXRlIHwgaSBpbiBzZXQgKGluZHMgdykgJiAobm90IElOX1dPUkQoY3dncmlkfiwgbWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSwgPFY+KSl9KSkpID0+CiAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmIChub3QgSU5fV09SRChjd2dyaWR+LCBta19wb3NpdGlvbigocC5oKSwgKCgocC52KSArIGkpIC0gMSkpLCA8SD4pKSA9PgogICAgaW52X3BvcygoKChwLnYpICsgaSkgLSAxKSkgYW5kIChpc19uYXQxKCgoKHAudikgKyBpKSAtIDEpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHdoaXRlIHwgaSBpbiBzZXQgKGluZHMgdykgJiAobm90IElOX1dPUkQoY3dncmlkfiwgbWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSwgPFY+KSl9KSkpID0+CiAgKGZvcmFsbCBpIGluIHNldCAoaW5kcyB3KSAmCiAgICBpbnZfcG9zKCgoKHAudikgKyBpKSAtIDEpKSBhbmQgKGlzX25hdDEoKCgocC52KSArIGkpIC0gMSkpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoKChkID0gPEg+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKCgoKHAuaCkgKyBpKSAtIDEpLCAocC52KSkgfC0+IHdoaXRlIHwgaSBpbiBzZXQgKGluZHMgdykgJiAobm90IElOX1dPUkQoY3dncmlkfiwgbWtfcG9zaXRpb24oKCgocC5oKSArIGkpIC0gMSksIChwLnYpKSwgPFY+KSl9KSkpIGFuZCAoKChkID0gPFY+KSA9PiAoY3dncmlkID0gKGN3Z3JpZH4gKysge21rX3Bvc2l0aW9uKChwLmgpLCAoKChwLnYpICsgaSkgLSAxKSkgfC0+IHdoaXRlIHwgaSBpbiBzZXQgKGluZHMgdykgJiAobm90IElOX1dPUkQoY3dncmlkfiwgbWtfcG9zaXRpb24oKHAuaCksICgoKHAudikgKyBpKSAtIDEpKSwgPEg+KSl9KSkpIGFuZCBDV19JTlZBUklBTlQoY3dncmlkLCB2YWxpZF93b3Jkcywgd2FpdGluZ193b3JkcykpKQosb3BlcmF0aW9uIHBvc3QgY29uZGl0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: U09GVF9ERUxFVEUsMCwoZm9yYWxsIHc6d29yZCwgcDpwb3NpdGlvbiwgZDpIViwgb2xkc3RhdGU6Y3Jvc3N3b3JkcyAmCiAgcHJlX1NPRlRfREVMRVRFKHcsIHAsIGQsIG9sZHN0YXRlKSA9PgogIHBvc3RfU09GVF9ERUxFVEUodywgcCwgZCwgb2xkc3RhdGUsIG5ld3N0YXRlKSkKLG9wZXJhdGlvbiBzYXRpZmlhYmlsaXR5LG51bGwsVW5wcm92ZWQs
+
+
+--crossword.vdmsl
+
+
+\section{A specification of the data structures}
+
+
+\subsection{Constants}
+
+The specification of the crosswords assistant starts with a series of constant
+declarations:
+
+\begin{itemize}
+\item the size of the grid,
+\item the set of allowed letters,
+\item the character meant to represent a black square,
+\item the character meant to represent an empty location.
+\end{itemize}
+
+\begin{vdm_al}
+values size : nat = 8;
+       letters : set of char =
+		{'a','b','c','d','e','f','g','h',
+		'i','j','k','l','m','n','o','p',
+		'q','r','s','t','u','v','w','x','y','z'};
+	black : char = '*';
+	white : char = '_'
+\end{vdm_al}
+
+\subsection{Types}
+
+The type $word$ is a sequence of characters that only includes
+$letters$. It corresponds to the words that will appear on the grid.
+Moreover, in a crossword grid a word is a sequence of at least two characters. 
+
+\begin{vdm_al}
+types  word = seq of char 
+	inv w == elems(w) subset letters 
+		and len w >= 2  ;
+\end{vdm_al}
+
+A second type is $pos$, i.e.\ strictly  positive natural numbers that are less
+than or equal to the size of the grid. They will be used to refer to horizontal and
+vertical positions on the grid. 
+A third type, $position$, is a composite with two fields: the horizontal and
+vertical offsets of a square in the grid.
+
+\begin{vdm_al}
+        pos = nat1 
+        inv pos_v == pos_v <= size;
+	position :: h : pos
+		    v : pos;
+\end{vdm_al}
+
+The $grid$ is then introduced as a map from positions to characters. The
+invariant ensures that:
+
+\begin{itemize}
+\item the grid only stores letters, empty locations  and black squares;
+\item the domain of the map includes all locations of the grid. 
+\end{itemize}
+
+\begin{vdm_al}
+	grid = map position to char
+	inv gr == rng gr subset (letters union {white, black}) and 
+	          dom gr = {mk_position(i,j) | i in set {1,...,size}, 
+	                                       j in set {1,...,size}};
+\end{vdm_al}
+
+Finally, a quote type $HV$ is introduced to denote the horizontal and vertical
+directions. 
+
+\begin{vdm_al}
+	HV = <H> | <V>
+\end{vdm_al}
+
+
+\newpage
+\subsection{Global state}
+
+The global state features three variables:
+
+\begin{itemize}
+\item the crossword grid 
+\item two sets of words: the words to validate ($waiting-words$) and the ones
+already validated ($valid-words$).
+\end{itemize}
+
+The invariant will be defined later as a function. The initial state specifies
+that both sets of words are empty, and that all locations of the grid are
+empty, i.e.\ store the $white$ character. 
+\begin{vdm_al}
+state  crosswords of
+	 cwgrid : grid
+	 valid_words : set of word
+	 waiting_words : set of word
+       inv mk_crosswords(gr,val,wait) == 
+		CW_INVARIANT(gr,val,wait)
+init mk_crosswords(gr,val,wait) ==
+        val = { } and wait = { } and 
+	forall i in set {1,...,size} &
+	forall j in set {1,...,size} &
+	gr(mk_position(i,j)) = white
+end
+\end{vdm_al}
+
+
+\section{Functions}
+
+\subsection{State invariant}
+
+A first function is the state invariant. It takes three arguments corresponding
+to the three variables of the global state and states that:
+
+\begin{itemize}
+\item the $valid-words$ and $waiting-words$ are disjoint, i.e.\ a word is
+either valid or waiting;
+\item every word of the grid appears in one of both sets;
+\item the words of the waiting list all appear on the grid.
+\end{itemize}
+
+The invariant does not force the list of valid words to only store words of the
+grid. It may also be filled in with input from an electronic dictionnary.
+\begin{vdm_al}
+functions
+\end{vdm_al}
+
+\begin{vdm_al}
+CW_INVARIANT: grid * set of word * set of word +> bool
+CW_INVARIANT(gr,val,wait) ==
+val inter wait = {} 
+and WORDS(gr) subset (val union wait)
+and wait subset WORDS(gr)
+;
+\end{vdm_al}
+
+\subsection{Words of a grid}
+
+In this definition of the invariant, the $WORDS$ function was introduced. It is
+a function which returns the set of all words that appear on the grid, given as
+argument. It has been chosen to specify this as an explicit boolean function
+which returns the union of the words that appear horizontally in the grid, and
+the words that appear vertically.
+\begin{vdm_al}
+WORDS : grid +> set of word
+WORDS(g) == HOR_WORDS(g) union VER_WORDS(g)
+;
+\end{vdm_al}
+
+$HOR-WORDS$ and $VER-WORDS$ are also explicit functions. They are expressed as
+the distributed union of the words that appear on every line or every column of
+the grid respectively.
+\begin{vdm_al}
+HOR_WORDS : grid +> set of word
+HOR_WORDS(g) == dunion { WORDS_OF_SEQ(LINE(i,g)) | i in set {1,...,size}}
+;
+VER_WORDS : grid +> set of word
+VER_WORDS(g) == dunion { WORDS_OF_SEQ(COL(i,g)) | i in set {1,...,size}}
+;
+\end{vdm_al}
+
+$LINE$ and $COL$ are functions that extract from a grid the ith line or column
+respectively and return it as a sequence of characters.
+
+\begin{vdm_al}
+LINE : pos *  grid +> seq of char
+LINE(i,g) == [g(mk_position(i,c)) | c in set {1,...,size}]
+;
+COL : pos *  grid +> seq of char
+COL(i,g) == [g(mk_position(l,i)) | l in set {1,...,size}]
+;
+\end{vdm_al}
+
+$WORDS-OF-SEQ$ returns the set of words that appear in a sequence of
+characters. A word is defined as a sequence of letters such that its neighbour
+characters (if any) are $white$ or $black$. The code of the explicit function
+is rather implicit since it refers to a set comprehension definition which is
+not executable.
+\begin{vdm_al}
+WORDS_OF_SEQ : seq of char +> set of word
+WORDS_OF_SEQ(s) == {w | w : word & 
+		exists s1, s2 : seq of char &
+			s = s1 ^ w ^ s2
+		        and (s1 = [] or s1(len s1) = black or s1(len s1) = white)
+			and (s2 = [] or s2(1) = black or s2(1) = white)}
+;
+\end{vdm_al}
+
+\newpage
+\subsection{Compatibility with the grid}
+
+When a new word will be added to the grid, it is necessary to check that :
+\begin{itemize}
+\item the length of the word fits in the grid;
+\item this word will not destroy existing information, i.e.\ the grid locations
+that will be overwritten by the word are either $white$ or already store the
+corresponding letter of the word.
+\end{itemize}
+
+\begin{vdm_al}
+COMPATIBLE : grid * word * position * HV +> bool
+COMPATIBLE (g, w, p, d ) == 
+	    (d = <H> => 
+		(p.h + len w -1 <= size)
+		and forall i in set inds w &
+		    	g(mk_position(p.h + i -1, p.v)) = white
+			or g(mk_position(p.h + i -1, p.v)) = w(i)
+			)
+	    and
+	    (d = <V> => 
+		(p.v + len w -1 <= size)
+		and forall i in set inds w &
+			g(mk_position(p.h, p.v + i -1)) = white
+			or g(mk_position(p.h, p.v + i -1)) = w(i))
+;
+\end{vdm_al}   
+
+When a word is deleted from the grid, it is necessary to check that a given
+word appears at a given location in a given direction. This boolean function is
+expressed hereafter.
+
+\begin{vdm_al}
+IS_LOCATED : grid * word * position * HV +> bool
+IS_LOCATED (g, w, p, d ) == 
+	    (d = <H> => 
+		 forall i in set inds w &
+		    g(mk_position(p.h + i -1, p.v)) = w(i))
+	    and
+	    (d = <V> => 
+		 forall i in set inds w &
+			g(mk_position(p.h, p.v + i -1)) = w(i))
+;
+\end{vdm_al}
+
+\subsection{Detection of words}
+
+In the deletion operation, it will be necessary to decide wheter a letter in a
+given position on
+the grid  is part of a word in a given direction. To be part of a word means
+that there exists a sequence of positions on the grid that features  a word and
+includes the given position. 
+
+
+\begin{vdm_al}
+IN_WORD: grid * position * HV +> bool
+IN_WORD(g,p,d) ==
+(d = <H> => 
+	exists i,j : pos &
+		i <= p.h and j >= p.h and i < j and
+		forall k in set {i,..., j} &
+			g(mk_position(k,p.v)) in set letters)
+and
+(d = <V> => 
+	exists i,j : pos &
+		i <= p.v and j >= p.v and i < j and
+		forall k in set {i,..., j} &
+			g(mk_position(p.h,k)) in set letters)
+
+\end{vdm_al}   
+
+\section{Operations}
+
+
+The operations are of three kinds:
+
+\begin{itemize}
+\item validation of a word of the waiting list;
+\item adding information to the grid;
+\item deleting information from the grid.
+\end{itemize}
+
+
+\subsection{Validation of words}
+
+This section only features a single operation $VALIDATE-WORD$ which transfers a
+word of the waiting list into the valid list. The pre-condition states that the
+word must be in the waiting list, while the post-condition expresses that the
+two sets have been modified by deleting the word from the one and adding it to
+the second. The state invariant is preserved by this operation since
+
+\begin{itemize}
+\item the two sets remain disjoint
+\item No new word has been added to  $waiting-words$ and the grid has not been
+affected. The elements of $waiting-words$ remain thus
+members of the grid.
+\end{itemize}
+
+\begin{vdm_al}
+operations
+\end{vdm_al}   
+\begin{vdm_al}
+VALIDATE_WORD (w : word)
+ext wr valid_words : set of word
+    wr waiting_words : set of word
+   pre w in set waiting_words
+  post valid_words = valid_words~ union {w}
+       and waiting_words = waiting_words~ \ {w}
+;
+\end{vdm_al}   
+
+\subsection{Adding information to the grid}
+
+There are actually two ways to modify the grid: either by adding new words
+($ADD-WORD$) or by adding black squares ($ADD-BLACK$). 
+
+To add a word to the grid, three inputs are needed: the actual word to add, the
+position where it must be added and the horizontal/vertical direction of this
+addition. The pre-condition must ensure that the word is compatible with the
+existing grid, i.e.\ that it will only modify $white$ locations. The
+compatibility also ensures that the length of the word fits in the grid.  The
+post-condition expresses the modification of the grid in terms of an
+overwriting map, given in comprehension. It also includes  the state invariant
+in order to guarantee it. Obviously, this operation preserves the state
+invariant, but it is necessary to check that it is implementable, i.e.\ that
+there exists a final state corresponding to this post-condition. 
+
+This proof may be informally stated as follows. Since $d$ is either $H$ or $V$,
+the new grid will be the previous one overwritten by a map. Since this map only
+adds letters to the grid and the length of the word has been checked to fit in
+the grid, the grid will keep its type. It must then be checked that it is
+possible to extract a list of waiting words from this grid, given an untouched
+list of valid words. This is achieved by extracting the set of words of the
+grid and substracting the valid words from this set.
+
+
+\begin{vdm_al}
+ADD_WORD (w : word, p : position, d : HV)
+ext wr cwgrid : grid
+    rd valid_words : set of word
+    wr waiting_words : set of word
+   pre COMPATIBLE(cwgrid, w, p, d)
+  post (d = <H> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> w(i) 
+	                    | i in set inds w})
+	and
+ 	(d = <V> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> w(i) 
+	                    | i in set inds w})
+	and
+	CW_INVARIANT(cwgrid, valid_words,waiting_words)
+;
+\end{vdm_al}   
+
+
+The $ADD-BLACK$ operations replaces an empty location by  a black square. 
+The precondition checks that the position given as input stores an empty
+location, and the post-condition overwrites the grid with a single maplet.
+This operation preserves the state invariant since it does not destroy letters
+from the grid and thus preserves the existing words.
+
+\begin{vdm_al}
+ADD_BLACK ( p : position)
+ext wr cwgrid : grid
+   pre cwgrid(p) = white
+  post cwgrid = cwgrid~ ++ { p |-> black }
+;
+\end{vdm_al}   
+
+\subsection{Deleting information from  the grid}
+
+Three operations are proposed to delete information from the grid. The simplest
+operation is the deletion of a black square. The remaining operations are
+concerned with deleting an existing word. Two operations are proposed. A ``strong''
+delete wipes out every letter of the word. Its application to word {\tt
+cord} in the example would result in : 
+
+\vspace{0.5cm}
+
+{\tt \begin{tabular}{r|c|c|c|c|c|c|c|c|}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\hline
+3 & & & &w& & & & \\
+\hline
+4 & & &c &o &a &l & & \\
+\hline
+5 & & &a &r&t & & & \\
+\hline
+6 & & & && & & & \\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\end{tabular}} 
+
+\vspace{0.5cm}
+
+This is probably too destructive because the words {\tt car} and {\tt word} have
+been modified as a consequence of this operation. So a ``soft'' delete is
+proposed which checks if a letter is member of a word in the orthogonal
+direction. In our example, it would result in :
+
+\vspace{0.5cm}
+
+{\tt \begin{tabular}{r|c|c|c|c|c|c|c|c|}
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\hline
+3 & & & &w& & & & \\
+\hline
+4 & & &c &o &a &l & & \\
+\hline
+5 & & &a &r&t & & & \\
+\hline
+6 & & &r &d& & & & \\
+\hline
+\multicolumn{9}{l}{\ldots}\\
+\end{tabular}}
+\vspace{0.5cm}
+
+where {\tt rd} will appear as a new word in the $waiting-words$.
+
+
+The first operation is $DELETE-BLACK$ which is the dual of $ADD-BLACK$. It
+similarly preserves the state invariant.
+
+\begin{vdm_al}
+DELETE_BLACK ( p : position)
+ext wr cwgrid : grid
+   pre cwgrid(p) = black
+  post cwgrid = cwgrid~ ++ { p |-> white }
+;
+\end{vdm_al}   
+
+
+The $STRONG-DELETE$ receives three inputs: the word to delete, its position,
+and its direction. The operation may not affect the list of valid words but may
+modify the grid and the waiting list. The precondition checks that the word is
+effectively located in the grid at the given position. The post-condition
+overwrites the grid with a map of empty locations and states that the invariant
+is preserved. The informal proof of the implementability of this operation is
+similar to the $ADD-WORD$ one.
+
+\begin{vdm_al}
+STRONG_DELETE (w : word, p : position, d : HV)
+ext wr cwgrid : grid
+    rd valid_words : set of word
+    wr waiting_words : set of word
+   pre IS_LOCATED(cwgrid, w, p, d)
+  post (d = <H> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h + i - 1, p.v) |-> white 
+	                    | i in set inds w})
+	and
+ 	(d = <V> =>
+	cwgrid = cwgrid~ ++ {mk_position(p.h, p.v + i - 1) |-> white 
+	                    | i in set inds w})
+	and
+	CW_INVARIANT(cwgrid,valid_words, waiting_words)
+;
+\end{vdm_al}   
+
+
+The $SOFT-DELETE$ is very similar to $STRONG-DELETE$. The major difference is
+that the overwriting map is filtered by the $IN-WORD$ function: a letter is
+overwritten  only if it does not appear in a word in the orthogonal direction.
+\begin{vdm_al}
+SOFT_DELETE (w : word, p : position, d : HV)
+ext wr cwgrid : grid
+    rd valid_words : set of word
+    wr waiting_words : set of word
+   pre IS_LOCATED(cwgrid, w, p, d)
+  post (d = <H> =>
+	cwgrid = cwgrid~ ++ 
+		{mk_position(p.h + i - 1, p.v) |-> white 
+			| i in set inds w 
+			& not IN_WORD(cwgrid~,mk_position(p.h + i - 1, p.v),<V>) })
+	and
+	(d = <V> =>
+	cwgrid = cwgrid~ ++ 
+		{mk_position(p.h, p.v + i - 1) |-> white 
+			| i in set inds w 
+			& not IN_WORD(cwgrid~,mk_position(p.h, p.v + i - 1),<H>) })
+	and
+	CW_INVARIANT(cwgrid,valid_words, waiting_words)
+\end{vdm_al}
+
+
+An alternate version of $SOFT-DELETE$ could be designed that would only leave
+on the grid the letters of validated words. This could be easily performed by
+checking that the word that the location belongs to is in the valid list.
+\end{document}

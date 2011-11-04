@@ -1,0 +1,213 @@
+-- TCErrors: WARNING:5012:35,1 WARNING:5000:12,1 WARNING:5000:13,1 WARNING:5000:14,1 WARNING:5000:15,1 WARNING:5000:16,1 WARNING:5000:43,1 WARNING:5000:57,1 WARNING:5000:73,1 WARNING:5000:96,1 WARNING:5000:106,1 WARNING:5000:129,1 WARNING:5000:156,1 WARNING:5000:189,1 PROOFOBLIGATION: TWF4T2ZTZXQsMCwoZm9yYWxsIHM6c2V0IG9mIChpbnQpICYKICBwcmVfTWF4T2ZTZXQocykgPT4gcG9zdF9NYXhPZlNldChzLCBsZXQgZSBpbiBzZXQgcyBpbiAoaWYgKChjYXJkIHMpID0gMSkKICB0aGVuIGUKICBlbHNlIGxldCBtcjppbnQgPSBNYXhPZlNldCgocyBcIHtlfSkpIGluIChpZiAoZSA+IG1yKQogIHRoZW4gZQogIGVsc2UgbXIpKSkpCixwb3N0IGNvbmRpdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: TWF4T2ZTZXQsMCwoZm9yYWxsIHM6c2V0IG9mIChpbnQpICYgKHMgPD4ge30pID0+CiAgZXhpc3RzIGUgaW4gc2V0IHMpCixsZXQgYmUgc3QgZXhpc3RlbmNlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: TWF4T2ZTZXQsIG1yLDAsKGZvcmFsbCBzOnNldCBvZiAoaW50KSAmIChzIDw+IHt9KSA9PgogIChmb3JhbGwgZSBpbiBzZXQgcyAmCiAgICAobm90ICgoY2FyZCBzKSA9IDEpID0+CiAgICAgIHByZV9NYXhPZlNldCgocyBcIHtlfSkpKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: TWF4T2ZTZXQsIG1yLDAsKGZvcmFsbCBzOnNldCBvZiAoaW50KSAmIChzIDw+IHt9KSA9PgogIChmb3JhbGwgZSBpbiBzZXQgcyAmCiAgICAobm90ICgoY2FyZCBzKSA9IDEpID0+CiAgICAgIENhcmRJbnQocykgPiBDYXJkSW50KChzIFwge2V9KSkpKSkKLHJlY3Vyc2l2ZSBmdW5jdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2x0b2ssIGNvbXBhdGlibGUsMCwoZm9yYWxsIGE6YXJyYXksIGs6bmF0MSAmCiAgKGZvcmFsbCBqIGluIHNldCB7MSwgLi4uICwoayAtIDEpfSAmIChhKGopIDw9IGEoaykpID0+CiAgICBqID4gMCkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc2x0b2ssIGNvbXBhdGlibGUsMCwoZm9yYWxsIGE6YXJyYXksIGs6bmF0MSAmCiAgKGZvcmFsbCBqIGluIHNldCB7MSwgLi4uICwoayAtIDEpfSAmCiAgICBqIGluIHNldCBpbmRzIGEpKQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2ssIGNvbXBhdGlibGUsMCwoZm9yYWxsIGE6YXJyYXksIGs6bmF0MSAmCiAgKGZvcmFsbCBqIGluIHNldCB7MSwgLi4uICwoayAtIDEpfSAmCiAgICBrIGluIHNldCBpbmRzIGEpKQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2ssMCwoZm9yYWxsIGE6YXJyYXksIGs6bmF0MSAmCiAgKGxldCBjb21wYXRpYmxlOnNldCBvZiAobmF0KSA9IHtsdXBzbHRvayhhLCBqKSB8IFtqIGluIHNldCB7MSwgLi4uICwoayAtIDEpfV0gJiAoYShqKSA8PSBhKGspKX0gaW4KICAgIChub3QgKGNvbXBhdGlibGUgPSB7fSkgPT4KICAgICAgcHJlX01heE9mU2V0KGNvbXBhdGlibGUpKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2x0b2ssMCwoZm9yYWxsIGE6YXJyYXksIGs6bmF0MSAmCiAgbGV0IGNvbXBhdGlibGU6c2V0IG9mIChuYXQpID0ge2x1cHNsdG9rKGEsIGopIHwgW2ogaW4gc2V0IHsxLCAuLi4gLChrIC0gMSl9XSAmIChhKGopIDw9IGEoaykpfSBpbiAoaWYgKGNvbXBhdGlibGUgPSB7fSkKICB0aGVuIDEKICBlbHNlIChNYXhPZlNldChjb21wYXRpYmxlKSArIDEpKSA+PSAwKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2wsMCwoZm9yYWxsIGE6YXJyYXkgJgogIHByZV9NYXhPZlNldCh7bHVwc2x0b2soYSwgaikgfCBbaiBpbiBzZXQgKGluZHMgYSldfSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2wsMCwoZm9yYWxsIGE6YXJyYXkgJgogIE1heE9mU2V0KHtsdXBzbHRvayhhLCBqKSB8IFtqIGluIHNldCAoaW5kcyBhKV19KSA+PSAwKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: YXNjZW5kaW5nLDAsKGZvcmFsbCBhOmFycmF5LCBzOnNldCBvZiAoaW50KSAmIChzIHN1YnNldCAoaW5kcyBhKSkgPT4KICAoZm9yYWxsIGksIGogaW4gc2V0IHMgJgogICAgaSBpbiBzZXQgaW5kcyBhKSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: YXNjZW5kaW5nLDAsKGZvcmFsbCBhOmFycmF5LCBzOnNldCBvZiAoaW50KSAmIChzIHN1YnNldCAoaW5kcyBhKSkgPT4KICAoZm9yYWxsIGksIGogaW4gc2V0IHMgJgogICAgaiBpbiBzZXQgaW5kcyBhKSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc2xTcGVjLDAsKGZvcmFsbCBhOmFycmF5ICYKICBwcmVfTWF4T2ZTZXQoeyhjYXJkIHMpIHwgW3MgaW4gc2V0IChwb3dlciAoaW5kcyBhKSldICYgYXNjZW5kaW5nKGEsIHMpfSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2xTcGVjLDAsKGZvcmFsbCBhOmFycmF5ICYKICAoZm9yYWxsIHMgaW4gc2V0IChwb3dlciAoaW5kcyBhKSkgJgogICAgcHJlX2FzY2VuZGluZyhhLCBzKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2xPcDFMYXNraSwwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2xPcDFMYXNraSwwLHByZV9NYXhPZlNldChsdXBzbHMpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2xPcDFMYXNraSwwLFJFU1VMVCA+PSAwCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc21PcDFHcmllcywwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc21PcDFHcmllcywwLDEgaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsKGxlbiBsdXBzbGFycikgaW4gc2V0IGluZHMgbHVwc2xhcnIKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsZXhpc3RzMSB4IGluIHNldCB7MSwgLi4uICwobGVuIGx1cHNsYXJyKX0gJiAoKGx1cHNsYXJyKHgpID4gYShrKSkgYW5kIChmb3JhbGwgaiBpbiBzZXQgezEsIC4uLiAsKHggLSAxKX0gJiAobHVwc2xhcnIoaikgPD0gYShrKSkpKQosdW5pcXVlIGV4aXN0ZW5jZSBiaW5kaW5nLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsKGZvcmFsbCB4IGluIHNldCB7MSwgLi4uICwobGVuIGx1cHNsYXJyKX0gJgogIHggaW4gc2V0IGluZHMgbHVwc2xhcnIpCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsKGZvcmFsbCB4IGluIHNldCB7MSwgLi4uICwobGVuIGx1cHNsYXJyKX0gJgogIGsgaW4gc2V0IGluZHMgYSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsKGZvcmFsbCB4IGluIHNldCB7MSwgLi4uICwobGVuIGx1cHNsYXJyKX0gJgogICgobHVwc2xhcnIoeCkgPiBhKGspKSA9PgogICAgKGZvcmFsbCBqIGluIHNldCB7MSwgLi4uICwoeCAtIDEpfSAmCiAgICAgIGogaW4gc2V0IGluZHMgbHVwc2xhcnIpKSkKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsKGZvcmFsbCB4IGluIHNldCB7MSwgLi4uICwobGVuIGx1cHNsYXJyKX0gJgogICgobHVwc2xhcnIoeCkgPiBhKGspKSA9PgogICAgKGZvcmFsbCBqIGluIHNldCB7MSwgLi4uICwoeCAtIDEpfSAmCiAgICAgIGsgaW4gc2V0IGluZHMgYSkpKQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsaSA+IDAgYW5kIGkgPD0gbGVuIChsdXBzbGFycikgKyAxCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMUdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2xPcDJMYXNraSwwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc21PcDJHcmllcywwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc21PcDJHcmllcywwLDEgaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsKGxlbiBsdXBzbGFycikgaW4gc2V0IGluZHMgbHVwc2xhcnIKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsd2hpbGUgKGx1cHNsYXJyKGkpIDw9IGEoaykpIGRvIC4uLgosd2hpbGUgbG9vcCB0ZXJtaW5hdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsaSBpbiBzZXQgaW5kcyBsdXBzbGFycgosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsaSA+IDAgYW5kIGkgPD0gbGVuIChsdXBzbGFycikgKyAxCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wMkdyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2xPcDNMYXNraSwwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDFMYXNraSwwLGogaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDFMYXNraSwwLGsgaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDFMYXNraSwwLGogaW4gc2V0IGluZHMgbHVwc2xhcnIKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc2x0b2tvcDFMYXNraSwwLHByZV9NYXhPZlNldChjb21wYXRpYmxlKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDFMYXNraSwwLFJFU1VMVCA+PSAwCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc21PcDNHcmllcywwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc21PcDNHcmllcywwLDEgaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsKGxlbiBsdXBzbGFycikgaW4gc2V0IGluZHMgbHVwc2xhcnIKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsMSBpbiBzZXQgaW5kcyBsdXBzbGFycgosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsMSA+IDAgYW5kIDEgPD0gbGVuIChsdXBzbGFycikgKyAxCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsd2hpbGUgKGxpIDw+IChyZSAtIDEpKSBkbyAuLi4KLHdoaWxlIGxvb3AgdGVybWluYXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsbSBpbiBzZXQgaW5kcyBsdXBzbGFycgosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAscmUgPiAwIGFuZCByZSA8PSBsZW4gKGx1cHNsYXJyKSArIDEKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc200a29wM0dyaWVzLDAsayBpbiBzZXQgaW5kcyBhCixzZXF1ZW5jZSBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bHVwc2xPcDRMYXNraSwwLChsdXBzbFNwZWMoYSkgPSBSRVNVTFQpCixvcGVyYXRpb24gcG9zdCBjb25kaXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDJMYXNraSwwLGogaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDJMYXNraSwwLGsgaW4gc2V0IGluZHMgYQosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bHVwc2x0b2tvcDJMYXNraSwwLGogaW4gc2V0IGluZHMgbHVwc2xhcnIKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc2x0b2tvcDJMYXNraSwwLGogaW4gc2V0IGluZHMgbHVwc2xhcnIKLHNlcXVlbmNlIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bHVwc2x0b2tvcDJMYXNraSwwLFJFU1VMVCA+PSAwCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs
+
+
+--LUPSL.vdmsl
+
+types
+
+array = seq1 of int;
+
+values
+
+a1: array = [1,2,9,4,7,3]; --,11,8,14,6]; 
+a2: array = [4,3,2,1];
+a3 = [1,2,3,4]; 
+a4 = [2];
+a5 = [2,2,2,2];
+
+functions
+
+MaxOfSet: set of int -> int
+MaxOfSet(s) ==
+ let e in set s in
+   if card s = 1 then
+      e
+   else
+      let mr = MaxOfSet(s\{e}) in
+         if e > mr then e else mr
+ pre s <> {}
+ post RESULT in set s and forall e in set s & e <= RESULT
+ measure CardInt;
+
+CardInt: set of int -> nat
+CardInt(s) == card s;
+
+lupsltok : array * nat1 -> nat
+lupsltok(a,k) ==
+ let compatible = {lupsltok(a,j) | j in set{1,...,k-1} & a(j)<=a(k)} 
+ in
+   if compatible = {} 
+   then 1 
+   else MaxOfSet(compatible) + 1; 
+
+lupsl : array -> nat
+lupsl(a) == 
+  MaxOfSet({lupsltok(a,j) | j in set inds a});
+
+ascending : array * set of int -> bool
+ascending(a,s) ==
+   forall i,j in set s & i<j => a(i)<=a(j) pre s subset (inds a);
+
+lupslSpec : array -> int
+lupslSpec(a) ==
+   MaxOfSet({ card s | s in set power inds a & ascending(a,s) })
+
+operations
+
+lupslOp1Laski : array ==> nat
+lupslOp1Laski(a) == 
+  (dcl lupsls : set of nat := {};
+   for all k in set inds a do
+      lupsls := lupsls union {lupsltok(a,k)};
+   return MaxOfSet(lupsls);
+  )
+post lupslSpec(a) = RESULT;
+
+state lups of
+  lupslarr : array 
+init s == s = mk_lups([1])
+end
+
+operations
+
+lupsmOp1Gries : array ==> nat
+lupsmOp1Gries(a) == 
+  (lupslarr := [a(1)];
+   for k = 2 to len a do
+      lupsm4kop1Gries(a,k);
+   return len lupslarr;
+  )
+post lupslSpec(a) = RESULT;
+ 
+lupsm4kop1Gries : array * nat1 ==> ()
+lupsm4kop1Gries(a,k) ==
+  (dcl i : int; 
+   if lupslarr(len lupslarr)<=a(k) then
+      lupslarr := lupslarr^[a(k)]
+   else
+     (i := iota x in set {1,...,len lupslarr} &
+             lupslarr(x) > a(k) and 
+             forall j in set {1,...,x-1} & lupslarr(j) <= a(k);
+      lupslarr(i) := a(k);
+     );
+  )
+pre k in set inds a;
+ 
+lupslOp2Laski : array ==> nat
+lupslOp2Laski(a) == 
+  (dcl lupslmax : nat := 0;
+   for k = 1 to len a do
+      let lak = lupsltok(a,k) in
+        if lak > lupslmax then lupslmax := lak;
+   return lupslmax;
+  )
+post lupslSpec(a) = RESULT;
+ 
+lupsmOp2Gries : array ==> nat
+lupsmOp2Gries(a) == 
+  (lupslarr := [a(1)];
+   for k = 2 to len a do
+      lupsm4kop2Gries(a,k);
+   return len lupslarr;
+  )
+post lupslSpec(a) = RESULT;
+
+lupsm4kop2Gries : array * nat1 ==> ()
+lupsm4kop2Gries(a,k) ==
+  (dcl i : int; 
+   if lupslarr(len lupslarr)<=a(k) then
+      lupslarr := lupslarr^[a(k)]
+   else
+     (i := 1;
+      while lupslarr(i) <= a(k) do
+         i := i+1;
+      lupslarr(i) := a(k);
+     );
+  )
+pre k in set inds a;
+ 
+lupslOp3Laski : array ==> nat
+lupslOp3Laski(a) == 
+  (dcl lupslmax : nat := 0; 
+   for k = 1 to len a do
+      let lak = lupsltokop1Laski(a,k) in
+        if lak > lupslmax 
+        then lupslmax := lak;
+   return lupslmax;
+  )
+post lupslSpec(a) = RESULT;
+
+lupsltokop1Laski : array * nat1 ==> nat
+lupsltokop1Laski(a,k) ==
+  (dcl compatible : set of int := {};
+   dcl erg : int; 
+   for j = 1 to k-1 do
+       if a(j)<=a(k) then
+          compatible := (compatible union {lupslarr(j)});
+   if compatible = {} then 
+      erg := 1
+   else 
+      erg := MaxOfSet(compatible) + 1;
+   lupslarr := lupslarr^[erg];
+   return erg;
+  )
+pre k in set inds a; 
+ 
+lupsmOp3Gries : array ==> nat
+lupsmOp3Gries(a) == 
+  (lupslarr := [a(1)];
+   for k = 2 to len a do
+      lupsm4kop3Gries(a,k);
+   return len lupslarr;
+  )
+post lupslSpec(a) = RESULT;
+ 
+lupsm4kop3Gries : array * nat1 ==> ()
+lupsm4kop3Gries(a,k) ==
+  (dcl li : int,
+       re : int,
+       m  : int; 
+   if lupslarr(len lupslarr)<=a(k) then
+          lupslarr := lupslarr^[a(k)]
+   elseif a(k)< lupslarr(1) then 
+      lupslarr(1) := a(k)
+   else  
+      (li := 1;
+       re := len lupslarr;
+       while li <> re-1 do
+         (m := (li+re) div 2;
+          if lupslarr(m)<=a(k) then
+             li := m
+          else
+             re := m;
+         );
+         lupslarr(re) := a(k);
+       );
+  )
+pre k in set inds a;
+ 
+lupslOp4Laski : array ==> nat
+lupslOp4Laski(a) == 
+  (dcl lupslmax : nat := 0; 
+   for k = 1 to len a do
+      let lak = lupsltokop2Laski(a,k) in
+        if lak > lupslmax 
+        then lupslmax := lak;
+   return lupslmax;
+  )
+post lupslSpec(a) = RESULT;
+ 
+lupsltokop2Laski : array * nat1 ==> nat
+lupsltokop2Laski(a,k) ==
+  (dcl erg : int := 0; 
+   for j = 1 to k-1 do
+       if a(j)<=a(k) then
+          if erg < lupslarr(j) 
+          then erg := lupslarr(j);
+   erg := erg+1;
+   lupslarr := lupslarr^[erg];
+   return erg;
+  )
+pre k in set inds a; 
+
+ 
