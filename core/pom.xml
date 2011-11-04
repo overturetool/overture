@@ -18,7 +18,8 @@
 	<module>parser</module>
 	<module>typechecker</module>	
 	<module>vdmjparsertest</module>
-	<module>vdmjtypecheckertest</module>		
+	<module>vdmjtypecheckertest</module>
+	<module>vdmjpog</module>		
 	<module>pog</module>
    
   </modules>
