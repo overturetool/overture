@@ -48,7 +48,6 @@ import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ExitException;
-import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.values.Value;
 
 public class Delegate implements Serializable
