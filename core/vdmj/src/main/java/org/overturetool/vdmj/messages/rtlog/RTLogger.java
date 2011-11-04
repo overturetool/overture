@@ -190,8 +190,7 @@ public class RTLogger
 	//		
 	// }
 	//	
-	@SuppressWarnings("unchecked")
-	private synchronized static void moveMessageToStart(Class definition)
+	private synchronized static void moveMessageToStart(@SuppressWarnings("rawtypes") Class definition)
 	{
 		//TODO this method should be removed when the new log standard have been defined
 		List<RTMessage> tmp = new Vector<RTMessage>();
