@@ -1,6 +1,9 @@
 package org.overture.pog.visitors;
 
+import java.util.LinkedList;
+
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ASetBind;
@@ -37,6 +40,7 @@ import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.POScopeContext;
+import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.StateInvariantObligation;
 import org.overture.pog.obligations.SubTypeObligation;
@@ -276,10 +280,21 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 	}
 
 	@Override
-	public ProofObligationList caseSLetDefStm(SLetDefStm node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSLetDefStm(node, question);
+	public ProofObligationList caseSLetDefStm(SLetDefStm node, POContextStack question) {
+		
+		ProofObligationList obligations = new ProofObligationList();
+		
+		for (PDefinition def: node.getLocalDefs())
+		{
+			obligations.addAll(def.apply(rootVisitor,question));
+		}
+
+		question.push(new POScopeContext());
+		obligations.addAll(node.getStatement().apply(this,question));
+		question.pop();
+
+		return obligations;
+
 	}
 
 	@Override
