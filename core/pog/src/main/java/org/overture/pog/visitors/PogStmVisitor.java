@@ -1,7 +1,5 @@
 package org.overture.pog.visitors;
 
-import java.util.LinkedList;
-
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -18,20 +16,18 @@ import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
-import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
-import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
-import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.AStartStm;
-import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
@@ -40,7 +36,6 @@ import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.POScopeContext;
-import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.StateInvariantObligation;
 import org.overture.pog.obligations.SubTypeObligation;
@@ -300,78 +295,114 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 	@Override
 	public ProofObligationList defaultSLetDefStm(SLetDefStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSLetDefStm(node, question);
+		
+		return	node.apply(this,question);
 	}
-
-	@Override
-	public ProofObligationList caseANotYetSpecifiedStm(
-			ANotYetSpecifiedStm node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANotYetSpecifiedStm(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList caseAReturnStm(AReturnStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAReturnStm(node, question);
+		
+		ProofObligationList obligations = new ProofObligationList();
+
+		if (node.getExpression() != null)
+		{
+			obligations.addAll(node.getExpression().apply(rootVisitor,question));
+		}
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseSSimpleBlockStm(SSimpleBlockStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSSimpleBlockStm(node, question);
-	}
+		
+		ProofObligationList obligations = new ProofObligationList();
 
-	@Override
-	public ProofObligationList defaultSSimpleBlockStm(SSimpleBlockStm node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSSimpleBlockStm(node, question);
-	}
+		for (PStm stmt: node.getStatements())
+		{
+			obligations.addAll(stmt.apply(this,question));
+		}
 
-	@Override
-	public ProofObligationList caseASkipStm(ASkipStm node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASkipStm(node, question);
+		return obligations;
 	}
-
+		
 	@Override
 	public ProofObligationList caseASpecificationStm(ASpecificationStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASpecificationStm(node, question);
+		
+		ProofObligationList obligations = new ProofObligationList();
+
+		if (node.getErrors() != null)
+		{
+			for (AErrorCase err: node.getErrors())
+			{
+				obligations.addAll(err.getLeft().apply(rootVisitor,question));
+				obligations.addAll(err.getRight().apply(rootVisitor,question));
+			}
+		}
+
+		if (node.getPrecondition() != null)
+		{
+			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+		}
+
+		if (node.getPostcondition() != null)
+		{
+			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
+		}
+
+		return obligations;
+
 	}
 
 	@Override
 	public ProofObligationList caseAStartStm(AStartStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAStartStm(node, question);
+		
+		return node.getObj().apply(rootVisitor,question);
 	}
-
-	@Override
-	public ProofObligationList caseASubclassResponsibilityStm(
-			ASubclassResponsibilityStm node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASubclassResponsibilityStm(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList caseATixeStm(ATixeStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATixeStm(node, question);
+		
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (ATixeStmtAlternative alt: node.getTraps())
+		{
+			obligations.addAll(alt.apply(rootVisitor,question));
+		}
+
+		obligations.addAll(node.getBody().apply(rootVisitor,question));
+		return obligations;
+
 	}
 
 	@Override
 	public ProofObligationList caseATrapStm(ATrapStm node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATrapStm(node, question);
+		
+		ProofObligationList list = new ProofObligationList();
+
+		if (node.getPatternBind().getPattern() != null)
+		{
+			// Nothing to do
+		}
+		else if (node.getPatternBind().getBind() instanceof ATypeBind)
+		{
+			// Nothing to do
+		}
+		else if (node.getPatternBind().getBind() instanceof ASetBind)
+		{
+			ASetBind bind = (ASetBind)node.getPatternBind().getBind();
+			list.addAll(bind.getSet().apply(rootVisitor,question));
+		}
+
+		list.addAll(node.getWith().apply(rootVisitor,question));
+		list.addAll(node.getBody().apply(rootVisitor,question));
+		return list;
+
 	}
 
 	@Override
@@ -381,7 +412,7 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.add(new WhileLoopObligation(node, question));
 		obligations.addAll(node.getExp().apply(rootVisitor,question));
-		obligations.addAll(node.getStatement().apply(rootVisitor,question));
+		obligations.addAll(node.getStatement().apply(this,question));
 		
 		return obligations;
 	}
@@ -389,6 +420,7 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 	@Override
 	public ProofObligationList caseADefLetDefStm(ADefLetDefStm node,
 			POContextStack question) {
+				
 		// TODO Auto-generated method stub
 		return super.caseADefLetDefStm(node, question);
 	}
@@ -396,16 +428,8 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 	@Override
 	public ProofObligationList caseABlockSimpleBlockStm(
 			ABlockSimpleBlockStm node, POContextStack question) {
+		
 		// TODO Auto-generated method stub
 		return super.caseABlockSimpleBlockStm(node, question);
 	}
-
-	@Override
-	public ProofObligationList caseANonDeterministicSimpleBlockStm(
-			ANonDeterministicSimpleBlockStm node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANonDeterministicSimpleBlockStm(node, question);
-	}
-	
-	
 }
