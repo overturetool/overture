@@ -24,7 +24,7 @@ cd ..
 
 echo "Making Overture - Eclipse Projects (eclipse:eclipse)..."
 
-mvn eclipse:eclipse > /tmp/overtureInstall.log
+mvn eclipse:eclipse >> /tmp/overtureInstall.log
 
 if test $? -gt 0  
 then
@@ -38,7 +38,7 @@ echo "Making Overture - Updating Generated plugins..."
 echo "Updating generated core components of the IDE..."
 
 cd ide/generated
-mvn psteclipse:eclipse-plugin > /tmp/overtureInstall.log
+mvn psteclipse:eclipse-plugin >> /tmp/overtureInstall.log
 
 if test $? -gt 0  
 then
@@ -77,7 +77,7 @@ cd ..
 
 echo "Clean Overture - Eclipse Projects (eclipse:clean)..."
 
-mvn eclipse:eclean -o > /tmp/overtureInstall.log
+mvn eclipse:eclean -o >> /tmp/overtureInstall.log
 
 if test $? -gt 0  
 then
