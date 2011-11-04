@@ -52,14 +52,15 @@ import org.overture.pog.obligations.SubTypeObligation;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameList;
 
-public class PogDefinitionVisitor extends QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
+public class PogDefinitionVisitor extends
+		QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
 
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
-	
+
 	public PogDefinitionVisitor(PogVisitor pogVisitor) {
 		this.rootVisitor = pogVisitor;
 	}
-	
+
 	@Override
 	// from [1] pg. 35 we have an:
 	// explicit function definition = identifier,
@@ -71,37 +72,33 @@ public class PogDefinitionVisitor extends QuestionAnswerAdaptor<POContextStack, 
 	// [ ‘measure’, name ] ;
 	public ProofObligationList caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, POContextStack question) {
-		
-		ProofObligationList obligations = new ProofObligationList();
-		LexNameList pids = new  LexNameList();
 
-		
-		// add all defined names from the function parameter list 
+		ProofObligationList obligations = new ProofObligationList();
+		LexNameList pids = new LexNameList();
+
+		// add all defined names from the function parameter list
 		for (List<PPattern> patterns : node.getParamPatternList())
-			for(PPattern p : patterns)
-				for(PDefinition def : p.getDefinitions())
+			for (PPattern p : patterns)
+				for (PDefinition def : p.getDefinitions())
 					pids.add(def.getName());
 
-		// check for duplicates 
-		if (pids.hasDuplicates())
-		{
-			obligations.add(new ParameterPatternObligation(node,question));
+		// check for duplicates
+		if (pids.hasDuplicates()) {
+			obligations.add(new ParameterPatternObligation(node, question));
 		}
-		
+
 		// do proof obligations for the pre-condition
-		PExp precondition  = node.getPrecondition(); 
-		if(precondition != null)
-		{
+		PExp precondition = node.getPrecondition();
+		if (precondition != null) {
 			question.push(new POFunctionDefinitionContext(node, false));
 			obligations.addAll(precondition.apply(this, question));
 			question.pop();
 		}
-		
+
 		// do proof obligations for the post-condition
 		PExp postcondition = node.getPostcondition();
-		if (postcondition != null)
-		{
-			question.push(new POFunctionDefinitionContext(node,false));
+		if (postcondition != null) {
+			question.push(new POFunctionDefinitionContext(node, false));
 			obligations.add(new FuncPostConditionObligation(node, question));
 			question.push(new POFunctionResultContext(node));
 			obligations.addAll(postcondition.apply(this, question));
@@ -110,22 +107,22 @@ public class PogDefinitionVisitor extends QuestionAnswerAdaptor<POContextStack, 
 		}
 
 		// do proof obligations for the function body
-		question.push(new POFunctionDefinitionContext(node,true));
+		question.push(new POFunctionDefinitionContext(node, true));
 		PExp body = node.getBody();
-		obligations.addAll(body.apply(this,question));
-		
-		
-		
+		obligations.addAll(body.apply(rootVisitor, question));
+
 		// do proof obligation for the return type
-		if (node.getIsUndefined() || !TypeComparator.isSubType(node.getActualResult(), node.getExpectedResult()))
-		{
-			obligations.add(new SubTypeObligation(node, node.getExpectedResult(), node.getActualResult(), question));
+		if (node.getIsUndefined()
+				|| !TypeComparator.isSubType(node.getActualResult(),
+						node.getExpectedResult())) {
+			obligations.add(new SubTypeObligation(node, node
+					.getExpectedResult(), node.getActualResult(), question));
 		}
 		question.pop();
-		
+
 		return obligations;
 	}
-	
+
 	@Override
 	public ProofObligationList caseAAssignmentDefinition(
 			AAssignmentDefinition node, POContextStack question) {
@@ -341,7 +338,8 @@ public class PogDefinitionVisitor extends QuestionAnswerAdaptor<POContextStack, 
 			ABracketedExpressionTraceCoreDefinition node,
 			POContextStack question) {
 		// TODO Auto-generated method stub
-		return super.caseABracketedExpressionTraceCoreDefinition(node, question);
+		return super
+				.caseABracketedExpressionTraceCoreDefinition(node, question);
 	}
 
 	@Override
@@ -349,7 +347,8 @@ public class PogDefinitionVisitor extends QuestionAnswerAdaptor<POContextStack, 
 			AConcurrentExpressionTraceCoreDefinition node,
 			POContextStack question) {
 		// TODO Auto-generated method stub
-		return super.caseAConcurrentExpressionTraceCoreDefinition(node, question);
+		return super.caseAConcurrentExpressionTraceCoreDefinition(node,
+				question);
 	}
 
 	@Override
@@ -379,5 +378,5 @@ public class PogDefinitionVisitor extends QuestionAnswerAdaptor<POContextStack, 
 		// TODO Auto-generated method stub
 		return super.caseAClassClassDefinition(node, question);
 	}
-	
+
 }
