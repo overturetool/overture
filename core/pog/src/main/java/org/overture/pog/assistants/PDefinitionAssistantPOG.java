@@ -14,7 +14,6 @@ public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
 	public static ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> pogVisitor,
-			LinkedList<PDefinition> defs, QuestionAnswerAdaptor<POContextStack, ProofObligationList> pogVisitor,
 			POContextStack ctxt) {
 		ProofObligationList obligations = new ProofObligationList();
 
