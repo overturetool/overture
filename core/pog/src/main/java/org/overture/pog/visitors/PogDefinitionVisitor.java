@@ -350,33 +350,18 @@ public class PogDefinitionVisitor extends
 		return super.caseAConcurrentExpressionTraceCoreDefinition(node,
 				question);
 	}
-
-	@Override
-	public ProofObligationList caseABusClassDefinition(
-			ABusClassDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseABusClassDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseACpuClassDefinition(
-			ACpuClassDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseACpuClassDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseASystemClassDefinition(
-			ASystemClassDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASystemClassDefinition(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList caseAClassClassDefinition(
 			AClassClassDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAClassClassDefinition(node, question);
+
+		ProofObligationList proofObligationList = new ProofObligationList();
+		
+		for(PDefinition def : node.getDefinitions())
+		{
+			proofObligationList.addAll(def.apply(this,question));
+		}
+		return proofObligationList;
 	}
 
 }
