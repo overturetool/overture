@@ -124,7 +124,6 @@ public class PogVisitor extends
 			this);
 	private PogImportVisitor pogImportVisitor = new PogImportVisitor(this);
 	private PogTypeVisitor pogTypeVisitor = new PogTypeVisitor(this);
-	private PogPatternVisitor pogPatternVisitor = new PogPatternVisitor(this);
 
 	@Override
 	// See [1] pg. 167 for the definition
@@ -503,7 +502,7 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPPattern(PPattern node,
 			POContextStack question) {
-		return node.apply(pogPatternVisitor, question);
+		return new ProofObligationList();
 	}
 
 	@Override
