@@ -122,7 +122,6 @@ public class PogVisitor extends
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
 	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(
 			this);
-	private PogImportVisitor pogImportVisitor = new PogImportVisitor(this);
 	private PogTypeVisitor pogTypeVisitor = new PogTypeVisitor(this);
 
 	@Override
@@ -598,7 +597,7 @@ public class PogVisitor extends
 	public ProofObligationList defaultPImports(PImports node,
 			POContextStack question) {
 
-		return node.apply(pogImportVisitor, question);
+		return new ProofObligationList();
 	}
 
 	@Override
