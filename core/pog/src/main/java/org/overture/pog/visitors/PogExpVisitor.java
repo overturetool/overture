@@ -671,14 +671,7 @@ public class PogExpVisitor extends
 		// TODO Auto-generated method stub
 		return super.caseAUndefinedExp(node, question);
 	}
-
-	@Override
-	public ProofObligationList caseAVariableExp(AVariableExp node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAVariableExp(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
 			POContextStack question) {
@@ -1111,6 +1104,12 @@ public class PogExpVisitor extends
 			POContextStack question) {
 		// TODO Auto-generated method stub
 		return super.caseASetRangeSetExp(node, question);
+	}
+	
+	@Override
+	public ProofObligationList defaultPExp(PExp node, POContextStack question) {
+
+		return new ProofObligationList();
 	}
 
 }

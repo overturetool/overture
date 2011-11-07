@@ -138,17 +138,10 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPField(PField node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPField(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAFieldField(AFieldField node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFieldField(node, question);
+		return new ProofObligationList();
 	}
-
+	
 	@Override
 	public ProofObligationList defaultPAccessSpecifier(PAccessSpecifier node,
 			POContextStack question) {
@@ -166,31 +159,10 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPAccess(PAccess node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPAccess(node, question);
+		
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAPublicAccess(APublicAccess node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPublicAccess(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAProtectedAccess(AProtectedAccess node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAProtectedAccess(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAPrivateAccess(APrivateAccess node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPrivateAccess(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultPPattern(PPattern node,
 			POContextStack question) {
@@ -482,8 +454,8 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultNode(Node node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultNode(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
