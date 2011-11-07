@@ -32,7 +32,6 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SLetDefStm;
-import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.POScopeContext;
@@ -313,19 +312,19 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 		return obligations;
 	}
 
-	@Override
-	public ProofObligationList caseSSimpleBlockStm(SSimpleBlockStm node,
-			POContextStack question) {
-		
-		ProofObligationList obligations = new ProofObligationList();
-
-		for (PStm stmt: node.getStatements())
-		{
-			obligations.addAll(stmt.apply(this,question));
-		}
-
-		return obligations;
-	}
+//	@Override
+//	public ProofObligationList caseSSimpleBlockStm(SSimpleBlockStm node,
+//			POContextStack question) {
+//		
+//		ProofObligationList obligations = new ProofObligationList();
+//
+//		for (PStm stmt: node.getStatements())
+//		{
+//			obligations.addAll(stmt.apply(this,question));
+//		}
+//
+//		return obligations;
+//	}
 		
 	@Override
 	public ProofObligationList caseASpecificationStm(ASpecificationStm node,
@@ -429,7 +428,24 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 	public ProofObligationList caseABlockSimpleBlockStm(
 			ABlockSimpleBlockStm node, POContextStack question) {
 		
-		// TODO Auto-generated method stub
-		return super.caseABlockSimpleBlockStm(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+		
+		for (PDefinition def  : node.getAssignmentDefs())
+		{
+			ProofObligationList defObligations = def.apply(rootVisitor,question);
+			if (defObligations != null)
+				obligations.addAll(defObligations);
+		}
+
+		question.push(new POScopeContext());
+		
+		for (PStm stmt: node.getStatements())
+		{
+			obligations.addAll(stmt.apply(this,question));
+		}
+		
+		question.pop();
+
+		return obligations;
 	}
 }
