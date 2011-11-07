@@ -8,6 +8,7 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
@@ -18,6 +19,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.pog.obligations.CasesExhaustiveObligation;
 import org.overture.pog.obligations.FiniteMapObligation;
 import org.overture.pog.obligations.FunctionApplyObligation;
+import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.MapApplyObligation;
 import org.overture.pog.obligations.MapSetOfCompatibleObligation;
 import org.overture.pog.obligations.NonEmptySeqObligation;
@@ -415,30 +417,49 @@ public class PogExpVisitor extends
 	}
 
 	@Override
+	// RWL See [1] pg. 64-65
 	public ProofObligationList caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIsOfBaseClassExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
+	// RWL See [1] pg. 64-65
 	public ProofObligationList caseAIsOfClassExp(AIsOfClassExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIsOfClassExp(node, question);
+
+		question.noteType(node.getExp(), node.getClassType());
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
+	// RWL See [1] pg. 62
 	public ProofObligationList caseALambdaExp(ALambdaExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALambdaExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (ATypeBind tb : node.getBindList()) {
+			obligations.addAll(tb.apply(this, question));
+		}
+
+		question.push(new POForAllContext(node));
+		obligations.addAll(node.getExpression().apply(this, question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseALetBeStExp(ALetBeStExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.add(new LetBeExistsObligation(node, question));
+		obligations.addAll(node.getBind().apply(this, question));
+
+		PExp suchThat = node.getSuchThat();
+
 		return super.caseALetBeStExp(node, question);
 	}
 
