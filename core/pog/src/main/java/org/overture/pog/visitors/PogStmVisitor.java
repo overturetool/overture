@@ -420,8 +420,18 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 	public ProofObligationList caseADefLetDefStm(ADefLetDefStm node,
 			POContextStack question) {
 				
-		// TODO Auto-generated method stub
-		return super.caseADefLetDefStm(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+		
+		for(PDefinition localDef : node.getLocalDefs())
+		{
+			obligations.addAll(localDef.apply(rootVisitor,question));
+		}
+
+		question.push(new POScopeContext());
+		obligations.addAll(node.getStatement().apply(this,question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
