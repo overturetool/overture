@@ -10,7 +10,8 @@ import org.overture.ast.expressions.*;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -23,12 +24,16 @@ import org.overture.pog.obligations.NonEmptySeqObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.POForAllContext;
 import org.overture.pog.obligations.POForAllPredicateContext;
+import org.overture.pog.obligations.POImpliesContext;
+import org.overture.pog.obligations.PONotImpliesContext;
 import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.RecursiveObligation;
 import org.overture.pog.obligations.SeqApplyObligation;
 import org.overture.pog.obligations.SubTypeObligation;
+import org.overture.pog.obligations.TupleSelectObligation;
 import org.overture.typecheck.TypeComparator;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class PogExpVisitor extends
 		QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
@@ -47,6 +52,7 @@ public class PogExpVisitor extends
 
 		ProofObligationList obligations = new ProofObligationList();
 
+		// is it a map?
 		PType type = node.getType();
 		if (type instanceof SMapType) {
 			SMapType mapType = (SMapType) type;
@@ -61,9 +67,11 @@ public class PogExpVisitor extends
 			}
 		}
 
-		if (!(type instanceof AUnknownType) && (type instanceof AFunctionType)) {
+		// VDMJ asks !type.isUnknown() && type.isFunctionType() however as we
+		// use inheritance in this version type instanceof AFunctionType will
+		// imply !type instance of UnknownType I guess
+		if ( /* !(type instanceof AUnknownType) && */(type instanceof AFunctionType)) {
 			AFunctionType funcType = (AFunctionType) type;
-			// TODO Fix this get the name of the precondition
 			String prename = "Precond";
 			if (prename == null || !prename.equals("")) {
 				obligations.add(new FunctionApplyObligation(node.getRoot(),
@@ -122,7 +130,20 @@ public class PogExpVisitor extends
 			POContextStack question) {
 
 		ProofObligationList obligations = new ProofObligationList();
-		ProofObligation po = new NonEmptySeqObligation(node.getExp(), question);
+		PExp exp = node.getExp();
+
+		// TODO RWL This is a hack. The new ast LexNameToken's toString method
+		// includes the module e.g. like Test`b for variables
+		// which the old one did not. Hence proof obligations with variable
+		// names are different as "Test`b" is just b with the old proof
+		// obligations generator.
+		PExp fake = exp.clone();
+		if (exp instanceof AVariableExp) {
+			AVariableExp var = (AVariableExp) fake;
+			var.setName(new LexNameToken("", var.getName().getIdentifier()));
+		}
+
+		ProofObligation po = new NonEmptySeqObligation(fake, question);
 		obligations.add(po);
 
 		return obligations;
@@ -201,119 +222,196 @@ public class PogExpVisitor extends
 	}
 
 	@Override
+	// RWL
 	public ProofObligationList defaultSUnaryExp(SUnaryExp node,
 			POContextStack question) {
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
+	// RWL
 	public ProofObligationList caseSBinaryExp(SBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSBinaryExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.addAll(node.getLeft().apply(this, question));
+		obligations.addAll(node.getRight().apply(this, question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList defaultSBinaryExp(SBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSBinaryExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.addAll(node.getLeft().apply(this, question));
+		obligations.addAll(node.getRight().apply(this, question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseABooleanConstExp(ABooleanConstExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseABooleanConstExp(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseACharLiteralExp(ACharLiteralExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseACharLiteralExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAElseIfExp(AElseIfExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAElseIfExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+		question.push(new POImpliesContext(node.getElseIf()));
+		node.getThen().apply(this, question);
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAExists1Exp(AExists1Exp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAExists1Exp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+		question.push(new POForAllContext(node));
+		obligations.addAll(node.getPredicate().apply(this, question));
+		question.pop();
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAExistsExp(AExistsExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAExistsExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (PMultipleBind mb : node.getBindList()) {
+			obligations.addAll(mb.apply(this, question));
+		}
+
+		question.push(new POForAllContext(node));
+		obligations.addAll(node.getPredicate().apply(this, question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAFieldExp(AFieldExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFieldExp(node, question);
+		return node.getObject().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAFieldNumberExp(AFieldNumberExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFieldNumberExp(node, question);
+
+		ProofObligationList obligations = node.getTuple().apply(this, question);
+
+		PType type = node.getType();
+
+		if (type instanceof AUnionType) {
+			AUnionType utype = (AUnionType) type;
+			for (PType t : utype.getTypes()) {
+				if (t instanceof AProductType) {
+					AProductType aprodType = (AProductType) t;
+					if (aprodType.getTypes().size() < node.getField().value) {
+						obligations.add(new TupleSelectObligation(node,
+								aprodType, question));
+					}
+				}
+			}
+		}
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAForAllExp(AForAllExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAForAllExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (PMultipleBind mb : node.getBindList()) {
+			obligations.addAll(mb.apply(this, question));
+		}
+
+		question.push(new POForAllContext(node));
+		obligations.addAll(node.getPredicate().apply(this, question));
+		question.pop();
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAFuncInstatiationExp(
 			AFuncInstatiationExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFuncInstatiationExp(node, question);
+		// TODO RWL Hmm, what to do here?
+		throw new RuntimeException("I did'nt know what to do there.");
+		// return super.caseAFuncInstatiationExp(node, question);
 	}
 
 	@Override
+	// RWL
 	public ProofObligationList caseAHistoryExp(AHistoryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAHistoryExp(node, question);
+		// No getProofObligationMethod found on the HistoryExpression class of
+		// VDMJ assuming we have the empty list.
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIfExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		question.push(new POImpliesContext(node.getTest()));
+		obligations.addAll(node.getThen().apply(this, question));
+		question.pop();
+
+		question.push(new PONotImpliesContext(node.getTest()));
+		obligations.addAll(node.getElse().apply(this, question));
+		question.pop();
+
+		for (AElseIfExp e : node.getElseList()) {
+			obligations.addAll(e.apply(this, question));
+			question.push(new PONotImpliesContext(e.getElseIf()));
+
+		}
+
+		obligations.addAll(node.getElse().apply(this, question));
+
+		for (int i = 0; i < node.getElseList().size(); i++)
+			question.pop();
+
+		question.pop();
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAIntLiteralExp(AIntLiteralExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIntLiteralExp(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAIotaExp(AIotaExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIotaExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAIsExp(AIsExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIsExp(node, question);
+		PDefinition typeDef = node.getTypedef();
+		PType basicType = node.getBasicType();
+		if (typeDef != null) {
+			question.noteType(node.getTest(), typeDef.getType());
+		} else if (basicType != null) {
+			question.noteType(node.getTest(), basicType);
+		}
+		return node.getTest().apply(this, question);
 	}
 
 	@Override
