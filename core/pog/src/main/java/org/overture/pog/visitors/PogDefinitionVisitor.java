@@ -3,11 +3,8 @@ package org.overture.pog.visitors;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -16,7 +13,6 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
@@ -24,7 +20,6 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
@@ -43,11 +38,13 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.obligations.FuncPostConditionObligation;
+import org.overture.pog.obligations.OperationPostConditionObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.POFunctionDefinitionContext;
 import org.overture.pog.obligations.POFunctionResultContext;
 import org.overture.pog.obligations.ParameterPatternObligation;
 import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pog.obligations.StateInvariantObligation;
 import org.overture.pog.obligations.SubTypeObligation;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -122,26 +119,19 @@ public class PogDefinitionVisitor extends
 
 		return obligations;
 	}
-
-	@Override
-	public ProofObligationList caseAAssignmentDefinition(
-			AAssignmentDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAAssignmentDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAInstanceVariableDefinition(
-			AInstanceVariableDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAInstanceVariableDefinition(node, question);
-	}
-
+		
 	@Override
 	public ProofObligationList caseSClassDefinition(SClassDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSClassDefinition(node, question);
+	
+		ProofObligationList proofObligationList = new ProofObligationList();
+		
+		for(PDefinition def : node.getDefinitions())
+		{
+			proofObligationList.addAll(def.apply(this,question));
+		}
+		return proofObligationList;
+		
 	}
 
 	@Override
@@ -182,8 +172,47 @@ public class PogDefinitionVisitor extends
 	@Override
 	public ProofObligationList caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAExplicitOperationDefinition(node, question);
+		
+		ProofObligationList obligations = new ProofObligationList();
+		LexNameList pids = new LexNameList();
+
+		// add all defined names from the function parameter list
+		for (PPattern p : node.getParameterPatterns())
+			for (PDefinition def : p.getDefinitions())
+				pids.add(def.getName());
+	
+		if (pids.hasDuplicates())
+		{
+			obligations.add(new ParameterPatternObligation(node, question));
+		}
+
+		if (node.getPrecondition() != null)
+		{
+			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+		}
+
+		if (node.getPostcondition() != null)
+		{
+			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
+			obligations.add(new OperationPostConditionObligation(node, question));
+		}
+
+		obligations.addAll(node.getBody().apply(rootVisitor,question));
+
+		if (node.getIsConstructor() &&
+			node.getClassDefinition() != null &&
+			node.getClassDefinition().getInvariant() != null)
+		{
+			obligations.add(new StateInvariantObligation(node, question));
+		}
+
+		if (!node.getIsConstructor() &&
+			!TypeComparator.isSubType(node.getActualResult(), node.getType().getResult()))
+		{
+			obligations.add(new SubTypeObligation(node, node.getActualResult(), question));
+		}
+
+		return obligations;
 	}
 
 	@Override
