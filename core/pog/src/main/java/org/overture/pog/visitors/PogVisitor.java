@@ -7,7 +7,6 @@ import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.PAlternative;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.PModifier;
@@ -22,32 +21,9 @@ import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PExports;
 import org.overture.ast.modules.PImports;
 import org.overture.ast.modules.PModules;
-import org.overture.ast.node.AFalseBooleanConst;
-import org.overture.ast.node.ATrueBooleanConst;
 import org.overture.ast.node.Node;
 import org.overture.ast.node.PBooleanConst;
 import org.overture.ast.node.Token;
-import org.overture.ast.node.tokens.TAndAnd;
-import org.overture.ast.node.tokens.TAsync;
-import org.overture.ast.node.tokens.TBool;
-import org.overture.ast.node.tokens.TBoolLiteral;
-import org.overture.ast.node.tokens.TChar;
-import org.overture.ast.node.tokens.TCharLiteral;
-import org.overture.ast.node.tokens.TFalse;
-import org.overture.ast.node.tokens.TInt;
-import org.overture.ast.node.tokens.TNat;
-import org.overture.ast.node.tokens.TNatOne;
-import org.overture.ast.node.tokens.TNumbersLiteral;
-import org.overture.ast.node.tokens.TOrOr;
-import org.overture.ast.node.tokens.TPlus;
-import org.overture.ast.node.tokens.TQuoteLiteral;
-import org.overture.ast.node.tokens.TRat;
-import org.overture.ast.node.tokens.TReal;
-import org.overture.ast.node.tokens.TRealLiteral;
-import org.overture.ast.node.tokens.TStatic;
-import org.overture.ast.node.tokens.TStringLiteral;
-import org.overture.ast.node.tokens.TTokenLiteral;
-import org.overture.ast.node.tokens.TTrue;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
@@ -87,19 +63,6 @@ import org.overture.ast.types.PType;
 import org.overture.pog.assistants.PDefinitionAssistantPOG;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.ProofObligationList;
-import org.overturetool.util.ClonableFile;
-import org.overturetool.vdmj.lex.LexBooleanToken;
-import org.overturetool.vdmj.lex.LexCharacterToken;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexIntegerToken;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexQuoteToken;
-import org.overturetool.vdmj.lex.LexRealToken;
-import org.overturetool.vdmj.lex.LexStringToken;
-import org.overturetool.vdmj.lex.LexToken;
-import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
-import org.overturetool.vdmj.typechecker.NameScope;
 
 /**
  * This is the proof obligation visitor climbs through the AST and builds the
@@ -122,7 +85,6 @@ public class PogVisitor extends
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
 	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(
 			this);
-	private PogTypeVisitor pogTypeVisitor = new PogTypeVisitor(this);
 
 	@Override
 	// See [1] pg. 167 for the definition
@@ -132,255 +94,7 @@ public class PogVisitor extends
 				pogDefinitionVisitor, question);
 
 	}
-
-	@Override
-	public ProofObligationList caseLexToken(LexToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexNameToken(LexNameToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexNameToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexIdentifierToken(LexIdentifierToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexIdentifierToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexBooleanToken(LexBooleanToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexBooleanToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexCharacterToken(LexCharacterToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexCharacterToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexIntegerToken(LexIntegerToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexIntegerToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexQuoteToken(LexQuoteToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexQuoteToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexRealToken(LexRealToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexRealToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexStringToken(LexStringToken node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexStringToken(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseClonableFile(ClonableFile node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseClonableFile(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseClassDefinitionSettings(
-			ClassDefinitionSettings node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseClassDefinitionSettings(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLexLocation(LexLocation node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLexLocation(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTPlus(TPlus node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTPlus(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseBoolean(Boolean node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseBoolean(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseInteger(Integer node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseInteger(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseString(String node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseString(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseLong(Long node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseLong(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseNameScope(NameScope node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseNameScope(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTBool(TBool node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTBool(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTChar(TChar node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTChar(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTInt(TInt node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTInt(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTNatOne(TNatOne node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTNatOne(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTNat(TNat node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTNat(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTRat(TRat node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTRat(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTReal(TReal node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTReal(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTTrue(TTrue node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTTrue(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTFalse(TFalse node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTFalse(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTAndAnd(TAndAnd node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTAndAnd(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTOrOr(TOrOr node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTOrOr(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTNumbersLiteral(TNumbersLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTNumbersLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTCharLiteral(TCharLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTCharLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTQuoteLiteral(TQuoteLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTQuoteLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTRealLiteral(TRealLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTRealLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTStringLiteral(TStringLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTStringLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTTokenLiteral(TTokenLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTTokenLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTBoolLiteral(TBoolLiteral node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTBoolLiteral(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTStatic(TStatic node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTStatic(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseTAsync(TAsync node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseTAsync(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultPExp(PExp node, POContextStack question) {
 
@@ -390,17 +104,10 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPModifier(PModifier node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPModifier(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseARecordModifier(ARecordModifier node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseARecordModifier(node, question);
+		return new ProofObligationList();
 	}
-
+	
 	@Override
 	public ProofObligationList defaultPAlternative(PAlternative node,
 			POContextStack question) {
@@ -418,28 +125,14 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPBooleanConst(PBooleanConst node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPBooleanConst(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseATrueBooleanConst(ATrueBooleanConst node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATrueBooleanConst(node, question);
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAFalseBooleanConst(AFalseBooleanConst node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFalseBooleanConst(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultPType(PType node, POContextStack question) {
 
-		return node.apply(pogTypeVisitor, question);
+		return new ProofObligationList();
 	}
 
 	@Override
@@ -795,8 +488,8 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultToken(Token node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultToken(node, question);
+
+		return new ProofObligationList();
 	}
 
 }
