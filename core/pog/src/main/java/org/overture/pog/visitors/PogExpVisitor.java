@@ -11,6 +11,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
@@ -28,8 +29,11 @@ import org.overture.pog.obligations.FunctionApplyObligation;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.MapApplyObligation;
 import org.overture.pog.obligations.MapCompatibleObligation;
+import org.overture.pog.obligations.MapIterationObligation;
+import org.overture.pog.obligations.MapSeqOfCompatibleObligation;
 import org.overture.pog.obligations.MapSetOfCompatibleObligation;
 import org.overture.pog.obligations.NonEmptySeqObligation;
+import org.overture.pog.obligations.NonZeroObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.PODefContext;
 import org.overture.pog.obligations.POForAllContext;
@@ -926,25 +930,33 @@ public class PogExpVisitor extends
 				"Oooh, fix me, here I did not know what to do.");
 	}
 
+	final static int LEFT = 0;
+	final static int RIGHT = 1;
+
+	private <T> PExp[] getLeftRight(T node) {
+		PExp[] res = new PExp[2];
+		try {
+			Class<?> clz = node.getClass();
+			Method getLeft = clz.getMethod("getLeft", new Class<?>[] {});
+			Method getRight = clz.getMethod("getRight", new Class<?>[] {});
+			res[LEFT] = (PExp) getLeft.invoke(node, new Object[0]);
+			res[RIGHT] = (PExp) getRight.invoke(node, new Object[0]);
+
+		} catch (Exception k) {
+			throw new RuntimeException(k);
+		}
+		return res;
+	}
+
 	private <T> ProofObligationList handleBinaryExpression(T node,
 			POContextStack question) {
 
 		if (node == null)
 			return new ProofObligationList();
 
-		PExp left = null;
-		PExp right = null;
-
-		try {
-			Class<?> clz = node.getClass();
-			Method getLeft = clz.getMethod("getLeft", new Class<?>[] {});
-			Method getRight = clz.getMethod("getRight", new Class<?>[] {});
-			left = (PExp) getLeft.invoke(node, new Object[0]);
-			right = (PExp) getRight.invoke(node, new Object[0]);
-
-		} catch (Exception k) {
-			throw new RuntimeException(k);
-		}
+		PExp[] leftRight = getLeftRight(node);
+		PExp left = leftRight[LEFT];
+		PExp right = leftRight[RIGHT];
 
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(left.apply(this, question));
@@ -1064,190 +1076,378 @@ public class PogExpVisitor extends
 	@Override
 	public ProofObligationList caseASeqConcatBinaryExp(
 			ASeqConcatBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASeqConcatBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetDifferenceBinaryExp(
 			ASetDifferenceBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetDifferenceBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetIntersectBinaryExp(
 			ASetIntersectBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetIntersectBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetUnionBinaryExp(ASetUnionBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetUnionBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAStarStarBinaryExp(AStarStarBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAStarStarBinaryExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp lExp = node.getLeft();
+		PType lType = lExp.getType();
+
+		if (lType instanceof AFunctionType) {
+
+			throw new RuntimeException(
+					"How do I get the left.preName (see StarStarExpression in vdmj) ?");
+			// String preName = lExp.getPre
+		}
+
+		if (lType instanceof SMapType) {
+			obligations.add(new MapIterationObligation(node, question));
+		}
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseASubsetBinaryExp(ASubsetBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASubsetBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAAndBooleanBinaryExp(
 			AAndBooleanBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAAndBooleanBinaryExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp lExp = node.getLeft();
+		PType lType = lExp.getType();
+		PExp rExp = node.getRight();
+		PType rType = rExp.getType();
+
+		if (lType instanceof AUnionType) {
+
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
+					lExp.getLocation(), false), lType, question));
+		}
+
+		if (rType instanceof AUnionType) {
+			question.push(new POImpliesContext(lExp));
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
+					rExp.getLocation(), false), rType, question));
+			question.pop();
+		}
+
+		obligations.addAll(lExp.apply(this, question));
+
+		question.push(new POImpliesContext(lExp));
+		obligations.addAll(rExp.apply(this, question));
+		question.pop();
+
+		return obligations;
+	}
+
+	private <T> ProofObligationList handleBinaryBooleanExp(T node,
+			POContextStack question) {
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp[] leftRight = getLeftRight(node);
+		PExp lExp = leftRight[LEFT];
+		PType lType = lExp.getType();
+		PExp rExp = leftRight[RIGHT];
+		PType rType = rExp.getType();
+
+		if (lType instanceof AUnionType) {
+
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
+					lExp.getLocation(), false), lType, question));
+		}
+
+		if (rType instanceof AUnionType) {
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
+					rExp.getLocation(), false), rType, question));
+		}
+
+		obligations.addAll(lExp.apply(this, question));
+
+		question.push(new POImpliesContext(lExp));
+		obligations.addAll(rExp.apply(this, question));
+		question.pop();
+
+		return obligations;
+
 	}
 
 	@Override
 	public ProofObligationList caseAEquivalentBooleanBinaryExp(
 			AEquivalentBooleanBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAEquivalentBooleanBinaryExp(node, question);
+		return handleBinaryBooleanExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAImpliesBooleanBinaryExp(
 			AImpliesBooleanBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAImpliesBooleanBinaryExp(node, question);
+		return handleBinaryBooleanExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAOrBooleanBinaryExp(
 			AOrBooleanBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAOrBooleanBinaryExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp lExp = node.getLeft();
+		PExp rExp = node.getRight();
+		PType lType = lExp.getType();
+		PType rType = rExp.getType();
+
+		if (lType instanceof AUnionType) {
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
+					lExp.getLocation(), false), lType, question));
+		}
+
+		if (rType instanceof AUnionType) {
+			question.push(new PONotImpliesContext(lExp));
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
+					rExp.getLocation(), false), rType, question));
+			question.pop();
+		}
+
+		obligations.addAll(lExp.apply(this, question));
+		question.push(new PONotImpliesContext(lExp));
+		obligations.addAll(rExp.apply(this, question));
+		question.pop();
+
+		return obligations;
+	}
+
+	private <T extends PExp> ProofObligationList handleDivideNumericBinaryExp(
+			T node, POContextStack question) {
+		ProofObligationList obligations = new ProofObligationList();
+		PExp[] leftRight = getLeftRight(node);
+		PExp rExp = leftRight[RIGHT];
+		if (!(rExp instanceof AIntLiteralExp)
+				&& !(rExp instanceof ARealLiteralExp)) {
+			obligations.add(new NonZeroObligation(node.getLocation(), rExp,
+					question));
+		}
+
+		return obligations;
 	}
 
 	@Override
+	// RWL see [1] pg.
 	public ProofObligationList caseADivNumericBinaryExp(
 			ADivNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADivNumericBinaryExp(node, question);
+		return handleDivideNumericBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseADivideNumericBinaryExp(
 			ADivideNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADivideNumericBinaryExp(node, question);
+		return handleDivideNumericBinaryExp(node, question);
+	}
+
+	private <T> ProofObligationList handleNumericBinaryExpression(T node,
+			POContextStack question) {
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp[] leftRight = getLeftRight(node);
+		PExp left = leftRight[LEFT];
+		PExp right = leftRight[RIGHT];
+		PType ltype = left.getType();
+		PType rtype = right.getType();
+
+		if (ltype instanceof AUnionType) {
+			obligations.add(new SubTypeObligation(left,
+					new ARealNumericBasicType(left.getLocation(), false),
+					ltype, question));
+		}
+
+		if (rtype instanceof AUnionType) {
+			obligations.add(new SubTypeObligation(right,
+					new ARealNumericBasicType(right.getLocation(), false),
+					rtype, question));
+		}
+
+		obligations.addAll(left.apply(this, question));
+		obligations.addAll(right.apply(this, question));
+		return obligations;
+
 	}
 
 	@Override
 	public ProofObligationList caseAGreaterEqualNumericBinaryExp(
 			AGreaterEqualNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAGreaterEqualNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAGreaterNumericBinaryExp(
 			AGreaterNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAGreaterNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseALessEqualNumericBinaryExp(
 			ALessEqualNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALessEqualNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseALessNumericBinaryExp(
 			ALessNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALessNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAModNumericBinaryExp(
 			AModNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAModNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPlusNumericBinaryExp(
 			APlusNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPlusNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARemNumericBinaryExp(
 			ARemNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseARemNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASubstractNumericBinaryExp(
 			ASubstractNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASubstractNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseATimesNumericBinaryExp(
 			ATimesNumericBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATimesNumericBinaryExp(node, question);
+		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapEnumMapExp(AMapEnumMapExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMapEnumMapExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		List<AMapletExp> members = node.getMembers();
+
+		for (AMapletExp maplet : members) {
+			obligations.addAll(maplet.apply(this, question));
+		}
+
+		if (members.size() > 1)
+			obligations.add(new MapSeqOfCompatibleObligation(node, question));
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseASeqCompSeqExp(ASeqCompSeqExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASeqCompSeqExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp first = node.getFirst();
+
+		question.push(new POForAllPredicateContext(node));
+		obligations.addAll(first.apply(this, question));
+		question.pop();
+
+		PExp predicate = node.getPredicate();
+		if (predicate != null) {
+			question.push(new POForAllContext(node));
+			obligations.addAll(predicate.apply(this, question));
+			question.pop();
+		}
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseASeqEnumSeqExp(ASeqEnumSeqExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASeqEnumSeqExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (PExp e : node.getMembers())
+			obligations.addAll(e.apply(this, question));
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseASetCompSetExp(ASetCompSetExp node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetCompSetExp(node, question);
+			POContextStack question)
+
+	{
+		PExp first = node.getFirst();
+		PExp predicate = node.getPredicate();
+
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.addAll(first.apply(this, question));
+		question.pop();
+
+		List<PMultipleBind> bindings = node.getBindings();
+
+		boolean finiteTest = false;
+		for (PMultipleBind b : bindings) {
+			if (b instanceof ATypeMultipleBind) {
+				finiteTest = true;
+			}
+		}
+
+		if (finiteTest) {
+			obligations.addAll(predicate.apply(this, question));
+		}
+
+		if (predicate != null) {
+			question.push(new POForAllContext(node));
+			obligations.addAll(predicate.apply(this, question));
+			question.pop();
+		}
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseASetEnumSetExp(ASetEnumSetExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetEnumSetExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (PExp e : node.getMembers())
+			obligations.addAll(e.apply(this, question));
+
+		return obligations;
+
 	}
 
 	@Override
 	public ProofObligationList caseASetRangeSetExp(ASetRangeSetExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetRangeSetExp(node, question);
+		PExp last = node.getLast();
+		PExp first = node.getFirst();
+		ProofObligationList obligations = first.apply(this, question);
+		obligations.addAll(last.apply(this, question));
+		return obligations;
+
 	}
 
 	@Override
