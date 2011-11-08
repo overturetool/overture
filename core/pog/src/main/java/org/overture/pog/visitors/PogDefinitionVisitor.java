@@ -10,28 +10,12 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AImportedDefinition;
-import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.AMultiBindListDefinition;
-import org.overture.ast.definitions.AMutexSyncDefinition;
-import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.AInstanceTraceDefinition;
-import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
-import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
@@ -48,6 +32,8 @@ import org.overture.pog.obligations.OperationPostConditionObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.POFunctionDefinitionContext;
 import org.overture.pog.obligations.POFunctionResultContext;
+import org.overture.pog.obligations.PONameContext;
+import org.overture.pog.obligations.POOperationDefinitionContext;
 import org.overture.pog.obligations.ParameterPatternObligation;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.SatisfiabilityObligation;
@@ -146,8 +132,7 @@ public class PogDefinitionVisitor extends
 	public ProofObligationList defaultSClassDefinition(SClassDefinition node,
 			POContextStack question) {
 				
-		// TODO Auto-generated method stub
-		return super.defaultSClassDefinition(node, question);
+		return caseSClassDefinition(node,question);
 	}
 
 	@Override
@@ -336,170 +321,168 @@ public class PogDefinitionVisitor extends
 	@Override
 	public ProofObligationList caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAImplicitOperationDefinition(node, question);
-	}
+		
+		ProofObligationList obligations = new ProofObligationList();
+		LexNameList pids = new LexNameList();
 
-	@Override
-	public ProofObligationList caseAImportedDefinition(
-			AImportedDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAImportedDefinition(node, question);
-	}
+		for(APatternListTypePair tp : node.getParameterPatterns() )
+		{
+			for (PPattern p : tp.getPatterns())
+			{
+				for(PDefinition def : p.getDefinitions())
+					pids.add(def.getName());
+			}
+		}
 
-	@Override
-	public ProofObligationList caseAInheritedDefinition(
-			AInheritedDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAInheritedDefinition(node, question);
-	}
+		if (pids.hasDuplicates())
+		{
+			obligations.add(new ParameterPatternObligation(node, question));
+		}
 
+		if (node.getPrecondition() != null)
+		{
+			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+		}
+
+		if (node.getPostcondition() != null)
+		{
+			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
+			obligations.add(new OperationPostConditionObligation(node, question));
+		}
+
+		if (node.getBody() != null)
+		{
+			obligations.addAll(node.getBody().apply(rootVisitor,question));
+
+			if (node.getIsConstructor() &&
+				node.getClassDefinition() != null &&
+				node.getClassDefinition().getInvariant() != null)
+			{
+				obligations.add(new StateInvariantObligation(node, question));
+			}
+
+			if (!node.getIsConstructor() &&
+				!TypeComparator.isSubType(node.getActualResult(), node.getType().getResult()))
+			{
+				obligations.add(
+					new SubTypeObligation(node, node.getActualResult(), question));
+			}
+		}
+		else
+		{
+			if (node.getPostcondition() != null)
+			{
+				question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition()));
+				obligations.add(
+					new SatisfiabilityObligation(node, node.getStateDefinition(), question));
+				question.pop();
+			}
+		}
+
+		return obligations;
+	}
+	
 	@Override
-	public ProofObligationList caseALocalDefinition(ALocalDefinition node,
+	public ProofObligationList defaultPDefinition(PDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALocalDefinition(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAMultiBindListDefinition(
-			AMultiBindListDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMultiBindListDefinition(node, question);
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAMutexSyncDefinition(
-			AMutexSyncDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMutexSyncDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseANamedTraceDefinition(
-			ANamedTraceDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANamedTraceDefinition(node, question);
-	}
-
+		
 	@Override
 	public ProofObligationList caseAPerSyncDefinition(APerSyncDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPerSyncDefinition(node, question);
+		
+		question.push(new PONameContext(new LexNameList(node.getOpname())));
+		ProofObligationList list = node.getGuard().apply(rootVisitor,question);
+		question.pop();
+		return list;
 	}
 
-	@Override
-	public ProofObligationList caseARenamedDefinition(ARenamedDefinition node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseARenamedDefinition(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList caseAStateDefinition(AStateDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAStateDefinition(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAThreadDefinition(AThreadDefinition node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAThreadDefinition(node, question);
-	}
+		ProofObligationList list = new ProofObligationList();
 
+		if (node.getInvdef() != null)
+		{
+			list.addAll(node.getInvdef().apply(this,question));
+		}
+
+		return list;
+	}
+	
 	@Override
 	public ProofObligationList caseATypeDefinition(ATypeDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATypeDefinition(node, question);
-	}
+		
+		ProofObligationList list = new ProofObligationList();
 
-	@Override
-	public ProofObligationList caseAUntypedDefinition(AUntypedDefinition node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAUntypedDefinition(node, question);
+		if (node.getInvdef() != null)
+		{
+			list.addAll(node.getInvdef().apply(this,question));
+		}
+
+		return list;
 	}
 
 	@Override
 	public ProofObligationList caseAValueDefinition(AValueDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAValueDefinition(node, question);
+		
+		ProofObligationList list = node.getExpression().apply(rootVisitor,question);
+
+		if (!(node.getPattern() instanceof AIdentifierPattern) &&
+			!(node.getPattern() instanceof AIgnorePattern) &&
+			node.getType() instanceof AUnionType)
+		{
+			PType patternType =  PPatternAssistantTC.getPossibleType(node.getPattern());	// With unknowns
+			AUnionType ut = (AUnionType)node.getType();
+			PTypeSet set = new PTypeSet();
+
+			for (PType u: ut.getTypes())
+			{
+				if (TypeComparator.compatible(u, patternType))
+				{
+					set.add(u);
+				}
+			}
+
+			if (!set.isEmpty())
+			{
+    			PType compatible = set.getType(node.getLocation());
+
+    			if (!TypeComparator.isSubType(node.getType(), compatible))
+    			{
+    				list.add(new ValueBindingObligation(node, question));
+    				list.add(new SubTypeObligation(node.getExpression(), compatible, node.getType(), question));
+    			}
+			}
+		}
+
+		if (!TypeComparator.isSubType(question.checkType(node.getExpression(), node.getExpType()), node.getType()))
+		{
+			list.add(new SubTypeObligation(node.getExpression(), node.getType(), node.getExpType(), question));
+		}
+
+		return list;
+
 	}
 
 	@Override
 	public ProofObligationList defaultPTraceDefinition(PTraceDefinition node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPTraceDefinition(node, question);
+		
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAInstanceTraceDefinition(
-			AInstanceTraceDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAInstanceTraceDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseALetBeStBindingTraceDefinition(
-			ALetBeStBindingTraceDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALetBeStBindingTraceDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseALetDefBindingTraceDefinition(
-			ALetDefBindingTraceDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALetDefBindingTraceDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseARepeatTraceDefinition(
-			ARepeatTraceDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseARepeatTraceDefinition(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultPTraceCoreDefinition(
 			PTraceCoreDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPTraceCoreDefinition(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAApplyExpressionTraceCoreDefinition(
-			AApplyExpressionTraceCoreDefinition node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAApplyExpressionTraceCoreDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseABracketedExpressionTraceCoreDefinition(
-			ABracketedExpressionTraceCoreDefinition node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super
-				.caseABracketedExpressionTraceCoreDefinition(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAConcurrentExpressionTraceCoreDefinition(
-			AConcurrentExpressionTraceCoreDefinition node,
-			POContextStack question) {
-		
-		
-		
-		
-		// TODO Auto-generated method stub
-		return super.caseAConcurrentExpressionTraceCoreDefinition(node,
-				question);
+		return new ProofObligationList();
 	}
 	
 	@Override

@@ -1,22 +1,12 @@
 package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.APrivateAccess;
-import org.overture.ast.definitions.AProtectedAccess;
-import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.PAlternative;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.PModifier;
-import org.overture.ast.modules.AAllExport;
-import org.overture.ast.modules.AFunctionExport;
-import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.modules.AOperationExport;
-import org.overture.ast.modules.ATypeExport;
-import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PExports;
 import org.overture.ast.modules.PImports;
@@ -36,33 +26,24 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.PPatternBind;
-import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.ACaseAlternativeStm;
-import org.overture.ast.statements.AErrorCase;
-import org.overture.ast.statements.AExternalClause;
-import org.overture.ast.statements.AFieldObjectDesignator;
-import org.overture.ast.statements.AFieldStateDesignator;
-import org.overture.ast.statements.AIdentifierObjectDesignator;
-import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
-import org.overture.ast.statements.ANewObjectDesignator;
-import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ATixeStmtAlternative;
-import org.overture.ast.statements.PAlternativeStm;
 import org.overture.ast.statements.PCase;
 import org.overture.ast.statements.PClause;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.PStmtAlternative;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
 import org.overture.pog.assistants.PDefinitionAssistantPOG;
+import org.overture.pog.obligations.POCaseContext;
 import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.PONotCaseContext;
 import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pog.obligations.SeqApplyObligation;
 
 /**
  * This is the proof obligation visitor climbs through the AST and builds the
@@ -107,19 +88,19 @@ public class PogVisitor extends
 
 		return new ProofObligationList();
 	}
-	
-	@Override
-	public ProofObligationList defaultPAlternative(PAlternative node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPAlternative(node, question);
-	}
-
+		
 	@Override
 	public ProofObligationList caseACaseAlternative(ACaseAlternative node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseACaseAlternative(node, question);
+		
+		ProofObligationList obligations = new ProofObligationList();
+
+		question.push(new POCaseContext(node.getPattern(), node.getType(), node.getCexp()));
+		obligations.addAll(node.getResult().apply(this.pogExpVisitor,question));
+		question.pop();
+		question.push(new PONotCaseContext(node.getPattern(), node.getType(), node.getCexp()));
+
+		return obligations;
 	}
 
 	@Override
@@ -248,14 +229,14 @@ public class PogVisitor extends
 	public ProofObligationList defaultPDefinition(PDefinition node,
 			POContextStack question) {
 
-		return node.apply(pogExpVisitor, question);
+		return node.apply(pogDefinitionVisitor, question);
 	}
 
 	@Override
 	public ProofObligationList defaultPModules(PModules node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPModules(node, question);
+		
+		return new ProofObligationList();
 	}
 
 	@Override
@@ -268,59 +249,17 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPExports(PExports node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPExports(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAModuleExports(AModuleExports node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAModuleExports(node, question);
+		
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPExport(PExport node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPExport(node, question);
+		
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAAllExport(AAllExport node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAAllExport(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAFunctionExport(AFunctionExport node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFunctionExport(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAOperationExport(AOperationExport node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAOperationExport(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseATypeExport(ATypeExport node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATypeExport(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAValueExport(AValueExport node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAValueExport(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultPStm(PStm node, POContextStack question) {
 
@@ -330,128 +269,86 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPStateDesignator(PStateDesignator node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPStateDesignator(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAFieldStateDesignator(
-			AFieldStateDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFieldStateDesignator(node, question);
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAIdentifierStateDesignator(
-			AIdentifierStateDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIdentifierStateDesignator(node, question);
-	}
-
+		
 	@Override
 	public ProofObligationList caseAMapSeqStateDesignator(
 			AMapSeqStateDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMapSeqStateDesignator(node, question);
+		
+		ProofObligationList list = new ProofObligationList();
+
+		if (node.getSeqType() != null)
+		{
+			list.add(new SeqApplyObligation(node.getMapseq(), node.getExp(), question));
+		}
+		
+		// Maps are OK, as you can create new map domain entries
+
+		return list;
 	}
 
 	@Override
 	public ProofObligationList defaultPObjectDesignator(PObjectDesignator node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPObjectDesignator(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAApplyObjectDesignator(
-			AApplyObjectDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAApplyObjectDesignator(node, question);
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAFieldObjectDesignator(
-			AFieldObjectDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFieldObjectDesignator(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAIdentifierObjectDesignator(
-			AIdentifierObjectDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIdentifierObjectDesignator(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseANewObjectDesignator(
-			ANewObjectDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANewObjectDesignator(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseASelfObjectDesignator(
-			ASelfObjectDesignator node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASelfObjectDesignator(node, question);
-	}
-
-	@Override
-	public ProofObligationList defaultPAlternativeStm(PAlternativeStm node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPAlternativeStm(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList caseACaseAlternativeStm(
 			ACaseAlternativeStm node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseACaseAlternativeStm(node, question);
-	}
+		
+		ProofObligationList obligations = new ProofObligationList();
 
-	@Override
-	public ProofObligationList defaultPStmtAlternative(PStmtAlternative node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPStmtAlternative(node, question);
-	}
+		question.push(new POCaseContext(node.getPattern(), node.getCtype(), node.getCexp()));
+		obligations.addAll(node.getResult().apply(pogStmVisitor,question));
+		question.pop();
+		question.push(new PONotCaseContext(node.getPattern(), node.getCtype(), node.getCexp()));
 
+		return obligations;
+		
+	}
+	
 	@Override
 	public ProofObligationList caseATixeStmtAlternative(
 			ATixeStmtAlternative node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATixeStmtAlternative(node, question);
+		
+		ProofObligationList list = new ProofObligationList();
+
+		if (node.getPatternBind().getPattern() != null)
+		{
+			// Nothing to do
+		}
+		else if (node.getPatternBind().getBind() instanceof ATypeBind)
+		{
+			// Nothing to do
+		}
+		else if (node.getPatternBind().getBind() instanceof ASetBind)
+		{
+			ASetBind bind = (ASetBind)node.getPatternBind().getBind();
+			list.addAll(bind.getSet().apply(this.pogExpVisitor,question));
+		}
+
+		list.addAll(node.getStatement().apply(this.pogStmVisitor,question));
+		return list;
+		
 	}
 
 	@Override
 	public ProofObligationList defaultPClause(PClause node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPClause(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAExternalClause(AExternalClause node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAExternalClause(node, question);
+		return new ProofObligationList();
 	}
-
+	
 	@Override
 	public ProofObligationList defaultPCase(PCase node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPCase(node, question);
+		
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAErrorCase(AErrorCase node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAErrorCase(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultNode(Node node, POContextStack question) {
 
