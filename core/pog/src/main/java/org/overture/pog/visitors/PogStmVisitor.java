@@ -290,14 +290,7 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 		return obligations;
 
 	}
-
-	@Override
-	public ProofObligationList defaultSLetDefStm(SLetDefStm node,
-			POContextStack question) {
 		
-		return	node.apply(this,question);
-	}
-	
 	@Override
 	public ProofObligationList caseAReturnStm(AReturnStm node,
 			POContextStack question) {
