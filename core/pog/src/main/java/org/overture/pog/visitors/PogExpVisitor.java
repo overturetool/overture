@@ -1,6 +1,8 @@
 package org.overture.pog.visitors;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Queue;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -10,8 +12,12 @@ import org.overture.ast.expressions.*;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -21,12 +27,15 @@ import org.overture.pog.obligations.FiniteMapObligation;
 import org.overture.pog.obligations.FunctionApplyObligation;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.MapApplyObligation;
+import org.overture.pog.obligations.MapCompatibleObligation;
 import org.overture.pog.obligations.MapSetOfCompatibleObligation;
 import org.overture.pog.obligations.NonEmptySeqObligation;
 import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.PODefContext;
 import org.overture.pog.obligations.POForAllContext;
 import org.overture.pog.obligations.POForAllPredicateContext;
 import org.overture.pog.obligations.POImpliesContext;
+import org.overture.pog.obligations.POLetDefContext;
 import org.overture.pog.obligations.PONotImpliesContext;
 import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
@@ -35,6 +44,7 @@ import org.overture.pog.obligations.SeqApplyObligation;
 import org.overture.pog.obligations.SubTypeObligation;
 import org.overture.pog.obligations.TupleSelectObligation;
 import org.overture.typecheck.TypeComparator;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 
 public class PogExpVisitor extends
@@ -452,6 +462,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
+	// RWL See [1] pg.95
 	public ProofObligationList caseALetBeStExp(ALetBeStExp node,
 			POContextStack question) {
 		ProofObligationList obligations = new ProofObligationList();
@@ -459,461 +470,594 @@ public class PogExpVisitor extends
 		obligations.addAll(node.getBind().apply(this, question));
 
 		PExp suchThat = node.getSuchThat();
+		if (suchThat != null) {
+			question.push(new POForAllContext(node));
+			obligations.addAll(suchThat.apply(this, question));
+			question.pop();
+		}
 
-		return super.caseALetBeStExp(node, question);
+		question.push(new POForAllPredicateContext(node));
+		obligations.addAll(node.getValue().apply(this, question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
+	// RWL see [1] pg.
 	public ProofObligationList caseALetDefExp(ALetDefExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALetDefExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		question.push(new POLetDefContext(node));
+		obligations.addAll(node.getExpression().apply(this, question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseADefExp(ADefExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADefExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+		List<PDefinition> localDefs = node.getLocalDefs();
+		for (PDefinition def : localDefs) {
+			obligations.addAll(def.apply(this, question));
+		}
+
+		// RWL Question, are we going
+		question.push(new PODefContext(node));
+		obligations.addAll(node.getExpression().apply(this, question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseSMapExp(SMapExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSMapExp(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultSMapExp(SMapExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSMapExp(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAMapletExp(AMapletExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
 		return super.caseAMapletExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMkBasicExp(AMkBasicExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMkBasicExp(node, question);
+		return node.getArg().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMkTypeExp(AMkTypeExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMkTypeExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+		Queue<PExp> args = node.getArgs();
+		for (PExp arg : args)
+			obligations.addAll(arg.apply(this, question));
+
+		Queue<PType> argTypes = node.getArgTypes();
+
+		ARecordInvariantType recordType = node.getRecordType();
+		for (AFieldField f : recordType.getFields()) {
+			PType aType = argTypes.poll();
+			PExp aExp = args.poll();
+
+			if (TypeComparator.isSubType(question.checkType(aExp, aType),
+					f.getType()))
+				obligations.add(new SubTypeObligation(aExp, f.getType(), aType,
+						question));
+		}
+
+		PDefinition invDef = recordType.getInvDef();
+		if (invDef != null)
+			obligations.add(new SubTypeObligation(node, recordType, recordType,
+					question));
+
+		return obligations;
+	}
+
+	private static AFieldField findField(ARecordInvariantType ty,
+			LexIdentifierToken id) {
+
+		List<AFieldField> fields = ty.getFields();
+		for (AFieldField f : fields)
+			if (f.getTag().equals(id.name))
+				return f;
+
+		return null;
 	}
 
 	@Override
+	// RWL See [1] pg. 56
 	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question) {
-		// TODO Auto-generated method stub
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		Queue<ARecordModifier> modifiers = node.getModifiers();
+		ARecordInvariantType recordType = node.getRecordType();
+		Queue<PType> mTypes = node.getModTypes();
+
+		for (ARecordModifier mod : modifiers) {
+			obligations.addAll(mod.getValue().apply(this, question));
+			AFieldField f = findField(recordType, mod.getTag());
+			PType mType = mTypes.poll();
+			if (f != null)
+				if (!TypeComparator.isSubType(mType, f.getType()))
+					obligations.add(new SubTypeObligation(mod.getValue(), f
+							.getType(), mType, question));
+
+		}
+
 		return super.caseAMuExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseANewExp(ANewExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANewExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		for (PExp exp : node.getArgs())
+			obligations.addAll(exp.apply(this, question));
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseANilExp(ANilExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANilExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseANotYetSpecifiedExp(
 			ANotYetSpecifiedExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANotYetSpecifiedExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAPostOpExp(APostOpExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPostOpExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAPreExp(APreExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPreExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAPreOpExp(APreOpExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPreOpExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAQuoteLiteralExp(AQuoteLiteralExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAQuoteLiteralExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseARealLiteralExp(ARealLiteralExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseARealLiteralExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASameBaseClassExp(ASameBaseClassExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASameBaseClassExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		obligations.addAll(node.getLeft().apply(this, question));
+		obligations.addAll(node.getRight().apply(this, question));
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseASameClassExp(ASameClassExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASameClassExp(node, question);
+		ProofObligationList list = node.getLeft().apply(this, question);
+		list.addAll(node.getRight().apply(this, question));
+		return list;
 	}
 
 	@Override
 	public ProofObligationList caseASelfExp(ASelfExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASelfExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseSSeqExp(SSeqExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSSeqExp(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultSSeqExp(SSeqExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSSeqExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseSSetExp(SSetExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSSetExp(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultSSetExp(SSetExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSSetExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAStateInitExp(AStateInitExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAStateInitExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAStringLiteralExp(AStringLiteralExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAStringLiteralExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASubclassResponsibilityExp(
 			ASubclassResponsibilityExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASubclassResponsibilityExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASubseqExp(ASubseqExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASubseqExp(node, question);
+		ProofObligationList list = node.getSeq().apply(this, question);
+		list.addAll(node.getFrom().apply(this, question));
+		list.addAll(node.getTo().apply(this, question));
+		return list;
 	}
 
 	@Override
 	public ProofObligationList caseAThreadIdExp(AThreadIdExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAThreadIdExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseATimeExp(ATimeExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATimeExp(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseATupleExp(ATupleExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATupleExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+		for (PExp exp : node.getArgs())
+			obligations.addAll(exp.apply(this, question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAUndefinedExp(AUndefinedExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAUndefinedExp(node, question);
+		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAAbsoluteUnaryExp(node, question);
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseACardinalityUnaryExp(
 			ACardinalityUnaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseACardinalityUnaryExp(node, question);
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseADistConcatUnaryExp(
 			ADistConcatUnaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADistConcatUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseADistIntersectUnaryExp(
 			ADistIntersectUnaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADistIntersectUnaryExp(node, question);
+		ProofObligationList obligations = node.getExp().apply(this, question);
+		obligations.add(new org.overture.pog.obligations.NonEmptySetObligation(
+				node.getExp(), question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseADistMergeUnaryExp(ADistMergeUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADistMergeUnaryExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.add(new MapSetOfCompatibleObligation(node.getExp(),
+				question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseADistUnionUnaryExp(ADistUnionUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADistUnionUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAElementsUnaryExp(AElementsUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAElementsUnaryExp(node, question);
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAFloorUnaryExp(AFloorUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAFloorUnaryExp(node, question);
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAIndicesUnaryExp(AIndicesUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAIndicesUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseALenUnaryExp(ALenUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseALenUnaryExp(node, question);
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMapDomainUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapInverseUnaryExp(
 			AMapInverseUnaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMapInverseUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMapRangeUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseANotUnaryExp(ANotUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANotUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPowerSetUnaryExp(APowerSetUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPowerSetUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAReverseUnaryExp(AReverseUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAReverseUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseATailUnaryExp(ATailUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATailUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAUnaryMinusUnaryExp(
 			AUnaryMinusUnaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAUnaryMinusUnaryExp(node, question);
+
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAUnaryPlusUnaryExp(node, question);
+		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseSBooleanBinaryExp(SBooleanBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
+		ProofObligationList obligations = new ProofObligationList();
+		PExp lExp = node.getLeft();
+		PExp rExp = node.getRight();
+
+		PType lType = lExp.getType();
+		PType rType = rExp.getType();
+		if (lType instanceof AUnionType) {
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
+					lExp.getLocation(), false), lType, question));
+		}
+
+		if (rType instanceof AUnionType) {
+
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
+					rExp.getLocation(), false), rType, question));
+		}
 		return super.caseSBooleanBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSBooleanBinaryExp(node, question);
+		return caseSBooleanBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseACompBinaryExp(ACompBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseACompBinaryExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+		PExp lExp = node.getLeft();
+		PType lType = lExp.getType();
+
+		// TODO Okay so the preName beats me, what is the equivalent in ast_v2
+
+		throw new RuntimeException(
+				"Oooh, fix me, here I did not know what to do.");
+	}
+
+	private <T> ProofObligationList handleBinaryExpression(T node,
+			POContextStack question) {
+
+		if (node == null)
+			return new ProofObligationList();
+
+		PExp left = null;
+		PExp right = null;
+
+		try {
+			Class<?> clz = node.getClass();
+			Method getLeft = clz.getMethod("getLeft", new Class<?>[] {});
+			Method getRight = clz.getMethod("getRight", new Class<?>[] {});
+			left = (PExp) getLeft.invoke(node, new Object[0]);
+			right = (PExp) getRight.invoke(node, new Object[0]);
+
+		} catch (Exception k) {
+			throw new RuntimeException(k);
+		}
+
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.addAll(left.apply(this, question));
+		obligations.addAll(right.apply(this, question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseADomainResByBinaryExp(
 			ADomainResByBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADomainResByBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseADomainResToBinaryExp(
 			ADomainResToBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADomainResToBinaryExp(node, question);
-	}
-
-	@Override
-	public ProofObligationList caseAEqualsBinaryExp(AEqualsBinaryExp node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAEqualsBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAInSetBinaryExp(AInSetBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAInSetBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAMapUnionBinaryExp(node, question);
+		ProofObligationList obligations = handleBinaryExpression(node, question);
+		obligations.add(new MapCompatibleObligation(node.getLeft(), node
+				.getRight(), question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseANotEqualBinaryExp(ANotEqualBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANotEqualBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseANotInSetBinaryExp(ANotInSetBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseANotInSetBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseSNumericBinaryExp(SNumericBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseSNumericBinaryExp(node, question);
+
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+		PType lType = left.getType();
+		PType rType = right.getType();
+
+		if (lType instanceof AUnionType) {
+
+			obligations.add(new SubTypeObligation(left,
+					new ARealNumericBasicType(right.getLocation(), false),
+					lType, question));
+		}
+
+		if (rType instanceof AUnionType) {
+			obligations.add(new SubTypeObligation(right,
+					new ARealNumericBasicType(right.getLocation(), false),
+					rType, question));
+		}
+
+		obligations.addAll(left.apply(this, question));
+		obligations.addAll(right.apply(this, question));
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList defaultSNumericBinaryExp(SNumericBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultSNumericBinaryExp(node, question);
+		return caseSNumericBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPlusPlusBinaryExp(node, question);
+
+		ProofObligationList obligations = handleBinaryExpression(node, question);
+		PType lType = node.getLeft().getType();
+
+		if (lType instanceof SSeqType) {
+			obligations
+					.add(new org.overture.pog.obligations.SeqModificationObligation(
+							node, question));
+		}
+
+		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAProperSubsetBinaryExp(
 			AProperSubsetBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAProperSubsetBinaryExp(node, question);
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARangeResByBinaryExp(
 			ARangeResByBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseARangeResByBinaryExp(node, question);
+
+		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARangeResToBinaryExp(
 			ARangeResToBinaryExp node, POContextStack question) {
-		// TODO Auto-generated method stub
 		return super.caseARangeResToBinaryExp(node, question);
 	}
 
@@ -1105,10 +1249,9 @@ public class PogExpVisitor extends
 		// TODO Auto-generated method stub
 		return super.caseASetRangeSetExp(node, question);
 	}
-	
+
 	@Override
 	public ProofObligationList defaultPExp(PExp node, POContextStack question) {
-
 		return new ProofObligationList();
 	}
 
