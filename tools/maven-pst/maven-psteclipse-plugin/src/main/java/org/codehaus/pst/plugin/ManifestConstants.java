@@ -64,7 +64,7 @@ public interface ManifestConstants {
     /**
      * Constant for "Bundle-Vendor" main attribute's default value.
      */
-    public static final String BUNDLE_VENDOR_VALUE = "Overture.";
+    public static final String BUNDLE_VENDOR_VALUE = "%providerName";
 
     /**
      * Constant for "Bundle-Localization" main attribute.
