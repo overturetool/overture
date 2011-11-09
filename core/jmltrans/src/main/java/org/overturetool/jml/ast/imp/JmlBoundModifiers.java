@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.jml.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -132,7 +133,8 @@ public class JmlBoundModifiers extends JmlNode implements IJmlBoundModifiers {
 		
 	  } 
 	  catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	  }
 	  return "";

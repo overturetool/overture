@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.jml.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -129,7 +130,8 @@ public class JmlClassKind extends JmlNode implements IJmlClassKind {
 	  try {
 		  return getStringValue();
 	  } catch (CGException e) {
-		  // TODO Auto-generated catch block
+		  
+
 		  e.printStackTrace();
 	  }
 	  return "";
