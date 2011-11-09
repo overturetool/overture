@@ -5,7 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlFunctionDefinitions extends IOmlDefinitionBlock
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getFunctionList() throws CGException;
 }
 

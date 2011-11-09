@@ -5,7 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlNondeterministicStatement extends IOmlStatement
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getStatementList() throws CGException;
 }
 

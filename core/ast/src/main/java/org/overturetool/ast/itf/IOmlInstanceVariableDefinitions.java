@@ -5,7 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlInstanceVariableDefinitions extends IOmlDefinitionBlock
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getVariablesList() throws CGException;
 }
 

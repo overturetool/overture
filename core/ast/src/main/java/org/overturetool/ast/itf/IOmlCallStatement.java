@@ -8,7 +8,7 @@ public abstract interface IOmlCallStatement extends IOmlStatement
 	abstract IOmlObjectDesignator getObjectDesignator() throws CGException;
 	abstract Boolean hasObjectDesignator() throws CGException;
 	abstract IOmlName getName() throws CGException;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getExpressionList() throws CGException;
 }
 

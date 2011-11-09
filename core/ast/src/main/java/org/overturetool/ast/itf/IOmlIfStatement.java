@@ -7,7 +7,7 @@ public abstract interface IOmlIfStatement extends IOmlStatement
 {
 	abstract IOmlExpression getExpression() throws CGException;
 	abstract IOmlStatement getThenStatement() throws CGException;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getElseifStatement() throws CGException;
 	abstract IOmlStatement getElseStatement() throws CGException;
 	abstract Boolean hasElseStatement() throws CGException;

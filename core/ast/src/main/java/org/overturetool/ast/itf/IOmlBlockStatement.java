@@ -5,9 +5,9 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlBlockStatement extends IOmlStatement
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getDclStatementList() throws CGException;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getStatementList() throws CGException;
 }
 

@@ -6,7 +6,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 public abstract interface IOmlClassTypeInstantiation extends IOmlType
 {
 	abstract IOmlName getName() throws CGException;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getGenericTypes() throws CGException;
 }
 

@@ -5,7 +5,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 public abstract interface IOmlPeriodicThread extends IOmlThreadSpecification
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getArgs() throws CGException;
 	abstract IOmlName getName() throws CGException;
 }

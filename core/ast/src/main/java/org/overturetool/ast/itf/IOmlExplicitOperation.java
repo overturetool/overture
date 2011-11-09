@@ -7,7 +7,7 @@ public abstract interface IOmlExplicitOperation extends IOmlOperationShape
 {
 	abstract String getIdentifier() throws CGException;
 	abstract IOmlType getType() throws CGException;
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	abstract Vector getParameterList() throws CGException;
 	abstract IOmlOperationBody getBody() throws CGException;
 	abstract IOmlOperationTrailer getTrailer() throws CGException;
