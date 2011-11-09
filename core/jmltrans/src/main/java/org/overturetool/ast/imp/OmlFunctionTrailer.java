@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -187,7 +188,8 @@ public class OmlFunctionTrailer extends OmlNode implements IOmlFunctionTrailer {
 		if (hasPreExpression()) res = "pre " + this.ivPreExpression.toString() + "\n";
 		if (hasPostExpression()) res += "post " + this.ivPostExpression.toString() + "\n";
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	return res;

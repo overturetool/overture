@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -212,7 +213,8 @@ public class OmlSimpleType extends OmlTypeShape implements IOmlSimpleType {
 		  this.ivInvariant.toString();
 		  else res = this.ivIdentifier + " = " + this.ivType.toString();
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	  return res;

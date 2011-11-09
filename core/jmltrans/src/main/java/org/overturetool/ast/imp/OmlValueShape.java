@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -212,7 +213,8 @@ public class OmlValueShape extends OmlNode implements IOmlValueShape {
 		  " = " + this.ivExpression.toString();
 		  else res = this.ivPattern.toString() + " = " + this.ivExpression.toString();
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	return res;

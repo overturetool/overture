@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 

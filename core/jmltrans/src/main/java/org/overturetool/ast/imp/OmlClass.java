@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -294,7 +295,8 @@ public class OmlClass extends OmlNode implements IOmlClass {
 			  inherit = this.ivInheritanceClause.toString();
 		  }
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	  

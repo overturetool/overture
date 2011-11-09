@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -258,7 +259,8 @@ public class OmlSpecificationStatement extends OmlStatement implements IOmlSpeci
 		  lst += this.ivPostExpression + "\n";
 		  if (hasExceptions()) lst += this.ivExceptions.toString();
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	  return "[" + lst + "]";

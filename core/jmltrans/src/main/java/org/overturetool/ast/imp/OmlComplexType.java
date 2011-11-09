@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -226,7 +227,8 @@ public class OmlComplexType extends OmlTypeShape implements IOmlComplexType {
 	  try {
 		if (hasInvariant()) inv = this.ivInvariant.toString();
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	return this.ivIdentifier + " :: \n" + field + inv;

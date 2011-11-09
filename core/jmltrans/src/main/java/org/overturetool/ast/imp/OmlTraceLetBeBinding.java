@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -181,7 +182,8 @@ public class OmlTraceLetBeBinding extends OmlTraceBinding implements IOmlTraceLe
 		    " in ";
 		  else res = "let " + this.ivBind.toString() + " in ";
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	  return res;

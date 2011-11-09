@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -211,7 +212,8 @@ public class OmlOperationBody extends OmlNode implements IOmlOperationBody {
 		  else if (this.ivNotYetSpecified) res = "is not yet specified";
 		  else res = "is subclass responsibility";
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	return res;

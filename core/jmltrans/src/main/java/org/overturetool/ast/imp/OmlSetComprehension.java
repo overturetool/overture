@@ -22,6 +22,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 
 import java.util.*;
 import org.overturetool.ast.itf.*;
+@SuppressWarnings(all) 
 // ***** VDMTOOLS END Name=imports
 
 
@@ -225,7 +226,8 @@ public class OmlSetComprehension extends OmlExpression implements IOmlSetCompreh
 		this.ivGuard.toString() + "}";
 		else res = "{" + this.ivExpression.toString() + "|" + lst + "}";
 	} catch (CGException e) {
-		// TODO Auto-generated catch block
+		
+
 		e.printStackTrace();
 	}
 	return res;
