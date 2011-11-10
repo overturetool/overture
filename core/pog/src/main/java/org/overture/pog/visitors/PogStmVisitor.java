@@ -145,7 +145,7 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 				hasIgnore = true;
 			}
 
-			obligations.addAll(node.apply(rootVisitor,question));
+			obligations.addAll(alt.apply(rootVisitor,question));
 		}
 
 		if (node.getOthers() != null && !hasIgnore)
