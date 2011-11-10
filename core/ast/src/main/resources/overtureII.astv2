@@ -120,7 +120,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {time} 
     |   {tuple} [args]:exp* (types):type*
     |   {undefined}
-    |   {variable} [name]:LexNameToken (vardef):definition        
+    |   {variable} [name]:LexNameToken [original]:java_String (vardef):definition        
     ;
     
 #Unary {-> package='org.overture.ast.expressions'}
