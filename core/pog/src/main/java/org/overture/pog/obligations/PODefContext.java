@@ -23,25 +23,21 @@
 
 package org.overture.pog.obligations;
 
-import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overturetool.vdmj.util.Utils;
 
-public class PODefContext extends POContext
-{
-	public final ALetDefExp exp;
+public class PODefContext extends POContext {
+	public final ADefExp exp;
 
-	public PODefContext(ALetDefExp exp)
-	{
+	public PODefContext(ADefExp exp) {
 		this.exp = exp;
 	}
 
 	@Override
-	public String getContext()
-	{
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (!exp.getLocalDefs().isEmpty())
-		{
+		if (!exp.getLocalDefs().isEmpty()) {
 			sb.append("def ");
 			sb.append(Utils.listToString(exp.getLocalDefs(), "; "));
 			sb.append(" in");
