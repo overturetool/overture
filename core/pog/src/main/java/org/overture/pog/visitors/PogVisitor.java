@@ -14,15 +14,11 @@ import org.overture.ast.modules.PModules;
 import org.overture.ast.node.Node;
 import org.overture.ast.node.PBooleanConst;
 import org.overture.ast.node.Token;
-import org.overture.ast.patterns.ADefPatternBind;
-import org.overture.ast.patterns.APatternListTypePair;
-import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PBind;
-import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.PPatternBind;
@@ -34,7 +30,6 @@ import org.overture.ast.statements.PClause;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
@@ -126,15 +121,8 @@ public class PogVisitor extends
 	@Override
 	public ProofObligationList defaultPAccessSpecifier(PAccessSpecifier node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPAccessSpecifier(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAAccessSpecifierAccessSpecifier(
-			AAccessSpecifierAccessSpecifier node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAAccessSpecifierAccessSpecifier(node, question);
+		return new ProofObligationList();
 	}
 
 	@Override
@@ -152,79 +140,44 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPPair(PPair node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPPair(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseAPatternTypePair(APatternTypePair node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPatternTypePair(node, question);
+		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseAPatternListTypePair(
-			APatternListTypePair node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseAPatternListTypePair(node, question);
-	}
-
+	
 	@Override
 	public ProofObligationList defaultPBind(PBind node, POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPBind(node, question);
+
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASetBind(ASetBind node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetBind(node, question);
+		
+		return node.getSet().apply(this.pogExpVisitor,question);
 	}
-
-	@Override
-	public ProofObligationList caseATypeBind(ATypeBind node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATypeBind(node, question);
-	}
-
-	@Override
-	public ProofObligationList defaultPMultipleBind(PMultipleBind node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPMultipleBind(node, question);
-	}
-
+		
 	@Override
 	public ProofObligationList caseASetMultipleBind(ASetMultipleBind node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseASetMultipleBind(node, question);
+
+		return node.getSet().apply(this.pogExpVisitor,question);
 	}
 
 	@Override
 	public ProofObligationList caseATypeMultipleBind(ATypeMultipleBind node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseATypeMultipleBind(node, question);
+		
+		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPPatternBind(PPatternBind node,
 			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.defaultPPatternBind(node, question);
-	}
 
-	@Override
-	public ProofObligationList caseADefPatternBind(ADefPatternBind node,
-			POContextStack question) {
-		// TODO Auto-generated method stub
-		return super.caseADefPatternBind(node, question);
+		return new ProofObligationList();
 	}
-
+	
 	@Override
 	public ProofObligationList defaultPDefinition(PDefinition node,
 			POContextStack question) {
