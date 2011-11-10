@@ -216,7 +216,7 @@ public class PogExpVisitor extends
 		boolean finiteTest = false;
 
 		for (PMultipleBind mb : node.getBindings()) {
-			obligations.addAll(mb.apply(this, question));
+			obligations.addAll(mb.apply(rootVisitor, question));
 			if (mb instanceof PMultipleBind)
 				finiteTest = true;
 		}
