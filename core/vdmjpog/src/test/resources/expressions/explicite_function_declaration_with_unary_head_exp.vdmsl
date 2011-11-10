@@ -1,0 +1,14 @@
+--
+-- This test is basic simple function with a unary 
+-- head expressing. We expect that a proof obligation
+-- that the b argument for a is not the empty list.
+--
+-- 
+module Test
+definitions
+functions
+    a: seq of bool -> bool
+    a(b) == hd b;
+    
+    
+end Test
