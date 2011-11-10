@@ -185,7 +185,7 @@ public class PogExpVisitor extends
 			if (alt.getPattern() instanceof AIgnorePattern)
 				hasIgnore = true;
 
-			obligations.addAll(alt.apply(this, question));
+			obligations.addAll(alt.apply(rootVisitor, question));
 			count++;
 		}
 
@@ -309,7 +309,7 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (PMultipleBind mb : node.getBindList()) {
-			obligations.addAll(mb.apply(this, question));
+			obligations.addAll(mb.apply(rootVisitor, question));
 		}
 
 		question.push(new POForAllContext(node));
@@ -356,7 +356,7 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (PMultipleBind mb : node.getBindList()) {
-			obligations.addAll(mb.apply(this, question));
+			obligations.addAll(mb.apply(rootVisitor, question));
 		}
 
 		question.push(new POForAllContext(node));
@@ -460,7 +460,7 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (ATypeBind tb : node.getBindList()) {
-			obligations.addAll(tb.apply(this, question));
+			obligations.addAll(tb.apply(rootVisitor, question));
 		}
 
 		question.push(new POForAllContext(node));
@@ -476,7 +476,7 @@ public class PogExpVisitor extends
 			POContextStack question) {
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.add(new LetBeExistsObligation(node, question));
-		obligations.addAll(node.getBind().apply(this, question));
+		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		PExp suchThat = node.getSuchThat();
 		if (suchThat != null) {
@@ -512,7 +512,7 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 		List<PDefinition> localDefs = node.getLocalDefs();
 		for (PDefinition def : localDefs) {
-			obligations.addAll(def.apply(this, question));
+			obligations.addAll(def.apply(rootVisitor, question));
 		}
 
 		// RWL Question, are we going
