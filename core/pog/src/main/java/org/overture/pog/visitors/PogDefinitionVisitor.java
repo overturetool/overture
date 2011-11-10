@@ -26,6 +26,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.pog.obligations.FuncPostConditionObligation;
 import org.overture.pog.obligations.OperationPostConditionObligation;
@@ -82,7 +83,7 @@ public class PogDefinitionVisitor extends
 		PExp precondition = node.getPrecondition();
 		if (precondition != null) {
 			question.push(new POFunctionDefinitionContext(node, false));
-			obligations.addAll(precondition.apply(this, question));
+			obligations.addAll(precondition.apply(rootVisitor, question));
 			question.pop();
 		}
 
@@ -92,15 +93,18 @@ public class PogDefinitionVisitor extends
 			question.push(new POFunctionDefinitionContext(node, false));
 			obligations.add(new FuncPostConditionObligation(node, question));
 			question.push(new POFunctionResultContext(node));
-			obligations.addAll(postcondition.apply(this, question));
+			obligations.addAll(postcondition.apply(rootVisitor, question));
 			question.pop();
 			question.pop();
 		}
 
 		// do proof obligations for the function body
+
 		question.push(new POFunctionDefinitionContext(node, true));
 		PExp body = node.getBody();
+		int sizeBefore = question.size();
 		obligations.addAll(body.apply(rootVisitor, question));
+		assert sizeBefore <= question.size();
 
 		// do proof obligation for the return type
 		if (node.getIsUndefined()
@@ -113,26 +117,25 @@ public class PogDefinitionVisitor extends
 
 		return obligations;
 	}
-		
+
 	@Override
 	public ProofObligationList caseSClassDefinition(SClassDefinition node,
 			POContextStack question) {
-	
+
 		ProofObligationList proofObligationList = new ProofObligationList();
-		
-		for(PDefinition def : node.getDefinitions())
-		{
-			proofObligationList.addAll(def.apply(this,question));
+
+		for (PDefinition def : node.getDefinitions()) {
+			proofObligationList.addAll(def.apply(this, question));
 		}
 		return proofObligationList;
-		
+
 	}
 
 	@Override
 	public ProofObligationList defaultSClassDefinition(SClassDefinition node,
 			POContextStack question) {
-				
-		return caseSClassDefinition(node,question);
+
+		return caseSClassDefinition(node, question);
 	}
 
 	@Override
@@ -141,8 +144,7 @@ public class PogDefinitionVisitor extends
 
 		ProofObligationList list = new ProofObligationList();
 
-		if (!node.getClassDefinition().getHasContructors())
-		{
+		if (!node.getClassDefinition().getHasContructors()) {
 			list.add(new StateInvariantObligation(node, question));
 		}
 
@@ -156,126 +158,114 @@ public class PogDefinitionVisitor extends
 		ProofObligationList list = new ProofObligationList();
 
 		PPattern pattern = node.getPattern();
-		if (pattern != null)
-		{
-			if (!(pattern instanceof AIdentifierPattern) &&
-				!(pattern instanceof AIgnorePattern) &&
-				node.getExpType() instanceof AUnionType)
-			{
-				PType patternType = PPatternAssistantTC.getPossibleType(pattern);	// With unknowns
-				AUnionType ut = (AUnionType)node.getExpType();
+		if (pattern != null) {
+			if (!(pattern instanceof AIdentifierPattern)
+					&& !(pattern instanceof AIgnorePattern)
+					&& node.getExpType() instanceof AUnionType) {
+				PType patternType = PPatternAssistantTC
+						.getPossibleType(pattern); // With unknowns
+				AUnionType ut = (AUnionType) node.getExpType();
 				PTypeSet set = new PTypeSet();
 
-				for (PType u: ut.getTypes())
-				{
-					if (TypeComparator.compatible(u, patternType))
-					{
+				for (PType u : ut.getTypes()) {
+					if (TypeComparator.compatible(u, patternType)) {
 						set.add(u);
 					}
 				}
-				
-				if (!set.isEmpty())
-				{
-	    			PType compatible = set.getType(node.getLocation());
 
-	    			if (!TypeComparator.isSubType(
-	    				question.checkType(node.getTest(), node.getExpType()), compatible))
-	    			{
-	    				list.add(new ValueBindingObligation(node, question));
-	    				list.add(new SubTypeObligation(node.getTest(), compatible, node.getExpType(), question));
-	    			}
+				if (!set.isEmpty()) {
+					PType compatible = set.getType(node.getLocation());
+
+					if (!TypeComparator.isSubType(
+							question.checkType(node.getTest(),
+									node.getExpType()), compatible)) {
+						list.add(new ValueBindingObligation(node, question));
+						list.add(new SubTypeObligation(node.getTest(),
+								compatible, node.getExpType(), question));
+					}
 				}
 			}
-		}
-		else if (node.getTypebind()!= null)
-		{
-			if (!TypeComparator.isSubType(question.checkType(node.getTest(), node.getExpType()), node.getDefType()))
-			{
-				list.add(new SubTypeObligation(node.getTest(), node.getDefType(), node.getExpType(), question));
+		} else if (node.getTypebind() != null) {
+			if (!TypeComparator.isSubType(
+					question.checkType(node.getTest(), node.getExpType()),
+					node.getDefType())) {
+				list.add(new SubTypeObligation(node.getTest(), node
+						.getDefType(), node.getExpType(), question));
 			}
-		}
-		else if (node.getSetbind() != null)
-		{
-			list.addAll(node.getSetbind().getSet().apply(rootVisitor,question));
+		} else if (node.getSetbind() != null) {
+			list.addAll(node.getSetbind().getSet().apply(rootVisitor, question));
 		}
 
-		list.addAll(node.getTest().apply(rootVisitor,question));
+		list.addAll(node.getTest().apply(rootVisitor, question));
 		return list;
 
 	}
-	
+
 	@Override
 	public ProofObligationList caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node, POContextStack question) {
-				
+
 		ProofObligationList obligations = new ProofObligationList();
 		LexNameList pids = new LexNameList();
 
-		for (APatternListTypePair pltp: node.getParamPatterns())
-		{
-			for (PPattern p: pltp.getPatterns())
-			{
-				for(PDefinition def : p.getDefinitions())
+		for (APatternListTypePair pltp : node.getParamPatterns()) {
+			for (PPattern p : pltp.getPatterns()) {
+				for (PDefinition def : p.getDefinitions())
 					pids.add(def.getName());
 			}
 		}
 
-		if (pids.hasDuplicates())
-		{
+		if (pids.hasDuplicates()) {
 			obligations.add(new ParameterPatternObligation(node, question));
 		}
 
-		if (node.getPrecondition() != null)
-		{
-			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+		if (node.getPrecondition() != null) {
+			obligations.addAll(node.getPrecondition().apply(rootVisitor,
+					question));
 		}
 
-		if (node.getPostcondition() != null)
-		{
-			if (node.getBody() != null)	// else satisfiability, below
+		if (node.getPostcondition() != null) {
+			if (node.getBody() != null) // else satisfiability, below
 			{
 				question.push(new POFunctionDefinitionContext(node, false));
-				obligations.add(new FuncPostConditionObligation(node, question));
+				obligations
+						.add(new FuncPostConditionObligation(node, question));
 				question.pop();
 			}
 
 			question.push(new POFunctionResultContext(node));
-			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
+			obligations.addAll(node.getPostcondition().apply(rootVisitor,
+					question));
 			question.pop();
 		}
 
 		question.push(new POFunctionDefinitionContext(node, false));
 
-		if (node.getBody() == null)
-		{
-			if (node.getPostcondition() != null)
-			{
-				obligations.add(
-					new SatisfiabilityObligation(node, question));
+		if (node.getBody() == null) {
+			if (node.getPostcondition() != null) {
+				obligations.add(new SatisfiabilityObligation(node, question));
 			}
-		}
-		else
-		{
-    		obligations.addAll(node.getBody().apply(rootVisitor,question));
+		} else {
+			obligations.addAll(node.getBody().apply(rootVisitor, question));
 
-			if (node.getIsUndefined() ||
-				!TypeComparator.isSubType(node.getActualResult(), node.getType().getResult()))
-			{
-				obligations.add(new SubTypeObligation(
-					node, node.getType().getResult(), node.getActualResult(), question));
+			if (node.getIsUndefined()
+					|| !TypeComparator.isSubType(node.getActualResult(), node
+							.getType().getResult())) {
+				obligations.add(new SubTypeObligation(node, node.getType()
+						.getResult(), node.getActualResult(), question));
 			}
 		}
 
 		question.pop();
 
 		return obligations;
-		
+
 	}
 
 	@Override
 	public ProofObligationList caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, POContextStack question) {
-		
+
 		ProofObligationList obligations = new ProofObligationList();
 		LexNameList pids = new LexNameList();
 
@@ -283,36 +273,35 @@ public class PogDefinitionVisitor extends
 		for (PPattern p : node.getParameterPatterns())
 			for (PDefinition def : p.getDefinitions())
 				pids.add(def.getName());
-	
-		if (pids.hasDuplicates())
-		{
+
+		if (pids.hasDuplicates()) {
 			obligations.add(new ParameterPatternObligation(node, question));
 		}
 
-		if (node.getPrecondition() != null)
-		{
-			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+		if (node.getPrecondition() != null) {
+			obligations.addAll(node.getPrecondition().apply(rootVisitor,
+					question));
 		}
 
-		if (node.getPostcondition() != null)
-		{
-			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
-			obligations.add(new OperationPostConditionObligation(node, question));
+		if (node.getPostcondition() != null) {
+			obligations.addAll(node.getPostcondition().apply(rootVisitor,
+					question));
+			obligations
+					.add(new OperationPostConditionObligation(node, question));
 		}
 
-		obligations.addAll(node.getBody().apply(rootVisitor,question));
+		obligations.addAll(node.getBody().apply(rootVisitor, question));
 
-		if (node.getIsConstructor() &&
-			node.getClassDefinition() != null &&
-			node.getClassDefinition().getInvariant() != null)
-		{
+		if (node.getIsConstructor() && node.getClassDefinition() != null
+				&& node.getClassDefinition().getInvariant() != null) {
 			obligations.add(new StateInvariantObligation(node, question));
 		}
 
-		if (!node.getIsConstructor() &&
-			!TypeComparator.isSubType(node.getActualResult(), node.getType().getResult()))
-		{
-			obligations.add(new SubTypeObligation(node, node.getActualResult(), question));
+		if (!node.getIsConstructor()
+				&& !TypeComparator.isSubType(node.getActualResult(), node
+						.getType().getResult())) {
+			obligations.add(new SubTypeObligation(node, node.getActualResult(),
+					question));
 		}
 
 		return obligations;
@@ -321,108 +310,99 @@ public class PogDefinitionVisitor extends
 	@Override
 	public ProofObligationList caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, POContextStack question) {
-		
+
 		ProofObligationList obligations = new ProofObligationList();
 		LexNameList pids = new LexNameList();
 
-		for(APatternListTypePair tp : node.getParameterPatterns() )
-		{
-			for (PPattern p : tp.getPatterns())
-			{
-				for(PDefinition def : p.getDefinitions())
+		for (APatternListTypePair tp : node.getParameterPatterns()) {
+			for (PPattern p : tp.getPatterns()) {
+				for (PDefinition def : p.getDefinitions())
 					pids.add(def.getName());
 			}
 		}
 
-		if (pids.hasDuplicates())
-		{
+		if (pids.hasDuplicates()) {
 			obligations.add(new ParameterPatternObligation(node, question));
 		}
 
-		if (node.getPrecondition() != null)
-		{
-			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+		if (node.getPrecondition() != null) {
+			obligations.addAll(node.getPrecondition().apply(rootVisitor,
+					question));
 		}
 
-		if (node.getPostcondition() != null)
-		{
-			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
-			obligations.add(new OperationPostConditionObligation(node, question));
+		if (node.getPostcondition() != null) {
+			obligations.addAll(node.getPostcondition().apply(rootVisitor,
+					question));
+			obligations
+					.add(new OperationPostConditionObligation(node, question));
 		}
 
-		if (node.getBody() != null)
-		{
-			obligations.addAll(node.getBody().apply(rootVisitor,question));
+		if (node.getBody() != null) {
+			obligations.addAll(node.getBody().apply(rootVisitor, question));
 
-			if (node.getIsConstructor() &&
-				node.getClassDefinition() != null &&
-				node.getClassDefinition().getInvariant() != null)
-			{
+			if (node.getIsConstructor() && node.getClassDefinition() != null
+					&& node.getClassDefinition().getInvariant() != null) {
 				obligations.add(new StateInvariantObligation(node, question));
 			}
 
-			if (!node.getIsConstructor() &&
-				!TypeComparator.isSubType(node.getActualResult(), node.getType().getResult()))
-			{
-				obligations.add(
-					new SubTypeObligation(node, node.getActualResult(), question));
+			if (!node.getIsConstructor()
+					&& !TypeComparator.isSubType(node.getActualResult(), node
+							.getType().getResult())) {
+				obligations.add(new SubTypeObligation(node, node
+						.getActualResult(), question));
 			}
-		}
-		else
-		{
-			if (node.getPostcondition() != null)
-			{
-				question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition()));
-				obligations.add(
-					new SatisfiabilityObligation(node, node.getStateDefinition(), question));
+		} else {
+			if (node.getPostcondition() != null) {
+				question.push(new POOperationDefinitionContext(node, false,
+						node.getStateDefinition()));
+				obligations.add(new SatisfiabilityObligation(node, node
+						.getStateDefinition(), question));
 				question.pop();
 			}
 		}
 
 		return obligations;
 	}
-	
+
 	@Override
 	public ProofObligationList defaultPDefinition(PDefinition node,
 			POContextStack question) {
 
 		return new ProofObligationList();
 	}
-		
+
 	@Override
 	public ProofObligationList caseAPerSyncDefinition(APerSyncDefinition node,
 			POContextStack question) {
-		
+
 		question.push(new PONameContext(new LexNameList(node.getOpname())));
-		ProofObligationList list = node.getGuard().apply(rootVisitor,question);
+		ProofObligationList list = node.getGuard().apply(rootVisitor, question);
 		question.pop();
 		return list;
 	}
 
-	
 	@Override
 	public ProofObligationList caseAStateDefinition(AStateDefinition node,
 			POContextStack question) {
 
 		ProofObligationList list = new ProofObligationList();
 
-		if (node.getInvdef() != null)
-		{
-			list.addAll(node.getInvdef().apply(this,question));
+		if (node.getInvdef() != null) {
+			list.addAll(node.getInvdef().apply(this, question));
 		}
 
 		return list;
 	}
-	
+
 	@Override
 	public ProofObligationList caseATypeDefinition(ATypeDefinition node,
 			POContextStack question) {
-		
 		ProofObligationList list = new ProofObligationList();
 
-		if (node.getInvdef() != null)
-		{
-			list.addAll(node.getInvdef().apply(this,question));
+		AExplicitFunctionDefinition invDef = node.getInvdef();
+
+		if (invDef != null) {
+			list.addAll(invDef.apply(this, question));
 		}
 
 		return list;
@@ -431,69 +411,69 @@ public class PogDefinitionVisitor extends
 	@Override
 	public ProofObligationList caseAValueDefinition(AValueDefinition node,
 			POContextStack question) {
-		
-		ProofObligationList list = node.getExpression().apply(rootVisitor,question);
 
-		if (!(node.getPattern() instanceof AIdentifierPattern) &&
-			!(node.getPattern() instanceof AIgnorePattern) &&
-			node.getType() instanceof AUnionType)
-		{
-			PType patternType =  PPatternAssistantTC.getPossibleType(node.getPattern());	// With unknowns
-			AUnionType ut = (AUnionType)node.getType();
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp exp = node.getExpression();
+		obligations.addAll(exp.apply(rootVisitor, question));
+
+		PPattern pattern = node.getPattern();
+		PType type = node.getType();
+
+		if (!(pattern instanceof AIdentifierPattern)
+				&& !(pattern instanceof AIgnorePattern)
+				&& type instanceof AUnionType) {
+			PType patternType = PPatternAssistantTC.getPossibleType(pattern);
+			AUnionType ut = PTypeAssistant.getUnion(type);
 			PTypeSet set = new PTypeSet();
 
-			for (PType u: ut.getTypes())
-			{
+			for (PType u : ut.getTypes()) {
 				if (TypeComparator.compatible(u, patternType))
-				{
 					set.add(u);
+			}
+
+			if (!set.isEmpty()) {
+				PType compatible = set.getType(node.getLocation());
+				if (!TypeComparator.isSubType(type, compatible)) {
+					obligations.add(new ValueBindingObligation(node, question));
+					obligations.add(new SubTypeObligation(exp, compatible,
+							type, question));
 				}
 			}
-
-			if (!set.isEmpty())
-			{
-    			PType compatible = set.getType(node.getLocation());
-
-    			if (!TypeComparator.isSubType(node.getType(), compatible))
-    			{
-    				list.add(new ValueBindingObligation(node, question));
-    				list.add(new SubTypeObligation(node.getExpression(), compatible, node.getType(), question));
-    			}
-			}
 		}
 
-		if (!TypeComparator.isSubType(question.checkType(node.getExpression(), node.getExpType()), node.getType()))
-		{
-			list.add(new SubTypeObligation(node.getExpression(), node.getType(), node.getExpType(), question));
+		if (!TypeComparator.isSubType(
+				question.checkType(exp, node.getExpType()), type)) {
+			obligations.add(new SubTypeObligation(exp, type, node.getExpType(),
+					question));
 		}
 
-		return list;
+		return obligations;
 
 	}
 
 	@Override
 	public ProofObligationList defaultPTraceDefinition(PTraceDefinition node,
 			POContextStack question) {
-		
+
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList defaultPTraceCoreDefinition(
 			PTraceCoreDefinition node, POContextStack question) {
 
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList caseAClassClassDefinition(
 			AClassClassDefinition node, POContextStack question) {
 
 		ProofObligationList proofObligationList = new ProofObligationList();
-		
-		for(PDefinition def : node.getDefinitions())
-		{
-			proofObligationList.addAll(def.apply(this,question));
+
+		for (PDefinition def : node.getDefinitions()) {
+			proofObligationList.addAll(def.apply(this, question));
 		}
 		return proofObligationList;
 	}
