@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
+import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -23,12 +24,15 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.pog.obligations.CasesExhaustiveObligation;
 import org.overture.pog.obligations.FiniteMapObligation;
+import org.overture.pog.obligations.FuncComposeObligation;
 import org.overture.pog.obligations.FunctionApplyObligation;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.MapApplyObligation;
 import org.overture.pog.obligations.MapCompatibleObligation;
+import org.overture.pog.obligations.MapComposeObligation;
 import org.overture.pog.obligations.MapIterationObligation;
 import org.overture.pog.obligations.MapSeqOfCompatibleObligation;
 import org.overture.pog.obligations.MapSetOfCompatibleObligation;
@@ -68,7 +72,10 @@ public class PogExpVisitor extends
 
 		ProofObligationList obligations = new ProofObligationList();
 
+		PExp root = node.getRoot();
+
 		// is it a map?
+
 		PType type = node.getType();
 		if (type instanceof SMapType) {
 			SMapType mapType = (SMapType) type;
@@ -83,12 +90,9 @@ public class PogExpVisitor extends
 			}
 		}
 
-		// VDMJ asks !type.isUnknown() && type.isFunctionType() however as we
-		// use inheritance in this version type instanceof AFunctionType will
-		// imply !type instance of UnknownType I guess
-		if ( /* !(type instanceof AUnknownType) && */(type instanceof AFunctionType)) {
-			AFunctionType funcType = (AFunctionType) type;
-			String prename = "Precond";
+		if (!PTypeAssistant.isUnknown(type) && PTypeAssistant.isFunction(type)) {
+			AFunctionType funcType = PTypeAssistant.getFunction(type);
+			String prename = PExpAssistant.getPreName(root);
 			if (prename == null || !prename.equals("")) {
 				obligations.add(new FunctionApplyObligation(node.getRoot(),
 						node.getArgs(), prename, question));
@@ -380,6 +384,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question) {
+
 		ProofObligationList obligations = new ProofObligationList();
 
 		question.push(new POImpliesContext(node.getTest()));
@@ -387,8 +392,6 @@ public class PogExpVisitor extends
 		question.pop();
 
 		question.push(new PONotImpliesContext(node.getTest()));
-		obligations.addAll(node.getElse().apply(this, question));
-		question.pop();
 
 		for (AElseIfExp e : node.getElseList()) {
 			obligations.addAll(e.apply(this, question));
@@ -396,7 +399,9 @@ public class PogExpVisitor extends
 
 		}
 
+		int sizeBefore = question.size();
 		obligations.addAll(node.getElse().apply(this, question));
+		assert sizeBefore <= question.size();
 
 		for (int i = 0; i < node.getElseList().size(); i++)
 			question.pop();
@@ -923,11 +928,22 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 		PExp lExp = node.getLeft();
 		PType lType = lExp.getType();
+		PExp rExp = node.getRight();
 
-		// TODO Okay so the preName beats me, what is the equivalent in ast_v2
+		if (PTypeAssistant.isFunction(lType)) {
+			String pref1 = PExpAssistant.getPreName(lExp);
+			String pref2 = PExpAssistant.getPreName(rExp);
 
-		throw new RuntimeException(
-				"Oooh, fix me, here I did not know what to do.");
+			if (pref1 == null || !pref1.equals(""))
+				obligations.add(new FuncComposeObligation(node, pref1, pref2,
+						question));
+		}
+
+		if (PTypeAssistant.isMap(lType)) {
+			obligations.add(new MapComposeObligation(node, question));
+		}
+
+		return obligations;
 	}
 
 	final static int LEFT = 0;
