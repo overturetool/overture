@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.Vector;
 
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase;
+import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -223,7 +224,6 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	}
 
-	@Override
 	public String getName() {
 
 		return file.getName();

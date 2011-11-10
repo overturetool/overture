@@ -37,6 +37,10 @@ public class ModulesVDMSlTypeCheckTest extends BaseTestSuite {
 	}
 
 	public static Test suite() throws Exception {
-		return getSuite(TestSuites.STATEMENTS);
+		TestSuite t = new TestSuite();
+		t.addTest(getSuite(TestSuites.STATEMENTS));
+		t.addTest(getSuite(TestSuites.FUNCTIONAL));
+		t.addTest(getSuite(TestSuites.EXPRESSIONS));
+		return t;
 	}
 }
