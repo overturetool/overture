@@ -1418,6 +1418,7 @@ public class PogExpVisitor extends
 		PExp predicate = node.getPredicate();
 
 		ProofObligationList obligations = new ProofObligationList();
+		question.push(new POForAllPredicateContext(node));
 		obligations.addAll(first.apply(this, question));
 		question.pop();
 
