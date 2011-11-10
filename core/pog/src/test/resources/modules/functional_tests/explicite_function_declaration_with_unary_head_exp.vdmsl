@@ -9,5 +9,5 @@ module Test
 definitions
 functions
     a: seq of bool -> bool
-    a(b) == hd b;
+    a(b) == hd b; 
 end Test
