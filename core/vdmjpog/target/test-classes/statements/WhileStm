@@ -1,0 +1,18 @@
+-- TCErrors: WARNING:5000:11,5 PROOFOBLIGATION: VGVzdFdoaWxlU3RtLDAsd2hpbGUgKGkgPiAwKSBkbyAuLi4KLHdoaWxlIGxvb3AgdGVybWluYXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VGVzdFdoaWxlU3RtLDAsKGkgLSAxKSA+PSAwCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs
+--
+-- This test is basic simple function with a unary 
+-- head expressing. We expect that a proof obligation
+-- that the b argument for a is not the empty list.
+--
+-- 
+module Test
+definitions
+operations
+	TestWhileStm : () ==> ()
+	TestWhileStm() ==
+	(dcl i : nat := 10; 
+		while(i > 0) do
+		i := i-1;
+	)
+	
+end Test

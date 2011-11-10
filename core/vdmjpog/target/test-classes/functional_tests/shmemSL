@@ -1,0 +1,251 @@
+-- TCErrors: WARNING:5000:134,7 PROOFOBLIGATION: c2l6ZW9mLDAsKGZvcmFsbCBtOk0gJgogICgoKG0uc3RvcCkgLSAobS5zdGFydCkpICsgMSkgPiAwKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: c3BhY2Vmb3IsMCwoZm9yYWxsIHNpemU6bmF0MSwgUTpRdWFkcmFudCAmCiAgKG5vdCBbXSA9IFEgPT4KICAgIChleGlzdHMgW2hdIF4gdGFpbDpRdWFkcmFudCAmIFtoXSBeIHRhaWwgPSBRID0+CiAgICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgICAgKG5vdCAoKChoLnR5cGUpID0gPEZSRUU+KSBhbmQgKHNpemVvZihoKSA+PSBzaXplKSkgPT4KICAgICAgICBRdWFkcmFudExlbihzaXplLCBRKSA+IFF1YWRyYW50TGVuKHNpemUsIHRhaWwpKSkpKQoscmVjdXJzaXZlIGZ1bmN0aW9uLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: c3BhY2Vmb3IsMCwoZm9yYWxsIHNpemU6bmF0MSwgUTpRdWFkcmFudCAmCiAgUSA9IFtdIG9yIChleGlzdHMgW2hdIF4gdGFpbDpRdWFkcmFudCAmIFEgPSBbaF0gXiB0YWlsKSkKLGNhc2VzIGV4aGF1c3RpdmUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: YmVzdGZpdCwwLChmb3JhbGwgc2l6ZTpuYXQxLCBROlF1YWRyYW50ICYKICAobm90IFtdID0gUSA9PgogICAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICAgIGxldCBbaF0gXiB0YWlsID0gUSBpbgogICAgICAoKCgoaC50eXBlKSA9IDxGUkVFPikgYW5kIChzaXplb2YoaCkgPj0gc2l6ZSkpID0+CiAgICAgICAgUXVhZHJhbnRMZW4oc2l6ZSwgUSkgPiBRdWFkcmFudExlbihzaXplLCB0YWlsKSkpKSkKLHJlY3Vyc2l2ZSBmdW5jdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: YmVzdGZpdCwwLChmb3JhbGwgc2l6ZTpuYXQxLCBROlF1YWRyYW50ICYKICAobm90IFtdID0gUSA9PgogICAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICAgIGxldCBbaF0gXiB0YWlsID0gUSBpbgogICAgICAobm90ICgoKGgudHlwZSkgPSA8RlJFRT4pIGFuZCAoc2l6ZW9mKGgpID49IHNpemUpKSA9PgogICAgICAgIFF1YWRyYW50TGVuKHNpemUsIFEpID4gUXVhZHJhbnRMZW4oc2l6ZSwgdGFpbCkpKSkpCixyZWN1cnNpdmUgZnVuY3Rpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: YmVzdGZpdCwwLChmb3JhbGwgc2l6ZTpuYXQxLCBROlF1YWRyYW50ICYKICBRID0gW10gb3IgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgUSA9IFtoXSBeIHRhaWwpKQosY2FzZXMgZXhoYXVzdGl2ZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: YWRkLDAsKGZvcmFsbCBzaXplOm5hdDEsIGhvbGU6bmF0MSwgUTpRdWFkcmFudCAmIChob2xlID49IHNpemUpID0+CiAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgICgoKChoLnR5cGUpID0gPEZSRUU+KSBhbmQgKHNpemVvZihoKSA9IGhvbGUpKSA9PgogICAgICAoKGhvbGUgPSBzaXplKSA9PgogICAgICAgIGludl9NKG1rX00oPFVTRUQ+LCAoaC5zdGFydCksIChoLnN0b3ApKSkpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: YWRkLDAsKGZvcmFsbCBzaXplOm5hdDEsIGhvbGU6bmF0MSwgUTpRdWFkcmFudCAmIChob2xlID49IHNpemUpID0+CiAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgICgoKChoLnR5cGUpID0gPEZSRUU+KSBhbmQgKHNpemVvZihoKSA9IGhvbGUpKSA9PgogICAgICAobm90IChob2xlID0gc2l6ZSkgPT4KICAgICAgICAoKChoLnN0YXJ0KSArIHNpemUpIC0gMSkgPj0gMCkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: YWRkLDAsKGZvcmFsbCBzaXplOm5hdDEsIGhvbGU6bmF0MSwgUTpRdWFkcmFudCAmIChob2xlID49IHNpemUpID0+CiAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgICgoKChoLnR5cGUpID0gPEZSRUU+KSBhbmQgKHNpemVvZihoKSA9IGhvbGUpKSA9PgogICAgICAobm90IChob2xlID0gc2l6ZSkgPT4KICAgICAgICBpbnZfTShta19NKDxVU0VEPiwgKGguc3RhcnQpLCAoKChoLnN0YXJ0KSArIHNpemUpIC0gMSkpKSBhbmQgKCgoKGguc3RhcnQpICsgc2l6ZSkgLSAxKSA+PSAwKSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: YWRkLDAsKGZvcmFsbCBzaXplOm5hdDEsIGhvbGU6bmF0MSwgUTpRdWFkcmFudCAmIChob2xlID49IHNpemUpID0+CiAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgICgoKChoLnR5cGUpID0gPEZSRUU+KSBhbmQgKHNpemVvZihoKSA9IGhvbGUpKSA9PgogICAgICAobm90IChob2xlID0gc2l6ZSkgPT4KICAgICAgICBpbnZfTShta19NKDxGUkVFPiwgKChoLnN0YXJ0KSArIHNpemUpLCAoaC5zdG9wKSkpKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: YWRkLDAsKGZvcmFsbCBzaXplOm5hdDEsIGhvbGU6bmF0MSwgUTpRdWFkcmFudCAmIChob2xlID49IHNpemUpID0+CiAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgIChub3QgKCgoaC50eXBlKSA9IDxGUkVFPikgYW5kIChzaXplb2YoaCkgPSBob2xlKSkgPT4KICAgICAgcHJlX2FkZChzaXplLCBob2xlLCB0YWlsKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: YWRkLDAsKGZvcmFsbCBzaXplOm5hdDEsIGhvbGU6bmF0MSwgUTpRdWFkcmFudCAmIChob2xlID49IHNpemUpID0+CiAgKGV4aXN0cyBbaF0gXiB0YWlsOlF1YWRyYW50ICYgW2hdIF4gdGFpbCA9IFEgPT4KICBsZXQgW2hdIF4gdGFpbCA9IFEgaW4KICAgIChub3QgKCgoaC50eXBlKSA9IDxGUkVFPikgYW5kIChzaXplb2YoaCkgPSBob2xlKSkgPT4KICAgICAgUXVhZHJhbnRMZW4yKHNpemUsIGhvbGUsIFEpID4gUXVhZHJhbnRMZW4yKHNpemUsIGhvbGUsIHRhaWwpKSkpCixyZWN1cnNpdmUgZnVuY3Rpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Y29tYmluZSwwLChmb3JhbGwgUTpRdWFkcmFudCAmCiAgKGV4aXN0cyBbaDEsIGgyXSBeIHRhaWw6UXVhZHJhbnQgJiBbaDEsIGgyXSBeIHRhaWwgPSBRID0+CiAgbGV0IFtoMSwgaDJdIF4gdGFpbCA9IFEgaW4KICAgICgoKChoMS50eXBlKSA9IDxGUkVFPikgYW5kICgoaDIudHlwZSkgPSA8RlJFRT4pKSA9PgogICAgICBRdWFkcmFudExlbjAoUSkgPiBRdWFkcmFudExlbjAoKFtta19NKDxGUkVFPiwgKGgxLnN0YXJ0KSwgKGgyLnN0b3ApKV0gXiB0YWlsKSkpKSkKLHJlY3Vyc2l2ZSBmdW5jdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Y29tYmluZSwwLChmb3JhbGwgUTpRdWFkcmFudCAmCiAgKGV4aXN0cyBbaDEsIGgyXSBeIHRhaWw6UXVhZHJhbnQgJiBbaDEsIGgyXSBeIHRhaWwgPSBRID0+CiAgbGV0IFtoMSwgaDJdIF4gdGFpbCA9IFEgaW4KICAgICgoKChoMS50eXBlKSA9IDxGUkVFPikgYW5kICgoaDIudHlwZSkgPSA8RlJFRT4pKSA9PgogICAgICBpbnZfTShta19NKDxGUkVFPiwgKGgxLnN0YXJ0KSwgKGgyLnN0b3ApKSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Y29tYmluZSwwLChmb3JhbGwgUTpRdWFkcmFudCAmCiAgKGV4aXN0cyBbaDEsIGgyXSBeIHRhaWw6UXVhZHJhbnQgJiBbaDEsIGgyXSBeIHRhaWwgPSBRID0+CiAgbGV0IFtoMSwgaDJdIF4gdGFpbCA9IFEgaW4KICAgIChub3QgKCgoaDEudHlwZSkgPSA8RlJFRT4pIGFuZCAoKGgyLnR5cGUpID0gPEZSRUU+KSkgPT4KICAgICAgUXVhZHJhbnRMZW4wKFEpID4gUXVhZHJhbnRMZW4wKCh0bCBRKSkpKSkKLHJlY3Vyc2l2ZSBmdW5jdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Y29tYmluZSwwLChmb3JhbGwgUTpRdWFkcmFudCAmCiAgKGV4aXN0cyBbaDEsIGgyXSBeIHRhaWw6UXVhZHJhbnQgJiBbaDEsIGgyXSBeIHRhaWwgPSBRID0+CiAgbGV0IFtoMSwgaDJdIF4gdGFpbCA9IFEgaW4KICAgIChub3QgKCgoaDEudHlwZSkgPSA8RlJFRT4pIGFuZCAoKGgyLnR5cGUpID0gPEZSRUU+KSkgPT4KICAgICAgUSA8PiBbXSkpKQosbm9uLWVtcHR5IHNlcXVlbmNlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: ZGVsZXRlLDAsKGZvcmFsbCBpdGVtOk0sIFE6UXVhZHJhbnQgJgogIFEgPD4gW10pCixub24tZW1wdHkgc2VxdWVuY2UsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: ZGVsZXRlLDAsKGZvcmFsbCBpdGVtOk0sIFE6UXVhZHJhbnQgJgogICgoKGhkIFEpID0gaXRlbSkgPT4KICAgIGludl9NKG1rX00oPEZSRUU+LCAoaXRlbS5zdGFydCksIChpdGVtLnN0b3ApKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: ZGVsZXRlLDAsKGZvcmFsbCBpdGVtOk0sIFE6UXVhZHJhbnQgJgogICgoKGhkIFEpID0gaXRlbSkgPT4KICAgIFEgPD4gW10pKQosbm9uLWVtcHR5IHNlcXVlbmNlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: ZGVsZXRlLDAsKGZvcmFsbCBpdGVtOk0sIFE6UXVhZHJhbnQgJgogIChub3QgKChoZCBRKSA9IGl0ZW0pID0+CiAgICBRIDw+IFtdKSkKLG5vbi1lbXB0eSBzZXF1ZW5jZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: ZGVsZXRlLDAsKGZvcmFsbCBpdGVtOk0sIFE6UXVhZHJhbnQgJgogIChub3QgKChoZCBRKSA9IGl0ZW0pID0+CiAgICBNUXVhZHJhbnRMZW4oaXRlbSwgUSkgPiBNUXVhZHJhbnRMZW4oaXRlbSwgKHRsIFEpKSkpCixyZWN1cnNpdmUgZnVuY3Rpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: ZGVsZXRlLDAsKGZvcmFsbCBpdGVtOk0sIFE6UXVhZHJhbnQgJgogIChub3QgKChoZCBRKSA9IGl0ZW0pID0+CiAgICBRIDw+IFtdKSkKLG5vbi1lbXB0eSBzZXF1ZW5jZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: ZnJhZ21lbnRzLDAsKGZvcmFsbCBROlF1YWRyYW50ICYKICAoKGNhcmQge3ggfCBbeCBpbiBzZXQgKGVsZW1zIFEpXSAmICgoeC50eXBlKSA9IDxGUkVFPil9KSAtIDEpID49IDApCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: c2VlZCwwLC0tIEFmdGVyIHJzZWVkIDo9IG4KbGV0IG1rX01lbW9yeSgtLCBxMywgcTQpID0gTWVtb3J5IGluICgoKGxlbiBxMykgPiAwKSBhbmQgKChsZW4gcTQpID4gMCkpCixzdGF0ZSBpbnZhcmlhbnQsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: aW5jLDAsLS0gQWZ0ZXIgcnNlZWQgOj0gKCgocnNlZWQgKiA2OTA2OSkgKyA1KSBtb2QgNDI5NDk2NzI5NikKbGV0IG1rX01lbW9yeSgtLCBxMywgcTQpID0gTWVtb3J5IGluICgoKGxlbiBxMykgPiAwKSBhbmQgKChsZW4gcTQpID4gMCkpCixzdGF0ZSBpbnZhcmlhbnQsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: Rmlyc3RGaXQsMCwtLSBBZnRlciBRNCA6PSBhZGQoc2l6ZSwgcTQsIFE0KQpsZXQgbWtfTWVtb3J5KC0sIHEzLCBxNCkgPSBNZW1vcnkgaW4gKCgobGVuIHEzKSA+IDApIGFuZCAoKGxlbiBxNCkgPiAwKSkKLHN0YXRlIGludmFyaWFudCxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Rmlyc3RGaXQsMCxwcmVfYWRkKHNpemUsIHE0LCBRNCkKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Rmlyc3RGaXQsMCwtLSBBZnRlciBRMyA6PSBhZGQoc2l6ZSwgcTMsIFEzKQpsZXQgbWtfTWVtb3J5KC0sIHEzLCBxNCkgPSBNZW1vcnkgaW4gKCgobGVuIHEzKSA+IDApIGFuZCAoKGxlbiBxNCkgPiAwKSkKLHN0YXRlIGludmFyaWFudCxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Rmlyc3RGaXQsMCxwcmVfYWRkKHNpemUsIHEzLCBRMykKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QmVzdEZpdCwwLC0tIEFmdGVyIFE0IDo9IGFkZChzaXplLCBxNCwgUTQpCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QmVzdEZpdCwwLHByZV9hZGQoc2l6ZSwgcTQsIFE0KQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: QmVzdEZpdCwwLC0tIEFmdGVyIFEzIDo9IGFkZChzaXplLCBxMywgUTMpCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QmVzdEZpdCwwLHByZV9hZGQoc2l6ZSwgcTMsIFEzKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: UmVzZXQsMCwtLSBBZnRlciBRMyA6PSBbbWtfTSg8RlJFRT4sIDAsIChNQVhNRU0gLSAxKSldCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: UmVzZXQsMCwoTUFYTUVNIC0gMSkgPj0gMAosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: UmVzZXQsMCxpbnZfTShta19NKDxGUkVFPiwgMCwgKE1BWE1FTSAtIDEpKSkgYW5kICgoTUFYTUVNIC0gMSkgPj0gMCkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: UmVzZXQsMCwtLSBBZnRlciBRNCA6PSBbbWtfTSg8RlJFRT4sIDAsIChNQVhNRU0gLSAxKSldCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: UmVzZXQsMCwoTUFYTUVNIC0gMSkgPj0gMAosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: UmVzZXQsMCxpbnZfTShta19NKDxGUkVFPiwgMCwgKE1BWE1FTSAtIDEpKSkgYW5kICgoTUFYTUVNIC0gMSkgPj0gMCkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RGVsZXRlT25lLDAsaSBpbiBzZXQgaW5kcyBRMwosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RGVsZXRlT25lLDAsLS0gQWZ0ZXIgUTMgOj0gZGVsZXRlKFEzKGkpLCBRMykKbGV0IG1rX01lbW9yeSgtLCBxMywgcTQpID0gTWVtb3J5IGluICgoKGxlbiBxMykgPiAwKSBhbmQgKChsZW4gcTQpID4gMCkpCixzdGF0ZSBpbnZhcmlhbnQsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RGVsZXRlT25lLDAsaSBpbiBzZXQgaW5kcyBRMwosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RGVsZXRlT25lLDAsaSBpbiBzZXQgaW5kcyBRNAosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RGVsZXRlT25lLDAsLS0gQWZ0ZXIgUTQgOj0gZGVsZXRlKFE0KGkpLCBRNCkKbGV0IG1rX01lbW9yeSgtLCBxMywgcTQpID0gTWVtb3J5IGluICgoKGxlbiBxMykgPiAwKSBhbmQgKChsZW4gcTQpID4gMCkpCixzdGF0ZSBpbnZhcmlhbnQsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RGVsZXRlT25lLDAsaSBpbiBzZXQgaW5kcyBRNAosc2VxdWVuY2UgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJ5Rmlyc3QsMCx3aGlsZSAoKGNvdW50IDwgbG9vcHMpIGFuZCBGaXJzdEZpdChyYW5kKENIVU5LKSkpIGRvIC4uLgosd2hpbGUgbG9vcCB0ZXJtaW5hdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: VHJ5Rmlyc3QsMCwtLSBBZnRlciBjb3VudCA6PSAoY291bnQgKyAxKQpsZXQgbWtfTWVtb3J5KC0sIHEzLCBxNCkgPSBNZW1vcnkgaW4gKCgobGVuIHEzKSA+IDApIGFuZCAoKGxlbiBxNCkgPiAwKSkKLHN0YXRlIGludmFyaWFudCxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: VHJ5QmVzdCwwLHdoaWxlICgoY291bnQgPCBsb29wcykgYW5kIEJlc3RGaXQocmFuZChDSFVOSykpKSBkbyAuLi4KLHdoaWxlIGxvb3AgdGVybWluYXRpb24sbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJ5QmVzdCwwLC0tIEFmdGVyIGNvdW50IDo9IChjb3VudCArIDEpCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bWFpbiwwLC0tIEFmdGVyIGJlc3QgOj0gVHJ5QmVzdChsb29wcykKbGV0IG1rX01lbW9yeSgtLCBxMywgcTQpID0gTWVtb3J5IGluICgoKGxlbiBxMykgPiAwKSBhbmQgKChsZW4gcTQpID4gMCkpCixzdGF0ZSBpbnZhcmlhbnQsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: bWFpbiwwLC0tIEFmdGVyIGZpcnN0IDo9IFRyeUZpcnN0KGxvb3BzKQpsZXQgbWtfTWVtb3J5KC0sIHEzLCBxNCkgPSBNZW1vcnkgaW4gKCgobGVuIHEzKSA+IDApIGFuZCAoKGxlbiBxNCkgPiAwKSkKLHN0YXRlIGludmFyaWFudCxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: bWFpbiwwLC0tIEFmdGVyIHJlc3VsdCA6PSAocmVzdWx0IF4gWzxTQU1FPl0pCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bWFpbiwwLC0tIEFmdGVyIHJlc3VsdCA6PSAocmVzdWx0IF4gWzxCRVNUPl0pCmxldCBta19NZW1vcnkoLSwgcTMsIHE0KSA9IE1lbW9yeSBpbiAoKChsZW4gcTMpID4gMCkgYW5kICgobGVuIHE0KSA+IDApKQosc3RhdGUgaW52YXJpYW50LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: bWFpbiwwLC0tIEFmdGVyIHJlc3VsdCA6PSAocmVzdWx0IF4gWzxGSVJTVD5dKQpsZXQgbWtfTWVtb3J5KC0sIHEzLCBxNCkgPSBNZW1vcnkgaW4gKCgobGVuIHEzKSA+IDApIGFuZCAoKGxlbiBxNCkgPiAwKSkKLHN0YXRlIGludmFyaWFudCxudWxsLFVucHJvdmVkLA==
+
+
+--shmem.vdmsl
+
+module M
+exports all
+definitions
+types
+
+Quadrant = seq of M;
+--inv Q == 
+--  forall a in set elems Q &
+--    (not exists b in set elems Q \ {a} &
+--           (b.start >= a.start and b.start <= a.stop) or
+--           (b.stop  >= a.start and b.stop  <= a.stop));
+
+M :: type : <USED> | <FREE>
+     start: nat
+     stop : nat
+inv mk_M(-, a, b) == (b >= a)
+
+
+state Memory of
+  rseed: nat
+  Q3: Quadrant
+  Q4: Quadrant
+inv mk_Memory(-, q3, q4) == len q3 > 0 and len q4 > 0
+init q == 
+  q = mk_Memory(87654321,
+                [mk_M(<FREE>, 0, MAXMEM-1)],
+                [mk_M(<FREE>, 0, MAXMEM-1)])
+		
+end
+
+values
+
+MAXMEM = 10000;
+CHUNK = 100;
+
+functions
+
+sizeof: M -> nat1
+sizeof(m) == 
+  m.stop - m.start + 1;
+
+least: nat1 * nat1 -> nat1
+least(a, b) == 
+  if a < b 
+  then a 
+  else b;
+	
+spacefor: nat1 * Quadrant -> nat1
+spacefor(size, Q) ==
+  cases Q:
+    []         -> MAXMEM + 1,
+    [h] ^ tail -> if h.type = <FREE> and sizeof(h) >= size
+                  then sizeof(h) 
+                  else spacefor(size, tail)
+  end
+measure QuadrantLen;
+	
+QuadrantLen:  nat1 * Quadrant -> nat
+QuadrantLen(-,list) == 
+  len list;
+
+bestfit: nat1 * Quadrant -> nat1
+bestfit(size, Q) ==
+  cases Q:
+    -- as we're looking for the smallest
+    []         -> MAXMEM + 1,	
+    [h] ^ tail -> if h.type = <FREE> and sizeof(h) >= size
+                  then least(sizeof(h), bestfit(size, tail))
+                  else bestfit(size, tail)
+  end
+measure QuadrantLen;
+	
+add: nat1 * nat1 * Quadrant -> Quadrant
+add(size, hole, Q) ==
+  cases Q:
+    [h] ^ tail ->  if h.type = <FREE> and sizeof(h) = hole 
+                   then	if hole = size 
+                        then [mk_M(<USED>, h.start, h.stop)] ^ tail
+                        else [mk_M(<USED>, h.start, h.start + size - 1),
+                              mk_M(<FREE>, h.start + size, h.stop)] ^ tail
+                   else	[h] ^ add(size, hole, tail),
+    others -> Q
+  end
+pre hole >= size
+measure QuadrantLen2;
+
+QuadrantLen2: nat1 * nat1 * Quadrant -> nat
+QuadrantLen2(-,-,list) == 
+  len list;
+
+combine: Quadrant -> Quadrant
+combine(Q) ==
+  cases Q:
+    [h1, h2] ^ tail -> 
+       if h1.type = <FREE> and h2.type = <FREE>
+       then combine([mk_M(<FREE>, h1.start, h2.stop)] ^ tail)
+       else [h1] ^ combine(tl Q),
+    others -> Q 
+  end
+measure QuadrantLen0;
+
+QuadrantLen0: Quadrant -> nat
+QuadrantLen0(list) == 
+  len list;
+
+delete: M * Quadrant -> Quadrant
+delete(item, Q) ==
+  if hd Q = item
+  then combine([mk_M(<FREE>, item.start, item.stop)] ^ tl Q)
+  else [hd Q] ^ delete(item, tl Q)
+  measure MQuadrantLen;
+
+MQuadrantLen: M * Quadrant -> nat
+MQuadrantLen(-,list) == 
+  len list;
+
+fragments: Quadrant -> nat
+fragments(Q) ==
+  card {x | x in set elems Q & x.type = <FREE>} - 1;
+
+operations
+
+seed: nat1 ==> ()
+seed(n) == 
+  rseed := n;
+	
+inc: () ==> ()
+inc() ==
+  for i = 1 to rseed mod 7 + 3 
+  do
+    rseed := (rseed * 69069 + 5) mod 4294967296;
+
+rand: nat1 ==> nat1
+rand(n) ==
+ (inc();
+  return rseed mod n + 1;
+ );
+
+FirstFit: nat1 ==> bool
+FirstFit(size) ==
+ (let q4 = spacefor(size, Q4) 
+  in
+    if q4 <= MAXMEM
+    then Q4 := add(size, q4, Q4)
+    else let q3 = spacefor(size, Q3) 
+         in
+           if q3 <= MAXMEM
+           then Q3 := add(size, q3, Q3)
+           else return false;
+  return true;
+ );
+
+BestFit: nat1 ==> bool
+BestFit(size) ==
+ (let q4 = bestfit(size, Q4) 
+  in
+    if q4 <= MAXMEM
+    then Q4 := add(size, q4, Q4)
+    else let q3 = bestfit(size, Q3) 
+         in
+           if q3 <= MAXMEM
+           then Q3 := add(size, q3, Q3)
+           else return false;
+  return true;
+ );
+
+Reset: () ==> ()
+Reset() ==
+ (Q3 := [mk_M(<FREE>, 0, MAXMEM-1)];
+  Q4 := [mk_M(<FREE>, 0, MAXMEM-1)];
+ );
+
+DeleteOne: () ==> ()
+DeleteOne() ==
+ (if rand(2) = 1
+  then let i = rand(len Q3) 
+       in
+         if Q3(i).type = <USED>
+         then Q3 := delete(Q3(i), Q3)
+         else DeleteOne()
+  else let i = rand(len Q4) 
+       in
+         if Q4(i).type = <USED>
+         then Q4 := delete(Q4(i), Q4)
+         else DeleteOne()
+ )
+pre (exists m in set elems Q3 & m.type = <USED>) or
+    (exists m in set elems Q4 & m.type = <USED>);
+
+TryFirst: nat ==> nat
+TryFirst(loops) ==
+ (dcl count:int := 0;
+	
+  while count < loops and FirstFit(rand(CHUNK)) 
+  do
+    (if count > 50 
+     then DeleteOne();
+     count := count + 1;
+    );
+
+  -- return count;
+  return fragments(Q3) + fragments(Q4);
+ );
+
+TryBest: nat ==> nat
+TryBest(loops) ==
+ (dcl count:int := 0;
+	
+  while count < loops and BestFit(rand(CHUNK)) 
+  do
+    (if count > 50 
+     then DeleteOne();
+     count := count + 1;
+    );
+	
+  -- return count;
+  return fragments(Q3) + fragments(Q4);
+ );
+
+main: nat1 * nat1 ==> seq of (<BEST> | <FIRST> | <SAME>)
+main(tries, loops) ==
+ (dcl result: seq of (<BEST> | <FIRST> | <SAME>) := [];
+	
+  for i = 1 to tries 
+  do
+    (dcl best:int, first:int;
+		
+     Reset();
+     seed(i);
+     best := TryBest(loops);
+		
+     Reset();
+     seed(i);
+     first := TryFirst(loops);
+		
+     if best = first
+     then result := result ^ [<SAME>]
+     elseif best > first 
+     then result := result ^ [<BEST>]
+     else result := result ^ [<FIRST>];
+    );
+		
+  return result;
+ )
+
+end M

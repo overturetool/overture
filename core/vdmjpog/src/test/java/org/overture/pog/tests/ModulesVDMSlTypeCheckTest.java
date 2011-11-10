@@ -11,14 +11,32 @@ import org.overture.pog.tests.framework.ModuleTestCase;
 
 public class ModulesVDMSlTypeCheckTest extends BaseTestSuite {
 
-	public static Test suite() throws IllegalArgumentException,
-			SecurityException, InstantiationException, IllegalAccessException,
+	private enum TestSuites {
+		FUNCTIONAL("functional_tests"), EXPRESSIONS("expressions"), STATEMENTS(
+				"statements");
+		private String folder;
+
+		TestSuites(String folder) {
+			this.folder = folder;
+		}
+
+		public String getFolder() {
+			return this.folder;
+		}
+	}
+
+	private static Test getSuite(TestSuites suite)
+			throws IllegalArgumentException, SecurityException,
+			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException {
 		String name = "Type Check Module TestSuite";
-		String root = "src\\test\\resources\\modules";
+		String root = "src\\test\\resources\\" + suite.getFolder();
 		TestSuite test = createTestCompleteFile(name, root,
 				ModuleTestCase.class);
 		return test;
 	}
 
+	public static Test suite() throws Exception {
+		return getSuite(TestSuites.STATEMENTS);
+	}
 }

@@ -1,4 +1,3 @@
--- TCErrors: WARNING:5000:11,5 PROOFOBLIGATION: YSwwLChmb3JhbGwgYjpzZXEgb2YgKGJvb2wpICYKICBiIDw+IFtdKQosbm9uLWVtcHR5IHNlcXVlbmNlLG51bGwsVW5wcm92ZWQs
 --
 -- This test is basic simple function with a unary 
 -- head expressing. We expect that a proof obligation

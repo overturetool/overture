@@ -1,0 +1,80 @@
+-- TCErrors: WARNING:5008:10,5 WARNING:5008:27,10 WARNING:5008:32,11 WARNING:5008:42,9 WARNING:5008:46,12 WARNING:5008:51,6 WARNING:5012:50,1 WARNING:5008:60,7 WARNING:5008:65,11 WARNING:5008:70,13 WARNING:5008:76,15 WARNING:5000:21,1 WARNING:5000:59,1 WARNING:5000:64,1 WARNING:5000:69,1 WARNING:5000:75,1 PROOFOBLIGATION: Qk9NLDAsKGZvcmFsbCBib206bWFwIChQbikgdG8gKHNldCBvZiAoUG4pKSAmCiAgKChmb3JhbGwgcHMgaW4gc2V0IChybmcgYm9tKSAmIChwcyBzdWJzZXQgKGRvbSBib20pKSkgPT4KICAgIChmb3JhbGwgcCBpbiBzZXQgKGRvbSBib20pICYKICAgICAgcHJlX1BhcnRzKHAsIGJvbSkpKSkKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: Ym9tLDAsZm9yYWxsIG0xLCBtMiBpbiBzZXQge3sxIHwtPiB7MiwgNH19LCB7MiB8LT4gezMsIDQsIDV9fSwgezMgfC0+IHs1LCA2fX0sIHs0IHwtPiB7Nn19LCB7NSB8LT4gezR9fSwgezYgfC0+IHt9fX0gJgogIGZvcmFsbCBkMyBpbiBzZXQgZG9tIG0xLCBkNCBpbiBzZXQgZG9tIG0yICYKICAgIGQzID0gZDQgPT4gbTEoZDMpID0gbTIoZDQpCixtYXAgc2VxdWVuY2UgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: Y3ljbGUsMCxmb3JhbGwgbTEsIG0yIGluIHNldCB7ezEgfC0+IHsyLCA0fX0sIHsyIHwtPiB7MywgNCwgNX19LCB7MyB8LT4gezUsIDZ9fSwgezQgfC0+IHs2fX0sIHs1IHwtPiB7NH19LCB7NiB8LT4gezF9fX0gJgogIGZvcmFsbCBkMyBpbiBzZXQgZG9tIG0xLCBkNCBpbiBzZXQgZG9tIG0yICYKICAgIGQzID0gZDQgPT4gbTEoZDMpID0gbTIoZDQpCixtYXAgc2VxdWVuY2UgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: UGFydHMsMCwoZm9yYWxsIHA6UG4sIGJvbTptYXAgKFBuKSB0byAoc2V0IG9mIChQbikpICYgKHAgaW4gc2V0IChkb20gYm9tKSkgPT4KICBwcmVfVHJhbnNDbG9zKGJvbSwgYm9tKHApKSkKLGZ1bmN0aW9uIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: UGFydHMsMCwoZm9yYWxsIHA6UG4sIGJvbTptYXAgKFBuKSB0byAoc2V0IG9mIChQbikpICYgKHAgaW4gc2V0IChkb20gYm9tKSkgPT4KICBwIGluIHNldCBkb20gYm9tKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: VHJhbnNDbG9zLDAsKGZvcmFsbCBib206bWFwIChQbikgdG8gKHNldCBvZiAoUG4pKSwgcHM6c2V0IG9mIChQbikgJiAocHMgc3Vic2V0IChkb20gYm9tKSkgPT4KICAoZm9yYWxsIHAgaW4gc2V0IHBzICYKICAgIHAgaW4gc2V0IGRvbSBib20pKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: VHJhbnNDbG9zLCBuZXdwcywwLChmb3JhbGwgYm9tOm1hcCAoUG4pIHRvIChzZXQgb2YgKFBuKSksIHBzOnNldCBvZiAoUG4pICYgKHBzIHN1YnNldCAoZG9tIGJvbSkpID0+CiAgKG5vdCAoZm9yYWxsIHAgaW4gc2V0IHBzICYgKGJvbShwKSBzdWJzZXQgcHMpKSA9PgogICAgKGZvcmFsbCBwIGluIHNldCBwcyAmCiAgICAgIHAgaW4gc2V0IGRvbSBib20pKSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: VHJhbnNDbG9zLDAsKGZvcmFsbCBib206bWFwIChQbikgdG8gKHNldCBvZiAoUG4pKSwgcHM6c2V0IG9mIChQbikgJiAocHMgc3Vic2V0IChkb20gYm9tKSkgPT4KICAobm90IChmb3JhbGwgcCBpbiBzZXQgcHMgJiAoYm9tKHApIHN1YnNldCBwcykpID0+CiAgICAobGV0IG5ld3BzOnNldCBvZiAoUG4pID0gKGR1bmlvbiB7Ym9tKHApIHwgW3AgaW4gc2V0IHBzXX0pIGluCiAgICAgIHByZV9UcmFuc0Nsb3MoYm9tLCAocHMgdW5pb24gbmV3cHMpKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: VHJhbnNDbG9zLDAsKGZvcmFsbCBib206bWFwIChQbikgdG8gKHNldCBvZiAoUG4pKSwgcHM6c2V0IG9mIChQbikgJiAocHMgc3Vic2V0IChkb20gYm9tKSkgPT4KICAobm90IChmb3JhbGwgcCBpbiBzZXQgcHMgJiAoYm9tKHApIHN1YnNldCBwcykpID0+CiAgICAobGV0IG5ld3BzOnNldCBvZiAoUG4pID0gKGR1bmlvbiB7Ym9tKHApIHwgW3AgaW4gc2V0IHBzXX0pIGluCiAgICAgIEluY3JBY2MoYm9tLCBwcykgPiBJbmNyQWNjKGJvbSwgKHBzIHVuaW9uIG5ld3BzKSkpKSkKLHJlY3Vyc2l2ZSBmdW5jdGlvbixudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: SW5jckFjYywwLChmb3JhbGwgYm9tOm1hcCAoUG4pIHRvIChzZXQgb2YgKFBuKSksIHBuczpzZXQgb2YgKFBuKSAmCiAgKChjYXJkIChkb20gYm9tKSkgLSAoY2FyZCBwbnMpKSA+PSAwKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: RXhwbG9kZSwwLChmb3JhbGwgcDpQbiwgYm9tOkJPTSAmIChwIGluIHNldCAoZG9tIGJvbSkpID0+CiAgcCBpbiBzZXQgZG9tIGJvbSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: RXhwbG9kZSwwLChmb3JhbGwgcDpQbiwgYm9tOkJPTSAmIChwIGluIHNldCAoZG9tIGJvbSkpID0+CiAgcHJlX0V4cHMoYm9tLCBib20ocCkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RXhwbG9kZSwwLChmb3JhbGwgcDpQbiwgYm9tOkJPTSAmIChwIGluIHNldCAoZG9tIGJvbSkpID0+CiAgcCBpbiBzZXQgZG9tIGJvbSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: RXhwcywwLChmb3JhbGwgYm9tOkJPTSwgcHM6c2V0IG9mIChQbikgJiAocHMgc3Vic2V0IChkb20gYm9tKSkgPT4KICAobm90IChwcyA9IHt9KSA9PgogICAgZXhpc3RzIHAxIGluIHNldCBwcykpCixsZXQgYmUgc3QgZXhpc3RlbmNlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: RXhwcywwLChmb3JhbGwgYm9tOkJPTSwgcHM6c2V0IG9mIChQbikgJiAocHMgc3Vic2V0IChkb20gYm9tKSkgPT4KICAobm90IChwcyA9IHt9KSA9PgogICAgKGZvcmFsbCBwMSBpbiBzZXQgcHMgJgogICAgICBwcmVfRXhwbG9kZShwMSwgYm9tKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RXhwcywwLChmb3JhbGwgYm9tOkJPTSwgcHM6c2V0IG9mIChQbikgJiAocHMgc3Vic2V0IChkb20gYm9tKSkgPT4KICAobm90IChwcyA9IHt9KSA9PgogICAgKGZvcmFsbCBwMSBpbiBzZXQgcHMgJgogICAgICBwcmVfRXhwcyhib20sIChwcyBcIHtwMX0pKSkpKQosZnVuY3Rpb24gYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RW50ZXIsMCwoZm9yYWxsIGJvbTpCT00sIHA6UG4sIHBzOnNldCBvZiAoUG4pICYgKChwIG5vdCBpbiBzZXQgKGRvbSBib20pKSBhbmQgKHBzIHN1YnNldCAoZG9tIGJvbSkpKSA9PgogIGZvcmFsbCBsZG9tMSBpbiBzZXQgZG9tIGJvbSwgcmRvbTIgaW4gc2V0IGRvbSB7cCB8LT4gcHN9ICYKICBsZG9tMSA9IHJkb20yID0+IGJvbShsZG9tMSkgPSB7cCB8LT4gcHN9KHJkb20yKSkKLG1hcCBjb21wYXRpYmxlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: RW50ZXIsMCwoZm9yYWxsIGJvbTpCT00sIHA6UG4sIHBzOnNldCBvZiAoUG4pICYgKChwIG5vdCBpbiBzZXQgKGRvbSBib20pKSBhbmQgKHBzIHN1YnNldCAoZG9tIGJvbSkpKSA9PgogIGludl9CT00oKGJvbSBtdW5pb24ge3AgfC0+IHBzfSkpIGFuZCAoaXNfKChib20gbXVuaW9uIHtwIHwtPiBwc30pLCBtYXAgKFBuKSB0byAoc2V0IG9mIChQbikpKSkpCixzdWJ0eXBlLG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: QWRkLDAsKGZvcmFsbCBwMTpQbiwgcDI6UG4sIGJvbTpCT00gJgogICgocDEgaW4gc2V0IChkb20gYm9tKSkgPT4KICAgICgocDIgaW4gc2V0IChkb20gYm9tKSkgPT4KICAgICAgcDEgaW4gc2V0IGRvbSBib20pKSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QWRkLDAsKGZvcmFsbCBwMTpQbiwgcDI6UG4sIGJvbTpCT00gJgogICgocDEgaW4gc2V0IChkb20gYm9tKSkgPT4KICAgICgocDIgaW4gc2V0IChkb20gYm9tKSkgPT4KICAgICAgKChwMiBub3QgaW4gc2V0IGJvbShwMSkpID0+CiAgICAgICAgcHJlX0V4cGxvZGUocDIsIGJvbSkpKSkpCixmdW5jdGlvbiBhcHBseSxudWxsLFVucHJvdmVkLA== PROOFOBLIGATION: QWRkLDAsKGZvcmFsbCBwMTpQbiwgcDI6UG4sIGJvbTpCT00gJiAoKHAxIGluIHNldCAoZG9tIGJvbSkpIGFuZCAoKHAyIGluIHNldCAoZG9tIGJvbSkpIGFuZCAoKHAyIG5vdCBpbiBzZXQgYm9tKHAxKSkgYW5kIChwMSBub3QgaW4gc2V0IEV4cGxvZGUocDIsIGJvbSkpKSkpID0+CiAgcDEgaW4gc2V0IGRvbSBib20pCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: QWRkLDAsKGZvcmFsbCBwMTpQbiwgcDI6UG4sIGJvbTpCT00gJiAoKHAxIGluIHNldCAoZG9tIGJvbSkpIGFuZCAoKHAyIGluIHNldCAoZG9tIGJvbSkpIGFuZCAoKHAyIG5vdCBpbiBzZXQgYm9tKHAxKSkgYW5kIChwMSBub3QgaW4gc2V0IEV4cGxvZGUocDIsIGJvbSkpKSkpID0+CiAgaW52X0JPTSgoYm9tICsrIHtwMSB8LT4gKGJvbShwMSkgdW5pb24ge3AyfSl9KSkgYW5kIChpc18oKGJvbSArKyB7cDEgfC0+IChib20ocDEpIHVuaW9uIHtwMn0pfSksIG1hcCAoUG4pIHRvIChzZXQgb2YgKFBuKSkpKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZCw= PROOFOBLIGATION: RXJhc2UsMCwoZm9yYWxsIHAxOlBuLCBwMjpQbiwgYm9tOkJPTSAmCiAgKChwMSBpbiBzZXQgKGRvbSBib20pKSA9PgogICAgKChwMiBpbiBzZXQgKGRvbSBib20pKSA9PgogICAgICBwMSBpbiBzZXQgZG9tIGJvbSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: RXJhc2UsMCwoZm9yYWxsIHAxOlBuLCBwMjpQbiwgYm9tOkJPTSAmICgocDEgaW4gc2V0IChkb20gYm9tKSkgYW5kICgocDIgaW4gc2V0IChkb20gYm9tKSkgYW5kIChwMiBpbiBzZXQgYm9tKHAxKSkpKSA9PgogIHAxIGluIHNldCBkb20gYm9tKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWQs PROOFOBLIGATION: RXJhc2UsMCwoZm9yYWxsIHAxOlBuLCBwMjpQbiwgYm9tOkJPTSAmICgocDEgaW4gc2V0IChkb20gYm9tKSkgYW5kICgocDIgaW4gc2V0IChkb20gYm9tKSkgYW5kIChwMiBpbiBzZXQgYm9tKHAxKSkpKSA9PgogIGludl9CT00oKGJvbSArKyB7cDEgfC0+IChib20ocDEpIFwge3AyfSl9KSkgYW5kIChpc18oKGJvbSArKyB7cDEgfC0+IChib20ocDEpIFwge3AyfSl9KSwgbWFwIChQbikgdG8gKHNldCBvZiAoUG4pKSkpKQosc3VidHlwZSxudWxsLFVucHJvdmVkLA==
+
+
+--bom.vdmsl
+
+\begin{vdm_al}
+types
+
+BOM = map Pn to set of Pn
+inv bom == 
+  (forall ps in set rng bom & ps subset dom bom) and
+  (forall p in set dom bom & p not in set Parts(p, bom));
+    
+Pn = nat
+
+values
+
+bom = {1 |-> {2,4}, 2 |-> {3,4,5}, 3 |-> {5,6}, 4 |-> {6}, 
+       5 |-> {4}, 6 |-> {}};
+    
+cycle = {1 |-> {2,4}, 2 |-> {3,4,5}, 3 |-> {5,6}, 4 |-> {6}, 
+         5 |-> {4}, 6 |-> {1}};
+
+functions
+
+Parts: Pn * map Pn to set of Pn -> set of Pn
+Parts(p, bom) ==
+  TransClos(bom, bom(p))
+pre p in set dom bom;
+
+TransClos: (map Pn to set of Pn) * set of Pn -> set of Pn
+TransClos(bom, ps) ==
+  if forall p in set ps & bom(p) subset ps
+  then ps
+  else let newps = dunion { bom(p) | p in set ps} 
+       in
+         TransClos(bom, ps union newps)            
+pre ps subset dom bom
+measure IncrAcc;
+
+IncrAcc: (map Pn to set of Pn) * set of Pn -> nat
+IncrAcc(bom,pns) ==
+  card dom bom - card pns;
+  
+Explode: Pn * BOM -> set of Pn
+Explode(p, bom) ==
+  bom(p) union Exps(bom, bom(p))
+pre p in set dom bom;
+
+Exps: BOM * set of Pn -> set of Pn
+Exps(bom, ps) ==
+  if ps = {}
+  then {}
+  else let p1 in set ps 
+       in 
+         Explode(p1, bom) union Exps(bom, ps \ {p1})
+pre ps subset dom bom;
+
+Enter: BOM * Pn * set of Pn -> BOM
+Enter(bom, p, ps) ==
+  bom munion { p |-> ps }
+pre (p not in set dom bom) and (ps subset dom bom);
+
+Delete: Pn * BOM -> BOM
+Delete(p, bom) ==
+  {p} <-: bom
+pre (p in set dom bom) and (inv_BOM({p} <-: bom));
+
+Add: Pn * Pn * BOM -> BOM
+Add(p1, p2, bom) == 
+  bom ++ {p1 |-> bom(p1) union {p2} }
+pre (p1 in set dom bom) and (p2 in set dom bom) and 
+    (p2 not in set bom(p1)) and (p1 not in set Explode(p2,bom));
+
+Erase: Pn * Pn * BOM -> BOM
+Erase(p1, p2, bom) ==
+  bom ++ { p1 |-> bom(p1) \ {p2} }
+pre (p1 in set dom bom) and (p2 in set dom bom) and
+    (p2 in set bom(p1))
+\end{vdm_al}
