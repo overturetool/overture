@@ -25,6 +25,20 @@
 					</includes>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- archive>
+                        <manifest>
+                            <mainClass>org.overturetool.vdmj.VDMJ</mainClass>
+                        </manifest>
+                    </archive-->
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
