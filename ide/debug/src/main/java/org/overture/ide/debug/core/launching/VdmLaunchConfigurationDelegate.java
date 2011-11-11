@@ -19,11 +19,16 @@
 package org.overture.ide.debug.core.launching;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -55,7 +60,7 @@ import org.overturetool.vdmj.util.Base64;
  * @author ari
  */
 public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
-		
+
 {
 
 	static int sessionId = 0;;
@@ -85,7 +90,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			final DebugSessionAcceptor acceptor = new DebugSessionAcceptor(target, monitor);
 			try
 			{
-				if(!useRemoteDebug(configuration))
+				if (!useRemoteDebug(configuration))
 				{
 					target.setProcess(launchExternalProcess(launch, commandList, getVdmProject(configuration), configuration));
 				}
@@ -168,11 +173,11 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add("localhost");
 		commandList.add("-p");
 		int port = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OVERRIDE_PORT, -1);
-		//Start debug service with the override port or just start the service and get the port
-		if(port >0)
+		// Start debug service with the override port or just start the service and get the port
+		if (port > 0)
 		{
 			port = VdmDebugPlugin.getDefault().getDbgpService(port).getPort();
-		}else
+		} else
 		{
 			port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
 		}
@@ -214,7 +219,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			commandList.add("-e64");
 			commandList.add(getExpressionBase64(configuration, charSet));
 			String default64 = getDefaultBase64(configuration, charSet);
-			if(default64.trim().length()>0)
+			if (default64.trim().length() > 0)
 			{
 				commandList.add("-default64");
 				commandList.add(getDefaultBase64(configuration, charSet));
@@ -247,7 +252,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add("LaunchConfigurationExpression");
 
 		commandList.addAll(getExtendedCommands(vdmProject, configuration));
-		
+
 		commandList.add("-baseDir");
 		commandList.add(getProject(configuration).getLocationURI().toASCIIString());
 
@@ -259,7 +264,8 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		}
 		commandList.add(0, "java");
 
-		commandList.addAll(1, getClassPath(vdmProject, configuration));
+		File vdmjPropertiesFile =prepareCustomDebuggerProperties(vdmProject, configuration);
+		commandList.addAll(1, getClassPath(vdmProject, configuration,vdmjPropertiesFile));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
 
@@ -306,6 +312,44 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 		}
 		return commandList;
+	}
+
+	private File prepareCustomDebuggerProperties(IVdmProject vdmProject,
+			ILaunchConfiguration configuration) throws CoreException
+	{
+		try
+		{
+			String properties = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES, "");
+		
+			File outputDir = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();
+			if (outputDir.mkdirs())
+			{
+				// ignore
+			}
+			File vdmjProperties = new File(outputDir,"vdmj.properties");
+			
+			PrintWriter out=null;
+			try{
+				FileWriter outFile = new FileWriter(vdmjProperties);
+				out = new PrintWriter(outFile);
+				for (String p : properties.split(";"))
+				{
+					out.println(p);
+				}
+				
+				return vdmjProperties;
+			}catch(IOException e)
+			{
+				abort("Faild to create custom properties file while writing properties", e);
+			}finally
+			{
+				out.close();
+			}
+		} catch (CoreException e)
+		{
+			abort("Faild to create custom properties file", e);
+		}
+		return null;
 	}
 
 	private synchronized int getSessionId()
@@ -389,7 +433,9 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	protected File getOutputFolder(IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
 	{
-		File outputDir = project.getModelBuildPath().getOutput().getLocation().toFile();//new File(getProject(configuration).getLocation().toFile(), "generated");
+		File outputDir = project.getModelBuildPath().getOutput().getLocation().toFile();// new
+																						// File(getProject(configuration).getLocation().toFile(),
+																						// "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}
@@ -460,7 +506,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	}
 
 	private List<String> getClassPath(IVdmProject project,
-			ILaunchConfiguration configuration) throws CoreException
+			ILaunchConfiguration configuration, File vdmjPropertiesFile) throws CoreException
 	{
 		List<String> commandList = new Vector<String>();
 		List<String> entries = new Vector<String>();
@@ -470,26 +516,28 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		File lib = new File(getProject(configuration).getLocation().toFile(), "lib");
 		if (lib.exists() && lib.isDirectory())
 		{
-			for (File f : getAllFiles(lib))
+			for (File f : getAllDirectories(lib))
 			{
-				if (f.getName().toLowerCase().endsWith(".jar"))
-				{
-					entries.add(f.getAbsolutePath());
-				}
+				entries.add(f.getAbsolutePath());
+			}
+
+			for (File f : getAllFiles(lib, new HashSet<String>(Arrays.asList(new String[] { ".jar" }))))
+			{
+				entries.add(f.getAbsolutePath());
 			}
 		}
+		
+		//add custom properties file vdmj.properties
+		entries.add(vdmjPropertiesFile.getParentFile().getAbsolutePath());
 
 		if (entries.size() > 0)
 		{
 			commandList.add("-cp");
 			StringBuffer classPath = new StringBuffer(" ");
-			for (String cp : entries)
+			for (String cp : new HashSet<String>(entries))// remove dublicates
 			{
-				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))
-				{
-					classPath.append(toPlatformPath(cp));
-					classPath.append(getCpSeperator());
-				}
+				classPath.append(toPlatformPath(cp));
+				classPath.append(getCpSeperator());
 			}
 			classPath.deleteCharAt(classPath.length() - 1);
 			commandList.add(classPath.toString().trim());
@@ -498,19 +546,41 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		return commandList;
 	}
 
-	private static List<File> getAllFiles(File file)
+	private static List<File> getAllDirectories(File file)
+	{
+		List<File> files = new Vector<File>();
+		if (file.isDirectory())
+		{
+			files.add(file);
+			for (File f : file.listFiles())
+			{
+				files.addAll(getAllDirectories(f));
+			}
+
+		}
+		return files;
+	}
+
+	private static List<File> getAllFiles(File file, Set<String> extensionFilter)
 	{
 		List<File> files = new Vector<File>();
 		if (file.isDirectory())
 		{
 			for (File f : file.listFiles())
 			{
-				files.addAll(getAllFiles(f));
+				files.addAll(getAllFiles(f, extensionFilter));
 			}
 
 		} else
 		{
-			files.add(file);
+			for (String filter : extensionFilter)
+			{
+				if (file.getAbsolutePath().endsWith(filter))
+				{
+					files.add(file);
+				}
+			}
+
 		}
 		return files;
 	}
@@ -554,8 +624,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		// model id
 		throw new CoreException((IStatus) new Status(IStatus.ERROR, IDebugConstants.ID_VDM_DEBUG_MODEL, 0, message, e));
 	}
-
-	
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{

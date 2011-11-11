@@ -35,15 +35,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.utils.DebuggerProperties;
+import org.overture.ide.debug.utils.ui.DebuggerPropertiesManager;
 
 /**
  * Tab page to set the VM options used in the launch delegate. Posible options might be.
  * <ul>
- * <li> -Xmx1024M
- * <li> -Xss20M
+ * <li>-Xmx1024M
+ * <li>-Xss20M
  * <ul>
+ * 
  * @author kela
- *
  */
 public class VmArgumentsLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab
@@ -69,6 +71,23 @@ public class VmArgumentsLaunchConfigurationTab extends
 
 	private Text fArgumentsText;
 	private WidgetListener fListener = new WidgetListener();
+	DebuggerPropertiesManager propMan;
+
+	public VmArgumentsLaunchConfigurationTab()
+	{
+		try
+		{
+			propMan = new DebuggerPropertiesManager(IDebugConstants.VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES, DebuggerProperties.getDefaults());
+		} catch (IllegalArgumentException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void createControl(Composite parent)
 	{
@@ -77,21 +96,21 @@ public class VmArgumentsLaunchConfigurationTab extends
 		setControl(comp);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
-			
+
 		Group group = new Group(comp, SWT.NONE);
 		group.setText("Java Virtual Machine custom arguments (e.g: -Xmx1024M -Xss20M):");
 
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		group.setLayoutData(gd);
-		
+
 		GridLayout layout = new GridLayout();
 		layout.makeColumnsEqualWidth = false;
 		layout.numColumns = 3;
 		group.setLayout(layout);
-		
-		createVmInput(group);
 
+		createVmInput(group);
+		propMan.createControl(comp, fListener);
 	}
 
 	private void createVmInput(Composite comp)
@@ -120,6 +139,7 @@ public class VmArgumentsLaunchConfigurationTab extends
 		try
 		{
 			fArgumentsText.setText(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, ""));
+			propMan.initializeFrom(configuration);
 		} catch (CoreException e)
 		{
 			if (VdmDebugPlugin.DEBUG)
@@ -133,13 +153,19 @@ public class VmArgumentsLaunchConfigurationTab extends
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, fArgumentsText.getText());
-
+		propMan.performApply(configuration);
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
-
+//		try
+//		{
+//			propMan.setDefaults(DebuggerProperties.getDefaults(),configuration);
+//		} catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		} 
 	}
 
 }

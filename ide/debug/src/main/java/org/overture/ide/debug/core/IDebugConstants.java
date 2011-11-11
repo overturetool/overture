@@ -54,6 +54,8 @@ public interface IDebugConstants
 	
 	static final String VDM_LAUNCH_CONFIG_OVERRIDE_PORT = "vdm_launch_config_override_port";
 	
+	static final String VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES = "VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES".toLowerCase();
+	
 //	final static String VDM_DEBUG_SESSION_ID = "vdm_debug_session_id";
 
 	public static final String ID_VDM_DEBUG_MODEL = "org.overture.ide.debug.vdm";
@@ -85,6 +87,7 @@ public interface IDebugConstants
 	static final int ERR_DEBUGGER_PROCESS_TERMINATED = 121;
 	static final String CONSOLE_INTERACTIVE_WELCOME_MESSAGE = "**\n** Welcome to the Overture Interactive Console\n**\n> ";
 	static final String CONSOLE_MESSAGE = "**\n** Overture Console\n**\n";
+	
 	 
 	
 }

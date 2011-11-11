@@ -38,7 +38,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 
 public class VdmDevelopLaunchConfigurationTab extends
-AbstractLaunchConfigurationTab
+		AbstractLaunchConfigurationTab
 {
 	class WidgetListener implements ModifyListener, SelectionListener
 	{
@@ -60,7 +60,7 @@ AbstractLaunchConfigurationTab
 			updateLaunchConfigurationDialog();
 		}
 	}
-	
+
 	private Button checkBoxRemoteDebug = null;
 	private Button checkBoxEnableLogging = null;
 	private Button checkBoxExperimentalTimeInvariantCheck = null;
@@ -73,23 +73,21 @@ AbstractLaunchConfigurationTab
 		setControl(comp);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
-		
-		
-		
+
 		Group group = new Group(comp, SWT.NONE);
 		group.setText("Development options");
-//		GridLayout layout = new GridLayout();
-//		layout.numColumns = 1;
-//		interperterGroup.setLayout(layout);
+		// GridLayout layout = new GridLayout();
+		// layout.numColumns = 1;
+		// interperterGroup.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		group.setLayoutData(gd);
-		
+
 		GridLayout layout = new GridLayout();
 		layout.makeColumnsEqualWidth = false;
 		layout.numColumns = 3;
 		group.setLayout(layout);
-		
+
 		checkBoxRemoteDebug = new Button(group, SWT.CHECK);
 		checkBoxRemoteDebug.setText("Remote debug");
 		checkBoxRemoteDebug.setSelection(false);
@@ -99,11 +97,11 @@ AbstractLaunchConfigurationTab
 		checkBoxEnableLogging.setText("Enable logging");
 		checkBoxEnableLogging.setSelection(false);
 		checkBoxEnableLogging.addSelectionListener(fListener);
-		
+
 		checkBoxExperimentalTimeInvariantCheck = new Button(group, SWT.CHECK);
 		checkBoxExperimentalTimeInvariantCheck.setText("Enable experimental time inv checks");
 		checkBoxExperimentalTimeInvariantCheck.setSelection(false);
-		checkBoxExperimentalTimeInvariantCheck.addSelectionListener(fListener);	
+		checkBoxExperimentalTimeInvariantCheck.addSelectionListener(fListener);
 	}
 
 	public String getName()
@@ -118,14 +116,15 @@ AbstractLaunchConfigurationTab
 			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
 			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
 			checkBoxExperimentalTimeInvariantCheck.setSelection(configuration.getAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false));
+
 		} catch (CoreException e)
 		{
 			if (VdmDebugPlugin.DEBUG)
 			{
-				VdmDebugPlugin.log(new Status(IStatus.ERROR,VdmDebugPlugin.PLUGIN_ID,"Error in develop launch configuration tab",e));
+				VdmDebugPlugin.log(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, "Error in develop launch configuration tab", e));
 			}
 		}
-		
+
 	}
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)

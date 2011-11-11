@@ -220,7 +220,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 	}
 
 	public boolean canSuspend() {
-		return canSuspend && !terminated && !suspended;
+		return false; //FIXME: I believe that the current debugger do not support any comminication while running //canSuspend && !terminated && !suspended;
 	}
 
 	public void endSuspend(DbgpException e, IDbgpStatus status) {
