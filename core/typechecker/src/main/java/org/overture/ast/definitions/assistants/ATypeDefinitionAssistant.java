@@ -150,17 +150,23 @@ public class ATypeDefinitionAssistant {
 		AFunctionType ftype =
 			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
 
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-				loc,
-				d.getName().getInvName(loc),
-				NameScope.GLOBAL, 
-				false,
-				PAccessSpecifierAssistant.getDefault(),
-				null,
-				parameters,
-				ftype, 
-				d.getInvExpression().clone(),
-				null, null, null);
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(loc, d.getName().getInvName(loc), 
+				NameScope.GLOBAL, false, null, 
+				PAccessSpecifierAssistant.getDefault(), null, parameters, 
+				ftype, d.getInvExpression(), null, null, null, null, null, null, 
+				null, false, false, null, null, null, null, parameters.size() > 1, null);
+		
+//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+//				loc,
+//				d.getName().getInvName(loc),
+//				NameScope.GLOBAL, 
+//				false,
+//				PAccessSpecifierAssistant.getDefault(),
+//				null,
+//				parameters,
+//				ftype, 
+//				d.getInvExpression().clone(),
+//				null, null, null);
 		def.setTypeInvariant(true);
 
 		def.setAccess(d.getAccess().clone());	// Same as type's

@@ -194,17 +194,25 @@ public class AImplicitFunctionDefinitionAssistant {
 		List<List<PPattern>> parameters = getParamPatternList(d);
 		parameters.get(0).add(d.getResult().getPattern().clone());
 
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-			d.getPostcondition().getLocation(),
-			d.getName().getPostName(d.getPostcondition().getLocation()), 
-			NameScope.GLOBAL,
-			false,
-			PAccessSpecifierAssistant.getDefault(),
-			(List<LexNameToken>)d.getTypeParams().clone(), 
-			parameters,
-			AFunctionTypeAssistant.getPostType(d.getType()),
-			d.getPostcondition().clone(), 
-			null, null, null);
+		
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPostcondition().getLocation(), 
+				d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, false, 
+				null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>)d.getTypeParams().clone(), 
+				parameters, AFunctionTypeAssistant.getPostType(d.getType()), 
+				d.getPostcondition(), null, null, null, null, null, null, 
+				null, false, false, null, null, null, null, parameters.size() > 1, null);
+		
+//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+//			d.getPostcondition().getLocation(),
+//			d.getName().getPostName(d.getPostcondition().getLocation()), 
+//			NameScope.GLOBAL,
+//			false,
+//			PAccessSpecifierAssistant.getDefault(),
+//			(List<LexNameToken>)d.getTypeParams().clone(), 
+//			parameters,
+//			AFunctionTypeAssistant.getPostType(d.getType()),
+//			d.getPostcondition().clone(), 
+//			null, null, null);
 		List<PDefinition> defsList = new LinkedList<PDefinition>();
 		defsList.add(def);
 		def.getType().setDefinitions(defsList);
@@ -216,17 +224,25 @@ public class AImplicitFunctionDefinitionAssistant {
 	private static AExplicitFunctionDefinition getPreDefinition(
 			AImplicitFunctionDefinition d) {
 		
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-				d.getPrecondition().getLocation(),
-				d.getName().getPreName(d.getPrecondition().getLocation()), 
-				NameScope.GLOBAL,
-				false,
-				PAccessSpecifierAssistant.getDefault(),
-				(List<LexNameToken>) d.getTypeParams().clone(), 
-				getParamPatternList(d),
-				AFunctionTypeAssistant.getPreType(d.getType()),
-				d.getPrecondition().clone(), 
-				null, null, null);
+		List<List<PPattern>> parameters = getParamPatternList(d);
+		
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
+				d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false, 
+				null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>) d.getTypeParams().clone(), 
+				parameters, AFunctionTypeAssistant.getPreType(d.getType()), d.getPrecondition(), 
+				null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1, null);
+		
+//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+//				d.getPrecondition().getLocation(),
+//				d.getName().getPreName(d.getPrecondition().getLocation()), 
+//				NameScope.GLOBAL,
+//				false,
+//				PAccessSpecifierAssistant.getDefault(),
+//				(List<LexNameToken>) d.getTypeParams().clone(), 
+//				getParamPatternList(d),
+//				AFunctionTypeAssistant.getPreType(d.getType()),
+//				d.getPrecondition().clone(), 
+//				null, null, null);
 			List<PDefinition> defsList = new LinkedList<PDefinition>();
 			defsList.add(def);
 			def.getType().setDefinitions(defsList);

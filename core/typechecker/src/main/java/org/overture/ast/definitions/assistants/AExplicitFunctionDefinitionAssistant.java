@@ -322,18 +322,24 @@ public class AExplicitFunctionDefinitionAssistant {
 
 		parameters.add(last);
 
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-			d.getPostcondition().getLocation(),
-			d.getName().getPostName(d.getPostcondition().getLocation()), 
-			NameScope.GLOBAL,
-			false,
-			PAccessSpecifierAssistant.getDefault(),
-			(List<LexNameToken>)d.getTypeParams().clone(), 
-			parameters,
-			AFunctionTypeAssistant.getCurriedPostType(d.getType(),d.getIsCurried()),
-			d.getPostcondition(), 
-			null, null, null);
+//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+//			d.getPostcondition().getLocation(),
+//			d.getName().getPostName(d.getPostcondition().getLocation()), 
+//			NameScope.GLOBAL,
+//			false,
+//			PAccessSpecifierAssistant.getDefault(),
+//			(List<LexNameToken>)d.getTypeParams().clone(), 
+//			parameters,
+//			AFunctionTypeAssistant.getCurriedPostType(d.getType(),d.getIsCurried()),
+//			d.getPostcondition(), 
+//			null, null, null);
 
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPostcondition().getLocation(), d.getName().getPostName(d.getPostcondition().getLocation()),
+				NameScope.GLOBAL, false, null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>)d.getTypeParams().clone(), 
+				parameters, AFunctionTypeAssistant.getCurriedPostType(d.getType(),d.getIsCurried()), 
+				d.getPostcondition(), null, null, null, null, null, null,
+				null, false, false, null, null, null, null, parameters.size() > 1, null);
+		
 		def.setAccess(d.getAccess());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
@@ -343,17 +349,26 @@ public class AExplicitFunctionDefinitionAssistant {
 			AExplicitFunctionDefinition d) {
 		LinkedList<List<PPattern>> paramPatterns = (LinkedList<List<PPattern>>) d.getParamPatternList().clone();
 		
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-				d.getPrecondition().getLocation(),
-				d.getName().getPreName(d.getPrecondition().getLocation()), //name
-				NameScope.GLOBAL, //namescope 
-				false, 
-				d.getAccess(), 
-				(List<LexNameToken>) d.getTypeParams().clone(), 
-				paramPatterns, 
-				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), //type 
-				d.getPrecondition().clone(), 
-				null, null, null);
+		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
+				d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false, null,
+				d.getAccess(), (List<LexNameToken>) d.getTypeParams().clone(), paramPatterns, 
+				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), d.getPrecondition(), 
+				null, null, 
+				null, null, null, null, null, false, false, null, 
+				null, null, null, paramPatterns.size() > 1, null);
+		
+		
+//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
+//				d.getPrecondition().getLocation(),
+//				d.getName().getPreName(d.getPrecondition().getLocation()), //name
+//				NameScope.GLOBAL, //namescope 
+//				false, 
+//				d.getAccess(), 
+//				(List<LexNameToken>) d.getTypeParams().clone(), 
+//				paramPatterns, 
+//				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), //type 
+//				d.getPrecondition(), 
+//				null, null, null);
 		
 		def.setClassDefinition(d.getClassDefinition());
 		
