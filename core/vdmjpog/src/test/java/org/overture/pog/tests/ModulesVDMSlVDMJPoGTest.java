@@ -9,11 +9,11 @@ import junit.framework.TestSuite;
 import org.overture.pog.tests.framework.BaseTestSuite;
 import org.overture.pog.tests.framework.ModuleTestCase;
 
-public class ModulesVDMSlTypeCheckTest extends BaseTestSuite {
+public class ModulesVDMSlVDMJPoGTest extends BaseTestSuite {
 
 	private enum TestSuites {
 		FUNCTIONAL("functional_tests"), EXPRESSIONS("expressions"), STATEMENTS(
-				"statements");
+				"statements"), THIRDPARTY("thirdpartytests");
 		private String folder;
 
 		TestSuites(String folder) {
@@ -38,6 +38,7 @@ public class ModulesVDMSlTypeCheckTest extends BaseTestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite t = new TestSuite();
+		t.addTest(getSuite(TestSuites.THIRDPARTY));
 		t.addTest(getSuite(TestSuites.STATEMENTS));
 		t.addTest(getSuite(TestSuites.FUNCTIONAL));
 		t.addTest(getSuite(TestSuites.EXPRESSIONS));
