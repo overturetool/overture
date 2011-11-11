@@ -9,16 +9,17 @@ import junit.framework.TestSuite;
 import org.overture.pog.tests.framework.BaseTestSuite;
 import org.overture.pog.tests.framework.ModuleTestCase;
 
-public class ModulesSlTypeCheckTest extends BaseTestSuite {
+public class ModulesSlPoGTest extends BaseTestSuite {
 
 	public static Test suite() throws IllegalArgumentException,
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException {
 
 		String name = "Type Check Modules TestSuite";
-		String root = "src\\test\\resources\\modules\\tc";
+		String root = "src\\test\\resources\\expressions";
 		TestSuite test = createTestCompleteFile(name, root,
 				ModuleTestCase.class);
 		return test;
 	}
+
 }
