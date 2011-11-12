@@ -273,7 +273,7 @@ public class OperationValue extends Value
 			try
 			{
 				// Note args cannot be Updateable, so we deref them here
-				Value pv = valIter.next().deref().convertValueTo(typeIter.next(), ctxt);
+				Value pv = valIter.next().constant().convertValueTo(typeIter.next(), ctxt);
 
 				for (NameValuePair nvp : p.getNamedValues(pv, ctxt))
 				{

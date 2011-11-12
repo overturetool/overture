@@ -100,11 +100,11 @@ public class TransactionValue extends UpdatableValue
 		{
     		if (newval instanceof UpdatableValue)
     		{
-    			newvalue = newval.deref();		// To avoid nested updatables
+    			newvalue = newval.constant();		// To avoid nested updatables
     		}
     		else
     		{
-    			newvalue = newval.getUpdatable(listeners).deref();
+    			newvalue = newval.getUpdatable(listeners).constant();
     		}
 		}
 
@@ -180,6 +180,12 @@ public class TransactionValue extends UpdatableValue
 	public synchronized Value deref()
 	{
 		return select().deref();
+	}
+
+	@Override
+	public synchronized Value constant()
+	{
+		return select().constant();
 	}
 
 	@Override

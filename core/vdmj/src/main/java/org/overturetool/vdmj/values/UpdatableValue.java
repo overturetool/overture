@@ -105,11 +105,11 @@ public class UpdatableValue extends ReferenceValue
 		{
     		if (newval instanceof UpdatableValue)
     		{
-    			value = newval.deref();	// To avoid nested updatables
+    			value = newval.constant();	// To avoid nested updatables
     		}
     		else
     		{
-    			value = newval.getUpdatable(listeners).deref();
+    			value = newval.getUpdatable(listeners).constant();
     		}
 		}
 
@@ -150,6 +150,12 @@ public class UpdatableValue extends ReferenceValue
 	public synchronized Value deref()
 	{
 		return value.deref();
+	}
+
+	@Override
+	public synchronized Value constant()
+	{
+		return value.constant();
 	}
 
 	@Override

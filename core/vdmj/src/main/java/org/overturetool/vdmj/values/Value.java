@@ -282,6 +282,11 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	{
 		return this;	// ReferenceValues are dereferenced
 	}
+	
+	public Value constant()
+	{
+		return this;	// UpdatableValues are dereferenced
+	}
 
 	/**
 	 * Return an UpdatableValue, wrapping this one. This is a deep translation
