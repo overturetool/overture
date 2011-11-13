@@ -42,10 +42,21 @@ public class InvariantValue extends ReferenceValue
 
 		FunctionValue invariant = type.getInvariant(ctxt);
 
-		if (invariant != null && Settings.invchecks &&
-			!invariant.eval(invariant.location, value, ctxt).boolValue(ctxt))
+		if (invariant != null && Settings.invchecks)
 		{
-			abort(4060, "Type invariant violated for " + type.typename, ctxt);
+			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+			// through a DTC check (which can include calculating an invariant),
+			// so we set the atomic flag around the conversion. This also stops
+			// VDM-RT from performing "time step" calculations.
+			
+			ctxt.threadState.setAtomic(true);
+			boolean inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
+			ctxt.threadState.setAtomic(false);
+
+			if (!inv)
+			{
+				abort(4060, "Type invariant violated for " + type.typename, ctxt);
+			}
 		}
 	}
 

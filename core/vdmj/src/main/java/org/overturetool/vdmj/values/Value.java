@@ -158,7 +158,16 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	{
 		if (Settings.dynamictypechecks)
 		{
-			return convertValueTo(to, ctxt);
+			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+			// through a DTC check (which can include calculating an invariant),
+			// so we set the atomic flag around the conversion. This also stops
+			// VDM-RT from performing "time step" calculations.
+			
+			ctxt.threadState.setAtomic(true);
+			Value converted = convertValueTo(to, ctxt);
+			ctxt.threadState.setAtomic(false);
+			
+			return converted;
 		}
 		else
 		{

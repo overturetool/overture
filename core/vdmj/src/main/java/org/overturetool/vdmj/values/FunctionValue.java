@@ -302,7 +302,7 @@ public class FunctionValue extends Value
 
 			if (checkInvariants)	// Don't even convert invariant arg values
 			{
-				pv = pv.convertValueTo(typeIter.next(), ctxt);
+				pv = pv.convertTo(typeIter.next(), ctxt);
 			}
 
 			try
@@ -343,11 +343,14 @@ public class FunctionValue extends Value
 			if (precondition != null && Settings.prechecks)
 			{
 				// Evaluate pre/post in evalContext as it includes the type
-				// variables, if any.
+				// variables, if any. We disable the swapping and time (RT)
+				// as precondition checks should be "free".
 
+				evalContext.threadState.setAtomic(true);
 				evalContext.setPrepost(4055, "Precondition failure: ");
 				precondition.eval(from, argValues, evalContext);
 				evalContext.setPrepost(0, null);
+				evalContext.threadState.setAtomic(false);
 			}
 
 			Long tid = Thread.currentThread().getId();
@@ -383,8 +386,12 @@ public class FunctionValue extends Value
 					measure.isMeasure = true;
 				}
 
+				// We disable the swapping and time (RT) as measure checks should be "free".
+
 				measure.measuringThreads.add(tid);
+				evalContext.threadState.setAtomic(true);
 				Value mv = measure.eval(measure.location, argValues, evalContext);
+				evalContext.threadState.setAtomic(false);
 				measure.measuringThreads.remove(tid);
 
 				Stack<Value> stack = measureValues.get(tid);
@@ -410,7 +417,7 @@ public class FunctionValue extends Value
 				stack.push(mv);
 			}
 
-    		Value rv = body.eval(evalContext).convertValueTo(type.result, evalContext);
+    		Value rv = body.eval(evalContext).convertTo(type.result, evalContext);
 
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
     		{
@@ -431,11 +438,14 @@ public class FunctionValue extends Value
 				postArgs.add(rv);
 
 				// Evaluate pre/post in evalContext as it includes the type
-				// variables, if any.
+				// variables, if any. We disable the swapping and time (RT)
+				// as postcondition checks should be "free".
 
+				evalContext.threadState.setAtomic(true);
 				evalContext.setPrepost(4056, "Postcondition failure: ");
 				postcondition.eval(from, postArgs, evalContext);
 				evalContext.setPrepost(0, null);
+				evalContext.threadState.setAtomic(false);
 			}
 
 			if (measure != null)

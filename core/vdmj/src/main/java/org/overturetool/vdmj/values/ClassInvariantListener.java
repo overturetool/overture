@@ -48,7 +48,16 @@ public class ClassInvariantListener implements ValueListener, Serializable
 		{
     		try
     		{
-    			if (!invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt))
+    			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+    			// through an invariant check, so we set the atomic flag around the
+    			// conversion. This also stops VDM-RT from performing "time step"
+    			// calculations.
+    			
+    			ctxt.threadState.setAtomic(true);
+    			boolean inv = invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt);
+    			ctxt.threadState.setAtomic(false);
+    			
+    			if (!inv)
     			{
     				throw new ContextException(
     					4130, "Instance invariant violated: " + invopvalue.name, location, ctxt);

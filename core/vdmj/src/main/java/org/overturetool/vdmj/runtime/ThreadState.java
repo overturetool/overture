@@ -43,7 +43,7 @@ public class ThreadState implements Serializable
 	public final DBGPReader dbgp;
 	public final CPUValue CPU;
 
-	private boolean atomic = false;	// Don't reschedule
+	private int atomic = 0;			// Don't reschedule if >0
 
 	public LexLocation stepline;	// Breakpoint stepping values
 	public RootContext nextctxt;
@@ -78,7 +78,7 @@ public class ThreadState implements Serializable
 
 	public void reschedule(Context ctxt, LexLocation location)
 	{
-		if (!atomic)
+		if (atomic == 0)
 		{
 			// Initialization doesn't occur from SchedulableThreads
 
@@ -93,6 +93,13 @@ public class ThreadState implements Serializable
 
 	public synchronized void setAtomic(boolean atomic)
 	{
-		this.atomic = atomic;
+		if (atomic)
+		{
+			this.atomic++;
+		}
+		else
+		{
+			this.atomic--;
+		}
 	}
 }

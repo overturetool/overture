@@ -25,6 +25,7 @@ package org.overturetool.vdmj.values;
 
 import java.util.Iterator;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.types.Field;
@@ -57,13 +58,24 @@ public class RecordValue extends Value
 		for (Value v: values)
 		{
 			Field f = fi.next();
-			fieldmap.add(f.tag, v.convertValueTo(f.type, ctxt), !f.equalityAbstration);
+			fieldmap.add(f.tag, v.convertTo(f.type, ctxt), !f.equalityAbstration);
 		}
 
-		if (invariant != null &&
-			!invariant.eval(invariant.location, this, ctxt).boolValue(ctxt))
+		if (invariant != null && Settings.invchecks)
 		{
-			abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+			// through an invariant check, so we set the atomic flag around the
+			// conversion. This also stops VDM-RT from performing "time step"
+			// calculations.
+			
+			ctxt.threadState.setAtomic(true);
+			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
+			ctxt.threadState.setAtomic(false);
+
+			if (!inv)
+			{
+				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+			}
 		}
 	}
 
@@ -92,13 +104,29 @@ public class RecordValue extends Value
 				abort(4081, "Field not defined: " + f.tag, ctxt);
 			}
 
-			fieldmap.add(f.tag, v.convertValueTo(f.type, ctxt), !f.equalityAbstration);
+			fieldmap.add(f.tag, v.convertTo(f.type, ctxt), !f.equalityAbstration);
 		}
 
 		if (invariant != null &&
 			!invariant.eval(invariant.location, this, ctxt).boolValue(ctxt))
 		{
 			abort(4082, "Type invariant violated by mk_ arguments", ctxt);
+		}
+		if (invariant != null && Settings.invchecks)
+		{
+			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+			// through an invariant check, so we set the atomic flag around the
+			// conversion. This also stops VDM-RT from performing "time step"
+			// calculations.
+			
+			ctxt.threadState.setAtomic(true);
+			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
+			ctxt.threadState.setAtomic(false);
+
+			if (!inv)
+			{
+				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+			}
 		}
 	}
 

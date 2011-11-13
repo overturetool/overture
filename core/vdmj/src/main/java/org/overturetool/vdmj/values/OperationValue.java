@@ -273,7 +273,7 @@ public class OperationValue extends Value
 			try
 			{
 				// Note args cannot be Updateable, so we deref them here
-				Value pv = valIter.next().constant().convertValueTo(typeIter.next(), ctxt);
+				Value pv = valIter.next().constant().convertTo(typeIter.next(), ctxt);
 
 				for (NameValuePair nvp : p.getNamedValues(pv, ctxt))
 				{
@@ -342,10 +342,14 @@ public class OperationValue extends Value
     			{
     				preArgs.add(self);
     			}
+    			
+    			// We disable the swapping and time (RT) as precondition checks should be "free".
 
+				ctxt.threadState.setAtomic(true);
     			ctxt.setPrepost(4071, "Precondition failure: ");
     			precondition.eval(from, preArgs, ctxt);
     			ctxt.setPrepost(0, null);
+				ctxt.threadState.setAtomic(false);
     		}
 
     		rv = body.eval(argContext);
@@ -356,7 +360,7 @@ public class OperationValue extends Value
     		}
     		else
     		{
-    			rv = rv.convertValueTo(type.result, argContext);
+    			rv = rv.convertTo(type.result, argContext);
     		}
 
     		if (postcondition != null && Settings.postchecks)
@@ -379,10 +383,14 @@ public class OperationValue extends Value
     				postArgs.add(originalSelf);
     				postArgs.add(self);
     			}
+    			
+    			// We disable the swapping and time (RT) as postcondition checks should be "free".
 
+				ctxt.threadState.setAtomic(true);
     			ctxt.setPrepost(4072, "Postcondition failure: ");
     			postcondition.eval(from, postArgs, ctxt);
     			ctxt.setPrepost(0, null);
+				ctxt.threadState.setAtomic(false);
     		}
 		}
 		finally
