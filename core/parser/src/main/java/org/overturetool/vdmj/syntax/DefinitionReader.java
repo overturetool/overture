@@ -768,8 +768,11 @@ public class DefinitionReader extends SyntaxReader
 //			 parameters,type,body,precondition,postcondition,measure,
 //			 null,null,null,null,false,false,0,null,null,false,false);
 //		
-		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, 
-				false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
+		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), typeParams, 
+				parameters, type, body, precondition, postcondition, measure, null, null, null, null, false, false, null, 
+				null, null, null, parameters.size() > 1, null);
+//		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, 
+//				false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
 		type.getDefinitions().add(res);
 		return res;
 	}
@@ -887,8 +890,9 @@ public class DefinitionReader extends SyntaxReader
 
 //		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), functionType, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null, functionType);
 
-		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), 
-				scope, false, getDefaultAccess(), typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, functionType);
+		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, null, null, functionType);
+//		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), 
+//				scope, false, getDefaultAccess(), typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, functionType);
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(functionDef);
