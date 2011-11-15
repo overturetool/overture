@@ -23,6 +23,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -384,6 +385,8 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		addNewPatternClass(ASetPattern.class);
 		addNewPatternClass(ARealPattern.class);
 		addNewPatternClass(AStringPattern.class);
+		addNewPatternClass(ATuplePattern.class);
+		addNewPatternClass(AUnionPattern.class);
 
 	}
 
@@ -493,6 +496,15 @@ public class PPatternAssistantTC extends PPatternAssistant {
 	private static PExp getExpression(ATuplePattern tp) {
 		return new ATupleExp(null, tp.getLocation(),
 				getMatchingExpressionList(tp.getPlist()));
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AUnionPattern up) {
+		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
+		return new ASetUnionBinaryExp(null, up.getLocation(),
+				getMatchingExpression(up.getLeft()), op,
+				getMatchingExpression(up.getRight()));
+
 	}
 
 	private static Random r = new Random();
