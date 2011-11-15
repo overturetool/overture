@@ -11,15 +11,38 @@ import org.overture.pog.tests.framework.ModuleTestCase;
 
 public class ModulesSlPoGTest extends BaseTestSuite {
 
-	public static Test suite() throws IllegalArgumentException,
-			SecurityException, InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, IOException {
+	private enum TestSuites {
+		FUNCTIONAL("functional_tests"), EXPRESSIONS("expressions"), STATEMENTS(
+				"statements"), THIRDPARTY("thirdpartytests");
+		private String folder;
 
-		String name = "Type Check Modules TestSuite";
-		String root = "src\\test\\resources\\expressions";
+		TestSuites(String folder) {
+			this.folder = folder;
+		}
+
+		public String getFolder() {
+			return this.folder;
+		}
+	}
+
+	private static Test getSuite(TestSuites suite)
+			throws IllegalArgumentException, SecurityException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException {
+		String name = "Type Check Module TestSuite";
+		String root = "src\\test\\resources\\" + suite.getFolder();
 		TestSuite test = createTestCompleteFile(name, root,
 				ModuleTestCase.class);
 		return test;
+	}
+
+	public static Test suite() throws Exception {
+		TestSuite t = new TestSuite();
+		t.addTest(getSuite(TestSuites.THIRDPARTY));
+		t.addTest(getSuite(TestSuites.STATEMENTS));
+		t.addTest(getSuite(TestSuites.FUNCTIONAL));
+		t.addTest(getSuite(TestSuites.EXPRESSIONS));
+		return t;
 	}
 
 }
