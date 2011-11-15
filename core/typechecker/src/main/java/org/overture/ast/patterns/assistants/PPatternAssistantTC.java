@@ -17,7 +17,14 @@ import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.ANilExp;
+import org.overture.ast.expressions.AQuoteLiteralExp;
+import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.AStringLiteralExp;
+import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ABooleanPattern;
@@ -28,10 +35,13 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AQuotePattern;
+import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
+import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
@@ -283,7 +293,7 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		return TypeComparator.compatible(getPossibleType(pattern), expType);
 	}
 
-	public static Object getMatchingExpressionList(List<PPattern> pl) {
+	public static List<PExp> getMatchingExpressionList(List<PPattern> pl) {
 		List<PExp> list = new Vector<PExp>();
 
 		for (PPattern p : pl) {
@@ -367,6 +377,14 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		addNewPatternClass(AExpressionPattern.class);
 		addNewPatternClass(AIgnorePattern.class);
 		addNewPatternClass(AIntegerPattern.class);
+		addNewPatternClass(AConcatenationPattern.class);
+		addNewPatternClass(ANilPattern.class);
+		addNewPatternClass(AQuotePattern.class);
+		addNewPatternClass(ASeqPattern.class);
+		addNewPatternClass(ASetPattern.class);
+		addNewPatternClass(ARealPattern.class);
+		addNewPatternClass(AStringPattern.class);
+
 	}
 
 	// A boolean pattern should yield a boolean const expression
@@ -401,11 +419,17 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		return eptrn.getExp();
 	}
 
+	// An Identifier should yield a variable expression.
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AIdentifierPattern idp) {
+
+		return new AVariableExp(null, idp.getLocation(), idp.getName(), "");
+	}
+
 	private static int var = 1;
 
 	@SuppressWarnings("unused")
 	private static PExp getExpression(AIgnorePattern iptrn) {
-
 		LexNameToken any = new LexNameToken("", "any" + var++,
 				iptrn.getLocation());
 		return new AVariableExp(null, iptrn.getLocation(), any, "any");
@@ -418,11 +442,19 @@ public class PPatternAssistantTC extends PPatternAssistant {
 				intptrn.getValue());
 	}
 
-	// An Identifier should yield a variable expression.
 	@SuppressWarnings("unused")
-	private static PExp getExpression(AIdentifierPattern idp) {
+	private static PExp getExpression(ANilPattern np) {
+		return new ANilExp(null, np.getLocation());
+	}
 
-		return new AVariableExp(null, idp.getLocation(), idp.getName(), "");
+	@SuppressWarnings("unused")
+	private static PExp getExperssion(AQuotePattern qp) {
+		return new AQuoteLiteralExp(null, qp.getLocation(), qp.getValue());
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ARealPattern rp) {
+		return new ARealLiteralExp(null, rp.getLocation(), rp.getValue());
 	}
 
 	@SuppressWarnings("unused")
@@ -433,9 +465,34 @@ public class PPatternAssistantTC extends PPatternAssistant {
 			list.add(getExpression(p));
 		}
 
-		// FIXME Type info here is set null (type and record type) correct?
+		// FIXME Consider Type info here that is set to null (type and record
+		// type) is that correct?
 		return new AMkTypeExp(null, ptrn.getLocation(), ptrn.getTypename(),
 				list, null);
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ASeqPattern seqp) {
+		return new ASeqEnumSeqExp(null, seqp.getLocation(),
+				getMatchingExpressionList(seqp.getPlist()));
+
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ASetPattern sp) {
+		return new ASetEnumSetExp(null, sp.getLocation(),
+				getMatchingExpressionList(sp.getPlist()));
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AStringPattern sp) {
+		return new AStringLiteralExp(null, sp.getLocation(), sp.getValue());
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ATuplePattern tp) {
+		return new ATupleExp(null, tp.getLocation(),
+				getMatchingExpressionList(tp.getPlist()));
 	}
 
 	private static Random r = new Random();
