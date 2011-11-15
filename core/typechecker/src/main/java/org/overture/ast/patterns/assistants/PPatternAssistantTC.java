@@ -1,24 +1,32 @@
 package org.overture.ast.patterns.assistants;
 
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACharLiteralExp;
+import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ABooleanPattern;
+import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.patterns.AConcatenationPattern;
+import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -42,6 +50,10 @@ import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeComparator;
+import org.overturetool.vdmj.lex.LexKeywordToken;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class PPatternAssistantTC extends PPatternAssistant {
@@ -351,6 +363,10 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		addNewPatternClass(AIdentifierPattern.class);
 		addNewPatternClass(ABooleanPattern.class);
 		addNewPatternClass(ARecordPattern.class);
+		addNewPatternClass(ACharacterPattern.class);
+		addNewPatternClass(AExpressionPattern.class);
+		addNewPatternClass(AIgnorePattern.class);
+		addNewPatternClass(AIntegerPattern.class);
 	}
 
 	// A boolean pattern should yield a boolean const expression
@@ -361,7 +377,48 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		return res;
 	}
 
-	// An Identifer should yield a variable expression.
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ACharacterPattern chr) {
+		return new ACharLiteralExp(null, chr.getLocation(), chr.getValue());
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AConcatenationPattern ccp) {
+		LexToken op = new LexKeywordToken(VDMToken.TOKEN.CONCATENATE,
+				ccp.getLocation());
+		PExp le = getMatchingExpression(ccp.getLeft());
+		PExp re = getMatchingExpression(ccp.getRight());
+		return new ASeqConcatBinaryExp(null, ccp.getLocation(), le, op, re);
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ADefPatternBind dpb) {
+		return null;
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AExpressionPattern eptrn) {
+		return eptrn.getExp();
+	}
+
+	private static int var = 1;
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AIgnorePattern iptrn) {
+
+		LexNameToken any = new LexNameToken("", "any" + var++,
+				iptrn.getLocation());
+		return new AVariableExp(null, iptrn.getLocation(), any, "any");
+
+	}
+
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AIntegerPattern intptrn) {
+		return new AIntLiteralExp(null, intptrn.getLocation(),
+				intptrn.getValue());
+	}
+
+	// An Identifier should yield a variable expression.
 	@SuppressWarnings("unused")
 	private static PExp getExpression(AIdentifierPattern idp) {
 
@@ -380,6 +437,8 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		return new AMkTypeExp(null, ptrn.getLocation(), ptrn.getTypename(),
 				list, null);
 	}
+
+	private static Random r = new Random();
 
 	public static PExp getExpression(PPattern p) {
 		// get class of p and lookup method to invoke
@@ -402,14 +461,19 @@ public class PPatternAssistantTC extends PPatternAssistant {
 
 		// invoke the found method
 		try {
-			return (PExp) m.invoke(null, clz.cast(p));
+			throw new Exception("TEsting");
+			// return (PExp) m.invoke(null, clz.cast(p));
 		} catch (Exception e) {
 			// ooops something went wrong, check that the getExpression method
 			// is static...
+			byte[] rnd = new byte[3];
+			r.nextBytes(rnd);
+			BigInteger b = new BigInteger(rnd).nextProbablePrime();
+			System.err.println(b.toString(16));
 			e.printStackTrace();
 			throw new RuntimeException(
-					"FixMe: Method invocation failed unexpectedly: (see console for stacktrace)"
-							+ e, e);
+					"FixMe: Method invocation failed unexpectedly: (see console for stacktrace near: \""
+							+ b.toString(16) + "\")" + e, e);
 		}
 	}
 }
