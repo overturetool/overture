@@ -451,7 +451,7 @@ public class PPatternAssistantTC extends PPatternAssistant {
 	}
 
 	@SuppressWarnings("unused")
-	private static PExp getExperssion(AQuotePattern qp) {
+	private static PExp getExpression(AQuotePattern qp) {
 		return new AQuoteLiteralExp(null, qp.getLocation(), qp.getValue());
 	}
 
