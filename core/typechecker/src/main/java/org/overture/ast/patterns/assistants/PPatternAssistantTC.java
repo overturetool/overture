@@ -336,12 +336,16 @@ public class PPatternAssistantTC extends PPatternAssistant {
 
 	private static Method getMethod(String s, Class<?> a) {
 		try {
-			return PPatternAssistantTC.class.getMethod(s, a);
+			Method declMethod = PPatternAssistantTC.class.getDeclaredMethod(
+					"getExpression", a);
+			declMethod.setAccessible(true);
+			return declMethod;
 		} catch (Exception e) {
 			throw new RuntimeException("Could not find method: " + e);
 		}
 	}
 
+	// Static initializer adding handled class to the map
 	static {
 		map = new HashMap<Class<?>, Method>();
 		addNewPatternClass(AIdentifierPattern.class);
@@ -350,19 +354,22 @@ public class PPatternAssistantTC extends PPatternAssistant {
 	}
 
 	// A boolean pattern should yield a boolean const expression
-	public static PExp getExpression(ABooleanPattern bp) {
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ABooleanPattern bp) {
 		ABooleanConstExp res = new ABooleanConstExp(null, bp.getLocation(),
 				bp.getValue());
 		return res;
 	}
 
 	// An Identifer should yield a variable expression.
-	public static PExp getExpression(AIdentifierPattern idp) {
+	@SuppressWarnings("unused")
+	private static PExp getExpression(AIdentifierPattern idp) {
 
 		return new AVariableExp(null, idp.getLocation(), idp.getName(), "");
 	}
 
-	public static PExp getExpression(ARecordPattern ptrn) {
+	@SuppressWarnings("unused")
+	private static PExp getExpression(ARecordPattern ptrn) {
 		List<PExp> list = new LinkedList<PExp>();
 
 		for (PPattern p : ptrn.getPlist()) {
@@ -379,7 +386,14 @@ public class PPatternAssistantTC extends PPatternAssistant {
 		Class<?> clz = p.getClass();
 		Method m = map.get(clz);
 
-		// lazy programmer did not add the class for the given p => FAIL
+		// If m==null the getExpression(T p) method, for T being the type in the
+		// error message that we cannot handle, is not implemented yet. Do the
+		// following:
+		// 1) Implement the missing getExpresion taking the pattern type as
+		// argument
+		// 2) Add this method to the map in the static initializer above, e.g.
+		// addNewPatternClass(T.class);
+		// 3) Run the test again
 		if (m == null)
 			throw new RuntimeException("FixMe: "
 					+ PPatternAssistantTC.class.getSimpleName()
