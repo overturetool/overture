@@ -512,11 +512,15 @@ public class StatementReader extends SyntaxReader
 				return new ASelfObjectDesignator(token.location, new LexNameToken(token.location.module, "self", token.location));
 
 			case IDENTIFIER:
-				return new AIdentifierObjectDesignator(token.location, idToName((LexIdentifierToken) token), new AVariableExp(null, token.location, idToName((LexIdentifierToken) token).getExplicit(true)));
-
+			{
+				LexNameToken tok = idToName((LexIdentifierToken) token).getExplicit(true);
+				return new AIdentifierObjectDesignator(token.location, idToName((LexIdentifierToken) token), new AVariableExp(null, token.location, tok, tok.getName()));
+			}
 			case NAME:
-				return new AIdentifierObjectDesignator(token.location, (LexNameToken) token, new AVariableExp(null, token.location, ((LexNameToken) token).getExplicit(true)));
-
+			{
+				LexNameToken tok = ((LexNameToken) token).getExplicit(true);
+				return new AIdentifierObjectDesignator(token.location, (LexNameToken) token, new AVariableExp(null, token.location, tok, tok.getName()));
+			}
 			case NEW:
 				LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
 				checkFor(VDMToken.BRA, 2207, "Expecting '(' after new class name");
