@@ -34,7 +34,6 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.PPatternBind;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
@@ -50,7 +49,8 @@ public class BindReader extends SyntaxReader
 		super(reader);
 	}
 
-	public ADefPatternBind readPatternOrBind() throws ParserException, LexException
+	public ADefPatternBind readPatternOrBind() throws ParserException,
+			LexException
 	{
 		ParserException bindError = null;
 
@@ -59,10 +59,9 @@ public class BindReader extends SyntaxReader
 			reader.push();
 			PBind bind = readBind();
 			reader.unpush();
-			return new ADefPatternBind(bind.getLocation(),null,bind);
-			//return new PPatternBind(bind.getLocation(), bind);
-		}
-		catch (ParserException e)
+			return new ADefPatternBind(bind.getLocation(), null, bind);
+			// return new PPatternBind(bind.getLocation(), bind);
+		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
 			reader.pop();
@@ -74,10 +73,9 @@ public class BindReader extends SyntaxReader
 			reader.push();
 			PPattern p = getPatternReader().readPattern();
 			reader.unpush();
-			return new ADefPatternBind(p.getLocation(),p,null);
-//			return new PPatternBind(p.location, p);
-		}
-		catch (ParserException e)
+			return new ADefPatternBind(p.getLocation(), p, null);
+			// return new PPatternBind(p.location, p);
+		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
 			reader.pop();
@@ -95,12 +93,11 @@ public class BindReader extends SyntaxReader
 			PBind bind = readSetBind();
 			reader.unpush();
 			return bind;
-		}
-		catch (ParserException e)
+		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
-    		reader.pop();
-    		setBindError = e;
+			reader.pop();
+			setBindError = e;
 		}
 
 		try
@@ -109,11 +106,10 @@ public class BindReader extends SyntaxReader
 			PBind bind = readTypeBind();
 			reader.unpush();
 			return bind;
-		}
-		catch (ParserException e)
+		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
-    		reader.pop();
+			reader.pop();
 			throw e.deeperThan(setBindError) ? e : setBindError;
 		}
 	}
@@ -128,14 +124,12 @@ public class BindReader extends SyntaxReader
 			if (nextToken().is(VDMToken.SET))
 			{
 				nextToken();
-				sb = new ASetBind(pattern.getLocation(),pattern, getExpressionReader().readExpression());
-			}
-			else
+				sb = new ASetBind(pattern.getLocation(), pattern, getExpressionReader().readExpression());
+			} else
 			{
 				throwMessage(2000, "Expecting 'in set' after pattern in set binding");
 			}
-		}
-		else
+		} else
 		{
 			throwMessage(2001, "Expecting 'in set' in set bind");
 		}
@@ -151,9 +145,8 @@ public class BindReader extends SyntaxReader
 		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
-			tb = new ATypeBind(pattern.getLocation(),pattern, getTypeReader().readType());
-		}
-		else
+			tb = new ATypeBind(pattern.getLocation(), pattern, getTypeReader().readType());
+		} else
 		{
 			throwMessage(2002, "Expecting ':' in type bind");
 		}
@@ -161,7 +154,8 @@ public class BindReader extends SyntaxReader
 		return tb;
 	}
 
-	public List<ATypeBind> readTypeBindList() throws ParserException, LexException
+	public List<ATypeBind> readTypeBindList() throws ParserException,
+			LexException
 	{
 		List<ATypeBind> list = new Vector<ATypeBind>();
 		list.add(readTypeBind());
@@ -174,7 +168,8 @@ public class BindReader extends SyntaxReader
 		return list;
 	}
 
-	public PMultipleBind readMultipleBind() throws LexException, ParserException
+	public PMultipleBind readMultipleBind() throws LexException,
+			ParserException
 	{
 		List<PPattern> plist = getPatternReader().readPatternList();
 		PMultipleBind mb = null;
@@ -185,10 +180,8 @@ public class BindReader extends SyntaxReader
 				if (nextToken().is(VDMToken.SET))
 				{
 					nextToken();
-					mb = new ASetMultipleBind(plist.get(0).getLocation(),
-							plist, getExpressionReader().readExpression());
-				}
-				else
+					mb = new ASetMultipleBind(plist.get(0).getLocation(), plist, getExpressionReader().readExpression());
+				} else
 				{
 					throwMessage(2003, "Expecting 'in set' after pattern in binding");
 				}
@@ -196,7 +189,7 @@ public class BindReader extends SyntaxReader
 
 			case COLON:
 				nextToken();
-				mb = new ATypeMultipleBind(plist.get(0).getLocation(),plist, getTypeReader().readType());
+				mb = new ATypeMultipleBind(plist.get(0).getLocation(), plist, getTypeReader().readType());
 				break;
 
 			default:
@@ -206,7 +199,8 @@ public class BindReader extends SyntaxReader
 		return mb;
 	}
 
-	public List<PMultipleBind> readBindList() throws ParserException, LexException
+	public List<PMultipleBind> readBindList() throws ParserException,
+			LexException
 	{
 		List<PMultipleBind> list = new Vector<PMultipleBind>();
 		list.add(readMultipleBind());
