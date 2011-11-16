@@ -863,7 +863,7 @@ public class ExpressionReader extends SyntaxReader
 				// Includes mk_ constructors
 				LexNameToken name = lastNameToken();
 				nextToken();
-				return new AVariableExp(null, name.location, name);
+				return new AVariableExp(null, name.location, name, name.getName());
 				// return new VariableExpression(name);
 
 			case IDENTIFIER:
@@ -872,7 +872,7 @@ public class ExpressionReader extends SyntaxReader
 				// use old~ names.
 				LexNameToken id = new LexNameToken(reader.currentModule, (LexIdentifierToken) token);
 				nextToken();
-				return new AVariableExp(null, id.location, id);
+				return new AVariableExp(null, id.location, id, id.getName());
 				// return new VariableExpression(id);
 
 			case STRING:
