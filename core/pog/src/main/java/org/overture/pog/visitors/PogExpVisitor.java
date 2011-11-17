@@ -418,8 +418,7 @@ public class PogExpVisitor extends
 	@Override
 	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question)
 	{
-
-		ProofObligationList obligations = new ProofObligationList();
+		ProofObligationList obligations = node.getTest().apply(this,question);
 
 		question.push(new POImpliesContext(node.getTest()));
 		obligations.addAll(node.getThen().apply(this, question));
