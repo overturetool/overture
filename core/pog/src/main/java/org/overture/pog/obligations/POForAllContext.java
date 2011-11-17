@@ -87,18 +87,18 @@ public class POForAllContext extends POContext
 	{
 		this.bindings = new Vector<PMultipleBind>();
 
-		for (ATypeBind tb: exp.getBindList())
+		for (ATypeBind tb : exp.getBindList())
 		{
 			List<PPattern> pl = new ArrayList<PPattern>();
-			pl.add(tb.getPattern());
-			ATypeMultipleBind mtb = new ATypeMultipleBind(pl.get(0).getLocation(), pl, tb.getType());
+			pl.add(tb.getPattern().clone());
+			ATypeMultipleBind mtb = new ATypeMultipleBind(pl.get(0).getLocation().clone(), pl, tb.getType().clone());
 			bindings.add(mtb);
 		}
 	}
 
 	public POForAllContext(ALetBeStExp exp)
 	{
-		this.bindings = PMultipleBindAssistant.getMultipleBindList( exp.getBind());
+		this.bindings = PMultipleBindAssistant.getMultipleBindList(exp.getBind());
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class POForAllContext extends POContext
 		sb.append("forall ");
 		String prefix = "";
 
-		for (PMultipleBind mb: bindings)
+		for (PMultipleBind mb : bindings)
 		{
 			sb.append(prefix);
 			sb.append(mb);

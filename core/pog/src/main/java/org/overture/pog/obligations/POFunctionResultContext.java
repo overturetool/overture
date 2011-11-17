@@ -31,7 +31,8 @@ import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.types.AFunctionType;
 import org.overturetool.vdmj.lex.LexNameToken;
 
-public class POFunctionResultContext extends POContext {
+public class POFunctionResultContext extends POContext
+{
 	public final LexNameToken name;
 	public final AFunctionType deftype;
 	public final PExp precondition;
@@ -39,21 +40,19 @@ public class POFunctionResultContext extends POContext {
 	public final APatternTypePair result;
 	public final boolean implicit;
 
-	public POFunctionResultContext(AExplicitFunctionDefinition definition) {
+	public POFunctionResultContext(AExplicitFunctionDefinition definition)
+	{
 		this.name = definition.getName();
 		this.deftype = definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
-		this.result = new APatternTypePair(false, new AIdentifierPattern(
-				definition.getLocation(), null, false, new LexNameToken(
-						definition.getName().module, "RESULT",
-						definition.getLocation())), definition.getType()
-				.getResult());
+		this.result = new APatternTypePair(false, new AIdentifierPattern(definition.getLocation().clone(), null, false, new LexNameToken(definition.getName().module, "RESULT", definition.getLocation().clone())), definition.getType().getResult().clone());
 
 	}
 
-	public POFunctionResultContext(AImplicitFunctionDefinition definition) {
+	public POFunctionResultContext(AImplicitFunctionDefinition definition)
+	{
 		this.name = definition.getName();
 		this.deftype = definition.getType();
 		this.precondition = definition.getPrecondition();
@@ -63,19 +62,23 @@ public class POFunctionResultContext extends POContext {
 	}
 
 	@Override
-	public String getContext() {
+	public String getContext()
+	{
 		StringBuilder sb = new StringBuilder();
 
-		if (precondition != null) {
+		if (precondition != null)
+		{
 			sb.append(precondition);
 			sb.append(" => ");
 		}
 
-		if (implicit) {
+		if (implicit)
+		{
 			sb.append("forall ");
 			sb.append(result);
 			sb.append(" & ");
-		} else {
+		} else
+		{
 			sb.append("let ");
 			sb.append(result);
 			sb.append(" = ");
