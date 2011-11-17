@@ -33,6 +33,7 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SLetDefStm;
+import org.overture.pog.assistants.PDefinitionAssistantPOG;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.PONameContext;
@@ -296,11 +297,10 @@ public class PogStmVisitor extends
 
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PDefinition def : node.getLocalDefs())
-		{
-			obligations.addAll(def.apply(rootVisitor, question));
-		}
-
+		obligations.addAll(PDefinitionAssistantPOG.getProofObligations(
+						node.getLocalDefs(),
+						rootVisitor,question));
+				
 		question.push(new POScopeContext());
 		obligations.addAll(node.getStatement().apply(this, question));
 		question.pop();
