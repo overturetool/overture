@@ -105,7 +105,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->#binary->#Numeric->greaterEqual = [left] ">=" [right]
 %exp->#binary->#Numeric->greater = "(" [left] " > " [right] ")"
 %exp->#binary->#Numeric->lessEqual = [left] "<=" [right]
-%exp->#binary->#Numeric->less = [left] "<" [right]
+%exp->#binary->#Numeric->less = "(" [left] " < " [right] ")"
 %exp->#binary->#Numeric->mod = [left] "mod" [right]
 %exp->#binary->#Numeric->plus = [left] "+" [right]
 %exp->#binary->#Numeric->rem = [left] "rem" [right]
