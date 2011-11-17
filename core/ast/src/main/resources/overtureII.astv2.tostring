@@ -274,4 +274,6 @@ import org.overturetool.util.ToStringUtil;
 
 %pair->patternType = [pattern]  ":" [type]
 
+//Binds
+%multipleBind->set = ""+ $Utils.listToString($[plist]$)$ + " in set " [set];
 
