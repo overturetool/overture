@@ -21,9 +21,9 @@ package org.overturetool.test.examples.vdmj;
 import java.io.File;
 import java.util.List;
 
-import org.overturetool.test.framework.examples.IMessage;
-import org.overturetool.test.framework.examples.IResultCombiner;
-import org.overturetool.test.framework.examples.Message;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.IResultCombiner;
+import org.overturetool.test.framework.results.Message;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.lex.LexException;

@@ -7,7 +7,7 @@
  * License along with Overture. If not, see <http://www.gnu.org/licenses/>. The Overture Tool web-site:
  * http://overturetool.org/
  *******************************************************************************/
-package org.overturetool.test.framework.examples;
+package org.overturetool.test.framework.results;
 
 public class Message implements IMessage
 {

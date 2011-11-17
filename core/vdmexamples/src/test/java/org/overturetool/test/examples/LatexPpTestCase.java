@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.test.framework.examples.Result;
+import org.overturetool.test.framework.results.Result;
 import org.overturetool.test.util.FileUtils;
 import org.overturetool.test.util.ProcessConsolePrinter;
 import org.overturetool.vdmj.Settings;

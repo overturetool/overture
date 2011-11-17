@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.test.framework.examples.IMessage;
-import org.overturetool.test.framework.examples.Message;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.Message;
 
 public class MessageReaderWritter
 {

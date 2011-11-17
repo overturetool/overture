@@ -16,17 +16,9 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overturetool.test.framework.examples;
+package org.overturetool.test.framework.results;
 
-public interface IMessage
+public interface IResultCombiner<R>
 {
-	public int getNumber();
-
-	public int getLine();
-
-	public int getCol();
-
-	public String getMessage();
-	
-	public String getResource();
+	R combine(R a, R b);
 }

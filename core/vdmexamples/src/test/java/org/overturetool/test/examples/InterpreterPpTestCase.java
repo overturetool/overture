@@ -16,10 +16,10 @@ import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.test.framework.examples.IMessage;
-import org.overturetool.test.framework.examples.IResultCombiner;
-import org.overturetool.test.framework.examples.Result;
 import org.overturetool.test.framework.examples.VdmReadme;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.IResultCombiner;
+import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;

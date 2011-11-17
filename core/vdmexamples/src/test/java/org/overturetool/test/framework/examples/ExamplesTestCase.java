@@ -14,6 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overturetool.test.framework.BaseTestCase;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.IResultCombiner;
+import org.overturetool.test.framework.results.Result;
 import org.overturetool.test.util.MessageReaderWritter;
 
 public class ExamplesTestCase extends BaseTestCase

@@ -27,6 +27,7 @@
     <module>vdmjc</module>
     <module>showtrace</module>
     <module>xmljunit</module>
+<module>testframework</module>
 <module>vdmexamples</module>
 <module>vdm2java</module>
 

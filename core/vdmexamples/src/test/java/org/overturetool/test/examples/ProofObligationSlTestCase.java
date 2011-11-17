@@ -21,8 +21,8 @@ package org.overturetool.test.examples;
 import java.io.File;
 import java.util.HashSet;
 
-import org.overturetool.test.framework.examples.IMessage;
-import org.overturetool.test.framework.examples.Result;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.pog.ProofObligationList;
 
