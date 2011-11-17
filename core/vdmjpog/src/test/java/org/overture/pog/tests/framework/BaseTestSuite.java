@@ -39,9 +39,12 @@ public class BaseTestSuite extends TestSuite {
 
 		if (testRoot != null && testRoot.exists()) {
 
-			for (File file : testRoot.listFiles()) {
-				createCompleteFile(suite, file, ctor);
-			}
+			if (testRoot.isDirectory())
+				for (File file : testRoot.listFiles()) {
+					createCompleteFile(suite, file, ctor);
+				}
+			if (testRoot.isFile())
+				createCompleteFile(suite, testRoot, ctor);
 		}
 		return suite;
 

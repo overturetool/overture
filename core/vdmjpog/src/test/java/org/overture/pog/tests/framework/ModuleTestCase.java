@@ -12,7 +12,6 @@ import java.nio.charset.Charset;
 import java.util.Vector;
 
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase;
-import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -212,8 +211,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		}
 
 		for (ProofObligation po : proofObligations) {
-			String poString = po.name + "," + po.number + "," + po.value + ","
-					+ po.kind + "," + po.proof + "," + po.status + ",";
+			String poString = "|" + po.name + "," + po.number + "," + po.value
+					+ "," + po.kind + "," + po.proof + "," + po.status + "|";
 			StringBuffer poAsB64 = Base64.encode(poString.getBytes(Charset
 					.forName("UTF-8")));
 			sb.append(" PROOFOBLIGATION: ");
