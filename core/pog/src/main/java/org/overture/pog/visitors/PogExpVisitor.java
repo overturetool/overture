@@ -56,11 +56,13 @@ import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
 
 public class PogExpVisitor extends
-		QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
+		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
+{
 
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
 
-	public PogExpVisitor(PogVisitor pogVisitor) {
+	public PogExpVisitor(PogVisitor pogVisitor)
+	{
 		this.rootVisitor = pogVisitor;
 
 	}
@@ -68,7 +70,8 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg. 57: 6.12 Apply Expressions
 	public ProofObligationList caseAApplyExp(AApplyExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -76,68 +79,72 @@ public class PogExpVisitor extends
 
 		// is it a map?
 
-		PType type = node.getType();
-		if (type instanceof SMapType) {
-			SMapType mapType = (SMapType) type;
-			obligations.add(new MapApplyObligation(node.getRoot(), node
-					.getArgs().get(0), question));
-			PType aType = question.checkType(node.getArgs().get(0), node
-					.getArgtypes().get(0));
+		PType type = root.getType();
+		if (PTypeAssistant.isMap(type))
+		{
+			SMapType mapType = PTypeAssistant.getMap(type);
+			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
+			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
 
-			if (!TypeComparator.isSubType(aType, mapType.getFrom())) {
-				obligations.add(new SubTypeObligation(node.getArgs().get(0),
-						mapType.getFrom(), aType, question));
+			if (!TypeComparator.isSubType(aType, mapType.getFrom()))
+			{
+				obligations.add(new SubTypeObligation(node.getArgs().get(0), mapType.getFrom(), aType, question));
 			}
 		}
 
-		if (!PTypeAssistant.isUnknown(type) && PTypeAssistant.isFunction(type)) {
+		if (!PTypeAssistant.isUnknown(type) && PTypeAssistant.isFunction(type))
+		{
 			AFunctionType funcType = PTypeAssistant.getFunction(type);
 			String prename = PExpAssistant.getPreName(root);
-			if (prename == null || !prename.equals("")) {
-				obligations.add(new FunctionApplyObligation(node.getRoot(),
-						node.getArgs(), prename, question));
+			if (prename == null || !prename.equals(""))
+			{
+				obligations.add(new FunctionApplyObligation(node.getRoot(), node.getArgs(), prename, question));
 			}
 
 			int i = 0;
 			List<PType> argTypes = node.getArgtypes();
 			List<PExp> argList = node.getArgs();
-			for (PType argType : argTypes) {
+			for (PType argType : argTypes)
+			{
 				argType = question.checkType(argList.get(i), argType);
 				PType pt = funcType.getParameters().get(i);
 
 				if (!TypeComparator.isSubType(argType, pt))
-					obligations.add(new SubTypeObligation(argList.get(i), pt,
-							argType, question));
+					obligations.add(new SubTypeObligation(argList.get(i), pt, argType, question));
 				i++;
 			}
 
 			PDefinition recursive = node.getRecursive();
-			if (recursive != null) {
-				if (recursive instanceof AExplicitFunctionDefinition) {
+			if (recursive != null)
+			{
+				if (recursive instanceof AExplicitFunctionDefinition)
+				{
 					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) recursive;
-					if (def.getMeasure() != null) {
-						obligations.add(new RecursiveObligation(def, node,
-								question));
+					if (def.getMeasure() != null)
+					{
+						obligations.add(new RecursiveObligation(def, node, question));
 					}
-				} else if (recursive instanceof AImplicitFunctionDefinition) {
+				} else if (recursive instanceof AImplicitFunctionDefinition)
+				{
 					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) recursive;
-					if (def.getMeasure() != null) {
-						obligations.add(new RecursiveObligation(def, node,
-								question));
+					if (def.getMeasure() != null)
+					{
+						obligations.add(new RecursiveObligation(def, node, question));
 					}
 
 				}
 			}
 		}
 
-		if (type instanceof SSeqType) {
-			obligations.add(new SeqApplyObligation(node.getRoot(), node
-					.getArgs().get(0), question));
+		if (PTypeAssistant.isSeq(type))
+		{
+			obligations.add(new SeqApplyObligation(node.getRoot(), node.getArgs().get(0), question));
 		}
 
 		obligations.addAll(node.getRoot().apply(this, question));
 
-		for (PExp arg : node.getArgs()) {
+		for (PExp arg : node.getArgs())
+		{
 			obligations.addAll(arg.apply(this, question));
 		}
 
@@ -147,7 +154,8 @@ public class PogExpVisitor extends
 	@Override
 	// see [1] pg. 179 unary expressions
 	public ProofObligationList caseAHeadUnaryExp(AHeadUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 		PExp exp = node.getExp();
@@ -158,7 +166,8 @@ public class PogExpVisitor extends
 		// names are different as "Test`b" is just b with the old proof
 		// obligations generator.
 		PExp fake = exp.clone();
-		if (exp instanceof AVariableExp) {
+		if (exp instanceof AVariableExp)
+		{
 			AVariableExp var = (AVariableExp) fake;
 			var.setName(new LexNameToken("", var.getName().getIdentifier()));
 		}
@@ -172,7 +181,8 @@ public class PogExpVisitor extends
 	@Override
 	// [1] pg. 46
 	public ProofObligationList caseACasesExp(ACasesExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -180,7 +190,8 @@ public class PogExpVisitor extends
 		boolean hasIgnore = false;
 
 		// handle each case
-		for (ACaseAlternative alt : node.getCases()) {
+		for (ACaseAlternative alt : node.getCases())
+		{
 
 			if (alt.getPattern() instanceof AIgnorePattern)
 				hasIgnore = true;
@@ -189,7 +200,8 @@ public class PogExpVisitor extends
 			count++;
 		}
 
-		if (node.getOthers() != null) {
+		if (node.getOthers() != null)
+		{
 			obligations.addAll(node.getOthers().apply(this, question));
 		}
 
@@ -204,7 +216,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAMapCompMapExp(AMapCompMapExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
 		obligations.add(new MapSetOfCompatibleObligation(node, question));
@@ -215,18 +228,19 @@ public class PogExpVisitor extends
 
 		boolean finiteTest = false;
 
-		for (PMultipleBind mb : node.getBindings()) {
+		for (PMultipleBind mb : node.getBindings())
+		{
 			obligations.addAll(mb.apply(rootVisitor, question));
 			if (mb instanceof PMultipleBind)
 				finiteTest = true;
 		}
 
 		if (finiteTest)
-			obligations.add(new FiniteMapObligation(node, node.getType(),
-					question));
+			obligations.add(new FiniteMapObligation(node, node.getType(), question));
 
 		PExp predicate = node.getPredicate();
-		if (predicate != null) {
+		if (predicate != null)
+		{
 			question.push(new POForAllContext(node));
 		}
 
@@ -236,7 +250,8 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg. 179 A.5.4 Unary Expressions
 	public ProofObligationList caseSUnaryExp(SUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
@@ -244,14 +259,16 @@ public class PogExpVisitor extends
 	@Override
 	// RWL
 	public ProofObligationList defaultSUnaryExp(SUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	// RWL
 	public ProofObligationList caseSBinaryExp(SBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(node.getLeft().apply(this, question));
 		obligations.addAll(node.getRight().apply(this, question));
@@ -260,7 +277,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList defaultSBinaryExp(SBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(node.getLeft().apply(this, question));
@@ -270,20 +288,23 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseABooleanConstExp(ABooleanConstExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseACharLiteralExp(ACharLiteralExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAElseIfExp(AElseIfExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 		question.push(new POImpliesContext(node.getElseIf()));
@@ -295,7 +316,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAExists1Exp(AExists1Exp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 		question.push(new POForAllContext(node));
 		obligations.addAll(node.getPredicate().apply(this, question));
@@ -305,10 +327,12 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAExistsExp(AExistsExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PMultipleBind mb : node.getBindList()) {
+		for (PMultipleBind mb : node.getBindList())
+		{
 			obligations.addAll(mb.apply(rootVisitor, question));
 		}
 
@@ -321,26 +345,31 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAFieldExp(AFieldExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getObject().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAFieldNumberExp(AFieldNumberExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = node.getTuple().apply(this, question);
 
 		PType type = node.getType();
 
-		if (type instanceof AUnionType) {
+		if (type instanceof AUnionType)
+		{
 			AUnionType utype = (AUnionType) type;
-			for (PType t : utype.getTypes()) {
-				if (t instanceof AProductType) {
+			for (PType t : utype.getTypes())
+			{
+				if (t instanceof AProductType)
+				{
 					AProductType aprodType = (AProductType) t;
-					if (aprodType.getTypes().size() < node.getField().value) {
-						obligations.add(new TupleSelectObligation(node,
-								aprodType, question));
+					if (aprodType.getTypes().size() < node.getField().value)
+					{
+						obligations.add(new TupleSelectObligation(node, aprodType, question));
 					}
 				}
 			}
@@ -351,11 +380,13 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAForAllExp(AForAllExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PMultipleBind mb : node.getBindList()) {
+		for (PMultipleBind mb : node.getBindList())
+		{
 			obligations.addAll(mb.apply(rootVisitor, question));
 		}
 
@@ -367,7 +398,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAFuncInstatiationExp(
-			AFuncInstatiationExp node, POContextStack question) {
+			AFuncInstatiationExp node, POContextStack question)
+	{
 		// TODO RWL Hmm, what to do here?
 		throw new RuntimeException("I did'nt know what to do there.");
 		// return super.caseAFuncInstatiationExp(node, question);
@@ -376,14 +408,16 @@ public class PogExpVisitor extends
 	@Override
 	// RWL
 	public ProofObligationList caseAHistoryExp(AHistoryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		// No getProofObligationMethod found on the HistoryExpression class of
 		// VDMJ assuming we have the empty list.
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question) {
+	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -393,7 +427,8 @@ public class PogExpVisitor extends
 
 		question.push(new PONotImpliesContext(node.getTest()));
 
-		for (AElseIfExp e : node.getElseList()) {
+		for (AElseIfExp e : node.getElseList())
+		{
 			obligations.addAll(e.apply(this, question));
 			question.push(new PONotImpliesContext(e.getElseIf()));
 
@@ -412,24 +447,29 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAIntLiteralExp(AIntLiteralExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAIotaExp(AIotaExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList caseAIsExp(AIsExp node, POContextStack question) {
+	public ProofObligationList caseAIsExp(AIsExp node, POContextStack question)
+	{
 		PDefinition typeDef = node.getTypedef();
 		PType basicType = node.getBasicType();
-		if (typeDef != null) {
+		if (typeDef != null)
+		{
 			question.noteType(node.getTest(), typeDef.getType());
-		} else if (basicType != null) {
+		} else if (basicType != null)
+		{
 			question.noteType(node.getTest(), basicType);
 		}
 		return node.getTest().apply(this, question);
@@ -438,14 +478,16 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg. 64-65
 	public ProofObligationList caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	// RWL See [1] pg. 64-65
 	public ProofObligationList caseAIsOfClassExp(AIsOfClassExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		question.noteType(node.getExp(), node.getClassType());
 
@@ -455,11 +497,13 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg. 62
 	public ProofObligationList caseALambdaExp(ALambdaExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (ATypeBind tb : node.getBindList()) {
+		for (ATypeBind tb : node.getBindList())
+		{
 			obligations.addAll(tb.apply(rootVisitor, question));
 		}
 
@@ -473,13 +517,15 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg.95
 	public ProofObligationList caseALetBeStExp(ALetBeStExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.add(new LetBeExistsObligation(node, question));
 		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		PExp suchThat = node.getSuchThat();
-		if (suchThat != null) {
+		if (suchThat != null)
+		{
 			question.push(new POForAllContext(node));
 			obligations.addAll(suchThat.apply(this, question));
 			question.pop();
@@ -495,7 +541,8 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg.
 	public ProofObligationList caseALetDefExp(ALetDefExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -507,11 +554,13 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseADefExp(ADefExp node, POContextStack question) {
+	public ProofObligationList caseADefExp(ADefExp node, POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 		List<PDefinition> localDefs = node.getLocalDefs();
-		for (PDefinition def : localDefs) {
+		for (PDefinition def : localDefs)
+		{
 			obligations.addAll(def.apply(rootVisitor, question));
 		}
 
@@ -524,33 +573,38 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseSMapExp(SMapExp node, POContextStack question) {
+	public ProofObligationList caseSMapExp(SMapExp node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultSMapExp(SMapExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAMapletExp(AMapletExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return super.caseAMapletExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMkBasicExp(AMkBasicExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getArg().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMkTypeExp(AMkTypeExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 		Queue<PExp> args = node.getArgs();
@@ -560,26 +614,25 @@ public class PogExpVisitor extends
 		Queue<PType> argTypes = node.getArgTypes();
 
 		ARecordInvariantType recordType = node.getRecordType();
-		for (AFieldField f : recordType.getFields()) {
+		for (AFieldField f : recordType.getFields())
+		{
 			PType aType = argTypes.poll();
 			PExp aExp = args.poll();
 
-			if (TypeComparator.isSubType(question.checkType(aExp, aType),
-					f.getType()))
-				obligations.add(new SubTypeObligation(aExp, f.getType(), aType,
-						question));
+			if (TypeComparator.isSubType(question.checkType(aExp, aType), f.getType()))
+				obligations.add(new SubTypeObligation(aExp, f.getType(), aType, question));
 		}
 
 		PDefinition invDef = recordType.getInvDef();
 		if (invDef != null)
-			obligations.add(new SubTypeObligation(node, recordType, recordType,
-					question));
+			obligations.add(new SubTypeObligation(node, recordType, recordType, question));
 
 		return obligations;
 	}
 
 	private static AFieldField findField(ARecordInvariantType ty,
-			LexIdentifierToken id) {
+			LexIdentifierToken id)
+	{
 
 		List<AFieldField> fields = ty.getFields();
 		for (AFieldField f : fields)
@@ -591,7 +644,8 @@ public class PogExpVisitor extends
 
 	@Override
 	// RWL See [1] pg. 56
-	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question) {
+	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -599,14 +653,14 @@ public class PogExpVisitor extends
 		ARecordInvariantType recordType = node.getRecordType();
 		Queue<PType> mTypes = node.getModTypes();
 
-		for (ARecordModifier mod : modifiers) {
+		for (ARecordModifier mod : modifiers)
+		{
 			obligations.addAll(mod.getValue().apply(this, question));
 			AFieldField f = findField(recordType, mod.getTag());
 			PType mType = mTypes.poll();
 			if (f != null)
 				if (!TypeComparator.isSubType(mType, f.getType()))
-					obligations.add(new SubTypeObligation(mod.getValue(), f
-							.getType(), mType, question));
+					obligations.add(new SubTypeObligation(mod.getValue(), f.getType(), mType, question));
 
 		}
 
@@ -614,7 +668,8 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseANewExp(ANewExp node, POContextStack question) {
+	public ProofObligationList caseANewExp(ANewExp node, POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -625,48 +680,56 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseANilExp(ANilExp node, POContextStack question) {
+	public ProofObligationList caseANilExp(ANilExp node, POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseANotYetSpecifiedExp(
-			ANotYetSpecifiedExp node, POContextStack question) {
+			ANotYetSpecifiedExp node, POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAPostOpExp(APostOpExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList caseAPreExp(APreExp node, POContextStack question) {
+	public ProofObligationList caseAPreExp(APreExp node, POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAPreOpExp(APreOpExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAQuoteLiteralExp(AQuoteLiteralExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseARealLiteralExp(ARealLiteralExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASameBaseClassExp(ASameBaseClassExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
 		obligations.addAll(node.getLeft().apply(this, question));
@@ -677,7 +740,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASameClassExp(ASameClassExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList list = node.getLeft().apply(this, question);
 		list.addAll(node.getRight().apply(this, question));
 		return list;
@@ -685,55 +749,64 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASelfExp(ASelfExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList caseSSeqExp(SSeqExp node, POContextStack question) {
+	public ProofObligationList caseSSeqExp(SSeqExp node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultSSeqExp(SSeqExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList caseSSetExp(SSetExp node, POContextStack question) {
+	public ProofObligationList caseSSetExp(SSetExp node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultSSetExp(SSetExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAStateInitExp(AStateInitExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAStringLiteralExp(AStringLiteralExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASubclassResponsibilityExp(
-			ASubclassResponsibilityExp node, POContextStack question) {
+			ASubclassResponsibilityExp node, POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASubseqExp(ASubseqExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList list = node.getSeq().apply(this, question);
 		list.addAll(node.getFrom().apply(this, question));
 		list.addAll(node.getTo().apply(this, question));
@@ -742,19 +815,22 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAThreadIdExp(AThreadIdExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseATimeExp(ATimeExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseATupleExp(ATupleExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 		for (PExp exp : node.getArgs())
 			obligations.addAll(exp.apply(this, question));
@@ -763,183 +839,205 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAUndefinedExp(AUndefinedExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseACardinalityUnaryExp(
-			ACardinalityUnaryExp node, POContextStack question) {
+			ACardinalityUnaryExp node, POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseADistConcatUnaryExp(
-			ADistConcatUnaryExp node, POContextStack question) {
+			ADistConcatUnaryExp node, POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseADistIntersectUnaryExp(
-			ADistIntersectUnaryExp node, POContextStack question) {
+			ADistIntersectUnaryExp node, POContextStack question)
+	{
 		ProofObligationList obligations = node.getExp().apply(this, question);
-		obligations.add(new org.overture.pog.obligations.NonEmptySetObligation(
-				node.getExp(), question));
+		obligations.add(new org.overture.pog.obligations.NonEmptySetObligation(node.getExp(), question));
 		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseADistMergeUnaryExp(ADistMergeUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
-		obligations.add(new MapSetOfCompatibleObligation(node.getExp(),
-				question));
+		obligations.add(new MapSetOfCompatibleObligation(node.getExp(), question));
 		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseADistUnionUnaryExp(ADistUnionUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAElementsUnaryExp(AElementsUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAFloorUnaryExp(AFloorUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAIndicesUnaryExp(AIndicesUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseALenUnaryExp(ALenUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapInverseUnaryExp(
-			AMapInverseUnaryExp node, POContextStack question) {
+			AMapInverseUnaryExp node, POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseANotUnaryExp(ANotUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPowerSetUnaryExp(APowerSetUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAReverseUnaryExp(AReverseUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseATailUnaryExp(ATailUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAUnaryMinusUnaryExp(
-			AUnaryMinusUnaryExp node, POContextStack question) {
+			AUnaryMinusUnaryExp node, POContextStack question)
+	{
 
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseSBooleanBinaryExp(SBooleanBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 		PExp lExp = node.getLeft();
 		PExp rExp = node.getRight();
 
 		PType lType = lExp.getType();
 		PType rType = rExp.getType();
-		if (lType instanceof AUnionType) {
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
-					lExp.getLocation(), false), lType, question));
+		if (lType instanceof AUnionType)
+		{
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType) {
+		if (rType instanceof AUnionType)
+		{
 
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
-					rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
 		}
 		return super.caseSBooleanBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList defaultSBooleanBinaryExp(SBooleanBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return caseSBooleanBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseACompBinaryExp(ACompBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 		PExp lExp = node.getLeft();
 		PType lType = lExp.getType();
 		PExp rExp = node.getRight();
 
-		if (PTypeAssistant.isFunction(lType)) {
+		if (PTypeAssistant.isFunction(lType))
+		{
 			String pref1 = PExpAssistant.getPreName(lExp);
 			String pref2 = PExpAssistant.getPreName(rExp);
 
 			if (pref1 == null || !pref1.equals(""))
-				obligations.add(new FuncComposeObligation(node, pref1, pref2,
-						question));
+				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
 		}
 
-		if (PTypeAssistant.isMap(lType)) {
+		if (PTypeAssistant.isMap(lType))
+		{
 			obligations.add(new MapComposeObligation(node, question));
 		}
 
@@ -949,23 +1047,27 @@ public class PogExpVisitor extends
 	final static int LEFT = 0;
 	final static int RIGHT = 1;
 
-	private <T> PExp[] getLeftRight(T node) {
+	private <T> PExp[] getLeftRight(T node)
+	{
 		PExp[] res = new PExp[2];
-		try {
+		try
+		{
 			Class<?> clz = node.getClass();
 			Method getLeft = clz.getMethod("getLeft", new Class<?>[] {});
 			Method getRight = clz.getMethod("getRight", new Class<?>[] {});
 			res[LEFT] = (PExp) getLeft.invoke(node, new Object[0]);
 			res[RIGHT] = (PExp) getRight.invoke(node, new Object[0]);
 
-		} catch (Exception k) {
+		} catch (Exception k)
+		{
 			throw new RuntimeException(k);
 		}
 		return res;
 	}
 
 	private <T> ProofObligationList handleBinaryExpression(T node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		if (node == null)
 			return new ProofObligationList();
@@ -982,46 +1084,52 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseADomainResByBinaryExp(
-			ADomainResByBinaryExp node, POContextStack question) {
+			ADomainResByBinaryExp node, POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseADomainResToBinaryExp(
-			ADomainResToBinaryExp node, POContextStack question) {
+			ADomainResToBinaryExp node, POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAInSetBinaryExp(AInSetBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = handleBinaryExpression(node, question);
-		obligations.add(new MapCompatibleObligation(node.getLeft(), node
-				.getRight(), question));
+		obligations.add(new MapCompatibleObligation(node.getLeft(), node.getRight(), question));
 		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseANotInSetBinaryExp(ANotInSetBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseSNumericBinaryExp(SNumericBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1030,17 +1138,15 @@ public class PogExpVisitor extends
 		PType lType = left.getType();
 		PType rType = right.getType();
 
-		if (lType instanceof AUnionType) {
+		if (lType instanceof AUnionType)
+		{
 
-			obligations.add(new SubTypeObligation(left,
-					new ARealNumericBasicType(right.getLocation(), false),
-					lType, question));
+			obligations.add(new SubTypeObligation(left, new ARealNumericBasicType(right.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType) {
-			obligations.add(new SubTypeObligation(right,
-					new ARealNumericBasicType(right.getLocation(), false),
-					rType, question));
+		if (rType instanceof AUnionType)
+		{
+			obligations.add(new SubTypeObligation(right, new ARealNumericBasicType(right.getLocation(), false), rType, question));
 		}
 
 		obligations.addAll(left.apply(this, question));
@@ -1050,21 +1156,22 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList defaultSNumericBinaryExp(SNumericBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return caseSNumericBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = handleBinaryExpression(node, question);
 		PType lType = node.getLeft().getType();
 
-		if (lType instanceof SSeqType) {
-			obligations
-					.add(new org.overture.pog.obligations.SeqModificationObligation(
-							node, question));
+		if (lType instanceof SSeqType)
+		{
+			obligations.add(new org.overture.pog.obligations.SeqModificationObligation(node, question));
 		}
 
 		return obligations;
@@ -1072,63 +1179,72 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAProperSubsetBinaryExp(
-			AProperSubsetBinaryExp node, POContextStack question) {
+			AProperSubsetBinaryExp node, POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARangeResByBinaryExp(
-			ARangeResByBinaryExp node, POContextStack question) {
+			ARangeResByBinaryExp node, POContextStack question)
+	{
 
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARangeResToBinaryExp(
-			ARangeResToBinaryExp node, POContextStack question) {
+			ARangeResToBinaryExp node, POContextStack question)
+	{
 		return super.caseARangeResToBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASeqConcatBinaryExp(
-			ASeqConcatBinaryExp node, POContextStack question) {
+			ASeqConcatBinaryExp node, POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetDifferenceBinaryExp(
-			ASetDifferenceBinaryExp node, POContextStack question) {
+			ASetDifferenceBinaryExp node, POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetIntersectBinaryExp(
-			ASetIntersectBinaryExp node, POContextStack question) {
+			ASetIntersectBinaryExp node, POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetUnionBinaryExp(ASetUnionBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp lExp = node.getLeft();
 		PType lType = lExp.getType();
 
-		if (lType instanceof AFunctionType) {
+		if (lType instanceof AFunctionType)
+		{
 
-			throw new RuntimeException(
-					"How do I get the left.preName (see StarStarExpression in vdmj) ?");
+			throw new RuntimeException("How do I get the left.preName (see StarStarExpression in vdmj) ?");
 			// String preName = lExp.getPre
 		}
 
-		if (lType instanceof SMapType) {
+		if (lType instanceof SMapType)
+		{
 			obligations.add(new MapIterationObligation(node, question));
 		}
 
@@ -1137,13 +1253,15 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASubsetBinaryExp(ASubsetBinaryExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAAndBooleanBinaryExp(
-			AAndBooleanBinaryExp node, POContextStack question) {
+			AAndBooleanBinaryExp node, POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1152,16 +1270,16 @@ public class PogExpVisitor extends
 		PExp rExp = node.getRight();
 		PType rType = rExp.getType();
 
-		if (lType instanceof AUnionType) {
+		if (lType instanceof AUnionType)
+		{
 
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
-					lExp.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType) {
+		if (rType instanceof AUnionType)
+		{
 			question.push(new POImpliesContext(lExp));
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
-					rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
 			question.pop();
 		}
 
@@ -1175,7 +1293,8 @@ public class PogExpVisitor extends
 	}
 
 	private <T> ProofObligationList handleBinaryBooleanExp(T node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp[] leftRight = getLeftRight(node);
@@ -1184,15 +1303,15 @@ public class PogExpVisitor extends
 		PExp rExp = leftRight[RIGHT];
 		PType rType = rExp.getType();
 
-		if (lType instanceof AUnionType) {
+		if (lType instanceof AUnionType)
+		{
 
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
-					lExp.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType) {
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
-					rExp.getLocation(), false), rType, question));
+		if (rType instanceof AUnionType)
+		{
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
 		}
 
 		obligations.addAll(lExp.apply(this, question));
@@ -1207,19 +1326,22 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAEquivalentBooleanBinaryExp(
-			AEquivalentBooleanBinaryExp node, POContextStack question) {
+			AEquivalentBooleanBinaryExp node, POContextStack question)
+	{
 		return handleBinaryBooleanExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAImpliesBooleanBinaryExp(
-			AImpliesBooleanBinaryExp node, POContextStack question) {
+			AImpliesBooleanBinaryExp node, POContextStack question)
+	{
 		return handleBinaryBooleanExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAOrBooleanBinaryExp(
-			AOrBooleanBinaryExp node, POContextStack question) {
+			AOrBooleanBinaryExp node, POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1228,15 +1350,15 @@ public class PogExpVisitor extends
 		PType lType = lExp.getType();
 		PType rType = rExp.getType();
 
-		if (lType instanceof AUnionType) {
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(
-					lExp.getLocation(), false), lType, question));
+		if (lType instanceof AUnionType)
+		{
+			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType) {
+		if (rType instanceof AUnionType)
+		{
 			question.push(new PONotImpliesContext(lExp));
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(
-					rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
 			question.pop();
 		}
 
@@ -1249,14 +1371,15 @@ public class PogExpVisitor extends
 	}
 
 	private <T extends PExp> ProofObligationList handleDivideNumericBinaryExp(
-			T node, POContextStack question) {
+			T node, POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 		PExp[] leftRight = getLeftRight(node);
 		PExp rExp = leftRight[RIGHT];
 		if (!(rExp instanceof AIntLiteralExp)
-				&& !(rExp instanceof ARealLiteralExp)) {
-			obligations.add(new NonZeroObligation(node.getLocation(), rExp,
-					question));
+				&& !(rExp instanceof ARealLiteralExp))
+		{
+			obligations.add(new NonZeroObligation(node.getLocation(), rExp, question));
 		}
 
 		return obligations;
@@ -1265,18 +1388,21 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg.
 	public ProofObligationList caseADivNumericBinaryExp(
-			ADivNumericBinaryExp node, POContextStack question) {
+			ADivNumericBinaryExp node, POContextStack question)
+	{
 		return handleDivideNumericBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseADivideNumericBinaryExp(
-			ADivideNumericBinaryExp node, POContextStack question) {
+			ADivideNumericBinaryExp node, POContextStack question)
+	{
 		return handleDivideNumericBinaryExp(node, question);
 	}
 
 	private <T> ProofObligationList handleNumericBinaryExpression(T node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp[] leftRight = getLeftRight(node);
@@ -1285,16 +1411,14 @@ public class PogExpVisitor extends
 		PType ltype = left.getType();
 		PType rtype = right.getType();
 
-		if (ltype instanceof AUnionType) {
-			obligations.add(new SubTypeObligation(left,
-					new ARealNumericBasicType(left.getLocation(), false),
-					ltype, question));
+		if (ltype instanceof AUnionType)
+		{
+			obligations.add(new SubTypeObligation(left, new ARealNumericBasicType(left.getLocation(), false), ltype, question));
 		}
 
-		if (rtype instanceof AUnionType) {
-			obligations.add(new SubTypeObligation(right,
-					new ARealNumericBasicType(right.getLocation(), false),
-					rtype, question));
+		if (rtype instanceof AUnionType)
+		{
+			obligations.add(new SubTypeObligation(right, new ARealNumericBasicType(right.getLocation(), false), rtype, question));
 		}
 
 		obligations.addAll(left.apply(this, question));
@@ -1305,67 +1429,78 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, POContextStack question) {
+			AGreaterEqualNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAGreaterNumericBinaryExp(
-			AGreaterNumericBinaryExp node, POContextStack question) {
+			AGreaterNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, POContextStack question) {
+			ALessEqualNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseALessNumericBinaryExp(
-			ALessNumericBinaryExp node, POContextStack question) {
+			ALessNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAModNumericBinaryExp(
-			AModNumericBinaryExp node, POContextStack question) {
+			AModNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPlusNumericBinaryExp(
-			APlusNumericBinaryExp node, POContextStack question) {
+			APlusNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARemNumericBinaryExp(
-			ARemNumericBinaryExp node, POContextStack question) {
+			ARemNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASubstractNumericBinaryExp(
-			ASubstractNumericBinaryExp node, POContextStack question) {
+			ASubstractNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseATimesNumericBinaryExp(
-			ATimesNumericBinaryExp node, POContextStack question) {
+			ATimesNumericBinaryExp node, POContextStack question)
+	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapEnumMapExp(AMapEnumMapExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
 		List<AMapletExp> members = node.getMembers();
 
-		for (AMapletExp maplet : members) {
+		for (AMapletExp maplet : members)
+		{
 			obligations.addAll(maplet.apply(this, question));
 		}
 
@@ -1377,7 +1512,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASeqCompSeqExp(ASeqCompSeqExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1388,7 +1524,8 @@ public class PogExpVisitor extends
 		question.pop();
 
 		PExp predicate = node.getPredicate();
-		if (predicate != null) {
+		if (predicate != null)
+		{
 			question.push(new POForAllContext(node));
 			obligations.addAll(predicate.apply(this, question));
 			question.pop();
@@ -1399,7 +1536,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASeqEnumSeqExp(ASeqEnumSeqExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1425,17 +1563,21 @@ public class PogExpVisitor extends
 		List<PMultipleBind> bindings = node.getBindings();
 
 		boolean finiteTest = false;
-		for (PMultipleBind b : bindings) {
-			if (b instanceof ATypeMultipleBind) {
+		for (PMultipleBind b : bindings)
+		{
+			if (b instanceof ATypeMultipleBind)
+			{
 				finiteTest = true;
 			}
 		}
 
-		if (finiteTest) {
+		if (finiteTest)
+		{
 			obligations.addAll(predicate.apply(this, question));
 		}
 
-		if (predicate != null) {
+		if (predicate != null)
+		{
 			question.push(new POForAllContext(node));
 			obligations.addAll(predicate.apply(this, question));
 			question.pop();
@@ -1446,7 +1588,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASetEnumSetExp(ASetEnumSetExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (PExp e : node.getMembers())
@@ -1458,7 +1601,8 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASetRangeSetExp(ASetRangeSetExp node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		PExp last = node.getLast();
 		PExp first = node.getFirst();
 		ProofObligationList obligations = first.apply(this, question);
@@ -1468,7 +1612,8 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList defaultPExp(PExp node, POContextStack question) {
+	public ProofObligationList defaultPExp(PExp node, POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
