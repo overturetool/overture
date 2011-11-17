@@ -19,7 +19,6 @@ import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.visitors.PogVisitor;
 import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
-import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -32,6 +31,10 @@ import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.util.Base64;
 
 public class ModuleTestCase extends TestCase {
+
+	public enum ParserType {
+		Expression, Expressions, Module, Class, Pattern, Type, Statement, Bind
+	}
 
 	public static final String tcHeader = "-- TCErrors:";
 	public static final Boolean printOks = false;
@@ -54,8 +57,8 @@ public class ModuleTestCase extends TestCase {
 	}
 
 	private static String makePoString(ProofObligation po) {
-		String poString = po.name + "," + po.number + "," + po.value + ","
-				+ po.kind + "," + po.proof + "," + po.status + ",";
+		String poString = "|" + po.name + "," + po.number + "," + po.value
+				+ "," + po.kind + "," + po.proof + "," + po.status + "|";
 		return poString;
 	}
 
@@ -175,10 +178,25 @@ public class ModuleTestCase extends TestCase {
 		expectedProofObligations = getExpectedProofObligations();
 
 		// fail if expected and actual number of po's are different
-		if (expectedProofObligations.size() != proofObligation.size())
+		if (expectedProofObligations.size() != proofObligation.size()) {
+			System.out
+					.println("Different number of ProofObligations: (Expected: "
+							+ expectedProofObligations.size()
+							+ ", Actual: "
+							+ proofObligation.size()
+							+ ")\n---- Expected ----\n");
+			for (String s : expectedProofObligations)
+				System.out.println(s + "\n");
+			System.out.println("\n------ Actual -----\n");
+			for (ProofObligation po : proofObligation)
+				System.out.println(makePoString(po) + "\n");
+			System.out.println(file.toURL());
 			throw new RuntimeException(
-					"The number of generated proof obligations are different from the actually encountered proof obligations.");
-
+					"The number of generated proof obligations are different from the actually encountered proof obligations. Expected: "
+							+ expectedProofObligations.size()
+							+ ", Actual: "
+							+ proofObligation.size());
+		}
 		// for each po found by our PoGVisitor check that it is among the
 		// expected po's
 		for (ProofObligation po : proofObligation) {

@@ -36,12 +36,24 @@ public class ModulesSlPoGTest extends BaseTestSuite {
 		return test;
 	}
 
+	private static Test getSuite(ThirdPartyTests suite)
+			throws IllegalArgumentException, SecurityException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException {
+		String name = "Type Check Module TestSuite";
+		String root = "src\\test\\resources\\" + suite.getFolder();
+		TestSuite test = createTestCompleteFile(name, root,
+				ModuleTestCase.class);
+		return test;
+	}
+
 	public static Test suite() throws Exception {
 		TestSuite t = new TestSuite();
-		t.addTest(getSuite(TestSuites.THIRDPARTY));
-		t.addTest(getSuite(TestSuites.STATEMENTS));
-		t.addTest(getSuite(TestSuites.FUNCTIONAL));
-		t.addTest(getSuite(TestSuites.EXPRESSIONS));
+		t.addTest(getSuite(ThirdPartyTests.applyexpr_02$vdm));
+		// t.addTest(getSuite(TestSuites.THIRDPARTY));
+		// t.addTest(getSuite(TestSuites.STATEMENTS));
+		// t.addTest(getSuite(TestSuites.FUNCTIONAL));
+		// t.addTest(getSuite(TestSuites.EXPRESSIONS));
 		return t;
 	}
 
