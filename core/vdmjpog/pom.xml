@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>org.overturetoolv2.core</groupId>
 	<artifactId>vdmjpog</artifactId>
-	<name>Test for the VDMJ Type Checker</name>
+	<name>Test for the VDMJ Proof Obligation Generator</name>
 
 
 	<build>
