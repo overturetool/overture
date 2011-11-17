@@ -1,0 +1,5 @@
+-- TCErrors: WARNING:5000:3,3 PROOFOBLIGATION: fGcsMCwoZm9yYWxsIHg6aW50ICYKICBwcmVfZyh4KSA9PiBleGlzdHMgcmVzdWx0OmludCAmIHBvc3RfZyh4LCByZXN1bHQpKQosZnVuY3Rpb24gc2F0aXNmaWFiaWxpdHksbnVsbCxVbnByb3ZlZHw=
+functions
+  g(x : int) result : int
+  pre x < 42
+  post x > result;
