@@ -619,7 +619,7 @@ public class PogExpVisitor extends
 			PType aType = argTypes.poll();
 			PExp aExp = args.poll();
 
-			if (TypeComparator.isSubType(question.checkType(aExp, aType), f.getType()))
+			if (!TypeComparator.isSubType(question.checkType(aExp, aType), f.getType()))
 				obligations.add(new SubTypeObligation(aExp, f.getType(), aType, question));
 		}
 
