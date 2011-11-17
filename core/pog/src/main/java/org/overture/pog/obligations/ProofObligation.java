@@ -38,8 +38,10 @@ abstract public class ProofObligation implements Comparable<ProofObligation>
 
 	private int var = 1;
 
-	public ProofObligation(LexLocation location, POType kind, POContextStack ctxt)
+	public ProofObligation(LexLocation location, POType kind,
+			POContextStack ctxt)
 	{
+		int a;
 		this.location = location;
 		this.kind = kind;
 		this.name = ctxt.getName();
@@ -56,7 +58,7 @@ abstract public class ProofObligation implements Comparable<ProofObligation>
 	@Override
 	public String toString()
 	{
-		return  name + ": " + kind + " obligation " + location + "\n" + value;
+		return name + ": " + kind + " obligation " + location + "\n" + value;
 	}
 
 	protected String getVar(String root)
@@ -66,7 +68,7 @@ abstract public class ProofObligation implements Comparable<ProofObligation>
 
 	public void trivialCheck()
 	{
-		for (POTrivialProof p: POTrivialProof.values())
+		for (POTrivialProof p : POTrivialProof.values())
 		{
 			if (p.proves(value))
 			{

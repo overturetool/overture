@@ -9,18 +9,22 @@ import junit.framework.TestSuite;
 import org.overture.pog.tests.framework.BaseTestSuite;
 import org.overture.pog.tests.framework.ModuleTestCase;
 
-public class ModulesSlPoGTest extends BaseTestSuite {
+public class ModulesSlPoGTest extends BaseTestSuite
+{
 
-	private enum TestSuites {
+	private enum TestSuites
+	{
 		FUNCTIONAL("functional_tests"), EXPRESSIONS("expressions"), STATEMENTS(
 				"statements"), THIRDPARTY("thirdpartytests");
 		private String folder;
 
-		TestSuites(String folder) {
+		TestSuites(String folder)
+		{
 			this.folder = folder;
 		}
 
-		public String getFolder() {
+		public String getFolder()
+		{
 			return this.folder;
 		}
 	}
@@ -28,26 +32,27 @@ public class ModulesSlPoGTest extends BaseTestSuite {
 	private static Test getSuite(TestSuites suite)
 			throws IllegalArgumentException, SecurityException,
 			InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, IOException {
+			InvocationTargetException, NoSuchMethodException, IOException
+	{
 		String name = "Type Check Module TestSuite";
 		String root = "src\\test\\resources\\" + suite.getFolder();
-		TestSuite test = createTestCompleteFile(name, root,
-				ModuleTestCase.class);
+		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class);
 		return test;
 	}
 
 	private static Test getSuite(ThirdPartyTests suite)
 			throws IllegalArgumentException, SecurityException,
 			InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, IOException {
+			InvocationTargetException, NoSuchMethodException, IOException
+	{
 		String name = "Type Check Module TestSuite";
 		String root = "src\\test\\resources\\" + suite.getFolder();
-		TestSuite test = createTestCompleteFile(name, root,
-				ModuleTestCase.class);
+		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class);
 		return test;
 	}
 
-	public static Test suite() throws Exception {
+	public static Test suite() throws Exception
+	{
 		TestSuite t = new TestSuite();
 		t.addTest(getSuite(ThirdPartyTests.applyexpr_02$vdm));
 		// t.addTest(getSuite(TestSuites.THIRDPARTY));

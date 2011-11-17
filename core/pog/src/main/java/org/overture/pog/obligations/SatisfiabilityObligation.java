@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
@@ -39,19 +40,19 @@ public class SatisfiabilityObligation extends ProofObligation
 	private String separator = "";
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
-		POContextStack ctxt)
+			POContextStack ctxt)
 	{
 		super(func.getLocation(), POType.FUNC_SATISFIABILITY, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		if (func.getPredef() != null)
 		{
-    		sb.append(func.getPredef().getName().name);
-    		sb.append("(");
+			sb.append(func.getPredef().getName().name);
+			sb.append("(");
 			separator = "";
-    		appendParamPatterns(sb, func.getParamPatterns());
-    		sb.append(")");
-    		sb.append(" => ");
+			appendParamPatterns(sb, func.getParamPatterns());
+			sb.append(")");
+			sb.append(" => ");
 		}
 
 		sb.append("exists ");
@@ -69,26 +70,26 @@ public class SatisfiabilityObligation extends ProofObligation
 	}
 
 	public SatisfiabilityObligation(AImplicitOperationDefinition op,
-		PDefinition stateDefinition, POContextStack ctxt)
+			PDefinition stateDefinition, POContextStack ctxt)
 	{
 		super(op.getLocation(), POType.OP_SATISFIABILITY, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		if (op.getPredef() != null)
 		{
-    		sb.append(op.getPredef().getName().name);
-    		sb.append("(");
-    		separator = "";
-    		appendParamPatterns(sb, op.getParameterPatterns());
-    		appendStatePatterns(sb, stateDefinition, true, false);
-    		sb.append(")");
-    		sb.append(" =>\n");
+			sb.append(op.getPredef().getName().name);
+			sb.append("(");
+			separator = "";
+			appendParamPatterns(sb, op.getParameterPatterns());
+			appendStatePatterns(sb, stateDefinition, true, false);
+			sb.append(")");
+			sb.append(" =>\n");
 		}
 
 		if (op.getResult() != null)
 		{
 			sb.append("exists ");
-    		separator = "";
+			separator = "";
 			appendResult(sb, op.getResult());
 			appendStatePatterns(sb, stateDefinition, false, true);
 			sb.append(" & ");
@@ -126,21 +127,19 @@ public class SatisfiabilityObligation extends ProofObligation
 		}
 	}
 
-	private void appendStatePatterns(
-		StringBuilder sb, PDefinition state, boolean old, boolean typed)
+	private void appendStatePatterns(StringBuilder sb, PDefinition state,
+			boolean old, boolean typed)
 	{
 		if (state == null)
 		{
 			return;
-		}
-		else if (state instanceof AStateDefinition)
+		} else if (state instanceof AStateDefinition)
 		{
 			if (old)
 			{
 				sb.append(separator);
 				sb.append("oldstate");
-			}
-			else
+			} else
 			{
 				sb.append(separator);
 				sb.append("newstate");
@@ -148,19 +147,17 @@ public class SatisfiabilityObligation extends ProofObligation
 
 			if (typed)
 			{
-				AStateDefinition def = (AStateDefinition)state;
+				AStateDefinition def = (AStateDefinition) state;
 				sb.append(":");
 				sb.append(def.getName().name);
 			}
-		}
-		else
+		} else
 		{
 			if (old)
 			{
 				sb.append(separator);
 				sb.append("oldself");
-			}
-			else
+			} else
 			{
 				sb.append(separator);
 				sb.append("newself");
@@ -168,7 +165,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 			if (typed)
 			{
-				SClassDefinition def = (SClassDefinition)state;
+				SClassDefinition def = (SClassDefinition) state;
 				sb.append(":");
 				sb.append(def.getName().name);
 			}
@@ -177,13 +174,15 @@ public class SatisfiabilityObligation extends ProofObligation
 		separator = ", ";
 	}
 
-	private void appendParamPatterns(
-		StringBuilder sb, List<APatternListTypePair> params)
+	private void appendParamPatterns(StringBuilder sb,
+			List<APatternListTypePair> params)
 	{
-		for (APatternListTypePair pltp: params)
+		for (APatternListTypePair pltp : params)
 		{
+			List<PExp> expList = PPatternAssistantTC.getMatchingExpressionList(pltp.getPatterns());
 			sb.append(separator);
-			sb.append(PPatternAssistantTC.getMatchingExpressionList(pltp.getPatterns()));
+			for (PExp e : expList)
+				sb.append(e);
 			separator = ", ";
 		}
 	}

@@ -2,6 +2,7 @@ package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ASetBind;
@@ -34,6 +35,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SLetDefStm;
 import org.overture.pog.obligations.LetBeExistsObligation;
 import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.PONameContext;
 import org.overture.pog.obligations.POScopeContext;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.StateInvariantObligation;
@@ -41,49 +43,54 @@ import org.overture.pog.obligations.SubTypeObligation;
 import org.overture.pog.obligations.WhileLoopObligation;
 import org.overture.typecheck.TypeComparator;
 
-public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
+public class PogStmVisitor extends
+		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
+{
 
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
-	
-	public PogStmVisitor(PogVisitor pogVisitor) {
+
+	public PogStmVisitor(PogVisitor pogVisitor)
+	{
 		this.rootVisitor = pogVisitor;
 	}
-	
+
 	@Override
-	public ProofObligationList defaultPStm(PStm node, POContextStack question) {
-	
+	public ProofObligationList defaultPStm(PStm node, POContextStack question)
+	{
+
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList caseAAlwaysStm(AAlwaysStm node,
-			POContextStack question) {
-		
-		ProofObligationList obligations = node.getAlways().apply(this,question);
-		obligations.addAll(node.getBody().apply(this,question));
+			POContextStack question)
+	{
+
+		ProofObligationList obligations = node.getAlways().apply(this, question);
+		obligations.addAll(node.getBody().apply(this, question));
 		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAAssignmentStm(AAssignmentStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
-		
-		if (!node.getInConstructor() &&
-			(node.getClassDefinition() != null && node.getClassDefinition().getInvariant() != null) ||
-			(node.getStateDefinition() != null && node.getStateDefinition().getInvExpression() != null))
+
+		if (!node.getInConstructor()
+				&& (node.getClassDefinition() != null && node.getClassDefinition().getInvariant() != null)
+				|| (node.getStateDefinition() != null && node.getStateDefinition().getInvExpression() != null))
 		{
-			obligations.add(new StateInvariantObligation(node,question));
+			obligations.add(new StateInvariantObligation(node, question));
 		}
 
-		obligations.addAll(node.getTarget().apply(rootVisitor,question));
-		obligations.addAll(node.getExp().apply(rootVisitor,question));
+		obligations.addAll(node.getTarget().apply(rootVisitor, question));
+		obligations.addAll(node.getExp().apply(rootVisitor, question));
 
 		if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType()))
 		{
-			obligations.add(
-				new SubTypeObligation(node.getExp(), node.getTargetType(), node.getExpType(), question));
+			obligations.add(new SubTypeObligation(node.getExp(), node.getTargetType(), node.getExpType(), question));
 		}
 
 		return obligations;
@@ -91,13 +98,14 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseAAtomicStm(AAtomicStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
-				
-		for (AAssignmentStm stmt: node.getAssignments())
+
+		for (AAssignmentStm stmt : node.getAssignments())
 		{
-			obligations.addAll(stmt.apply(this,question));
+			obligations.addAll(stmt.apply(this, question));
 		}
 
 		return obligations;
@@ -105,13 +113,14 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseACallObjectStm(ACallObjectStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PExp exp: node.getArgs())
+		for (PExp exp : node.getArgs())
 		{
-			obligations.addAll( exp.apply(rootVisitor,question));
+			obligations.addAll(exp.apply(rootVisitor, question));
 		}
 
 		return obligations;
@@ -119,13 +128,14 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseACallStm(ACallStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PExp exp: node.getArgs())
+		for (PExp exp : node.getArgs())
 		{
-			obligations.addAll(exp.apply(rootVisitor,question));
+			obligations.addAll(exp.apply(rootVisitor, question));
 		}
 
 		return obligations;
@@ -133,48 +143,51 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseACasesStm(ACasesStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 		boolean hasIgnore = false;
 
-		for (ACaseAlternativeStm alt: node.getCases())
+		for (ACaseAlternativeStm alt : node.getCases())
 		{
 			if (alt.getPattern() instanceof AIgnorePattern)
 			{
 				hasIgnore = true;
 			}
 
-			obligations.addAll(alt.apply(rootVisitor,question));
+			obligations.addAll(alt.apply(rootVisitor, question));
 		}
 
 		if (node.getOthers() != null && !hasIgnore)
 		{
-			obligations.addAll(node.getOthers().apply(rootVisitor,question));
+			obligations.addAll(node.getOthers().apply(rootVisitor, question));
 		}
 
 		return obligations;
-		
+
 	}
-	
+
 	@Override
 	public ProofObligationList caseAElseIfStm(AElseIfStm node,
-			POContextStack question) {
-	
-		ProofObligationList obligations = node.getElseIf().apply(rootVisitor,question);
-		obligations.addAll(node.getThenStm().apply(this,question));
+			POContextStack question)
+	{
+
+		ProofObligationList obligations = node.getElseIf().apply(rootVisitor, question);
+		obligations.addAll(node.getThenStm().apply(this, question));
 		return obligations;
 	}
-	
+
 	@Override
 	public ProofObligationList caseAExitStm(AExitStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
 		if (node.getExpression() != null)
 		{
-			obligations.addAll(node.getExpression().apply(rootVisitor,question));
+			obligations.addAll(node.getExpression().apply(rootVisitor, question));
 		}
 
 		return obligations;
@@ -182,27 +195,29 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseAForAllStm(AForAllStm node,
-			POContextStack question) {
-		
-		ProofObligationList obligations = node.getSet().apply(rootVisitor,question);
-		obligations.addAll(node.getStatement().apply(this,question));
+			POContextStack question)
+	{
+
+		ProofObligationList obligations = node.getSet().apply(rootVisitor, question);
+		obligations.addAll(node.getStatement().apply(this, question));
 		return obligations;
 	}
 
 	@Override
 	public ProofObligationList caseAForIndexStm(AForIndexStm node,
-			POContextStack question) {
-	
-		ProofObligationList obligations = node.getFrom().apply(rootVisitor,question);
-		obligations.addAll(node.getTo().apply(rootVisitor,question));
+			POContextStack question)
+	{
+
+		ProofObligationList obligations = node.getFrom().apply(rootVisitor, question);
+		obligations.addAll(node.getTo().apply(rootVisitor, question));
 
 		if (node.getBy() != null)
 		{
-			obligations.addAll(node.getBy().apply(rootVisitor,question));
+			obligations.addAll(node.getBy().apply(rootVisitor, question));
 		}
 
 		question.push(new POScopeContext());
-		obligations.addAll(node.getStatement().apply(this,question));
+		obligations.addAll(node.getStatement().apply(this, question));
 		question.pop();
 
 		return obligations;
@@ -210,43 +225,43 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseAForPatternBindStm(AForPatternBindStm node,
-			POContextStack question) {
-		
-		ProofObligationList list = node.getExp().apply(rootVisitor,question);
+			POContextStack question)
+	{
+
+		ProofObligationList list = node.getExp().apply(rootVisitor, question);
 
 		if (node.getPatternBind().getPattern() != null)
 		{
 			// Nothing to do
-		}
-		else if (node.getPatternBind().getBind() instanceof ATypeBind)
+		} else if (node.getPatternBind().getBind() instanceof ATypeBind)
 		{
-			
+
 			// Nothing to do
-		}
-		else if (node.getPatternBind().getBind() instanceof ASetBind)
+		} else if (node.getPatternBind().getBind() instanceof ASetBind)
 		{
-			ASetBind bind = (ASetBind)node.getPatternBind().getBind();
-			list.addAll(bind.getSet().apply(rootVisitor,question));
+			ASetBind bind = (ASetBind) node.getPatternBind().getBind();
+			list.addAll(bind.getSet().apply(rootVisitor, question));
 		}
 
-		list.addAll(node.getStatement().apply(this,question));
+		list.addAll(node.getStatement().apply(this, question));
 		return list;
 	}
 
 	@Override
-	public ProofObligationList caseAIfStm(AIfStm node, POContextStack question) {
-		
-		ProofObligationList obligations = node.getIfExp().apply(rootVisitor,question);
-		obligations.addAll(node.getThenStm().apply(this,question));
+	public ProofObligationList caseAIfStm(AIfStm node, POContextStack question)
+	{
 
-		for (AElseIfStm stmt: node.getElseIf())
+		ProofObligationList obligations = node.getIfExp().apply(rootVisitor, question);
+		obligations.addAll(node.getThenStm().apply(this, question));
+
+		for (AElseIfStm stmt : node.getElseIf())
 		{
-			obligations.addAll(stmt.apply(this,question));
+			obligations.addAll(stmt.apply(this, question));
 		}
 
 		if (node.getElseStm() != null)
 		{
-			obligations.addAll(node.getElseStm().apply(this,question));
+			obligations.addAll(node.getElseStm().apply(this, question));
 		}
 
 		return obligations;
@@ -255,93 +270,98 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseALetBeStStm(ALetBeStStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.add(new LetBeExistsObligation(node, question));
-		obligations.addAll(node.getBind().apply(rootVisitor,question));
+		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		if (node.getSuchThat() != null)
 		{
-			obligations.addAll(node.getSuchThat().apply(rootVisitor,question));
+			obligations.addAll(node.getSuchThat().apply(rootVisitor, question));
 		}
 
 		question.push(new POScopeContext());
-		obligations.addAll(node.getStatement().apply(this,question));
+		obligations.addAll(node.getStatement().apply(this, question));
 		question.pop();
 
 		return obligations;
 	}
 
 	@Override
-	public ProofObligationList caseSLetDefStm(SLetDefStm node, POContextStack question) {
-		
+	public ProofObligationList caseSLetDefStm(SLetDefStm node,
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
-		
-		for (PDefinition def: node.getLocalDefs())
+
+		for (PDefinition def : node.getLocalDefs())
 		{
-			obligations.addAll(def.apply(rootVisitor,question));
+			obligations.addAll(def.apply(rootVisitor, question));
 		}
 
 		question.push(new POScopeContext());
-		obligations.addAll(node.getStatement().apply(this,question));
+		obligations.addAll(node.getStatement().apply(this, question));
 		question.pop();
 
 		return obligations;
 
 	}
-		
+
 	@Override
 	public ProofObligationList caseAReturnStm(AReturnStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
 		if (node.getExpression() != null)
 		{
-			obligations.addAll(node.getExpression().apply(rootVisitor,question));
+			obligations.addAll(node.getExpression().apply(rootVisitor, question));
 		}
 
 		return obligations;
 	}
 
-//	@Override
-//	public ProofObligationList caseSSimpleBlockStm(SSimpleBlockStm node,
-//			POContextStack question) {
-//		
-//		ProofObligationList obligations = new ProofObligationList();
-//
-//		for (PStm stmt: node.getStatements())
-//		{
-//			obligations.addAll(stmt.apply(this,question));
-//		}
-//
-//		return obligations;
-//	}
-		
+	// @Override
+	// public ProofObligationList caseSSimpleBlockStm(SSimpleBlockStm node,
+	// POContextStack question) {
+	//
+	// ProofObligationList obligations = new ProofObligationList();
+	//
+	// for (PStm stmt: node.getStatements())
+	// {
+	// obligations.addAll(stmt.apply(this,question));
+	// }
+	//
+	// return obligations;
+	// }
+
 	@Override
 	public ProofObligationList caseASpecificationStm(ASpecificationStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
 		if (node.getErrors() != null)
 		{
-			for (AErrorCase err: node.getErrors())
+			for (AErrorCase err : node.getErrors())
 			{
-				obligations.addAll(err.getLeft().apply(rootVisitor,question));
-				obligations.addAll(err.getRight().apply(rootVisitor,question));
+				obligations.addAll(err.getLeft().apply(rootVisitor, question));
+				obligations.addAll(err.getRight().apply(rootVisitor, question));
 			}
 		}
 
 		if (node.getPrecondition() != null)
 		{
-			obligations.addAll(node.getPrecondition().apply(rootVisitor,question));
+			obligations.addAll(node.getPrecondition().apply(rootVisitor, question));
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			obligations.addAll(node.getPostcondition().apply(rootVisitor,question));
+			obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
 		}
 
 		return obligations;
@@ -350,78 +370,82 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseAStartStm(AStartStm node,
-			POContextStack question) {
-		
-		return node.getObj().apply(rootVisitor,question);
+			POContextStack question)
+	{
+
+		return node.getObj().apply(rootVisitor, question);
 	}
-	
+
 	@Override
 	public ProofObligationList caseATixeStm(ATixeStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (ATixeStmtAlternative alt: node.getTraps())
+		for (ATixeStmtAlternative alt : node.getTraps())
 		{
-			obligations.addAll(alt.apply(rootVisitor,question));
+			obligations.addAll(alt.apply(rootVisitor, question));
 		}
 
-		obligations.addAll(node.getBody().apply(rootVisitor,question));
+		obligations.addAll(node.getBody().apply(rootVisitor, question));
 		return obligations;
 
 	}
 
 	@Override
 	public ProofObligationList caseATrapStm(ATrapStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList list = new ProofObligationList();
 
 		if (node.getPatternBind().getPattern() != null)
 		{
 			// Nothing to do
-		}
-		else if (node.getPatternBind().getBind() instanceof ATypeBind)
+		} else if (node.getPatternBind().getBind() instanceof ATypeBind)
 		{
 			// Nothing to do
-		}
-		else if (node.getPatternBind().getBind() instanceof ASetBind)
+		} else if (node.getPatternBind().getBind() instanceof ASetBind)
 		{
-			ASetBind bind = (ASetBind)node.getPatternBind().getBind();
-			list.addAll(bind.getSet().apply(rootVisitor,question));
+			ASetBind bind = (ASetBind) node.getPatternBind().getBind();
+			list.addAll(bind.getSet().apply(rootVisitor, question));
 		}
 
-		list.addAll(node.getWith().apply(rootVisitor,question));
-		list.addAll(node.getBody().apply(rootVisitor,question));
+		list.addAll(node.getWith().apply(rootVisitor, question));
+		list.addAll(node.getBody().apply(rootVisitor, question));
 		return list;
 
 	}
 
 	@Override
 	public ProofObligationList caseAWhileStm(AWhileStm node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.add(new WhileLoopObligation(node, question));
-		obligations.addAll(node.getExp().apply(rootVisitor,question));
-		obligations.addAll(node.getStatement().apply(this,question));
-		
+		obligations.addAll(node.getExp().apply(rootVisitor, question));
+		obligations.addAll(node.getStatement().apply(this, question));
+
 		return obligations;
 	}
-		
+
 	@Override
 	public ProofObligationList caseADefLetDefStm(ADefLetDefStm node,
-			POContextStack question) {
-				
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
-		
-		for(PDefinition localDef : node.getLocalDefs())
+
+		for (PDefinition localDef : node.getLocalDefs())
 		{
-			obligations.addAll(localDef.apply(rootVisitor,question));
+			question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(localDef)));
+			obligations.addAll(localDef.apply(rootVisitor, question));
 		}
 
 		question.push(new POScopeContext());
-		obligations.addAll(node.getStatement().apply(this,question));
+		obligations.addAll(node.getStatement().apply(this, question));
 		question.pop();
 
 		return obligations;
@@ -429,24 +453,25 @@ public class PogStmVisitor extends	QuestionAnswerAdaptor<POContextStack, ProofOb
 
 	@Override
 	public ProofObligationList caseABlockSimpleBlockStm(
-			ABlockSimpleBlockStm node, POContextStack question) {
-		
+			ABlockSimpleBlockStm node, POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
-		
-		for (PDefinition def  : node.getAssignmentDefs())
+
+		for (PDefinition def : node.getAssignmentDefs())
 		{
-			ProofObligationList defObligations = def.apply(rootVisitor,question);
+			ProofObligationList defObligations = def.apply(rootVisitor, question);
 			if (defObligations != null)
 				obligations.addAll(defObligations);
 		}
 
 		question.push(new POScopeContext());
-		
-		for (PStm stmt: node.getStatements())
+
+		for (PStm stmt : node.getStatements())
 		{
-			obligations.addAll(stmt.apply(this,question));
+			obligations.addAll(stmt.apply(this, question));
 		}
-		
+
 		question.pop();
 
 		return obligations;

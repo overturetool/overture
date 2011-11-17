@@ -546,6 +546,9 @@ public class PogExpVisitor extends
 
 		ProofObligationList obligations = new ProofObligationList();
 
+		for (PDefinition def : node.getLocalDefs())
+			obligations.addAll(def.apply(rootVisitor, question));
+
 		question.push(new POLetDefContext(node));
 		obligations.addAll(node.getExpression().apply(this, question));
 		question.pop();
