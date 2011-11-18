@@ -143,7 +143,7 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized boolean isType(Class<? extends Value> valueclass)
 	{
-		return valueclass.isInstance(this.value);
+		return valueclass.isInstance(this.value.deref());
 	}
 
 	@Override

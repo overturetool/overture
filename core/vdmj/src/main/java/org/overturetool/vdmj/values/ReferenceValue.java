@@ -34,7 +34,7 @@ abstract public class ReferenceValue extends Value
 
 	public ReferenceValue(Value value)
 	{
-		this.value = value.deref();		// In case we're reffing a ref
+		this.value = value.constant();		// In case we're reffing a ref
 	}
 
 	public ReferenceValue()
@@ -51,7 +51,7 @@ abstract public class ReferenceValue extends Value
 	@Override
 	public boolean isType(Class<? extends Value> valueclass)
 	{
-		return valueclass.isInstance(this.value);
+		return valueclass.isInstance(this.value.deref());
 	}
 
 	@Override
