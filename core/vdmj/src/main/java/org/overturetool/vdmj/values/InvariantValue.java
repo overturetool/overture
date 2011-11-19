@@ -33,6 +33,7 @@ public class InvariantValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
 	public final NamedType type;
+	private FunctionValue invariant;
 
 	public InvariantValue(NamedType type, Value value, Context ctxt)
 		throws ValueException
@@ -40,8 +41,12 @@ public class InvariantValue extends ReferenceValue
 		super(value);
 		this.type = type;
 
-		FunctionValue invariant = type.getInvariant(ctxt);
-
+		invariant = type.getInvariant(ctxt);
+		checkInvariant(ctxt);
+	}
+	
+	public void checkInvariant(Context ctxt) throws ValueException
+	{
 		if (invariant != null && Settings.invchecks)
 		{
 			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
@@ -61,10 +66,11 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	// For clone only
-	private InvariantValue(NamedType type, Value value)
+	private InvariantValue(NamedType type, Value value, FunctionValue invariant)
 	{
 		super(value);
 		this.type = type;
+		this.invariant = invariant;
 	}
 
 	@Override
@@ -83,13 +89,39 @@ public class InvariantValue extends ReferenceValue
 	@Override
 	public Value getUpdatable(ValueListenerList listeners)
 	{
-		return UpdatableValue.factory(
-			new InvariantValue(type, value.getUpdatable(listeners)), listeners);
+		InvariantValueListener invl = null;
+		
+		if (invariant != null)
+		{
+			// Add an invariant listener to a new list for children of this value
+			// We update the object in the listener once we've created it (below)
+			
+			invl = new InvariantValueListener();
+			ValueListenerList list = new ValueListenerList(invl);
+			
+			if (listeners != null)
+			{
+				list.addAll(listeners);
+			}
+			
+			listeners = list;
+		}
+		
+		InvariantValue ival = new InvariantValue(type, value.getUpdatable(listeners), invariant);
+		Value uval = UpdatableValue.factory(ival, listeners);
+		
+		if (invl != null)
+		{
+			// Update the listener with the address of the updatable copy
+			invl.setValue(ival);
+		}
+		
+		return uval;
 	}
 
 	@Override
 	public Object clone()
 	{
-		return new InvariantValue(type, value);
+		return new InvariantValue(type, value, invariant);
 	}
 }
