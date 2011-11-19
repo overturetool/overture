@@ -108,12 +108,12 @@ public class InvariantValue extends ReferenceValue
 		}
 		
 		InvariantValue ival = new InvariantValue(type, value.getUpdatable(listeners), invariant);
-		Value uval = UpdatableValue.factory(ival, listeners);
+		UpdatableValue uval = UpdatableValue.factory(ival, listeners);
 		
 		if (invl != null)
 		{
 			// Update the listener with the address of the updatable copy
-			invl.setValue(ival);
+			invl.setValue(uval);
 		}
 		
 		return uval;

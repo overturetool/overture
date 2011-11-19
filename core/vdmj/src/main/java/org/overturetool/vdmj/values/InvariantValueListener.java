@@ -34,7 +34,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 public class InvariantValueListener implements ValueListener, Serializable
 {
     private static final long serialVersionUID = 1L;
-	private InvariantValue root = null;
+	private UpdatableValue root = null;
 
 	public InvariantValueListener()
 	{
@@ -46,18 +46,27 @@ public class InvariantValueListener implements ValueListener, Serializable
 	// the objref of the object just created. See the getUpdatable method of
 	// InvariantValue.
 	
-	public void setValue(InvariantValue value)
+	public void setValue(UpdatableValue value)
 	{
-		this.root = value;
+		this.root = value;		// Always an updatable InvariantValue
 	}
 
 	public void changedValue(LexLocation location, Value value, Context ctxt)
 	{
-		if (root != null && Settings.invchecks)
+		// InvariantValueListeners are created at every InvariantValue point (with
+		// an inv function) in a structure, but the simplest level is actually
+		// covered by the convertTo call in the arguments to "set". So to avoid
+		// another unnecessary inv check, we also test whether root = value, which
+		// is true for these simplest levels. The instanceof test is added for
+		// safety, but all non-simple listeners should have InstanceValue roots.
+		
+		if (root != null && root.value != value &&
+			(root.value instanceof InvariantValue) && Settings.invchecks)
 		{
     		try
     		{
-    			root.checkInvariant(ctxt);	// Note, check root value (includes new value somewhere)
+    			InvariantValue ival = (InvariantValue) root.value;	// Safe
+    			ival.checkInvariant(ctxt);
     		}
     		catch (ValueException e)
     		{
