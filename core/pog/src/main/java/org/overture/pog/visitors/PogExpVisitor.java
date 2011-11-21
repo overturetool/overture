@@ -648,9 +648,7 @@ public class PogExpVisitor extends
 	// RWL See [1] pg. 56
 	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question)
 	{
-
-		ProofObligationList obligations = new ProofObligationList();
-
+		ProofObligationList obligations = node.getRecord().apply(rootVisitor,question);
 		Queue<ARecordModifier> modifiers = node.getModifiers();
 		ARecordInvariantType recordType = node.getRecordType();
 		Queue<PType> mTypes = node.getModTypes();
@@ -666,7 +664,7 @@ public class PogExpVisitor extends
 
 		}
 
-		return super.caseAMuExp(node, question);
+		return obligations;
 	}
 
 	@Override
