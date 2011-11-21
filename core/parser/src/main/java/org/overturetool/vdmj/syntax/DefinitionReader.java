@@ -1312,7 +1312,7 @@ public class DefinitionReader extends SyntaxReader
 			ASetBind setbind = new ASetBind(pattern.getLocation(), pattern, test.getLeft());
 			reader.unpush();
 
-			return new AEqualsDefinition(location, null, null, null, null, null, null, pattern, null, setbind, test, null, null, pattern.getDefinitions());
+			return new AEqualsDefinition(location, null, null, null, null, null, null, null, null, setbind, test, null, null, pattern.getDefinitions());
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
