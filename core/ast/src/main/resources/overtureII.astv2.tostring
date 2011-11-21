@@ -9,7 +9,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
 %exp->boolean_const =  [value] 
 %exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
-%exp->charLiteral =  [value] 
+%exp->charLiteral =  "'" + $_value.unicode$ + "'" 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
 %exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"
@@ -276,4 +276,4 @@ import org.overturetool.util.ToStringUtil;
 
 //Binds
 %multipleBind->set = ""+ $Utils.listToString($[plist]$)$ + " in set " [set];
-
+%multipleBind->type = "" + $Utils.listToString($[plist]$)$ + ":" [type]
