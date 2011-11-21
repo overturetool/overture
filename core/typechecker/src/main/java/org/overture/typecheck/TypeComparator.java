@@ -700,7 +700,10 @@ public class TypeComparator
 			return Result.Yes;		// Hmmm... too many errors otherwise
 		}
 
-		if (sub == sup)
+		//TODO: When nodes are cloned this 'if(sub == sup)' will not work, 
+		//but this might not be the best way to solve it
+		//if(sub == sup)
+		if (sub.getLocation().equals(sup.getLocation()))
 		{
 			return Result.Yes;		// Same object!
 		}
