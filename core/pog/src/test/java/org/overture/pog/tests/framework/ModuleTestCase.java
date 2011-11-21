@@ -30,9 +30,22 @@ import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.util.Base64;
 
-public class ModuleTestCase extends TestCase {
+public class ModuleTestCase extends TestCase
+{
 
-	public enum ParserType {
+	private static boolean isPermutationOf(String org, String perm)
+	{
+		boolean result = true;
+		if (org.length() != perm.length())
+			return false;
+		for (char c : org.toCharArray())
+			if (perm.indexOf(c) == -1)
+				return false;
+		return true;
+	}
+
+	public enum ParserType
+	{
 		Expression, Expressions, Module, Class, Pattern, Type, Statement, Bind
 	}
 
@@ -51,60 +64,73 @@ public class ModuleTestCase extends TestCase {
 	List<VDMWarning> warnings = new Vector<VDMWarning>();
 	ProofObligationList proofObligation = new ProofObligationList();
 
-	public ModuleTestCase() {
+	public ModuleTestCase()
+	{
 		super("test");
 
 	}
 
-	private static String makePoString(ProofObligation po) {
-		String poString = "|" + po.name + "," + po.number + "," + po.value
-				+ "," + po.kind + "," + po.proof + "," + po.status + "|";
+	private static String makePoString(ProofObligation po)
+	{
+		String poString = "|" + po.name + "," + po.value + "," + po.kind + ","
+				+ po.proof + "," + po.status + "|";
 		return poString;
 	}
 
-	private String base64Decode(String s) {
-		try {
+	private String base64Decode(String s)
+	{
+		try
+		{
 			return new String(Base64.decode(s));
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// in our case it is a runtime exception if the encoding fails we
 			// expect it to be correct at all times as it is auto-generated.
 			throw new RuntimeException(e);
 		}
 	}
 
-	private List<String> getExpectedProofObligations() throws IOException {
+	private List<String> getExpectedProofObligations() throws IOException
+	{
 		List<String> result = new LinkedList<String>();
 		String line = null;
 		String header = null;
 		String proofObligationSection = "PROOFOBLIGATION:";
 		// read the header line
-		try {
+		try
+		{
 			FileReader f = new FileReader(file);
 			BufferedReader input = new BufferedReader(f);
 			while ((line = input.readLine()) != null)
-				if (line.startsWith(tcHeader)) {
+				if (line.startsWith(tcHeader))
+				{
 					header = line;
 					break;
 				}
 			f.close();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			throw new RuntimeException(e);
 		}
 
 		// collect expected proof obligations for the header line
-		if (header != null) {
+		if (header != null)
+		{
 			String[] sections = header.split(" ");
 
 			// for each space separated part of the header line
-			for (int j = 0; j < sections.length; j++) {
+			for (int j = 0; j < sections.length; j++)
+			{
 				String s = sections[j];
 
 				// if it start with PROOFOBLIGATION: then the following section
 				// will be the base64 encoded proof obligation string
 				// representation
 				// as created by makePoString.
-				if (s.trim().startsWith(proofObligationSection)) {
-					if (sections.length > j + 1) {
+				if (s.trim().startsWith(proofObligationSection))
+				{
+					if (sections.length > j + 1)
+					{
 						// add the decoded string
 						result.add(base64Decode(sections[j + 1]));
 					} else
@@ -117,7 +143,8 @@ public class ModuleTestCase extends TestCase {
 		return result;
 	}
 
-	public ModuleTestCase(File file) {
+	public ModuleTestCase(File file)
+	{
 		super("test");
 		this.parserType = ParserType.Module;
 		this.file = file;
@@ -125,12 +152,14 @@ public class ModuleTestCase extends TestCase {
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return this.content;
 	}
 
 	@Override
-	protected void setUp() throws Exception {
+	protected void setUp() throws Exception
+	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
@@ -138,35 +167,43 @@ public class ModuleTestCase extends TestCase {
 		proofObligation.clear();
 	}
 
-	public void test() throws ParserException, LexException, IOException {
-		if (content != null) {
+	public void test() throws ParserException, LexException, IOException
+	{
+		if (content != null)
+		{
 			moduleTc(content);
 		}
 	}
 
 	private void moduleTc(String module) throws ParserException, LexException,
-			IOException {
+			IOException
+	{
 		System.out.flush();
 		System.err.flush();
 
 		List<AModuleModules> modules = null;
-		try {
+		try
+		{
 			modules = parse(file);
-		} catch (ParserException e) {
+		} catch (ParserException e)
+		{
 			isParseOk = false;
-		} catch (LexException e) {
+		} catch (LexException e)
+		{
 			isParseOk = false;
 		}
 
-		if (isParseOk) {
+		if (isParseOk)
+		{
 
 			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
 			mtc.typeCheck();
 
-			if (TypeChecker.getErrorCount() == 0) {
-				for (AModuleModules aModule : modules) {
-					proofObligation.addAll(aModule.apply(new PogVisitor(),
-							new POContextStack()));
+			if (TypeChecker.getErrorCount() == 0)
+			{
+				for (AModuleModules aModule : modules)
+				{
+					proofObligation.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
 				}
 			}
 
@@ -178,42 +215,54 @@ public class ModuleTestCase extends TestCase {
 		expectedProofObligations = getExpectedProofObligations();
 
 		// fail if expected and actual number of po's are different
-		if (expectedProofObligations.size() != proofObligation.size()) {
-			System.out
-					.println("Different number of ProofObligations: (Expected: "
-							+ expectedProofObligations.size()
-							+ ", Actual: "
-							+ proofObligation.size()
-							+ ")\n---- Expected ----\n");
+		if (expectedProofObligations.size() != proofObligation.size())
+		{
+			System.out.println("Different number of ProofObligations: (Expected: "
+					+ expectedProofObligations.size()
+					+ ", Actual: "
+					+ proofObligation.size() + ")\n---- Expected ----\n");
 			for (String s : expectedProofObligations)
 				System.out.println(s + "\n");
 			System.out.println("\n------ Actual -----\n");
 			for (ProofObligation po : proofObligation)
 				System.out.println(makePoString(po) + "\n");
 			System.out.println(file.toURL());
-			throw new RuntimeException(
-					"The number of generated proof obligations are different from the actually encountered proof obligations. Expected: "
-							+ expectedProofObligations.size()
-							+ ", Actual: "
-							+ proofObligation.size());
+			throw new RuntimeException("The number of generated proof obligations are different from the actually encountered proof obligations. Expected: "
+					+ expectedProofObligations.size()
+					+ ", Actual: "
+					+ proofObligation.size());
 		}
 		// for each po found by our PoGVisitor check that it is among the
 		// expected po's
-		for (ProofObligation po : proofObligation) {
+		for (ProofObligation po : proofObligation)
+		{
 
-			String poString = makePoString(po);
+			String poString = makePoString(po).trim();
+			boolean poFound = false;
+			for (String s : expectedProofObligations)
+			{
+				if (isPermutationOf(s, poString))
+				{
+					poFound = true;
+					break;
+				}
+			}
 
-			if (!expectedProofObligations.contains(poString.trim()))
-				throw new RuntimeException(
-						"Proof obligation expected was not there: \n"
-								+ poString + "\nin\n"
-								+ expectedProofObligations);
+			if (!poFound)
+			{
+				System.out.println(po.toString());
+				throw new RuntimeException("Proof obligation from AST_v2: \n"
+						+ poString
+						+ "\nis not in the expected list VDMJ produces:\n"
+						+ expectedProofObligations);
+			}
 		}
 
 	}
 
 	private List<AModuleModules> parse(File file) throws ParserException,
-			LexException {
+			LexException
+	{
 		// if (file != null)
 		// {
 		return internal(new LexTokenReader(file, Settings.dialect));
@@ -224,15 +273,18 @@ public class ModuleTestCase extends TestCase {
 	}
 
 	protected List<AModuleModules> internal(LexTokenReader ltr)
-			throws ParserException, LexException {
+			throws ParserException, LexException
+	{
 		ModuleReader reader = null;
 		List<AModuleModules> result = null;
 		String errorMessages = "";
-		try {
+		try
+		{
 			reader = getReader(ltr);
 			result = read(reader);
 
-			if (reader != null && reader.getErrorCount() > 0) {
+			if (reader != null && reader.getErrorCount() > 0)
+			{
 				// perrs += reader.getErrorCount();
 				StringWriter s = new StringWriter();
 				reader.printErrors(new PrintWriter(s));// new
@@ -242,13 +294,15 @@ public class ModuleTestCase extends TestCase {
 			}
 			assertEquals(errorMessages, 0, reader.getErrorCount());
 
-			if (reader != null && reader.getWarningCount() > 0) {
+			if (reader != null && reader.getWarningCount() > 0)
+			{
 				// pwarn += reader.getWarningCount();
 				// reader.printWarnings(new PrintWriter(System.out));
 			}
 
 			return result;
-		} finally {
+		} finally
+		{
 			// if (!hasRunBefore())
 			// {
 			// setHasRunBefore(true);
@@ -269,11 +323,13 @@ public class ModuleTestCase extends TestCase {
 		}
 	}
 
-	private List<AModuleModules> read(ModuleReader reader) {
+	private List<AModuleModules> read(ModuleReader reader)
+	{
 		return reader.readModules();
 	}
 
-	private ModuleReader getReader(LexTokenReader ltr) {
+	private ModuleReader getReader(LexTokenReader ltr)
+	{
 		return new ModuleReader(ltr);
 	}
 
