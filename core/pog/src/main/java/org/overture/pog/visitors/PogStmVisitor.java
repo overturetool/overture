@@ -442,6 +442,7 @@ public class PogStmVisitor extends
 		{
 			question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(localDef)));
 			obligations.addAll(localDef.apply(rootVisitor, question));
+			question.pop();
 		}
 
 		question.push(new POScopeContext());

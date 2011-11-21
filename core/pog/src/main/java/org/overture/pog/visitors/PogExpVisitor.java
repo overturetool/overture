@@ -418,7 +418,7 @@ public class PogExpVisitor extends
 	@Override
 	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question)
 	{
-		ProofObligationList obligations = node.getTest().apply(this,question);
+		ProofObligationList obligations = node.getTest().apply(this, question);
 
 		question.push(new POImpliesContext(node.getTest()));
 		obligations.addAll(node.getThen().apply(this, question));
@@ -1413,12 +1413,12 @@ public class PogExpVisitor extends
 		PType ltype = left.getType();
 		PType rtype = right.getType();
 
-		if (ltype instanceof AUnionType)
+		if (PTypeAssistant.isUnion(ltype))
 		{
 			obligations.add(new SubTypeObligation(left, new ARealNumericBasicType(left.getLocation(), false), ltype, question));
 		}
 
-		if (rtype instanceof AUnionType)
+		if (PTypeAssistant.isUnion(rtype))
 		{
 			obligations.add(new SubTypeObligation(right, new ARealNumericBasicType(right.getLocation(), false), rtype, question));
 		}
