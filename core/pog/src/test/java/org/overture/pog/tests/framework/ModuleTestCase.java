@@ -226,7 +226,7 @@ public class ModuleTestCase extends TestCase
 			System.out.println("\n------ Actual -----\n");
 			for (ProofObligation po : proofObligation)
 				System.out.println(makePoString(po) + "\n");
-			System.out.println(file.toURL());
+
 			throw new RuntimeException("The number of generated proof obligations are different from the actually encountered proof obligations. Expected: "
 					+ expectedProofObligations.size()
 					+ ", Actual: "
