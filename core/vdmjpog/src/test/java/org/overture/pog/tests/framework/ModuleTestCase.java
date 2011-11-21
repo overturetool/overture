@@ -27,7 +27,8 @@ import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.util.Base64;
 
-public class ModuleTestCase extends BasicTypeCheckTestCase {
+public class ModuleTestCase extends BasicTypeCheckTestCase
+{
 
 	public static final String tcHeader = "-- TCErrors:";
 
@@ -40,12 +41,14 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 	private boolean generateResultOutput = true;
 	private ProofObligationList proofObligations = new ProofObligationList();
 
-	public ModuleTestCase() {
+	public ModuleTestCase()
+	{
 		super("test");
 
 	}
 
-	public ModuleTestCase(File file) {
+	public ModuleTestCase(File file)
+	{
 		super("test");
 		this.parserType = ParserType.Module;
 		this.file = file;
@@ -53,21 +56,25 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 	}
 
 	@Override
-	protected void setUp() throws Exception {
+	protected void setUp() throws Exception
+	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}
 
-	public void test() throws ParserException, LexException, IOException {
-		if (content != null) {
+	public void test() throws ParserException, LexException, IOException
+	{
+		if (content != null)
+		{
 			moduleTc(content);
 		}
 	}
 
 	private void moduleTc(String expressionString) throws ParserException,
-			LexException, IOException {
+			LexException, IOException
+	{
 		System.out.flush();
 		System.err.flush();
 		insertTCHeader();
@@ -82,7 +89,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		boolean parseIsOk = ModuleTypeChecker.getErrorCount() == 0;
 
 		String errorMessages = null;
-		if (TypeChecker.getErrorCount() > 0) {
+		if (TypeChecker.getErrorCount() > 0)
+		{
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
 			TypeChecker.printErrors(new PrintWriter(s));// new
@@ -93,7 +101,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 		// assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
 
-		if (showWarnings && TypeChecker.getWarningCount() > 0) {
+		if (showWarnings && TypeChecker.getWarningCount() > 0)
+		{
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
 			TypeChecker.printWarnings(new PrintWriter(s));// new
@@ -102,8 +111,10 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 			System.out.println(s.toString());
 		}
 
-		if (parseIsOk) {
-			for (Module m : modules) {
+		if (parseIsOk)
+		{
+			for (Module m : modules)
+			{
 				proofObligations.addAll(m.getProofObligations());
 			}
 		}
@@ -112,17 +123,20 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	}
 
-	private void printFile(File file) throws IOException {
+	private void printFile(File file) throws IOException
+	{
 		FileReader in = new FileReader(file);
 		BufferedReader br = new BufferedReader(in);
 		String line = null;
-		while ((line = br.readLine()) != null) {
+		while ((line = br.readLine()) != null)
+		{
 			System.out.println(line);
 		}
 
 	}
 
-	private void insertTCHeader() throws IOException {
+	private void insertTCHeader() throws IOException
+	{
 		if (!file.exists())
 			return;
 		FileReader in = new FileReader(file);
@@ -131,19 +145,23 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		Vector<String> lines = new Vector<String>();
 		String line = null;
 
-		while ((line = br.readLine()) != null) {
+		while ((line = br.readLine()) != null)
+		{
 			lines.add(line);
 		}
 
 		in.close();
 
-		if (lines.size() > 0) {
+		if (lines.size() > 0)
+		{
 			String firstLine = lines.get(0);
-			if (!firstLine.startsWith(tcHeader)) {
+			if (!firstLine.startsWith(tcHeader))
+			{
 				BufferedWriter out = new BufferedWriter(new FileWriter(file));
 				out.write(tcHeader);
 				out.newLine();
-				for (String string : lines) {
+				for (String string : lines)
+				{
 					out.write(string);
 					out.write("\n");
 				}
@@ -154,7 +172,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	}
 
-	private void printTCHeader() throws IOException {
+	private void printTCHeader() throws IOException
+	{
 		if (!file.exists())
 			return;
 		FileReader in = new FileReader(file);
@@ -163,18 +182,21 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		Vector<String> lines = new Vector<String>();
 		String line = null;
 
-		while ((line = br.readLine()) != null) {
+		while ((line = br.readLine()) != null)
+		{
 			lines.add(line);
 		}
 
 		in.close();
 
-		if (lines.size() > 1) {
+		if (lines.size() > 1)
+		{
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			out.write(getTCHeader());
 			out.newLine();
 			int i = 1;
-			for (; i < lines.size() - 1; i++) {
+			for (; i < lines.size() - 1; i++)
+			{
 				out.write(lines.get(i));
 				out.write("\n");
 			}
@@ -186,11 +208,13 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	}
 
-	private String getTCHeader() {
+	private String getTCHeader()
+	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(tcHeader);
 
-		for (VDMError error : TypeChecker.getErrors()) {
+		for (VDMError error : TypeChecker.getErrors())
+		{
 			sb.append(" ERROR:");
 			sb.append(error.number);
 			sb.append(":");
@@ -200,7 +224,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 		}
 
-		for (VDMWarning error : TypeChecker.getWarnings()) {
+		for (VDMWarning error : TypeChecker.getWarnings())
+		{
 			sb.append(" WARNING:");
 			sb.append(error.number);
 			sb.append(":");
@@ -210,11 +235,11 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 		}
 
-		for (ProofObligation po : proofObligations) {
-			String poString = "|" + po.name + "," + po.number + "," + po.value
-					+ "," + po.kind + "," + po.proof + "," + po.status + "|";
-			StringBuffer poAsB64 = Base64.encode(poString.getBytes(Charset
-					.forName("UTF-8")));
+		for (ProofObligation po : proofObligations)
+		{
+			String poString = "|" + po.name + "," + po.value + "," + po.kind
+					+ "," + po.proof + "," + po.status + "|";
+			StringBuffer poAsB64 = Base64.encode(poString.getBytes(Charset.forName("UTF-8")));
 			sb.append(" PROOFOBLIGATION: ");
 			sb.append(poAsB64);
 		}
@@ -223,7 +248,8 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	}
 
-	public String getName() {
+	public String getName()
+	{
 
 		return file.getName();
 	}
