@@ -75,42 +75,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->#Unary->unaryMinus ="(- "  [exp]+")"
 %exp->#Unary->unaryPlus ="(+ "  [exp]+")"
 
-%exp->#binary->comp = "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->domainResBy = "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->domainResTo = "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->equals = "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->inSet = "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->mapUnion = "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->notEqual =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->notInSet =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->plusPlus =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->properSubset =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->rangeResBy =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->rangeResTo =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->seqConcat =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->setDifference =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->setIntersect =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->setUnion =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->starStar =  "(" [left] " " + [op] + " " + [right] + ")"
-%exp->#binary->subset =  "(" [left] " " + [op] + " " + [right] + ")"
-
-
-%exp->#binary->#Boolean->and = [left] "and" [right]
-%exp->#binary->#Boolean->equivalent = [left] "<=>" [right]
-%exp->#binary->#Boolean->implies = [left] "=>" [right]
-%exp->#binary->#Boolean->or = [left] "or" [right]
-
-%exp->#binary->#Numeric->div = [left] "div" [right]
-%exp->#binary->#Numeric->divide = [left] "/" [right]
-%exp->#binary->#Numeric->greaterEqual = [left] ">=" [right]
-%exp->#binary->#Numeric->greater = "(" [left] " > " [right] ")"
-%exp->#binary->#Numeric->lessEqual = [left] "<=" [right]
-%exp->#binary->#Numeric->less = "(" [left] " < " [right] ")"
-%exp->#binary->#Numeric->mod = [left] "mod" [right]
-%exp->#binary->#Numeric->plus = [left] "+" [right]
-%exp->#binary->#Numeric->rem = [left] "rem" [right]
-%exp->#binary->#Numeric->substract = "(" [left] " - " [right] ")"
-%exp->#binary->#Numeric->times = [left] "*" [right]
+%exp->#binary = "(" + [left] " " + [op] + " " [right] + ")"
 
 %exp->#Map->mapComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
 %exp->#Map->mapEnum = "{" + $Utils.listToString($[members]$)$ + "}"
