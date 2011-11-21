@@ -277,3 +277,4 @@ import org.overturetool.util.ToStringUtil;
 //Binds
 %multipleBind->set = ""+ $Utils.listToString($[plist]$)$ + " in set " [set];
 %multipleBind->type = "" + $Utils.listToString($[plist]$)$ + ":" [type]
+%bind->set = ""+ [pattern] + " in set " [set];
