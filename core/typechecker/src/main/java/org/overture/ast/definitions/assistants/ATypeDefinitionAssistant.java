@@ -95,6 +95,9 @@ public class ATypeDefinitionAssistant {
 				TypeCheckerErrors.report(3050, "Type '" + d.getName() + "' is infinite",d.getLocation(),d);
 			}
 
+			//set type before in case the invdef uses a type defined in this one
+			d.setType(d.getInvType());
+			
 			if (d.getInvdef() != null)
 			{
 				PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
