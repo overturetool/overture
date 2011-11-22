@@ -41,7 +41,6 @@ abstract public class ProofObligation implements Comparable<ProofObligation>
 	public ProofObligation(LexLocation location, POType kind,
 			POContextStack ctxt)
 	{
-		int a;
 		this.location = location;
 		this.kind = kind;
 		this.name = ctxt.getName();

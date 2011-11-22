@@ -598,6 +598,7 @@ public class PogExpVisitor extends
 	public ProofObligationList caseAMapletExp(AMapletExp node,
 			POContextStack question)
 	{
+
 		ProofObligationList obligations = node.getLeft().apply(this, question);
 		obligations.addAll(node.getRight().apply(this, question));
 		return obligations;
@@ -616,11 +617,11 @@ public class PogExpVisitor extends
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
-		Queue<PExp> args = node.getArgs();
+		Queue<PExp> args = (Queue<PExp>) node.getArgs().clone();
 		for (PExp arg : args)
 			obligations.addAll(arg.apply(this, question));
 
-		Queue<PType> argTypes = node.getArgTypes();
+		Queue<PType> argTypes = (Queue<PType>) node.getArgTypes().clone();
 
 		ARecordInvariantType recordType = node.getRecordType();
 		for (AFieldField f : recordType.getFields())
@@ -941,7 +942,12 @@ public class PogExpVisitor extends
 	public ProofObligationList caseAMapInverseUnaryExp(
 			AMapInverseUnaryExp node, POContextStack question)
 	{
-		return node.getExp().apply(this, question);
+		ProofObligationList obligations = node.getExp().apply(this, question);
+		if (!node.getMapType().getEmpty())
+		{
+			obligations.add(new org.overture.pog.obligations.InvariantObligation(node, question));
+		}
+		return obligations;
 	}
 
 	@Override
@@ -1243,14 +1249,16 @@ public class PogExpVisitor extends
 		PExp lExp = node.getLeft();
 		PType lType = lExp.getType();
 
-		if (lType instanceof AFunctionType)
+		if (PTypeAssistant.isFunction(lType))
 		{
-
-			throw new RuntimeException("How do I get the left.preName (see StarStarExpression in vdmj) ?");
-			// String preName = lExp.getPre
+			String preName = PExpAssistant.getPreName(lExp);
+			if (preName == null || !preName.equals(""))
+			{
+				obligations.add(new org.overture.pog.obligations.FuncIterationObligation(node, preName, question));
+			}
 		}
 
-		if (lType instanceof SMapType)
+		if (PTypeAssistant.isMap(lType))
 		{
 			obligations.add(new MapIterationObligation(node, question));
 		}
