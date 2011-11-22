@@ -1587,7 +1587,7 @@ public class PogExpVisitor extends
 
 		if (finiteTest)
 		{
-			obligations.addAll(predicate.apply(this, question));
+			obligations.add(new org.overture.pog.obligations.FiniteSetObligation(node, node.getSetType(), question));
 		}
 
 		if (predicate != null)
