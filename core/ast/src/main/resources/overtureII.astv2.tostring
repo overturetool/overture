@@ -133,8 +133,8 @@ import org.overturetool.util.ToStringUtil;
 %pattern->quote = [value]
 %pattern->real = [value]
 %pattern->record = "mk_" [typename]  "(" + $Utils.listToString($[plist]$)$ + ")"
-%pattern->seq = "[" [plist] "]"
-%pattern->set = "{" [plist] "}"
+%pattern->seq = [plist]
+%pattern->set = "{" + $Utils.listToString($[plist]$)$ + "}"
 %pattern->string = [value]
 %pattern->tuple = "mk_"  "(" + $Utils.listToString($[plist]$)$ + ")"
 %pattern->union = [left] " union " [right]
