@@ -72,7 +72,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->#Unary->powerSet ="(power "  [exp]+")"
 %exp->#Unary->reverse ="(reverse "  [exp]+")"
 %exp->#Unary->tail ="(tl "  [exp]+")"
-%exp->#Unary->unaryMinus ="(- "  [exp]+")"
+%exp->#Unary->unaryMinus ="-"  [exp]+""
 %exp->#Unary->unaryPlus ="(+ "  [exp]+")"
 
 %exp->#binary = "(" + [left] " " + [op] + " " [right] + ")"
