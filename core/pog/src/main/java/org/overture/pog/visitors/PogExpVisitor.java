@@ -51,6 +51,7 @@ import org.overture.pog.obligations.RecursiveObligation;
 import org.overture.pog.obligations.SeqApplyObligation;
 import org.overture.pog.obligations.SubTypeObligation;
 import org.overture.pog.obligations.TupleSelectObligation;
+import org.overture.pog.obligations.UniqueExistenceObligation;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -454,7 +455,13 @@ public class PogExpVisitor extends
 	public ProofObligationList caseAIotaExp(AIotaExp node,
 			POContextStack question)
 	{
-		return new ProofObligationList();
+		ProofObligationList obligations = node.getBind().apply(rootVisitor, question);
+		obligations.add(new UniqueExistenceObligation(node, question));
+
+		question.push(new POForAllContext(node));
+		obligations.addAll(node.getPredicate().apply(this, question));
+		question.pop();
+		return obligations;
 	}
 
 	@Override
