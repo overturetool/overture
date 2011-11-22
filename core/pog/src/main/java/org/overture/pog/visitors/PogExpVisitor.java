@@ -598,7 +598,9 @@ public class PogExpVisitor extends
 	public ProofObligationList caseAMapletExp(AMapletExp node,
 			POContextStack question)
 	{
-		return super.caseAMapletExp(node, question);
+		ProofObligationList obligations = node.getLeft().apply(this, question);
+		obligations.addAll(node.getRight().apply(this, question));
+		return obligations;
 	}
 
 	@Override
@@ -1275,13 +1277,13 @@ public class PogExpVisitor extends
 		PExp rExp = node.getRight();
 		PType rType = rExp.getType();
 
-		if (lType instanceof AUnionType)
+		if (PTypeAssistant.isUnion(lType))
 		{
 
 			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType)
+		if (PTypeAssistant.isUnion(rType))
 		{
 			question.push(new POImpliesContext(lExp));
 			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
