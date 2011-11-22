@@ -8,6 +8,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.expressions.*;
 import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.patterns.AIgnorePattern;
@@ -43,6 +44,7 @@ import org.overture.pog.obligations.POForAllContext;
 import org.overture.pog.obligations.POForAllPredicateContext;
 import org.overture.pog.obligations.POImpliesContext;
 import org.overture.pog.obligations.POLetDefContext;
+import org.overture.pog.obligations.PONameContext;
 import org.overture.pog.obligations.PONotImpliesContext;
 import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
@@ -550,7 +552,11 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (PDefinition def : node.getLocalDefs())
+		{
+			question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(def)));
 			obligations.addAll(def.apply(rootVisitor, question));
+			question.pop();
+		}
 
 		question.push(new POLetDefContext(node));
 		obligations.addAll(node.getExpression().apply(this, question));
