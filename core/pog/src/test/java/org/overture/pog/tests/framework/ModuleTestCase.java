@@ -250,7 +250,9 @@ public class ModuleTestCase extends TestCase
 
 			if (!poFound)
 			{
-				System.out.println(po.toString());
+				System.out.println(poString);
+				System.out.println("Not Found IN:");
+				System.out.println(expectedProofObligations);
 				throw new RuntimeException("Proof obligation from AST_v2: \n"
 						+ poString
 						+ "\nis not in the expected list VDMJ produces:\n"

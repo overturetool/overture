@@ -27,7 +27,6 @@ import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 
-
 public class CasesExhaustiveObligation extends ProofObligation
 {
 	public CasesExhaustiveObligation(ACasesExp exp, POContextStack ctxt)
@@ -36,7 +35,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		StringBuilder sb = new StringBuilder();
 		String prefix = "";
 
-		for (ACaseAlternative alt: exp.getCases())
+		for (ACaseAlternative alt : exp.getCases())
 		{
 			sb.append(prefix);
 
@@ -45,18 +44,17 @@ public class CasesExhaustiveObligation extends ProofObligation
 				sb.append(exp.getExpression());
 				sb.append(" = ");
 				sb.append(alt.getPattern());
-			}
-			else
+			} else
 			{
-	    		sb.append("(exists ");
-	    		sb.append(alt.getPattern());
-	    		sb.append(":");
-	    		sb.append(exp.getType());
-	    		sb.append(" & ");
-	    		sb.append(exp.getExpression());
-	    		sb.append(" = ");
-	    		sb.append(alt.getPattern());
-	    		sb.append(")");
+				sb.append("(exists ");
+				sb.append(alt.getPattern());
+				sb.append(":");
+				sb.append(exp.getExpression().getType());
+				sb.append(" & ");
+				sb.append(exp.getExpression());
+				sb.append(" = ");
+				sb.append(alt.getPattern());
+				sb.append(")");
 			}
 
 			prefix = " or ";
