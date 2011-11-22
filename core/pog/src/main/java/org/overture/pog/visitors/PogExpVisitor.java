@@ -232,7 +232,7 @@ public class PogExpVisitor extends
 		for (PMultipleBind mb : node.getBindings())
 		{
 			obligations.addAll(mb.apply(rootVisitor, question));
-			if (mb instanceof PMultipleBind)
+			if (mb instanceof ATypeMultipleBind)
 				finiteTest = true;
 		}
 
