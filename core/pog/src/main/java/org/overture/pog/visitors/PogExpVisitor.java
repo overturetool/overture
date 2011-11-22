@@ -23,7 +23,6 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.pog.obligations.CasesExhaustiveObligation;
 import org.overture.pog.obligations.FiniteMapObligation;
@@ -1182,7 +1181,7 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = handleBinaryExpression(node, question);
 		PType lType = node.getLeft().getType();
 
-		if (lType instanceof SSeqType)
+		if (PTypeAssistant.isSeq(lType))
 		{
 			obligations.add(new org.overture.pog.obligations.SeqModificationObligation(node, question));
 		}
