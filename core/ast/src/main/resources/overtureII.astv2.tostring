@@ -8,7 +8,7 @@ import org.overturetool.util.ToStringUtil;
 
 %exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
 %exp->boolean_const =  [value] 
-%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "\n") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
+%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
 %exp->charLiteral =  "'" + $_value.unicode$ + "'" 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
