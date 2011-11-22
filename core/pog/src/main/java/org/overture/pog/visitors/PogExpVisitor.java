@@ -400,9 +400,7 @@ public class PogExpVisitor extends
 	public ProofObligationList caseAFuncInstatiationExp(
 			AFuncInstatiationExp node, POContextStack question)
 	{
-		// TODO RWL Hmm, what to do here?
-		throw new RuntimeException("I did'nt know what to do there.");
-		// return super.caseAFuncInstatiationExp(node, question);
+		return node.getFunction().apply(this, question);
 	}
 
 	@Override
@@ -648,7 +646,7 @@ public class PogExpVisitor extends
 	// RWL See [1] pg. 56
 	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question)
 	{
-		ProofObligationList obligations = node.getRecord().apply(rootVisitor,question);
+		ProofObligationList obligations = node.getRecord().apply(rootVisitor, question);
 		Queue<ARecordModifier> modifiers = node.getModifiers();
 		ARecordInvariantType recordType = node.getRecordType();
 		Queue<PType> mTypes = node.getModTypes();
