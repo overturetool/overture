@@ -987,7 +987,10 @@ public class PogExpVisitor extends
 	public ProofObligationList caseATailUnaryExp(ATailUnaryExp node,
 			POContextStack question)
 	{
-		return node.getExp().apply(this, question);
+		ProofObligationList obligations = node.getExp().apply(this, question);
+		obligations.add(new NonEmptySeqObligation(node.getExp(), question));
+
+		return obligations;
 	}
 
 	@Override
