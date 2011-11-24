@@ -235,6 +235,7 @@ public class ModuleTestCase extends TestCase
 			actualPos.add(makePoString(po));
 
 		List<Pair<String, String, Integer>> ratedStuff = new LinkedList<Pair<String, String, Integer>>();
+		List<String> okayPos = new LinkedList<String>();
 
 		String more = "";
 		int count = 0;
@@ -249,6 +250,7 @@ public class ModuleTestCase extends TestCase
 
 				if (isPermutationOf(poExp, poAct))
 				{
+					okayPos.add(poExp);
 					differenceExists = false;
 					break;
 				}
@@ -277,11 +279,14 @@ public class ModuleTestCase extends TestCase
 
 		}
 
-		System.out.println("Proof obligations expected: "
-				+ expectedProofObligations.size() + " actual: "
-				+ actualPos.size() + " of these actual proof obligations "
-				+ ratedStuff.size() + " mismatched. " + more + "\n\n");
+		expectedProofObligations.retainAll(okayPos);
 
+		System.out.println("Proof obligations expected: " + expPoSize
+				+ " actual: " + actPoSize
+				+ " of these actual proof obligations " + ratedStuff.size()
+				+ " mismatched. " + more + "\n\n");
+
+		// Report all the matched proof obligations
 		if (ratedStuff.size() > 0)
 		{
 			System.out.println("Mismatched po's with best match: ");
@@ -298,10 +303,20 @@ public class ModuleTestCase extends TestCase
 			}
 		}
 
+		// Report all not matched proof obligations
+		if (expPoSize > actPoSize)
+		{
+			System.out.println("These proof obligations were not matched at all: ");
+			System.out.println("------------------------------------------------ ");
+			for (String p : expectedProofObligations)
+				System.out.println("\n" + p + "\n");
+		}
+
 		if (ratedStuff.size() > 0 || expPoSize != actPoSize)
 			throw new RuntimeException("Proof obligation mismatch - Expected: "
 					+ expPoSize + " Actual: " + actPoSize + " Mismatching: "
 					+ ratedStuff.size());
+
 	}
 
 	private List<AModuleModules> parse(File file) throws ParserException,
