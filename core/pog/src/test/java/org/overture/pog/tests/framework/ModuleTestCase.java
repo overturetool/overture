@@ -213,53 +213,95 @@ public class ModuleTestCase extends TestCase
 		// (the file)
 		List<String> expectedProofObligations;
 		expectedProofObligations = getExpectedProofObligations();
+		int expPoSize = expectedProofObligations.size();
+		int actPoSize = proofObligation.size();
 
-		// fail if expected and actual number of po's are different
-		if (expectedProofObligations.size() != proofObligation.size())
+		class Pair<V, K, Z>
 		{
-			System.out.println("Different number of ProofObligations: (Expected: "
-					+ expectedProofObligations.size()
-					+ ", Actual: "
-					+ proofObligation.size() + ")\n---- Expected ----\n");
-			for (String s : expectedProofObligations)
-				System.out.println(s + "\n");
-			System.out.println("\n------ Actual -----\n");
-			for (ProofObligation po : proofObligation)
-				System.out.println(makePoString(po) + "\n");
+			public V first;
+			public K middle;
+			public Z last;
 
-			throw new RuntimeException("The number of generated proof obligations are different from the actually encountered proof obligations. Expected: "
-					+ expectedProofObligations.size()
-					+ ", Actual: "
-					+ proofObligation.size());
-		}
-		// for each po found by our PoGVisitor check that it is among the
-		// expected po's
-		for (ProofObligation po : proofObligation)
-		{
-
-			String poString = makePoString(po).trim();
-			boolean poFound = false;
-			for (String s : expectedProofObligations)
+			Pair(V v, K k, Z z)
 			{
-				if (isPermutationOf(s, poString))
+				this.first = v;
+				this.middle = k;
+				this.last = z;
+			}
+		}
+
+		List<String> actualPos = new LinkedList<String>();
+		for (ProofObligation po : proofObligation)
+			actualPos.add(makePoString(po));
+
+		List<Pair<String, String, Integer>> ratedStuff = new LinkedList<Pair<String, String, Integer>>();
+
+		String more = "";
+		int count = 0;
+		for (String poAct : actualPos)
+		{
+			boolean differenceExists = false;
+			int min = Integer.MAX_VALUE;
+
+			String minExpPo = null;
+			for (String poExp : expectedProofObligations)
+			{
+
+				if (isPermutationOf(poExp, poAct))
 				{
-					poFound = true;
+					differenceExists = false;
 					break;
 				}
+
+				differenceExists = true;
+				int rate = editDistance(poAct, poExp);
+				if (rate < min)
+				{
+					minExpPo = poExp;
+					min = rate;
+				}
+
+			}
+			if (differenceExists)
+			{
+				ratedStuff.add(new Pair<String, String, Integer>(poAct, minExpPo, min));
+				expectedProofObligations.remove(minExpPo);
+				count++;
 			}
 
-			if (!poFound)
+			if (count > 9)
 			{
-				System.out.println(poString);
-				System.out.println("Not Found IN:");
-				System.out.println(expectedProofObligations);
-				throw new RuntimeException("Proof obligation from AST_v2: \n"
-						+ poString
-						+ "\nis not in the expected list VDMJ produces:\n"
-						+ expectedProofObligations);
+				more = " And there are more...";
+				break;
+			}
+
+		}
+
+		System.out.println("Proof obligations expected: "
+				+ expectedProofObligations.size() + " actual: "
+				+ actualPos.size() + " of these actual proof obligations "
+				+ ratedStuff.size() + " mismatched. " + more + "\n\n");
+
+		if (ratedStuff.size() > 0)
+		{
+			System.out.println("Mismatched po's with best match: ");
+			for (Pair<String, String, Integer> p : ratedStuff)
+			{
+				System.out.println("Expected proof obligation:");
+				System.out.println("--------------------------");
+				System.out.println(p.middle);
+				System.out.println("Matched actual proof obligation (" + p.last
+						+ "):");
+				System.out.println("--------------------------");
+				System.out.println(p.first);
+				System.out.println();
 			}
 		}
 
+		if (ratedStuff.size() > 0 || expPoSize != actPoSize)
+			throw new RuntimeException("Proof obligation mismatch - Expected: "
+					+ expPoSize + " Actual: " + actPoSize + " Mismatching: "
+					+ ratedStuff.size());
 	}
 
 	private List<AModuleModules> parse(File file) throws ParserException,
@@ -333,6 +375,42 @@ public class ModuleTestCase extends TestCase
 	private ModuleReader getReader(LexTokenReader ltr)
 	{
 		return new ModuleReader(ltr);
+	}
+
+	private static int editDistance(String n, String m)
+	{
+		int nl = n.length();
+		int ml = m.length();
+		char na[] = n.toCharArray();
+		char ma[] = m.toCharArray();
+
+		if (nl == 0)
+			return ml;
+		if (ml == 0)
+			return nl;
+
+		int[][] dp = new int[nl + 1][ml + 1];
+		for (int i = 0; i < nl + 1; i++)
+			dp[i][0] = i;
+
+		for (int i = 0; i < ml + 1; i++)
+			dp[0][i] = i;
+
+		dp[0][0] = -200;
+
+		for (int ni = 1; ni < nl + 1; ni++)
+		{
+			for (int mi = 1; mi < ml + 1; mi++)
+			{
+				int cost = na[ni - 1] == ma[mi - 1] ? -4 : 2;
+				int leftOf = dp[ni - 1][mi] + 2;
+				int topOf = (dp[ni][mi - 1]) + 2;
+				int diagOf = dp[ni - 1][mi - 1] + cost;
+				dp[ni][mi] = Math.min(leftOf, Math.min(topOf, diagOf));
+			}
+		}
+
+		return dp[nl][ml];
 	}
 
 }
