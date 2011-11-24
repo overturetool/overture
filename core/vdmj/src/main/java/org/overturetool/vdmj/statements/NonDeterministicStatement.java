@@ -25,6 +25,13 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.TypeSet;
+import org.overturetool.vdmj.types.UnionType;
+import org.overturetool.vdmj.types.VoidReturnType;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.Value;
 
 public class NonDeterministicStatement extends SimpleBlockStatement
@@ -34,6 +41,59 @@ public class NonDeterministicStatement extends SimpleBlockStatement
 	public NonDeterministicStatement(LexLocation location)
 	{
 		super(location);
+	}
+
+	@Override
+	public Type typeCheck(Environment env, NameScope scope)
+	{
+		TypeSet rtypes = new TypeSet();
+		int rcount = 0;
+
+		for (Statement stmt: statements)
+		{
+			Type stype = stmt.typeCheck(env, scope);
+
+			if (stype instanceof UnionType)
+			{
+				UnionType ust = (UnionType)stype;
+
+				for (Type t: ust.types)
+				{
+					if (addOne(rtypes, t)) rcount++;
+				}
+			}
+			else
+			{
+				if (addOne(rtypes, stype)) rcount++;
+			}
+		}
+		
+		if (rcount > 1)
+		{
+			warning(5016, "Some statements will not be reached");
+		}
+
+		return rtypes.isEmpty() ?
+			new VoidType(location) : rtypes.getType(location);
+	}
+
+	private boolean addOne(TypeSet rtypes, Type add)
+	{
+		if (add instanceof VoidReturnType)
+		{
+			rtypes.add(new VoidType(add.location));
+			return true;
+		}
+		else if (!(add instanceof VoidType))
+		{
+			rtypes.add(add);
+			return true;
+		}
+		else
+		{
+			rtypes.add(add);
+			return false;
+		}
 	}
 
 	@Override
