@@ -25,6 +25,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.pog.assistants.PDefinitionAssistantPOG;
 import org.overture.pog.obligations.CasesExhaustiveObligation;
 import org.overture.pog.obligations.FiniteMapObligation;
 import org.overture.pog.obligations.FuncComposeObligation;
@@ -568,14 +569,8 @@ public class PogExpVisitor extends
 	@Override
 	public ProofObligationList caseADefExp(ADefExp node, POContextStack question)
 	{
-
-		ProofObligationList obligations = new ProofObligationList();
-		List<PDefinition> localDefs = node.getLocalDefs();
-		for (PDefinition def : localDefs)
-		{
-			obligations.addAll(def.apply(rootVisitor, question));
-		}
-
+		ProofObligationList obligations = PDefinitionAssistantPOG.getProofObligations(node.getLocalDefs(), rootVisitor, question);
+		
 		// RWL Question, are we going
 		question.push(new PODefContext(node));
 		obligations.addAll(node.getExpression().apply(this, question));
