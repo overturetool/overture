@@ -30,7 +30,7 @@ import org.overturetool.util.ToStringUtil;
 %exp->maplet = [left] + " |-> " + [right]
 %exp->mkBasic = "mk_" + [type] + "(" + [arg] + ")"
 %exp->mkType = "mk_" [typeName] "(" + $Utils.listToString($[args]$)$ + ")"
-%exp->mu  = "mu(" [recordType] ", " + $Utils.listToString($[modifiers]$)$ + ")"
+%exp->mu  = "mu(" [record] ", " + $Utils.listToString($[modifiers]$)$ + ")"
 %exp->new = "new " [className] "("+ $Utils.listToString($[args]$)$ + ")"
 %exp->nil = "nil"
 %exp->postOp = [postexpression]
@@ -110,7 +110,7 @@ import org.overturetool.util.ToStringUtil;
 %type->optional = "[" [type] "]"
 %type->parameter = "@" [name]
 %type->product = "" +$Utils.listToString("(",$ [types] $, " * ", ")")$
-%type->quote = "<" [value] ">"
+%type->quote = [value] 
 %type->#seq->seq = ""+ $($[empty]$ ? "[]" : "seq of (" + $  [seqof] $+ ")" )$ 
 %type->#seq->seq1 = "seq1 of (" + [seqof] + ")"
 %type->set = ""+ $($[empty]$ ? "{}" : "set of (" +$ [setof]$ + ")")$
@@ -244,3 +244,7 @@ import org.overturetool.util.ToStringUtil;
 %multipleBind->type = "" + $Utils.listToString($[plist]$)$ + ":" [type]
 %bind->set = ""+ [pattern] + " in set " [set];
 %bind->type = "" + [pattern] + ":" + [type];
+
+// Modifiers
+
+%modifier->record = [tag] " |-> " [value];
