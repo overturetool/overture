@@ -310,7 +310,7 @@ public class PogExpVisitor extends
 
 		ProofObligationList obligations = new ProofObligationList();
 		question.push(new POImpliesContext(node.getElseIf()));
-		node.getThen().apply(this, question);
+		obligations.addAll(node.getThen().apply(this, question));
 		question.pop();
 
 		return obligations;
