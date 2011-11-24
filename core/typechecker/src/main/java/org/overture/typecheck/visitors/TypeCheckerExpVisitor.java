@@ -1718,7 +1718,7 @@ public class TypeCheckerExpVisitor extends
 			{
 				PDefinitionAssistantTC.implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, rootVisitor, new TypeCheckInfo(local, question.scope, question.qualifiers));
-				d.apply(rootVisitor, question);
+				d.apply(rootVisitor, new TypeCheckInfo(local, question.scope, question.qualifiers));
 				local = new FlatCheckedEnvironment(d, local, question.scope); // cumulative
 			}
 		}
