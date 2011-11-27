@@ -31,6 +31,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.values.BooleanValue;
 import org.overturetool.vdmj.values.NilValue;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.TupleValue;
 import org.overturetool.vdmj.values.Value;
@@ -76,5 +77,20 @@ public class VDMUtil
 		}
 
 		return new TupleValue(result);
+	}
+	
+	public static Value classname(Value arg)
+	{
+		Value a = arg.deref();
+		
+		if (a instanceof ObjectValue)
+		{
+			ObjectValue obj = (ObjectValue)a;
+			return new SeqValue(obj.type.name.name);
+		}
+		else
+		{
+			return new NilValue();
+		}
 	}
 }
