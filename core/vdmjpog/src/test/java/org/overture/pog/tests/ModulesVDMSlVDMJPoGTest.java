@@ -40,7 +40,7 @@ public class ModulesVDMSlVDMJPoGTest extends BaseTestSuite
 		return test;
 	}
 
-	private static Test getSuite(ThirdPartyTests suite)
+	private static Test getSuite(AbstractTests suite)
 			throws IllegalArgumentException, SecurityException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
@@ -54,7 +54,8 @@ public class ModulesVDMSlVDMJPoGTest extends BaseTestSuite
 	public static Test suite() throws Exception
 	{
 		TestSuite t = new TestSuite();
-		t.addTest(getSuite(ThirdPartyTests.applyexpr_02$vdm));
+		t.addTest(getSuite(ThirdPartyTests.recfun_40$vdm));
+		t.addTest(getSuite(FunctionalTests.newspeakSL));
 		// t.addTest(getSuite(TestSuites.THIRDPARTY));
 		// t.addTest(getSuite(TestSuites.STATEMENTS));
 		// t.addTest(getSuite(TestSuites.FUNCTIONAL));
