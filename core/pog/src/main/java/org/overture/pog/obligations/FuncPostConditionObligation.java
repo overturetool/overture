@@ -28,31 +28,37 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
-import org.overture.ast.definitions.assistants.AImplicitOperationDefinitionAssistant;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
-
+import org.overturetool.vdmj.util.Utils;
 
 public class FuncPostConditionObligation extends ProofObligation
 {
-	public FuncPostConditionObligation(
-		AExplicitFunctionDefinition func, POContextStack ctxt)
+	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
+			POContextStack ctxt)
 	{
 		super(func.getLocation(), POType.FUNC_POST_CONDITION, ctxt);
 
 		StringBuilder params = new StringBuilder();
 
-		for (List<PPattern> pl: func.getParamPatternList())
+		for (List<PPattern> pl : func.getParamPatternList())
 		{
-			params.append(PPatternAssistantTC.getMatchingExpressionList(pl));
+			String postfix = "";
+			for (PExp p : PPatternAssistantTC.getMatchingExpressionList(pl))
+			{
+				params.append(postfix);
+				params.append(p);
+				postfix = ", ";
+			}
 		}
 
 		String body = null;
 
-		if (func.getBody() instanceof ANotYetSpecifiedExp ||
-			func.getBody() instanceof ASubclassResponsibilityExp)
+		if (func.getBody() instanceof ANotYetSpecifiedExp
+				|| func.getBody() instanceof ASubclassResponsibilityExp)
 		{
 			// We have to say "f(a)" because we have no expression yet
 
@@ -62,8 +68,7 @@ public class FuncPostConditionObligation extends ProofObligation
 			sb.append(params);
 			sb.append(")");
 			body = sb.toString();
-		}
-		else
+		} else
 		{
 			body = func.getBody().toString();
 		}
@@ -71,16 +76,16 @@ public class FuncPostConditionObligation extends ProofObligation
 		value = ctxt.getObligation(generate(func.getPredef(), func.getPostdef(), params, body));
 	}
 
-	public FuncPostConditionObligation(
-		AImplicitFunctionDefinition func, POContextStack ctxt)
+	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
+			POContextStack ctxt)
 	{
 		super(func.getLocation(), POType.FUNC_POST_CONDITION, ctxt);
 
 		StringBuilder params = new StringBuilder();
 
-		for (List<PPattern> pl: AImplicitFunctionDefinitionAssistant.getParamPatternList(func))
+		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistant.getParamPatternList(func))
 		{
-			params.append(PPatternAssistantTC.getMatchingExpressionList(pl));
+			params.append(Utils.listToString(PPatternAssistantTC.getMatchingExpressionList(pl)));
 		}
 
 		String body = null;
@@ -88,9 +93,8 @@ public class FuncPostConditionObligation extends ProofObligation
 		if (func.getBody() == null)
 		{
 			body = func.getResult().getPattern().toString();
-		}
-		else if (func.getBody() instanceof ANotYetSpecifiedExp ||
-				 func.getBody() instanceof ASubclassResponsibilityExp)
+		} else if (func.getBody() instanceof ANotYetSpecifiedExp
+				|| func.getBody() instanceof ASubclassResponsibilityExp)
 		{
 			// We have to say "f(a)" because we have no expression yet
 
@@ -100,8 +104,7 @@ public class FuncPostConditionObligation extends ProofObligation
 			sb.append(params);
 			sb.append(")");
 			body = sb.toString();
-		}
-		else
+		} else
 		{
 			body = func.getBody().toString();
 		}
@@ -109,10 +112,9 @@ public class FuncPostConditionObligation extends ProofObligation
 		value = ctxt.getObligation(generate(func.getPredef(), func.getPostdef(), params, body));
 	}
 
-	private String generate(
-		AExplicitFunctionDefinition predef,
-		AExplicitFunctionDefinition postdef,
-		StringBuilder params, String body)
+	private String generate(AExplicitFunctionDefinition predef,
+			AExplicitFunctionDefinition postdef, StringBuilder params,
+			String body)
 	{
 		StringBuilder sb = new StringBuilder();
 

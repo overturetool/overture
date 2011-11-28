@@ -41,57 +41,54 @@ import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.SeqApplyObligation;
 
 /**
- * This is the proof obligation visitor climbs through the AST and builds the
- * list of proof obligations the given program exhibits.
- * 
- * References:
- * 
- * [1] http://wiki.overturetool.org/images/9/95/VDM10_lang_man.pdf for BNF
- * definitions.
- * 
+ * This is the proof obligation visitor climbs through the AST and builds the list of proof obligations the given
+ * program exhibits. References: [1] http://wiki.overturetool.org/images/9/95/VDM10_lang_man.pdf for BNF definitions.
  * This work is based on previous work by Nick Battle in the VDMJ package.
  * 
  * @author Overture team
  * @since 1.0
  */
 public class PogVisitor extends
-		QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
+		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
+{
 
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
-	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(
-			this);
+	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(this);
 
 	@Override
 	// See [1] pg. 167 for the definition
 	public ProofObligationList caseAModuleModules(AModuleModules node,
-			POContextStack question) {
-		return PDefinitionAssistantPOG.getProofObligations(node.getDefs(),
-				pogDefinitionVisitor, question);
+			POContextStack question)
+	{
+		return PDefinitionAssistantPOG.getProofObligations(node.getDefs(), pogDefinitionVisitor, question);
 
 	}
-	
+
 	@Override
-	public ProofObligationList defaultPExp(PExp node, POContextStack question) {
+	public ProofObligationList defaultPExp(PExp node, POContextStack question)
+	{
 
 		return node.apply(pogExpVisitor, question);
 	}
 
 	@Override
 	public ProofObligationList defaultPModifier(PModifier node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-		
+
 	@Override
 	public ProofObligationList caseACaseAlternative(ACaseAlternative node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
 		question.push(new POCaseContext(node.getPattern(), node.getType(), node.getCexp()));
-		obligations.addAll(node.getResult().apply(this.pogExpVisitor,question));
+		obligations.addAll(node.getResult().apply(this.pogExpVisitor, question));
 		question.pop();
 		question.push(new PONotCaseContext(node.getPattern(), node.getType(), node.getCexp()));
 
@@ -100,143 +97,163 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPBooleanConst(PBooleanConst node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-	
+
 	@Override
-	public ProofObligationList defaultPType(PType node, POContextStack question) {
+	public ProofObligationList defaultPType(PType node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPField(PField node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList defaultPAccessSpecifier(PAccessSpecifier node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPAccess(PAccess node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList defaultPPattern(PPattern node,
-			POContextStack question) {
+			POContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList defaultPPair(PPair node, POContextStack question) {
+	public ProofObligationList defaultPPair(PPair node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-	
+
 	@Override
-	public ProofObligationList defaultPBind(PBind node, POContextStack question) {
+	public ProofObligationList defaultPBind(PBind node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList caseASetBind(ASetBind node,
-			POContextStack question) {
-		
-		return node.getSet().apply(this.pogExpVisitor,question);
+			POContextStack question)
+	{
+
+		return node.getSet().apply(this.pogExpVisitor, question);
 	}
-		
+
 	@Override
 	public ProofObligationList caseASetMultipleBind(ASetMultipleBind node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
-		return node.getSet().apply(this.pogExpVisitor,question);
+		return node.getSet().apply(this.pogExpVisitor, question);
 	}
 
 	@Override
 	public ProofObligationList caseATypeMultipleBind(ATypeMultipleBind node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPPatternBind(PPatternBind node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList defaultPDefinition(PDefinition node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return node.apply(pogDefinitionVisitor, question);
 	}
 
 	@Override
 	public ProofObligationList defaultPModules(PModules node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPImports(PImports node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPExports(PExports node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		return new ProofObligationList();
 	}
 
 	@Override
 	public ProofObligationList defaultPExport(PExport node,
-			POContextStack question) {
-		
+			POContextStack question)
+	{
+
 		return new ProofObligationList();
 	}
-	
+
 	@Override
-	public ProofObligationList defaultPStm(PStm node, POContextStack question) {
+	public ProofObligationList defaultPStm(PStm node, POContextStack question)
+	{
 
 		return node.apply(pogStmVisitor, question);
 	}
 
 	@Override
 	public ProofObligationList defaultPStateDesignator(PStateDesignator node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-		
+
 	@Override
 	public ProofObligationList caseAMapSeqStateDesignator(
-			AMapSeqStateDesignator node, POContextStack question) {
-		
+			AMapSeqStateDesignator node, POContextStack question)
+	{
+
 		ProofObligationList list = new ProofObligationList();
 
 		if (node.getSeqType() != null)
 		{
 			list.add(new SeqApplyObligation(node.getMapseq(), node.getExp(), question));
 		}
-		
+
 		// Maps are OK, as you can create new map domain entries
 
 		return list;
@@ -244,72 +261,77 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPObjectDesignator(PObjectDesignator node,
-			POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
-	
+
 	@Override
 	public ProofObligationList caseACaseAlternativeStm(
-			ACaseAlternativeStm node, POContextStack question) {
-		
+			ACaseAlternativeStm node, POContextStack question)
+	{
+
 		ProofObligationList obligations = new ProofObligationList();
 
 		question.push(new POCaseContext(node.getPattern(), node.getCtype(), node.getCexp()));
-		obligations.addAll(node.getResult().apply(pogStmVisitor,question));
+		obligations.addAll(node.getResult().apply(pogStmVisitor, question));
 		question.pop();
 		question.push(new PONotCaseContext(node.getPattern(), node.getCtype(), node.getCexp()));
 
 		return obligations;
-		
+
 	}
-	
+
 	@Override
 	public ProofObligationList caseATixeStmtAlternative(
-			ATixeStmtAlternative node, POContextStack question) {
-		
+			ATixeStmtAlternative node, POContextStack question)
+	{
+
 		ProofObligationList list = new ProofObligationList();
 
 		if (node.getPatternBind().getPattern() != null)
 		{
 			// Nothing to do
-		}
-		else if (node.getPatternBind().getBind() instanceof ATypeBind)
+		} else if (node.getPatternBind().getBind() instanceof ATypeBind)
 		{
 			// Nothing to do
-		}
-		else if (node.getPatternBind().getBind() instanceof ASetBind)
+		} else if (node.getPatternBind().getBind() instanceof ASetBind)
 		{
-			ASetBind bind = (ASetBind)node.getPatternBind().getBind();
-			list.addAll(bind.getSet().apply(this.pogExpVisitor,question));
+			ASetBind bind = (ASetBind) node.getPatternBind().getBind();
+			list.addAll(bind.getSet().apply(this.pogExpVisitor, question));
 		}
 
-		list.addAll(node.getStatement().apply(this.pogStmVisitor,question));
+		list.addAll(node.getStatement().apply(this.pogStmVisitor, question));
 		return list;
-		
+
 	}
 
 	@Override
 	public ProofObligationList defaultPClause(PClause node,
-			POContextStack question) {
-
-		return new ProofObligationList();
-	}
-	
-	@Override
-	public ProofObligationList defaultPCase(PCase node, POContextStack question) {
-		
-		return new ProofObligationList();
-	}
-	
-	@Override
-	public ProofObligationList defaultNode(Node node, POContextStack question) {
+			POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
-	public ProofObligationList defaultToken(Token node, POContextStack question) {
+	public ProofObligationList defaultPCase(PCase node, POContextStack question)
+	{
+
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList defaultNode(Node node, POContextStack question)
+	{
+
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList defaultToken(Token node, POContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
