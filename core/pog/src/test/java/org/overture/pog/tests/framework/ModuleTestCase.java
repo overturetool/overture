@@ -279,7 +279,7 @@ public class ModuleTestCase extends TestCase
 
 		}
 
-		expectedProofObligations.retainAll(okayPos);
+		expectedProofObligations.removeAll(okayPos);
 
 		System.out.println("Proof obligations expected: " + expPoSize
 				+ " actual: " + actPoSize
@@ -308,8 +308,19 @@ public class ModuleTestCase extends TestCase
 		{
 			System.out.println("These proof obligations were not matched at all: ");
 			System.out.println("------------------------------------------------ ");
+			int i = 0;
 			for (String p : expectedProofObligations)
+			{
 				System.out.println("\n" + p + "\n");
+				if (i++ > 10)
+				{
+					System.out.println("... And "
+							+ (expectedProofObligations.size() - 10)
+							+ " more...");
+					break;
+				}
+
+			}
 		}
 
 		if (ratedStuff.size() > 0 || expPoSize != actPoSize)
@@ -347,7 +358,7 @@ public class ModuleTestCase extends TestCase
 				// perrs += reader.getErrorCount();
 				StringWriter s = new StringWriter();
 				reader.printErrors(new PrintWriter(s));// new
-														// PrintWriter(System.out));
+				// PrintWriter(System.out));
 				errorMessages = "\n" + s.toString() + "\n";
 				System.out.println(s.toString());
 			}
