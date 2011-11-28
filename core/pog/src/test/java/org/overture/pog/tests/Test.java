@@ -2,9 +2,9 @@ package org.overture.pog.tests;
 
 /**
  * @author rala
- * 
  */
-enum ThirdPartyTests {
+enum ThirdPartyTests implements AbstractTests
+{
 	applyexpr_01$vdm(
 			"thirdpartytests//pog/exprtest/CORE/expr/applyexpr/applyexpr-01.vdm"), applyexpr_02$vdm(
 			"thirdpartytests//pog/exprtest/CORE/expr/applyexpr/applyexpr-02.vdm"), applyexpr_03$vdm(
@@ -346,15 +346,18 @@ enum ThirdPartyTests {
 			"thirdpartytests//pog/fulltest/SL/stmtsl/blockstmt/blockstmt.vdm"), ;
 	private String filePath;
 
-	ThirdPartyTests(String fp) {
+	ThirdPartyTests(String fp)
+	{
 		this.filePath = fp;
 	}
 
-	public String getFolder() {
+	public String getFolder()
+	{
 		return this.filePath;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return this.filePath;
 	}
 
