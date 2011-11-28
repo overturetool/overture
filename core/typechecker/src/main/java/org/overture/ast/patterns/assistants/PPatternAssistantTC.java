@@ -85,7 +85,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case IDENTIFIER:
 				AIdentifierPattern idPattern = (AIdentifierPattern) rp;
 				List<PDefinition> defs = new ArrayList<PDefinition>();
-				defs.add(new ALocalDefinition(idPattern.getLocation(), scope, false, null, null, ptype, false, idPattern.getName()));
+				defs.add(new ALocalDefinition(idPattern.getLocation(), scope, false, null, null, ptype.clone(), false, idPattern.getName().clone()));
 				return defs;
 			case BOOLEAN:
 			case CHARACTER:
