@@ -209,7 +209,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseSSimpleBlockStm(SSimpleBlockStm node,
+	public PType defaultSSimpleBlockStm(SSimpleBlockStm node,
 			TypeCheckInfo question) {
 		boolean notreached = false;
 		PTypeSet rtypes = new PTypeSet();
@@ -291,7 +291,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		// local variables. At runtime (below) they have to be treated
 		// more like (updatable) state.
 
-		PType r = caseSSimpleBlockStm(node,new TypeCheckInfo(local,question.scope));
+		PType r = defaultSSimpleBlockStm(node,new TypeCheckInfo(local,question.scope));
 		local.unusedCheck(question.env);
 		node.setType(r);
 		return r;
@@ -849,7 +849,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question) 
 	{
 		
-		PType r = caseSSimpleBlockStm(node,question);
+		PType r = defaultSSimpleBlockStm(node,question);
 		
 		node.setType(r);
 		return r;

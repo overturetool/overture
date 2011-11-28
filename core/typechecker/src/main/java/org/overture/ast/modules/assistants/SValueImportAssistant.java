@@ -8,7 +8,6 @@ import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
-import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.SValueImport;
 import org.overture.typecheck.TypeCheckerErrors;

@@ -21,7 +21,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;

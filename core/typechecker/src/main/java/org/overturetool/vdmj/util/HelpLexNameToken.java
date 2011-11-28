@@ -1,7 +1,5 @@
 package org.overturetool.vdmj.util;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 

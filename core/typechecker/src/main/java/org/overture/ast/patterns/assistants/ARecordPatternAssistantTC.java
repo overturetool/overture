@@ -15,7 +15,6 @@ import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class ARecordPatternAssistantTC {

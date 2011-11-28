@@ -7,7 +7,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.ATypeImport;
-import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
 

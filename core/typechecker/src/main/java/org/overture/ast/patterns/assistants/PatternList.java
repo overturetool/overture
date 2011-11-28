@@ -1,6 +1,5 @@
 package org.overture.ast.patterns.assistants;
 
-import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
