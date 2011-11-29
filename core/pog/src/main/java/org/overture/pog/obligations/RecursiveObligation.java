@@ -27,6 +27,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overturetool.util.Utils;
 
 public class RecursiveObligation extends ProofObligation
 {
@@ -38,12 +39,12 @@ public class RecursiveObligation extends ProofObligation
 
 		sb.append(def.getMeasure().getName());
 		sb.append("(");
-		sb.append(def.getParamPatternList().get(0));
+		sb.append(Utils.listToString(def.getParamPatternList().get(0)));
 		sb.append(")");
 		sb.append(def.getMeasureLexical() > 0 ? " LEX" + def.getMeasureLexical() + "> " : " > ");
 		sb.append(def.getMeasure().getName());
 		sb.append("(");
-		sb.append(apply.getArgs());
+		sb.append(Utils.listToString(apply.getArgs()));
 		sb.append(")");
 
 		value = ctxt.getObligation(sb.toString());
