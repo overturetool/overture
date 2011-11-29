@@ -13,16 +13,10 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.test.framework.BaseTestCase;
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.IResultCombiner;
-import org.overturetool.test.framework.results.Result;
-import org.overturetool.test.util.MessageReaderWritter;
+import org.overturetool.test.framework.ResultTestCase;
 
-public class ExamplesTestCase extends BaseTestCase
+public class ExamplesTestCase extends ResultTestCase
 {
-	public static boolean recordTestResults = false;
-
 	public ExamplesTestCase()
 	{
 	}
@@ -99,79 +93,22 @@ public class ExamplesTestCase extends BaseTestCase
 		return null;
 	}
 
-	protected void compareResults(Set<IMessage> warnings, Set<IMessage> errors,
-			Object result, String filename)
+	protected File getResultFile(String filename)
 	{
-		if(recordTestResults)
-		{
-			MessageReaderWritter mrw = new MessageReaderWritter(new File(file,filename));
-			mrw.setWarningsAndErrors(errors, warnings);
-			mrw.save();
-			return;
-		}
-		
-		File file = getFile(filename);
-
-		assertNotNull("Result file " + filename + " was not found", file);
-
-		MessageReaderWritter mrw = new MessageReaderWritter(file);
-
-		assertTrue("Result file " + filename + " does not exist", mrw.exists());
-
-		boolean parsed = mrw.load();
-
-		assertTrue("Could not read result file: " + file.getName(), parsed);
-
-		if (parsed)
-		{
-			checkMessages("warning", mrw.getWarnings(), warnings);
-			checkMessages("error", mrw.getErrors(), errors);
-		}
+		return getFile(filename);
 	}
 
-	public void checkMessages(String typeName, Set<IMessage> expectedList,
-			Set<IMessage> list)
+	@Override
+	protected File createResultFile(String filename)
 	{
-//		assertEquals("Number of " + typeName + "s do not match expected.", expectedList.size(), list.size());
-		String TypeName = typeName.toUpperCase().toCharArray()[0]
-				+ typeName.substring(1);
-		for (IMessage w : list)
+		if(!file.exists()&& file.isDirectory())
 		{
-			assertTrue(TypeName + " not exspected: " + w, containedIn(expectedList, w));
-		}
-		for (IMessage w : expectedList)
-		{
-			assertTrue(TypeName + " exspected but not found: " + w, containedIn(list, w));
-		}
-	}
-
-	private static boolean containedIn(Set<IMessage> list, IMessage m)
-	{
-		for (IMessage m1 : list)
-		{
-			if (m1.equals(m))
+			if(file.mkdirs())
 			{
-				return true;
+				//dont care for now
 			}
 		}
-		return false;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected <T> Result mergeResults(Set<? extends Result<T>> parse,
-			IResultCombiner<T> c)
-	{
-		Set<IMessage> warnings = new HashSet<IMessage>();
-		Set<IMessage> errors = new HashSet<IMessage>();
-		T result = null;
-
-		for (Result<T> r : parse)
-		{
-			warnings.addAll(r.warnings);
-			errors.addAll(r.errors);
-			result = c.combine(result, r.result);
-		}
-		return new Result(result, warnings, errors);
+		return new File(file,filename);
 	}
 
 }

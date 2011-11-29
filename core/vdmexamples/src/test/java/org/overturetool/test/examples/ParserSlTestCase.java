@@ -60,7 +60,7 @@ public class ParserSlTestCase extends ExamplesTestCase
 			fail("Parse completed with errors:\n"+res);
 		}
 		
-		compareResults(res.warnings, res.errors, res.result,"parser.result");
+		compareResults(res,"parser.result");
 	}
 
 	protected Result<List<Module>> parse() throws Exception

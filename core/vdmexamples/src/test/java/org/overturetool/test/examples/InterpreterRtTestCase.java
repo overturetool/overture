@@ -66,7 +66,7 @@ public class InterpreterRtTestCase extends TypeCheckRtTestCase
 			}
 		});
 
-		compareResults(res.warnings, res.errors, res.result,"interpreter.result");
+		compareResults(res,"interpreter.result");
 	}
 	
 	protected Result<String> interpret(String expression) throws Exception

@@ -48,4 +48,9 @@ public class Result<R>
 		buf.append("Result:\n");
 		return buf.toString();
 	}
+	
+	public String getStringResult()
+	{
+		return (result==null?"":""+result);
+	}
 }

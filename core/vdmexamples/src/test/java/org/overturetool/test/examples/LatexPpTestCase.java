@@ -69,7 +69,7 @@ public class LatexPpTestCase extends TypeCheckPpTestCase
 		if (res.errors.size() > 0)
 		{
 //			fail("Type check errors");
-			compareResults(res.warnings, res.errors, res.result, "latex.result");
+			compareResults(res, "latex.result");
 			return;
 		}
 

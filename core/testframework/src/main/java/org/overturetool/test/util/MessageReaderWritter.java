@@ -21,26 +21,28 @@ import java.util.Set;
 
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
+import org.overturetool.test.framework.results.Result;
 
 public class MessageReaderWritter
 {
 
 	enum MsgType
 	{
-		Warning, Error
+		Warning, Error,Result
 	};
 
 	public static String WARNING_LABEL = "WARNING";
 	public static String ERROR_LABEL = "ERROR";
+	public static String RESULT_LABEL = "RESULT";
 
 	final Set<IMessage> errors = new HashSet<IMessage>();
 	final Set<IMessage> warnings = new HashSet<IMessage>();
+	String result = "";
 	final File file;
 
 	public MessageReaderWritter(File file)
 	{
 		this.file = file;
-
 	}
 
 	public MessageReaderWritter(String path)
@@ -57,6 +59,13 @@ public class MessageReaderWritter
 		this.warnings.addAll(warnings);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void set(Result result)
+	{
+		setWarningsAndErrors(result.errors, result.warnings);
+		this.result = result.getStringResult();
+	}
+
 	public Set<IMessage> getErrors()
 	{
 		return errors;
@@ -65,6 +74,11 @@ public class MessageReaderWritter
 	public Set<IMessage> getWarnings()
 	{
 		return warnings;
+	}
+
+	public String getResult()
+	{
+		return result;
 	}
 
 	public boolean exists()
@@ -76,7 +90,7 @@ public class MessageReaderWritter
 	{
 		errors.clear();
 		warnings.clear();
-
+		result = "";
 		try
 		{
 			BufferedReader in = new BufferedReader(new FileReader(file));
@@ -92,7 +106,11 @@ public class MessageReaderWritter
 				{
 					type = MsgType.Warning;
 					line = line.substring(WARNING_LABEL.length() + 1);
-				} else
+				}else if (line.startsWith(RESULT_LABEL))
+				{
+					type = MsgType.Result;
+					line = line.substring(RESULT_LABEL.length() + 1);
+				}  else
 				{
 					return false;
 				}
@@ -119,7 +137,7 @@ public class MessageReaderWritter
 				String message = splitLine[3];
 				String resource = splitLine[0];
 
-				IMessage msg = new Message(resource,number, startLine, startCol, message);
+				IMessage msg = new Message(resource, number, startLine, startCol, message);
 
 				switch (type)
 				{
@@ -128,6 +146,9 @@ public class MessageReaderWritter
 						break;
 					case Warning:
 						warnings.add(msg);
+						break;
+					case Result:
+						result = message;
 						break;
 				}
 
@@ -149,9 +170,10 @@ public class MessageReaderWritter
 		try
 		{
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-		
-			writeMessageSet(out,WARNING_LABEL,warnings);
-			writeMessageSet(out,ERROR_LABEL,errors);
+
+			writeMessageSet(out, WARNING_LABEL, warnings);
+			writeMessageSet(out, ERROR_LABEL, errors);
+			writeResult(out,result);
 
 			out.flush();
 			out.close();
@@ -163,7 +185,26 @@ public class MessageReaderWritter
 		return true;
 	}
 
-	public void writeMessageSet(BufferedWriter out, String label, Set<IMessage> list) throws IOException
+	private void writeResult(BufferedWriter out, String result2) throws IOException
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(RESULT_LABEL);
+		sb.append(":");
+		sb.append("result");
+		sb.append(":");
+		sb.append(-1);
+		sb.append(":");
+		sb.append(-1);
+		sb.append(",");
+		sb.append(-1);
+		sb.append(":");
+		sb.append(result2.replace(':', '\''));
+		out.write(sb.toString());
+		out.newLine();		
+	}
+
+	public void writeMessageSet(BufferedWriter out, String label,
+			Set<IMessage> list) throws IOException
 	{
 		for (IMessage m : list)
 		{

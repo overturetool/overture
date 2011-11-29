@@ -58,7 +58,7 @@ public class TypeCheckPpTestCase extends ParserPpTestCase
 			fail("TC completed with errors:\n"+res);
 		}
 		
-		compareResults(res.warnings, res.errors, res.result,"typechecker.result");
+		compareResults(res,"typechecker.result");
 	}
 
 	public Result<ClassList> typeCheck() throws Exception
