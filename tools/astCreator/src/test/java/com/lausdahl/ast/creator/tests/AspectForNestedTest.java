@@ -14,8 +14,8 @@ public class AspectForNestedTest extends TestCase
 	public void test() throws IOException, InstantiationException, IllegalAccessException, AstCreatorException
 	{
 		System.out.println(new File(".").getAbsolutePath());
-		File output = new File("target/testData/aspectForNested".replace('/', File.separatorChar));
-		String inputFile= TESTDATA_BASE+"aspectForNested.astv2".replace('/', File.separatorChar);
-		Main.create(new File(new File(".").getParentFile(),inputFile).getAbsolutePath(), output, true);
+		File output = new File(FilePathUtil.getPlatformPath("target/testData/aspectForNested"));
+		String inputFile= TESTDATA_BASE+"aspectForNested.astv2";
+		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true);
 	}
 }

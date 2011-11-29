@@ -14,8 +14,8 @@ public class Nested1TestTypeTest extends TestCase
 	public void test() throws IOException, InstantiationException, IllegalAccessException, AstCreatorException
 	{
 		System.out.println(new File(".").getAbsolutePath());
-		File output = new File("target/testData/nested1".replace('/', File.separatorChar));
-		String inputFile= TESTDATA_BASE+"nested1.astv2".replace('/', File.separatorChar);
-		Main.create(new File(new File(".").getParentFile(),inputFile).getAbsolutePath(), output, true);
+		File output = new File(FilePathUtil.getPlatformPath("target/testData/nested1"));
+		String inputFile= TESTDATA_BASE+"nested1.astv2";
+		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true);
 	}
 }
