@@ -3,8 +3,9 @@ package com.lausdahl.ast.creator.methods;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.EnumUtil;
 
 public class KindNodeMethod extends Method
 {
@@ -12,11 +13,9 @@ public class KindNodeMethod extends Method
 	{
 		super(null,env);
 	}
-	CommonTreeClassDefinition c;
-	public KindNodeMethod(CommonTreeClassDefinition c,Environment env)
+	public KindNodeMethod(IClassDefinition c,Environment env)
 	{
 		super(c,env);
-		this.c =c;
 	}
 
 	@Override
@@ -25,15 +24,15 @@ public class KindNodeMethod extends Method
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
-		sb.append("\t * Returns the {@link NodeEnum"+c.getNamePostfix()+"} corresponding to the\n");
+		sb.append("\t * Returns the {@link NodeEnum"+classDefinition.getName().getPostfix()+"} corresponding to the\n");
 		sb.append("\t * type of this {@link Node} node.\n");
-		sb.append("\t * @return the {@link NodeEnum"+c.getNamePostfix()+"} for this node\n");
+		sb.append("\t * @return the {@link NodeEnum"+classDefinition.getName().getPostfix()+"} for this node\n");
 		sb.append("\t */");
 		this.javaDoc = sb.toString();
 		name = "kindNode";
 		annotation = "@Override";
-		returnType="NodeEnum"+c.getNamePostfix();
-		body = "\t\treturn NodeEnum"+c.getNamePostfix()+"."+c.getEnumName()+";";
+		returnType=EnumUtil.getEnumTypeName(env.node,env);
+		body = "\t\treturn "+EnumUtil.getEnumTypeName(env.node,env)+"."+EnumUtil.getEnumElementName(classDefinition)+";";
 
 		
 		// @Override public NodeEnum kindNode() {
@@ -47,7 +46,7 @@ public class KindNodeMethod extends Method
 		Set<String> imports = new HashSet<String>();
 		imports.addAll(super.getRequiredImports());
 		
-		imports.add(env.getDefaultPackage()+".NodeEnum"+c.getNamePostfix());
+		imports.add(env.getDefaultPackage()+"."+EnumUtil.getEnumTypeName(env.node,env));
 		
 		return imports;
 	}

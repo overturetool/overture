@@ -1,3 +1,4 @@
+//COPYRIGHT
 package %generated.node%;
 
 
@@ -25,10 +26,10 @@ import java.util.*;
  *
  */
 @SuppressWarnings("serial")
-public class %GraphNodeListList%<E extends %Node%> extends %NodeListList%<E> {
+public class %GraphNodeListList%<E extends %INode%> extends %NodeListList%<E> {
 		
 	@Override
-	protected void setParentOfInnterList(List<? extends E> list, %Node% parent)
+	protected void setParentOfInnterList(List<? extends E> list, %INode% parent)
 	{
 		//Don't change the structure for Graph fields
 	}
@@ -37,11 +38,11 @@ public class %GraphNodeListList%<E extends %Node%> extends %NodeListList%<E> {
 		//Don't change the structure for Graph fields
 	}
 	
-	public %GraphNodeListList%(%Node% parent) {
+	public %GraphNodeListList%(%INode% parent) {
 		super(null);
 	}
 	
-	public %GraphNodeListList%(%Node% parent, Collection<List<E>> c) {
+	public %GraphNodeListList%(%INode% parent, Collection<List<E>> c) {
 		this(parent);
 		addAll(c);
 	}

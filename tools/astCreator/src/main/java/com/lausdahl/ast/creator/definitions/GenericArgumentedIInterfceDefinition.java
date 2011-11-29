@@ -1,136 +1,63 @@
 package com.lausdahl.ast.creator.definitions;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+
+import com.lausdahl.ast.creator.java.definitions.JavaName;
+import com.lausdahl.ast.creator.methods.Method;
 
 public class GenericArgumentedIInterfceDefinition implements
 		IInterfaceDefinition
 {
 	IInterfaceDefinition def;
-	List<IInterfaceDefinition> arguments = new Vector<IInterfaceDefinition>();
+	List<String> arguments = new Vector<String>();
 
 	public GenericArgumentedIInterfceDefinition(IInterfaceDefinition def,
-			IInterfaceDefinition... arguments)
+			String... arguments)
 	{
 		this.def = def;
-		setGenericArguments(arguments);
+		setGenericArguments(Arrays.asList(arguments));
 	}
 
-	
-	public String getName()
+	public JavaName getName()
 	{
-		String tmp =def.getSignatureName()+"<";
-		for (IInterfaceDefinition arg : arguments)
-		{
-			tmp+=arg.getName()+", ";
-		}
-		if(!arguments.isEmpty())
-		{
-			tmp = tmp.substring(0,tmp.length()-2);
-		}
-		return tmp+">";
+		return this.def.getName();
 	}
 
-	
 	public Set<String> getImports()
 	{
 		return def.getImports();
 	}
 
-	
-	public boolean isFinal()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	public boolean isAbstract()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	public String getPackageName()
-	{
-		return def.getPackageName();
-	}
-
-	
-	public void setPackageName(String packageName)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public String getSignatureName()
-	{
-		return def.getSignatureName();
-	}
-
-	
 	public String getJavaSourceCode(StringBuilder sb)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
 	public String getVdmSourceCode(StringBuilder sb)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
-	public void setNamePostfix(String postfix)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public String getNamePostfix()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 	public void setTag(String tag)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
-	
 	public String getTag()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
-	public void setGenericArguments(IInterfaceDefinition... arguments)
-	{
-		if (arguments != null)
-		{
-			this.arguments.addAll(Arrays.asList(arguments));
-		}
-	}
-
-	
-	public List<IInterfaceDefinition> getGenericArguments()
+	public List<String> getGenericArguments()
 	{
 		return this.arguments;
 	}
 
-	
-	public void setGenericArguments(List<IInterfaceDefinition> arguments)
+	public void setGenericArguments(List<String> arguments)
 	{
 		if (arguments != null)
 		{
@@ -138,16 +65,69 @@ public class GenericArgumentedIInterfceDefinition implements
 		}
 	}
 
-	
 	public void setAnnotation(String annotation)
 	{
-		
+
 	}
 
-
-	public String getImportName()
+	public List<Method> getMethods()
 	{
-		return getPackageName() + "." + getSignatureName();
+		return null;
+	}
+
+	public Set<Method> getMethod(String name)
+	{
+		return null;
+	}
+
+	public void addMethod(Method m)
+	{
+
+	}
+
+	public String getGenericsString()
+	{
+		StringBuilder sb = new StringBuilder();
+		if (!this.arguments.isEmpty())
+		{
+			sb.append("<");
+			for (Iterator<String> itr = this.arguments.iterator(); itr.hasNext();)
+			{
+				String type = itr.next();
+				sb.append(type);
+				if (itr.hasNext())
+				{
+					sb.append(", ");
+				}
+			}
+			sb.append(">");
+		}
+		return sb.toString();
+	}
+
+	public void setFinal(boolean isFinal)
+	{
+
+	}
+
+	public void setAbstract(boolean isAbstract)
+	{
+
+	}
+
+	public boolean isFinal()
+	{
+		return false;
+	}
+
+	public boolean isAbstract()
+	{
+		return false;
+	}
+
+	public Set<IInterfaceDefinition> getSuperDefs()
+	{
+		return new HashSet<IInterfaceDefinition>();
 	}
 
 }

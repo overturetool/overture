@@ -1,12 +1,12 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
-import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class SetMethod extends Method {
 	Field f;
@@ -20,19 +20,19 @@ public class SetMethod extends Method {
 	protected void prepare() {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
-				+ CommonTreeClassDefinition.javaClassName(f.getName());
+				+ NameUtil.javaClassName(f.getName());
 		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
 
 		javaDoc = "\t/**\n";
 		javaDoc += "\t * Sets the {@code " + f.getName()
-				+ "} child of this {@link " + c.getName() + "} node.\n";
+				+ "} child of this {@link " + c.getName().getName() + "} node.\n";
 		javaDoc += "\t * @param value the new {@code " + f.getName()
-				+ "} child of this {@link " + c.getName() + "} node\n";
+				+ "} child of this {@link " + c.getName().getName() + "} node\n";
 		javaDoc += "\t*/";
 
 		StringBuilder sb = new StringBuilder();
 
-		if ((!f.isTokenField && !(c instanceof CustomClassDefinition)) || (f.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)f.type).extendsNode)) {
+		if ((!f.isTokenField && !(env.classToType.get(c)==ClassType.Custom)) || (f.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)f.type).extendsNode)) {
 			if (!f.isList) {
 				if (!f.isAspect && f.structureType==StructureType.Tree) {
 					sb.append("\t\tif (this." + f.getName() + " != null) {\n");
@@ -70,7 +70,7 @@ public class SetMethod extends Method {
 	protected void prepareVdm() {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
-				+ CommonTreeClassDefinition.javaClassName(f.getName());
+				+ NameUtil.javaClassName(f.getName());
 		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
 
 		javaDoc = "\t/**\n";
@@ -83,7 +83,7 @@ public class SetMethod extends Method {
 		StringBuilder sb = new StringBuilder();
 
 		if (!f.isTokenField && !f.isAspect
-				&& !(c instanceof CustomClassDefinition)) {
+				&& !(env.classToType.get(c)==ClassType.Custom)) {
 			if (!f.isList) {
 				sb.append("\t\tif this." + f.getName() + " <> null then(\n");
 				sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");

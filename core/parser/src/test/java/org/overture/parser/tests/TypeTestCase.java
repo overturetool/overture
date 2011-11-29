@@ -2,7 +2,7 @@ package org.overture.parser.tests;
 
 import java.io.File;
 
-import org.overture.ast.node.Node;
+import org.overture.ast.node.INode;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -35,7 +35,7 @@ public class TypeTestCase extends BaseParserTestCase<TypeReader>
 	}
 
 	@Override
-	protected Node read(TypeReader reader) throws ParserException, LexException
+	protected INode read(TypeReader reader) throws ParserException, LexException
 	{
 		return reader.readType();
 	}

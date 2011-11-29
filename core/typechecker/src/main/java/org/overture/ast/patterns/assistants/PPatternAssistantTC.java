@@ -321,7 +321,6 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case ALTERNATIVE:
 			case ALTERNATIVESTM:
 			case BIND:
-			case BOOLEANCONST:
 			case CASE:
 			case CLAUSE:
 			case DEFINITION:

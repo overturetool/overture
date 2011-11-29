@@ -1,3 +1,4 @@
+//COPYRIGHT
 package %generated.node%;
 
 
@@ -25,10 +26,10 @@ import java.util.*;
  *
  */
 @SuppressWarnings("serial")
-public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
-	%Node% parent;
+public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
+	%INode% parent;
 	
-	protected void setParentOfInnterList(List<? extends E> list, %Node% parent)
+	protected void setParentOfInnterList(List<? extends E> list, %INode% parent)
 	{
 		for (E e : list)
 		{
@@ -40,7 +41,7 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		for (E n : list)
 		{
 			
-		%Node% p = n.parent();
+		%INode% p = n.parent();
 		if (p != null) {
 			p.removeChild(n);
 		}
@@ -48,12 +49,12 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 		}
 	}
 	
-	public %NodeListList%(%Node% parent) {
+	public %NodeListList%(%INode% parent) {
 		super();
 		this.parent = parent;
 	}
 	
-	public %NodeListList%(%Node% parent, Collection<List<E>> c) {
+	public %NodeListList%(%INode% parent, Collection<List<E>> c) {
 		this(parent);
 		addAll(c);
 	}
@@ -77,7 +78,7 @@ public class %NodeListList%<E extends %Node%> extends LinkedList<List<E>> {
 	
 	public @Override boolean remove(Object o) {
 		if (super.remove(o)) {
-			((%Node%)o).parent(null);
+			((%INode%)o).parent(null);
 			return true;
 		}
 		return false;

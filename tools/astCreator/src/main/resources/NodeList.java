@@ -1,3 +1,4 @@
+//COPYRIGHT
 package %generated.node%;
 
 import java.util.*;
@@ -25,23 +26,23 @@ import java.util.*;
  *
  */
 @SuppressWarnings("serial")
-public class %NodeList%<E extends %Node%> extends LinkedList<E> {
-	%Node% parent;
+public class %NodeList%<E extends %INode%> extends LinkedList<E> {
+	%INode% parent;
 	
-	protected void setParent(%Node% n) {
-		%Node% p = n.parent();
+	protected void setParent(%INode% n) {
+		%INode% p = n.parent();
 		if (p != null) {
 			p.removeChild(n);
 		}
 		n.parent(parent);
 	}
 	
-	public %NodeList%(%Node% parent) {
+	public %NodeList%(%INode% parent) {
 		super();
 		this.parent = parent;
 	}
 	
-	public %NodeList%(%Node% parent, Collection<? extends E> c) {
+	public %NodeList%(%INode% parent, Collection<? extends E> c) {
 		this(parent);
 		addAll(c);
 	}
@@ -63,7 +64,7 @@ public class %NodeList%<E extends %Node%> extends LinkedList<E> {
 	
 	public @Override boolean remove(Object o) {
 		if (super.remove(o)) {
-			((%Node%)o).parent(null);
+			((%INode%)o).parent(null);
 			return true;
 		}
 		return false;

@@ -3,10 +3,10 @@ package org.overturetool.vdmj.lex;
 import java.io.Serializable;
 import java.util.List;
 
-import org.overture.ast.analysis.IAnalysis;
-import org.overture.ast.analysis.IAnswer;
-import org.overture.ast.analysis.IQuestion;
-import org.overture.ast.analysis.IQuestionAnswer;
+import org.overture.ast.analysis.intf.IAnalysis;
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.messages.InternalException;
 

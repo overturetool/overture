@@ -1,8 +1,8 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
 
 public class TokenConstructorMethod extends Method
 {
@@ -23,7 +23,7 @@ public class TokenConstructorMethod extends Method
 	protected void prepare()
 	{
 		isConstructor = true;
-		name = classDefinition.getName();
+		name = classDefinition.getName().getName();
 		returnType = "";
 		body = "\t\t" + f.getName()
 				+ " = \""
@@ -34,7 +34,7 @@ public class TokenConstructorMethod extends Method
 	protected void prepareVdm()
 	{
 		isConstructor = true;
-		name = classDefinition.getName();
+		name = classDefinition.getName().getName();
 		returnType = "";
 		body = "\t\t" + f.getName()
 				+ " := \""

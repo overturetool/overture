@@ -5,24 +5,25 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class ConstructorMethod extends Method
 {
 	public ConstructorMethod(IClassDefinition c, Environment env)
 	{
 		super(c, env);
+		isConstructor=true;
 	}
 
 	@Override
 	protected void prepare()
 	{
 		skip = classDefinition.getFields().isEmpty();
-		this.name = classDefinition.getSignatureName();
+		this.name = classDefinition.getName().getName();
 
 		this.returnType = "";
 
@@ -30,7 +31,7 @@ public class ConstructorMethod extends Method
 		sbDoc.append("\t");
 		sbDoc.append("/**\n");
 		sbDoc.append("\t");
-		sbDoc.append("* Creates a new {@code " + classDefinition.getName()
+		sbDoc.append("* Creates a new {@code " + classDefinition.getName().getName()
 				+ "} node with the given nodes as children.\n");
 		sbDoc.append("\t");
 		sbDoc.append("* The basic child nodes are removed from their previous parents.\n");
@@ -67,7 +68,7 @@ public class ConstructorMethod extends Method
 					+ "_"));
 			sb.append("\t\t");
 			sb.append("this.set");
-			sb.append(CommonTreeClassDefinition.javaClassName(f.getName()));
+			sb.append(NameUtil.javaClassName(f.getName()));
 			sb.append("(");
 			sb.append(name + "_");
 			sb.append(");\n");
@@ -75,7 +76,7 @@ public class ConstructorMethod extends Method
 			{
 				sbDoc.append("\t* @param " + name + " the {@link "
 						+ f.getType() + "} node for the {@code " + name
-						+ "} child of this {@link " + classDefinition.getName()
+						+ "} child of this {@link " + classDefinition.getName().getName()
 						+ "} node\n");
 			} else
 			{
@@ -86,7 +87,7 @@ public class ConstructorMethod extends Method
 						+ "} <b>graph</a> node for the {@code "
 						+ name
 						+ "} child of this {@link "
-						+ classDefinition.getName()
+						+ classDefinition.getName().getName()
 						+ "} node.\n\t*  <i>The parent of this {@ "
 						+ name
 						+ " } will not be changed by adding it to this node.</i>\n");
@@ -114,12 +115,12 @@ public class ConstructorMethod extends Method
 	{
 		Set<String> list = new HashSet<String>();
 		list.addAll(super.getRequiredImports());
-		if (classDefinition instanceof CommonTreeClassDefinition)
+		if (env.isTreeNode(classDefinition ))
 		{
 
 			List<Field> fields = new Vector<Field>();
 
-			fields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
+			fields.addAll( classDefinition.getInheritedFields());
 			for (Field field : fields)
 			{
 
@@ -131,20 +132,20 @@ public class ConstructorMethod extends Method
 				list.addAll(field.getRequiredImports());
 				if (field.isList && !field.isDoubleList)
 				{
-					list.add(Environment.listDef.getImportName());
+					list.add(Environment.listDef.getName().getCanonicalName());
 				}
 				if (field.isDoubleList)
 				{
-					list.add(Environment.collectionDef.getImportName());
-					list.add(Environment.listDef.getImportName());
+					list.add(Environment.collectionDef.getName().getCanonicalName());
+					list.add(Environment.listDef.getName().getCanonicalName());
 				}
 			}
 
 			List<String> removeImportsFromSuper = new Vector<String>();
-			removeImportsFromSuper.add(env.graphNodeList.getImportName());
-			removeImportsFromSuper.add(env.graphNodeListList.getImportName());
-			removeImportsFromSuper.add(env.nodeList.getImportName());
-			removeImportsFromSuper.add(env.nodeListList.getImportName());
+			removeImportsFromSuper.add(env.graphNodeList.getName().getCanonicalName());
+			removeImportsFromSuper.add(env.graphNodeListList.getName().getCanonicalName());
+			removeImportsFromSuper.add(env.nodeList.getName().getCanonicalName());
+			removeImportsFromSuper.add(env.nodeListList.getName().getCanonicalName());
 
 			list.removeAll(removeImportsFromSuper);
 
@@ -153,17 +154,17 @@ public class ConstructorMethod extends Method
 				list.addAll(field.getRequiredImports());
 				if (field.isList && !field.isDoubleList)
 				{
-					list.add(Environment.listDef.getImportName());
+					list.add(Environment.listDef.getName().getCanonicalName());
 				}
 				if (field.isDoubleList)
 				{
-					list.add(Environment.collectionDef.getImportName());
-					list.add(Environment.listDef.getImportName());
+					list.add(Environment.collectionDef.getName().getCanonicalName());
+					list.add(Environment.listDef.getName().getCanonicalName());
 				}
 			}
 		}
 
-		String nodelistpackage = env.nodeList.getImportName();
+		String nodelistpackage = env.nodeList.getName().getCanonicalName();
 		list.remove(nodelistpackage);
 
 		return list;

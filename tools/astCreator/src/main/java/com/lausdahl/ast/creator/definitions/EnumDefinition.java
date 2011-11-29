@@ -3,32 +3,33 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.java.definitions.JavaName;
+
 public class EnumDefinition extends BaseClassDefinition
 {
 	public List<String> elements = new Vector<String>();
 
-	public EnumDefinition(String name)
+	public EnumDefinition(JavaName name)
 	{
 		super(name);
 	}
 	
-
-	
 	@Override
 	public String getJavaSourceCode(StringBuilder sb)
 	{
+		sb.append(IInterfaceDefinition.copurightHeader+ "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
 
-		if (getPackageName() != null)
+		if (getName().getPackageName() != null)
 		{
-			sb.append("\npackage " + getPackageName() + ";\n\n\n");
+			sb.append("\npackage " +getName().getPackageName() + ";\n");
 		}
 
 		for (String importName : getImports())
 		{
 			sb.append("import " + importName + ";\n");
 		}
-
+		sb.append("\n\n"+javaDoc);
 		sb.append("public enum " + getName());
 		sb.append("\n{\n");
 		

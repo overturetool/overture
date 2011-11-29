@@ -1,112 +1,23 @@
 package com.lausdahl.ast.creator.definitions;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import com.lausdahl.ast.creator.java.definitions.JavaFrozenName;
+import com.lausdahl.ast.creator.java.definitions.JavaName;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.ToStringAddOn;
-
-public class PredefinedClassDefinition implements IClassDefinition
+public class PredefinedClassDefinition extends BaseClassDefinition// implements IClassDefinition
 {
-	private String packageName;
-	private String name;
-	private String namePostfix = "";
 	private String tag = "";
-	private boolean frozenName = false;
 
 	public PredefinedClassDefinition(String packageName, String name)
 	{
-		this.packageName = packageName;
-		this.name = name;
+		super(new JavaName(packageName, name));
+
 	}
 
 	public PredefinedClassDefinition(String packageName, String name,
 			boolean frozenName)
 	{
-		this.packageName = packageName;
-		this.name = name;
-		this.frozenName = frozenName;
-	}
-
-	public Set<String> getImports()
-	{
-		return new HashSet<String>();
-	}
-
-	public boolean isFinal()
-	{
-		return false;
-	}
-
-	public boolean isAbstract()
-	{
-		return false;
-	}
-
-	public String getPackageName()
-	{
-		return packageName;
-	}
-
-	public void setPackageName(String packageName)
-	{
-		this.packageName = packageName;
-	}
-
-	public String getJavaSourceCode(StringBuilder sb)
-	{
-		return "";
-	}
-
-	public String getVdmSourceCode(StringBuilder sb)
-	{
-		return "";
-	}
-
-	public String getName()
-	{
-		return name + (frozenName ? "" : getNamePostfix());
-	}
-
-	public String getSignatureName()
-	{
-		return getName();
-	}
-
-	public String getSuperSignatureName()
-	{
-		return null;
-	}
-
-	public List<Field> getFields()
-	{
-		return new Vector<Field>();
-	}
-
-	public boolean hasSuper()
-	{
-		return false;
-	}
-
-	public void addField(Field field)
-	{
-	}
-
-	public void setNamePostfix(String postfix)
-	{
-		this.namePostfix = postfix;
-	}
-
-	public String getNamePostfix()
-	{
-		return namePostfix;
-	}
-
-	public IClassDefinition getSuperDef()
-	{
-		return null;
+		super(frozenName ? new JavaFrozenName(packageName, name)
+				: new JavaName(packageName, name));
 	}
 
 	public void setTag(String tag)
@@ -119,73 +30,10 @@ public class PredefinedClassDefinition implements IClassDefinition
 		return this.tag;
 	}
 
-	public void setGenericArguments(IInterfaceDefinition... arguments)
+	@Override
+	public String toString()
 	{
-
+		return getName().getCanonicalName();
 	}
 
-	public List<IInterfaceDefinition> getGenericArguments()
-	{
-		return new Vector<IInterfaceDefinition>();
-	}
-
-	public void setGenericArguments(List<IInterfaceDefinition> arguments)
-	{
-
-	}
-
-	public void setAnnotation(String annotation)
-	{
-
-	}
-
-	public Set<IInterfaceDefinition> getInterfaces()
-	{
-		return new HashSet<IInterfaceDefinition>();
-	}
-
-	public void addToStringAddOn(ToStringAddOn addon)
-	{
-
-	}
-
-	public List<ToStringAddOn> getToStringAddOns()
-	{
-		return new Vector<ToStringAddOn>();
-	}
-
-	public String getImportName()
-	{
-		return getPackageName() + "." + getSignatureName();
-	}
-
-	public boolean hasField(String name)
-	{
-		return false;// We don't know.
-	}
-
-	public boolean refinesField(String name)
-	{
-		return false;
-	}
-
-	public boolean isRefinedField(Field field)
-	{
-		return false;
-	}
-
-	public List<Field> getInheritedFields()
-	{
-		return new Vector<Field>();
-	}
-
-	public void checkFieldTypeHierarchy()
-	{
-
-	}
-
-	public void updateEnvironment(Environment environment)
-	{
-		
-	}
 }

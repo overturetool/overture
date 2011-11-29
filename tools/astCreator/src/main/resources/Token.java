@@ -1,9 +1,10 @@
+//COPYRIGHT
 package %generated.node%;
 /**
  * {@code Token} is the superclass of all tokens is the AST.
  */
 @SuppressWarnings("nls")
-public abstract class %Token% extends %Node% {
+public abstract class %Token% extends %Node% implements %IToken% {
 	private static final long serialVersionUID = 1L;
 	private String text;
 	private int line;
@@ -83,7 +84,7 @@ public abstract class %Token% extends %Node% {
 	 * @param child the child node to be removed from this {@link Token} node
 	 * @throws RuntimeException if {@code child} is not a child of this {@link Token} node
 	 */
-	public @Override void removeChild(%Node% child) {
+	public @Override void removeChild(%INode% child) {
 		throw new RuntimeException("Not a child.");
 	}
 

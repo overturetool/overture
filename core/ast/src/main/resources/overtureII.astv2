@@ -20,43 +20,21 @@ Tokens
   LexQuoteToken = 'java:node:org.overturetool.vdmj.lex.LexQuoteToken';
   LexRealToken = 'java:node:org.overturetool.vdmj.lex.LexRealToken';
   LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
-  //Delegate = 'java:node:org.overturetool.vdmj.util.Delegate';
   clonableFile ='java:org.overturetool.util.ClonableFile';
+  clonableString ='java:org.overturetool.util.ClonableString';
   ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
-  
-  
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
-  plus = '+';
+  nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
+  
+  //Java
   java_Boolean = 'java:java.lang.Boolean';
   java_Integer = 'java:java.lang.Integer';
   java_String = 'java:java.lang.String';
   java_Long = 'java:java.lang.Long';
-  //java_file = 'java:java.io.File';
-  nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
-   
-  bool = 'bool';
-  char = 'char';
-  int = 'int';
-  natOne = 'nat1';
-  nat = 'nat';
-  rat = 'rat';
-  real = 'real';
-  true = 'true';
-  false = 'false';
-  and_and = '&&';
-  or_or = '||';  
-  numbers_literal = 'some regex for numbers';
-  char_literal = 'some regex for chars';
-  quote_literal = 'some regex for quote types';
-  real_literal = 'some regex for reals';
-  string_literal = 'some regex for string';
-  token_literal = 'some regex for token type';
-  bool_literal = 'some regex for bool type';
+     
   static = 'static';
   async = 'async';
   
-
-
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
  *
@@ -73,7 +51,7 @@ exp {-> package='org.overture.ast.expressions'}
     =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition
     |   #Unary
     |   #Binary
-    |   {boolean_const} [value]:LexBooleanToken
+    |   {booleanConst} [value]:LexBooleanToken
     |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp
     |   {charLiteral} [value]:LexCharacterToken
     |   {elseIf} [elseIf]:exp [then]:exp  
@@ -214,12 +192,8 @@ modifier {-> package='org.overture.ast.expressions'}
     ;
     
 alternative {-> package='org.overture.ast.expressions'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:exp [defs]:definition*  [type]:type (expType):type
-    ;
-    
-boolean_const
-    =   {true}
-    |   {false}
+    = {case} [location]:location [cexp]:exp [pattern]:pattern 
+             [result]:exp [defs]:definition*  [type]:type (expType):type
     ;
     
 type {-> package='org.overture.ast.types'}
@@ -284,7 +258,8 @@ type {-> package='org.overture.ast.types'}
     ;
 
 field {-> package='org.overture.ast.types'}
-    =   {field} [access]:accessSpecifier.accessSpecifier [tagname]:LexNameToken [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
+    =   {field} [access]:accessSpecifier.accessSpecifier [tagname]:LexNameToken 
+                [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
     ;
 accessSpecifier  {-> package='org.overture.ast.types'}
   = {accessSpecifier} [access]:access [static]:static [async]:async 
@@ -339,7 +314,8 @@ definition {-> package='org.overture.ast.definitions'}
     |   {instanceVariable} [expression]:exp (expType):type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
     |   {classInvariant}  [expression]:exp
-    |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp [expType]:type [defType]:type [defs]:definition*
+    |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp 
+                 [expType]:type [defType]:type [defs]:definition*
     |   {explicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatternList]:pattern**
                             [type]:type.function 
@@ -423,7 +399,7 @@ definition {-> package='org.overture.ast.definitions'}
     |   {local} [valueDefinition]:java_Boolean (name):LexNameToken
     |   {multiBindList} (bindings):multipleBind* (defs):definition*
     |   {mutexSync} [operations]:LexNameToken*
-    |   {namedTrace} /*[pathname]:java_String* //TODO*/[terms]:/*definition.#trace**/traceDefinition**//Why is this not a definition
+    |   {namedTrace} [pathname]:clonableString* [terms]:term.traceDefinition*//Why is this not a definition
     |   {perSync} [opname]:LexNameToken [guard]:exp
     |   {renamed}  (def):definition 
     |   {state} [fields]:field.field* 
@@ -433,14 +409,20 @@ definition {-> package='org.overture.ast.definitions'}
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:type.#invariant [invPattern]:pattern [invExpression]:exp [invdef]:definition.explicitFunction [infinite]:java_Boolean (name):LexNameToken//is access missing here
+    |   {type} [invType]:type.#invariant [invPattern]:pattern [invExpression]:exp 
+               [invdef]:definition.explicitFunction [infinite]:java_Boolean (name):LexNameToken//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
     ;
  
 /*
  * Trace defintions which is not definitions...
- */   
+ */  
+ 
+term {-> package='org.overture.ast.definitions.traces'}
+    =   {traceDefinition} [list]:traceDefinition*
+    ;
+    
 traceDefinition {-> package='org.overture.ast.definitions.traces'}
     =   {instance}
     |   {letBeStBinding} [bind]:multipleBind [stexp]:exp [body]:traceDefinition [def]:definition.multiBindList
@@ -519,9 +501,11 @@ export {-> package='org.overture.ast.modules'}
 
 stm {-> package='org.overture.ast.statements'}
     =   {always} [always]:stm [body]:stm
-    |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type (classDefinition):definition.#class (stateDefinition):definition.state (inConstructor):java_Boolean
+    |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type 
+                     (classDefinition):definition.#class (stateDefinition):definition.state (inConstructor):java_Boolean
     |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
-    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
+    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken 
+                     [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
@@ -578,7 +562,7 @@ alternativeStm {-> package='org.overture.ast.statements'}
     ;
     
 stmtAlternative {-> package='org.overture.ast.statements'}
-    = {tixe} [patternBind]:patternBind.def [statement]:stm (exp):PType
+    = {tixe} [patternBind]:patternBind.def [statement]:stm (exp):type
     ;
     
 clause {-> package='org.overture.ast.statements'}
@@ -589,11 +573,6 @@ case {-> package='org.overture.ast.statements'}
     = {error} [name]:LexIdentifierToken [left]:exp [right]:exp
     ;
     
-    
-//NODE {-> package='org.overture.ast.sometest'}
-//    =   {AABBCC}
-//    ;
-
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
 

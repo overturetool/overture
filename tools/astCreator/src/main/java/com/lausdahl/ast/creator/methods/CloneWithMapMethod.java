@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class CloneWithMapMethod extends CloneMethod
 {
@@ -21,19 +22,19 @@ public class CloneWithMapMethod extends CloneMethod
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = c.getName();
+		this.returnType = getSpecializedTypeName(c);
 		this.requiredImports.add("java.util.Map");
 
-		this.arguments.add(new Argument("Map<" + env.node.getName() + ","
-				+ env.node.getName() + ">", "oldToNewMap"));
+		this.arguments.add(new Argument("Map<" + env.iNode.getName().getName() + ","
+				+ env.iNode.getName().getName() + ">", "oldToNewMap"));
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");
-		sbDoc.append("\t * Creates a deep clone of this {@link " + c.getName()
+		sbDoc.append("\t * Creates a deep clone of this {@link " + c.getName().getName()
 				+ "} node while putting all\n");
 		sbDoc.append("\t * old node-new node relations in the map {@code oldToNewMap}.\n");
 		sbDoc.append("\t * @param oldToNewMap the map filled with the old node-new node relation\n");
-		sbDoc.append("\t * @return a deep clone of this {@link " + c.getName()
+		sbDoc.append("\t * @return a deep clone of this {@link " + c.getName().getName()
 				+ "} node\n");
 		sbDoc.append("\t */");
 
@@ -41,7 +42,7 @@ public class CloneWithMapMethod extends CloneMethod
 
 		List<Field> fields = new Vector<Field>();
 
-		for (Field field : ((CommonTreeClassDefinition) classDefinition).getInheritedFields())
+		for (Field field :  classDefinition.getInheritedFields())
 		{
 			if (!classDefinition.refinesField(field.getName()))
 			{
@@ -61,7 +62,7 @@ public class CloneWithMapMethod extends CloneMethod
 			case Alternative:
 			case Custom:
 			case Unknown:
-				sb.append("\t\t" + c.getName() + " node = new " + c.getName()
+				sb.append("\t\t" + c.getName().getName() + " node = new " + c.getName().getName()
 						+ "(\n");
 
 				if (!fields.isEmpty())
@@ -76,7 +77,10 @@ public class CloneWithMapMethod extends CloneMethod
 							name = f.getCast() + name;
 						}
 
-						if (f.isList && !f.isDoubleList)
+						if (f.structureType == StructureType.Graph)
+						{
+							tmp += ("\t\t\t" + name + ",\n");
+						} else if (f.isList && !f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneList"
 									+ (f.isTypeExternalNotNode() ? "External"
@@ -104,7 +108,7 @@ public class CloneWithMapMethod extends CloneMethod
 				sb.append("\t\treturn node;");
 				break;
 			case Token:
-				sb.append("\t\t" + c.getName() + " token = new " + c.getName()
+				sb.append("\t\t" + c.getName().getName() + " token = new " + c.getName().getName()
 						+ "( ");
 
 				if (!fields.isEmpty())
@@ -119,7 +123,7 @@ public class CloneWithMapMethod extends CloneMethod
 							name = f.getCast() + name;
 						}
 						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
+								+ NameUtil.getClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
@@ -151,7 +155,7 @@ public class CloneWithMapMethod extends CloneMethod
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = c.getName();
+		this.returnType = c.getName().getName();
 		// this.requiredImports.add("java.util.LinkedList");
 		// this.requiredImports.add("java.util.List");
 		this.requiredImports.add("java.util.Map");
@@ -219,7 +223,7 @@ public class CloneWithMapMethod extends CloneMethod
 							name = f.getCast() + name;
 						}
 						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
+								+ NameUtil.getClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}
@@ -241,7 +245,7 @@ public class CloneWithMapMethod extends CloneMethod
 	{
 		Set<String> imports = new HashSet<String>();
 		imports.addAll(super.getRequiredImports());
-		imports.add(env.node.getImportName());
+		imports.add(env.iNode.getName().getCanonicalName());
 		imports.add("java.util.Map");
 		return imports;
 	}

@@ -1,19 +1,19 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
-import com.lausdahl.ast.creator.definitions.CustomClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class CustomSetMethod extends Method
 {
 	Field f;
-	CustomClassDefinition c;
+//	CustomClassDefinition c;
 
-	public CustomSetMethod(CustomClassDefinition c, Field f, Environment env)
+	public CustomSetMethod(IClassDefinition c, Field f, Environment env)
 	{
 		super(c, env);
-		this.c = c;
+//		this.c = c;
 		this.f = f;
 	}
 
@@ -21,7 +21,7 @@ public class CustomSetMethod extends Method
 	protected void prepare()
 	{
 		this.name = "set"
-				+ CommonTreeClassDefinition.javaClassName(f.getName());
+				+ NameUtil.javaClassName(f.getName());
 		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
 
 		/**
@@ -35,9 +35,9 @@ public class CustomSetMethod extends Method
 		sbDoc.append("/**\n");
 		sbDoc.append("\t");
 		sbDoc.append("* Sets the {@code " + f.getName()
-				+ "} child of this {@link " + c.getName() + "} node.\n");
+				+ "} child of this {@link " + classDefinition.getName().getName() + "} node.\n");
 		sbDoc.append("\t* @param value the new {@code " + f.getName()
-				+ "} child of this {@link " + c.getName() + "} node\n");
+				+ "} child of this {@link " + classDefinition.getName().getName() + "} node\n");
 
 		StringBuilder sb = new StringBuilder();
 

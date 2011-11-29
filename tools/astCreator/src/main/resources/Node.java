@@ -1,25 +1,25 @@
+//COPYRIGHT
 package %generated.node%;
 
 import java.io.Serializable;
 import java.util.Collection;
-//import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import %org.overture.ast.analysis%.%IAnalysis%;
-import %org.overture.ast.analysis%.%IAnswer%;
-import %org.overture.ast.analysis%.%IQuestion%;
-import %org.overture.ast.analysis%.%IQuestionAnswer%;
+import %org.overture.ast.analysis.IAnalysis%;
+import %org.overture.ast.analysis.IAnswer%;
+import %org.overture.ast.analysis.IQuestion%;
+import %org.overture.ast.analysis.IQuestionAnswer%;
 
-public abstract class %Node% implements Cloneable, Serializable, Comparable<%Node%>
+public abstract class %Node% implements %INode%, Cloneable, Serializable, /*experimental compare based on toString*/Comparable<%INode%>
 {
 	private static final long serialVersionUID = 1L;
 	
-	private %Node% parent;
+	private %INode% parent;
 	
 	public @Override abstract Object clone();
-	public abstract %Node% clone(Map<%Node%,%Node%> oldToNewMap);
+	public abstract %INode% clone(Map<%INode%,%INode%> oldToNewMap);
 	/**
 	 * Returns the {@link NodeEnum} corresponding to the
 	 * type of this {@link Node} node.
@@ -31,7 +31,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * Returns the parent node of this node.
 	 * @return the parent node of this node
 	 */
-	public %Node% parent() {
+	public %INode% parent() {
 		return this.parent;
 	}
 
@@ -39,7 +39,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * Sets the parent node of this node.
 	 * @param parent the new parent node of this node
 	 */
-	public void parent(%Node% parent) {
+	public void parent(%INode% parent) {
 		this.parent = parent;
 	}
 	
@@ -48,7 +48,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * @param child the child node to be removed from this node
 	 * @throws RuntimeException if {@code child} is not a child of this node
 	 */
-	public abstract void removeChild(%Node% child);
+	public abstract void removeChild(%INode% child);
 	
 //	/**
 //	 * Replaces the {@link %Node%} {@code oldChild} child node of this node
@@ -75,7 +75,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * @return a deep clone of {@code node}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T extends %Node%> T cloneNode(T node) {
+	protected <T extends %INode%> T cloneNode(T node) {
 		if(node != null) {
 			return (T) node.clone();
 		}
@@ -99,7 +99,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * @return a deep clone of {@code node}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T extends %Node%> T cloneNode(T node, java.util.Map<%Node%,%Node%> oldToNewMap) {
+	protected <T extends %INode%> T cloneNode(T node, java.util.Map<%INode%,%INode%> oldToNewMap) {
 		if(node != null) {
 			T clone = (T) node.clone(oldToNewMap);
 			oldToNewMap.put(node,clone);
@@ -109,7 +109,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T extends %ExternalNode%> T cloneNode(T node, java.util.Map<%Node%,%Node%> oldToNewMap) {
+	protected <T extends %ExternalNode%> T cloneNode(T node, java.util.Map<%INode%,%INode%> oldToNewMap) {
 		if(node != null) {
 			T clone = (T) node.clone();//oldToNewMap);
 //			oldToNewMap.put(node,clone);
@@ -124,7 +124,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * @return a deep clone of {@code list}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T extends %Node%> List<T> cloneList(List<T> list) {
+	protected <T extends %INode%> List<T> cloneList(List<T> list) {
 		List<T> clone = new LinkedList<T>();
 		for(T n : list) {
 			clone.add((T) n.clone());
@@ -141,7 +141,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 		return clone;
 	}
 	
-	protected <T extends %Node%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list) {
+	protected <T extends %INode%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list) {
 		LinkedList<List<T>> clone = new LinkedList< List<T>>();
 		for(List<T> n : list) {
 			clone.add( cloneList(n));
@@ -157,7 +157,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * @return a deep clone of {@code list}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T extends %Node%> List<T> cloneList(List<T> list, java.util.Map<%Node%,%Node%> oldToNewMap) {
+	protected <T extends %INode%> List<T> cloneList(List<T> list, java.util.Map<%INode%,%INode%> oldToNewMap) {
 		List<T> clone = new LinkedList<T>();
 		for(T n : list) {
 			T cloneNode = (T) n.clone(oldToNewMap);
@@ -168,7 +168,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T extends %ExternalNode%> List<T> cloneListExternal(List<T> list, java.util.Map<%Node%,%Node%> oldToNewMap) {
+	protected <T extends %ExternalNode%> List<T> cloneListExternal(List<T> list, java.util.Map<%INode%,%INode%> oldToNewMap) {
 		List<T> clone = new LinkedList<T>();
 		for(T n : list) {
 			T cloneNode = (T) n.clone();//oldToNewMap);
@@ -178,7 +178,7 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 		return clone;
 	}
 	
-	protected <T extends %Node%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list, java.util.Map<%Node%,%Node%> oldToNewMap) {
+	protected <T extends %INode%> Collection<? extends List<T>> cloneListList(List<? extends List<T>> list, java.util.Map<%INode%,%INode%> oldToNewMap) {
 		LinkedList<List<T>> clone = new LinkedList< List<T>>();
 		for(List<T> n : list) {
 			clone.add( cloneList(n,oldToNewMap));
@@ -192,13 +192,20 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 * @param classType the superclass used
 	 * @return the nearest ancestor of this node
 	 */
-	public <T extends %Node%> T getAncestor(Class<T> classType) {
-		%Node% n = this;
+	public <T extends %INode%> T getAncestor(Class<T> classType) {
+		%INode% n = this;
 		while (!classType.isInstance(n)) {
 			n = n.parent();
 			if (n == null) return null;
 		}
 		return classType.cast(n);
+	}
+	
+	/**
+	 * CompareTo based on ToString
+	 */
+	public int compareTo(%INode% o) {
+		return toString().compareTo(o.toString());
 	}
 	
 	/**
@@ -231,50 +238,4 @@ public abstract class %Node% implements Cloneable, Serializable, Comparable<%Nod
 	 */
 	public abstract <Q,A> A apply(%IQuestionAnswer<Q,A>% caller, Q question);
 		
-//	//////////////////////////////////// Try out //////////////////////////////////
-//	/**
-//	 * Ignored by clone
-//	 */
-//	final Map<String, Map<String, Object>> customFields = new Hashtable<String, Map<String, Object>>();
-//
-//	public void setCustomField(String pluginId, String field, Object value)
-//	{
-//		if (customFields.containsKey(pluginId))
-//		{
-//			Map<String, Object> fields = customFields.get(pluginId);
-//			if (fields.containsKey(field))
-//			{
-//				fields.remove(field);
-//			}
-//			fields.put(field, value);
-//		} else
-//		{
-//			Map<String, Object> fields = new Hashtable<String, Object>();
-//			fields.put(field, value);
-//			customFields.put(pluginId, fields);
-//		}
-//	}
-
-//	@SuppressWarnings("unchecked")
-//	public <T> T getCustomField(String pluginId, String field, T defaultValue)
-//	{
-//		if (customFields.containsKey(pluginId))
-//		{
-//			Map<String, Object> fields = customFields.get(pluginId);
-//			if (fields.containsKey(field))
-//			{
-//				Object o = fields.get(field);
-//				if(defaultValue.getClass().isInstance(o))
-//				{
-//					return (T) o;
-//				}
-//				
-//			}
-//		}
-//		return defaultValue;
-//	}
-	
-	public int compareTo(%Node% o) {
-		return toString().compareTo(o.toString());
-}
 }

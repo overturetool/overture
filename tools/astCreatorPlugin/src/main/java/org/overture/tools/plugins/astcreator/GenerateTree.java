@@ -1,15 +1,14 @@
 package org.overture.tools.plugins.astcreator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.overture.tools.plugins.astcreator.util.Util;
 
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.Main;
+import com.lausdahl.ast.creator.env.Environment;
 
 /**
  * Generate Tree

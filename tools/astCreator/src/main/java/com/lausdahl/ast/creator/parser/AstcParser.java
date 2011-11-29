@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-07-28 13:30:50
+// $ANTLR 3.2 Sep 23, 2009 14:05:07 C:\\overture\\astV2\\tools\\astCreator\\src\\main\\resources\\Astc.g 2011-11-29 13:07:59
 
 package com.lausdahl.ast.creator.parser;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 import org.antlr.runtime.tree.*;
-
+@SuppressWarnings("all")
 public class AstcParser extends Parser {
     public static final String[] tokenNames = new String[] {
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ASSIGN", "COLON", "PACKAGES", "AST", "TOKENS", "ASPECT_DCL", "FIELD_DCL", "QUOTE", "COMMENT", "ID", "JAVANAME", "WS", "ESC_SEQ", "NormalChar", "SpecialChar", "'base'", "';'", "'analysis'", "'%'", "'|'", "'#'", "'{'", "'}'", "'['", "']'", "'('", "')'", "'?'", "'*'", "'**'", "'+'", "'||'", "'&&'"
@@ -722,7 +722,7 @@ public class AstcParser extends Parser {
 
 
             // AST REWRITE
-            // elements: aspectName, definitions
+            // elements: definitions, aspectName
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -991,7 +991,7 @@ public class AstcParser extends Parser {
 
 
             // AST REWRITE
-            // elements: alternative, name, productionfields
+            // elements: productionfields, name, alternative
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1113,7 +1113,7 @@ public class AstcParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: ID, 24
+                    // elements: 24, ID
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -1422,7 +1422,7 @@ public class AstcParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: ID, definitions
+                    // elements: definitions, ID
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 

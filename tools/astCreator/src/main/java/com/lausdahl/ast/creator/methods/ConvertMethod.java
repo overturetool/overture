@@ -3,9 +3,9 @@ package com.lausdahl.ast.creator.methods;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
 
 public class ConvertMethod extends Method
 {
@@ -40,7 +40,7 @@ public class ConvertMethod extends Method
 			this.returnType = to.getType();
 		} else
 		{
-			this.returnType = toCDef.getName();
+			this.returnType = toCDef.getName().getName();
 		}
 		this.isAbstract = true;
 
@@ -48,15 +48,15 @@ public class ConvertMethod extends Method
 		{
 			if (from.isList)
 			{
-				this.arguments.add(new Argument(Environment.listDef.getImportName()
-						+ "<? extends " + from.type.getImportName() + ">", "node"));
+				this.arguments.add(new Argument(Environment.listDef.getName().getCanonicalName()
+						+ "<? extends " + from.type.getName().getCanonicalName() + ">", "node"));
 			} else
 			{
-				this.arguments.add(new Argument(from.type.getImportName(), "node"));
+				this.arguments.add(new Argument(from.type.getName().getCanonicalName(), "node"));
 			}
 		} else
 		{
-			this.arguments.add(new Argument(fromCDef.getImportName(), "node"));
+			this.arguments.add(new Argument(fromCDef.getName().getCanonicalName(), "node"));
 		}
 	}
 
@@ -66,14 +66,14 @@ public class ConvertMethod extends Method
 		Set<String> list = new HashSet<String>();
 		if (to != null)
 		{
-			list.add(to.type.getImportName());
+			list.add(to.type.getName().getCanonicalName());
 			if (to.isList)
 			{
-				list.add(Environment.listDef.getImportName());
+				list.add(Environment.listDef.getName().getCanonicalName());
 			}
 		} else
 		{
-			list.add(toCDef.getImportName());
+			list.add(toCDef.getName().getCanonicalName());
 		}
 		return list;
 	}

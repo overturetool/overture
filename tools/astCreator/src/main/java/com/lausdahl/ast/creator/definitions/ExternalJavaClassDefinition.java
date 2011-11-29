@@ -1,30 +1,36 @@
 package com.lausdahl.ast.creator.definitions;
 
-import com.lausdahl.ast.creator.Environment;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.java.definitions.JavaName;
 
-public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
+public class ExternalJavaClassDefinition extends BaseClassDefinition
 {
-	String name;
 	public final boolean extendsNode;
 
 	public ExternalJavaClassDefinition(String rawName,
 			IClassDefinition superClass, ClassType type, String name,
 			boolean extendsNode, Environment env)
 	{
-		super(rawName, superClass, type, env);
+		super(createName(rawName, superClass, type, name, extendsNode, env));
 		this.extendsNode = extendsNode;
+
+	}
+
+	private static JavaName createName(String rawName,
+			IClassDefinition superClass, ClassType type, String name,
+			boolean extendsNode, Environment env)
+	{
 		if (name.contains("."))
 		{
-			setPackageName(name.substring(0, name.lastIndexOf(".")));
-			this.name = name.substring(name.lastIndexOf(".") + 1);
+			return new JavaName(name.substring(0, name.lastIndexOf(".")), name.substring(name.lastIndexOf(".") + 1));
 		} else
 		{
-			this.name = name;
+			return new JavaName("", name);
 		}
 	}
 
 	@Override
-	public String getName()
+	public JavaName getName()
 	{
 		return name;
 	}
@@ -44,7 +50,7 @@ public class ExternalJavaClassDefinition extends CommonTreeClassDefinition
 	@Override
 	public String toString()
 	{
-		return getName();
+		return getName().toString();
 	}
 
 	@Override

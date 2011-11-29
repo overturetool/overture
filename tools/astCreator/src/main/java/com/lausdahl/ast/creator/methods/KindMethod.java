@@ -1,19 +1,17 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.EnumUtil;
 
 public class KindMethod extends Method
 {
 
-	CommonTreeClassDefinition c;
 	boolean isAbstractKind = false;
 
-	public KindMethod(CommonTreeClassDefinition c,boolean isAbstractKind, Environment env)
+	public KindMethod(IClassDefinition c,boolean isAbstractKind, Environment env)
 	{
 		super(c, env);
-		this.c = c;
 		this.isAbstractKind = isAbstractKind;
 	}
 
@@ -24,21 +22,21 @@ public class KindMethod extends Method
 		if (isAbstractKind)//(c.getType() == ClassType.Production)
 		{
 			this.isAbstract = true;
-			this.name = "kind" + c.getName();
-			this.returnType = c.getEnumTypeName();
+			this.name = "kind" + env.getInterfaceForCommonTreeNode(classDefinition).getName().getName();
+			this.returnType = EnumUtil.getEnumTypeName(classDefinition,env);
 		} else
 		{
-			IClassDefinition superClass = c.getSuperClassDefinition();
-			if (superClass instanceof CommonTreeClassDefinition)
+			IClassDefinition superClass = classDefinition.getSuperDef();
+			if (env.isTreeNode(superClass ))
 			{
-				String enumerationName = ((CommonTreeClassDefinition) superClass).getEnumTypeName();
-				this.name = "kind" + c.getSuperClassDefinition().getName();
+				String enumerationName = EnumUtil.getEnumTypeName( superClass,env);
+				this.name = "kind" + env.getInterfaceForCommonTreeNode(classDefinition.getSuperDef()).getName().getName();
 
 				// this.arguments.add(new Argument(f.getType(), "value"));
 				this.returnType = enumerationName;
 				this.annotation = "@Override";
 				this.body = "\t\treturn " + enumerationName + "."
-						+ c.getEnumName() + ";";
+						+ EnumUtil.getEnumElementName(classDefinition) + ";";
 			}
 		}
 

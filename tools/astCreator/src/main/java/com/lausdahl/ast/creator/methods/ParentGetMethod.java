@@ -1,7 +1,7 @@
 package com.lausdahl.ast.creator.methods;
 
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.env.Environment;
 
 public class ParentGetMethod extends Method
 {

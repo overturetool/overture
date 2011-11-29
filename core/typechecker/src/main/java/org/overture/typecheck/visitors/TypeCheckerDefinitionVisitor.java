@@ -40,7 +40,7 @@ import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.PTraceDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
-import org.overture.ast.definitions.traces.PTraceDefinition;
+import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
@@ -1052,9 +1052,9 @@ public class TypeCheckerDefinitionVisitor extends
 			question = new TypeCheckInfo(new FlatEnvironment(PDefinitionAssistantTC.getSelfDefinition(node), question.env), question.scope, question.qualifiers);
 		}
 
-		for (List<PTraceDefinition> term : node.getTerms())
+		for (ATraceDefinitionTerm term : node.getTerms())
 		{
-			PTraceDefinitionAssistant.typeCheck(term, rootVisitor, new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE));
+			PTraceDefinitionAssistant.typeCheck(term.getList(), rootVisitor, new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE));
 		}
 
 		return null;

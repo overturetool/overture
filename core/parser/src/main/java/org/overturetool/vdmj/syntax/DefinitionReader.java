@@ -57,6 +57,7 @@ import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinit
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
+import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -92,6 +93,7 @@ import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overturetool.util.ClonableString;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
@@ -1429,7 +1431,20 @@ public class DefinitionReader extends SyntaxReader
 		// TODO
 		LexNameToken name = new LexNameToken(start.module, Utils.listToString(names, "_"), start);
 		AAccessSpecifierAccessSpecifier access = new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
-		return new ANamedTraceDefinition(start, name, NameScope.GLOBAL, false, null, access, null, traces);
+		
+		List<ClonableString> namesClonable = new Vector<ClonableString>();
+		for (String string : names)
+		{
+			namesClonable.add( new ClonableString(string));
+		}
+		
+		List<ATraceDefinitionTerm> tracesTerms = new Vector<ATraceDefinitionTerm>();
+		for (List<PTraceDefinition> list : traces)
+		{
+			tracesTerms.add( new ATraceDefinitionTerm(list));
+		}
+		
+		return new ANamedTraceDefinition(start, name, NameScope.GLOBAL, false, null, access, null, namesClonable,tracesTerms);
 	}
 
 	private List<String> readTraceIdentifierList() throws ParserException,

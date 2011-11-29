@@ -1,11 +1,14 @@
 package com.lausdahl.ast.creator.methods.analysis.depthfirst;
 
-import com.lausdahl.ast.creator.Environment;
+import java.util.Set;
+
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
-import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.methods.GetMethod;
 import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class DepthFirstCaseMethod extends Method
 {
@@ -26,19 +29,19 @@ public class DepthFirstCaseMethod extends Method
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
 		sb.append("\t* Called by the {@link "
-				+ c.getName()
+				+ AnalysisUtil.getClass(env, c).getName().getName()
 				+ "} node from {@link "
-				+ c.getName()
+				+ AnalysisUtil.getClass(env, c).getName().getName()
 				+ "#apply("
-				+ (c.getInterfaces().isEmpty() ? c.getSignatureName()
-						: c.getInterfaces().iterator().next().getSignatureName())
+				+ (c.getInterfaces().isEmpty() ? c.getName().getName()
+						: c.getInterfaces().iterator().next().getName().getName())
 				+ ")}.\n");
-		sb.append("\t* @param node the calling {@link " + c.getName()
+		sb.append("\t* @param node the calling {@link " + AnalysisUtil.getClass(env, c).getName().getName()
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "case" + InterfaceDefinition.javaClassName(c.getName());
-		this.arguments.add(new Argument(classDefinition.getName(), "node"));
+		this.name = "case" + NameUtil.getClassName(AnalysisUtil.getCaseClass(env, c).getName().getName());
+		this.arguments.add(new Argument(AnalysisUtil.getCaseClass(env, classDefinition).getName().getName(), "node"));
 		this.requiredImports.add("java.util.ArrayList");
 		this.requiredImports.add("java.util.List");
 
@@ -112,5 +115,24 @@ public class DepthFirstCaseMethod extends Method
 		// {
 		// this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
 		// }
+	}
+	
+	@Override
+	public Set<String> getRequiredImports()
+	{
+		Set<String> imports = super.getRequiredImports();
+		for (Field f : classDefinition.getFields())
+		{
+			if (f.isTokenField)
+			{
+				continue;
+			}
+			if(f.isList || f.isDoubleList)
+			{
+				f.getInnerTypeForList();
+				imports.add(f.type.getName().getCanonicalName());
+			}
+		}
+		return imports;
 	}
 }

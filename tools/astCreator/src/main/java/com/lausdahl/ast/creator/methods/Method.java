@@ -1,14 +1,15 @@
 package com.lausdahl.ast.creator.methods;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.env.Environment;
 
 public abstract class Method
 {
@@ -36,30 +37,30 @@ public abstract class Method
 
 	public boolean isConstructor = false;
 	public boolean isAbstract = false;
-	protected String javaDoc;
+	protected String javaDoc = "";
 	public String name;
 	public String returnType = "void";
 	public List<Argument> arguments = new Vector<Method.Argument>();
 	public String body;
 	public String annotation;
 	public IClassDefinition classDefinition;
-	protected Set<String> requiredImports =new HashSet<String>();
-//	private boolean isStructureFinal = false;
+	protected Set<String> requiredImports = new HashSet<String>();
+	// private boolean isStructureFinal = false;
 	protected boolean skip = false;
 	protected boolean optionalVdmArgument = true;
 	protected Environment env;
 
-	public Method(IClassDefinition c,Environment env)
+	public Method(IClassDefinition c, Environment env)
 	{
 		this.env = env;
 		setClassDefinition(c);
 	}
 
-//	public Method(IClassDefinition c, boolean finalStructure)
-//	{
-//		this.isStructureFinal = finalStructure;
-//		setClassDefinition(c);
-//	}
+	// public Method(IClassDefinition c, boolean finalStructure)
+	// {
+	// this.isStructureFinal = finalStructure;
+	// setClassDefinition(c);
+	// }
 
 	public void setClassDefinition(IClassDefinition c)
 	{
@@ -68,10 +69,10 @@ public abstract class Method
 
 	private void internalPrepare()
 	{
-//		if (isStructureFinal)
-//		{
-//			return;
-//		}
+		// if (isStructureFinal)
+		// {
+		// return;
+		// }
 		requiredImports.clear();
 		arguments.clear();
 		prepare();
@@ -79,10 +80,6 @@ public abstract class Method
 
 	private void internalVdmPrepare()
 	{
-//		if (isStructureFinal)
-//		{
-//			return;
-//		}
 		optionalVdmArgument = true;
 		skip = false;
 		requiredImports.clear();
@@ -108,23 +105,61 @@ public abstract class Method
 		{
 			addImportForType(arg.type);
 		}
-		
+
 		return requiredImports;
 	}
-	
+
 	private void addImportForType(String typeName)
 	{
-		IInterfaceDefinition defIntf = env.lookUpInterface(typeName);
-		if (defIntf != null )
+		//TODO type name as a string is not good
+		Set<String> names = new HashSet<String>();
+		if (typeName.contains("<"))
 		{
-			requiredImports.add(defIntf.getPackageName() + "." + defIntf.getSignatureName());
-		}
-		
-		IClassDefinition def = env.lookUp(typeName);
-		if (def != null )
+			names.add(typeName.substring(0, typeName.indexOf('<')).trim());
+			if (!typeName.contains("extends"))
+			{
+				String tmp = typeName.substring(typeName.indexOf('<') + 1, typeName.indexOf('>')).trim();
+				names.addAll(Arrays.asList(tmp.split("\\,")));
+			} else
+			{
+				String tmp = typeName.substring(typeName.indexOf('<') + 1, typeName.indexOf('>')).trim();
+				tmp = tmp.replaceAll("\\?", "");
+				tmp = tmp.replaceAll("extends", "");
+				tmp = tmp.replaceAll(" ", "");
+				names.addAll(Arrays.asList(tmp.split("\\,")));
+			}
+		} else
 		{
-			requiredImports.add(def.getPackageName() + "." + def.getSignatureName());
+			names.add(typeName);
 		}
+
+		for (String name : names)
+		{
+			IInterfaceDefinition defIntf = env.lookUpInterface(name);
+			if (defIntf != null)
+			{
+				requiredImports.add(defIntf.getName().getCanonicalName());
+			}
+
+			IClassDefinition def = env.lookUp(name);
+			if (def != null)
+			{
+				requiredImports.add(def.getName().getCanonicalName());
+			}
+		}
+
+	}
+
+	public Set<String> getRequiredImportsSignature()
+	{
+		internalPrepare();
+		addImportForType(returnType);
+		for (Argument arg : arguments)
+		{
+			addImportForType(arg.type);
+		}
+
+		return requiredImports;
 	}
 
 	@Override
@@ -140,7 +175,7 @@ public abstract class Method
 		{
 			return "";
 		}
-		
+
 		String tmp = javaDoc != null ? javaDoc + "\n" : "";
 		if (annotation != null)
 		{
@@ -171,7 +206,7 @@ public abstract class Method
 		{
 			return "";
 		}
-		
+
 		String tmp = javaDoc != null ? javaDoc + "\n" : "";
 		if (annotation != null)
 		{
@@ -220,11 +255,13 @@ public abstract class Method
 		for (Argument a : arguments)
 		{
 			String typeName = a.type;
-			if(typeName.contains("List<"))
+			if (typeName.contains("List<"))
 			{
-				typeName="seq of "+typeName.substring(typeName.lastIndexOf(' '),typeName.lastIndexOf('>')).trim();
+				typeName = "seq of "
+						+ typeName.substring(typeName.lastIndexOf(' '), typeName.lastIndexOf('>')).trim();
 			}
-			tmp += (optionalVdmArgument?"[":"") + typeName + (optionalVdmArgument?"]":"")+" * ";
+			tmp += (optionalVdmArgument ? "[" : "") + typeName
+					+ (optionalVdmArgument ? "]" : "") + " * ";
 		}
 		if (!arguments.isEmpty())
 		{
@@ -234,8 +271,7 @@ public abstract class Method
 			tmp += "() ";
 		}
 
-		
-		String returnTypeName =BaseClassDefinition.stripGenericArguments( returnType);
+		String returnTypeName = BaseClassDefinition.stripGenericArguments(returnType);
 		tmp += " ==> "
 				+ (returnType.length() == 0 ? name
 						: (returnType.equals("void") ? "()" : returnTypeName))
@@ -263,5 +299,59 @@ public abstract class Method
 	public void setEnvironment(Environment env2)
 	{
 		this.env = env2;
+	}
+
+	protected String getSpecializedTypeName(IInterfaceDefinition c)
+	{
+		IInterfaceDefinition intfForClass = env.getInterfaceForCommonTreeNode(c);
+		if (intfForClass == null)
+		{
+			return c.getName().getName();
+		} else
+		{
+			return intfForClass.getName().getName();
+		}
+	}
+
+	public boolean isOverride(Method m)
+	{
+		if (this.name.equals(m.name) && arguments.size() == m.arguments.size())
+		{
+			for (int i = 0; i < arguments.size(); i++)
+			{
+				Argument sourceArg1 = arguments.get(i);
+				Argument basearg1 = m.arguments.get(i);
+				if (!env.isSuperTo(env.lookUpType(basearg1.type), env.lookUpType(sourceArg1.type)))
+				{
+					return false;
+				}
+			}
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+
+	public boolean isSignatureEqual(Method m)
+	{
+		if (this.name.equals(m.name) && arguments.size() == m.arguments.size()
+				&& returnType.equals(m.returnType))
+		{
+			for (int i = 0; i < arguments.size(); i++)
+			{
+				Argument sourceArg1 = arguments.get(i);
+				Argument basearg1 = m.arguments.get(i);
+				if (!basearg1.type.equals(sourceArg1.type))
+				{
+					return false;
+				}
+
+			}
+			return true;
+		} else
+		{
+			return false;
+		}
 	}
 }

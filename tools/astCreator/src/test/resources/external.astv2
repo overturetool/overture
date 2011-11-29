@@ -1,0 +1,25 @@
+Packages
+base org.overture.ast.node;
+analysis org.overture.ast.analysis;
+Tokens
+/* This section declared tokens as internal types or external classes
+ * internal definitions:
+ *  plus='+';
+ *
+ * external
+ *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+ */
+  lextoken = 'java:org.overturetool.vdmj.lex.LexToken';
+  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+  tok = 'java:enum:org.overturetool.vdmj.lex.KK';
+ 
+Abstract Syntax Tree
+exp {-> package='org.overture.ast.expressions'}
+    =   {example1} [token]:lextoken [location]:location [tok]:tok
+    ;
+
+Aspect Declaration
+/* This section allows fields of root types to be declared e.g. exp*/
+%exp = [tokens]:lextoken* [additionalLocation]:location
+    ;
+    

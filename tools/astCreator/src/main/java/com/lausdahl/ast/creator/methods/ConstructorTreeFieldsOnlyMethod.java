@@ -3,18 +3,19 @@ package com.lausdahl.ast.creator.methods;
 import java.util.List;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 {
 	public ConstructorTreeFieldsOnlyMethod(IClassDefinition c, Environment env)
 	{
 		super(c, env);
+		this.name = classDefinition.getName().getName();
 	}
 
 	@Override
@@ -25,9 +26,9 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		// if(!skip)
 		{
 			List<Field> allFields = new Vector<Field>();
-			if (classDefinition instanceof CommonTreeClassDefinition)
+			if (env.isTreeNode(classDefinition ))
 			{
-				allFields.addAll(((CommonTreeClassDefinition) classDefinition).getInheritedFields());
+				allFields.addAll(classDefinition.getInheritedFields());
 			}
 			allFields.addAll(classDefinition.getFields());
 
@@ -44,7 +45,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		{
 			return;
 		}
-		this.name = classDefinition.getSignatureName();
+		this.name = classDefinition.getName().getName();
 
 		this.returnType = "";
 
@@ -97,7 +98,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 						+ "_"));
 				sb.append("\t\t");
 				sb.append("this.set");
-				sb.append(CommonTreeClassDefinition.javaClassName(f.getName()));
+				sb.append(NameUtil.javaClassName(f.getName()));
 				sb.append("(");
 				sb.append(name + "_");
 				sb.append(");\n");
@@ -110,7 +111,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 			{
 				sb.append("\t\t");
 				sb.append("this.set");
-				sb.append(CommonTreeClassDefinition.javaClassName(f.getName()));
+				sb.append(NameUtil.javaClassName(f.getName()));
 				sb.append("(");
 				sb.append(JavaTypes.getDefaultValue(f.getType()));
 				sb.append(");\n");

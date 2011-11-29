@@ -29,10 +29,11 @@ package org.overturetool.vdmj.lex;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.overture.ast.analysis.IAnalysis;
-import org.overture.ast.analysis.IAnswer;
-import org.overture.ast.analysis.IQuestion;
-import org.overture.ast.analysis.IQuestionAnswer;
+import org.overture.ast.analysis.intf.IAnalysis;
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.node.INode;
 import org.overture.ast.node.Node;
 import org.overture.ast.node.NodeEnum;
 
@@ -102,7 +103,7 @@ import org.overture.ast.node.NodeEnum;
 	}
 
 	@Override
-	public Node clone(Map<Node, Node> oldToNewMap) {
+	public INode clone(Map<INode, INode> oldToNewMap) {
 		Node newNode = (Node) clone();
 		oldToNewMap.put(this, newNode);
 		return newNode;
@@ -134,7 +135,7 @@ import org.overture.ast.node.NodeEnum;
 	}
 
 	@Override
-	public void removeChild(Node child) {
+	public void removeChild(INode child) {
 				
 	}
 

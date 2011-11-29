@@ -11,12 +11,14 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
 
 import com.lausdahl.ast.creator.ToStringAddOn.ToStringPart.ToStringPartType;
-import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
-import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.parser.AstcToStringLexer;
 import com.lausdahl.ast.creator.parser.AstcToStringParser;
 import com.lausdahl.ast.creator.parser.AstcToStringParser.root_return;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class ToStringAddOnReader
 {
@@ -54,7 +56,7 @@ public class ToStringAddOnReader
 			show(t, 0);
 			ToStringAddOn envAddon = new ToStringAddOn();
 			env.addToStringAddOn(envAddon);
-			
+
 			for (Object root : t.getChildren())
 			{
 				if (root instanceof CommonTree)
@@ -65,14 +67,15 @@ public class ToStringAddOnReader
 					{
 						if (node.getChildren() != null)
 						{
-							
+
 							for (Object toke : node.getChildren())
 							{
 								if (toke instanceof CommonTree)
 								{
 									CommonTree p = (CommonTree) toke;
-									
-									if(p.getText()!=null && p.getText().equals("import"))
+
+									if (p.getText() != null
+											&& p.getText().equals("import"))
 									{
 										ToStringAddOn.ToStringPart part = new ToStringAddOn.ToStringPart();
 										part.type = ToStringPartType.Import;
@@ -80,16 +83,17 @@ public class ToStringAddOnReader
 										envAddon.parts.add(part);
 										continue;
 									}
-									
+
 									// String classDefName = "P"
 									// + BaseClassDefinition.firstLetterUpper(p.getText());
 									String classDefName = getNameFromAspectNode((CommonTree) p.getChild(0));
-									IClassDefinition c = env.lookUp(classDefName);
+									IClassDefinition c = lookup(env,classDefName);
 									if (c == null)
 									{
-										System.err.println("Failed to lookup aspect addition with "
+										System.err.println("Failed to lookup tostring addition with "
 												+ p + classDefName);
 										continue;
+
 									}
 									boolean firstName = true;
 									if (p.getChildCount() > 0)
@@ -144,7 +148,7 @@ public class ToStringAddOnReader
 
 									println("To String Extensions: " + p);
 								}
-								
+
 							}
 						}
 					}
@@ -155,6 +159,28 @@ public class ToStringAddOnReader
 			e.printStackTrace();
 			throw new AstCreatorException("Exception in AST To String parser", e, true);
 		}
+	}
+
+	private IClassDefinition lookup(Environment env, String classDefName)
+	{
+		IClassDefinition c = env.lookUp(classDefName);
+		if (c == null)
+		{
+			//now look for a P or S node
+			IInterfaceDefinition intf = env.lookUpInterface(classDefName);
+			if(intf !=null)
+			{
+				for (IClassDefinition d : env.getClasses())
+				{
+					//todo multiple classes may implement the interface, but really this should not occur
+					if(d.getInterfaces().contains(intf))
+					{
+						return d;//just return the first
+					}
+				}
+			}
+		}
+		return c;
 	}
 
 	public static void show(CommonTree token, int level)
@@ -199,23 +225,13 @@ public class ToStringAddOnReader
 	public static String getNameFromAspectNode(CommonTree p)
 	{
 		String topName = CreateOnParse.unfoldName(p);
-//		String topName = p.getText();
-//		if (p.getChildCount() > 0)
-//		{
-//			for (Object c : p.getChildren())
-//			{
-//				if (c instanceof CommonTree)
-//				{
-//					topName += ((CommonTree) c).getText();
-//				}
-//			}
-//		}
 
 		String[] names = topName.split("->");
 
 		List<String> nns = Arrays.asList(names);
 		Collections.reverse(nns);
 
+		ClassType type = ClassType.Unknown;
 		String name = null;
 		for (String s : nns)
 		{
@@ -223,19 +239,22 @@ public class ToStringAddOnReader
 			{
 				if (s.startsWith("#"))
 				{
+					type = ClassType.SubProduction;
 					name = "S";
 				} else
 				{
 					name = "A";
 				}
 			}
-			name += InterfaceDefinition.javaClassName(BaseClassDefinition.firstLetterUpper(s.replace("#", "")));
+			name += NameUtil.getClassName(s.replace("#", ""));
 		}
 
-		// String name = (topName.startsWith("#") ? "S" : "P");
-		//
-		// name += BaseClassDefinition.firstLetterUpper(topName.substring(topName.startsWith("#") ? 1
-		// : 0));
+		switch (type)
+		{
+			case SubProduction:
+				name += "Base";
+				break;
+		}
 
 		return name;
 	}

@@ -6,21 +6,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.ToStringAddOn.ToStringPart;
 import com.lausdahl.ast.creator.ToStringAddOn.ToStringPart.ToStringPartType;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
 
 public class ToStringMethod extends Method
 {
-	CommonTreeClassDefinition c;
 
-	public ToStringMethod(CommonTreeClassDefinition c, Environment env)
+	public ToStringMethod(IClassDefinition c, Environment env)
 	{
 		super(c, env);
-		this.c = c;
 	}
 
 	String bodyCache = null;
@@ -39,15 +37,15 @@ public class ToStringMethod extends Method
 
 		StringBuilder sb = new StringBuilder();
 
-		if (c.getToStringAddOns().isEmpty())
+		if (classDefinition.getToStringAddOns().isEmpty())
 		{
-			switch (c.getType())
+			switch (env.classToType.get(classDefinition))
 			{
 				case Token:
 				case Alternative:
 					sb.append("\t\treturn");
 					String tmp = "";
-					for (Field f : c.getFields())
+					for (Field f : classDefinition.getFields())
 					{
 						tmp += " ("
 								+ f.getName()
@@ -55,7 +53,7 @@ public class ToStringMethod extends Method
 								+ f.getName()
 								+ ".toString():this.getClass().getSimpleName())+";
 					}
-					if (!c.getFields().isEmpty())
+					if (!classDefinition.getFields().isEmpty())
 					{
 						tmp = tmp.substring(0, tmp.length() - 1);
 					}
@@ -91,7 +89,7 @@ public class ToStringMethod extends Method
 			}
 			sb.append("\t\treturn \"\" + ");
 
-			for (ToStringAddOn addon : c.getToStringAddOns())
+			for (ToStringAddOn addon : classDefinition.getToStringAddOns())
 			{
 				String tmp = "";
 				for (int i = 0; i < addon.parts.size(); i++)
@@ -102,7 +100,7 @@ public class ToStringMethod extends Method
 					{
 						case Field:
 							boolean found = false;
-							for (Field f : c.getInheritedFields())
+							for (Field f : classDefinition.getInheritedFields())
 							{
 								if (f.getName().equals("_" + p.content))
 								{
@@ -115,7 +113,7 @@ public class ToStringMethod extends Method
 
 							if (!found)
 							{
-								for (Field f : c.getFields())
+								for (Field f : classDefinition.getFields())
 								{
 									if (f.getName().equals("_" + p.content))
 									{
@@ -128,7 +126,7 @@ public class ToStringMethod extends Method
 							if (!found)
 							{
 								showError("Faild to find field \"_" + p.content
-										+ "\" in class " + c.getName());
+										+ "\" in class " + classDefinition.getName());
 							}
 							break;
 						case RawJava:
@@ -196,61 +194,16 @@ public class ToStringMethod extends Method
 		return ToStringPartType.Unknown;
 	}
 
-	private boolean isVdmBasicType(String type)
-	{
-		return (type.contains("int") || type.contains("real")
-				|| type.contains("char") || type.contains("String")
-				|| type.contains("seq") || type.contains("set"));
-	}
+//	private boolean isVdmBasicType(String type)
+//	{
+//		return (type.contains("int") || type.contains("real")
+//				|| type.contains("char") || type.contains("String")
+//				|| type.contains("seq") || type.contains("set"));
+//	}
 
 	@Override
 	protected void prepareVdm()
 	{
-		this.name = "toString";
-		this.returnType = "String";
-
-		StringBuilder sb = new StringBuilder();
-
-		switch (c.getType())
-		{
-			case Token:
-			case Alternative:
-				sb.append("\t\treturn");
-				String tmp = "";
-				for (Field f : c.getFields())
-				{
-					tmp += " (if "
-							+ f.getName()
-							+ "<>null then ("
-							+ (isVdmBasicType(f.getType()) ? "toStringg("
-									+ f.getName() + ")" : f.getName()
-									+ ".toString()")
-							+ ") else (this.getClass().getSimpleName()))+";
-				}
-				if (!c.getFields().isEmpty())
-				{
-					tmp = tmp.substring(0, tmp.length() - 1);
-				}
-				if (tmp.trim().length() == 0)
-				{
-					// sb.append(" super.toString()");
-					sb.append(" \"" + c.getName() + "\"");
-				} else
-				{
-					sb.append(tmp);
-				}
-
-				sb.append(";");
-				break;
-
-			case Production:
-			default:
-				// sb.append("\t\treturn super.toString();\n");
-				sb.append("\t\treturn \"" + c.getName() + "\";\n");
-				break;
-		}
-
-		this.body = sb.toString().replace('+', '^');
 	}
 
 	static List<String> reportedErrors = new Vector<String>();

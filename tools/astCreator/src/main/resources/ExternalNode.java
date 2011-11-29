@@ -1,3 +1,4 @@
+//COPYRIGHT
 package %generated.node%;
 
 import java.io.Serializable;

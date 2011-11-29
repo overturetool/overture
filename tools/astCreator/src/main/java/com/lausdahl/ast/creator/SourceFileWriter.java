@@ -19,6 +19,8 @@ import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class SourceFileWriter
 {
@@ -41,7 +43,7 @@ public class SourceFileWriter
 				continue;
 			}
 			System.out.print(/* def.getSignatureName()+"..." */".");
-//			System.out.println(def.getName());
+			// System.out.println(def.getName());
 			System.out.flush();
 			i--;
 			if (i == 0)
@@ -63,30 +65,42 @@ public class SourceFileWriter
 			String analysisPackageName, Environment env)
 	{
 		Map<String, String> replace = new Hashtable<String, String>();
-		replace.put("%Node%", env.node.getName());
-		replace.put("%Token%", env.token.getName());
-		replace.put("%NodeList%", env.nodeList.getName());
-		replace.put("%GraphNodeList%", env.graphNodeList.getName());
-		
-		replace.put("%NodeListList%", env.nodeListList.getName());
-		replace.put("%GraphNodeListList%", env.graphNodeListList.getName());
-		replace.put("%ExternalNode%", env.externalNode.getName());
+		replace.put("//COPYRIGHT", IInterfaceDefinition.copurightHeader);
+
+		replace.put("%INode%", env.iNode.getName().getName());
+		replace.put("%Node%", env.node.getName().getName());
+		replace.put("%IToken%", env.iToken.getName().getName());
+		replace.put("%Token%", env.token.getName().getName());
+		replace.put("%NodeList%", env.nodeList.getName().getName());
+		replace.put("%GraphNodeList%", env.graphNodeList.getName().getName());
+
+		replace.put("%NodeListList%", env.nodeListList.getName().getName());
+		replace.put("%GraphNodeListList%", env.graphNodeListList.getName().getName());
+		replace.put("%ExternalNode%", env.externalNode.getName().getName());
 		replace.put("%generated.node%", defaultPackage);
 
 		replace.put("%org.overture.ast.analysis%", analysisPackageName);
-		replace.put("%IAnalysis%", env.getTaggedDef(env.TAG_IAnalysis).getName());
-		replace.put("%IAnswer<A>%", env.getTaggedDef(env.TAG_IAnswer).getName());
-		replace.put("%IQuestion<Q>%", env.getTaggedDef(env.TAG_IQuestion).getName());
-		replace.put("%IQuestionAnswer<Q,A>%", env.getTaggedDef(env.TAG_IQuestionAnswer).getName());
 
-		replace.put("%IAnswer%", env.getTaggedDef(env.TAG_IAnswer).getSignatureName());
-		replace.put("%IQuestion%", env.getTaggedDef(env.TAG_IQuestion).getSignatureName());
-		replace.put("%IQuestionAnswer%", env.getTaggedDef(env.TAG_IQuestionAnswer).getSignatureName());
+		replace.put("%org.overture.ast.analysis.IAnalysis%", env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
+		replace.put("%org.overture.ast.analysis.IAnswer%", env.getTaggedDef(env.TAG_IAnswer).getName().getCanonicalName());
+		replace.put("%org.overture.ast.analysis.IQuestion%", env.getTaggedDef(env.TAG_IQuestion).getName().getCanonicalName());
+		replace.put("%org.overture.ast.analysis.IQuestionAnswer%", env.getTaggedDef(env.TAG_IQuestionAnswer).getName().getCanonicalName());
+
+		replace.put("%IAnalysis%", env.getTaggedDef(env.TAG_IAnalysis).getName().getName());
+		replace.put("%IAnswer<A>%", NameUtil.getGenericName(env.getTaggedDef(env.TAG_IAnswer)));
+		replace.put("%IQuestion<Q>%", NameUtil.getGenericName(env.getTaggedDef(env.TAG_IQuestion)));
+		replace.put("%IQuestionAnswer<Q,A>%", NameUtil.getGenericName(env.getTaggedDef(env.TAG_IQuestionAnswer)));
+
+		replace.put("%IAnswer%", env.getTaggedDef(env.TAG_IAnswer).getName().getName());
+		replace.put("%IQuestion%", env.getTaggedDef(env.TAG_IQuestion).getName().getName());
+		replace.put("%IQuestionAnswer%", env.getTaggedDef(env.TAG_IQuestionAnswer).getName().getName());
 
 		replace.put("%NodeEnum%", "NodeEnum"
-				+ env.node.getName().replace("Node", ""));
+				+ env.node.getName().getName().replace("Node", ""));
 
+		copy(generated, "INode.java", replace, defaultPackage);
 		copy(generated, "Node.java", replace, defaultPackage);
+		copy(generated, "IToken.java", replace, defaultPackage);
 		copy(generated, "Token.java", replace, defaultPackage);
 		copy(generated, "NodeList.java", replace, defaultPackage);
 		copy(generated, "NodeListList.java", replace, defaultPackage);
@@ -98,8 +112,6 @@ public class SourceFileWriter
 	private static void copy(File generated, String name,
 			Map<String, String> replaceTemplates, String packageName)
 	{
-		// File output = new File(new File(generated, "generated"), "node");
-
 		InputStream fis = null;
 
 		try
@@ -112,12 +124,6 @@ public class SourceFileWriter
 				fis = new FileInputStream(name);
 
 			}
-
-			// byte[] buffer = new byte[4096];
-			// for (int n; (n = fis.read(buffer)) != -1;)
-			// {
-			// out.write(buffer, 0, n);
-			// }
 			BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
 			String text = null;
@@ -136,19 +142,28 @@ public class SourceFileWriter
 			}
 
 			String outputFileName = "";
-			if (data.contains("class "))
+			if (data.contains(" class "))
 			{
 				outputFileName = data.substring(data.indexOf(" class ")
 						+ " class ".length());
-			} else
+			} else if (data.contains("public interface "))
 			{
 				outputFileName = data.substring(data.indexOf(" interface ")
 						+ " interface ".length());
+			} else
+			{
+				System.err.println("Unable to determin file name for:\n\n______________________________________________________________\n"
+						+ data);
 			}
 			outputFileName = outputFileName.substring(0, outputFileName.indexOf(' ')).trim();
 			if (outputFileName.contains("<"))
 			{
 				outputFileName = outputFileName.substring(0, outputFileName.indexOf('<'));
+			}
+
+			if (outputFileName.contains("{"))
+			{
+				outputFileName = outputFileName.substring(0, outputFileName.indexOf('{')).replace('\n', ' ').replace('\r', ' ').trim();
 			}
 
 			File output = createFolder(generated, packageName);
@@ -179,10 +194,10 @@ public class SourceFileWriter
 		{
 			String name = null;
 			String content = "";
-			File output = createFolder(generated, def.getPackageName());
+			File output = createFolder(generated, def.getName().getPackageName());
 			if (writeJava)
 			{
-				name = def.getName();
+				name = def.getName().getName();
 				content = def.getJavaSourceCode(new StringBuilder());
 			} else
 			{
@@ -191,7 +206,7 @@ public class SourceFileWriter
 				Field.fieldPrefic = "m_";
 				content = def.getVdmSourceCode(new StringBuilder());
 				Field.fieldPrefic = tmp;
-				name = def.getName();
+				name = def.getName().getName();
 				InterfaceDefinition.VDM = false;
 			}
 

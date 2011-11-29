@@ -3,8 +3,9 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.env.FieldTypeResolver;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class Field
 {
@@ -46,24 +47,24 @@ public class Field
 		List<String> imports = new Vector<String>();
 		if (isList)
 		{
-			imports.add(getInternalType(unresolvedType).getImportName());
+			imports.add(getInternalType(unresolvedType).getName().getCanonicalName());
 			if (isTypeExternalNotNode())
 			{
-				imports.add(Environment.vectorDef.getImportName());
+				imports.add(Environment.vectorDef.getName().getCanonicalName());
 			}
-			if(!isDoubleList)
+			if (!isDoubleList)
 			{
 				switch (structureType)
 				{
 					case Graph:
-						imports.add(env.graphNodeList.getImportName());
+						imports.add(env.graphNodeList.getName().getCanonicalName());
 						break;
 					case Tree:
-						imports.add(env.nodeList.getImportName());
+						imports.add(env.nodeList.getName().getCanonicalName());
 						break;
-					
+
 				}
-				
+
 			}
 		}
 		if (isDoubleList)
@@ -71,25 +72,25 @@ public class Field
 			switch (structureType)
 			{
 				case Graph:
-					imports.add(env.graphNodeListList.getImportName());
+					imports.add(env.graphNodeListList.getName().getCanonicalName());
 					break;
 				case Tree:
-					imports.add(env.nodeListList.getImportName());
+					imports.add(env.nodeListList.getName().getCanonicalName());
 					break;
-				
+
 			}
 		}
 
 		IInterfaceDefinition defIntf = env.lookUpInterface(getType());
 		if (defIntf != null)
 		{
-			imports.add(defIntf.getImportName());
+			imports.add(defIntf.getName().getCanonicalName());
 		}
 
 		IClassDefinition def = env.lookUp(getType());
 		if (def != null)
 		{
-			imports.add(def.getImportName());
+			imports.add(def.getName().getCanonicalName());
 		}
 
 		return imports;
@@ -117,7 +118,7 @@ public class Field
 		{
 			type = getInternalType(unresolvedType);
 		}
-		String tmp = (name == null ? type.getName() : name);
+		String tmp = (name == null ? type.getName().getName() : name);
 		return fieldPrefic + tmp.substring(0, 1).toLowerCase()
 				+ tmp.substring(1);
 	}
@@ -129,7 +130,7 @@ public class Field
 			type = getInternalType(unresolvedType);
 		}
 		checkType(type);
-		String internaalType = type.getName();
+		String internaalType = type.getName().getName();
 		if (isList && !isDoubleList)
 		{
 			if (isTypeExternalNotNode())
@@ -141,7 +142,8 @@ public class Field
 				if (abstractType)
 				{
 					def = Environment.linkedListDef;
-					internaalType = new GenericArgumentedIInterfceDefinition(def, type).getName();
+					// internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());//new
+					// GenericArgumentedIInterfceDefinition(def, type).getName().getName();
 				} else
 				{
 					if (structureType == StructureType.Tree)
@@ -152,8 +154,10 @@ public class Field
 					{
 						def = env.graphNodeList;
 					}
-					internaalType = new GenericArgumentedIInterfceDefinition(def, type).getName();
+					// internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());//new
+					// GenericArgumentedIInterfceDefinition(def, type).getName().getName();
 				}
+				internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());
 
 			}
 		}
@@ -162,8 +166,10 @@ public class Field
 			IInterfaceDefinition def = null;
 			if (abstractType)
 			{
-				def = new GenericArgumentedIInterfceDefinition(Environment.linkedListDef, new GenericArgumentedIInterfceDefinition(Environment.listDef, type));
-				internaalType = def.getName();
+				// def = new GenericArgumentedIInterfceDefinition(Environment.linkedListDef, new
+				// GenericArgumentedIInterfceDefinition(Environment.listDef, type));
+				// internaalType = def.getName().getName();
+				internaalType = NameUtil.getGenericName(Environment.linkedListDef.getName().getName(), NameUtil.getGenericName(Environment.listDef.getName().getName(), type.getName().getName()));
 			} else
 			{
 				if (structureType == StructureType.Tree)
@@ -174,7 +180,9 @@ public class Field
 				{
 					def = env.graphNodeListList;
 				}
-				internaalType = new GenericArgumentedIInterfceDefinition(def, type).getName();
+				internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());// new
+																											// GenericArgumentedIInterfceDefinition(def,
+																											// type).getName().getName();
 			}
 
 		}
@@ -195,7 +203,7 @@ public class Field
 			type = getInternalType(unresolvedType);
 		}
 		checkType(type);
-		String internaalType = type.getName();
+		String internaalType = type.getName().getName();
 		if (isList && !isDoubleList)
 		{
 
@@ -219,7 +227,7 @@ public class Field
 			{
 				if (def.getFields() != null && def.getFields().contains(this))
 				{
-					className = def.getName();
+					className = def.getName().getName();
 				}
 
 			}
@@ -236,12 +244,7 @@ public class Field
 			type = getInternalType(unresolvedType);
 		}
 
-		String internaalType = type.getName();
-		// if (isList)
-		// {
-		//
-		// return "List<? extends " + internaalType + ">";
-		// }
+		String internaalType = type.getName().getName();
 		return internaalType;
 	}
 
@@ -252,139 +255,8 @@ public class Field
 			return type;
 		}
 
-		// First look up all tokens
-		for (IClassDefinition cd : env.getClasses())
-		{
-			if (cd instanceof CommonTreeClassDefinition)
-			{
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				if (c.getType() == CommonTreeClassDefinition.ClassType.Token
-						&& checkName(c, unresolvedTypeName, true))// c.rawName.equals(unresolvedTypeName))
-				{
-					return c;
-				}
-			}
-		}
-
-		// Lookup in all root productions
-		for (IClassDefinition cd : env.getClasses())
-		{
-			if (cd instanceof CommonTreeClassDefinition)
-			{
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				// if (c.rawName.equals(unresolvedTypeName))
-				if (c.getType() == ClassType.Production
-						&& checkName(c, unresolvedTypeName, true))
-				{
-					return c;
-				}
-			}
-		}
-		// Lookup in all sub productions
-		for (IClassDefinition cd : env.getClasses())
-		{
-			if (cd instanceof CommonTreeClassDefinition)
-			{
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				// if (c.rawName.equals(unresolvedTypeName))
-				if (c.getType() == ClassType.SubProduction
-						&& checkName(c, unresolvedTypeName, true))
-				{
-					return c;
-				}
-			}
-		}
-
-		// Lookup in all alternatives
-		for (IClassDefinition cd : env.getClasses())
-		{
-			if (cd instanceof CommonTreeClassDefinition)
-			{
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				// if (c.rawName.equals(unresolvedTypeName))
-				if (c.getType() == ClassType.Alternative
-						&& checkName(c, unresolvedTypeName, true))
-				{
-					return c;
-				}
-			}
-		}
-
-		// Lookup for all raw names no matter the type
-		for (IClassDefinition cd : env.getClasses())
-		{
-			if (cd instanceof CommonTreeClassDefinition)
-			{
-				CommonTreeClassDefinition c = (CommonTreeClassDefinition) cd;
-
-				// if (c.rawName.equals(unresolvedTypeName))
-				if (checkName(c, unresolvedTypeName, true))
-				{
-					return c;
-				}
-			}
-		}
-
-		// Lookup in all with not raw name
-		for (IClassDefinition cd : env.getClasses())
-		{
-			if (cd instanceof CustomClassDefinition)
-			{
-				CustomClassDefinition c = (CustomClassDefinition) cd;
-
-				// if (c.name.equals(unresolvedTypeName))
-				if (checkName(c, unresolvedTypeName, false))
-				{
-					return c;
-				}
-			}
-		}
-		
-		for (IClassDefinition c : env.getClasses())
-		{
-			if(c.getName().equals(unresolvedTypeName))
-			{
-				return c;
-			}
-		}
-
-		return null;// "%" + type;
-	}
-
-	private boolean checkName(IClassDefinition def, String name,
-			boolean rawNameCheck)
-	{
-		if (name == null || name.trim().length() == 0)
-		{
-			return true;
-		}
-		String nameToCheck = null;
-		String rest = null;
-		if (name.contains("."))
-		{
-			nameToCheck = name.substring(name.lastIndexOf('.') + 1, name.length());
-			rest = name.substring(0, name.lastIndexOf('.'));
-		} else
-		{
-			nameToCheck = name;
-		}
-
-		if (rawNameCheck && def instanceof CommonTreeClassDefinition)
-		{
-			CommonTreeClassDefinition cDef = (CommonTreeClassDefinition) def;
-			return cDef.rawName.equals(nameToCheck)
-					&& checkName(cDef.getSuperDef(), rest, rawNameCheck);
-		} else if (def instanceof CustomClassDefinition)
-		{
-			CustomClassDefinition cDef = (CustomClassDefinition) def;
-			return cDef.name.equals(nameToCheck)
-					&& checkName(cDef.getSuperDef(), rest, rawNameCheck);
-		}
-		return false;
+		//TODO return FieldTypeResolver.searchType(unresolvedTypeName, env);
+		return FieldTypeResolver.searchTypePreferInterface(unresolvedTypeName, env);
 	}
 
 	public void setType(String text)
@@ -398,21 +270,22 @@ public class Field
 	{
 		return (type instanceof ExternalJavaClassDefinition && !((ExternalJavaClassDefinition) type).extendsNode);
 	}
-	
+
 	public String getCast()
 	{
-		return "("+ getType()+")";
+		return "(" + getType() + ")";
 	}
-	
+
 	/**
 	 * Only use this to merge unresolved fields
+	 * 
 	 * @return
 	 */
 	public String getUnresolvedType()
 	{
 		return this.unresolvedType;
 	}
-	
+
 	public void updateEnvironment(Environment env)
 	{
 		this.env = env;

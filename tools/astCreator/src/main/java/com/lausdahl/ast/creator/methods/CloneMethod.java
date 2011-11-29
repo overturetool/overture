@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.Environment;
-import com.lausdahl.ast.creator.definitions.CommonTreeClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalEnumJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.JavaTypes;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class CloneMethod extends Method
 {
@@ -24,15 +24,14 @@ public class CloneMethod extends Method
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = c.getName();
-//		this.requiredImports.add("java.util.Map");
+		this.returnType = getSpecializedTypeName(c);
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");
-		sbDoc.append("\t * Returns a deep clone of this {@link " + c.getName()
-				+ "} node.\n");
-		sbDoc.append("\t * @return a deep clone of this {@link " + c.getName()
-				+ "} node\n");
+		sbDoc.append("\t * Returns a deep clone of this {@link "
+				+ c.getName().getName() + "} node.\n");
+		sbDoc.append("\t * @return a deep clone of this {@link "
+				+ c.getName().getName() + "} node\n");
 		sbDoc.append("\t */");
 		StringBuilder sb = new StringBuilder();
 
@@ -52,14 +51,14 @@ public class CloneMethod extends Method
 		{
 			case Production:
 			case SubProduction:
-				this.annotation ="@Override";
+				this.annotation = "@Override";
 				this.isAbstract = true;
 				break;
 			case Alternative:
 			case Custom:
 
 			case Unknown:
-				sb.append("\t\treturn new " + c.getName() + "(\n");
+				sb.append("\t\treturn new " + c.getName().getName() + "(\n");
 
 				if (!fields.isEmpty())
 				{
@@ -73,10 +72,10 @@ public class CloneMethod extends Method
 							name = f.getCast() + name;
 						}
 
-						if(f.structureType==StructureType.Graph)
+						if (f.structureType == StructureType.Graph)
 						{
 							tmp += ("\t\t\t" + name + ",\n");
-						}else if (f.isList && !f.isDoubleList)
+						} else if (f.isList && !f.isDoubleList)
 						{
 							tmp += ("\t\t\tcloneList"
 									+ (f.isTypeExternalNotNode() ? "External"
@@ -103,7 +102,7 @@ public class CloneMethod extends Method
 				break;
 
 			case Token:
-				sb.append("\t\treturn new " + c.getName() + "( ");
+				sb.append("\t\treturn new " + c.getName().getName() + "( ");
 
 				if (!fields.isEmpty())
 				{
@@ -117,8 +116,7 @@ public class CloneMethod extends Method
 							name = f.getCast() + name;
 						}
 
-						tmp += ("get"
-								+ CommonTreeClassDefinition.javaClassName(name) + "(), ");
+						tmp += ("get" + NameUtil.getClassName(name) + "(), ");
 					}
 					sb.append(tmp.substring(0, tmp.length() - 2));
 				}

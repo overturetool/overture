@@ -1,33 +1,39 @@
 package com.lausdahl.ast.creator.definitions;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.AstCreatorException;
-import com.lausdahl.ast.creator.Environment;
 import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.definitions.Field.StructureType;
+import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
 public class BaseClassDefinition extends InterfaceDefinition implements
 		IClassDefinition
 {
-	protected List<Field> fields = new Vector<Field>();
-	protected List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
-	public Set<IInterfaceDefinition> interfaces = new HashSet<IInterfaceDefinition>();
-	public IClassDefinition superDef;
+	protected final List<Field> fields = new Vector<Field>();
+	protected final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
+	protected final Set<IInterfaceDefinition> interfaces = new HashSet<IInterfaceDefinition>();
+	protected IClassDefinition superDef;
 
-	public BaseClassDefinition(String name)
+	public BaseClassDefinition(JavaName name)
 	{
 		super(name);
-		namePrefix = "";
 	}
 
 	public boolean hasSuper()
 	{
 		return this.superDef != null;
+	}
+
+	public void setSuper(IClassDefinition newSuper)
+	{
+		this.superDef = newSuper;
 	}
 
 	public void addField(Field field)
@@ -47,19 +53,18 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		if (getSuperDef() != null)
 		{
-			imports.add(getSuperDef().getImportName());
+			imports.add(getSuperDef().getName().getCanonicalName());
 		}
 
 		for (IInterfaceDefinition i : this.imports)
 		{
-			imports.add(i.getImportName());
+			imports.add(i.getName().getCanonicalName());
 		}
 
 		for (IInterfaceDefinition i : this.interfaces)
 		{
-			imports.add(i.getImportName());
+			imports.add(i.getName().getCanonicalName());
 		}
-		// imports.addAll(this.imports);
 		for (Method m : methods)
 		{
 			for (String string : m.getRequiredImports())
@@ -79,21 +84,15 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return imports;
 	}
 
-//	@Override
-//	public String toString()
-//	{
-//		return getJavaSourceCode();
-//	}
-
 	public String getJavaSourceCode(StringBuilder sb)
 	{
-		
 
+		sb.append(IInterfaceDefinition.copurightHeader + "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
 
-		if (getPackageName() != null)
+		if (getName().getPackageName() != null)
 		{
-			sb.append("\npackage " + getPackageName() + ";\n\n\n");
+			sb.append("\npackage " + getName().getPackageName() + ";\n\n\n");
 		}
 
 		for (String importName : getImports())
@@ -101,32 +100,48 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			sb.append("import " + importName + ";\n");
 		}
 		sb.append("\n\n");
+		sb.append(javaDoc);
 
 		if (annotation != null && annotation.length() > 0)
 		{
 			sb.append(annotation + "\n");
 		}
 		sb.append("public " + (isFinal() ? "final " : "")
-				+ (isAbstract() ? "abstract " : "") + "class " + getName());
+				+ (isAbstract() ? "abstract " : "") + "class "
+				+ getName().getName());
+
+		sb.append(getGenericsString());
 
 		if (hasSuper())
 		{
-			sb.append(" extends " + getSuperDef().getName());
+			sb.append(" extends " + getSuperDef().getName().getName()
+					+ getSuperDef().getGenericsString());
 		}
 
 		if (!interfaces.isEmpty())
 		{
 			sb.append(" implements ");
-			StringBuilder intfs = new StringBuilder();
-			for (IInterfaceDefinition intfName : interfaces)
+//			StringBuilder intfs = new StringBuilder();
+//			for (IInterfaceDefinition intfName : interfaces)
+//			{
+//				intfs.append(intfName.getName().getName()
+//						+ intfName.getGenericsString() + ", ");
+//			}
+//			sb.append(intfs.subSequence(0, intfs.length() - 2));
+			for (Iterator<IInterfaceDefinition> iterator = interfaces.iterator(); iterator.hasNext();)
 			{
-				intfs.append(intfName.getName() + ", ");
+				IInterfaceDefinition intf = iterator.next();
+				sb.append(intf.getName()+intf.getGenericsString());
+				if(iterator.hasNext())
+				{
+					sb.append(", ");
+				}
+				
 			}
-			sb.append(intfs.subSequence(0, intfs.length() - 2));
 		}
 
 		sb.append("\n{");
-		
+
 		sb.append("\n\tprivate static final long serialVersionUID = 1L;\n");
 
 		for (Field f : fields)
@@ -145,7 +160,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			{
 				if (f.isTypeExternalNotNode())
 				{
-					sb.append(" = new Vector<" + f.type.getSignatureName()
+					sb.append(" = new Vector<" + f.type.getName().getName()
 							+ ">()");
 				} else
 				{
@@ -170,139 +185,19 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		}
 
 		sb.append(noneCtorMethods);
-
-		// for (Method m : methods)
-		// {
-		// if (!m.isConstructor)
-		// {
-		// sb.append(m.getJavaSourceCode() + "\n");
-		// }
-		// }
-
 		sb.append("\n}\n");
-
 		return sb.toString();
 	}
 
 	public String getVdmSourceCode(StringBuilder sb)
 	{
-		sb.append(IClassDefinition.classHeader + "\n");
-
-		if (getPackageName() != null)
-		{
-			sb.append("\n--package " + getPackageName() + ";\n\n\n");
-		}
-
-		for (String importName : getImports())
-		{
-			sb.append("--import " + importName + ";\n");
-		}
-
-		sb.append("class " + getSignatureName());
-
-		if (hasSuper() || !interfaces.isEmpty())
-		{
-			sb.append(" is subclass of ");
-		}
-
-		if (hasSuper())
-		{
-			sb.append(getSuperSignatureName());
-		}
-		if (!interfaces.isEmpty())
-		{
-			if (hasSuper())
-			{
-				sb.append(" , ");
-			}
-			StringBuilder intfs = new StringBuilder();
-			for (IInterfaceDefinition intfName : interfaces)
-			{
-				intfs.append(stripGenericArguments(intfName.getName()) + ", ");
-			}
-			sb.append(intfs.subSequence(0, intfs.length() - 2));
-		}
-
-		sb.append("\ntypes\n");
-		sb.append("\n\tpublic String = seq of char;\n");
-
-		for (String t : getGenericClassArguments())
-		{
-			sb.append("\n\tpublic " + t + " = ?;\n");
-		}
-
-		sb.append("\ninstance variables\n");
-
-		for (Field f : fields)
-		{
-			if (isRefinedField(f))
-			{
-				continue;
-			}
-			sb.append("\n\tprivate " + f.getName() + " : ["
-					+ stripGenericArguments(f.getType()) + "] := nil;");
-		}
-
-		sb.append("\n\noperations\n");
-
-		if (getSignatureName().equals("PExp"))
-		{
-			sb.append("\n\n\n-- VDMJ interitance PATCH --\n");
-			sb.append("public parent : ()  ==> [Node]\n");
-			sb.append("parent()== return self.parent_;\n");
-			sb.append("public parent : [Node]  ==> ()\n");
-			sb.append("parent(p)== parent_:=p;\n");
-			sb.append("-- VDMJ interitance PATCH --\n\n\n");
-		}
-
-		for (Method m : methods)
-		{
-			if (m.isConstructor)
-			{
-				sb.append(m.getVdmSourceCode() + "\n");
-			}
-		}
-
-		for (Method m : methods)
-		{
-			if (!m.isConstructor)
-			{
-				sb.append(m.getVdmSourceCode() + "\n");
-			}
-		}
-
-		sb.append("\nend " + getSignatureName());
-
-		return sb.toString().replaceAll("this", "self").replaceAll("null", "nil").replace("org.overturetool.vdmj.lex.", "").replace("OrgOverturetoolVdmjLex", "").replaceAll("self\\.", "").replaceAll("token", "token_").replaceAll("super\\.", (getSuperDef() != null ? getSuperDef().getName()
-				: "")
-				+ "`");
+		return "";
 	}
 
-	// public static String javaClassName(String name)
+	// public static String firstLetterUpper(String name)
 	// {
-	// while (name.indexOf('_') != -1)
-	// {
-	// int index = name.indexOf('_');
-	// name = name.substring(0, index)
-	// + firstLetterUpper(name.substring(index + 1));
+	// return String.valueOf(name.charAt(0)).toUpperCase() + name.substring(1);
 	// }
-	// return name;
-	// }
-
-	public static String firstLetterUpper(String name)
-	{
-		return String.valueOf(name.charAt(0)).toUpperCase() + name.substring(1);
-	}
-
-	public String getSuperSignatureName()
-	{
-		String n = getSuperDef().getName();
-		if (n.contains("<"))
-		{
-			return n.substring(0, n.indexOf('<'));
-		}
-		return n;
-	}
 
 	public static String stripGenericArguments(String name)
 	{
@@ -370,10 +265,9 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	public boolean isRefinedField(Field field)
 	{
 		boolean existsInSuper = (getSuperDef() != null && getSuperDef().hasField(field.getName()));
-//		return hasField(field.getName()) && existsInSuper;
 		for (Field f : getFields())
 		{
-			if(f == field && existsInSuper)
+			if (f == field && existsInSuper)
 			{
 				return true;
 			}
@@ -411,32 +305,34 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 				if (!isSubclassOf(field.type, superField.type))
 				{
-					String msg ="Field \"" + field.getName()
-							+ "\" in class " + getName() + " with type \""
-							+ field.getType()
-							+ "\" is not a subclass of \""
+					String msg = "Field \"" + field.getName() + "\" in class "
+							+ getName().getName() + " with type \""
+							+ field.getType() + "\" is not a subclass of \""
 							+ superField.getType() + "\"";
 					throw new AstCreatorException(msg, null, true);
-				}else
+				} else
 				{
-					String msg ="Field \"" + field.getName()
-					+ "\" in class " + getName() + " with type \""
-					+ field.getType()
-					+ "\" specializes of \""
-					+ superField.getType() + "\"";
-					System.out.println("WARNING: "+msg);
+					String msg = "Field \"" + field.getName() + "\" in class "
+							+ getName().getName() + " with type \""
+							+ field.getType() + "\" specializes of \""
+							+ superField.getType() + "\"";
+					System.out.println("WARNING: " + msg);
 				}
 			}
 		}
-		{
-
-		}
 	}
 
-	private boolean isSubclassOf(IInterfaceDefinition subclass,
+	private static boolean isSubclassOf(IInterfaceDefinition subclass,
 			IInterfaceDefinition superClass)
 	{
 		if (subclass == superClass)
+		{
+			return true;
+		}
+
+		// TODO: this check is not yet for recursice interfaces
+		if (subclass instanceof IClassDefinition
+				&& ((IClassDefinition) subclass).getInterfaces().contains(superClass))
 		{
 			return true;
 		}
@@ -456,10 +352,22 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			f.updateEnvironment(env);
 		}
-		
+
 		for (Method m : methods)
 		{
 			m.setEnvironment(env);
 		}
+	}
+
+	public void addInterface(IInterfaceDefinition intf)
+	{
+		for (IInterfaceDefinition i : interfaces)
+		{
+			if (i.getName().getName().equals(intf.getName().getName()))
+			{
+				return;
+			}
+		}
+		this.interfaces.add(intf);
 	}
 }
