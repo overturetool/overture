@@ -1436,7 +1436,7 @@ public class TypeCheckerExpVisitor extends
 		question.qualifiers = null;
 		rtypes.add(node.getElse().apply(rootVisitor, question));
 
-		node.setType(rtypes.getType(node.getLocation()));
+		node.setType(rtypes.getType(node.getLocation()).clone());
 		return node.getType();
 	}
 
@@ -1854,7 +1854,7 @@ public class TypeCheckerExpVisitor extends
 			return rec;
 		}
 
-		node.setRecordType((ARecordInvariantType) rec);
+		node.setRecordType((ARecordInvariantType) rec.clone());
 
 		if (node.getRecordType().getOpaque())
 		{
