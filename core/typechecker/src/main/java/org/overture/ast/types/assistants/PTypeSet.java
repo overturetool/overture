@@ -136,7 +136,7 @@ public class PTypeSet extends TreeSet<PType>{
 			result = uType;
 		}
 
-		return (optional ? new AOptionalType(location, false,null, result) : result);
+		return (optional ? new AOptionalType(location, false,null, result.clone()) : result);
 	}
 	
 	@Override
