@@ -146,6 +146,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			IProgressMonitor monitor) throws CoreException
 	{
 		List<String> commandList = null;
+		
 		Integer debugSessionId = Integer.valueOf(getSessionId());
 		if (useRemoteDebug(configuration))
 		{
@@ -444,16 +445,18 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			List<String> commandList, IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
 	{
+		//String executeString = getArgumentString(commandList);
 
-		String executeString = getArgumentString(commandList);
-
+		ProcessBuilder procBuilder = new ProcessBuilder(commandList);
+		//System.out.println(executeString);
 		Process process = null;
 		// System.out.println(executeString);
 		try
 		{
 			if (!useRemoteDebug(launch.getLaunchConfiguration()))
 			{
-				process = Runtime.getRuntime().exec(executeString, null, getProject(configuration).getLocation().toFile());
+				process = procBuilder.start();
+				//process = Runtime.getRuntime().exec(executeString, null, getProject(configuration).getLocation().toFile());
 
 			} else
 			{
@@ -596,6 +599,11 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	public static boolean isWindowsPlatform()
 	{
 		return System.getProperty("os.name").toLowerCase().contains("win");
+	}
+	
+	public static boolean isMacPlatform()
+	{
+		return System.getProperty("os.name").toLowerCase().contains("mac");
 	}
 
 	protected static String toPlatformPath(String path)
