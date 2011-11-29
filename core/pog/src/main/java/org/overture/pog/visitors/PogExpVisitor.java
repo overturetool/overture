@@ -1320,26 +1320,21 @@ public class PogExpVisitor extends
 		PType lType = lExp.getType();
 		PExp rExp = leftRight[RIGHT];
 		PType rType = rExp.getType();
-
-		if (lType instanceof AUnionType)
+		
+		if (PTypeAssistant.isUnion(lType))
 		{
-
 			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
 		}
 
-		if (rType instanceof AUnionType)
+		if (PTypeAssistant.isUnion(rType))
 		{
 			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
 		}
 
 		obligations.addAll(lExp.apply(this, question));
-
-		question.push(new POImpliesContext(lExp));
 		obligations.addAll(rExp.apply(this, question));
-		question.pop();
 
 		return obligations;
-
 	}
 
 	@Override
