@@ -41,7 +41,7 @@ public class VdmDocumentPartitioner extends FastPartitioner implements
 	{
 	    super.connect(document, delayInitialise);	 
 	    document.setDocumentPartitioner(this);
-	    printPartitions(document);
+	   // printPartitions(document);
 	}
 
 	
