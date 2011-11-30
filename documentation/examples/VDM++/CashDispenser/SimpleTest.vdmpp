@@ -18,7 +18,7 @@ types
 
 operations 
 
-public Run : () ==> bool
+public Run : () ==> bool 
   Run () ==
     (clock.SetDate("150999");
     let peter = new Cardholder().Create("Peter Gorm Larsen", "Granvej 24")
@@ -30,7 +30,8 @@ public Run : () ==> bool
           resource.AddLetterbox(clock, new Letterbox());
           tills(1).InsertCard(c1);
           if tills(1).Validate(123456) = <PinOk>
-          then return tills(1).MakeWithdrawal(800);
+          then return tills(1).MakeWithdrawal(800)
+          else return false;
          );          
     );
 
