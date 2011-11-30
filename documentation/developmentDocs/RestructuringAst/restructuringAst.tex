@@ -606,9 +606,155 @@ copy
 SL API
 OO structure - link to VDM PP classes
 
+\subsection{Structure}
+All nodes in the AST are linked by their parent. This means that any node knows who its parent is and can only be a child of a single node.
+
+\begin{lstlisting}[language=java]
+	/**
+	 * Sets the parent node of this node.
+	 * @param parent the new parent node of this node
+	 */
+	protected void parent(Node parent) {
+		this.parent = parent;
+	}
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=java]
+	public void removeChild(Node child)
+	{
+		//removes the child and sets the child of this node to null
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[language=java]
+//sets a new child of this node by first removing the current child from this node then removing the new one from its old parent and adding it	
+	public void setLeft(PExp value)
+	{
+		if (this._left != null) {
+			this._left.parent(null);
+		}
+		if (value != null) {
+			if (value.parent() != null) {
+				value.parent().removeChild(value);
+		}
+			value.parent(this);
+		}
+		this._left = value;
+	}
+\end{lstlisting}
+
+\subsection{Enumerated node types}
+All nodes must have return an element from a node enumeration identifying the specific node type. The same applies to derrived nodes which must return an element of an enumeration from the class it inherit from. e.g.:
+
+\begin{lstlisting}[language=java]
+public enum NodeEnum
+{
+	TOKEN,
+	BINOP,
+	UNOP,
+	EXP,
+	BOOLEAN,
+	TYPE
+}
+
+public abstract class PExp extends Node
+{
+	public NodeEnum kindNode()
+	{
+		return NodeEnum.EXP;
+	}
+}
+\end{lstlisting}
+
+\subsection{Copying}
+The AST must include the following clone methods, which either creates a single deep copy of the AST or creates a copy including a mapping from source to copy map.
 \begin{lstlisting}[language=java]
 	public @Override abstract Object clone();
 	public abstract Node clone(Map<Node,Node> oldToNewMap);
+\end{lstlisting}
+
+\subsection{Copy-extend}
+It should be possible to extend an AST with either new fields on nodes or by adding new subclasses the the AST, however this poses a challenge when such an extended tree should be constructed from from a smaller tree. $SourceAST \subset ExtendedAST$. The AST creator must be able to output a visitor which can instantiate any extended tree of its source tree.
+
+\begin{lstlisting}[language=java]
+@Override
+public ABinopExpExtended caseABinopExp(ABinopExp node)
+{//n.setLeft(node.getLeft().apply(this)) could also be an option
+	ABinopExpExtended n = new ABinopExpExtended(
+		node.getLeft().apply(this), 
+		node.getBinop().apply(this), 
+		node.getLeft().apply(this), 
+		null .....);
+	return n;
+}
+\end{lstlisting}
+
+\subsection{Navigation}
+
+\subsubsection{Get ancestor by type}
+Get an ancestor of a specific type from a node if it exists by searching up in the tree.
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns the nearest ancestor of this node (including itself)
+	 * which is a subclass of {@code classType}.
+	 * @param classType the superclass used
+	 * @return the nearest ancestor of this node
+	 */
+	public <T extends Node> T getAncestor(Class<T> classType) {
+		Node n = this;
+		while (!classType.isInstance(n)) {
+			n = n.parent();
+			if (n == null) return null;
+		}
+		return classType.cast(n);
+	}
+\end{lstlisting}
+
+\subsubsection{Standard visitor}
+The standard visitor implemented for each node a call to analysis where the method called is specific the the current node.
+\begin{lstlisting}[language=java]
+	/**
+	 * Applies this node to the {@link Analysis} visitor {@code analysis}.
+	 * @param analysis the {@link Analysis} to which this node is applied
+	 */
+	public abstract void apply(IAnalysis analysis);
+\end{lstlisting}
+
+\subsubsection{Answer visitor}
+An answer visitor implements a call for each node to the caller with a specific method for this node and allows a value of A to be returned.
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns the answer for {@code caller} by applying this node to the
+	 * {@link Answer} visitor.
+	 * @param caller the {@link Answer} to which this node is applied
+	 * @return the answer as returned from {@code caller}
+	 */
+	public abstract <A> A apply(IAnswer<A> caller);
+\end{lstlisting}
+
+\subsubsection{Question visitor}
+A question visitor implements a call for each node to the caller with a specific method for this node where a question of type Q can be parsed to the method.
+\begin{lstlisting}[language=java]
+	/**
+	 * Applies this node to the {@link Question} visitor {@code caller}.
+	 * @param caller the {@link Question} to which this node is applied
+	 * @param question the question provided to {@code caller}
+	 */
+	public abstract <Q> void apply(IQuestion<Q> caller, Q question);
+\end{lstlisting}
+
+\subsubsection{Question Answer visitor}
+A question visitor implements a call for each node to the caller with a specific method for this node where a question of type Q can be parsed to the method and a return value of A will be returned.
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns the answer for {@code answer} by applying this node with the
+	 * {@code question} to the {@link QuestionAnswer} visitor.
+	 * @param caller the {@link QuestionAnswer} to which this node is applied
+	 * @param question the question provided to {@code answer}
+	 * @return the answer as returned from {@code answer}
+	 */
+	public abstract <Q,A> A apply(IQuestionAnswer<Q,A> caller, Q question);
 \end{lstlisting}
 
 \bibliographystyle{acm}

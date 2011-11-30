@@ -81,7 +81,7 @@
 {\large{\bf  Overture -- Open-source Tools for Formal Modelling}}
 \end{minipage}
 \hfill
-\resizebox{0.05\textwidth}{!}{\includegraphics{OMLlogoattempt.jpg}}
+\resizebox{0.05\textwidth}{!}{\includegraphics{overture}}
     }
   \end{titlepage}
   \setcounter{footnote}{0} \let\thanks\relax \let\maketitle\relax
