@@ -57,7 +57,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		// Add rule for single line comments.
 		rules.add(new EndOfLineRule("--", comment));
 		// Multi line comment
-		rules.add(new MultiLineRule("/*", "*/", comment));
+		rules.add(new MultiLineRule("/*", "*/", comment,(char) 0, true));
 
 		// Add rule for strings.
 		rules.add(new CharacterRule(string));
