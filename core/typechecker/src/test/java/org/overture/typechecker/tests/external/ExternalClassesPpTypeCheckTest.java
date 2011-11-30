@@ -18,7 +18,7 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 	{
 		ResultTestCase.recordTestResults = false;
 		String name = "Type_Check_PP_Classes_TestSuite_External";
-		String root = ExternalTestSettings.basePath+"cskpptest/tc";
+		String root = ExternalTestSettings.basePath+"pptest/tc";
 		TestSuite test = null;
 		if (new File(root).exists())
 		{
