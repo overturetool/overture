@@ -26,7 +26,8 @@ import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class ModuleTestCase extends TestCase {
+public class ModuleTestCase extends TestCase
+{
 
 	public static final String tcHeader = "-- TCErrors:";
 	public static final Boolean printOks = false;
@@ -36,20 +37,19 @@ public class ModuleTestCase extends TestCase {
 	String content;
 	String expectedType;
 	ParserType parserType;
-	private boolean showWarnings;
-	private boolean generateResultOutput = true;
 	private TCStructList tcHeaderList = null;
 	private boolean isParseOk = true;
 	List<VDMError> errors = new Vector<VDMError>();
 	List<VDMWarning> warnings = new Vector<VDMWarning>();
-	
-	
-	public ModuleTestCase() {
+
+	public ModuleTestCase()
+	{
 		super("test");
 
 	}
 
-	public ModuleTestCase(File file) {
+	public ModuleTestCase(File file)
+	{
 		super("test");
 		this.parserType = ParserType.Module;
 		this.file = file;
@@ -58,26 +58,31 @@ public class ModuleTestCase extends TestCase {
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return this.content;
 	}
-	
+
 	@Override
-	protected void setUp() throws Exception {
+	protected void setUp() throws Exception
+	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}
 
-	public void test() throws ParserException, LexException, IOException {
-		if (content != null) {
+	public void test() throws ParserException, LexException, IOException
+	{
+		if (content != null)
+		{
 			moduleTc(content);
 		}
 	}
 
 	private void moduleTc(String module) throws ParserException, LexException,
-			IOException {
+			IOException
+	{
 		System.out.flush();
 		System.err.flush();
 
@@ -85,118 +90,107 @@ public class ModuleTestCase extends TestCase {
 		List<AModuleModules> modules = null;
 		try
 		{
-		modules = parse(file);
-		}
-		catch(ParserException e)
+			modules = parse(file);
+		} catch (ParserException e)
+		{
+			isParseOk = false;
+		} catch (LexException e)
 		{
 			isParseOk = false;
 		}
-		catch(LexException e)
+
+		if (isParseOk)
 		{
-			isParseOk = false;
-		}
-		
-		if(isParseOk)
-		{
-			
+
 			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
 			mtc.typeCheck();
-	
-			String errorMessages = null;
-			
-			
+
 			int tcV2found = tcHeaderList.size();
-			int total = TypeChecker.getErrorCount() + TypeChecker.getWarningCount();
-			String status = "Errors/Warnings: %s"   + 
-					"\n by VDMJ: " + tcHeaderList.getErrorCount() + "/" + tcHeaderList.getWarningCount()
-					 + "\n by TCv2: " + TypeChecker.getErrorCount() + "/" + TypeChecker.getWarningCount() ;
-			
-		
-			if (mtc != null && TypeChecker.getErrorCount() > 0) {
-	
-				for (VDMError error : TypeChecker.getErrors()) {
-					if(!tcHeaderList.markTCStruct(error))
+			int total = TypeChecker.getErrorCount()
+					+ TypeChecker.getWarningCount();
+			String status = "Errors/Warnings: %s" + "\n by VDMJ: "
+					+ tcHeaderList.getErrorCount() + "/"
+					+ tcHeaderList.getWarningCount() + "\n by TCv2: "
+					+ TypeChecker.getErrorCount() + "/"
+					+ TypeChecker.getWarningCount();
+
+			if (mtc != null && TypeChecker.getErrorCount() > 0)
+			{
+
+				for (VDMError error : TypeChecker.getErrors())
+				{
+					if (!tcHeaderList.markTCStruct(error))
 					{
 						errors.add(error);
 					}
 				}
 			}
-	
-			if (mtc != null && TypeChecker.getWarningCount() > 0) {
-				for (VDMWarning warning : TypeChecker.getWarnings()) {
-					if(!tcHeaderList.markTCStruct(warning))
+
+			if (mtc != null && TypeChecker.getWarningCount() > 0)
+			{
+				for (VDMWarning warning : TypeChecker.getWarnings())
+				{
+					if (!tcHeaderList.markTCStruct(warning))
 					{
 						warnings.add(warning);
 					}
-				}				
+				}
 			}
-			
-			
-			if( !(tcHeaderList.size() == 0 && total == tcV2found)  )
+
+			if (!(tcHeaderList.size() == 0 && total == tcV2found))
 			{
-				System.out.println("----------- Type checking starting for... " + file.getName() + " -----------");
-				System.out.println(status.format(status, "WRONG"));
-				for (VDMError error : errors) {
+				System.out.println("----------- Type checking starting for... "
+						+ file.getName() + " -----------");
+				System.out.println(String.format(status, "WRONG"));
+				for (VDMError error : errors)
+				{
 					System.out.println(error.toString());
 				}
 
-				for (VDMWarning warning : warnings) {
+				for (VDMWarning warning : warnings)
+				{
 					System.out.println(warning.toString());
 				}
-//				if (mtc != null && TypeChecker.getErrorCount() > 0) {
-//					StringWriter s = new StringWriter();
-//					TypeChecker.printErrors(new PrintWriter(s));// new
-//																// PrintWriter(System.out));
-//					errorMessages = "\n" + s.toString() + "\n";			
-//					System.out.println(s.toString());
-//				}
-//		
-//				if (mtc != null && TypeChecker.getWarningCount() > 0) {
-//					StringWriter s = new StringWriter();
-//					TypeChecker.printWarnings(new PrintWriter(s));// new
-//					System.out.println(s.toString());
-//				}
-			
+
 				System.out.println("Missing errors/warnings:");
 				System.out.println(tcHeaderList.toString());
-			}
-			else{
-				if(printOks)
+			} else
+			{
+				if (printOks)
 				{
-					System.out.println("----------- Type checking starting for... " + file.getName() + " -----------");
-					System.out.println(status.format(status, "OK"));
+					System.out.println("----------- Type checking starting for... "
+							+ file.getName() + " -----------");
+					System.out.println(String.format(status, "OK"));
 				}
 			}
-			
-//			System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
-			assertTrue("TEST FAILED: difference in errors: " +  Math.abs(total- tcV2found) , tcHeaderList.size() == 0 && total == tcV2found);
+
+			// System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
+			assertTrue("TEST FAILED: difference in errors: "
+					+ Math.abs(total - tcV2found), tcHeaderList.size() == 0
+					&& total == tcV2found);
 		}
-	
+
 	}
 
-	
-
 	private List<AModuleModules> parse(File file) throws ParserException,
-			LexException {
-		// if (file != null)
-		// {
+			LexException
+	{
 		return internal(new LexTokenReader(file, Settings.dialect));
-		// } else if (content != null)
-		// {
-		// internal(new LexTokenReader(content, Settings.dialect));
-		// }
 	}
 
 	protected List<AModuleModules> internal(LexTokenReader ltr)
-			throws ParserException, LexException {
+			throws ParserException, LexException
+	{
 		ModuleReader reader = null;
 		List<AModuleModules> result = null;
 		String errorMessages = "";
-		try {
+		try
+		{
 			reader = getReader(ltr);
 			result = read(reader);
 
-			if (reader != null && reader.getErrorCount() > 0) {
+			if (reader != null && reader.getErrorCount() > 0)
+			{
 				// perrs += reader.getErrorCount();
 				StringWriter s = new StringWriter();
 				reader.printErrors(new PrintWriter(s));// new
@@ -206,42 +200,30 @@ public class ModuleTestCase extends TestCase {
 			}
 			assertEquals(errorMessages, 0, reader.getErrorCount());
 
-			if (reader != null && reader.getWarningCount() > 0) {
+			if (reader != null && reader.getWarningCount() > 0)
+			{
 				// pwarn += reader.getWarningCount();
 				// reader.printWarnings(new PrintWriter(System.out));
 			}
 
 			return result;
-		} finally {
-			// if (!hasRunBefore())
-			// {
-			// setHasRunBefore(true);
-			// System.out.println("============================================================================================================");
-			//
-			// System.out.println("|");
-			// System.out.println("|\t\t" + getReaderTypeName() + "s");
-			// // System.out.println("|");
-			// System.out.println("|___________________________________________________________________________________________________________");
-			//
-			// }
-			// System.out.println(pad("Parsed " + getReaderTypeName(), 20) +
-			// " - "
-			// + pad(getReturnName(result), 35) + ": "
-			// + pad(result + "", 35).replace('\n', ' ') + " from \""
-			// + (content + "").replace('\n', ' ') + "\"");
-			// System.out.flush();
+		} finally
+		{
 		}
 	}
 
-	private List<AModuleModules> read(ModuleReader reader) {
+	private List<AModuleModules> read(ModuleReader reader)
+	{
 		return reader.readModules();
 	}
 
-	private ModuleReader getReader(LexTokenReader ltr) {
+	private ModuleReader getReader(LexTokenReader ltr)
+	{
 		return new ModuleReader(ltr);
 	}
 
-	private void parseFileHeader(File file) throws IOException {
+	private void parseFileHeader(File file) throws IOException
+	{
 
 		FileReader in = new FileReader(file);
 		BufferedReader br = new BufferedReader(in);
@@ -249,27 +231,27 @@ public class ModuleTestCase extends TestCase {
 		String line = null;
 		boolean more = true;
 
-		while (more) {
+		while (more)
+		{
 			line = br.readLine();
-			if (line.startsWith(tcHeader)) {
+			if (line.startsWith(tcHeader))
+			{
 				line = line.substring(tcHeader.length()).trim();
-				if(line.equals(""))
+				if (line.equals(""))
 				{
 					more = false;
 					break;
 				}
 				String[] errors = line.split(" ");
-				for (String error : errors) {
+				for (String error : errors)
+				{
 					String[] parsedError = error.split(":");
 					String[] parsedLocation = parsedError[2].split(",");
-					
-					tcHeaderList.add(new TCStruct(
-							Type.valueOf(parsedError[0]),
-							Integer.parseInt(parsedError[1]), 
-							Integer.parseInt(parsedLocation[0]), 
-							Integer.parseInt(parsedLocation[1])));
+
+					tcHeaderList.add(new TCStruct(Type.valueOf(parsedError[0]), Integer.parseInt(parsedError[1]), Integer.parseInt(parsedLocation[0]), Integer.parseInt(parsedLocation[1])));
 				}
-			} else {
+			} else
+			{
 				more = false;
 			}
 		}

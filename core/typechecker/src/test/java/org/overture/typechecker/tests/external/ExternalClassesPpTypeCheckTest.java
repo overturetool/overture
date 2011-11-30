@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overture.typechecker.tests.framework.BaseTestSuite;
-import org.overture.typechecker.tests.framework.ClassTestCase;
+import org.overturetool.test.framework.BaseTestSuite;
+import org.overturetool.test.framework.ResultTestCase;
 
 public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 {
@@ -16,12 +16,13 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Type Check Classes TestSuite with external data";
-		String root = "/home/jenkins/resources/protected/externalTests/pptest/tc";
+		ResultTestCase.recordTestResults = false;
+		String name = "Type_Check_PP_Classes_TestSuite_External";
+		String root = ExternalTestSettings.basePath+"cskpptest/tc";
 		TestSuite test = null;
 		if (new File(root).exists())
 		{
-			test = createTestCompleteFile(name, root, ClassTestCase.class);
+			test = createTestCompleteFile(name, root, NewClassTestCase.class);
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

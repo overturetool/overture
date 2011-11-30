@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overture.typechecker.tests.framework.BaseTestSuite;
-import org.overture.typechecker.tests.framework.ModuleTestCase;
+import org.overturetool.test.framework.BaseTestSuite;
+import org.overturetool.test.framework.ResultTestCase;
 
 public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 {
@@ -16,13 +16,13 @@ public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Type Check Modules TestSuite with external data";
-		String root = "/home/jenkins/resources/protected/externalTests/sltest/tc";
+		ResultTestCase.recordTestResults = false;
+		String name = "Type_Check_SL_Modules_TestSuite_External";
+		String root = ExternalTestSettings.basePath+"csksltest/tc";
 		TestSuite test = null;
-
 		if (new File(root).exists())
 		{
-			test = createTestCompleteFile(name, root, ModuleTestCase.class);
+			test = createTestCompleteFile(name, root, NewModuleTestCase.class);
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

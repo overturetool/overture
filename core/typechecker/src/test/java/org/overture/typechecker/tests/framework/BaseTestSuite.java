@@ -25,7 +25,10 @@ public class BaseTestSuite extends TestSuite
 	{
 
 	}
-	public void test(){}
+
+	public void test()
+	{
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteFile(String name,
@@ -36,6 +39,14 @@ public class BaseTestSuite extends TestSuite
 	{
 		File testRoot = getFile(testRootPath);
 		Constructor ctor = testCase.getConstructor(new Class[] { File.class });
+		Constructor ctorCustom = null;
+		try
+		{
+			ctorCustom = testCase.getConstructor(new Class[] { File.class,
+					String.class, File.class });
+		} catch (Exception e)
+		{
+		}
 		TestSuite suite = new BaseTestSuite(name);
 
 		if (testRoot != null && testRoot.exists())
@@ -43,7 +54,7 @@ public class BaseTestSuite extends TestSuite
 
 			for (File file : testRoot.listFiles())
 			{
-				createCompleteFile(suite, file, ctor);
+				createCompleteFile(suite, file, ctor, ctorCustom, testRoot);
 			}
 		}
 		return suite;
@@ -51,11 +62,14 @@ public class BaseTestSuite extends TestSuite
 	}
 
 	private static void createCompleteFile(TestSuite suite, File file,
-			@SuppressWarnings("rawtypes") Constructor ctor)
+			@SuppressWarnings("rawtypes") Constructor ctor,
+			@SuppressWarnings("rawtypes") Constructor ctorCustom, File testRoot)
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException
 	{
-		if (file.getName().startsWith(".") || file.getName().endsWith("assert") || file.getName().endsWith("original")|| file.getName().endsWith("vdmj"))
+		if (file.getName().startsWith(".") || file.getName().endsWith("assert")
+				|| file.getName().endsWith("original")
+				|| file.getName().endsWith("vdmj"))
 		{
 			return;
 		}
@@ -63,12 +77,20 @@ public class BaseTestSuite extends TestSuite
 		{
 			for (File f : file.listFiles())
 			{
-				createCompleteFile(suite, f, ctor);
+				createCompleteFile(suite, f, ctor, ctorCustom, testRoot);
 			}
 		} else
 		{
-			//System.out.println("Creating test for:" + file);
-			Object instance = ctor.newInstance(new Object[] { file });
+			// System.out.println("Creating test for:" + file);
+			Object instance = null;
+			if (ctorCustom == null)
+			{
+				instance = ctor.newInstance(new Object[] { file });
+			} else
+			{
+				instance = ctorCustom.newInstance(new Object[] { file,
+						suite.getName(), testRoot });
+			}
 			suite.addTest((Test) instance);
 		}
 
@@ -82,7 +104,8 @@ public class BaseTestSuite extends TestSuite
 			SecurityException, NoSuchMethodException, IOException
 	{
 		File testRoot = getFile(testRootPath);
-		Constructor ctor = testCase.getConstructor(new Class[] {ParserType.class, String.class,File.class,String.class,
+		Constructor ctor = testCase.getConstructor(new Class[] {
+				ParserType.class, String.class, File.class, String.class,
 				String.class });
 		TestSuite suite = new BaseTestSuite(name);
 
@@ -90,7 +113,8 @@ public class BaseTestSuite extends TestSuite
 		{
 			for (File file : testRoot.listFiles())
 			{
-				if (file.getName().startsWith(".")|| file.getName().endsWith("_generated"))
+				if (file.getName().startsWith(".")
+						|| file.getName().endsWith("_generated"))
 				{
 					continue;
 				}
@@ -101,10 +125,10 @@ public class BaseTestSuite extends TestSuite
 					{
 						Object instance = ctor.newInstance(new Object[] {
 								type,
-								file.getName() + " " + i + " - " + splitContentResult(lines.get(i))[0],
-								file,
-								splitContentResult(lines.get(i))[0],
-								splitContentResult(lines.get(i))[1]});
+								file.getName() + " " + i + " - "
+										+ splitContentResult(lines.get(i))[0],
+								file, splitContentResult(lines.get(i))[0],
+								splitContentResult(lines.get(i))[1] });
 						suite.addTest((Test) instance);
 					}
 				}
@@ -117,15 +141,14 @@ public class BaseTestSuite extends TestSuite
 
 	private static String[] splitContentResult(String line)
 	{
-		String[] tmp = new String[]{"",""};
-		if(line.indexOf('$')!=-1)
+		String[] tmp = new String[] { "", "" };
+		if (line.indexOf('$') != -1)
 		{
-			tmp[0]=line.substring(line.indexOf('$')+1).trim();
-			tmp[1]=line.substring(0,line.indexOf('$')).trim();
-		}
-		else
+			tmp[0] = line.substring(line.indexOf('$') + 1).trim();
+			tmp[1] = line.substring(0, line.indexOf('$')).trim();
+		} else
 		{
-			tmp[0]= line.trim();
+			tmp[0] = line.trim();
 		}
 		return tmp;
 	}
