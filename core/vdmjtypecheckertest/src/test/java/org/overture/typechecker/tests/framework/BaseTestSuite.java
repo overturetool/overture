@@ -14,6 +14,7 @@ import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserTyp
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+
 public class BaseTestSuite extends TestSuite
 {
 	public BaseTestSuite(String name)
@@ -37,6 +38,14 @@ public class BaseTestSuite extends TestSuite
 	{
 		File testRoot = getFile(testRootPath);
 		Constructor ctor = testCase.getConstructor(new Class[] { File.class });
+		Constructor ctorCustom = null;
+		try
+		{
+			ctorCustom = testCase.getConstructor(new Class[] { File.class,
+					String.class, File.class });
+		} catch (Exception e)
+		{
+		}
 		TestSuite suite = new BaseTestSuite(name);
 
 		if (testRoot != null && testRoot.exists())
@@ -44,7 +53,7 @@ public class BaseTestSuite extends TestSuite
 
 			for (File file : testRoot.listFiles())
 			{
-				createCompleteFile(suite, file, ctor);
+				createCompleteFile(suite, file, ctor, ctorCustom, testRoot);
 			}
 		}
 		return suite;
@@ -52,7 +61,8 @@ public class BaseTestSuite extends TestSuite
 	}
 
 	private static void createCompleteFile(TestSuite suite, File file,
-			@SuppressWarnings("rawtypes") Constructor ctor)
+			@SuppressWarnings("rawtypes") Constructor ctor,
+			@SuppressWarnings("rawtypes") Constructor ctorCustom, File testRoot)
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException
 	{
@@ -65,12 +75,19 @@ public class BaseTestSuite extends TestSuite
 		{
 			for (File f : file.listFiles())
 			{
-				createCompleteFile(suite, f, ctor);
+				createCompleteFile(suite, f, ctor,ctorCustom,testRoot);
 			}
 		} else
 		{
-			System.out.println("Creating test for:" + file);
-			Object instance = ctor.newInstance(new Object[] { file });
+			Object instance = null;
+			if (ctorCustom == null)
+			{
+				instance = ctor.newInstance(new Object[] { file });
+			} else
+			{
+				instance = ctorCustom.newInstance(new Object[] { file,
+						suite.getName(), testRoot });
+			}
 			suite.addTest((Test) instance);
 		}
 

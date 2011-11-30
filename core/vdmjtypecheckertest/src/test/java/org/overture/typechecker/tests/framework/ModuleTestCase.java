@@ -3,7 +3,6 @@ package org.overture.typechecker.tests.framework;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,23 +12,14 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
-import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeChecker;
-import org.overturetool.vdmj.typechecker.TypeComparator;
-import org.overturetool.vdmj.types.Type;
 
 public class ModuleTestCase extends BasicTypeCheckTestCase {
 
@@ -41,7 +31,6 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 	String expectedType;
 	ParserType parserType;
 	private boolean showWarnings = true;
-	private boolean generateResultOutput = true;
 
 	public ModuleTestCase() {
 		super("test");
@@ -83,13 +72,11 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		ModuleTypeChecker moduleTC = new ModuleTypeChecker(modules);
 		moduleTC.typeCheck();
 
-		String errorMessages = null;
 		if (TypeChecker.getErrorCount() > 0) {
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
 			TypeChecker.printErrors(new PrintWriter(s));// new
 														// PrintWriter(System.out));
-			errorMessages = "\n" + s.toString() + "\n";
 			System.out.println(s.toString());
 		}
 
@@ -108,15 +95,6 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	}
 
-	private void printFile(File file) throws IOException {
-		FileReader in = new FileReader(file);
-		BufferedReader br = new BufferedReader(in);
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			System.out.println(line);
-		}
-
-	}
 
 	private void insertTCHeader() throws IOException {
 		if (!file.exists())

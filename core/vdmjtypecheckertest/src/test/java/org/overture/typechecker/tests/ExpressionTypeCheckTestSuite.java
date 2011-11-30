@@ -7,8 +7,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overture.typechecker.tests.framework.BaseTestSuite;
-import org.overture.typechecker.tests.framework.GeneratedTestCase;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
+import org.overture.typechecker.tests.framework.GeneratedTestCase;
 
 public class ExpressionTypeCheckTestSuite extends BaseTestSuite
 {

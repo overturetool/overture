@@ -3,32 +3,18 @@ package org.overture.typechecker.tests.framework;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
-import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
-import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeChecker;
-import org.overturetool.vdmj.typechecker.TypeComparator;
-import org.overturetool.vdmj.types.Type;
 
 public class ClassTestCase extends BasicTypeCheckTestCase {
 
@@ -39,8 +25,6 @@ public class ClassTestCase extends BasicTypeCheckTestCase {
 	String content;
 	String expectedType;
 	ParserType parserType;
-	private boolean showWarnings = true;
-	private boolean generateResultOutput = true;
 
 	public ClassTestCase() {
 		super("test");
@@ -77,27 +61,6 @@ public class ClassTestCase extends BasicTypeCheckTestCase {
 
 		ClassTypeChecker moduleTC = new ClassTypeChecker(classes);
 		moduleTC.typeCheck();
-
-//		String errorMessages = null;
-//		if (TypeChecker.getErrorCount() > 0) {
-//			// perrs += reader.getErrorCount();
-//			StringWriter s = new StringWriter();
-//			TypeChecker.printErrors(new PrintWriter(s));// new
-//														// PrintWriter(System.out));
-//			errorMessages = "\n" + s.toString() + "\n";
-//			System.out.println(s.toString());
-//		}
-
-		//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
-
-//		if (showWarnings && TypeChecker.getWarningCount() > 0) {
-//			// perrs += reader.getErrorCount();
-//			StringWriter s = new StringWriter();
-//			TypeChecker.printWarnings(new PrintWriter(s));// new
-//															// PrintWriter(System.out));
-//			// String warningMessages = "\n" + s.toString() + "\n";
-//			System.out.println(s.toString());
-//		}
 
 		printTCHeader();
 
