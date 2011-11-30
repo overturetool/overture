@@ -18,6 +18,10 @@
  *******************************************************************************/
 package org.overture.ide.core.parser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +70,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		{
 			LexLocation.getAllLocations().clear();
 			result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
-			setFileMarkers(file.getFile(), result);
+			setFileMarkers(file.getFile(), result,null);
 			if (result != null && result.getAst() != null)
 				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
 
@@ -87,10 +91,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		ParseResult result;
 		try
-		{
-			LexLocation.getAllLocations().clear();
+		{			
+			LexLocation.getAllLocations().clear();		
 			result = startParse(file, data, file.getFile().getCharset());
-			setFileMarkers(file.getFile(), result);
+			setFileMarkers(file.getFile(), result,data);
 			if (result != null)
 
 				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
@@ -111,9 +115,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	 *            the file where the markers should be set
 	 * @param result
 	 *            the result indicating if parse errors occurred
+	 * @param content 
 	 * @throws CoreException
 	 */
-	private void setFileMarkers(IFile file, ParseResult result)
+	private void setFileMarkers(IFile file, ParseResult result, String content)
 			throws CoreException
 	{
 		if (file != null)
@@ -125,14 +130,24 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				int previousErrorNumber = -1;
 				for (VDMError error : result.getErrors())
 				{
-					if (previousErrorNumber == error.number)// this check is
+					if (previousErrorNumber == error.number)
+					{// this check is
 						// done to avoid
 						// error fall
 						// through
 						continue;
+					}
 					else
+					{
 						previousErrorNumber = error.number;
-					FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID);
+					}
+					
+					if(content==null)
+					{
+						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID);
+					}else{
+						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID,content);
+					}
 				}
 			}
 
@@ -143,7 +158,12 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			{
 				for (VDMWarning warning : result.getWarnings())
 				{
-					FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID);
+					if(content ==null)
+					{
+						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID);
+					}else{
+						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID,content);
+					}
 				}
 			}
 		}

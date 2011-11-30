@@ -24,17 +24,19 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public class SourceLocationConverter
 {
-	String content;
+	
 	CodeModel model;
 
 	private static class CodeModel
 	{
+		public final String content;
 		private String[] codeLines;
 
 		private int[] codeLineLengths;
 
 		public CodeModel(String code)
 		{
+			this.content = code;
 			init(code);
 		}
 		 
@@ -79,16 +81,23 @@ public class SourceLocationConverter
 	}
 
 	
-	
+	@Deprecated
 	public SourceLocationConverter(char[] content)
 	{
-		this.content = new String(content);
-		this.model = new CodeModel(this.content);
+//		this.content = new String(content);
+		this.model = new CodeModel(new String(content));
 	}
 	
+	@Deprecated
 	public SourceLocationConverter(List<Character> content) {
-		this.content = new String(FileUtility.getCharContent(content));
-		this.model = new CodeModel(this.content);
+//		this.content = new String(FileUtility.getCharContent(content));
+		this.model = new CodeModel(new String(FileUtility.getCharContent(content)));
+	}
+	
+	public SourceLocationConverter(String content)
+	{
+//		this.content = new String(content);
+		this.model = new CodeModel(content);
 	}
 
 	
@@ -122,6 +131,6 @@ public class SourceLocationConverter
 
 	public int length()
 	{
-		return this.content.length();
+		return this.model.content.length();
 	}
 }

@@ -124,11 +124,69 @@ public class FileUtility
 	public static void addMarker(IFile file, String message,
 			LexLocation location, int severity, String sourceId)
 	{
+		if (file == null)
+			return;
+		
+		try
+		{
+			List<Character> content = getContent(file);//FIXME this should be improved converting a string 3 times is not good.
+			String tmp = new String(FileUtility.getCharContent(content));
+			addMarker(file,message,location,severity,sourceId,tmp);
+		} catch (CoreException e)
+		{
+			VdmCore.log("FileUtility addMarker", e);
+		}
+	}
+	
+	/**
+	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser. Important: If a marker already
+	 * exists at the specified location with the same message
+	 * 
+	 * @param file
+	 *            The IFile which is the source where the marker should be set
+	 * @param message
+	 *            The message of the marker
+	 * @param location
+	 *            The lex location where the marker should be set
+	 * @param severity
+	 *            The severity, e.g: IMarker.SEVERITY_ERROR or IMarker.SEVERITY_ERROR
+	 * @param sourceId
+	 *            The source if of the plugin calling this function. The PLUGIN id.
+	 */
+	public static void addMarker(IFile file, String message,
+			LexLocation location, int severity, String sourceId, String content)
+	{
+		if (file == null)
+			return;
+			
+			addInternalMarker(file,message,location,severity,sourceId,content);
+	}
+	
+	/**
+	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser. Important: If a marker already
+	 * exists at the specified location with the same message
+	 * 
+	 * @param file
+	 *            The IFile which is the source where the marker should be set
+	 * @param message
+	 *            The message of the marker
+	 * @param location
+	 *            The lex location where the marker should be set
+	 * @param severity
+	 *            The severity, e.g: IMarker.SEVERITY_ERROR or IMarker.SEVERITY_ERROR
+	 * @param sourceId
+	 *            The source if of the plugin calling this function. The PLUGIN id.
+	 * @param content
+	 * 				The content used when calculating the char offset for the markers
+	 */
+	protected static void addInternalMarker(IFile file, String message,
+			LexLocation location, int severity, String sourceId,String content)
+	{
 		try
 		{
 			if (file == null)
 				return;
-			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
+			SourceLocationConverter converter = new SourceLocationConverter(content);
 			// lineNumber -= 1;
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
