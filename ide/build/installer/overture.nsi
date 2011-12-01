@@ -17,7 +17,7 @@
 !define PRODUCT_NAME "Overture"
 
 !define OVERTUREIDE "OvertureIde-"
-!define OVERTUREFOLDER "${OVERTUREIDE}${PRODUCT_VERSION}I"
+;!define OVERTUREFOLDER "${OVERTUREIDE}${PRODUCT_VERSION}I"
 ;!define DESTECSZIP "${DESTECSFOLDER}-win32.win32.x86.zip"
 !define OVERTUREZIP "overture.zip"
 
@@ -31,7 +31,7 @@ Var UNINSTALL_OLD_VERSION
 Name "Overture"
 
 ; The file to write
-OutFile "OvertureInstaller.exe"
+OutFile "OvertureInstaller-${PRODUCT_VERSION}.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\Overture
