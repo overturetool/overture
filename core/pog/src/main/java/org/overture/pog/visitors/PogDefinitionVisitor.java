@@ -124,7 +124,7 @@ public class PogDefinitionVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseSClassDefinition(SClassDefinition node,
+	public ProofObligationList defaultSClassDefinition(SClassDefinition node,
 			POContextStack question)
 	{
 
@@ -136,14 +136,6 @@ public class PogDefinitionVisitor extends
 		}
 		return proofObligationList;
 
-	}
-
-	@Override
-	public ProofObligationList defaultSClassDefinition(SClassDefinition node,
-			POContextStack question)
-	{
-
-		return caseSClassDefinition(node, question);
 	}
 
 	@Override

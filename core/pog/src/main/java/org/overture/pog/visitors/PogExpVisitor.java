@@ -245,6 +245,8 @@ public class PogExpVisitor extends
 		if (predicate != null)
 		{
 			question.push(new POForAllContext(node));
+			obligations.addAll(predicate.apply(this, question));
+			question.pop();
 		}
 
 		return obligations;
@@ -252,37 +254,18 @@ public class PogExpVisitor extends
 
 	@Override
 	// RWL see [1] pg. 179 A.5.4 Unary Expressions
-	public ProofObligationList caseSUnaryExp(SUnaryExp node,
-			POContextStack question)
-	{
-
-		return node.getExp().apply(this, question);
-	}
-
-	@Override
-	// RWL
 	public ProofObligationList defaultSUnaryExp(SUnaryExp node,
 			POContextStack question)
 	{
+
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	// RWL
-	public ProofObligationList caseSBinaryExp(SBinaryExp node,
-			POContextStack question)
-	{
-		ProofObligationList obligations = new ProofObligationList();
-		obligations.addAll(node.getLeft().apply(this, question));
-		obligations.addAll(node.getRight().apply(this, question));
-		return obligations;
-	}
-
-	@Override
 	public ProofObligationList defaultSBinaryExp(SBinaryExp node,
 			POContextStack question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(node.getLeft().apply(this, question));
 		obligations.addAll(node.getRight().apply(this, question));
@@ -570,20 +553,13 @@ public class PogExpVisitor extends
 	public ProofObligationList caseADefExp(ADefExp node, POContextStack question)
 	{
 		ProofObligationList obligations = PDefinitionAssistantPOG.getProofObligations(node.getLocalDefs(), rootVisitor, question);
-		
+
 		// RWL Question, are we going
 		question.push(new PODefContext(node));
 		obligations.addAll(node.getExpression().apply(this, question));
 		question.pop();
 
 		return obligations;
-	}
-
-	@Override
-	public ProofObligationList caseSMapExp(SMapExp node, POContextStack question)
-	{
-
-		return new ProofObligationList();
 	}
 
 	@Override
@@ -763,23 +739,9 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseSSeqExp(SSeqExp node, POContextStack question)
-	{
-
-		return new ProofObligationList();
-	}
-
-	@Override
 	public ProofObligationList defaultSSeqExp(SSeqExp node,
 			POContextStack question)
 	{
-		return new ProofObligationList();
-	}
-
-	@Override
-	public ProofObligationList caseSSetExp(SSetExp node, POContextStack question)
-	{
-
 		return new ProofObligationList();
 	}
 
@@ -1004,7 +966,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseSBooleanBinaryExp(SBooleanBinaryExp node,
+	public ProofObligationList defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			POContextStack question)
 	{
 		ProofObligationList obligations = new ProofObligationList();
@@ -1023,14 +985,7 @@ public class PogExpVisitor extends
 
 			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
 		}
-		return super.caseSBooleanBinaryExp(node, question);
-	}
-
-	@Override
-	public ProofObligationList defaultSBooleanBinaryExp(SBooleanBinaryExp node,
-			POContextStack question)
-	{
-		return caseSBooleanBinaryExp(node, question);
+		return obligations;
 	}
 
 	@Override
@@ -1143,7 +1098,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseSNumericBinaryExp(SNumericBinaryExp node,
+	public ProofObligationList defaultSNumericBinaryExp(SNumericBinaryExp node,
 			POContextStack question)
 	{
 
@@ -1168,13 +1123,6 @@ public class PogExpVisitor extends
 		obligations.addAll(left.apply(this, question));
 		obligations.addAll(right.apply(this, question));
 		return obligations;
-	}
-
-	@Override
-	public ProofObligationList defaultSNumericBinaryExp(SNumericBinaryExp node,
-			POContextStack question)
-	{
-		return caseSNumericBinaryExp(node, question);
 	}
 
 	@Override
@@ -1320,7 +1268,7 @@ public class PogExpVisitor extends
 		PType lType = lExp.getType();
 		PExp rExp = leftRight[RIGHT];
 		PType rType = rExp.getType();
-		
+
 		if (PTypeAssistant.isUnion(lType))
 		{
 			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));

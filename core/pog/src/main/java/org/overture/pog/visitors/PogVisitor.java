@@ -11,9 +11,6 @@ import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PExports;
 import org.overture.ast.modules.PImports;
 import org.overture.ast.modules.PModules;
-import org.overture.ast.node.Node;
-import org.overture.ast.node.PBooleanConst;
-import org.overture.ast.node.Token;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -93,14 +90,6 @@ public class PogVisitor extends
 		question.push(new PONotCaseContext(node.getPattern(), node.getType(), node.getCexp()));
 
 		return obligations;
-	}
-
-	@Override
-	public ProofObligationList defaultPBooleanConst(PBooleanConst node,
-			POContextStack question)
-	{
-
-		return new ProofObligationList();
 	}
 
 	@Override
@@ -317,20 +306,6 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPCase(PCase node, POContextStack question)
-	{
-
-		return new ProofObligationList();
-	}
-
-	@Override
-	public ProofObligationList defaultNode(Node node, POContextStack question)
-	{
-
-		return new ProofObligationList();
-	}
-
-	@Override
-	public ProofObligationList defaultToken(Token node, POContextStack question)
 	{
 
 		return new ProofObligationList();

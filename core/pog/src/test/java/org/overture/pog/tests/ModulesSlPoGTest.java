@@ -34,7 +34,7 @@ public class ModulesSlPoGTest extends BaseTestSuite
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Type Check Module TestSuite";
+		String name = "Proof Obligation Generator Module TestSuite";
 		String root = "src\\test\\resources\\" + suite.getFolder();
 		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class);
 		return test;
@@ -45,7 +45,7 @@ public class ModulesSlPoGTest extends BaseTestSuite
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		String name = "Type Check Module TestSuite";
+		String name = "Proof Obligation Generator Module TestSuite";
 		String root = "src\\test\\resources\\" + suite.getFolder();
 		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class);
 		return test;
@@ -54,8 +54,8 @@ public class ModulesSlPoGTest extends BaseTestSuite
 	public static Test suite() throws Exception
 	{
 		TestSuite t = new TestSuite();
-		t.addTest(getSuite(FunctionalTests.newspeakSL));
-		// t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
+		// t.addTest(getSuite(FunctionalTests.newspeakSL));
+		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
 		// t.addTest(getSuite(ThirdPartyTests.recfun_40$vdm));
 		// t.addTest(getSuite(ThirdPartyTests.extexplfndef_01$vdm));
 		// t.addTest(getSuite(ThirdPartyTests.memory$vdm));

@@ -291,16 +291,14 @@ public class PogStmVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseSLetDefStm(SLetDefStm node,
+	public ProofObligationList defaultSLetDefStm(SLetDefStm node,
 			POContextStack question)
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
 
-		obligations.addAll(PDefinitionAssistantPOG.getProofObligations(
-						node.getLocalDefs(),
-						rootVisitor,question));
-				
+		obligations.addAll(PDefinitionAssistantPOG.getProofObligations(node.getLocalDefs(), rootVisitor, question));
+
 		question.push(new POScopeContext());
 		obligations.addAll(node.getStatement().apply(this, question));
 		question.pop();

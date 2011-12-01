@@ -23,6 +23,7 @@ import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -35,7 +36,6 @@ public class ModuleTestCase extends TestCase
 
 	private static boolean isPermutationOf(String org, String perm)
 	{
-		boolean result = true;
 		if (org.length() != perm.length())
 			return false;
 		for (char c : org.toCharArray())
@@ -72,8 +72,9 @@ public class ModuleTestCase extends TestCase
 
 	private static String makePoString(ProofObligation po)
 	{
-		String poString = "|" + po.name + "," + po.value + "," + po.kind + ","
-				+ po.proof + "," + po.status + "|";
+		LexLocation loc = po.location;
+		String poString = "|" + loc.startLine + " " + po.name + "," + po.value
+				+ "," + po.kind + "," + po.proof + "," + po.status + "|";
 		return poString;
 	}
 
@@ -205,7 +206,8 @@ public class ModuleTestCase extends TestCase
 				{
 					proofObligation.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
 				}
-			}
+			} else
+				fail(file.getName() + " failed because of the type checker.");
 
 		}
 
@@ -235,7 +237,6 @@ public class ModuleTestCase extends TestCase
 			actualPos.add(makePoString(po));
 
 		List<Pair<String, String, Integer>> ratedStuff = new LinkedList<Pair<String, String, Integer>>();
-		List<String> okayPos = new LinkedList<String>();
 
 		String more = "";
 		int count = 0;
@@ -243,6 +244,7 @@ public class ModuleTestCase extends TestCase
 		{
 			boolean differenceExists = false;
 			int min = Integer.MAX_VALUE;
+			String okayPo = null;
 
 			String minExpPo = null;
 			for (String poExp : expectedProofObligations)
@@ -250,7 +252,7 @@ public class ModuleTestCase extends TestCase
 
 				if (isPermutationOf(poExp, poAct))
 				{
-					okayPos.add(poExp);
+					okayPo = poExp;
 					differenceExists = false;
 					break;
 				}
@@ -271,6 +273,9 @@ public class ModuleTestCase extends TestCase
 				count++;
 			}
 
+			if (okayPo != null)
+				expectedProofObligations.remove(okayPo);
+
 			if (count > 9)
 			{
 				more = " And there are more...";
@@ -278,8 +283,6 @@ public class ModuleTestCase extends TestCase
 			}
 
 		}
-
-		expectedProofObligations.removeAll(okayPos);
 
 		System.out.println("Proof obligations expected: " + expPoSize
 				+ " actual: " + actPoSize
@@ -422,12 +425,14 @@ public class ModuleTestCase extends TestCase
 		for (int i = 0; i < ml + 1; i++)
 			dp[0][i] = i;
 
+		// favor matching the initial characters extremely as the line number and function really should be the same
 		dp[0][0] = -200;
 
 		for (int ni = 1; ni < nl + 1; ni++)
 		{
 			for (int mi = 1; mi < ml + 1; mi++)
 			{
+				// favor matching to replacing
 				int cost = na[ni - 1] == ma[mi - 1] ? -4 : 2;
 				int leftOf = dp[ni - 1][mi] + 2;
 				int topOf = (dp[ni][mi - 1]) + 2;
