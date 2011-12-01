@@ -1,4 +1,4 @@
--- TCErrors: WARNING:5000:11,5 PROOFOBLIGATION: fFRlc3RXaGlsZVN0bSwwLHdoaWxlIChpID4gMCkgZG8gLi4uCix3aGlsZSBsb29wIHRlcm1pbmF0aW9uLG51bGwsVW5wcm92ZWR8 PROOFOBLIGATION: fFRlc3RXaGlsZVN0bSwwLChpIC0gMSkgPj0gMAosc3VidHlwZSxudWxsLFVucHJvdmVkfA==
+-- TCErrors: WARNING:5000:11,5 PROOFOBLIGATION: fDE0IFRlc3RXaGlsZVN0bSx3aGlsZSAoaSA+IDApIGRvIC4uLgosd2hpbGUgbG9vcCB0ZXJtaW5hdGlvbixudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDE1IFRlc3RXaGlsZVN0bSwoaSAtIDEpID49IDAKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZHw=
 --
 -- This test is basic simple function with a unary 
 -- head expressing. We expect that a proof obligation
