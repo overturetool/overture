@@ -25,6 +25,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.pog.assistants.ACaseAlternativeAssistantPOG;
 import org.overture.pog.assistants.PDefinitionAssistantPOG;
 import org.overture.pog.obligations.CasesExhaustiveObligation;
 import org.overture.pog.obligations.FiniteMapObligation;
@@ -186,7 +187,6 @@ public class PogExpVisitor extends
 	public ProofObligationList caseACasesExp(ACasesExp node,
 			POContextStack question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
 
 		int count = 0;
@@ -199,7 +199,13 @@ public class PogExpVisitor extends
 			if (alt.getPattern() instanceof AIgnorePattern)
 				hasIgnore = true;
 
+			
+			obligations.addAll(
+				ACaseAlternativeAssistantPOG.getProofObligations(alt, rootVisitor, 
+						question, node.getType()));
+			/*
 			obligations.addAll(alt.apply(rootVisitor, question));
+			*/
 			count++;
 		}
 

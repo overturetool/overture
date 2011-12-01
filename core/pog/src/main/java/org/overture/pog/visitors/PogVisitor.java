@@ -255,23 +255,7 @@ public class PogVisitor extends
 
 		return new ProofObligationList();
 	}
-
-	@Override
-	public ProofObligationList caseACaseAlternativeStm(
-			ACaseAlternativeStm node, POContextStack question)
-	{
-
-		ProofObligationList obligations = new ProofObligationList();
-
-		question.push(new POCaseContext(node.getPattern(), node.getCtype(), node.getCexp()));
-		obligations.addAll(node.getResult().apply(pogStmVisitor, question));
-		question.pop();
-		question.push(new PONotCaseContext(node.getPattern(), node.getCtype(), node.getCexp()));
-
-		return obligations;
-
-	}
-
+	
 	@Override
 	public ProofObligationList caseATixeStmtAlternative(
 			ATixeStmtAlternative node, POContextStack question)

@@ -33,10 +33,13 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SLetDefStm;
+import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.assistants.PDefinitionAssistantPOG;
 import org.overture.pog.obligations.LetBeExistsObligation;
+import org.overture.pog.obligations.POCaseContext;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.PONameContext;
+import org.overture.pog.obligations.PONotCaseContext;
 import org.overture.pog.obligations.POScopeContext;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.obligations.StateInvariantObligation;
@@ -157,7 +160,7 @@ public class PogStmVisitor extends
 				hasIgnore = true;
 			}
 
-			obligations.addAll(alt.apply(rootVisitor, question));
+			obligations.addAll(alt.apply(this, question));
 		}
 
 		if (node.getOthers() != null && !hasIgnore)
@@ -167,6 +170,15 @@ public class PogStmVisitor extends
 
 		return obligations;
 
+	}
+	
+	@Override
+	public ProofObligationList caseACaseAlternativeStm(
+			ACaseAlternativeStm node, POContextStack question)
+	{
+		ProofObligationList obligations = new ProofObligationList();
+		obligations.addAll(node.getResult().apply(this, question));
+		return obligations;
 	}
 
 	@Override
@@ -449,30 +461,33 @@ public class PogStmVisitor extends
 
 		return obligations;
 	}
-
-	@Override
-	public ProofObligationList caseABlockSimpleBlockStm(
-			ABlockSimpleBlockStm node, POContextStack question)
+	
+	public ProofObligationList defaultSSimpleBlockStm(SSimpleBlockStm node, POContextStack  question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
-
-		for (PDefinition def : node.getAssignmentDefs())
-		{
-			ProofObligationList defObligations = def.apply(rootVisitor, question);
-			if (defObligations != null)
-				obligations.addAll(defObligations);
-		}
-
-		question.push(new POScopeContext());
-
+		
 		for (PStm stmt : node.getStatements())
 		{
 			obligations.addAll(stmt.apply(this, question));
 		}
-
+		
+		return obligations;
+	}
+	
+	@Override
+	public ProofObligationList caseABlockSimpleBlockStm(
+			ABlockSimpleBlockStm node, POContextStack question)
+	{
+		ProofObligationList obligations = 
+			PDefinitionAssistantPOG.getProofObligations(
+					node.getAssignmentDefs(), rootVisitor, question);
+				
+		question.push(new POScopeContext());
+		obligations.addAll(defaultSSimpleBlockStm(node,question));
 		question.pop();
 
 		return obligations;
 	}
+	
+	
 }
