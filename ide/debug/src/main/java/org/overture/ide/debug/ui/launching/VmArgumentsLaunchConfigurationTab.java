@@ -54,7 +54,6 @@ public class VmArgumentsLaunchConfigurationTab extends
 	{
 		public void modifyText(ModifyEvent e)
 		{
-
 			updateLaunchConfigurationDialog();
 		}
 

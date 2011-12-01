@@ -156,10 +156,25 @@ public class DebuggerPropertiesManager
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
-		configuration.setAttribute(launchConfigkey, getConfigString(props));
+		//configuration.setAttribute(launchConfigkey, getConfigString(props));
+		try {
+			List<DebuggerProperty> sorted = new Vector<DebuggerProperty>();
+			sorted.addAll(props);
+			Collections.sort(sorted);
+			
+			if(!getConfigString(sorted).equals(configuration.getAttribute(launchConfigkey, "")) )
+			{
+				configuration.setAttribute(launchConfigkey, getConfigString(sorted));
+			}
+			
+			
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private static String getConfigString(Set<DebuggerProperty> ps)
+	private static String getConfigString(List<DebuggerProperty> ps)
 	{
 		String tmp = "";
 		for (Iterator<DebuggerProperty> itr = ps.iterator(); itr.hasNext();)
@@ -177,7 +192,9 @@ public class DebuggerPropertiesManager
 	public void setDefaults(Set<DebuggerProperty> defaultProps,
 			ILaunchConfigurationWorkingCopy configuration)
 	{
-		initializeFrom(getConfigString(defaultProps));
+		List<DebuggerProperty> dProps = new Vector<DebuggerProperty>(defaultProps);
+		Collections.sort(dProps);
+		initializeFrom(getConfigString(dProps));
 		performApply(configuration);
 	}
 
