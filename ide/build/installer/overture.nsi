@@ -112,6 +112,8 @@ Section "Overture (required)" ;No components page, name is not important
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_REG_KEY}" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
   
+   AccessControl::GrantOnFile "$INSTDIR" "(BU)" "GenericRead + GenericWrite"
+  
 SectionEnd ; end the section
 
 ; Optional section (can be disabled by the user)
