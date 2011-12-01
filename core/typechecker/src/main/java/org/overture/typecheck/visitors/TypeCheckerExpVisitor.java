@@ -2770,7 +2770,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail("Actual type", etype);
 		}
 
-		node.setType(new ASetType(node.getLocation(), false, new ANatNumericBasicType(node.getLocation(), false), false, false));
+		node.setType(new ASetType(node.getLocation(), false, new ANatOneNumericBasicType(node.getLocation(), false), false, false));
 		return node.getType();
 	}
 
