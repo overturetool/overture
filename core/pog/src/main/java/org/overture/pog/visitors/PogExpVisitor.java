@@ -198,11 +198,10 @@ public class PogExpVisitor extends
 
 			if (alt.getPattern() instanceof AIgnorePattern)
 				hasIgnore = true;
-
 			
 			obligations.addAll(
 				ACaseAlternativeAssistantPOG.getProofObligations(alt, rootVisitor, 
-						question, node.getType()));
+						question, node.getExpression().getType()));
 			/*
 			obligations.addAll(alt.apply(rootVisitor, question));
 			*/
