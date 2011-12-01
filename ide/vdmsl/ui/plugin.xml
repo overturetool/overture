@@ -35,7 +35,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmsl_file_tsk.gif"
             id="org.overture.ide.vdmsl.ui.fileWizard"
-            name="Empty File"
+            name="%newEmptyFile"
             preferredPerspectives="org.overture.ide.ui.perspective">
       </wizard>
       <wizard
@@ -44,7 +44,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/obj16/module_obj.gif"
             id="org.overture.ide.vdmsl.ui.moduleWizard"
-            name="Module"
+            name="%newModule"
             preferredPerspectives="org.overture.ide.ui.perspective">
       </wizard>
       <primaryWizard

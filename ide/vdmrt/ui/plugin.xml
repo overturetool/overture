@@ -35,7 +35,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/cview16/vdmrt_file_tsk.gif"
             id="org.overture.ide.vdmrt.ui.fileWizard"
-            name="Empty File"
+            name="%newEmptyFile"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="false">
       </wizard>
@@ -45,7 +45,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/obj16/class_obj.gif"
             id="org.overture.ide.vdmrt.ui.classWizard"
-            name="Class"
+            name="%newClass"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="false">
       </wizard>
@@ -55,7 +55,7 @@
             finalPerspective="org.overture.ide.ui.perspective"
             icon="icons/obj16/system_obj.gif"
             id="org.overture.ide.vdmrt.ui.systemWizard"
-            name="System"
+            name="%newSystem"
             preferredPerspectives="org.overture.ide.ui.perspective"
             project="false">
       </wizard>
