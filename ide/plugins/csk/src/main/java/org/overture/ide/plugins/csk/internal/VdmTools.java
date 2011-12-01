@@ -20,6 +20,7 @@ package org.overture.ide.plugins.csk.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -59,7 +60,7 @@ public class VdmTools
 	public void createProject(Shell shell, IVdmProject vdmProject,
 			List<File> files) throws IOException
 	{
-
+		boolean macOsx = false;
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		File location = project.getLocation().toFile();
 		StringBuilder sb = new StringBuilder();
@@ -103,13 +104,27 @@ public class VdmTools
 		options.Save(generated, projectFileName);
 
 //		String projectFileName = projectFileName + ".prj";
-
+		List<String> commandArgs = new ArrayList<String>();
+		
+		if (Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX))
+		{
+			macOsx = true;
+			commandArgs.add("open");
+		}
+		
 		String vdmToolsPath = getVdmToolsPath(shell, vdmProject);
 
 		if (vdmToolsPath != null)
 		{
-			Runtime.getRuntime().exec(toPlatformPath(vdmToolsPath) + " "
-					+ toPlatformPath(projectFileName+".prj"), null, generated);
+			commandArgs.add(toPlatformPath(vdmToolsPath));
+			if(macOsx)
+			{
+				commandArgs.add("--args");
+			}
+			commandArgs.add(toPlatformPath(projectFileName+".prj"));
+			ProcessBuilder pb = new ProcessBuilder(commandArgs);
+			pb.directory(generated);
+			pb.start();
 		}
 	}
 
@@ -162,12 +177,6 @@ public class VdmTools
 		if (valid)
 		{
 			valid = new File(path).exists();
-
-			if (Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX))
-			{
-				path = "open " + path;
-			}
-
 		}
 		if (!valid)
 		{
