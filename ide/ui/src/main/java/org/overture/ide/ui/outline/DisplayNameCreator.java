@@ -28,6 +28,7 @@ import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.RecordPattern;
 import org.overturetool.vdmj.types.FunctionType;
+import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
 
 public class DisplayNameCreator {
@@ -48,7 +49,30 @@ public class DisplayNameCreator {
 				{
 					
 					ExplicitOperationDefinition def = (ExplicitOperationDefinition) element;
-					sb.append(def.name);
+					
+					sb.append(def.getName());
+
+					if (def.getType() instanceof OperationType) {
+						OperationType type = (OperationType) def.getType();
+						if (type.parameters.size() == 0) {
+							sb.append("() ");
+						} else {
+							sb.append("(");
+							int i = 0;
+							while (i < type.parameters.size() - 1) {
+								Type definition = (Type) type.parameters.elementAt(i);
+								sb.append(getSimpleTypeString(definition) + ", ");
+
+								i++;
+							}
+							Type definition = (Type) type.parameters.elementAt(i);
+							sb.append(getSimpleTypeString(definition) + ")");
+						}
+					}
+
+					
+
+					
 //					sb.append("(");
 //					for (int i = 0; i < def.parameterPatterns.size(); i++)
 //					{
