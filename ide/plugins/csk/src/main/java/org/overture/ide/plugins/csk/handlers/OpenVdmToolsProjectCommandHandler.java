@@ -76,10 +76,10 @@ public class OpenVdmToolsProjectCommandHandler extends AbstractHandler
 							project.refreshLocal(IResource.DEPTH_INFINITE, null);
 						} catch (IOException e)
 						{
-							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Faild to open VDM Tools",e);
+							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to open VDM Tools",e);
 						} catch (CoreException e)
 						{
-							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Faild to open VDM Tools",e);
+							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to open VDM Tools",e);
 						}
 						return Status.OK_STATUS;
 					}

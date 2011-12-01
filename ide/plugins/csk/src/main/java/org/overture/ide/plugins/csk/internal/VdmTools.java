@@ -60,7 +60,6 @@ public class VdmTools
 	public void createProject(Shell shell, IVdmProject vdmProject,
 			List<File> files) throws IOException
 	{
-		boolean macOsx = false;
 		IProject project = (IProject) vdmProject.getAdapter(IProject.class);
 		File location = project.getLocation().toFile();
 		StringBuilder sb = new StringBuilder();
@@ -106,22 +105,35 @@ public class VdmTools
 //		String projectFileName = projectFileName + ".prj";
 		List<String> commandArgs = new ArrayList<String>();
 		
-		if (Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX))
-		{
-			macOsx = true;
-			commandArgs.add("open");
-		}
+		
 		
 		String vdmToolsPath = getVdmToolsPath(shell, vdmProject);
 
 		if (vdmToolsPath != null)
 		{
-			commandArgs.add(toPlatformPath(vdmToolsPath));
-			if(macOsx)
+			if(isMacPlatform())
 			{
-				commandArgs.add("--args");
+				switch (vdmProject.getDialect())
+				{
+					case VDM_PP:
+						commandArgs.add(toPlatformPath(vdmToolsPath + "/vppgde.app/Contents/MacOS/vppgde"));
+						break;
+					case VDM_RT:
+						commandArgs.add(toPlatformPath(vdmToolsPath+ "/vicegde.app/Contents/MacOS/vicegde"));;
+						break;
+					case VDM_SL:
+						commandArgs.add(toPlatformPath(vdmToolsPath + "/vdmgde.app/Contents/MacOS/vdmgde"));;
+						break;
+				}
+				commandArgs.add(toPlatformPath(projectFileName+".prj"));
 			}
-			commandArgs.add(toPlatformPath(projectFileName+".prj"));
+			else
+			{
+				commandArgs.add(toPlatformPath(vdmToolsPath));
+				commandArgs.add(toPlatformPath(projectFileName+".prj"));
+			}
+		
+			
 			ProcessBuilder pb = new ProcessBuilder(commandArgs);
 			pb.directory(generated);
 			pb.start();
@@ -133,6 +145,11 @@ public class VdmTools
 		return file.getAbsolutePath();// "./../"+file.getAbsolutePath().substring(location.getAbsolutePath().length()+1);
 	}
 
+	public static boolean isMacPlatform()
+	{
+		return Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX);
+	}
+	
 	public static boolean isWindowsPlatform()
 	{
 		return System.getProperty("os.name").toLowerCase().contains("win");
