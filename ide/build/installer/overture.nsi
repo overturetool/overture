@@ -1,4 +1,4 @@
- 
+SetCompress Off 
 ;--------------------------------
 ;Include Modern UI
 
