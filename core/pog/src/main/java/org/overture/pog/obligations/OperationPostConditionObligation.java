@@ -48,7 +48,7 @@ public class OperationPostConditionObligation extends ProofObligation
 
 	private String getExp(PExp preexp, PExp postexp, List<AErrorCase> errs)
 	{
-		if (errs.isEmpty())
+		if (errs == null || errs.isEmpty())
 		{
 			return postexp.toString();
 		}
