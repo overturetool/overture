@@ -90,7 +90,7 @@ public class VdmTools
 		// "generated");
 		generated.mkdirs();
 		
-		String projectFileName = vdmProject.getName().trim().replaceAll(" ", "");//TODO removes all spaces because of linux launch error
+		String projectFileName = vdmProject.getName().trim();
 
 		PluginFolderInclude.writeFile(generated, projectFileName + ".prj", sb.toString());
 		VdmToolsOptions options = new VdmToolsOptions();
@@ -104,8 +104,6 @@ public class VdmTools
 
 //		String projectFileName = projectFileName + ".prj";
 		List<String> commandArgs = new ArrayList<String>();
-		
-		
 		
 		String vdmToolsPath = getVdmToolsPath(shell, vdmProject);
 
@@ -125,15 +123,19 @@ public class VdmTools
 						commandArgs.add(toPlatformPath(vdmToolsPath + "/vdmgde.app/Contents/MacOS/vdmgde"));;
 						break;
 				}
-				commandArgs.add(toPlatformPath(projectFileName+".prj"));
+				commandArgs.add(projectFileName +".prj");
 			}
-			else
+			else if(isWindowsPlatform())
 			{
 				commandArgs.add(toPlatformPath(vdmToolsPath));
 				commandArgs.add(toPlatformPath(projectFileName+".prj"));
 			}
-		
-			
+			else
+			{
+				//Linux platform
+				commandArgs.add(toPlatformPath(vdmToolsPath));
+				commandArgs.add(projectFileName+".prj");
+			}
 			ProcessBuilder pb = new ProcessBuilder(commandArgs);
 			pb.directory(generated);
 			pb.start();
