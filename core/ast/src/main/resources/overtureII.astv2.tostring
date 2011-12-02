@@ -246,5 +246,9 @@ import org.overturetool.util.ToStringUtil;
 %bind->type = "" + [pattern] + ":" + [type];
 
 // Modifiers
-
 %modifier->record = [tag] " |-> " [value];
+
+//designator
+%stateDesignator->field = [object] "." [field];
+%stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")";
+%stateDesignator->identifier = [name];
