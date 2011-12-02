@@ -6,9 +6,6 @@
    <feature url="features/org.overture.ide.features.plugins.coverageeditor_1.0.0.qualifier.jar" id="org.overture.ide.features.plugins.coverageeditor" version="1.0.0.qualifier">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.features.rcp_0.3.0.qualifier.jar" id="org.overture.ide.features.rcp" version="0.3.0.qualifier">
-      <category name="Overture"/>
-   </feature>
    <feature url="features/org.overture.ide.plugins.features.csk_1.0.0.qualifier.jar" id="org.overture.ide.plugins.features.csk" version="1.0.0.qualifier">
       <category name="Overture"/>
    </feature>
