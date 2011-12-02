@@ -193,8 +193,7 @@ Function OvertureInstall
   ; Print to detail log 
   DetailPrint "Installing Overture"
   ; Unzip the file
-  ZipDLL::extractall "${OVERTUREZIP}" "$TEMP\overture"
-  ExecWait 'xcopy /S /Y $\"$TEMP\overture$\" $\"$INSTDIR$\"'
+  ZipDLL::extractall "${OVERTUREZIP}" $INSTDIR 
   ; Delete the zip
   Delete "${OVERTUREZIP}"
   ;Moving files from DESTECS folder to root of $INSTDIR
