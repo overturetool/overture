@@ -1,4 +1,4 @@
--- TCErrors: WARNING:5000:3,3 PROOFOBLIGATION: fDMgZywoZm9yYWxsIHg6aW50ICYKICBwcmVfZyh4KSA9PiBleGlzdHMgcmVzdWx0OmludCAmIHBvc3RfZyh4LCByZXN1bHQpKQosZnVuY3Rpb24gc2F0aXNmaWFiaWxpdHksbnVsbCxVbnByb3ZlZHw=
+-- TCErrors: WARNING:5000:3,3 PROOFOBLIGATION: fDM6MyBnLChmb3JhbGwgeDppbnQgJgogIHByZV9nKHgpID0+IGV4aXN0cyByZXN1bHQ6aW50ICYgcG9zdF9nKHgsIHJlc3VsdCkpCixmdW5jdGlvbiBzYXRpc2ZpYWJpbGl0eSxudWxsLFVucHJvdmVkfA==
 functions
   g(x : int) result : int
   pre x < 42

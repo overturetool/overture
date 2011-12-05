@@ -53,13 +53,16 @@ public class ModulesVDMSlVDMJPoGTest extends BaseTestSuite
 
 	public static Test suite() throws Exception
 	{
+
 		TestSuite t = new TestSuite();
+		t.addTest(getSuite(ExpressionsTests.smallerfromexample$vdmsl));
+		// t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
 		// t.addTest(getSuite(ThirdPartyTests.recfun_40$vdm));
 		// t.addTest(getSuite(FunctionalTests.newspeakSL));
-		t.addTest(getSuite(TestSuites.THIRDPARTY));
-		t.addTest(getSuite(TestSuites.STATEMENTS));
-		t.addTest(getSuite(TestSuites.FUNCTIONAL));
-		t.addTest(getSuite(TestSuites.EXPRESSIONS));
+		// t.addTest(getSuite(TestSuites.THIRDPARTY));
+		// t.addTest(getSuite(TestSuites.STATEMENTS));
+		// t.addTest(getSuite(TestSuites.FUNCTIONAL));
+		// t.addTest(getSuite(TestSuites.EXPRESSIONS));
 		return t;
 	}
 }
