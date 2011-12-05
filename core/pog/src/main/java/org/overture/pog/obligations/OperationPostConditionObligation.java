@@ -32,15 +32,15 @@ import org.overture.ast.statements.AErrorCase;
 
 public class OperationPostConditionObligation extends ProofObligation
 {
-	public OperationPostConditionObligation(
-		AExplicitOperationDefinition op, POContextStack ctxt)
+	public OperationPostConditionObligation(AExplicitOperationDefinition op,
+			POContextStack ctxt)
 	{
 		super(op.getLocation(), POType.OP_POST_CONDITION, ctxt);
 		value = ctxt.getObligation(getExp(op.getPrecondition(), op.getPostcondition(), null));
 	}
 
-	public OperationPostConditionObligation(
-		AImplicitOperationDefinition op, POContextStack ctxt)
+	public OperationPostConditionObligation(AImplicitOperationDefinition op,
+			POContextStack ctxt)
 	{
 		super(op.getLocation(), POType.OP_POST_CONDITION, ctxt);
 		value = ctxt.getObligation(getExp(op.getPrecondition(), op.getPostcondition(), op.getErrors()));
@@ -51,8 +51,7 @@ public class OperationPostConditionObligation extends ProofObligation
 		if (errs == null || errs.isEmpty())
 		{
 			return postexp.toString();
-		}
-		else
+		} else
 		{
 			StringBuilder sb = new StringBuilder();
 
@@ -63,13 +62,12 @@ public class OperationPostConditionObligation extends ProofObligation
 				sb.append(" and ");
 				sb.append(postexp);
 				sb.append(")");
-			}
-			else
+			} else
 			{
 				sb.append(postexp);
 			}
 
-			for (AErrorCase err: errs)
+			for (AErrorCase err : errs)
 			{
 				sb.append(" or (");
 				sb.append(err.getLeft());
