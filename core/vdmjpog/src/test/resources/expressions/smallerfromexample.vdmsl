@@ -1,0 +1,66 @@
+-- TCErrors: WARNING:5000:53,1 PROOFOBLIGATION: fDQ3OjEgRW5kSm9pbnQsKGZvcmFsbCBwOlBhdGgsIGQ6RGlyZWN0aW9uICYKICAoaXNfKEVuZEpvaW50KHAsIGQpLCB0b2tlbikpKQosc3VidHlwZSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDUwOjEgU3RhcnRKb2ludCwoZm9yYWxsIHA6UGF0aCwgZDpEaXJlY3Rpb24gJgogIChpc18oU3RhcnRKb2ludChwLCBkKSwgdG9rZW4pKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZHw= PROOFOBLIGATION: fDU2OjMyIE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lLCBjb246Q29ubmVjdCwgbjE6QXJlYV9Kb2ludCwgbjI6QXJlYV9Kb2ludCwgZHI6RGlyZWN0aW9uICYKICAobjEuYWlkKSBpbiBzZXQgZG9tIChsbi5hcmVhcykpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZHw= PROOFOBLIGATION: fDU3OjE3IE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lLCBjb246Q29ubmVjdCwgbjE6QXJlYV9Kb2ludCwgbjI6QXJlYV9Kb2ludCwgZHI6RGlyZWN0aW9uICYKICAoZm9yYWxsIHAgaW4gc2V0IChybmcgKChsbi5hcmVhcykoKG4xLmFpZCkpLnBhdGhzKSkgJgogICAgZHIgaW4gc2V0IGRvbSAocC51c2VkKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZHw= PROOFOBLIGATION: fDYyOjM1IE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sIGRyMiwoZm9yYWxsIGxuOkxpbmUsIGNvbjpDb25uZWN0LCBuMTpBcmVhX0pvaW50LCBuMjpBcmVhX0pvaW50LCBkcjpEaXJlY3Rpb24gJgogIChub3QgdHJ1ZSA9PgogICAgY29uIGluIHNldCBkb20gKGxuLmNvbm5lY3QpKSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDY0OjQxIE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lLCBjb246Q29ubmVjdCwgbjE6QXJlYV9Kb2ludCwgbjI6QXJlYV9Kb2ludCwgZHI6RGlyZWN0aW9uICYKICAobm90IHRydWUgPT4KICAgIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4gfCBEaXJlY3Rpb24pID0gKGlmIChub3QgKChsbi5jb25uZWN0KShjb24pLmNobmdfZGlyZWN0aW9uKSkKICAgIHRoZW4gZHIKICAgIGVsc2UgKGlmIChkciA9IDxBRElSPikKICAgIHRoZW4gPEJESVI+CiAgICBlbHNlIDxBRElSPikpIGluCiAgICAgIChuMi5haWQpIGluIHNldCBkb20gKGxuLmFyZWFzKSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWR8 PROOFOBLIGATION: fDY1OjMzIE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lLCBjb246Q29ubmVjdCwgbjE6QXJlYV9Kb2ludCwgbjI6QXJlYV9Kb2ludCwgZHI6RGlyZWN0aW9uICYKICAobm90IHRydWUgPT4KICAgIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4gfCBEaXJlY3Rpb24pID0gKGlmIChub3QgKChsbi5jb25uZWN0KShjb24pLmNobmdfZGlyZWN0aW9uKSkKICAgIHRoZW4gZHIKICAgIGVsc2UgKGlmIChkciA9IDxBRElSPikKICAgIHRoZW4gPEJESVI+CiAgICBlbHNlIDxBRElSPikpIGluCiAgICAgIChmb3JhbGwgcCBpbiBzZXQgKHJuZyAoKGxuLmFyZWFzKSgobjIuYWlkKSkucGF0aHMpKSAmCiAgICAgICAgZHIyIGluIHNldCBkb20gKHAudXNlZCkpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZHw=
+types
+    TrackC_id =token;
+    Joint_id =token;
+    Direction = <ADIR> | <BDIR>;
+    Path_id = token;
+    Area_id = token;
+
+    TrackC = token;
+
+    Path::  tc : TrackC_id
+        startr : Joint_id
+          endp : Joint_id
+        length : nat
+          used : map Direction to bool;
+
+Area_Joint ::   aid : Area_id
+        tcid : TrackC_id
+        no : Joint_id;
+
+Remark_Connect :: chng_direction : bool
+          chng_distance : bool;
+    
+Area_map = map Area_id to Area;
+    Connect_map = map Connect to Remark_Connect
+    inv con == forall a1, a2 in set dom con & a1 <> a2 => a1 inter a2 = {};
+
+    Path_map = map Path_id to Path;
+    
+
+TrackC_map = map TrackC_id to TrackC;
+
+
+    Area ::
+    trackcs : TrackC_map
+    paths : Path_map;
+
+   Line :: areas   : Area_map
+           connect : Connect_map;
+
+    Connect = set of Area_Joint
+    inv con == card con = 2 and
+     forall a1, a2 in set con & a1 <> a2 => a1.aid <> a2.aid;
+
+
+functions
+EndJoint : Path * Direction -> Joint_id
+EndJoint(p,d) == is not yet specified;
+
+StartJoint : Path * Direction -> Joint_id
+StartJoint(p,d) == is not yet specified;
+
+One_Side_Unique_Path_at_Connection : Line * Connect * Area_Joint *Area_Joint*Direction-> bool
+One_Side_Unique_Path_at_Connection(ln,con,n1,n2,dr) ==
+        
+        card {p | p in set rng ln.areas(n1.aid).paths & 
+                p.used(dr) and 
+                EndJoint(p, dr) = n1.no} > 1 =>
+
+                (true or
+
+                 let dr2 = if not ln.connect(con).chng_direction then dr
+                                else if dr = <ADIR> then <BDIR> else <ADIR> in
+                 card {p | p in set rng ln.areas(n2.aid).paths & 
+                                p.used(dr2) and 
+                                StartJoint(p, dr2) = n2.no} = 1);

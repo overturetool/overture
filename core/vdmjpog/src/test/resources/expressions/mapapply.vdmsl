@@ -1,0 +1,17 @@
+-- TCErrors: WARNING:5000:12,5 PROOFOBLIGATION: fDEwOjQ4IHRyZWVNYXAsZm9yYWxsIG0xLCBtMiBpbiBzZXQge3swIHwtPiA8TGVhZj59LCB7MiB8LT4gPExlYWY+fSwgezQgfC0+IDxMZWFmPn0sIHs4IHwtPiA8TGVhZj59LCB7MTYgfC0+IDxMZWFmPn0sIHszMiB8LT4gPExlYWY+fX0gJgogIGZvcmFsbCBkMyBpbiBzZXQgZG9tIG0xLCBkNCBpbiBzZXQgZG9tIG0yICYKICAgIGQzID0gZDQgPT4gbTEoZDMpID0gbTIoZDQpCixtYXAgc2VxdWVuY2UgY29tcGF0aWJsZSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDE3OjEzIGYsKGZvcmFsbCBpOmludCwgZHI6VHdvVHlwZXMgJgogIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4pID0gKGlmIChkciA9IDxBRElSPikKICB0aGVuIDxCRElSPgogIGVsc2UgPEFESVI+KSBpbgogICAgaSBpbiBzZXQgZG9tIHsxIHwtPiAoY2FyZCB7cCB8IFtwIGluIHNldCAocm5nICh0cmVlTWFwKGkpLnZhbCkpXSAmIChkcjIgPSA8QURJUj4pfSl9KSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDE3Ojc5IGYsKGZvcmFsbCBpOmludCwgZHI6VHdvVHlwZXMgJgogIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4pID0gKGlmIChkciA9IDxBRElSPikKICB0aGVuIDxCRElSPgogIGVsc2UgPEFESVI+KSBpbgogICAgaSA+IDApKQosc3VidHlwZSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDE3OjQ1IGYsKGZvcmFsbCBpOmludCwgZHI6VHdvVHlwZXMgJgogIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4pID0gKGlmIChkciA9IDxBRElSPikKICB0aGVuIDxCRElSPgogIGVsc2UgPEFESVI+KSBpbgogICAgaSBpbiBzZXQgZG9tIHRyZWVNYXApKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWR8
+types
+    Tree = <Leaf> | Node;
+    Node :: val: map int to Tree
+            left: Tree
+            right: Tree;
+    TwoTypes = <ADIR> | <BDIR>;
+
+values
+    treeMap: map int to Tree = { 1 |-> mk_Node({0|-><Leaf>,2|-><Leaf>,4|-><Leaf>,8|-><Leaf>,16|-><Leaf>,32|-><Leaf>},<Leaf>,<Leaf>) };             
+functions
+    f: int * TwoTypes -> int
+    f(i,dr) ==
+        let
+            dr2 = if dr = <ADIR> then <BDIR> else <ADIR>
+        in 
+            { 1 |-> card { p | p in set rng treeMap(i).val  & dr2 = <ADIR>} }(i);

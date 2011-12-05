@@ -1,0 +1,18 @@
+-- TCErrors: WARNING:5000:11,1
+types
+	ADDR = <a0> | <a1> | <a2>;
+	CON  = <c0> | <c1> | <c2>;
+	State :: mem    : map ADDR to CON
+         access : set of ADDR
+         used    : set of ADDR;
+		 
+operations
+functions
+Alloc20 : ADDR * State -> State
+Alloc20 (addr,mk_State(mem,access,used)) ==
+  let used' = used union {addr},
+      mem'  = mem ++ {addr |-> <c0>}
+  in
+      mk_State(mem',access,used')   
+pre addr not in set used and
+    addr in set access;

@@ -1,0 +1,70 @@
+-- TCErrors: WARNING:5000:53,1 WARNING:5000:69,5 PROOFOBLIGATION: fDQ3OjEgRW5kSm9pbnQsKGZvcmFsbCBwOlBhdGgsIGQ6RGlyZWN0aW9uICYKICAoaXNfKEVuZEpvaW50KHAsIGQpLCB0b2tlbikpKQosc3VidHlwZSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDUwOjEgU3RhcnRKb2ludCwoZm9yYWxsIHA6UGF0aCwgZDpEaXJlY3Rpb24gJgogIChpc18oU3RhcnRKb2ludChwLCBkKSwgdG9rZW4pKSkKLHN1YnR5cGUsbnVsbCxVbnByb3ZlZHw= PROOFOBLIGATION: fDU4OjMyIE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lICYKICAoZm9yYWxsIGNvbiBpbiBzZXQgKGRvbSAobG4uY29ubmVjdCkpICYKICAgIChmb3JhbGwgbjEsIG4yIGluIHNldCBjb24gJgogICAgICAoZm9yYWxsIGRyIGluIHNldCB7PEFESVI+LCA8QkRJUj59ICYKICAgICAgICAobjEuYWlkKSBpbiBzZXQgZG9tIChsbi5hcmVhcykpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZHw= PROOFOBLIGATION: fDU5OjE3IE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lICYKICAoZm9yYWxsIGNvbiBpbiBzZXQgKGRvbSAobG4uY29ubmVjdCkpICYKICAgIChmb3JhbGwgbjEsIG4yIGluIHNldCBjb24gJgogICAgICAoZm9yYWxsIGRyIGluIHNldCB7PEFESVI+LCA8QkRJUj59ICYKICAgICAgICAoZm9yYWxsIHAgaW4gc2V0IChybmcgKChsbi5hcmVhcykoKG4xLmFpZCkpLnBhdGhzKSkgJgogICAgICAgICAgZHIgaW4gc2V0IGRvbSAocC51c2VkKSkpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZHw= PROOFOBLIGATION: fDY0OjM1IE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sIGRyMiwoZm9yYWxsIGxuOkxpbmUgJgogIChmb3JhbGwgY29uIGluIHNldCAoZG9tIChsbi5jb25uZWN0KSkgJgogICAgKGZvcmFsbCBuMSwgbjIgaW4gc2V0IGNvbiAmCiAgICAgIChmb3JhbGwgZHIgaW4gc2V0IHs8QURJUj4sIDxCRElSPn0gJgogICAgICAgIChub3QgdHJ1ZSA9PgogICAgICAgICAgY29uIGluIHNldCBkb20gKGxuLmNvbm5lY3QpKSkpKSkKLG1hcCBhcHBseSxudWxsLFVucHJvdmVkfA== PROOFOBLIGATION: fDY2OjQxIE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lICYKICAoZm9yYWxsIGNvbiBpbiBzZXQgKGRvbSAobG4uY29ubmVjdCkpICYKICAgIChmb3JhbGwgbjEsIG4yIGluIHNldCBjb24gJgogICAgICAoZm9yYWxsIGRyIGluIHNldCB7PEFESVI+LCA8QkRJUj59ICYKICAgICAgICAobm90IHRydWUgPT4KICAgICAgICAgIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4pID0gKGlmIChub3QgKChsbi5jb25uZWN0KShjb24pLmNobmdfZGlyZWN0aW9uKSkKICAgICAgICAgIHRoZW4gZHIKICAgICAgICAgIGVsc2UgKGlmIChkciA9IDxBRElSPikKICAgICAgICAgIHRoZW4gPEJESVI+CiAgICAgICAgICBlbHNlIDxBRElSPikpIGluCiAgICAgICAgICAgIChuMi5haWQpIGluIHNldCBkb20gKGxuLmFyZWFzKSkpKSkpKQosbWFwIGFwcGx5LG51bGwsVW5wcm92ZWR8 PROOFOBLIGATION: fDY3OjMzIE9uZV9TaWRlX1VuaXF1ZV9QYXRoX2F0X0Nvbm5lY3Rpb24sKGZvcmFsbCBsbjpMaW5lICYKICAoZm9yYWxsIGNvbiBpbiBzZXQgKGRvbSAobG4uY29ubmVjdCkpICYKICAgIChmb3JhbGwgbjEsIG4yIGluIHNldCBjb24gJgogICAgICAoZm9yYWxsIGRyIGluIHNldCB7PEFESVI+LCA8QkRJUj59ICYKICAgICAgICAobm90IHRydWUgPT4KICAgICAgICAgIChsZXQgZHIyOig8QURJUj4gfCA8QkRJUj4pID0gKGlmIChub3QgKChsbi5jb25uZWN0KShjb24pLmNobmdfZGlyZWN0aW9uKSkKICAgICAgICAgIHRoZW4gZHIKICAgICAgICAgIGVsc2UgKGlmIChkciA9IDxBRElSPikKICAgICAgICAgIHRoZW4gPEJESVI+CiAgICAgICAgICBlbHNlIDxBRElSPikpIGluCiAgICAgICAgICAgIChmb3JhbGwgcCBpbiBzZXQgKHJuZyAoKGxuLmFyZWFzKSgobjIuYWlkKSkucGF0aHMpKSAmCiAgICAgICAgICAgICAgZHIyIGluIHNldCBkb20gKHAudXNlZCkpKSkpKSkpCixtYXAgYXBwbHksbnVsbCxVbnByb3ZlZHw=
+types
+    TrackC_id =token;
+    Joint_id =token;
+    Direction = <ADIR> | <BDIR>;
+    Path_id = token;
+    Area_id = token;
+
+    TrackC = token;
+
+    Path::  tc : TrackC_id
+        startr : Joint_id
+          endp : Joint_id
+        length : nat
+          used : map Direction to bool;
+
+Area_Joint ::   aid : Area_id
+        tcid : TrackC_id
+        no : Joint_id;
+
+Remark_Connect :: chng_direction : bool
+          chng_distance : bool;
+    
+Area_map = map Area_id to Area;
+    Connect_map = map Connect to Remark_Connect
+    inv con == forall a1, a2 in set dom con & a1 <> a2 => a1 inter a2 = {};
+
+    Path_map = map Path_id to Path;
+    
+
+TrackC_map = map TrackC_id to TrackC;
+
+
+    Area ::
+    trackcs : TrackC_map
+    paths : Path_map;
+
+   Line :: areas   : Area_map
+           connect : Connect_map;
+
+    Connect = set of Area_Joint
+    inv con == card con = 2 and
+     forall a1, a2 in set con & a1 <> a2 => a1.aid <> a2.aid;
+
+
+functions
+EndJoint : Path * Direction -> Joint_id
+EndJoint(p,d) == is not yet specified;
+
+StartJoint : Path * Direction -> Joint_id
+StartJoint(p,d) == is not yet specified;
+
+One_Side_Unique_Path_at_Connection : Line -> bool
+One_Side_Unique_Path_at_Connection(ln) ==
+        forall con in set dom ln.connect &
+        forall n1, n2 in set con & n1 <> n2 =>
+        forall dr in set {<ADIR>, <BDIR>} &
+        card {p | p in set rng ln.areas(n1.aid).paths & 
+                p.used(dr) and 
+                EndJoint(p, dr) = n1.no} > 1 =>
+
+                (true or
+
+                 let dr2 = if not ln.connect(con).chng_direction then dr
+                                else if dr = <ADIR> then <BDIR> else <ADIR> in
+                 card {p | p in set rng ln.areas(n2.aid).paths & 
+                                p.used(dr2) and 
+                                StartJoint(p, dr2) = n2.no} = 1);
+    Run: () -> bool
+    Run() == true;
