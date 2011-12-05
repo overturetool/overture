@@ -54,16 +54,15 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 				IMarker[] markers = resource.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 				if (markers.length > 0)
 				{
-
-					if (checkIfOnlyWarnings(markers))
-					{
-						Image image = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
-						decoration.addOverlay(DecorationOverlayIcon.createFromImage(image), IDecoration.BOTTOM_LEFT);
-					} else
+					if(containsSeverity(markers,IMarker.SEVERITY_ERROR))
 					{
 						Image image = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
 						decoration.addOverlay(DecorationOverlayIcon.createFromImage(image), IDecoration.BOTTOM_LEFT);
-					}
+					}else if(containsSeverity(markers,IMarker.SEVERITY_WARNING))
+					{
+						Image image = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
+						decoration.addOverlay(DecorationOverlayIcon.createFromImage(image), IDecoration.BOTTOM_LEFT);
+					} 
 				}
 
 			} catch (CoreException e)
@@ -75,23 +74,33 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 
 	}
 
-	private boolean checkIfOnlyWarnings(IMarker[] markers)
+	/**
+	 * Checks if any marker in the array has a defined severity which is set to the 
+	 * @param markers
+	 * @param severity
+	 * @return
+	 */
+	private boolean containsSeverity(IMarker[] markers, int severity)
 	{
 		for (int i = 0; i < markers.length; i++)
 		{
 			try
 			{
 				Object tmp = markers[i].getAttribute(IMarker.SEVERITY);
-				if (tmp.equals(IMarker.SEVERITY_ERROR))
+				if(tmp == null && !(tmp instanceof Integer))
 				{
-					return false;
+					continue;
+				}
+				if (tmp!=null && ((Integer)tmp & severity)!=0)
+				{
+					return true;
 				}
 			} catch (CoreException e)
 			{
 				VdmUIPlugin.log("Faild to check marker attribute SEVERITY", e);
 			}
 		}
-		return true;
+		return false;
 	}
 
 }
