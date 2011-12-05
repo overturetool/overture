@@ -3,6 +3,7 @@ package org.overture.pog.visitors;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -374,6 +375,27 @@ public class PogDefinitionVisitor extends
 				obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question));
 				question.pop();
 			}
+		}
+
+		return obligations;
+	}
+	
+	@Override
+	public ProofObligationList caseAAssignmentDefinition(AAssignmentDefinition node, 
+			POContextStack question)
+	{
+		ProofObligationList obligations = new ProofObligationList();
+		
+		PExp expression = node.getExpression();
+		PType type = node.getType();
+		PType expType = node.getExpType();
+		
+		obligations.addAll(expression.apply(rootVisitor,question));
+
+		if (!TypeComparator.isSubType(question.checkType(expression, expType), type))
+		{
+			obligations.add(
+				new SubTypeObligation(expression, type, expType, question));
 		}
 
 		return obligations;
