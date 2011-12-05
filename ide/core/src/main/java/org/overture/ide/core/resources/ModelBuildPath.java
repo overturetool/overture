@@ -46,6 +46,7 @@ public class ModelBuildPath
 
 	List<IContainer> srcPaths = new Vector<IContainer>();
 	IContainer output;
+	IContainer library;
 
 	public ModelBuildPath(IVdmProject project)
 	{
@@ -56,6 +57,7 @@ public class ModelBuildPath
 		base = base.append(".modelpath");
 		this.modelPathFile = base.toFile();
 		this.output = this.project.getFolder("generated");
+		this.library = this.project.getFolder("lib");
 		parse();
 	}
 
@@ -79,6 +81,11 @@ public class ModelBuildPath
 	public synchronized IContainer getOutput()
 	{
 		return this.output;
+	}
+
+	public synchronized IContainer getLibrary()
+	{
+		return this.library;
 	}
 
 	private synchronized void parse()
@@ -115,6 +122,11 @@ public class ModelBuildPath
 							Node pathAttribute = fstNode.getAttributes().getNamedItem("path");
 							String pathValue = pathAttribute.getNodeValue();
 							output = this.project.getFolder(pathValue);
+						} else if (kindValue.equals("library"))
+						{
+							Node pathAttribute = fstNode.getAttributes().getNamedItem("path");
+							String pathValue = pathAttribute.getNodeValue();
+							library = this.project.getFolder(pathValue);
 						}
 					}
 				}
@@ -125,10 +137,15 @@ public class ModelBuildPath
 			VdmCore.log("Faild to parse .modelpath file", e);
 		}
 	}
-	
+
 	public synchronized void setOutput(IContainer container)
 	{
 		this.output = container;
+	}
+
+	public synchronized void setLibrary(IContainer container)
+	{
+		this.library = container;
 	}
 
 	public synchronized void add(IContainer container)
@@ -154,20 +171,6 @@ public class ModelBuildPath
 
 	public synchronized void save() throws CoreException
 	{
-		save(srcPaths, output);
-	}
-
-	/**
-	 * Reload the build path and discard any un-saved changes
-	 */
-	public void reload()
-	{
-		parse();
-	}
-
-	private void save(List<IContainer> srcPaths, IContainer output)
-			throws CoreException
-	{
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -189,6 +192,13 @@ public class ModelBuildPath
 			sb.append("\t<modelpathentry kind=\"output\" path=\""
 					+ output.getProjectRelativePath() + "\"/>\n");
 		}
+
+		if (library != null
+				&& library.getProjectRelativePath().toString().length() > 0)
+		{
+			sb.append("\t<modelpathentry kind=\"library\" path=\""
+					+ library.getProjectRelativePath() + "\"/>\n");
+		}
 		sb.append("</modelpath>");
 
 		PrintWriter out = null;
@@ -203,12 +213,20 @@ public class ModelBuildPath
 			VdmCore.log("Faild to save .modelpath file", e);
 		} finally
 		{
-			if(out != null)
+			if (out != null)
 			{
 				out.close();
 			}
 		}
 		ResourceManager.getInstance().syncBuildPath(vdmProject);
-
 	}
+
+	/**
+	 * Reload the build path and discard any un-saved changes
+	 */
+	public void reload()
+	{
+		parse();
+	}
+
 }
