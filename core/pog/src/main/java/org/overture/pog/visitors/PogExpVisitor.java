@@ -87,8 +87,7 @@ public class PogExpVisitor extends
 		PType type = root.getType();
 		if (PTypeAssistant.isMap(type))
 		{
-			if (node.getLocation().startLine == 954
-					|| node.getLocation().startLine == 970)
+			if (node.getLocation().startLine == 64)
 				System.out.println("Here");
 			SMapType mapType = PTypeAssistant.getMap(type);
 			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));

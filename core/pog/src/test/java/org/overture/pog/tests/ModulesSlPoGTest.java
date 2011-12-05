@@ -54,7 +54,14 @@ public class ModulesSlPoGTest extends BaseTestSuite
 	public static Test suite() throws Exception
 	{
 		TestSuite t = new TestSuite();
+
+		// t.addTest(getSuite(ExpressionsTests.fromexample$vdmsl));
+		// t.addTest(getSuite(ExpressionsTests.smallerfromexample$vdmsl));
+		// t.addTest(getSuite(ThirdPartyTests.safer$vdm));
 		// t.addTest(getSuite(FunctionalTests.newspeakSL));
+		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
+		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
+		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
 		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
 		// t.addTest(getSuite(ThirdPartyTests.recfun_40$vdm));
 		// t.addTest(getSuite(ThirdPartyTests.extexplfndef_01$vdm));
