@@ -237,7 +237,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase
 
 		for (ProofObligation po : proofObligations)
 		{
-			String poString = "|" + po.location.startLine + " " + po.name + ","
+			String poString = "|" + po.location.startLine + ":" + po.location.startPos +" " + po.name + ","
 					+ po.value + "," + po.kind + "," + po.proof + ","
 					+ po.status + "|";
 			StringBuffer poAsB64 = Base64.encode(poString.getBytes(Charset.forName("UTF-8")));
