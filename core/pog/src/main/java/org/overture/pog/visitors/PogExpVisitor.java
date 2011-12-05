@@ -164,7 +164,7 @@ public class PogExpVisitor extends
 			POContextStack question)
 	{
 
-		ProofObligationList obligations = new ProofObligationList();
+		ProofObligationList obligations = defaultSUnaryExp(node,question);
 		PExp exp = node.getExp();
 
 		// TODO RWL This is a hack. The new ast LexNameToken's toString method
