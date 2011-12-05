@@ -73,7 +73,7 @@ public class ModuleTestCase extends TestCase
 	private static String makePoString(ProofObligation po)
 	{
 		LexLocation loc = po.location;
-		String poString = "|" + loc.startLine + " " + po.name + "," + po.value
+		String poString = "|" + loc.startLine + ":" + po.location.startPos + " " + po.name + "," + po.value
 				+ "," + po.kind + "," + po.proof + "," + po.status + "|";
 		return poString;
 	}
@@ -249,7 +249,7 @@ public class ModuleTestCase extends TestCase
 			String minExpPo = null;
 			for (String poExp : expectedProofObligations)
 			{
-
+			
 				if (isPermutationOf(poExp, poAct))
 				{
 					okayPo = poExp;
@@ -268,13 +268,20 @@ public class ModuleTestCase extends TestCase
 			}
 			if (differenceExists)
 			{
+				
+				
 				ratedStuff.add(new Pair<String, String, Integer>(poAct, minExpPo, min));
 				expectedProofObligations.remove(minExpPo);
 				count++;
 			}
 
 			if (okayPo != null)
+			{
+				if (poAct.startsWith("|148"))
+					System.out.println(minExpPo);
 				expectedProofObligations.remove(okayPo);
+			}
+				
 
 			if (count > 9)
 			{
