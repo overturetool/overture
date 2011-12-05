@@ -49,11 +49,8 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
-import org.overture.typecheck.TypeCheckException;
 
-
-
-
+import com.sun.corba.se.spi.legacy.interceptor.UnknownType;
 
 /**
  * A class for static type checking comparisons.
@@ -62,25 +59,24 @@ import org.overture.typecheck.TypeCheckException;
 public class TypeComparator
 {
 	/**
-	 * A vector of type pairs that have already been compared. This is to
-	 * allow recursive type definitions to be compared without infinite
-	 * regress.
+	 * A vector of type pairs that have already been compared. This is to allow recursive type definitions to be
+	 * compared without infinite regress.
 	 */
 
 	private static Vector<TypePair> done = new Vector<TypePair>(256);
 
 	/**
-	 * A result value for comparison of types. The "Maybe" value is needed so
-	 * that the fact that a type's subtypes are being actively compared in
-	 * a recursive call can be recorded. For example, if a MySetType contains
-	 * references to MySetType in its element's type, the comparison of those
-	 * types will see the "Maybe" result of the original call and not recurse.
-	 * That will not fail the lower level comparison, but the overall "yes"
-	 * will not be recorded until the recursive calls return (assuming there
-	 * are no "no" votes of course).
+	 * A result value for comparison of types. The "Maybe" value is needed so that the fact that a type's subtypes are
+	 * being actively compared in a recursive call can be recorded. For example, if a MySetType contains references to
+	 * MySetType in its element's type, the comparison of those types will see the "Maybe" result of the original call
+	 * and not recurse. That will not fail the lower level comparison, but the overall "yes" will not be recorded until
+	 * the recursive calls return (assuming there are no "no" votes of course).
 	 */
 
-	private static enum Result { Yes, No, Maybe }
+	private static enum Result
+	{
+		Yes, No, Maybe
+	}
 
 	private static class TypePair
 	{
@@ -100,7 +96,7 @@ public class TypeComparator
 		{
 			if (other instanceof TypePair)
 			{
-				TypePair to = (TypePair)other;
+				TypePair to = (TypePair) other;
 				return a == to.a && b == to.b;
 			}
 
@@ -115,10 +111,9 @@ public class TypeComparator
 	}
 
 	/**
-	 * Test whether the two types are compatible. This means that, at runtime,
-	 * it is possible that the two types are the same, or sufficiently similar
-	 * that the "from" value can be assigned to the "to" value.
-	 *
+	 * Test whether the two types are compatible. This means that, at runtime, it is possible that the two types are the
+	 * same, or sufficiently similar that the "from" value can be assigned to the "to" value.
+	 * 
 	 * @param to
 	 * @param from
 	 * @return True if types "a" and "b" are compatible.
@@ -130,7 +125,8 @@ public class TypeComparator
 		return searchCompatible(to, from, false) == Result.Yes;
 	}
 
-	public synchronized static boolean compatible(PType to, PType from, boolean paramOnly)
+	public synchronized static boolean compatible(PType to, PType from,
+			boolean paramOnly)
 	{
 		done.clear();
 		return searchCompatible(to, from, paramOnly) == Result.Yes;
@@ -138,37 +134,37 @@ public class TypeComparator
 
 	/**
 	 * Compare two type lists for placewise compatibility.
-	 *
+	 * 
 	 * @param to
 	 * @param from
 	 * @return True if all types compatible.
 	 */
 
-	public synchronized static boolean compatible(List<PType> to, List<PType> from)
+	public synchronized static boolean compatible(List<PType> to,
+			List<PType> from)
 	{
 		done.clear();
 		return allCompatible(to, from, false) == Result.Yes;
 	}
 
 	/**
-	 * Compare two type lists for placewise compatibility. This is used
-	 * to check ordered lists of types such as those in a ProductType or
-	 * parameters to a function or operation.
-	 *
+	 * Compare two type lists for placewise compatibility. This is used to check ordered lists of types such as those in
+	 * a ProductType or parameters to a function or operation.
+	 * 
 	 * @param to
 	 * @param from
 	 * @return Yes or No.
 	 */
 
-	private static Result allCompatible(List<PType> to, List<PType> from, boolean paramOnly)
+	private static Result allCompatible(List<PType> to, List<PType> from,
+			boolean paramOnly)
 	{
 		if (to.size() != from.size())
 		{
 			return Result.No;
-		}
-		else
+		} else
 		{
-			for (int i=0; i<to.size(); i++)
+			for (int i = 0; i < to.size(); i++)
 			{
 				if (searchCompatible(to.get(i), from.get(i), paramOnly) == Result.No)
 				{
@@ -181,25 +177,24 @@ public class TypeComparator
 	}
 
 	/**
-	 * Search the {@link #done} vector for an existing comparison of two
-	 * types before either returning the previous result, or making a new
-	 * comparison and adding that result to the vector.
-	 *
+	 * Search the {@link #done} vector for an existing comparison of two types before either returning the previous
+	 * result, or making a new comparison and adding that result to the vector.
+	 * 
 	 * @param to
 	 * @param from
 	 * @return Yes or No.
 	 */
 
-	private static Result searchCompatible(PType to, PType from, boolean paramOnly)
+	private static Result searchCompatible(PType to, PType from,
+			boolean paramOnly)
 	{
 		TypePair pair = new TypePair(to, from);
 		int i = done.indexOf(pair);
 
 		if (i >= 0)
 		{
-			return done.get(i).result;		// May be "Maybe".
-		}
-		else
+			return done.get(i).result; // May be "Maybe".
+		} else
 		{
 			done.add(pair);
 		}
@@ -211,29 +206,19 @@ public class TypeComparator
 	}
 
 	/**
-	 * The main implementation of the compatibility checker. If "a" and "b" are
-	 * the same object the result is "yes"; if either is an {@link UnknownType},
-	 * we are dealing with earlier parser errors and so "yes" is returned to
-	 * avoid too many errors; if either is a {@link ParameterType} the result is
-	 * also "yes" on the grounds that the type cannot be tested at compile time.
-	 *
-	 * If either type is a {@link BracketType} or a {@link NamedType} the types
-	 * are reduced to their underlying type before proceeding; if either is an
-	 * {@link OptionalType} and the other is optional also, the result is
-	 * "yes", otherwise the underlying type of the optional type is taken before
-	 * proceeding; the last two steps are repeated until the types will not
-	 * reduce further.
-	 *
-	 * To compare the reduced types, if "a" is a union type, then all the
-	 * component types of "a" are compared to "b" (or b's components, if it too
-	 * is a union type) until a match is found; otherwise basic type comparisons
-	 * are made, involving any subtypes - for example, if they are both sets,
-	 * then the result depends on whether their "set of" subtypes are
-	 * compatible, by a recursive call. Similarly with maps and sequences,
-	 * function/operation parameter types, and record field types. Lastly, a
-	 * simple {@link org.overturetool.vdmj.types.Type#equals} operation is
-	 * performed on two basic types to decide the result.
-	 *
+	 * The main implementation of the compatibility checker. If "a" and "b" are the same object the result is "yes"; if
+	 * either is an {@link UnknownType}, we are dealing with earlier parser errors and so "yes" is returned to avoid too
+	 * many errors; if either is a {@link ParameterType} the result is also "yes" on the grounds that the type cannot be
+	 * tested at compile time. If either type is a {@link BracketType} or a {@link NamedType} the types are reduced to
+	 * their underlying type before proceeding; if either is an {@link OptionalType} and the other is optional also, the
+	 * result is "yes", otherwise the underlying type of the optional type is taken before proceeding; the last two
+	 * steps are repeated until the types will not reduce further. To compare the reduced types, if "a" is a union type,
+	 * then all the component types of "a" are compared to "b" (or b's components, if it too is a union type) until a
+	 * match is found; otherwise basic type comparisons are made, involving any subtypes - for example, if they are both
+	 * sets, then the result depends on whether their "set of" subtypes are compatible, by a recursive call. Similarly
+	 * with maps and sequences, function/operation parameter types, and record field types. Lastly, a simple
+	 * {@link org.overturetool.vdmj.types.Type#equals} operation is performed on two basic types to decide the result.
+	 * 
 	 * @param to
 	 * @param from
 	 * @param paramOnly
@@ -254,24 +239,23 @@ public class TypeComparator
 
 		if (PTypeAssistant.equals(to, from))
 		{
-			return Result.Yes;	// Same object!
+			return Result.Yes; // Same object!
 		}
 
 		if (to instanceof AUnknownType || from instanceof AUnknownType)
 		{
-			return Result.Yes;	// Hmmm... too many errors otherwise
+			return Result.Yes; // Hmmm... too many errors otherwise
 		}
 
 		if (to instanceof AUndefinedType || from instanceof AUndefinedType)
 		{
-			return Result.Yes;	// Not defined "yet"...?
+			return Result.Yes; // Not defined "yet"...?
 		}
 
 		if (to instanceof AParameterType || from instanceof AParameterType)
 		{
-			return Result.Yes;	// Runtime checked...
+			return Result.Yes; // Runtime checked...
 		}
-
 
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
 		// OptionalTypes.
@@ -280,232 +264,212 @@ public class TypeComparator
 
 		while (!resolved)
 		{
-    		if (to instanceof ABracketType)
-    		{
-    			to = ((ABracketType)to).getType();
-    			continue;
-    		}
+			if (to instanceof ABracketType)
+			{
+				to = ((ABracketType) to).getType();
+				continue;
+			}
 
-    		if (from instanceof ABracketType)
-    		{
-    			from = ((ABracketType)from).getType();
-    			continue;
-    		}
+			if (from instanceof ABracketType)
+			{
+				from = ((ABracketType) from).getType();
+				continue;
+			}
 
-    		if (to instanceof ANamedInvariantType)
-    		{
-    			to = ((ANamedInvariantType)to).getType();
-    			continue;
-    		}
+			if (to instanceof ANamedInvariantType)
+			{
+				to = ((ANamedInvariantType) to).getType();
+				continue;
+			}
 
-    		if (from instanceof ANamedInvariantType)
-    		{
-    			from = ((ANamedInvariantType)from).getType();
-    			continue;
-    		}
+			if (from instanceof ANamedInvariantType)
+			{
+				from = ((ANamedInvariantType) from).getType();
+				continue;
+			}
 
-    		if (to instanceof AOptionalType)
-    		{
-    			if (from instanceof AOptionalType)
-    			{
-    				return Result.Yes;
-    			}
+			if (to instanceof AOptionalType)
+			{
+				if (from instanceof AOptionalType)
+				{
+					return Result.Yes;
+				}
 
-    			to = ((AOptionalType)to).getType();
-    			continue;
-    		}
+				to = ((AOptionalType) to).getType();
+				continue;
+			}
 
-    		if (from instanceof AOptionalType)
-    		{
-    			// Can't assign nil to a non-optional type? This should maybe
-    			// generate a warning here?
+			if (from instanceof AOptionalType)
+			{
+				// Can't assign nil to a non-optional type? This should maybe
+				// generate a warning here?
 
-    			if (to instanceof AOptionalType)
-    			{
-    				return Result.Yes;
-    			}
+				if (to instanceof AOptionalType)
+				{
+					return Result.Yes;
+				}
 
-    			from = ((AOptionalType)from).getType();
-    			continue;
-    		}
+				from = ((AOptionalType) from).getType();
+				continue;
+			}
 
-    		resolved = true;
+			resolved = true;
 		}
 
 		// OK... so we have fully resolved the basic types...
 
 		if (to instanceof AUnionType)
 		{
-			AUnionType ua = (AUnionType)to;
+			AUnionType ua = (AUnionType) to;
 
-			for (PType ta: ua.getTypes())
+			for (PType ta : ua.getTypes())
 			{
 				if (searchCompatible(ta, from, paramOnly) == Result.Yes)
 				{
 					return Result.Yes;
 				}
 			}
-		}
-		else
+		} else
 		{
 			if (from instanceof AUnionType)
 			{
-				AUnionType ub = (AUnionType)from;
+				AUnionType ub = (AUnionType) from;
 
-				for (PType tb: ub.getTypes())
+				for (PType tb : ub.getTypes())
 				{
 					if (searchCompatible(to, tb, paramOnly) == Result.Yes)
 					{
 						return Result.Yes;
 					}
 				}
-			}
-			else if (to instanceof SNumericBasicType)
+			} else if (to instanceof SNumericBasicType)
 			{
-				return (from instanceof SNumericBasicType) ? Result.Yes : Result.No;
-			}
-			else if (to instanceof AProductType)
+				return (from instanceof SNumericBasicType) ? Result.Yes
+						: Result.No;
+			} else if (to instanceof AProductType)
 			{
 				if (!(from instanceof AProductType))
 				{
 					return Result.No;
 				}
 
-				List<PType> ta = ((AProductType)to).getTypes();
-				List<PType> tb = ((AProductType)from).getTypes();
+				List<PType> ta = ((AProductType) to).getTypes();
+				List<PType> tb = ((AProductType) from).getTypes();
 				return allCompatible(ta, tb, paramOnly);
-			}
-			else if (to instanceof SMapType)
+			} else if (to instanceof SMapType)
 			{
 				if (!(from instanceof SMapType))
 				{
 					return Result.No;
 				}
 
-				SMapType ma = (SMapType)to;
-				SMapType mb = (SMapType)from;
+				SMapType ma = (SMapType) to;
+				SMapType mb = (SMapType) from;
 
-				return (ma.getEmpty() || mb.getEmpty() ||
-					(searchCompatible(ma.getFrom(), mb.getFrom(), paramOnly) == Result.Yes &&
-					 searchCompatible(ma.getTo(), mb.getTo(), paramOnly) == Result.Yes)) ?
-							Result.Yes : Result.No;
-			}
-			else if (to instanceof ASetType)
+				return (ma.getEmpty() || mb.getEmpty() || (searchCompatible(ma.getFrom(), mb.getFrom(), paramOnly) == Result.Yes && searchCompatible(ma.getTo(), mb.getTo(), paramOnly) == Result.Yes)) ? Result.Yes
+						: Result.No;
+			} else if (to instanceof ASetType)
 			{
 				if (!(from instanceof ASetType))
 				{
 					return Result.No;
 				}
 
-				ASetType sa = (ASetType)to;
-				ASetType sb = (ASetType)from;
+				ASetType sa = (ASetType) to;
+				ASetType sb = (ASetType) from;
 
-				return (sa.getEmpty() || sb.getEmpty() ||
-						searchCompatible(sa.getSetof(), sb.getSetof(), paramOnly) == Result.Yes) ?
-							Result.Yes : Result.No;
-			}
-			else if (to instanceof SSeqType)	// Includes seq1
+				return (sa.getEmpty() || sb.getEmpty() || searchCompatible(sa.getSetof(), sb.getSetof(), paramOnly) == Result.Yes) ? Result.Yes
+						: Result.No;
+			} else if (to instanceof SSeqType) // Includes seq1
 			{
 				if (!(from instanceof SSeqType))
 				{
 					return Result.No;
 				}
 
-				SSeqType sa = (SSeqType)to;
-				SSeqType sb = (SSeqType)from;
+				SSeqType sa = (SSeqType) to;
+				SSeqType sb = (SSeqType) from;
 
 				if (to instanceof ASeq1SeqType && sb.getEmpty())
 				{
 					return Result.No;
 				}
 
-				return (sa.getEmpty() || sb.getEmpty() ||
-						searchCompatible(sa.getSeqof(), sb.getSeqof(), paramOnly) == Result.Yes) ?
-							Result.Yes : Result.No;
-			}
-			else if (to instanceof AFunctionType)
+				return (sa.getEmpty() || sb.getEmpty() || searchCompatible(sa.getSeqof(), sb.getSeqof(), paramOnly) == Result.Yes) ? Result.Yes
+						: Result.No;
+			} else if (to instanceof AFunctionType)
 			{
 				if (!(from instanceof AFunctionType))
 				{
 					return Result.No;
 				}
 
-				AFunctionType fa = (AFunctionType)to;
-				AFunctionType fb = (AFunctionType)from;
+				AFunctionType fa = (AFunctionType) to;
+				AFunctionType fb = (AFunctionType) from;
 
-				return (allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes &&
-						(paramOnly ||
-						 searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes)) ?
-							Result.Yes : Result.No;
-			}
-			else if (to instanceof AOperationType)
+				return (allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes && (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes)) ? Result.Yes
+						: Result.No;
+			} else if (to instanceof AOperationType)
 			{
 				if (!(from instanceof AOperationType))
 				{
 					return Result.No;
 				}
 
-				AOperationType fa = (AOperationType)to;
-				AOperationType fb = (AOperationType)from;
+				AOperationType fa = (AOperationType) to;
+				AOperationType fb = (AOperationType) from;
 
-				return (allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes &&
-						(paramOnly ||
-						 searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes)) ?
-							Result.Yes : Result.No;
-			}
-			else if (to instanceof ARecordInvariantType)
+				return (allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes && (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes)) ? Result.Yes
+						: Result.No;
+			} else if (to instanceof ARecordInvariantType)
 			{
 				if (!(from instanceof ARecordInvariantType))
 				{
 					return Result.No;
 				}
 
-				ARecordInvariantType rf = (ARecordInvariantType)from;
-				ARecordInvariantType rt = (ARecordInvariantType)to;
+				ARecordInvariantType rf = (ARecordInvariantType) from;
+				ARecordInvariantType rt = (ARecordInvariantType) to;
 
 				return PTypeAssistant.equals(rf, rt) ? Result.Yes : Result.No;
-			}
-			else if (to instanceof AClassType)
+			} else if (to instanceof AClassType)
 			{
 				if (!(from instanceof AClassType))
 				{
 					return Result.No;
 				}
 
-				AClassType cfrom = (AClassType)from;
-				AClassType cto = (AClassType)to;
+				AClassType cfrom = (AClassType) from;
+				AClassType cto = (AClassType) to;
 
 				// VDMTools doesn't seem to worry about sub/super type
 				// assignments. This was "cfrom.equals(cto)".
 
-				if (PTypeAssistant.hasSupertype(cfrom,cto) || PTypeAssistant.hasSupertype(cto,cfrom))
+				if (PTypeAssistant.hasSupertype(cfrom, cto)
+						|| PTypeAssistant.hasSupertype(cto, cfrom))
 				{
 					return Result.Yes;
 				}
-			}
-			else if (from instanceof AVoidReturnType)
+			} else if (from instanceof AVoidReturnType)
 			{
 				if (to instanceof AVoidType || to instanceof AVoidReturnType)
 				{
 					return Result.Yes;
-				}
-				else
+				} else
 				{
 					return Result.No;
 				}
-			}
-			else if (to instanceof AVoidReturnType)
+			} else if (to instanceof AVoidReturnType)
 			{
-				if (from instanceof AVoidType || from instanceof AVoidReturnType)
+				if (from instanceof AVoidType
+						|| from instanceof AVoidReturnType)
 				{
 					return Result.Yes;
-				}
-				else
+				} else
 				{
 					return Result.No;
 				}
-			}
-			else
+			} else
 			{
 				return PTypeAssistant.equals(to, from) ? Result.Yes : Result.No;
 			}
@@ -516,7 +480,7 @@ public class TypeComparator
 
 	/**
 	 * Test whether one type is a subtype of another.
-	 *
+	 * 
 	 * @param sub
 	 * @param sup
 	 * @return True if sub is a subtype of sup.
@@ -529,10 +493,9 @@ public class TypeComparator
 	}
 
 	/**
-	 * Compare two type lists for placewise subtype compatibility. This is used
-	 * to check ordered lists of types such as those in a ProductType or
-	 * parameters to a function or operation.
-	 *
+	 * Compare two type lists for placewise subtype compatibility. This is used to check ordered lists of types such as
+	 * those in a ProductType or parameters to a function or operation.
+	 * 
 	 * @param sub
 	 * @param sup
 	 * @return Yes or No.
@@ -543,10 +506,9 @@ public class TypeComparator
 		if (sub.size() != sup.size())
 		{
 			return Result.No;
-		}
-		else
+		} else
 		{
-			for (int i=0; i<sub.size(); i++)
+			for (int i = 0; i < sub.size(); i++)
 			{
 				if (searchSubType(sub.get(i), sup.get(i)) == Result.No)
 				{
@@ -559,10 +521,9 @@ public class TypeComparator
 	}
 
 	/**
-	 * Search the {@link #done} vector for an existing subtype comparison of two
-	 * types before either returning the previous result, or making a new
-	 * comparison and adding that result to the vector.
-	 *
+	 * Search the {@link #done} vector for an existing subtype comparison of two types before either returning the
+	 * previous result, or making a new comparison and adding that result to the vector.
+	 * 
 	 * @param sub
 	 * @param sup
 	 * @return Yes or No, if sub is a subtype of sup.
@@ -575,9 +536,8 @@ public class TypeComparator
 
 		if (i >= 0)
 		{
-			return done.get(i).result;		// May be "Maybe".
-		}
-		else
+			return done.get(i).result; // May be "Maybe".
+		} else
 		{
 			done.add(pair);
 		}
@@ -589,29 +549,19 @@ public class TypeComparator
 	}
 
 	/**
-	 * The main implementation of the subtype checker. If "a" and "b" are
-	 * the same object the result is "yes"; if either is an {@link UnknownType},
-	 * we are dealing with earlier parser errors and so "yes" is returned to
-	 * avoid too many errors; if either is a {@link ParameterType} the result is
-	 * also "yes" on the grounds that the type cannot be tested at compile time.
-	 *
-	 * If either type is a {@link BracketType} or a {@link NamedType} the types
-	 * are reduced to their underlying type before proceeding; if either is an
-	 * {@link OptionalType} and the other is optional also, the result is
-	 * "yes", otherwise the underlying type of the optional type is taken before
-	 * proceeding; the last two steps are repeated until the types will not
-	 * reduce further.
-	 *
-	 * To compare the reduced types, if "a" is a union type, then all the
-	 * component types of "a" are compared to "b" (or b's components, if it too
-	 * is a union type); otherwise basic type comparisons
-	 * are made, involving any subtypes - for example, if they are both sets,
-	 * then the result depends on whether their "set of" subtypes are
-	 * subtypes, by a recursive call. Similarly with maps and sequences,
-	 * function/operation parameter types, and record field types. Lastly, a
-	 * simple {@link org.overturetool.vdmj.types.Type#equals} operation is
-	 * performed on two basic types to decide the result.
-	 *
+	 * The main implementation of the subtype checker. If "a" and "b" are the same object the result is "yes"; if either
+	 * is an {@link UnknownType}, we are dealing with earlier parser errors and so "yes" is returned to avoid too many
+	 * errors; if either is a {@link ParameterType} the result is also "yes" on the grounds that the type cannot be
+	 * tested at compile time. If either type is a {@link BracketType} or a {@link NamedType} the types are reduced to
+	 * their underlying type before proceeding; if either is an {@link OptionalType} and the other is optional also, the
+	 * result is "yes", otherwise the underlying type of the optional type is taken before proceeding; the last two
+	 * steps are repeated until the types will not reduce further. To compare the reduced types, if "a" is a union type,
+	 * then all the component types of "a" are compared to "b" (or b's components, if it too is a union type); otherwise
+	 * basic type comparisons are made, involving any subtypes - for example, if they are both sets, then the result
+	 * depends on whether their "set of" subtypes are subtypes, by a recursive call. Similarly with maps and sequences,
+	 * function/operation parameter types, and record field types. Lastly, a simple
+	 * {@link org.overturetool.vdmj.types.Type#equals} operation is performed on two basic types to decide the result.
+	 * 
 	 * @param sub
 	 * @param sup
 	 * @return Yes or No.
@@ -631,17 +581,17 @@ public class TypeComparator
 
 		if (sub instanceof AUnknownType || sup instanceof AUnknownType)
 		{
-			return Result.Yes;	// Hmmm... too many errors otherwise
+			return Result.Yes; // Hmmm... too many errors otherwise
 		}
 
 		if (sub instanceof AParameterType || sup instanceof AParameterType)
 		{
-			return Result.Yes;	// Runtime checked...
+			return Result.Yes; // Runtime checked...
 		}
 
 		if (sub instanceof AUndefinedType || sup instanceof AUndefinedType)
 		{
-			return Result.Yes;	// Usually uninitialized variables etc.
+			return Result.Yes; // Usually uninitialized variables etc.
 		}
 
 		// Obtain the fundamental type of BracketTypes, NamedTypes and
@@ -651,70 +601,71 @@ public class TypeComparator
 
 		while (!resolved)
 		{
-    		if (sub instanceof ABracketType)
-    		{
-    			sub = ((ABracketType)sub).getType();
-    			continue;
-    		}
+			if (sub instanceof ABracketType)
+			{
+				sub = ((ABracketType) sub).getType();
+				continue;
+			}
 
-    		if (sup instanceof ABracketType)
-    		{
-    			sup = ((ABracketType)sup).getType();
-    			continue;
-    		}
+			if (sup instanceof ABracketType)
+			{
+				sup = ((ABracketType) sup).getType();
+				continue;
+			}
 
-    		if (sub instanceof ANamedInvariantType)
-    		{
-    			ANamedInvariantType nt = (ANamedInvariantType)sub;
+			if (sub instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType nt = (ANamedInvariantType) sub;
 
-       			if (nt.getInvDef() == null)
-       			{
-        			sub = nt.getType();
-        			continue;
-        		}
-    		}
+				if (nt.getInvDef() == null)
+				{
+					sub = nt.getType();
+					continue;
+				}
+			}
 
-    		if (sup instanceof ANamedInvariantType)
-    		{
-    			ANamedInvariantType nt = (ANamedInvariantType)sup;
+			if (sup instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType nt = (ANamedInvariantType) sup;
 
-       			if (nt.getInvDef() == null)
-       			{
-        			sup = nt.getType();
-        			continue;
-        		}
-    		}
+				if (nt.getInvDef() == null)
+				{
+					sup = nt.getType();
+					continue;
+				}
+			}
 
-    		if (sub instanceof AOptionalType && sup instanceof AOptionalType)
-    		{
-       			sub = ((AOptionalType)sub).getType();
-       			sup = ((AOptionalType)sup).getType();
-    			continue;
-    		}
+			if (sub instanceof AOptionalType && sup instanceof AOptionalType)
+			{
+				sub = ((AOptionalType) sub).getType();
+				sup = ((AOptionalType) sup).getType();
+				continue;
+			}
 
-    		resolved = true;
+			resolved = true;
 		}
 
 		if (sub instanceof AUnknownType || sup instanceof AUnknownType)
 		{
-			return Result.Yes;		// Hmmm... too many errors otherwise
+			return Result.Yes; // Hmmm... too many errors otherwise
 		}
 
-		//TODO: When nodes are cloned this 'if(sub == sup)' will not work, 
-		//but this might not be the best way to solve it
-		//if(sub == sup)
+		// TODO: When nodes are cloned this 'if(sub == sup)' will not work,
+		// but this might not be the best way to solve it
+		// if(sub == sup)
+
 		if (sub.getLocation().equals(sup.getLocation()))
 		{
-			return Result.Yes;		// Same object!
+			return Result.Yes;
 		}
 
 		// OK... so we have fully resolved the basic types...
 
 		if (sub instanceof AUnionType)
 		{
-			AUnionType subu = (AUnionType)sub;
+			AUnionType subu = (AUnionType) sub;
 
-			for (PType suba: subu.getTypes())
+			for (PType suba : subu.getTypes())
 			{
 				if (searchSubType(suba, sup) == Result.No)
 				{
@@ -722,98 +673,87 @@ public class TypeComparator
 				}
 			}
 
-			return Result.Yes;	// Must be all of them
-		}
-		else
+			return Result.Yes; // Must be all of them
+		} else
 		{
 			if (sup instanceof AUnionType)
 			{
-				AUnionType supu = (AUnionType)sup;
+				AUnionType supu = (AUnionType) sup;
 
-				for (PType supt: supu.getTypes())
+				for (PType supt : supu.getTypes())
 				{
 					if (searchSubType(sub, supt) == Result.Yes)
 					{
-						return Result.Yes;	// Can be any of them
+						return Result.Yes; // Can be any of them
 					}
 				}
 
 				return Result.No;
-			}
-			else if (sub instanceof ANamedInvariantType)
-    		{
-				ANamedInvariantType subn = (ANamedInvariantType)sub;
+			} else if (sub instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType subn = (ANamedInvariantType) sub;
 				return searchSubType(subn.getType(), sup);
-			}
-			else if (sup instanceof AOptionalType)
-    		{
+			} else if (sup instanceof AOptionalType)
+			{
 				// Supertype includes a nil value, and the subtype is not
 				// optional (stripped above), so we test the optional's type.
 
-				AOptionalType op = (AOptionalType)sup;
+				AOptionalType op = (AOptionalType) sup;
 				return searchSubType(sub, op.getType());
-			}
-			else if (sub instanceof SNumericBasicType)
+			} else if (sub instanceof SNumericBasicType)
 			{
 				if (sup instanceof SNumericBasicType)
 				{
-					SNumericBasicType subn = (SNumericBasicType)sub;
-					SNumericBasicType supn = (SNumericBasicType)sup;
+					SNumericBasicType subn = (SNumericBasicType) sub;
+					SNumericBasicType supn = (SNumericBasicType) sup;
 
-					return (SNumericBasicTypeAssistant.getWeight(subn) <= SNumericBasicTypeAssistant.getWeight(supn)) ?
-						Result.Yes : Result.No;
+					return (SNumericBasicTypeAssistant.getWeight(subn) <= SNumericBasicTypeAssistant.getWeight(supn)) ? Result.Yes
+							: Result.No;
 				}
-			}
-			else if (sub instanceof AProductType)
+			} else if (sub instanceof AProductType)
 			{
 				if (!(sup instanceof AProductType))
 				{
 					return Result.No;
 				}
 
-				List<PType> subl = ((AProductType)sub).getTypes();
-				List<PType> supl = ((AProductType)sup).getTypes();
+				List<PType> subl = ((AProductType) sub).getTypes();
+				List<PType> supl = ((AProductType) sup).getTypes();
 
 				return allSubTypes(subl, supl);
-			}
-			else if (sub instanceof SMapType)
+			} else if (sub instanceof SMapType)
 			{
 				if (!(sup instanceof SMapType))
 				{
 					return Result.No;
 				}
 
-				SMapType subm = (SMapType)sub;
-				SMapType supm = (SMapType)sup;
+				SMapType subm = (SMapType) sub;
+				SMapType supm = (SMapType) sup;
 
-				return (subm.getEmpty() || supm.getEmpty() ||
-					(searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes &&
-					 searchSubType(subm.getTo(), supm.getTo()) == Result.Yes)) ?
-							Result.Yes : Result.No;
-			}
-			else if (sub instanceof ASetType)
+				return (subm.getEmpty() || supm.getEmpty() || (searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes && searchSubType(subm.getTo(), supm.getTo()) == Result.Yes)) ? Result.Yes
+						: Result.No;
+			} else if (sub instanceof ASetType)
 			{
 				if (!(sup instanceof ASetType))
 				{
 					return Result.No;
 				}
 
-				ASetType subs = (ASetType)sub;
-				ASetType sups = (ASetType)sup;
+				ASetType subs = (ASetType) sub;
+				ASetType sups = (ASetType) sup;
 
-				return (subs.getEmpty() || sups.getEmpty() ||
-						searchSubType(subs.getSetof(), sups.getSetof()) == Result.Yes) ?
-							Result.Yes : Result.No;
-			}
-			else if (sub instanceof SSeqType)	// Includes seq1
+				return (subs.getEmpty() || sups.getEmpty() || searchSubType(subs.getSetof(), sups.getSetof()) == Result.Yes) ? Result.Yes
+						: Result.No;
+			} else if (sub instanceof SSeqType) // Includes seq1
 			{
 				if (!(sup instanceof SSeqType))
 				{
 					return Result.No;
 				}
 
-				SSeqType subs = (SSeqType)sub;
-				SSeqType sups = (SSeqType)sup;
+				SSeqType subs = (SSeqType) sub;
+				SSeqType sups = (SSeqType) sup;
 
 				if (subs.getEmpty() || sups.getEmpty())
 				{
@@ -822,75 +762,68 @@ public class TypeComparator
 
 				if (searchSubType(subs.getSeqof(), sups.getSeqof()) == Result.Yes)
 				{
-					if (!(sub instanceof ASeq1SeqType) &&
-						 (sup instanceof ASeq1SeqType))
+					if (!(sub instanceof ASeq1SeqType)
+							&& (sup instanceof ASeq1SeqType))
 					{
 						return Result.No;
 					}
-					
+
 					return Result.Yes;
-				}
-				else
+				} else
 				{
 					return Result.No;
 				}
-			}
-			else if (sub instanceof AFunctionType)
+			} else if (sub instanceof AFunctionType)
 			{
 				if (!(sup instanceof AFunctionType))
 				{
 					return Result.No;
 				}
 
-				AFunctionType subf = (AFunctionType)sub;
-				AFunctionType supf = (AFunctionType)sup;
+				AFunctionType subf = (AFunctionType) sub;
+				AFunctionType supf = (AFunctionType) sup;
 
-				return (allSubTypes(subf.getParameters(), supf.getParameters()) == Result.Yes &&
-						searchSubType(subf.getResult(), supf.getResult()) == Result.Yes) ?
-							Result.Yes : Result.No;
-			}
-			else if (sub instanceof AOperationType)
+				return (allSubTypes(subf.getParameters(), supf.getParameters()) == Result.Yes && searchSubType(subf.getResult(), supf.getResult()) == Result.Yes) ? Result.Yes
+						: Result.No;
+			} else if (sub instanceof AOperationType)
 			{
 				if (!(sup instanceof AOperationType))
 				{
 					return Result.No;
 				}
 
-				AOperationType subo = (AOperationType)sub;
-				AOperationType supo = (AOperationType)sup;
+				AOperationType subo = (AOperationType) sub;
+				AOperationType supo = (AOperationType) sup;
 
-				return (allSubTypes(subo.getParameters(), supo.getParameters()) == Result.Yes &&
-						searchSubType(subo.getResult(), supo.getResult()) == Result.Yes) ?
-							Result.Yes : Result.No;
-			}
-			else if (sub instanceof ARecordInvariantType)
+				return (allSubTypes(subo.getParameters(), supo.getParameters()) == Result.Yes && searchSubType(subo.getResult(), supo.getResult()) == Result.Yes) ? Result.Yes
+						: Result.No;
+			} else if (sub instanceof ARecordInvariantType)
 			{
 				if (!(sup instanceof ARecordInvariantType))
 				{
 					return Result.No;
 				}
 
-				ARecordInvariantType subr = (ARecordInvariantType)sub;
-				ARecordInvariantType supr = (ARecordInvariantType)sup;
+				ARecordInvariantType subr = (ARecordInvariantType) sub;
+				ARecordInvariantType supr = (ARecordInvariantType) sup;
 
-				return PTypeAssistant.equals(subr,supr) ? Result.Yes : Result.No;
-			}
-			else if (sub instanceof AClassType)
+				return PTypeAssistant.equals(subr, supr) ? Result.Yes
+						: Result.No;
+			} else if (sub instanceof AClassType)
 			{
 				if (!(sup instanceof AClassType))
 				{
 					return Result.No;
 				}
 
-				AClassType supc = (AClassType)sup;
-				AClassType subc = (AClassType)sub;
+				AClassType supc = (AClassType) sup;
+				AClassType subc = (AClassType) sub;
 
-				if (PTypeAssistant.hasSupertype(subc,supc))
+				if (PTypeAssistant.hasSupertype(subc, supc))
 				{
 					return Result.Yes;
 				}
-			}
-			else
+			} else
 			{
 				return PTypeAssistant.equals(sub, sup) ? Result.Yes : Result.No;
 			}

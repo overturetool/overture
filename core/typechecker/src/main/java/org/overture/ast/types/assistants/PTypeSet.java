@@ -15,10 +15,10 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.util.Utils;
 
-
 @SuppressWarnings("serial")
-public class PTypeSet extends TreeSet<PType>{
-	
+public class PTypeSet extends TreeSet<PType>
+{
+
 	public PTypeSet()
 	{
 		super();
@@ -35,8 +35,8 @@ public class PTypeSet extends TreeSet<PType>{
 		add(t2);
 	}
 
-	
-	public PTypeSet(List<PType> types) {
+	public PTypeSet(List<PType> types)
+	{
 		super(types);
 	}
 
@@ -47,51 +47,49 @@ public class PTypeSet extends TreeSet<PType>{
 		{
 			// If we add a Seq1Type, and there is already a SeqType in the set
 			// we ignore the Seq1Type.
-			
-			ASeq1SeqType s1t = (ASeq1SeqType)t;
-			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(),false, s1t.getSeqof(), false);
-			
+
+			ASeq1SeqType s1t = (ASeq1SeqType) t;
+			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(), false, s1t.getSeqof(), false);
+
 			if (contains(st))
 			{
-				return false;	// Was already there
+				return false; // Was already there
 			}
-		}
-		else if (t instanceof ASeqSeqType)
+		} else if (t instanceof ASeqSeqType)
 		{
 			// If we add a SeqType, and there is already a Seq1Type in the set
 			// we replace the Seq1Type.
-			
-			ASeqSeqType st = (ASeqSeqType)t;
-			ASeq1SeqType s1t = new ASeq1SeqType(st.getLocation(),false, st.getSeqof(),null);
-			
+
+			ASeqSeqType st = (ASeqSeqType) t;
+			ASeq1SeqType s1t = new ASeq1SeqType(st.getLocation(), false, st.getSeqof(), null);
+
 			if (contains(s1t))
 			{
-				remove(s1t);	// Replace seq with seq1
+				remove(s1t); // Replace seq with seq1
 			}
-		}
-		else if (t instanceof SNumericBasicType)
+		} else if (t instanceof SNumericBasicType)
 		{
-			for (PType x: this)
+			for (PType x : this)
 			{
 				if (x instanceof SNumericBasicType)
 				{
-					if ( SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)) )
+					if (SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)))
 					{
 						remove(x);
 						break;
-					}
-					else
+					} else
 					{
-						return false;	// Was already there
+						return false; // Was already there
 					}
 				}
 			}
 		}
-		
+
 		return super.add(t);
 	}
-	
-	public PType getType(LexLocation location) {
+
+	public PType getType(LexLocation location)
+	{
 		// If there are any Optional(Unknowns) these are the result of
 		// nil values, which set the overall type as optional. Other
 		// optional types stay.
@@ -99,17 +97,22 @@ public class PTypeSet extends TreeSet<PType>{
 		Iterator<PType> tit = this.iterator();
 		boolean optional = false;
 
-		while (tit.hasNext()) {
+		while (tit.hasNext())
+		{
 			PType t = tit.next();
 
-			if (t instanceof AOptionalType) {
+			if (t instanceof AOptionalType)
+			{
 				AOptionalType ot = (AOptionalType) t;
 
-				if (ot.getType() instanceof AUnknownType) {
-					if (this.size() > 1) {
+				if (ot.getType() instanceof AUnknownType)
+				{
+					if (this.size() > 1)
+					{
 						tit.remove();
 						optional = true;
-					} else {
+					} else
+					{
 						optional = false;
 					}
 				}
@@ -119,26 +122,31 @@ public class PTypeSet extends TreeSet<PType>{
 		assert this.size() > 0 : "Getting type of empty TypeSet";
 		PType result = null;
 
-		if (this.size() == 1) {
+		if (this.size() == 1)
+		{
 			result = this.iterator().next();
-		} else {
-			
+		} else
+		{
+
 			Vector<PType> types = new Vector<PType>();
-			
-			for (PType pType : this) {
-				types.add(pType);//.clone()
+
+			for (PType pType : this)
+			{
+				types.add(pType);// .clone()
 			}
-			//TODO
-			//AUnionType uType = new AUnionType(location, false, types,false, false);
+			// TODO
+			// AUnionType uType = new AUnionType(location, false, types,false, false);
 			AUnionType uType = new AUnionType(location, false, false, false);
 			uType.setTypes(types);
 			uType.setProdCard(-1);
+			AUnionTypeAssistant.expand(uType);
 			result = uType;
 		}
 
-		return (optional ? new AOptionalType(location, false,null, result.clone()) : result);
+		return (optional ? new AOptionalType(location, false, null, result.clone())
+				: result);
 	}
-	
+
 	@Override
 	public String toString()
 	{

@@ -1279,7 +1279,7 @@ public class TypeCheckerDefinitionVisitor extends
 		PDefinitionListAssistant.setClassDefinition(defs, node.getClassDefinition());
 		question.qualifiers = null;
 		PDefinitionListAssistant.typeCheck(defs, rootVisitor, question);
-		return null;
+		return node.getType();
 	}
 
 }
