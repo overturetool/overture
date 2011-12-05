@@ -1,6 +1,7 @@
 package org.overture.pog.visitors;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -86,6 +87,9 @@ public class PogExpVisitor extends
 		PType type = root.getType();
 		if (PTypeAssistant.isMap(type))
 		{
+			if (node.getLocation().startLine == 954
+					|| node.getLocation().startLine == 970)
+				System.out.println("Here");
 			SMapType mapType = PTypeAssistant.getMap(type);
 			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
 			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
@@ -198,13 +202,11 @@ public class PogExpVisitor extends
 
 			if (alt.getPattern() instanceof AIgnorePattern)
 				hasIgnore = true;
-			
-			obligations.addAll(
-				ACaseAlternativeAssistantPOG.getProofObligations(alt, rootVisitor, 
-						question, node.getExpression().getType()));
+
+			obligations.addAll(ACaseAlternativeAssistantPOG.getProofObligations(alt, rootVisitor, question, node.getExpression().getType()));
 			/*
-			obligations.addAll(alt.apply(rootVisitor, question));
-			*/
+			 * obligations.addAll(alt.apply(rootVisitor, question));
+			 */
 			count++;
 		}
 
@@ -640,13 +642,14 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = node.getRecord().apply(rootVisitor, question);
 		Queue<ARecordModifier> modifiers = node.getModifiers();
 		ARecordInvariantType recordType = node.getRecordType();
-		Queue<PType> mTypes = node.getModTypes();
+		LinkedList<PType> mTypes = node.getModTypes();
 
+		int i = 0;
 		for (ARecordModifier mod : modifiers)
 		{
 			obligations.addAll(mod.getValue().apply(this, question));
 			AFieldField f = findField(recordType, mod.getTag());
-			PType mType = mTypes.poll();
+			PType mType = mTypes.get(i++);
 			if (f != null)
 				if (!TypeComparator.isSubType(mType, f.getType()))
 					obligations.add(new SubTypeObligation(mod.getValue(), f.getType(), mType, question));
@@ -1531,8 +1534,8 @@ public class PogExpVisitor extends
 		boolean finiteTest = false;
 		for (PMultipleBind b : bindings)
 		{
-			obligations.addAll(b.apply(rootVisitor,question));
-			
+			obligations.addAll(b.apply(rootVisitor, question));
+
 			if (b instanceof ATypeMultipleBind)
 			{
 				finiteTest = true;
