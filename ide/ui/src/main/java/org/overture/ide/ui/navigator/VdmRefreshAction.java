@@ -79,7 +79,8 @@ public class VdmRefreshAction extends CommonActionProvider {
 	     * context menu to add actions to
 	     */
 	    
-	    @Override
+	    @SuppressWarnings("unchecked")
+		@Override
 	    public void fillContextMenu(IMenuManager menu) {
 	        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 	        boolean hasClosedProjects = false;

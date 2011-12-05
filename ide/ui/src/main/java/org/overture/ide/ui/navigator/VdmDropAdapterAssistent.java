@@ -361,6 +361,7 @@ public class VdmDropAdapterAssistent extends CommonDropAdapterAssistant {
 	 * 
 	 * @return the resource selection from the LocalSelectionTransfer
 	 */
+	@SuppressWarnings("unchecked")
 	private IResource[] getSelectedResources(IStructuredSelection selection) {
 		ArrayList<Object> selectedResources = new ArrayList<Object>();
 
