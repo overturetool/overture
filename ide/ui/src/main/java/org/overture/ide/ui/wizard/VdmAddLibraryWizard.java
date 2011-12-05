@@ -84,7 +84,8 @@ public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 	@Override
 	public void addPages()
 	{
-		_pageTwo = new LibraryIncludePage("Add Library",isOoDialect());
+		_pageTwo = new LibraryIncludePage("Add Library",isOoDialect(),project);
+		
 		addPage(_pageTwo);
 	}
 	

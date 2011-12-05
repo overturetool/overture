@@ -55,7 +55,7 @@ public abstract class VdmNewProjectWizard extends BasicNewProjectResourceWizard
 		getPages()[0].setTitle(getPageTitle());
 		getPages()[0].setDescription(getPageDescription());
 		Dialect d = LanguageManager.getInstance().getLanguage(getNature()).getDialect();
-		_pageTwo = new LibraryIncludePage("Library Include",d == Dialect.VDM_PP || d==Dialect.VDM_RT);
+		_pageTwo = new LibraryIncludePage("Library Include",d == Dialect.VDM_PP || d==Dialect.VDM_RT,null);
 		addPage(_pageTwo);
 	}
 

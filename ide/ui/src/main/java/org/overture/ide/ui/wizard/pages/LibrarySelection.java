@@ -36,9 +36,10 @@ public class LibrarySelection extends Composite
 	private Button checkBoxVdmUnit = null;
 	boolean isOo;
 
-	public LibrarySelection(Composite parent, int style, boolean isOo) {
+	public LibrarySelection(Composite parent, int style, boolean isOo)
+	{
 		super(parent, style);
-		this.isOo=isOo;
+		this.isOo = isOo;
 		initialize();
 	}
 
@@ -58,7 +59,7 @@ public class LibrarySelection extends Composite
 		checkBoxCsvIo = new Button(this, SWT.CHECK);
 		checkBoxCsvIo.setText("CSV");
 		checkBoxCsvIo.setToolTipText("Provides IO facilities for CSV files");
-		if(isOo)
+		if (isOo)
 		{
 			checkBoxVdmUnit = new Button(this, SWT.CHECK);
 			checkBoxVdmUnit.setText("VDM-Unit");
@@ -67,26 +68,54 @@ public class LibrarySelection extends Composite
 		setSize(new Point(300, 200));
 		setLayout(new GridLayout());
 	}
-	
-	
+
 	public boolean isIoSelected()
 	{
 		return checkBoxIo.getSelection();
 	}
+
 	public boolean isMathSelected()
 	{
 		return checkBoxMath.getSelection();
 	}
+
 	public boolean isUtilSelected()
 	{
 		return checkBoxUtil.getSelection();
 	}
+
 	public boolean isCsvSelected()
 	{
 		return checkBoxCsvIo.getSelection();
 	}
+
 	public boolean isVdmUnitSelected()
 	{
-		return checkBoxVdmUnit!=null && checkBoxVdmUnit.getSelection();
+		return checkBoxVdmUnit != null && checkBoxVdmUnit.getSelection();
+	}
+
+	public void setIoChecked(boolean b)
+	{
+		checkBoxIo.setSelection(b);
+	}
+
+	public void setMathChecked(boolean exists)
+	{
+		checkBoxMath.setSelection(exists);
+	}
+
+	public void setVdmUtilChecked(boolean exists)
+	{
+		checkBoxUtil.setSelection(exists);
+	}
+
+	public void setCsvChecked(boolean exists)
+	{
+		checkBoxCsvIo.setSelection(exists);
+	}
+
+	public void setVdmUnitChecked(boolean exists)
+	{
+		checkBoxVdmUnit.setSelection(exists);
 	}
 }
