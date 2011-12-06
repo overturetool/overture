@@ -116,6 +116,9 @@ public class LibrarySelection extends Composite
 
 	public void setVdmUnitChecked(boolean exists)
 	{
-		checkBoxVdmUnit.setSelection(exists);
+		if (isOo)
+		{
+			checkBoxVdmUnit.setSelection(exists);
+		}
 	}
 }
