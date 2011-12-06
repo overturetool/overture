@@ -32,6 +32,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.ui.VdmUIPlugin;
+import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
 import org.overture.ide.ui.editor.partitioning.VdmDocumentPartitioner;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
@@ -93,7 +94,7 @@ public class VdmExternalDocumentProvider extends FileDocumentProvider
 		{
 			IDocumentExtension3 extension3 = (IDocumentExtension3) document;
 			IDocumentPartitioner partitioner = new VdmDocumentPartitioner(VdmUIPlugin.getDefault().getPartitionScanner(), VdmPartitionScanner.PARTITION_TYPES);
-			extension3.setDocumentPartitioner(VdmUIPlugin.VDM_PARTITIONING, partitioner);
+			extension3.setDocumentPartitioner(IVdmPartitions.VDM_PARTITIONING, partitioner);
 			partitioner.connect(document);
 		}
 

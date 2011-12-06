@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
-import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -48,21 +46,14 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 
 		IToken keyword = new Token(new TextAttribute(provider.getColor(VdmColorProvider.KEYWORD), null, SWT.BOLD));
 		IToken type = new Token(new TextAttribute(provider.getColor(VdmColorProvider.TYPE), null, SWT.BOLD));
-		final IToken string = new Token(new TextAttribute(provider.getColor(VdmColorProvider.STRING)));
+		
 		final IToken stringBold = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT),null, SWT.BOLD | SWT.ITALIC));
 		IToken comment = new Token(new TextAttribute(provider.getColor(VdmColorProvider.SINGLE_LINE_COMMENT)));
 		 final IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
 		
 		List<IRule> rules = new ArrayList<IRule>();
-		// Add rule for single line comments.
-		rules.add(new EndOfLineRule("--", comment));
-		// Multi line comment
-		rules.add(new MultiLineRule("/*", "*/", comment,(char) 0, true));
+	
 
-		// Add rule for strings.
-		rules.add(new CharacterRule(string));
-		rules.add(new SingleLineRule("\"", "\"", string, '\\'));
-		// rules.add(new SingleLineRule("'", "'", string, '\\'));
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new VdmWhitespaceDetector()));
 

@@ -33,15 +33,13 @@ public class VdmDocumentPartitioner extends FastPartitioner implements
 	public VdmDocumentPartitioner(IPartitionTokenScanner scanner,
 			String[] legalContentTypes) {
 		super(scanner, legalContentTypes);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void connect(IDocument document, boolean delayInitialise)
 	{
 	    super.connect(document, delayInitialise);	 
-	    document.setDocumentPartitioner(this);
-	   // printPartitions(document);
+	    //printPartitions(document);
 	}
 
 	

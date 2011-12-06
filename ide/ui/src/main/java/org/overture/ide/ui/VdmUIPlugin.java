@@ -31,7 +31,7 @@ import org.overture.ide.ui.internal.viewsupport.ProblemMarkerManager;
 public class VdmUIPlugin extends AbstractUIPlugin {
 	public static boolean DEBUG = true;
 	private static VdmUIPlugin plugin;
-	public final static String VDM_PARTITIONING = "__vdm__partitioning__";
+	
 
 	private VdmPartitionScanner fPartitionScanner;
 	private ImageDescriptorRegistry fImageDescriptorRegistry;

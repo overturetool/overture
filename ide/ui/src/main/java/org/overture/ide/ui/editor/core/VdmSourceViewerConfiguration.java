@@ -30,7 +30,6 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
-import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -38,7 +37,13 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.autoedit.VdmAutoEditStrategy;
+import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
+import org.overture.ide.ui.editor.partitioning.VdmDamagerRepairer;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
+import org.overture.ide.ui.editor.syntax.VdmColorProvider;
+import org.overture.ide.ui.editor.syntax.VdmMultiLineCommentScanner;
+import org.overture.ide.ui.editor.syntax.VdmSingleLineCommentScanner;
+import org.overture.ide.ui.editor.syntax.VdmStringScanner;
 
 public abstract class VdmSourceViewerConfiguration extends
 		SourceViewerConfiguration
@@ -46,13 +51,16 @@ public abstract class VdmSourceViewerConfiguration extends
 	private ITokenScanner vdmCodeScanner = null;
 	PresentationReconciler reconciler = null;
 	private String[] commentingPrefix = new String[] { "--" };
+	private ITokenScanner vdmSingleLineCommentScanner;
+	private ITokenScanner vdmMultiLineCommentScanner;
+	private ITokenScanner vdmStringScanner;
 
 	// private Object fScanner;
 
 	@Override
 	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer)
 	{
-		return VdmUIPlugin.VDM_PARTITIONING;
+		return IVdmPartitions.VDM_PARTITIONING;
 	}
 
 	@Override
@@ -65,10 +73,7 @@ public abstract class VdmSourceViewerConfiguration extends
 				VdmPartitionScanner.STRING };
 	}
 
-	// @Override
-	// public IUndoManager getUndoManager(ISourceViewer sourceViewer) {
-	// return new DefaultUndoManager(25);
-	// }
+
 
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
@@ -93,29 +98,60 @@ public abstract class VdmSourceViewerConfiguration extends
 		if (reconciler == null)
 		{
 			reconciler = new PresentationReconciler();
-
+			reconciler.setDocumentPartitioning(IVdmPartitions.VDM_PARTITIONING);
+			
 			if (vdmCodeScanner == null)
 			{
 				vdmCodeScanner = getVdmCodeScanner();
 			}
 
-			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(vdmCodeScanner);
+			VdmDamagerRepairer dr = new VdmDamagerRepairer(getVdmSingleLineCommentScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
 			reconciler.setRepairer(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
 
-			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
+			dr = new VdmDamagerRepairer(getVdmMultiLineCommentScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.MULTILINE_COMMENT);
 			reconciler.setRepairer(dr, VdmPartitionScanner.MULTILINE_COMMENT);
 
-			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
+			dr = new VdmDamagerRepairer(getVdmStringScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.STRING);
 			reconciler.setRepairer(dr, VdmPartitionScanner.STRING);
 
-			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
+			dr = new VdmDamagerRepairer(getVdmCodeScanner());
 			reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 			reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		}
 		return reconciler;
+	}
+
+	private ITokenScanner getVdmStringScanner()
+	{
+		if(vdmStringScanner == null)
+		{
+			vdmStringScanner = new VdmStringScanner(new VdmColorProvider());
+		}
+		
+		return vdmStringScanner;
+	}
+
+	private ITokenScanner getVdmSingleLineCommentScanner()
+	{
+		if(vdmSingleLineCommentScanner == null)
+		{
+			vdmSingleLineCommentScanner = new VdmSingleLineCommentScanner(new VdmColorProvider());
+		}
+		
+		return vdmSingleLineCommentScanner;
+	}
+	
+	private ITokenScanner getVdmMultiLineCommentScanner()
+	{
+		if(vdmMultiLineCommentScanner == null)
+		{
+			vdmMultiLineCommentScanner = new VdmMultiLineCommentScanner(new VdmColorProvider());
+		}
+		
+		return vdmMultiLineCommentScanner;
 	}
 
 	protected abstract ITokenScanner getVdmCodeScanner();
@@ -162,8 +198,6 @@ public abstract class VdmSourceViewerConfiguration extends
 	@Override
 	abstract public IContentAssistant getContentAssistant(
 			ISourceViewer sourceViewer);
-
-	// return new VdmContentAssistant();
 
 	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer,

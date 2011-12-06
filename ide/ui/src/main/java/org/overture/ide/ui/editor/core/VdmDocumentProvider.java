@@ -29,6 +29,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.VdmUIPlugin;
+import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
 import org.overture.ide.ui.editor.partitioning.VdmDocumentPartitioner;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
@@ -69,14 +70,14 @@ public class VdmDocumentProvider extends FileDocumentProvider
 		if (document instanceof IDocumentExtension3)
 		{
 			IDocumentExtension3 extension3 = (IDocumentExtension3) document;
-			IDocumentPartitioner partitioner = new VdmDocumentPartitioner(VdmUIPlugin.getDefault().getPartitionScanner(), VdmPartitionScanner.PARTITION_TYPES);
-			extension3.setDocumentPartitioner(VdmUIPlugin.VDM_PARTITIONING, partitioner);
+			IDocumentPartitioner partitioner = new VdmDocumentPartitioner(VdmUIPlugin.getDefault().getPartitionScanner(), VdmPartitionScanner.PARTITION_TYPES);			
 			partitioner.connect(document);
+			extension3.setDocumentPartitioner(IVdmPartitions.VDM_PARTITIONING, partitioner);
 		}
 
 		return document;
 	}
-
+	
 	@Override
 	protected IDocument createEmptyDocument()
 	{

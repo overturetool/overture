@@ -22,24 +22,73 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.rules.EndOfLineRule;
+import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.MultiLineRule;
-import org.eclipse.jface.text.rules.PatternRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.text.rules.WordRule;
 
-public class VdmPartitionScanner extends RuleBasedPartitionScanner {
+public class VdmPartitionScanner extends RuleBasedPartitionScanner implements IVdmPartitions{
 
-	// string constants for different partition types
-	public final static String MULTILINE_COMMENT = "__vdm_multiline_comment";
-	public final static String SINGLELINE_COMMENT = "__vdm_singleline_comment";
-	public final static String STRING = "__vdm_string";
-	public final static String LATEX = "__vdm_latex";
+	/**
+	 * Detector for empty comments.
+	 */
+	static class EmptyCommentDetector implements IWordDetector {
+
+		/*
+		 * @see IWordDetector#isWordStart
+		 */
+		public boolean isWordStart(char c) {
+			return (c == '/');
+		}
+
+		/*
+		 * @see IWordDetector#isWordPart
+		 */
+		public boolean isWordPart(char c) {
+			return (c == '*' || c == '/');
+		}
+	}
+
+
+	/**
+	 * Word rule for empty comments.
+	 */
+	static class EmptyCommentRule extends WordRule implements IPredicateRule {
+
+		private IToken fSuccessToken;
+		/**
+		 * Constructor for EmptyCommentRule.
+		 * @param successToken
+		 */
+		public EmptyCommentRule(IToken successToken) {
+			super(new EmptyCommentDetector());
+			fSuccessToken= successToken;
+			addWord("/**/", fSuccessToken); //$NON-NLS-1$
+		}
+
+		/*
+		 * @see IPredicateRule#evaluate(ICharacterScanner, boolean)
+		 */
+		public IToken evaluate(ICharacterScanner scanner, boolean resume) {
+			return evaluate(scanner);
+		}
+
+		/*
+		 * @see IPredicateRule#getSuccessToken()
+		 */
+		public IToken getSuccessToken() {
+			return fSuccessToken;
+		}
+	}
+
 	
 	public final static String[] PARTITION_TYPES = new String[] {
-			MULTILINE_COMMENT, SINGLELINE_COMMENT, STRING, LATEX };
+			MULTILINE_COMMENT, SINGLELINE_COMMENT, STRING };
 
 	/**
 	 * Creates the partitioner and sets up the appropriate rules.
@@ -51,18 +100,21 @@ public class VdmPartitionScanner extends RuleBasedPartitionScanner {
 		IToken string = new Token(STRING); 
 //		IToken latex = new Token(LATEX);
 		
-		List<PatternRule> rules= new ArrayList<PatternRule>(); 
+		List<IPredicateRule> rules= new ArrayList<IPredicateRule>(); 
 		// Add rule for single line comments. 
 		rules.add(new EndOfLineRule("--", singlelinecomment)); 
 		// Add rule for strings and character constants. 
 		rules.add(new SingleLineRule("\"", "\"", string, '\\')); 
 		rules.add(new SingleLineRule("'", "'", string, '\\')); 
 		// Add rules for multi-line comments and javadoc. 
-		rules.add(new MultiLineRule("/*", "*/", multilinecomment, (char) 0, true)); 
-
-
-
+		rules.add(new MultiLineRule("/*", "*/", multilinecomment)); 
 		
+		
+		// Add special case word rule.
+		EmptyCommentRule wordRule= new EmptyCommentRule(multilinecomment);
+		rules.add(wordRule);
+		
+
 		IPredicateRule[] result= new IPredicateRule[rules.size()]; 
 		rules.toArray(result); 
 		setPredicateRules(result); 
