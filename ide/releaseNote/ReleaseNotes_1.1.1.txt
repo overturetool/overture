@@ -83,15 +83,12 @@ Bugs Fixed Since 1.1.0
 The number in [] is the ID of the report in Overture bug tracker on
 sourceforge
 
-Fixed
 [3390097] The parser does not recognize 0x hex literals
 [3340419] Reading IO values from a product type with an invariant
 [3441239] Project paths with spaces cause problems
 [3340700] Keywords highlighted in block comments
 [3323854] Starting debug in MacOsx with a space in the class path
 [3415900] VDMTools can't use Overture's IO.vdmsl
-
-Pending
 [3427211] Func/ops with pattern parameters confuse the launch dialog
 [3429817] Running a saved launch file changes that file
 [3197390] Syntax error highlighting is wrong
