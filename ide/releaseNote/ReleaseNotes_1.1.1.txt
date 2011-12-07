@@ -62,21 +62,6 @@ installer in the start programs or via the Uninstall menu in the
 Control Panel.
 
 
-New and Noteworthy
-------------------
-
-* It is possible to use literate Word and Open Office documents as
-  source for VDM models, though these are read-only sources. Word
-  (.doc) files can only contain 8-bit charsets (ASCII and ISO-Latin-1
-  are OK, but not Japanese)
-* All time unit referenced in time constructs in VDM-RT (i.e. periodic
-  and duration) are now changed from milliseconds to nanoseconds.
-* It is now possible to use standard libraries in VDM-SL
-  specifications without modules (if using VDM10).
-* New standard libraries have been added (CSV and VDMUnit).
-* The IO library now takes relative paths into account.
-
-
 Bugs Fixed Since 1.1.0
 ----------------------
 
@@ -88,11 +73,13 @@ sourceforge
 [3441239] Project paths with spaces cause problems
 [3340700] Keywords highlighted in block comments
 [3323854] Starting debug in MacOsx with a space in the class path
-[3415900] VDMTools can't use Overture's IO.vdmsl
 [3427211] Func/ops with pattern parameters confuse the launch dialog
 [3429817] Running a saved launch file changes that file
 [3197390] Syntax error highlighting is wrong
 [3415897] Can't open with VDMTools if spaces in project name
+
+Not fixable in Overture, SCSK is looking into it
+[3415900] VDMTools can't use Overture's IO.vdmsl
 
 
 Known Issues
