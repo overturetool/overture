@@ -65,28 +65,7 @@ public interface IVdmProject extends IAdaptable
 
 	public Dialect getDialect();
 
-//	public boolean hasDynamictypechecks();
-//
-//	public boolean hasInvchecks();
-//
-//	public boolean hasPostchecks();
-//
-//	public boolean hasPrechecks();
-//
-//	public boolean hasMeasurechecks();
-
 	public boolean hasSuppressWarnings();
-
-//	public void setDynamictypechecks(Boolean value)
-//			throws CoreException;
-//
-//	public void setInvchecks(Boolean value) throws CoreException;
-//
-//	public void setPostchecks(Boolean value) throws CoreException;
-//
-//	public void setPrechecks(Boolean value) throws CoreException;
-//
-//	public void setMeasurechecks(Boolean value) throws CoreException;
 
 	public void setSuppressWarnings(Boolean value)
 			throws CoreException;
