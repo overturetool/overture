@@ -2,7 +2,7 @@ Overture 1.1.0 Release Notes - 07/12/2011
 =========================================
 
 
-What’s New in Overture 1.1.1?
+What's New in Overture 1.1.1?
 -----------------------------
 
 This version brings bug fixes to the previous official release of the
@@ -107,7 +107,7 @@ before raising new bugs.
   engine. See the SourceForge bug list for details.
 * The output console showing the result of an evaluation, or an error
   raised during evaluation, is not always visible when the evaluation
-  completes. Click the “Display Selected Console” button to cycle
+  completes. Click the "Display Selected Console" button to cycle
   through the consoles available.
 * It sometimes takes a long time to generate the GUI representation of
   a VDM-RT log file, and the log files themselves can become quite
@@ -116,7 +116,7 @@ before raising new bugs.
   out of the Proof Obligations perspective. Just close the view.
 * When you run a set of combinatorial tests, the coverage of the
   specification is not measured. Individual tests' coverage is
-  measured if you “Send to Interpreter”.
+  measured if you "Send to Interpreter".
 
 
 Troubleshooting
@@ -156,11 +156,11 @@ Other Resources and Links
 -------------------------
 
 The following links may be helpful:
-* Overture Community site – http://www.overturetool.org
+* Overture Community site - http://www.overturetool.org
 * Overture Wiki for developers - http://wiki.overturetool.org
 * VDM Tutorials - http://overturetool.org/?q=Documentation
 * VDM Examples - http://overturetool.org/?q=node/11
 * VDM Portal - http://www.vdmportal.org
-* VDM Books – http://www.vdmbook.com
+* VDM Books - http://www.vdmbook.com
 * Wikipedia on VDM - http://en.wikipedia.org/wiki/Vienna_Development_Method
 
