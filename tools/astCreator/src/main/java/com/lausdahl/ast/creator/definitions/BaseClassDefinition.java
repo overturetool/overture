@@ -86,7 +86,6 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 	public String getJavaSourceCode(StringBuilder sb)
 	{
-
 		sb.append(IInterfaceDefinition.copurightHeader + "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
 
@@ -116,34 +115,33 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			sb.append(" extends " + getSuperDef().getName().getName()
 					+ getSuperDef().getGenericsString());
+
 		}
 
 		if (!interfaces.isEmpty())
 		{
 			sb.append(" implements ");
-//			StringBuilder intfs = new StringBuilder();
-//			for (IInterfaceDefinition intfName : interfaces)
-//			{
-//				intfs.append(intfName.getName().getName()
-//						+ intfName.getGenericsString() + ", ");
-//			}
-//			sb.append(intfs.subSequence(0, intfs.length() - 2));
+			// StringBuilder intfs = new StringBuilder();
+			// for (IInterfaceDefinition intfName : interfaces)
+			// {
+			// intfs.append(intfName.getName().getName()
+			// + intfName.getGenericsString() + ", ");
+			// }
+			// sb.append(intfs.subSequence(0, intfs.length() - 2));
 			for (Iterator<IInterfaceDefinition> iterator = interfaces.iterator(); iterator.hasNext();)
 			{
 				IInterfaceDefinition intf = iterator.next();
-				sb.append(intf.getName()+intf.getGenericsString());
-				if(iterator.hasNext())
+				sb.append(intf.getName() + intf.getGenericsString());
+				if (iterator.hasNext())
 				{
 					sb.append(", ");
 				}
-				
+
 			}
 		}
 
 		sb.append("\n{");
-
 		sb.append("\n\tprivate static final long serialVersionUID = 1L;\n");
-
 		for (Field f : fields)
 		{
 			if (isRefinedField(f))
@@ -154,6 +152,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			{
 				sb.append("\n\t/**\n\t* Graph field, parent will not be removed when added and parent \n\t*  of this field may not be this node. Also excluded for visitor.\n\t*/");
 			}
+
 			sb.append("\n\t" + f.accessspecifier.syntax + " " + f.getType()
 					+ " " + f.getName());
 			if (f.isList)
@@ -183,6 +182,28 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 				noneCtorMethods.append(m.getJavaSourceCode() + "\n");
 			}
 		}
+
+		StringBuilder equalsString = new StringBuilder();
+		StringBuilder hashCodeString = new StringBuilder();
+
+		// setup equals method using toString
+		// essentially: this.toString().equals(o.toString())
+		equalsString.append("\n\t/**\n\t * Essentially this.toString().equals(o.toString()).\n\t**/");
+		equalsString.append("\n\t@Override");
+		equalsString.append("\n\tpublic boolean equals(Object o) {");
+		equalsString.append("\n\tif (o != null && o instanceof "
+				+ name.getName() + ")");
+		equalsString.append("\n\t return toString().equals(o.toString());\n\t");
+		equalsString.append("return false; }\n\t");
+		sb.append("\n" + equalsString + "\n");
+
+		// setup hashCode method using toString
+		// essentially: this.toString().hashCode()
+		hashCodeString.append("\n\t/**\n\t * Essentially this.toString().hashCode()\n\t**/");
+		hashCodeString.append("\n\t@Override");
+		hashCodeString.append("\n\tpublic int hashCode() {");
+		hashCodeString.append("\n\t return this.toString().hashCode();\n\t}");
+		sb.append("\n" + hashCodeString + "\n");
 
 		sb.append(noneCtorMethods);
 		sb.append("\n}\n");
