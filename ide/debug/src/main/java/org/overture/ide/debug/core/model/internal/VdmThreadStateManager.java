@@ -44,7 +44,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 	private final DbgpDebugger engine;
 
 	// Abilities of debugging engine
-	private volatile boolean canSuspend;
+//	private volatile boolean canSuspend;
 
 	// Number of suspends
 	private volatile int modificationsCount;
@@ -140,7 +140,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 		this.handler = thread;
 		this.engine = new DbgpDebugger(thread, this);
 
-		canSuspend = true; // engine.isSupportsAsync();
+//		canSuspend = true; // engine.isSupportsAsync();
 		this.modificationsCount = 0;
 
 		this.suspended = true;

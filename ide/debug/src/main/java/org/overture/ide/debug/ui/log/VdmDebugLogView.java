@@ -201,7 +201,7 @@ public class VdmDebugLogView extends ViewPart {
 	private IAction clearAction;
 
 	public void clear(){
-		viewer.getControl().getDisplay().getDefault().syncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				clearAction.run();
 			}

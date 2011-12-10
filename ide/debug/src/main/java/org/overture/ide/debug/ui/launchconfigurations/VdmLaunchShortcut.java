@@ -369,11 +369,11 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		// IEditorInput input = editor.getEditorInput();
 		// IJavaElement je = (IJavaElement) input.getAdapter(IJavaElement.class);
 		// TODO get ISourceUnit from editor
-		IVdmSourceUnit je = null;
-		if (je != null)
-		{
-			searchAndLaunch(new Object[] { je }, mode, getTypeSelectionTitle(), getEditorEmptyMessage());
-		}
+//		IVdmSourceUnit je = null;
+//		if (je != null)
+//		{
+//			searchAndLaunch(new Object[] { je }, mode, getTypeSelectionTitle(), getEditorEmptyMessage());
+//		}
 	}
 
 	public void launch(ISelection selection, String mode)
