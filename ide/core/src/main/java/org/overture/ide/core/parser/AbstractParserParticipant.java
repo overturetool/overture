@@ -18,10 +18,6 @@
  *******************************************************************************/
 package org.overture.ide.core.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +29,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.VdmCore;
-
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
 import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 
