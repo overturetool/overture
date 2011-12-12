@@ -107,69 +107,26 @@ public class AUnionTypeAssistant
 	public static void expand(AUnionType type)
 	{
 
-		class InternRep
-		{
-			private PType p;
-			private String v;
-
-			public InternRep(PType p)
-			{
-				v = (this.p = p).toString();
-			}
-
-			@Override
-			public int hashCode()
-			{
-				return v.hashCode();
-			}
-
-			@Override
-			public boolean equals(Object obj)
-			{
-				if (obj instanceof InternRep)
-				{
-					InternRep other = (InternRep) obj;
-					if (other.v.length() != this.v.length())
-						return false;
-					for (char c : v.toCharArray())
-						if (other.v.indexOf(c) == -1)
-							return false;
-					return true;
-				}
-				return false;
-			}
-
-			public PType getP()
-			{
-				return p;
-			}
-
-		}
-
 		if (type.getExpanded())
 			return;
 
-		Set<InternRep> exptypes = new HashSet<InternRep>();
+		Set<PType> exptypes = new HashSet<PType>();
 
 		for (PType t : type.getTypes())
 		{
 			if (t instanceof AUnionType)
 			{
 				AUnionType ut = (AUnionType) t;
+				ut.setExpanded(false);
 				expand(ut);
-				for (PType to : ut.getTypes())
-					exptypes.add(new InternRep(to));
-				// exptypes.addAll(ut.getTypes());
+				exptypes.addAll(ut.getTypes());
 			} else
 			{
-				exptypes.add(new InternRep(t));
+				exptypes.add(t);
 			}
 		}
 
-		Vector<PType> v = new Vector<PType>();
-		for (InternRep r : exptypes)
-			v.add(r.getP());
-
+		Vector<PType> v = new Vector<PType>(exptypes);
 		type.setTypes(v);
 		type.setExpanded(true);
 		List<PDefinition> definitions = type.getDefinitions();
