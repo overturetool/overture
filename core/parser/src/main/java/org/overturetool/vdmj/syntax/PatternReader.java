@@ -26,6 +26,7 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.patterns.AConcatenationPattern;
@@ -143,7 +144,8 @@ public class PatternReader extends SyntaxReader
 			case BRA:
 				nextToken();
 				ExpressionReader expr = getExpressionReader();
-				pattern = new AExpressionPattern(token.location, null, false, expr.readExpression());
+				PExp exp = expr.readExpression();
+				pattern = new AExpressionPattern(exp.getLocation(), null, false,exp );
 				// pattern = new ExpressionPattern(expr.readExpression());
 				checkFor(VDMToken.KET, 2180, "Mismatched brackets in pattern");
 				rdtok = false;
