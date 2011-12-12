@@ -31,6 +31,7 @@ import org.overture.ast.expressions.assistants.ACaseAlternativeAssistant;
 import org.overture.ast.expressions.assistants.SBinaryExpAssistant;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -2180,9 +2181,23 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question)
 	{
-
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, ASetBindAssistant.getMultipleBindList(node.getSetBind().clone()), null);
+		//save these so we can clone them after they have been type checked
+		PExp setBindSet = node.getSetBind().getSet();
+		PPattern setBindPattern = node.getSetBind().getPattern();
+		
+		List<PPattern> plist = new ArrayList<PPattern>();
+		plist.add(setBindPattern);
+		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
+		mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist, setBindSet));
+		
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, 
+				null, null, null, null, null, 
+				mblist, null);
 		def.apply(rootVisitor, question);
+		
+		//now they are typechecked, add them again
+		node.getSetBind().setSet(setBindSet.clone());
+		node.getSetBind().setPattern(setBindPattern.clone());
 
 		if (!PTypeAssistant.isNumeric(PDefinitionAssistantTC.getType(def)))
 		{
