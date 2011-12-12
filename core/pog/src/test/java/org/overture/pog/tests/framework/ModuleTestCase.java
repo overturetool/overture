@@ -243,53 +243,63 @@ public class ModuleTestCase extends TestCase
 		List<Pair<String, String, Integer>> ratedStuff = new LinkedList<Pair<String, String, Integer>>();
 
 		String more = "";
-		int count = 0;
+		List<String> notMatchedExpectedProofObligations = new LinkedList<String>();
+		//find all the exact matches
 		for (String poExp : expectedProofObligations)
 		{
-			boolean differenceExists = false;
-			int min = Integer.MAX_VALUE;
 			String okayPo = null;
 
-			String minActPo = null;
 			for (String poAct : actualPos)
 			{
-			
 				if (isPermutationOf(poExp, poAct))
 				{
-					okayPo = poExp;
-					differenceExists = false;
+					okayPo = poAct;
 					break;
 				}
-
-				differenceExists = true;
-				int rate = editDistance(poAct, poExp);
-				if (rate < min)
-				{
-					minActPo = poAct;
-					min = rate;
-				}
-
-			}
-			if (differenceExists)
-			{
-				ratedStuff.add(new Pair<String, String, Integer>(minActPo,poExp,min));
-				actualPos.remove(minActPo);
-				count++;
 			}
 
 			if (okayPo != null)
 			{
 				actualPos.remove(okayPo);
 			}
-				
+			else
+			{
+				notMatchedExpectedProofObligations.add(poExp);
+			}
+		}
 
-			if (count > 9)
+		//find the best match for all the expected pogs that wasn't matched exactly
+		int count = 0;
+		for (String poAct : actualPos)
+		{
+			int min = Integer.MAX_VALUE;
+
+			String minExpPo = null;
+			
+			if(notMatchedExpectedProofObligations.isEmpty())
+				break;
+			
+			for (String poExp : notMatchedExpectedProofObligations)
+			{
+				int rate = editDistance(poAct, poExp);
+				if (rate < min)
+				{
+					minExpPo = poExp;
+					min = rate;
+				}
+
+			}
+			ratedStuff.add(new Pair<String, String, Integer>(poAct,minExpPo,min));
+			notMatchedExpectedProofObligations.remove(minExpPo);
+			
+			if (++count > 9)
 			{
 				more = " And there are more...";
 				break;
 			}
-
 		}
+		
+		actualPos = actualPos.subList(count, actualPos.size());
 
 		System.out.println("Proof obligations expected: " + expPoSize
 				+ " actual: " + actPoSize
@@ -314,18 +324,18 @@ public class ModuleTestCase extends TestCase
 		}
 
 		// Report all not matched proof obligations
-		if (expPoSize > actPoSize)
+		if (!notMatchedExpectedProofObligations.isEmpty())
 		{
 			System.out.println("These proof obligations were not matched at all: ");
 			System.out.println("------------------------------------------------ ");
 			int i = 0;
-			for (String p : expectedProofObligations)
+			for (String p : notMatchedExpectedProofObligations)
 			{
 				System.out.println("\n" + p + "\n");
 				if (i++ > 10)
 				{
 					System.out.println("... And "
-							+ (expectedProofObligations.size() - 10)
+							+ (notMatchedExpectedProofObligations.size() - 10)
 							+ " more...");
 					break;
 				}
