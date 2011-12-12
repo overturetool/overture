@@ -194,6 +194,9 @@ public class ModuleTestCase extends TestCase
 			isParseOk = false;
 		}
 
+		List<String> expectedProofObligations;
+		expectedProofObligations = getExpectedProofObligations();
+		
 		if (isParseOk)
 		{
 
@@ -207,14 +210,15 @@ public class ModuleTestCase extends TestCase
 					proofObligation.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
 				}
 			} else
-				fail(file.getName() + " failed because of the type checker.");
+				if (expectedProofObligations.size() > 0)
+					fail(file.getName() + " failed because of the type checker.");
+				
 
 		}
 
 		// read out the expected proof obligations from the test case header
 		// (the file)
-		List<String> expectedProofObligations;
-		expectedProofObligations = getExpectedProofObligations();
+		
 		int expPoSize = expectedProofObligations.size();
 		int actPoSize = proofObligation.size();
 
