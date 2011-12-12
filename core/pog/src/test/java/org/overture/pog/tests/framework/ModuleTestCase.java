@@ -244,14 +244,14 @@ public class ModuleTestCase extends TestCase
 
 		String more = "";
 		int count = 0;
-		for (String poAct : actualPos)
+		for (String poExp : expectedProofObligations)
 		{
 			boolean differenceExists = false;
 			int min = Integer.MAX_VALUE;
 			String okayPo = null;
 
-			String minExpPo = null;
-			for (String poExp : expectedProofObligations)
+			String minActPo = null;
+			for (String poAct : actualPos)
 			{
 			
 				if (isPermutationOf(poExp, poAct))
@@ -265,25 +265,21 @@ public class ModuleTestCase extends TestCase
 				int rate = editDistance(poAct, poExp);
 				if (rate < min)
 				{
-					minExpPo = poExp;
+					minActPo = poAct;
 					min = rate;
 				}
 
 			}
 			if (differenceExists)
 			{
-				
-				
-				ratedStuff.add(new Pair<String, String, Integer>(poAct, minExpPo, min));
-				expectedProofObligations.remove(minExpPo);
+				ratedStuff.add(new Pair<String, String, Integer>(minActPo,poExp,min));
+				actualPos.remove(minActPo);
 				count++;
 			}
 
 			if (okayPo != null)
 			{
-				if (poAct.startsWith("|148"))
-					System.out.println(minExpPo);
-				expectedProofObligations.remove(okayPo);
+				actualPos.remove(okayPo);
 			}
 				
 
@@ -330,6 +326,26 @@ public class ModuleTestCase extends TestCase
 				{
 					System.out.println("... And "
 							+ (expectedProofObligations.size() - 10)
+							+ " more...");
+					break;
+				}
+
+			}
+		}
+		
+		// Report all not matched proof obligations
+		if (expPoSize < actPoSize)
+		{
+			System.out.println("These actual proof obligations were not expected: ");
+			System.out.println("------------------------------------------------- ");
+			int i = 0;
+			for (String p : actualPos)
+			{
+				System.out.println("\n" + p + "\n");
+				if (i++ > 10)
+				{
+					System.out.println("... And "
+							+ (actualPos.size() - 10)
 							+ " more...");
 					break;
 				}
