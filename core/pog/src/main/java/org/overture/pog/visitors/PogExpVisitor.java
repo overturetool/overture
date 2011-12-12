@@ -1482,15 +1482,15 @@ public class PogExpVisitor extends
 	public ProofObligationList caseASeqCompSeqExp(ASeqCompSeqExp node,
 			POContextStack question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp first = node.getFirst();
-
 		question.push(new POForAllPredicateContext(node));
 		obligations.addAll(first.apply(this, question));
 		question.pop();
-
+		
+		obligations.addAll(node.getSetBind().apply(rootVisitor,question));
+		
 		PExp predicate = node.getPredicate();
 		if (predicate != null)
 		{
