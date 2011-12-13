@@ -135,7 +135,7 @@ public class LatexBuilder
 			documentName = saveDocument(output, project.getSettings().getName(), author);
 		else
 			documentName = alternativeDocumentFileName;
-		p = Runtime.getRuntime().exec("pdflatex -interaction=batchmode "
+		p = Runtime.getRuntime().exec("pdflatex -interaction=nonstopmode "
 				+ documentName, null, output);
 		// processes.add(p);
 
