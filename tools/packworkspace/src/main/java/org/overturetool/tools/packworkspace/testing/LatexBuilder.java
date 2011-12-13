@@ -135,7 +135,7 @@ public class LatexBuilder
 			documentName = saveDocument(output, project.getSettings().getName(), author);
 		else
 			documentName = alternativeDocumentFileName;
-		p = Runtime.getRuntime().exec("pdflatex " + documentName, null, output);
+		p = Runtime.getRuntime().exec("pdflatex -halt-on-error " + documentName, null, output);
 		processes.add(p);
 
 		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output, Phase.Latex
