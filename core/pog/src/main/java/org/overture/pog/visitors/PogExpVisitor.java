@@ -1344,6 +1344,11 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 		PExp[] leftRight = getLeftRight(node);
 		PExp rExp = leftRight[RIGHT];
+		PExp lExp = leftRight[LEFT];
+		
+		obligations.addAll(lExp.apply(this, question));
+		obligations.addAll(rExp.apply(this, question));
+				
 		if (!(rExp instanceof AIntLiteralExp)
 				&& !(rExp instanceof ARealLiteralExp))
 		{
