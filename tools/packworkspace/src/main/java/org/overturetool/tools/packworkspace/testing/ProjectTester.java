@@ -118,7 +118,7 @@ public class ProjectTester
 
 		project.getSettings().createReadme(new File(dir, "Settings.txt"));
 		project.packTo(dir, modelDir);
-//		FileUtils.writeFile(FileUtils.readFile("/web/default.asp"), new File(dir, "model/default.asp"));
+		// FileUtils.writeFile(FileUtils.readFile("/web/default.asp"), new File(dir, "model/default.asp"));
 
 		setConsole(project.getSettings().getName(), Phase.SyntaxCheck);
 
@@ -215,6 +215,12 @@ public class ProjectTester
 							Console.out.flush();
 							statusInterpreter = ExitStatus.EXIT_ERRORS;
 
+						}catch(Error e)
+						{
+							Console.err.write(e.toString());
+							Console.err.flush();
+							Console.out.flush();
+							statusInterpreter = ExitStatus.EXIT_ERRORS;
 						}
 						Console.out.write(DEVIDER_LINE);
 						Console.err.write(DEVIDER_LINE);
@@ -268,27 +274,27 @@ public class ProjectTester
 					+ settingsLink));
 
 		if (statusParse != null)
-			sb.append(makeCell(statusParse,HtmlPage.getName( statusParse)
+			sb.append(makeCell(statusParse, HtmlPage.getName(statusParse)
 					+ " "
 					+ getLinks(project.getSettings().getName(), Phase.SyntaxCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusTypeCheck != null)
-			sb.append(makeCell(statusTypeCheck,HtmlPage.getName( statusTypeCheck)
+			sb.append(makeCell(statusTypeCheck, HtmlPage.getName(statusTypeCheck)
 					+ " "
 					+ getLinks(project.getSettings().getName(), Phase.TypeCheck)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusPo != null)
-			sb.append(makeCell(statusPo, HtmlPage.getName( statusPo) + " "
+			sb.append(makeCell(statusPo, HtmlPage.getName(statusPo) + " "
 					+ getLinks(project.getSettings().getName(), Phase.PO)));
 		else
 			sb.append(HtmlTable.makeCell(""));
 
 		if (statusInterpreter != null)
-			sb.append(makeCell(statusInterpreter, HtmlPage.getName( statusInterpreter)
+			sb.append(makeCell(statusInterpreter, HtmlPage.getName(statusInterpreter)
 					+ " "
 					+ getLinks(project.getSettings().getName(), Phase.Interpretation)));
 		else
@@ -299,8 +305,8 @@ public class ProjectTester
 			pdf = latex.getPdfFile();
 			String pdfPath = project.getSettings().getName() + "/latex/"
 					+ project.getSettings().getName() + ".pdf";
-			
-			if(!latex.isFinished())
+
+			if (!latex.isFinished())
 			{
 				try
 				{
@@ -309,16 +315,18 @@ public class ProjectTester
 				{
 				}
 			}
-			
-			boolean pdfFileExists =new File(dir, "latex/"
-					+ project.getSettings().getName() + ".pdf").exists(); 
-			
+
+			boolean pdfFileExists = new File(dir, "latex/"
+					+ project.getSettings().getName() + ".pdf").exists();
+
 			ExitStatus pdfExists = pdfFileExists ? ExitStatus.EXIT_OK
-							: ExitStatus.EXIT_ERRORS;
-			
-			sb.append(makeCell(pdfExists ,HtmlPage.getName( pdfExists)+" "+ getLinks(project.getSettings().getName()
-					+ "/latex", Phase.Latex)
-					+( pdfExists == ExitStatus.EXIT_OK? " " + HtmlPage.makeLink("Pdf", pdfPath):"")));
+					: ExitStatus.EXIT_ERRORS;
+
+			sb.append(makeCell(pdfExists, HtmlPage.getName(pdfExists)
+					+ " "
+					+ getLinks(project.getSettings().getName() + "/latex", Phase.Latex)
+					+ (pdfExists == ExitStatus.EXIT_OK ? " "
+							+ HtmlPage.makeLink("Pdf", pdfPath) : "")));
 		} else
 			sb.append(HtmlTable.makeCell(""));
 
@@ -377,25 +385,25 @@ public class ProjectTester
 		// cp += getCpSeperator()
 		// + new File("C:/overture/overturesvn/core/vdmj/target/classes".replace('/',
 		// File.separatorChar)).getAbsolutePath();
-		String cp = System.getProperty("java.class.path");//+";vdmj_time-2.0.2.jar";
+		String cp = System.getProperty("java.class.path");// +";vdmj_time-2.0.2.jar";
 		String splitOn = cp.contains(";") ? ";" : ":";
-String[] cps = cp.split(splitOn);
-cp="";
+		String[] cps = cp.split(splitOn);
+		cp = "";
 		for (String path : cps)
 		{
 			File f = new File(path);
-			if (f.isFile() &&!f.isAbsolute())
+			if (f.isFile() && !f.isAbsolute())
 			{
-				cp+=new File(f.getName()).getAbsolutePath()+splitOn;
-			}else
+				cp += new File(f.getName()).getAbsolutePath() + splitOn;
+			} else
 			{
-				cp+=path+splitOn;
+				cp += path + splitOn;
 			}
 		}
-		
-		if(cp.length()>0)
+
+		if (cp.length() > 0)
 		{
-			cp = cp.substring(0,cp.length()-1);
+			cp = cp.substring(0, cp.length() - 1);
 		}
 
 		File lib = new File(project.getSettings().getWorkingDirectory(), "lib");

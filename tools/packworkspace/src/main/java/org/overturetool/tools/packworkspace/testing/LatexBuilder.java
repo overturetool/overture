@@ -152,8 +152,9 @@ public class LatexBuilder
 			p.waitFor();
 		} catch (InterruptedException e)
 		{
-			// TODO Auto-generated catch block
+			System.err.println("VDMJ Interpreter died!");
 			e.printStackTrace();
+			System.err.println("VDMJ Interpreter died - end of exception");
 		}
 		p1.interrupt();
 		p2.interrupt();
