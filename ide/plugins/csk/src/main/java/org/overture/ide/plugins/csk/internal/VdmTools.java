@@ -90,7 +90,7 @@ public class VdmTools
 		// "generated");
 		generated.mkdirs();
 		
-		String projectFileName = vdmProject.getName().trim().replace(" ", "");
+		String projectFileName = vdmProject.getName().trim();
 
 		PluginFolderInclude.writeFile(generated, projectFileName + ".prj", sb.toString());
 		VdmToolsOptions options = new VdmToolsOptions();
