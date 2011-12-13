@@ -51,10 +51,18 @@ public class FileUtility
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
 			{
-				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
+				if (
+						marker.getAttribute(IMarker.MESSAGE) != null
+						&& marker.getAttribute(IMarker.SEVERITY) != null
+						&& marker.getAttribute(IMarker.LINE_NUMBER) != null
+						&& marker.getAttribute(IMarker.MESSAGE).equals(message)
 						&& marker.getAttribute(IMarker.SEVERITY).equals(severity)
-						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber))
+						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber)
+					)
+				{
 					return;
+				}
+					
 
 			}
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
@@ -85,7 +93,10 @@ public class FileUtility
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
 			{
-				if (marker.getAttribute(IMarker.MESSAGE).equals(message)
+				if (	marker.getAttribute(IMarker.MESSAGE) != null
+						&& marker.getAttribute(IMarker.SEVERITY) != null
+						&& marker.getAttribute(IMarker.LINE_NUMBER) != null
+						&& marker.getAttribute(IMarker.MESSAGE).equals(message)
 						&& marker.getAttribute(IMarker.SEVERITY).equals(severity)
 						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber))
 					return;
@@ -159,7 +170,7 @@ public class FileUtility
 		if (file == null)
 			return;
 			
-			addInternalMarker(file,message,location,severity,sourceId,content);
+		addInternalMarker(file,message,location,severity,sourceId,content);
 	}
 	
 	/**
@@ -230,6 +241,7 @@ public class FileUtility
 			for (IMarker marker : markers)
 			{
 				if (marker.getAttribute(IMarker.SOURCE_ID) != null
+						&& marker.getAttribute(IMarker.SOURCE_ID) != null 
 						&& marker.getAttribute(IMarker.SOURCE_ID).equals(sourceId))
 					marker.delete();
 			}
@@ -241,37 +253,6 @@ public class FileUtility
 			}
 		}
 	}
-
-	// public static void gotoLocation(IFile file, LexLocation location,
-	// String message) {
-	// try {
-	//
-	// IWorkbench wb = PlatformUI.getWorkbench();
-	// IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-	//
-	// IEditorPart editor = IDE.openEditor(win.getActivePage(), file, true);
-	//
-	// IMarker marker = file.createMarker(IMarker.MARKER);
-	// marker.setAttribute(IMarker.MESSAGE, message);
-	// marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-	//
-	// SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
-	// marker.setAttribute(IMarker.CHAR_START,converter.getStartPos( location));
-	// marker.setAttribute(IMarker.CHAR_END,converter.getEndPos(location));
-	// // marker.setAttribute(IMarker.LINE_NUMBER, location.startLine);
-	// // System.out.println("Marker- file: " + file.getName() + " ("
-	// // + location.startLine + "," + location.startPos + "-"
-	// // + location.endPos + ")");
-	//
-	// IDE.gotoMarker(editor, marker);
-	//
-	// marker.delete();
-	//
-	// } catch (CoreException e) {
-	//
-	// e.printStackTrace();
-	// }
-	// }
 
 	public static List<Character> getContent(IFile file) throws CoreException
 	{
@@ -366,9 +347,6 @@ public class FileUtility
 				length = file.getLocation().toFile().length();
 			}
 			
-			
-			
-
 			char[] buf = new char[(int) (length + 1)];
 			int numRead = 0;
 			// while((numRead=in.read(buf)) != -1){
