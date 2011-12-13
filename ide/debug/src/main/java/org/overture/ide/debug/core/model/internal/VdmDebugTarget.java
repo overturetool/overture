@@ -781,7 +781,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 			}
 
-			logView.clear();
+			if(logView != null)
+			{
+				logView.clear();
+			}
+			
 		}
 
 	}
