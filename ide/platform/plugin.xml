@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+ 
+ 
+
+ <extension
+       id="product"
+       point="org.eclipse.core.runtime.products">
+    <product
+          application="org.eclipse.ui.ide.workbench"
+          name="Overture Tools">
+       <property
+             name="windowImages"
+             value="icons/ctool16/overture_misc.png,icons/ctool32/overture_misc.png,icons/ctool48/overture_misc.png,icons/ctool64/overture_misc.png,icons/ctool128/overture_misc.png">
+       </property>
+       <property
+             name="aboutText"
+             value="%aboutText">
+       </property>
+       <property
+             name="aboutImage"
+             value="icons/ctool128/overture_misc.png">
+       </property>
+       <property
+             name="startupForegroundColor"
+             value="FFFFFF">
+       </property>
+       <property
+             name="startupProgressRect"
+             value="75,235,300,20">
+       </property>
+       <property
+             name="startupMessageRect"
+             value="75,250,300,15">
+       </property>
+       <property
+             name="appName"
+             value="Overture Tools">
+       </property>
+       <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
+       </property>
+    </product>
+ </extension> 
+  <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.overture.ide.platform.intro">
+      </intro>
+      <introProductBinding
+            introId="org.overture.ide.platform.intro"
+            productId="org.overture.ide.platform.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            content="introContent.xml"
+            id="org.overture.ide.platform.introConfigId"
+            introId="org.overture.ide.platform.intro">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx"
+                  >
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+  
+
+ <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandler
+            class="org.overture.ide.platform.splash.SplashHandler"
+            id="org.overture.ide.platform.splash">
+      </splashHandler>
+      <splashHandlerProductBinding
+            productId="org.overture.ide.platform.product"
+            splashId="org.overture.ide.platform.splash">
+      </splashHandlerProductBinding>
+   </extension>
+
+
+ 
+
+ 
+ 
+ 
+</plugin>

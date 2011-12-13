@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.overture.ide</groupId>
+    <artifactId>org.overture.ide.plugins</artifactId>
+    <version>2.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide.plugins</groupId>
+  <artifactId>org.overture.ide.plugins.showtrace</artifactId>
+  <name>Showtrace</name>
+  <version>2.0.0</version>
+ 
+  <packaging>source-plugin</packaging>
+<description>Graphical tool to display execution trace of a realtime VDM PP model. Enables the user to see thread switched and bus traffic.</description>
+<build>
+	<plugins>
+		 <plugin>
+        <groupId>org.overturetool.tools</groupId>
+        <artifactId>vdmt</artifactId>
+        <version>2.0.1</version>
+        <configuration>
+          <excludePackages>
+          
+          </excludePackages>
+          <excludeClasses>
+			<param>Color</param>
+			<param>ColorConstants</param>
+			<param>Dimension</param>
+			<param>Ellipse</param>
+			<param>Figure</param>
+			<param>Font</param>
+			<param>Image</param>
+			<param>ImageFigure</param>
+			<param>IMarker</param>
+			<param>Label</param>
+			<param>Point</param>
+			<param>PolyLine</param>
+			<param>PositionConstants</param>
+			<param>RoundedRectangle</param>
+			<param>Shape</param>
+			
+			<param>Line</param>
+			<param>NormalLabel</param>
+			<param>RectangleLabelFigure</param>
+			<param>RotatedLabel</param>
+			<param>GenericTabItem</param>
+			<!-- There is a bug in the generated code -->
+			<param>TracefileVisitor</param>
+          </excludeClasses>
+          <importPackages>
+            <param>org.overturetool.traceviewer.ast.itf</param>
+            <param>org.overturetool.traceviewer.ast.imp</param>
+            <param>org.overturetool.traceviewer.visitor</param>
+            <param>org.eclipse.draw2d</param>
+            <param>org.eclipse.draw2d.geometry</param>
+            <param>org.eclipse.swt.graphics</param>
+            
+          </importPackages>
+          <singleimport>
+          	<param>java.util.Vector</param>
+          	<param>org.overturetool.traceviewer.visitor.OmlVisitor</param>
+          	
+          </singleimport>
+        </configuration>
+      </plugin>
+	</plugins>
+</build>
+<dependencies>
+	<dependency>
+		<groupId>org.overturetool.core</groupId>
+		<artifactId>showtrace</artifactId>
+		<version>2.0.1</version>
+		
+	</dependency>
+</dependencies>
+
+</project>

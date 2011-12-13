@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<templates>
+
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Case Expression" enabled="true" name="caseExpression" id="caseExpressionVDMSL">cases ${expression}:
+	${patternList1} -&gt; ${expression1},
+	${patternList2} -&gt; ${expression2},
+	others -&gt; ${expressionOthers}
+end;</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Declare" enabled="true" name="dclStatement" id="dclStatementVDMSL">dcl ${name} : ${nameType};
+	${name} := ${expression}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="def pattern = expression1 in expression2" enabled="true" name="defExpression" id="defExpressionVDMSL">def ${pattern} = ${expression1} in
+	${expression2}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="exists bindList &amp; predicate" enabled="true" name="exists" id="existsVDMSL">exists ${bindList} &amp; ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="forall bind list &amp; predicate" enabled="true" name="forall" id="forallVDMSL">forall ${bindList} &amp; ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="for identifier = expression1 to expression2 do\n statement" enabled="true" name="forallLoop" id="forallLoopVDMSL">for ${identifier} = ${initialValue} to ${upperValue} do
+	${statement}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="forall in set" enabled="true" name="forallinset" id="forallinsetVDMSL">forall ${element} in set ${set}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Explicit function" enabled="true" name="functionExplicit" id="functionExplicitVDMSL">${functionName} :  ${parameterTypes} -&gt; ${resultType}
+${functionName} (${parameterNames}) == ${expression};</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Implicit function" enabled="true" name="functionImplicit" id="functionImplicitVDMSL">${functionName} (${parameters}) -&gt;
+${resultName}: ${resultType}
+pre ${predicate}
+post ${predicate}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Function block" enabled="true" name="functions" id="functionsVDMSL">
+functions
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="if predicate then expression1 else expression2" enabled="true" name="ifthen" id="ifthenVDMSL">if ${predicate} 
+then 
+	${expression1} 
+else
+	${expression2}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="let pattern = expression1 in expression2" enabled="true" name="let" id="letVDMSL">let ${pattern} = ${expression1} in
+	${expression2}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Module" enabled="true" name="module" id="moduleVDMSL">module ${moduleName}
+	exports all
+	definitions
+
+end ${moduleName}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Module Full skeleton of a module" enabled="true" name="moduleSkeleton" id="moduleSkeletonVDMSL">module ${moduleName}
+	exports all
+	definitions
+	
+	state ${stateName} of
+	end
+
+	types
+
+	values
+
+	operations
+
+	functions
+
+end ${moduleName}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Explicit Operation" enabled="true" name="operationExplicit" id="operationExplicitVDMSL">${operationName} : ${parameterTypes} ==&gt; ${resultType}
+${operationName} (${parameterNames}) == ${statements};</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Implicit operation" enabled="true" name="operationImplicit" id="operationImplicitVDMSL">${operationName} (${parameters}) ==&gt;
+${resultName}: ${resultType}
+	ext rd ${instanceVariable1} : ${instanceVariable1Type}
+	wr ${instanceVariable2} : ${instanceVariable2Type}
+	pre ${predicate}
+	post ${predicate};</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="Operation block" enabled="true" name="operations" id="operationsVDMSL">
+operations
+	${cursor}</template>
+	<template autoinsert="true" context="org.overture.ide.vdmsl.ui.contextType" deleted="false" description="while predicate do statement" enabled="true" name="while" id="whileVDMSL">while ${predicate} 
+do ${statement}</template>
+</templates>

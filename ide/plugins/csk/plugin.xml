@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.overture.ide.ui.vdm"
+            class="org.overture.ide.plugins.csk.internal.WorkbenchPreferencePageCsk"
+            id="org.overture.ide.plugins.csk.page1"
+            name="CSK">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.overture.ide.ui.VdmExplorer">
+         <menu
+               icon="icons/cview16/vdmtools_nav.gif"
+               label="VDM Tools">
+            <command
+                  commandId="org.overture.ide.plugins.csk.commandOpenProject"
+                  label="Open Project in VDM Tools"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                      <iterate>
+                     	<adapt type="org.overture.ide.core.resources.IVdmProject"></adapt>
+                     </iterate>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.overture.ide.plugins.csk.commandOpenProject"
+            name="Open VDM Tools">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.overture.ide.plugins.csk.handlers.OpenVdmToolsProjectCommandHandler"
+            commandId="org.overture.ide.plugins.csk.commandOpenProject">
+      </handler>
+   </extension>
+
+</plugin>

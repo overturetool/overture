@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+<!-- Builder for VDM PP -->
+   <extension
+         point="org.overture.ide.core.buildParticipant">
+      <builder
+            class="org.overture.ide.builders.vdmj.BuilderPp"
+            nature="org.overture.ide.vdmpp.core.nature">
+      </builder>
+   </extension>
+   
+   <!-- Builder for VDM RT -->
+   <extension
+         point="org.overture.ide.core.buildParticipant">
+      <builder
+            class="org.overture.ide.builders.vdmj.BuilderRt"
+            nature="org.overture.ide.vdmrt.core.nature">
+      </builder>
+   </extension>
+   
+  <!-- Builder for VDM SL --> 
+   <extension
+         point="org.overture.ide.core.buildParticipant">
+      <builder
+            class="org.overture.ide.builders.vdmj.BuilderSl"
+            nature="org.overture.ide.vdmsl.core.nature">
+      </builder>
+   </extension>
+</plugin>

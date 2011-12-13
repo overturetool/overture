@@ -1,0 +1,1527 @@
+\begin{vdm_al}
+class GenericTabItem
+operations
+  public getHorizontalSize: () ==> nat
+  getHorizontalSize () == is not yet specified;
+  
+  public getVerticalSize: () ==> nat
+  getVerticalSize () == is not yet specified;
+  
+  public addFigure: Figure ==> ()
+  addFigure (-) == is not yet specified;
+  
+  public getCurrentFont: () ==> Font
+  getCurrentFont () == is not yet specified;
+  
+  public getImage: seq of char ==> Image
+  getImage (-) == is not yet specified;
+  
+  public composePath: seq of char * seq of char ==> seq of char
+  composePath (-,-) == is not yet specified;
+  
+  public getCPU: () ==> tdCPU
+  getCPU () == is not yet specified
+end GenericTabItem
+\end{vdm_al}
+
+\begin{vdm_al}
+class TracefileVisitor is subclass of OmlVisitor
+
+values
+  CPU_XPOS           : nat = 150;
+  CPU_YPOS           : nat = 25;
+  CPU_HEIGHT         : nat = 40;
+  CPU_HALFWIDTH      : nat = 45;
+  CPU_HINTERVAL      : nat = 40;
+  BUS_XPOS           : nat = 25;
+  BUS_YPOS           : nat = CPU_YPOS * 2 + CPU_HEIGHT;
+  BUS_VINTERVAL      : nat = 30;
+  RESOURCE_VINTERVAL : nat = 50;
+  ELEMENT_SIZE		 : nat = 18;
+	
+instance variables
+  -- remember the current tab item and CPU
+  private theTabItem : GenericTabItem;
+  private theCpu : tdCPU;
+  
+  -- placeholder for the trace data
+  private data : TraceData := new TraceData();
+  
+  -- current x and y position in the overview
+  private ov_xpos : nat := CPU_XPOS;
+  private ov_ypos : nat := 0;
+  
+  -- start and current time in the overview
+  private ov_starttime : nat := 0;
+  private ov_currenttime : nat := 0;
+  
+  -- history for the vertical time positions
+  private ov_timepos: seq of nat := []
+  
+functions
+  private nat2str: nat -> seq of char
+  nat2str (num) ==
+    if num < 10
+    then ["0123456789"(num+1)]
+    else nat2str(num div 10) ^ nat2str(num mod 10)
+        
+operations
+  --
+  -- AUXILIARY ACCESS OPERATIONS
+  --
+  
+  public getAllTimes: () ==> seq of nat
+  getAllTimes () == return data.getTimes();
+  
+  public getCpus: () ==> seq of tdCPU
+  getCpus () ==
+    ( dcl res : seq of tdCPU := [];
+      for cpuid in data.getOrderedCpus() do
+        res := res ^ [data.getCPU(cpuid)];
+      return res );
+  
+  --
+  -- TOP-LEVEL DRAWING OPERATIONS
+  --
+  
+  public drawArchitecture: GenericTabItem ==> ()
+  drawArchitecture (pgti) ==
+    ( dcl -- the current x-position
+          curx : nat := CPU_XPOS,
+          -- the current y-position
+          cury : nat := BUS_YPOS;
+      -- make sure everything is reset
+      data.reset();
+      -- draw all the CPUs
+      for cpuid in data.getOrderedCpus() do
+        def cpu = data.getCPU(cpuid) in
+        def width = 2 * CPU_HALFWIDTH + 9 * card cpu.connects() in
+          ( dcl nlb : NormalLabel := new NormalLabel(cpu.getName(), pgti.getCurrentFont()),
+                nrr : RectangleLabelFigure := new RectangleLabelFigure(nlb),
+                np : Point := new Point(curx,CPU_YPOS);
+            if not cpu.isExplicit()
+            then ( nrr.setDash();
+                   nrr.setForegroundColor(ColorConstants`darkGray) );
+            -- draw the rectangle
+            nrr.setLocation(np);
+            nrr.setSize(width,CPU_HEIGHT);
+            pgti.addFigure(nrr);
+            -- update the position administration
+            cpu.setX(curx);
+            curx := curx + width + CPU_HINTERVAL );
+      -- draw all the BUS labels
+      for busid in data.getOrderedBuses() do
+        def bus = data.getBUS(busid) in
+          ( dcl nlb : NormalLabel := new NormalLabel(data.getBUS(busid).getName(), pgti.getCurrentFont()),
+                np : Point := new Point(BUS_XPOS+100-nlb.getSize().width,cury);
+            -- draw the label
+            nlb.setLocation(np);
+            pgti.addFigure(nlb);
+            -- update the position administration
+            bus.setY(cury);
+            cury := cury + BUS_VINTERVAL);
+      -- now draw all the buses
+      drawArchDetail(pgti) );
+  
+  public drawOverview: GenericTabItem * nat ==> ()
+  drawOverview (pgti, starttime) ==
+    ( dcl -- the current y-position
+          cury : nat := RESOURCE_VINTERVAL div 2;
+      -- make sure everything is reset
+      data.reset();
+      resetLastDrawn();
+      -- reset the overview member variables
+      ov_xpos := CPU_XPOS;
+      ov_ypos := 0;
+      ov_starttime := starttime;
+      ov_currenttime := 0;
+      -- draw the CPU legenda vertically in reverse order
+      def revcpus = data.getOrderedCpus() in
+        for cpuid in reverse revcpus do
+          def cpu = data.getCPU(cpuid) in
+            ( dcl nlb : NormalLabel := new NormalLabel(cpu.getName(), pgti.getCurrentFont()),
+                  np : Point := new Point(BUS_XPOS+100-nlb.getSize().width,cury);
+              -- draw the label
+              nlb.setLocation(np);
+              pgti.addFigure(nlb);
+              -- update the position administration
+              cpu.setX(CPU_XPOS);
+              cpu.setY(cury+10);
+              cury := cury + RESOURCE_VINTERVAL );
+      -- draw the BUS legenda vertically in normal order
+      for busid in data.getOrderedBuses() do
+        def bus = data.getBUS(busid) in
+          ( dcl nlb : NormalLabel := new NormalLabel(bus.getName(), pgti.getCurrentFont()),
+                np : Point := new Point(BUS_XPOS+100-nlb.getSize().width,cury);
+              -- draw the label
+              nlb.setLocation(np);
+              pgti.addFigure(nlb);
+              -- update the position administration
+              bus.setX(CPU_XPOS);
+              bus.setY(cury+10);
+              cury := cury + RESOURCE_VINTERVAL );
+      -- now draw the overview
+      ov_ypos := cury;
+      drawOverviewDetail (pgti) )
+    pre starttime in set elems data.getTimes();
+
+  public drawCpu: GenericTabItem * nat ==> ()
+  drawCpu (pgti, starttime) ==
+    ( dcl -- the current x-position
+          curx : nat := 100,
+          -- the current CPU
+          cpu : tdCPU := pgti.getCPU();
+      -- make sure everything is reset
+      data.reset();
+      -- reset the overview member variables
+      ov_starttime := starttime;
+      ov_currenttime := 0;
+      ov_xpos := 0;
+      ov_ypos := CPU_YPOS + CPU_HEIGHT + ELEMENT_SIZE;
+      ov_timepos := [];
+      -- draw the BUS legenda horizontally in normal order
+      for busid in data.getOrderedBuses() do
+        if busid in set cpu.connects()
+        then def bus = data.getBUS(busid) in
+             def width = 2 * CPU_HALFWIDTH + 23 in
+               ( dcl nlb : NormalLabel := new NormalLabel(bus.getName(), pgti.getCurrentFont()),
+                     nrr : RectangleLabelFigure := new RectangleLabelFigure(nlb),
+                     np : Point := new Point(curx,CPU_YPOS);
+                 if not bus.isExplicit()
+                 then ( nrr.setDash();
+                        nrr.setForegroundColor(ColorConstants`darkGray) );
+                 -- draw the rectangle
+                 nrr.setLocation(np);
+                 nrr.setSize(width,CPU_HEIGHT);
+                 pgti.addFigure(nrr);
+                 -- update the position administration
+                 bus.setX(curx+CPU_HALFWIDTH+12);
+                 bus.setY(ov_ypos);
+                 curx := curx + width + CPU_HINTERVAL );
+      -- save the current position
+      ov_xpos := curx;
+      -- draw the object legenda horizontally in random order
+      for all objid in set cpu.getObjects() do
+        def obj = data.getObject(objid) in
+          updateCpuObject(pgti, cpu, obj);
+      -- now draw the overview
+      drawCpuDetail (pgti,cpu) );
+   
+  --
+  -- SECONDARY DRAWING OPERATIONS
+  --
+  
+  private drawArchDetail: GenericTabItem ==> ()
+  drawArchDetail (pgti) ==
+    ( dcl max : map nat to nat := {|->},
+          min : map nat to nat := {|->};
+      -- first draw the horizontal line for the vBUS
+      def cpus = data.getOrderedCpus() in
+      def lastcpu = cpus(len cpus) in
+      def x1 = data.getCPU(0).getX() + CPU_HALFWIDTH + 1;
+          x2 = data.getCPU(lastcpu).getX() + CPU_HALFWIDTH + 9;
+          y  = data.getBUS(0).getY() + 1 in
+        ( dcl line : Line := new Line (x1,y,x2,y);
+          line.setLineWidth(2);
+          line.setForegroundColor(ColorConstants`gray);
+          pgti.addFigure(line) );
+      -- draw the vertical lines from CPU to BUS first
+      for all cpuid in set data.getCPUs() do
+        def cpu = data.getCPU(cpuid) in
+        def xbase = data.getCPU(cpuid).getX() + CPU_HALFWIDTH + 5 in
+          for all busid in set cpu.connects() do
+            def bus = data.getBUS(busid) in
+            def nxp = xbase + 9 * busid;
+                nyp1 = CPU_YPOS + CPU_HEIGHT;
+                nyp2 = data.getBUS(busid).getY() in
+              ( -- create the line
+                dcl line : Line := new Line(nxp, nyp1, nxp, nyp2);
+                if not bus.isExplicit()
+                then ( line.setDot();
+                       line.setForegroundColor(ColorConstants`gray) );
+                pgti.addFigure(line);
+                -- determine maxima and minima for each bus x-position
+                if busid in set dom max
+                then ( if nxp > max(busid) then max := max ++ {busid |-> nxp} ) 
+                else max := max munion {busid |-> nxp};
+                if busid in set dom min
+                then ( if nxp < min(busid) then min := min ++ {busid |-> nxp} )
+                else min := min munion {busid |-> nxp} );
+      -- draw the horizontal lines for all buses except vBUS
+      for all busid in set data.getBUSes() \ {0} do
+        def x1 = min(busid) - 4;
+            x2 = max(busid) + 4;
+            y = data.getBUS(busid).getY() + 1 in
+          ( dcl line : Line := new Line(x1,y,x2,y);
+            line.setLineWidth(2);
+            pgti.addFigure(line) ) );
+
+  private drawOverviewDetail: GenericTabItem ==> ()
+  drawOverviewDetail (pgti) ==
+    if len data.getTimes() > 0
+    then ( dcl event_time : nat := hd data.getTimes(),
+               rest_hist : seq of nat := tl data.getTimes(),
+               cont : bool := true;
+           -- draw all the relevant events in the overview
+           while cont do
+             ( -- set the global time
+               ov_currenttime := event_time;
+               -- write out the time marker
+               if ov_currenttime >= ov_starttime
+               then drawOvTimeMarker(pgti, ov_xpos, ov_ypos, event_time);
+               -- draw all the events at this time
+               for event in data.getHistory(event_time) do
+                 if ov_xpos < pgti.getHorizontalSize()
+                 then if isofclass(IOmlThreadCreate,event) then drawOvThreadCreate(pgti,event)
+                      else if isofclass(IOmlThreadSwapIn,event) then drawOvThreadSwapIn(pgti,event)
+                      else if isofclass(IOmlDelayedThreadSwapIn,event) then drawOvDelayedThreadSwapIn(pgti,event)
+                      else if isofclass(IOmlThreadSwapOut,event) then drawOvThreadSwapOut(pgti,event)
+                      else if isofclass(IOmlThreadKill,event) then drawOvThreadKill(pgti,event)
+                      else if isofclass(IOmlOpRequest,event) then drawOvOpRequest(pgti,event)
+                      else if isofclass(IOmlOpActivate,event) then drawOvOpActivate(pgti,event)
+                      else if isofclass(IOmlOpCompleted,event) then drawOvOpCompleted(pgti,event)
+                      else if isofclass(IOmlMessageRequest,event) then drawOvMessageRequest(pgti,event)
+                      else if isofclass(IOmlReplyRequest,event) then drawOvReplyRequest(pgti,event)
+                      else if isofclass(IOmlMessageActivate,event) then drawOvMessageActivate(pgti,event)
+                      else if isofclass(IOmlMessageCompleted,event) then drawOvMessageCompleted(pgti,event)
+                      else skip;
+               -- do we need to continue drawing
+               if rest_hist = [] or ov_xpos >= pgti.getHorizontalSize()
+               then cont := false
+               else ( event_time := hd rest_hist;
+                      rest_hist := tl rest_hist ) );
+           -- make sure that all the resources are drawn to the end
+           for all cpuid in set data.getCPUs() do
+             updateOvCpu(pgti,data.getCPU(cpuid));
+           for all busid in set data.getBUSes() do
+             updateOvBus(pgti,data.getBUS(busid)) );
+
+  private drawCpuDetail: GenericTabItem * tdCPU ==> ()
+  drawCpuDetail (pgti, cpu) ==
+    if len cpu.getTimes() > 0
+    then ( dcl event_time : nat := hd cpu.getTimes(),
+               rest_hist : seq of nat := tl cpu.getTimes(),
+               cont : bool := true;
+           -- draw all the relevant events in the cpu overview
+           while cont do
+             ( -- set the global time
+               ov_currenttime := event_time;
+               if ov_currenttime >= ov_starttime
+               then drawCpuTimeMarker(pgti, 80, ov_ypos, event_time);
+               -- draw all the events at this time
+               for event in cpu.getHistory(event_time) do
+                 if ov_ypos < pgti.getVerticalSize()
+                 then if isofclass(IOmlThreadCreate,event) then drawCpuThreadCreate(pgti,event)
+                      else if isofclass(IOmlThreadSwapIn,event) then drawCpuThreadSwapIn(pgti,event)
+                      else if isofclass(IOmlDelayedThreadSwapIn,event) then drawCpuDelayedThreadSwapIn(pgti,event)
+                      else if isofclass(IOmlThreadSwapOut,event) then drawCpuThreadSwapOut(pgti,event)
+                      else if isofclass(IOmlThreadKill,event) then drawCpuThreadKill(pgti,event)
+                      else if isofclass(IOmlOpRequest,event) then drawCpuOpRequest(pgti,event)
+                      else if isofclass(IOmlOpActivate,event) then drawCpuOpActivate(pgti,event)
+                      else if isofclass(IOmlOpCompleted,event) then drawCpuOpCompleted(pgti,event)
+                      else if isofclass(IOmlMessageRequest,event) then drawCpuMessageRequest(pgti,event)
+                      else if isofclass(IOmlReplyRequest,event) then drawCpuReplyRequest(pgti,event)
+                      else if isofclass(IOmlMessageCompleted,event) then drawCpuMessageCompleted(pgti,event)
+                      else skip;
+               -- do we need to continue drawing
+               if rest_hist = [] or ov_ypos >= pgti.getVerticalSize()
+               then cont := false
+               else ( event_time := hd rest_hist;
+                      rest_hist := tl rest_hist ) );
+           -- make sure we draw the resources and objects to the end
+           for all busid in set cpu.connects() do
+             def bus = data.getBUS(busid) in
+              ( updateCpuBus(pgti,data.getBUS(busid));
+                drawCpuTimeMarkerHelper(pgti, bus) );
+           for all objid in set cpu.getObjects() do
+             def obj = cpu.getObject(objid) in
+              ( updateCpuObject(pgti, cpu, obj);
+                drawCpuTimeMarkerHelper(pgti, obj) ) );  
+  --
+  -- AUXILIARY DRAWING OPERATIONS
+  --
+  
+  private updateOvBus: GenericTabItem * tdBUS ==> ()
+  updateOvBus (pgti, ptdr) ==
+    def xpos = ptdr.getX(); ypos = ptdr.getY() in
+      if ov_xpos > xpos
+      -- create a filler line and update the position of the resource
+      then ( dcl line : Line := new Line(xpos+1, ypos, ov_xpos+1, ypos);
+             if ptdr.isIdle()
+             then ( line.setForegroundColor(ColorConstants`lightGray);
+                    line.setDot() )
+             else ( line.setForegroundColor(ColorConstants`blue);
+                    line.setLineWidth(3) );
+             pgti.addFigure(line);
+             ptdr.setX(ov_xpos) );
+
+  private updateOvCpu: GenericTabItem * tdCPU ==> ()
+  updateOvCpu (pgti, ptdr) ==
+    def xpos = ptdr.getX(); ypos = ptdr.getY() in
+      if ov_xpos > xpos
+      -- create a filler line and update the position of the resource
+      then ( dcl line : Line := new Line(xpos+1, ypos, ov_xpos+1, ypos);
+             if ptdr.isIdle()
+             then ( line.setForegroundColor(ColorConstants`lightGray);
+                    line.setDot() )
+             else def thr = ptdr.getCurrentThread() in
+                    ( line.setForegroundColor(ColorConstants`blue);
+                      if thr.getStatus()
+                      then line.setDot();
+                      line.setLineWidth(3) );
+             pgti.addFigure(line);
+             ptdr.setX(ov_xpos);
+             -- check for the conjecture limit markers
+             if ptdr.hasCurrentThread()
+             then def thr = ptdr.getCurrentThread() in
+                  def thrid = thr.getId() in
+                    checkConjectureLimits(pgti, ov_xpos - ELEMENT_SIZE, ypos, ov_currenttime, thrid) );
+
+  private updateCpuObject: GenericTabItem * tdCPU * tdObject ==> ()
+  updateCpuObject (pgti, pcpu, pobj) ==
+    def width = 2 * CPU_HALFWIDTH+23 in
+      ( dcl xpos : nat := pobj.getX(),
+            ypos : nat := pobj.getY();
+        -- is it a new object 
+        if xpos = 0 and ypos = 0
+        then ( dcl str : seq of char := pobj.getName() ^ " (" ^ nat2str(pobj.getId()) ^ ")",
+                   nlb : NormalLabel := new NormalLabel(str, pgti.getCurrentFont()),
+                   nrr : RectangleLabelFigure := new RectangleLabelFigure(nlb),
+                   np : Point := new Point(ov_xpos,CPU_YPOS);
+               -- add the object to the CPU scope
+               pcpu.addObject(pobj);
+               -- draw the rectangle
+               nrr.setLocation(np);
+               nrr.setSize(width,CPU_HEIGHT);
+               pgti.addFigure(nrr);
+               -- update the position administration
+               xpos := ov_xpos+CPU_HALFWIDTH+12;
+               pobj.setX(xpos);
+               ypos := CPU_YPOS + CPU_HEIGHT + ELEMENT_SIZE;
+               pobj.setY(ypos);
+               -- calculate the next object x-position
+               ov_xpos := ov_xpos + width + CPU_HINTERVAL );
+        -- or is it an existing object
+        if ov_ypos > ypos
+        -- create a filler line and update the position of the resource
+        then ( dcl line : Line := new Line(xpos, ypos+1, xpos, ov_ypos-1);
+               -- extend the vertical line
+               line.setForegroundColor(ColorConstants`lightGray);
+               line.setDot();
+               pgti.addFigure(line);
+               pobj.setY(ov_ypos) ) );
+             
+  private updateCpuBus: GenericTabItem * tdBUS ==> ()
+  updateCpuBus (pgti, ptdr) ==
+    def xpos = ptdr.getX(); ypos = ptdr.getY() in
+      if ov_ypos > ypos
+      -- create a filler line and update the position of the resource
+      then ( dcl line : Line := new Line(xpos, ypos+1, xpos, ov_ypos-1);
+             line.setForegroundColor(ColorConstants`lightGray);
+             line.setDot();
+             pgti.addFigure(line);
+             ptdr.setY(ov_ypos) );
+               
+  private drawOvMarker: GenericTabItem * nat * nat * nat * nat * Color ==> ()
+  drawOvMarker (pgti, x1, y1, x2, y2, clr) ==
+    ( -- draw the main line on the overview
+      dcl line : Line := new Line(x1,y1,x2,y2);
+      line.setLineWidth(3);
+      line.setForegroundColor(clr);
+      pgti.addFigure(line);
+      line := new Line(x1,y1-5,x1,y1+5);
+      pgti.addFigure(line);            
+      line := new Line(x2,y2-5,x2,y2+5);
+      pgti.addFigure(line) )
+    pre x1 < x2;            
+
+  private drawCpuMarker: GenericTabItem * nat * nat * nat * nat * Color ==> ()
+  drawCpuMarker (pgti, x1, y1, x2, y2, clr) ==
+    ( -- draw the main line on the cpu overview
+      dcl line : Line := new Line(x1,y1,x2,y2);
+      line.setLineWidth(3);
+      line.setForegroundColor(clr);
+      pgti.addFigure(line);
+      line := new Line (x1-5,y1,x1+5,y1);
+      pgti.addFigure(line);
+      line := new Line (x2-5,y2,x2+5,y2);
+      pgti.addFigure(line) )
+    pre y1 < y2;
+
+  private drawOvTimeMarker: GenericTabItem * nat * nat * nat ==> ()
+  drawOvTimeMarker (pgti, x, y, marktime) ==
+    def dy = RESOURCE_VINTERVAL div 2 in
+      ( -- draw the line marker
+        dcl line1 : Line := new Line (x,dy-10,x,y-dy),
+            line2 : Line := new Line (x,y,x,y+5),
+            label : RotatedLabel := new RotatedLabel(nat2str(marktime), pgti.getCurrentFont()),
+            xoffset : nat := label.getSize().width div 2,
+            pt : Point := new Point(x-xoffset-1,y+10);
+        line1.setForegroundColor(ColorConstants`lightGray);
+        line1.setDot();
+        pgti.addFigure(line1);
+        pgti.addFigure(line2);
+        label.setLocation(pt);
+        pgti.addFigure(label) );
+  
+  private drawCpuTimeMarker: GenericTabItem * nat * nat * nat ==> ()
+  drawCpuTimeMarker (pgti, x, y, marktime) ==
+    ( dcl line1 : Line := new Line (x-5,y,x,y),
+          line2 : Line := new Line (100,y,101+CPU_HALFWIDTH,y),
+          label : NormalLabel := new NormalLabel(nat2str(marktime), pgti.getCurrentFont()),
+          xoffset : nat := 10 + label.getSize().width,
+          yoffset : nat := 1 + label.getSize().height div 2,
+          pt : Point := new Point(x - xoffset, y - yoffset);
+        -- remember the y-location of this marker
+        ov_timepos := ov_timepos ^ [y];
+        -- add the line to the figure
+        pgti.addFigure(line1);
+        -- add the helper line to the figure
+        line2.setForegroundColor(ColorConstants`lightGray);
+        line2.setDot();
+        pgti.addFigure(line2);
+        -- add the time label to the figure
+        label.setLocation(pt);
+        pgti.addFigure(label) );
+              
+  private drawCpuTimeMarkerHelper: GenericTabItem * tdResource ==> ()
+  drawCpuTimeMarkerHelper (pgti, res) ==
+    def width = 2 * CPU_HALFWIDTH + 23 + CPU_HINTERVAL;
+        xmax = ov_xpos - CPU_HINTERVAL;
+        x1 = res.getX() + 10;
+        x2 = if res.getX() + width - 10 > xmax then xmax else res.getX() + width - 10 in
+      for ypos in ov_timepos do
+        ( dcl line : Line := new Line(x1, ypos, x2, ypos);
+          line.setForegroundColor(ColorConstants`lightGray);
+          line.setDot();
+          pgti.addFigure(line) );
+
+  private drawVerticalArrow: GenericTabItem * nat * nat * nat * seq of char * Color ==> ()
+  drawVerticalArrow (pgti, x, y1, y2, str, clr) ==
+    ( -- draw the main line of the arrow
+      dcl line : Line := new Line(x,y1,x,y2),
+          lbl : NormalLabel := new NormalLabel(" "^str^" ", pgti.getCurrentFont());
+      line.setForegroundColor(clr);
+      line.setToolTip(lbl);
+      pgti.addFigure(line);
+      -- draw the arrow head
+      if y1 < y2
+      then ( line := new Line(x-4,y2-8,x,y2);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line);
+             line := new Line(x+4,y2-8,x,y2);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line) )
+      else ( line := new Line(x-4,y2+8,x,y2);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line);
+             line := new Line(x+4,y2+8,x,y2);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line) ) );
+             
+  private drawHorizontalArrow: GenericTabItem * nat * nat * nat * seq of char * Color ==> ()
+  drawHorizontalArrow (pgti, x1, x2, y, str, clr) ==
+    ( -- draw the main line of the arrow
+      dcl line : Line := new Line (x1,y,x2,y),
+          lbl : NormalLabel := new NormalLabel(" "^str^" ", pgti.getCurrentFont());
+      line.setForegroundColor(clr);
+      line.setToolTip(lbl);
+      pgti.addFigure(line);
+      -- draw the arrow head
+      if x1 < x2
+      then ( line := new Line (x1,y,x1+8,y-4);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line);
+             line := new Line (x1,y,x1+8,y+4);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line) )
+      else ( line := new Line (x1-8,y-4,x1,y);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line);
+             line := new Line (x1-8,y+4,x1,y);
+             line.setForegroundColor(clr);
+             pgti.addFigure(line) ) );
+      
+  --
+  -- VISITOR AND DRAWING OPERATIONS
+  --
+  
+  public visitTraceFile: IOmlTraceFile ==> ()
+  visitTraceFile (pitf) ==
+    ( -- insert the default virtual CPU and virtual BUS
+      dcl cpu : tdCPU := data.createCPU(0,"vCPU0",false),
+          bus : tdBUS := data.createBUS(0,"vBUS",false),
+          -- create the interpreter UI object
+          obj : tdObject := data.createObject(0,"VdmTools");
+      -- link the bus to the cpu and vice versa
+      cpu.connect(0);
+      bus.connect(0);
+      obj.deploy(0,0);
+      -- iterate over all the lines in the tracefile
+      def lines = pitf.getTrace() in
+        for line in lines do
+          visitTraceEvent(line) );
+
+  --
+  -- THREAD CREATE
+  --
+  
+  public visitThreadCreate: IOmlThreadCreate ==> ()
+  visitThreadCreate (pitc) ==
+    def cpunm = pitc.getCpunm();
+        thrid = pitc.getId() in
+    def cpu = data.getCPU(cpunm) in
+    def thr = cpu.createThread(thrid) in
+      ( -- update the history pointers
+        data.addHistory(pitc, pitc.getObstime());
+        cpu.addHistory(pitc, pitc.getObstime());
+        thr.addHistory(pitc, pitc.getObstime()) );
+  
+  -- draw the thread create in the overview view
+  private drawOvThreadCreate: GenericTabItem * IOmlThreadCreate ==> ()
+  drawOvThreadCreate (pgti, pitc) ==
+    def cpunm = pitc.getCpunm() in
+    def cpu = data.getCPU(cpunm) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the resource
+             updateOvCpu(pgti,cpu);
+             -- then draw the resource activity
+             def x1 = cpu.getX(); x2 = x1 + ELEMENT_SIZE;
+                 y1 = cpu.getY(); y2 = y1 in
+               ( -- draw the event on the overview
+                 drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`green);
+                 -- update the position information
+                 ov_xpos := x2;
+                 cpu.setX(x2) ) );
+  
+  -- draw the thread create in the cpu view
+  private drawCpuThreadCreate: GenericTabItem * IOmlThreadCreate ==> ()
+  drawCpuThreadCreate (pgti, pitc) ==
+    def thr = data.getThread(pitc.getId());
+        objref = if pitc.hasObjref() then pitc.getObjref() else 0;
+        cpunm = pitc.getCpunm();
+        cpu = data.getCPU(cpunm);
+        obj = data.getObject(objref) in
+      ( -- save the thread-object context
+        thr.pushCurrentObject(objref);
+        -- check if in our time frame
+        if ov_currenttime >= ov_starttime
+        then ( -- first update the resource
+               updateCpuObject(pgti,cpu,obj);
+               -- then draw the object activity
+               def x1 = obj.getX(); x2 = x1;
+                   y1 = obj.getY(); y2 = y1 + ELEMENT_SIZE in
+                 ( -- draw the event on the cpu overview
+                   drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`green);
+                   -- update the position information
+                   ov_ypos := y2;
+                   obj.setY(y2) ) ) );
+        
+  --
+  -- THREAD SWAP-IN
+  --
+  
+  public visitThreadSwapIn: IOmlThreadSwapIn ==> ()
+  visitThreadSwapIn (pitsw) ==
+    def thrid = pitsw.getId() in
+    def thr = data.getThread(thrid) in
+      ( -- update the history counters
+        data.addHistory(pitsw, pitsw.getObstime());
+        data.getCPU(pitsw.getCpunm()).addHistory(pitsw, pitsw.getObstime());
+        thr.addHistory(pitsw, pitsw.getObstime()) );
+
+  -- draw the thread swap-in in the overview view
+  private drawOvThreadSwapIn: GenericTabItem * IOmlThreadSwapIn ==> ()
+  drawOvThreadSwapIn (pgti, pitsw) ==
+    def cpunm = pitsw.getCpunm() in
+    def cpu = data.getCPU(cpunm) in
+      ( if ov_currenttime >= ov_starttime
+        then ( -- first update the resource
+               updateOvCpu(pgti,cpu);
+               -- then draw the resource activity
+               def x1 = cpu.getX(); x2 = x1 + ELEMENT_SIZE - 1;
+                   y1 = cpu.getY(); y2 = y1 in
+                 ( -- draw the event on the overview
+                   drawOvMarker (pgti, x1, y1, x2, y2, ColorConstants`gray);
+                   drawOvSwapInImage (pgti, x1, y1);
+                   -- update the position and time information
+                   ov_xpos := x2;
+                   cpu.setX(x2) ) );
+        cpu.setCurrentThread(pitsw.getId()) );
+
+  private drawOvSwapInImage: GenericTabItem * nat * nat ==> ()
+  drawOvSwapInImage (pgti, x, y) ==
+    ( dcl image : [Image] := pgti.getImage(pgti.composePath("icons","vswapin.gif"));
+      if image <> nil
+      then ( dcl imagefig : ImageFigure := new ImageFigure(image),
+                 point : Point := new Point(x+2, y-24);
+             imagefig.setLocation(point);
+             imagefig.setSize(16,20);
+             pgti.addFigure(imagefig) ) ) ;
+      
+  -- draw the thread swap-in in the cpu view
+  private drawCpuThreadSwapIn: GenericTabItem * IOmlThreadSwapIn ==> ()
+  drawCpuThreadSwapIn (pgti, pitsw) ==
+    def objref = if pitsw.hasObjref() then pitsw.getObjref() else 0;
+        thrid = pitsw.getId();
+        thr = data.getThread(thrid);
+        cpunm = pitsw.getCpunm();
+        obj = data.getObject(objref);
+        cpu = data.getCPU(cpunm) in
+      (  -- first save the context
+         cpu.setCurrentThread(thrid);
+         thr.pushCurrentObject(objref);
+         -- check if in our time frame
+         if ov_currenttime >= ov_starttime
+         then ( -- first update the resource
+                updateCpuObject(pgti,cpu,obj);
+                -- then draw the object activity
+                def x1 = obj.getX(); x2 = x1;
+                    y1 = obj.getY(); y2 = y1 + ELEMENT_SIZE in
+                  ( -- draw the event on the cpu overview
+                    drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`gray);
+                    drawCpuSwapInImage(pgti, x1, y1);
+                    -- update the position information
+                    ov_ypos := y2;
+                    obj.setY(y2) ) ) );
+  
+  private drawCpuSwapInImage: GenericTabItem * nat * nat ==> ()
+  drawCpuSwapInImage (pgti, x, y) ==
+    ( dcl image : [Image] := pgti.getImage(pgti.composePath("icons","hswapin.gif"));
+      if image <> nil
+      then ( dcl imagefig : ImageFigure := new ImageFigure(image),
+                 point : Point := new Point(x+8, y+2);
+             imagefig.setLocation(point);
+             imagefig.setSize(20,16);
+             pgti.addFigure(imagefig) ) ) ;
+      
+  --
+  -- THREAD DELAYED SWAP-IN
+  --
+  
+  public visitDelayedThreadSwapIn: IOmlDelayedThreadSwapIn ==> ()
+  visitDelayedThreadSwapIn (pitsw) ==
+    def thrid = pitsw.getId() in
+    def thr = data.getThread(thrid) in
+      ( data.addHistory(pitsw, pitsw.getObstime());
+        data.getCPU(pitsw.getCpunm()).addHistory(pitsw, pitsw.getObstime());
+        thr.addHistory(pitsw, pitsw.getObstime()) );
+
+  -- draw the thread swap-in in the overview view
+  private drawOvDelayedThreadSwapIn: GenericTabItem * IOmlDelayedThreadSwapIn ==> ()
+  drawOvDelayedThreadSwapIn (pgti, pitsw) ==
+    def cpunm = pitsw.getCpunm() in
+    def cpu = data.getCPU(cpunm) in
+      ( if ov_currenttime >= ov_starttime
+        then ( -- first update the resource
+               updateOvCpu(pgti,cpu);
+               -- then draw the resource activity
+               def x1 = cpu.getX(); x2 = x1 + ELEMENT_SIZE - 1;
+                   y1 = cpu.getY(); y2 = y1 in
+                 ( -- draw the event on the overview
+                   drawOvMarker (pgti, x1, y1, x2, y2, ColorConstants`orange);
+                   drawOvSwapInImage (pgti, x1, y1);
+                   -- update the position and time information
+                   ov_xpos := x2;
+                   cpu.setX(x2) ) );
+        cpu.setCurrentThread(pitsw.getId()) );
+
+  -- draw the thread swap-in in the cpu view
+  private drawCpuDelayedThreadSwapIn: GenericTabItem * IOmlDelayedThreadSwapIn ==> ()
+  drawCpuDelayedThreadSwapIn (pgti, pitsw) ==
+    def objref = if pitsw.hasObjref() then pitsw.getObjref() else 0;
+        thrid = pitsw.getId();
+        thr = data.getThread(thrid);
+        cpunm = pitsw.getCpunm();
+        obj = data.getObject(objref);
+        cpu = data.getCPU(cpunm) in
+      (  -- save the thread context
+         cpu.setCurrentThread(thrid);
+         thr.pushCurrentObject(objref);
+         -- check if in our time frame
+         if ov_currenttime >= ov_starttime
+         then ( -- first update the resource
+                updateCpuObject(pgti,cpu,obj);
+                -- then draw the object activity
+                def x1 = obj.getX(); x2 = x1;
+                    y1 = obj.getY(); y2 = y1 + ELEMENT_SIZE in
+                  ( -- draw the event on the cpu overview
+                    drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`gray);
+                    drawCpuSwapInImage(pgti, x1, y1);
+                    -- update the position information
+                    ov_ypos := y2;
+                    obj.setY(y2) ) ) );
+
+  --
+  -- THREAD SWAP-OUT
+  --
+  
+  public visitThreadSwapOut: IOmlThreadSwapOut ==> ()
+  visitThreadSwapOut (pitsw) ==
+    def thrid = pitsw.getId() in
+    def thr = data.getThread(thrid) in
+      ( data.addHistory(pitsw, pitsw.getObstime());
+        data.getCPU(pitsw.getCpunm()).addHistory(pitsw, pitsw.getObstime());
+        thr.addHistory(pitsw, pitsw.getObstime()) );
+
+  -- draw the thread swap-out in the overview view
+  private drawOvThreadSwapOut: GenericTabItem * IOmlThreadSwapOut ==> ()
+  drawOvThreadSwapOut (pgti, pitsw) ==
+    def cpunm = pitsw.getCpunm() in
+    def cpu = data.getCPU(cpunm) in
+      ( if ov_currenttime >= ov_starttime
+        then ( -- first update the resource
+               updateOvCpu(pgti,cpu);
+               -- then draw the resource activity
+               def x1 = cpu.getX(); x2 = x1 + ELEMENT_SIZE;
+                   y1 = cpu.getY(); y2 = y1 in
+                 ( -- draw the event on the overview
+                   drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`gray);
+                   drawOvSwapOutImage (pgti, x1, y1);
+                   -- update the position and time information
+                   ov_xpos := x2;
+                   cpu.setX(x2) ) );
+        cpu.setCurrentThread(nil) );
+
+  private drawOvSwapOutImage: GenericTabItem * nat * nat ==> ()
+  drawOvSwapOutImage (pgti, x, y) ==
+    ( dcl image : [Image] := pgti.getImage(pgti.composePath("icons","vswapout.gif"));
+      if image <> nil
+      then ( dcl imagefig : ImageFigure := new ImageFigure(image),
+                 point : Point := new Point(x+2, y-24);
+             imagefig.setLocation(point);
+             imagefig.setSize(16,20);
+             pgti.addFigure(imagefig) ) );
+      
+  -- draw the thread swap-out in the cpu view
+  private drawCpuThreadSwapOut: GenericTabItem * IOmlThreadSwapOut ==> ()
+  drawCpuThreadSwapOut (pgti, pitsw) ==
+    def objref = if pitsw.hasObjref() then pitsw.getObjref() else 0;
+        thrid = pitsw.getId();
+        thr = data.getThread(thrid);
+        cpunm = pitsw.getCpunm();
+        obj = data.getObject(objref);
+        cpu = data.getCPU(cpunm) in
+      (  -- check if in our time frame
+         if ov_currenttime >= ov_starttime
+         then ( -- first update the resource
+                updateCpuObject(pgti,cpu,obj);
+                -- then draw the object activity
+                def x1 = obj.getX(); x2 = x1;
+                    y1 = obj.getY(); y2 = y1 + ELEMENT_SIZE in
+                  ( -- draw the event on the cpu overview
+                    drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`gray);
+                    drawCpuSwapOutImage(pgti, x1, y1);
+                    -- update the position information
+                    ov_ypos := y2;
+                    obj.setY(y2) ) );
+         -- update the cpu and thread state
+         cpu.setCurrentThread(nil);
+         thr.popCurrentObject() );
+  
+  private drawCpuSwapOutImage: GenericTabItem * nat * nat ==> ()
+  drawCpuSwapOutImage (pgti, x, y) ==
+    ( dcl image : [Image] := pgti.getImage(pgti.composePath("icons","hswapout.gif"));
+      if image <> nil
+      then ( dcl imagefig : ImageFigure := new ImageFigure(image),
+                 point : Point := new Point(x+8, y+2);
+             imagefig.setLocation(point);
+             imagefig.setSize(20,16);
+             pgti.addFigure(imagefig) ) );
+      
+  --
+  -- THREAD KILL
+  --
+  
+  public visitThreadKill: IOmlThreadKill ==> ()
+  visitThreadKill (pitk) ==
+    def thrid = pitk.getId() in
+    def thr = data.getThread(thrid) in
+      ( data.addHistory(pitk, pitk.getObstime());
+        data.getCPU(pitk.getCpunm()).addHistory(pitk, pitk.getObstime());
+        thr.addHistory(pitk, pitk.getObstime()) );
+
+  -- draw the thread swap-out in the overview view
+  private drawOvThreadKill: GenericTabItem * IOmlThreadKill ==> ()
+  drawOvThreadKill (pgti, pitsw) ==
+    def cpunm = pitsw.getCpunm() in
+    def cpu = data.getCPU(cpunm) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the resource
+             updateOvCpu(pgti,cpu);
+             -- then draw the resource activity
+             def x1 = cpu.getX(); x2 = x1 + ELEMENT_SIZE;
+                 y1 = cpu.getY(); y2 = y1 in
+               ( -- draw the event on the overview
+                 drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`red);
+                 -- update the position and time information
+                 ov_xpos := x2;
+                 cpu.setX(x2) ) );
+
+  -- draw the thread swap-out in the overview view
+  private drawCpuThreadKill: GenericTabItem * IOmlThreadKill ==> ()
+  drawCpuThreadKill (pgti, pitk) ==
+    def thrid = pitk.getId();
+        thr = data.getThread(thrid);
+        cpunm = pitk.getCpunm();
+        cpu = data.getCPU(cpunm);
+        obj = thr.getCurrentObject() in
+      ( -- check if in our time frame
+        if ov_currenttime >= ov_starttime
+        then ( -- first update the resource
+               updateCpuObject(pgti, cpu, obj);
+               -- then draw the object activity
+               def x1 = obj.getX(); x2 = x1;
+                   y1 = obj.getY(); y2 = y1 + ELEMENT_SIZE in
+                 ( -- draw the event on the cpu overview
+                   drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`red);
+                   -- update the position information
+                   ov_ypos := y2;
+                   obj.setY(y2) ) );
+         -- update the cpu and thread state
+         thr.popCurrentObject() );
+
+  --
+  -- OPERATION REQUEST
+  --
+  
+  public visitOpRequest: IOmlOpRequest ==> ()
+  visitOpRequest (pior) ==
+    def thrid = pior.getId() in
+    def thr = data.getThread(thrid) in
+      ( data.addHistory(pior, pior.getObstime());
+        data.getCPU(pior.getCpunm()).addHistory(pior, pior.getObstime());
+        thr.addHistory(pior, pior.getObstime()) );
+
+  -- draw the operation request in the overview view
+  public drawOvOpRequest: GenericTabItem * IOmlOpRequest ==> ()
+  drawOvOpRequest (pgti, pior) ==
+    ( -- only draw when we are in view
+      if ov_currenttime >= ov_starttime
+      then def cpunm = pior.getCpunm() in
+           def cpu = data.getCPU(cpunm) in
+             ( ov_xpos := ov_xpos + ELEMENT_SIZE;
+               updateOvCpu(pgti,cpu) );
+      -- check for remote synchronous calls
+      if not pior.getAsynchronous()
+      then if pior.hasObjref()
+           then def thrid = pior.getId();
+                    cpunm = pior.getCpunm();
+                    objref = pior.getObjref() in
+                def cpu = data.getCPU(cpunm) in
+                  if not cpu.hasObjectAt(objref, pior.getObstime())
+                  then cpu.getThread(thrid).setStatus(true) );
+
+  -- draw the operation request in the overview view
+  public drawCpuOpRequest: GenericTabItem * IOmlOpRequest ==> ()
+  drawCpuOpRequest (pgti, pior) ==
+    if ov_currenttime >= ov_starttime
+    then def thrid = pior.getId();
+             objid = pior.getObjref();
+             cpunm = pior.getCpunm();
+             cpu = data.getCPU(cpunm);
+             thr = data.getThread(thrid) in 
+         if thr.hasCurrentObject()
+         then def obj = thr.getCurrentObject() in
+                ( -- first update the resource
+                  updateCpuObject(pgti, cpu, obj);
+                  -- then draw the object activity
+                  def x1 = obj.getX(); x2 = x1;
+                      y1 = obj.getY(); y2 = y1 + ELEMENT_SIZE in
+                    ( dcl lbl : NormalLabel := new NormalLabel("R", pgti.getCurrentFont()),
+                          str : seq of char :=
+                            if pior.hasArgs()
+                            then " with arguments " ^ pior.getArgs()
+                            else [],
+                          ttl : NormalLabel := new NormalLabel(" Requested " ^pior.getOpname()
+                            ^" on object " ^nat2str(objid) ^str ^" ", pgti.getCurrentFont()),
+                          pt : Point := new Point(x1+8,y1+2);
+                      -- draw the event on the cpu overview
+                      drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`blue);
+                      -- add the request description
+                      lbl.setToolTip(ttl);
+                      lbl.setLocation(pt);
+                      pgti.addFigure(lbl);
+                      -- update the position information
+                      ov_ypos := y2;
+                      obj.setY(y2) ) );
+    
+  --
+  -- OPERATION ACTIVATE
+  --
+  
+  public visitOpActivate: IOmlOpActivate ==> ()
+  visitOpActivate (pioa) ==
+    def thrid = pioa.getId() in
+    def thr = data.getThread(thrid) in
+      ( data.addHistory(pioa, pioa.getObstime());
+        data.getCPU(pioa.getCpunm()).addHistory(pioa, pioa.getObstime());
+        thr.addHistory(pioa, pioa.getObstime()) );
+
+  -- draw the operation activation in the overview view
+  public drawOvOpActivate: GenericTabItem * IOmlOpActivate ==> ()
+  drawOvOpActivate (pgti, pioa) ==
+    if ov_currenttime >= ov_starttime
+    then def cpunm = pioa.getCpunm() in
+         def cpu = data.getCPU(cpunm) in
+           ( ov_xpos := ov_xpos + ELEMENT_SIZE;
+             updateOvCpu(pgti,cpu) );
+
+  -- draw the operation activation in the cpu view
+  public drawCpuOpActivate: GenericTabItem * IOmlOpActivate ==> ()
+  drawCpuOpActivate (pgti, pioa) ==
+    -- retrieve the active thread involved
+    def thrid = pioa.getId();
+        thr = data.getThread(thrid) in
+    -- retrieve the current object scope
+    def srcobj = thr.getCurrentObject() in
+      -- static or dynamic call
+      if not pioa.hasObjref()
+      then skip
+      else def destobjref = pioa.getObjref();
+               destobj = data.getObject(destobjref) in
+             ( -- are we visible
+               if ov_currenttime >= ov_starttime
+               then ( def cpunm = pioa.getCpunm();
+                          cpu = data.getCPU(cpunm) in
+                        if srcobj.getId() = destobj.getId()
+                        then ( -- simple update
+                               updateCpuObject(pgti, cpu, destobj);
+		                       -- draw the activity on the destination object
+		                       def x1 = destobj.getX(); x2 = x1;
+		                           y1 = destobj.getY(); y2 = y1 + ELEMENT_SIZE in
+		                         ( dcl lbl : NormalLabel := new NormalLabel("A "^pioa.getOpname(),
+		                                 pgti.getCurrentFont()),
+		                               pt : Point := new Point(x1+8,y1+2);
+		                           -- draw the event on the cpu overview
+ 		                           drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`blue);
+		                           -- add the request description
+		                           lbl.setLocation(pt);
+		                           pgti.addFigure(lbl);
+		                           -- update the position information
+		                           ov_ypos := y2;
+		                           destobj.setY(y2) ) )
+                        else ( -- complex update
+                               updateCpuObject(pgti, cpu, srcobj);
+                               updateCpuObject(pgti, cpu, destobj);
+                               Object2ObjectArrow(pgti, srcobj, destobj, pioa.getOpname()) ) );
+               -- update the thread state
+               thr.pushCurrentObject(destobjref) );
+
+  private Object2ObjectArrow: GenericTabItem * tdObject * tdObject * seq of char ==> ()
+  Object2ObjectArrow (pgti, psrc, pdest, pstr) ==
+    def psx = psrc.getX(); psy = psrc.getY() in
+    def pdx = pdest.getX(); pdy = pdest.getY() in
+      ( dcl line :  Line := new Line (psx,psy,psx,psy+20),
+            lbl : NormalLabel := new NormalLabel(pstr,pgti.getCurrentFont());
+        line.setLineWidth(3);
+        line.setForegroundColor(ColorConstants`blue);
+        pgti.addFigure(line);
+        line := new Line (pdx,pdy+20,pdx,pdy+40);
+        line.setLineWidth(3);
+        line.setForegroundColor(ColorConstants`blue);
+        pgti.addFigure(line);
+        line := new Line (psx,psy+20,pdx,psy+20);
+        line.setForegroundColor(ColorConstants`blue);
+        pgti.addFigure(line);
+        if psx < pdx
+        then ( dcl pt : Point := new Point(psx+20,psy+2);
+               lbl.setLocation(pt);
+               pgti.addFigure(lbl);
+               line := new Line (pdx-10,pdy+16,pdx-2,pdy+20);
+        	   line.setForegroundColor(ColorConstants`blue);
+        	   pgti.addFigure(line);
+        	   line := new Line (pdx-10,pdy+24,pdx-2,pdy+20);
+        	   line.setForegroundColor(ColorConstants`blue);
+        	   pgti.addFigure(line) )
+        else ( dcl pt : Point := new Point(psx-20-lbl.getSize().width,psy+2);
+               lbl.setLocation(pt);
+               pgti.addFigure(lbl);
+               line := new Line (pdx+2,pdy+20,pdx+10,pdy+16);
+        	   line.setForegroundColor(ColorConstants`blue);
+        	   pgti.addFigure(line);
+        	   line := new Line (pdx+2,pdy+20,pdx+10,pdy+24);
+        	   line.setForegroundColor(ColorConstants`blue);
+        	   pgti.addFigure(line) );
+        ov_ypos := ov_ypos + 40;
+        psrc.setY(ov_ypos);
+        pdest.setY(ov_ypos) );
+              
+  --
+  -- OPERATION COMPLETED
+  --
+  
+  public visitOpCompleted: IOmlOpCompleted ==> ()
+  visitOpCompleted (pioc) ==
+    def thrid = pioc.getId() in
+    def thr = data.getThread(thrid) in
+      ( data.addHistory(pioc, pioc.getObstime());
+        data.getCPU(pioc.getCpunm()).addHistory(pioc, pioc.getObstime());
+        thr.addHistory(pioc, pioc.getObstime()) );
+
+  -- draw the operation completion in the overview view
+  public drawOvOpCompleted: GenericTabItem * IOmlOpCompleted ==> ()
+  drawOvOpCompleted (pgti, pioc) ==
+    if ov_currenttime >= ov_starttime
+    then def cpunm = pioc.getCpunm() in
+         def cpu = data.getCPU(cpunm) in
+           ( ov_xpos := ov_xpos + ELEMENT_SIZE;
+             updateOvCpu(pgti,cpu) );
+
+  -- draw the operation completion in the cpu view
+  public drawCpuOpCompleted: GenericTabItem * IOmlOpCompleted ==> ()
+  drawCpuOpCompleted (pgti, pioc) ==
+    -- retrieve the active thread involved
+    def thrid = pioc.getId();
+        thr = data.getThread(thrid) in
+    -- retrieve the current object scope
+    def srcobj = thr.getCurrentObject() in
+      -- static or dynamic call
+      if not pioc.hasObjref()
+      then skip
+      else ( -- retrieve the previous object scope
+             thr.popCurrentObject();
+             def destobj = thr.getCurrentObject() in
+               -- are we visible
+               if ov_currenttime >= ov_starttime
+               then ( def cpunm = pioc.getCpunm();
+                          cpu = data.getCPU(cpunm) in
+                        if srcobj.getId() = destobj.getId()
+                        then ( -- simple update
+                               updateCpuObject(pgti, cpu, destobj);
+		                       -- draw the activity on the destination object
+		                       def x1 = destobj.getX(); x2 = x1;
+		                           y1 = destobj.getY(); y2 = y1 + ELEMENT_SIZE;
+		                           objid = pioc.getObjref() in
+		                         ( dcl lbl : NormalLabel := new NormalLabel("C", pgti.getCurrentFont()),
+		                               str : seq of char :=
+		                                 if pioc.hasRes()
+		                                 then " returns " ^pioc.getRes()
+		                                 else [],
+		                               ttl : NormalLabel := new NormalLabel(" Completed " ^pioc.getOpname()
+		                                 ^" on object " ^nat2str(objid) ^str ^" ", pgti.getCurrentFont()),
+		                               pt : Point := new Point(x1+8,y1+2);
+		                           -- draw the event on the cpu overview
+		                           drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`blue);
+		                           -- add the request description
+		                           lbl.setToolTip(ttl);
+		                           lbl.setLocation(pt);
+		                           pgti.addFigure(lbl);
+		                           -- update the position information
+		                           ov_ypos := y2;
+		                           destobj.setY(y2) ) )
+                        else ( -- complex update
+                               updateCpuObject(pgti, cpu, srcobj);
+                               updateCpuObject(pgti, cpu, destobj);
+                               Object2ObjectArrow(pgti, srcobj, destobj, "") ) ) );
+  
+  --
+  -- MESSAGE REQUEST
+  --
+  
+  public visitMessageRequest: IOmlMessageRequest ==> ()
+  visitMessageRequest (pimr) ==
+    def busid = pimr.getBusid();
+        bus = data.getBUS(busid);
+        msgid = pimr.getMsgid();
+        fromcpu = pimr.getFromcpu();
+        fromthr = pimr.getCallthr();
+        tocpu = pimr.getTocpu();
+        toobj = pimr.getObjref() in
+    def str = pimr.getOpname() in
+    def msg = bus.createMessage(msgid, fromcpu, fromthr, tocpu, nil, toobj, str) in
+      ( data.addHistory(pimr, pimr.getObstime());
+        bus.addHistory(pimr, pimr.getObstime());
+        msg.addHistory(pimr, pimr.getObstime());
+        -- also add to history of the source cpu
+        data.getCPU(fromcpu).addHistory(pimr, pimr.getObstime()) );
+
+  -- draw the message request in the overview view
+  private drawOvMessageRequest: GenericTabItem * IOmlMessageRequest ==> ()
+  drawOvMessageRequest (pgti, pitmr) ==
+    def busid = pitmr.getBusid();
+        msgid = pitmr.getMsgid() in
+    def bus = data.getBUS(busid);
+        msg = data.getMessage(msgid) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the BUS resource
+             ov_xpos := ov_xpos + 6;
+             updateOvBus(pgti,bus);
+             -- then draw the resource activity
+             def x1 = bus.getX(); x2 = x1 + ELEMENT_SIZE;
+                 y1 = bus.getY(); y2 = y1 in
+             def ycpu = data.getCPU(msg.getFromCpu()).getY() + 8 in
+               ( -- draw the event on the overview
+                 drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`lightGray);
+                 -- draw the arrow from the CPU to the BUS
+                 drawVerticalArrow(pgti, x1, ycpu, y1 - 8,
+                   " call " ^msg.getDescr()^ " ", ColorConstants`darkBlue);
+                 -- update the position and time information
+                 ov_xpos := x2;
+                 bus.setX(x2) ) );
+
+  -- draw the message request in the cpu view
+  private drawCpuMessageRequest: GenericTabItem * IOmlMessageRequest ==> ()
+  drawCpuMessageRequest (pgti, pitmr) ==
+    def busid = pitmr.getBusid();
+        msgid = pitmr.getMsgid() in
+    def bus = data.getBUS(busid);
+        msg = data.getMessage(msgid) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the resource
+             ov_ypos := ov_ypos + 10;
+             updateCpuBus(pgti,bus);
+             -- then draw the resource activity
+             def x1 = bus.getX(); x2 = x1;
+                 y1 = bus.getY(); y2 = y1 + ELEMENT_SIZE in
+             def thr = data.getThread(msg.getFromThread()) in
+             def obj = thr.getCurrentObject() in
+             def xobj = obj.getX()-10 in
+               ( -- draw the event on the overview
+                 drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`lightGray);
+                 -- draw the arrow from the CPU to the BUS
+                 drawHorizontalArrow(pgti, x1+10, xobj, y1,
+                   " call " ^msg.getDescr() ^" ", ColorConstants`darkGreen);
+                 -- update the position and time information
+                 ov_ypos := y2;
+                 bus.setY(y2) ) );
+
+  --
+  -- REPLY REQUEST
+  --
+  
+  public visitReplyRequest: IOmlReplyRequest ==> ()
+  visitReplyRequest (pirr) == 
+    def busid = pirr.getBusid();
+        bus = data.getBUS(busid);
+        msgid = pirr.getMsgid();
+        fromcpu = pirr.getFromcpu();
+        fromthr = pirr.getCalleethr();
+        tocpu = pirr.getTocpu();
+        tothr = pirr.getCallthr() in
+    def str = data.getMessage(pirr.getOrigmsgid()).getDescr() in
+    def msg = bus.createMessage(msgid, fromcpu, fromthr, tocpu, tothr, nil, str) in
+      ( data.addHistory(pirr, pirr.getObstime());
+        bus.addHistory(pirr, pirr.getObstime());
+        msg.addHistory(pirr, pirr.getObstime());
+        -- also add to history of the source cpu
+        data.getCPU(fromcpu).addHistory(pirr, pirr.getObstime()) );
+
+  -- draw the reply request in the overview view
+  private drawOvReplyRequest: GenericTabItem * IOmlReplyRequest ==> ()
+  drawOvReplyRequest (pgti, pitrr) ==
+    def busid = pitrr.getBusid();
+        msgid = pitrr.getMsgid() in
+    def bus = data.getBUS(busid);
+        msg = data.getMessage(msgid) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the BUS resource
+             ov_xpos := ov_xpos + 6;
+             updateOvBus(pgti,bus);
+             -- then draw the resource activity
+             def x1 = bus.getX(); x2 = x1 + ELEMENT_SIZE;
+                 y1 = bus.getY(); y2 = y1 in
+             def ycpu = data.getCPU(msg.getFromCpu()).getY() + 8 in
+               ( -- draw the event on the overview
+                 drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`lightGray);
+                 -- draw the arrow from the CPU to the BUS
+                 drawVerticalArrow(pgti, x1, ycpu, y1 - 8,
+                   " return from " ^msg.getDescr()^ " ", ColorConstants`darkBlue);
+                 -- update the position and time information
+                 ov_xpos := x2;
+                 bus.setX(x2) ) );
+
+  -- draw the reply request in the cpu view
+  private drawCpuReplyRequest: GenericTabItem * IOmlReplyRequest ==> ()
+  drawCpuReplyRequest (pgti, pitrr) ==
+    def busid = pitrr.getBusid();
+        msgid = pitrr.getMsgid() in
+    def bus = data.getBUS(busid);
+        msg = data.getMessage(msgid) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the resource
+             ov_ypos := ov_ypos + 10;
+             updateCpuBus(pgti,bus);
+             -- then draw the resource activity
+             def x1 = bus.getX(); x2 = x1;
+                 y1 = bus.getY(); y2 = y1 + ELEMENT_SIZE in
+             def thr = data.getThread(msg.getFromThread()) in
+             def obj = thr.getCurrentObject() in
+             def xobj = obj.getX()-10 in
+               ( -- draw the event on the overview
+                 drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`lightGray);
+                 -- draw the arrow from the CPU to the BUS
+                 drawHorizontalArrow(pgti, x1+10, xobj, y1,
+                   " return from " ^msg.getDescr()^ " ", ColorConstants`darkGreen);
+                 -- update the position and time information
+                 ov_ypos := y2;
+                 bus.setY(y2) ) );
+
+  --
+  -- MESSAGE ACTIVATE
+  --
+  
+  public visitMessageActivate: IOmlMessageActivate ==> ()
+  visitMessageActivate (pima) ==
+    def msg = data.getMessage(pima.getMsgid()) in
+    def bus = data.getBUS(msg.getBusId()) in
+    ( data.addHistory(pima, pima.getObstime());
+      bus.addHistory(pima, pima.getObstime());
+      msg.addHistory(pima, pima.getObstime()) );
+        
+  -- draw the message activate in the overview view
+  private drawOvMessageActivate: GenericTabItem * IOmlMessageActivate ==> ()
+  drawOvMessageActivate (pgti, pitma) ==
+    def msgid = pitma.getMsgid() in
+    def busid = data.getMessage(msgid).getBusId();
+        bus = data.getBUS(busid) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the resource
+             updateOvBus(pgti,bus);
+             -- then draw the resource activity
+             def x1 = bus.getX(); x2 = x1 + ELEMENT_SIZE;
+                 y1 = bus.getY(); y2 = y1 in
+               ( -- draw the event on the overview
+                 drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`gray);
+                 -- update the position and time information
+                 ov_xpos := x2;
+                 bus.setX(x2) ) );
+
+  -- message activation is not shown in the cpu view
+  
+  --
+  -- MESSAGE COMPLETED
+  --
+  
+  public visitMessageCompleted: IOmlMessageCompleted ==> ()
+  visitMessageCompleted (pimc) ==
+    def msg = data.getMessage(pimc.getMsgid()) in
+    def bus = data.getBUS(msg.getBusId()) in
+    ( data.addHistory(pimc, pimc.getObstime());
+      bus.addHistory(pimc, pimc.getObstime());
+      msg.addHistory(pimc, pimc.getObstime());
+      -- also add to history of destination cpu
+      data.getCPU(msg.getToCpu()).addHistory(pimc, pimc.getObstime()) );
+
+  -- draw the message activate in the overview view
+  private drawOvMessageCompleted: GenericTabItem * IOmlMessageCompleted ==> ()
+  drawOvMessageCompleted (pgti, pitmc) ==
+    def msgid = pitmc.getMsgid() in
+    def msg = data.getMessage(msgid) in
+    def busid = msg.getBusId();
+        bus = data.getBUS(busid) in
+    def cpu = data.getCPU(msg.getToCpu()) in
+      ( -- draw the message if we are in view
+        if ov_currenttime >= ov_starttime
+        then ( -- first update the resources
+               updateOvBus(pgti,bus);
+               -- then draw the resource activity
+               def x1 = bus.getX(); x2 = x1 + ELEMENT_SIZE;
+                   y1 = bus.getY(); y2 = y1 in
+               def ycpu = cpu.getY() + 8 in
+                 ( -- draw the event on the overview
+                   drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants`darkGray);
+                   -- draw the arrow from the CPU to the BUS
+                   drawVerticalArrow(pgti, x2, y1 - 8, ycpu,
+                     " " ^msg.getDescr()^ " ", ColorConstants`darkBlue);
+                   -- update the position and time information and the CPU resource
+                   ov_xpos := x2 + 6;
+                   updateOvCpu(pgti,cpu);
+                   bus.setX(x2) ) );
+        -- update the thread status if we were a reply request
+        if msg.hasToThread()
+        then cpu.getThread(msg.getToThread()).setStatus(false) );
+
+  -- draw the message activate in the overview view
+  private drawCpuMessageCompleted: GenericTabItem * IOmlMessageCompleted ==> ()
+  drawCpuMessageCompleted (pgti, pitmc) ==
+    def msgid = pitmc.getMsgid() in
+    def msg = data.getMessage(msgid) in
+    def busid = msg.getBusId();
+        bus = data.getBUS(busid) in
+      if ov_currenttime >= ov_starttime
+      then ( -- first update the resource
+             updateCpuBus(pgti,bus);
+             -- then draw the resource activity
+             def x1 = bus.getX(); x2 = x1;
+                 y1 = bus.getY(); y2 = y1 + ELEMENT_SIZE in
+               ( -- draw the event on the overview
+                 drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants`darkGray);
+                 -- determine the target for the message
+                 if msg.hasToThread()
+                 then -- we are dealing with a reply request
+                      def thr = data.getThread(msg.getToThread()) in
+                      def obj = thr.getCurrentObject() in
+                      def xobj = obj.getX()-10 in
+                        -- draw the arrow from the BUS to the CPU
+                        drawHorizontalArrow(pgti, xobj, x1+10, y2,
+                          " " ^msg.getDescr()^ " ", ColorConstants`darkGreen)
+                 else -- we are dealing with a message request
+                      def objid = msg.getToObj() in
+                      def cpuid = msg.getToCpu() in
+                      def obj = data.getObject(objid) in
+                      def cpu = data.getCPU(cpuid) in
+                        ( updateCpuObject(pgti, cpu, obj);
+                          drawHorizontalArrow(pgti, obj.getX()-10, x1+10, y2, msg.getDescr(), ColorConstants`darkGreen) );
+                 -- update the position and time information
+                 ov_ypos := y2 + 10;
+                 bus.setY(y2) ) );
+        
+  --
+  -- ARCHITECTURE
+  --
+  
+  public visitCPUdecl: IOmlCPUdecl ==> ()
+  visitCPUdecl (picd) ==
+    def id = picd.getId();
+        name = picd.getName();
+        expl = picd.getExpl() in
+      ( dcl cpu : tdCPU := data.createCPU(id,name,expl),
+            bus : tdBUS := data.getBUS(0);
+        -- connect the global virtual bus to the cpu
+        bus.connect(id);
+        -- and vice versa
+        cpu.connect(bus.getId()) );
+
+  public visitBUSdecl: IOmlBUSdecl ==> ()
+  visitBUSdecl (pibd) ==
+    def id = pibd.getId();
+        name = pibd.getName();
+        topo = pibd.getTopo() in
+      ( dcl bus : tdBUS := data.createBUS(id,name,true);
+        for all cpuid in set topo do
+          ( dcl cpu : tdCPU := data.getCPU(cpuid) ;
+            -- connect the bus to this cpu
+            bus.connect(cpuid);
+            -- connect the cpu to this bus
+            cpu.connect(id) ) )
+
+  --
+  -- DEPLOYMENT
+  --
+              
+operations
+  public visitDeployObj: IOmlDeployObj ==> ()
+  visitDeployObj (pido) ==
+    def objref = pido.getObjref();
+        cpunm = pido.getCpunm();
+        clnm = pido.getClnm();
+        etime = pido.getObstime() in
+      ( dcl obj : tdObject :=
+          if data.hasObject(objref)
+          then data.getObject(objref)
+          else data.createObject(objref, clnm);
+        obj.deploy(cpunm, etime) )
+
+  --
+  -- VALIDATION CONJECTURES
+  --
+
+types
+  ConjectureLimit :: obstime : nat
+                     thrid : nat
+                     name : seq of char
+                       
+instance variables
+  failedLower : seq of ConjectureLimit := [];
+  lastLower : map nat to nat := {|->};
+  failedUpper : seq of ConjectureLimit := [];
+  lastUpper : map nat to nat := {|->};
+  
+operations
+  public resetLastDrawn: () ==> ()
+  resetLastDrawn () == ( lastLower := {|->}; lastUpper := {|->} );
+  
+  public lastLowerTime: nat ==> nat
+  lastLowerTime (pthr) ==
+    if pthr in set dom lastLower
+    then return lastLower(pthr)
+    else return 0;
+    
+  public addFailedLower: nat * nat * seq of char ==> ()
+  addFailedLower (ptime, pthr, pname) ==
+   failedLower := failedLower ^ [ mk_ConjectureLimit(ptime, pthr, pname) ];
+ 
+  public inFailedLower: nat * nat ==> bool
+  inFailedLower (ptime, pthr) ==
+    return exists i in set inds failedLower &
+      let mk_ConjectureLimit(cltime, clthr, -) = failedLower(i) in
+        cltime = ptime and clthr = pthr and lastLowerTime(clthr) < cltime; 
+        
+  public getLowerLimitName: nat * nat ==> seq of char
+  getLowerLimitName (ptime, pthr) ==
+    ( dcl res : seq of char := [];
+      for cl in failedLower do
+        let mk_ConjectureLimit(cltime, clthr, clname) = cl in
+          if cltime = ptime and clthr = pthr
+          then ( res := res ^ clname ^ " ";
+                 lastLower := lastLower ++ {clthr |-> cltime} );
+      return res );
+  
+  public lastUpperTime: nat ==> nat
+  lastUpperTime (pthr) ==
+    if pthr in set dom lastUpper
+    then return lastUpper(pthr)
+    else return 0;
+    
+  public addFailedUpper: nat * nat * seq of char ==> ()
+  addFailedUpper (ptime, pthr, pname) == 
+   failedUpper := failedUpper ^ [ mk_ConjectureLimit(ptime, pthr, pname) ];
+  
+  public inFailedUpper: nat * nat ==> bool
+  inFailedUpper (ptime, pthr) ==
+    return exists i in set inds failedUpper &
+      let mk_ConjectureLimit(cltime, clthr, -) = failedUpper(i) in
+        cltime = ptime and clthr = pthr and lastUpperTime(clthr) < cltime;
+  
+  public getUpperLimitName: nat * nat ==> seq of char
+  getUpperLimitName (ptime, pthr) ==
+    ( dcl res : seq of char := [];
+      for cl in failedUpper do
+        let mk_ConjectureLimit(cltime, clthr, clname) = cl in
+          if cltime = ptime and clthr = pthr
+          then ( res := res ^ clname ^ " ";
+                 lastUpper := lastUpper ++ {clthr |-> cltime} );
+      return res );
+      
+  public checkConjectureLimits: GenericTabItem * nat * nat * nat * nat ==> ()
+  checkConjectureLimits (pgti, xpos, ypos, ptime, pthr) ==
+    ( if inFailedLower(ptime, pthr)
+      then drawFailedLower(pgti, xpos, ypos, getLowerLimitName(ptime, pthr));
+      if inFailedUpper(ptime, pthr)
+      then drawFailedUpper(pgti, xpos, ypos, getUpperLimitName(ptime, pthr)) );
+      
+  public drawFailedLower: GenericTabItem * nat * nat * seq of char ==> ()
+  drawFailedLower (pgti, xpos, ypos, pname) ==
+    ( dcl ellipse : Ellipse := new Ellipse(),
+          nlb : NormalLabel := new NormalLabel(pname, pgti.getCurrentFont()),
+          p1 : Point := new Point(xpos+1, ypos-8),
+          p2 : Point := new Point(xpos+2,ypos+12);
+      -- draw the circle and the label
+      ellipse.setLocation(p1);
+      ellipse.setSize(16,16);
+      ellipse.setFill(false);
+      ellipse.setForegroundColor(ColorConstants`red);
+      pgti.addFigure(ellipse);
+      nlb.setLocation(p2);
+      nlb.setForegroundColor(ColorConstants`red);
+      pgti.addFigure(nlb) );
+  
+  public drawFailedUpper: GenericTabItem * nat * nat * seq of char ==> ()
+  drawFailedUpper (pgti, xpos, ypos, pname) ==
+    ( dcl ellipse : Ellipse := new Ellipse(),
+          nlb : NormalLabel := new NormalLabel(pname, pgti.getCurrentFont()),
+          p1 : Point := new Point(xpos+1, ypos-8),
+          p2 : Point := new Point(xpos+2,ypos-20-20);
+      -- draw the circle and the label
+      ellipse.setLocation(p1);
+      ellipse.setSize(16,16);
+      ellipse.setFill(false);
+      ellipse.setForegroundColor(ColorConstants`red);
+      pgti.addFigure(ellipse);
+      nlb.setLocation(p2);
+      nlb.setForegroundColor(ColorConstants`red);
+      pgti.addFigure(nlb) )
+    
+end TracefileVisitor
+\end{vdm_al}
