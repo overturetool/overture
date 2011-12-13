@@ -118,8 +118,8 @@ public class LatexBuilder
 			try
 			{
 				PrintWriter pw = new PrintWriter(texFile);
-				//new LatexSourceFile(sf).printCoverage(pw, false, true, true);
-				new LatexSourceFile(sf).print(pw, false, true, false,false);
+				// new LatexSourceFile(sf).printCoverage(pw, false, true, true);
+				new LatexSourceFile(sf).print(pw, false, true, false, false);
 				pw.flush();
 				pw.close();
 
@@ -135,8 +135,9 @@ public class LatexBuilder
 			documentName = saveDocument(output, project.getSettings().getName(), author);
 		else
 			documentName = alternativeDocumentFileName;
-		p = Runtime.getRuntime().exec("pdflatex -halt-on-error " + documentName, null, output);
-		processes.add(p);
+		p = Runtime.getRuntime().exec("pdflatex -interaction=batchmode "
+				+ documentName, null, output);
+		// processes.add(p);
 
 		ProcessConsolePrinter p1 = new ProcessConsolePrinter(new File(output, Phase.Latex
 				+ "Err.txt"), p.getErrorStream());
@@ -146,16 +147,16 @@ public class LatexBuilder
 				+ "Out.txt"), p.getInputStream());
 		p2.start();
 
-		// try
-		// {
-		// p.waitFor();
-		// } catch (InterruptedException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// p1.interrupt();
-		// p2.interrupt();
+		try
+		{
+			p.waitFor();
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		p1.interrupt();
+		p2.interrupt();
 	}
 
 	public boolean isFinished()
