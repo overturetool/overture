@@ -30,6 +30,7 @@ import org.overture.ast.statements.SSimpleBlockStm;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.util.Utils;
 
 public class ToStringUtil
@@ -38,68 +39,100 @@ public class ToStringUtil
 	{
 		StringBuilder params = new StringBuilder();
 
-		for (List<PPattern> plist: d.getParamPatternList())
+		for (List<PPattern> plist : d.getParamPatternList())
 		{
 			params.append("(" + Utils.listToString(plist) + ")");
 		}
 
-		return d.getAccess() + d.getName().name +
-				(d.getTypeParams().isEmpty() ? ": " : "[" + getTypeListString(d.getTypeParams()) + "]: ") + d.getType() +
-				"\n\t" + d.getName().name + params + " ==\n" + d.getBody() +
-				(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
-				(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition());
+		String accessStr = d.getAccess().toString();
+		if (d.getNameScope() == NameScope.LOCAL)
+			accessStr = "";
+
+		return accessStr
+				+ d.getName().name
+				+ (d.getTypeParams().isEmpty() ? ": " : "["
+						+ getTypeListString(d.getTypeParams()) + "]: ")
+				+ d.getType()
+				+ "\n\t"
+				+ d.getName().name
+				+ params
+				+ " ==\n"
+				+ d.getBody()
+				+ (d.getPrecondition() == null ? "" : "\n\tpre "
+						+ d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n\tpost "
+						+ d.getPostcondition());
 	}
-	
+
 	public static String getImplicitFunctionString(AImplicitFunctionDefinition d)
 	{
-		return	d.getAccess() + " " +	d.getName().name +
-		(d.getTypeParams().isEmpty() ? "" : "[" + getTypeListString(d.getTypeParams()) + "]") +
-		Utils.listToString("(", getString(d.getParamPatterns()), ", ", ")") + d.getResult()+
-		(d.getBody() == null ? "" : " ==\n\t" + d.getBody()) +
-		(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
-		(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition());
+		return d.getAccess()
+				+ " "
+				+ d.getName().name
+				+ (d.getTypeParams().isEmpty() ? "" : "["
+						+ getTypeListString(d.getTypeParams()) + "]")
+				+ Utils.listToString("(", getString(d.getParamPatterns()), ", ", ")")
+				+ d.getResult()
+				+ (d.getBody() == null ? "" : " ==\n\t" + d.getBody())
+				+ (d.getPrecondition() == null ? "" : "\n\tpre "
+						+ d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n\tpost "
+						+ d.getPostcondition());
 	}
-	
+
 	private static List<String> getString(List<APatternListTypePair> node)
 	{
 		List<String> list = new Vector<String>();
 		for (APatternListTypePair pl : node)
 		{
-			list.add( "(" + getStringPattern(pl.getPatterns()) + ":" + pl.getType() + ")");	
+			list.add("(" + getStringPattern(pl.getPatterns()) + ":"
+					+ pl.getType() + ")");
 		}
 		return list;
 	}
+
 	private static String getStringPattern(List<PPattern> patterns)
 	{
 		return Utils.listToString(patterns);
 	}
-
-
 
 	private static String getTypeListString(List<LexNameToken> typeParams)
 	{
 		return "(" + Utils.listToString(typeParams) + ")";
 	}
 
-	public static String getExplicitOperationString(AExplicitOperationDefinition d)
+	public static String getExplicitOperationString(
+			AExplicitOperationDefinition d)
 	{
-		return  d.getName() + " " + d.getType() +
-		"\n\t" + d.getName() + "(" + Utils.listToString(d.getParameterPatterns()) + ")" +
-		(d.getBody() == null ? "" : " ==\n" + d.getBody()) +
-		(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
-		(d.getPostcondition()== null ? "" : "\n\tpost " + d.getPostcondition());
+		return d.getName()
+				+ " "
+				+ d.getType()
+				+ "\n\t"
+				+ d.getName()
+				+ "("
+				+ Utils.listToString(d.getParameterPatterns())
+				+ ")"
+				+ (d.getBody() == null ? "" : " ==\n" + d.getBody())
+				+ (d.getPrecondition() == null ? "" : "\n\tpre "
+						+ d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n\tpost "
+						+ d.getPostcondition());
 	}
-	
-	public static String getImplicitOperationString(AImplicitOperationDefinition d)
+
+	public static String getImplicitOperationString(
+			AImplicitOperationDefinition d)
 	{
-		return	d.getName() + Utils.listToString("(", d.getParameterPatterns(), ", ", ")") +
-		(d.getResult() == null ? "" : " " + d.getResult()) +
-		(d.getExternals().isEmpty() ? "" : "\n\text " + d.getExternals()) +
-		(d.getPrecondition() == null ? "" : "\n\tpre " + d.getPrecondition()) +
-		(d.getPostcondition() == null ? "" : "\n\tpost " + d.getPostcondition()) +
-		(d.getErrors().isEmpty() ? "" : "\n\terrs " + d.getErrors());
+		return d.getName()
+				+ Utils.listToString("(", d.getParameterPatterns(), ", ", ")")
+				+ (d.getResult() == null ? "" : " " + d.getResult())
+				+ (d.getExternals().isEmpty() ? "" : "\n\text "
+						+ d.getExternals())
+				+ (d.getPrecondition() == null ? "" : "\n\tpre "
+						+ d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n\tpost "
+						+ d.getPostcondition())
+				+ (d.getErrors().isEmpty() ? "" : "\n\terrs " + d.getErrors());
 	}
-	
 
 	public static String getDefinitionListString(
 			NodeList<PDefinition> _definitions)
@@ -108,10 +141,10 @@ public class ToStringUtil
 
 		for (PDefinition d : _definitions)
 		{
-			if(d.getAccess()!=null)
+			if (d.getAccess() != null)
 			{
-			sb.append(d.getAccess());
-			sb.append(" ");
+				sb.append(d.getAccess());
+				sb.append(" ");
 			}
 			sb.append(d.kindPDefinition() + " " + getVariableNames(d) + ":"
 					+ d.getType());
@@ -210,10 +243,10 @@ public class ToStringUtil
 			case THREAD:
 				if (d instanceof AThreadDefinition)
 				{
-					if(((AThreadDefinition) d).getOperationDef() !=null)//Differnt from VDMJ
+					if (((AThreadDefinition) d).getOperationDef() != null)// Differnt from VDMJ
 					{
-					return new LexNameList(((AThreadDefinition) d).getOperationDef().getName());
-					}else
+						return new LexNameList(((AThreadDefinition) d).getOperationDef().getName());
+					} else
 					{
 						return null;
 					}
@@ -242,85 +275,87 @@ public class ToStringUtil
 		}
 		return null;
 	}
-public static String getCasesString(ACasesStm stm)
-{
-	StringBuilder sb = new StringBuilder();
-	sb.append("cases " + stm.getExp() + " :\n");
 
-	for (ACaseAlternativeStm csa: stm.getCases())
+	public static String getCasesString(ACasesStm stm)
 	{
-		sb.append("  ");
-		sb.append(csa.toString());
+		StringBuilder sb = new StringBuilder();
+		sb.append("cases " + stm.getExp() + " :\n");
+
+		for (ACaseAlternativeStm csa : stm.getCases())
+		{
+			sb.append("  ");
+			sb.append(csa.toString());
+		}
+
+		if (stm.getOthers() != null)
+		{
+			sb.append("  others -> ");
+			sb.append(stm.getOthers().toString());
+		}
+
+		sb.append("esac");
+		return sb.toString();
 	}
 
-	if (stm.getOthers() != null)
+	public static String getIfString(AIfStm node)
 	{
-		sb.append("  others -> ");
-		sb.append(stm.getOthers().toString());
+		StringBuilder sb = new StringBuilder();
+		sb.append("if " + node.getIfExp() + "\nthen\n" + node.getThenStm());
+
+		for (AElseIfStm s : node.getElseIf())
+		{
+			sb.append(s.toString());
+		}
+
+		if (node.getElseStm() != null)
+		{
+			sb.append("else\n");
+			sb.append(node.getElseStm().toString());
+		}
+
+		return sb.toString();
 	}
 
-	sb.append("esac");
-	return sb.toString();
-}
-
-
-public static String getIfString(AIfStm node)
-{
-	StringBuilder sb = new StringBuilder();
-	sb.append("if " + node.getIfExp() + "\nthen\n" + node.getThenStm());
-
-	for (AElseIfStm s: node.getElseIf())
+	public static String getSimpleBlockString(SSimpleBlockStm node)
 	{
-		sb.append(s.toString());
-	}
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
 
-	if (node.getElseStm() != null)
-	{
-		sb.append("else\n");
-		sb.append(node.getElseStm().toString());
-	}
+		for (PStm s : node.getStatements())
+		{
+			sb.append(sep);
+			sb.append(s.toString());
+			sep = ";\n";
+		}
 
-	return sb.toString();
-}
-public static String getSimpleBlockString(SSimpleBlockStm node)
-{
-	StringBuilder sb = new StringBuilder();
-	String sep = "";
-
-	for (PStm s: node.getStatements())
-	{
-		sb.append(sep);
-		sb.append(s.toString());
-		sep = ";\n";
-	}
-
-	sb.append("\n");
-	return sb.toString();
-}
-
-public static String getBlockSimpleBlockString(ABlockSimpleBlockStm node)
-{
-	StringBuilder sb = new StringBuilder();
-	sb.append("(\n");
-
-	for (PDefinition d: node.getAssignmentDefs())
-	{
-		sb.append(d);
 		sb.append("\n");
+		return sb.toString();
 	}
 
-	sb.append("\n");
-	sb.append(getSimpleBlockString(node));
-	sb.append(")");
-	return sb.toString();
-}
+	public static String getBlockSimpleBlockString(ABlockSimpleBlockStm node)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("(\n");
 
-public static String getNonDeterministicSimpleBlockString(ANonDeterministicSimpleBlockStm node)
-{
-	StringBuilder sb = new StringBuilder();
-	sb.append("||(\n");
-	sb.append(getSimpleBlockString(node));
-	sb.append(")");
-	return sb.toString();
-}
+		for (PDefinition d : node.getAssignmentDefs())
+		{
+			sb.append(d);
+			sb.append("\n");
+		}
+
+		sb.append("\n");
+		sb.append(getSimpleBlockString(node));
+		sb.append(")");
+		return sb.toString();
+	}
+
+	public static String getNonDeterministicSimpleBlockString(
+			ANonDeterministicSimpleBlockStm node)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("||(\n");
+		sb.append(getSimpleBlockString(node));
+		sb.append(")");
+		return sb.toString();
+	}
 }
