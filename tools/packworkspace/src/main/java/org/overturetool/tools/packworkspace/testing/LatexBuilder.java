@@ -109,7 +109,8 @@ public class LatexBuilder
 
 		FileUtils.writeFile(overturesty, new File(output, "/overture.sty"));
 		FileUtils.writeFile(overturelanguagedef, new File(output, "/overturelanguagedef.sty"));
-
+		FileUtils.writeFile(FileUtils.readFile("/latex/fullpage.sty"), new File(output, "/fullpage.sty"));
+		
 		for (File f : interpreter.getSourceFiles())
 		{
 			SourceFile sf = interpreter.getSourceFile(f);
