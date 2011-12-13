@@ -20,6 +20,5 @@ Formal Methods
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=DEFAULT`CHOOSE_SURPLUS_TO_TRANSFER()
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************
