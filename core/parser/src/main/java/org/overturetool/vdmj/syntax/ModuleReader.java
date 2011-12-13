@@ -27,6 +27,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultListModel;
+
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AAllExport;
@@ -288,7 +290,10 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		// return new DLModule(name, imports, exports, library);
-		return null;// TODO
+		List<ClonableFile> files = new Vector<ClonableFile>();
+		files.add(new ClonableFile(name.location.file));
+
+		return new AModuleModules(name, imports, exports, null, files, null, null, false, false); // TODO
 	}
 
 	private AModuleExports readExports() throws ParserException, LexException
