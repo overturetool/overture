@@ -65,17 +65,17 @@ exp {-> package='org.overture.ast.expressions'}
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
-    |   {is} [typeName]:LexNameToken [basicType]:type [test]:exp [typedef]:definition
+    |   {is} [typeName]:LexNameToken (basicType):type [test]:exp [typedef]:definition
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
-    |   {isOfClass} [className]:LexNameToken [classType]:type.class [exp]:exp
-    |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* [functionType]:type.function     
+    |   {isOfClass} [className]:LexNameToken (classType):type.class [exp]:exp
+    |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* (functionType):type.function     
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp [def]:definition.multiBindList
     |   {letDef} [localDefs]:definition* [expression]:exp
     |   {def} [localDefs]:definition* [expression]:exp
     |   #Map
     |   {maplet}  [left]:exp [right]:exp
     |   {mkBasic} [arg]:exp
-    |   {mkType} [typeName]:LexNameToken [args]:exp* [recordType]:type.#invariant.record (argTypes):type*
+    |   {mkType} [typeName]:LexNameToken [args]:exp* (recordType):type.#invariant.record (argTypes):type*
     |   {mu} [record]:exp (recordType):type.#invariant.record [modifiers]:modifier.record* (modTypes):type*
     |   {new} [className]:LexIdentifierToken [args]:exp* (classdef):definition.#class (ctorDefinition):definition
     |   {nil} 
@@ -173,7 +173,7 @@ exp {-> package='org.overture.ast.expressions'}
     
 #Map {-> package='org.overture.ast.expressions'}
     =   {mapComp} [first]:exp.maplet [bindings]:multipleBind* [predicate]:exp
-    |   {mapEnum} [members]:exp.maplet* [domTypes]:type* [rngTypes]:type*
+    |   {mapEnum} [members]:exp.maplet* (domTypes):type* (rngTypes):type*
     ;
     
 #Seq {-> package='org.overture.ast.expressions'}
@@ -193,20 +193,20 @@ modifier {-> package='org.overture.ast.expressions'}
     
 alternative {-> package='org.overture.ast.expressions'}
     = {case} [location]:location [cexp]:exp [pattern]:pattern 
-             [result]:exp [defs]:definition*  [type]:type (expType):type
+             [result]:exp [defs]:definition*  (type):type (expType):type
     ;
     
 type {-> package='org.overture.ast.types'}
     =   #basic
-    |   {bracket} [type]:type
+    |   {bracket} (type):type
     |   {class} [name]:LexNameToken [classdef]:definition.#class 
     |   {function} [partial]:java_Boolean (parameters):type* (result):type 
     |   #invariant
     |   #Map 
     |   {operation} (parameters):type* (result):type
-    |   {optional} [type]:type
+    |   {optional} (type):type
     |   {parameter} [name]:LexNameToken
-    |   {product} [types]:type*
+    |   {product} (types):type*
     |   {quote} [value]:LexQuoteToken 
     |   #seq 
     |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
@@ -259,7 +259,7 @@ type {-> package='org.overture.ast.types'}
 
 field {-> package='org.overture.ast.types'}
     =   {field} [access]:accessSpecifier.accessSpecifier [tagname]:LexNameToken 
-                [tag]:java_String [type]:type [equalityAbstraction]:java_Boolean
+                [tag]:java_String (type):type [equalityAbstraction]:java_Boolean
     ;
 accessSpecifier  {-> package='org.overture.ast.types'}
   = {accessSpecifier} [access]:access [static]:static [async]:async 
@@ -281,7 +281,7 @@ pattern {-> package='org.overture.ast.patterns'}
     |   {nil}
     |   {quote} [value]:LexQuoteToken
     |   {real} [value]:LexRealToken
-    |   {record} [typename]:LexNameToken [plist]:pattern* [type]:type
+    |   {record} [typename]:LexNameToken [plist]:pattern* (type):type
     |   {seq} [plist]:pattern*
     |   {set} [plist]:pattern*
     |   {string} [value]:LexStringToken
@@ -290,19 +290,19 @@ pattern {-> package='org.overture.ast.patterns'}
     ;
     
 pair {-> package='org.overture.ast.patterns'}
-    = {patternType} [pattern]:pattern [type]:type
-    | {patternListType} [patterns]:pattern* [type]:type
+    = {patternType} [pattern]:pattern (type):type
+    | {patternListType} [patterns]:pattern* (type):type
     ; 
     
 bind {-> package='org.overture.ast.patterns'}
     =   {set} [pattern]:pattern [set]:exp //binds
-    |   {type} [pattern]:pattern [type]:type //binds
+    |   {type} [pattern]:pattern (type):type //binds
     ;
 
 //This is used in PExp and PDefinition
 multipleBind {-> package='org.overture.ast.patterns'}
     =   {set}  [set]:exp //binds
-    |   {type} [type]:type //binds
+    |   {type} (type):type //binds
     ;
 
 patternBind {-> package='org.overture.ast.patterns'}
@@ -310,15 +310,15 @@ patternBind {-> package='org.overture.ast.patterns'}
     ;
     
 definition {-> package='org.overture.ast.definitions'}
-    =   {assignment} [expression]:exp [expType]:type
+    =   {assignment} [expression]:exp (expType):type
     |   {instanceVariable} [expression]:exp (expType):type [initialized]:java_Boolean [oldname]:LexNameToken //this actually inherits assignment in Nicks tree
     |   #class 
     |   {classInvariant}  [expression]:exp
     |   {equals} [pattern]:pattern [typebind]:bind.type [setbind]:bind.set [test]:exp 
-                 [expType]:type [defType]:type [defs]:definition*
+                 (expType):type (defType):type [defs]:definition*
     |   {explicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatternList]:pattern**
-                            [type]:type.function 
+                            (type):type.function 
                             (body):exp 
                             [precondition]:exp 
                             [postcondition]:exp
@@ -360,7 +360,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (measureLexical):java_Integer
                              
                             (actualResult):type
-                            [type]:type.function
+                            (type):type.function
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                            
     |   {explicitOperation} [parameterPatterns]:pattern* 
@@ -368,7 +368,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [precondition]:exp 
                             [postcondition]:exp 
                             
-                            [type]:type.operation
+                            (type):type.operation
                             
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
@@ -386,7 +386,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp
                             [errors]:case.error*
                             
-                            [type]:type.operation
+                            (type):type.operation
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
                             (state):definition.state
@@ -405,11 +405,11 @@ definition {-> package='org.overture.ast.definitions'}
     |   {state} [fields]:field.field* 
                 [invPattern]:pattern [invExpression]:exp (invdef):definition.explicitFunction
                 [initPattern]:pattern [initExpression]:exp (initdef):definition.explicitFunction
-                (stateDefs):definition* [recordDefinition]:definition.local [recordType]:type
+                (stateDefs):definition* [recordDefinition]:definition.local (recordType):type
                 (canBeExecuted):java_Boolean //This should properly not be here, this is interpreter stuff else it should be added for all other nodes as well
                  
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.explicitOperation
-    |   {type} [invType]:type.#invariant [invPattern]:pattern [invExpression]:exp 
+    |   {type} (invType):type.#invariant [invPattern]:pattern [invExpression]:exp 
                [invdef]:definition.explicitFunction [infinite]:java_Boolean (name):LexNameToken//is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
@@ -486,10 +486,10 @@ exports {-> package='org.overture.ast.modules'}
 
 export {-> package='org.overture.ast.modules'}
     =   {all}
-    |   {function} [nameList]:LexNameToken* [exportType]:type
-    |   {operation} [nameList]:LexNameToken* [exportType]:type
+    |   {function} [nameList]:LexNameToken* (exportType):type
+    |   {operation} [nameList]:LexNameToken* (exportType):type
     |   {type} [name]:LexNameToken [struct]:java_Boolean
-    |   {value} [nameList]:LexNameToken* [exportType]:type
+    |   {value} [nameList]:LexNameToken* (exportType):type
     ;
 //patternList {-> package='org.overture.ast.patterns'}
 //    = {pattern_inner_list} [list]:pattern*
@@ -566,7 +566,7 @@ stmtAlternative {-> package='org.overture.ast.statements'}
     ;
     
 clause {-> package='org.overture.ast.statements'}
-    = {external} [mode]:LexToken [identifiers]:LexNameToken* [type]:type
+    = {external} [mode]:LexToken [identifiers]:LexNameToken* (type):type
     ;
     
 case {-> package='org.overture.ast.statements'}
@@ -579,7 +579,7 @@ Aspect Declaration
 %exp->#Unary =  [exp]:exp
     ;
 
-%exp = [type]:type [location]:location
+%exp = (type):type [location]:location
     ;
 
 %exp->#Binary = [left]:exp [op]:LexToken [right]:exp 
@@ -608,7 +608,7 @@ Aspect Declaration
         [used]:java_Boolean 
         (classDefinition):definition.#class 
         [access]:accessSpecifier.accessSpecifier
-        [type]:type 
+        (type):type 
         // [pass]:pass
     ;
 
@@ -648,7 +648,7 @@ Aspect Declaration
     ;  
     
 %import->#value 
-    = [importType]:type
+    = (importType):type
     ;
      
 %type->#Map = [from]:type [to]:type [empty]:java_Boolean
@@ -679,7 +679,7 @@ Aspect Declaration
     ;
     
 %stateDesignator 
-    = [location]:location [type]:type
+    = [location]:location (type):type
     ;
     
 %objectDesignator

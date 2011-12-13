@@ -437,7 +437,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 			// Unary, so recursion OK for left grouping
-			exp = new AMapInverseUnaryExp(null, token.location, readEvaluatorP3Expression());
+			exp = new AMapInverseUnaryExp(token.location, readEvaluatorP3Expression());
 			// exp = new MapInverseExpression(token.location, readEvaluatorP3Expression());
 		} else
 		{
@@ -724,7 +724,7 @@ public class ExpressionReader extends SyntaxReader
 								PExp last = readExpression();
 								checkFor(VDMToken.KET, 2121, "Expecting ')' after subsequence");
 								reader.unpush();
-								exp = new ASubseqExp(null, exp.getLocation(), exp, first, last);
+								exp = new ASubseqExp(exp.getLocation(), exp, first, last);
 								// exp = new SubseqExpression(exp, first, last);
 								break;
 							}
@@ -863,7 +863,7 @@ public class ExpressionReader extends SyntaxReader
 				// Includes mk_ constructors
 				LexNameToken name = lastNameToken();
 				nextToken();
-				return new AVariableExp(null, name.location, name, name.getName());
+				return new AVariableExp(name.location, name, name.getName());
 				// return new VariableExpression(name);
 
 			case IDENTIFIER:
@@ -872,7 +872,7 @@ public class ExpressionReader extends SyntaxReader
 				// use old~ names.
 				LexNameToken id = new LexNameToken(reader.currentModule, (LexIdentifierToken) token);
 				nextToken();
-				return new AVariableExp(null, id.location, id, id.getName());
+				return new AVariableExp(id.location, id, id.getName());
 				// return new VariableExpression(id);
 
 			case STRING:
@@ -1044,7 +1044,7 @@ public class ExpressionReader extends SyntaxReader
 		} while (lastToken().is(VDMToken.COMMA));
 
 		checkFor(VDMToken.KET, 2130, "Expecting ')' after mu maplets");
-		return new AMuExp(null, ve.getLocation(), record, args);
+		return new AMuExp(ve.getLocation(), record, args);
 		// return new MuExpression(ve.location, record, args);
 	}
 
@@ -1073,7 +1073,7 @@ public class ExpressionReader extends SyntaxReader
 				throwMessage(2035, "Tuple must have >1 argument");
 			}
 
-			exp = new ATupleExp(null, ve.getLocation(), args);
+			exp = new ATupleExp(ve.getLocation(), args);
 			// exp = new TupleExpression(ve.location, args);
 		} else
 		{
@@ -1132,7 +1132,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 			} else
 			{
-				exp = new AMkTypeExp(null, ve.getLocation(), typename, args, null);
+				exp = new AMkTypeExp(ve.getLocation(), typename, args);
 				// exp = new MkTypeExpression(typename, args);
 			}
 		}
@@ -1272,7 +1272,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.SET_CLOSE))
 		{
 			nextToken();
-			return new ASetEnumSetExp(null, start, null); // TODO
+			return new ASetEnumSetExp(start, null); // TODO
 			// return new SetEnumExpression(start); // empty set
 		} else if (token.is(VDMToken.MAPLET))
 		{
@@ -1318,7 +1318,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
-			result = new ASetCompSetExp(null, start, first, bindings, exp);
+			result = new ASetCompSetExp(start, first, bindings, exp);
 			// result = new SetCompExpression(start, first, bindings, exp);
 		} else
 		{
@@ -1333,7 +1333,7 @@ public class ExpressionReader extends SyntaxReader
 					PExp end = readExpression();
 					checkFor(VDMToken.SET_CLOSE, 2138, "Expecting '}' after set range");
 					reader.unpush();
-					return new ASetRangeSetExp(null, start, first, end); // TODO inheritance issue?
+					return new ASetRangeSetExp(start, first, end); // TODO inheritance issue?
 					// return new SetRangeExpression(start, first, end);
 				}
 
@@ -1349,7 +1349,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
-			result = new ASetEnumSetExp(null, start, members);
+			result = new ASetEnumSetExp(start, members);
 			// result = new SetEnumExpression(start, members);
 		}
 
@@ -1416,7 +1416,7 @@ public class ExpressionReader extends SyntaxReader
 		if (lastToken().is(VDMToken.SEQ_CLOSE))
 		{
 			nextToken();
-			return new ASeqEnumSeqExp(null, start, null);
+			return new ASeqEnumSeqExp(start, null);
 			// return new SeqEnumExpression(start); // empty list
 		}
 
@@ -1452,7 +1452,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SEQ_CLOSE, 2143, "Expecting ']' after list enumeration");
-			result = new ASeqEnumSeqExp(null, start, members);
+			result = new ASeqEnumSeqExp(start, members);
 			// result = new SeqEnumExpression(start, members);
 		}
 
@@ -1543,7 +1543,7 @@ public class ExpressionReader extends SyntaxReader
 
 		for (PPattern p : plist)
 		{
-			alts.add(new ACaseAlternative(null, exp.clone(), p.clone(), then.clone(), null, null));
+			alts.add(new ACaseAlternative(null, exp.clone(), p.clone(), then.clone(), null));
 			// alts.add(new CaseAlternative(exp, p, then));
 		}
 
@@ -1709,7 +1709,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
-		return new ANewExp(null, start, name, args);
+		return new ANewExp(start, name, args);
 		// return new NewExpression(start, name, args);
 	}
 

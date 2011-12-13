@@ -283,7 +283,7 @@ public class AUnionTypeAssistant
 			}
 
 			type.setProdType(list.isEmpty() ? null
-					: new AProductType(type.getLocation(), false, list));
+					: new AProductType(type.getLocation(), false,null, list));
 		}
 
 		return type.getProdType();

@@ -257,7 +257,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case INTEGER:
 				return SNumericBasicTypeAssistant.typeOf(((AIntegerPattern) pattern).getValue().value, pattern.getLocation());
 			case NIL:
-				return new AOptionalType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(), false));
+				return new AOptionalType(pattern.getLocation(), false,null, new AUnknownType(pattern.getLocation(), false));
 			case QUOTE:
 				return new AQuoteType(pattern.getLocation(), false, ((AQuotePattern) pattern).getValue().clone());
 			case REAL:
@@ -462,7 +462,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 		LexNameToken name = idp.getName();
 		LexLocation loc = idp.getLocation().clone();
-		return new AVariableExp(null, typeSafeClone(loc, LexLocation.class), typeSafeClone(name, LexNameToken.class), name != null ? name.getName()
+		return new AVariableExp(typeSafeClone(loc, LexLocation.class), typeSafeClone(name, LexNameToken.class), name != null ? name.getName()
 				: "");
 	}
 
@@ -472,7 +472,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	private static PExp getExpression(AIgnorePattern iptrn)
 	{
 		LexNameToken any = new LexNameToken("", "any" + var++, typeSafeClone(iptrn.getLocation(), LexLocation.class));
-		return new AVariableExp(null, typeSafeClone(iptrn.getLocation(), LexLocation.class), any, "any");
+		return new AVariableExp(typeSafeClone(iptrn.getLocation(), LexLocation.class), any, "any");
 
 	}
 
@@ -515,20 +515,20 @@ public class PPatternAssistantTC extends PPatternAssistant
 		// FIXME Consider Type info here that is set to null (type and record
 		// type) is that correct?
 		LexNameToken tpName = ptrn.getTypename();
-		return new AMkTypeExp(null, ptrn.getLocation(), typeSafeClone(tpName, LexNameToken.class), list, null);
+		return new AMkTypeExp(ptrn.getLocation(), typeSafeClone(tpName, LexNameToken.class), list);
 	}
 
 	@SuppressWarnings("unused")
 	private static PExp getExpression(ASeqPattern seqp)
 	{
-		return new ASeqEnumSeqExp(null, seqp.getLocation(), getMatchingExpressionList(seqp.getPlist()));
+		return new ASeqEnumSeqExp(seqp.getLocation(), getMatchingExpressionList(seqp.getPlist()));
 
 	}
 
 	@SuppressWarnings("unused")
 	private static PExp getExpression(ASetPattern sp)
 	{
-		return new ASetEnumSetExp(null, sp.getLocation(), getMatchingExpressionList(sp.getPlist()));
+		return new ASetEnumSetExp(sp.getLocation(), getMatchingExpressionList(sp.getPlist()));
 	}
 
 	@SuppressWarnings("unused")
@@ -541,7 +541,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	@SuppressWarnings("unused")
 	private static PExp getExpression(ATuplePattern tp)
 	{
-		return new ATupleExp(null, tp.getLocation(), getMatchingExpressionList(tp.getPlist()));
+		return new ATupleExp(tp.getLocation(), getMatchingExpressionList(tp.getPlist()));
 	}
 
 	@SuppressWarnings("unused")

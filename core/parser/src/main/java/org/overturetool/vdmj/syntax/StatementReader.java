@@ -514,12 +514,12 @@ public class StatementReader extends SyntaxReader
 			case IDENTIFIER:
 			{
 				LexNameToken tok = idToName((LexIdentifierToken) token).getExplicit(true);
-				return new AIdentifierObjectDesignator(token.location, idToName((LexIdentifierToken) token), new AVariableExp(null, token.location, tok, tok.getName()));
+				return new AIdentifierObjectDesignator(token.location, idToName((LexIdentifierToken) token), new AVariableExp(token.location, tok, tok.getName()));
 			}
 			case NAME:
 			{
 				LexNameToken tok = ((LexNameToken) token).getExplicit(true);
-				return new AIdentifierObjectDesignator(token.location, (LexNameToken) token, new AVariableExp(null, token.location, tok, tok.getName()));
+				return new AIdentifierObjectDesignator(token.location, (LexNameToken) token, new AVariableExp(token.location, tok, tok.getName()));
 			}
 			case NEW:
 				LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
@@ -540,7 +540,7 @@ public class StatementReader extends SyntaxReader
 
 				checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
 
-				return new ANewObjectDesignator(name.location, new ANewExp(null, name.location, name, args));
+				return new ANewObjectDesignator(name.location, new ANewExp(name.location, name, args));
 
 			default:
 				throwMessage(2067, "Expecting 'self', 'new' or name in object designator");
@@ -714,14 +714,14 @@ public class StatementReader extends SyntaxReader
 					throwMessage(2068, "Expecting field identifier");
 				}
 
-				sd = new AFieldStateDesignator(sd.getLocation(), null, sd, lastIdToken());
+				sd = new AFieldStateDesignator(sd.getLocation(), sd, lastIdToken());
 				nextToken();
 			} else
 			{
 				nextToken();
 				PExp exp = getExpressionReader().readExpression();
 				checkFor(VDMToken.KET, 2223, "Expecting ')' after map/seq reference");
-				sd = new AMapSeqStateDesignator(sd.getLocation(), null, sd, exp);
+				sd = new AMapSeqStateDesignator(sd.getLocation(), sd, exp);
 			}
 		}
 

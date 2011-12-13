@@ -63,11 +63,11 @@ public class AParameterTypeAssistant {
 			tl.add(new AUnknownType(type.getLocation(),false));
 		}
 
-		return new AProductType(type.getLocation(),false, tl);
+		return new AProductType(type.getLocation(),false,null, tl);
 	}
 
 	public static AProductType getProduct(AProductType type) {
-		return new AProductType(type.getLocation(),false, new NodeList<PType>(null));
+		return new AProductType(type.getLocation(),false,null, new NodeList<PType>(null));
 	}
 
 	public static boolean isType(AParameterType b,

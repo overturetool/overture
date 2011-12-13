@@ -93,14 +93,14 @@ public class SubTypeObligation extends ProofObligation {
 				|| func.getBody() instanceof ASubclassResponsibilityExp) {
 			// We have to say "f(a)" because we have no body
 
-			PExp root = new AVariableExp(null, func.getName().getLocation(),
+			PExp root = new AVariableExp(func.getName().getLocation(),
 					func.getName(), func.getName().getName());
 			List<PExp> args = new ArrayList<PExp>();
 
 			for (PPattern p : func.getParamPatternList().get(0)) {
 				args.add(PPatternAssistantTC.getMatchingExpression(p));
 			}
-			body = new AApplyExp(null, root.getLocation(), root, args);
+			body = new AApplyExp(root.getLocation(), root, args);
 
 		} else {
 			body = func.getBody();
@@ -119,7 +119,7 @@ public class SubTypeObligation extends ProofObligation {
 				|| func.getBody() instanceof ASubclassResponsibilityExp) {
 			// We have to say "f(a)" because we have no body
 
-			PExp root = new AVariableExp(null, func.getName().getLocation(),
+			PExp root = new AVariableExp(func.getName().getLocation(),
 					func.getName(), func.getName().getName());
 			List<PExp> args = new ArrayList<PExp>();
 
@@ -129,7 +129,7 @@ public class SubTypeObligation extends ProofObligation {
 				}
 			}
 
-			body = new AApplyExp(null, root.getLocation(), root, args);
+			body = new AApplyExp(root.getLocation(), root, args);
 		} else {
 			body = func.getBody();
 		}
@@ -143,7 +143,7 @@ public class SubTypeObligation extends ProofObligation {
 
 		LexNameToken tok = new LexNameToken(def.getName().module, "RESULT",
 				def.getLocation());
-		AVariableExp result = new AVariableExp(null, def.getLocation(), tok,
+		AVariableExp result = new AVariableExp(def.getLocation(), tok,
 				tok.getName());
 
 		value = ctxt.getObligation(oneType(false, result, def.getType()
@@ -158,7 +158,7 @@ public class SubTypeObligation extends ProofObligation {
 		if (def.getResult().getPattern() instanceof AIdentifierPattern) {
 			AIdentifierPattern ip = (AIdentifierPattern) def.getResult()
 					.getPattern();
-			result = new AVariableExp(null, ip.getName().getLocation(),
+			result = new AVariableExp(ip.getName().getLocation(),
 					ip.getName(), ip.getName().getName());
 		} else {
 			ATuplePattern tp = (ATuplePattern) def.getResult().getPattern();
@@ -166,11 +166,11 @@ public class SubTypeObligation extends ProofObligation {
 
 			for (PPattern p : tp.getPlist()) {
 				AIdentifierPattern ip = (AIdentifierPattern) p;
-				args.add(new AVariableExp(null, ip.getName().getLocation(), ip
+				args.add(new AVariableExp(ip.getName().getLocation(), ip
 						.getName(), ip.getName().getName()));
 			}
 
-			result = new ATupleExp(null, def.getLocation(), args);
+			result = new ATupleExp(def.getLocation(), args);
 		}
 
 		value = ctxt.getObligation(oneType(false, result, def.getType()

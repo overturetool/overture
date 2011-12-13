@@ -37,7 +37,7 @@ public class PTypeList extends Vector<PType> {
 		}
 		else
 		{
-			result = new AProductType(location,false, this);
+			result = new AProductType(location,false,null, this);
 		}
 
 		return result;
