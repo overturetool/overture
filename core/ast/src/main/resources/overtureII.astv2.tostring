@@ -98,7 +98,7 @@ import org.overturetool.util.ToStringUtil;
 %type->#basic->#numeric->rational="rat"
 %type->#basic->#numeric->real="real"
 
-%type->bracket ="(" [type] ")"
+%type->bracket = [type]
 %type->class =[classdef]$.getName().name$
 %type->function = "(" + $($ [parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + ($[partial]$ ? " -> " : " +> ")$ + [result] + ")"
 %type->#invariant->named = [name]
