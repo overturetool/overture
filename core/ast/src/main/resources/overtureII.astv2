@@ -209,7 +209,7 @@ type {-> package='org.overture.ast.types'}
     |   {product} (types):type*
     |   {quote} [value]:LexQuoteToken 
     |   #seq 
-    |   {set} [setof]:type [empty]:java_Boolean [infinite]:java_Boolean
+    |   {set} (setof):type [empty]:java_Boolean [infinite]:java_Boolean
     |   {undefined}
     |   {union} (types):type* [infinite]:java_Boolean [expanded]:java_Boolean 
         (seqDone):java_Boolean (seqType):type.#seq 
