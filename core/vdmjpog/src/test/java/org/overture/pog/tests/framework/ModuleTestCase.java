@@ -14,15 +14,19 @@ import java.util.Vector;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.ClassDefinition;
+import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligation;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.util.Base64;
@@ -75,18 +79,58 @@ public class ModuleTestCase extends BasicTypeCheckTestCase
 	private void moduleTc(String expressionString) throws ParserException,
 			LexException, IOException
 	{
+
+		if (file.getName().endsWith("vpp"))
+			Settings.dialect = Dialect.VDM_PP;
+
 		System.out.flush();
 		System.err.flush();
 		insertTCHeader();
 
 		// printFile(file);
+		boolean parseIsOk = false;
+		TypeChecker tc = null;
+		Runnable doPoG;
+		switch (Settings.dialect)
+		{
+			case VDM_SL:
+			{
+				final ModuleList modules = parse(ParserType.Module, file);
+				tc = new ModuleTypeChecker(modules);
+				doPoG = new Runnable()
+				{
 
-		ModuleList modules = parse(ParserType.Module, file);
+					public void run()
+					{
+						for (Module m : modules)
+							proofObligations.addAll(m.getProofObligations());
+					}
+				};
+			}
+				break;
+			case VDM_PP:
+			{
+				final ClassList classes = parse(ParserType.Class, file);
+				tc = new ClassTypeChecker(classes);
+				doPoG = new Runnable()
+				{
+					public void run()
+					{
+						POContextStack ctxt = new POContextStack();
+						for (ClassDefinition cd : classes)
+							proofObligations.addAll(cd.getProofObligations(ctxt));
+					}
+				};
+			}
+				break;
+			default:
+				throw new RuntimeException("Unspecified dialect: "
+						+ Settings.dialect + " among: " + Dialect.VDM_SL
+						+ " and " + Dialect.VDM_PP);
+		}
 
-		ModuleTypeChecker moduleTC = new ModuleTypeChecker(modules);
-		moduleTC.typeCheck();
-
-		boolean parseIsOk = ModuleTypeChecker.getErrorCount() == 0;
+		tc.typeCheck();
+		parseIsOk = TypeChecker.getErrorCount() == 0;
 
 		String errorMessages = null;
 		if (TypeChecker.getErrorCount() > 0)
@@ -113,10 +157,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase
 
 		if (parseIsOk)
 		{
-			for (Module m : modules)
-			{
-				proofObligations.addAll(m.getProofObligations());
-			}
+			doPoG.run();
 		}
 
 		printTCHeader();
@@ -237,9 +278,9 @@ public class ModuleTestCase extends BasicTypeCheckTestCase
 
 		for (ProofObligation po : proofObligations)
 		{
-			String poString = "|" + po.location.startLine + ":" + po.location.startPos +" " + po.name + ","
-					+ po.value + "," + po.kind + "," + po.proof + ","
-					+ po.status + "|";
+			String poString = "|" + po.location.startLine + ":"
+					+ po.location.startPos + " " + po.name + "," + po.value
+					+ "," + po.kind + "," + po.proof + "," + po.status + "|";
 			StringBuffer poAsB64 = Base64.encode(poString.getBytes(Charset.forName("UTF-8")));
 			sb.append(" PROOFOBLIGATION: ");
 			sb.append(poAsB64);
