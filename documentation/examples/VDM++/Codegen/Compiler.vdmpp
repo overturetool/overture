@@ -25,11 +25,17 @@ post RESULT not in set rng context;
 
 private getUniqeSimpleName : () ==> seq of char
 getUniqeSimpleName() == 
+(
 	while true do
-		let name : seq of char = getUniqeName() -- Use it as a source of new strings
+	(
+		let name : seq of char = getUniqeName() -- Use it as a source of new string     
 		in 
 			if (name not in set dom context) then
 				return name
+	);
+
+	return ""
+)
 post RESULT not in set dom context;
 
 public Compile : seq of char * SimpleSpecification ==> GiraffeSpecification
