@@ -654,7 +654,7 @@ public class TypeComparator
 		// but this might not be the best way to solve it
 		// if(sub == sup)
 
-		if (sub.getLocation().equals(sup.getLocation()))
+		if (sub.equals(sup))
 		{
 			return Result.Yes;
 		}
