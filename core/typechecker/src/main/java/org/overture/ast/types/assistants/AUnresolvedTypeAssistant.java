@@ -37,7 +37,8 @@ public class AUnresolvedTypeAssistant {
 			deref = PTypeAssistant.typeResolve(deref, root, rootVisitor, question);
 		}
 
-		return deref.clone();
+		//TODO: return deref.clone()
+		return deref;
 	}
 
 	private static PType dereference(AUnresolvedType type, Environment env, ATypeDefinition root)

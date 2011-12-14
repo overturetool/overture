@@ -2266,7 +2266,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		ASetType setType = new ASetType(node.getLocation(), false, etype.clone(), false, false);
+		ASetType setType = new ASetType(node.getLocation(), false, null,etype, false, false);
 		node.setType(setType);
 		node.setSetType(setType);
 		return setType;
@@ -2287,8 +2287,8 @@ public class TypeCheckerExpVisitor extends
 			types.add(mt);
 		}
 
-		node.setType(ts.isEmpty() ? new ASetType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true, false)
-				: new ASetType(node.getLocation(), false, ts.getType(node.getLocation()).clone(), false, false));
+		node.setType(ts.isEmpty() ? new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), true, false)
+				: new ASetType(node.getLocation(), false,null, ts.getType(node.getLocation()), false, false));
 
 		return node.getType();
 	}
@@ -2319,7 +2319,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3167, "Set range type must be an number", ltype.getLocation(), ltype);
 		}
 
-		node.setType(new ASetType(first.getLocation(), false, new AIntNumericBasicType(node.getLocation(), false), false, false));
+		node.setType(new ASetType(first.getLocation(), false,null, new AIntNumericBasicType(node.getLocation(), false), false, false));
 		return node.getType();
 	}
 
@@ -2730,7 +2730,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		TypeCheckerErrors.report(3078, "dunion argument is not a set of sets", node.getLocation(), node);
-		node.setType(new ASetType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), false, false));
+		node.setType(new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), false, false));
 		return node.getType();
 	}
 
@@ -2785,7 +2785,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail("Actual type", etype);
 		}
 
-		node.setType(new ASetType(node.getLocation(), false, new ANatOneNumericBasicType(node.getLocation(), false), false, false));
+		node.setType(new ASetType(node.getLocation(), false,null, new ANatOneNumericBasicType(node.getLocation(), false), false, false));
 		return node.getType();
 	}
 
@@ -2825,7 +2825,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		SMapType mt = PTypeAssistant.getMap(etype);
-		node.setType(new ASetType(node.getLocation(), false, mt.getFrom().clone(), false, false));
+		node.setType(new ASetType(node.getLocation(), false,null, mt.getFrom(), false, false));
 		return node.getType();
 	}
 
@@ -2907,7 +2907,7 @@ public class TypeCheckerExpVisitor extends
 			return node.getType();
 		}
 
-		node.setType(new ASetType(node.getLocation(), false, etype, false, false));
+		node.setType(new ASetType(node.getLocation(), false,null, etype, false, false));
 		return node.getType();
 	}
 
@@ -2989,13 +2989,13 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(arg))
 		{
 			TypeCheckerErrors.report(3085, "Argument of 'elems' is not a sequence", node.getLocation(), node);
-			node.setType(new ASetType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true, false));
+			node.setType(new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), true, false));
 			return node.getType();
 		}
 
 		SSeqType seq = PTypeAssistant.getSeq(arg);
-		node.setType(seq.getEmpty() ? new ASetType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true, false)
-				: new ASetType(node.getLocation(), false, seq.getSeqof().clone(), false, false));
+		node.setType(seq.getEmpty() ? new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), true, false)
+				: new ASetType(node.getLocation(), false,null, seq.getSeqof(), false, false));
 		return node.getType();
 	}
 }

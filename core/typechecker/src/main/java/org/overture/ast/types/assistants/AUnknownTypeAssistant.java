@@ -103,7 +103,7 @@ public class AUnknownTypeAssistant {
 	}
 
 	public static ASetType getSet(AUnknownType type) {
-		return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);
+		return new ASetType(type.getLocation(), false, null,new AUnknownType(type.getLocation(), false), true, false);
 	}
 
 	public static boolean isClass(AUnknownType type) {

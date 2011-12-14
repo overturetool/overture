@@ -267,7 +267,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case SEQ:
 				return new ASeqSeqType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(), false), false);
 			case SET:
-				return new ASetType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(), false), true, false);
+				return new ASetType(pattern.getLocation(), false,null, new AUnknownType(pattern.getLocation(), false), true, false);
 			case STRING:
 				return new ASeqSeqType(pattern.getLocation(), false, new ACharBasicType(pattern.getLocation(), false), false);
 			case TUPLE:

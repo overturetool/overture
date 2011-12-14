@@ -120,7 +120,7 @@ public class AParameterTypeAssistant {
 	}
 
 	public static ASetType getSet(AParameterType type) {
-		return new ASetType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), true, false);
+		return new ASetType(type.getLocation(), false,null, new AUnknownType(type.getLocation(), false), true, false);
 	}
 
 	public static boolean isRecord(AParameterType type) {
