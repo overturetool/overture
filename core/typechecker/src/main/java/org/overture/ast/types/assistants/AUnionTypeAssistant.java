@@ -186,7 +186,7 @@ public class AUnionTypeAssistant
 			}
 
 			type.setSetType(set.isEmpty() ? null
-					: new ASetType(location, false,null, set.getType(location).clone(), false, false));
+					: new ASetType(location, false,null, set.getType(location), false, false));
 		}
 
 		return type.getSetType();
@@ -279,7 +279,7 @@ public class AUnionTypeAssistant
 
 			for (int i = 0; i < result.size(); i++)
 			{
-				list.add(result.get(i).getType(type.getLocation()).clone());
+				list.add(result.get(i).getType(type.getLocation()));
 			}
 
 			type.setProdType(list.isEmpty() ? null
@@ -571,7 +571,7 @@ public class AUnionTypeAssistant
 			for (String tag : common.keySet())
 			{
 				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
-				fields.add(new AFieldField(null, tagname, tag, common.get(tag).getType(type.getLocation()).clone(), false));
+				fields.add(new AFieldField(null, tagname, tag, common.get(tag).getType(type.getLocation()), false));
 			}
 
 			type.setRecType(fields.isEmpty() ? null

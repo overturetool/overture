@@ -110,7 +110,7 @@ public class PTypeAssistant
 			case SEQ:
 				return new ASeqSeqType(location, false, definitions, polymorph(((SSeqType) type).getSeqof(), pname, actualType), ((SSeqType) type).getEmpty());
 			case SET:
-				return new ASetType(location, false, definitions, polymorph(((ASetType) type).getSetof().clone(), pname, actualType), ((ASetType) type).getEmpty(), false);
+				return new ASetType(location, false, definitions, polymorph(((ASetType) type).getSetof(), pname, actualType), ((ASetType) type).getEmpty(), false);
 			case UNION:
 				Set<PType> polytypesSet = new HashSet<PType>();
 

@@ -538,7 +538,6 @@ public class PogExpVisitor extends
 	public ProofObligationList caseALetDefExp(ALetDefExp node,
 			POContextStack question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (PDefinition def : node.getLocalDefs())

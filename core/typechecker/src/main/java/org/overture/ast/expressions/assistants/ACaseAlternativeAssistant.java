@@ -44,7 +44,7 @@ public class ACaseAlternativeAssistant {
 		
 		Environment local = new FlatCheckedEnvironment(c.getDefs(), question.env, question.scope);
 		question  = new TypeCheckInfo(local, question.scope,question.qualifiers);
-		c.setType(c.getResult().apply(rootVisitor, question).clone());
+		c.setType(c.getResult().apply(rootVisitor, question));
 		local.unusedCheck();
 		return c.getType();
 	}
