@@ -2551,7 +2551,7 @@ public class TypeCheckerExpVisitor extends
 		} else
 		{
 			PDefinition temp = env.findName(name, question.scope);
-			node.setVardef(temp == null ? null : temp.clone());
+			node.setVardef(temp == null ? null : temp);
 		}
 
 		if (node.getVardef() == null)
