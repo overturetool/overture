@@ -32,6 +32,7 @@ import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.pog.obligations.FuncPostConditionObligation;
 import org.overture.pog.obligations.OperationPostConditionObligation;
 import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.POForAllPredicateContext;
 import org.overture.pog.obligations.POFunctionDefinitionContext;
 import org.overture.pog.obligations.POFunctionResultContext;
 import org.overture.pog.obligations.PONameContext;
@@ -523,7 +524,9 @@ public class PogDefinitionVisitor extends
 
 		for (PDefinition def : node.getDefinitions())
 		{
+			question.push(new PONameContext(new LexNameList(def.getName())));
 			proofObligationList.addAll(def.apply(this, question));
+			question.pop();
 		}
 		return proofObligationList;
 	}
