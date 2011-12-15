@@ -206,7 +206,6 @@ public class ProjectTester
 							// Value value = i.execute(entryPoint, null);
 							statusInterpreter = runInterpreter(project, entryPoint);
 							// Console.out.println(value);
-							
 
 						} catch (Exception e)
 						{
@@ -215,13 +214,14 @@ public class ProjectTester
 							Console.out.flush();
 							statusInterpreter = ExitStatus.EXIT_ERRORS;
 
-						}catch(Error e)
+						} catch (Error e)
 						{
 							Console.err.write(e.toString());
 							Console.err.flush();
 							Console.out.flush();
 							statusInterpreter = ExitStatus.EXIT_ERRORS;
-						}finally{
+						} finally
+						{
 							Console.out.flush();
 						}
 						Console.out.write(DEVIDER_LINE);
@@ -536,8 +536,20 @@ public class ProjectTester
 		{
 			return ExitStatus.EXIT_ERRORS;
 		}
-		pcpErr.interrupt();
-		pcpOut.interrupt();
+		try
+		{
+			pcpErr.interrupt();
+		} catch (Exception e)
+		{
+
+		}
+		try
+		{
+			pcpOut.interrupt();
+		} catch (Exception e)
+		{
+
+		}
 		if (p.exitValue() == 0)
 			return ExitStatus.EXIT_OK;
 		else
