@@ -512,9 +512,6 @@ public class ProjectTester
 
 		File projectDir = new File(reportLocation, project.getSettings().getName());
 		projectDir.mkdirs();
-		ProcessConsolePrinter pcpErr = new ProcessConsolePrinter(new File(projectDir, Phase.Interpretation
-				+ "Err.txt"), p.getErrorStream());
-		pcpErr.start();
 
 		StringBuilder sb = new StringBuilder();
 		for (String cmd : command)
@@ -527,6 +524,11 @@ public class ProjectTester
 				+ "Out.txt"), p.getInputStream(), sb.toString().trim());
 		pcpOut.start();
 
+		ProcessConsolePrinter pcpErr = new ProcessConsolePrinter(new File(projectDir, Phase.Interpretation
+				+ "Err.txt"), p.getErrorStream());
+		pcpErr.start();
+
+		boolean failed = false;
 		try
 		{
 			Thread killer = new ProcessTimeOutKiller(p, 5 * 60);
@@ -534,7 +536,8 @@ public class ProjectTester
 			killer.stop();
 		} catch (Exception e)
 		{
-			return ExitStatus.EXIT_ERRORS;
+			failed = true;
+
 		}
 		try
 		{
@@ -550,7 +553,7 @@ public class ProjectTester
 		{
 
 		}
-		if (p.exitValue() == 0)
+		if (p.exitValue() == 0 && !failed)
 			return ExitStatus.EXIT_OK;
 		else
 			return ExitStatus.EXIT_ERRORS;
