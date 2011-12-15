@@ -206,7 +206,7 @@ public class ProjectTester
 							// Value value = i.execute(entryPoint, null);
 							statusInterpreter = runInterpreter(project, entryPoint);
 							// Console.out.println(value);
-							Console.out.flush();
+							
 
 						} catch (Exception e)
 						{
@@ -221,6 +221,8 @@ public class ProjectTester
 							Console.err.flush();
 							Console.out.flush();
 							statusInterpreter = ExitStatus.EXIT_ERRORS;
+						}finally{
+							Console.out.flush();
 						}
 						Console.out.write(DEVIDER_LINE);
 						Console.err.write(DEVIDER_LINE);
