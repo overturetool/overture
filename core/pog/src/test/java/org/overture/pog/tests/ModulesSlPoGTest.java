@@ -15,7 +15,9 @@ public class ModulesSlPoGTest extends BaseTestSuite
 	private enum TestSuites
 	{
 		FUNCTIONAL("functional_tests"), EXPRESSIONS("expressions"), STATEMENTS(
-				"statements"), THIRDPARTY("thirdpartytests");
+				"statements"), THIRDPARTY("thirdpartytests"), THIRDPARTY_PP(
+				THIRDPARTY.getFolder() + "/pp"), THIRDPARTY_SL(
+				THIRDPARTY.getFolder() + "/sl");
 		private String folder;
 
 		TestSuites(String folder)
@@ -54,19 +56,9 @@ public class ModulesSlPoGTest extends BaseTestSuite
 	public static Test suite() throws Exception
 	{
 		TestSuite t = new TestSuite();
-
-		// t.addTest(getSuite(ExpressionsTests.fromexample$vdmsl));
-		// t.addTest(getSuite(ExpressionsTests.smallerfromexample$vdmsl));
-		// t.addTest(getSuite(ThirdPartyTests.safer$vdm));
-		// t.addTest(getSuite(FunctionalTests.newspeakSL));
-		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
-		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
-		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
-		t.addTest(getSuite(ThirdPartyTests.db_linecond41$vdm));
-		// t.addTest(getSuite(ThirdPartyTests.recfun_40$vdm));
-		// t.addTest(getSuite(ThirdPartyTests.extexplfndef_01$vdm));
-		// t.addTest(getSuite(ThirdPartyTests.memory$vdm));
-		// t.addTest(getSuite(TestSuites.THIRDPARTY));
+		// t.addTest(getSuite(Thirdpartytests_sl.recfun_14$vdm));
+		// t.addTest(getSuite(FunctionalTests.ADTSL));
+		t.addTest(getSuite(TestSuites.THIRDPARTY_SL));
 		// t.addTest(getSuite(TestSuites.STATEMENTS));
 		// t.addTest(getSuite(TestSuites.FUNCTIONAL));
 		// t.addTest(getSuite(TestSuites.EXPRESSIONS));

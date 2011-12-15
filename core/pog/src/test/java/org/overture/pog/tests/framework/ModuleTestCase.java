@@ -12,11 +12,13 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.pog.obligations.POContextStack;
 import org.overture.pog.obligations.ProofObligation;
 import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.visitors.PogVisitor;
+import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
 import org.overturetool.vdmj.Release;
@@ -27,8 +29,10 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
+import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.util.Base64;
 
 public class ModuleTestCase extends TestCase
@@ -62,7 +66,7 @@ public class ModuleTestCase extends TestCase
 	private boolean isParseOk = true;
 	List<VDMError> errors = new Vector<VDMError>();
 	List<VDMWarning> warnings = new Vector<VDMWarning>();
-	ProofObligationList proofObligation = new ProofObligationList();
+	ProofObligationList proofObligations = new ProofObligationList();
 
 	public ModuleTestCase()
 	{
@@ -73,8 +77,9 @@ public class ModuleTestCase extends TestCase
 	private static String makePoString(ProofObligation po)
 	{
 		LexLocation loc = po.location;
-		String poString = "|" + loc.startLine + ":" + po.location.startPos + " " + po.name + "," + po.value
-				+ "," + po.kind + "," + po.proof + "," + po.status + "|";
+		String poString = "|" + loc.startLine + ":" + po.location.startPos
+				+ " " + po.name + "," + po.value + "," + po.kind + ","
+				+ po.proof + "," + po.status + "|";
 		return poString;
 	}
 
@@ -165,7 +170,7 @@ public class ModuleTestCase extends TestCase
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
-		proofObligation.clear();
+		proofObligations.clear();
 	}
 
 	public void test() throws ParserException, LexException, IOException
@@ -179,50 +184,91 @@ public class ModuleTestCase extends TestCase
 	private void moduleTc(String module) throws ParserException, LexException,
 			IOException
 	{
+		if (file.getName().endsWith("vpp"))
+			Settings.dialect = Dialect.VDM_PP;
 		System.out.flush();
 		System.err.flush();
 
-		List<AModuleModules> modules = null;
-		try
-		{
-			modules = parse(file);
-		} catch (ParserException e)
-		{
-			isParseOk = false;
-		} catch (LexException e)
-		{
-			isParseOk = false;
-		}
-
 		List<String> expectedProofObligations;
 		expectedProofObligations = getExpectedProofObligations();
-		
+
+		TypeChecker tc = null;
+		Runnable doPoG = null;
+		switch (Settings.dialect)
+		{
+			case VDM_SL:
+			{
+				final List<AModuleModules> modules;
+				try
+				{
+					modules = parse(file);
+				} catch (Exception e)
+				{
+					isParseOk = false;
+					break;
+				}
+				tc = new ModuleTypeChecker(modules);
+				doPoG = new Runnable()
+				{
+					public void run()
+					{
+						for (AModuleModules aModule : modules)
+						{
+							proofObligations.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
+						}
+					}
+				};
+			}
+				break;
+			case VDM_PP:
+			{
+				final List<SClassDefinition> classes;
+				final POContextStack question = new POContextStack();
+				try
+				{
+					classes = parse(file);
+				} catch (Exception e)
+				{
+					isParseOk = false;
+					break;
+				}
+				tc = new ClassTypeChecker(classes);
+				doPoG = new Runnable()
+				{
+
+					public void run()
+					{
+						for (SClassDefinition cd : classes)
+							proofObligations.addAll(cd.apply(new PogVisitor(), question));
+					}
+				};
+
+			}
+				break;
+			default:
+				throw new RuntimeException("Unknown dialect.");
+		}
+
 		if (isParseOk)
 		{
+			tc.typeCheck();
+			boolean typeCheckOk = TypeChecker.getErrorCount() == 0;
 
-			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
-			mtc.typeCheck();
-
-			if (TypeChecker.getErrorCount() == 0)
+			if (typeCheckOk)
 			{
-				for (AModuleModules aModule : modules)
-				{
-					proofObligation.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
-				}
-			} else
-				if (expectedProofObligations.size() > 0)
-					fail(file.getName() + " failed because of the type checker.");
-				
+				doPoG.run();
+			} else if (expectedProofObligations.size() > 0)
+				fail(file.getName() + " failed because of the type checker.");
 
 		}
 
 		// read out the expected proof obligations from the test case header
 		// (the file)
-		
-		int expPoSize = expectedProofObligations.size();
-		int actPoSize = proofObligation.size();
 
-		class Pair<V, K, Z>
+		int expPoSize = expectedProofObligations.size();
+		int actPoSize = proofObligations.size();
+
+		final class Pair<V, K, Z>
 		{
 			public V first;
 			public K middle;
@@ -237,20 +283,21 @@ public class ModuleTestCase extends TestCase
 		}
 
 		List<String> actualPos = new LinkedList<String>();
-		for (ProofObligation po : proofObligation)
+		for (ProofObligation po : proofObligations)
 			actualPos.add(makePoString(po));
 
 		List<Pair<String, String, Integer>> ratedStuff = new LinkedList<Pair<String, String, Integer>>();
 
 		String more = "";
 		List<String> notMatchedExpectedProofObligations = new LinkedList<String>();
-		//find all the exact matches
+		// find all the exact matches
 		for (String poExp : expectedProofObligations)
 		{
 			String okayPo = null;
 
 			for (String poAct : actualPos)
 			{
+
 				if (isPermutationOf(poExp, poAct))
 				{
 					okayPo = poAct;
@@ -261,24 +308,23 @@ public class ModuleTestCase extends TestCase
 			if (okayPo != null)
 			{
 				actualPos.remove(okayPo);
-			}
-			else
+			} else
 			{
 				notMatchedExpectedProofObligations.add(poExp);
 			}
 		}
 
-		//find the best match for all the expected pogs that wasn't matched exactly
+		// find the best match for all the expected pogs that wasn't matched exactly
 		int count = 0;
 		for (String poAct : actualPos)
 		{
 			int min = Integer.MAX_VALUE;
 
 			String minExpPo = null;
-			
-			if(notMatchedExpectedProofObligations.isEmpty())
+
+			if (notMatchedExpectedProofObligations.isEmpty())
 				break;
-			
+
 			for (String poExp : notMatchedExpectedProofObligations)
 			{
 				int rate = editDistance(poAct, poExp);
@@ -289,16 +335,17 @@ public class ModuleTestCase extends TestCase
 				}
 
 			}
-			ratedStuff.add(new Pair<String, String, Integer>(poAct,minExpPo,min));
+			ratedStuff.add(new Pair<String, String, Integer>(poAct, minExpPo, min));
 			notMatchedExpectedProofObligations.remove(minExpPo);
-			
+
 			if (++count > 9)
 			{
+
 				more = " And there are more...";
 				break;
 			}
 		}
-		
+
 		actualPos = actualPos.subList(count, actualPos.size());
 
 		System.out.println("Proof obligations expected: " + expPoSize
@@ -342,7 +389,7 @@ public class ModuleTestCase extends TestCase
 
 			}
 		}
-		
+
 		// Report all not matched proof obligations
 		if (expPoSize < actPoSize)
 		{
@@ -354,8 +401,7 @@ public class ModuleTestCase extends TestCase
 				System.out.println("\n" + p + "\n");
 				if (i++ > 10)
 				{
-					System.out.println("... And "
-							+ (actualPos.size() - 10)
+					System.out.println("... And " + (actualPos.size() - 10)
 							+ " more...");
 					break;
 				}
@@ -370,8 +416,7 @@ public class ModuleTestCase extends TestCase
 
 	}
 
-	private List<AModuleModules> parse(File file) throws ParserException,
-			LexException
+	private <T> List<T> parse(File file) throws ParserException, LexException
 	{
 		// if (file != null)
 		// {
@@ -382,11 +427,11 @@ public class ModuleTestCase extends TestCase
 		// }
 	}
 
-	protected List<AModuleModules> internal(LexTokenReader ltr)
-			throws ParserException, LexException
+	protected <T> List<T> internal(LexTokenReader ltr) throws ParserException,
+			LexException
 	{
-		ModuleReader reader = null;
-		List<AModuleModules> result = null;
+		SyntaxReader reader = null;
+		List<T> result = null;
 		String errorMessages = "";
 		try
 		{
@@ -433,14 +478,25 @@ public class ModuleTestCase extends TestCase
 		}
 	}
 
-	private List<AModuleModules> read(ModuleReader reader)
+	@SuppressWarnings("unchecked")
+	private static <T> List<T> read(SyntaxReader reader)
 	{
-		return reader.readModules();
+		if (reader instanceof ModuleReader)
+			return (List<T>) ModuleReader.class.cast(reader).readModules();
+
+		if (reader instanceof ClassReader)
+			return (List<T>) ClassReader.class.cast(reader).readClasses();
+
+		return null;
 	}
 
-	private ModuleReader getReader(LexTokenReader ltr)
+	private static SyntaxReader getReader(LexTokenReader ltr)
 	{
-		return new ModuleReader(ltr);
+		if (ltr.dialect == Dialect.VDM_SL)
+			return new ModuleReader(ltr);
+		if (ltr.dialect == Dialect.VDM_PP)
+			return new ClassReader(ltr);
+		return null;
 	}
 
 	private static int editDistance(String n, String m)
