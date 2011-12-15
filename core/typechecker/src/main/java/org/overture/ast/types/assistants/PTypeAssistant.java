@@ -134,6 +134,8 @@ public class PTypeAssistant
 	{
 		switch (type.kindPType())
 		{
+			case UNION:
+				return AUnionTypeAssistant.isUnknown((AUnionType)type);
 			case PARAMETER:
 			case UNKNOWN:
 				return true;

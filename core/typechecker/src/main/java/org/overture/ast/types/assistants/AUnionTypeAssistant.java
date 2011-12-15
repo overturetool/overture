@@ -60,7 +60,6 @@ public class AUnionTypeAssistant
 		try
 		{
 			PTypeSet fixed = new PTypeSet();
-			int a;
 			for (PType t : type.getTypes())
 			{
 				if (root != null)
@@ -488,7 +487,20 @@ public class AUnionTypeAssistant
 	{
 		return getNumeric(type) != null;
 	}
+	
+	public static boolean isUnknown(AUnionType type)
+	{
+		for (PType t: type.getTypes())
+		{
+			if (PTypeAssistant.isUnknown(t))
+			{
+				return true;
+			}
+		}
 
+		return false;
+	}
+		
 	public static SNumericBasicType getNumeric(AUnionType type)
 	{
 		if (!type.getNumDone())
