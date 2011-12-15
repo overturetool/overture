@@ -1107,7 +1107,6 @@ public class PogExpVisitor extends
 	public ProofObligationList defaultSNumericBinaryExp(SNumericBinaryExp node,
 			POContextStack question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp left = node.getLeft();
@@ -1234,7 +1233,6 @@ public class PogExpVisitor extends
 	public ProofObligationList caseAAndBooleanBinaryExp(
 			AAndBooleanBinaryExp node, POContextStack question)
 	{
-
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp lExp = node.getLeft();
@@ -1343,11 +1341,9 @@ public class PogExpVisitor extends
 		ProofObligationList obligations = new ProofObligationList();
 		PExp[] leftRight = getLeftRight(node);
 		PExp rExp = leftRight[RIGHT];
-		PExp lExp = leftRight[LEFT];
+			
+		obligations.addAll(defaultSNumericBinaryExp((SNumericBinaryExp)node,question));
 		
-		obligations.addAll(lExp.apply(this, question));
-		obligations.addAll(rExp.apply(this, question));
-				
 		if (!(rExp instanceof AIntLiteralExp)
 				&& !(rExp instanceof ARealLiteralExp))
 		{
@@ -1383,6 +1379,9 @@ public class PogExpVisitor extends
 		PType ltype = left.getType();
 		PType rtype = right.getType();
 
+		if(left.getLocation().startLine == 2792)
+			System.out.println("fd");
+		
 		if (PTypeAssistant.isUnion(ltype))
 		{
 			obligations.add(new SubTypeObligation(left, new ARealNumericBasicType(left.getLocation(), false), ltype, question));
