@@ -51,7 +51,7 @@ public class ProcessConsolePrinter extends Thread
 	{
 
 		String line = null;
-		BufferedReader input = new BufferedReader(new InputStreamReader(stream));
+		
 		FileWriter outputFileReader;
 		BufferedWriter outputStream = null;
 		try
@@ -63,6 +63,8 @@ public class ProcessConsolePrinter extends Thread
 				outputStream.write("\n" + headerMessage + "\n");
 				outputStream.flush();
 			}
+			
+			BufferedReader input = new BufferedReader(new InputStreamReader(stream));
 			while ((line = input.readLine()) != null)
 			{
 				outputStream.write("\n" + line);
