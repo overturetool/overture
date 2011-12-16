@@ -17,6 +17,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
@@ -524,7 +525,7 @@ public class PogDefinitionVisitor extends
 
 		for (PDefinition def : node.getDefinitions())
 		{
-			question.push(new PONameContext(new LexNameList(def.getName())));
+			question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(def)));
 			proofObligationList.addAll(def.apply(this, question));
 			question.pop();
 		}
