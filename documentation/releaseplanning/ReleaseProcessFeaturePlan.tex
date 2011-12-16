@@ -1,0 +1,283 @@
+% -*- mode: latex; mode: flyspell; coding: utf-8 -*-
+\documentclass{overturerep}
+
+\usepackage{hyperref}
+\usepackage{times}
+\usepackage[scaled]{helvet}
+\usepackage[hmargin=24mm,vmargin=36mm]{geometry}
+
+\def\today{\number\day\space\ifcase\month\or January\or February\or March\or April\or May\or June\or July\or August\or September\or October\or November\or December\fi\space\number\year} % DD Month YYYY
+
+\newenvironment{denseitemize}
+  {\begin{itemize}\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}
+  {\end{itemize}}
+\newenvironment{denseenumerate}
+  {\begin{enumerate}\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}\setlength{\parsep}{0pt}}
+  {\end{enumerate}}
+
+\newcommand{\developer}[1]{{\scriptsize \fbox{#1}}}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\medskipamount}
+
+\title{Overture Release Process \& Feature List}
+\author{Joey W. Coleman}
+\reportno{TR-2011-??}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Release Process
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\chapter{Release Process}
+
+  This section is an attempt to explain a process and rationale for
+  the release process of the Overture tool.  Much of the information
+  in this document should be obvious, however, stating it explicitly
+  is useful to reduce ambiguity in discussions.
+
+\section{Version Numbering}
+
+  Version numbers are of the generally form $x.y.z$, e.g. 1.1.2, and
+  in the run-up to a non-trivial release, may include a release
+  candidate suffix, e.g. 1.2.0-RC1.  The meaning of each position is
+  as follows:
+
+\begin{description}
+\item[Major, x.\_.\_] Indicates major changes to the tool, including
+  replacement of a foundational subsystem (such as the AST), or the
+  addition of a major new feature set (such as the possible future
+  merge of the COMPASS tool).
+
+  This sort of change requires as much testing as we can manage and
+  must use release candidates prior to release.
+
+\item[Minor, \_.x.\_] Indicates either the addition of significant
+  (but not foundational) new features or replacement of a minor
+  subsystem.  Adding a feature such as code completion is an example.
+
+  This feature requires thorough testing and should use release
+  candidates.
+
+\item[Increment, \_.\_.x] Indicates an apparently regression-free bugfix
+  release.  The only changes relative to the prior version are bug
+  fixes and very minor feature changes.
+
+  In order to allow these release to happen quickly, this sort of
+  release should not use release candidates.  However, it must pass
+  the unit test suite and it must have had the manual GUI testing
+  procedure checked.
+
+\item[Release Candidates, x.y.\_-RCn] Indicates a version that, if no
+  problems are found, could become the version indicated (1.2.0, in
+  this case).
+
+  Any release candidate should pass the unit tests and manual GUI
+  testing procedure, but this is not guaranteed.  It must pass all
+  tests before becoming a full release.
+\end{description}
+
+
+\section{Testing}
+
+  Testing, at present, is comprised of a few procedures:
+
+\begin{denseenumerate}
+\item an incomplete set of unit tests; and,
+\item an informal procedure for exercising the tool's features using the GUI; and,
+\item distributing the tool to many users to see if it works for them.
+\end{denseenumerate}
+
+  Clearly, we need to work on this.
+
+\section{Bug Tracking \& Feature Requests}
+
+  For Overture in general we use SourceForge to track both, and for
+  DESTECS we use ChessForge.  COMPASS will likely use SourceForge as
+  well.
+
+  I am strongly considering using a Trac instance to track bugs,
+  features, and releases, if only to have some automatic dependency
+  tracking.
+
+\section{Documentation}
+
+  Much more ought to be said about this.
+
+  Every release should be accompanied by release notes, the contents
+  of which are yet to be fully determined.
+
+  We need a complete build guide that lists the development tools
+  used, their role in the process (and any deviations from
+  ``standard'' usage by us), and how to invoke the process in various
+  contexts (release building, local building, etc).  This is in
+  preparation, and will end up on the wiki (at least).
+
+  This document itself is intended to be a living reference, as part
+  of this it will be updated regularly.  Furthermore, I will be
+  investigating tools like Trac to produce a task list that records
+  dependencies, release versions, and so on.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Feature Plan
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Feature Plan}
+
+  This section presents the list of planned features and an
+  approximate timeline of when they are expected to be in an official
+  release of the Overture/DESTECS/COMPASS Tool.  The intention is to
+  cover the development of all three tools, and the feature planning
+  for Overture does, occasionally, rely on the context of DESTECS and
+  (eventually) COMPASS development.
+
+  In the actions timeline, a [D] indicates a primarily DESTECS task,
+  [C] indicates primarily COMPASS.  A number in parentheses after a
+  [D] is a reference to the
+  \mbox{``Requirements\_at\_M23\_priority\_updated.pptx''} document as
+  produced at the DESTECS M23 meeting, and can safely be ignored by
+  anyone not in DESTECS.
+
+  It's worth noting that I hope to release minor versions of the
+  various tools regularly, so those are not explicitly recorded unless
+  it's relevant.
+
+\section{Actions Timeline}
+
+\subsection{December 2011}
+\begin{denseitemize}
+\item\ Release Overture 1.1.1 (done)
+\item\ [D] Release DESTECS 1.2.1 (using Overture 1.1.1, done)
+\item\ Finish new AST \developer{KEL, ARI, AKM, RAL}
+\item\ [O/D] Clean out Overture, DESTECS bugs \developer{ARI}
+\item\ Release Overture 1.1.2 (old AST), 2.0.0 (new AST)
+\item\ [C] CML grammar \developer{JWC}
+\item\ Document release plan, feature plan, build process \developer{JWC}
+\end{denseitemize}
+
+\subsection{January 2012}
+\begin{denseitemize}
+\item\ Refactor build process as much as possible \developer{JWC}
+\item\ [D] (7) Plot multiple co-simulation results \developer{KEL, CLP}
+\item\ [D] (4) Improved parameter sweeping (incl. VDM deployments) \developer{ARI}
+\item\ [D] Freeze DESTECS to Overture 1.1.2
+\item\ [D] Release DESTECS 1.2.2 (based on Overture 1.1.2)
+\item\ [C] Developer intro documentation for COMPASS workshop \developer{ARI}
+\item\ [D] (6) Pause/Resume during DESTECS simulation \developer{KEL}
+\item\ [D] (10) Now: VDM state changes aligned with 20-sim plots (was VDM real / bool plot during co-sim (hard / hacky?)) \developer{KEL with CLP}
+\end{denseitemize}
+
+\subsection{February}
+\begin{denseitemize}
+\item\ [D] (3) Finish tool / model settings access \developer{ARI with CLP}
+\item\ [D] (5) Composite Shared Design Parameters
+\item\ [C] Setup build framework to allow a COMPASS Tool package to be built
+\end{denseitemize}
+
+\subsection{March} 
+\begin{denseitemize}
+\item\ [D] (8) Finish scripting language \developer{ARI with CLP}
+\end{denseitemize}
+
+\subsection{April}
+\begin{denseitemize}
+\item\ [D] (2) Work on optimization \developer{ARI, KEL}
+\end{denseitemize}
+
+\subsection{May} 
+\begin{denseitemize}
+\item\ [D] (1,13,14) Improved examples and user manual and bugs \developer{ARI}
+\item\ [D] DESTECS development freeze
+\end{denseitemize}
+
+\subsection{June, July}
+\begin{denseitemize}
+\end{denseitemize}
+
+
+
+
+\section{Other Features}
+This section pulls in the old release planning document and adds some
+that don't yet have specific work plans.  Some may no longer be
+relevant.
+
+\begin{denseenumerate}
+\item Complete the new ASTGen utility and add all sources for it to
+  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None} \label{completeAST}
+  
+\item Include VDMDoc (inspired by JavaDoc) for all VDM dialects. / Allowing multi line comments in VDM to be represented in the AST \developer{??}
+
+\item Make VDM ast pretty printer for math syntax
+   
+\item Documentation of the Overture IDE in order to enable more
+  developers to make updates for the IDE 
+  development to follow similar principles. This shall document the
+  implementation of the editor, the parser, the builder, the outline
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}}
+    \begin{denseenumerate}
+    \item Parser 
+    \item Builder; How to insure TC is completed
+    \item How to add debug with a new interpreter and corresponding launch configuration.
+    \end{denseenumerate}
+
+\item Provide help (F1) inside Eclipse
+
+\item Provide goto definition and completion; \developer{AugustoRibeiro}
+
+\item Change to the AST generated from the new version of ASTGen all
+  over the Overture sources (i.e.\ this will affect the development of
+  UML and POtrans components). \developer{NickBattle,
+    KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
+
+\item Quick fix incorporated in the editor view of the IDE for all VDM
+  dialects. \developer{??}
+
+\item Goto definition in the edit view of the IDE across all files in
+  a project for all VDM dialects. \developer{??}
+
+\item First version of refactoring support for all VDM
+  dialects. \developer{??}
+ 
+\item Stable version of the UML mapper enabling proper round-trip
+  engineering between VDM and UML class diagrams and enable generation
+  of traces from a subset of UML sequence
+  diagrams. \developer{KennethLausdahl,PeterGormLarsen}
+
+\item First release of code generator from VDM to a programming
+  language. \developer{MarcelVerhoef}
+
+\item Increased \LaTeX\ support in the editor such that parts outside
+  the \texttt{vdm\_al} environments are highlighed as TeXClipse would
+  do it. \developer{??}
+  \item Make Java code generator
+
+\item Make C code generator
+
+\item Make C++ code generator
+
+\item Make VDM Doc parser
+
+\item Make VDM source format
+  
+\item Tests of the plug-ins
+
+\item Make a VDM model of Multi-core CPU distribution/scheduling.
+
+\item GUI unit testing within Eclipse
+
+\end{denseenumerate}
+
+
+
+\end{document}
+
+
+
