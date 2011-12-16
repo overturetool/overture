@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.types.PType;
 import org.overturetool.util.Utils;
 import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.vdmj.util.Utils;
 
 public class LexNameToken extends LexToken implements Serializable
 {
@@ -18,15 +19,14 @@ public class LexNameToken extends LexToken implements Serializable
 	public final String module;
 	public final String name;
 	public final boolean old;
-	public final boolean explicit;	// Name has an explicit module/class
+	public final boolean explicit; // Name has an explicit module/class
 
 	public List<PType> typeQualifier = null;
 
 	private int hashcode = 0;
 
-	public LexNameToken(
-		String module, String name, LexLocation location,
-		boolean old, boolean explicit)
+	public LexNameToken(String module, String name, LexLocation location,
+			boolean old, boolean explicit)
 	{
 		super(location, VDMToken.NAME);
 		this.module = module;
@@ -61,15 +61,14 @@ public class LexNameToken extends LexToken implements Serializable
 
 	public LexNameToken getOldName()
 	{
-		return new LexNameToken(module,
-			new LexIdentifierToken(name, true, location));
+		return new LexNameToken(module, new LexIdentifierToken(name, true, location));
 	}
 
 	public String getName()
 	{
 		// Flat specifications have blank module names
-		return (explicit ? (module.length() > 0 ? module + "`" : "") : "") +
-				name + (old ? "~" : "");	// NB. No qualifier
+		return (explicit ? (module.length() > 0 ? module + "`" : "") : "")
+				+ name + (old ? "~" : ""); // NB. No qualifier
 	}
 
 	public LexNameToken getPreName(LexLocation l)
@@ -104,8 +103,7 @@ public class LexNameToken extends LexToken implements Serializable
 		if (module.equals("CLASS"))
 		{
 			return new LexNameToken(name, "self", location);
-		}
-		else
+		} else
 		{
 			return new LexNameToken(module, "self", location);
 		}
@@ -116,8 +114,7 @@ public class LexNameToken extends LexToken implements Serializable
 		if (module.equals("CLASS"))
 		{
 			return new LexNameToken(name, "thread", location);
-		}
-		else
+		} else
 		{
 			return new LexNameToken(module, "thread", location);
 		}
@@ -142,11 +139,11 @@ public class LexNameToken extends LexToken implements Serializable
 	{
 		if (hashcode != 0)
 		{
-			if ((typeQualifier == null && types != null) ||
-				(typeQualifier != null && !typeQualifier.equals(types)))
+			if ((typeQualifier == null && types != null)
+					|| (typeQualifier != null && !typeQualifier.equals(types)))
 			{
-				throw new InternalException(
-					2, "Cannot change type qualifier: " + this + " to " + types);
+				throw new InternalException(2, "Cannot change type qualifier: "
+						+ this + " to " + types);
 			}
 		}
 
@@ -161,18 +158,17 @@ public class LexNameToken extends LexToken implements Serializable
 			return false;
 		}
 
-		LexNameToken lother = (LexNameToken)other;
+		LexNameToken lother = (LexNameToken) other;
 
 		if (typeQualifier != null && lother.getTypeQualifier() != null)
 		{
 			throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
-//			if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
-//			{
-//				return false;
-//			}
-		}
-		else if ((typeQualifier != null && lother.getTypeQualifier() == null) ||
-				 (typeQualifier == null && lother.getTypeQualifier() != null))
+			// if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
+			// {
+			// return false;
+			// }
+		} else if ((typeQualifier != null && lother.getTypeQualifier() == null)
+				|| (typeQualifier == null && lother.getTypeQualifier() != null))
 		{
 			return false;
 		}
@@ -182,9 +178,8 @@ public class LexNameToken extends LexToken implements Serializable
 
 	public boolean matches(LexNameToken other)
 	{
-		return module.equals(other.module) &&
-				name.equals(other.name) &&
-				old == other.old;
+		return module.equals(other.module) && name.equals(other.name)
+				&& old == other.old;
 	}
 
 	@Override
@@ -192,8 +187,8 @@ public class LexNameToken extends LexToken implements Serializable
 	{
 		if (hashcode == 0)
 		{
-			hashcode = module.hashCode() + name.hashCode() + (old ? 1 : 0) +
-				(typeQualifier == null ? 0 : typeQualifier.hashCode());
+			hashcode = module.hashCode() + name.hashCode() + (old ? 1 : 0)
+					+ (typeQualifier == null ? 0 : typeQualifier.hashCode());
 		}
 
 		return hashcode;
@@ -212,54 +207,58 @@ public class LexNameToken extends LexToken implements Serializable
 		return c;
 	}
 
-	
 	public int compareTo(LexNameToken o)
 	{
 		return toString().compareTo(o.toString());
 	}
 
-	
-	public LexLocation getLocation() {
+	public LexLocation getLocation()
+	{
 		return location;
 	}
 
-	
-	public String getModule() {
+	public String getModule()
+	{
 		return module;
 	}
 
 	@Override
-	public LexNameToken clone() {
+	public LexNameToken clone()
+	{
 		return copy();
 	}
 
-	public List<PType> getTypeQualifier() {
+	public List<PType> getTypeQualifier()
+	{
 		return typeQualifier;
 	}
 
-	
-	public boolean isOld() {
+	public boolean isOld()
+	{
 		return old;
 	}
-	
-	
+
 	@Override
-	public void apply(IAnalysis analysis) {
+	public void apply(IAnalysis analysis)
+	{
 		analysis.caseLexNameToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) {
+	public <A> A apply(IAnswer<A> caller)
+	{
 		return caller.caseLexNameToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) {
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+	{
 		caller.caseLexNameToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
+	{
 		return caller.caseLexNameToken(this, question);
 	}
 }
