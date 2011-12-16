@@ -338,6 +338,11 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case PAIR:
 			case PATTERN:
 			{
+				if (p instanceof AIgnorePattern)
+				{	
+					return getExpression((AIgnorePattern)p);
+				}
+				
 				return getExpression(p);
 			}
 			case PATTERNBIND:
@@ -472,7 +477,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	private static PExp getExpression(AIgnorePattern iptrn)
 	{
 		LexNameToken any = new LexNameToken("", "any" + var++, typeSafeClone(iptrn.getLocation(), LexLocation.class));
-		return new AVariableExp(typeSafeClone(iptrn.getLocation(), LexLocation.class), any, "any");
+		return new AVariableExp(typeSafeClone(iptrn.getLocation(), LexLocation.class), any, any.getName());
 
 	}
 

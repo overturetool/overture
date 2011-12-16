@@ -329,8 +329,10 @@ public class SClassDefinitionAssistant {
 		setInherited(d,publicClasses);
 		setInheritedDefinitions(d);
 
-		PDefinition invariant = getInvDefinition(d);
+		AExplicitOperationDefinition invariant = getInvDefinition(d);
 
+		d.setInvariant(invariant);
+		
 		if (invariant != null)
 		{
 			invariant.setClassDefinition(d);
@@ -351,7 +353,7 @@ public class SClassDefinitionAssistant {
 		
 	}
 
-	private static PDefinition getInvDefinition(SClassDefinition d) {
+	private static AExplicitOperationDefinition getInvDefinition(SClassDefinition d) {
 		
 		List<PDefinition> invdefs = getInvDefs(d);
 
