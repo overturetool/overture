@@ -10,7 +10,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.types.PType;
 import org.overturetool.util.Utils;
 import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.util.Utils;
 
 public class LexNameToken extends LexToken implements Serializable
 {
@@ -197,7 +196,9 @@ public class LexNameToken extends LexToken implements Serializable
 	@Override
 	public String toString()
 	{
-		return getName() + (typeQualifier == null ? "" : "(" + Utils.listToString(typeQualifier) + ")");
+		return getName()
+				+ (typeQualifier == null ? "" : "("
+						+ Utils.listToString(typeQualifier) + ")");
 	}
 
 	public LexNameToken copy()
