@@ -26,7 +26,12 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import javax.rmi.CORBA.Util;
+
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -143,9 +148,9 @@ public class ClassReader extends SyntaxReader
 			{
 				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
-
+				 			 	
 			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,null, superclasses, members,null,null,false,ClassDefinitionSettings.UNSET , null, false, null, false,false,false, null,false,null);
-			
+							
 			PDefinitionAssistant.setClassDefinition(def,def);
 			
 			return def;

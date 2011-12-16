@@ -1334,7 +1334,7 @@ public class DefinitionReader extends SyntaxReader
 			PExp exp = getExpressionReader().readExpression();
 			String str = getCurrentModule();
 			LexNameToken className = new LexNameToken(str, str, token.location);
-			return new AClassInvariantDefinition(token.location, className, null, null, null, null, null, exp);
+			return new AClassInvariantDefinition(token.location, className.getInvName(token.location), null, null, null, null, null, exp);
 			// return new ClassInvariantDefinition(
 			// className.getInvName(token.location), exp);
 		} else
