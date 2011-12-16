@@ -97,7 +97,7 @@ public class TypeComparator
 			if (other instanceof TypePair)
 			{
 				TypePair to = (TypePair) other;
-				return a == to.a && b == to.b;
+				return a.equals(to.a) && b.equals(to.b);
 			}
 
 			return false;
