@@ -11,6 +11,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -33,7 +34,6 @@ import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.pog.obligations.FuncPostConditionObligation;
 import org.overture.pog.obligations.OperationPostConditionObligation;
 import org.overture.pog.obligations.POContextStack;
-import org.overture.pog.obligations.POForAllPredicateContext;
 import org.overture.pog.obligations.POFunctionDefinitionContext;
 import org.overture.pog.obligations.POFunctionResultContext;
 import org.overture.pog.obligations.PONameContext;
@@ -409,6 +409,25 @@ public class PogDefinitionVisitor extends
 	{
 
 		return new ProofObligationList();
+	}
+	
+	public ProofObligationList caseAInstanceVariableDefinition(AInstanceVariableDefinition node, POContextStack question)
+	{
+		ProofObligationList obligations = new ProofObligationList();
+		
+		PExp expression = node.getExpression();
+		PType type = node.getType();
+		PType expType = node.getExpType();
+		
+		obligations.addAll(expression.apply(rootVisitor,question));
+
+		if (!TypeComparator.isSubType(question.checkType(expression, expType), type))
+		{
+			obligations.add(
+				new SubTypeObligation(expression, type, expType, question));
+		}
+
+		return obligations;
 	}
 
 	@Override
