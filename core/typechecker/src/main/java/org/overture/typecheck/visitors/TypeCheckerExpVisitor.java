@@ -1199,7 +1199,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		PType resType = results.getType(node.getLocation());
-		node.setType(resType.clone());
+		node.setType(resType);
 		return node.getType();
 	}
 
@@ -1437,7 +1437,7 @@ public class TypeCheckerExpVisitor extends
 		question.qualifiers = null;
 		rtypes.add(node.getElse().apply(rootVisitor, question));
 
-		node.setType(rtypes.getType(node.getLocation()).clone());
+		node.setType(rtypes.getType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -1796,7 +1796,7 @@ public class TypeCheckerExpVisitor extends
 
 		PType ltype = node.getLeft().apply(rootVisitor, question);
 		PType rtype = node.getRight().apply(rootVisitor, question);
-		node.setType(new AMapMapType(node.getLocation(), false, null, ltype.clone(), rtype.clone(), false));
+		node.setType(new AMapMapType(node.getLocation(), false, null, ltype, rtype, false));
 		return node.getType();
 	}
 
@@ -1832,13 +1832,13 @@ public class TypeCheckerExpVisitor extends
 		PType rec = null;
 		if (typeDef instanceof ATypeDefinition)
 		{
-			rec = ((ATypeDefinition) typeDef).getInvType().clone();
+			rec = ((ATypeDefinition) typeDef).getInvType();
 		} else if (typeDef instanceof AStateDefinition)
 		{
-			rec = ((AStateDefinition) typeDef).getRecordType().clone();
+			rec = ((AStateDefinition) typeDef).getRecordType();
 		} else
 		{
-			rec = PDefinitionAssistantTC.getType(typeDef).clone();
+			rec = PDefinitionAssistantTC.getType(typeDef);
 		}
 
 		while (rec instanceof ANamedInvariantType)
@@ -2020,7 +2020,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		PType type = PDefinitionAssistantTC.getType(classdef);
-		node.setType(type.clone());
+		node.setType(type);
 		return type;
 	}
 
@@ -2240,7 +2240,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), false, null, new AUnknownType(node.getLocation(), false, null), true)
-				: new ASeq1SeqType(node.getLocation(), false, null, ts.getType(node.getLocation()).clone(), false));
+				: new ASeq1SeqType(node.getLocation(), false, null, ts.getType(node.getLocation()), false));
 
 		return node.getType();
 	}
@@ -2444,7 +2444,7 @@ public class TypeCheckerExpVisitor extends
 		for (PExp arg : node.getArgs())
 		{
 			question.qualifiers = null;
-			types.add(arg.apply(rootVisitor, question).clone());
+			types.add(arg.apply(rootVisitor, question));
 		}
 
 		node.setType(new AProductType(node.getLocation(), false, null, types));
@@ -2672,7 +2672,7 @@ public class TypeCheckerExpVisitor extends
 
 			if (set.getEmpty() || PTypeAssistant.isSet(set.getSetof()))
 			{
-				node.setType(set.getSetof().clone());
+				node.setType(set.getSetof());
 				return set.getSetof();
 			}
 		}
@@ -2870,7 +2870,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		SMapType mt = PTypeAssistant.getMap(etype);
-		node.setType(new ASetType(node.getLocation(), false, null, mt.getTo().clone(), false, false));
+		node.setType(new ASetType(node.getLocation(), false, null, mt.getTo(), false, false));
 		return node.getType();
 	}
 

@@ -1,5 +1,6 @@
 package org.overture.typecheck.visitors;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -100,7 +101,7 @@ public class TypeCheckerDefinitionVisitor extends
 	{
 
 		question.qualifiers = null;
-		node.setExpType(node.getExpression().apply(rootVisitor, question).clone());
+		node.setExpType(node.getExpression().apply(rootVisitor, question));
 		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
@@ -184,7 +185,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		question.qualifiers = null;
 
-		node.setExpType(node.getTest().apply(rootVisitor, question).clone());
+		node.setExpType(node.getTest().apply(rootVisitor, question));
 		PPattern pattern = node.getPattern();
 
 		if (pattern != null)
@@ -249,6 +250,8 @@ public class TypeCheckerDefinitionVisitor extends
 		node.setExpectedResult(expectedResult);
 		List<List<PDefinition>> paramDefinitionList = AExplicitFunctionDefinitionAssistant.getParamDefinitions(node, node.getType(), node.getParamPatternList(), node.getLocation());
 
+		Collections.reverse(paramDefinitionList);
+		
 		for (List<PDefinition> pdef : paramDefinitionList)
 		{
 			defs.addAll(pdef); // All definitions of all parameter lists
@@ -571,7 +574,7 @@ public class TypeCheckerDefinitionVisitor extends
 			local.unusedCheck();
 		}
 
-		node.setType(node.getType().clone());
+		node.setType(node.getType());
 		return node.getType();
 	}
 
