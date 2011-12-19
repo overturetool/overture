@@ -670,15 +670,30 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		PType actualResult = node.getBody().apply(rootVisitor, new TypeCheckInfo(local, NameScope.NAMESANDSTATE));
-		node.setActualResult(actualResult.clone());
+		node.setActualResult(actualResult);
 		boolean compatible = TypeComparator.compatible(node.getType().getResult(), node.getActualResult());
-
+				
 		if ((node.getIsConstructor()
 				&& !PTypeAssistant.isType(node.getActualResult(), AVoidType.class) && !compatible)
 				|| (!node.getIsConstructor() && !compatible))
 		{
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getType().getResult());
+		}
+		else if (!node.getIsConstructor() && !PTypeAssistant.isUnknown(actualResult))
+		{
+			if (PTypeAssistant.isType(node.getType().getResult(),AVoidType.class) && 
+					!PTypeAssistant.isType(actualResult,AVoidType.class))
+    		{
+				TypeCheckerErrors.report(3312, "Void operation returns non-void value", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Actual", actualResult, "Expected", node.getType().getResult());
+    		}
+    		else if (!PTypeAssistant.isType(node.getType().getResult(),AVoidType.class) && 
+    				PTypeAssistant.isType(actualResult,AVoidType.class))
+    		{
+    			TypeCheckerErrors.report(3313, "Operation returns void value",node.getLocation(),node);
+    			TypeCheckerErrors.detail2("Actual", actualResult, "Expected", node.getType().getResult());
+    		}
 		}
 
 		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
