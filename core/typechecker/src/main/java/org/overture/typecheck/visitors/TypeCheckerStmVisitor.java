@@ -29,8 +29,8 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.assistants.ATypeBindAssistant;
 import org.overture.ast.patterns.assistants.PBindAssistant;
-import org.overture.ast.patterns.assistants.PPatternBindAssistant;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
+import org.overture.ast.patterns.assistants.PPatternBindAssistant;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -70,6 +70,7 @@ import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.statements.assistants.ABlockSimpleBlockStmAssistant;
 import org.overture.ast.statements.assistants.ACallObjectStatementAssistant;
 import org.overture.ast.statements.assistants.ACallStmAssistant;
+import org.overture.ast.statements.assistants.ANonDeterministicSimpleBlockStmAssistant;
 import org.overture.ast.statements.assistants.PStateDesignatorAssistant;
 import org.overture.ast.statements.assistants.PStmAssistant;
 import org.overture.ast.types.ABooleanBasicType;
@@ -97,6 +98,8 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.typechecker.NameScope;
+
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.VoidType;
 
 
 public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, PType> 
@@ -848,11 +851,39 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseANonDeterministicSimpleBlockStm(
 			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question) 
 	{
+		//PType r = defaultSSimpleBlockStm(node,question);
 		
-		PType r = defaultSSimpleBlockStm(node,question);
+		PTypeSet rtypes = new PTypeSet();
+		int rcount = 0;
+
+		for (PStm stmt: node.getStatements())
+		{
+			PType stype = stmt.apply(rootVisitor,question);
+
+			if (PTypeAssistant.isType(stype, AUnionType.class))
+			{
+				AUnionType ust = (AUnionType)stype;
+				for (PType t: ust.getTypes())
+				{
+					if (ANonDeterministicSimpleBlockStmAssistant.addOne(rtypes, t)) rcount++;
+				}
+			}
+			else
+			{
+				if (ANonDeterministicSimpleBlockStmAssistant.addOne(rtypes, stype)) rcount++;
+			}
+		}
 		
-		node.setType(r);
-		return r;
+		if (rcount > 1)
+		{
+			TypeCheckerErrors.warning(5016, "Some statements will not be reached",node.getLocation(),node);
+		}
+
+		return rtypes.isEmpty() ?
+			new AVoidType(node.getLocation(),false) : rtypes.getType(node.getLocation());
+		
+//		node.setType(r);
+//		return r;
 	}
 	
 	@Override
