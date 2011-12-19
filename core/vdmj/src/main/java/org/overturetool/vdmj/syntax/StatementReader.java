@@ -744,8 +744,10 @@ public class StatementReader extends SyntaxReader
 	public Statement readBlockStatement(LexLocation token)
 		throws ParserException, LexException
 	{
+		LexToken start = lastToken();
 		checkFor(Token.BRA, 2224, "Expecting statement block");
 		BlockStatement block = new BlockStatement(token, readDclStatements());
+		boolean problems = false;
 
 		while (true)	// Loop for continue in exceptions
 		{
@@ -767,6 +769,8 @@ public class StatementReader extends SyntaxReader
 			}
 			catch (ParserException e)
 			{
+				problems = true;
+				
 				if (lastToken().is(Token.EOF))
 				{
 					break;
@@ -780,6 +784,12 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(Token.KET, 2226, "Expecting ')' at end of statement block");
+		
+		if (!problems && block.statements.isEmpty())
+		{
+			throwMessage(2296, "Block cannot be empty", start);
+		}
+		
 		return block;
 	}
 

@@ -344,6 +344,7 @@ as the expected and actual values.
 2293, "Expecting '|| (a, b {,...})'"
 2294, "Expecting ')' ending || clause"
 2295, "Can't use old name here"
+2296, "Block cannot be empty"
 
 
 3000, "Expression does not match declared type"
