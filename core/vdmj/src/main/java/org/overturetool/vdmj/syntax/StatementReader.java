@@ -751,19 +751,23 @@ public class StatementReader extends SyntaxReader
 		{
 			try
 			{
-				block.add(readStatement());
-
 				while (!lastToken().is(Token.KET))
 				{
-					checkFor(Token.SEMICOLON, 2225, "Expecting ';' after statement");
     				block.add(readStatement());
+    				
+    				if (lastToken().isNot(Token.KET) && lastToken().isNot(Token.SEMICOLON))
+    				{
+    					throwMessage(2225, "Expecting ';' after statement");
+    				}
+    				
+    				ignore(Token.SEMICOLON);
     			}
 
 				break;
 			}
 			catch (ParserException e)
 			{
-				if (lastToken().is(Token.KET) || lastToken().is(Token.EOF))
+				if (lastToken().is(Token.EOF))
 				{
 					break;
 				}
