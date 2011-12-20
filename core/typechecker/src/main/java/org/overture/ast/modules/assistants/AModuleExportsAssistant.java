@@ -35,5 +35,27 @@ public class AModuleExportsAssistant
 
 		return exportDefs;
 	}
+	
+	public static Collection<? extends PDefinition> getDefinitions(AModuleExports aModuleExports)
+	{
+		List<PDefinition> exportDefs = new Vector<PDefinition>();
+
+		for (List<PExport> etype: aModuleExports.getExports())
+		{
+			for (PExport exp: etype)
+			{
+				exportDefs.addAll(PExportAssistant.getDefinition(exp));
+			}
+		}
+
+		// Mark all exports as used
+
+		for (PDefinition d: exportDefs)
+		{
+			PDefinitionAssistantTC.markUsed(d);
+		}
+
+		return exportDefs;
+	}
 
 }

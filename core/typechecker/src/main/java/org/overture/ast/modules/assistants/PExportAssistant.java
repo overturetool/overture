@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -17,6 +18,8 @@ import org.overture.ast.modules.AOperationExport;
 import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
+import org.overture.ast.node.tokens.TStatic;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -183,4 +186,58 @@ public class PExportAssistant
 		return null;
 	}
 
+	public static Collection<? extends PDefinition> getDefinition(PExport exp)
+	{
+		switch(exp.kindPExport())
+		{
+			case ALL:
+				return new LinkedList<PDefinition>();	// Nothing <shrug>
+			case FUNCTION:
+			{
+				List<PDefinition> list = new Vector<PDefinition>();
+				//AAccessSpecifierAccessSpecifier
+				for (LexNameToken name: ((AFunctionExport)exp).getNameList())
+				{
+					list.add(new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+							new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+							((AFunctionExport)exp).getExportType(),false,name.clone()));
+				}
+
+				return list;
+			}
+				
+			case OPERATION:
+				{
+					List<PDefinition> list = new Vector<PDefinition>();
+
+					for (LexNameToken name: ((AOperationExport)exp).getNameList())
+					{
+						list.add(new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+								new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+								((AOperationExport)exp).getExportType(),false,name.clone()));
+					}
+
+					return list;
+				}
+			case TYPE:
+				{	
+					return new LinkedList<PDefinition>();
+				}
+			case VALUE:
+			{
+				List<PDefinition> list = new Vector<PDefinition>();
+				
+				for (LexNameToken name: ((AValueExport)exp).getNameList())
+				{
+					list.add(new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+							new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+							((AValueExport)exp).getExportType(),true,name.clone()));
+				}
+
+				return list;
+			}
+		}
+		assert false;// "No match in switch";
+		return null;
+	}
 }

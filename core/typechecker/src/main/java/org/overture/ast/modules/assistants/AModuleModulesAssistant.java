@@ -18,7 +18,10 @@ public class AModuleModulesAssistant
 	{
 		if (m.getExports() != null)
 		{
-			m.getExportdefs().addAll(AModuleExportsAssistant.getDefinitions(m.getExports(),m.getDefs()));
+			if (!m.getIsDLModule())
+				m.getExportdefs().addAll(AModuleExportsAssistant.getDefinitions(m.getExports(),m.getDefs()));
+			else
+				m.getExportdefs().addAll(AModuleExportsAssistant.getDefinitions(m.getExports()));
 		}
 	}
 
