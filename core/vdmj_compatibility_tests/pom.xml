@@ -16,7 +16,7 @@
 	
 	<module>vdmjparsertest</module>
 	<module>vdmjtypecheckertest</module>
-	<module>vdmjpog</module>		
+	<!--module>vdmjpog</module-->		
 	</modules>
 
 </project>
