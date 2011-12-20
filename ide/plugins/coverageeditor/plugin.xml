@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.overture.ide.plugins.coverageeditor.editor.VdmPpCoverageEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="*vdmppcov"
+            icon="icons/cview32/cov_file_tsk.png"
+            id="org.overture.ide.plugins.coverageeditor.editor.vdmpp"
+            name="VDM-PP Coverage Editor">
+         <contentTypeBinding
+               contentTypeId="org.overture.ide.plugins.coverageeditor.vdmppcov.content-type">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+   
+      <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.overture.ide.plugins.coverageeditor.editor.VdmSlCoverageEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="*vdmslcov"
+            icon="icons/cview32/cov_file_tsk.png"
+            id="org.overture.ide.plugins.coverageeditor.editor.vdmsl"
+            name="VDM-SL Coverage Editor">
+         <contentTypeBinding
+               contentTypeId="org.overture.ide.plugins.coverageeditor.vdmslcov.content-type">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+   
+      <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.overture.ide.plugins.coverageeditor.editor.VdmRtCoverageEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="*vdmrtcov"
+            icon="icons/cview32/cov_file_tsk.png"
+            id="org.overture.ide.plugins.coverageeditor.editor.vdmrt"
+            name="VDM-RT Coverage Editor">
+         <contentTypeBinding
+               contentTypeId="org.overture.ide.plugins.coverageeditor.vdmrtcov.content-type">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+
+
+ <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+          <content-type
+            base-type="org.eclipse.core.runtime.text"
+            id="org.overture.ide.plugins.coverageeditor.content-type"
+            name="VDM Coverage Content type"
+            priority="normal">
+      </content-type>
+      
+      
+      <content-type
+            base-type="org.overture.ide.plugins.coverageeditor.content-type"
+            file-extensions="vdmppcov"
+            id="org.overture.ide.plugins.coverageeditor.vdmppcov.content-type"
+            name="VDM-PP Coverage Content type"
+            priority="normal">
+      </content-type>     
+       <content-type
+            base-type="org.overture.ide.plugins.coverageeditor.content-type"
+            file-extensions="vdmslcov"
+            id="org.overture.ide.plugins.coverageeditor.vdmslcov.content-type"
+            name="VDM-SL Coverage Content type"
+            priority="normal">
+      </content-type>  
+       <content-type
+            base-type="org.overture.ide.plugins.coverageeditor.content-type"
+            file-extensions="vdmrtcov"
+            id="org.overture.ide.plugins.coverageeditor.vdmrtcov.content-type"
+            name="VDM-RT Coverage Content type"
+            priority="normal">
+      </content-type>  
+   </extension>
+
+
+<extension
+       point="org.eclipse.ui.navigator.navigatorContent">
+     <commonFilter  
+            id="org.overture.resources.filters.coverageeditor.endsWithCovTbl"
+            name="%Filters.endsWithCovTbl.name"
+            description="%Filters.endsWithCovTbl.description"
+            activeByDefault="true"
+            >
+         <filterExpression>
+         	<and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+            	<test property="org.eclipse.core.resources.name" value="*.covtbl"/>	            
+	        </and>
+         </filterExpression>
+      </commonFilter> 
+ </extension>
+
+</plugin>

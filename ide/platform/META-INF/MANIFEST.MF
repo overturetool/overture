@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.overture.ide.platform
+Bundle-SymbolicName: org.overture.ide.platform;singleton:=true
+Bundle-Version: 2.1.0
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.intro,
+ org.eclipse.ui.ide.application;bundle-version="1.0.101",
+ org.eclipse.ui.views.log;bundle-version="1.0.100"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: Overture
+Bundle-Activator: org.overture.ide.platform.Activator
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .

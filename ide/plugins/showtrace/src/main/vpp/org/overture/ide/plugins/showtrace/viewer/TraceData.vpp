@@ -1,0 +1,516 @@
+\begin{vdm_al}
+class tdHistory
+
+instance variables
+  -- history
+  private hist_events: map nat to seq of IOmlTraceEvent := {|->};
+  private hist_times : seq of nat := []
+
+operations
+  protected insert: nat * seq of nat ==> seq of nat
+  insert (pval, pseq) ==
+    ( dcl res : seq of nat := [],
+          found : bool := false;
+      if pseq = []
+      then res := [pval]
+      else ( for pi in pseq do
+               if pi < pval
+               then res := res ^ [pi]
+               else if pi = pval
+                    then ( res := res ^ [pi];
+                           found := true )
+                    else if not found
+                         then ( res := res ^ [pval, pi];
+                                found := true )
+                         else res := res ^ [pi];
+             if not found
+             then res := res ^ [pval] );
+      return res ) ;
+      
+  public addHistory: IOmlTraceEvent * nat ==> ()
+  addHistory (pite,ptime) ==
+    ( -- update the history events
+      if ptime in set dom hist_events
+      then hist_events := hist_events ++ {ptime |-> hist_events(ptime) ^ [pite]}
+      else hist_events := hist_events munion {ptime |-> [pite]};
+      -- update the history times
+      hist_times := insert(ptime, hist_times) )
+    post elems hist_times = dom hist_events;
+   
+   public getHistory: nat ==> seq of IOmlTraceEvent
+   getHistory (ptime) == return hist_events(ptime)
+     pre ptime in set dom hist_events;
+        
+   public getTimes: () ==> seq of nat
+   getTimes () == return hist_times;
+   
+   public reset: () ==> ()
+   reset () == is subclass responsibility
+  
+end tdHistory
+\end{vdm_al}
+
+\begin{vdm_al}
+class TraceData
+  is subclass of tdHistory
+  
+instance variables
+  -- keep track of the CPUS
+  cpus : map nat to tdCPU := {|->};
+  cpu_order : seq of nat := [];
+  
+  -- keep track of the BUSes
+  buses : map nat to tdBUS := {|->};
+  bus_order : seq of nat := [];
+  
+  -- keep track of the threads
+  threads : map nat to tdThread := {|->};
+  
+  -- keep track of the messages
+  messages : map nat to tdMessage := {|->};
+  
+  -- keep track of the objects
+  objects : map nat to tdObject := {|->}
+    
+operations
+  public createCPU: nat * seq of char * bool ==> tdCPU
+  createCPU (pid, pname, pvirt) ==
+    ( dcl cpu : tdCPU := new tdCPU(self, pid, pname, pvirt);
+      cpus := cpus munion {pid |-> cpu};
+      cpu_order := insert(pid, cpu_order);
+      return cpu )
+    pre pid not in set dom cpus;
+    
+  public getCPU: nat ==> tdCPU
+  getCPU (pid) == return cpus(pid)
+    pre pid in set dom cpus;
+    
+  public getCPUs: () ==> set of nat
+  getCPUs () == return dom cpus;
+  
+  public getOrderedCpus: () ==> seq of nat
+  getOrderedCpus () == return cpu_order;
+  
+  public getNoCpus: () ==> nat
+  getNoCpus () == return card dom cpus;
+      
+  public createBUS: nat * seq of char * bool ==> tdBUS
+  createBUS (pid, pname, pvirt) ==
+    ( dcl bus : tdBUS := new tdBUS(self, pid, pname, pvirt);
+      buses := buses munion {pid |-> bus};
+      bus_order := insert(pid, bus_order);
+      return bus )
+    pre pid not in set dom buses;
+    
+  public getBUS: nat ==> tdBUS
+  getBUS (pid) == return buses(pid)
+    pre pid in set dom buses;
+  
+  public getBUSes: () ==> set of nat
+  getBUSes () == return dom buses;
+  
+  public getOrderedBuses: () ==> seq of nat
+  getOrderedBuses () == return bus_order;
+  
+  public getNoBuses: () ==> nat
+  getNoBuses () == return card dom buses;
+
+  public addThread: tdThread ==> ()
+  addThread (pthr) ==
+    threads := threads munion {pthr.getId() |-> pthr}
+    pre pthr.getId() not in set dom threads;
+    
+  public getThread: nat ==> tdThread
+  getThread (pthrid) == return threads(pthrid)
+    pre pthrid in set dom threads;
+  
+  public addMessage: tdMessage ==> ()
+  addMessage (pmsg) ==
+    messages := messages munion {pmsg.getMsgId() |-> pmsg}
+    pre pmsg.getMsgId() not in set dom messages;
+    
+  public getMessage: nat ==> tdMessage
+  getMessage (pmsgid) == return messages(pmsgid)
+    pre pmsgid in set dom messages;
+  
+  public createObject: nat * seq of char ==> tdObject
+  createObject (pobjid, pclnm) ==
+    ( dcl obj : tdObject := new tdObject(self, pobjid, pclnm);
+      objects := objects munion {pobjid |-> obj};
+      return obj )
+    pre pobjid not in set dom objects;
+    
+  public hasObject: nat ==> bool
+  hasObject (pobjid) == return pobjid in set dom objects;
+    
+  public getObject: nat ==> tdObject
+  getObject (pobjid) == return objects(pobjid)
+    pre hasObject(pobjid);
+        
+  public reset: () ==> ()
+  reset () ==
+    ( for all cpuid in set dom cpus do
+        cpus(cpuid).reset();
+      for all busid in set dom buses do
+        buses(busid).reset();
+      for all objid in set dom objects do
+        objects(objid).reset() )
+                  
+end TraceData
+\end{vdm_al}
+
+\begin{vdm_al}
+class tdResource
+  is subclass of tdHistory
+  
+instance variables
+  protected xpos   : nat := 0;
+  protected ypos   : nat := 0;
+  protected ctime  : nat := 0;
+  protected idle   : bool := true;
+  
+  -- keep a link to TraceData
+  protected data : TraceData
+  
+operations
+  public setX: nat ==> ()
+  setX (px) == xpos := px;
+  
+  public setY: nat ==> ()
+  setY (py) == ypos := py;
+  
+  public setTime: nat ==> ()
+  setTime (ptime) == ctime := ptime;
+  
+  public setIdle: bool ==> ()
+  setIdle (pidle) == idle := pidle;
+  
+  public getX: () ==> nat
+  getX () == return xpos;
+  
+  public getY: () ==> nat
+  getY () == return ypos;
+  
+  public getTime: () ==> nat
+  getTime () == return ctime;
+  
+  public isIdle: () ==> bool
+  isIdle () == return idle;
+  
+  public getTraceData: () ==> TraceData
+  getTraceData () == return data;
+  
+  public reset: () ==> ()
+  reset () ==
+    ( xpos := 0;
+      ypos := 0;
+      ctime := 0;
+      idle := true );
+  
+end tdResource
+\end{vdm_al}
+
+\begin{vdm_al}
+class tdCPU
+  is subclass of tdResource
+
+instance variables
+  -- CPU properties
+  id : nat;
+  name : seq of char;
+  expl : bool;
+  bus_connect : set of nat := {};
+  
+  -- threads running on this CPU
+  threads : map nat to tdThread := {|->};
+  curthr : [nat] := nil;
+  
+  -- keep track of the (visible) objects
+  objects : map nat to tdObject := {|->}
+    
+operations
+  public tdCPU: TraceData * nat * seq of char * bool ==> tdCPU
+  tdCPU (pdata, pid,pname,pexpl) == ( data := pdata; id := pid; name := pname; expl := pexpl );
+  
+  public getId: () ==> nat
+  getId () == return id;
+
+  public getName: () ==> seq of char
+  getName () == return name;
+
+  public isExplicit: () ==> bool
+  isExplicit () == return expl;
+
+  public connects: () ==> set of nat
+  connects () == return bus_connect;
+        
+  public connect: nat ==> ()
+  connect (pbid) == bus_connect := bus_connect union {pbid};
+  
+  public createThread: nat ==> tdThread
+  createThread (pthrid) ==
+    ( dcl thr : tdThread := new tdThread(self, pthrid);
+      threads := threads munion {pthrid |-> thr};
+      data.addThread(thr);
+      return thr )
+    pre pthrid not in set dom threads;
+    
+  public getThread: nat ==> tdThread
+  getThread (pthrid) == return threads(pthrid)
+    pre pthrid in set dom threads;
+    
+  public setCurrentThread: [nat] ==> ()
+  setCurrentThread (pthr) ==
+    if pthr = nil
+    then ( curthr := nil;
+           setIdle(true) )
+    else if pthr not in set dom threads
+         then error
+         else ( curthr := pthr;
+                setIdle(false) );
+                
+  public hasCurrentThread: () ==> bool
+  hasCurrentThread () == return curthr <> nil;
+  
+  public getCurrentThread: () ==> tdThread
+  getCurrentThread () == return getThread(curthr)
+    pre hasCurrentThread();
+
+  public addObject: tdObject ==> ()
+  addObject (pobj) ==
+    objects := objects munion {pobj.getId() |-> pobj} 
+    pre not hasObject(pobj.getId());
+    
+  public hasObject: nat ==> bool
+  hasObject (pobjid) == return pobjid in set dom objects;
+    
+  public getObject: nat ==> tdObject
+  getObject (pobjid) == return objects(pobjid)
+    pre hasObject(pobjid);
+  
+  public getObjects: () ==> set of nat
+  getObjects () == return dom objects;
+    
+  public hasObjectAt: nat * nat ==> bool
+  hasObjectAt (pobjid, ptime) ==
+    return id = getTraceData().getObject(pobjid).deployedAt(ptime);
+    
+  public reset: () ==> ()
+  reset () ==
+    ( -- call the base class reset operation
+      tdHistory`reset(); 
+      -- reset all threads and objects
+      objects := {|->};
+      curthr := nil;
+      for all thrid in set dom threads do
+        threads(thrid).reset() )
+        
+end tdCPU
+\end{vdm_al}
+
+\begin{vdm_al}
+class tdBUS
+  is subclass of tdResource
+
+instance variables
+  -- BUS properties
+  id : nat;
+  name : seq of char;
+  expl : bool;
+  cpu_connect : set of nat := {};
+  
+  -- messages exchanged through this BUS
+  messages : map nat to tdMessage := {|->}
+  
+operations
+  public tdBUS: TraceData * nat * seq of char * bool ==> tdBUS
+  tdBUS (pdata, pid,pname,pexpl) == ( data := pdata; id := pid; name := pname; expl := pexpl );
+  
+  public getId: () ==> nat
+  getId () == return id;
+  
+  public getName: () ==> seq of char
+  getName () == return name;
+    
+  public isExplicit: () ==> bool
+  isExplicit () == return expl;
+      
+  public connects: () ==> set of nat
+  connects () == return cpu_connect;
+        
+  public connect: nat ==> ()
+  connect (pbid) == cpu_connect := cpu_connect union {pbid};
+  
+  public createMessage: nat * nat * nat * nat * [nat] * [nat] * seq of char ==> tdMessage
+  createMessage (pmsgid, pfrom, pfromthr, pto, ptothr, ptoobj, pdescr) ==
+    ( dcl msg : tdMessage := new tdMessage(self, pmsgid, pfrom, pfromthr, pto, ptothr, ptoobj, pdescr);
+      messages := messages munion {pmsgid |-> msg};
+      data.addMessage(msg);
+      return msg )
+    pre pmsgid not in set dom messages;
+    
+  public getMessage: nat ==> tdMessage
+  getMessage (pmsgid) == return messages(pmsgid)
+    pre pmsgid in set dom messages;
+  
+  public reset: () ==> ()
+  reset () ==
+    ( -- call the base class reset operation
+      tdHistory`reset(); 
+      -- reset all messages
+      for all msgid in set dom messages do
+        messages(msgid).reset() )
+        
+end tdBUS
+\end{vdm_al}
+
+\begin{vdm_al}
+class tdMessage
+  is subclass of tdHistory
+  
+instance variables
+  -- the BUS this message is transported on
+  theBus : tdBUS;
+  
+  -- message identifier
+  id : nat;
+  from_cpu : nat;
+  from_thr : nat;
+  to_cpu : nat;
+  to_thr : [nat];
+  to_obj : [nat];
+  descr : seq of char
+  
+operations
+  public tdMessage: tdBUS * nat * nat * nat * nat * [nat] * [nat] * seq of char ==> tdMessage
+  tdMessage (bus, pmsgid, pfrom, pfromthr, pto, ptothr, ptoobj, pdescr) ==
+    ( theBus := bus; id := pmsgid;
+      from_cpu := pfrom; from_thr := pfromthr;
+      to_cpu := pto; to_thr := ptothr; to_obj := ptoobj;
+      descr := pdescr );
+  
+  public getMsgId: () ==> nat
+  getMsgId () == return id;
+  
+  public getBusId: () ==> nat
+  getBusId () == return theBus.getId();
+  
+  public getFromCpu: () ==> nat
+  getFromCpu () == return from_cpu;
+  
+  public getFromThread: () ==> nat
+  getFromThread () == return from_thr;
+  
+  public getToCpu: () ==> nat
+  getToCpu () == return to_cpu;
+  
+  public hasToThread: () ==> bool
+  hasToThread () == return to_thr <> nil;
+  
+  public getToThread: () ==> nat
+  getToThread () == return to_thr
+    pre hasToThread();
+  
+  public getToObj: () ==> nat
+  getToObj () == return to_obj
+    pre hasToObj();
+  
+  public hasToObj: () ==> bool
+  hasToObj () == return to_obj <> nil;
+  
+  public getDescr: () ==> seq of char
+  getDescr () == return descr;
+  
+  public reset: () ==> ()
+  reset () == skip
+    
+end tdMessage
+\end{vdm_al}
+
+\begin{vdm_al}
+class tdThread
+  is subclass of tdHistory
+  
+instance variables
+  -- the CPU this thread is running on
+  theCpu : tdCPU;
+  
+  -- thread identifier
+  id : nat;
+  
+  -- the current object
+  curobj : seq of nat := [];
+  
+  -- the thread status
+  blocked : bool := false
+  
+operations
+  public tdThread: tdCPU * nat ==> tdThread
+  tdThread (cpu, pthrid) == ( theCpu := cpu; id := pthrid );
+  
+  public getId: () ==> nat
+  getId () == return id;
+  
+  public setStatus: bool ==> ()
+  setStatus (pblocked) == blocked := pblocked;
+  
+  public getStatus: () ==> bool
+  getStatus () == return blocked;
+
+  public pushCurrentObject: nat ==> ()
+  pushCurrentObject (pobjid) == curobj := [pobjid] ^ curobj;
+  
+  public popCurrentObject: () ==> ()
+  popCurrentObject () == curobj := tl curobj;
+  
+  public hasCurrentObject: () ==> bool
+  hasCurrentObject () == return len curobj > 0;
+  
+  public getCurrentObject: () ==> tdObject
+  getCurrentObject () == return theCpu.getTraceData().getObject(hd curobj)
+    pre hasCurrentObject();
+      
+  public reset: () ==> ()
+  reset () == ( curobj := []; blocked := false)
+    
+end tdThread
+\end{vdm_al}
+
+\begin{vdm_al}
+class tdObject
+  is subclass of tdResource
+  
+instance variables
+  
+  -- the object identifier
+  id : nat;
+  
+  -- the class name of the object
+  name : seq of char;
+  
+  -- the deployment information
+  where: seq of (nat * nat) := []
+  
+operations
+  public tdObject: TraceData * nat * seq of char ==> tdObject
+  tdObject (pdata, pobjid, pname) == ( data := pdata; id := pobjid; name := pname );
+  
+  public getId: () ==> nat
+  getId () == return id;
+  
+  public getName: () ==> seq of char
+  getName () == return name;
+  
+  public deploy: nat * nat ==> ()
+  deploy (pcpu, ptime) == where := [mk_ (pcpu,ptime)] ^ where;
+  
+  public deployedAt: nat ==> nat
+  deployedAt (ptime) ==
+    ( for dinfo in where do
+        def mk_(cpunm,etime) = dinfo in
+          if ptime >= etime
+          then return cpunm;
+      error )
+          
+end tdObject
+\end{vdm_al}

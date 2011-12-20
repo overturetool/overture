@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.quickinterpreter.view.VdmQuickInterpreter"
+            icon="icons/cview16/qint_tsk.png"
+            id="org.overture.ide.plugins.quickinterpreter.viewinterpreter"
+            name="VDM Quick Interpreter"
+            restorable="true">
+      </view>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.overture.ide.ui.perspective">
+         <view
+               id="org.overture.ide.plugins.quickinterpreter.viewinterpreter"
+               minimized="true"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+
+
+
+
+</plugin>
