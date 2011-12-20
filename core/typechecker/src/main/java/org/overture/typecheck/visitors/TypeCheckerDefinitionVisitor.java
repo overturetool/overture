@@ -41,7 +41,12 @@ import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.PTraceDefinitionAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
+import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
@@ -1300,4 +1305,66 @@ public class TypeCheckerDefinitionVisitor extends
 		return node.getType();
 	}
 
+	@Override
+	public PType caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
+	{
+		AMultiBindListDefinition def = new AMultiBindListDefinition(node.getBind().getLocation(),
+				null,null,null,null,null,null,PMultipleBindAssistant.getMultipleBindList(node.getBind()),null); 
+		node.setDef(def);
+		//PDefinitionListAssistant.typeResolve(def, rootVisitor, question);
+		node.getDef().apply(rootVisitor,question);
+		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+
+		if (node.getStexp() != null &&
+			!PTypeAssistant.isType(
+					node.getStexp().apply(rootVisitor, new TypeCheckInfo(local, question.scope)), 
+					ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3225,
+				"Such that clause is not boolean", node.getStexp().getLocation(),node);
+		}
+
+		node.getBody().apply(rootVisitor,new TypeCheckInfo(local, question.scope));
+		local.unusedCheck();
+		
+		return null;
+	}
+	
+	@Override
+	public PType caseARepeatTraceDefinition(ARepeatTraceDefinition node, TypeCheckInfo question)
+	{
+		//Environment local = question.env;
+		node.getCore().apply(rootVisitor,question);
+
+		if (node.getFrom() > node.getTo())
+		{
+			TypeCheckerErrors.report(3277, "Trace repeat illegal values", node.getLocation(),node);
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public PType caseABracketedExpressionTraceCoreDefinition(
+			ABracketedExpressionTraceCoreDefinition node, 
+			TypeCheckInfo question)
+	{
+		for (List<PTraceDefinition> term : node.getTerms())
+		{
+			for(PTraceDefinition def : term )
+			{
+				def.apply(rootVisitor,question);
+			}
+		}
+				
+		return null;
+	}
+
+	@Override
+	public PType caseAApplyExpressionTraceCoreDefinition(AApplyExpressionTraceCoreDefinition node, TypeCheckInfo question)
+	{
+		node.getCallStatement().apply(rootVisitor, question);
+		return null;
+	}
+	
 }

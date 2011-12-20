@@ -2,6 +2,8 @@ package org.overture.typecheck.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.traces.PTraceCoreDefinition;
+import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
@@ -95,5 +97,15 @@ public class TypeCheckVisitor extends
 	public PType defaultPStmtAlternative(PStmtAlternative node,
 			TypeCheckInfo question) {
 		return node.apply(tcStm, question);
+	}
+	
+	public PType defaultPTraceDefinition(PTraceDefinition node, TypeCheckInfo question)
+	{
+		return node.apply(tcDefinition,question);
+	}
+	
+	public PType defaultPTraceCoreDefinition(PTraceCoreDefinition node, TypeCheckInfo question)
+	{
+		return node.apply(tcDefinition,question);
 	}
 }
