@@ -1,4 +1,4 @@
--- TCErrors: WARNING:5012:241,3
+-- TCErrors: ERROR:3139:326,9 WARNING:5012:241,3
 
 
 --ast.vdmsl
