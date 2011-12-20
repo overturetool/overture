@@ -1,5 +1,0 @@
-instructions.configure=\
-  addRepository(type:0,location:http${#58}//download.eclipse.org/releases/galileo,name:Galileo Update Site);\
-  addRepository(type:1,location:http${#58}//download.eclipse.org/releases/galileo,name:Galileo Update Site);\
-  addRepository(type:0,location:http${#58}//overture.sourceforge.net/ide/repository);\
-  addRepository(type:1,location:http${#58}//overture.sourceforge.net/ide/repository);
