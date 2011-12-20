@@ -145,7 +145,7 @@
 	</fileset>
 </copy>
 
-<copy todir="${buildDirectory}/plugins/generated.showtrace">
+<!-- copy todir="${buildDirectory}/plugins/generated.showtrace">
 	<fileset dir="../generated/showtrace">
 		<exclude name="**/target/" />
 	</fileset>
@@ -167,7 +167,7 @@
 	<fileset dir="../generated/vdmj">
 		<exclude name="**/target/" />
 	</fileset>
-</copy>
+</copy-->
 
 <copy todir="${buildDirectory}">
 	<fileset dir="../">

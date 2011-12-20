@@ -1,32 +1,30 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.overture</groupId>
-    <artifactId>ide</artifactId>
-    <version>2.0.0</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.overture</groupId>
+		<artifactId>ide</artifactId>
+		<version>2.1.0</version>
+	</parent>
 
-  <groupId>org.overture.ide</groupId>
-  <artifactId>org.overture.ide.plugins</artifactId>
-  <packaging>pom</packaging>
-  <version>2.0.0</version>
-  <name>Overture IDE core plugins GUI</name>
-  <description>Providing GUI for all integrated core plugins</description>
+	<groupId>org.overture.ide</groupId>
+	<artifactId>org.overture.ide.plugins</artifactId>
+	<packaging>pom</packaging>
+	<version>2.1.0</version>
+	<name>Overture IDE core plugins GUI</name>
+	<description>Providing GUI for all integrated core plugins</description>
 
-  <modules>
-    <!-- Put all child Eclipse Plugin projects(modules) here -->
-    <module>umltrans</module>
-    <module>showtrace</module>
-    <module>traces</module>
-   
-    <!--module>proofsupport</module-->
-    <module>poviewer</module>
-    <module>latex</module>
-    <module>quickinterpreter</module>
-    <module>coverageeditor</module>
-    <module>csk</module>
+	<modules>
+		<module>coverageeditor</module>
+		<module>csk</module>
+		<module>quickinterpreter</module>
 		<module>externaleditor</module>
+		<module>latex</module>
+		<module>poviewer</module>
 
+		<module>umltrans</module>
+		<module>showtrace</module>
+		<module>traces</module>
 
-  </modules>
+	</modules>
 </project>

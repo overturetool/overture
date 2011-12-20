@@ -5,15 +5,13 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
-		<version>1.0.0</version>
+		<version>2.1.0</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>jmltrans</artifactId>
 	<name>The VDM++ to JML translator</name>
-	<build>
-		<finalName>org.overturetool.jmltrans-${version}
-		</finalName>
-	</build>
+<version>2.1.0</version>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.swinglabs</groupId>
@@ -24,19 +22,19 @@
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>stdlib</artifactId>
-			<version>1.0.0</version>
+			<version>2.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>ast</artifactId>
-			<version>1.0.0</version>
+			<version>2.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>parser</artifactId>
-			<version>1.0.0</version>
+			<version>2.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>	

@@ -2,34 +2,26 @@
   <parent>
     <artifactId>dbgp</artifactId>
     <groupId>org.overturetool.vdmtools</groupId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overturetool.vdmtools.dbgp</groupId>
   <artifactId>vdmtoolsdbgp</artifactId>
   <name>vdmtoolsdbgp</name>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+   
     <dependency>
     	<groupId>org.overturetool.vdmtools.dbgp</groupId>
     	<artifactId>abstractdbgp</artifactId>
-    	<version>2.0.0</version>
+    	<version>2.1.0</version>
     </dependency>
     <dependency>
     	<groupId>org.overturetool</groupId>
     	<artifactId>vdmtoolsapi</artifactId>
-    	<version>2.0.0</version>
+    	<version>2.1.0</version>
     </dependency>
   </dependencies>
-  <dependencyManagement>
-  	<dependencies>
-  	</dependencies>
-  </dependencyManagement>
+ 
 </project>

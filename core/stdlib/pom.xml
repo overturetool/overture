@@ -1,24 +1,23 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<parent>
-<groupId>org.overturetool</groupId>
-<artifactId>core</artifactId>
-<version>2.0.0</version>
-</parent>
-<groupId>org.overturetool.core</groupId>
-<artifactId>stdlib</artifactId>
-<version>2.0.1</version>
-<packaging>jar</packaging>
-<name>The Overture Standard Library for CG code</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.overturetool</groupId>
+		<artifactId>core</artifactId>
+		<version>2.1.0</version>
+	</parent>
+	<groupId>org.overturetool.core</groupId>
+	<artifactId>stdlib</artifactId>
+	<version>2.1.0</version>
+	<packaging>jar</packaging>
+	<name>The Overture Standard Library for CG code</name>
 
 
-<dependencies>
-	<dependency>
-		<groupId>org.overturetool.core.vdmtools</groupId>
-		<artifactId>cglib</artifactId>
-		<version>2.0.0</version>
-	</dependency>
-
-</dependencies>
-
+	<dependencies>
+		<dependency>
+			<groupId>org.overturetool.core.vdmtools</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+	</dependencies>
 </project>

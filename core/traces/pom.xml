@@ -1,181 +1,104 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <version>2.0.1</version>
-  <parent>
-    <groupId>org.overturetool</groupId>
-    <artifactId>core</artifactId>
-    <version>2.0.0</version>
-  </parent>
-  <groupId>org.overturetool.core</groupId>
-  <artifactId>traces</artifactId>
-  <name>Combinatorial Testing of VDM++ models</name>
-  <dependencies>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>vdmj</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>parser</artifactId>
-      <version>2.0.1</version>
-    </dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.overturetool</groupId>
+		<artifactId>core</artifactId>
+		<version>2.1.0</version>
+	</parent>
+	<groupId>org.overturetool.core</groupId>
+	<artifactId>traces</artifactId>
+	<name>Combinatorial Testing of VDM++ models</name>
+<version>2.1.0</version>
+	<dependencies>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>vdmj</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>parser</artifactId>
+			<version>2.1.0</version>
+		</dependency>
 
-    <dependency>
-      <groupId>org.overturetool.core.vdmtools</groupId>
-      <artifactId>vdmtoolsapi</artifactId>
-      <version>2.0.0</version>
-    </dependency>
+		<dependency>
+			<groupId>org.overturetool.core.vdmtools</groupId>
+			<artifactId>vdmtoolsapi</artifactId>
+			<version>2.1.0</version>
+		</dependency>
 
-  </dependencies>
-
-
-  <build>
-    <plugins>
-    
-      <plugin>
-        <!-- NOTE: We don't need a groupId specification because the group is
-             org.apache.maven.plugins ...which is assumed by default.
-         -->
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-           <archive>
-            <manifest>
-              <mainClass>org.overturetool.traces.MainClass</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-        </plugin>
-    
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.overturetool.tools</groupId>
-        <artifactId>vdmt</artifactId>
-        <version>2.0.0</version>
-        <configuration>
-          <excludePackages>
-            <param>
-              org.overturetool.traces.test
-            </param>
-            <param>
-              org.overturetool.traces.astspec
-            </param>
-            <param>org.overturetool.traces.API.vdmunit</param>
-          </excludePackages>
-          <excludeClasses>
-
-          </excludeClasses>
-          <importPackages>
-            <param>org.overturetool.ast.itf</param>
-            <param>org.overturetool.ast.imp</param>
-          </importPackages>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+	</dependencies>
 
 
+	<build>
+		<plugins>
 
-  <!-- Reporting section used in site generation-->
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.5</version>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jxr-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clover-plugin</artifactId>
-      </plugin>
+			<plugin>
+				<!-- NOTE: We don't need a groupId specification because the group is 
+					org.apache.maven.plugins ...which is assumed by default. -->
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.2</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>org.overturetool.traces.MainClass</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-changes-plugin</artifactId>
-        <inherited>false</inherited>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>changes-report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-        <configuration>
-          <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
+			<plugin>
+				<groupId>org.overturetool.tools</groupId>
+				<artifactId>vdmt</artifactId>
+				<version>2.1.0</version>
+				<configuration>
+					<excludePackages>
+						<param>org.overturetool.traces.test</param>
+						<param>org.overturetool.traces.astspec</param>
+						<param>org.overturetool.traces.API.vdmunit</param>
+					</excludePackages>
+					<excludeClasses>
 
-
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <targetjdk>1.5</targetjdk>
-          <rulesets>
-            <ruleset>/rulesets/basic.xml</ruleset>
-            <ruleset>/rulesets/controversial.xml</ruleset>
-          </rulesets>
-          <format>xml</format>
-          <linkXref>true</linkXref>
-          <sourceEncoding>utf-8</sourceEncoding>
+					</excludeClasses>
+					<importPackages>
+						<param>org.overturetool.ast.itf</param>
+						<param>org.overturetool.ast.imp</param>
+					</importPackages>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 
-          <minimumTokens>100</minimumTokens>
-        </configuration>
-      </plugin>
-    </plugins>
-
-  </reporting>
-  
-  
-  
-   <developers>
-    <developer>
-      <id>KennethLausdahl</id>
-      <name>Kenneth Lausdahl</name>
-      <email />
-      <url>http://www.lausdahl.com</url>
-      <organization>IHA</organization>
-      <organizationUrl>http://iha.dk</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-     <developer>
-      <id>PeterGormLarsen</id>
-      <name>Peter Gorm Larsen</name>
-      <email />
-      <url>-</url>
-      <organization>IHA</organization>
-      <organizationUrl>http://www.iha.dk</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-  </developers>
+	<developers>
+		<developer>
+			<id>KennethLausdahl</id>
+			<name>Kenneth Lausdahl</name>
+			<email />
+			<url>http://www.lausdahl.com</url>
+			<organization>IHA</organization>
+			<organizationUrl>http://iha.dk</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>PeterGormLarsen</id>
+			<name>Peter Gorm Larsen</name>
+			<email />
+			<url>-</url>
+			<organization>IHA</organization>
+			<organizationUrl>http://www.iha.dk</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 </project>

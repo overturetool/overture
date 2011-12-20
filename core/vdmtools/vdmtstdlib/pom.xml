@@ -1,23 +1,23 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.overturetool.core</groupId>
-    <artifactId>vdmtools</artifactId>
-    <version>2.0.0</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.overturetool.core.vdmtools</groupId>
-  <artifactId>vdmtstdlib</artifactId>
-  <name>VDM Tools Standard library implementation</name>
-  <version>2.0.0</version>
- 
- 
-<dependencies>
-	<dependency>
-		<groupId>org.overturetool.core.vdmtools</groupId>
-		<artifactId>cglib</artifactId>
-		<version>2.0.0</version>
-	</dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.overturetool.core</groupId>
+		<artifactId>vdmtools</artifactId>
+		<version>2.1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overturetool.core.vdmtools</groupId>
+	<artifactId>vdmtstdlib</artifactId>
+	<name>VDM Tools Standard library implementation</name>
+	<version>2.1.0</version>
 
-</dependencies>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overturetool.core.vdmtools</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+	</dependencies>
 
 </project>
