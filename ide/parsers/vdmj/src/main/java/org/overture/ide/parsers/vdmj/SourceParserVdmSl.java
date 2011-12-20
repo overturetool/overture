@@ -22,18 +22,18 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overturetool.util.modules.ModuleList;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ModuleReader;
 
 public class SourceParserVdmSl extends AbstractParserParticipant
@@ -80,8 +80,8 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 			reader = new ModuleReader(ltr);
 			modules.addAll(reader.readModules());
 
-			List<IAstNode> nodes = new Vector<IAstNode>();
-			for (Module module : modules)
+			List<INode> nodes = new Vector<INode>();
+			for (AModuleModules module : modules)
 			{
 				nodes.add(module);
 			}

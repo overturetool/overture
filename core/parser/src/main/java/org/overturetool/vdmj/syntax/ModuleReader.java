@@ -27,8 +27,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
-
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AAllExport;
@@ -51,6 +49,7 @@ import org.overture.ast.modules.SValueImport;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overturetool.util.ClonableFile;
+import org.overturetool.util.modules.ModuleList;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -73,9 +72,9 @@ public class ModuleReader extends SyntaxReader
 		super(reader);
 	}
 
-	public List<AModuleModules> readModules()
+	public ModuleList readModules()
 	{
-		List<AModuleModules> modules = new Vector<AModuleModules>();
+		ModuleList modules = new ModuleList();
 
 		try
 		{

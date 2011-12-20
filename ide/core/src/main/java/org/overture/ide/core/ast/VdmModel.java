@@ -28,6 +28,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
@@ -36,11 +39,8 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.util.modules.ModuleList;
 
 public class VdmModel implements IVdmModel
 {
@@ -64,9 +64,9 @@ public class VdmModel implements IVdmModel
 	 * (non-Javadoc)
 	 * @see org.overture.ide.core.ast.IVdmElement#getRootElementList()
 	 */
-	public synchronized List<IAstNode> getRootElementList()
+	public synchronized List<INode> getRootElementList()
 	{
-		List<IAstNode> list = new Vector<IAstNode>();
+		List<INode> list = new Vector<INode>();
 		for (IVdmSourceUnit unit : vdmSourceUnits)
 		{
 			list.addAll(unit.getParseList());
@@ -137,8 +137,8 @@ public class VdmModel implements IVdmModel
 		ModuleList modules = new ModuleList();
 		for (Object definition : getRootElementList())
 		{
-			if (definition instanceof Module)
-				modules.add((Module) definition);
+			if (definition instanceof AModuleModules)
+				modules.add((AModuleModules) definition);
 			else
 				throw new NotAllowedException("Other definition than Module is found: "
 						+ definition.getClass().getName());
@@ -158,8 +158,8 @@ public class VdmModel implements IVdmModel
 		ClassList classes = new ClassList();
 		for (Object definition : getRootElementList())
 		{
-			if (definition instanceof ClassDefinition)
-				classes.add((ClassDefinition) definition);
+			if (definition instanceof SClassDefinition)
+				classes.add((SClassDefinition) definition);
 			else
 				throw new NotAllowedException("Other definition than ClassDefinition is found: "
 						+ definition.getClass().getName());
@@ -175,7 +175,7 @@ public class VdmModel implements IVdmModel
 	{
 		for (Object definition : getRootElementList())
 		{
-			if (definition instanceof ClassDefinition)
+			if (definition instanceof SClassDefinition)
 				return true;
 		}
 		return false;
@@ -189,7 +189,7 @@ public class VdmModel implements IVdmModel
 	{
 		for (Object definition : getRootElementList())
 		{
-			if (definition instanceof Module)
+			if (definition instanceof AModuleModules)
 				return true;
 		}
 		return false;

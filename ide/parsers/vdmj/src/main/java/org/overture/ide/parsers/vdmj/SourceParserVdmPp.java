@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overturetool.util.definitions.ClassList;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -80,8 +80,8 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset,streamReaderType);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
-			List<IAstNode> nodes = new Vector<IAstNode>();
-			for (ClassDefinition classDefinition : classes)
+			List<INode> nodes = new Vector<INode>();
+			for (SClassDefinition classDefinition : classes)
 			{
 				nodes.add(classDefinition);
 			}
@@ -114,7 +114,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			result.setWarnings(reader.getWarnings());
 		}
 
-		for (ClassDefinition classDefinition : classes)
+		for (SClassDefinition classDefinition : classes)
 		{
 			classDefinition.getDefinitions();
 		}

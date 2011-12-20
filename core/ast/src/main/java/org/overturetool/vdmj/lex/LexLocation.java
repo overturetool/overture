@@ -31,12 +31,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
 
 import org.overture.ast.node.ExternalNode;
+import org.overture.ast.node.INode;
 
 
 
@@ -57,7 +59,7 @@ public class LexLocation implements Serializable , ExternalNode
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
 	
 	/** A collection of all LexLocation objects to the AstNodes. */
-//	private static Map<LexLocation,IAstNode> locationToAstNode = new Hashtable<LexLocation,IAstNode>();
+	private static Map<LexLocation,INode> locationToAstNode = new Hashtable<LexLocation,INode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
 	private static Map<LexNameToken, LexLocation> nameSpans =
@@ -199,10 +201,10 @@ public class LexLocation implements Serializable , ExternalNode
 			allLocations = new Vector<LexLocation>();
 		}
 		
-//		synchronized (locationToAstNode)
-//		{
-//			locationToAstNode = new Hashtable<LexLocation, IAstNode>();
-//		}
+		synchronized (locationToAstNode)
+		{
+			locationToAstNode = new Hashtable<LexLocation, INode>();
+		}
 //		
 //		synchronized (nameSpans)
 //		{
@@ -523,18 +525,19 @@ public class LexLocation implements Serializable , ExternalNode
 		br.close();
 	}
 	
-//	public static void addAstNode(LexLocation location, IAstNode node)
-//	{
-//		synchronized (locationToAstNode)
-//		{
-//			locationToAstNode.put(location, node);
-//		}
-//	}
-//	
-//	public static Map<LexLocation,IAstNode> getLocationToAstNodeMap()
-//	{
-//		return locationToAstNode;
-//	}
+	//FIXME we know this is never called a new solutions is needed
+	public static void addAstNode(LexLocation location, INode node)
+	{
+		synchronized (locationToAstNode)
+		{
+			locationToAstNode.put(location, node);
+		}
+	}
+	
+	public static Map<LexLocation,INode> getLocationToAstNodeMap()
+	{
+		return locationToAstNode;
+	}
 	
 	public static List<LexLocation> getAllLocations()
 	{

@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
-import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class VdmSourceUnit implements IVdmSourceUnit
@@ -38,10 +38,10 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	protected IFile file;
 	protected int type;
 	protected final List<LexLocation> allLocation = new Vector<LexLocation>();
-	protected final HashMap<LexLocation, IAstNode> locationToAstNodeMap = new HashMap<LexLocation, IAstNode>();
+	protected final HashMap<LexLocation, INode> locationToAstNodeMap = new HashMap<LexLocation, INode>();
 	protected boolean parseErrors = false;
 
-	protected List<IAstNode> parseList = new Vector<IAstNode>();
+	protected List<INode> parseList = new Vector<INode>();
 
 	public VdmSourceUnit(IVdmProject project, IFile file)
 	{
@@ -67,9 +67,9 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		return project.getFile(file);
 	}
 
-	public synchronized void reconcile(List<IAstNode> parseResult,
+	public synchronized void reconcile(List<INode> parseResult,
 			List<LexLocation> allLocation,
-			Map<LexLocation, IAstNode> locationToAstNodeMap, boolean parseErrors)
+			Map<LexLocation, INode> locationToAstNodeMap, boolean parseErrors)
 	{
 		this.parseList.clear();
 		
@@ -104,7 +104,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.CHANGED), ElementChangedEvent.DeltaType.POST_RECONCILE));
 	}
 
-	public synchronized List<IAstNode> getParseList()
+	public synchronized List<INode> getParseList()
 	{
 		return this.parseList;
 	}
@@ -154,7 +154,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	/**
 	 * No not make this synchronized it will lock up due to getParse list and this one being called at the same time
 	 */
-	public/* synchronized */Map<LexLocation, IAstNode> getLocationToAstNodeMap()
+	public/* synchronized */Map<LexLocation, INode> getLocationToAstNodeMap()
 	{
 		//return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
 		return locationToAstNodeMap;

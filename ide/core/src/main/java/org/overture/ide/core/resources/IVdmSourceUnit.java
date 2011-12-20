@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
-import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public interface IVdmSourceUnit extends IVdmElement{
@@ -41,9 +41,9 @@ public interface IVdmSourceUnit extends IVdmElement{
 	
 	public File getSystemFile();
 	
-	public  void reconcile(List<IAstNode> parseResult,List<LexLocation> allLocation, Map<LexLocation,IAstNode> locationToAstNodeMap,boolean parseErrors);
+	public  void reconcile(List<INode> parseResult,List<LexLocation> allLocation, Map<LexLocation,INode> locationToAstNodeMap,boolean parseErrors);
 	
-	public  List<IAstNode> getParseList();
+	public  List<INode> getParseList();
 
 	public boolean exists();
 	public void clean();
@@ -52,7 +52,7 @@ public interface IVdmSourceUnit extends IVdmElement{
 
 	public abstract boolean hasParseTree();
 
-	public abstract Map<LexLocation, IAstNode> getLocationToAstNodeMap();
+	public abstract Map<LexLocation, INode> getLocationToAstNodeMap();
 	
 	public abstract boolean hasParseErrors();
 	

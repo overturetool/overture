@@ -15,8 +15,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
-			<artifactId>vdmj</artifactId>
-			<version>2.1.0</version>
+			<artifactId>ast</artifactId>
+			<version>2.2.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>parser</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 	</dependencies>
 

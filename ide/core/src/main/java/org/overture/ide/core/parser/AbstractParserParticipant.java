@@ -27,12 +27,12 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
-import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.messages.VDMError;
@@ -214,12 +214,12 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 	public static class ParseResult
 	{
-		private List<IAstNode> ast = null;
+		private List<INode> ast = null;
 		private List<VDMError> errors = new ArrayList<VDMError>();
 		private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 		private Throwable fatalError;
 		private List<LexLocation> allLocation;
-		private Map<LexLocation, IAstNode> locationToAstNodeMap;
+		private Map<LexLocation, INode> locationToAstNodeMap;
 
 		public ParseResult()
 		{
@@ -231,14 +231,14 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			return errors.size() != 0 || fatalError != null;
 		}
 
-		public void setAst(List<IAstNode> ast)
+		public void setAst(List<INode> ast)
 		{
 			Assert.isNotNull(ast, "AST cannot be null");
 			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
 			this.ast = ast;
 		}
 
-		public List<IAstNode> getAst()
+		public List<INode> getAst()
 		{
 			return ast;
 		}
@@ -288,12 +288,12 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		}
 
 		public void setLocationToAstNodeMap(
-				Map<LexLocation, IAstNode> locationToAstNodeMap)
+				Map<LexLocation, INode> locationToAstNodeMap)
 		{
 			this.locationToAstNodeMap = locationToAstNodeMap;
 		}
 
-		public Map<LexLocation, IAstNode> getLocationToAstNodeMap()
+		public Map<LexLocation, INode> getLocationToAstNodeMap()
 		{
 			return locationToAstNodeMap;
 		};

@@ -26,24 +26,20 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
-import javax.rmi.CORBA.Util;
-
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overturetool.util.definitions.ClassList;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
@@ -61,9 +57,9 @@ public class ClassReader extends SyntaxReader
 		super(reader);
 	}
 
-	public List<SClassDefinition> readClasses()
+	public ClassList readClasses()
 	{
-		List<SClassDefinition> list = new Vector<SClassDefinition>();
+		ClassList list = new ClassList();
 
 		try
 		{
