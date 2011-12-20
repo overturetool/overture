@@ -453,8 +453,9 @@ modules {-> package='org.overture.ast.modules'}
                 (importdefs):definition*
                 (exportdefs):definition*
               // [delegate]:Delegate
-                [isFlat]:java_Boolean
+              	[isFlat]:java_Boolean
                 (typeChecked):java_Boolean
+                [isDLModule]:java_Boolean //The typechecker needs to know this, since the actual exports does not exists in a DLModule
     ;
 
 
