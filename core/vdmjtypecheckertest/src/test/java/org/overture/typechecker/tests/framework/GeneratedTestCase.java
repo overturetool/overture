@@ -89,9 +89,10 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 	private void expressionTc(String expressionString, String expectedTypeString)
 			throws ParserException, LexException
 	{
+if(DEBUG){
 		System.out.flush();
 		System.err.flush();
-
+}
 		Expression exp = parse(parserType, expressionString);
 		Type expectedType = getResultType(expectedTypeString);
 
@@ -110,7 +111,9 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 			StringWriter s = new StringWriter();
 			TypeChecker.printErrors(new PrintWriter(s));// new PrintWriter(System.out));
 			errorMessages = "\n" + s.toString() + "\n";
+if(DEBUG){
 			System.out.println(s.toString());
+}
 		}
 
 		assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
@@ -121,7 +124,9 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 			StringWriter s = new StringWriter();
 			TypeChecker.printWarnings(new PrintWriter(s));// new PrintWriter(System.out));
 			// String warningMessages = "\n" + s.toString() + "\n";
+if(DEBUG){
 			System.out.println(s.toString());
+}
 		}
 		//
 
@@ -134,17 +139,19 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 
 		if (type != null)
 		{
+if(DEBUG){
 			System.out.println("Type of \""
 					+ exp.toString().replace('\n', ' ').replace('\r', ' ')
-					+ "\" is: " + type);
+					+ "\" is: " + type);}
 		} else
-		{
+		{if(DEBUG){
 			System.err.println("Type of \""
 					+ exp.toString().replace('\n', ' ').replace('\r', ' ')
-					+ "\" is: " + type);
+					+ "\" is: " + type);}
 		}
+if(DEBUG){
 		System.out.flush();
-		System.err.flush();
+		System.err.flush();}
 
 		if (generateResultOutput )
 		{

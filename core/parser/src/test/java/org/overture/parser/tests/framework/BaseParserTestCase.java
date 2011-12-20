@@ -18,6 +18,8 @@ import org.overturetool.vdmj.syntax.SyntaxReader;
 public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 		TestCase
 {
+
+public final static boolean DEBUG = false;
 	File file;
 	String name;
 	String content;
@@ -103,7 +105,8 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 				StringWriter s = new StringWriter();
 				reader.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
 				errorMessages ="\n"+s.toString()+"\n";
-				System.out.println(s.toString());
+if(DEBUG){
+				System.out.println(s.toString());}
 			}
 			assertEquals(errorMessages,0,reader.getErrorCount());
 
@@ -117,6 +120,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 			if(!hasRunBefore())
 			{
 				setHasRunBefore( true);
+if(DEBUG){
 				System.out.println("============================================================================================================");
 				
 				System.out.println("|");
@@ -124,10 +128,10 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 //				System.out.println("|");
 				System.out.println("|___________________________________________________________________________________________________________");
 				
-			}
+			
 			System.out.println(pad("Parsed " + getReaderTypeName(),20) +" - "+pad(getReturnName(result),35)+ ": "+
 					pad(result+"",35).replace('\n', ' ')+" from \""+ (content+"").replace('\n', ' ') + "\""  );
-			System.out.flush();
+			System.out.flush();}}
 		}
 	}
 

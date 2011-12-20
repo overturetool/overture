@@ -60,9 +60,10 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	private void moduleTc(String expressionString) throws ParserException,
 			LexException, IOException {
+if(DEBUG){
 		System.out.flush();
 		System.err.flush();
-		insertTCHeader();
+		insertTCHeader();}
 
 		//printFile(file);
 	
@@ -72,6 +73,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		ModuleTypeChecker moduleTC = new ModuleTypeChecker(modules);
 		moduleTC.typeCheck();
 
+if(DEBUG){
 		if (TypeChecker.getErrorCount() > 0) {
 			// perrs += reader.getErrorCount();
 			StringWriter s = new StringWriter();
@@ -92,7 +94,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		}
 
 		printTCHeader();
-
+}
 	}
 
 

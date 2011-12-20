@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>org.overturetoolv2.tools</groupId>
-    <artifactId>toolsv2</artifactId>
-    <version>2.0.0</version>
+    <groupId>org.overturetool.tools</groupId>
+    <artifactId>tools</artifactId>
+    <version>2.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.overturetoolv2.tools</groupId>
+  <groupId>org.overturetool.tools</groupId>
   <artifactId>astcreatorplugin</artifactId>
   <packaging>maven-plugin</packaging>
   <version>1.0.1</version>
@@ -46,55 +46,11 @@
       <version>2.1.1</version>
       <type>maven-plugin</type>
     </dependency>
-   
-
-
-
     <dependency>
-    	<groupId>org.overturetoolv2.tools</groupId>
+    	<groupId>org.overturetool.tools</groupId>
     	<artifactId>astCreator</artifactId>
     	<version>1.0.1</version>
     </dependency>
   </dependencies>
 
-
-
-  <!-- Reporting section used in site generation-->
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.5</version>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jxr-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clover-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-changes-plugin</artifactId>
-        <inherited>false</inherited>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>changes-report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-        <configuration>
-          <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
-        </configuration>
-      </plugin>
-     
-    </plugins>
-
-  </reporting>
 </project>

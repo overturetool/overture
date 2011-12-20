@@ -91,14 +91,15 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 	private void expressionTc(String expressionString, String expectedTypeString)
 			throws ParserException, LexException
 	{
+if(DEBUG){
 		System.out.flush();
 		System.err.flush();
-
+}
 		Node exp = parse(parserType, expressionString);
 		PType expectedType = getResultType(expectedTypeString);
-
+if(DEBUG){
 		System.out.println(exp.toString().replace('\n', ' ').replace('\r', ' '));
-
+}
 		Environment env = new FlatCheckedEnvironment(new Vector<PDefinition>(), NameScope.NAMESANDSTATE);
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		PType type = exp.apply(tc, new TypeCheckInfo(env));
@@ -112,7 +113,8 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 			StringWriter s = new StringWriter();
 			TypeChecker.printErrors(new PrintWriter(s));// new PrintWriter(System.out));
 			errorMessages = "\n" + s.toString() + "\n";
-			System.out.println(s.toString());
+if(DEBUG){	
+		System.out.println(s.toString());}
 		}
 
 		assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
@@ -123,10 +125,12 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 			StringWriter s = new StringWriter();
 			TypeChecker.printWarnings(new PrintWriter(s));// new PrintWriter(System.out));
 			// String warningMessages = "\n" + s.toString() + "\n";
-			System.out.println(s.toString());
+if(DEBUG){
+			System.out.println(s.toString());}
 		}
 		//
 
+if(DEBUG){
 		if (expectedType != null)
 		{
 			assertEquals("Type of \n"
@@ -147,7 +151,7 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 		}
 		System.out.flush();
 		System.err.flush();
-
+}
 		if (generateResultOutput )
 		{
 			writeTestWithResult(type, expressionString);

@@ -1,102 +1,147 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.overturetoolv2</groupId>
-  <artifactId>rootv2</artifactId>
-  <packaging>pom</packaging>
-  <version>2.0.0</version>
-  <name>OvertureTool</name>
- 
-  <modules>
-    <module>core</module>
-    <module>tools</module>
-   
-    
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overturetool</groupId>
+	<artifactId>root</artifactId>
+	<packaging>pom</packaging>
+	<version>2.1.0</version>
+	<name>OvertureTool</name>
 
-  </modules>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      
-      
-        <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.0-beta-7</version>
-        <configuration>
-          <tagBase>https://overture.svn.sourceforge.net/svnroot/overture/tags</tagBase>
-        </configuration>
-      </plugin>
-      
-        <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>2.0.1</version>
-      </plugin>
-    </plugins>
+	<modules>
+		<module>core</module>
+		<module>tools</module>
+		<module>ide</module>
+	</modules>
 
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ftp</artifactId>
-        <version>1.0-beta-6</version>
-      </extension>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav</artifactId>
-        <version>1.0-beta-2</version>
-      </extension>
-    </extensions>
-  </build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!-- Add JUnit for testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- Configure the compiler for all Overture Projects -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+
+			<!-- Attatch sources to all installed jars -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+			</plugin>
+
+			<!-- Enable JavaDoc but dont fail on error. This must be disabled for 
+				the Eclipse project in the IDE -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<failOnError>false</failOnError>
+<quiet>true</quiet>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.0-beta-7</version>
+				<configuration>
+					<tagBase>https://overture.svn.sourceforge.net/svnroot/overture/tags</tagBase>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.0.1</version>
+			</plugin>
+		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+		</extensions>
+	</build>
 
 
 
-  <distributionManagement>
-    <repository>
-      <id>sourceforge.net</id>
-      <name>Overture Repo af SF.Net</name>
-      <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>
-    </repository>
-    <snapshotRepository>
-      <id>sourceforge.net</id>
-      <name>Overture Snapshot Repo af SF.Net</name>
-      <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>
-    </snapshotRepository>
-    <site>
-      <id>sourceforge.net</id>
-      <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url>
-    </site>
-  </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>sourceforge.net</id>
+			<name>Overture Repo af SF.Net</name>
+			<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>
+		</repository>
+		<snapshotRepository>
+			<id>sourceforge.net</id>
+			<name>Overture Snapshot Repo af SF.Net</name>
+			<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>
+		</snapshotRepository>
+		<site>
+			<id>sourceforge.net</id>
+			<url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url>
+		</site>
+	</distributionManagement>
 
 
 
-  <scm>
-    <connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</connection>
-    <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection>
-    <url>svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</url>
-  </scm>
+	<scm>
+		<connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</connection>
+		<developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection>
+		<url>svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</url>
+	</scm>
 
-  <issueManagement>
-    <system>sourceforge</system>
-    <url>http://sourceforge.net/tracker/?group_id=141350</url>
-  </issueManagement>
+	<issueManagement>
+		<system>sourceforge</system>
+		<url>http://sourceforge.net/tracker/?group_id=141350</url>
+	</issueManagement>
 
-<organization>
-  <name>Overture</name> 
-  <url>http://www.overturetool.org</url> 
-  </organization>
+	<organization>
+		<name>Overture</name>
+		<url>http://www.overturetool.org</url>
+	</organization>
 
 </project>

@@ -52,17 +52,21 @@ public class ClassTestCase extends BasicTypeCheckTestCase {
 
 	private void moduleTc(String expressionString) throws ParserException,
 			LexException, IOException {
+
+if(DEBUG){
 		System.out.flush();
 		System.err.flush();
 		insertTCHeader();
-
+}
 		
 		ClassList classes = parse(ParserType.Class, file);
 
 		ClassTypeChecker moduleTC = new ClassTypeChecker(classes);
 		moduleTC.typeCheck();
 
+if(DEBUG){
 		printTCHeader();
+}
 
 	}
 	

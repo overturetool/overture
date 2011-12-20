@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<version>2.0.1</version>
+	
 	<parent>
-		<groupId>org.overturetoolv2</groupId>
-		<artifactId>corev2</artifactId>
-		<version>2.0.0</version>
+		<groupId>org.overturetool</groupId>
+		<artifactId>core</artifactId>
+		<version>2.1.0</version>
 	</parent>
-	<groupId>org.overturetoolv2.core</groupId>
+	<groupId>org.overturetool.core</groupId>
 	<artifactId>typechecker</artifactId>
 	<name>The VDM++ Type Checker</name>
-
+<version>2.2.0</version>
 
 	<build>
 		<plugins>
@@ -46,25 +46,25 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overturetoolv2.core</groupId>
-			<artifactId>astv_2</artifactId>
-			<version>2.0.1</version>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>ast</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.overturetoolv2.core</groupId>
-			<artifactId>parserv2</artifactId>
-			<version>2.0.1</version>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>parser</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overturetoolv2.core</groupId>
+			<groupId>org.overturetool.core</groupId>
 			<artifactId>ast_assistance</artifactId>
-			<version>2.0.1</version>
+			<version>2.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>testframework</artifactId>
-			<version>2.0.1</version>
+			<version>2.1.0</version>
 		</dependency>
 	</dependencies>
 </project>

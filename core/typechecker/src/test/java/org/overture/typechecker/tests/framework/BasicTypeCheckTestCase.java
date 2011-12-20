@@ -24,7 +24,7 @@ import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.syntax.TypeReader;
 
 public abstract class BasicTypeCheckTestCase extends TestCase
-{
+{public final static boolean DEBUG = false;
 	public enum ParserType
 	{
 		Expression, Expressions, Module, Class, Pattern, Type, Statement, Bind
@@ -72,7 +72,8 @@ public abstract class BasicTypeCheckTestCase extends TestCase
 				StringWriter s = new StringWriter();
 				reader.printErrors(new PrintWriter(s));// new PrintWriter(System.out));
 				errorMessages = "\n" + s.toString() + "\n";
-				System.out.println(s.toString());
+if(DEBUG){
+				System.out.println(s.toString());}
 			}
 			assertEquals(errorMessages, 0, reader.getErrorCount());
 

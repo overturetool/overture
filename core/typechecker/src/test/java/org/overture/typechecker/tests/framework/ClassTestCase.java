@@ -28,7 +28,7 @@ import org.overturetool.vdmj.syntax.ParserException;
 
 public class ClassTestCase extends TestCase
 {
-
+public final static boolean DEBUG = false;
 	public static final String tcHeader = "-- TCErrors:";
 	public static final Boolean printOks = false;
 
@@ -137,7 +137,7 @@ public class ClassTestCase extends TestCase
 				}
 			}
 
-			if (!(tcHeaderList.size() == 0 && total == tcV2found))
+			if (DEBUG && !(tcHeaderList.size() == 0 && total == tcV2found))
 			{
 				System.out.println("----------- Type checking starting for... "
 						+ file.getName() + " -----------");
