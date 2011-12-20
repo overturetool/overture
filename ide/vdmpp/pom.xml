@@ -3,13 +3,13 @@
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>ide</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
   </parent>
 
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.vdmpp</artifactId>
   <packaging>pom</packaging>
-  <version>2.1.0</version>
+  <version>2.2.0</version>
   <name>Overture IDE VDM-PP Top-level</name>
   <description>Top level of the Overture IDE for VDM-PP</description>
   
