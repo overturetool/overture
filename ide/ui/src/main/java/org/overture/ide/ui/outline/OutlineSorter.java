@@ -20,9 +20,10 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.types.Type;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
+import org.overture.ast.types.PType;
+import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 class OutlineSorter extends ViewerSorter
 {
@@ -39,10 +40,10 @@ class OutlineSorter extends ViewerSorter
 	@Override
 	public int category(Object element)
 	{
-		if (element instanceof Type)
+		if (element instanceof PType)
 		{
 			return TYPES;
-		} else if (element instanceof Definition)
+		} else if (element instanceof PDefinition)
 		{
 			return VALUES;
 		} else
@@ -58,11 +59,15 @@ class OutlineSorter extends ViewerSorter
 		{
 			return cat1 - cat2;
 		}
-		
-		if(e1 instanceof IAstNode && e2 instanceof IAstNode)
+
+		if (e1 instanceof INode && e2 instanceof INode)
 		{
-			return collator.compare(((IAstNode)e1).getName(), ((IAstNode)e2).getName());
-		}else
-		return super.compare(viewer, e1, e2);
+			return collator.compare(AstNameUtil.getName((INode) e1), AstNameUtil.getName(((INode) e2)));
+		} else
+		{
+			return super.compare(viewer, e1, e2);
+		}
 	}
+	
+	
 }
