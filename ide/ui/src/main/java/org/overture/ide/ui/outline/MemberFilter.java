@@ -20,10 +20,10 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
-import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.lex.Token;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.EAccess;
+import org.overture.ast.definitions.PDefinition;
 
 public class MemberFilter extends ViewerFilter {
 
@@ -110,25 +110,25 @@ public class MemberFilter extends ViewerFilter {
 	}
 
 	private boolean isStatic(Object element) {
-		if(element instanceof Definition){
-			return ((Definition) element).isStatic();
+		if(element instanceof PDefinition){
+			return ((PDefinition) element).getAccess().getStatic()!=null;
 		}
 		return false;
 	}
 	private boolean isLocalType(Object element) {
-		if(element instanceof TypeDefinition){
+		if(element instanceof ATypeDefinition){
 			return true;
 		}
 		return false;
 	}
 	private boolean isNonPublic(Object element) {
-		if(element instanceof Definition){
-			return !((Definition)element).isAccess(Token.PUBLIC);
+		if(element instanceof PDefinition){
+			return ! (((PDefinition)element).getAccess().getAccess().kindPAccess()==EAccess.PUBLIC);
 		}
 		return false;
 	}
 	private boolean isField(Object element){
-		return (element instanceof InstanceVariableDefinition);
+		return (element instanceof AInstanceVariableDefinition);
 	}
 	
 	
