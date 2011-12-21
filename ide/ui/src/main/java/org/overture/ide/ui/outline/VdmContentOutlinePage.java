@@ -33,6 +33,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IElementChangedListener;
 import org.overture.ide.core.IVdmElement;
@@ -43,7 +44,6 @@ import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
-import org.overturetool.vdmj.ast.IAstNode;
 
 @SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
@@ -350,7 +350,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		VdmCore.addElementChangedListener(fListener);
 	}
 
-	public void select(IAstNode reference)
+	public void select(INode reference)
 	{
 
 		if (fOutlineViewer != null)

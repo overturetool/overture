@@ -18,25 +18,27 @@
  *******************************************************************************/
 package org.overture.ide.ui.internal.viewsupport;
 
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.modules.ModuleImports;
+import java.util.List;
+
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.modules.AModuleImports;
 
 public class ImportsContainer {
 
 	
-	private ModuleImports imports = null;
-	private DefinitionList importDefs = null;
+	private AModuleImports imports = null;
+	private List<PDefinition> importDefs = null;
 	
-	public ImportsContainer(ModuleImports imports, DefinitionList importDefs){
+	public ImportsContainer(AModuleImports imports, List<PDefinition> importDefs){
 		this.imports = imports;
 		this.importDefs = importDefs;
 	}
 	
-	public DefinitionList getImportDefs() {
+	public List<PDefinition> getImportDefs() {
 		return importDefs;
 	}
 	
-	public ModuleImports getImports() {
+	public AModuleImports getImports() {
 		return imports;
 	}
 	

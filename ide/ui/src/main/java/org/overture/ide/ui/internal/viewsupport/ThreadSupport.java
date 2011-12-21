@@ -18,25 +18,28 @@
  *******************************************************************************/
 package org.overture.ide.ui.internal.viewsupport;
 
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.expressions.Expression;
+import java.util.List;
+
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AOperationType;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.types.OperationType;
 
-public class ThreadSupport extends ExplicitOperationDefinition {
+public class ThreadSupport extends AExplicitOperationDefinition {
 
-	public ThreadSupport(ExplicitOperationDefinition eod) {
+	public ThreadSupport(AExplicitOperationDefinition eod) {
 		
-		super(eod.name,eod.type,eod.parameterPatterns,eod.precondition,eod.postcondition,eod.body);
-		System.out.println(eod.location);
+		super(eod.getLocation(),eod.getName(),eod.getNameScope(),eod.getUsed(),eod.getClassDefinition(),eod.getAccess().clone(),eod.getParameterPatterns(),eod.getBody().clone(),eod.getPrecondition(),eod.getPostcondition(),eod.getType(),null,null,null,null,eod.getActualResult(),false);
+		System.out.println(eod.getLocation());
 	}
 	
-	public ThreadSupport(LexNameToken name, OperationType type,
-			PatternList parameters, Expression precondition,
-			Expression postcondition, Statement body) {
-		super(name, type, parameters, precondition, postcondition, body);
+	public ThreadSupport(LexNameToken name, AOperationType type,
+			List<PPattern> parameters, PExp precondition,
+			PExp postcondition, PStm body) {
+//		super(name, type, parameters, precondition, postcondition, body);
+		super(null,name,null,false,null,null,parameters,body,precondition,postcondition,type,null,null,null,null,null,false);
 
 	}
 

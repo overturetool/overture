@@ -20,6 +20,11 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>typechecker</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>

@@ -48,16 +48,15 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.overture.ast.definitions.AMutexSyncDefinition;
+import org.overture.ast.node.INode;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.MutexSyncDefinition;
-import org.overturetool.vdmj.statements.BlockStatement;
 
 public abstract class VdmEditor extends TextEditor {
 	ISourceViewer viewer;
@@ -90,7 +89,7 @@ public abstract class VdmEditor extends TextEditor {
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 
 	VdmContentOutlinePage fOutlinePage = null;
-	protected SourceReferenceManager sourceReferenceManager = null;
+//	protected SourceReferenceManager sourceReferenceManager = null;
 
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
 
@@ -154,35 +153,35 @@ public abstract class VdmEditor extends TextEditor {
 					@SuppressWarnings("rawtypes")
 					List elements = ss.toList();
 					if (!elements.isEmpty()) {
-						if (elements.get(0) instanceof IAstNode) {
-							IAstNode node = (IAstNode) elements.get(0);
-							// IVdmElement vdmElement = getInputVdmElement();
-							if (sourceReferenceManager != null) {
-								// IVdmSourceUnit unit = (IVdmSourceUnit)
-								// vdmElement;
-
-								int endPos = 0;
-
-								// fix for VDMJ endPos == 0 when rest of the
-								// line is
-								// marked as location
-								if (node.getLocation().endPos == 0) {
-									endPos = sourceReferenceManager
-											.getLineOffset(node.getLocation().endLine)
-											- sourceReferenceManager.getLineOffset(node
-													.getLocation().startLine)
-											- node.getLocation().startPos;
-								} else {
-									endPos = node.getLocation().endPos
-											- node.getLocation().startPos;
-								}
-								selectAndReveal(
-										sourceReferenceManager.getLineOffset(node
-												.getLocation().startLine)
-												+ node.getLocation().startPos
-												- 1, endPos);
-
-							}
+						if (elements.get(0) instanceof INode) {
+							INode node = (INode) elements.get(0);
+							// FIEMW
+//							if (sourceReferenceManager != null) {
+//								// IVdmSourceUnit unit = (IVdmSourceUnit)
+//								// vdmElement;
+//
+//								int endPos = 0;
+//
+//								// fix for VDMJ endPos == 0 when rest of the
+//								// line is
+//								// marked as location
+//								if (node.getLocation().endPos == 0) {
+//									endPos = sourceReferenceManager
+//											.getLineOffset(node.getLocation().endLine)
+//											- sourceReferenceManager.getLineOffset(node
+//													.getLocation().startLine)
+//											- node.getLocation().startPos;
+//								} else {
+//									endPos = node.getLocation().endPos
+//											- node.getLocation().startPos;
+//								}
+//								selectAndReveal(
+//										sourceReferenceManager.getLineOffset(node
+//												.getLocation().startLine)
+//												+ node.getLocation().startPos
+//												- 1, endPos);
+//
+//							}
 						}
 					}
 				}
@@ -362,17 +361,18 @@ public abstract class VdmEditor extends TextEditor {
 									// default
 	}
 
-	public SourceReferenceManager getSourceReferenceManager() {
-		if(this.sourceReferenceManager == null)
-		{
-			IVdmElement inputElement = getInputVdmElement();
-			if (inputElement instanceof IVdmSourceUnit) {
-				this.sourceReferenceManager = new SourceReferenceManager(
-				(IVdmSourceUnit) inputElement);
-			}
-		}
-		return this.sourceReferenceManager;
-	}
+	//FIXME
+//	public SourceReferenceManager getSourceReferenceManager() {
+//		if(this.sourceReferenceManager == null)
+//		{
+//			IVdmElement inputElement = getInputVdmElement();
+//			if (inputElement instanceof IVdmSourceUnit) {
+//				this.sourceReferenceManager = new SourceReferenceManager(
+//				(IVdmSourceUnit) inputElement);
+//			}
+//		}
+//		return this.sourceReferenceManager;
+//	}
 
 	private void internalDoSetInput(IEditorInput input) throws CoreException {
 		ISourceViewer sourceViewer = getSourceViewer();
@@ -390,12 +390,13 @@ public abstract class VdmEditor extends TextEditor {
 
 		IVdmElement inputElement = getInputVdmElement();
 		if (inputElement instanceof IVdmSourceUnit) {
-			if (sourceReferenceManager != null) {
-				sourceReferenceManager.shutdown(null);
-			}
-			sourceReferenceManager = getSourceReferenceManager();//new SourceReferenceManager(
-					//(IVdmSourceUnit) inputElement);
-			sourceReferenceManager.startup(null);
+//FIXME
+			//			if (sourceReferenceManager != null) {
+//				sourceReferenceManager.shutdown(null);
+//			}
+//			sourceReferenceManager = getSourceReferenceManager();
+//					
+//			sourceReferenceManager.startup(null);
 		}
 
 		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null) {
@@ -514,7 +515,7 @@ public abstract class VdmEditor extends TextEditor {
 	protected void selectionChanged() {
 		if (getSelectionProvider() == null)
 			return;
-		IAstNode element = computeHighlightRangeSourceReference();
+		INode element = computeHighlightRangeSourceReference();
 		// if
 		// (getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE))
 		synchronizeOutlinePage(element);
@@ -528,7 +529,7 @@ public abstract class VdmEditor extends TextEditor {
 
 	}
 
-	protected void setSelection(IAstNode reference, boolean moveCursor) {
+	protected void setSelection(INode reference, boolean moveCursor) {
 		if (getSelectionProvider() == null)
 			return;
 
@@ -674,11 +675,11 @@ public abstract class VdmEditor extends TextEditor {
 	 * @param element
 	 *            the java element to select
 	 */
-	protected void synchronizeOutlinePage(IAstNode element) {
+	protected void synchronizeOutlinePage(INode element) {
 		// TODO: don't search for mutexes
-		if (element instanceof MutexSyncDefinition)
+		if (element instanceof AMutexSyncDefinition)
 			return;
-		if (element instanceof BlockStatement)
+		if (element instanceof ABlockSimpleBlockStm)
 			return;
 
 		try {
@@ -698,7 +699,7 @@ public abstract class VdmEditor extends TextEditor {
 	 *            <code>true</code> if check for active outline page needs to be
 	 *            done
 	 */
-	protected void synchronizeOutlinePage(IAstNode element,
+	protected void synchronizeOutlinePage(INode element,
 			boolean checkIfOutlinePageActive) {
 		if (fOutlinePage != null && element != null
 				&& !(checkIfOutlinePageActive)) {// && isJavaOutlinePageActive()
@@ -722,7 +723,7 @@ public abstract class VdmEditor extends TextEditor {
 	 * @return the computed source reference
 	 * @since 3.0
 	 */
-	protected IAstNode computeHighlightRangeSourceReference() {
+	protected INode computeHighlightRangeSourceReference() {
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (sourceViewer == null)
 			return null;
@@ -741,9 +742,9 @@ public abstract class VdmEditor extends TextEditor {
 			caret = offset + styledText.getCaretOffset();
 		}
 
-		IAstNode element = getElementAt(caret, false);
+		INode element = getElementAt(caret, false);
 
-		// if (!(element instanceof IAstNode))
+		// if (!(element instanceof INode))
 		// return null;
 
 		// if (element.getElementType() == IJavaElement.IMPORT_DECLARATION) {
@@ -776,39 +777,40 @@ public abstract class VdmEditor extends TextEditor {
 	 * @return the most narrow java element
 	 * @since 3.0
 	 */
-	protected IAstNode getElementAt(int offset, boolean reconcile) {
+	protected INode getElementAt(int offset, boolean reconcile) {
 		return getElementAt(offset);
 	}
 
-	public IAstNode getElementAt(int offset) {
+	public INode getElementAt(int offset) {
 
-		if (sourceReferenceManager != null) {
-			IAstNode node = sourceReferenceManager.getNodeAt(
-					offset,
-					(IResource) this.getEditorInput().getAdapter(
-							IResource.class));
-			if (node != null) {
-				// if(node.getName() != null)
-				// System.out.println("Element hit: " + node.getName());
-
-				return node;
-			}
-
-		}
+		//FIXME
+//		if (sourceReferenceManager != null) {
+//			INode node = sourceReferenceManager.getNodeAt(
+//					offset,
+//					(IResource) this.getEditorInput().getAdapter(
+//							IResource.class));
+//			if (node != null) {
+//				// if(node.getName() != null)
+//				// System.out.println("Element hit: " + node.getName());
+//
+//				return node;
+//			}
+//
+//		}
 		return null;
 	}
 
 	@Override
 	public void dispose() {
-		try {
-			if (sourceReferenceManager != null) {
-				sourceReferenceManager.shutdown(getProgressMonitor());
-			}
-			sourceReferenceManager = null;
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			if (sourceReferenceManager != null) {
+//				sourceReferenceManager.shutdown(getProgressMonitor());
+//			}
+//			sourceReferenceManager = null;
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		super.dispose();
 		if (fOutlinePage != null) {
 			fOutlinePage.dispose();

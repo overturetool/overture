@@ -1,9 +1,8 @@
 package org.overture.ide.builders.vdmj;
 
-import org.overturetool.vdmj.ExitStatus;
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.BUSClassDefinition;
-import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.InternalException;
 
@@ -33,8 +32,8 @@ public class BuilderRt extends BuilderPp {
 	{
 		try
 		{
-			classes.add(new CPUClassDefinition());
-  			classes.add(new BUSClassDefinition());
+			classes.add(new ACpuClassDefinition());
+  			classes.add(new ABusClassDefinition());
 		}
 		catch (Exception e)
 		{

@@ -4,13 +4,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
-import org.overturetool.vdmj.ExitStatus;
+import org.overture.typecheck.ModuleTypeChecker;
+import org.overture.typecheck.TypeChecker;
+import org.overturetool.util.modules.ModuleList;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.modules.ModuleList;
-import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
-import org.overturetool.vdmj.typechecker.TypeChecker;
 
 /***
  * VDM SL builder

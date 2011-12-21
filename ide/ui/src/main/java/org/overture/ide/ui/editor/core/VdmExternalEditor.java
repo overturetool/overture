@@ -22,9 +22,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.overture.ide.core.ExternalSourceReferenceManager;
-import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 
 public abstract class VdmExternalEditor extends VdmEditor
@@ -51,17 +48,18 @@ public abstract class VdmExternalEditor extends VdmEditor
 		styledText.setBackground(color);
 	}
 	
-	@Override
-	public SourceReferenceManager getSourceReferenceManager()
-	{
-		if(this.sourceReferenceManager == null)
-		{
-			IVdmElement inputElement = getInputVdmElement();
-			if (inputElement instanceof IVdmSourceUnit) {
-				this.sourceReferenceManager = new ExternalSourceReferenceManager(
-				(IVdmSourceUnit) inputElement);
-			}
-		}
-		return this.sourceReferenceManager;
-	}
+	//FIXME
+//	@Override
+//	public SourceReferenceManager getSourceReferenceManager()
+//	{
+//		if(this.sourceReferenceManager == null)
+//		{
+//			IVdmElement inputElement = getInputVdmElement();
+//			if (inputElement instanceof IVdmSourceUnit) {
+//				this.sourceReferenceManager = new ExternalSourceReferenceManager(
+//				(IVdmSourceUnit) inputElement);
+//			}
+//		}
+//		return this.sourceReferenceManager;
+//	}
 }

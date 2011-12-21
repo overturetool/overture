@@ -25,23 +25,11 @@ import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.overture.ast.node.INode;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
-import org.overturetool.vdmj.definitions.LocalDefinition;
-import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.modules.Module;
 
 public class VdmCompleteProcesser
 {
@@ -68,7 +56,7 @@ public class VdmCompleteProcesser
 		boolean recordTypesOnly = info.afterMk || info.isEmpty;
 		String typeName = info.field.toString();
 
-		for (IAstNode element : getAst(document))
+		for (INode element : getAst(document))
 		{
 			if (modulesOnly)
 			{
@@ -84,7 +72,7 @@ public class VdmCompleteProcesser
 		}
 	}
 
-	private void addContainerTypes(IAstNode def, boolean recordTypesOnly,
+	private void addContainerTypes(INode def, boolean recordTypesOnly,
 			int offset, List<ICompletionProposal> proposals)
 	{
 		if (def instanceof ClassDefinition)
@@ -120,16 +108,16 @@ public class VdmCompleteProcesser
 	{
 		try
 		{
-			List<IAstNode> ast = getAst(document);
+			List<INode> ast = getAst(document);
 			if (info.fieldType.toString().trim().length() != 0)
 			{
 				completeFromType(info.fieldType.toString(), info.proposal.toString(), proposals, offset, ast);
 			} else
 			{
-				List<IAstNode> possibleMatch = new Vector<IAstNode>();
-				for (IAstNode node : getLocalFileAst(document))
+				List<INode> possibleMatch = new Vector<INode>();
+				for (INode node : getLocalFileAst(document))
 				{
-					for (IAstNode field : getFields(node))
+					for (INode field : getFields(node))
 					{
 						if (field.getName().equals(info.field.toString()))
 						{
@@ -150,7 +138,7 @@ public class VdmCompleteProcesser
 		}
 	}
 
-	private String getTypeName(IAstNode field)
+	private String getTypeName(INode field)
 	{
 		if (field instanceof InstanceVariableDefinition)
 		{
@@ -160,14 +148,14 @@ public class VdmCompleteProcesser
 	}
 
 	private void completeFromType(String typeName, String proposal,
-			List<ICompletionProposal> proposals, int offset, List<IAstNode> ast)
+			List<ICompletionProposal> proposals, int offset, List<INode> ast)
 	{
 		System.out.println("Complete for type: " + typeName
 				+ " with proposal: " + proposal);
-		IAstNode type = getType(typeName, ast);
+		INode type = getType(typeName, ast);
 
 		// Fields
-		for (IAstNode field : getFields(type))
+		for (INode field : getFields(type))
 		{
 			if (field.getName().startsWith(proposal) || proposal.isEmpty())
 			{
@@ -175,7 +163,7 @@ public class VdmCompleteProcesser
 			}
 		}
 		// Operations
-		for (IAstNode op : getOperations(type))
+		for (INode op : getOperations(type))
 		{
 			if (op.getName().startsWith(proposal) || proposal.isEmpty())
 			{
@@ -183,7 +171,7 @@ public class VdmCompleteProcesser
 			}
 		}
 		// Functions
-		for (IAstNode fn : getFunctions(type))
+		for (INode fn : getFunctions(type))
 		{
 			if (fn.getName().startsWith(proposal) || proposal.isEmpty())
 			{
@@ -191,7 +179,7 @@ public class VdmCompleteProcesser
 			}
 		}
 		// Types
-		for (IAstNode tp : getTypes(type))
+		for (INode tp : getTypes(type))
 		{
 			if (tp.getName().startsWith(proposal) || proposal.isEmpty())
 			{
@@ -200,7 +188,7 @@ public class VdmCompleteProcesser
 		}
 	}
 
-	private ICompletionProposal createProposal(IAstNode node, int offset)
+	private ICompletionProposal createProposal(INode node, int offset)
 	{
 		String name = node.getName();
 		if (node instanceof TypeDefinition)
@@ -211,9 +199,9 @@ public class VdmCompleteProcesser
 		return new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(node, 0), name, info, name);
 	}
 
-	private IAstNode getType(String typeName, List<IAstNode> ast)
+	private INode getType(String typeName, List<INode> ast)
 	{
-		for (IAstNode node : ast)
+		for (INode node : ast)
 		{
 			if (node.getName().equals(typeName))
 			{
@@ -223,9 +211,9 @@ public class VdmCompleteProcesser
 		return null;
 	}
 
-	private List<IAstNode> getFields(IAstNode node)
+	private List<INode> getFields(INode node)
 	{
-		List<IAstNode> fields = new Vector<IAstNode>();
+		List<INode> fields = new Vector<INode>();
 		DefinitionList list = getDefinitions(node);
 
 		if (list != null)
@@ -243,9 +231,9 @@ public class VdmCompleteProcesser
 		return fields;
 	}
 
-	private List<IAstNode> getTypes(IAstNode node)
+	private List<INode> getTypes(INode node)
 	{
-		List<IAstNode> types = new Vector<IAstNode>();
+		List<INode> types = new Vector<INode>();
 		DefinitionList list = getDefinitions(node);
 		if (list != null)
 		{
@@ -260,9 +248,9 @@ public class VdmCompleteProcesser
 		return types;
 	}
 
-	private List<IAstNode> getOperations(IAstNode node)
+	private List<INode> getOperations(INode node)
 	{
-		List<IAstNode> ops = new Vector<IAstNode>();
+		List<INode> ops = new Vector<INode>();
 		DefinitionList list = getDefinitions(node);
 
 		if (list != null)
@@ -279,9 +267,9 @@ public class VdmCompleteProcesser
 		return ops;
 	}
 
-	private List<IAstNode> getFunctions(IAstNode node)
+	private List<INode> getFunctions(INode node)
 	{
-		List<IAstNode> fns = new Vector<IAstNode>();
+		List<INode> fns = new Vector<INode>();
 		DefinitionList list = getDefinitions(node);
 
 		if (list != null)
@@ -298,7 +286,7 @@ public class VdmCompleteProcesser
 		return fns;
 	}
 
-	private DefinitionList getDefinitions(IAstNode node)
+	private DefinitionList getDefinitions(INode node)
 	{
 		DefinitionList list = null;
 		if (node instanceof ClassDefinition)
@@ -311,17 +299,17 @@ public class VdmCompleteProcesser
 		return list;
 	}
 
-	private List<IAstNode> getAst(VdmDocument document)
+	private List<INode> getAst(VdmDocument document)
 	{
-		List<IAstNode> ast = new Vector<IAstNode>();
+		List<INode> ast = new Vector<INode>();
 		ast.addAll(document.getProject().getModel().getRootElementList());
 		ast.addAll(document.getSourceUnit().getParseList());
 		return ast;
 	}
 
-	private List<IAstNode> getLocalFileAst(VdmDocument document)
+	private List<INode> getLocalFileAst(VdmDocument document)
 	{
-		List<IAstNode> ast = new Vector<IAstNode>();
+		List<INode> ast = new Vector<INode>();
 		ast.addAll(document.getSourceUnit().getParseList());
 		return ast;
 	}
