@@ -18,24 +18,25 @@
  *******************************************************************************/
 package org.overture.ide.ui.outline;
 
+
 import org.eclipse.swt.graphics.Image;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ide.ui.VdmPluginImages;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.modules.Module;
 
 public class DisplayImageCreator
 {
 
 	public static Image getImage(Object element)
 	{
-		if (element instanceof ClassDefinition || element instanceof Module)
+		if (element instanceof SClassDefinition || element instanceof AModuleModules)
 			return VdmPluginImages.get(VdmPluginImages.IMG_OBJS_CLASS);
-		else if (element instanceof ValueDefinition)
+		else if (element instanceof AValueDefinition)
 		{
-			Definition def = (Definition) element;
-			switch (def.accessSpecifier.access)
+			PDefinition def = (PDefinition) element;
+			switch (def.getAccess().getAccess().kindPAccess())
 			{
 			case PRIVATE:
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PRIVATE);
@@ -47,12 +48,12 @@ public class DisplayImageCreator
 			default:
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PUBLIC);
 			}
-		} else if (element instanceof Definition)
+		} else if (element instanceof PDefinition)
 		{
-			Definition def = (Definition) element;
-			if(def.classDefinition==null)
+			PDefinition def = (PDefinition) element;
+			if(def.getClassDefinition()==null)
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PUBLIC);//VDM-SL
-			switch (def.accessSpecifier.access)
+			switch (def.getAccess().getAccess().kindPAccess())
 			{
 			case PRIVATE:
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PRIVATE);

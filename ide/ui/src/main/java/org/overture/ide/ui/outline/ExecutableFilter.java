@@ -20,30 +20,26 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.InheritedDefinition;
-import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.modules.Module;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.EAccess;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 
-public class ExecutableFilter extends ViewerFilter
-{
+public class ExecutableFilter extends ViewerFilter {
 
 	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element)
-	{
-		return element instanceof ClassDefinition || 
-				element instanceof Module || 
-				(
-						parentElement instanceof ClassDefinition
-				&& (element instanceof ExplicitOperationDefinition || element instanceof ExplicitFunctionDefinition || element instanceof InheritedDefinition)
-				&& (element instanceof Definition && ((Definition) element).accessSpecifier.access == Token.PUBLIC)
-				)
-				
-				
-				|| (parentElement instanceof Module &&  (element instanceof ExplicitFunctionDefinition||element instanceof ExplicitOperationDefinition)	);
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		return element instanceof SClassDefinition
+				|| element instanceof AModuleModules
+				|| (parentElement instanceof SClassDefinition
+						&& (element instanceof AExplicitOperationDefinition
+								|| element instanceof AExplicitFunctionDefinition || element instanceof AInheritedDefinition) && (element instanceof PDefinition && ((PDefinition) element)
+						.getAccess().getAccess().kindPAccess() == EAccess.PUBLIC))
+
+				|| (parentElement instanceof AModuleModules && (element instanceof AExplicitFunctionDefinition || element instanceof AExplicitOperationDefinition));
 
 	}
 

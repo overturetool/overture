@@ -18,18 +18,19 @@
  *******************************************************************************/
 package org.overture.ide.ui.outline;
 
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.IgnorePattern;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.RecordPattern;
-import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.Type;
+
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.patterns.ARecordPattern;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.PType;
 
 public class DisplayNameCreator {
 
@@ -38,34 +39,34 @@ public class DisplayNameCreator {
 		try
 		{
 			StringBuilder sb = new StringBuilder();
-			if (element instanceof ClassDefinition)
-				return ((ClassDefinition) element).name.name;
-			else if (element instanceof Module)
-				return ((Module) element).name.name;
-			else if (element instanceof Definition)
+			if (element instanceof SClassDefinition)
+				return ((SClassDefinition) element).getName().name;
+			else if (element instanceof AModuleModules)
+				return ((AModuleModules) element).getName().name;
+			else if (element instanceof PDefinition)
 			{
 				//sb.append(((Definition) element).name.name);
-				if (element instanceof ExplicitOperationDefinition)
+				if (element instanceof AExplicitOperationDefinition)
 				{
 					
-					ExplicitOperationDefinition def = (ExplicitOperationDefinition) element;
+					AExplicitOperationDefinition def = (AExplicitOperationDefinition) element;
 					
 					sb.append(def.getName());
 
-					if (def.getType() instanceof OperationType) {
-						OperationType type = (OperationType) def.getType();
-						if (type.parameters.size() == 0) {
+					if (def.getType() instanceof AOperationType) {
+						AOperationType type = (AOperationType) def.getType();
+						if (type.getParameters().size() == 0) {
 							sb.append("() ");
 						} else {
 							sb.append("(");
 							int i = 0;
-							while (i < type.parameters.size() - 1) {
-								Type definition = (Type) type.parameters.elementAt(i);
+							while (i < type.getParameters().size() - 1) {
+								PType definition = (PType) type.getParameters().get(i);
 								sb.append(getSimpleTypeString(definition) + ", ");
 
 								i++;
 							}
-							Type definition = (Type) type.parameters.elementAt(i);
+							PType definition = (PType) type.getParameters().get(i);
 							sb.append(getSimpleTypeString(definition) + ")");
 						}
 					}
@@ -113,15 +114,15 @@ public class DisplayNameCreator {
 //							sb.append(", ");
 //					}
 //					sb.append(")");
-				} else if (element instanceof ExplicitFunctionDefinition)
+				} else if (element instanceof AExplicitFunctionDefinition)
 				{
-					ExplicitFunctionDefinition def = (ExplicitFunctionDefinition) element;
+					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) element;
 					
 					
 					sb.append(def.getName());
 
-					if (def.getType() instanceof FunctionType) {
-						FunctionType type = (FunctionType) def.getType();
+					if (def.getType() instanceof AFunctionType) {
+						AFunctionType type = (AFunctionType) def.getType();
 						sb.append(getFunctionTypeString(type));
 					}
 				}		
@@ -136,45 +137,45 @@ public class DisplayNameCreator {
 		}
 	}
 	
-	public static String getFunctionTypeString(FunctionType type)
+	public static String getFunctionTypeString(AFunctionType type)
 	{
 		StringBuffer sb = new StringBuffer();
-		if (type.parameters.size() == 0) {
+		if (type.getParameters().size() == 0) {
 			sb.append("() ");
 		} else {
 			sb.append("(");
 			int i = 0;
-			while (i < type.parameters.size() - 1) {
-				Type definition = (Type) type.parameters.elementAt(i);
+			while (i < type.getParameters().size() - 1) {
+				PType definition = (PType) type.getParameters().get(i);
 				sb.append(getSimpleTypeString(definition) + ", ");
 
 				i++;
 			}
-			Type definition = (Type) type.parameters.elementAt(i);
+			PType definition = (PType) type.getParameters().get(i);
 			sb.append(getSimpleTypeString(definition) + ")");
-			if(type.result instanceof FunctionType)
+			if(type.getResult() instanceof AFunctionType)
 			{
-				sb.append(getFunctionTypeString((FunctionType) type.result));
+				sb.append(getFunctionTypeString((AFunctionType) type.getResult()));
 			}
 		}
 		return sb.toString();
 	}
 	
-	public static String print(Pattern pattern)
+	public static String print(PPattern pattern)
 		{
 			
 			StringBuilder sb = new StringBuilder();	
 
-				if (pattern instanceof IdentifierPattern)
-					sb.append(((IdentifierPattern) pattern).name);
-				else if (pattern instanceof RecordPattern)
+				if (pattern instanceof AIdentifierPattern)
+					sb.append(((AIdentifierPattern) pattern).getName()
+							);
+				else if (pattern instanceof AIdentifierPattern)
 				{
-					RecordPattern recordPattern =(RecordPattern) pattern; 
-					sb.append((recordPattern).typename);
-					
+					ARecordPattern recordPattern =(ARecordPattern) pattern; 
+					sb.append((recordPattern).getTypename());
 					
 				}
-				else if (pattern instanceof IgnorePattern)
+				else if (pattern instanceof AIgnorePattern)
 					sb.append("-");
 				else
 					sb.append(pattern.toString());
@@ -182,7 +183,7 @@ public class DisplayNameCreator {
 			return sb.toString();
 		}
 	
-	private static String processUnresolved(Type definition) {
+	private static String processUnresolved(PType definition) {
 
 		String defString = definition.toString();
 
@@ -195,7 +196,7 @@ public class DisplayNameCreator {
 		return definition.toString();
 	}
 
-	private static String getSimpleTypeString(Type type) {
+	private static String getSimpleTypeString(PType type) {
 		String typeName = processUnresolved(type);
 		typeName = typeName.replace("(", "");
 		typeName = typeName.replace(")", "");
