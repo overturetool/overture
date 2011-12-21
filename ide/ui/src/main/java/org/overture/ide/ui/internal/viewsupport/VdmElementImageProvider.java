@@ -19,6 +19,7 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -28,14 +29,28 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AFromModuleImports;
+import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.modules.AOperationValueImport;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AFieldField;
 import org.overture.ide.ui.VdmPluginImages;
 import org.overture.ide.ui.VdmUIPlugin;
 
@@ -119,66 +134,66 @@ public class VdmElementImageProvider {
 		} else if (element instanceof ATypeDefinition) {
 			return getTypeDefinitionImage((ATypeDefinition) element,
 					SMALL_ICONS, adornmentFlags);
-		} else if (element instanceof InstanceVariableDefinition) {
+		} else if (element instanceof AInstanceVariableDefinition) {
 			return getInstanceVariableDefinitionImage(
-					(InstanceVariableDefinition) element, SMALL_ICONS,
+					(AInstanceVariableDefinition) element, SMALL_ICONS,
 					adornmentFlags);
-		} else if (element instanceof ExplicitOperationDefinition) {
+		} else if (element instanceof AExplicitOperationDefinition) {
 			return getExplicitOperationDefinitionImage(
-					(ExplicitOperationDefinition) element, SMALL_ICONS,
+					(AExplicitOperationDefinition) element, SMALL_ICONS,
 					adornmentFlags);
-		} else if (element instanceof ExplicitFunctionDefinition) {
+		} else if (element instanceof AExplicitFunctionDefinition) {
 			return getExplicitFunctionDefinitionImage(
-					(ExplicitFunctionDefinition) element, SMALL_ICONS,
+					(AExplicitFunctionDefinition) element, SMALL_ICONS,
 					adornmentFlags);
-		} else if(element instanceof ImplicitFunctionDefinition){
+		} else if(element instanceof AImplicitFunctionDefinition){
 			return getImplicitFunctionDefinitionImage(
-					(ImplicitFunctionDefinition) element, SMALL_ICONS,
+					(AImplicitFunctionDefinition) element, SMALL_ICONS,
 					adornmentFlags);
-		}else if(element instanceof ImplicitOperationDefinition){
+		}else if(element instanceof AImplicitOperationDefinition){
 			return getImplicitOperationDefinitionImage(
-					(ImplicitOperationDefinition) element, SMALL_ICONS,
+					(AImplicitOperationDefinition) element, SMALL_ICONS,
 					adornmentFlags);
-		}else if(element instanceof PerSyncDefinition){
+		}else if(element instanceof APerSyncDefinition){
 			return getPerSyncDefinitionImage(
-					(PerSyncDefinition) element, SMALL_ICONS,
+					(APerSyncDefinition) element, SMALL_ICONS,
 					adornmentFlags);
 		}
 		
 		
 		
 		
-		else if (element instanceof LocalDefinition) {
-			return getLocalDefinitionImage((LocalDefinition) element,
+		else if (element instanceof ALocalDefinition) {
+			return getLocalDefinitionImage((ALocalDefinition) element,
 					SMALL_ICONS, adornmentFlags);
-		} else if (element instanceof ValueDefinition) {
-			return getValueDefinitionImage((ValueDefinition) element,
+		} else if (element instanceof AValueDefinition) {
+			return getValueDefinitionImage((AValueDefinition) element,
 					SMALL_ICONS, adornmentFlags);
-		} else if (element instanceof NamedTraceDefinition) {
-			return getNamedTraceDefinitionImage((NamedTraceDefinition) element,
+		} else if (element instanceof ANamedTraceDefinition) {
+			return getNamedTraceDefinitionImage((ANamedTraceDefinition) element,
 					SMALL_ICONS, adornmentFlags);
-		} else if (element instanceof UntypedDefinition) {
-			DefinitionList definitions = null;
-			if (((UntypedDefinition) element).classDefinition != null) {
-				ClassDefinition classDef = ((UntypedDefinition) element).classDefinition;
-				definitions = classDef.definitions;
+		} else if (element instanceof AUntypedDefinition) {
+			List<PDefinition> definitions = null;
+			if (((AUntypedDefinition) element).getClassDefinition() != null) {
+				SClassDefinition classDef = ((AUntypedDefinition) element).getClassDefinition();
+				definitions = classDef.getDefinitions();
 			} else {
 				if (activeModule != null){
-					UntypedDefinition untypedDef = (UntypedDefinition) element;
+					AUntypedDefinition untypedDef = (AUntypedDefinition) element;
 					
-					definitions = activeModule.get(untypedDef.name.module).defs;
+					definitions = activeModule.get(untypedDef.getName().module).getDefs();
 				}
 			}
 			if (definitions != null) {
-				for (Definition def : definitions) {
-					if (def instanceof ValueDefinition) {
-						for (int i = 0; i < def.getDefinitions().size(); i++) {
-							if (def.getDefinitions().get(i).getLocation()
+				for (PDefinition def : definitions) {
+					if (def instanceof AValueDefinition) {
+						for (int i = 0; i < ((AValueDefinition)def).getDefs().size(); i++) {
+							if (((AValueDefinition)def).getDefs().get(i).getLocation()
 									.equals(
-											((UntypedDefinition) element)
+											((AUntypedDefinition) element)
 													.getLocation())) {
 								return getValueDefinitionImage(
-										(ValueDefinition) def, SMALL_ICONS,
+										(AValueDefinition) def, SMALL_ICONS,
 										adornmentFlags);
 							}
 						}
@@ -187,11 +202,11 @@ public class VdmElementImageProvider {
 			}
 		}
 
-		else if (element instanceof ModuleImports) {
+		else if (element instanceof AModuleImports) {
 			return VdmPluginImages.DESC_OBJS_IMPCONT;
 		}
 
-		else if (element instanceof ImportFromModule) {
+		else if (element instanceof AFromModuleImports) {
 			return VdmPluginImages.DESC_OBJS_IMPDECL;
 		}
 		
@@ -208,14 +223,14 @@ public class VdmElementImageProvider {
 			return getWorkbenchImageDescriptor(file, flags);
 		} else if (element instanceof IAdaptable) {
 			return getWorkbenchImageDescriptor((IAdaptable) element, flags);
-		} else if (element instanceof Field){
-			return getFieldImage((Field) element,
+		} else if (element instanceof AFieldField){
+			return getFieldImage((AFieldField) element,
 					SMALL_ICONS, adornmentFlags);
-		} else if (element instanceof InheritedDefinition){
-			return getInheritedDefinitionImage((InheritedDefinition)element,SMALL_ICONS,adornmentFlags);
-		} else if (element instanceof RenamedDefinition){
+		} else if (element instanceof AInheritedDefinition){
+			return getInheritedDefinitionImage((AInheritedDefinition)element,SMALL_ICONS,adornmentFlags);
+		} else if (element instanceof ARenamedDefinition){
 			return VdmPluginImages.DESC_OBJS_IMPDECL;
-		} else if(element instanceof ImportedOperation){
+		} else if(element instanceof AOperationValueImport){
 			return VdmPluginImages.DESC_METHOD_DEFAULT;					
 		}
 		
@@ -225,27 +240,27 @@ public class VdmElementImageProvider {
 
 	
 
-	private ImageDescriptor getFieldImage(Field element, int smallIcons,
+	private ImageDescriptor getFieldImage(AFieldField element, int smallIcons,
 			int adornmentFlags) {
 		ImageDescriptor result = null;
-		AccessSpecifier as = element.accessibility;
+		AAccessSpecifierAccessSpecifier as = element.getAccess();
 		if(as == null) 
 			return result;
 		
 		Point size = useSmallSize(smallIcons) ? SMALL_SIZE : BIG_SIZE;
-		if (as.access.toString().equals("private")) {
+		if (as.getAccess().toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("public")) {
+		} else if (as.getAccess().toString().equals("public")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("protected")) {
+		} else if (as.getAccess().toString().equals("protected")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("default")) {
+		} else if (as.getAccess().toString().equals("default")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
 					adornmentFlags, size);
@@ -256,19 +271,19 @@ public class VdmElementImageProvider {
 	}
 
 	private ImageDescriptor getInheritedDefinitionImage(
-			InheritedDefinition element, int smallIcons, int adornmentFlags) {
+			AInheritedDefinition element, int smallIcons, int adornmentFlags) {
 		Point size = useSmallSize(smallIcons) ? SMALL_SIZE : BIG_SIZE;
-		ImageDescriptor desc = computeDescriptor(element.superdef,adornmentFlags);
+		ImageDescriptor desc = computeDescriptor(element.getSuperdef(),adornmentFlags);
 		
 		
 		return new VdmElementImageDescriptor(desc, adornmentFlags, size);
 	}
 	
 	private ImageDescriptor getImplicitOperationDefinitionImage(
-			ImplicitOperationDefinition element, int smallIcons,
+			AImplicitOperationDefinition element, int smallIcons,
 			int adornmentFlags) {
 		ImageDescriptor result = null;
-		AccessSpecifier as = element.accessSpecifier;
+		AAccessSpecifierAccessSpecifier as = element.getAccess();
 		Point size = useSmallSize(smallIcons) ? SMALL_SIZE : BIG_SIZE;
 
 		// result =
@@ -276,19 +291,19 @@ public class VdmElementImageProvider {
 
 		adornmentFlags = adornmentFlags | VdmElementImageDescriptor.FINAL;
 
-		if (as.access.toString().equals("private")) {
+		if (as.getAccess().toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("public")) {
+		} else if (as.getAccess().toString().equals("public")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("protected")) {
+		} else if (as.getAccess().toString().equals("protected")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("default")) {
+		} else if (as.getAccess().toString().equals("default")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
 					adornmentFlags, size);
@@ -298,10 +313,10 @@ public class VdmElementImageProvider {
 	}
 
 	private ImageDescriptor getImplicitFunctionDefinitionImage(
-			ImplicitFunctionDefinition element, int smallIcons,
+			AImplicitFunctionDefinition element, int smallIcons,
 			int adornmentFlags) {
 		ImageDescriptor result = null;
-		AccessSpecifier as = element.accessSpecifier;
+		AAccessSpecifierAccessSpecifier as = element.getAccess();
 		Point size = useSmallSize(smallIcons) ? SMALL_SIZE : BIG_SIZE;
 
 		// result =
@@ -309,19 +324,19 @@ public class VdmElementImageProvider {
 
 		adornmentFlags = adornmentFlags | VdmElementImageDescriptor.FINAL;
 
-		if (as.access.toString().equals("private")) {
+		if (as.getAccess().toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("public")) {
+		} else if (as.getAccess().toString().equals("public")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("protected")) {
+		} else if (as.getAccess().toString().equals("protected")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("default")) {
+		} else if (as.getAccess().toString().equals("default")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
 					adornmentFlags, size);
@@ -331,10 +346,10 @@ public class VdmElementImageProvider {
 	}
 
 	private ImageDescriptor getExplicitFunctionDefinitionImage(
-			ExplicitFunctionDefinition element, int renderFlags,
+			AExplicitFunctionDefinition element, int renderFlags,
 			int adornmentFlags) {
 		ImageDescriptor result = null;
-		AccessSpecifier as = element.accessSpecifier;
+		AAccessSpecifierAccessSpecifier as = element.getAccess();
 		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
 
 		// result =
@@ -342,19 +357,19 @@ public class VdmElementImageProvider {
 
 		//adornmentFlags = adornmentFlags | VdmElementImageDescriptor.FINAL;
 
-		if (as.access.toString().equals("private")) {
+		if (as.getAccess().toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("public")) {
+		} else if (as.getAccess().toString().equals("public")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("protected")) {
+		} else if (as.getAccess().toString().equals("protected")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
 					adornmentFlags, size);
-		} else if (as.access.toString().equals("default")) {
+		} else if (as.getAccess().toString().equals("default")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
 					adornmentFlags, size);
@@ -364,7 +379,7 @@ public class VdmElementImageProvider {
 	}
 
 	private ImageDescriptor getNamedTraceDefinitionImage(
-			NamedTraceDefinition element, int renderFlags, int adornmentFlags) {
+			ANamedTraceDefinition element, int renderFlags, int adornmentFlags) {
 		//ImageDescriptor result = null;
 
 		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
@@ -375,7 +390,7 @@ public class VdmElementImageProvider {
 	}
 	
 	private ImageDescriptor getPerSyncDefinitionImage(
-			PerSyncDefinition element, int renderFlags, int adornmentFlags) {
+			APerSyncDefinition element, int renderFlags, int adornmentFlags) {
 		//ImageDescriptor result = null;
 
 		Point size = useSmallSize(renderFlags) ? SMALL_SIZE : BIG_SIZE;
@@ -592,24 +607,24 @@ public class VdmElementImageProvider {
 	public int computeVdmAdornmentFlags(Object element) {
 		int flags = 0;
 
-		if (element instanceof ClassDefinition) {
-			flags = getClassDefinitionFlags((ClassDefinition) element);
-		} else if (element instanceof InstanceVariableDefinition) {
-			flags = getInstanceVariableDefinitionFlags((InstanceVariableDefinition) element);
-		} else if (element instanceof ExplicitOperationDefinition) {
-			flags = getExplicitOperationDefinitionFlags((ExplicitOperationDefinition) element);
+		if (element instanceof AClassClassDefinition) {
+			flags = getClassDefinitionFlags((AClassClassDefinition) element);
+		} else if (element instanceof AInstanceVariableDefinition) {
+			flags = getInstanceVariableDefinitionFlags((AInstanceVariableDefinition) element);
+		} else if (element instanceof AExplicitOperationDefinition) {
+			flags = getExplicitOperationDefinitionFlags((AExplicitOperationDefinition) element);
 
-		} else if (element instanceof LocalDefinition) {
-			flags = getLocalDefinitionFlags((LocalDefinition) element);
-		} else if (element instanceof InheritedDefinition){
-			flags = getInheritedDefinitionFlags((InheritedDefinition)element);
+		} else if (element instanceof ALocalDefinition) {
+			flags = getLocalDefinitionFlags((ALocalDefinition) element);
+		} else if (element instanceof AInheritedDefinition){
+			flags = getInheritedDefinitionFlags((AInheritedDefinition)element);
 		}
 		
 		
 		return flags;
 	}
 
-	private int getInheritedDefinitionFlags(InheritedDefinition element) {
+	private int getInheritedDefinitionFlags(AInheritedDefinition element) {
 		int flags = 0;
 		flags |= VdmElementImageDescriptor.OVERRIDES;
 		
