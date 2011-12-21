@@ -68,6 +68,5 @@ class OutlineSorter extends ViewerSorter
 			return super.compare(viewer, e1, e2);
 		}
 	}
-	
-	
+
 }
