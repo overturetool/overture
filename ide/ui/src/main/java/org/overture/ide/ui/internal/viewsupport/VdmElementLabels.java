@@ -19,42 +19,42 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.InheritedDefinition;
-import org.overturetool.vdmj.definitions.InstanceVariableDefinition;
-import org.overturetool.vdmj.definitions.LocalDefinition;
-import org.overturetool.vdmj.definitions.NamedTraceDefinition;
-import org.overturetool.vdmj.definitions.PerSyncDefinition;
-import org.overturetool.vdmj.definitions.RenamedDefinition;
-import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.definitions.UntypedDefinition;
-import org.overturetool.vdmj.definitions.ValueDefinition;
-import org.overturetool.vdmj.modules.Import;
-import org.overturetool.vdmj.modules.ImportAll;
-import org.overturetool.vdmj.modules.ImportFromModule;
-import org.overturetool.vdmj.modules.ImportedType;
-import org.overturetool.vdmj.modules.ImportedValue;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleImports;
-import org.overturetool.vdmj.types.Field;
-import org.overturetool.vdmj.types.FunctionType;
-import org.overturetool.vdmj.types.NamedType;
-import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.ProductType;
-import org.overturetool.vdmj.types.RecordType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.UnresolvedType;
-import org.overturetool.vdmj.types.VoidType;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AAllImport;
+import org.overture.ast.modules.AFromModuleImports;
+import org.overture.ast.modules.AModuleImports;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.modules.ATypeImport;
+import org.overture.ast.modules.PImport;
+import org.overture.ast.modules.SValueImport;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidType;
+import org.overture.ast.types.PType;
 
 public class VdmElementLabels {
 
@@ -88,92 +88,92 @@ public class VdmElementLabels {
 
 	// TODO: this map should be deleted when the AST fix is made
 	// so that definitions contain a reference to the module they belong
-	static Map<String, Module> activeModule = new HashMap<String, Module>();
+	static Map<String, AModuleModules> activeModule = new HashMap<String, AModuleModules>();
 
 	public static StyledString getStyledTextLabel(Object element, long flags) {
 		// if (element instanceof IVdmElement) {
 		// return getElementLabel((IVdmElement) element, flags);
 		// }
-		if (element instanceof ClassDefinition) {
+		if (element instanceof SClassDefinition) {
 			// activeModule = null;
-			return getClassDefinitionLabel((ClassDefinition) element, flags);
+			return getClassDefinitionLabel((SClassDefinition) element, flags);
 		}
-		if (element instanceof Module) {
-			activeModule.put(((Module) element).getName(), ((Module) element));
-			return getModuleLabel((Module) element, flags);
+		if (element instanceof AModuleModules) {
+			activeModule.put(((AModuleModules) element).getName().toString(), ((AModuleModules) element));
+			return getModuleLabel((AModuleModules) element, flags);
 		}
-		if (element instanceof InstanceVariableDefinition) {
-			return getInstanceVariableDefinitionLabel((InstanceVariableDefinition) element);
+		if (element instanceof AInstanceVariableDefinition) {
+			return getInstanceVariableDefinitionLabel((AInstanceVariableDefinition) element);
 		}
-		if (element instanceof TypeDefinition) {
-			return getTypeDefinitionLabel((TypeDefinition) element);
+		if (element instanceof ATypeDefinition) {
+			return getTypeDefinitionLabel((ATypeDefinition) element);
 		}
-		if (element instanceof ExplicitOperationDefinition) {
-			return getExplicitOperationDefinitionLabel((ExplicitOperationDefinition) element);
+		if (element instanceof AExplicitOperationDefinition) {
+			return getExplicitOperationDefinitionLabel((AExplicitOperationDefinition) element);
 		}
-		if (element instanceof ImplicitOperationDefinition) {
-			return getImplicitOperationDefinitionLabel((ImplicitOperationDefinition) element);
-		}
-
-		if (element instanceof ExplicitFunctionDefinition) {
-			return getExplicitFunctionDefinitionLabel((ExplicitFunctionDefinition) element);
+		if (element instanceof AImplicitOperationDefinition) {
+			return getImplicitOperationDefinitionLabel((AImplicitOperationDefinition) element);
 		}
 
-		if (element instanceof ImplicitFunctionDefinition) {
-			return getImplicitFunctionDefinitionLabel((ImplicitFunctionDefinition) element);
+		if (element instanceof AExplicitFunctionDefinition) {
+			return getExplicitFunctionDefinitionLabel((AExplicitFunctionDefinition) element);
 		}
-		if (element instanceof LocalDefinition) {
-			return getLocalDefinitionLabel((LocalDefinition) element);
+
+		if (element instanceof AImplicitFunctionDefinition) {
+			return getImplicitFunctionDefinitionLabel((AImplicitFunctionDefinition) element);
 		}
-		if (element instanceof ValueDefinition) {
+		if (element instanceof ALocalDefinition) {
+			return getLocalDefinitionLabel((ALocalDefinition) element);
+		}
+		if (element instanceof AValueDefinition) {
 			System.out.println("VALUE DEF");
 		}
-		if (element instanceof NamedTraceDefinition) {
-			return getNamedTraceDefinitionLabel((NamedTraceDefinition) element);
+		if (element instanceof ANamedTraceDefinition) {
+			return getNamedTraceDefinitionLabel((ANamedTraceDefinition) element);
 		}
 
-		if (element instanceof UntypedDefinition) {
-			return getUntypedDefinition((UntypedDefinition) element);
+		if (element instanceof AUntypedDefinition) {
+			return getUntypedDefinition((AUntypedDefinition) element);
 		}
 
-		if (element instanceof ModuleImports) {
+		if (element instanceof AModuleImports) {
 			StyledString result = new StyledString();
 			result.append("import definitions");
 			return result;
 		}
 
-		if (element instanceof ImportFromModule) {
-			return getImportFromModuleLabel((ImportFromModule) element);
+		if (element instanceof AFromModuleImports) {
+			return getImportFromModuleLabel((AFromModuleImports) element);
 		}
 
-		if (element instanceof Import) {
-			return getImportLabel((Import) element);
+		if (element instanceof PImport) {
+			return getImportLabel((PImport) element);
 		}
 
-		if (element instanceof Field) {
+		if (element instanceof AFieldField) {
 			StyledString result = new StyledString();
-			result.append(((Field) element).tag);
-			result.append(" : " + processUnresolved(((Field) element).type),
+			result.append(((AFieldField) element).getTag());
+			result.append(" : " + processUnresolved(((AFieldField) element).getType()),
 					StyledString.DECORATIONS_STYLER);
 			return result;
 		}
 
-		if (element instanceof PerSyncDefinition) {
-			return getPerSyncDefinitionLabel((PerSyncDefinition) element);
+		if (element instanceof APerSyncDefinition) {
+			return getPerSyncDefinitionLabel((APerSyncDefinition) element);
 		}
 
-		if (element instanceof InheritedDefinition) {
-			return getInheritedDefinition((InheritedDefinition) element, flags);
+		if (element instanceof AInheritedDefinition) {
+			return getInheritedDefinition((AInheritedDefinition) element, flags);
 		}
 
 		if (element instanceof ImportsContainer) {
 			return getStyledTextLabel(
-					(ModuleImports) ((ImportsContainer) element).getImports(),
+					(AModuleImports) ((ImportsContainer) element).getImports(),
 					flags);
 		}
 
-		if (element instanceof RenamedDefinition) {
-			return getRenamedDefinitionLabel((RenamedDefinition) element, flags);
+		if (element instanceof ARenamedDefinition) {
+			return getRenamedDefinitionLabel((ARenamedDefinition) element, flags);
 		}
 
 		StyledString result = new StyledString();
@@ -183,56 +183,56 @@ public class VdmElementLabels {
 	}
 
 	private static StyledString getRenamedDefinitionLabel(
-			RenamedDefinition element, long flags) {
+			ARenamedDefinition element, long flags) {
 
-		return getStyledTextLabel(element.def, flags);
+		return getStyledTextLabel(element.getDef(), flags);
 
 	}
 
 	private static StyledString getInheritedDefinition(
-			InheritedDefinition element, long flags) {
+			AInheritedDefinition element, long flags) {
 
-		StyledString res = getStyledTextLabel(element.superdef, flags);
+		StyledString res = getStyledTextLabel(element.getSuperdef(), flags);
 
 		return res;
 	}
 
 	private static StyledString getPerSyncDefinitionLabel(
-			PerSyncDefinition element) {
+			APerSyncDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
+		result.append(element.getName().toString());
 		result.append(" : sync predicate", StyledString.DECORATIONS_STYLER);
 		return result;
 	}
 
 	private static StyledString getImplicitOperationDefinitionLabel(
-			ImplicitOperationDefinition element) {
+			AImplicitOperationDefinition element) {
 		StyledString result = new StyledString();
 
-		result.append(element.getName());
+		result.append(element.getName().toString());
 
-		if (element.getType() instanceof OperationType) {
-			OperationType type = (OperationType) element.getType();
-			if (type.parameters.size() == 0) {
+		if (element.getType() instanceof AOperationType) {
+			AOperationType type = (AOperationType) element.getType();
+			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
 				result.append("(");
 				int i = 0;
-				while (i < type.parameters.size() - 1) {
-					Type definition = (Type) type.parameters.elementAt(i);
+				while (i < type.getParameters().size() - 1) {
+					PType definition = (PType) type.getParameters().get(i);
 					result.append(getSimpleTypeString(definition) + ", ");
 
 					i++;
 				}
-				Type definition = (Type) type.parameters.elementAt(i);
+				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
 		}
 
-		if (element.type.result instanceof VoidType) {
+		if (element.getType().getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.type.result),
+			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
 					StyledString.DECORATIONS_STYLER);
 		}
 
@@ -240,32 +240,32 @@ public class VdmElementLabels {
 	}
 
 	private static StyledString getImplicitFunctionDefinitionLabel(
-			ImplicitFunctionDefinition element) {
+			AImplicitFunctionDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
+		result.append(element.getName().toString());
 
-		if (element.getType() instanceof FunctionType) {
-			FunctionType type = (FunctionType) element.getType();
-			if (type.parameters.size() == 0) {
+		if (element.getType() instanceof AFunctionType) {
+			AFunctionType type = (AFunctionType) element.getType();
+			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
 				result.append("(");
 				int i = 0;
-				while (i < type.parameters.size() - 1) {
-					Type definition = (Type) type.parameters.elementAt(i);
+				while (i < type.getParameters().size() - 1) {
+					PType definition = (PType) type.getParameters().get(i);
 					result.append(getSimpleTypeString(definition) + ", ");
 
 					i++;
 				}
-				Type definition = (Type) type.parameters.elementAt(i);
+				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
 		}
 
-		if (element.type.result instanceof VoidType) {
+		if (element.getType().getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.type.result),
+			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -273,85 +273,85 @@ public class VdmElementLabels {
 		return result;
 	}
 
-	private static StyledString getImportLabel(Import element) {
+	private static StyledString getImportLabel(PImport element) {
 
 		StyledString result = new StyledString();
 
-		if (element instanceof ImportAll) {
-			result.append(element.name.toString());
-		} else if (element instanceof ImportedType) {
+		if (element instanceof AAllImport) {
+			result.append(element.getName().toString());
+		} else if (element instanceof ATypeImport) {
 			
 			
-			ImportedType type = (ImportedType) element;
-			result.append(type.name.toString());
-			if(type.def!=null)
+			ATypeImport type = (ATypeImport) element;
+			result.append(type.getName().toString());
+			if(type.getDef()!=null)
 			{
-				result.append(" : " + getSimpleTypeString(type.def.getType()), StyledString.DECORATIONS_STYLER);
+				result.append(" : " + getSimpleTypeString(type.getDef().getType()), StyledString.DECORATIONS_STYLER);
 			}else
 			{
 				result.append(" : " , StyledString.DECORATIONS_STYLER);
 			}
 			
-			result.append(type.renamed.name, StyledString.DECORATIONS_STYLER);
-		} else if (element instanceof ImportedValue) {
-			ImportedValue value = (ImportedValue) element;
-			result.append(value.name.toString());
-			if (value.type != null) {
-				String typeString = value.type.toString();
+			result.append(type.getRenamed().name, StyledString.DECORATIONS_STYLER);
+		} else if (element instanceof SValueImport) {
+			SValueImport value = (SValueImport) element;
+			result.append(value.getName().toString());
+			if (value.getImportType() != null) {
+				String typeString = value.getImportType().toString();
 				typeString = typeString.replaceFirst("[(]", "");
 				typeString = typeString.substring(0, typeString.length() - 1);
 				result.append(" : " + typeString);
 			}
 		}
 
-		if (element.renamed != null) {
-			result.append(" (renamed as: " + element.renamed.name + ")",
+		if (element.getRenamed()!= null) {
+			result.append(" (renamed as: " + element.getRenamed().getName() + ")",
 					StyledString.DECORATIONS_STYLER);
 		}
 		return result;
 	}
 
 	private static StyledString getImportFromModuleLabel(
-			ImportFromModule element) {
+			AFromModuleImports element) {
 		StyledString result = new StyledString();
 
-		result.append(element.name.toString());
+		result.append(element.getName().toString());
 
 		return result;
 	}
 
 	private static StyledString getNamedTraceDefinitionLabel(
-			NamedTraceDefinition element) {
+			ANamedTraceDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
+		result.append(element.getName().toString());
 		return result;
 	}
 
-	private static StyledString getUntypedDefinition(UntypedDefinition element) {
+	private static StyledString getUntypedDefinition(AUntypedDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
-		DefinitionList definitions = null;
-		if (element.classDefinition != null) {
-			ClassDefinition classDef = element.classDefinition;
-			definitions = classDef.definitions;
+		result.append(element.getName().toString());
+		List<PDefinition> definitions = null;
+		if (element.getClassDefinition() != null) {
+			SClassDefinition classDef = element.getClassDefinition();
+			definitions = classDef.getDefinitions();
 		} else {
 			if (activeModule != null)
-				definitions = activeModule.get(element.name.module).defs;
+				definitions = activeModule.get(element.getName().getModule()).getDefs();
 		}
 		if (definitions != null) {
-			for (Definition def : definitions) {
-				if (def instanceof ValueDefinition) {
-					for (int i = 0; i < def.getDefinitions().size(); i++) {
-						if (def.getDefinitions().get(i).getLocation()
+			for (PDefinition def : definitions) {
+				if (def instanceof AValueDefinition) {
+					for (int i = 0; i < ((AValueDefinition)def).getDefs().size(); i++) {
+						if (((AValueDefinition)def).getDefs().get(i).getLocation()
 								.equals(element.getLocation())) {
-							Type type = ((ValueDefinition) def).type;
-							if (type instanceof ProductType) {
+							PType type = ((AValueDefinition) def).getType();
+							if (type instanceof AProductType) {
 								return result
 										.append(" : "
-												+ getSimpleTypeString(((ProductType) type).types
+												+ getSimpleTypeString(((AProductType) type).getTypes()
 														.get(i)),
 												StyledString.DECORATIONS_STYLER);
-							} else if (type instanceof UnresolvedType) {
+							} else if (type instanceof AUnresolvedType) {
 								return result.append(" : "
 										+ getSimpleTypeString(type),
 										StyledString.DECORATIONS_STYLER);
@@ -362,7 +362,7 @@ public class VdmElementLabels {
 							} else {
 								// System.err.println("Could not translate type");
 								return result.append(" : "
-										+ ((ValueDefinition) def).exp,
+										+ ((AValueDefinition) def).getExpression(),
 										StyledString.DECORATIONS_STYLER);
 							}
 						}
@@ -377,47 +377,47 @@ public class VdmElementLabels {
 		return result;
 	}
 
-	private static StyledString getLocalDefinitionLabel(LocalDefinition element) {
+	private static StyledString getLocalDefinitionLabel(ALocalDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
-		if (element.type.location.module.toLowerCase().equals("default")) {
-			result.append(" : " + getSimpleTypeString(element.type),
+		result.append(element.getName().toString());
+		if (element.getType().getLocation().module.toLowerCase().equals("default")) {
+			result.append(" : " + getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + element.type.location.module + "`"
-					+ getSimpleTypeString(element.type),
+			result.append(" : " + element.getType().getLocation().module + "`"
+					+ getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
 		}
 		return result;
 	}
 
 	private static StyledString getExplicitFunctionDefinitionLabel(
-			ExplicitFunctionDefinition element) {
+			AExplicitFunctionDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
+		result.append(element.getName().toString());
 
-		if (element.getType() instanceof FunctionType) {
-			FunctionType type = (FunctionType) element.getType();
-			if (type.parameters.size() == 0) {
+		if (element.getType() instanceof AFunctionType) {
+			AFunctionType type = (AFunctionType) element.getType();
+			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
 				result.append("(");
 				int i = 0;
-				while (i < type.parameters.size() - 1) {
-					Type definition = (Type) type.parameters.elementAt(i);
+				while (i < type.getParameters().size() - 1) {
+					PType definition = (PType) type.getParameters().get(i);
 					result.append(getSimpleTypeString(definition) + ", ");
 
 					i++;
 				}
-				Type definition = (Type) type.parameters.elementAt(i);
+				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
 		}
 
-		if (element.type.result instanceof VoidType) {
+		if (element.getType().getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.type.result),
+			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -425,17 +425,17 @@ public class VdmElementLabels {
 		return result;
 	}
 
-	private static StyledString getTypeDefinitionLabel(TypeDefinition element) {
+	private static StyledString getTypeDefinitionLabel(ATypeDefinition element) {
 		StyledString result = new StyledString();
-		if (element.type instanceof RecordType) {
+		if (element.getType() instanceof ARecordInvariantType) {
 
-			result.append(element.getName());
+			result.append(element.getName().toString());
 			result.append(" : record type", StyledString.DECORATIONS_STYLER);
-		} else if (element.type instanceof NamedType) {
+		} else if (element.getType() instanceof ANamedInvariantType) {
 
-			result.append(element.getName());
+			result.append(element.getName().toString());
 			result.append(" : "
-					+ getSimpleTypeString(((NamedType) element.type).type),
+					+ getSimpleTypeString(((ANamedInvariantType)element.getType()).getType()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -443,33 +443,33 @@ public class VdmElementLabels {
 	}
 
 	private static StyledString getExplicitOperationDefinitionLabel(
-			ExplicitOperationDefinition element) {
+			AExplicitOperationDefinition element) {
 		StyledString result = new StyledString();
 
-		result.append(element.getName());
+		result.append(element.getName().toString());
 
-		if (element.getType() instanceof OperationType) {
-			OperationType type = (OperationType) element.getType();
-			if (type.parameters.size() == 0) {
+		if (element.getType() instanceof AOperationType) {
+			AOperationType type = (AOperationType) element.getType();
+			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
 				result.append("(");
 				int i = 0;
-				while (i < type.parameters.size() - 1) {
-					Type definition = (Type) type.parameters.elementAt(i);
+				while (i < type.getParameters().size() - 1) {
+					PType definition = (PType) type.getParameters().get(i);
 					result.append(getSimpleTypeString(definition) + ", ");
 
 					i++;
 				}
-				Type definition = (Type) type.parameters.elementAt(i);
+				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
 		}
 
-		if (element.type.result instanceof VoidType) {
+		if (element.getType().getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.type.result),
+			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -478,24 +478,24 @@ public class VdmElementLabels {
 	}
 
 	private static StyledString getInstanceVariableDefinitionLabel(
-			InstanceVariableDefinition element) {
+			AInstanceVariableDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
-		result.append(" : " + getSimpleTypeString(element.type),
+		result.append(element.getName().toString());
+		result.append(" : " + getSimpleTypeString(element.getType()),
 				StyledString.DECORATIONS_STYLER);
 		return result;
 	}
 
 	private static StyledString getClassDefinitionLabel(
-			ClassDefinition element, long flags) {
+			SClassDefinition element, long flags) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
+		result.append(element.getName().toString());
 		return result;
 	}
 
-	private static StyledString getModuleLabel(Module element, long flags) {
+	private static StyledString getModuleLabel(AModuleModules element, long flags) {
 		StyledString result = new StyledString();
-		result.append(element.getName());
+		result.append(element.getName().toString());
 		return result;
 	}
 
@@ -504,7 +504,7 @@ public class VdmElementLabels {
 		return null;
 	}
 
-	private static String processUnresolved(Type definition) {
+	private static String processUnresolved(PType definition) {
 
 		String defString = definition.toString();
 
@@ -517,7 +517,7 @@ public class VdmElementLabels {
 		return definition.toString();
 	}
 
-	private static String getSimpleTypeString(Type type) {
+	private static String getSimpleTypeString(PType type) {
 		String typeName = processUnresolved(type);
 		typeName = typeName.replace("(", "");
 		typeName = typeName.replace(")", "");
