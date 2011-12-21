@@ -25,11 +25,23 @@ import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext;
+import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 public class VdmCompleteProcesser
 {
@@ -60,7 +72,7 @@ public class VdmCompleteProcesser
 		{
 			if (modulesOnly)
 			{
-				String name = element.getName();
+				String name = AstNameUtil.getName(element);
 				if (name.startsWith(typeName) || name.length() == 0)
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
@@ -75,24 +87,24 @@ public class VdmCompleteProcesser
 	private void addContainerTypes(INode def, boolean recordTypesOnly,
 			int offset, List<ICompletionProposal> proposals)
 	{
-		if (def instanceof ClassDefinition)
+		if (def instanceof SClassDefinition)
 		{
-			ClassDefinition cd = (ClassDefinition) def;
-			for (Definition element : cd.getDefinitions())
+			SClassDefinition cd = (SClassDefinition) def;
+			for (PDefinition element : cd.getDefinitions())
 			{
-				if (element instanceof TypeDefinition)
+				if (element instanceof ATypeDefinition)
 				{
 					String name = cd.getName() + "`" + element.getName();
 					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, info, name));
 				}
 			}
-		} else if (def instanceof Module)
+		} else if (def instanceof AModuleModules)
 		{
-			Module m = (Module) def;
-			for (Definition element : m.defs)
+			AModuleModules m = (AModuleModules) def;
+			for (PDefinition element : m.getDefs())
 			{
-				if (element instanceof TypeDefinition)
+				if (element instanceof ATypeDefinition)
 				{
 					String name = m.getName() + "`" + element.getName();
 					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
@@ -119,11 +131,11 @@ public class VdmCompleteProcesser
 				{
 					for (INode field : getFields(node))
 					{
-						if (field.getName().equals(info.field.toString()))
+						if (AstNameUtil.getName(field).equals(info.field.toString()))
 						{
 							// Ok match then complete it
 							completeFromType(getTypeName(field), info.proposal.toString(), proposals, offset, ast);
-						} else if (field.getName().startsWith(info.field.toString()))
+						} else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
 						{
 							possibleMatch.add(field);
 						}
@@ -140,9 +152,9 @@ public class VdmCompleteProcesser
 
 	private String getTypeName(INode field)
 	{
-		if (field instanceof InstanceVariableDefinition)
+		if (field instanceof AInstanceVariableDefinition)
 		{
-			return ((InstanceVariableDefinition) field).type.toString();
+			return ((AInstanceVariableDefinition) field).getType().toString();
 		}
 		return "";
 	}
@@ -157,7 +169,7 @@ public class VdmCompleteProcesser
 		// Fields
 		for (INode field : getFields(type))
 		{
-			if (field.getName().startsWith(proposal) || proposal.isEmpty())
+			if (AstNameUtil.getName(field).startsWith(proposal) || proposal.isEmpty())
 			{
 				proposals.add(createProposal(field, offset));
 			}
@@ -165,7 +177,7 @@ public class VdmCompleteProcesser
 		// Operations
 		for (INode op : getOperations(type))
 		{
-			if (op.getName().startsWith(proposal) || proposal.isEmpty())
+			if (AstNameUtil.getName(op).startsWith(proposal) || proposal.isEmpty())
 			{
 				proposals.add(createProposal(op, offset));
 			}
@@ -173,7 +185,7 @@ public class VdmCompleteProcesser
 		// Functions
 		for (INode fn : getFunctions(type))
 		{
-			if (fn.getName().startsWith(proposal) || proposal.isEmpty())
+			if (AstNameUtil.getName(fn).startsWith(proposal) || proposal.isEmpty())
 			{
 				proposals.add(createProposal(fn, offset));
 			}
@@ -181,7 +193,7 @@ public class VdmCompleteProcesser
 		// Types
 		for (INode tp : getTypes(type))
 		{
-			if (tp.getName().startsWith(proposal) || proposal.isEmpty())
+			if (AstNameUtil.getName(tp).startsWith(proposal) || proposal.isEmpty())
 			{
 				proposals.add(createProposal(tp, offset));
 			}
@@ -190,10 +202,10 @@ public class VdmCompleteProcesser
 
 	private ICompletionProposal createProposal(INode node, int offset)
 	{
-		String name = node.getName();
-		if (node instanceof TypeDefinition)
+		String name = AstNameUtil.getName(node);
+		if (node instanceof ATypeDefinition)
 		{
-			name = node.getLocation().module + "`" + name;
+			name = ((ATypeDefinition)node).getLocation().module + "`" + name;
 		}
 		IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 		return new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(node, 0), name, info, name);
@@ -203,7 +215,7 @@ public class VdmCompleteProcesser
 	{
 		for (INode node : ast)
 		{
-			if (node.getName().equals(typeName))
+			if (AstNameUtil.getName(node).equals(typeName))
 			{
 				return node;
 			}
@@ -214,15 +226,15 @@ public class VdmCompleteProcesser
 	private List<INode> getFields(INode node)
 	{
 		List<INode> fields = new Vector<INode>();
-		DefinitionList list = getDefinitions(node);
+		List<PDefinition> list = getDefinitions(node);
 
 		if (list != null)
 		{
-			for (Definition definition : list)
+			for (PDefinition definition : list)
 			{
-				if (definition instanceof LocalDefinition
-						|| definition instanceof ValueDefinition
-						|| definition instanceof InstanceVariableDefinition)
+				if (definition instanceof ALocalDefinition
+						|| definition instanceof AValueDefinition
+						|| definition instanceof AInstanceVariableDefinition)
 				{
 					fields.add(definition);
 				}
@@ -234,12 +246,12 @@ public class VdmCompleteProcesser
 	private List<INode> getTypes(INode node)
 	{
 		List<INode> types = new Vector<INode>();
-		DefinitionList list = getDefinitions(node);
+		List<PDefinition> list = getDefinitions(node);
 		if (list != null)
 		{
-			for (Definition definition : list)
+			for (PDefinition definition : list)
 			{
-				if (definition instanceof TypeDefinition)
+				if (definition instanceof ATypeDefinition)
 				{
 					types.add(definition);
 				}
@@ -251,14 +263,14 @@ public class VdmCompleteProcesser
 	private List<INode> getOperations(INode node)
 	{
 		List<INode> ops = new Vector<INode>();
-		DefinitionList list = getDefinitions(node);
+		List<PDefinition> list = getDefinitions(node);
 
 		if (list != null)
 		{
-			for (Definition definition : list)
+			for (PDefinition definition : list)
 			{
-				if (definition instanceof ExplicitOperationDefinition
-						|| definition instanceof ImplicitOperationDefinition)
+				if (definition instanceof AExplicitOperationDefinition
+						|| definition instanceof AImplicitOperationDefinition)
 				{
 					ops.add(definition);
 				}
@@ -270,14 +282,14 @@ public class VdmCompleteProcesser
 	private List<INode> getFunctions(INode node)
 	{
 		List<INode> fns = new Vector<INode>();
-		DefinitionList list = getDefinitions(node);
+		List<PDefinition> list = getDefinitions(node);
 
 		if (list != null)
 		{
-			for (Definition definition : list)
+			for (PDefinition definition : list)
 			{
-				if (definition instanceof ExplicitFunctionDefinition
-						|| definition instanceof ImplicitFunctionDefinition)
+				if (definition instanceof AExplicitFunctionDefinition
+						|| definition instanceof AImplicitFunctionDefinition)
 				{
 					fns.add(definition);
 				}
@@ -286,15 +298,15 @@ public class VdmCompleteProcesser
 		return fns;
 	}
 
-	private DefinitionList getDefinitions(INode node)
+	private List<PDefinition> getDefinitions(INode node)
 	{
-		DefinitionList list = null;
-		if (node instanceof ClassDefinition)
+		List<PDefinition> list = null;
+		if (node instanceof SClassDefinition)
 		{
-			list = ((ClassDefinition) node).getDefinitions();
-		} else if (node instanceof Module)
+			list = ((SClassDefinition) node).getDefinitions();
+		} else if (node instanceof AModuleModules)
 		{
-			list = ((Module) node).defs;
+			list = ((AModuleModules) node).getDefs();
 		}
 		return list;
 	}
