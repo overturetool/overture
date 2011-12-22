@@ -46,14 +46,15 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.progress.IProgressService;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overture.ide.debug.core.VdmDebugPlugin;
+
 
 public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 {
@@ -71,7 +72,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	 *            type to create a launch configuration for
 	 * @return launch configuration configured to launch the specified type
 	 */
-	protected abstract ILaunchConfiguration createConfiguration(IAstNode type,
+	protected abstract ILaunchConfiguration createConfiguration(INode type,
 			String projectName);
 
 	/**
@@ -91,7 +92,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	// IRunnableContext context) throws InterruptedException,
 	// CoreException;
 
-	protected abstract IAstNode[] filterTypes(Object[] elements,
+	protected abstract INode[] filterTypes(Object[] elements,
 			IRunnableContext context);
 
 	/**
@@ -133,7 +134,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	private void searchAndLaunch(Object[] scope, String mode,
 			String selectTitle, String emptyMessage)
 	{
-		IAstNode[] types = null;
+		INode[] types = null;
 
 		try
 		{
@@ -157,7 +158,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 			MessageDialog.openError(getShell(), LauncherMessages.VdmLaunchShortcut_0, e.getMessage());
 			return;
 		}
-		IAstNode type = null;
+		INode type = null;
 		if (types == null || types.length == 0)
 		{
 			MessageDialog.openError(getShell(), LauncherMessages.VdmLaunchShortcut_1, emptyMessage);
@@ -183,14 +184,14 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	 *            the selection dialog title
 	 * @return the selected type or <code>null</code> if none.
 	 */
-	protected IAstNode chooseType(IAstNode[] types, String title)
+	protected INode chooseType(INode[] types, String title)
 	{
 		try
 		{
 			DebugTypeSelectionDialog mmsd = new DebugTypeSelectionDialog(VdmDebugPlugin.getActiveWorkbenchShell(), types, title, project);
 			if (mmsd.open() == Window.OK)
 			{
-				return (IAstNode) mmsd.getResult()[0];
+				return (INode) mmsd.getResult()[0];
 			}
 		} catch (Exception e)
 		{
@@ -200,7 +201,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		return null;
 	}
 
-	private void launch(IAstNode type, String mode, String projectName)
+	private void launch(INode type, String mode, String projectName)
 	{
 		ILaunchConfiguration config = findLaunchConfiguration( projectName, getConfigurationType());
 		if (config == null)
@@ -266,36 +267,36 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		return null;
 	}
 
-	protected String getModuleName(IAstNode node)
+	protected String getModuleName(INode node)
 	{
-		if (node instanceof ExplicitFunctionDefinition)
+		if (node instanceof AExplicitFunctionDefinition)
 		{
-			return ((ExplicitFunctionDefinition) node).location.module;
+			return ((AExplicitFunctionDefinition) node).getLocation().module;
 		}
-		if (node instanceof ExplicitOperationDefinition)
+		if (node instanceof AExplicitOperationDefinition)
 		{
-			return ((ExplicitOperationDefinition) node).location.module;
+			return ((AExplicitOperationDefinition) node).getLocation().module;
 		}
 
 		return "";
 	}
 
-	protected String getModuleNameLaunch(IAstNode node)
+	protected String getModuleNameLaunch(INode node)
 	{
 		String name = "";
-		if (node instanceof ExplicitFunctionDefinition)
+		if (node instanceof AExplicitFunctionDefinition)
 		{
-			name = ((ExplicitFunctionDefinition) node).location.module;
-			if (!((ExplicitFunctionDefinition) node).isStatic())
+			name = ((AExplicitFunctionDefinition) node).getLocation().module;
+			if (!PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) node).getAccess()))
 			{
 				name += "()";
 			}
 
 		}
-		if (node instanceof ExplicitOperationDefinition)
+		if (node instanceof AExplicitOperationDefinition)
 		{
-			name = ((ExplicitOperationDefinition) node).location.module;
-			if (!((ExplicitOperationDefinition) node).isStatic())
+			name = ((AExplicitOperationDefinition) node).getLocation().module;
+			if (!PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) node).getAccess()))
 			{
 				name += "()";
 			}
@@ -304,20 +305,20 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		return name;
 	}
 
-	protected String getOperationName(IAstNode node)
+	protected String getOperationName(INode node)
 	{
 		return node.getName();
 	}
 
-	protected boolean isStaticAccessRequired(IAstNode node)
+	protected boolean isStaticAccessRequired(INode node)
 	{
-		if (node instanceof ExplicitFunctionDefinition)
+		if (node instanceof AExplicitFunctionDefinition)
 		{
-			return ((ExplicitFunctionDefinition) node).isStatic();
+			return PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) node).getAccess());
 		}
-		if (node instanceof ExplicitOperationDefinition)
+		if (node instanceof AExplicitOperationDefinition)
 		{
-			return ((ExplicitOperationDefinition) node).isStatic();
+			return PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) node).getAccess());
 		}
 
 		return true;
@@ -472,7 +473,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		return DebugPlugin.getDefault().getLaunchManager();
 	}
 
-	protected IAstNode[] findTypes(Object[] elements, IRunnableContext context)
+	protected INode[] findTypes(Object[] elements, IRunnableContext context)
 			throws InterruptedException, CoreException
 	{
 		for (Object object : elements)
