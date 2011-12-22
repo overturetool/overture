@@ -33,14 +33,14 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.internal.VdmLineBreakpoint;
 import org.overture.ide.ui.editor.core.VdmEditor;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.modules.Module;
 
 public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 {
@@ -65,11 +65,11 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 				if (element != null && element instanceof IVdmSourceUnit)
 				{
 					IVdmSourceUnit sourceUnti = (IVdmSourceUnit) element;
-					for (IAstNode node : sourceUnti.getParseList())
+					for (INode node : sourceUnti.getParseList())
 					{
-						if (node instanceof ClassDefinition)
+						if (node instanceof SClassDefinition)
 						{
-							ClassDefinition c = (ClassDefinition) node;
+							SClassDefinition c = (SClassDefinition) node;
 							if (c.findExpression(lineNumber + 1) != null)
 							{
 								executable = true;
@@ -80,9 +80,9 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 								executable = true;
 								break;
 							}
-						} else if (node instanceof Module)
+						} else if (node instanceof AModuleModules)
 						{
-							Module m = (Module) node;
+							AModuleModules m = (AModuleModules) node;
 							if (m.findExpression(sourceUnti.getSystemFile(), lineNumber + 1) != null)
 							{
 								executable = true;
