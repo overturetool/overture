@@ -69,6 +69,11 @@ public class LexNameToken extends LexToken implements Serializable
 		return (explicit ? (module.length() > 0 ? module + "`" : "") : "")
 				+ name + (old ? "~" : ""); // NB. No qualifier
 	}
+	
+	public String getSimpleName()
+	{
+		return name;
+	}
 
 	public LexNameToken getPreName(LexLocation l)
 	{
