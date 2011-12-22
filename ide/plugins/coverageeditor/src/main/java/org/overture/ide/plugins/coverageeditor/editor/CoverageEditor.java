@@ -47,18 +47,17 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.overture.ide.core.SourceReferenceManager;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.util.modules.ModuleList;
 import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
 
@@ -96,7 +95,7 @@ public abstract class CoverageEditor
 	IFile vdmSourceFile = null;
 	String vdmCoverage = null;
 	List<StyleRange> styleRanges = new Vector<StyleRange>();
-	SourceReferenceManager sourceReferenceManager = null;
+//	SourceReferenceManager sourceReferenceManager = null;
 	IVdmProject project = null;
 
 	@SuppressWarnings( { "deprecation" })
@@ -222,7 +221,7 @@ public abstract class CoverageEditor
 			}
 				break;
 		}
-		SourceLocationConverter converter = new SourceLocationConverter(content.toCharArray());
+		SourceLocationConverter converter = new SourceLocationConverter(content);
 
 		BufferedReader br;
 		try

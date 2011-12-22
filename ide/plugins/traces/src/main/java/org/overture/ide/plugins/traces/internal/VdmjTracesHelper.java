@@ -37,6 +37,9 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
@@ -155,14 +158,14 @@ public class VdmjTracesHelper implements ITracesHelper
 		{
 			if (dialect == Dialect.VDM_SL)
 			{
-				for (Module classdef : project.getModel().getModuleList())
+				for (AModuleModules classdef : project.getModel().getModuleList())
 				{
-					for (Object string : classdef.defs)
+					for (Object string : classdef.getDefs())
 					{
-						if (string instanceof NamedTraceDefinition)
+						if (string instanceof ANamedTraceDefinition)
 						{
 
-							classNames.add(classdef.name.name);
+							classNames.add(classdef.getName().name);
 							break;
 						}
 					}
@@ -170,14 +173,14 @@ public class VdmjTracesHelper implements ITracesHelper
 
 			} else
 			{
-				for (ClassDefinition classdef : project.getModel().getClassList())
+				for (SClassDefinition classdef : project.getModel().getClassList())
 				{
-					for (Object string : classdef.definitions)
+					for (Object string : classdef.getDefinitions())
 					{
 						if (string instanceof NamedTraceDefinition)
 						{
 
-							classNames.add(classdef.name.name);
+							classNames.add(classdef.getName().name);
 							break;
 						}
 					}

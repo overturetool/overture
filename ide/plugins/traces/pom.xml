@@ -18,6 +18,16 @@
 			<artifactId>traces</artifactId>
 			<version>2.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.overture.ide</groupId>
+			<artifactId>org.overture.ide.core</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overture.ide</groupId>
+			<artifactId>org.overture.ide.debug</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

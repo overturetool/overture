@@ -45,6 +45,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -59,13 +61,11 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.util.modules.ModuleList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.runtime.LatexSourceFile;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
@@ -213,9 +213,9 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							List<File> outputFiles = getFileChildern(vdmProject.getModelBuildPath().getOutput().getLocation().toFile());
 
-							for (ClassDefinition classDefinition : classes)
+							for (SClassDefinition classDefinition : classes)
 							{
-								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.location.file, modelOnly);
+								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.getLocation().file, modelOnly);
 
 							}
 						} else if (selectedProject.getDialect() == Dialect.VDM_SL)
@@ -224,9 +224,9 @@ public class LatexCoverageAction implements IObjectActionDelegate
 
 							ModuleList modules = parseModules(selectedProject);
 
-							for (Module classDefinition : modules)
+							for (AModuleModules classDefinition : modules)
 							{
-								for (File moduleFile : classDefinition.files)
+								for (File moduleFile : classDefinition.getFiles())
 								{
 									createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, moduleFile, modelOnly);
 								}
