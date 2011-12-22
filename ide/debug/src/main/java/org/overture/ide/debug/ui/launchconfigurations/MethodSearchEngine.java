@@ -76,12 +76,12 @@ public class MethodSearchEngine
 					continue;//is constructor
 				}
 				
-				if(onlyRun && !exop.getName().getName().equalsIgnoreCase(RUN_NAME))
+				if(onlyRun && !exop.getName().getSimpleName().equalsIgnoreCase(RUN_NAME))
 				{
 					continue;
 				}
 				
-				if(onlyWorldClass && (exop.getClassDefinition()==null || !exop.getClassDefinition().getName().getName().equalsIgnoreCase(WORLD_NAME)))
+				if(onlyWorldClass && (exop.getClassDefinition()==null || !exop.getClassDefinition().getName().getSimpleName().equalsIgnoreCase(WORLD_NAME)))
 				{
 					continue;
 				}
@@ -105,7 +105,7 @@ public class MethodSearchEngine
 							{
 								continue;
 							}
-							if (ctor.getName().getName().equalsIgnoreCase(exop.getClassDefinition().getName().getName()))
+							if (ctor.getName().getSimpleName().equalsIgnoreCase(exop.getClassDefinition().getName().getSimpleName()))
 							{
 								constructorFound = true;
 							}
@@ -130,7 +130,7 @@ public class MethodSearchEngine
 					}
 				}
 				if (onlyMain
-						&& !exop.getName().getName().toLowerCase().equals(MAIN_NAME))
+						&& !exop.getName().getSimpleName().toLowerCase().equals(MAIN_NAME))
 				{
 					continue;
 				}
@@ -157,18 +157,18 @@ public class MethodSearchEngine
 					continue;
 				}
 				
-				if(onlyRun && !exfu.getName().getName().equalsIgnoreCase(RUN_NAME))
+				if(onlyRun && !exfu.getName().getSimpleName().equalsIgnoreCase(RUN_NAME))
 				{
 					continue;
 				}
 				
-				if(onlyWorldClass && (exfu.getClassDefinition()==null || !exfu.getClassDefinition().getName().getName().equalsIgnoreCase(WORLD_NAME)))
+				if(onlyWorldClass && (exfu.getClassDefinition()==null || !exfu.getClassDefinition().getName().getSimpleName().equalsIgnoreCase(WORLD_NAME)))
 				{
 					continue;
 				}
 				
 				if (onlyMain
-						&& !exfu.getName().getName().toLowerCase().equals(MAIN_NAME))
+						&& !exfu.getName().getSimpleName().toLowerCase().equals(MAIN_NAME))
 				{
 					continue;
 				}
@@ -209,7 +209,7 @@ public class MethodSearchEngine
 	
 	public static boolean isConstructor(AExplicitOperationDefinition op)
 	{
-		if (op.getIsConstructor()||op.getClassDefinition()!=null && op.getName().getName().equalsIgnoreCase(op.getClassDefinition().getLocation().module))
+		if (op.getIsConstructor()||op.getClassDefinition()!=null && op.getName().getSimpleName().equalsIgnoreCase(op.getClassDefinition().getLocation().module))
 		{
 			return true;
 		}
