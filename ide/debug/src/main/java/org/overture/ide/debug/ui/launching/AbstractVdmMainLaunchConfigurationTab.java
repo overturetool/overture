@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.overture.ide.debug.ui.launching;
 
-import java.io.File;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;
@@ -57,6 +56,12 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
@@ -66,16 +71,11 @@ import org.overture.ide.ui.outline.DisplayNameCreator;
 import org.overture.ide.ui.outline.ExecutableFilter;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
+import org.overturetool.util.ClonableFile;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
@@ -98,17 +98,20 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		public Object[] getElements(Object inputElement)
 		{
 			Object[] elems = super.getElements(inputElement);
-			if (elems.length > 0 && elems[0] instanceof Module
-					&& ((Module) elems[0]).name.name.equals("DEFAULT"))
+			if (elems.length > 0 && elems[0] instanceof AModuleModules
+					&& ((AModuleModules) elems[0]).getName().name.equals("DEFAULT"))
 			{
-				DefinitionList definitions = new DefinitionList();
+				List<PDefinition> definitions = new Vector<PDefinition>();
 
 				for (Object m : elems)
 				{
-					definitions.addAll(((Module) m).defs);
+					definitions.addAll(((AModuleModules) m).getDefs());
 				}
 
-				Module module = new Module(new File("mergedFile"), definitions);
+				List<ClonableFile> files = new Vector<ClonableFile>();
+				files.add(new ClonableFile("mergedFile"));
+				
+				AModuleModules module = new AModuleModules(null,null,null,definitions,files,null,false);
 				return new Object[] { module };
 
 			}
@@ -682,7 +685,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			public IStatus validate(Object[] selection)
 			{
 				if (selection.length == 1
-						&& (selection[0] instanceof ExplicitOperationDefinition || selection[0] instanceof ExplicitFunctionDefinition))
+						&& (selection[0] instanceof AExplicitOperationDefinition || selection[0] instanceof AExplicitFunctionDefinition))
 				{
 					// new
 					// Status(IStatus.OK,IDebugConstants.PLUGIN_ID,IStatus.OK,"Selection: "+
@@ -704,50 +707,50 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			// ResourceComparator(ResourceComparator...NAME));
 			if (dialog.open() == IDialogConstants.OK_ID)
 			{				
-				if(dialog.getFirstResult() instanceof Module)
+				if(dialog.getFirstResult() instanceof AModuleModules)
 				{
-					Module m = (Module) dialog.getFirstResult();
-					defaultModule = m.getName();
+					AModuleModules m = (AModuleModules) dialog.getFirstResult();
+					defaultModule = m.getName().toString();
 					fModuleNameText.setText(DisplayNameCreator.getDisplayName(m));
 					return;
 				}
 				
-				Definition method = (Definition) dialog.getFirstResult();
-				IAstNode module = null;
+				PDefinition method = (PDefinition) dialog.getFirstResult();
+				INode module = null;
 
-				if (method.classDefinition != null)
+				if (method.getClassDefinition() != null)
 				{
-					if (!method.isStatic())
+					if (!PAccessSpecifierAssistant.isStatic(method.getAccess()))
 					{
 						boolean foundConstructor = false;
-						for (Definition def : method.classDefinition.definitions)
+						for (PDefinition def : method.getClassDefinition().getDefinitions())
 						{
-							if (def instanceof ExplicitOperationDefinition
-									&& ((ExplicitOperationDefinition) def).isConstructor)
+							if (def instanceof AExplicitOperationDefinition
+									&& ((AExplicitOperationDefinition) def).getIsConstructor())
 							{
 								foundConstructor = true;
 								module = def;
-								defaultModule = def.getName();
+								defaultModule = def.getName().toString();
 								fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
 							}
 						}
 						if (!foundConstructor)
 						{
-							module = method.classDefinition;
-							defaultModule = method.classDefinition.getName();
-							fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition)
+							module = method.getClassDefinition();
+							defaultModule = method.getClassDefinition().getName().toString();
+							fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition())
 									+ "()");
 						}
 					} else
 					{
-						module = method.classDefinition;
-						defaultModule = method.classDefinition.getName();
-						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.classDefinition));
+						module = method.getClassDefinition();
+						defaultModule = method.getClassDefinition().getName().toString();
+						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition()));
 					}
-				} else if (method.location != null
-						&& method.location.module != null)
+				} else if (method.getLocation() != null
+						&& method.getLocation().module != null)
 				{
-					defaultModule = method.location.module;
+					defaultModule = method.getLocation().module;
 					fModuleNameText.setText(defaultModule);
 				} else
 				{
@@ -783,17 +786,17 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, true);
 	}
 
-	private boolean isStaticCall(IAstNode module, IAstNode operation)
+	private boolean isStaticCall(INode module, INode operation)
 	{
 		boolean staticAccess = true;
-		if (module != null && !(module instanceof Module))
+		if (module != null && !(module instanceof AModuleModules))
 		{
-			if (operation instanceof ExplicitOperationDefinition
-					&& !((ExplicitOperationDefinition) operation).isStatic())
+			if (operation instanceof AExplicitOperationDefinition
+					&& !PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) operation).getAccess()))
 			{
 				staticAccess = false;
-			} else if (operation instanceof ExplicitFunctionDefinition
-					&& !((ExplicitFunctionDefinition) operation).isStatic())
+			} else if (operation instanceof AExplicitFunctionDefinition
+					&& !PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) operation).getAccess()))
 			{
 				staticAccess = false;
 			}
