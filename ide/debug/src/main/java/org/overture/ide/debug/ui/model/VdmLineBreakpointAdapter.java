@@ -33,13 +33,12 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.model.internal.VdmLineBreakpoint;
+import org.overture.ide.debug.utils.ExecutableAnalysis;
 import org.overture.ide.ui.editor.core.VdmEditor;
 
 public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
@@ -67,33 +66,34 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 					IVdmSourceUnit sourceUnti = (IVdmSourceUnit) element;
 					for (INode node : sourceUnti.getParseList())
 					{
-						if (node instanceof SClassDefinition)
-						{
-							SClassDefinition c = (SClassDefinition) node;
-							if (c.findExpression(lineNumber + 1) != null)
-							{
-								executable = true;
-								break;
-							}
-							if (c.findStatement(lineNumber + 1) != null)
-							{
-								executable = true;
-								break;
-							}
-						} else if (node instanceof AModuleModules)
-						{
-							AModuleModules m = (AModuleModules) node;
-							if (m.findExpression(sourceUnti.getSystemFile(), lineNumber + 1) != null)
-							{
-								executable = true;
-								break;
-							}
-							if (m.findStatement(sourceUnti.getSystemFile(), lineNumber + 1) != null)
-							{
-								executable = true;
-								break;
-							}
-						}
+						executable = ExecutableAnalysis.isExecutable(node, lineNumber);
+//						if (node instanceof SClassDefinition)
+//						{
+//							SClassDefinition c = (SClassDefinition) node;
+//							if (c.findExpression(lineNumber + 1) != null)
+//							{
+//								executable = true;
+//								break;
+//							}
+//							if (c.findStatement(lineNumber + 1) != null)
+//							{
+//								executable = true;
+//								break;
+//							}
+//						} else if (node instanceof AModuleModules)
+//						{
+//							AModuleModules m = (AModuleModules) node;
+//							if (m.findExpression(sourceUnti.getSystemFile(), lineNumber + 1) != null)
+//							{
+//								executable = true;
+//								break;
+//							}
+//							if (m.findStatement(sourceUnti.getSystemFile(), lineNumber + 1) != null)
+//							{
+//								executable = true;
+//								break;
+//							}
+//						}
 					}
 				}
 			}

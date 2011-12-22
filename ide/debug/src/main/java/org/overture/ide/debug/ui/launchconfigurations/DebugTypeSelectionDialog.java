@@ -44,6 +44,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	
@@ -71,7 +72,7 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		public String getText(Object element) {
 			if(element instanceof INode) {
 				INode type = (INode) element;
-				String label = type.getName();
+				String label = AstNameUtil.getName(type);
 				String container = getDeclaringContainerName(type);
 				if(container != null && !"".equals(container)) { //$NON-NLS-1$
 					label += " - "+container; //$NON-NLS-1$
@@ -189,7 +190,7 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 			if(!(item instanceof INode) || !Arrays.asList(fTypes).contains(item)) {
 				return false;
 			}
-			return matches(((INode)item).getName());
+			return matches(AstNameUtil.getName(((INode)item)));
 		}
 	}
 	
@@ -258,7 +259,7 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		Comparator<Object> comp = new Comparator<Object>() {
             public int compare(Object o1, Object o2) {
             	if(o1 instanceof INode && o2 instanceof INode) {
-            		return ((INode)o1).getName().compareTo(((INode)o2).getName());
+            		return (AstNameUtil.getName((INode)o1)).compareTo(AstNameUtil.getName(((INode)o2)));
             	}
                 return -1;
             }
@@ -305,7 +306,7 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	 */
 	public String getElementName(Object item) {
 		if(item instanceof INode) {
-			return ((INode)item).getName();
+			return (AstNameUtil.getName((INode)item));
 		}
 		return null;
 	}

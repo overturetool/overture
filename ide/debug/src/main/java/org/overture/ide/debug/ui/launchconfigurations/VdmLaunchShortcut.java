@@ -54,6 +54,7 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 
 public abstract class VdmLaunchShortcut implements ILaunchShortcut2
@@ -307,7 +308,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 
 	protected String getOperationName(INode node)
 	{
-		return node.getName();
+		return AstNameUtil.getName(node);
 	}
 
 	protected boolean isStaticAccessRequired(INode node)
