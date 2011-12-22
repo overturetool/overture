@@ -99,7 +99,7 @@ public class VdmElementLabels {
 			return getClassDefinitionLabel((SClassDefinition) element, flags);
 		}
 		if (element instanceof AModuleModules) {
-			activeModule.put(((AModuleModules) element).getName().toString(), ((AModuleModules) element));
+			activeModule.put(((AModuleModules) element).getName().getName(), ((AModuleModules) element));
 			return getModuleLabel((AModuleModules) element, flags);
 		}
 		if (element instanceof AInstanceVariableDefinition) {
@@ -200,7 +200,7 @@ public class VdmElementLabels {
 	private static StyledString getPerSyncDefinitionLabel(
 			APerSyncDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 		result.append(" : sync predicate", StyledString.DECORATIONS_STYLER);
 		return result;
 	}
@@ -209,7 +209,7 @@ public class VdmElementLabels {
 			AImplicitOperationDefinition element) {
 		StyledString result = new StyledString();
 
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AOperationType) {
 			AOperationType type = (AOperationType) element.getType();
@@ -242,7 +242,7 @@ public class VdmElementLabels {
 	private static StyledString getImplicitFunctionDefinitionLabel(
 			AImplicitFunctionDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AFunctionType) {
 			AFunctionType type = (AFunctionType) element.getType();
@@ -278,12 +278,12 @@ public class VdmElementLabels {
 		StyledString result = new StyledString();
 
 		if (element instanceof AAllImport) {
-			result.append(element.getName().toString());
+			result.append(element.getName().getSimpleName());
 		} else if (element instanceof ATypeImport) {
 			
 			
 			ATypeImport type = (ATypeImport) element;
-			result.append(type.getName().toString());
+			result.append(type.getName().getSimpleName());
 			if(type.getDef()!=null)
 			{
 				result.append(" : " + getSimpleTypeString(type.getDef().getType()), StyledString.DECORATIONS_STYLER);
@@ -295,7 +295,7 @@ public class VdmElementLabels {
 			result.append(type.getRenamed().name, StyledString.DECORATIONS_STYLER);
 		} else if (element instanceof SValueImport) {
 			SValueImport value = (SValueImport) element;
-			result.append(value.getName().toString());
+			result.append(value.getName().getSimpleName());
 			if (value.getImportType() != null) {
 				String typeString = value.getImportType().toString();
 				typeString = typeString.replaceFirst("[(]", "");
@@ -315,7 +315,7 @@ public class VdmElementLabels {
 			AFromModuleImports element) {
 		StyledString result = new StyledString();
 
-		result.append(element.getName().toString());
+		result.append(element.getName().getName());
 
 		return result;
 	}
@@ -323,13 +323,13 @@ public class VdmElementLabels {
 	private static StyledString getNamedTraceDefinitionLabel(
 			ANamedTraceDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 		return result;
 	}
 
 	private static StyledString getUntypedDefinition(AUntypedDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 		List<PDefinition> definitions = null;
 		if (element.getClassDefinition() != null) {
 			SClassDefinition classDef = element.getClassDefinition();
@@ -379,7 +379,7 @@ public class VdmElementLabels {
 
 	private static StyledString getLocalDefinitionLabel(ALocalDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 		if (element.getType().getLocation().module.toLowerCase().equals("default")) {
 			result.append(" : " + getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
@@ -394,7 +394,7 @@ public class VdmElementLabels {
 	private static StyledString getExplicitFunctionDefinitionLabel(
 			AExplicitFunctionDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AFunctionType) {
 			AFunctionType type = (AFunctionType) element.getType();
@@ -429,11 +429,11 @@ public class VdmElementLabels {
 		StyledString result = new StyledString();
 		if (element.getType() instanceof ARecordInvariantType) {
 
-			result.append(element.getName().toString());
+			result.append(element.getName().getSimpleName());
 			result.append(" : record type", StyledString.DECORATIONS_STYLER);
 		} else if (element.getType() instanceof ANamedInvariantType) {
 
-			result.append(element.getName().toString());
+			result.append(element.getName().getSimpleName());
 			result.append(" : "
 					+ getSimpleTypeString(((ANamedInvariantType)element.getType()).getType()),
 					StyledString.DECORATIONS_STYLER);
@@ -446,7 +446,7 @@ public class VdmElementLabels {
 			AExplicitOperationDefinition element) {
 		StyledString result = new StyledString();
 
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AOperationType) {
 			AOperationType type = (AOperationType) element.getType();
@@ -480,7 +480,7 @@ public class VdmElementLabels {
 	private static StyledString getInstanceVariableDefinitionLabel(
 			AInstanceVariableDefinition element) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 		result.append(" : " + getSimpleTypeString(element.getType()),
 				StyledString.DECORATIONS_STYLER);
 		return result;
@@ -489,13 +489,13 @@ public class VdmElementLabels {
 	private static StyledString getClassDefinitionLabel(
 			SClassDefinition element, long flags) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getSimpleName());
 		return result;
 	}
 
 	private static StyledString getModuleLabel(AModuleModules element, long flags) {
 		StyledString result = new StyledString();
-		result.append(element.getName().toString());
+		result.append(element.getName().getName());
 		return result;
 	}
 
