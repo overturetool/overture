@@ -199,11 +199,11 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		// setup hashCode method using toString
 		// essentially: this.toString().hashCode()
-		hashCodeString.append("\n\t/**\n\t * Essentially this.toString().hashCode()\n\t**/");
-		hashCodeString.append("\n\t@Override");
-		hashCodeString.append("\n\tpublic int hashCode() {");
-		hashCodeString.append("\n\t return this.toString().hashCode();\n\t}");
-		sb.append("\n" + hashCodeString + "\n");
+		//hashCodeString.append("\n\t/**\n\t * Essentially this.toString().hashCode()\n\t**/");
+//		hashCodeString.append("\n\t@Override");
+//		hashCodeString.append("\n\tpublic int hashCode() {");
+//		hashCodeString.append("\n\t return this.toString().hashCode();\n\t}");
+//		sb.append("\n" + hashCodeString + "\n");
 
 		sb.append(noneCtorMethods);
 		sb.append("\n}\n");
