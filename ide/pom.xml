@@ -113,6 +113,7 @@
 					</buildcommands>
 					<classpathContainers>
 						<classpathContainer>org.eclipse.pde.core.requiredPlugins</classpathContainer>
+<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
 					</classpathContainers>
 					<!-- We set the workspace to null or at least not found such that Eclipse always will use the M2_repo-->
 					<workspace>nowhere</workspace>

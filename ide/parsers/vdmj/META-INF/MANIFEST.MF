@@ -8,13 +8,9 @@ Bundle-Name: org.overture.ide.parsers.vdmj
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.parsers.vdmj;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.overture.ide.vdmpp.core;bundle-version="0.3.0",
- org.overture.ide.vdmrt.core;bundle-version="0.3.0",
- org.overture.ide.vdmsl.core;bundle-version="0.3.0",
- org.overture.ide.core;bundle-version="0.3.0"
+Require-Bundle: org.overture.ide.core;bundle-version="2.2.0"
 Bundle-Activator: org.overture.ide.parsers.vdmj.Activator
-Export-Package: org.overture.ide.parsers.vdmj
 Bundle-ClassPath: .,
- ast-2.1.0.jar,
- vdmj-2.1.0.jar,
- cglib-2.1.0.jar
+ ast-2.2.0.jar,
+ ast_assistance-2.2.0.jar,
+ parser-2.2.0.jar

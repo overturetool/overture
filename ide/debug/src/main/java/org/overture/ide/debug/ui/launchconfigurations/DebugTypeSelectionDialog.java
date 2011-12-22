@@ -40,10 +40,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.node.INode;
 import org.overture.ide.debug.core.VdmDebugPlugin;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 
 public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	
@@ -69,8 +69,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 			return null;
 		}
 		public String getText(Object element) {
-			if(element instanceof IAstNode) {
-				IAstNode type = (IAstNode) element;
+			if(element instanceof INode) {
+				INode type = (INode) element;
 				String label = type.getName();
 				String container = getDeclaringContainerName(type);
 				if(container != null && !"".equals(container)) { //$NON-NLS-1$
@@ -86,19 +86,19 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		 * @param type the type to find the container name for
 		 * @return the container name for the specified type
 		 */
-		protected String getDeclaringContainerName(IAstNode type) {
+		protected String getDeclaringContainerName(INode type) {
 			
-			if(type instanceof ExplicitFunctionDefinition)
+			if(type instanceof AExplicitFunctionDefinition)
 			{
-				return ((ExplicitFunctionDefinition)type).location.module;
+				return ((AExplicitFunctionDefinition)type).getLocation().module;
 			}
-			if(type instanceof ExplicitOperationDefinition)
+			if(type instanceof AExplicitOperationDefinition)
 			{
-				return ((ExplicitOperationDefinition)type).location.module;
+				return ((AExplicitOperationDefinition)type).getLocation().module;
 			}
 			
 			return "";
-//			IAstNode outer = type.getDeclaringType();
+//			INode outer = type.getDeclaringType();
 //			if(outer != null) {
 //				return outer.getFullyQualifiedName('.');
 //			}
@@ -117,20 +117,20 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		 * @param type the type to find the enclosing <code>IJavaElement</code> for.
 		 * @return the enclosing element or <code>null</code> if none
 		 */
-		protected IAstNode getDeclaringContainer(IAstNode type) {
+		protected INode getDeclaringContainer(INode type) {
 //			IJavaElement outer = type.getDeclaringType();
 //			if(outer == null) {
 //				outer = type.getPackageFragment();
 //			}
 //			return outer;
 			
-			if(type instanceof ExplicitFunctionDefinition)
+			if(type instanceof AExplicitFunctionDefinition)
 			{
-				return ((ExplicitFunctionDefinition)type).classDefinition;
+				return ((AExplicitFunctionDefinition)type).getClassDefinition();
 			}
-			if(type instanceof ExplicitOperationDefinition)
+			if(type instanceof AExplicitOperationDefinition)
 			{
-				return ((ExplicitOperationDefinition)type).classDefinition;
+				return ((AExplicitOperationDefinition)type).getClassDefinition();
 			}
 			
 			return null;
@@ -150,8 +150,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	 */
 	class DebugTypeDetailsLabelProvider extends DebugTypeLabelProvider {
 		public String getText(Object element) {
-			if(element instanceof IAstNode) {
-				IAstNode type = (IAstNode) element;
+			if(element instanceof INode) {
+				INode type = (INode) element;
 				String name = getDeclaringContainerName(type);
 				if(name != null) {
 					if(name.equals(LauncherMessages.MainMethodLabelProvider_0)) {
@@ -171,8 +171,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 			return null;
 		}
 		public Image getImage(Object element) {
-			if(element instanceof IAstNode) {
-				return super.getImage(getDeclaringContainer(((IAstNode) element)));
+			if(element instanceof INode) {
+				return super.getImage(getDeclaringContainer(((INode) element)));
 			}
 			return super.getImage(element);
 		}
@@ -183,13 +183,13 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	 */
 	class DebugTypeItemsFilter extends ItemsFilter {
 		public boolean isConsistentItem(Object item) {
-			return item instanceof IAstNode;
+			return item instanceof INode;
 		}
 		public boolean matchItem(Object item) {
-			if(!(item instanceof IAstNode) || !Arrays.asList(fTypes).contains(item)) {
+			if(!(item instanceof INode) || !Arrays.asList(fTypes).contains(item)) {
 				return false;
 			}
-			return matches(((IAstNode)item).getName());
+			return matches(((INode)item).getName());
 		}
 	}
 	
@@ -200,24 +200,24 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		protected Object restoreItemFromMemento(IMemento memento) {
 			//IJavaElement element = JavaCore.create(memento.getTextData()); 
 			Object element = null;
-			return (element instanceof IAstNode ? element : null);
+			return (element instanceof INode ? element : null);
 		}
 		protected void storeItemToMemento(Object item, IMemento memento) {
-			if(item instanceof IAstNode) {
-				//memento.putTextData(((IAstNode) item).getHandleIdentifier());
+			if(item instanceof INode) {
+				//memento.putTextData(((INode) item).getHandleIdentifier());
 			}
 		}
 	}
 	
 	private static final String SETTINGS_ID= "";// JDIDebugUIPlugin.getUniqueIdentifier() + ".MAIN_METHOD_SELECTION_DIALOG"; //$NON-NLS-1$
-	private IAstNode[] fTypes = null;
+	private INode[] fTypes = null;
 	private IProject project;
 
 	/**
 	 * Constructor
 	 * @param elements the types to display in the dialog
 	 */
-	public DebugTypeSelectionDialog(Shell shell, IAstNode[] elements, String title,IProject project) {
+	public DebugTypeSelectionDialog(Shell shell, INode[] elements, String title,IProject project) {
 		super(shell, false);
 		setTitle(title);
 		fTypes = elements;
@@ -257,8 +257,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	protected Comparator<Object> getItemsComparator() {
 		Comparator<Object> comp = new Comparator<Object>() {
             public int compare(Object o1, Object o2) {
-            	if(o1 instanceof IAstNode && o2 instanceof IAstNode) {
-            		return ((IAstNode)o1).getName().compareTo(((IAstNode)o2).getName());
+            	if(o1 instanceof INode && o2 instanceof INode) {
+            		return ((INode)o1).getName().compareTo(((INode)o2).getName());
             	}
                 return -1;
             }
@@ -304,8 +304,8 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#getElementName(java.lang.Object)
 	 */
 	public String getElementName(Object item) {
-		if(item instanceof IAstNode) {
-			return ((IAstNode)item).getName();
+		if(item instanceof INode) {
+			return ((INode)item).getName();
 		}
 		return null;
 	}

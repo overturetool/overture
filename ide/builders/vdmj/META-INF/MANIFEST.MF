@@ -8,14 +8,13 @@ Bundle-Name: org.overture.ide.builders.vdmj
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.builders.vdmj;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.overture.ide.vdmpp.core;bundle-version="0.3.0",
- org.overture.ide.vdmrt.core;bundle-version="0.3.0",
- org.overture.ide.vdmsl.core;bundle-version="0.3.0",
- org.overture.ide.core;bundle-version="0.3.0"
+Require-Bundle: org.overture.ide.core;bundle-version="0.3.0"
 Export-Package: org.overture.ide.builders.vdmj
 Bundle-Activator: org.overture.ide.builders.vdmj.Activator
 Bundle-ClassPath: .,
  org.overture.ide.core-2.2.0.jar,
  ast-2.2.0.jar,
  ast_assistance-2.2.0.jar,
- parser-2.2.0.jar
+ parser-2.2.0.jar,
+ testframework-2.1.0.jar,
+ typechecker-2.2.0.jar

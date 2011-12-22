@@ -27,6 +27,8 @@ Export-Package: org.overture.ide.debug.core,
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,
- ast-2.1.0.jar,
- vdmj-2.1.0.jar,
- cglib-2.1.0.jar
+ org.overture.ide.core-2.2.0.jar,
+ org.overture.ide.ui-2.2.0.jar,
+ ast-2.2.0.jar,
+ ast_assistance-2.2.0.jar,
+ parser-2.2.0.jar

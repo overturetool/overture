@@ -121,7 +121,6 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 
 		result.setAllLocation(LexLocation.getAllLocations());
 		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
-
 		return result;
 	}
 

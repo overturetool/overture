@@ -33,6 +33,8 @@ Export-Package: org.overture.ide.ui,
  org.overture.ide.ui.utility,
  org.overture.ide.ui.wizard
 Bundle-ClassPath: .,
- ast-2.1.0.jar,
- vdmj-2.1.0.jar,
- cglib-2.1.0.jar
+ ast-2.2.0.jar,
+ ast_assistance-2.2.0.jar,
+ parser-2.2.0.jar,
+ testframework-2.1.0.jar,
+ typechecker-2.2.0.jar
