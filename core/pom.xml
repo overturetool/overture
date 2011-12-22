@@ -18,7 +18,7 @@
 	<module>ast_assistance</module>    	
 	<module>parser</module>
 	<module>typechecker</module>	
-	
+	<module>interpreter</module>
 		
 	<module>pog</module>
 <module>vdmj_compatibility_tests</module>

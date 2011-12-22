@@ -13,17 +13,20 @@
 	<name>The VDM Interpreter</name>
 
 	<build>
+
+<sourceDirectory>src/main/java_</sourceDirectory>
+ <testSourceDirectory>src/test/java_</testSourceDirectory>
 		<plugins>
 		<plugin>
                 <groupId>org.overturetool.tools</groupId>
                 <artifactId>astcreatorplugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
                 <executions>
                     <execution>
                         <id>java</id>
-                        <phase>generate-sources</phase>
+                        <!--phase>generate-sources</phase-->
                         <goals>
-                            <goal>astcreate</goal>
+                            <!--goal>astcreate</goal-->
 
                         </goals>
                     </execution>
@@ -50,6 +53,41 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.overturetool.tools
+										</groupId>
+										<artifactId>
+											astcreatorplugin
+										</artifactId>
+										<versionRange>
+											[1.0.1,)
+										</versionRange>
+										<goals>
+											<goal>astcreate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 
@@ -57,7 +95,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
-			<artifactId>astv</artifactId>
+			<artifactId>ast</artifactId>
 			<version>2.2.0</version>
 		</dependency>
 		<dependency>
