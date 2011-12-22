@@ -18,19 +18,22 @@
  *******************************************************************************/
 package org.overture.ide.debug.ui.launchconfigurations;
 
+import java.lang.instrument.ClassDefinition;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jface.operation.IRunnableContext;
-import org.overturetool.vdmj.ast.IAstNode;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
+import org.overture.ast.node.Token;
+import org.overture.ast.patterns.assistants.PatternList;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
+
 
 public class MethodSearchEngine
 {
@@ -42,7 +45,7 @@ public class MethodSearchEngine
 	public static final int WORLD_CLASS = 32;
 	public static final int RUN = 64;
 
-	public IAstNode[] searchMainMethods(IRunnableContext context,
+	public INode[] searchMainMethods(IRunnableContext context,
 			Object[] nodes, int constraints)
 	{
 		boolean onlyMain = (constraints & MAIN_ONLY) == MAIN_ONLY;
@@ -57,7 +60,7 @@ public class MethodSearchEngine
 		final String RUN_NAME = "run";
 		final String WORLD_NAME = "world";
 
-		List<IAstNode> matched = new Vector<IAstNode>();
+		List<INode> matched = new Vector<INode>();
 
 		for (int i = 0; i < nodes.length; i++)
 		{
@@ -65,55 +68,55 @@ public class MethodSearchEngine
 			boolean accept = false;
 
 			if (onlyExplicitOperation
-					&& iAstNode instanceof ExplicitOperationDefinition)
+					&& iAstNode instanceof AExplicitOperationDefinition)
 			{
-				ExplicitOperationDefinition exop = (ExplicitOperationDefinition) iAstNode;
+				AExplicitOperationDefinition exop = (AExplicitOperationDefinition) iAstNode;
 				if (isConstructor(exop))
 				{
 					continue;//is constructor
 				}
 				
-				if(onlyRun && !exop.getName().equalsIgnoreCase(RUN_NAME))
+				if(onlyRun && !exop.getName().getName().equalsIgnoreCase(RUN_NAME))
 				{
 					continue;
 				}
 				
-				if(onlyWorldClass && (exop.classDefinition==null || !exop.classDefinition.getName().equalsIgnoreCase(WORLD_NAME)))
+				if(onlyWorldClass && (exop.getClassDefinition()==null || !exop.getClassDefinition().getName().getName().equalsIgnoreCase(WORLD_NAME)))
 				{
 					continue;
 				}
 
-				if (onlyStatic && !exop.isStatic())
+				if (onlyStatic && !PAccessSpecifierAssistant.isStatic(exop.getAccess()))
 				{
 					continue;
 				}
 
-				if (!exop.isStatic() && exop.classDefinition != null)
+				if (!PAccessSpecifierAssistant.isStatic(exop.getAccess()) && exop.getClassDefinition() != null)
 				{
 					// check for empty constructor
 					boolean ok = false;
 					boolean constructorFound = false;
-					for (Object def : exop.classDefinition.getDefinitions())
+					for (Object def : exop.getClassDefinition().getDefinitions())
 					{
-						if (def instanceof ExplicitOperationDefinition)
+						if (def instanceof AExplicitOperationDefinition)
 						{
-							ExplicitOperationDefinition ctor = (ExplicitOperationDefinition) def;
+							AExplicitOperationDefinition ctor = (AExplicitOperationDefinition) def;
 							if (isConstructor(ctor))
 							{
 								continue;
 							}
-							if (ctor.getName().equalsIgnoreCase(exop.classDefinition.getName()))
+							if (ctor.getName().getName().equalsIgnoreCase(exop.getClassDefinition().getName().getName()))
 							{
 								constructorFound = true;
 							}
-							if (ctor.body instanceof SubclassResponsibilityStatement)
+							if (ctor.getBody() instanceof ASubclassResponsibilityStm)
 							{
 								// abstract class instantiation impossible
 								ok = false;
 								break;
 							}
-							if ( ctor.parameterPatterns != null
-									&& ctor.parameterPatterns.size() > 0)
+							if ( ctor.getParameterPatterns() != null
+									&& ctor.getParameterPatterns().size() > 0)
 							{
 								ok = true;
 								break;
@@ -127,18 +130,18 @@ public class MethodSearchEngine
 					}
 				}
 				if (onlyMain
-						&& !exop.getName().toLowerCase().equals(MAIN_NAME))
+						&& !exop.getName().getName().toLowerCase().equals(MAIN_NAME))
 				{
 					continue;
 				}
 				if (onlyPublicAccess
-						&& exop.accessSpecifier.access != Token.PUBLIC)
+						&& !PAccessSpecifierAssistant.isPublic(exop.getAccess()))
 				{
 					continue;
 				}
 
-				if ( exop.parameterPatterns != null
-						&& exop.parameterPatterns.size() > 0)
+				if ( exop.getParameterPatterns() != null
+						&& exop.getParameterPatterns().size() > 0)
 				{
 					continue;
 				}
@@ -146,37 +149,37 @@ public class MethodSearchEngine
 
 			}
 			if (onlyExplicitFunction
-					&& iAstNode instanceof ExplicitFunctionDefinition)
+					&& iAstNode instanceof AExplicitFunctionDefinition)
 			{
-				ExplicitFunctionDefinition exfu = (ExplicitFunctionDefinition) iAstNode;
-				if (onlyStatic && !exfu.isStatic())
+				AExplicitFunctionDefinition exfu = (AExplicitFunctionDefinition) iAstNode;
+				if (onlyStatic && !PAccessSpecifierAssistant.isStatic(exfu.getAccess()))
 				{
 					continue;
 				}
 				
-				if(onlyRun && !exfu.getName().equalsIgnoreCase(RUN_NAME))
+				if(onlyRun && !exfu.getName().getName().equalsIgnoreCase(RUN_NAME))
 				{
 					continue;
 				}
 				
-				if(onlyWorldClass && (exfu.classDefinition==null || !exfu.classDefinition.getName().equalsIgnoreCase(WORLD_NAME)))
+				if(onlyWorldClass && (exfu.getClassDefinition()==null || !exfu.getClassDefinition().getName().getName().equalsIgnoreCase(WORLD_NAME)))
 				{
 					continue;
 				}
 				
 				if (onlyMain
-						&& !exfu.getName().toLowerCase().equals(MAIN_NAME))
+						&& !exfu.getName().getName().toLowerCase().equals(MAIN_NAME))
 				{
 					continue;
 				}
 				if (onlyPublicAccess
-						&& exfu.accessSpecifier.access != Token.PUBLIC)
+						&& !PAccessSpecifierAssistant.isPublic(exfu.getAccess()))
 				{
 					continue;
 				}
 
-				if (exfu.paramPatternList != null
-						&& (exfu.paramPatternList.size() > 0 && exfu.paramPatternList.get(0) instanceof PatternList && ((PatternList)exfu.paramPatternList.get(0)).size()>0))
+				if (exfu.getParamPatternList() != null
+						&& (exfu.getParamPatternList().size() > 0 && exfu.getParamPatternList().get(0) instanceof PatternList && ((PatternList)exfu.getParamPatternList().get(0)).size()>0))
 				{
 					continue;
 				}
@@ -184,29 +187,29 @@ public class MethodSearchEngine
 
 			}
 
-			if (accept && iAstNode instanceof IAstNode)
+			if (accept && iAstNode instanceof INode)
 			{
-				matched.add((IAstNode) iAstNode);
+				matched.add((INode) iAstNode);
 			}
 
 			if (iAstNode instanceof ClassDefinition)
 			{
-				Object[] elements = ((ClassDefinition) iAstNode).getDefinitions().toArray();
+				Object[] elements = ((SClassDefinition) iAstNode).getDefinitions().toArray();
 				matched.addAll(Arrays.asList(searchMainMethods(context, elements, constraints)));
 			}
-			if (iAstNode instanceof Module)
+			if (iAstNode instanceof AModuleModules)
 			{
-				Object[] elements = ((Module) iAstNode).defs.toArray();
+				Object[] elements = ((AModuleModules) iAstNode).getDefs().toArray();
 				matched.addAll(Arrays.asList(searchMainMethods(context, elements, constraints)));
 			}
 		}
-		return matched.toArray(new IAstNode[matched.size()]);
+		return matched.toArray(new INode[matched.size()]);
 	}
 	
 	
-	public static boolean isConstructor(ExplicitOperationDefinition op)
+	public static boolean isConstructor(AExplicitOperationDefinition op)
 	{
-		if (op.isConstructor||op.classDefinition!=null && op.getName().equalsIgnoreCase(op.classDefinition.location.module))
+		if (op.getIsConstructor()||op.getClassDefinition()!=null && op.getName().getName().equalsIgnoreCase(op.getClassDefinition().getLocation().module))
 		{
 			return true;
 		}
