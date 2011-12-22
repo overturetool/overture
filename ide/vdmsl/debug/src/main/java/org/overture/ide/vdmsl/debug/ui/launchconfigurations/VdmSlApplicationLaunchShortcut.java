@@ -24,13 +24,14 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
+import org.overture.ast.node.INode;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.ui.launchconfigurations.LauncherMessages;
 import org.overture.ide.debug.ui.launchconfigurations.MethodSearchEngine;
 import org.overture.ide.debug.ui.launchconfigurations.VdmLaunchShortcut;
+import org.overture.ide.ui.utility.ast.AstNameUtil;
 import org.overture.ide.vdmsl.debug.IVdmSlDebugConstants;
-import org.overturetool.vdmj.ast.IAstNode;
 
 public class VdmSlApplicationLaunchShortcut extends VdmLaunchShortcut
 {
@@ -74,7 +75,7 @@ public class VdmSlApplicationLaunchShortcut extends VdmLaunchShortcut
 	 * @see org.eclipse.jdt.debug.ui.launchConfigurations.JavaLaunchShortcut#createConfiguration(org.eclipse.jdt
 	 * .core.IType)
 	 */
-	protected ILaunchConfiguration createConfiguration(IAstNode type,
+	protected ILaunchConfiguration createConfiguration(INode type,
 			String projectName)
 	{
 		ILaunchConfiguration config = null;
@@ -83,7 +84,7 @@ public class VdmSlApplicationLaunchShortcut extends VdmLaunchShortcut
 		{
 			
 			ILaunchConfigurationType configType = getConfigurationType();
-			wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(projectName+" "+ type.getName()));
+			wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(projectName+" "+AstNameUtil.getName(type)));
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, projectName);
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, true);
 
@@ -109,7 +110,7 @@ public class VdmSlApplicationLaunchShortcut extends VdmLaunchShortcut
 	}
 
 	@Override
-	protected IAstNode[] filterTypes(Object[] elements,IRunnableContext context)
+	protected INode[] filterTypes(Object[] elements,IRunnableContext context)
 	{
 				return new MethodSearchEngine().searchMainMethods(context, elements, MethodSearchEngine.EXPLICIT_FUNCTION
 						| MethodSearchEngine.EXPLICIT_OPERATION
