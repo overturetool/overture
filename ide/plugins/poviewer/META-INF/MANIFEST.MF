@@ -23,4 +23,6 @@ Bundle-ClassPath: .,
  org.overture.ide.vdmsl.core-2.2.0.jar,
  ast-2.2.0.jar,
  ast_assistance-2.2.0.jar,
- parser-2.2.0.jar
+ parser-2.2.0.jar,
+ testframework-2.1.0.jar,
+ typechecker-2.2.0.jar

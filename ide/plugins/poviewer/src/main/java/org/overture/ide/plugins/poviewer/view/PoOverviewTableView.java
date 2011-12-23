@@ -53,8 +53,8 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.ui.utility.EditorUtility;
-import org.overturetool.vdmj.pog.POStatus;
-import org.overturetool.vdmj.pog.ProofObligation;
+import org.overture.pog.obligations.POStatus;
+import org.overture.pog.obligations.ProofObligation;
 
 public class PoOverviewTableView extends ViewPart implements ISelectionListener
 {

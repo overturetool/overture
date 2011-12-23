@@ -19,12 +19,13 @@
 package org.overture.ide.plugins.poviewer.actions;
 
 
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
-import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pog.visitors.PogVisitor;
 
 public class ViewPosActionSl extends ViewPosAction {
 
@@ -35,19 +36,24 @@ public class ViewPosActionSl extends ViewPosAction {
 
 	@Override
 	protected ProofObligationList getProofObligations(IVdmModel root) throws NotAllowedException {
-		ModuleList cl = new ModuleList();
+		PogVisitor pogVisitor = new PogVisitor();
+		ProofObligationList obligations = new ProofObligationList();
 		if(!root.isTypeCorrect()){
 			return null;
 		}
 		for (Object definition : root.getModuleList()) {
-			if (definition instanceof Module)
-				if (!((Module) definition).getName().equals("DEFAULT") && skipElement(((Module) definition).name.location.file))
+			if (definition instanceof AModuleModules)
+				if (!((AModuleModules) definition).getName().equals("DEFAULT") && skipElement(((AModuleModules) definition).getName().getLocation().file))
 					continue;
 				else
-					cl.add((Module) definition);
+				{
+					ProofObligationList tmp = pogVisitor.caseAModuleModules((AModuleModules) definition,new POContextStack());
+					tmp.trivialCheck();
+					obligations.addAll(tmp);
+				}
 		}
 
-		final ProofObligationList pos = cl.getProofObligations();
+		final ProofObligationList pos = obligations;
 		return pos;
 	}
 }
