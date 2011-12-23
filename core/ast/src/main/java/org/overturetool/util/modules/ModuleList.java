@@ -20,6 +20,7 @@ import org.overturetool.util.ClonableFile;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.util.Utils;
 
@@ -140,7 +141,9 @@ public class ModuleList extends Vector<AModuleModules>
 
 		if (!isEmpty())
 		{
-			AModuleModules def = new AModuleModules();
+			
+			AModuleModules def = new AModuleModules(new LexIdentifierToken("DEFAULT", false, new LexLocation()),null,null,
+							new Vector<PDefinition>(),new Vector<ClonableFile>(),true,false);
 
 			if (Settings.release == Release.VDM_10)
 			{
@@ -162,7 +165,7 @@ public class ModuleList extends Vector<AModuleModules>
 //    				def = new AModuleModules(def.getName(),
 //    					new ModuleImports(def.getName(), imports), null, def.defs);
 
-    				def= new AModuleModules(def.getName(),new AModuleImports(def.getName(), imports), null, def.getDefs(), null, null, null, false, false,false);
+    				def= new AModuleModules(def.getName(),new AModuleImports(def.getName(), imports), null, def.getDefs(),def.getFiles(), null, null, false, false,false);
     				
     			}
 			}
