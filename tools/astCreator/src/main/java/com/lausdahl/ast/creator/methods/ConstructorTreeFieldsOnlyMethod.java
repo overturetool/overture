@@ -103,9 +103,9 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 				sb.append(name + "_");
 				sb.append(");\n");
 
-				sbDoc.append("\t* @param " + name + " the {@link "
-						+ f.getType() + "} node for the {@code " + name
-						+ "} child of this {@link " + classDefinition.getName()
+				sbDoc.append("\t* @param " + name + "_ the {@link "
+						+ NameUtil.stripGenerics(f.getType()) + "} node for the {@code " + name
+						+ "} child of this {@link " + classDefinition.getName().getName()
 						+ "} node\n");
 			}else if(JavaTypes.isPrimitiveType(f.getType()))
 			{

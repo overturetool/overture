@@ -2,7 +2,6 @@ package com.lausdahl.ast.creator.methods;
 
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
-import com.lausdahl.ast.creator.definitions.Field.StructureType;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.env.Environment;
@@ -33,21 +32,7 @@ public class SetMethod extends Method {
 		StringBuilder sb = new StringBuilder();
 
 		if ((!f.isTokenField && !(env.classToType.get(c)==ClassType.Custom)) || (f.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)f.type).extendsNode)) {
-			if (!f.isList) {
-				if (!f.isAspect && f.structureType==StructureType.Tree) {
-					sb.append("\t\tif (this." + f.getName() + " != null) {\n");
-					sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
-					sb.append("\t\t}\n");
-					sb.append("\t\tif (value != null) {\n");
-					sb.append("\t\t\tif (value.parent() != null) {\n");
-					sb.append("\t\t\t\tvalue.parent().removeChild(value);\n");
-					sb.append("\t\t}\n");
-					sb.append("\t\t\tvalue.parent(this);\n");
-					sb.append("\t\t}\n");
-				}
-				sb.append("\t\tthis." + f.getName() + " = value;\n");
-			} else {
-
+			if (f.isList) {
 				sb.append("\t\tif (this." + f.getName() + ".equals(value)) {\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t}\n");
@@ -56,10 +41,35 @@ public class SetMethod extends Method {
 				sb.append("\t\t\tthis." + f.getName() + ".addAll(value);\n");
 				sb.append("\t\t}\n");
 
+			}else
+			{
+				switch(f.structureType)
+				{
+					case Graph:
+						sb.append("\t\tif( value != null && value.parent() == null) {\n");
+						sb.append("\t\t\tvalue.parent(this);\n");
+						sb.append("\t\t}\n");
+						break;
+					case Tree:
+						if(!f.isAspect)
+						{
+							sb.append("\t\tif (this." + f.getName() + " != null) {\n");
+							sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
+							sb.append("\t\t}\n");
+							sb.append("\t\tif (value != null) {\n");
+							sb.append("\t\t\tif (value.parent() != null) {\n");
+							sb.append("\t\t\t\tvalue.parent().removeChild(value);\n");
+							sb.append("\t\t}\n");
+							sb.append("\t\t\tvalue.parent(this);\n");
+							sb.append("\t\t}\n");
+						}
+						break;
+					
+				}
+								
+				sb.append("\t\tthis." + f.getName() + " = value;\n");
 			}
-		}
-
-		else if (f.isTokenField || f.isAspect) {
+		}else if (f.isTokenField || f.isAspect) {
 			sb.append("\t\tthis." + f.getName() + " = value;");
 		}
 

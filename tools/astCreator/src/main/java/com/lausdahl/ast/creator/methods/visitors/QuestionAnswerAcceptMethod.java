@@ -27,7 +27,7 @@ public class QuestionAnswerAcceptMethod extends Method
 		sb.append("\t/**\n");
 		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case"
 				+ AnalysisUtil.getClass(env, c).getName().getName() + "(" + AnalysisUtil.getClass(env, c).getName().getName()
-				+ ")} of the {@link "+argDef.getName().getName()+"} {@code caller}.\n");
+				+ ", Object)} of the {@link "+argDef.getName().getName()+"} {@code caller}.\n");
 		sb.append("\t* @param caller the {@link "+argDef.getName().getName()+"} to which this {@link "
 				+ AnalysisUtil.getClass(env, c).getName().getName() + "} node is applied\n");
 		sb.append("\t* @param question the question provided to {@code caller}\n");

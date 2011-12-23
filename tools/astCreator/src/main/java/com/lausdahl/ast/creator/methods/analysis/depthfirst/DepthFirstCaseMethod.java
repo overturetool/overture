@@ -1,6 +1,8 @@
 package com.lausdahl.ast.creator.methods.analysis.depthfirst;
 
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
@@ -32,21 +34,23 @@ public class DepthFirstCaseMethod extends Method
 				+ AnalysisUtil.getClass(env, c).getName().getName()
 				+ "} node from {@link "
 				+ AnalysisUtil.getClass(env, c).getName().getName()
-				+ "#apply("
-				+ (c.getInterfaces().isEmpty() ? c.getName().getName()
-						: c.getInterfaces().iterator().next().getName().getName())
-				+ ")}.\n");
+				+ "#apply("+env.getTaggedDef(env.TAG_IAnalysis).getName().getName()+")}.\n");
 		sb.append("\t* @param node the calling {@link " + AnalysisUtil.getClass(env, c).getName().getName()
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "case" + NameUtil.getClassName(AnalysisUtil.getCaseClass(env, c).getName().getName());
+		String thisNodeMethodName =NameUtil.getClassName(AnalysisUtil.getCaseClass(env, c).getName().getName()); 
+		this.name = "case" + thisNodeMethodName;
 		this.arguments.add(new Argument(AnalysisUtil.getCaseClass(env, classDefinition).getName().getName(), "node"));
 		this.requiredImports.add("java.util.ArrayList");
 		this.requiredImports.add("java.util.List");
 
 		StringBuffer bodySb = new StringBuffer();
-		for (Field f : c.getFields())
+		bodySb.append("\t\tin"+thisNodeMethodName+"(node);\n\n");
+		List<Field> allFields = new Vector<Field>();
+		allFields.addAll(c.getInheritedFields());
+		allFields.addAll(c.getFields());
+		for (Field f : allFields)
 		{
 			if (f.isTokenField)
 			{
@@ -100,6 +104,8 @@ public class DepthFirstCaseMethod extends Method
 //				}
 			}
 		}
+		
+		bodySb.append("\n\t\tout"+thisNodeMethodName+"(node);");
 
 		this.body = bodySb.toString();
 		// this.annotation="@override";

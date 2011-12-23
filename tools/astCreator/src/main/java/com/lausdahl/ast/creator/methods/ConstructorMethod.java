@@ -74,21 +74,21 @@ public class ConstructorMethod extends Method
 			sb.append(");\n");
 			if (f.structureType == StructureType.Tree)
 			{
-				sbDoc.append("\t* @param " + name + " the {@link "
-						+ f.getType() + "} node for the {@code " + name
+				sbDoc.append("\t* @param " + name + "_ the {@link "
+						+ NameUtil.stripGenerics(f.getType()) + "} node for the {@code " + name
 						+ "} child of this {@link " + classDefinition.getName().getName()
 						+ "} node\n");
 			} else
 			{
 				sbDoc.append("\t* @param "
 						+ name
-						+ " the {@link "
-						+ f.getType()
+						+ "_ the {@link "
+						+ NameUtil.stripGenerics(f.getType())
 						+ "} <b>graph</a> node for the {@code "
 						+ name
 						+ "} child of this {@link "
 						+ classDefinition.getName().getName()
-						+ "} node.\n\t*  <i>The parent of this {@ "
+						+ "} node.\n\t*  <i>The parent of this {@code "
 						+ name
 						+ " } will not be changed by adding it to this node.</i>\n");
 

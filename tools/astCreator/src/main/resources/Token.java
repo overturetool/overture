@@ -79,7 +79,7 @@ public abstract class %Token% extends %Node% implements %IToken% {
 //	}
 
 	/**
-	 * Implements the {@link Node#removeChild(Node)} method. Since tokens have no
+	 * Implements the {@link %INode%#removeChild(%INode%)} method. Since tokens have no
 	 * children, it always throws a {@link RuntimeException}.
 	 * @param child the child node to be removed from this {@link Token} node
 	 * @throws RuntimeException if {@code child} is not a child of this {@link Token} node

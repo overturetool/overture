@@ -24,9 +24,9 @@ public class KindNodeMethod extends Method
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
-		sb.append("\t * Returns the {@link NodeEnum"+classDefinition.getName().getPostfix()+"} corresponding to the\n");
-		sb.append("\t * type of this {@link Node} node.\n");
-		sb.append("\t * @return the {@link NodeEnum"+classDefinition.getName().getPostfix()+"} for this node\n");
+		sb.append("\t * Returns the {@link NodeEnum"+env.getInterfaceForCommonTreeNode(classDefinition).getName().getPostfix()+"} corresponding to the\n");
+		sb.append("\t * type of this {@link "+env.iNode.getName().getName()+"} node.\n");
+		sb.append("\t * @return the {@link NodeEnum"+env.getInterfaceForCommonTreeNode(classDefinition).getName().getPostfix()+"} for this node\n");
 		sb.append("\t */");
 		this.javaDoc = sb.toString();
 		name = "kindNode";

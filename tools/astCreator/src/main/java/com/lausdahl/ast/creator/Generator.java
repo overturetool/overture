@@ -10,6 +10,7 @@ import com.lausdahl.ast.creator.definitions.EnumDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.env.BaseEnvironment;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
@@ -268,24 +269,25 @@ public class Generator
 		answerIntf.setTag(tag);
 		answerIntf.setGenericArguments(genericArguments);
 		env.addInterface(answerIntf);
+		answerIntf.supers.add(BaseEnvironment.serializableDef);
 
 		for (IClassDefinition c : getClasses(env.getClasses(), env))
 		{
-//			if (env.classToType.get(c) == IClassDefinition.ClassType.Production)
-//			{
-//				continue;
-//			}
-//			Method m = (Method) accept.newInstance();
-//			m.setClassDefinition(c);
-//			m.setEnvironment(env);
-//			c.addMethod(m);
-//
-//			m = (Method) caseM.newInstance();
-//			m.setClassDefinition(c);
-//			m.setEnvironment(env);
-//			answerIntf.methods.add(m);
-			
-			switch(env.classToType.get(c))
+			// if (env.classToType.get(c) == IClassDefinition.ClassType.Production)
+			// {
+			// continue;
+			// }
+			// Method m = (Method) accept.newInstance();
+			// m.setClassDefinition(c);
+			// m.setEnvironment(env);
+			// c.addMethod(m);
+			//
+			// m = (Method) caseM.newInstance();
+			// m.setClassDefinition(c);
+			// m.setEnvironment(env);
+			// answerIntf.methods.add(m);
+
+			switch (env.classToType.get(c))
 			{
 				case Alternative:
 				case Token:
@@ -294,7 +296,7 @@ public class Generator
 					m.setClassDefinition(c);
 					m.setEnvironment(env);
 					c.addMethod(m);
-		
+
 					m = (Method) caseM.newInstance();
 					m.setClassDefinition(c);
 					m.setEnvironment(env);
@@ -331,12 +333,12 @@ public class Generator
 					}
 						break;
 					case SubProduction:
-//					{
-//						Method m = (Method) caseM.newInstance();
-//						m.setClassDefinition(c);
-//						m.setEnvironment(env);
-//						answerClass.addMethod(m);
-//					}
+						// {
+						// Method m = (Method) caseM.newInstance();
+						// m.setClassDefinition(c);
+						// m.setEnvironment(env);
+						// answerClass.addMethod(m);
+						// }
 					case Production:
 					{
 						Method m = (Method) defaultCase.newInstance();
@@ -386,16 +388,89 @@ public class Generator
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
 		{
-			if (source.classToType.get(c) == IClassDefinition.ClassType.Production)
+//			if (source.classToType.get(c) != IClassDefinition.ClassType.Production)
+//			{
+//				// continue;
+//				Method m = new DepthFirstCaseMethod(c, source);
+//				m.setClassDefinition(c);
+//				m.setEnvironment(source);
+//				adaptor.addMethod(m);
+//			}
+
+			switch (source.classToType.get(c))
 			{
-				continue;
+				
+				case Custom:
+					break;
+				case Production:
+				case SubProduction:
+				{
+					AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(c, source);
+					mIn.setDefaultPostfix("In");
+					mIn.setClassDefinition(c);
+					mIn.setEnvironment(source);
+					adaptor.addMethod(mIn);
+
+					AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(c, source);
+					mOut.setDefaultPostfix("Out");
+					mOut.setClassDefinition(c);
+					mOut.setEnvironment(source);
+					adaptor.addMethod(mOut);
+				}
+					break;
+				case Alternative:
+				case Token:
+				{
+					// continue;
+					Method m = new DepthFirstCaseMethod(c, source);
+					m.setClassDefinition(c);
+					m.setEnvironment(source);
+					adaptor.addMethod(m);
+				}
+					break;
+				case Unknown:
+					break;
+
 			}
 
-			Method m = new DepthFirstCaseMethod(c, source);
-			m.setClassDefinition(c);
-			m.setEnvironment(source);
-			adaptor.addMethod(m);
+			AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c, source);
+			mIn.setMethodNamePrefix("in");
+			mIn.setDefaultPostfix("In");
+			mIn.setClassDefinition(c);
+			mIn.setEnvironment(source);
+			adaptor.addMethod(mIn);
 
+			AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c, source);
+			mOut.setMethodNamePrefix("out");
+			mOut.setDefaultPostfix("Out");
+			mOut.setClassDefinition(c);
+			mOut.setEnvironment(source);
+			adaptor.addMethod(mOut);
+
+		}
+
+		{
+			AnalysisAdaptorDefaultNodeMethod mOut = new AnalysisAdaptorDefaultNodeMethod(source);
+			mOut.setDefaultPostfix("Out");
+			mOut.setEnvironment(source);
+			adaptor.addMethod(mOut);
+
+			AnalysisAdaptorDefaultNodeMethod mIn = new AnalysisAdaptorDefaultNodeMethod(source);
+			mIn.setDefaultPostfix("In");
+			mIn.setEnvironment(source);
+			adaptor.addMethod(mIn);
+		}
+
+		{
+			AnalysisAdaptorDefaultTokenMethod mOut = new AnalysisAdaptorDefaultTokenMethod(source);
+			mOut.setDefaultPostfix("Out");
+			mOut.setEnvironment(source);
+			adaptor.addMethod(mOut);
+
+			AnalysisAdaptorDefaultTokenMethod mIn = new AnalysisAdaptorDefaultTokenMethod(source);
+			mIn.setDefaultPostfix("In");
+			mIn.setEnvironment(source);
+			adaptor.addMethod(mIn);
 		}
 
 		// FIXME adaptor.getImports().addAll(source.getAllDefinitions());

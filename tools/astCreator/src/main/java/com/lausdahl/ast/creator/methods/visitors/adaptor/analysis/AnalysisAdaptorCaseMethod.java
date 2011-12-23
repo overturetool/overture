@@ -8,6 +8,9 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 {
+	private String methodNamePrefix = "case";
+	
+
 	public AnalysisAdaptorCaseMethod()
 	{
 		super(null, null);
@@ -29,17 +32,15 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 		sb.append("\t* Called by the {@link "
 				+ AnalysisUtil.getClass(env, c).getName().getName()
 				+ "} node from {@link "
-				+ AnalysisUtil.getClass(env, c).getName().getName()
-				+ "#apply("
-				+ (c.getInterfaces().isEmpty() ? c.getName().getName()
-						: c.getInterfaces().iterator().next().getName().getName())
+				+ AnalysisUtil.getClass(env, c).getName().getName() + "#apply("
+				+ env.getTaggedDef(env.TAG_IAnalysis).getName().getName()
 				+ ")}.\n");
 		sb.append("\t* @param node the calling {@link "
 				+ AnalysisUtil.getClass(env, c).getName().getName()
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "case"
+		this.name = methodNamePrefix
 				+ NameUtil.getClassName(AnalysisUtil.getCaseClass(env, c).getName().getName());
 		setupArguments();
 		// this.annotation="@override";
@@ -52,13 +53,13 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 			{
 				case Production:
 				case SubProduction:
-					this.body += AnalysisUtil.getClass(env, c).getSuperDefs().iterator().next().getName().getName();
+					this.body +=defaultPostFix+ AnalysisUtil.getClass(env, c).getSuperDefs().iterator().next().getName().getName();
 					break;
 				case Token:
-					this.body += AnalysisUtil.getClass(env, c).getName().getName();
+					this.body +=defaultPostFix+ AnalysisUtil.getClass(env, c).getName().getName();
 					break;
 				case Alternative:
-					this.body += AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
+					this.body +=defaultPostFix+ AnalysisUtil.getClass(env, c.getSuperDef()).getName().getName();
 					break;
 				default:
 					this.body += c.getSuperDef().getName().getName();
@@ -72,5 +73,12 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 			this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
 		}
 	}
+
+	public void setMethodNamePrefix(String nm)
+	{
+		this.methodNamePrefix = nm;
+	}
+	
+	
 
 }

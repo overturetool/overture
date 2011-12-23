@@ -23,8 +23,8 @@ public class GetMethod extends Method
 	{
 
 		javaDoc = "\t/**\n";
-		javaDoc += "\t * Returns the {@link "+f.getType()+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node.\n";
-		javaDoc += "\t * @return the {@link "+f.getType()+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
+		//javaDoc += "\t * Returns the {@link "+f.getType()+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node.\n";
+		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType())+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
 		javaDoc += "\t*/";
 
 		this.name = "get"

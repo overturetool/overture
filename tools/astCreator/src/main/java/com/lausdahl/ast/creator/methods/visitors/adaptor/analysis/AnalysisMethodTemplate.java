@@ -10,6 +10,7 @@ public abstract class AnalysisMethodTemplate extends Method
 {
 	protected boolean addReturnToBody = false;
 	protected IInterfaceDefinition intf;
+	protected String defaultPostFix = "";
 
 	public AnalysisMethodTemplate(IClassDefinition c, Environment env)
 	{
@@ -50,4 +51,9 @@ public abstract class AnalysisMethodTemplate extends Method
 		}
 	}
 
+	
+	public void setDefaultPostfix(String nm)
+	{
+		this.defaultPostFix = nm;
+	}
 }

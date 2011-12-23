@@ -24,12 +24,12 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
 		sb.append("\t* Called by the {@link " + c.getName().getName()
-				+ "} node from {@link " + c.getName().getName() + "#apply(Switch)}.\n");
+				+ "} node from {@link " + c.getName().getName() + "#apply("+env.getTaggedDef(env.TAG_IAnalysis).getName().getName()+")}.\n");
 		sb.append("\t* @param node the calling {@link " + c.getName().getName()
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		this.name = "default" + NameUtil.getClassName(c.getName().getName());
+		this.name = "default"+defaultPostFix + NameUtil.getClassName(c.getName().getName());
 		setupArguments();
 
 		this.body = "\t\t" + (addReturnToBody ? "return null;" : "")

@@ -118,4 +118,15 @@ public class NameUtil
 
 		return name;
 	}
+
+
+public static String stripGenerics(String name)
+{
+
+if(name.contains("<"))
+{
+return name.substring(0,name.indexOf('<'));
+}
+return name;
+}
 }
