@@ -27,6 +27,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.ui.launching.AbstractVdmMainLaunchConfigurationTab;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmsl.debug.Activator;
+import org.overture.ide.vdmsl.debug.utils.VdmSlRuntimeUtil;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
 import org.overturetool.util.modules.ModuleList;
 import org.overturetool.vdmj.Settings;
@@ -69,15 +70,16 @@ public class VdmSlMainLaunchConfigurationTab extends
 				}
 			}
 			ModuleList modules = model.getModuleList();
-			modules.combineDefaults();
-			ModuleInterpreter ci = new ModuleInterpreter(modules);
-			if (expression.contains(STATIC_CALL_SEPERATOR))
-			{
-				ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR))); // needed for static fn/op check
-			}
-
-			ci.typeCheck(expression);
-			return true;
+//			modules.combineDefaults();
+//			ModuleInterpreter ci = new ModuleInterpreter(modules);
+//			if (expression.contains(STATIC_CALL_SEPERATOR))
+//			{
+//				ci.setDefaultName(expression.substring(0, expression.indexOf(STATIC_CALL_SEPERATOR))); // needed for static fn/op check
+//			}
+//
+//			ci.typeCheck(expression);
+//			return true;
+			return VdmSlRuntimeUtil.typeCheck(modules, expression);
 		} catch (NotAllowedException e)
 		{
 			setErrorMessage(e.toString());
