@@ -24,7 +24,7 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 		return analysis.executable;
 	}
 
-	public void defaultPStm(PStm node)
+	public void defaultInPStm(PStm node)
 	{
 		if (node.getLocation().startLine == searchLine)
 		{
@@ -33,7 +33,7 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	public void defaultPExp(PExp node)
+	public void defaultInPExp(PExp node)
 	{
 		if (node.getLocation().startLine == searchLine)
 		{

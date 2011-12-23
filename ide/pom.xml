@@ -28,6 +28,7 @@
 		<module>plugins</module>
 		<module>help</module>
 		<module>build</module>
+<module>debugger</module>
 	</modules>
 
 	<reporting>
