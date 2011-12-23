@@ -27,6 +27,7 @@ import org.overture.ide.debug.ui.launching.AbstractVdmMainLaunchConfigurationTab
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.ide.vdmpp.debug.Activator;
+import org.overture.ide.vdmpp.debug.utils.VdmPpRuntimeUtil;
 import org.overturetool.util.definitions.ClassList;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -74,12 +75,13 @@ public class VdmPpMainLaunchConfigurationTab extends
 			}
 			ClassList classes = model.getClassList();
 		
-			ClassInterpreter ci = new ClassInterpreter(classes);			
+//			ClassInterpreter ci = new ClassInterpreter(classes);			
 			
 			//Fix to the lauchConfig type check expression 
-			ci.setDefaultName(null);
-			ci.typeCheck(expression);
-			return true;
+//			ci.setDefaultName(null);
+//			ci.typeCheck(expression);
+//			return true;
+			return VdmPpRuntimeUtil.typeCheck(classes, expression);
 		} catch (NotAllowedException e)
 		{
 			setErrorMessage(e.toString());

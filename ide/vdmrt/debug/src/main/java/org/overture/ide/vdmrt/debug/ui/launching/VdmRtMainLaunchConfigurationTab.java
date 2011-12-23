@@ -25,6 +25,7 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.ui.launching.AbstractVdmMainLaunchConfigurationTab;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.ide.vdmpp.debug.utils.VdmPpRuntimeUtil;
 import org.overture.ide.vdmrt.debug.Activator;
 import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overturetool.util.definitions.ClassList;
@@ -73,29 +74,13 @@ public class VdmRtMainLaunchConfigurationTab extends
 				}
 			}
 			ClassList classes = model.getClassList();
-			ClassInterpreter ci = new ClassInterpreter(classes);
-			// if (expression.contains("new"))
-			// ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); //
-			// needed for static fn/op check
-//			if (!expression.contains("new"))
-//			{
-//				if (expression.contains("`"))
-//				{
-//					ci.setDefaultName(expression.substring(0, expression.indexOf("`")));
-//				} else if (expression.contains("("))
-//				{
-//					ci.setDefaultName(expression.substring(0, expression.indexOf("("))); // needed for static fn/op
-//																							// check
-//				}
-//			} else if (expression.contains("new"))
-//			{
-//				ci.setDefaultName(expression.substring(expression.indexOf(' '), expression.indexOf("(")).trim()); 																										// check
-//			}
-			
-			//Fix to the lauchConfig type check expression 
-			ci.setDefaultName(null);
-			ci.typeCheck(expression);
-			return true;
+//			ClassInterpreter ci = new ClassInterpreter(classes);
+//			
+//			//Fix to the lauchConfig type check expression 
+//			ci.setDefaultName(null);
+//			ci.typeCheck(expression);
+//			return true;
+			return VdmPpRuntimeUtil.typeCheck(classes, expression, Dialect.VDM_RT);
 		} catch (NotAllowedException e)
 		{
 			setErrorMessage(e.toString());

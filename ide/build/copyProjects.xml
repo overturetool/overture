@@ -190,11 +190,11 @@
 		<exclude name="**/target/" />
 	</fileset>
 </copy>
-<copy todir="${buildDirectory}/features/features.ct">
+<!-- copy todir="${buildDirectory}/features/features.ct">
 	<fileset dir="../plugins/features/ct">
 		<exclude name="**/target/" />
 	</fileset>
-</copy>
+</copy-->
 <copy todir="${buildDirectory}/features/features.latex">
 	<fileset dir="../plugins/features/latex">
 		<exclude name="**/target/" />
@@ -205,11 +205,11 @@
 		<exclude name="**/target/" />
 	</fileset>
 </copy>
-<copy todir="${buildDirectory}/features/features.quickinterpreter">
+<!-- copy todir="${buildDirectory}/features/features.quickinterpreter">
 	<fileset dir="../plugins/features/quickinterpreter">
 		<exclude name="**/target/" />
 	</fileset>
-</copy>
+</copy-->
 <copy todir="${buildDirectory}/features/features.realtimelogviewer">
 	<fileset dir="../plugins/features/realtimelogviewer">
 		<exclude name="**/target/" />

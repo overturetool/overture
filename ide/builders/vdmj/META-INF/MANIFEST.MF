@@ -12,7 +12,6 @@ Require-Bundle: org.overture.ide.core;bundle-version="0.3.0"
 Export-Package: org.overture.ide.builders.vdmj
 Bundle-Activator: org.overture.ide.builders.vdmj.Activator
 Bundle-ClassPath: .,
- org.overture.ide.core-2.2.0.jar,
  ast-2.2.0.jar,
  ast_assistance-2.2.0.jar,
  parser-2.2.0.jar,

@@ -13,7 +13,6 @@ Require-Bundle: org.overture.ide.core;bundle-version="0.3.0",
  org.overture.ide.ui;bundle-version="0.3.0"
 Bundle-Activator: org.overture.ide.plugins.csk.Activator
 Bundle-ClassPath: .,
- org.overture.ide.core-2.2.0.jar,
  ast-2.2.0.jar,
  ast_assistance-2.2.0.jar,
  parser-2.2.0.jar
