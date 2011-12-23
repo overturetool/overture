@@ -47,7 +47,7 @@ public class ViewPosActionSl extends ViewPosAction {
 					continue;
 				else
 				{
-					ProofObligationList tmp = pogVisitor.caseAModuleModules((AModuleModules) definition,new POContextStack());
+					ProofObligationList tmp = ((AModuleModules) definition).apply(pogVisitor,new POContextStack());
 					tmp.trivialCheck();
 					obligations.addAll(tmp);
 				}
