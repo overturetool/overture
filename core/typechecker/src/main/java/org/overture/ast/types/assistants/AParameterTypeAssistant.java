@@ -136,7 +136,7 @@ public class AParameterTypeAssistant {
 	}
 	
 	public static AClassType getClassType(AParameterType type) {
-		return new AClassType(type.getLocation(),false, null, 
+		return new AClassType(type.getLocation(),false, null,null, 
 				new AClassClassDefinition(
 						new LexLocation(),
 						new LexNameToken("CLASS", "DEFAULT", new LexLocation()),

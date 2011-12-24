@@ -582,7 +582,7 @@ public class SClassDefinitionAssistant {
 	public static PType getType(SClassDefinition def) {
 		if (def.getClasstype() == null)
 		{
-			def.setClasstype(new AClassType(def.getLocation(), false, def.getName().clone(), def));
+			def.setClasstype(new AClassType(def.getLocation(), false, null,def.getName().clone(), def));
 		}
 
 		return def.getClasstype();

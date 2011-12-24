@@ -112,7 +112,7 @@ public class AUnknownTypeAssistant {
 	
 	public static AClassType getClassType(AUnknownType type){
 		LexNameToken name = new LexNameToken("CLASS", "DEFAULT", new LexLocation());
-		return new AClassType(type.getLocation(),false, name, 
+		return new AClassType(type.getLocation(),false, null,name, 
 				new AClassClassDefinition(
 						new LexLocation(),
 						name,

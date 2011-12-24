@@ -685,7 +685,7 @@ public class AUnionTypeAssistant
 				pDefinition.setClassDefinition(class_);
 			}
 			type.setClassType((classname == null) ? null
-					: new AClassType(type.getLocation(), false, classname, class_));
+					: new AClassType(type.getLocation(), false, null,classname, class_));
 		}
 
 		return type.getClassType();
