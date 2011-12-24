@@ -99,8 +99,6 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.VoidType;
-
 
 public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, PType> 
 {

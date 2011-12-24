@@ -50,7 +50,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 
-import com.sun.corba.se.spi.legacy.interceptor.UnknownType;
 
 /**
  * A class for static type checking comparisons.

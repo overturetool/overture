@@ -1,7 +1,6 @@
 package org.overture.typecheck.visitors;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExternalDefinition;
@@ -9,13 +8,7 @@ import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
-import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
-import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.Node;
 import org.overture.ast.patterns.ADefPatternBind;
@@ -34,7 +27,6 @@ import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
@@ -50,7 +42,6 @@ import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.Environment;
-import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
