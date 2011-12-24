@@ -3,6 +3,7 @@
 		<include name="ui/**" />
 		<include name="core/**" />
 		<include name="debug/**" />
+		<include name="debugger/**" />
 		<include name="help/**" />
 		<include name="platform/**" />
 		<include name="ui/**" />
