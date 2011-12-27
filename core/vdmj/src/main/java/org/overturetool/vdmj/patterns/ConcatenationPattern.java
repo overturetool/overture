@@ -113,7 +113,9 @@ public class ConcatenationPattern extends Pattern
 	@Override
 	public int getLength()
 	{
-		return left.getLength() + right.getLength();
+		int llen = left.getLength();
+		int rlen = right.getLength();
+		return (llen == 0 || rlen == 0) ? 0 : llen + rlen; 
 	}
 
 	@Override
