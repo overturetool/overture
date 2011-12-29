@@ -114,6 +114,12 @@ operations
 								let wpsIds = [wps(i).GetId() | i in set inds wps] in 
 									IO`print(wpsIds);
 							Printer`Out("\n");
+							
+							if simulating then
+							(
+								start(b);
+							);
+	
 						);
 
 				    	 eventOccurred := true;
