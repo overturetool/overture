@@ -1,0 +1,27 @@
+class Printer
+
+	operations		
+		public static Out: seq of char ==> ()
+		 Out (pstr) ==
+		   def - = new IO().echo(pstr ^ "\n") in skip;
+		    
+		
+		public static natToString : nat ==> seq of char 
+		natToString(n) ==
+		(
+			return VDMUtil`val2seq_of_char[nat](n);
+		);
+
+		  
+		public static OutWithTS: seq of char ==> ()
+		OutWithTS (pstr) ==
+    		def - = new IO().echo(Printer`natToString(World`timerRef.GetTime()) ^": " ^ pstr ^ "\n") in skip;
+
+
+		public static intToString : int ==> seq of char 
+		intToString(i) ==
+		(
+			return VDMUtil`val2seq_of_char[int](i);
+		);
+
+end Printer

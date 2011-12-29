@@ -1,0 +1,16 @@
+[
+--mk_Types`BusRoute(1, [<R8>,<R15>,<R10>,<R9>], 1),	-- normal route works
+--mk_Types`BusRoute(1, [<R8>,<R15>,<R4>,<R9>], 1), --R4 and R15 not connected --fails
+--mk_Types`BusRoute(1, [<R4>,<R1>,<R3>,<R9>], 1),   -- not starting at central --fails
+--mk_Types`BusRoute(1, [<R8>,<R7>,<R7>,<R8>], 1),   -- return by the same route -- works
+--mk_Types`BusRoute(2, [<R9>,<R12>,<R13>,<R2>,<R1>,<HW1>], 1),
+--mk_Types`BusRoute(7, [<R8>,<R15>,<R11>,<R14>,<R13>,<R12>,<R9>], 1),	
+--mk_Types`BusRoute(57, [<HW1>, <R4>, <R5>, <R7>, <R8>], 1),	
+--mk_Types`BusRoute(3, [<R9>,<R16>,<R2>,<R1>,<R1>,<R2>,<R16>,<R9>], 1),	
+mk_Types`Inflow(1, 3),
+mk_Types`Simulate(5), 
+--mk_Types`Inflow(3, 75),
+--mk_Types`Inflow(5, 125),
+--mk_Types`Inflow(0, 150),
+mk_Types`WasteTime(220)
+]

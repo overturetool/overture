@@ -1,0 +1,55 @@
+class Waypoint
+
+	types
+		public BusStops = <A> | <B> | <C> | <D> | <E> | <F> | <Central>;
+		public WaypointsEnum = <WP1> | <WP2> | <WP3> | <WP4> | <WP5> | BusStops;	
+
+	instance variables
+		protected id : WaypointsEnum;
+		protected isStop : bool := false;
+
+	operations
+		public Waypoint : Waypoint`WaypointsEnum ==> Waypoint
+		Waypoint(s) == 
+		(
+			id := s;
+		);
+
+		public GetId : () ==> WaypointsEnum
+		GetId()== return id;
+
+		public IsStop: () ==> bool
+		IsStop()== return isStop;
+
+	functions 
+		public static StringToBusStop : seq of char -> Waypoint`BusStops
+		StringToBusStop(busstop) ==
+	  	(
+		    cases busstop:
+		    "A" -> <A>,
+		    "B" -> <B>,
+			"C" -> <C>,
+			"D" -> <D>,
+			"E" -> <E>,
+			"F" -> <F>,
+			"Central" -> <Central>
+		    end
+	  	);
+
+		public static StringToWaypoint : seq of char -> Waypoint`WaypointsEnum
+		StringToWaypoint(wp) ==
+	  	(
+		    cases wp:
+		    "WP1" -> <WP1>,
+		    "WP2" -> <WP2>,
+			"WP3" -> <WP3>,
+			"WP4" -> <WP4>,
+			"WP5" -> <WP5>,
+			"WP6" -> <WP6>,
+			"WP7" -> <WP7>,
+			others -> StringToBusStop(wp)
+		    end
+	  	);
+
+
+end Waypoint

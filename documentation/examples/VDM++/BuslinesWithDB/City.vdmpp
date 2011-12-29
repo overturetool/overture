@@ -1,0 +1,205 @@
+class City
+
+	instance variables
+		wayspoints : inmap Waypoint`WaypointsEnum to Waypoint := {|->};
+		stops : inmap Waypoint`BusStops to Busstop := {|->};	
+		roads : inmap Road`RoadNumber to Road := {|->};	
+		buses : inmap nat to Bus := {|->};
+		central : Busstop;
+		inflow : nat; 
+
+	operations
+		public City : () ==> City
+		City()== 
+		(
+			central := addBusstop(<Central>);
+			inflow := 1; --default inflow value
+		);		
+
+		public newCity : () ==> () 
+		newCity() == 
+		(
+			stops := {|->};	
+			roads := {|->};	
+			wayspoints := {|->};
+			buses := {|->};	
+
+			central := addBusstop(<Central>);
+		);
+		
+		--add a new busStop to the city
+		public addBusstop : Waypoint`BusStops ==> Busstop 
+		addBusstop(stp) == 
+		(
+			let bs = new Busstop(stp) in 
+			(
+				stops := stops munion {stp|->bs};
+				wayspoints := wayspoints munion {stp |-> bs};
+				return bs
+			)
+		)
+		pre stp not in set dom stops; 
+
+
+		--add waypoint to the city, pasengers cannot get off at a waypoint
+		public addWaypoint : Waypoint`WaypointsEnum ==> Waypoint 
+		addWaypoint(stp) == 
+		(
+			 Printer`Out("CITY: Add WP");
+			let wp = new Waypoint(stp) in 
+			(
+				wayspoints := wayspoints munion {stp |-> wp};
+				return wp;
+			)
+		)
+		pre stp not in set dom stops;
+
+
+		--add road to the city, a road are end to end and must have to waypoints and a roadnumber 
+		-- the length of the road has significance to travel time of the bus
+		public addRoad : Waypoint * Waypoint * Road`RoadNumber * nat ==> ()
+		addRoad(wp1, wp2, roadNmbr, length) ==	
+		(
+			let r = new Road(roadNmbr, {wp1, wp2}, length) in
+			(
+				roads := roads munion {roadNmbr |-> r};
+			);
+		)
+		pre roadNmbr not in set dom roads --road number not used before
+		and wp1 <> wp2	--not the same wp, a road to the same wp is not a road
+		and forall r in set rng roads & not r.Covers({wp1, wp2}); --  waypoint not connected before
+		
+		public addRoad :  Waypoint`WaypointsEnum *  Waypoint`WaypointsEnum * Road`RoadNumber * nat * bool ==> ()
+		addRoad(wp1, wp2, roadNmbr, length, highspeed) ==
+			if highspeed then 
+				addRoad(wayspoints(wp1), wayspoints(wp2), roadNmbr, length, Config`DefaultRoadSpeedLimit + 10)
+			else
+				addRoad(wayspoints(wp1), wayspoints(wp2), roadNmbr, length);
+
+		--overloaded addRoad, which allows for the speedlimit of the road to be change from
+		-- the default value
+		public addRoad : Waypoint * Waypoint * Road`RoadNumber * nat * nat==> ()
+		addRoad(wp1, wp2, roadNmbr, length ,speedlimit) ==	
+		(
+			let r = new Road(roadNmbr, {wp1, wp2}, length, speedlimit) in
+			(
+				roads := roads munion {roadNmbr |-> r};		
+			)
+		)
+		pre roadNmbr not in set dom roads --road number not used before
+		and forall r in set rng roads & not r.Covers({wp1, wp2}) --  waypoint not connected before
+		and wp1 <> wp2;	--not the same wp, a road to the same wp is not a road
+
+		--add a new bus with a particular road 
+		public addBus : nat * seq of Road`RoadNumber ==> Bus
+		addBus(lineNumber, route)==
+		(
+			--validate that route is possible and finds waypoints along route  	
+			dcl busstops : seq of Waypoint := [];
+			dcl currentWP : Waypoint;
+			--find roads from ids
+			let busRoads = findRoadsFromRoadNumber(route) in
+			(
+					--always start from central
+					currentWP := central;
+					busstops := [currentWP];
+
+					--find busstops on the route, starting from central
+					for all i in set inds busRoads do
+					(
+						--stepwise move along route
+						currentWP := busRoads(i).OppositeEnd(currentWP);
+						busstops := busstops ^ [currentWP];
+					);
+								
+
+				if (hd busstops <> busstops(len(busstops))) then
+					exit "End not the same as start "; --change to pre? 
+				
+				--create bus	
+				let bus = new Bus(lineNumber, busRoads, busstops) in 
+				(
+					--add to mapping
+					buses := buses munion {lineNumber |-> bus};
+					--
+					World`graphics.busAdded(lineNumber);
+					return bus;
+				)	
+			);
+		)
+		pre len route > 1 --there actually is a route
+		and lineNumber not in set rng buses; --bus linenumber is not known
+
+
+		private findRoadsFromRoadNumber : seq of Road`RoadNumber ==> seq of Road
+		findRoadsFromRoadNumber(route)==  
+				return [roads(route(i)) | i in set inds route]; 
+
+
+		public getCentralStation : () ==> Busstop
+		getCentralStation()== 
+			return central;
+
+		--passenger inflow
+		public setInflow : nat ==> ()
+		setInflow(flow) ==	
+		(			
+			inflow := flow;
+			World`graphics.inflowChanged(inflow);
+		);
+
+		public getInflow : () ==> nat
+		getInflow()==
+			return inflow;
+
+		public getBuses : () ==> set of Bus
+		getBuses()==
+			return rng buses;
+		
+		--sync functionality for ensuring thread is started, 
+		--due to lack of thread scheduling fairness
+		public WaitForThreadStart : () ==> ()
+		WaitForThreadStart() == skip;
+
+		private ThreadStarted : () ==> ()
+		ThreadStarted() == skip;
+
+	sync
+		--mutex(setInflow);
+		--mutex(setInflow, getInflow);
+		per WaitForThreadStart => #fin(ThreadStarted) > 0
+
+	thread
+	(
+		ThreadStarted();
+		while true do
+		(
+			--add passengers to central station
+				for all - in set {1,...,getInflow()} do
+				(
+					--random find stop for passenger to get off
+					let stopSeq = VDMUtil`set2seq[Waypoint`BusStops](dom stops) in  --TODO exclude central
+						let i = MATH`rand(World`timerRef.GetTime()) mod len stopSeq  in
+							let pass = new Passenger(stops(stopSeq(i+1))) in 
+							(
+								--let pass = new Passenger(stops(<A>)) in --TODO
+								central.AddPassenger(pass);
+								World`graphics.passengerAtCentral(pass.Id(), 
+									VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum]
+									(pass.GetDestination().GetId()));
+							)
+				);
+
+			World`env.handleEvent(Printer`natToString(central.GetWaitingCount()) ^ " passengers waiting a central station");
+			
+			--check annoyance of waiting passengers
+			for all pass in set central.GetWaiting() do
+				pass.AnnoyedOfWaiting();
+
+			World`timerRef.WaitRelative(5);
+   			World`timerRef.NotifyAll();
+   			World`timerRef.Awake();
+		) 
+	)
+
+end City
