@@ -11,7 +11,7 @@ public class BuslinesControl implements IBuslinesControl {
 	BlockingQueue<String> commandQueue = new LinkedBlockingQueue<String>();
 	RemoteInterpreter interpreter;
 	public BuslinesControl(RemoteInterpreter intrprtr) {
-		interpreter = intrprtr;
+		interpreter = intrprtr; 
 		Controller.buslinesControl = this;
 	}
 	
@@ -103,23 +103,23 @@ public class BuslinesControl implements IBuslinesControl {
 	
 	public void StartSimulation() {
 		try {
-			Thread runner = new Thread(new Runnable(){
-				 public void run(){
-					 
-					 try{
-							Thread.sleep(750);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+//			Thread runner = new Thread(new Runnable(){
+//				 public void run(){
+//					 
+//					 try{
+//							Thread.sleep(750);
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
 					 
 						try {
 							execute("w.StartSimulation()");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-				 }
-				 
-			});
+				// }
+
+			//});
 			Thread commandRunner = new Thread(new Runnable(){
 				 public void run(){
 					String cmd = null;
@@ -137,7 +137,7 @@ public class BuslinesControl implements IBuslinesControl {
 			});
 			
 			commandRunner.start();
-			runner.start();
+			//runner.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
