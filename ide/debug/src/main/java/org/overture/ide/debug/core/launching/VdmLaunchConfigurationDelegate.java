@@ -453,6 +453,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		// System.out.println(executeString);
 		try
 		{
+procBuilder.directory(getProject(configuration).getLocation().toFile());
 			if (!useRemoteDebug(launch.getLaunchConfiguration()))
 			{
 				process = procBuilder.start();
