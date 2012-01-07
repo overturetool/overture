@@ -28,9 +28,6 @@ public class BuslinesControl implements IBuslinesControl {
 	public void IncreaseInflow() {
 		try {
 			commandQueue.add("w.env.IncreaseInflow()");
-			//execute("w.env.IncreaseInflow()");
-			//execute("World`env.go()");
-			//execute("w.Yield()");			//Optimization for thread fairness  
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,9 +36,7 @@ public class BuslinesControl implements IBuslinesControl {
 	@Override
 	public void DecreaseInflow() {
 		try {
-			//execute("w.env.DecreaseInflow()");
 			commandQueue.add("w.env.DecreaseInflow()");
-			//execute("w.Yield()");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,23 +98,12 @@ public class BuslinesControl implements IBuslinesControl {
 	
 	public void StartSimulation() {
 		try {
-//			Thread runner = new Thread(new Runnable(){
-//				 public void run(){
-//					 
-//					 try{
-//							Thread.sleep(750);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
-					 
-						try {
-							execute("w.StartSimulation()");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-				// }
-
-			//});
+				try {
+					execute("w.StartSimulation()");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			Thread commandRunner = new Thread(new Runnable(){
 				 public void run(){
 					String cmd = null;
@@ -137,7 +121,6 @@ public class BuslinesControl implements IBuslinesControl {
 			});
 			
 			commandRunner.start();
-			//runner.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
