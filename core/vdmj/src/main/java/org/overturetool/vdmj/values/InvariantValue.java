@@ -44,7 +44,7 @@ public class InvariantValue extends ReferenceValue
 		invariant = type.getInvariant(ctxt);
 		checkInvariant(ctxt);
 	}
-	
+
 	public void checkInvariant(Context ctxt) throws ValueException
 	{
 		if (invariant != null && Settings.invchecks)
@@ -53,7 +53,7 @@ public class InvariantValue extends ReferenceValue
 			// through a DTC check (which can include calculating an invariant),
 			// so we set the atomic flag around the conversion. This also stops
 			// VDM-RT from performing "time step" calculations.
-			
+
 			ctxt.threadState.setAtomic(true);
 			boolean inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
 			ctxt.threadState.setAtomic(false);
@@ -90,38 +90,38 @@ public class InvariantValue extends ReferenceValue
 	public Value getUpdatable(ValueListenerList listeners)
 	{
 		InvariantValueListener invl = null;
-		
+
 		if (invariant != null)
 		{
 			// Add an invariant listener to a new list for children of this value
 			// We update the object in the listener once we've created it (below)
-			
+
 			invl = new InvariantValueListener();
 			ValueListenerList list = new ValueListenerList(invl);
-			
+
 			if (listeners != null)
 			{
 				list.addAll(listeners);
 			}
-			
+
 			listeners = list;
 		}
-		
+
 		InvariantValue ival = new InvariantValue(type, value.getUpdatable(listeners), invariant);
 		UpdatableValue uval = UpdatableValue.factory(ival, listeners);
-		
+
 		if (invl != null)
 		{
 			// Update the listener with the address of the updatable copy
 			invl.setValue(uval);
 		}
-		
+
 		return uval;
 	}
 
 	@Override
 	public Object clone()
 	{
-		return new InvariantValue(type, value, invariant);
+		return new InvariantValue(type, (Value)value.clone(), invariant);
 	}
 }

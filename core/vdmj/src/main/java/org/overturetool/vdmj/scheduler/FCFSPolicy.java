@@ -48,7 +48,11 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public void reset()
 	{
-		threads.clear();
+		synchronized (threads)
+		{
+			threads.clear();
+		}
+
 		bestThread = null;
 	}
 

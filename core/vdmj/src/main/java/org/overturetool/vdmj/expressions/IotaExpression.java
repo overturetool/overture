@@ -87,6 +87,7 @@ public class IotaExpression extends Expression
 		else
 		{
 			TypeBind tb = (TypeBind)bind;
+			tb.typeResolve(base);
 			rt = tb.type;
 		}
 
@@ -111,7 +112,7 @@ public class IotaExpression extends Expression
 		{
 			abort(e);
 		}
-		
+
 		for (Value val: allValues)
 		{
 			try
