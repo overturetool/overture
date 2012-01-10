@@ -439,6 +439,8 @@ public class VdmElementLabels {
 					StyledString.DECORATIONS_STYLER);
 
 		}
+		else 
+			result.append(element.getName().getName());
 		return result;
 	}
 
