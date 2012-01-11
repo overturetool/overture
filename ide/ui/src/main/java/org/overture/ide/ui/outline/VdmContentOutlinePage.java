@@ -137,8 +137,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	/**
 	 * Constant indicating that all levels of the tree should be expanded or collapsed.
 	 * 
-	 * @see #expandToLevel(int)
-	 * @see #collapseToLevel(Object, int)
+//	 * @see #expandToLevel(int)
+//	 * @see #collapseToLevel(Object, int)
 	 */
 	public static final int ALL_LEVELS = -1;
 

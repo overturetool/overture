@@ -166,6 +166,11 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 					sb.append(" = new " + f.getType() + "(this)");
 				}
 			}
+			
+			if(f.hasCustomInitializer())
+			{
+				sb.append(" = "+f.getCustomInitializer());
+			}
 			sb.append(";");
 		}
 

@@ -290,4 +290,9 @@ public class BacktrackInputReader extends Reader
 	{
 		return;		// Stream was closed at the start anyway.
 	}
+	
+	public int getCurrentRawReadOffset()
+	{
+		return pos;
+	}
 }

@@ -62,7 +62,7 @@ public class TupleSelectRule implements IRule
 				digitCount++;
 			}
 			
-			boolean followedBySpace = Character.isSpace((char)c);
+			boolean followedBySpace = Character.isWhitespace((char)c);
 			
 			
 			scanner.unread(); //last one read in while

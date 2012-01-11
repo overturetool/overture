@@ -84,7 +84,7 @@ public class ClassFactory
 		if (type != ClassType.Token)
 		{
 			methods.add(new DefaultConstructorMethod(classDef, env));
-			methods.add(new RemoveChildMethod(classDef, classDef.getFields(), env));
+			methods.add(new RemoveChildMethod(classDef, env));
 		}
 
 		methods.add(new ToStringMethod(classDef, env));

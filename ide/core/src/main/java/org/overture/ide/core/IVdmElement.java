@@ -19,19 +19,21 @@
 package org.overture.ide.core;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 
 public interface IVdmElement extends IAdaptable {
 
 	/**
 	 * Constant representing a Java model (workspace level object).
-	 * A Java element with this type can be safely cast to {@link IJavaModel}.
+	 * A Java element with this type can be safely cast to {@link IVdmModel}.
 	 */
 	int VDM_MODEL = 1;
 
 	/**
 	 * Constant representing a Java project.
-	 * A Java element with this type can be safely cast to {@link IJavaProject}.
+	 * A Java element with this type can be safely cast to {@link IVdmProject}.
 	 */
 	int VDM_PROJECT = 2;
 

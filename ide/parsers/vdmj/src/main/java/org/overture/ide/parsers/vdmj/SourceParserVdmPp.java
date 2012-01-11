@@ -99,7 +99,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			result.setFatalError(e);
 		} catch (Throwable e)
 		{
-
+e.printStackTrace();
 			result.setFatalError(e);
 		}
 

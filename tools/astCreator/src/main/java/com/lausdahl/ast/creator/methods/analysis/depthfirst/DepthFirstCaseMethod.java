@@ -46,6 +46,13 @@ public class DepthFirstCaseMethod extends Method
 		this.requiredImports.add("java.util.List");
 
 		StringBuffer bodySb = new StringBuffer();
+		
+		bodySb.append("\t\tif(_queue.contains(node))\n");
+		bodySb.append("\t\t{ //already visiting this node from other path\n");
+		bodySb.append("\t\t\treturn;\n");
+		bodySb.append("\t\t}\n");
+		bodySb.append("\t\t_queue.add(node);\n");
+		
 		bodySb.append("\t\tin"+thisNodeMethodName+"(node);\n\n");
 		List<Field> allFields = new Vector<Field>();
 		allFields.addAll(c.getInheritedFields());
@@ -105,7 +112,8 @@ public class DepthFirstCaseMethod extends Method
 			}
 		}
 		
-		bodySb.append("\n\t\tout"+thisNodeMethodName+"(node);");
+		bodySb.append("\n\t\tout"+thisNodeMethodName+"(node);\n");
+		bodySb.append("\t\t_queue.remove(node);\n");
 
 		this.body = bodySb.toString();
 		// this.annotation="@override";

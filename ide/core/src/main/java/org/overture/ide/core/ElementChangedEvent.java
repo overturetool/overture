@@ -130,9 +130,9 @@ public class ElementChangedEvent extends EventObject
 	 * Returns the type of event being reported.
 	 * 
 	 * @return one of the event type constants
-	 * @see #POST_CHANGE
-	 * @see #PRE_AUTO_BUILD
-	 * @see #POST_RECONCILE
+//	 * @see #POST_CHANGE
+//	 * @see #PRE_AUTO_BUILD
+//	 * @see #POST_RECONCILE
 	 * @since 2.0
 	 */
 	public DeltaType getType()

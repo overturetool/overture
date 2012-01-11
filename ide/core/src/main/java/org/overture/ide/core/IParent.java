@@ -31,7 +31,7 @@ public interface IParent {
  * Unless otherwise specified by the implementing element,
  * the children are in no particular order.
  *
- * @exception JavaModelException if this element does not exist or if an
+ * @exception VdmModelException if this element does not exist or if an
  *      exception occurs while accessing its corresponding resource
  * @return the immediate children of this element
  */
@@ -41,7 +41,7 @@ IVdmElement[] getChildren() throws VdmModelException;
  * This is a convenience method, and may be more efficient than
  * testing whether <code>getChildren</code> is an empty array.
  *
- * @exception JavaModelException if this element does not exist or if an
+ * @exception VdmModelException if this element does not exist or if an
  *      exception occurs while accessing its corresponding resource
  * @return true if the immediate children of this element, false otherwise
  */

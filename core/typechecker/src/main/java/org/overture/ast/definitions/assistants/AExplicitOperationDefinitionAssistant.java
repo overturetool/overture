@@ -172,7 +172,7 @@ public class AExplicitOperationDefinitionAssistant {
 		}
 
 		parameters.add(plist);
-		APostOpExp postop = new APostOpExp(null,d.getLocation(), d.getName(), d.getPrecondition(), d.getPostcondition(), null, state, null);
+		APostOpExp postop = new APostOpExp(null,d.getLocation(), d.getName().clone(), d.getPrecondition(), d.getPostcondition(), null, state, null);
 
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getLocation(), 
 				d.getName().getPostName(d.getPostcondition().getLocation()), 

@@ -24,7 +24,6 @@
 package org.overturetool.vdmj.lex;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
@@ -54,6 +53,8 @@ public class LexTokenReader extends BacktrackInputReader
 	private int charsread;
 	/** The number of tokens read since the last push. */
 	private int tokensread;
+	/** The current offset */
+	private int offset;
 
 	/** The next character to process. */
 	private char ch;
@@ -165,9 +166,7 @@ public class LexTokenReader extends BacktrackInputReader
 	 *            The string (expression) to parse.
 	 * @param dialect
 	 *            Parse VDM++ or VDM-SL tokens.
-	 * @throws UnsupportedEncodingException
 	 */
-
 	public LexTokenReader(String expression, Dialect dialect)
 	{
 		super(expression);
@@ -185,9 +184,7 @@ public class LexTokenReader extends BacktrackInputReader
 	 *            Parse VDM++ or VDM-SL tokens.
 	 * @param charset
 	 *            The charset to use.
-	 * @throws UnsupportedEncodingException
 	 */
-
 	public LexTokenReader(String expression, Dialect dialect, String charset)
 	{
 		super(expression, charset);
@@ -282,7 +279,7 @@ public class LexTokenReader extends BacktrackInputReader
 			throws LexException
 	{
 		throw new LexException(number, msg, new LexLocation(file,
-				currentModule, line, pos, line, pos));
+				currentModule, line, pos, line, pos,-1, -1));//FIXME
 	}
 
 	/**
@@ -406,9 +403,18 @@ public class LexTokenReader extends BacktrackInputReader
 		{
 			charpos++;
 		}
-
+		
 		ch = c;
 		charsread++;
+		offset= getCurrentRawReadOffset();
+		
+//		if(ch == '\r')
+//		{
+//			ch = rdCh();
+//		}else
+//		{
+//			ch = c;
+//		}
 		return ch;
 	}
 
@@ -598,6 +604,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 		int tokline = linecount;
 		int tokpos = charpos;
+		int tokOffset = offset;
 		VDMToken type = null;
 		last = null;
 		boolean rdch = true;
@@ -800,7 +807,7 @@ public class LexTokenReader extends BacktrackInputReader
 					{
 						unpush();
 						last = new LexQuoteToken(name,
-								location(tokline, tokpos));
+								location(tokline, tokpos, tokOffset, offset));
 						type = VDMToken.QUOTE;
 					}
 					else
@@ -841,13 +848,13 @@ public class LexTokenReader extends BacktrackInputReader
 
 				checkFor('\"', 1005, "Expecting close double quote");
 				last = new LexStringToken(msg.toString(), location(tokline,
-						tokpos));
+						tokpos, tokOffset, offset));
 				rdch = false;
 				break;
 
 			case '\'':
 				last = new LexCharacterToken(rdQuotedCh(), location(tokline,
-						tokpos));
+						tokpos, tokOffset, offset));
 				rdCh();
 				checkFor('\'', 1006, "Expecting close quote after character");
 				rdch = false;
@@ -951,7 +958,7 @@ public class LexTokenReader extends BacktrackInputReader
 			default:
 				if (ch >= '0' && ch <= '9')
 				{
-					last = rdReal(tokline, tokpos);
+					last = rdReal(tokline, tokpos, tokOffset);
 					rdch = false;
 				}
 				else if (startOfName(ch))
@@ -967,7 +974,7 @@ public class LexTokenReader extends BacktrackInputReader
 							if (type == null)
 							{
 								last = new LexIdentifierToken(name.get(0),
-										(ch == '~'), location(tokline, tokpos));
+										(ch == '~'), location(tokline, tokpos, tokOffset, offset));
 								rdch = (ch == '~');
 							}
 							else
@@ -977,12 +984,12 @@ public class LexTokenReader extends BacktrackInputReader
 									case TRUE:
 									case FALSE:
 										last = new LexBooleanToken(type,
-												location(tokline, tokpos));
+												location(tokline, tokpos, tokOffset, offset));
 										break;
 
 									default:
 										last = new LexKeywordToken(type,
-												location(tokline, tokpos));
+												location(tokline, tokpos, tokOffset, offset));
 										break;
 								}
 							}
@@ -990,7 +997,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 						case 2:
 							last = new LexNameToken(name.get(0), name.get(1),
-									location(tokline, tokpos), false, true);
+									location(tokline, tokpos, tokOffset, offset), false, true);
 							break;
 
 						default:
@@ -1012,7 +1019,7 @@ public class LexTokenReader extends BacktrackInputReader
 
 		if (last == null)
 		{
-			last = new LexKeywordToken(type, location(tokline, tokpos));
+			last = new LexKeywordToken(type, location(tokline, tokpos, tokOffset, offset));
 		}
 
 		tokensread++;
@@ -1026,10 +1033,11 @@ public class LexTokenReader extends BacktrackInputReader
 	 *            The token start line.
 	 * @param tokpos
 	 *            The token start position.
+	 * @param endOffset 
 	 * @return A new LexLocation.
 	 */
 
-	private LexLocation location(int tokline, int tokpos)
+	private LexLocation location(int tokline, int tokpos,int startOffset, int endOffset)
 	{
 		//Fix for location on traces
 		if (this.location != null)
@@ -1039,7 +1047,7 @@ public class LexTokenReader extends BacktrackInputReader
 		else
 		{
 			return new LexLocation(file, currentModule, tokline, tokpos,
-					linecount, charpos);
+					linecount, charpos, startOffset, endOffset);
 		}
 	}
 
@@ -1051,11 +1059,12 @@ public class LexTokenReader extends BacktrackInputReader
 	 *            The start line of the number.
 	 * @param tokpos
 	 *            The start position of the number.
+	 * @param tokOffset 
 	 * @return Either a LexRealToken or a LexIntegerToken.
 	 * @throws LexException
 	 */
 
-	private LexToken rdReal(int tokline, int tokpos) throws LexException
+	private LexToken rdReal(int tokline, int tokpos, int tokOffset) throws LexException
 	{
 		String floatSyntax = "Expecting <digits>[.<digits>][e<+-><digits>]";
 		String value = rdNumber(10);
@@ -1078,7 +1087,7 @@ public class LexTokenReader extends BacktrackInputReader
 			{
 				// Somthing like rec.#1.field, so just return the integer
 				pop();
-				return new LexIntegerToken(value, location(tokline, tokpos));
+				return new LexIntegerToken(value, location(tokline, tokpos, tokOffset, offset));
 			}
 		}
 
@@ -1131,10 +1140,10 @@ public class LexTokenReader extends BacktrackInputReader
 			String real = "+" + value + "." + fraction + "e"
 					+ (negative ? "-" : "+") + exponent;
 
-			return new LexRealToken(real, location(tokline, tokpos));
+			return new LexRealToken(real, location(tokline, tokpos, tokOffset, offset));
 		}
 
-		return new LexIntegerToken(value, location(tokline, tokpos));
+		return new LexIntegerToken(value, location(tokline, tokpos, tokOffset, offset));
 	}
 
 	/**

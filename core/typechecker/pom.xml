@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>typechecker</artifactId>
-	<name>The VDM++ Type Checker</name>
+	<name>The VDM Type Checker</name>
 <version>2.2.0</version>
 
 	<build>

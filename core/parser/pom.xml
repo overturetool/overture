@@ -10,7 +10,7 @@
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>parser</artifactId>
 	<version>2.2.0</version>	
-<name>The VDM++ parser</name>
+<name>The VDM parser</name>
 
 	<build>
 		<plugins>

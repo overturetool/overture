@@ -339,7 +339,7 @@ public class AExplicitFunctionDefinitionAssistant {
 				d.getPostcondition(), null, null, null, null, null, null,
 				null, false, false, null, null, null, null, parameters.size() > 1, null);
 		
-		def.setAccess(d.getAccess());
+		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}

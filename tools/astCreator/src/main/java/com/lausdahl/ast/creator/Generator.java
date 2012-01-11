@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.EnumDefinition;
+import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
+import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
@@ -14,6 +18,7 @@ import com.lausdahl.ast.creator.env.BaseEnvironment;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
+import com.lausdahl.ast.creator.methods.SetMethod;
 import com.lausdahl.ast.creator.methods.analysis.depthfirst.DepthFirstCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnswerAcceptMethod;
@@ -385,6 +390,13 @@ public class Generator
 		IClassDefinition adaptor = ClassFactory.createCustom(new JavaName(source.getAnalysisPackage(), "DepthFirstAnalysisAdaptor"), source);
 		// adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
 		adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
+		Field queue = new Field(source);
+		queue.name = "queue";
+		queue.accessspecifier = AccessSpecifier.Protected;
+		queue.type = new GenericArgumentedIInterfceDefinition(BaseEnvironment.queueDef, source.iNode.getName().getName());
+		queue.setCustomInitializer("new java.util.LinkedList<"+source.iNode.getName().getName()+">()");
+		adaptor.addField(queue);
+		adaptor.addMethod(new SetMethod(adaptor,queue,source));
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
 		{

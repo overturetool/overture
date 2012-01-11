@@ -37,26 +37,11 @@ import org.overturetool.vdmj.lex.Dialect;
 public interface IVdmProject extends IAdaptable
 {
 	public static final IContentType externalFileContentType = Platform.getContentTypeManager().getContentType(ICoreConstants.EXTERNAL_CONTENT_TYPE_ID);
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.overture.ide.utility.IVdmProject#setBuilder(org.overturetool.vdmj .Release)
-	 */
 	public void setBuilder(Release languageVersion)
 			throws CoreException;
 
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.overture.ide.utility.IVdmProject#hasBuilder()
-	 */
 	public boolean hasBuilder() throws CoreException;
 
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.overture.ide.utility.IVdmProject#getLanguageVersion()
-	 */
 	public Release getLanguageVersion() throws CoreException;
 
 	public String getLanguageVersionName() throws CoreException;

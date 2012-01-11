@@ -22,7 +22,7 @@ public class LexIdentifierToken extends LexToken {
 
 		LexLocation loc = new LexLocation(location.file, name,
 				location.startLine, location.startPos, location.endLine,
-				location.endPos);
+				location.endPos, location.startOffset, location.endOffset);
 
 		return new LexNameToken("CLASS", name, loc);
 	}

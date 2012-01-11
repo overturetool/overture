@@ -16,6 +16,9 @@ public class BaseEnvironment
 
 	public static final IInterfaceDefinition serializableDef = new PredefinedClassDefinition("java.io", "Serializable", true);
 	public static final IInterfaceDefinition listDef = new PredefinedClassDefinition("java.util", "List", true);
+	
+	public static final IInterfaceDefinition queueDef = new PredefinedClassDefinition("java.util", "Queue", true);
+	
 	public static final IInterfaceDefinition vectorDef = new PredefinedClassDefinition("java.util", "Vector", true);
 	public static final IInterfaceDefinition linkedListDef = new PredefinedClassDefinition("java.util", "LinkedList", true);
 	public static final IInterfaceDefinition collectionDef = new PredefinedClassDefinition("java.util", "Collection", true);
@@ -56,6 +59,7 @@ public class BaseEnvironment
 		baseClasses.addAll(classes);
 		interfaces.add(serializableDef);
 		interfaces.add(listDef);
+		interfaces.add(queueDef);
 		interfaces.add(linkedListDef);
 		interfaces.add(collectionDef);
 		baseClasses.add(vectorDef);

@@ -126,9 +126,6 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 
 	/***
 	 * This method sync the project resources. It is called before an instance of the AbstractBuilder is created
-	 * 
-	 * @param project
-	 *            The project which should be synced
 	 */
 	public void syncProjectResources()
 	{

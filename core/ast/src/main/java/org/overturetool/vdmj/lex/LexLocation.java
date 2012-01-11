@@ -51,7 +51,7 @@ public class LexLocation implements Serializable , ExternalNode
 	@Override
 	public LexLocation clone()
 	{
-		return new LexLocation(file, module, startLine, startPos, endLine, endPos);
+		return new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
 	}
 	private static final long serialVersionUID = 1L;
 
@@ -80,16 +80,21 @@ public class LexLocation implements Serializable , ExternalNode
 	public final int endLine;
 	/** The character position of the end of the token. */
 	public final int endPos;
+	
+	public final int startOffset;
+	
+	public final int endOffset;
 
 	/** The number of times the location has been executed. */
 	public long hits = 0;
 
 	/**
 	 * Create a location with the given fields.
+	 * @param endOffset 
 	 */
 
 	public LexLocation(File file, String module,
-		int startLine, int startPos, int endLine, int endPos)
+		int startLine, int startPos, int endLine, int endPos, int startOffset, int endOffset)
 	{
 		this.file = file;
 		this.module = module;
@@ -97,6 +102,8 @@ public class LexLocation implements Serializable , ExternalNode
 		this.startPos = startPos;
 		this.endLine = endLine;
 		this.endPos = endPos;
+		this.startOffset = startOffset;
+		this.endOffset = endOffset;
 		synchronized (allLocations)
 		{
 			allLocations.add(this);
@@ -109,7 +116,7 @@ public class LexLocation implements Serializable , ExternalNode
 
 	public LexLocation()
 	{
-		this(new File("?"), "?", 0, 0, 0, 0);
+		this(new File("?"), "?", 0, 0, 0, 0, 0, 0);
 	}
 
 	@Override
@@ -250,7 +257,9 @@ public class LexLocation implements Serializable , ExternalNode
 			name.location.startLine,
 			name.location.startPos,
 			upto.location.endLine,
-			upto.location.endPos);
+			upto.location.endPos,
+			upto.location.startOffset,
+			upto.location.endOffset);
 
 		nameSpans.put(name, span);
 	}

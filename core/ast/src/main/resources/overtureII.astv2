@@ -604,7 +604,7 @@ Aspect Declaration
     
 %definition 
     =   [location]:location 
-        [name]:LexNameToken 
+        (name):LexNameToken // try out () 
         [nameScope]:nameScope 
         [used]:java_Boolean 
         (classDefinition):definition.#class 
@@ -615,7 +615,7 @@ Aspect Declaration
 
 %definition->#class
     =   (supertypes):type* 
-        [supernames]:LexNameToken* 
+        (supernames):LexNameToken*// try out () 
         (definitions):definition* 
         (allInheritedDefinitions):definition*
         (localInheritedDefinitions):definition* 

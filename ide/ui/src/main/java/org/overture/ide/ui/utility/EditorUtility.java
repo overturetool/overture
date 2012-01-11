@@ -26,8 +26,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.overture.ide.core.utility.FileUtility;
-import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class EditorUtility
@@ -56,9 +54,9 @@ public class EditorUtility
 		marker.setAttribute(IMarker.MESSAGE, message);
 		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 
-		SourceLocationConverter converter = new SourceLocationConverter(FileUtility.getContent(file));
-		marker.setAttribute(IMarker.CHAR_START,converter.getStartPos( location));
-		marker.setAttribute(IMarker.CHAR_END,converter.getEndPos(location));
+//		SourceLocationConverter converter = new SourceLocationConverter(FileUtility.getContent(file));
+		marker.setAttribute(IMarker.CHAR_START,location.startOffset);//converter.getStartPos( location));
+		marker.setAttribute(IMarker.CHAR_END,location.endOffset);//converter.getEndPos(location));
 		IDE.gotoMarker(editor, marker);
 
 		marker.delete();

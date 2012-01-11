@@ -1341,7 +1341,7 @@ public class DefinitionReader extends SyntaxReader
 		{
 			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
-			AInstanceVariableDefinition ivd = new AInstanceVariableDefinition(def.getName().location, def.getName(), NameScope.STATE, null, null, access, def.getType(), def.getExpression(), null, !(def.getExpression() instanceof AUndefinedExp), def.getName().getOldName());
+			AInstanceVariableDefinition ivd = new AInstanceVariableDefinition(def.getName().location, def.getName().clone(), NameScope.STATE, null, null, access, def.getType(), def.getExpression(), null, !(def.getExpression() instanceof AUndefinedExp), def.getName().getOldName());
 			ivd.setAccess(access);
 			return ivd;
 		}

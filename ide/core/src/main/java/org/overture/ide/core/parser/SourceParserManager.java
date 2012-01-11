@@ -140,14 +140,13 @@ public class SourceParserManager
 	}
 
 	/***
-	 * Parses files in a project which has a content type and sould be parsed
+	 * Parses files in a project which has a content type and should be parsed
 	 * before a build could be performed
 	 * 
-	 * @param project
+	 * @param vdmProject
 	 *            the project
-	 * @param natureId
-	 *            the nature if which is used by the parser, it is used to store
-	 *            the ast and look up if a file needs parsing
+	 * @param model
+	 *            the model with ast
 	 * @param monitor
 	 *            an optional monitor, can be null
 	 * @throws CoreException
@@ -189,8 +188,6 @@ public class SourceParserManager
 	/**
 	 * Parse a single file from a project
 	 * 
-	 * @param project
-	 *            the project where the file originates from
 	 * @param source
 	 *            the file to be parsed
 	 * @throws CoreException
@@ -199,11 +196,6 @@ public class SourceParserManager
 	public static void parseFile(final IVdmSourceUnit source)
 			throws CoreException, IOException
 	{
-
-		// IVdmModel model = file.getProject().getModel();
-		// if (model != null && model.hasFile(file))
-		// return;
-
 		try
 		{
 			ISourceParser parser = SourceParserManager.getInstance()

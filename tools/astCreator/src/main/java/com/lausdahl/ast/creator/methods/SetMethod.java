@@ -51,8 +51,8 @@ public class SetMethod extends Method {
 						sb.append("\t\t}\n");
 						break;
 					case Tree:
-						if(!f.isAspect)
-						{
+//						if(!f.isAspect)
+//						{
 							sb.append("\t\tif (this." + f.getName() + " != null) {\n");
 							sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
 							sb.append("\t\t}\n");
@@ -62,7 +62,7 @@ public class SetMethod extends Method {
 							sb.append("\t\t}\n");
 							sb.append("\t\t\tvalue.parent(this);\n");
 							sb.append("\t\t}\n");
-						}
+//						}
 						break;
 					
 				}

@@ -42,7 +42,7 @@ public class VdmPpRuntimeUtil
 		if (defaultModuleName == null || (classes.isEmpty()))
 		{
 			LexNameToken name =new LexNameToken("CLASS", "DEFAULT", new LexLocation());
-			defaultModule = new AClassClassDefinition(name.getLocation(),name,NameScope.CLASSNAME,true,null,null,null,null,null,null,null,null);
+			defaultModule = new AClassClassDefinition(name.getLocation(),name,NameScope.CLASSNAME,true,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
 //			classes.add(defaultModule);
 		} 
 //		else

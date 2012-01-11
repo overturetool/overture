@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -49,6 +48,7 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.overture.ast.definitions.AMutexSyncDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ide.core.IVdmElement;
@@ -57,25 +57,27 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
+import org.overture.ide.ui.utility.ast.AstLocationSearcher;
 
-public abstract class VdmEditor extends TextEditor {
+public abstract class VdmEditor extends TextEditor
+{
 	ISourceViewer viewer;
 
 	/**
-	 * Updates the Java outline page selection and this editor's range
-	 * indicator.
+	 * Updates the Java outline page selection and this editor's range indicator.
 	 * 
 	 * @since 3.0
 	 */
 	private class EditorSelectionChangedListener extends
-			AbstractSelectionChangedListener {
+			AbstractSelectionChangedListener
+	{
 
 		/*
-		 * @see
-		 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged
-		 * (org.eclipse.jface.viewers. SelectionChangedEvent)
+		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged (org.eclipse.jface.viewers.
+		 * SelectionChangedEvent)
 		 */
-		public void selectionChanged(SelectionChangedEvent event) {
+		public void selectionChanged(SelectionChangedEvent event)
+		{
 			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
 			VdmEditor.this.selectionChanged();
 		}
@@ -89,11 +91,12 @@ public abstract class VdmEditor extends TextEditor {
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 
 	VdmContentOutlinePage fOutlinePage = null;
-//	protected SourceReferenceManager sourceReferenceManager = null;
+	// protected SourceReferenceManager sourceReferenceManager = null;
 
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
 
-	public VdmEditor() {
+	public VdmEditor()
+	{
 
 		super();
 		setDocumentProvider(new VdmDocumentProvider());
@@ -102,10 +105,10 @@ public abstract class VdmEditor extends TextEditor {
 
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent,
-			IVerticalRuler ruler, int styles) {
+			IVerticalRuler ruler, int styles)
+	{
 
-		viewer = new VdmSourceViewer(parent, ruler, getOverviewRuler(),
-				isOverviewRulerVisible(), styles);
+		viewer = new VdmSourceViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 		getSourceViewerDecorationSupport(viewer);
 
 		return viewer;
@@ -113,7 +116,8 @@ public abstract class VdmEditor extends TextEditor {
 	}
 
 	@Override
-	protected void initializeEditor() {
+	protected void initializeEditor()
+	{
 		super.initializeEditor();
 		fVdmSourceViewer = getVdmSourceViewerConfiguration();
 		setSourceViewerConfiguration(fVdmSourceViewer);
@@ -123,9 +127,12 @@ public abstract class VdmEditor extends TextEditor {
 
 	public abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration();
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class required) {
-		if (IContentOutlinePage.class.equals(required)) {
-			if (fOutlinePage == null) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
+	{
+		if (IContentOutlinePage.class.equals(required))
+		{
+			if (fOutlinePage == null)
+			{
 				fOutlinePage = createOutlinePage();
 			}
 			return fOutlinePage;
@@ -139,64 +146,43 @@ public abstract class VdmEditor extends TextEditor {
 	 * 
 	 * @return the created Java outline page
 	 */
-	protected VdmContentOutlinePage createOutlinePage() {
+	protected VdmContentOutlinePage createOutlinePage()
+	{
 		// VdmContentOutlinePage page= new
 		// VdmContentOutlinePage(fOutlinerContextMenuId, this);
 		VdmContentOutlinePage page = new VdmContentOutlinePage(this);
 		setOutlinePageInput(page, getEditorInput());
-		page.addSelectionChangedListener(new ISelectionChangedListener() {
+		page.addSelectionChangedListener(new ISelectionChangedListener()
+		{
 
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void selectionChanged(SelectionChangedEvent event)
+			{
 				ISelection s = event.getSelection();
-				if (s instanceof IStructuredSelection) {
+				if (s instanceof IStructuredSelection)
+				{
 					IStructuredSelection ss = (IStructuredSelection) s;
 					@SuppressWarnings("rawtypes")
 					List elements = ss.toList();
-					if (!elements.isEmpty()) {
-						if (elements.get(0) instanceof INode) {
+					if (!elements.isEmpty())
+					{
+						if (elements.get(0) instanceof INode)
+						{
 							INode node = (INode) elements.get(0);
-							// FIEMW
-//							if (sourceReferenceManager != null) {
-//								// IVdmSourceUnit unit = (IVdmSourceUnit)
-//								// vdmElement;
-//
-//								int endPos = 0;
-//
-//								// fix for VDMJ endPos == 0 when rest of the
-//								// line is
-//								// marked as location
-//								if (node.getLocation().endPos == 0) {
-//									endPos = sourceReferenceManager
-//											.getLineOffset(node.getLocation().endLine)
-//											- sourceReferenceManager.getLineOffset(node
-//													.getLocation().startLine)
-//											- node.getLocation().startPos;
-//								} else {
-//									endPos = node.getLocation().endPos
-//											- node.getLocation().startPos;
-//								}
-//								selectAndReveal(
-//										sourceReferenceManager.getLineOffset(node
-//												.getLocation().startLine)
-//												+ node.getLocation().startPos
-//												- 1, endPos);
-//
-//							}
+							int[] offsetLength = AstLocationSearcher.getNodeOffset(node);
+							selectAndReveal(offsetLength[0],offsetLength[1]);
 						}
 					}
 				}
-
 			}
 		});
 		return page;
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets .Composite)
 	 */
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent)
+	{
 		super.createPartControl(parent);
 
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
@@ -204,28 +190,30 @@ public abstract class VdmEditor extends TextEditor {
 
 		IEditorInput input = getEditorInput();
 		IDocument doc = getDocumentProvider().getDocument(input);
-		if (doc instanceof VdmDocument) {
+		if (doc instanceof VdmDocument)
+		{
 			VdmDocument vdmDoc = (VdmDocument) doc;
-			try {
+			try
+			{
 				if (vdmDoc != null && vdmDoc.getSourceUnit() != null
-						&& !vdmDoc.getSourceUnit().hasParseTree()) {
+						&& !vdmDoc.getSourceUnit().hasParseTree())
+				{
 					SourceParserManager.parseFile(vdmDoc.getSourceUnit());
 				}
-			} catch (CoreException e) {
-				VdmUIPlugin.log(
-						"Faild to do initial parse of SourceUnit in editor", e);
-			} catch (IOException e) {
-				VdmUIPlugin.log(
-						"Faild to do initial parse of SourceUnit in editor", e);
+			} catch (CoreException e)
+			{
+				VdmUIPlugin.log("Faild to do initial parse of SourceUnit in editor", e);
+			} catch (IOException e)
+			{
+				VdmUIPlugin.log("Faild to do initial parse of SourceUnit in editor", e);
 			}
 
-		} else {
+		} else
+		{
 
-			if (input instanceof FileStoreEditorInput) {
-				MessageDialog d = new MessageDialog(PlatformUI.getWorkbench()
-						.getDisplay().getActiveShell(), "Error", null,
-						"Cannot open a vdm file outside the workspace",
-						MessageDialog.ERROR, new String[] { "Ok" }, 0);
+			if (input instanceof FileStoreEditorInput)
+			{
+				MessageDialog d = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", null, "Cannot open a vdm file outside the workspace", MessageDialog.ERROR, new String[] { "Ok" }, 0);
 				d.open();
 
 			}
@@ -297,10 +285,12 @@ public abstract class VdmEditor extends TextEditor {
 	/*
 	 * @see AbstractTextEditor#doSetInput
 	 */
-	protected void doSetInput(IEditorInput input) throws CoreException {
+	protected void doSetInput(IEditorInput input) throws CoreException
+	{
 
 		ISourceViewer sourceViewer = getSourceViewer();
-		if (!(sourceViewer instanceof ISourceViewerExtension2)) {
+		if (!(sourceViewer instanceof ISourceViewerExtension2))
+		{
 			setPreferenceStore(createCombinedPreferenceStore(input));
 			internalDoSetInput(input);
 			return;
@@ -314,8 +304,7 @@ public abstract class VdmEditor extends TextEditor {
 
 		// install & register preference store listener
 		sourceViewer.configure(getSourceViewerConfiguration());
-		getSourceViewerDecorationSupport(sourceViewer).install(
-				getPreferenceStore());
+		getSourceViewerDecorationSupport(sourceViewer).install(getPreferenceStore());
 
 		internalDoSetInput(input);
 		// ISourceViewer sourceViewer = super.getSourceViewer();
@@ -343,41 +332,30 @@ public abstract class VdmEditor extends TextEditor {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.texteditor.AbstractTextEditor#doSetSelection(ISelection)
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSetSelection(ISelection)
 	 */
-	protected void doSetSelection(ISelection selection) {
+	protected void doSetSelection(ISelection selection)
+	{
 		super.doSetSelection(selection);
 		synchronizeOutlinePageSelection();
 	}
 
 	/*
 	 * @see org.eclipse.ui.part.WorkbenchPart#getOrientation()
-	 * 
 	 * @since 3.1
 	 */
-	public int getOrientation() {
+	public int getOrientation()
+	{
 		return SWT.LEFT_TO_RIGHT; // Java editors are always left to right by
 									// default
 	}
 
-	//FIXME
-//	public SourceReferenceManager getSourceReferenceManager() {
-//		if(this.sourceReferenceManager == null)
-//		{
-//			IVdmElement inputElement = getInputVdmElement();
-//			if (inputElement instanceof IVdmSourceUnit) {
-//				this.sourceReferenceManager = new SourceReferenceManager(
-//				(IVdmSourceUnit) inputElement);
-//			}
-//		}
-//		return this.sourceReferenceManager;
-//	}
-
-	private void internalDoSetInput(IEditorInput input) throws CoreException {
+	private void internalDoSetInput(IEditorInput input) throws CoreException
+	{
 		ISourceViewer sourceViewer = getSourceViewer();
 		VdmSourceViewer vdmSourceViewer = null;
-		if (sourceViewer instanceof VdmSourceViewer) {
+		if (sourceViewer instanceof VdmSourceViewer)
+		{
 			vdmSourceViewer = (VdmSourceViewer) sourceViewer;
 		}
 		// IPreferenceStore store = getPreferenceStore();
@@ -389,20 +367,12 @@ public abstract class VdmEditor extends TextEditor {
 		super.doSetInput(input);
 
 		IVdmElement inputElement = getInputVdmElement();
-		if (inputElement instanceof IVdmSourceUnit) {
-//FIXME
-			//			if (sourceReferenceManager != null) {
-//				sourceReferenceManager.shutdown(null);
-//			}
-//			sourceReferenceManager = getSourceReferenceManager();
-//					
-//			sourceReferenceManager.startup(null);
-		}
 
-		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null) {
-			IReconciler reconciler = getSourceViewerConfiguration()
-					.getReconciler(vdmSourceViewer);
-			if (reconciler != null) {
+		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null)
+		{
+			IReconciler reconciler = getSourceViewerConfiguration().getReconciler(vdmSourceViewer);
+			if (reconciler != null)
+			{
 				reconciler.install(vdmSourceViewer);
 				vdmSourceViewer.setReconciler(reconciler);
 
@@ -412,7 +382,8 @@ public abstract class VdmEditor extends TextEditor {
 		if (fEncodingSupport != null)
 			fEncodingSupport.reset();
 
-		if (fOutlinePage == null) {
+		if (fOutlinePage == null)
+		{
 			fOutlinePage = createOutlinePage();
 		}
 		setOutlinePageInput(fOutlinePage, input);
@@ -423,16 +394,15 @@ public abstract class VdmEditor extends TextEditor {
 	}
 
 	/**
-	 * Creates and returns the preference store for this Java editor with the
-	 * given input.
+	 * Creates and returns the preference store for this Java editor with the given input.
 	 * 
 	 * @param input
 	 *            The editor input for which to create the preference store
 	 * @return the preference store for this editor
-	 * 
 	 * @since 3.0
 	 */
-	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input) {
+	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input)
+	{
 		List<IPreferenceStore> stores = new ArrayList<IPreferenceStore>(3);
 
 		// IJavaProject project= EditorUtility.getJavaProject(input);
@@ -448,9 +418,7 @@ public abstract class VdmEditor extends TextEditor {
 		stores.add(PlatformUI.getPreferenceStore());
 		// stores.get(0).setValue(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER,true);
 
-		return new ChainedPreferenceStore(
-				(IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores
-						.size()]));
+		return new ChainedPreferenceStore((IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores.size()]));
 	}
 
 	/**
@@ -462,7 +430,8 @@ public abstract class VdmEditor extends TextEditor {
 	 *            the editor input
 	 */
 	protected void setOutlinePageInput(VdmContentOutlinePage page,
-			IEditorInput input) {
+			IEditorInput input)
+	{
 		if (page == null)
 			return;
 
@@ -474,24 +443,20 @@ public abstract class VdmEditor extends TextEditor {
 
 	}
 
-	public IVdmElement getInputVdmElement() {
+	public IVdmElement getInputVdmElement()
+	{
 		IDocumentProvider docProvider = getDocumentProvider();
-		if (docProvider != null) {
+		if (docProvider != null)
+		{
 			IDocument doc = docProvider.getDocument(getEditorInput());
-			if (doc instanceof VdmDocument) {
+			if (doc instanceof VdmDocument)
+			{
 				VdmDocument vdmDoc = (VdmDocument) doc;
-				// IVdmProject project = vdmDoc.getProject();
-				// IVdmModel model = project.getModel();
-				// IVdmSourceUnit sourceUnit =
-				// model.getVdmSourceUnit(vdmDoc.getFile());
 				IVdmSourceUnit sourceUnit = vdmDoc.getSourceUnit();
-				if (sourceUnit != null) {
-					return sourceUnit;// return
-										// rootNode.filter(vdmDoc.getFile());
+				if (sourceUnit != null)
+				{
+					return sourceUnit;
 				}
-				// else
-				// System.err.println("No root parsed for: " + sourceUnit);
-
 			}
 		}
 		return null;
@@ -500,8 +465,10 @@ public abstract class VdmEditor extends TextEditor {
 	/**
 	 * Informs the editor that its outliner has been closed.
 	 */
-	public void outlinePageClosed() {
-		if (fOutlinePage != null) {
+	public void outlinePageClosed()
+	{
+		if (fOutlinePage != null)
+		{
 			fOutlinePage = null;
 			resetHighlightRange();
 		}
@@ -512,7 +479,8 @@ public abstract class VdmEditor extends TextEditor {
 	 * 
 	 * @since 3.0
 	 */
-	protected void selectionChanged() {
+	protected void selectionChanged()
+	{
 		if (getSelectionProvider() == null)
 			return;
 		INode element = computeHighlightRangeSourceReference();
@@ -529,12 +497,14 @@ public abstract class VdmEditor extends TextEditor {
 
 	}
 
-	protected void setSelection(INode reference, boolean moveCursor) {
+	protected void setSelection(INode reference, boolean moveCursor)
+	{
 		if (getSelectionProvider() == null)
 			return;
 
 		ISelection selection = getSelectionProvider().getSelection();
-		if (selection instanceof ITextSelection) {
+		if (selection instanceof ITextSelection)
+		{
 			ITextSelection textSelection = (ITextSelection) selection;
 			// PR 39995: [navigation] Forward history cleared after going back
 			// in navigation history:
@@ -543,12 +513,12 @@ public abstract class VdmEditor extends TextEditor {
 			// this is called from a PostSelectionEvent that should only update
 			// the magnet)
 			if (moveCursor
-					&& (textSelection.getOffset() != 0 || textSelection
-							.getLength() != 0))
+					&& (textSelection.getOffset() != 0 || textSelection.getLength() != 0))
 				markInNavigationHistory();
 		}
 
-		if (reference != null) {
+		if (reference != null)
+		{
 
 			StyledText textWidget = null;
 
@@ -669,61 +639,63 @@ public abstract class VdmEditor extends TextEditor {
 	}
 
 	/**
-	 * Synchronizes the outliner selection with the given element position in
-	 * the editor.
+	 * Synchronizes the outliner selection with the given element position in the editor.
 	 * 
 	 * @param element
 	 *            the java element to select
 	 */
-	protected void synchronizeOutlinePage(INode element) {
+	protected void synchronizeOutlinePage(INode element)
+	{
 		// TODO: don't search for mutexes
 		if (element instanceof AMutexSyncDefinition)
 			return;
 		if (element instanceof ABlockSimpleBlockStm)
 			return;
 
-		try {
+		try
+		{
 			synchronizeOutlinePage(element, false);// true
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 
 		}
 	}
 
 	/**
-	 * Synchronizes the outliner selection with the given element position in
-	 * the editor.
+	 * Synchronizes the outliner selection with the given element position in the editor.
 	 * 
 	 * @param element
 	 *            the java element to select
 	 * @param checkIfOutlinePageActive
-	 *            <code>true</code> if check for active outline page needs to be
-	 *            done
+	 *            <code>true</code> if check for active outline page needs to be done
 	 */
 	protected void synchronizeOutlinePage(INode element,
-			boolean checkIfOutlinePageActive) {
+			boolean checkIfOutlinePageActive)
+	{
 		if (fOutlinePage != null && element != null
-				&& !(checkIfOutlinePageActive)) {// && isJavaOutlinePageActive()
+				&& !(checkIfOutlinePageActive))
+		{// && isJavaOutlinePageActive()
 			fOutlinePage.select(element);
 		}
 	}
 
 	/**
-	 * Synchronizes the outliner selection with the actual cursor position in
-	 * the editor.
+	 * Synchronizes the outliner selection with the actual cursor position in the editor.
 	 */
-	public void synchronizeOutlinePageSelection() {
+	public void synchronizeOutlinePageSelection()
+	{
 		synchronizeOutlinePage(computeHighlightRangeSourceReference());
 	}
 
 	/**
-	 * Computes and returns the source reference that includes the caret and
-	 * serves as provider for the outline page selection and the editor range
-	 * indication.
+	 * Computes and returns the source reference that includes the caret and serves as provider for the outline page
+	 * selection and the editor range indication.
 	 * 
 	 * @return the computed source reference
 	 * @since 3.0
 	 */
-	protected INode computeHighlightRangeSourceReference() {
+	protected INode computeHighlightRangeSourceReference()
+	{
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (sourceViewer == null)
 			return null;
@@ -733,11 +705,12 @@ public abstract class VdmEditor extends TextEditor {
 			return null;
 
 		int caret = 0;
-		if (sourceViewer instanceof ITextViewerExtension5) {
+		if (sourceViewer instanceof ITextViewerExtension5)
+		{
 			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			caret = extension.widgetOffset2ModelOffset(styledText
-					.getCaretOffset());
-		} else {
+			caret = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
+		} else
+		{
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret = offset + styledText.getCaretOffset();
 		}
@@ -772,47 +745,50 @@ public abstract class VdmEditor extends TextEditor {
 	 * @param offset
 	 *            the offset inside of the requested element
 	 * @param reconcile
-	 *            <code>true</code> if editor input should be reconciled in
-	 *            advance
+	 *            <code>true</code> if editor input should be reconciled in advance
 	 * @return the most narrow java element
 	 * @since 3.0
 	 */
-	protected INode getElementAt(int offset, boolean reconcile) {
+	protected INode getElementAt(int offset, boolean reconcile)
+	{
 		return getElementAt(offset);
 	}
 
-	public INode getElementAt(int offset) {
+	public INode getElementAt(int offset)
+	{
+		IVdmElement element = getInputVdmElement();
+		List<INode> nodes = null;
+		if (element instanceof IVdmSourceUnit)
+		{
+			nodes = ((IVdmSourceUnit) element).getParseList();
+		}
+		INode node = AstLocationSearcher.search(nodes, offset);
 
-		//FIXME
-//		if (sourceReferenceManager != null) {
-//			INode node = sourceReferenceManager.getNodeAt(
-//					offset,
-//					(IResource) this.getEditorInput().getAdapter(
-//							IResource.class));
-//			if (node != null) {
-//				// if(node.getName() != null)
-//				// System.out.println("Element hit: " + node.getName());
-//
-//				return node;
-//			}
-//
-//		}
-		return null;
+		// System.out.println(getSourceViewer().getTextWidget().getText(offset, offset+1));
+		// System.out.println("Found element with offset: "+offset+" = "+(node!=null?node.getClass():"null")+" - offset:"+AstLocationSearcher.getNodeOffset(node)+
+		// "----"+node);
+
+		// Get a definition to sync with outline, where only definitions are shown. If not a definition the search up
+		// the tree until one is found.
+		INode def = null;
+		if (node instanceof PDefinition)
+		{
+			def = node;
+		} else if (node != null)
+		{
+			def = node.getAncestor(PDefinition.class);
+		}
+		// System.out.println("Using def = "+def);
+		return def;
+
 	}
 
 	@Override
-	public void dispose() {
-//		try {
-//			if (sourceReferenceManager != null) {
-//				sourceReferenceManager.shutdown(getProgressMonitor());
-//			}
-//			sourceReferenceManager = null;
-//		} catch (CoreException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+	public void dispose()
+	{
 		super.dispose();
-		if (fOutlinePage != null) {
+		if (fOutlinePage != null)
+		{
 			fOutlinePage.dispose();
 		}
 
@@ -857,16 +833,16 @@ public abstract class VdmEditor extends TextEditor {
 	// configureToggleCommentAction();
 	// }
 
-//	/**
-//	 * Configure actions
-//	 */
-//	private void configureToggleCommentAction() {
-//		IAction action = getAction("ToggleComment"); //$NON-NLS-1$
-//		if (action instanceof ToggleCommentAction) {
-//			ISourceViewer sourceViewer = getSourceViewer();
-//			SourceViewerConfiguration configuration = getSourceViewerConfiguration();
-//			((ToggleCommentAction) action).configure(sourceViewer,
-//					configuration);
-//		}
-//	}
+	// /**
+	// * Configure actions
+	// */
+	// private void configureToggleCommentAction() {
+	//		IAction action = getAction("ToggleComment"); //$NON-NLS-1$
+	// if (action instanceof ToggleCommentAction) {
+	// ISourceViewer sourceViewer = getSourceViewer();
+	// SourceViewerConfiguration configuration = getSourceViewerConfiguration();
+	// ((ToggleCommentAction) action).configure(sourceViewer,
+	// configuration);
+	// }
+	// }
 }

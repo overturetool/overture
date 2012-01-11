@@ -50,7 +50,7 @@ public class LatexStreamReader extends InputStreamReader
 	public int read(char[] array) throws IOException
 	{
 		BufferedReader br = new BufferedReader(this);
-		String line = br.readLine();
+		String line = readLine(br);
 
 		boolean supress = false;
 		int pos = 0;
@@ -62,14 +62,14 @@ public class LatexStreamReader extends InputStreamReader
 			if (trimmed.startsWith("%"))
  			{
  				supress = true;
- 				line = "";
+ 				line =""; getEmptyLine(line.length());
  			}
 			else if (trimmed.startsWith("\\"))
 			{
     			if (trimmed.startsWith("\\begin{vdm_al}"))
     			{
     				supress = false;
-    				line = "";
+    				line = getEmptyLine(line.length());
     			}
     			else if (trimmed.startsWith("\\end{vdm_al}") ||
     					 trimmed.startsWith("\\section") ||
@@ -77,7 +77,7 @@ public class LatexStreamReader extends InputStreamReader
     					 trimmed.startsWith("\\document"))
     			{
     				supress = true;
-    				line = "";
+    				line ="";// getEmptyLine(line.length());
     			}
 			}
 			else if (trimmed.startsWith("#"))
@@ -92,20 +92,23 @@ public class LatexStreamReader extends InputStreamReader
     					supress = true;
     				}
 
-    				line = "";
+    				if(!supress)
+    				{
+    					line = getEmptyLine(line.length());
+    				}
     			}
     			else if (trimmed.startsWith("#else"))
     			{
     				if (!ifstack.peek())
     				{
     					supress = !supress;
-    					line = "";
+    					line = getEmptyLine(line.length());
     				}
     			}
     			else if (trimmed.startsWith("#endif"))
     			{
     				supress = ifstack.pop();
-    				line = "";
+    				line = getEmptyLine(line.length());
     			}
 			}
 
@@ -113,13 +116,62 @@ public class LatexStreamReader extends InputStreamReader
 			{
 				line.getChars(0, line.length(), array, pos);
 				pos += line.length();
+			}else
+			{
+				getEmptyLine(line.length()).getChars(0, line.length(), array, pos);
+				pos += line.length();
 			}
 
-			array[pos++] = '\n';
-			line = br.readLine();
+//			array[pos++] = '\n';
+			line = readLine(br);//br.readLine();
 		}
 
 		br.close();
+//		System.out.println("\n\n---------------------------\n");
+//		for (char c : array)
+//		{
+//			System.out.print(c);
+//		}System.out.println();
 		return pos;
+	}
+	
+	private String getEmptyLine(int size)
+	{
+		StringBuffer buf = new StringBuffer();
+		for(int i=0;i<size;i++)
+		{
+			buf.append(" ");
+		}
+		return buf.toString();
+	}
+
+	private String readLine(BufferedReader br) throws IOException
+	{
+		StringBuffer buf = new StringBuffer();
+		int c = -1;
+		boolean empty = true;
+		while((c=br.read())!=-1)
+		{
+			if(c == '\r')
+			{
+				buf.append(' ');
+			}else
+			{
+				buf.append((char)c);
+			}
+			empty = false;
+			if(c=='\n' )
+			{
+				return buf.toString();
+			}
+			
+		}
+		
+		if(!empty)
+		{
+			return buf.toString();
+		}
+		
+		return null;
 	}
 }

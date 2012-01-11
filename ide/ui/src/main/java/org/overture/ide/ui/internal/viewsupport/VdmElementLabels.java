@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.osgi.util.TextProcessor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -72,15 +71,15 @@ public class VdmElementLabels {
 	 */
 	public final static long ALL_DEFAULT = 1231;
 
-	/**
-	 * Returns the styled string for the given resource. The returned label is
-	 * BiDi-processed with {@link TextProcessor#process(String, String)}.
-	 * 
-	 * @param resource
-	 *            the resource
-	 * @return the styled string
-	 * @since 3.4
-	 */
+//	/**
+//	 * Returns the styled string for the given resource. The returned label is
+//	 * BiDi-processed with {@link TextProcessor#process(String, String)}.
+//	 * 
+//	 * @param resource
+//	 *            the resource
+//	 * @return the styled string
+//	 * @since 3.4
+//	 */
 	// private static StyledString getStyledResourceLabel(IResource resource) {
 	// StyledString result = new StyledString(resource.getName());
 	// return Strings.markLTR(result);

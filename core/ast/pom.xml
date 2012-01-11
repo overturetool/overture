@@ -10,7 +10,7 @@
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>ast</artifactId>
 	<version>2.2.0</version>
-	<name>The Overture Abstract Syntax</name>
+	<name>The Overture Abstract Syntax Tree</name>
 	<build>
 		<plugins>
 			<plugin>

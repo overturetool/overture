@@ -36,6 +36,7 @@ public class Field
 	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
 	public boolean isDoubleList = false;
 	public StructureType structureType = StructureType.Tree;
+	private String customInitializer ="";
 
 	public Field(Environment env)
 	{
@@ -289,5 +290,20 @@ public class Field
 	public void updateEnvironment(Environment env)
 	{
 		this.env = env;
+	}
+
+	public boolean hasCustomInitializer()
+	{
+		return !this.customInitializer.isEmpty();
+	}
+
+	public String getCustomInitializer()
+	{
+		return this.customInitializer;
+	}
+	
+	public void setCustomInitializer(String customInitializer)
+	{
+		this.customInitializer = customInitializer;
 	}
 }

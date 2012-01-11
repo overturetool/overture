@@ -22,7 +22,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.overture.ide.core.resources.IVdmSourceUnit;
 
 public abstract class VdmExternalEditor extends VdmEditor
 {

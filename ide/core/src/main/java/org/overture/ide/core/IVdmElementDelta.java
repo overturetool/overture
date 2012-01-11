@@ -24,13 +24,13 @@ public interface IVdmElementDelta
 {
 	/**
 	 * Status constant indicating that the element has been added.
-	 * Note that an added java element delta has no children, as they are all implicitely added.
+	 * Note that an added java element delta has no children, as they are all implicitly added.
 	 */
 	public int ADDED = 1;
 
 	/**
 	 * Status constant indicating that the element has been removed.
-	 * Note that a removed java element delta has no children, as they are all implicitely removed.
+	 * Note that a removed java element delta has no children, as they are all implicitly removed.
 	 */
 	public int REMOVED = 2;
 
@@ -38,7 +38,7 @@ public interface IVdmElementDelta
 	 * Status constant indicating that the element has been changed,
 	 * as described by the change flags.
 	 *
-	 * @see #getFlags()
+//	 * @see #getFlags()
 	 */
 	public int CHANGED = 4;
 
