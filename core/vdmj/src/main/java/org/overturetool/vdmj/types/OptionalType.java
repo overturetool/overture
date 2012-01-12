@@ -105,6 +105,11 @@ public class OptionalType extends Type
 	@Override
 	public boolean isType(Class<? extends Type> typeclass)
 	{
+		if (typeclass.equals(VoidType.class))
+		{
+			return false;	// Optionals are never void
+		}
+		
 		return type.isType(typeclass);
 	}
 
