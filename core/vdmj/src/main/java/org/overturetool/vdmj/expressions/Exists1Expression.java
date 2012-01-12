@@ -27,6 +27,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.patterns.Bind;
+import org.overturetool.vdmj.patterns.TypeBind;
 import org.overturetool.vdmj.pog.POForAllContext;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -70,6 +71,12 @@ public class Exists1Expression extends Expression
 		def = new MultiBindListDefinition(bind.location, bind.getMultipleBindList());
 		def.typeCheck(base, scope);
 		Environment local = new FlatCheckedEnvironment(def, base, scope);
+		
+		if (bind instanceof TypeBind)
+		{
+			TypeBind tb = (TypeBind)bind;
+			tb.typeResolve(base);
+		}
 
 		if (!predicate.typeCheck(local, null, scope).isType(BooleanType.class))
 		{
