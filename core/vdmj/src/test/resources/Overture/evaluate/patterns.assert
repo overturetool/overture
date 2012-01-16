@@ -1,0 +1,4 @@
+let A = new A() in
+	A.f("abcabc") = 'b'
+	and A.g([mk_R(1,2), mk_R(2,1)]) = 2
+	and A.sf([{'a','b'},{'f','a'}]) = 'a'

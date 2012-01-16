@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.expressions.Expression;
@@ -77,10 +80,12 @@ public class IdentifierPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 	{
-		NameValuePairList result = new NameValuePairList();
-		result.add(new NameValuePair(name, expval));
+		List<NameValuePairList> result = new Vector<NameValuePairList>();
+		NameValuePairList list = new NameValuePairList();
+		list.add(new NameValuePair(name, expval));
+		result.add(list);
 		return result;
 	}
 
@@ -99,6 +104,6 @@ public class IdentifierPattern extends Pattern
 	@Override
 	public boolean isConstrained()
 	{
-		return false;		// The variable can be anything
+		return false;	// The variable may be constrained to be the same as another occurrence
 	}
 }

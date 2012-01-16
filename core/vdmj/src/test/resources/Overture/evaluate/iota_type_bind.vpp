@@ -1,0 +1,17 @@
+class A
+types
+	T = <A> | <B> | <C>;
+
+functions
+	isA: T -> bool
+	isA(t) == (t = <A>);
+	
+	public iotaTest: () -> bool
+	iotaTest() ==
+		<A> = iota t:T & isA(t);
+		
+	public exists1Test: () -> bool
+	exists1Test() ==
+		exists1 t:T & isA(t);
+		
+end A

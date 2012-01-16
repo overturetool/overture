@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.patterns;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
@@ -92,7 +93,14 @@ public abstract class Pattern implements Serializable
 	abstract public DefinitionList getDefinitions(Type type, NameScope scope);
 
 	/** Get a name/value pair list for the pattern's variables. */
-	abstract public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	public NameValuePairList getNamedValues(Value expval, Context ctxt)	throws PatternMatchException
+	{
+		List<NameValuePairList> all = getAllNamedValues(expval, ctxt);
+		return all.get(0);
+	}
+
+	/** Get a name/value pair list for the pattern's variables. */
+	protected abstract List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException;
 
 	/** Get the type(s) that could match this pattern. */

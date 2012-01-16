@@ -38,6 +38,7 @@ import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.traces.Permutor;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -110,7 +111,7 @@ public class UnionPattern extends Pattern
 	{
 		int llen = left.getLength();
 		int rlen = right.getLength();
-		return (llen == 0 || rlen == 0) ? 0 : llen + rlen; 
+		return (llen == 0 || rlen == 0) ? 0 : llen + rlen;
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class UnionPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueSet values = null;
@@ -159,37 +160,48 @@ public class UnionPattern extends Pattern
 		int rlen = right.getLength();
 		int size = values.size();
 
-		if ((llen == 0 && rlen > size) ||
+		if ((size < 2) ||	// We don't allow empty sequence matches
+			(llen == 0 && rlen > size) ||
 			(rlen == 0 && llen > size) ||
 			(rlen > 0 && llen > 0 && size != llen + rlen))
 		{
 			patternFail(4125, "Set union pattern does not match expression");
 		}
 
+		// If the left and right sizes are zero (ie. flexible) then we have to
+		// generate a set of splits of the values, and offer these to sub-matches
+		// to see whether they fit. Otherwise, there is just one split at this level.
+
+		List<Integer> leftSizes = new Vector<Integer>();
+
 		if (llen == 0)
 		{
 			if (rlen == 0)
 			{
-				// Divide size roughly between l/r
-				llen = size/2;
-				rlen = size - llen;
+				// Divide size roughly between l/r initially, then diverge
+				int half = size/2;
+				leftSizes.add(half);
+
+				for (int delta=1; half - delta > 0; delta++)
+				{
+					leftSizes.add(half + delta);
+					leftSizes.add(half - delta);
+				}
+
+				if (size % 2 == 1)
+				{
+					leftSizes.add(size-1);	// Most in left, one in right
+				}
 			}
 			else
 			{
-				// Take rlen from size and give to llen
-				llen = size - rlen;
+				leftSizes.add(size - rlen);
 			}
 		}
 		else
 		{
-			if (rlen == 0)
-			{
-				// Take llen from size and give to rlen
-				rlen = size - llen;
-			}
+			leftSizes.add(llen);
 		}
-
-		assert llen + rlen == size : "Pattern match internal error";
 
 		// Since the left and right may have specific set members, we
 		// have to permute through the various set orderings to see
@@ -209,57 +221,94 @@ public class UnionPattern extends Pattern
 			allSets.add(values);
 		}
 
-		for (ValueSet setPerm: allSets)
+		// Now loop through the various splits and attempt to match the l/r
+		// sub-patterns to the split set value.
+
+		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+
+		for (Integer lsize: leftSizes)
 		{
-			Iterator<Value> iter = setPerm.iterator();
-			ValueSet first = new ValueSet();
-
-			for (int i=0; i<llen; i++)
+			for (ValueSet setPerm: allSets)
 			{
-				first.add(iter.next());
-			}
+				Iterator<Value> iter = setPerm.iterator();
+				ValueSet first = new ValueSet();
 
-			ValueSet second = new ValueSet();
-
-			while (iter.hasNext())	// Everything else in second
-			{
-				second.add(iter.next());
-			}
-
-			try
-			{
-				NameValuePairList matches = new NameValuePairList();
-				matches.addAll(left.getNamedValues(new SetValue(first), ctxt));
-				matches.addAll(right.getNamedValues(new SetValue(second), ctxt));
-				NameValuePairMap results = new NameValuePairMap();
-
-				for (NameValuePair nvp: matches)
+				for (int i=0; i<lsize; i++)
 				{
-					Value v = results.get(nvp.name);
-
-					if (v == null)
-					{
-						results.put(nvp);
-					}
-					else	// Names match, so values must also
-					{
-						if (!v.equals(nvp.value))
-						{
-							patternFail(4126, "Values do not match union pattern");
-						}
-					}
+					first.add(iter.next());
 				}
 
-				return results.asList();
-			}
-			catch (PatternMatchException pme)
-			{
-				// Try next perm then...
+				ValueSet second = new ValueSet();
+
+				while (iter.hasNext())	// Everything else in second
+				{
+					second.add(iter.next());
+				}
+
+				List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+				int psize = 2;
+				int[] counts = new int[psize];
+
+				try
+				{
+					List<NameValuePairList> lnvps = left.getAllNamedValues(new SetValue(first), ctxt);
+					nvplists.add(lnvps);
+					counts[0] = lnvps.size();
+
+					List<NameValuePairList> rnvps = right.getAllNamedValues(new SetValue(second), ctxt);
+					nvplists.add(rnvps);
+					counts[1] = rnvps.size();
+				}
+				catch (Exception e)
+				{
+					continue;
+				}
+
+				Permutor permutor = new Permutor(counts);
+
+				while (permutor.hasNext())
+				{
+					try
+					{
+						NameValuePairMap results = new NameValuePairMap();
+						int[] selection = permutor.next();
+
+						for (int p=0; p<psize; p++)
+						{
+							for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
+							{
+								Value v = results.get(nvp.name);
+
+								if (v == null)
+								{
+									results.put(nvp);
+								}
+								else	// Names match, so values must also
+								{
+									if (!v.equals(nvp.value))
+									{
+										patternFail(4126, "Values do not match union pattern");
+									}
+								}
+							}
+						}
+
+						finalResults.add(results.asList());
+					}
+					catch (PatternMatchException pme)
+					{
+						// Try next perm then...
+					}
+				}
 			}
 		}
 
-		patternFail(4127, "Cannot match set pattern");
-		return null;
+		if (finalResults.isEmpty())
+		{
+			patternFail(4127, "Cannot match set pattern");
+		}
+
+		return finalResults;
 	}
 
 	@Override
@@ -271,7 +320,7 @@ public class UnionPattern extends Pattern
 		list.add(right.getPossibleType());
 
 		Type s = list.getType(location);
-		
+
 		return s.isUnknown() ?
 			new SetType(location, new UnknownType(location)) : s;
 	}

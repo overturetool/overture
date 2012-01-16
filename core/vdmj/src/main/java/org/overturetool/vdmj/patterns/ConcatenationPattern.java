@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.patterns;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
@@ -36,6 +38,7 @@ import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.traces.Permutor;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -115,7 +118,7 @@ public class ConcatenationPattern extends Pattern
 	{
 		int llen = left.getLength();
 		int rlen = right.getLength();
-		return (llen == 0 || rlen == 0) ? 0 : llen + rlen; 
+		return (llen == 0 || rlen == 0) ? 0 : llen + rlen;
 	}
 
 	@Override
@@ -130,7 +133,7 @@ public class ConcatenationPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueList values = null;
@@ -148,76 +151,134 @@ public class ConcatenationPattern extends Pattern
 		int rlen = right.getLength();
 		int size = values.size();
 
-		if ((llen == 0 && rlen > size) ||
+		if ((size < 2) ||	// We don't allow empty sequence matches
+			(llen == 0 && rlen > size) ||
 			(rlen == 0 && llen > size) ||
 			(rlen > 0 && llen > 0 && size != llen + rlen))
 		{
 			patternFail(4108, "Sequence concatenation pattern does not match expression");
 		}
 
+		// If the left and right sizes are zero (ie. flexible) then we have to
+		// generate a set of splits of the values, and offer these to sub-matches
+		// to see whether they fit. Otherwise, there is just one split at this level.
+
+		List<Integer> leftSizes = new Vector<Integer>();
+
 		if (llen == 0)
 		{
 			if (rlen == 0)
 			{
-				// Divide size roughly between l/r
-				llen = size/2;
-				rlen = size - llen;
+				// Divide size roughly between l/r initially, then diverge
+				int half = size/2;
+				leftSizes.add(half);
+
+				for (int delta=1; half - delta > 0; delta++)
+				{
+					leftSizes.add(half + delta);
+					leftSizes.add(half - delta);
+				}
+
+				if (size % 2 == 1)
+				{
+					leftSizes.add(size-1);	// Most in left, one in right
+				}
 			}
 			else
 			{
-				// Take rlen from size and give to llen
-				llen = size - rlen;
+				leftSizes.add(size - rlen);
 			}
 		}
 		else
 		{
-			if (rlen == 0)
+			leftSizes.add(llen);
+		}
+
+		// Now loop through the various splits and attempt to match the l/r
+		// sub-patterns to the split sequence value.
+
+		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+
+		for (Integer lsize: leftSizes)
+		{
+			Iterator<Value> iter = values.iterator();
+			ValueList head = new ValueList();
+
+			for (int i=0; i<lsize; i++)
 			{
-				// Take llen from size and give to rlen
-				rlen = size - llen;
+				head.add(iter.next());
 			}
-		}
 
-		assert llen + rlen == size : "Pattern match internal error";
+			ValueList tail = new ValueList();
 
-		Iterator<Value> iter = values.iterator();
-		ValueList head = new ValueList();
-
-		for (int i=0; i<llen; i++)
-		{
-			head.add(iter.next());
-		}
-
-		ValueList tail = new ValueList();
-
-		while (iter.hasNext())	// Everything else in second
-		{
-			tail.add(iter.next());
-		}
-
-		NameValuePairList matches = new NameValuePairList();
-		matches.addAll(left.getNamedValues(new SeqValue(head), ctxt));
-		matches.addAll(right.getNamedValues(new SeqValue(tail), ctxt));
-		NameValuePairMap results = new NameValuePairMap();
-
-		for (NameValuePair nvp: matches)
-		{
-			Value v = results.get(nvp.name);
-
-			if (v == null)
+			while (iter.hasNext())	// Everything else in second
 			{
-				results.put(nvp);
+				tail.add(iter.next());
 			}
-			else	// Names match, so values must also
+
+			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+			int psize = 2;
+			int[] counts = new int[psize];
+
+			try
 			{
-				if (!v.equals(nvp.value))
+				List<NameValuePairList> lnvps = left.getAllNamedValues(new SeqValue(head), ctxt);
+				nvplists.add(lnvps);
+				counts[0] = lnvps.size();
+
+				List<NameValuePairList> rnvps = right.getAllNamedValues(new SeqValue(tail), ctxt);
+				nvplists.add(rnvps);
+				counts[1] = rnvps.size();
+			}
+			catch (PatternMatchException e)
+			{
+				continue;
+			}
+
+			Permutor permutor = new Permutor(counts);
+
+			while (permutor.hasNext())
+			{
+				try
 				{
-					patternFail(4109, "Values do not match concatenation pattern");
+					NameValuePairMap results = new NameValuePairMap();
+					int[] selection = permutor.next();
+
+					for (int p=0; p<psize; p++)
+					{
+						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
+						{
+							Value v = results.get(nvp.name);
+
+							if (v == null)
+							{
+								results.put(nvp);
+							}
+							else	// Names match, so values must also
+							{
+								if (!v.equals(nvp.value))
+								{
+									patternFail(4109, "Values do not match concatenation pattern");
+								}
+							}
+						}
+					}
+
+					finalResults.add(results.asList());		// Consistent set of nvps
+				}
+				catch (PatternMatchException pme)
+				{
+					// try next perm
 				}
 			}
 		}
 
-		return results.asList();
+		if (finalResults.isEmpty())
+		{
+			patternFail(4109, "Values do not match concatenation pattern");
+		}
+
+		return finalResults;
 	}
 
 	@Override

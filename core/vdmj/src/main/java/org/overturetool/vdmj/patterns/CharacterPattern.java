@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.CharLiteralExpression;
 import org.overturetool.vdmj.expressions.Expression;
@@ -60,10 +63,10 @@ public class CharacterPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
-		NameValuePairList result = new NameValuePairList();
+		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
 		{
@@ -77,6 +80,7 @@ public class CharacterPattern extends Pattern
 			patternFail(e);
 		}
 
+		result.add(new NameValuePairList());
 		return result;
 	}
 

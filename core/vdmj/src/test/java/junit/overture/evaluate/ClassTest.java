@@ -36,4 +36,14 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("evaluate2", ResultType.VOID);
 	}
+
+	public void test_IotaTypeBind()
+	{
+		evaluate("iota_type_bind", ResultType.TRUE);
+	}
+
+	public void test_Patterns()
+	{
+		evaluate("patterns", ResultType.TRUE);
+	}
 }

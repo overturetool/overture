@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.runtime.Context;
@@ -75,16 +78,17 @@ public class ExpressionPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
-		NameValuePairList result = new NameValuePairList();
+		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		if (!expval.equals(exp.eval(ctxt)))
 		{
 			patternFail(4110, "Expression pattern match failed");
 		}
 
+		result.add(new NameValuePairList());
 		return result;		// NB no values for a match, as there's no definition
 	}
 

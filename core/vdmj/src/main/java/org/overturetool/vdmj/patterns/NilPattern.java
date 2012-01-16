@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.NilExpression;
@@ -59,16 +62,17 @@ public class NilPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
-		NameValuePairList result = new NameValuePairList();
+		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		if (!(expval.deref() instanceof NilValue))
 		{
 			patternFail(4106, "Nil pattern match failed");
 		}
 
+		result.add(new NameValuePairList());
 		return result;
 	}
 

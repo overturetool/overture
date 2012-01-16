@@ -1,0 +1,15 @@
+class A
+types
+	public R :: a:nat b:nat
+	
+functions
+	public f: seq of char -> char
+	f(-^[a]^-^[a]^-) == a;
+	
+	public g: seq of R -> nat
+	g([mk_R(-,a), mk_R(a,-)]) == a;
+	
+	public sf: seq of set of char -> char
+	sf([- union {a}]^[- union {a}]) == a;
+	
+end A

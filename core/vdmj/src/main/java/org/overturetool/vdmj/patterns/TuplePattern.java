@@ -24,7 +24,9 @@
 package org.overturetool.vdmj.patterns;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
@@ -35,6 +37,7 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.traces.Permutor;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -77,12 +80,6 @@ public class TuplePattern extends Pattern
 		}
 
 		return new TupleExpression(location, list);
-	}
-
-	@Override
-	public int getLength()
-	{
-		return plist.size();
 	}
 
 	@Override
@@ -132,7 +129,7 @@ public class TuplePattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueList values = null;
@@ -152,29 +149,62 @@ public class TuplePattern extends Pattern
 		}
 
 		ListIterator<Value> iter = values.listIterator();
-		NameValuePairMap results = new NameValuePairMap();
-
+		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+		int psize = plist.size();
+		int[] counts = new int[psize];
+		int i = 0;
+		
 		for (Pattern p: plist)
 		{
-			for (NameValuePair nvp: p.getNamedValues(iter.next(), ctxt))
+			List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next(), ctxt);
+			nvplists.add(pnvps);
+			counts[i++] = pnvps.size();
+		}
+		
+		Permutor permutor = new Permutor(counts);
+		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		
+		while (permutor.hasNext())
+		{
+			try
 			{
-				Value v = results.get(nvp.name);
+				NameValuePairMap results = new NameValuePairMap();
+				int[] selection = permutor.next();
 
-				if (v == null)
+				for (int p=0; p<psize; p++)
 				{
-					results.put(nvp);
-				}
-				else	// Names match, so values must also
-				{
-					if (!v.equals(nvp.value))
+					for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 					{
-						patternFail(4124, "Values do not match tuple pattern");
+						Value v = results.get(nvp.name);
+		
+						if (v == null)
+						{
+							results.put(nvp);
+						}
+						else	// Names match, so values must also
+						{
+							if (!v.equals(nvp.value))
+							{
+								patternFail(4124, "Values do not match tuple pattern");
+							}
+						}
 					}
 				}
+				
+				finalResults.add(results.asList());		// Consistent set of nvps
+			}
+			catch (PatternMatchException pme)
+			{
+				// try next perm
 			}
 		}
 
-		return results.asList();
+		if (finalResults.isEmpty())
+		{
+			patternFail(4124, "Values do not match tuple pattern");
+		}
+
+		return finalResults;
 	}
 
 	@Override

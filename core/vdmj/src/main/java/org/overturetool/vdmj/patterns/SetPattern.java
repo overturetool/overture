@@ -36,6 +36,7 @@ import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.traces.Permutor;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
@@ -148,7 +149,7 @@ public class SetPattern extends Pattern
 	}
 
 	@Override
-	public NameValuePairList getNamedValues(Value expval, Context ctxt)
+	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueSet values = null;
@@ -185,44 +186,81 @@ public class SetPattern extends Pattern
 			allSets.add(values);
 		}
 
+		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		int psize = plist.size();
+
+		if (plist.isEmpty())
+		{
+			finalResults.add(new NameValuePairList());
+			return finalResults;
+		}
+
 		for (ValueSet setPerm: allSets)
 		{
 			Iterator<Value> iter = setPerm.iterator();
-
+			
+			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+			int[] counts = new int[psize];
+			int i = 0;
+			
 			try
 			{
-				NameValuePairMap results = new NameValuePairMap();
-
 				for (Pattern p: plist)
 				{
-					for (NameValuePair nvp: p.getNamedValues(iter.next(), ctxt))
-					{
-						Value v = results.get(nvp.name);
+					List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next(), ctxt);
+					nvplists.add(pnvps);
+					counts[i++] = pnvps.size();
+				}
+			}
+			catch (Exception e)
+			{
+				continue;
+			}
+			
+			Permutor permutor = new Permutor(counts);
 
-						if (v == null)
+			while (permutor.hasNext())
+			{
+				try
+				{
+					NameValuePairMap results = new NameValuePairMap();
+					int[] selection = permutor.next();
+
+					for (int p=0; p<psize; p++)
+					{
+						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 						{
-							results.put(nvp);
-						}
-						else	// Names match, so values must also
-						{
-							if (!v.equals(nvp.value))
+							Value v = results.get(nvp.name);
+	
+							if (v == null)
 							{
-								patternFail(4120, "Values do not match set pattern");
+								results.put(nvp);
+							}
+							else	// Names match, so values must also
+							{
+								if (!v.equals(nvp.value))
+								{
+									patternFail(4120, "Values do not match set pattern");
+								}
 							}
 						}
 					}
+	
+					finalResults.add(results.asList());
 				}
-
-				return results.asList();
-			}
-			catch (PatternMatchException pme)
-			{
-				// Try next perm then...
+				catch (PatternMatchException pme)
+				{
+					// Try next perm then...
+				}
 			}
 		}
 
-		patternFail(4121, "Cannot match set pattern");
-		return null;
+		if (finalResults.isEmpty())
+		{
+			patternFail(4121, "Cannot match set pattern");
+		}
+
+		return finalResults;
 	}
 
 	@Override
