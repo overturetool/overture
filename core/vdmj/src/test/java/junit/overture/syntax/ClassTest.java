@@ -36,4 +36,9 @@ public class ClassTest extends OvertureTest
 	{
 		syntax("syntax2");
 	}
+
+	public void test_Syntax3()
+	{
+		syntax("emptyblock");
+	}
 }

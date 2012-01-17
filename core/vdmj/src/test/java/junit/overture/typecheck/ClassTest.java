@@ -36,4 +36,9 @@ public class ClassTest extends OvertureTest
 	{
 		typecheck("typecheck2");
 	}
+
+	public void test_ReturnNil()
+	{
+		typecheck("returnnil");
+	}
 }

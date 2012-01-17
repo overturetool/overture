@@ -1,0 +1,6 @@
+class A
+operations
+	op: () ==> ()
+	op() == ();		-- Can't have an empty statement block
+	
+end A
