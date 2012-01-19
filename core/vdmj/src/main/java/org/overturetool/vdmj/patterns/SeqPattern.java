@@ -163,23 +163,23 @@ public class SeqPattern extends Pattern
 		{
 			patternFail(4117, "Wrong number of elements for sequence pattern");
 		}
-		
+
 		ListIterator<Value> iter = values.listIterator();
 		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
 		int psize = plist.size();
 		int[] counts = new int[psize];
 		int i = 0;
-		
+
 		for (Pattern p: plist)
 		{
 			List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next(), ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
-		
+
 		Permutor permutor = new Permutor(counts);
 		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
-		
+
 		if (plist.isEmpty())
 		{
 			finalResults.add(new NameValuePairList());
@@ -198,7 +198,7 @@ public class SeqPattern extends Pattern
 					for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 					{
 						Value v = results.get(nvp.name);
-		
+
 						if (v == null)
 						{
 							results.put(nvp);
@@ -212,7 +212,7 @@ public class SeqPattern extends Pattern
 						}
 					}
 				}
-				
+
 				finalResults.add(results.asList());		// Consistent set of nvps
 			}
 			catch (PatternMatchException pme)
@@ -225,7 +225,7 @@ public class SeqPattern extends Pattern
 		{
 			patternFail(4118, "Values do not match sequence pattern");
 		}
-		
+
 		return finalResults;
 	}
 
@@ -244,5 +244,18 @@ public class SeqPattern extends Pattern
 		}
 
 		return false;
+	}
+
+	@Override
+	public List<IdentifierPattern> findIdentifiers()
+	{
+		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
+
+		for (Pattern p: plist)
+		{
+			list.addAll(p.findIdentifiers());
+		}
+
+		return list;
 	}
 }

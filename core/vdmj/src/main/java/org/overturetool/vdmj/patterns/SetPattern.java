@@ -198,11 +198,11 @@ public class SetPattern extends Pattern
 		for (ValueSet setPerm: allSets)
 		{
 			Iterator<Value> iter = setPerm.iterator();
-			
+
 			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
 			int[] counts = new int[psize];
 			int i = 0;
-			
+
 			try
 			{
 				for (Pattern p: plist)
@@ -216,7 +216,7 @@ public class SetPattern extends Pattern
 			{
 				continue;
 			}
-			
+
 			Permutor permutor = new Permutor(counts);
 
 			while (permutor.hasNext())
@@ -231,7 +231,7 @@ public class SetPattern extends Pattern
 						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 						{
 							Value v = results.get(nvp.name);
-	
+
 							if (v == null)
 							{
 								results.put(nvp);
@@ -245,7 +245,7 @@ public class SetPattern extends Pattern
 							}
 						}
 					}
-	
+
 					finalResults.add(results.asList());
 				}
 				catch (PatternMatchException pme)
@@ -283,5 +283,18 @@ public class SetPattern extends Pattern
 		}
 
 		return false;
+	}
+
+	@Override
+	public List<IdentifierPattern> findIdentifiers()
+	{
+		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
+
+		for (Pattern p: plist)
+		{
+			list.addAll(p.findIdentifiers());
+		}
+
+		return list;
 	}
 }

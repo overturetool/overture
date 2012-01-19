@@ -330,4 +330,13 @@ public class UnionPattern extends Pattern
 	{
 		return left.isConstrained() || right.isConstrained();
 	}
+
+	@Override
+	public List<IdentifierPattern> findIdentifiers()
+	{
+		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
+		list.addAll(left.findIdentifiers());
+		list.addAll(right.findIdentifiers());
+		return list;
+	}
 }

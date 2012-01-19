@@ -153,17 +153,17 @@ public class TuplePattern extends Pattern
 		int psize = plist.size();
 		int[] counts = new int[psize];
 		int i = 0;
-		
+
 		for (Pattern p: plist)
 		{
 			List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next(), ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
-		
+
 		Permutor permutor = new Permutor(counts);
 		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
-		
+
 		while (permutor.hasNext())
 		{
 			try
@@ -176,7 +176,7 @@ public class TuplePattern extends Pattern
 					for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 					{
 						Value v = results.get(nvp.name);
-		
+
 						if (v == null)
 						{
 							results.put(nvp);
@@ -190,7 +190,7 @@ public class TuplePattern extends Pattern
 						}
 					}
 				}
-				
+
 				finalResults.add(results.asList());		// Consistent set of nvps
 			}
 			catch (PatternMatchException pme)
@@ -242,5 +242,18 @@ public class TuplePattern extends Pattern
 		}
 
 		return false;
+	}
+
+	@Override
+	public List<IdentifierPattern> findIdentifiers()
+	{
+		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
+
+		for (Pattern p: plist)
+		{
+			list.addAll(p.findIdentifiers());
+		}
+
+		return list;
 	}
 }

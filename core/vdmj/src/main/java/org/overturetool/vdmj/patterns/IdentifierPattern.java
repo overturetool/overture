@@ -44,6 +44,7 @@ public class IdentifierPattern extends Pattern
 {
 	private static final long serialVersionUID = 1L;
 	public final LexNameToken name;
+	private boolean constrained;
 
 	public IdentifierPattern(LexNameToken token)
 	{
@@ -104,6 +105,19 @@ public class IdentifierPattern extends Pattern
 	@Override
 	public boolean isConstrained()
 	{
-		return false;	// The variable may be constrained to be the same as another occurrence
+		return constrained;	// The variable may be constrained to be the same as another occurrence
+	}
+
+	public void setConstrained(boolean c)
+	{
+		constrained = c;
+	}
+
+	@Override
+	public List<IdentifierPattern> findIdentifiers()
+	{
+		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
+		list.add(this);
+		return list;
 	}
 }

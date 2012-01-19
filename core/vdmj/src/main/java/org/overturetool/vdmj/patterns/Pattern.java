@@ -25,11 +25,13 @@ package org.overturetool.vdmj.patterns;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -95,8 +97,37 @@ public abstract class Pattern implements Serializable
 	/** Get a name/value pair list for the pattern's variables. */
 	public NameValuePairList getNamedValues(Value expval, Context ctxt)	throws PatternMatchException
 	{
+		List<IdentifierPattern> ids = findIdentifiers();
+
+		// Go through the list of IDs, marking duplicate names as constrained. This is
+		// because we have to permute sets that contain duplicate variables, so that
+		// we catch permutations that match constrained values of the variable from
+		// elsewhere in the pattern.
+
+		int count = ids.size();
+
+		for (int i=0; i<count; i++)
+		{
+			LexNameToken iname = ids.get(i).name;
+
+			for (int j=i+1; j<count; j++)
+			{
+				if (iname.equals(ids.get(j).name))
+				{
+					ids.get(i).setConstrained(true);
+					ids.get(j).setConstrained(true);
+				}
+			}
+		}
+
 		List<NameValuePairList> all = getAllNamedValues(expval, ctxt);
-		return all.get(0);
+		return all.get(0);		// loose choice here!
+	}
+
+	/** Return a list of the contained IdentifierPatterns */
+	protected List<IdentifierPattern> findIdentifiers()
+	{
+		return new Vector<IdentifierPattern>();		// Most have none
 	}
 
 	/** Get a name/value pair list for the pattern's variables. */
@@ -105,17 +136,14 @@ public abstract class Pattern implements Serializable
 
 	/** Get the type(s) that could match this pattern. */
 	abstract public Type getPossibleType();
-	
+
 	/** Test whether the pattern can match the type passed */
 	public boolean matches(Type type)
 	{
 		return TypeComparator.compatible(getPossibleType(), type);
 	}
 
-	/**
-	 * @return A list of the pattern's variable names.
-	 */
-
+	/** Get a list of the pattern's variable names. */
 	public LexNameList getVariableNames()
 	{
 		return new LexNameList();	// Most are empty

@@ -202,17 +202,17 @@ public class RecordPattern extends Pattern
 		int psize = plist.size();
 		int[] counts = new int[psize];
 		int i = 0;
-		
+
 		for (Pattern p: plist)
 		{
 			List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next().value, ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
-		
+
 		Permutor permutor = new Permutor(counts);
 		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
-		
+
 		if (plist.isEmpty())
 		{
 			finalResults.add(new NameValuePairList());
@@ -245,7 +245,7 @@ public class RecordPattern extends Pattern
 						}
 					}
 				}
-				
+
 				finalResults.add(results.asList());		// Consistent set of nvps
 			}
 			catch (PatternMatchException pme)
@@ -258,7 +258,7 @@ public class RecordPattern extends Pattern
 		{
 			patternFail(4116, "Values do not match record pattern");
 		}
-		
+
 		return finalResults;
 	}
 
@@ -277,5 +277,18 @@ public class RecordPattern extends Pattern
 		}
 
 		return false;
+	}
+
+	@Override
+	public List<IdentifierPattern> findIdentifiers()
+	{
+		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
+
+		for (Pattern p: plist)
+		{
+			list.addAll(p.findIdentifiers());
+		}
+
+		return list;
 	}
 }
