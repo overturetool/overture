@@ -35,6 +35,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -99,6 +100,10 @@ public class CasesStatement extends Statement
 		if (others != null)
 		{
 			rtypes.add(others.typeCheck(env, scope));
+		}
+		else
+		{
+			rtypes.add(new VoidType(location));
 		}
 
 		return rtypes.getType(location);
