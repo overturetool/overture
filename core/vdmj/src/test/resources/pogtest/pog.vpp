@@ -207,10 +207,14 @@ operations
 
 public op: int ==> int
 	op(i) ==
+	(
 		cases i:
 			1 -> if m(1) < 10 then return m(1) else return m(2),
 			2 -> return m(3)
 		end;
+		
+		return 0
+	);
 
 public op2: () ==> ()
 	op2() ==

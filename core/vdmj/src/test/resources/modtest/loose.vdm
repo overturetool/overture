@@ -520,7 +520,8 @@ operations
 					   then return { ENV`MkEmptyBlkEnv()};
 			                  return {}),
      (is_AS`SetEnumPattern(pat_p))  -> MatchSetEnumPattern(pat_p, val_v),
-     (is_AS`SetUnionPattern(pat_p)) -> MatchSetUnionPattern(pat_p, val_v)
+     (is_AS`SetUnionPattern(pat_p)) -> MatchSetUnionPattern(pat_p, val_v),
+     others -> return {}
     end;
 
 MatchSetEnumPattern : AS`SetEnumPattern * ENV`VAL ==> set of ENV`BlkEnv
