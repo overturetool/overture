@@ -96,7 +96,7 @@ public class AParameterTypeAssistant {
 	}
 
 	public static SSeqType getSeq(AParameterType type) {
-		return new ASeqSeqType(type.getLocation(),false,null,true);
+		return new ASeqSeqType(type.getLocation(),false,true);
 	}
 
 	public static boolean isNumeric(AParameterType type) {
@@ -112,7 +112,9 @@ public class AParameterTypeAssistant {
 	}
 
 	public static SMapType getMap(AParameterType type) {
-		return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);
+		AMapMapType m = new AMapMapType(type.getLocation(), false,true);
+		m.setTo(new AUnknownType(type.getLocation(), false));m.setFrom(new AUnknownType(type.getLocation(), false)); 
+		return m;
 	}
 
 	public static boolean isSet(AParameterType type) {

@@ -127,8 +127,10 @@ public class AUnionTypeAssistat {
     			}
     		}
 
+    		ASeqSeqType tt = new ASeqSeqType(type.getLocation(),false, false);
+    		tt.setSeqof(set.getType(type.getLocation()));
     		type.setSeqType(set.isEmpty() ? null :
-    			new ASeqSeqType(type.getLocation(),false, set.getType(type.getLocation()),false));
+    			tt );
  		}
 
 		return type.getSeqType();
@@ -178,8 +180,12 @@ public class AUnionTypeAssistat {
     				to.add(PTypeAssistant.getMap(t).getTo());
     			}
     		}
+    		
+    		AMapMapType mm = new AMapMapType(location, false, false);
+    		mm.setFrom(from.getType(location));
+    		mm.setTo( to.getType(location));
 
-    		type.setMapType(from.isEmpty() ? null : new AMapMapType(location, false, from.getType(location), to.getType(location), false));
+    		type.setMapType(from.isEmpty() ? null : mm );
 		}
 
 		return type.getMapType();

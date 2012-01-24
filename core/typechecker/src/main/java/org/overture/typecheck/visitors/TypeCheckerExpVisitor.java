@@ -2372,7 +2372,9 @@ public class TypeCheckerExpVisitor extends
 
 		if (node.getValue().value.isEmpty())
 		{
-			node.setType(new ASeqSeqType(node.getLocation(), false, new ACharBasicType(node.getLocation(), false, null), false));
+			ASeqSeqType tt = new ASeqSeqType(node.getLocation(), false,  false);
+			tt.setSeqof(new ACharBasicType(node.getLocation(), false, null));
+			node.setType(tt);
 			return node.getType();
 		} else
 		{
@@ -2703,7 +2705,9 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		TypeCheckerErrors.report(3077, "Merge argument is not a set of maps", node.getLocation(), node);
-		return new AMapMapType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), new AUnknownType(node.getLocation(), false), true); // Unknown
+		AMapMapType mm = new AMapMapType(node.getLocation(), false,  true);
+		mm.setFrom(new AUnknownType(node.getLocation(), false));mm.setTo(new AUnknownType(node.getLocation(), false));
+		return  mm;// Unknown
 																																							// types
 	}
 
@@ -2847,7 +2851,10 @@ public class TypeCheckerExpVisitor extends
 
 		// TODO:NOT SURE ABOUT THIS ONE:
 		node.setMapType(PTypeAssistant.getMap(etype));
-		node.setType(new AMapMapType(node.getLocation(), false, node.getMapType().getTo(), node.getMapType().getFrom(), false));
+		AMapMapType mm = new AMapMapType(node.getLocation(), false, false);
+		mm.setFrom(node.getMapType().getTo());
+		mm.setTo( node.getMapType().getFrom());// RWL TO AND FROM are twisted?
+		node.setType(mm);
 
 		return node.getType();
 	}
@@ -2923,7 +2930,9 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(etype))
 		{
 			TypeCheckerErrors.report(3295, "Argument to 'reverse' is not a sequence", node.getLocation(), node);
-			node.setType(new ASeqSeqType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true));
+			ASeqSeqType tt = new ASeqSeqType(node.getLocation(), false, true);
+			tt.setSeqof(new AUnknownType(node.getLocation(), false));
+			node.setType(tt);
 			return node.getType();
 		}
 
@@ -2942,7 +2951,9 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(etype))
 		{
 			TypeCheckerErrors.report(3179, "Argument to 'tl' is not a sequence", node.getLocation(), node);
-			node.setType(new ASeqSeqType(node.getLocation(), false, new AUnknownType(node.getLocation(), false), true));
+			ASeqSeqType tt = new ASeqSeqType(node.getLocation(), false,  true);
+			tt.setSeqof(new AUnknownType(node.getLocation(), false));
+			node.setType(tt);
 			return node.getType();
 		}
 		node.setType(etype);

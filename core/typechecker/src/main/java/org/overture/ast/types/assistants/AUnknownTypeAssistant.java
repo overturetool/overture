@@ -79,7 +79,9 @@ public class AUnknownTypeAssistant {
 	
 	public static SSeqType getSeq(AUnknownType type)
 	{
-		return new ASeqSeqType(type.getLocation(),false, new AUnknownType(type.getLocation(), false), true);	// empty
+		ASeqSeqType res = new ASeqSeqType(type.getLocation(),false,  true);	// empty
+		res.setSeqof(new AUnknownType(type.getLocation(), false));
+		return res;
 	}
 
 	public static boolean isNumeric(AUnknownType type) {
@@ -95,7 +97,10 @@ public class AUnknownTypeAssistant {
 	}
 
 	public static SMapType getMap(AUnknownType type) {
-		return new AMapMapType(type.getLocation(), false, new AUnknownType(type.getLocation(), false), new AUnknownType(type.getLocation(), false), true);
+		AMapMapType res = new AMapMapType(type.getLocation(), false,  true);
+		res.setFrom(new AUnknownType(type.getLocation(), false));
+		res.setTo(new AUnknownType(type.getLocation(), false));
+		return res;
 	}
 
 	public static boolean isSet(AUnknownType type) {

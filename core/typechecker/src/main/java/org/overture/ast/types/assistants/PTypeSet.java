@@ -49,8 +49,8 @@ public class PTypeSet extends TreeSet<PType>
 			// we ignore the Seq1Type.
 
 			ASeq1SeqType s1t = (ASeq1SeqType) t;
-			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(), false, s1t.getSeqof(), false);
-
+			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(), false, false);
+			st.setSeqof(s1t.getSeqof() );	
 			if (contains(st))
 			{
 				return false; // Was already there
@@ -61,7 +61,8 @@ public class PTypeSet extends TreeSet<PType>
 			// we replace the Seq1Type.
 
 			ASeqSeqType st = (ASeqSeqType) t;
-			ASeq1SeqType s1t = new ASeq1SeqType(st.getLocation(), false, st.getSeqof(), null);
+			ASeq1SeqType s1t = new ASeq1SeqType(st.getLocation(), false, null);
+			s1t.setSeqof(st.getSeqof());
 
 			if (contains(s1t))
 			{

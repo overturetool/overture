@@ -246,8 +246,6 @@ public class PPatternAssistantTC extends PPatternAssistant
 				return new ABooleanBasicType(pattern.getLocation(), false);
 			case CHARACTER:
 				return new ACharBasicType(pattern.getLocation(), false);
-			case CONCATENATION:
-				return new ASeqSeqType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(), false), false);
 			case EXPRESSION:
 				return new AUnknownType(pattern.getLocation(), false);
 			case IDENTIFIER:
@@ -264,12 +262,20 @@ public class PPatternAssistantTC extends PPatternAssistant
 				return new ARealNumericBasicType(pattern.getLocation(), false);
 			case RECORD:
 				return ((ARecordPattern) pattern).getType();
-			case SEQ:
-				return new ASeqSeqType(pattern.getLocation(), false, new AUnknownType(pattern.getLocation(), false), false);
 			case SET:
-				return new ASetType(pattern.getLocation(), false,null, new AUnknownType(pattern.getLocation(), false), true, false);
+			{
+				ASetType t = new ASetType(pattern.getLocation(), false,  true, false);
+				t.setSetof(new AUnknownType(pattern.getLocation(), false));
+				return t;
+			}
+			case SEQ:
 			case STRING:
-				return new ASeqSeqType(pattern.getLocation(), false, new ACharBasicType(pattern.getLocation(), false), false);
+			case CONCATENATION:
+			{
+				ASeqSeqType t = new ASeqSeqType(pattern.getLocation(), false, false);
+				t.setSeqof( new AUnknownType(pattern.getLocation(), false));
+				return t;
+			}
 			case TUPLE:
 				ATuplePattern tupplePattern = (ATuplePattern) pattern;
 				PTypeList list = new PTypeList();
