@@ -162,11 +162,11 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			// through a DTC check (which can include calculating an invariant),
 			// so we set the atomic flag around the conversion. This also stops
 			// VDM-RT from performing "time step" calculations.
-			
+
 			ctxt.threadState.setAtomic(true);
 			Value converted = convertValueTo(to, ctxt);
 			ctxt.threadState.setAtomic(false);
-			
+
 			return converted;
 		}
 		else
@@ -287,14 +287,19 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 		return valueclass.isInstance(this);
 	}
 
+	/**
+	 * Find the most primitive underlying value contained. This is typically
+	 * used to check whether a value is "really" (say) a MapValue once the
+	 * ReferenceValue (Updatablevalue) wrappers have been removed.
+	 *
+	 * Note that this strips InvariantTypes of their invariance!
+	 *
+	 * @return The primitive value
+	 */
+
 	public Value deref()
 	{
-		return this;	// ReferenceValues are dereferenced
-	}
-	
-	public Value constant()
-	{
-		return this;	// UpdatableValues are dereferenced
+		return this;
 	}
 
 	/**
@@ -310,6 +315,20 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	public Value getUpdatable(ValueListenerList listeners)
 	{
 		return UpdatableValue.factory(this, listeners);
+	}
+
+	/**
+	 * Return a simple Value, removing any Updatable/TransactionValue wrappers.
+	 * This is the opposite of getUpdatable(), though it works for all values.
+	 *
+	 * Note that this will preserve InvariantValues' integrity (unlike deref).
+	 *
+	 * @return A simple value
+	 */
+
+	public Value getConstant()
+	{
+		return this;
 	}
 
 	public double realValue(Context ctxt) throws ValueException

@@ -63,6 +63,20 @@ public class TupleValue extends Value
 	}
 
 	@Override
+	public Value getConstant()
+	{
+		ValueList ntup = new ValueList();
+
+		for (Value k: values)
+		{
+			Value v = k.getConstant();
+			ntup.add(v);
+		}
+
+		return new TupleValue(ntup);
+	}
+
+	@Override
 	public boolean equals(Object other)
 	{
 		if (other instanceof Value)

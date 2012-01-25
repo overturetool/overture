@@ -144,4 +144,17 @@ public class ValueList extends Vector<Value>
 
 		return copy;
 	}
+
+	public ValueList getConstant()
+	{
+		ValueList nseq = new ValueList();
+
+		for (Value k: this)
+		{
+			Value v = k.getConstant();
+			nseq.add(v);
+		}
+
+		return nseq;
+	}
 }

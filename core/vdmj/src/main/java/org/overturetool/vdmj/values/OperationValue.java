@@ -186,7 +186,7 @@ public class OperationValue extends Value
 		else
 		{
 			// Create "old and new" expression
-			
+
 			LexLocation where = isMutex ? guard.location : add.location;
 
 			guard = new AndExpression(guard,
@@ -211,20 +211,24 @@ public class OperationValue extends Value
 	public Value eval(LexLocation from, ValueList argValues, Context ctxt)
 		throws ValueException
 	{
+		// Note args cannot be Updateable, so we convert them here. This means
+		// that TransactionValues pass the local "new" value to the far end.
+		ValueList constValues = argValues.getConstant();
+
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
 			{
-				return asyncEval(argValues, ctxt);
+				return asyncEval(constValues, ctxt);
 			}
 			else
 			{
-				return localEval(from, argValues, ctxt, true);
+				return localEval(from, constValues, ctxt, true);
 			}
 		}
 		else
 		{
-			return localEval(from, argValues, ctxt, true);
+			return localEval(from, constValues, ctxt, true);
 		}
 	}
 
@@ -272,8 +276,8 @@ public class OperationValue extends Value
 		{
 			try
 			{
-				// Note args cannot be Updateable, so we deref them here
-				Value pv = valIter.next().constant().convertTo(typeIter.next(), ctxt);
+				// Note values are assumed to be constant, as enforced by eval()
+				Value pv = valIter.next().convertTo(typeIter.next(), ctxt);
 
 				for (NameValuePair nvp : p.getNamedValues(pv, ctxt))
 				{
@@ -342,7 +346,7 @@ public class OperationValue extends Value
     			{
     				preArgs.add(self);
     			}
-    			
+
     			// We disable the swapping and time (RT) as precondition checks should be "free".
 
 				ctxt.threadState.setAtomic(true);
@@ -383,7 +387,7 @@ public class OperationValue extends Value
     				postArgs.add(originalSelf);
     				postArgs.add(self);
     			}
-    			
+
     			// We disable the swapping and time (RT) as postcondition checks should be "free".
 
 				ctxt.threadState.setAtomic(true);

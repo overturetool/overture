@@ -64,6 +64,20 @@ public class MapValue extends Value
 		return UpdatableValue.factory(new MapValue(nm), listeners);
 	}
 
+	@Override
+	public Value getConstant()
+	{
+		ValueMap nm = new ValueMap();
+
+		for (Value k: values.keySet())
+		{
+			Value v = values.get(k).getConstant();
+			nm.put(k, v);
+		}
+
+		return new MapValue(nm);
+	}
+
 	public Value lookup(Value arg, Context ctxt) throws ValueException
 	{
 		Value v = values.get(arg);

@@ -89,6 +89,12 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
+	public synchronized Value getConstant()
+	{
+		return value.getConstant();
+	}
+
+	@Override
 	public synchronized Value convertValueTo(Type to, Context ctxt) throws ValueException
 	{
 		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
@@ -105,12 +111,14 @@ public class UpdatableValue extends ReferenceValue
 		{
     		if (newval instanceof UpdatableValue)
     		{
-    			value = newval.constant();	// To avoid nested updatables
+    			value = newval;
     		}
     		else
     		{
-    			value = newval.getUpdatable(listeners).constant();
+    			value = newval.getUpdatable(listeners);
     		}
+
+    		value = ((UpdatableValue)value).value;	// To avoid nested updatables
 		}
 
 		// The listeners are outside the sync because they have to lock
@@ -143,19 +151,13 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized boolean isType(Class<? extends Value> valueclass)
 	{
-		return valueclass.isInstance(this.value.deref());
+		return valueclass.isInstance(value.deref());
 	}
 
 	@Override
 	public synchronized Value deref()
 	{
 		return value.deref();
-	}
-
-	@Override
-	public synchronized Value constant()
-	{
-		return value.constant();
 	}
 
 	@Override

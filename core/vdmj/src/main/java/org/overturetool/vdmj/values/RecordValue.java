@@ -67,7 +67,7 @@ public class RecordValue extends Value
 			// through an invariant check, so we set the atomic flag around the
 			// conversion. This also stops VDM-RT from performing "time step"
 			// calculations.
-			
+
 			ctxt.threadState.setAtomic(true);
 			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
 			ctxt.threadState.setAtomic(false);
@@ -118,7 +118,7 @@ public class RecordValue extends Value
 			// through an invariant check, so we set the atomic flag around the
 			// conversion. This also stops VDM-RT from performing "time step"
 			// calculations.
-			
+
 			ctxt.threadState.setAtomic(true);
 			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
 			ctxt.threadState.setAtomic(false);
@@ -170,6 +170,20 @@ public class RecordValue extends Value
 		}
 
 		return UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
+	}
+
+	@Override
+	public Value getConstant()
+	{
+		FieldMap nm = new FieldMap();
+
+		for (FieldValue fv: fieldmap)
+		{
+			Value uv = fv.value.getConstant();
+			nm.add(fv.name, uv, fv.comparable);
+		}
+
+		return new RecordValue(type, nm, invariant);
 	}
 
 	@Override

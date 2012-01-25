@@ -50,7 +50,6 @@ import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.NameValuePairList;
-import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 
@@ -281,8 +280,8 @@ public class ValueDefinition extends Definition
 
 		try
 		{
-			// UpdatableValues are dereferenced as they cannot be updated.
-			v = exp.eval(ctxt).convertTo(getType(), ctxt).constant();
+			// UpdatableValues are constantized as they cannot be updated.
+			v = exp.eval(ctxt).convertTo(getType(), ctxt).getConstant();
 			return pattern.getNamedValues(v, ctxt);
      	}
 	    catch (ValueException e)

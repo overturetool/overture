@@ -81,6 +81,20 @@ public class SetValue extends Value
 	}
 
 	@Override
+	public Value getConstant()
+	{
+		ValueSet nset = new ValueSet();
+
+		for (Value k: values)
+		{
+			Value v = k.getConstant();
+			nset.add(v);
+		}
+
+		return new SetValue(nset);
+	}
+
+	@Override
 	public boolean equals(Object other)
 	{
 		if (other instanceof Value)

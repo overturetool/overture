@@ -110,6 +110,12 @@ public class SeqValue extends Value
 		return UpdatableValue.factory(new SeqValue(nseq), listeners);
 	}
 
+	@Override
+	public Value getConstant()
+	{
+		return new SeqValue(values.getConstant());
+	}
+
 	public Value get(Value arg, Context ctxt) throws ValueException
 	{
 		int i = (int)arg.nat1Value(ctxt);

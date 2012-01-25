@@ -100,12 +100,14 @@ public class TransactionValue extends UpdatableValue
 		{
     		if (newval instanceof UpdatableValue)
     		{
-    			newvalue = newval.constant();		// To avoid nested updatables
+    			value = newval;
     		}
     		else
     		{
-    			newvalue = newval.getUpdatable(listeners).constant();
+    			value = newval.getUpdatable(listeners);
     		}
+
+    		value = ((UpdatableValue)value).value;	// To avoid nested updatables
 		}
 
 		if (newthreadid < 0)
@@ -183,9 +185,9 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized Value constant()
+	public synchronized Value getConstant()
 	{
-		return select().constant();
+		return select().getConstant();
 	}
 
 	@Override

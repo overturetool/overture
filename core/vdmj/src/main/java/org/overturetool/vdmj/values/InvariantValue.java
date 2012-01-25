@@ -120,6 +120,12 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	@Override
+	public Value getConstant()
+	{
+		return new InvariantValue(type, value.getConstant(), invariant);
+	}
+
+	@Override
 	public Object clone()
 	{
 		return new InvariantValue(type, (Value)value.clone(), invariant);
