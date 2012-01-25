@@ -147,59 +147,5 @@ Where \% prefixes the root node name. The name can also be a composite name like
 
 \end{description}
 
-\subsection{Usage}
-The ast generator can be invokes like: 
-
-\begin{astlst}
-java -cp astCreator.jar com.lausdahl.ast.creator.CmdMain ast.astV2 .
-\end{astlst}
-
-\subsection{Extensions}
-
-%\subsection{Extendibility and Isolation of Additions}\label{sec:astExtendIsolation}
-
-%\begin{itemize}
-%\item The general idea about creating a new grammar file and adding only the new stuff, new fields and nodes.
-%\item First proposal isolate changes and make a new AST. Not a good idea. No reuse at all
-%\item Solution creating a new subclassed AST with the additions.
-%\item Create
-%\end{itemize}
-
-In this subsection we describe a new way to specify and generate a tree that extends a base tree and preserves backwards compatibility with its base tree. Extensions are only visible to components that depend on the extended tree otherwise only the base tree structure will be accessible. In figure~\ref{fig:ast_extensions} examples of extensions required by Overture is shown. Each box defines a plug-in feature that needs its own extensions like a type field to store the derived type information from a type checker and a proof obligation generator needs a place to attach proof obligations. The figure also illustrates that an extended tree may be further extended; In this case the derived type information is needed by the interpreter. 
-
-\begin{figure}[tbh]
-\centering
-\includegraphics[width=.4\textwidth]{figures/ast_extensions}
-\caption{Illustration of AST extensions in Overture.\label{fig:ast_extensions}}
-\end{figure}
-
-The extension principle is based on sub-classing from a class-hierarchy where each extended node sub-classes the corresponding node in the base hierarchy. This allows a new extended AST to be used by any implementation that supports its base tree e.g from figure~\ref{fig:ast_extensions} any feature that uses a typed AST can also use an interpreter AST.
-To achieve isolation between extensions we require extensions to be declared in a separate file so that a generator (illustrated in figure~\ref{fig:ASTgenExtend}) can combine them into a single tree and generate a converter from the base tree to the extended tree. To illustrate the type check extension listing~\ref{extendedAstEx} shows how expressions are extended with a field for the derived type information.
 
 
-
-%Extendibility is important to provide fulfil the goal of an easy extendible platform for new development. But to ensure a stable industrial strength tool such extensions must be isolated, such that new additions do not change the behaviour of existing features. Three kinds of additions has been identified as: adding new nodes, adding new fields to a node or refining a field type of a node. To make it clear what changes are made to the source grammar for a particular feature it was considered a good idea to group new additions in a separate grammar file.
-%The initial idea for AST extensions was to create a new derived tree from a source tree where the new tree didn’t have any relation to the source tree. This new tree would be completely independent on the source tree. It would only at generation time copy the structure from the source tree into the target tree. This turned out to be the least efficient way to do development do the lack of reuse because of any utility code made to traverse the tree e.g.collecting names from nodes could not be use one a new extended tree.
-%Based on the above a number of requirements for an extended AST has been defined as:
-%\begin{itemize}
-%\item The extended grammar must only specify additions to a basic grammar.
-%\item The extended AST must be generated such that is subclasses the basic AST.
-%\item Any visitors and adaptors made for the basic AST must also be able to operate the extended AST excluding the new additions.
-%\item A new set of visitors and adaptors must be generated for the extended AST handling both the basic and extended nodes.
-%\item A converter which can convert a source AST into its extended version.
-%\end{itemize}
-
-%Figure~\ref{fig:ASTgenExtend} illustrates how an extended grammar file can be combined with a source grammar to generate a new extended AST which sub classes the source AST.
-
-\begin{figure}[hpt]
-\centering
-\includegraphics[width=.5\textwidth]{figures/ASTgenerator_extend}
-\caption{Extending an existing AST.\label{fig:ASTgenExtend}}
-\end{figure}
-
-%The interpreter is one feature which requires a number of additions to the AST. One of such extensions is a new \texttt{breakpoint} expression enabling a user to set a conditional breakpoint during interpretation. A breakpoint expression is not part of the VDM language and should therefore not be added to the source AST but only exist within the interpreter. In listing~\ref{extendedAstEx} the grammar for this extension is shown, the part adding the breakpoint expression to all expressions is left out.
-
-\begin{astlst}[\lstset{caption=Example showing how a type can be added to all expressions.,label=extendedAstEx}]
-Aspect Declaration
-exp = [type]:type;
-\end{astlst}
