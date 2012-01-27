@@ -60,7 +60,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp [actualTypes]:type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
+    |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken
@@ -652,7 +652,7 @@ Aspect Declaration
     = (importType):type
     ;
      
-%type->#Map = [from]:type [to]:type [empty]:java_Boolean
+%type->#Map = (from):type (to):type [empty]:java_Boolean
     ;
 %export 
     =   [location]:location [definition]:definition*
@@ -676,7 +676,7 @@ Aspect Declaration
     ; 
     
 %type->#seq
-    = [seqof]:type [empty]:java_Boolean
+    = (seqof):type [empty]:java_Boolean
     ;
     
 %stateDesignator 
