@@ -46,4 +46,9 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("patterns", ResultType.TRUE);
 	}
+
+	public void test_Measures()
+	{
+		evaluate("measures", ResultType.VOID);
+	}
 }
