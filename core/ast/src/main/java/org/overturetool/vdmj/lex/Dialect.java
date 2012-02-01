@@ -35,8 +35,9 @@ public enum Dialect implements Serializable
 {
 	VDM_SL("-vdmsl", ".+\\.vdm|.+\\.vdmsl"),
 	VDM_PP("-vdmpp", ".+\\.vpp|.+\\.vdmpp"),
-	VDM_RT("-vdmrt", ".+\\.vpp|.+\\.vdmrt");
-
+	VDM_RT("-vdmrt", ".+\\.vpp|.+\\.vdmrt"),
+	CML("-cml", ".+\\.cml|.+\\.vdmcml");
+	
 	private final String argstring;
 	private final Filter filter;
 

@@ -21,7 +21,7 @@
 	<module>interpreter</module>
 		
 	<module>pog</module>
-<module>vdmj_compatibility_tests</module>
+<!-- <module>vdmj_compatibility_tests</module> -->
 
 		<!--<module>jmltrans</module> -->
 		<!-- module>proofsupport</module-->
