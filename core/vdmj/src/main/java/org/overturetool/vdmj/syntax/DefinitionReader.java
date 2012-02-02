@@ -136,7 +136,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		return newSection(lastToken());
 	}
-	
+
 	public static boolean newSection(LexToken tok)
 	{
 		return sectionList.contains(tok.type);
@@ -888,6 +888,15 @@ public class DefinitionReader extends SyntaxReader
 			initPattern = getPatternReader().readPattern();
 			checkFor(Token.EQUALSEQUALS, 2099, "Expecting '==' after pattern in initializer");
 			initExpression = getExpressionReader().readExpression();
+		}
+
+		// Be forgiving about the inv/init order
+		if (lastToken().is(Token.INV) && invExpression == null)
+		{
+			nextToken();
+			invPattern = getPatternReader().readPattern();
+			checkFor(Token.EQUALSEQUALS, 2098, "Expecting '==' after pattern in invariant");
+			invExpression = getExpressionReader().readExpression();
 		}
 
 		checkFor(Token.END, 2100, "Expecting 'end' after state definition");

@@ -99,10 +99,10 @@ public class State implements ValueListener
 					Value sv = context.get(f.tagname);
 					sv.set(ee.location, iv.fieldmap.get(f.tag), globals);
 				}
-
-				doInvariantChecks = true;
-				changedValue(ee.location, null, globals);
 			}
+
+			doInvariantChecks = true;
+			changedValue(null, null, globals);
 		}
 		catch (ValueException e)
 		{
@@ -123,6 +123,11 @@ public class State implements ValueListener
 	{
 		if (doInvariantChecks && definition.invfunc != null && Settings.invchecks)
 		{
+			if (location == null)
+			{
+				location = definition.invfunc.body.location;
+			}
+
     		try
     		{
     			if (!definition.invfunc.eval(
