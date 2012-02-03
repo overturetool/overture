@@ -52,7 +52,9 @@ public class ImportAll extends Import
 
 		for (Definition d: from.exportdefs)
 		{
-			imported.add(new ImportedDefinition(location, d));
+			Definition id = new ImportedDefinition(location, d);
+			id.markUsed();	// So imports all is quiet
+			imported.add(id);
 		}
 
 		return imported;	// The lot!

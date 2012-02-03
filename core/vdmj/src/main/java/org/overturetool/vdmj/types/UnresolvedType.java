@@ -145,6 +145,6 @@ public class UnresolvedType extends Type
 	@Override
 	public String toDisplay()
 	{
-		return "(unresolved " + typename + ")";
+		return "(unresolved " + typename.getExplicit(true) + ")";
 	}
 }

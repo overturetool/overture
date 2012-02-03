@@ -135,7 +135,7 @@ public class Module implements Serializable,IAstNode
 		importdefs = new DefinitionList();	// and import nothing
 
 		this.delegate = new Delegate(name.name, defs);
-		
+
 		isFlat = true;
 	}
 
@@ -185,8 +185,22 @@ public class Module implements Serializable,IAstNode
 	{
 		if (imports != null)
 		{
+			DefinitionList updated = imports.getDefinitions(allModules);
+
+			D: for (Definition u: updated)
+			{
+				for (Definition tc: importdefs)
+				{
+					if (tc.name != null && u.name != null && tc.name.matches(u.name))
+					{
+						u.used = tc.used;	// Copy usage from TC phase
+						continue D;
+					}
+				}
+			}
+
 			importdefs.clear();
-			importdefs.addAll(imports.getDefinitions(allModules));
+			importdefs.addAll(updated);
 		}
 	}
 

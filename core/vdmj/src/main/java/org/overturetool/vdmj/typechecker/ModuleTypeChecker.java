@@ -86,7 +86,7 @@ public class ModuleTypeChecker extends TypeChecker
 					TypeChecker.report(3429, "Module " + m1.name + " duplicates " + m2.name, m1.name.location);
 				}
 			}
-			
+
 			if (m1.isFlat)
 			{
 				hasFlat = true;
@@ -140,7 +140,8 @@ public class ModuleTypeChecker extends TypeChecker
 		}
 
 		// Create a list of all definitions from all modules, including
-		// imports of renamed definitions.
+		// imports of renamed definitions. We put the imports ahead of the
+		// other definitions so that they are found first.
 
 		DefinitionList alldefs = new DefinitionList();
 		DefinitionList checkDefs = new DefinitionList();
@@ -152,7 +153,10 @@ public class ModuleTypeChecker extends TypeChecker
 				alldefs.add(d);
 				if (!m.typechecked) checkDefs.add(d);
 			}
+		}
 
+		for (Module m: modules)
+		{
 			for (Definition d: m.defs)
 			{
 				alldefs.add(d);

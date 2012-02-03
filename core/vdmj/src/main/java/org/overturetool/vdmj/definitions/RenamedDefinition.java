@@ -45,7 +45,7 @@ public class RenamedDefinition extends Definition
 	{
 		super(def.pass, name.location, name, def.nameScope);
 		this.def = def;
-		this.used = def.used;
+		// this.used = def.used;
 	}
 
 	@Override
@@ -79,11 +79,11 @@ public class RenamedDefinition extends Definition
 		def.markUsed();
 	}
 
-	@Override
-    protected boolean isUsed()
-	{
-		return def.isUsed();
-	}
+//	@Override
+//    protected boolean isUsed()
+//	{
+//		return def.isUsed();
+//	}
 
 	@Override
 	public DefinitionList getDefinitions()

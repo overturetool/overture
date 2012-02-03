@@ -80,11 +80,11 @@ public class ImportedDefinition extends Definition
 		def.markUsed();
 	}
 
-	@Override
-    protected boolean isUsed()
-	{
-		return def.isUsed();
-	}
+//	@Override
+//    protected boolean isUsed()
+//	{
+//		return def.isUsed();
+//	}
 
 	@Override
 	public DefinitionList getDefinitions()
