@@ -44,4 +44,11 @@ public class ErrorCase
 	{
 		return "(" + name + ": " + left + "->" + right + ")";
 	}
+
+	public Expression findExpression(int lineno)
+	{
+		Expression found = left.findExpression(lineno);
+		if (found != null) return found;
+		return right.findExpression(lineno);
+	}
 }

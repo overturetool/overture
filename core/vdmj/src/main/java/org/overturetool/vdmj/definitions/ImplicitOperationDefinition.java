@@ -460,6 +460,15 @@ public class ImplicitOperationDefinition extends Definition
 			Expression found = postdef.findExpression(lineno);
 			if (found != null) return found;
 		}
+		
+		if (errors != null)
+		{
+			for (ErrorCase err: errors)
+			{
+				Expression found = err.findExpression(lineno);
+				if (found != null) return found;
+			}
+		}
 
 		return body == null ? null : body.findExpression(lineno);
 	}
