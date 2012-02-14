@@ -160,8 +160,8 @@ public abstract class VdmSourceViewerConfiguration extends
 	public IAutoEditStrategy[] getAutoEditStrategies(
 			ISourceViewer sourceViewer, String contentType)
 	{
-		IAutoEditStrategy strategy = (IDocument.DEFAULT_CONTENT_TYPE.equals(contentType)) ? new VdmAutoEditStrategy()
-				: new DefaultIndentLineAutoEditStrategy();
+		IAutoEditStrategy strategy = //(IDocument.DEFAULT_CONTENT_TYPE.equals(contentType)) ? new VdmAutoEditStrategy() :
+				 new DefaultIndentLineAutoEditStrategy();
 		return new IAutoEditStrategy[] { strategy };
 	}
 
