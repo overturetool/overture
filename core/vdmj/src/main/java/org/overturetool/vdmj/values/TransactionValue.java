@@ -100,14 +100,14 @@ public class TransactionValue extends UpdatableValue
 		{
     		if (newval instanceof UpdatableValue)
     		{
-    			value = newval;
+    			newvalue = newval;
     		}
     		else
     		{
-    			value = newval.getUpdatable(listeners);
+    			newvalue = newval.getUpdatable(listeners);
     		}
 
-    		value = ((UpdatableValue)value).value;	// To avoid nested updatables
+    		newvalue = ((UpdatableValue)newvalue).value;	// To avoid nested updatables
 		}
 
 		if (newthreadid < 0)
