@@ -6,6 +6,7 @@
 \usepackage[scaled]{helvet}
 \usepackage[hmargin=24mm,vmargin=36mm]{geometry}
 
+
 \def\today{\number\day\space\ifcase\month\or January\or February\or March\or April\or May\or June\or July\or August\or September\or October\or November\or December\fi\space\number\year} % DD Month YYYY
 
 \newenvironment{denseitemize}
@@ -23,7 +24,9 @@
 
 \title{Overture Release Process \& Feature List}
 \author{Joey W. Coleman}
-\reportno{TR-2011-??}
+%\reportno{TR-2011-??}
+
+\hypersetup{linkcolor=blue,filecolor=blue,urlcolor=blue,colorlinks=true} 
 
 \begin{document}
 \maketitle
@@ -138,69 +141,68 @@
   for Overture does, occasionally, rely on the context of DESTECS and
   (eventually) COMPASS development.
 
-  In the actions timeline, a [D] indicates a primarily DESTECS task,
-  [C] indicates primarily COMPASS.  A number in parentheses after a
-  [D] is a reference to the
-  \mbox{``Requirements\_at\_M23\_priority\_updated.pptx''} document as
-  produced at the DESTECS M23 meeting, and can safely be ignored by
-  anyone not in DESTECS.
+  The feature plan is fairly sparse, but represents the things that
+  are firmly expected.
 
   It's worth noting that I hope to release minor versions of the
   various tools regularly, so those are not explicitly recorded unless
   it's relevant.
 
 \section{Actions Timeline}
+\label{sec:actions}
 
-\subsection{December 2011}
+\paragraph{February 2012}
 \begin{denseitemize}
-\item\ Release Overture 1.1.1 (done)
-\item\ [D] Release DESTECS 1.2.1 (using Overture 1.1.1, done)
-\item\ Finish new AST \developer{KEL, ARI, AKM, RAL}
-\item\ [O/D] Clean out Overture, DESTECS bugs \developer{ARI}
-\item\ Release Overture 1.1.2 (old AST), 2.0.0 (new AST)
-\item\ [C] CML grammar \developer{JWC}
-\item\ Document release plan, feature plan, build process \developer{JWC}
+\item Overture 1.1.2 release, with minor bugfixes \developer{ARI, KEL}
+\item DESTECS 1.3.0 release, based on Overture 1.1.2 \developer{ARI, KEL}
 \end{denseitemize}
 
-\subsection{January 2012}
+\paragraph{March 2012} 
 \begin{denseitemize}
-\item\ Refactor build process as much as possible \developer{JWC}
-\item\ [D] (7) Plot multiple co-simulation results \developer{KEL, CLP}
-\item\ [D] (4) Improved parameter sweeping (incl. VDM deployments) \developer{ARI}
-\item\ [D] Freeze DESTECS to Overture 1.1.2
-\item\ [D] Release DESTECS 1.2.2 (based on Overture 1.1.2)
-\item\ [C] Developer intro documentation for COMPASS workshop \developer{ARI}
-\item\ [D] (6) Pause/Resume during DESTECS simulation \developer{KEL}
-\item\ [D] (10) Now: VDM state changes aligned with 20-sim plots (was VDM real / bool plot during co-sim (hard / hacky?)) \developer{KEL with CLP}
+\item DESTECS 1.3.1 release, based on Overture 1.1.2 \developer{ARI, KEL}
+\item Overture v2 release, based on New AST \developer{KEL, JWC}
 \end{denseitemize}
 
-\subsection{February}
+\paragraph{April 2012}
 \begin{denseitemize}
-\item\ [D] (3) Finish tool / model settings access \developer{ARI with CLP}
-\item\ [D] (5) Composite Shared Design Parameters
-\item\ [C] Setup build framework to allow a COMPASS Tool package to be built
+\item DESTECS 1.3.2 release, based on Overture 1.1.2 \developer{ARI, KEL}
 \end{denseitemize}
 
-\subsection{March} 
+\paragraph{May 2012} 
 \begin{denseitemize}
-\item\ [D] (8) Finish scripting language \developer{ARI with CLP}
+\item DESTECS 1.3.3 release, based on Overture 1.1.2 \developer{ARI}
+\item DESTECS development freeze
 \end{denseitemize}
 
-\subsection{April}
-\begin{denseitemize}
-\item\ [D] (2) Work on optimization \developer{ARI, KEL}
-\end{denseitemize}
 
-\subsection{May} 
-\begin{denseitemize}
-\item\ [D] (1,13,14) Improved examples and user manual and bugs \developer{ARI}
-\item\ [D] DESTECS development freeze
-\end{denseitemize}
+\section{Language Board ``execution'' RMs}
 
-\subsection{June, July}
-\begin{denseitemize}
-\end{denseitemize}
+  These features and changes come from the Overture Language Board and
+  represent things that have change and are now a part of the VDM
+  language family standards.
 
+  Language board Requests for Modification will be added to this list
+  after they reach ``execution'' phase.  As and when people pick up
+  these tasks, they will be added to the action timeline in
+  Section~\ref{sec:actions}; they will be removed when they have been
+  completed.
+
+\begin{tabular}{clcc}
+SF.net ID & Title & Who & When \\
+\hline
+\href{https://sourceforge.net/tracker/?func=detail&aid=3011828&group_id=141350&atid=1127184}{3011828}
+	& Include the non-deterministic statement inside traces
+	& Unknown & Unknown \\
+\href{https://sourceforge.net/tracker/?func=detail&aid=3220182&group_id=141350&atid=1127184}{3220182}
+	& Expressions in periodic thread definitions
+	& Unknown & Unknown \\
+\href{https://sourceforge.net/tracker/?func=detail&aid=3220223&group_id=141350&atid=1127184}{3220223}
+	& Values in duration / cycles statements	
+	& Unknown & Unknown \\
+\href{https://sourceforge.net/tracker/?func=detail&aid=3220437&group_id=141350&atid=1127184}{3220437}
+	& Extend duration and cycles	
+	& Unknown & Unknown
+\end{tabular}
 
 
 
