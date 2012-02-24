@@ -380,7 +380,6 @@
         point="org.eclipse.ui.commands">
      <command
            categoryId="org.eclipse.ui.category.textEditor"
-           defaultHandler="org.overture.ide.ui.commands.ToggleComment"
            id="org.overture.ide.ui.commands.toggleComment"
            name="Toggle Comment">
      </command>
@@ -508,6 +507,27 @@ Handlers
            class="org.overture.ide.ui.handlers.RemoveSourceFolderFromBuildPathCommandHandler"
            commandId="org.overture.ide.ui.commands.removeFromBuildPath">
      </handler>
+     <handler
+           class="org.overture.ide.ui.commands.ToggleComment"
+           commandId="org.overture.ide.ui.commands.toggleComment">
+        <activeWhen>
+           <reference
+                 definitionId="org.overture.ide.ui.insideVdmEditor">
+           </reference>
+        </activeWhen>
+     </handler>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.definitions">
+     <definition
+           id="org.overture.ide.ui.insideVdmEditor">
+        <with
+              variable="activeEditor">
+           <instanceof
+                 value="org.overture.ide.ui.editor.core.VdmEditor">
+           </instanceof>
+        </with>
+     </definition>
   </extension>
   
 </plugin>
