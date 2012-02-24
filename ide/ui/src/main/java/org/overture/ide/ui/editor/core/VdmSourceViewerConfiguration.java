@@ -36,7 +36,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.ui.editor.autoedit.VdmAutoEditStrategy;
 import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
 import org.overture.ide.ui.editor.partitioning.VdmDamagerRepairer;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
