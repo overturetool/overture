@@ -103,7 +103,7 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 		{
 			defaultModule = expression.substring(0, expression.indexOf('`')).trim();
 		}
-		System.out.println("Default is: "+ defaultModule);
+//		System.out.println("Default is: "+ defaultModule);
 		interpreter.setDefaultName(defaultModule);
 		Value value = interpreter.execute(expression, null);
 		return new Result<String>(value == null ? null : value.toString(), new HashSet<IMessage>(), new HashSet<IMessage>());
