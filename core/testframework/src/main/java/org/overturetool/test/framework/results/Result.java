@@ -51,6 +51,6 @@ public class Result<R>
 	
 	public String getStringResult()
 	{
-		return (result==null?"":""+result);
+		return (result==null?"":""+result).replace("\n", "");
 	}
 }
