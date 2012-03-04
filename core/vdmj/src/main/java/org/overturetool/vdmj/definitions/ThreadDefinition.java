@@ -114,7 +114,7 @@ public class ThreadDefinition extends Definition
 	@Override
 	public LexNameList getVariableNames()
 	{
-		return new LexNameList(operationDef.name);
+		return (operationDef==null?null:new LexNameList(operationDef.name));
 	}
 
 	@Override
