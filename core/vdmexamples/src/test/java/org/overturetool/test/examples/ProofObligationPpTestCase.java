@@ -55,7 +55,7 @@ public class ProofObligationPpTestCase extends TypeCheckPpTestCase
 		Result<ProofObligationList> res = new Result<ProofObligationList>( resTc.result.getProofObligations(),new HashSet<IMessage>(),new HashSet<IMessage>());
 
 		
-		compareResults(res,"typechecker.result");
+		compareResults(res,"po.result");
 	}
 
 }
