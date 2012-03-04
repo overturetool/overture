@@ -1,0 +1,18 @@
+RESULT:result:-1:-1,-1:null"
+Till 1'	Validate Successful
+Till 1'	LocalTill Fail
+Till 2'	Validate Successful
+Till 3'	Validate Successful
+Till 4'	Validate Successful
+Till 2'	Balance is 3000
+Till 3'	Balance is 3000
+Till 4'	Balance is 3000
+Till 2'	Withdrawal (100) Successful
+Till 3'	Withdrawal (100) Successful
+Till 4'	Withdrawal (100) Successful
+Till 2'	Balance is 2700
+Till 2'	Card Returned
+Till 3'	Balance is 2700
+Till 3'	Card Returned
+Till 4'	Balance is 2700
+Till 4'	Card Returned"

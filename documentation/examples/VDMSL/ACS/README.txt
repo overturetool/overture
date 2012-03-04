@@ -24,6 +24,6 @@ does not have a main debug functionality.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=sum({3,4,5})
+#ENTRY_POINT=DEFAULT`sum({3,4,5})
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

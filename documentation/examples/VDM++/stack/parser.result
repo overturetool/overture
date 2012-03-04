@@ -1,0 +1,1 @@
+RESULT:result:-1:-1,-1:class Stackprivate instance variable stack'seq of (int)public explicit operation Reset'(() ==> ())public explicit operation Pop'(() ==> int)public explicit operation Push'(int ==> ())public explicit operation Top'(() ==> int)end Stackclass UseStackprivate instance variable stack'(unresolved UseStack`Stack)public trace '(() ==> ())end UseStack
