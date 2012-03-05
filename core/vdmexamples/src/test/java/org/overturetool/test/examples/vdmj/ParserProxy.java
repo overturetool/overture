@@ -61,7 +61,7 @@ public class ParserProxy<T extends SyntaxReader, R>
 
 			for (VDMWarning m : reader.getWarnings())
 			{
-				errors.add(factory.convertMessage(m));
+				warnings.add(factory.convertMessage(m));
 			}
 
 			completeResult.add(new Result<R>(result, warnings, errors));
