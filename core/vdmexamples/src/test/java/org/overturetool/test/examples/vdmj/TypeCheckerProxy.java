@@ -32,6 +32,7 @@ public class TypeCheckerProxy
 {
 	public static <R>Result<R> typeCheck(TypeChecker checker, IMessageConverter factory)
 	{
+		TypeChecker.clearErrors();
 		checker.typeCheck();
 		Set<IMessage> warnings = new HashSet<IMessage>();
 		Set<IMessage> errors = new HashSet<IMessage>();
