@@ -43,7 +43,7 @@ public class VdmjFactories
 
 		T createReader(LexTokenReader ltr);
 
-		LexTokenReader createTokenReader(File file);
+		LexTokenReader createTokenReader(File file, String charset);
 
 	}
 	
@@ -71,9 +71,15 @@ public class VdmjFactories
 			return new Message(msg.location.file.getName(),msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 		}
 
-		public LexTokenReader createTokenReader(File file)
+		public LexTokenReader createTokenReader(File file, String charset)
 		{
-			return new LexTokenReader(file, Settings.dialect);
+			if(charset==null)
+			{
+				return new LexTokenReader(file, Settings.dialect);
+			}else
+			{
+				return new LexTokenReader(file, Settings.dialect,charset);
+			}
 		}
 	};
 
@@ -97,9 +103,15 @@ public class VdmjFactories
 			return new Message(msg.location.file.getName(),msg.number, msg.location.startLine, msg.location.endPos, msg.message);
 		}
 
-		public LexTokenReader createTokenReader(File file)
+		public LexTokenReader createTokenReader(File file, String charset)
 		{
-			return new LexTokenReader(file, Settings.dialect);
+			if(charset==null)
+			{
+				return new LexTokenReader(file, Settings.dialect);
+			}else
+			{
+				return new LexTokenReader(file, Settings.dialect,charset);
+			}
 		}
 	};
 

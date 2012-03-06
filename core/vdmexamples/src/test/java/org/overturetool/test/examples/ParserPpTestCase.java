@@ -83,7 +83,7 @@ public class ParserPpTestCase extends ExamplesTestCase
 			}
 		}
 
-		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmPpParserfactory, specFiles);
+		ParserProxy<ClassReader, List<ClassDefinition>> parser = new ParserProxy<ClassReader, List<ClassDefinition>>(VdmjFactories.vdmPpParserfactory, specFiles,settings.getEncoding());
 		@SuppressWarnings("unchecked")
 		Result<List<ClassDefinition>> res = mergeResults(parser.parse(), VdmjFactories.vdmPpParserResultCombiner);
 		return res;

@@ -33,12 +33,20 @@ public class ParserProxy<T extends SyntaxReader, R>
 {
 	final ParserFactory<T, R> factory;
 	final Set<File> files = new HashSet<File>();
+	final String charset;
 
-	public ParserProxy(ParserFactory<T, R> reader, Set<File> files)
+	public ParserProxy(ParserFactory<T, R> reader, Set<File> files,String charset)
 	{
 		this.factory = reader;
 		this.files.clear();
 		this.files.addAll(files);
+		if(charset!=null && !charset.isEmpty())
+		{
+			this.charset = charset;
+		}else
+		{
+			this.charset = null;
+		}
 	}
 
 	public Set<Result<R>> parse() throws Exception
@@ -51,7 +59,7 @@ public class ParserProxy<T extends SyntaxReader, R>
 			R result = null;
 			Set<IMessage> warnings = new HashSet<IMessage>();
 			Set<IMessage> errors = new HashSet<IMessage>();
-			reader = factory.createReader(factory.createTokenReader(file));
+			reader = factory.createReader(factory.createTokenReader(file,charset));
 			result = factory.read(reader);
 
 			for (VDMError m : reader.getErrors())

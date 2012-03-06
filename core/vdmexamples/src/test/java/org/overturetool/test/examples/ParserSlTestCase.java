@@ -65,7 +65,8 @@ public class ParserSlTestCase extends ExamplesTestCase
 
 	protected Result<List<Module>> parse() throws Exception
 	{
-		ParserProxy<ModuleReader, List<Module>> parser = new ParserProxy<ModuleReader, List<Module>>(VdmjFactories.vdmSlParserfactory, getSpecFiles("vdmsl", file));
+		VdmReadme settings = getReadme();
+		ParserProxy<ModuleReader, List<Module>> parser = new ParserProxy<ModuleReader, List<Module>>(VdmjFactories.vdmSlParserfactory, getSpecFiles("vdmsl", file),settings.getEncoding());
 		@SuppressWarnings("unchecked")
 		Result<List<Module>> res = mergeResults(parser.parse(), VdmjFactories.vdmSlParserResultCombiner);
 		return res;
