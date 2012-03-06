@@ -1,0 +1,1 @@
+RESULT:result:-1:-1,-1:nullError 4065' Value -1 is not a nat in 'RateController' (../../documentation/examples/VDM++/PacemakerConc/RateController.vdmpp) at line 134'1()()Error 4096' Can't get tuple value of nil in 'Environment' (../../documentation/examples/VDM++/PacemakerConc/Environment.vdmpp) at line 56'13
