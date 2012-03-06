@@ -25,18 +25,33 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overturetool.test.examples.LatexPpTestCase;
+import org.overturetool.test.examples.TypeCheckRtTestCase;
+import org.overturetool.test.examples.TypeCheckSlTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
 
-
+/**
+ * Test in this class is only enabled if the environment variable testLatex=true is defined.
+ * @author kela
+ *
+ */
 public class PdfLatexExamplesTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		String name = "PdfLatex Examples TestSuite";
 		String root = "../../documentation/examples/";
-		TestSuite test = createTestCompleteDirectory(name,root+"VDM++",LatexPpTestCase.class);
-//		add(test,createTestCompleteDirectory(name,root+"VDMSL",TypeCheckSlTestCase.class));
-//		add(test,createTestCompleteDirectory(name,root+"VDMRT",TypeCheckRtTestCase.class));
+		TestSuite test =null;
+		String value = System.getenv("testLatex");
+        if (value != null && Boolean.parseBoolean(value)) {
+        	test = createTestCompleteDirectory(name,root+"VDM++",LatexPpTestCase.class);
+    		add(test,createTestCompleteDirectory(name,root+"VDMSL",TypeCheckSlTestCase.class));
+    		add(test,createTestCompleteDirectory(name,root+"VDMRT",TypeCheckRtTestCase.class));
+        }
+
+        else
+        {
+        	test = new TestSuite();
+        }
 		return test;
 	}
 
