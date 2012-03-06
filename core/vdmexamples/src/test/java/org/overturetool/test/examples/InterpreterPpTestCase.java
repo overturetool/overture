@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overturetool.test.framework.examples.VdmReadme;
+import org.overturetool.test.framework.examples.VdmReadme.ResultStatus;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.IResultCombiner;
 import org.overturetool.test.framework.results.Result;
@@ -26,17 +27,12 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.messages.StderrRedirector;
 import org.overturetool.vdmj.messages.StdoutRedirector;
+import org.overturetool.vdmj.messages.VDMErrorsException;
 import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.runtime.ContextException;
 
 public class InterpreterPpTestCase extends TypeCheckPpTestCase
 {
-	static Set<String> ignoreList = new HashSet<String>();
-	static
-	{
-		ignoreList.add("SAFERProof <VDM++>");
-	}
-
 	public InterpreterPpTestCase()
 	{
 	}
@@ -54,13 +50,13 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 			return;
 		}
 
-		if (ignoreList.contains(getName()))
+		VdmReadme settings = getReadme();
+		
+		if(settings.getExpectedResult()==ResultStatus.NO_CHECK|| settings.getExpectedResult()==ResultStatus.NO_ERROR_SYNTAX|| settings.getExpectedResult()==ResultStatus.NO_ERROR_TYPE_CHECK)
 		{
-			fail("Ignored");
 			return;
 		}
-
-		VdmReadme settings = getReadme();
+		
 		Set<Result<String>> results = new HashSet<Result<String>>();
 		for (String expression : settings.getEntryPoints())
 		{
@@ -82,13 +78,13 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 	protected Result<String> interpret(String expression) throws Exception
 	{
 		Result<ClassList> res = typeCheck();
-		if (res.errors.size() > 0)
+String result = null;
+		
+		if(res.errors.isEmpty())
 		{
-			fail("Type check errors");
-		}
 
-		ClassInterpreter interpreter = new ClassInterpreter(res.result);
-		interpreter.init(null);
+		ClassInterpreter intepreter = new ClassInterpreter(res.result);
+		intepreter.init(null);
 		// if(interpreter.initialContext!=null)
 		// {
 		// interpreter.initialContext.size()
@@ -104,9 +100,28 @@ public class InterpreterPpTestCase extends TypeCheckPpTestCase
 			defaultModule = expression.substring(0, expression.indexOf('`')).trim();
 		}
 //		System.out.println("Default is: "+ defaultModule);
-		interpreter.setDefaultName(defaultModule);
-		Value value = interpreter.execute(expression, null);
-		return new Result<String>(value == null ? null : value.toString(), new HashSet<IMessage>(), new HashSet<IMessage>());
+		intepreter.setDefaultName(defaultModule);
+//		Value value = interpreter.execute(expression, null);
+//		return new Result<String>(value == null ? null : value.toString(), new HashSet<IMessage>(), new HashSet<IMessage>());
+		
+		try{
+			result = intepreter.execute(expression, null).toString();
+		}catch(OutOfMemoryError e)
+		{
+			result = e.getMessage();
+		}catch(ContextException e)
+		{
+			result = e.getMessage();
+		}catch(VDMErrorsException e)
+		{
+			result = e.getMessage();
+		}}else
+		{
+			result = "Silent failure. Type check faild";
+		}
+		
+		
+		return new Result<String>(result,new HashSet<IMessage>(),new HashSet<IMessage>());
 	}
 
 	@Override
