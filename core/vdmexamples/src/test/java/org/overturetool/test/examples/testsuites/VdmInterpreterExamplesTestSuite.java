@@ -38,7 +38,7 @@ public class VdmInterpreterExamplesTestSuite extends BaseTestSuite
 		String root = "../../documentation/examples/";
 		TestSuite test =createTestCompleteDirectory(name,root+"VDMSL",InterpreterSlTestCase.class);
 		add(test, createTestCompleteDirectory(name,root+"VDM++",InterpreterPpTestCase.class));
-//		add(test,createTestCompleteDirectory(name,root+"VDMRT",InterpreterRtTestCase.class));
+		add(test,createTestCompleteDirectory(name,root+"VDMRT",InterpreterRtTestCase.class));
 		return test;
 	}
 
