@@ -66,7 +66,6 @@ public class StateDefinition extends Definition
 	public final Pattern initPattern;
 	public final Expression initExpression;
 
-	public LocalDefinition recordDefinition = null;
 	public ExplicitFunctionDefinition invdef = null;
 	public FunctionValue invfunc = null;
 	public ExplicitFunctionDefinition initdef = null;
@@ -104,7 +103,13 @@ public class StateDefinition extends Definition
 		}
 
 		recordType = new RecordType(name, fields);
+		LocalDefinition recordDefinition = null;
+
 		recordDefinition = new LocalDefinition(location, name, NameScope.STATE, recordType);
+		recordDefinition.markUsed();	// Can't be exported anyway
+		statedefs.add(recordDefinition);
+
+		recordDefinition = new LocalDefinition(location, name.getOldName(), NameScope.OLDSTATE, recordType);
 		recordDefinition.markUsed();	// Can't be exported anyway
 		statedefs.add(recordDefinition);
 	}
@@ -207,11 +212,6 @@ public class StateDefinition extends Definition
     		{
     			return initdef;
     		}
-		}
-
-		if (recordDefinition.findName(sought, scope) != null)
-		{
-			return recordDefinition;
 		}
 
 		for (Definition d: statedefs)
