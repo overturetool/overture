@@ -16,7 +16,7 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		ResultTestCase.recordTestResults = false;
+		
 		String name = "Type_Check_PP_Classes_TestSuite_External";
 		String root = ExternalTestSettings.basePath+"pptest/tc";
 		TestSuite test = null;

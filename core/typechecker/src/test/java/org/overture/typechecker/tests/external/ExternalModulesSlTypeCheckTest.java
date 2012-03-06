@@ -16,7 +16,7 @@ public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		ResultTestCase.recordTestResults = false;
+		
 		String name = "Type_Check_SL_Modules_TestSuite_External";
 		String root = ExternalTestSettings.basePath+"sltest/tc";
 		TestSuite test = null;
