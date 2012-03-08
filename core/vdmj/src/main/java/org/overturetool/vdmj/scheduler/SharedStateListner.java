@@ -107,7 +107,7 @@ public class SharedStateListner
 		}
 	}
 	
-	public void setIdentityChecker(IdentityChecker checker)
+	public static void setIdentityChecker(IdentityChecker checker)
 	{
 		SharedStateListner.checker = checker;
 	}
