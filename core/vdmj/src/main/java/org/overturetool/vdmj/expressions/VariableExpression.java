@@ -23,12 +23,15 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.scheduler.SharedStateListner;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.FunctionType;
@@ -207,6 +210,11 @@ public class VariableExpression extends Expression
 	@Override
 	public Value eval(Context ctxt)
 	{
+		//Experimental hood added for DESTECS
+		if(Settings.dialect == Dialect.VDM_RT)
+		{
+			SharedStateListner.beforeVariableReadDuration(this);
+		}
 		breakpoint.check(location, ctxt);
 		return ctxt.lookup(name);
 	}

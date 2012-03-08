@@ -29,6 +29,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.SharedStateListner;
 import org.overturetool.vdmj.types.Type;
 
 /**
@@ -120,6 +121,12 @@ public class UpdatableValue extends ReferenceValue
 
     		value = ((UpdatableValue)value).value;	// To avoid nested updatables
 		}
+		
+		//Experimental hood added for DESTECS
+		if(Settings.dialect == Dialect.VDM_RT)
+		{
+			SharedStateListner.variableChanged(this, location);
+		}
 
 		// The listeners are outside the sync because they have to lock
 		// the object they notify, which can be holding a lock on this one.
@@ -128,6 +135,8 @@ public class UpdatableValue extends ReferenceValue
 		{
 			listeners.changedValue(location, value, ctxt);
 		}
+		
+		
 	}
 
 	public void addListener(ValueListener listener)

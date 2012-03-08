@@ -27,11 +27,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.SharedStateListner;
 import org.overturetool.vdmj.types.Type;
 
 /**
@@ -47,6 +50,8 @@ public class TransactionValue extends UpdatableValue
 
 	private Value newvalue = null;		// The pending value before a commit
 	private long newthreadid = -1;		// The thread that made the change
+	
+	private LexLocation lastSetLocation = null; //The location that made the change
 
 	protected TransactionValue(Value value, ValueListenerList listeners)
 	{
@@ -98,6 +103,7 @@ public class TransactionValue extends UpdatableValue
 
 		synchronized (this)
 		{
+			lastSetLocation = location;
     		if (newval instanceof UpdatableValue)
     		{
     			newvalue = newval;
@@ -163,6 +169,12 @@ public class TransactionValue extends UpdatableValue
 		{
 			value = newvalue;		// Listener called for original "set"
 			newthreadid = -1;
+		}
+		
+		//Experimental hood added for DESTECS
+		if(Settings.dialect == Dialect.VDM_RT)
+		{
+			SharedStateListner.variableChanged(this,lastSetLocation);
 		}
 	}
 

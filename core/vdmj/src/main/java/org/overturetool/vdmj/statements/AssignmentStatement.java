@@ -43,6 +43,7 @@ import org.overturetool.vdmj.pog.SubTypeObligation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
+import org.overturetool.vdmj.scheduler.SharedStateListner;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
@@ -142,6 +143,12 @@ public class AssignmentStatement extends Statement
 		Value newval = exp.eval(ctxt);
 		Value oldval = target.eval(ctxt);
 
+		//Experimental hood added for DESTECS
+		if(Settings.dialect == Dialect.VDM_RT)
+		{
+			SharedStateListner.beforeAssignmentSet(this,oldval,newval);
+		}
+		
 		try
 		{
 			oldval.set(location, newval.convertTo(targetType, ctxt), ctxt);
