@@ -77,7 +77,7 @@
         This tutorial simply copies the projects directly from your workspace
         into the appropriate build directory folders.
     -->
-	<target name="init" ><!--depends="svn-info" -->
+	<target name="init" depends="svn-info">
 		<mkdir dir="${buildDirectory}" />
 		<mkdir dir="${buildDirectory}/plugins" />
 		<mkdir dir="${buildDirectory}/features" />
