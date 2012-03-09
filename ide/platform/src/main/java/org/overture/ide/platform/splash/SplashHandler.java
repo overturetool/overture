@@ -44,8 +44,9 @@ public class SplashHandler extends BasicSplashHandler
 		foregroundColorInteger & 0xFF));
 
 		final Point buildIdPoint = new Point(350, 200);
-		final String bundleVersion = "v"
-				+ Activator.getDefault().getBundle().getHeaders().get("Bundle-Version");
+		final String bundleVersion = "v" + "1.2.0";
+		//FIXME: this needs to be reverted
+		///		+ Activator.getDefault().getBundle().getHeaders().get("Bundle-Version");
 
 		getContent().addPaintListener(new PaintListener()
 		{
