@@ -46,7 +46,7 @@ public class OrExpression extends BooleanBinaryExpression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
+		// breakpoint.check(location, ctxt);
 
 		try
 		{
