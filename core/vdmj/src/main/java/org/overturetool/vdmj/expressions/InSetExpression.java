@@ -60,7 +60,8 @@ public class InSetExpression extends BinaryExpression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
+		// breakpoint.check(location, ctxt);
+		location.hit();		// Mark as covered
 
 		Value elem = left.eval(ctxt);
 		Value set = right.eval(ctxt);

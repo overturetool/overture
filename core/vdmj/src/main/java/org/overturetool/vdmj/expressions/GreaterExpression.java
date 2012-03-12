@@ -53,7 +53,8 @@ public class GreaterExpression extends NumericBinaryExpression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
+		// breakpoint.check(location, ctxt);
+		location.hit();		// Mark as covered
 
 		Value lv = left.eval(ctxt);
 		Value rv = right.eval(ctxt);

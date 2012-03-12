@@ -42,6 +42,7 @@ public class ImpliesExpression extends BooleanBinaryExpression
 	public Value eval(Context ctxt)
 	{
 		// breakpoint.check(location, ctxt);
+		location.hit();		// Mark as covered
 
 		try
 		{

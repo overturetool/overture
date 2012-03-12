@@ -72,7 +72,8 @@ public class SetDifferenceExpression extends BinaryExpression
 	@Override
 	public Value eval(Context ctxt)
 	{
-		breakpoint.check(location, ctxt);
+		// breakpoint.check(location, ctxt);
+		location.hit();		// Mark as covered
 
 		ValueSet result = new ValueSet();
 		ValueSet togo = null;
