@@ -22,6 +22,7 @@ operations
 			               return {}),
      (is_SetEnumPattern(pat_p))  -> MatchSetEnumPattern(pat_p, val_v),
      (is_SetUnionPattern(pat_p)) -> MatchSetUnionPattern(pat_p, val_v)
+     others -> error
     end;
 \end{vdm_al}
 Concerning match values it should be noted that the definition given

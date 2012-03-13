@@ -72,6 +72,7 @@ evaluateRule(rule) ==
              true   -> return(rule.effect),
              false  -> return(<NotApplicable>),
             <Indet> -> return(<Indeterminate>)
+            others -> error
        end
            else return <NotApplicable> 
   else

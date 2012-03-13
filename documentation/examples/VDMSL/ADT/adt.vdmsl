@@ -1566,6 +1566,7 @@ Trees_Insert(tree, data, direction) ==
    <ToRoot>  -> return  Trees_InsertRoot(data), 
    <ToLeft>  -> return  Trees_InsertLeft(tree, data),
    <ToRight> -> return  Trees_InsertRight(tree, data)
+   others -> error
 end
 pre Heaps_Available(heap) and
     let mk_Trees_Tree(treePtr, current) = tree 
@@ -1688,6 +1689,7 @@ Trees_ExistsDirection(tree, direction) ==
           <ToRight> -> 
                return tree.current <> NIL 
                     and Trees_HasRightChild(heap, tree.current)
+        others -> error
      end
 post STrees_ExistsDirection(Trees_Set(heap, tree), direction) 
 		= RESULT;
@@ -1713,7 +1715,7 @@ Trees_MoveInDir(tree, direction) ==
           <ToRoot> -> return mk_Trees_Tree(tree.treePtr, tree.treePtr),
           <ToLeft> -> return mk_Trees_Tree(tree.treePtr, LEFT(tree.current)),
           <ToRight> -> return mk_Trees_Tree(tree.treePtr, RIGHT(tree.current))
-
+          others -> error
      end
 pre tree.treePtr <> NIL 
      and (direction = <ToLeft> => Trees_HasLeftChild(heap, tree.current)) 

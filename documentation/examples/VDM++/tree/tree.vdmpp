@@ -24,6 +24,7 @@ class Tree
       cases root:
         <Empty> -> return ({}),
         mk_node(lt,v,rt) -> return(lt.nodes() union {v} union rt.nodes())
+        others -> error
       end ;
 
     protected
@@ -84,6 +85,7 @@ class Tree
          mk_node(lt,v,rt) -> let ln = lt.depth_first_search(),
                                  rn = rt.depth_first_search()
                              in return [v]^ln^rn
+		others -> error                             
       end;
 
     public inorder : () ==> seq of int
@@ -93,6 +95,7 @@ class Tree
         mk_node(lt,v,rt) -> let ln = lt.inorder(),
                                 rn = rt.inorder()
                             in return ln^[v]^rn
+		others -> error                            
       end
 
 

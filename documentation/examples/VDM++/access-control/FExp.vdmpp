@@ -113,6 +113,7 @@ MRelExpr(exp,env) ==
   cases exp:
    mk_RelExpr(-,<GT>,-)  -> return (EvaluateGT(exp.left,exp.right,env)),
    mk_RelExpr(-,<LT>,-)  -> return (EvaluateLT(exp.left,exp.right,env))
+   others -> error
   end;
 
 EvaluateLT: Expr * Expr * Env ==> Val
@@ -132,6 +133,7 @@ MInfix(exp,env) ==
   cases exp:
    mk_Infix(-,<AND>,-) -> return (EvaluateAND(exp.left,exp.right,env)),
    mk_Infix(-,<OR>,-)  -> return (EvaluateOR(exp.left,exp.right,env))
+   others -> error
   end;
 
 EvaluateAND: Expr * Expr * Env ==> Val

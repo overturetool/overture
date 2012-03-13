@@ -22,10 +22,7 @@ World(simtime) ==
 );
 
 public Yield: () ==> ()
-Yield() ==
-(
-  
-);
+Yield() == skip;
 
 Finished: () ==> nat
 Finished() ==

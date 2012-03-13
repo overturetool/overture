@@ -15,7 +15,7 @@ display.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Augusto Ribeiro
-#LIB= IO; MATH
+#LIB= IO; MATH; VDMUtil
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true
