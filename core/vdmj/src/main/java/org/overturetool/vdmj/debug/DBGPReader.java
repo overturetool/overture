@@ -98,8 +98,6 @@ import org.overturetool.vdmj.values.Value;
 
 public class DBGPReader
 {
-	private static final long serialVersionUID = 1L;
-
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;

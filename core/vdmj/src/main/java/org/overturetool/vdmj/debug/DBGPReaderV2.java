@@ -1781,7 +1781,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		}
 	}
 
-	protected static void writeCoverage(Interpreter interpreter, File coverage)
+	public static void writeCoverage(Interpreter interpreter, File coverage)
 			throws IOException {
 		for (File f : interpreter.getSourceFiles()) {
 			SourceFile source = interpreter.getSourceFile(f);
