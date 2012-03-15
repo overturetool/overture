@@ -239,7 +239,7 @@ public class TimingInvariantsParser
 			{
 				rightName = right.split(".");
 			}
-//			res.add(new ValueValidationExpression(leftName, binop, rightName));
+			res.add(new ValueValidationExpression(leftName, binop, rightName));
 		}
 		return res;
 		

@@ -37,7 +37,7 @@ import org.overturetool.vdmj.values.OperationValue;
 public class RuntimeValidator
 {
 
-	static IRuntimeValidatior validator;
+	public static IRuntimeValidatior validator;
 	private static PrintWriter logfile = null;
 	
 	

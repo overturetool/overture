@@ -47,17 +47,17 @@ public class ValueObserver implements ValueListener {
 		this.expr.valueChanged(this);
 	}
 
-	private String printValueName()
-	{
-		if(name.length == 2)
-		{
-			return name[0] + "`" + name[1];
-		}
-		else
-		{
-			return name[0] + "`" + name[1] + "." + name[2];
-		}
-	}
+//	private String printValueName()
+//	{
+//		if(name.length == 2)
+//		{
+//			return name[0] + "`" + name[1];
+//		}
+//		else
+//		{
+//			return name[0] + "`" + name[1] + "." + name[2];
+//		}
+//	}
 
 	public double getValue() {
 		try {

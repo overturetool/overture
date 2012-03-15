@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.runtime.validation;
 
+import org.overturetool.vdmj.messages.Console;
+
 
 public class ConjectureValue {
 
@@ -63,13 +65,13 @@ public class ConjectureValue {
 	
 	private void printValidation() 
 	{
-		System.out.println("-----------------------------------------");
-		System.out.print("Conjecture: ");
-		System.out.println(def.toString());
-		System.out.println("Validated? " + this.validated);
-		System.out.println("Trigger - time: " + triggerTime + " thread: " + triggerThreadId); 
-		System.out.println("Ending  - time: " + endTime + " thread: " + endThreadId);
-		System.out.println("-----------------------------------------");
+		Console.out.println("----------------------------------------------------------------------------------");
+		Console.out.print("Conjecture: ");
+		Console.out.println(def.toString());
+		Console.out.println("Validated: " + this.validated);
+		Console.out.println("Trigger  - time: " + triggerTime + " thread: " + triggerThreadId); 
+		Console.out.println("Ending   - time: " + endTime + " thread: " + endThreadId);
+		Console.out.println("----------------------------------------------------------------------------------");
 				
 	}
 	

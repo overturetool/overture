@@ -199,7 +199,10 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 	}
 
 	
-	
+	public List<ConjectureDefinition> getConjectures()
+	{
+		return this.conjectures;
+	}
 	
 	
 }
