@@ -87,8 +87,9 @@ String result = null;
 		if(res.errors.isEmpty())
 		{
 		ClassInterpreter intepreter = new ClassInterpreter(res.result);
-		intepreter.init(null);
 		try{
+			intepreter.init(null);
+		
 			result = intepreter.execute(expression, null).toString();
 		}catch(OutOfMemoryError e)
 		{

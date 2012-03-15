@@ -84,6 +84,7 @@ String result = null;
 		{
 
 		ClassInterpreter intepreter = new ClassInterpreter(res.result);
+		try{
 		intepreter.init(null);
 		// if(interpreter.initialContext!=null)
 		// {
@@ -104,7 +105,7 @@ String result = null;
 //		Value value = interpreter.execute(expression, null);
 //		return new Result<String>(value == null ? null : value.toString(), new HashSet<IMessage>(), new HashSet<IMessage>());
 		
-		try{
+		
 			result = intepreter.execute(expression, null).toString();
 		}catch(OutOfMemoryError e)
 		{

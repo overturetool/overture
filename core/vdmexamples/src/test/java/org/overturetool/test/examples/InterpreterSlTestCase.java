@@ -86,6 +86,7 @@ public class InterpreterSlTestCase extends TypeCheckSlTestCase
 		{
 			
 		ModuleInterpreter intepreter = new ModuleInterpreter(res.result);
+	try{
 		intepreter.init(null);
 
 //			if (defaultName != null)
@@ -94,7 +95,7 @@ public class InterpreterSlTestCase extends TypeCheckSlTestCase
 //			}
 		
 		
-		try{
+		
 			result = intepreter.execute(expression, null).toString();
 		}catch(OutOfMemoryError e)
 		{
