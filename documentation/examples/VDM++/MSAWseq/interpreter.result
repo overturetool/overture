@@ -1,1 +1,1 @@
-RESULT:result:-1:-1,-1:nullSilent failure. Type check faild
+RESULT:result:-1:-1,-1:nullError 4041' 'is not yet specified' statement reached in 'dk_au_eng_Radar' (..\..\documentation\examples\VDM++\MSAWseq\dk_au_eng_Radar.vdmpp) at line 41'35
