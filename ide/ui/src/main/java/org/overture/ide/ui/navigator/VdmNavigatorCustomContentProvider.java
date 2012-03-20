@@ -25,9 +25,16 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.IBasicPropertyConstants;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * Please notice that the events send to this class is based on the navigatorContent:
@@ -35,7 +42,7 @@ import org.eclipse.swt.widgets.Control;
  * <li>triggerPoints</li>
  * <li>possibleChildren</li>
  * </ul>
- * 
+ * @see org.eclipse.jdt.internal.ui.packageview.PackageExplorerContentProvider for inspiration
  * @author kela
  */
 @SuppressWarnings("restriction")
@@ -44,6 +51,10 @@ public class VdmNavigatorCustomContentProvider
 		org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionContentProvider
 {
 	private Viewer viewer;
+	
+	private Collection<Runnable> fPendingUpdates;
+
+	private UIJob fUpdateJob = null;
 
 	/*
 	 * (non-Javadoc)
@@ -70,38 +81,18 @@ public class VdmNavigatorCustomContentProvider
 		{
 			return;
 		}
+		final ArrayList<Runnable> runnables= new ArrayList<Runnable>();
+		try {
+			// 58952 delete project does not update Package Explorer [package explorer]
+			// if the input to the viewer is deleted then refresh to avoid the display of stale elements
+//			if (inputDeleted(runnables))
+//				return;
 
-		final Collection<Runnable> runnables = new ArrayList<Runnable>();
-		processDelta(delta, runnables);
-
-		if (runnables.isEmpty())
-		{
-			return;
-		}
-		// Are we in the UIThread? If so spin it until we are done
-		if (ctrl.getDisplay().getThread() == Thread.currentThread())
-		{
-			runUpdates(runnables);
-		} else
-		{
-			ctrl.getDisplay().asyncExec(new Runnable()
-			{
-				/*
-				 * (non-Javadoc)
-				 * @see java.lang.Runnable#run()
-				 */
-				public void run()
-				{
-					// Abort if this happens after disposes
-					Control ctrl = viewer.getControl();
-					if (ctrl == null || ctrl.isDisposed())
-					{
-						return;
-					}
-
-					runUpdates(runnables);
-				}
-			});
+			processDelta(delta, runnables);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			executeRunnables(runnables);
 		}
 
 	}
@@ -148,7 +139,7 @@ public class VdmNavigatorCustomContentProvider
 
 		if ((changeFlags & IResourceDelta.MARKERS) != 0)
 		{// && (changeFlags& IResourceDelta.CONTENT) != 0) {
-			runnables.add(getRefreshRunnable(resource));
+				runnables.add(getRefreshRunnable(resource));
 			// also refresh all parents
 			IResource parent = resource;
 			while ((parent = parent.getParent()) != null)
@@ -159,6 +150,7 @@ public class VdmNavigatorCustomContentProvider
 					break;
 				}
 			}
+		
 
 			return;
 		}
@@ -182,23 +174,80 @@ public class VdmNavigatorCustomContentProvider
 		{
 			public void run()
 			{
-				((StructuredViewer) viewer).update(resource, null);
+				((StructuredViewer) viewer).update(resource, new String[]{IBasicPropertyConstants.P_IMAGE});
 			}
 		};
 	}
 
-	/**
-	 * Run all of the runnables that are the widget updates
-	 * 
-	 * @param runnables
-	 */
-	private void runUpdates(Collection<Runnable> runnables)
-	{
-		Iterator<Runnable> runnableIterator = runnables.iterator();
-		while (runnableIterator.hasNext())
-		{
-			((Runnable) runnableIterator.next()).run();
-		}
+	
+	//
+	// JDK package explorer stuff
+	//
+	
+	protected final void executeRunnables(final Collection<Runnable> runnables) {
 
+		// now post all collected runnables
+		Control ctrl= viewer.getControl();
+		if (ctrl != null && !ctrl.isDisposed()) {
+			final boolean hasPendingUpdates;
+			synchronized (this) {
+				hasPendingUpdates= fPendingUpdates != null && !fPendingUpdates.isEmpty();
+			}
+			//Are we in the UIThread? If so spin it until we are done
+			if (!hasPendingUpdates && ctrl.getDisplay().getThread() == Thread.currentThread() && !((TreeViewer)viewer).isBusy()) {
+				runUpdates(runnables);
+			} else {
+				synchronized (this) {
+					if (fPendingUpdates == null) {
+						fPendingUpdates= runnables;
+					} else {
+						fPendingUpdates.addAll(runnables);
+					}
+				}
+				postAsyncUpdate(ctrl.getDisplay());
+			}
+		}
+	}
+	private void postAsyncUpdate(final Display display) {
+		if (fUpdateJob == null) {
+			fUpdateJob= new UIJob(display, "Updating content viewer") {
+				@Override
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					TreeViewer viewert= (TreeViewer) viewer;
+					if (viewert != null && viewert.isBusy()) {
+						schedule(100); // reschedule when viewer is busy: bug 184991
+					} else {
+						runPendingUpdates();
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			fUpdateJob.setSystem(true);
+		}
+		fUpdateJob.schedule();
+	}
+
+	/**
+	 * Run all of the runnables that are the widget updates. Must be called in the display thread.
+	 */
+	public void runPendingUpdates() {
+		Collection<Runnable> pendingUpdates;
+		synchronized (this) {
+			pendingUpdates= fPendingUpdates;
+			fPendingUpdates= null;
+		}
+		if (pendingUpdates != null && viewer != null) {
+			Control control = viewer.getControl();
+			if (control != null && !control.isDisposed()) {
+				runUpdates(pendingUpdates);
+			}
+		}
+	}
+
+	private void runUpdates(Collection<Runnable> runnables) {
+		Iterator<Runnable> runnableIterator = runnables.iterator();
+		while (runnableIterator.hasNext()){
+			runnableIterator.next().run();
+		}
 	}
 }
