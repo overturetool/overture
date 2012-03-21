@@ -110,6 +110,9 @@ public class SafeBuilder extends Thread
 											throw e;
 										}
 										return;
+									}else
+									{
+										workingModel.discard();
 									}
 								}
 							}
