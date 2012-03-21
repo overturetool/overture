@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.core.parser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,18 +64,50 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		ParseResult result;
 		try
 		{
-			LexLocation.getAllLocations().clear();
-			result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
-			setFileMarkers(file.getFile(), result,null);
-			if (result != null && result.getAst() != null)
-				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
+			if (file.getFile().isLinked()
+					&& !file.getFile().getLocation().toFile().exists())
+			{
+				FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
+				addError(file.getFile(), "Linked file not found "
+						+ file.getFile(), 0);
+				file.reconcile(null, null, null, true);
+			} else
+			{
+				LexLocation.getAllLocations().clear();
+				result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
+				setFileMarkers(file.getFile(), result, null);
+				if (result != null && result.getAst() != null)
+				{
+					file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
+				}
+			}
 
 		} catch (CoreException e)
+		{
+			if (e.getStatus().getException() instanceof IOException)
+			{
+				FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
+				if (e.getStatus() != null
+						&& e.getStatus().getException() != null)
+				{
+					addError(file.getFile(), e.getStatus().getException().getMessage(), 0);
+				}
+
+			} else if (VdmCore.DEBUG)
+			{
+				VdmCore.log("AbstractParserParticipant:parse IVdmSourceUnit", e);
+			}
+
+			file.reconcile(null, null, null, true);
+		} catch (Exception e)
 		{
 			if (VdmCore.DEBUG)
 			{
 				VdmCore.log("AbstractParserParticipant:parse IVdmSourceUnit", e);
 			}
+			FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
+			addError(file.getFile(), "Internal error: " + e.getMessage(), 0);
+			file.reconcile(null, null, null, true);
 		}
 	}
 
@@ -86,10 +119,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		ParseResult result;
 		try
-		{			
-			LexLocation.getAllLocations().clear();		
+		{
+			LexLocation.getAllLocations().clear();
 			result = startParse(file, data, file.getFile().getCharset());
-			setFileMarkers(file.getFile(), result,data);
+			setFileMarkers(file.getFile(), result, data);
 			if (result != null)
 
 				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
@@ -110,7 +143,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	 *            the file where the markers should be set
 	 * @param result
 	 *            the result indicating if parse errors occurred
-	 * @param content 
+	 * @param content
 	 * @throws CoreException
 	 */
 	private void setFileMarkers(IFile file, ParseResult result, String content)
@@ -131,17 +164,17 @@ public abstract class AbstractParserParticipant implements ISourceParser
 						// error fall
 						// through
 						continue;
-					}
-					else
+					} else
 					{
 						previousErrorNumber = error.number;
 					}
-					
-					if(content==null)
+
+					if (content == null)
 					{
 						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID);
-					}else{
-						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID,content);
+					} else
+					{
+						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID, content);
 					}
 				}
 			}
@@ -153,11 +186,12 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			{
 				for (VDMWarning warning : result.getWarnings())
 				{
-					if(content ==null)
+					if (content == null)
 					{
 						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID);
-					}else{
-						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID,content);
+					} else
+					{
+						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID, content);
 					}
 				}
 			}
@@ -202,10 +236,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		if (file.getFileExtension().endsWith("doc"))
 		{
 			streamReaderType = ReaderType.Doc;
-		}else if(file.getFileExtension().endsWith("docx"))
+		} else if (file.getFileExtension().endsWith("docx"))
 		{
 			streamReaderType = ReaderType.Docx;
-		}else if(file.getFileExtension().endsWith("odt"))
+		} else if (file.getFileExtension().endsWith("odt"))
 		{
 			streamReaderType = ReaderType.Odf;
 		}
