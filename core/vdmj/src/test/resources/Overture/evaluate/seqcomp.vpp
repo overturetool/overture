@@ -1,0 +1,6 @@
+class A
+functions
+	public firsts : () -> seq of int
+	firsts() == [x | mk_(x,-) in set {mk_(1,2), mk_(2,3), mk_(1,4)}];
+	
+end A

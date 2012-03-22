@@ -51,4 +51,9 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("measures", ResultType.VOID);
 	}
+
+	public void test_SeqComp()
+	{
+		evaluate("seqcomp", ResultType.TRUE);
+	}
 }
