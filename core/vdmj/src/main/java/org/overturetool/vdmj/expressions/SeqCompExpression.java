@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import java.util.Collections;
+
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -42,9 +43,12 @@ import org.overturetool.vdmj.types.BooleanType;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueMap;
+import org.overturetool.vdmj.values.ValueSet;
 
 
 public class SeqCompExpression extends SeqExpression
@@ -76,7 +80,7 @@ public class SeqCompExpression extends SeqExpression
 		Definition def = new MultiBindListDefinition(location, setbind.getMultipleBindList());
 		def.typeCheck(base, scope);
 
-		if (!def.getType().isNumeric())
+		if (setbind.pattern.getVariableNames().size() != 1 || !def.getType().isNumeric())
 		{
 			report(3155, "List comprehension must define one numeric bind variable");
 		}
@@ -101,34 +105,34 @@ public class SeqCompExpression extends SeqExpression
 	{
 		breakpoint.check(location, ctxt);
 
-		if (setbind.pattern.getVariableNames().size() != 1)
-		{
-			abort(4028, "Sequence comprehension pattern has multiple variables", ctxt);
-		}
-
 		ValueList allValues = setbind.getBindValues(ctxt);
 
-		for (Value v: allValues)
-		{
-			if (!v.isNumeric())
-			{
-				abort(4029, "Sequence comprehension bindings must be numeric", ctxt);
-			}
-		}
-
-		Collections.sort(allValues);	// Using compareTo
-		ValueList set = new ValueList();
+		ValueSet seq = new ValueSet();	// Bind variable values
+		ValueMap map = new ValueMap();	// Map bind values to output values
 
 		for (Value val: allValues)
 		{
 			try
 			{
 				Context evalContext = new Context(location, "seq comprehension", ctxt);
-				evalContext.putList(setbind.pattern.getNamedValues(val, ctxt));
+				NameValuePairList nvpl = setbind.pattern.getNamedValues(val, ctxt);
+				Value sortOn = nvpl.get(0).value;
 
-				if (predicate == null || predicate.eval(evalContext).boolValue(ctxt))
+				if (map.get(sortOn) == null)
 				{
-					set.add(first.eval(evalContext));
+    				if (nvpl.size() != 1 || !sortOn.isNumeric())
+    				{
+    					abort(4029, "Sequence comprehension bindings must be one numeric value", ctxt);
+    				}
+
+    				evalContext.putList(nvpl);
+
+    				if (predicate == null || predicate.eval(evalContext).boolValue(ctxt))
+    				{
+    					Value out = first.eval(evalContext);
+   						seq.add(sortOn);
+   						map.put(sortOn, out);
+    				}
 				}
 			}
 			catch (ValueException e)
@@ -141,7 +145,15 @@ public class SeqCompExpression extends SeqExpression
 			}
 		}
 
-		return new SeqValue(set);
+		Collections.sort(seq);	// Using compareTo
+		ValueList sorted = new ValueList();
+
+		for (Value bv: seq)
+		{
+			sorted.add(map.get(bv));
+		}
+
+		return new SeqValue(sorted);
 	}
 
 	@Override

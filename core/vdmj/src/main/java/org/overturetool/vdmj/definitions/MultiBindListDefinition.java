@@ -33,7 +33,8 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.types.TypeSet;
+import org.overturetool.vdmj.types.UnionType;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -58,7 +59,7 @@ public class MultiBindListDefinition extends Definition
 	{
 		return "def " + Utils.listToString(bindings);
 	}
-	
+
 	@Override
 	public boolean equals(Object other)
 	{
@@ -66,10 +67,10 @@ public class MultiBindListDefinition extends Definition
 		{
 			return toString().equals(other.toString());
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -109,12 +110,14 @@ public class MultiBindListDefinition extends Definition
 	@Override
 	public Type getType()
 	{
-		if (defs != null && defs.size() == 1)
+		TypeSet types = new TypeSet();
+
+		for (Definition def: defs)
 		{
-			return defs.get(0).getType();
+			types.add(def.getType());
 		}
 
-		return new UnknownType(location);
+		return new UnionType(location, types);
 	}
 
 	@Override
