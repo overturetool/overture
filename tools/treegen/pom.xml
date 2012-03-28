@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.tools</groupId>
 	<artifactId>treegen</artifactId>
-	<version>2.1.1</version>
+	<version>1.1.0</version>
 	<name>TreeGen</name>
 	<organization>
 		<name>Overture Tool Project</name>
