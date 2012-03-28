@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.1</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>vdmexamples</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 	<name>Test Project for all VDM Examples</name>
 	<build>
 		<plugins>
@@ -33,13 +33,13 @@
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>vdmj</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>testframework</artifactId>
 			<scope>test</scope>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 	</dependencies>
 	

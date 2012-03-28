@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.1</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>jmltrans</artifactId>
@@ -22,19 +22,19 @@
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>stdlib</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>ast</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool</groupId>
 			<artifactId>parser</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>	

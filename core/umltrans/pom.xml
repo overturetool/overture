@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.1</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>umltrans</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 	<name>Bi-directional OML to UML translator</name>
 	<build>
 		<plugins>
@@ -28,7 +28,7 @@
 			<plugin>
 				<groupId>org.overturetool.tools</groupId>
 				<artifactId>vdmt</artifactId>
-				<version>2.1.0</version>
+				<version>2.1.1</version>
 				<configuration>
 					<excludePackages>
 						<param>
@@ -83,18 +83,18 @@
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>parser</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>xmljunit</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>stdlib</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>args4j</groupId>

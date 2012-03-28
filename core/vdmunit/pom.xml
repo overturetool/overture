@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.1</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>vdmunit</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 	<packaging>jar</packaging>
 	<build>
 		<finalName>org.overturetool.vdmunit-${version}</finalName>

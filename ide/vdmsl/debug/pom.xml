@@ -3,32 +3,32 @@
   <parent>
     <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.vdmsl</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
   </parent>
 
   <groupId>org.overture.ide.vdmsl</groupId>
   <artifactId>org.overture.ide.vdmsl.debug</artifactId>
   <name>org.overture.ide.vdmsl.debug</name>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <dependencies>
   	<dependency>
   		<groupId>org.overture.ide</groupId>
   		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.1.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.overture.ide</groupId>
   		<artifactId>org.overture.ide.debug</artifactId>
-  		<version>2.1.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.overture.ide.vdmsl</groupId>
   		<artifactId>org.overture.ide.vdmsl.core</artifactId>
-  		<version>2.1.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
