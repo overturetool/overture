@@ -4,12 +4,12 @@
 
 		<groupId>org.overturetool.tools</groupId>
 		<artifactId>tools</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.tools</groupId>
 	<artifactId>packworkspace</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 	<name>Overture Examples Workspace packer</name>
 	<build>
 		<plugins>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>vdmj</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 	</dependencies>
 </project>
