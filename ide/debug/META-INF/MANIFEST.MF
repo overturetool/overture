@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
-Bundle-Version: 2.1.0
+Bundle-Version: 2.1.1
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.debug
@@ -27,6 +27,6 @@ Export-Package: org.overture.ide.debug.core,
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,
- ast-2.1.0.jar,
- vdmj-2.1.0.jar,
- cglib-2.1.0.jar
+ ast-2.1.1.jar,
+ vdmj-2.1.1.jar,
+ cglib-2.1.1.jar
