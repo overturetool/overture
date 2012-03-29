@@ -9,7 +9,7 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.vdmsl.debug;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.overture.ide.debug,
- org.overture.ide.vdmsl.core;bundle-version="0.3.0"
+ org.overture.ide.vdmsl.core;bundle-version="2.1.1"
 Export-Package: org.overture.ide.vdmsl.debug,
  org.overture.ide.vdmsl.debug.ui.launchconfigurations
 Bundle-Activator: org.overture.ide.vdmsl.debug.Activator
