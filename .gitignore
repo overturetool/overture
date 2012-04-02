@@ -33,3 +33,7 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+# maven target directories #
+############################
+target/
+
