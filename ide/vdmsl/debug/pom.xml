@@ -9,7 +9,7 @@
   <groupId>org.overture.ide.vdmsl</groupId>
   <artifactId>org.overture.ide.vdmsl.debug</artifactId>
   <name>org.overture.ide.vdmsl.debug</name>
-  <version>2.1.1</version>
+  <version>1.1.1</version>
   <dependencies>
   	<dependency>
   		<groupId>org.overture.ide</groupId>
