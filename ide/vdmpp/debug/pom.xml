@@ -8,9 +8,10 @@
 
   <groupId>org.overture.ide.vdmpp</groupId>
   <artifactId>org.overture.ide.vdmpp.debug</artifactId>
-  
- <name>org.overture.ide.vdmpp.debug</name>
+  <name>org.overture.ide.vdmpp.debug</name>
   <version>1.1.1</version>
+  <packaging>eclipse-plugin</packaging>
+
   <dependencies>
   	<dependency>
   		<groupId>org.overture.ide</groupId>

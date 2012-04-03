@@ -10,6 +10,7 @@
 	<artifactId>org.overture.ide.plugins.poviewer</artifactId>
 	<name>org.overture.ide.plugins.poviewer</name>
 	<version>2.1.1</version>
+	<packaging>eclipse-plugin</packaging>
 
 	<dependencies>
 		<dependency>

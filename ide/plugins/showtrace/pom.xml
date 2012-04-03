@@ -10,6 +10,7 @@
 	<artifactId>org.overture.ide.plugins.showtrace</artifactId>
 	<name>Showtrace</name>
 	<version>2.1.1</version>
+	<packaging>eclipse-plugin</packaging>
 
 	<description>Graphical tool to display execution trace of a realtime VDM PP model. Enables the user to see thread switched and bus traffic.</description>
 	<build>

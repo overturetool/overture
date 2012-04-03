@@ -9,7 +9,7 @@
   <artifactId>org.overture.ide.vdmrt.ui</artifactId>
   <name>org.overture.ide.vdmrt.ui</name>
   <version>2.1.1</version>
-  
+  <packaging>eclipse-plugin</packaging>  
 
  <reporting>
     <plugins>

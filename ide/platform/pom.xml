@@ -6,13 +6,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide</groupId>
-  <artifactId>
-    org.overture.ide.platform
-  </artifactId>
-  <name>
-    org.overture.ide.platform
-  </name>
+  <artifactId>org.overture.ide.platform</artifactId>
+  <name>org.overture.ide.platform</name>
   <version>2.1.1</version>
-  
+  <packaging>eclipse-plugin</packaging>  
 
 </project>

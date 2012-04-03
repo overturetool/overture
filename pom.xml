@@ -10,7 +10,7 @@
 	<modules>
 		<module>core</module>
 		<module>tools</module>
-		<module>ide</module>
+		<!-- <module>ide</module> -->
 	</modules>
 
 	<properties>
@@ -78,73 +78,65 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.0-beta-7</version>
-				<configuration>
-					<tagBase>https://overture.svn.sourceforge.net/svnroot/overture/tags</tagBase>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>2.0.1</version>
 			</plugin>
+
                         <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-release-plugin</artifactId>
-                                <version>2.2.2</version>
+                                <version>2.2</version>
                                 <configuration>
                                         <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
                                 </configuration>
                         </plugin>
 		</plugins>
 
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-beta-2</version>
-			</extension>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-webdav</artifactId>
-				<version>1.0-beta-2</version>
-			</extension>
-		</extensions>
+		<!-- <extensions> -->
+		<!-- 	<extension> -->
+		<!-- 		<groupId>org.apache.maven.wagon</groupId> -->
+		<!-- 		<artifactId>wagon-ftp</artifactId> -->
+		<!-- 		<version>1.0</version> -->
+		<!-- 	</extension> -->
+		<!-- 	<extension> -->
+		<!-- 		<groupId>org.apache.maven.wagon</groupId> -->
+		<!-- 		<artifactId>wagon-webdav</artifactId> -->
+		<!-- 		<version>1.0</version> -->
+		<!-- 	</extension> -->
+		<!-- </extensions> -->
 	</build>
 
 
 
-	<distributionManagement>
-		<repository>
-			<id>sourceforge.net</id>
-			<name>Overture Repo af SF.Net</name>
-			<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>
-		</repository>
-		<snapshotRepository>
-			<id>sourceforge.net</id>
-			<name>Overture Snapshot Repo af SF.Net</name>
-			<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>
-		</snapshotRepository>
-		<site>
-			<id>sourceforge.net</id>
-			<url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url>
-		</site>
-	</distributionManagement>
+	<!-- <distributionManagement> -->
+	<!-- 	<repository> -->
+	<!-- 		<id>sourceforge.net</id> -->
+	<!-- 		<name>Overture Repo af SF.Net</name> -->
+	<!-- 		<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url> -->
+	<!-- 	</repository> -->
+	<!-- 	<snapshotRepository> -->
+	<!-- 		<id>sourceforge.net</id> -->
+	<!-- 		<name>Overture Snapshot Repo af SF.Net</name> -->
+	<!-- 		<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url> -->
+	<!-- 	</snapshotRepository> -->
+	<!-- 	<site> -->
+	<!-- 		<id>sourceforge.net</id> -->
+	<!-- 		<url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url> -->
+	<!-- 	</site> -->
+	<!-- </distributionManagement> -->
 
 
 
-	<scm>
-		<connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</connection>
-		<developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection>
-		<url>svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</url>
-	</scm>
+	<!-- <scm> -->
+	<!-- 	<connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</connection> -->
+	<!-- 	<developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection> -->
+	<!-- 	<url>svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</url> -->
+	<!-- </scm> -->
 
-	<issueManagement>
-		<system>sourceforge</system>
-		<url>http://sourceforge.net/tracker/?group_id=141350</url>
-	</issueManagement>
+	<!-- <issueManagement> -->
+	<!-- 	<system>sourceforge</system> -->
+	<!-- 	<url>http://sourceforge.net/tracker/?group_id=141350</url> -->
+	<!-- </issueManagement> -->
 
 	<organization>
 		<name>Overture</name>

@@ -9,6 +9,7 @@
   <artifactId>org.overture.ide.plugins.csk</artifactId>
   <name>org.overture.ide.plugins.csk</name>
   <version>2.1.1</version>
+  <packaging>eclipse-plugin</packaging>
   <dependencies>
   	<dependency>
   		<groupId>org.overture.ide</groupId>

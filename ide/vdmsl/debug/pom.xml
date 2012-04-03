@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.overture.ide</groupId>
-  <artifactId>org.overture.ide.vdmsl</artifactId>
+    <artifactId>org.overture.ide.vdmsl</artifactId>
     <version>2.1.1</version>
   </parent>
 
@@ -10,6 +10,8 @@
   <artifactId>org.overture.ide.vdmsl.debug</artifactId>
   <name>org.overture.ide.vdmsl.debug</name>
   <version>2.1.1</version>
+  <packaging>eclipse-plugin</packaging>
+
   <dependencies>
   	<dependency>
   		<groupId>org.overture.ide</groupId>
