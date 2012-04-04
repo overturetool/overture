@@ -10,7 +10,7 @@
 	<modules>
 		<module>core</module>
 		<module>tools</module>
-		<!-- <module>ide</module> -->
+		<module>ide</module>
 	</modules>
 
 	<properties>

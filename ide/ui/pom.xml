@@ -1,38 +1,37 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>org.overture</groupId>
-		<artifactId>ide</artifactId>
-		<version>2.1.1</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overture.ide</groupId>
-	<artifactId>org.overture.ide.ui</artifactId>
-	<name>org.overture.ide.ui</name>
-	<version>2.1.1</version>
-	<packaging>eclipse-plugin</packaging>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.overture</groupId>
+    <artifactId>ide</artifactId>
+    <version>2.1.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide</groupId>
+  <artifactId>org.overture.ide.ui</artifactId>
+  <name>org.overture.ide.ui</name>
+  <!-- <packaging>eclipse-plugin</packaging> -->
 
-	<dependencies>
-		<dependency>
-			<groupId>org.overture.ide</groupId>
-			<artifactId>org.overture.ide.core</artifactId>
-			<version>2.1.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<skip>true</skip>
-					<failOnError>false</failOnError>
-					<excludePackageNames>*org.eclipse.*</excludePackageNames>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
+  <dependencies>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-javadoc-plugin</artifactId>
+	<version>2.5</version>
+	<configuration>
+	  <skip>true</skip>
+	  <failOnError>false</failOnError>
+	  <excludePackageNames>*org.eclipse.*</excludePackageNames>
+	</configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
