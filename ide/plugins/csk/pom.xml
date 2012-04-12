@@ -8,18 +8,39 @@
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.csk</artifactId>
   <name>org.overture.ide.plugins.csk</name>
-  <version>2.1.1</version>
-  <packaging>eclipse-plugin</packaging>
+
   <dependencies>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.ui</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.ui</groupId>
+      <artifactId>org.eclipse.ui</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jface</groupId>
+      <artifactId>org.eclipse.jface</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.swt</groupId>
+      <artifactId>org.eclipse.swt</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.swt</groupId>
+      <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+      <version>3.7.2</version>
+    </dependency>
   </dependencies>
-  
-
-
 </project>

@@ -15,23 +15,22 @@
   
   <properties>
     <maven.test.skip>true</maven.test.skip>
-    <!-- <tycho-version>0.14.1</tycho-version> -->
   </properties>
   
   <modules>
     <!-- Put all child Eclipse Plugin projects(modules) here -->
     <module>core</module>
     <module>ui</module>
-    <!-- <module>debug</module> -->
-    <!-- <module>vdmsl</module> -->
-    <!-- <module>vdmpp</module> -->
-    <!-- <module>vdmrt</module> -->
-    <!-- <module>platform</module> -->
-    <!-- <module>parsers</module> -->
-    <!-- <module>builders</module> -->
-    <!-- <module>plugins</module> -->
-    <!-- <module>help</module> -->
-    <!-- <module>build</module> -->
+    <module>debug</module>
+    <module>vdmsl</module>
+    <module>vdmpp</module>
+    <module>vdmrt</module>
+    <module>platform</module>
+    <module>parsers</module>
+    <module>builders</module>
+    <module>plugins</module>
+    <module>help</module>
+    <module>build</module>
   </modules>
 
   <!-- <dependencies> -->
@@ -85,45 +84,6 @@
 	    </lifecycleMappingMetadata>
 	  </configuration>
 	</plugin>
-				<!-- <plugin> -->
-				<!-- 	<groupId>org.eclipse.tycho</groupId> -->
-				<!-- 	<artifactId>tycho-compiler-plugin</artifactId> -->
-				<!-- 	<version>${tycho-version}</version> -->
-				<!-- </plugin> -->
-				<!-- <plugin> -->
-				<!--   <groupId>org.eclipse.tycho</groupId> -->
-				<!--   <artifactId>target-platform-configuration</artifactId> -->
-				<!--   <version>${tycho-version}</version> -->
-				<!--   <configuration> -->
-				<!--     <environments> -->
-				      <!-- <environment> -->
-				      <!-- 	<os>linux</os> -->
-				      <!-- 	<ws>gtk</ws> -->
-				      <!-- 	<arch>x86</arch> -->
-				      <!-- </environment> -->
-				      <!-- <environment> -->
-				      <!-- 	<os>linux</os> -->
-				      <!-- 	<ws>gtk</ws> -->
-				      <!-- 	<arch>x86_64</arch> -->
-				      <!-- </environment> -->
-				      <!-- <environment> -->
-				      <!-- 	<os>win32</os> -->
-				      <!-- 	<ws>win32</ws> -->
-				      <!-- 	<arch>x86</arch> -->
-				      <!-- </environment> -->
-				      <!-- <environment> -->
-				      <!-- 	<os>win32</os> -->
-				      <!-- 	<ws>win32</ws> -->
-				      <!-- 	<arch>x86_64</arch> -->
-				      <!-- </environment> -->
-				<!--       <environment> -->
-				<!-- 	<os>macosx</os> -->
-				<!-- 	<ws>cocoa</ws> -->
-				<!-- 	<arch>x86_64</arch> -->
-				<!--       </environment> -->
-				<!--     </environments> -->
-				<!--   </configuration> -->
-				<!-- </plugin> -->
       </plugins>
     </pluginManagement>
 
@@ -183,25 +143,8 @@
 	  <skip>true</skip>
 	</configuration>
       </plugin>
-      <!-- <plugin> -->
-      <!-- 	<groupId>org.eclipse.tycho</groupId> -->
-      <!-- 	<artifactId>tycho-maven-plugin</artifactId> -->
-      <!-- 	<version>${tycho-version}</version> -->
-      <!-- 	<extensions>true</extensions> -->
-      <!-- 	<configuration> -->
-      <!-- 	  <pomDependencies>consider</pomDependencies> -->
-      <!-- 	</configuration> -->
-      <!-- </plugin> -->
     </plugins>
   </build>
-
-  <!-- <repositories> -->
-  <!--   <repository> -->
-  <!--     <id>eclipse-indigo</id> -->
-  <!--     <layout>p2</layout> -->
-  <!--     <url>http://download.eclipse.org/releases/indigo</url> -->
-  <!--   </repository> -->
-  <!-- </repositories> -->
 
   <profiles>
     <profile>

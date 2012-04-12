@@ -8,18 +8,22 @@
   <groupId>org.overture.ide.vdmsl</groupId>
   <artifactId>org.overture.ide.vdmsl.ui</artifactId>
   <name>org.overture.ide.vdmsl.ui</name>
-  <version>2.1.1</version>
-  <packaging>eclipse-plugin</packaging>  
 
   <dependencies>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.ui</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.ui</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmsl</groupId>
+      <artifactId>org.overture.ide.vdmsl.core</artifactId>
+      <version>2.1.1</version>
+    </dependency>
   </dependencies>
+
   <reporting>
     <plugins>
       <plugin>

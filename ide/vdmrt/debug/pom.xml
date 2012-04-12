@@ -9,32 +9,31 @@
   <groupId>org.overture.ide.vdmrt</groupId>
   <artifactId>org.overture.ide.vdmrt.debug</artifactId>
   <name>org.overture.ide.vdmrt.debug</name>
-  <version>1.1.1</version>
-  <packaging>eclipse-plugin</packaging>
 
   <dependencies>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.debug</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide.vdmrt</groupId>
-  		<artifactId>org.overture.ide.vdmrt.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.debug</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmrt</groupId>
+      <artifactId>org.overture.ide.vdmrt.core</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmpp</groupId>
+      <artifactId>org.overture.ide.vdmpp.debug</artifactId>
+      <version>2.1.1</version>
+    </dependency>
   </dependencies>
- 
-
 </project>
