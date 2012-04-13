@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.patterns;
 
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -82,5 +83,11 @@ public class MultipleTypeBind extends MultipleBind
 	public ValueList getValues(Context ctxt)
 	{
 		return new ValueList();
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return new LexNameList();
 	}
 }

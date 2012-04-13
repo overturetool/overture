@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.pog.CasesExhaustiveObligation;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -182,6 +183,24 @@ public class CasesExpression extends Expression
 		if (others != null)
 		{
 			list.addAll(others.getValues(ctxt));
+		}
+
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = exp.getOldNames();
+
+		for (CaseAlternative c: cases)
+		{
+			list.addAll(c.getOldNames());
+		}
+
+		if (others != null)
+		{
+			list.addAll(others.getOldNames());
 		}
 
 		return list;

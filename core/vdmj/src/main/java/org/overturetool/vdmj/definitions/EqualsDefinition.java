@@ -348,4 +348,17 @@ public class EqualsDefinition extends Definition
 
 		return list;
 	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = test.getOldNames();
+
+		if (setbind != null)
+		{
+			list.addAll(setbind.getOldNames());
+		}
+
+		return list;
+	}
 }

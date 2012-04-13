@@ -28,6 +28,7 @@ import java.util.List;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.pog.POForAllContext;
@@ -190,6 +191,20 @@ public class ForAllExpression extends Expression
 		}
 
 		list.addAll(predicate.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = new LexNameList();
+
+		for (MultipleBind mb: bindList)
+		{
+			list.addAll(mb.getOldNames());
+		}
+
+		list.addAll(predicate.getOldNames());
 		return list;
 	}
 }

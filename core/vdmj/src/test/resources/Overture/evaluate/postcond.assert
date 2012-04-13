@@ -1,0 +1,2 @@
+let T = new Test() in
+	T.f() = [true, false] and T.pop(999) = 999

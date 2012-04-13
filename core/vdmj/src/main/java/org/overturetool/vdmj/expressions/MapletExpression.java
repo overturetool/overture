@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.io.Serializable;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -82,6 +83,13 @@ public class MapletExpression implements Serializable
 	{
 		ValueList list = left.getValues(ctxt);
 		list.addAll(right.getValues(ctxt));
+		return list;
+	}
+
+	public LexNameList getOldNames()
+	{
+		LexNameList list = left.getOldNames();
+		list.addAll(right.getOldNames());
 		return list;
 	}
 }

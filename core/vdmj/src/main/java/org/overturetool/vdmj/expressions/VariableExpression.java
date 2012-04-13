@@ -29,6 +29,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.scheduler.SharedStateListner;
@@ -237,6 +238,19 @@ public class VariableExpression extends Expression
 		else
 		{
 			return new ValueList(v);
+		}
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		if (name.old)
+		{
+			return new LexNameList(name);
+		}
+		else
+		{
+			return new LexNameList();
 		}
 	}
 }

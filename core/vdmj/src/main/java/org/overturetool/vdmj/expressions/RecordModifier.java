@@ -24,8 +24,8 @@
 package org.overturetool.vdmj.expressions;
 
 import java.io.Serializable;
-
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.values.ValueList;
 
@@ -51,5 +51,10 @@ public class RecordModifier implements Serializable
 	public ValueList getValues(Context ctxt)
 	{
 		return value.getValues(ctxt);
+	}
+
+	public LexNameList getOldNames()
+	{
+		return value.getOldNames();
 	}
 }

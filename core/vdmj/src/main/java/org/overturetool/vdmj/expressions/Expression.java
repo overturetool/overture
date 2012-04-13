@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import org.overturetool.vdmj.ast.IAstNode;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Breakpoint;
@@ -188,6 +189,19 @@ public abstract class Expression implements Serializable,IAstNode
 	public ValueList getValues(Context ctxt)
 	{
 		return new ValueList();  // Default, for expressions with no variables
+	}
+	
+	/**
+	 * Return a list of all the variable names used by an expression that refer
+	 * to the "old" names of variables (like xyz~). This is used during the
+	 * evaluation of postconditions to decide which variables to evaluate.
+	 * 
+	 * @return A list of old variable names.
+	 */
+	
+	public LexNameList getOldNames()
+	{
+		return new LexNameList();	// Default for expressions with no old variables
 	}
 
 	/**

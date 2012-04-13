@@ -33,9 +33,11 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.SystemDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.Lock;
 import org.overturetool.vdmj.types.ClassType;
@@ -463,6 +465,31 @@ public class ObjectValue extends Value
 			throw new InternalException(5, "Illegal clone: " + e);
 		}
 	}
+	
+	public MapValue getOldValues(LexNameList oldnames)
+	{
+		ValueMap values = new ValueMap();
+		ObjectContext ctxt = new ObjectContext(type.location, "Old Object Creation", null, this);
+
+		for (LexNameToken name: oldnames)
+		{
+			Value mv = ctxt.check(name.getNewName()).deref();
+			SeqValue sname = new SeqValue(name.name);
+
+			if (mv instanceof ObjectValue)
+			{
+				ObjectValue om = (ObjectValue)mv;
+				values.put(sname, om.deepCopy());
+			}
+			else
+			{
+				values.put(sname, (Value)mv.clone());
+			}
+		}
+
+		return new MapValue(values);
+	}
+	
 
 //	private void writeObject(ObjectOutputStream out)
 //		throws IOException

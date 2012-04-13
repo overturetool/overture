@@ -30,6 +30,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.patterns.TypeBind;
@@ -152,5 +153,11 @@ public class LambdaExpression extends Expression
 	public ValueList getValues(Context ctxt)
 	{
 		return expression.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return expression.getOldNames();
 	}
 }

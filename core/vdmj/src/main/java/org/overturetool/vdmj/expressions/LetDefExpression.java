@@ -28,6 +28,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POLetDefContext;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -174,6 +175,14 @@ public class LetDefExpression extends Expression
 	{
 		ValueList list = localDefs.getValues(ctxt);
 		list.addAll(expression.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = localDefs.getOldNames();
+		list.addAll(expression.getOldNames());
 		return list;
 	}
 }

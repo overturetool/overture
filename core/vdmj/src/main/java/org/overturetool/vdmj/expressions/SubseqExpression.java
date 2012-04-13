@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -161,6 +162,15 @@ public class SubseqExpression extends Expression
 		ValueList list = seq.getValues(ctxt);
 		list.addAll(from.getValues(ctxt));
 		list.addAll(to.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = seq.getOldNames();
+		list.addAll(from.getOldNames());
+		list.addAll(to.getOldNames());
 		return list;
 	}
 }

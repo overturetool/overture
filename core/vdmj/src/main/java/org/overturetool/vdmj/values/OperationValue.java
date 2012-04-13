@@ -38,6 +38,7 @@ import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
@@ -311,7 +312,7 @@ public class OperationValue extends Value
 		argContext.putAll(args);
 
 		Value originalSigma = null;
-		ObjectValue originalSelf = null;
+		MapValue originalValues = null;
 
 		if (postcondition != null)
 		{
@@ -323,7 +324,9 @@ public class OperationValue extends Value
 
 			if (self != null)
 			{
-				originalSelf = self.shallowCopy();	// self.deepCopy();
+				// originalSelf = self.shallowCopy();
+				LexNameList oldnames = postcondition.body.getOldNames();
+				originalValues = self.getOldValues(oldnames);
 			}
 		}
 
@@ -384,7 +387,7 @@ public class OperationValue extends Value
     			}
     			else if (self != null)
     			{
-    				postArgs.add(originalSelf);
+    				postArgs.add(originalValues);
     				postArgs.add(self);
     			}
 

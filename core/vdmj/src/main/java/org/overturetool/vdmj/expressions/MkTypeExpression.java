@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -211,5 +212,11 @@ public class MkTypeExpression extends Expression
 	public ValueList getValues(Context ctxt)
 	{
 		return args.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return args.getOldNames();
 	}
 }

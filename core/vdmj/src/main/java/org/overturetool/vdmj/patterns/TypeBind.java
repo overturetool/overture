@@ -26,6 +26,7 @@ package org.overturetool.vdmj.patterns;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -83,5 +84,11 @@ public class TypeBind extends Bind
 	public ValueList getValues(Context ctxt)
 	{
 		return new ValueList();
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return new LexNameList();
 	}
 }

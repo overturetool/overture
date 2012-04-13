@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -70,7 +71,10 @@ public abstract class Bind implements Serializable
 
 	/** Return a list of all values read by the bind evaluation. */
 	abstract public ValueList getValues(Context ctxt);
-
+	
+	/** Return a list of all old values read by the bind evaluation. */
+	abstract public LexNameList getOldNames();
+	
 	/**
 	 * @see org.overturetool.vdmj.definitions.Definition#report
 	 */

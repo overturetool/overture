@@ -25,6 +25,7 @@ package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -169,5 +170,11 @@ public class IsExpression extends Expression
 	public ValueList getValues(Context ctxt)
 	{
 		return test.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return test.getOldNames();
 	}
 }
