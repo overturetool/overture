@@ -29,9 +29,9 @@
 
   <repositories>
     <repository>
-      <id>localEclipseM2Repo</id>
-      <name>Local Eclipse Repository in Maven Format from MT4E</name>
-      <url>file:///Users/jwc/Documents/ov-mvn-fix/mt4e/tmp/m2repo</url>
+      <id>OvertureMT4Em2Repo</id>
+      <name>Overture Project's MT4E-generated Maven Repository of Eclipse 3.7.2 files</name>
+      <url>http://build.overturetool.org/builds/mt4e-m2repo-eclipse3.7.2/</url>
       <layout>default</layout>
     </repository>
   </repositories>
