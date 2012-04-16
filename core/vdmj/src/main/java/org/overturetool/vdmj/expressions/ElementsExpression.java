@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -115,5 +116,11 @@ public class ElementsExpression extends SetExpression
 	public ValueList getValues(Context ctxt)
 	{
 		return exp.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return exp.getOldNames();
 	}
 }

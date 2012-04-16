@@ -25,6 +25,7 @@ package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.pog.LetBeExistsObligation;
@@ -203,6 +204,20 @@ public class LetBeStExpression extends Expression
 		}
 
 		list.addAll(value.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = bind.getOldNames();
+
+		if (suchThat != null)
+		{
+			list.addAll(suchThat.getOldNames());
+		}
+
+		list.addAll(value.getOldNames());
 		return list;
 	}
 }

@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.PONotImpliesContext;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.POImpliesContext;
@@ -204,6 +205,25 @@ public class IfExpression extends Expression
 		if (elseExp != null)
 		{
 			list.addAll(elseExp.getValues(ctxt));
+		}
+
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = ifExp.getOldNames();
+		list.addAll(thenExp.getOldNames());
+
+		for (ElseIfExpression elif: elseList)
+		{
+			list.addAll(elif.getOldNames());
+		}
+
+		if (elseExp != null)
+		{
+			list.addAll(elseExp.getOldNames());
 		}
 
 		return list;

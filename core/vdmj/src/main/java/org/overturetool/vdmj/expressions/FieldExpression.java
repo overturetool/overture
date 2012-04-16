@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -268,5 +269,11 @@ public class FieldExpression extends Expression
 	public ValueList getValues(Context ctxt)
 	{
 		return object.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return object.getOldNames();
 	}
 }

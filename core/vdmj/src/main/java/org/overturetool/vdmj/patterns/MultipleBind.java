@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -103,7 +104,10 @@ public abstract class MultipleBind implements Serializable
 	/** Return a list of all values read by the bind evaluation. */
 	abstract public ValueList getValues(Context ctxt);
 
+	/** Return a list of old names used by the bind. */
+	abstract public LexNameList getOldNames();
 
+	
 	public Type getPossibleType()
 	{
 		return plist.getPossibleType(location);

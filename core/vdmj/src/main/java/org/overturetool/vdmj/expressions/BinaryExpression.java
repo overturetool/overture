@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.expressions;
 
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -72,10 +73,10 @@ abstract public class BinaryExpression extends Expression
 	@Override
 	public Expression findExpression(int lineno)
 	{
-		Expression found = super.findExpression(lineno);
-		if (found != null) return found;
+//		Expression found = super.findExpression(lineno);
+//		if (found != null) return found;
 
-		found = left.findExpression(lineno);
+		Expression found = left.findExpression(lineno);
 		if (found != null) return found;
 
 		return right.findExpression(lineno);
@@ -104,6 +105,14 @@ abstract public class BinaryExpression extends Expression
 		return list;
 	}
 	
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = left.getOldNames();
+		list.addAll(right.getOldNames());
+		return list;
+	}
+
 	@Override
 	public ExpressionList getSubExpressions()
 	{

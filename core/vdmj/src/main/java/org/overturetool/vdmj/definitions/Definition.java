@@ -174,6 +174,15 @@ public abstract class Definition implements Serializable, IAstNode
 	}
 
 	/**
+	 * Return a list of old names used by the definition.
+	 */
+	
+	public LexNameList getOldNames()
+	{
+		return new LexNameList();
+	}
+
+	/**
 	 * Return the static type of the definition. For example, the type of a
 	 * function or operation definition would be its parameter/result signature;
 	 * the type of a value definition would be that value's type; the type of a

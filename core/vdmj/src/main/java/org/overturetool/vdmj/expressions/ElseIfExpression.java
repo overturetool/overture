@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.POImpliesContext;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -113,6 +114,14 @@ public class ElseIfExpression extends Expression
 	{
 		ValueList list = elseIfExp.getValues(ctxt);
 		list.addAll(thenExp.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = elseIfExp.getOldNames();
+		list.addAll(thenExp.getOldNames());
 		return list;
 	}
 

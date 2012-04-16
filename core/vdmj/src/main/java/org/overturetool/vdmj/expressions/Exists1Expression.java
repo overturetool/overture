@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.Bind;
 import org.overturetool.vdmj.patterns.TypeBind;
 import org.overturetool.vdmj.pog.POForAllContext;
@@ -165,6 +166,14 @@ public class Exists1Expression extends Expression
 	{
 		ValueList list = bind.getValues(ctxt);
 		list.addAll(predicate.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = bind.getOldNames();
+		list.addAll(predicate.getOldNames());
 		return list;
 	}
 }

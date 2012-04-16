@@ -83,6 +83,12 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 			new LexIdentifierToken(name, true, location));
 	}
 
+	public LexNameToken getNewName()
+	{
+		return new LexNameToken(module,
+			new LexIdentifierToken(name, false, location));
+	}
+
 	public String getName()
 	{
 		// Flat specifications have blank module names
@@ -112,7 +118,7 @@ public class LexNameToken extends LexToken implements Serializable, Comparable<L
 
 	public LexNameToken getModifiedName(String classname)
 	{
-		LexNameToken mod = new LexNameToken(classname, name, location);
+		LexNameToken mod = new LexNameToken(classname, name, location, old, explicit);
 		mod.setTypeQualifier(typeQualifier);
 		return mod;
 	}

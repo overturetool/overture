@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.expressions.Expression;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -107,5 +108,11 @@ public class SetBind extends Bind
 	public ValueList getValues(Context ctxt)
 	{
 		return set.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return set.getOldNames();
 	}
 }

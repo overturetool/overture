@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.MapSeqOfCompatibleObligation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -174,6 +175,19 @@ public class MapEnumExpression extends MapExpression
 		for (MapletExpression maplet: members)
 		{
 			list.addAll(maplet.getValues(ctxt));
+		}
+
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = new LexNameList();
+
+		for (MapletExpression maplet: members)
+		{
+			list.addAll(maplet.getOldNames());
 		}
 
 		return list;

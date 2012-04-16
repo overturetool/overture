@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -139,6 +140,14 @@ public class SameClassExpression extends Expression
 	{
 		ValueList list = left.getValues(ctxt);
 		list.addAll(right.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = left.getOldNames();
+		list.addAll(right.getOldNames());
 		return list;
 	}
 }

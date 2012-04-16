@@ -276,4 +276,10 @@ public class FuncInstantiationExpression extends Expression
 	{
 		return function.getValues(ctxt);
 	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return function.getOldNames();
+	}
 }

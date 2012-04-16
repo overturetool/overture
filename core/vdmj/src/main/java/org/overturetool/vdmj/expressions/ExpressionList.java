@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.expressions;
 
 import java.util.Vector;
+
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
@@ -70,6 +72,18 @@ public class ExpressionList extends Vector<Expression>
 		for (Expression exp: this)
 		{
 			list.addAll(exp.getValues(ctxt));
+		}
+
+		return list;
+	}
+
+	public LexNameList getOldNames()
+	{
+		LexNameList list = new LexNameList();
+
+		for (Expression exp: this)
+		{
+			list.addAll(exp.getOldNames());
 		}
 
 		return list;

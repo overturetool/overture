@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
@@ -43,6 +44,7 @@ import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
 import org.overturetool.vdmj.values.RecordValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueMap;
 
 public class PostOpExpression extends Expression
 {
@@ -102,15 +104,14 @@ public class PostOpExpression extends Expression
     			LexNameToken oldselfname = selfname.getOldName();
 
     			ObjectValue self = octxt.lookup(selfname).objectValue(ctxt);
-    			ObjectValue oldself = octxt.lookup(oldselfname).objectValue(ctxt);
+    			ValueMap oldvalues = octxt.lookup(oldselfname).mapValue(ctxt);
 
     			// If the opname was defined in a superclass of "self", we have
     			// to discover the subobject to populate its state variables.
 
     			ObjectValue subself = findObject(opname.module, self);
-    			ObjectValue suboldself = findObject(opname.module, oldself);
 
-    			if (subself == null || suboldself == null)
+    			if (subself == null)
     			{
     				abort(4026, "Cannot create post_op environment", ctxt);
     			}
@@ -128,7 +129,7 @@ public class PostOpExpression extends Expression
         			ctxt = selfctxt;
     			}
 
-    			populate(ctxt, suboldself);		// To add old "~" values
+    			populate(ctxt, subself.type.name.name, oldvalues);		// To add old "~" values
     		}
 
 
@@ -136,8 +137,7 @@ public class PostOpExpression extends Expression
     		// we evaluate that as well as the postcondition.
 
     		boolean result =
-    			(errors == null || preexpression == null ||
-    				preexpression.eval(ctxt).boolValue(ctxt)) &&
+    			(errors == null || preexpression == null || preexpression.eval(ctxt).boolValue(ctxt)) &&
     			postexpression.eval(ctxt).boolValue(ctxt);
 
     		errorLocation = location;
@@ -172,16 +172,18 @@ public class PostOpExpression extends Expression
 		return errorLocation == null ? location : errorLocation;
 	}
 
-	private void populate(Context ctxt, ObjectValue object)
+	private void populate(Context ctxt, String classname, ValueMap oldvalues) throws ValueException
 	{
-		for (LexNameToken var: object.members.keySet())
+		for (Value var: oldvalues.keySet())
 		{
-			Value val = object.members.get(var).deref();
+			String name = var.stringValue(ctxt);
+			Value val = oldvalues.get(var);
 
 			if (!(val instanceof FunctionValue) &&
 				!(val instanceof OperationValue))
 			{
-				ctxt.put(var.getOldName(), val);
+				LexNameToken oldname = new LexNameToken(classname, name, location, true, false);
+				ctxt.put(oldname, val);
 			}
 		}
 	}
@@ -224,6 +226,12 @@ public class PostOpExpression extends Expression
 	public Expression findExpression(int lineno)
 	{
 		return postexpression.findExpression(lineno);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return postexpression.getOldNames();
 	}
 
 	@Override

@@ -24,6 +24,7 @@
 package org.overturetool.vdmj.expressions;
 
 import org.overturetool.vdmj.lex.LexIntegerToken;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.TupleSelectObligation;
@@ -152,5 +153,11 @@ public class FieldNumberExpression extends Expression
 	public ValueList getValues(Context ctxt)
 	{
 		return tuple.getValues(ctxt);
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return tuple.getOldNames();
 	}
 }

@@ -290,4 +290,16 @@ public class DefinitionList extends Vector<Definition>
 
 		return list;
 	}
+
+	public LexNameList getOldNames()
+	{
+		LexNameList list = new LexNameList();
+
+		for (Definition d: this)
+		{
+			list.addAll(d.getOldNames());
+		}
+
+		return list;
+	}
 }

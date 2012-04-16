@@ -28,6 +28,7 @@ import java.util.List;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.MultiBindListDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.MultipleTypeBind;
 import org.overturetool.vdmj.patterns.Pattern;
@@ -230,6 +231,24 @@ public class SetCompExpression extends SetExpression
 		if (predicate != null)
 		{
 			list.addAll(predicate.getValues(ctxt));
+		}
+
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = first.getOldNames();
+
+		for (MultipleBind mb: bindings)
+		{
+			list.addAll(mb.getOldNames());
+		}
+
+		if (predicate != null)
+		{
+			list.addAll(predicate.getOldNames());
 		}
 
 		return list;

@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.patterns.ExpressionPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.pog.POCaseContext;
@@ -130,6 +131,11 @@ public class CaseAlternative implements Serializable
 	public ValueList getValues(Context ctxt)
 	{
 		return result.getValues(ctxt);
+	}
+
+	public LexNameList getOldNames()
+	{
+		return result.getOldNames();
 	}
 
 	public ExpressionList getSubExpressions()

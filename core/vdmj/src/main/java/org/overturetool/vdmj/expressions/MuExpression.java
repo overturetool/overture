@@ -26,6 +26,7 @@ package org.overturetool.vdmj.expressions;
 import java.util.List;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.pog.SubTypeObligation;
@@ -191,6 +192,19 @@ public class MuExpression extends Expression
 		for (RecordModifier rm: modifiers)
 		{
 			list.addAll(rm.getValues(ctxt));
+		}
+
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = record.getOldNames();
+
+		for (RecordModifier rm: modifiers)
+		{
+			list.addAll(rm.getOldNames());
 		}
 
 		return list;

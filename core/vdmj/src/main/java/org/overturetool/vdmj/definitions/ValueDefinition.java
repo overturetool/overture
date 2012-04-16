@@ -354,4 +354,10 @@ public class ValueDefinition extends Definition
 	{
 		return exp.getValues(ctxt);
 	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		return exp.getOldNames();
+	}
 }

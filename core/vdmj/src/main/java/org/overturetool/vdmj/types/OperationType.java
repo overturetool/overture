@@ -93,7 +93,11 @@ public class OperationType extends Type
 		}
 		else if (classname != null && !isStatic)
 		{
-			params.add(new UnresolvedType(classname.name));
+			params.add(
+				new MapType(location,
+					new SeqType(location, new CharacterType(location)),
+					new UnknownType(location)));
+			
 			params.add(new UnresolvedType(classname.name));
 		}
 

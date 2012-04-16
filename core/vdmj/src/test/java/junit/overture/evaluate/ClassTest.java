@@ -56,4 +56,9 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("seqcomp", ResultType.TRUE);
 	}
+
+	public void test_Postcond()
+	{
+		evaluate("postcond", ResultType.TRUE);
+	}
 }

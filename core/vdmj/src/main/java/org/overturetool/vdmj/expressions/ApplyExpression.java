@@ -29,6 +29,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.PerSyncDefinition;
+import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.FunctionApplyObligation;
 import org.overturetool.vdmj.pog.MapApplyObligation;
@@ -474,6 +475,14 @@ public class ApplyExpression extends Expression
 	{
 		ValueList list = args.getValues(ctxt);
 		list.addAll(root.getValues(ctxt));
+		return list;
+	}
+
+	@Override
+	public LexNameList getOldNames()
+	{
+		LexNameList list = args.getOldNames();
+		list.addAll(root.getOldNames());
 		return list;
 	}
 
