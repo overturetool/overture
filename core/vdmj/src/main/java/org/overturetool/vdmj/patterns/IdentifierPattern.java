@@ -55,7 +55,7 @@ public class IdentifierPattern extends Pattern
 	@Override
 	public int getLength()
 	{
-		return 0;	// Special value meaning "any length"
+		return ANY;	// Special value meaning "any length"
 	}
 
 	@Override

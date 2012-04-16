@@ -118,7 +118,7 @@ public class ConcatenationPattern extends Pattern
 	{
 		int llen = left.getLength();
 		int rlen = right.getLength();
-		return (llen == 0 || rlen == 0) ? 0 : llen + rlen;
+		return (llen == ANY || rlen == ANY) ? ANY : llen + rlen;
 	}
 
 	@Override
@@ -151,10 +151,9 @@ public class ConcatenationPattern extends Pattern
 		int rlen = right.getLength();
 		int size = values.size();
 
-		if ((size < 2) ||	// We don't allow empty sequence matches
-			(llen == 0 && rlen > size) ||
-			(rlen == 0 && llen > size) ||
-			(rlen > 0 && llen > 0 && size != llen + rlen))
+		if ((llen == ANY && rlen > size) ||
+			(rlen == ANY && llen > size) ||
+			(rlen != ANY && llen != ANY && size != llen + rlen))
 		{
 			patternFail(4108, "Sequence concatenation pattern does not match expression");
 		}
@@ -165,13 +164,13 @@ public class ConcatenationPattern extends Pattern
 
 		List<Integer> leftSizes = new Vector<Integer>();
 
-		if (llen == 0)
+		if (llen == ANY)
 		{
-			if (rlen == 0)
+			if (rlen == ANY)
 			{
 				// Divide size roughly between l/r initially, then diverge
 				int half = size/2;
-				leftSizes.add(half);
+				if (half > 0) leftSizes.add(half);
 
 				for (int delta=1; half - delta > 0; delta++)
 				{
@@ -181,8 +180,10 @@ public class ConcatenationPattern extends Pattern
 
 				if (size % 2 == 1)
 				{
-					leftSizes.add(size-1);	// Most in left, one in right
+					leftSizes.add(size);
 				}
+
+				if (!leftSizes.contains(0))	leftSizes.add(0);	// Always as a last resort
 			}
 			else
 			{

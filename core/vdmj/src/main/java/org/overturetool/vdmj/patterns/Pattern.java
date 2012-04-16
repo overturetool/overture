@@ -56,6 +56,9 @@ public abstract class Pattern implements Serializable
 
 	/** A flag to prevent recursive type resolution problems. */
 	boolean resolved = false;
+	
+	/** A value for getLength meaning "any length" */
+	protected static int ANY = -1;
 
 	/**
 	 * Create a pattern at the given location.
