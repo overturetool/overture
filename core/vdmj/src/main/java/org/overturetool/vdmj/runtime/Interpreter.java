@@ -502,6 +502,8 @@ abstract public class Interpreter
 		assert false : "findClass cannot be called for modules";
 		return null;
 	}
+	
+	public abstract Type findType(String typename);
 
 	/**
 	 * @param module Unused.

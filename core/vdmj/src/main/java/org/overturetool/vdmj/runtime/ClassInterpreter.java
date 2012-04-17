@@ -36,6 +36,7 @@ import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.DefinitionSet;
 import org.overturetool.vdmj.definitions.LocalDefinition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -450,5 +451,24 @@ public class ClassInterpreter extends Interpreter
 		scheduler.start(main);
 
 		return main.getList();
+	}
+
+	@Override
+	public Type findType(String typename)
+	{
+		for (ClassDefinition cDef : classes)
+		{
+			for (Definition def : cDef.getDefinitions())
+			{
+				if(def instanceof TypeDefinition)
+				{
+					if(def.getName().equals(typename))
+					{
+						return def.getType();
+					}
+				}
+			}
+		}
+		return null;
 	}
 }
