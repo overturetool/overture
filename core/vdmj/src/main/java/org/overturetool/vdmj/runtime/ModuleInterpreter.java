@@ -29,7 +29,9 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.debug.DBGPReader;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -49,6 +51,7 @@ import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.traces.CallSequence;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.ModuleEnvironment;
+import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.Value;
 
@@ -337,5 +340,24 @@ public class ModuleInterpreter extends Interpreter
 		scheduler.start(main);
 
 		return main.getList();
+	}
+
+	@Override
+	public Type findType(String typename)
+	{
+		for (Module module : modules)
+		{
+			for (Definition def : module.defs)
+			{
+				if(def instanceof TypeDefinition)
+				{
+					if(def.getName().equals(typename))
+					{
+						return def.getType();
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

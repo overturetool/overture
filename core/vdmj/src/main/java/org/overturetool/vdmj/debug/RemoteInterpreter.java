@@ -39,6 +39,7 @@ import org.overturetool.vdmj.runtime.ModuleInterpreter;
 import org.overturetool.vdmj.runtime.SourceFile;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueFactory;
 
 public class RemoteInterpreter
 {
@@ -56,6 +57,11 @@ public class RemoteInterpreter
 	public Interpreter getInterpreter()
 	{
 		return interpreter;
+	}
+	
+	public ValueFactory getValueFactory()
+	{
+		return new ValueFactory();
 	}
 
 	public DBGPReader getDebugReader()
