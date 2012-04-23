@@ -114,11 +114,6 @@
       <artifactId>org.eclipse.ui.console</artifactId>
       <version>3.5.100</version>
     </dependency>
-    <!-- <dependency> -->
-    <!--   <groupId>org.eclipse.ui</groupId> -->
-    <!--   <artifactId>org.eclipse.ui</artifactId> -->
-    <!--   <version>3.7.0</version> -->
-    <!-- </dependency> -->
     <dependency>
       <groupId>org.eclipse.swt</groupId>
       <artifactId>org.eclipse.swt</artifactId>
@@ -127,6 +122,11 @@
     <dependency>
       <groupId>org.eclipse.swt</groupId>
       <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.gef</groupId>
+      <artifactId>org.eclipse.gef</artifactId>
       <version>3.7.2</version>
     </dependency>
   </dependencies>

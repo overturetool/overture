@@ -21,8 +21,7 @@
     <module>latex</module>
     <module>poviewer</module>
     <module>umltrans</module>
-    <!-- Needs GEF framework; it's outside of eclipse classic, so FIXME later -->
-    <!-- <module>showtrace</module> -->
+    <module>showtrace</module>
     <module>traces</module>
   </modules>
 </project>
