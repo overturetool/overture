@@ -1,3 +1,0 @@
-Bundle-SymbolicName: org.foo.bar.baz
-Bundle-Version: 1.0.0.v123.456.7
-Bundle-ClassPath: lib/foo.jar,bar.jar,baz.jar
