@@ -2,31 +2,33 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.overture.ide</groupId>
-  <artifactId>org.overture.ide.vdmpp</artifactId>
+    <artifactId>org.overture.ide.vdmpp</artifactId>
     <version>2.1.1</version>
   </parent>
 
   <groupId>org.overture.ide.vdmpp</groupId>
   <artifactId>org.overture.ide.vdmpp.debug</artifactId>
-  
- <name>org.overture.ide.vdmpp.debug</name>
-  <version>1.1.1</version>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.debug</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  </dependencies>
- 
+  <name>org.overture.ide.vdmpp.debug</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.debug</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmpp</groupId>
+      <artifactId>org.overture.ide.vdmpp.core</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+  </dependencies>
 </project>
