@@ -1,0 +1,102 @@
+Packages
+base org.destecs.script.ast.node;
+analysis org.destecs.script.ast.analysis;
+Tokens
+  int = 'int';
+ 
+   //Java
+  java_Double = 'java:java.lang.Double';
+  java_Boolean = 'java:java.lang.Boolean';
+  java_Integer = 'java:java.lang.Integer';
+  java_String = 'java:java.lang.String';
+  java_Long = 'java:java.lang.Long';
+ 
+Abstract Syntax Tree
+unop {-> package='org.destecs.script.ast.expressions.unop'}
+    =   {add}
+    |	{minus}
+    |	{abs}
+    |	{floor}
+    |	{ceil}
+    ;
+    
+binop {-> package='org.destecs.script.ast.expressions.binop'}
+    =   {plus}
+    |	{minus}
+    |	{multiply}
+    |	{divide}
+    |	{div}
+    |	{mod}
+    |	{lessThan}
+    |	{lessEqual}
+    |	{greaterThan}
+    |	{greaterEqual}
+    |	{equal}
+    |	{different}
+    |	{or}
+    |	{and}
+    |	{implies}
+    |	{equiv}
+    ;    
+
+domain {-> package='org.destecs.script.ast'}
+    =   {de}
+    |	{ct}
+    ;
+
+exp {-> package='org.destecs.script.ast.expressions'}
+    =   #single
+    |	{unary} [operator]:unop [exp]:exp
+    |	{binary} [left]:exp [operator]:binop [right]:exp
+    ;
+    
+#single {-> package='org.destecs.script.ast.expressions'}
+    =	{bool} [value]:java_Boolean
+    |	{numerical} [value]:java_Double
+    |	{time} [value]:java_Double [unit]:timeunit
+    |	{identifier} [domain]:domain [type]:type [name]:java_String
+    |	{systemTime}
+    ;
+    
+timeunit  {-> package='org.destecs.script.ast.expressions'}
+    =	{us}
+    |	{ms}
+    |	{s}
+    |	{m}
+    |	{h}
+    ;
+ 
+stm {-> package='org.destecs.script.ast.statement'}
+    =   {when} [test]:exp [then]:stm* [after]:revert* [for]:exp.#single.time
+    |	{assign} [domain]:domain [name]:java_String [value]:exp
+ //   |   {block} [statements]:stm*
+    |	{revert} [identifier]:identifier
+    |	#message
+    |	{quit}
+    ;
+    
+#message {-> package='org.destecs.script.ast.statement'}
+	=	{print} 
+    |	{error}
+    |	{warn}
+    ;
+    
+    
+type  {-> package='org.destecs.script.ast.types'}
+    =	{real}
+    |	{int}
+    |	{bool}
+    |	{time}
+    ;
+    
+include {-> package='org.destecs.script.ast.preprocessing'}
+    =	{script} [filename]:java_String 
+    ;
+    
+    
+Aspect Declaration
+%stm->#message = [message]:java_String;
+/* This section allows fields of root types to be declared e.g. exp*/
+//exp = [type]:type*
+//    ;
+    

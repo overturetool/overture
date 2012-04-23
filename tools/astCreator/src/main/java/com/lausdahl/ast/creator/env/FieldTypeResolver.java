@@ -1,5 +1,6 @@
 package com.lausdahl.ast.creator.env;
 
+import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
@@ -7,9 +8,10 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 public class FieldTypeResolver
 {
 	public static IInterfaceDefinition searchTypePreferInterface(String unresolvedTypeName,
-			Environment env)
+			Environment env, Field field)
 	{
 		IInterfaceDefinition type = searchType(unresolvedTypeName, env);
+		field.checkType(type);
 		IInterfaceDefinition intf = env.getInterfaceForCommonTreeNode(type);
 		if(intf==null)
 		{
@@ -144,4 +146,7 @@ public class FieldTypeResolver
 		}
 		return false;
 	}
+	
+	
+	
 }

@@ -221,7 +221,7 @@ public class Field
 	{
 		if (t == null)
 		{
-			String msg = ("Unable to resolve type for field: \"" + getName()
+			String msg = ("Unable to resolve type for field: \"" + name
 					+ " : " + unresolvedType + "\" in class %s with raw type " + unresolvedType);
 			String className = "";
 			for (IClassDefinition def : env.getClasses())
@@ -257,7 +257,7 @@ public class Field
 		}
 
 		//TODO return FieldTypeResolver.searchType(unresolvedTypeName, env);
-		return FieldTypeResolver.searchTypePreferInterface(unresolvedTypeName, env);
+		return FieldTypeResolver.searchTypePreferInterface(unresolvedTypeName, env,this);
 	}
 
 	public void setType(String text)

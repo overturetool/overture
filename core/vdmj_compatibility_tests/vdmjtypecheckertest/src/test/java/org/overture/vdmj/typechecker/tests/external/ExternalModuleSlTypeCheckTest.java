@@ -8,7 +8,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.test.framework.ResultTestCase;
+import org.overturetool.test.framework.Properties;
 
 public class ExternalModuleSlTypeCheckTest extends BaseTestSuite
 {
@@ -16,7 +16,7 @@ public class ExternalModuleSlTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
-		ResultTestCase.recordTestResults = true;
+		Properties.recordTestResults = true;
 		String name = "Type_Check_SL_Modules_TestSuite_External";
 		String root = ExternalTestSettings.basePath + "sltest/tc";
 		TestSuite test = null;
