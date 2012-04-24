@@ -37,9 +37,12 @@ Thumbs.db
 ############################
 target/
 
+<<<<<<< HEAD
 .classpath
 .settings/
 .project
 
 m2-repo/
 
+=======
+>>>>>>> add ignore file, fix versions on old treegen bits
