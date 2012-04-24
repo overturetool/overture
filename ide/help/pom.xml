@@ -8,9 +8,16 @@
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.help</artifactId>
   <name>org.overture.ide.help</name>
-  <version>2.1.1</version>
  
- <reporting>
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.ui</groupId>
+      <artifactId>org.eclipse.ui</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+  </dependencies>
+
+  <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

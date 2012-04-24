@@ -1,71 +1,88 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>org.overture.ide</groupId>
-		<artifactId>org.overture.ide.plugins</artifactId>
-		<version>2.1.1</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overture.ide.plugins</groupId>
-	<artifactId>org.overture.ide.plugins.umltrans</artifactId>
-	<name>org.overture.ide.plugins.umltrans</name>
-	<version>2.1.1</version>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.overture.ide</groupId>
+    <artifactId>org.overture.ide.plugins</artifactId>
+    <version>2.1.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide.plugins</groupId>
+  <artifactId>org.overture.ide.plugins.umltrans</artifactId>
+  <name>org.overture.ide.plugins.umltrans</name>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>umltrans</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmpp</groupId>
+      <artifactId>org.overture.ide.vdmpp.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmrt</groupId>
+      <artifactId>org.overture.ide.vdmrt.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.ui</groupId>
+      <artifactId>org.eclipse.ui.console</artifactId>
+      <version>3.5.100</version>
+    </dependency>
+    <!-- <dependency> -->
+    <!--   <groupId>org.eclipse.ui</groupId> -->
+    <!--   <artifactId>org.eclipse.ui</artifactId> -->
+    <!--   <version>3.7.0</version> -->
+    <!-- </dependency> -->
+    <dependency>
+      <groupId>org.eclipse.swt</groupId>
+      <artifactId>org.eclipse.swt</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.swt</groupId>
+      <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+  </dependencies>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>umltrans</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.ide</groupId>
-			<artifactId>org.overture.ide.core</artifactId>
-			<version>2.1.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.ide.vdmpp</groupId>
-			<artifactId>org.overture.ide.vdmpp.core</artifactId>
-			<version>2.1.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.ide.vdmrt</groupId>
-			<artifactId>org.overture.ide.vdmrt.core</artifactId>
-			<version>2.1.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							
-							<excludeArtifactIds>org.overture.ide.vdmrt.core,org.overture.ide.vdmpp.core,org.overture.ide.core</excludeArtifactIds>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-			 <plugin>
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>2.1</version>
+	<executions>
+	  <execution>
+	    <id>copy-dependencies</id>
+	    <phase>process-sources</phase>
+	    <goals>
+	      <goal>copy-dependencies</goal>
+	    </goals>
+	    <configuration>
+	      <outputDirectory>${basedir}</outputDirectory>
+	      <overWriteReleases>false</overWriteReleases>
+	      <overWriteSnapshots>false</overWriteSnapshots>
+	      <overWriteIfNewer>true</overWriteIfNewer>	      
+	      <excludeArtifactIds>org.overture.ide.vdmrt.core,org.overture.ide.vdmpp.core,org.overture.ide.core</excludeArtifactIds>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>2.3</version>
         <configuration>
@@ -76,10 +93,10 @@
                 <include>*.jar</include>
               </includes>
               <followSymlinks>false</followSymlinks>
-             </fileset>
-           </filesets>
-         </configuration>
-       </plugin>
-		</plugins>
-	</build>
+	    </fileset>
+	  </filesets>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

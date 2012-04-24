@@ -41,3 +41,5 @@ target/
 .settings/
 .project
 
+m2-repo/
+

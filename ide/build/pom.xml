@@ -1,58 +1,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>org.overture</groupId>
-		<artifactId>ide</artifactId>
-		<version>2.1.1</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overture.ide</groupId>
-	<artifactId>
-    org.overture.ide.build
-  </artifactId>
-	<name>
-    org.overture.ide.build
-  </name>
-	<version>2.1.1</version>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.overture</groupId>
+    <artifactId>ide</artifactId>
+    <version>2.1.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide</groupId>
+  <artifactId>org.overture.ide.build</artifactId>
+  <name>org.overture.ide.build</name>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<phase>deploy</phase>
-						<configuration>
-							<target>
-								<property name="base" value="${user.rcp.build.base}" />
-								<property name="equinoxLauncherPluginVersion"
-									value="${user.rcp.build.equinox.launcher.plugin.version}" />
-								<property name="pdeBuildPluginVersion"
-									value="${user.rcp.build.pde.build.plugin.version}" />
-								<property name="baseos" value="${user.rcp.build.baseos}" />
-								<property name="basews" value="${user.rcp.build.basews}" />
-								<property name="basearch" value="${user.rcp.build.basearch}" />
-
-								<property name="eclipseLocation" value="${base}" />
-								<property name="buildDirectory" value="${project.build.directory}/RCP" />
-								<ant antfile="build.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-deploy-plugin</artifactId>
+	<version>2.7</version>
+	<configuration>
+	  <skip>true</skip>
+	</configuration>
+      </plugin>
+      <plugin>
+	<artifactId>maven-antrun-plugin</artifactId>
+	<version>1.7</version>
+	<executions>
+	  <execution>
+	    <phase>deploy</phase>
+	    <configuration>
+	      <target>
+		<property name="base" value="${user.rcp.build.base}" />
+		<property name="equinoxLauncherPluginVersion"
+			  value="${user.rcp.build.equinox.launcher.plugin.version}" />
+		<property name="pdeBuildPluginVersion"
+			  value="${user.rcp.build.pde.build.plugin.version}" />
+		<property name="baseos" value="${user.rcp.build.baseos}" />
+		<property name="basews" value="${user.rcp.build.basews}" />
+		<property name="basearch" value="${user.rcp.build.basearch}" />
+		
+		<property name="eclipseLocation" value="${base}" />
+		<property name="buildDirectory" value="${project.build.directory}/RCP" />
+		<ant antfile="build.xml" />
+	      </target>
+	    </configuration>
+	    <goals>
+	      <goal>run</goal>
+	    </goals>
+	  </execution>
+	</executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
