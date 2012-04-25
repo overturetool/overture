@@ -102,36 +102,41 @@
       </plugin>
     </plugins>
     
-    <!-- <extensions> -->
-    <!-- 	<extension> -->
-    <!-- 		<groupId>org.apache.maven.wagon</groupId> -->
-    <!-- 		<artifactId>wagon-ftp</artifactId> -->
-    <!-- 		<version>1.0</version> -->
-    <!-- 	</extension> -->
-    <!-- 	<extension> -->
-    <!-- 		<groupId>org.apache.maven.wagon</groupId> -->
-    <!-- 		<artifactId>wagon-webdav</artifactId> -->
-    <!-- 		<version>1.0</version> -->
-    <!-- 	</extension> -->
-    <!-- </extensions> -->
+    <extensions>
+     	<extension> 
+     		<groupId>org.apache.maven.wagon</groupId> 
+     		<artifactId>wagon-ftp</artifactId> 
+     		<version>2.2</version> 
+     	</extension> 
+     	<!--extension> 
+     		<groupId>org.apache.maven.wagon</groupId> 
+     		<artifactId>wagon-webdav</artifactId> 
+     		<version>1.0-beta-2</version> 
+     	</extension--> 
+		 <extension> 
+        <groupId>org.apache.maven.wagon</groupId> 
+         <artifactId>wagon-ssh</artifactId> 
+         <version>1.0-beta-7</version> 
+      </extension> 
+     </extensions> 
   </build>
 
-  <!-- <distributionManagement> -->
-  <!-- 	<repository> -->
-  <!-- 		<id>sourceforge.net</id> -->
-  <!-- 		<name>Overture Repo af SF.Net</name> -->
-  <!-- 		<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url> -->
-  <!-- 	</repository> -->
-  <!-- 	<snapshotRepository> -->
-  <!-- 		<id>sourceforge.net</id> -->
-  <!-- 		<name>Overture Snapshot Repo af SF.Net</name> -->
-  <!-- 		<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url> -->
-  <!-- 	</snapshotRepository> -->
-  <!-- 	<site> -->
-  <!-- 		<id>sourceforge.net</id> -->
-  <!-- 		<url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url> -->
-  <!-- 	</site> -->
-  <!-- </distributionManagement> -->
+  <distributionManagement> 
+  	<repository> 
+   		<id>sourceforge.net</id> 
+   		<name>Overture Repo af SF.Net</name> 
+   		<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url> 
+   	</repository> 
+   	<snapshotRepository>
+   		<id>sourceforge.net</id> 
+   		<name>Overture Snapshot Repo af SF.Net</name> 
+   		<url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url> 
+   	</snapshotRepository> 
+   	<site> 
+   		<id>sourceforge.net</id>
+   		<url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url>
+  	</site> 
+   </distributionManagement> 
 
   <!-- <scm> -->
   <!-- 	<connection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</connection> -->
