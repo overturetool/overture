@@ -43,3 +43,7 @@ target/
 
 m2-repo/
 
+# Java files created by ASTgen #
+################################
+core/ast/src/main/java/org/overture/ast
+

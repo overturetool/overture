@@ -8,8 +8,8 @@
 	</parent>
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>testframework</artifactId>
-	<version>2.1.1</version>
 	<name>Test Framework for Overture</name>
+
 	<build>
 		<plugins>
 			<plugin>
