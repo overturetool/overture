@@ -1,0 +1,28 @@
+class Sensor
+
+instance variables
+
+protected ID	: nat;
+protected Type	: NetworkTypes`nodeType;
+protected Value	: nat;
+protected Env	: Surroundings;
+
+operations
+
+public GetID: () ==> nat
+GetID() ==
+  return ID;
+
+public GetType: () ==> NetworkTypes`nodeType
+GetType() ==
+  return Type;
+
+public ReadValue: () ==> nat
+ReadValue() ==
+  return Value;
+
+public Step: () ==> ()
+Step() ==
+  is subclass responsibility
+
+end Sensor

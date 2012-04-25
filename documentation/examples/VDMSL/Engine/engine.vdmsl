@@ -1,0 +1,169 @@
+types
+
+ValvePos = <open> | <closed>;
+
+SwitchPos = <on> | <off>;
+
+StartAttempt = nat1
+inv s == s <= DVMAXNUMBERATTEMPTS;
+
+StartState = <FuelSwitchAtCut> | 
+             <StartCommanded> |
+             <WaitForFuelOnConditions> |
+             <WaitForLightUp> |
+             <WaitForStarterOnConditions> |
+             <WaitForIdle> |
+             <EngineStarted> |
+             <CoolAndFlushCycle> |
+             <AttemptAborted> | 
+             <SequenceAborted>;
+             
+values
+
+DVMINN2GNDFOC : real = 26;
+
+DVMINTGTGNDFOC : real = 100;
+
+DVATORABOVEIDLE : real = 55;
+
+DVMAXNUMBERATTEMPTS : int = 2;
+
+DVHOTSTART : real = 305;
+
+DVMAXLIGHTWAITTIME : int = 180;
+
+STATEMAP = {1 |-> <FuelSwitchAtCut>, 
+            2 |-> <StartCommanded>,
+            3 |-> <WaitForStarterOnConditions>,
+            4 |-> <WaitForFuelOnConditions>, 
+            5 |-> <WaitForLightUp>,
+            6 |-> <WaitForIdle>,
+            7 |-> <EngineStarted>,
+            8 |-> <CoolAndFlushCycle>,
+            9 |-> <AttemptAborted>,
+            10 |-> <SequenceAborted>}
+            
+state StartingSystem of
+  sstate : StartState
+  startswitch : SwitchPos
+  fuelswitch : SwitchPos
+  n2 : real
+  aog : bool
+  starteron : bool
+  sov : ValvePos
+  lit : bool
+  ignon : bool  
+  startcomplete : bool
+  startaborted : bool
+  attempt : StartAttempt
+  lightuptimer : int
+  coolflushcmd : bool
+  stalldet : bool
+  ign_flt : bool
+  sov_flt : bool
+  starter_flt : bool
+  n2_flt : bool
+  tgt_flt : bool
+init ss == 
+  ss = mk_StartingSystem (<FuelSwitchAtCut>, <off>, <off>, 0, true,
+                          false, <closed>, false, false, false, false, 
+                          0, 0, false, false, false, false, false, false, 
+                          false)
+end
+
+functions
+
+LightUpDetect : real -> bool
+LightUpDetect (tempTGT) ==
+  tempTGT > DVMINTGTGNDFOC;
+
+FOCDetect : SwitchPos * SwitchPos * real * bool -> bool
+FOCDetect (fuelswitch, startswitch, n2, aog) ==
+  (fuelswitch = <on>) and
+  (startswitch = <on>) and
+  (n2 > DVMINN2GNDFOC) and
+  aog;
+  
+ReturnState : int -> StartState
+ReturnState (i) ==
+  STATEMAP (i);
+
+LightupTimeOutDetect : int -> bool
+LightupTimeOutDetect (lightuptimer) ==
+  lightuptimer > DVMAXLIGHTWAITTIME;
+
+GroundFailureDetected : bool * bool * bool * bool * bool * real -> bool
+GroundFailureDetected (ign_flt, starter_flt, sov_flt, n2_flt, tgt_flt, n2) ==
+  ign_flt or starter_flt or sov_flt or n2_flt or
+  tgt_flt or(n2 > DVMINN2GNDFOC)
+  
+operations
+
+StarterOn () 
+ext rd sstate : StartState
+    rd startswitch : SwitchPos
+    rd aog : bool
+    wr starteron : bool
+    rd fuelswitch : SwitchPos
+pre (fuelswitch = <on>) and (startswitch = <on>) and aog
+post starteron;
+
+StarterOff () 
+ext rd startswitch : SwitchPos
+    rd lit : bool
+    wr starteron : bool
+pre startswitch = <off> or lit
+post not starteron;
+
+OpenSOV () 
+ext rd startswitch : SwitchPos
+    rd fuelswitch : SwitchPos
+    rd n2 : real
+    rd aog : bool
+    wr sov : ValvePos
+pre startswitch = <on> and 
+    FOCDetect (fuelswitch, startswitch, n2, aog)
+post sov = <open>;
+
+IgnOn (tempTGT : real) 
+ext rd sov : ValvePos
+    wr ignon : bool
+pre (sov = <open>) and not LightUpDetect(tempTGT)
+post ignon;
+
+IgnOff (tempTGT : real) 
+ext rd sov : ValvePos
+    wr ignon : bool
+pre (sov = <open>) and LightUpDetect (tempTGT)
+post not ignon;
+
+StartComplete (tempTGT : real) 
+ext rd n2 : real
+    wr startcomplete : bool
+pre LightUpDetect (tempTGT) and
+    (n2 > DVATORABOVEIDLE)
+post startcomplete;
+
+SequenceAbort () 
+ext rd fuelswitch : SwitchPos
+    wr attempt : StartAttempt
+    wr startaborted : bool
+    rd starter_flt : bool
+    rd ign_flt
+    rd sov_flt
+    rd n2_flt
+    rd tgt_flt
+    rd n2
+pre GroundFailureDetected (ign_flt, starter_flt, sov_flt, n2_flt, tgt_flt, n2) or
+    (fuelswitch = <off>) or
+    (attempt >= DVMAXNUMBERATTEMPTS)
+post startaborted and (attempt = 0) ;
+
+CoolFlush (tempTGT : real)
+ext rd lightuptimer : int
+    rd coolflushcmd : bool
+    rd stalldet : bool
+    wr attempt : StartAttempt
+pre LightupTimeOutDetect (lightuptimer) and coolflushcmd or
+    (tempTGT > DVHOTSTART) or stalldet
+post (attempt = attempt~ + 1)

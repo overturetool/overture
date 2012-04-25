@@ -1,0 +1,37 @@
+class HumidSensor is subclass of Sensor
+
+instance variables
+
+finished	: bool := false;
+
+operations
+
+public HumidSensor: nat * NetworkTypes`nodeType * nat * Surroundings ==> HumidSensor
+HumidSensor (id, type, val, envir) ==
+ (ID := id;
+  Type := type;
+  Value := val;
+  Env := envir;
+ );
+
+public Finish: () ==> ()
+Finish() ==
+  finished := true;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+	
+  per IsFinished => finished;
+
+thread
+ (while true 
+  do 
+   (Value := Env.ReadHumid();
+    World`timerRef.WaitRelative(World`timerRef.stepLength);
+   )
+ )
+
+end HumidSensor

@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleIdentifierImpl is subclass of SimpleIdentifier
+instance variables
+    private iv_name:seq of char;
+
+operations
+    public SimpleIdentifierImpl: seq of char ==> SimpleIdentifierImpl
+    SimpleIdentifierImpl(p_name) ==
+    (
+        iv_name := p_name;
+    );
+
+    public getName: () ==> seq of char
+    getName() == return iv_name;
+
+end SimpleIdentifierImpl

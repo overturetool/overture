@@ -1,0 +1,127 @@
+\section{World}
+
+\begin{vdm_al}
+class World
+
+instance variables
+  protected envCustomer : [Customer] := nil;
+
+operations
+
+
+  public World : seq of char ==> World
+  World(fname) ==
+	(
+		envCustomer := new Customer(fname);
+		envCustomer.addTokenDevice(CRSystem`tok1);
+		envCustomer.addTokenDevice(CRSystem`tok2);
+		envCustomer.addTokenDevice(CRSystem`tok3);
+		envCustomer.addTokenDevice(CRSystem`tok4);
+		envCustomer.addTokenDevice(CRSystem`tok5);
+		envCustomer.addTokenDevice(CRSystem`tok6);
+		envCustomer.addTokenDevice(CRSystem`tok7);
+		envCustomer.addTokenDevice(CRSystem`tok8);
+		envCustomer.addTokenDevice(CRSystem`tok9);
+		envCustomer.addTokenDevice(CRSystem`tok10);
+		--envCustomer.addTokenDevice(CRSystem`tok11);
+		--envCustomer.addTokenDevice(CRSystem`tok12);
+		--envCustomer.addTokenDevice(CRSystem`tok13);
+
+		envCustomer.addCyberRail(CRSystem`cb);
+		CRSystem`cb.setQ_APM_out(CRSystem`apm);
+		CRSystem`cb.setRailwayGrid(CRSystem`grid);
+		CRSystem`apm.setQ_CR_out(CRSystem`cb);
+		CRSystem`tok1.setQ_APM_out(CRSystem`apm);
+		CRSystem`tok1.setQ_Env_out(envCustomer);
+
+		CRSystem`tok2.setQ_Env_out(envCustomer);
+		CRSystem`tok2.setQ_APM_out(CRSystem`apm);
+
+		CRSystem`tok3.setQ_Env_out(envCustomer);
+		CRSystem`tok3.setQ_APM_out(CRSystem`apm);
+
+		CRSystem`tok4.setQ_Env_out(envCustomer);
+		CRSystem`tok4.setQ_APM_out(CRSystem`apm);
+
+		CRSystem`tok5.setQ_Env_out(envCustomer);
+		CRSystem`tok5.setQ_APM_out(CRSystem`apm);
+
+		CRSystem`tok6.setQ_Env_out(envCustomer);
+		CRSystem`tok6.setQ_APM_out(CRSystem`apm);
+		CRSystem`tok7.setQ_Env_out(envCustomer);
+		CRSystem`tok7.setQ_APM_out(CRSystem`apm);
+		CRSystem`tok8.setQ_Env_out(envCustomer);
+		CRSystem`tok8.setQ_APM_out(CRSystem`apm);
+		CRSystem`tok9.setQ_Env_out(envCustomer);
+		CRSystem`tok9.setQ_APM_out(CRSystem`apm);
+		CRSystem`tok10.setQ_Env_out(envCustomer);
+		CRSystem`tok10.setQ_APM_out(CRSystem`apm);
+		--CRSystem`tok11.setQ_Env_out(envCustomer);
+		--CRSystem`tok11.setQ_APM_out(CRSystem`apm);
+		--CRSystem`tok12.setQ_Env_out(envCustomer);
+		--CRSystem`tok12.setQ_APM_out(CRSystem`apm);		
+		--CRSystem`tok13.setQ_Env_out(envCustomer);
+		--CRSystem`tok13.setQ_APM_out(CRSystem`apm);
+		
+	);
+
+	public test : () ==> TokenDevice
+	test () == return CRSystem`tok1;
+
+	public run : () ==>  seq of Logger`logType
+	run() == 	
+	(
+		dcl i : nat := 5;
+--		duration(0)
+      (
+		start(envCustomer);
+		start(CRSystem`apm);
+		start(CRSystem`cb);
+		start(CRSystem`tok1);
+		start(CRSystem`tok2);
+		start(CRSystem`tok3);
+		start(CRSystem`tok4);
+		start(CRSystem`tok5);
+		start(CRSystem`tok6);
+		start(CRSystem`tok7);
+		start(CRSystem`tok8);
+		start(CRSystem`tok9);
+		start(CRSystem`tok10);
+		--start(CRSystem`tok11);
+		--start(CRSystem`tok12);
+		--start(CRSystem`tok13);
+
+		);
+		envCustomer.isFinished();
+		while i > 0 do
+		(
+			CRSystem`cb.isFinished();
+			CRSystem`apm.isFinished();
+			CRSystem`tok1.isFinished();
+			CRSystem`tok1.isFinished();
+			CRSystem`tok2.isFinished();
+			CRSystem`tok3.isFinished();
+			CRSystem`tok4.isFinished();
+			CRSystem`tok5.isFinished();
+			CRSystem`tok6.isFinished();
+			CRSystem`tok7.isFinished();
+			CRSystem`tok8.isFinished();
+			CRSystem`tok9.isFinished();
+			CRSystem`tok10.isFinished();
+			--CRSystem`tok11.isFinished();
+			--CRSystem`tok12.isFinished();
+			--CRSystem`tok13.isFinished();
+			
+			i := i - 1;
+		);
+		
+	
+		
+		envCustomer.showResults();
+		return Logger`printLog();
+
+
+	);
+	
+end World
+\end{vdm_al}

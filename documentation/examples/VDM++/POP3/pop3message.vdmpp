@@ -1,0 +1,60 @@
+\section{The POP3Message Class}
+
+\begin{vdm_al}
+class POP3Message
+
+instance variables
+  header : seq of char;
+  body : seq of char;
+  deleted : bool;
+  uniqueId : seq of char
+  
+
+operations
+
+public POP3Message: seq of char * seq of char * seq of char ==> POP3Message
+POP3Message(nheader, nbody, nuniqueId) ==
+( header := nheader;
+  body := nbody;
+  deleted := false;
+  uniqueId := nuniqueId;
+);
+
+public GetBody: () ==> seq of char
+GetBody() ==
+  return body;
+
+public GetHeader: () ==> seq of char
+GetHeader() ==
+  return header;
+
+public GetText: () ==> seq of char
+GetText() ==
+  return header ^"\n"^body;
+
+public Delete: () ==> POP3Message
+Delete() ==
+( deleted := true;
+  return self
+);
+
+public IsDeleted: () ==> bool
+IsDeleted() ==
+  return deleted;
+
+public Undelete: () ==> POP3Message
+Undelete() ==
+( deleted := false;
+  return self
+);
+
+public GetSize: () ==> nat
+GetSize() ==
+  return len body + len header;
+
+public GetUniqueId: () ==> seq of char
+GetUniqueId() ==
+  return uniqueId;
+
+end POP3Message
+\end{vdm_al}

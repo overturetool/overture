@@ -1,0 +1,158 @@
+\documentclass[slidestop,uncompress,mathserif,final]{beamer}
+%\usecolortheme[RGB={108,0,161}]{structure}
+\usecolortheme[RGB={46,1,58}]{structure}
+%\usecolortheme[RGB={68,0,101}]{structure}
+%\setbeamertemplate{blocks}[rounded][shadow=true] 
+%\definecolor[named]{colorlightlilla}{RGB}{124,0,184} 
+%\definecolor[named]{colordarklille}{RGB}{28,0,41} 
+%\setbeamertemplate{background canvas}[vertical shading][bottom=colorlightlilla!20,top=colordarklille!30]
+\usepackage{times}
+
+\usepackage{color, graphicx}
+\usepackage[draft]{fixme}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf}
+%\usepackage{beamerthemesplit}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{arrows}
+%\usepackage{fancyhdr,lastpage}
+%\pagestyle{fancy}\fancyhf{}\rfoot{\vspace{-0.5cm} Page
+%{\thepage} of \pageref{LastPage}}
+\setbeamertemplate{navigation symbols}{}    % turn off navigation symbols
+%\title[Short Title \hspace{4em} \insertframenumber\ of \inserttotalframenumber]{Full Title}
+
+
+
+
+\input{vdmmodelstyle}
+\usepackage{macros}
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+% The command below enables you to escape into normal LaTeX mode inside your 
+% VDM chunks by starting with a `?´ character and ending with a `£´
+%\lstset{escapeinside=?£}
+
+%\usetheme{Singapore} 
+\useoutertheme{infolines}
+\usetheme{Copenhagen} 
+
+
+
+
+
+
+
+
+
+\setbeamertemplate{footline}{%
+\leavevmode%
+\hbox{%
+\begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+\usebeamerfont{author in head/foot}\insertshortauthor
+\end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.566666\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+\usebeamerfont{title in head/foot}\insertshorttitle
+\end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+\usebeamerfont{date in head/foot}\hspace*{2em}\color{white}
+\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+\end{beamercolorbox}}%
+\vskip0pt%
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+% Util commands %
+\newcommand{\pgl}[0]{Peter Gorm Larsen} 
+\newcommand{\mail}[1]{{\small \texttt{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+\newcommand{\fixin}[1]{\fixme[inline]{\texttt{#1}}} 
+\newcommand{\fixfo}[1]{\fixme[footnote]{\texttt{#1}}} 
+\newcommand{\fixma}[1]{\fixme[margin]{\texttt{#1}}} 
+\newcommand{\from}[1]{%
+\noindent%
+\begin{flushright}%
+    \emph{\footnotesize #1}%
+\end{flushright}%
+} 
+%\usebackgroundtemplate{\includegraphics[width=\paperwidth]{images/bg.png}}
+\title{Connecting UML and VDM++ with Open Tool Support}
+
+\subtitle{16th International Symposium on Formal Methods}
+
+\author[K. Lausdahl, H.K.A Lintrup, P.G. Larsen]{
+  Kenneth Lausdahl \\
+  \mail{kenneth@lausdahl.com} \\
+  Hans Kristian Agerlund Lintrup \\
+  \mail{hlintrup@gmail.com}\\
+  Peter Gorm Larsen \\
+  \mail{pgl@iha.dk}
+}
+
+\institute[IHA]{
+  Aarhus School of Engineering
+}
+
+%\pgfputat{\pgfxy(0,-6.5)}{\pgfbox[left,base]{\includegraphics[width=2cm]{images/OMLlogoattempt.jpg}}}
+
+\date{Eindhoven --- November 2009}
+
+\begin{document}
+
+\input{frames}
+
+
+\bibliographystyle{plain}
+\bibliography{mf}
+
+
+
+\end{document}

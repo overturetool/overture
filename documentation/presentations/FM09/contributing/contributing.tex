@@ -1,0 +1,69 @@
+\documentclass[slidestop,uncompress,mathserif,final]{beamer}
+%\usecolortheme[RGB={108,0,161}]{structure}
+\usecolortheme[RGB={46,1,58}]{structure}
+%\usecolortheme[RGB={68,0,101}]{structure}
+%\setbeamertemplate{blocks}[rounded][shadow=true] 
+%\definecolor[named]{colorlightlilla}{RGB}{124,0,184} 
+%\definecolor[named]{colordarklille}{RGB}{28,0,41} 
+%\setbeamertemplate{background canvas}[vertical shading][bottom=colorlightlilla!20,top=colordarklille!30]
+
+\usepackage{color, graphicx}
+\usepackage[draft]{fixme}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf}
+\usepackage{fancyvrb}
+%\usepackage{beamerthemesplit}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{arrows}
+\usepackage{url}
+\setbeamertemplate{navigation symbols}{}    % turn off navigation symbols
+%\usetheme{Singapore} 
+\usetheme{Copenhagen} 
+
+% Util commands %
+\newcommand{\pgl}[0]{Peter Gorm Larsen} 
+\newcommand{\mail}[1]{{\small \texttt{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+\newcommand{\fixin}[1]{\fixme[inline]{\texttt{#1}}} 
+\newcommand{\fixfo}[1]{\fixme[footnote]{\texttt{#1}}} 
+\newcommand{\fixma}[1]{\fixme[margin]{\texttt{#1}}} 
+\newcommand{\from}[1]{%
+\noindent%
+\begin{flushright}%
+    \emph{\footnotesize #1}%
+\end{flushright}%
+} 
+%\usebackgroundtemplate{\includegraphics[width=\paperwidth]{images/bg.png}}
+\title{Contributing to Overture}
+
+\subtitle{16th International Symposium on Formal Methods\\Overture Workshop}
+
+\author[K. Lausdahl]{
+  Kenneth Lausdahl \\
+  \mail{kenneth AT lausdahl.com} \\
+}
+
+\institute[IHA]{
+  Aarhus School of Engineering
+}
+
+%\pgfputat{\pgfxy(0,-6.5)}{\pgfbox[left,base]{\includegraphics[width=2cm]{images/OMLlogoattempt.jpg}}}
+
+\date{Eindhoven --- November 2009}
+
+\begin{document}
+
+\input{frames}
+
+
+\bibliographystyle{plain}
+\bibliography{mf}
+
+
+
+\end{document}

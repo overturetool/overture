@@ -1,0 +1,29 @@
+class World
+
+types
+  public perfdata = nat * nat * real
+
+instance variables
+  static public envTasks : map seq of char to EnvironmentTask := {|->};
+
+operations
+  addEnvironmentTask: seq of char * EnvironmentTask ==> ()
+  addEnvironmentTask (pnm, penv) ==
+    ( envTasks := envTasks munion { pnm |-> penv };
+      penv.Run() );
+
+  public RunScenario1 : () ==> map seq of char to perfdata
+  RunScenario1 () ==
+    ( addEnvironmentTask("VolumeKnob", new VolumeKnob(10));
+      addEnvironmentTask("TransmitTMC", new TransmitTMC(10));
+      return { name |-> envTasks(name).getMinMaxAverage() 
+             | name in set dom envTasks } );
+
+  public RunScenario2 : () ==> map seq of char to perfdata 
+  RunScenario2 () ==
+    ( addEnvironmentTask("InsertAddress", new InsertAddress(10));
+      addEnvironmentTask("TransmitTMC", new TransmitTMC(10));
+      return { name |-> envTasks(name).getMinMaxAverage() 
+             | name in set dom envTasks } );
+
+end World

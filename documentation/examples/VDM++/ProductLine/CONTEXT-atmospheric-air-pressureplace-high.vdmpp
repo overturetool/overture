@@ -1,0 +1,7 @@
+class HighAtmosphericAirPressure is subclass of AtmosphericAirPressure
+
+instance variables
+  inv
+    atm > 1
+
+end HighAtmosphericAirPressure

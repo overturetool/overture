@@ -1,0 +1,68 @@
+
+functions
+  MergeSort: seq of real -> seq of real
+  MergeSort(l) ==
+    cases l:
+      []      -> l,
+      [e]     -> l,
+      others  -> let l1^l2 in set {l} be st abs (len l1 - len l2) < 2
+                 in
+                   let l_l = MergeSort(l1),
+                       l_r = MergeSort(l2) in
+                    Merge(l_l, l_r)
+    end;
+  Merge: seq of int * seq of int -> seq of int
+  Merge(l1,l2) ==
+    cases mk_(l1,l2):
+      mk_([],l),mk_(l,[]) -> l,
+      others              -> if hd l1 <= hd l2 then 
+                               [hd l1] ^ Merge(tl l1, l2)
+                             else
+                               [hd l2] ^ Merge(l1, tl l2)
+    end
+
+types
+  PosReal = real
+  inv r == r >= 0
+  
+functions
+  ImplSort(l: seq of PosReal) r: seq of PosReal
+  post IsPermutation(r,l) and IsOrdered(r);
+  IsPermutation: seq of real * seq of real -> bool
+  IsPermutation(l1,l2) ==
+    forall e in set (elems l1 union elems l2) &
+      card {i | i in set inds l1 & l1(i) = e} =
+      card {i | i in set inds l2 & l2(i) = e};
+  IsOrdered: seq of real -> bool
+  IsOrdered(l) ==
+    forall i,j in set inds l & i > j => l(i) >= l(j);
+
+  ExplSort : seq of PosReal -> seq of PosReal
+  ExplSort (l) ==
+    let r in set Permutations(l) be st IsOrdered(r) in r;
+  Permutations: seq of real -> set of seq of real
+  Permutations(l) ==
+    cases l:
+      [],[-] -> {l},
+      others -> dunion {{[l(i)]^j | 
+                         j in set Permutations(RestSeq(l,i))} | 
+                         i in set inds l}
+    end;
+  RestSeq: seq of real * nat -> seq of real
+  RestSeq(l,i) ==
+    [l(j) | j in set (inds l \ {i})];
+
+  DoSort: seq of real -> seq of real
+  DoSort(l) ==
+    if l = [] then
+      []
+    else
+      let sorted = DoSort (tl l) in
+        InsertSorted (hd l, sorted);
+  InsertSorted: PosReal * seq of PosReal -> seq of PosReal
+  InsertSorted(i,l) ==
+    cases true :
+      (l = [])    -> [i],
+      (i <= hd l) -> [i] ^ l,
+      others      -> [hd l] ^ InsertSorted(i,tl l)
+    end

@@ -1,0 +1,19 @@
+\section{RotationCommand Class}
+
+\begin{vdm_al}
+class RotationCommand is subclass of Command
+operations
+  public
+  RotCmdsPresent : () ==> bool
+  RotCmdsPresent() ==
+    return (exists a in set dom axesdir & axesdir(a) <> <Zero>);
+
+end RotationCommand
+\end{vdm_al}
+
+The test coverage table for the RotationCommand class looks like:
+
+\begin{rtinfo}{vdm.tc}[RotationCommand]
+\end{rtinfo}
+
+

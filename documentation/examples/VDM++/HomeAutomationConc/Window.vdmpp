@@ -1,0 +1,45 @@
+class Window is subclass of Actuator
+
+instance variables
+
+finished	: bool := false;
+
+operations
+
+public Window: nat * NetworkTypes`nodeType * Surroundings ==> Window
+Window (id, type, envir) ==
+ (ID := id;
+  Type := type;
+  Corr := <CLOSE>;
+  Env := envir;
+ );
+
+public SetCorrection: NetworkTypes`correction ==> ()
+SetCorrection(cor) ==
+  Corr := cor
+pre (cor = <OPEN>) or (cor = <CLOSE>);
+
+public Finish: () ==> ()
+Finish() ==
+  finished := true;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+	
+  per IsFinished => finished;
+
+thread
+ (while true 
+  do
+   (if (GetCorr() = <OPEN>)
+    then (HA`Env.DecHumid();
+          HA`Env.DecTemp();
+         );
+    World`timerRef.WaitRelative(World`timerRef.stepLength);
+   )
+ )
+
+end Window

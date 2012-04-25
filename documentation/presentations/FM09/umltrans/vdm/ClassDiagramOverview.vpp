@@ -1,0 +1,9 @@
+class Train is subclass of Vehicle
+instance variables
+
+passengers : map int to Passenger;
+capacity   : nat := 345
+
+thread
+...
+end Train

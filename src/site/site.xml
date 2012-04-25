@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Maven">
+	<skin>
+		<groupId>org.overturetool.tools</groupId>
+		<artifactId>overture-skin</artifactId>
+		<version>1.0</version>
+	</skin>
+	
+	
+	
+
+	
+	<body>
+	
+	
+	
+	
+	<links>
+			<item name="Overture Tool" href="http://overture.sourceforge.net/maven/doc/" />
+			
+		</links>
+		<menu name="Documentation">
+			<item name="Parent" href="../index.html" />
+			
+		</menu>
+		<menu name="Overture">
+			<item name="Twiki" href="http://www.overturetool.org" />
+			<item name="Downloads" href="http://sf.net/projects/overture" />
+		</menu>
+		$modules
+		
+		$reports
+	</body>
+</project>

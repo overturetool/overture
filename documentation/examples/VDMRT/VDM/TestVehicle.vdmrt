@@ -1,0 +1,266 @@
+\section{Test of Vehicle}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			TestVehicle
+-- Description: 	Test the Vehicle class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestVehicle is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+
+private dir: Types`Direction;
+private pos : Position;
+
+
+--
+-- Operations definition section
+--
+operations
+
+public TestVehicle: seq of char ==> TestVehicle
+TestVehicle(s) ==
+(
+	TestCase(s);
+);
+
+
+protected SetUp: () ==> ()
+SetUp () == 
+(
+ dir := <EAST>; 
+ pos := new Position(5,1);  
+);
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+ dcl vec : Vehicle := new Vehicle(2, pos, 1, dir),
+  	vec2 : Vehicle := new Vehicle(3, pos, 1, dir);
+
+ AssertTrue(vec <> vec2);
+ AssertTrue(vec.GetID() = 2);
+ AssertTrue(vec2.GetID() = 3); 
+ testGetDirection();
+ testSetDirection();
+ testGetSpeed();
+ testSetSpeed();
+ testgetLowGrip();
+ testsetLowGrip();
+ testTurnIndicator();
+ testsetTurnIndicator();
+ testGetPosition();
+ testSetPosition();
+ testStep();
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+
+protected initData : () ==> Vehicle
+initData() ==
+return new Vehicle(1, pos, 1, dir);
+
+
+protected testGetDirection: () ==> ()
+testGetDirection() ==
+(
+dcl v : Vehicle := initData();
+AssertTrue(v.GetDirection() = <EAST>)
+);
+
+protected testSetDirection: ()  ==> ()
+testSetDirection() ==
+(
+dcl v : Vehicle := initData();
+v.SetDirection(<WEST>);
+AssertTrue(v.GetDirection() = <WEST>)
+);
+
+protected testGetSpeed: () ==> () 
+testGetSpeed() ==
+(
+dcl v : Vehicle := initData();
+AssertTrue(v.GetSpeed() = 1)
+);
+	
+protected testSetSpeed: () ==> () 
+testSetSpeed() ==
+(
+dcl v : Vehicle := initData();
+v.SetSpeed(10);
+AssertTrue(v.GetSpeed() = 10)
+);
+
+protected testgetLowGrip: () ==> () 
+testgetLowGrip() ==
+(
+dcl v : Vehicle := initData();
+AssertFalse(v.getLowGrip())
+);
+
+protected testsetLowGrip: () ==> () 
+testsetLowGrip() ==
+(
+dcl v : Vehicle := initData();
+v.setLowGrip(true);
+AssertTrue(v.getLowGrip());
+v.setLowGrip(false);
+AssertFalse(v.getLowGrip())
+);
+	
+protected testTurnIndicator: () ==> () 
+testTurnIndicator() ==
+(
+dcl v : Vehicle := initData();
+AssertTrue(v.TurnIndicator() = <NONE>);
+AssertTrue(Vehicle`IndicatorToString(<LEFT>) = "LEFT");
+AssertTrue(Vehicle`IndicatorToString(<RIGHT>) = "RIGHT");
+AssertTrue(Vehicle`IndicatorToString(<NONE>) = "NONE");
+);	
+	
+protected testsetTurnIndicator: () ==> () 
+testsetTurnIndicator() ==
+(
+dcl v : Vehicle := initData();
+v.setTurnIndicator(<LEFT>);
+AssertTrue(v.TurnIndicator() = <LEFT>);
+);
+	
+protected testGetPosition: () ==> () 
+testGetPosition() ==
+(
+dcl v : Vehicle := initData();
+let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 5);
+ AssertTrue(p.Y() = 1);
+ )
+);
+
+protected testSetPosition: () ==> () 
+testSetPosition() ==
+(
+dcl v : Vehicle := initData();
+ let newP = new Position(10, 1) in
+ v.SetPosition(newP);
+  let p = v.GetPosition() in
+  (
+  AssertTrue(p.X() = 10);
+  AssertTrue(p.Y() = 1);
+  )
+);
+
+
+protected testStep: () ==> ()
+testStep() ==
+(
+dcl v : Vehicle := initData();
+ let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 5);
+ AssertTrue(p.Y() = 1);
+ );
+ 
+ v.Move();
+ AssertTrue(v.GetDirection() = <EAST>);
+ AssertTrue(Types`DirectionToString(v.GetDirection()) = "EAST");
+ let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 6);
+ AssertTrue(p.Y() = 1);
+ );
+ 
+ v.Move();
+ let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 7);
+ AssertTrue(p.Y() = 1);
+ );
+ 
+ v.SetDirection(<NORTH>);
+ AssertTrue(v.GetDirection() = <NORTH>);
+ AssertTrue(Types`DirectionToString(v.GetDirection()) = "NORTH");
+ v.Move();
+ let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 7);
+ AssertTrue(p.Y() = 2);
+ );
+ 
+ v.SetDirection(<WEST>);
+ AssertTrue(v.GetDirection() = <WEST>);
+ AssertTrue(Types`DirectionToString(v.GetDirection()) = "WEST");
+ v.Move();
+ let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 6);
+ AssertTrue(p.Y() = 2);
+ );
+ 
+  
+ v.SetDirection(<SOUTH>);
+ AssertTrue(v.GetDirection() = <SOUTH>);
+ AssertTrue(Types`DirectionToString(v.GetDirection()) = "SOUTH");
+ v.Move();
+ let p = v.GetPosition() in
+ (
+ AssertTrue(p.X() = 6);
+ AssertTrue(p.Y() = 1);
+ );
+ 
+ 
+);
+
+-- sequential model only
+--protected testStep: () ==> ()
+--testStep() ==
+--(
+--dcl v : Vehicle := initData();
+-- let p = v.GetPosition() in
+-- (
+-- AssertTrue(p.X() = 5);
+-- AssertTrue(p.Y() = 1);
+-- );
+-- 
+-- v.Step();
+-- AssertTrue(v.GetDirection() = <EAST>);
+-- let p = v.GetPosition() in
+-- (
+-- AssertTrue(p.X() = 6);
+-- AssertTrue(p.Y() = 1);
+-- );
+-- 
+-- v.Step();
+-- let p = v.GetPosition() in
+-- (
+-- AssertTrue(p.X() = 7);
+-- AssertTrue(p.Y() = 1);
+-- );
+-- 
+-- v.SetDirection(<NORTH>);
+-- AssertTrue(v.GetDirection() = <NORTH>);
+-- v.Step();
+-- let p = v.GetPosition() in
+-- (
+-- AssertTrue(p.X() = 7);
+-- AssertTrue(p.Y() = 2);
+-- );
+-- 
+--);
+
+end TestVehicle
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestVehicle]
+\end{rtinfo}

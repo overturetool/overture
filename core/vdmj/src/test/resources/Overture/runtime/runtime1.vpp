@@ -1,0 +1,5 @@
+class A
+values
+	i:int = 123.456
+	
+end A

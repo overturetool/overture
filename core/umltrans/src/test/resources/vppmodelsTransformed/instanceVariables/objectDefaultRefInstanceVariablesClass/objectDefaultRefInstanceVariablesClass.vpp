@@ -1,0 +1,10 @@
+class objectDefaultRefInstanceVariablesClass
+
+
+
+
+instance variables
+
+private instanceVariableA : objectDefaultRefInstanceVariablesClassA;
+
+end objectDefaultRefInstanceVariablesClass

@@ -1,0 +1,99 @@
+\begin{vdm_al}
+class RotorTest
+  is subclass of TestCase
+
+values
+  refcfg : inmap nat to nat =
+    { 1 |-> 2, 3 |-> 4};
+
+  rotcfg : inmap nat to nat =
+    { 1 |-> 1,  2 |-> 3, 3 |-> 2, 4 |-> 4}
+    
+instance variables
+  alph : Alphabet
+
+operations
+  public RotorTest: seq of char ==> RotorTest
+  RotorTest(nm) == name := nm;
+
+  protected SetUp: () ==> ()
+  SetUp () == alph := new Alphabet("ABCD");
+
+  protected SimpleTest: () ==> ()
+  SimpleTest () ==
+    ( dcl tc : Rotor := new Rotor(1,1,alph,rotcfg);
+      tc.SetNext(new Reflector(1,alph,refcfg));
+      AssertTrue(tc.Substitute(1) = 3);
+      AssertTrue(tc.Substitute(2) = 4);
+      AssertTrue(tc.Substitute(3) = 1);
+      AssertTrue(tc.Substitute(4) = 2);
+      tc.Rotate();
+      AssertTrue(tc.Substitute(1) = 2);
+      AssertTrue(tc.Substitute(2) = 1);
+      AssertTrue(tc.Substitute(3) = 4);
+      AssertTrue(tc.Substitute(4) = 3);
+      tc.Rotate();
+      AssertTrue(tc.Substitute(1) = 3);
+      AssertTrue(tc.Substitute(2) = 4);
+      AssertTrue(tc.Substitute(3) = 1);
+      AssertTrue(tc.Substitute(4) = 2);
+      tc.Rotate();
+      AssertTrue(tc.Substitute(1) = 2);
+      AssertTrue(tc.Substitute(2) = 1);
+      AssertTrue(tc.Substitute(3) = 4);
+      AssertTrue(tc.Substitute(4) = 3) );
+
+  protected ComplexTest: () ==> ()
+  ComplexTest () ==
+    ( dcl tc1 : Rotor := new Rotor(1,1,alph,rotcfg),
+          tc2 : Rotor := new Rotor(1,1,alph,rotcfg);
+      tc1.SetNext(new Reflector(1,alph,refcfg));
+      tc2.SetNext(tc1);
+      AssertTrue(tc2.Substitute(1) = 2);
+      AssertTrue(tc2.Substitute(2) = 1);
+      AssertTrue(tc2.Substitute(3) = 4);
+      AssertTrue(tc2.Substitute(4) = 3);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 2);
+      AssertTrue(tc2.Substitute(2) = 1);
+      AssertTrue(tc2.Substitute(3) = 4);
+      AssertTrue(tc2.Substitute(4) = 3);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 3);
+      AssertTrue(tc2.Substitute(2) = 4);
+      AssertTrue(tc2.Substitute(3) = 1);
+      AssertTrue(tc2.Substitute(4) = 2);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 2);
+      AssertTrue(tc2.Substitute(2) = 1);
+      AssertTrue(tc2.Substitute(3) = 4);
+      AssertTrue(tc2.Substitute(4) = 3);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 3);
+      AssertTrue(tc2.Substitute(2) = 4);
+      AssertTrue(tc2.Substitute(3) = 1);
+      AssertTrue(tc2.Substitute(4) = 2);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 2);
+      AssertTrue(tc2.Substitute(2) = 1);
+      AssertTrue(tc2.Substitute(3) = 4);
+      AssertTrue(tc2.Substitute(4) = 3);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 2);
+      AssertTrue(tc2.Substitute(2) = 1);
+      AssertTrue(tc2.Substitute(3) = 4);
+      AssertTrue(tc2.Substitute(4) = 3);
+      tc2.Rotate();
+      AssertTrue(tc2.Substitute(1) = 4);
+      AssertTrue(tc2.Substitute(2) = 3);
+      AssertTrue(tc2.Substitute(3) = 2);
+      AssertTrue(tc2.Substitute(4) = 1) );
+
+  protected RunTest: () ==> ()
+  RunTest () == ( SimpleTest(); ComplexTest() );
+
+  protected TearDown: () ==> ()
+  TearDown () == skip;
+
+end RotorTest
+\end{vdm_al}

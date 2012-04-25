@@ -1,0 +1,100 @@
+types
+
+Graph = map Id to set of Id
+inv g == dunion rng g subset dom g;
+
+ASyncGraph = Graph
+inv asyncg == 
+  forall id in set dom asyncg & 
+     id not in set TransClos(asyncg,id);
+
+Path = seq of Id;
+
+Id = nat
+
+functions
+
+Paths: ASyncGraph * Id -> set of Path
+Paths(g,id) ==
+  let children = g(id)
+  in
+    if children = {}
+    then {[id]}
+    else dunion {{[id] ^ p | p in set Paths(g,c)} 
+                | c in set children}  
+pre id in set dom g
+measure measureTransClos;
+
+measureTransClos : ASyncGraph * Id -> nat
+measureTransClos(g,id) == 
+  card TransClos(g,id);
+
+LinearPath: Graph * Id -> Path
+LinearPath(g,id) ==
+  let children = g(id)
+  in
+    if card children <> 1 or 
+       exists parent in set dom g & 
+          parent <> id and children subset g(parent)
+    then [id]
+    else let child in set children
+         in
+           [id] ^ LinearPath(g,child)
+pre id in set dom g and
+    id not in set TransClos(g,id);
+   
+TransClos: Graph * Id -> set of Id
+TransClos(g,id) ==
+  dunion {TransClosAux(g,c,{})| c in set g(id)}
+pre id in set dom g;
+
+TransClosAux: Graph * Id * set of Id -> set of Id
+TransClosAux(g,id,reached) ==
+  if id in set reached
+  then {}
+  else {id} union
+       dunion {TransClosAux(g,c,reached union {id}) 
+              | c in set g(id)}
+pre id in set dom g
+measure measureGraphReached;
+
+measureGraphReached : Graph * Id * set of Id -> nat
+measureGraphReached(g,-,reached) ==
+  card dom g - card reached;
+
+AsycDescendents: AcyclicGraph * Id -> set of Id
+AsycDescendents(g,id) == 
+  {id} union dunion {AsycDescendents(g,c) | c in set  g(id)}
+pre id in set dom g
+measure measureTransClos;
+
+Descendents: Graph * Id * set of Id -> set of Id
+Descendents(g,id,reached) ==
+  if id in set reached
+  then {}
+  else {id} union
+       dunion {Descendents(g,c,reached union {id}) 
+              | c in set g(id)}
+pre id in set dom g
+measure measureGraphReached;
+
+AllDesc: Graph * Id -> set of Id
+AllDesc(g,id) ==
+  dunion {TransClosAux(g,c,{})| c in set g(id)}
+pre id in set dom g;
+
+types
+
+AcyclicGraph = Graph
+inv acg == 
+  not exists id in set dom acg & 
+     id in set AllDesc(acg,id);
+
+values
+
+  graph : Graph = {1 |-> {2,3},
+                   2 |-> {4},
+                   3 |-> {5},
+                   4 |-> {6},
+                   5 |-> {6},
+                   6 |-> {}}

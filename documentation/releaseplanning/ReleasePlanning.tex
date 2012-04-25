@@ -1,0 +1,460 @@
+\documentclass{overturerep}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+%\usepackage{color}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow}
+
+\newcommand{\vdmtools}{VDMTools}
+\newcommand{\vdmstyle}[1]{\texttt{#1}}
+\newcounter{exerciseno}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+%\newcounter{exerciseno}
+
+\newcommand\thebookexercise{\thechapter.\arabic{exerciseno}}
+\newenvironment{myexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise}\enskip}{$\Box$\\
+}
+\newenvironment{myhardexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise $\star$}\enskip}{$\Box$\\
+}
+\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+\newenvironment{mysolution}{
+} %% This will be replaced by a perl script extracting the solutions
+  %% and inserting them automatically into the solutions chapter.
+ 
+%\newcommand{\insertcommentedvdm*}[2]{}
+  %% This macro is identified by perl script which will move the
+  %% parameter to the solutions chapter.
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+
+
+\newcommand{\kw}[1]{{\tt #1}}
+
+%%%%%%%%%%%%%%%%%% Commands for bibtex %%%%%%%%%%%%%%%%%%%%%%%
+%************************************************************************
+%                                                                       *
+%       Bibliography and Terminology supporting commands                *
+%                                                                       *
+%************************************************************************
+
+\newcommand{\bthisbibliography}[1]{\chapter*{References}%
+   \begin {list} {}%
+     {\settowidth {\labelwidth} {[#1]XX}%
+      \setlength {\leftmargin} {\labelwidth}%
+      \addtolength{\leftmargin} {\labelsep}%
+      \setlength {\parsep} {1ex}%
+      \setlength {\itemsep} {2ex}%
+     }
+  }
+\newcommand{\ethisbibliography}{\end{list}}
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
+
+% Requirements environment
+\newenvironment{reqs}{%
+\begin{enumerate}
+%\renewcommand{\labelenumi}{\textbf{R\theenumi}}
+\renewcommand{\theenumi}{\textbf{R\arabic{enumi}}}
+}{%
+\end{enumerate}}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+
+\newcommand{\experience}[1]{%
+\begin{center}
+\fbox{
+\begin{minipage}[t]{.8\textwidth}
+#1
+\end{minipage}}
+\end{center}}
+
+\newcommand{\markDone}[1]{{\color{Gray}#1}}
+\newcommand{\markFuture}[1]{{\color{OliveGreen}\textit{#1}}}
+\newcommand{\markDeleted}[1]{{\color{Maroon}\textit{#1}}}
+\newcommand{\developer}[1]{{\scriptsize \fbox{#1}}}
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Release plan for Overture}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{overture}}}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+ 
+\title{Release Planning for Overture}
+\author{Peter Gorm Larsen\\
+        %\and
+        Kenneth Lausdahl\\
+        Augusto Ribeiro}
+
+\date{May 2011}
+
+%\frontmatter
+\reportno{TR-2011-05}     
+
+\pagenumbering{roman}
+\maketitle
+%\addtocounter{page}{2}
+\tableofcontents
+\newpage
+% \include{foreword/foreword}
+
+%\cleardoublepage
+%\mainmatter
+%\lhead{\nouppercase{\rightmark}}
+%\rhead{\nouppercase{\leftmark}}
+
+
+%\pagestyle{fancy}
+%\fancyhead{}
+%\fancyhead[LO]{\leftmark}
+%\fancyhead[RE]{Validated Designs for Object-oriented Systems}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{}
+%%\fancyfoot[LE,RO]{\thepage}
+
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+
+\chapter{Introduction}
+
+This document is intended to provide an overview of the release
+planning for the open source project called Overture. Efforts will be
+made to ensure that stable releases of the executables for
+Overture in a systematic fashion. It is recommended that
+official public releases of these executables are synchronised with
+each other. The planning presented here is aggressive and probably on
+the optimistic side but naturally this also depends upon the time the
+different stakeholders are able to deliver to the projects during
+2010.
+
+Official major public releases will be made yearly and will be made
+available through the Overture official websites.  One month before
+the major release, a Release Candidate will be made for the purpose of
+testing and locate bugs. In the meantime, snapshot builds will be
+provided via SourceForge. In this period only bug fixes needed for the
+features planning in that release will be checked in. Minor official
+public releases will be released approximately once every three months
+and for each of these two weeks of release candidate periods will be
+used. A full release procedure will be followed for each of the public
+releases such that the users can expect all public releases to be
+stable.  In between these public releases ad-hoc releases will be
+produced on a needs basis but it is suggested that at least a weekly
+build that contains the latest source code will be put in system. For
+such ad-hoc releases the documentation cannot be guaranteed to be
+updated and it will not be tested at the same level of detail as for
+official releases so no guarantee is provided for all ad-hoc
+releases. All the builds will consist of stand alone branded version
+for the Windows, Mac and Linux platforms.
+
+This document start off with providing an overview of the release
+numbering scheme in Section~\ref{sec:numbering}. This is followed by
+Section~\ref{sec:Overture2010} which provides the current plan for the
+releases of Overture executables during 2010. 
+%Finally
+%Section~\ref{sec:DESTECS2010} provides the current plan for the
+%additional features released in the DESTECS executable releases in
+%2010. Later on the document will be updated with plans for subsequent
+%years. 
+
+\chapter{Release Build Numbering}\label{sec:numbering}
+
+The Overture project deliverables (both executables as
+well as associated documentation) build numbering will be made with
+the following format:
+\begin{center}
+\fbox{\textbf{X.Y.Z}}
+\end{center}
+
+The \textbf{X} indicates which is the major public release version of
+the tool. 
+%During the DESTECS project there will be three major
+%releases of the DESTECS Tool (month 12, 24 and 36, i.e.\ December
+%2010, 2011 and 2012 respectively). 
+%It is suggested that these builds
+%are numbered 1.0.0, 2.0.0 and 3.0.0 respectively.
+
+An increase of \textbf{Y} indicates a minor public release including
+significant update since last version, for example, a new feature
+which have been through a proper release procedure. Thus the users can
+expect it to be in a stable state.
+
+An increase of  \textbf{Z} indicates an ad-hoc release with minor
+update since the last version, for example, bug fixes. No guarantee for
+stability is provided for these ad-hoc releases because they have not
+been going through the release procedure used for public releases.
+
+When release candidates are made available at the X and Y level there
+shall be a list of checks that needs to be performed by different
+named stakeholders before the
+release candidate is lifted up to before an official X or Y
+release. This check list shall include:
+
+\begin{enumerate}
+\item All examples for all dialects must be up to date with the
+  software from the release.
+\item The tutorials for all dialects must be updated to fit the newest
+  screen dumps and the features in the new release.
+\item Checks to be performed on the executable at each OS platform
+  (Mac, Linux and Windows). The explicit list of what to check for the
+  executables must be created.
+\end{enumerate}
+
+\chapter{Contents of Overture releases in 2010}\label{sec:Overture2010}
+
+This section presents a plan for the contents of the 2010 releases of
+the Overture executable.
+
+\begin{description}
+
+%
+% Release 0.3.0
+%
+\item[Release 0.3.0 (June 2010):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+
+\item \markDone{Follow standard way to use pictures in Eclipse and document this
+  for all developers. \developer{AugustoRibeiro}. \textbf{Dependencies: None}\label{picturesEclipse}}
+
+
+\item \markDone{A button for moving a test case from the combinatorial testing
+  perspective into the debugger such that it will stop at the right
+  place for the run-time error reported for the test case
+  selected. \developer{KennethLausdahl see launch shortcut to see how this can be done}}%, \textbf{Dependencies: \ref{launchconfig}} }
+
+\item  \markDone{Include all definitions in the Outline view for all VDM
+  dialects. \developer{AugustoRibeiro}, \textbf{Dependencies: R020:\ref{completeAST}}  Missing RT System and Threads}
+
+
+\item \markDone{ Make use of {\bf\ttfamily measure}'s inside the the interpreter
+  so it would be checked in the same way as invariants, pre and post
+  conditions. \developer{NickBattle}}
+\end{enumerate}
+
+
+
+
+%
+% Release 0.4.0
+%
+\item[Release 0.4.0 (September 2010):] The aim for this release is to
+  include the following features:   
+\begin{enumerate}
+
+\item \markDone{ Investigate the possibility of Eclipse p2. (Adding Self-Update to an RCP Application) \url{http://wiki.eclipse.org/RCP_FAQ}}.
+
+\item \markDone{New version of the interpreter for scheduling of multiple
+  threads in VDM++ and VDM-RT prepared for co-simulkation also able to
+  break after a fixed amount of time. \developer{KennethLausdahl,++}}
+\item \markDone{User documentation in pdf available as a part of the Overture
+  executable so the user can search on-line in these sources
+  (including a VDM-10 language manual). \developer{PeterGormLarsen,++}}
+\end{enumerate}
+\end{description}
+
+\chapter{Contents of Overture releases in 2011}\label{sec:Overture2011}
+
+\begin{description}
+\item[Release 1.0.0 (February 2011):] The aim for this release was to
+  include the following features:   
+\begin{enumerate}
+\item \markDone{Possibly first release of proof support feature for proving a
+  subset of the POs generated. \developer{NickBattle}}
+\item \markDone{Support in the Proof Obligation Explorer view for new icons
+  indicating whether the user have proved a PO or have manually
+  inspected it and approved it. This also means that the icon with the
+  red cross shall only be used for those where proof have failed and a
+  less intemidating iconj shall be used for the POs that one have not
+  yet dealt with. \developer{??}}
+\end{enumerate}
+\end{description}
+
+\chapter{Contents of Overture releases in 2012}\label{sec:Overture2012}
+
+
+\begin{description}
+\item[Release X (?):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+\item \markDone{ VDM Tools
+	\begin{enumerate}
+		\item Start VDM Tools command line prompt from a Overture project. Where the prompt is a console inside Eclipse.
+		
+		\item Create a number of buttons for VDM Tools code generation through the VDM Tools comman dline interface, with output in the console.
+		
+		\item \markDeleted{ Make a VDM Tools corba DBGPReader to enable a VDM Tools debugger to connect to the Overture IDE and use the basic debug facility.}
+		\item Preferences for VDM Tools
+	\end{enumerate}
+      }
+
+
+
+
+\item \markDone{Ant scripts to build a product}
+\item \markDone{Test program which can parse/type/interpret all examples and compare results with expected.}
+\item \markDone{Extract VDM is not specified classes from Java implementation of external interpreter modules.}
+
+\end{enumerate}
+\end{description}
+
+
+\begin{description}
+\item[Release 1.0.1 (May 2011):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+\item Launching specs with errors eventually fails in IDE: ID:3206614
+\item Launch dialog type checking is wrong ID: 3197397
+\item PO red cross icon should change. ID: 3193289
+\item \markDone{XMI is not created inside the generated folder ID: 3193287\developer{Kenneth}}
+\end{enumerate}
+\end{description}
+
+\begin{description}
+\item[Release 1.1.0 (November 2011):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+
+\item Complete the new ASTGen utility and add all sources for it to
+  the tools utility in the Overture SF SVN. \developer{NickBattle} \textbf{Dependencies: None},\label{completeAST}
+  
+   \item Include VDMDoc (inspired by JavaDoc) for all VDM dialects. / Allowing multi line comments in VDM to be represented in the AST \developer{??}
+   \item Make VDM ast pretty printer for math syntax
+   
+\end{enumerate}
+\end{description}
+
+
+\begin{description}
+\item[Release Future (2011/2012):] The aim for this release is to
+  include the following features:  
+\begin{enumerate}
+
+\item Documentation of the Overture IDE in order to enable more
+  developers to make updates for the IDE 
+  development to follow similar principles. This shall document the
+  implementation of the editor, the parser, the builder, the outline
+  and the AST access. \textbf{Status:} Ongoing \developer{AugustoRibeiro}, \textbf{Dependencies: \ref{completeAST}}%, \ref{analyseDLTKDebug}}
+	%DESTECS:
+	\begin{enumerate}
+		\item Parser 
+		\item Builder; How to insure TC is completed
+		\item How to add debug with a new interpreter and corresponding launch configuration.
+		\end{enumerate}
+\item Provide help (F1) inside Eclipse
+\item Provide goto definition and completion; \developer{AugustoRibeiro}
+
+
+\item Change to the AST generated from the new version of ASTGen all
+  over the Overture sources (i.e.\ this will affect the development of
+  UML
+%, JML 
+  and POtrans components). \developer{NickBattle, KennethLausdahl}, \textbf{Dependencies: \ref{completeAST}}
+%  \item First stable bi-directional connection from Overture/VDM++
+%  to/from JML. \developer{CarlosVilhena}
+  
+  \item Quick fix incorporated in the editor view of the IDE for all VDM
+  dialects. \developer{??}
+\item Goto definition in the edit view of the IDE across all files in
+  a project for all VDM dialects. \developer{??}
+\item First version of refactoring support for all VDM
+  dialects. \developer{??}
+ 
+\item Stable version of the UML mapper enabling proper round-trip
+  engineering between VDM and UML class diagrams and enable generation
+  of traces from a subset of UML sequence
+  diagrams. \developer{KennethLausdahl,PeterGormLarsen} 
+\item First release of code generator from VDM to a programming
+  language. \developer{MarcelVerhoef}
+\item Increased \LaTeX\ support in the editor such that parts outside
+  the \texttt{vdm\_al} environments are highlighed as TeXClipse would
+  do it. \developer{??}
+  \item Make Java code generator
+
+\item Make C code generator
+
+\item Make C++ code generator
+
+\item Make VDM Doc parser
+
+
+
+\item Make VDM source format
+  
+  \item Tests of the plug-ins
+\item Make a VDM model of Multi-core CPU distribution/scheduling.
+
+\end{enumerate}
+\end{description}
+
+
+
+
+
+
+\bibliographystyle{newalpha}
+
+\bibliography{dan}
+
+\appendix*
+
+
+
+%\input{OvertureStatus}
+%\input{Released}
+\end{document}

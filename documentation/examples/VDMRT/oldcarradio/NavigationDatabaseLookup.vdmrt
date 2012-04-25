@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class NavigationDatabaseLookup is subclass of BasicTask
+
+operations
+  public NavigationDatabaseLookup: EventDispatcher ==> NavigationDatabaseLookup
+  NavigationDatabaseLookup (pde) == BasicTask("DatabaseLookup",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public DatabaseLookup: () ==> ()
+  DatabaseLookup() == duration (5000) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( DatabaseLookup();
+	-- send message to next task in this scenario
+      sendMessage("UpdateScreenAddress", pe.getEvent()) )
+
+end NavigationDatabaseLookup
+\end{vdm_al}

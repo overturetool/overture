@@ -1,0 +1,234 @@
+\documentclass[10pt,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry} 
+\usepackage{times}
+\usepackage{listings}
+
+\usepackage{termrefr}
+\usepackage{longtable}
+
+
+
+
+\usepackage{Macros}
+
+%\usepackage{myalltt}%%%
+% If you're reading this, be prepared for confusion.  Making this was
+% a learning experience for me, and it shows.  Much of the placement
+% was hacked in; if you make it better, let me know...
+
+
+% 2008-04
+% Changed page margin code to use the geometry package. Also added code for
+% conditional page margins, depending on paper size. Thanks to Uwe Ziegenhagen
+% for the suggestions.
+% 2006-08
+% Made changes based on suggestions from Gene Cooperman. <gene at ccs.neu.edu>
+
+
+% To Do:
+% \listoffigures \listoftables
+% \setcounter{secnumdepth}{0}
+
+
+% This sets page margins to .5 inch if using letter paper, and to 1cm
+% if using A4 paper. (This probably isn't strictly necessary.)
+% If using another size paper, use default 1cm margins.
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+	{ \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+	{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	}
+
+% Turn off header and footer
+\pagestyle{empty}
+ 
+
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+%---------------------
+\newenvironment{TypeSemantics}{\begin{tabular}{|l|l|}}{\end{tabular}}
+\def\Quote{{\mathcode`\'='047 '}}
+\newcommand{\Lit}[1]{`{\tt #1}\Quote}
+\newcommand{\Rule}[2]{
+  \begin{quote}\begin{tabbing}
+    #1\index{#1}\ \ \= = \ \ \= #2  ; %    Adds production rule to index
+    
+  \end{tabbing}\end{quote}
+  }
+\newcommand{\SETDIFF}{\texttt{\char'134}}
+\newcommand{\SeqPt}[1]{\{\ #1\ \}}
+\newcommand{\lfeed}{\\ \> \>}
+\newcommand{\OptPt}[1]{[\ #1\ ]}
+\newcommand{\dsepl}{\ $|$\ }
+\newcommand{\dsep}{\\ \> $|$ \>}
+\newcommand{\Lop}[1]{`{\sf #1}\Quote}
+\newcommand{\blankline}{\vspace{\baselineskip}}
+\newcommand{\Brack}[1]{(\ #1\ )}
+\newcommand{\nmk}{\footnotemark}
+\newcommand{\ntext}[1]{\footnotetext{{\bf Note: } #1}}
+\newlength{\mykwlen}
+\newcommand{\Keyw}[1]{\settowidth{\mykwlen}{\tt #1}\makebox[\mykwlen][l]{\sf
+    #1}}
+\newcommand{\keyw}[1]{{\bf\ttfamily #1}}
+\newcommand{\kw}[1]{{\bf\ttfamily #1}}
+\newcommand{\tool}[1]{{\sf #1}}
+\newcommand{\id}[1]{{\tt #1}}
+\newcommand{\metaiv}[1]{\begin{alltt}\input{#1}\end{alltt}}
+\newcommand{\MAP}[2]{\kw{map }#1\kw{ to }#2}
+\newcommand{\INMAP}[2]{\kw{inmap }#1\kw{ to }#2}
+\newcommand{\SEQ}[1]{\kw{seq of }#1}
+\newcommand{\NSEQ}[1]{\kw{seq1 of }#1}
+\newcommand{\SET}[1]{\kw{set of }#1}
+\newcommand{\PROD}[2]{#1 * #2}
+\newcommand{\TO}[2]{#1 $\rightarrow$ #2}
+\newcommand{\FUN}[2]{#1 \To #2}
+\newcommand{\sindex}[1]{ }
+
+
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols}{2}
+
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{Quick Overview of VDM Operators} \\
+\end{center}
+\input{QuickOverviewVDM}
+
+\newpage
+\section{Examples}
+
+\subsection{General}
+\begin{description}
+\item \keyw{if} \textit{predicate} \keyw{then} Expression \keyw{else} Expression
+
+\item \keyw{cases} expression:\\
+      (pattern list 1){\tt ->} Expression 1,\\
+      (pattern list 2),\\
+      (pattern list 3){\tt ->} Expression 2,\\
+       \keyw{others {\tt ->}} Expression 3\\
+   \noindent end;
+
+\item \keyw{for all} value \keyw{in set} setOfValues\\
+      \keyw{do} Expression
+
+\item \keyw{dcl} variable \textit{\keyw{:} type} \keyw{:=} Variable creation \keyw{;}
+
+\item \keyw{let} variable \textit{\keyw{:} type} \keyw{=} Variable creation \keyw{in} Expression
+
+\item \keyw{let} variable \keyw{in set} setOfValues \keyw{be st} pred(variable) \keyw{in} Expression
+\end{description}
+
+\subsection{Comprehensions (Structure to Structure)}
+
+\begin{minipage}[c]{1\linewidth}
+
+\begin{lstlisting}
+{element(var) | var in set setexpr & pred(var)}
+
+[element(i) | i in set numsetexpr & pred(i)]
+
+!\textrm{Typically:}£
+
+[element(list(i)) | i in set inds list & pred(list(i))]
+
+{dexpr(var) |-> rexpr(var) | var in set setexpr & pred(var)} 
+\end{lstlisting}
+
+\subsection{From Structure to Arbitrary Value}
+
+\begin{lstlisting}
+Select: set of nat -> nat
+Select(s) ==
+  let e in set s
+  in
+    e
+pre s <> {}
+\end{lstlisting}
+
+\subsection{From Structure to Single Value}
+
+\begin{lstlisting}
+SumSet: set of nat -> nat
+SumSet(s) ==
+  if s = {}
+  then 0
+  else let e in set s
+       in
+         e + SumSet(s\{e})
+measure Card
+\end{lstlisting}
+
+\subsection{From Structure to single Boolean}
+
+\begin{lstlisting}
+forall p in set setOfP & pred(p)
+
+exists p in set setOfP & pred(p)
+
+exists1 p in set setOfP & pred(p)
+\end{lstlisting}
+
+
+
+
+
+
+
+\end{minipage}
+
+
+\begin{minipage}[c]{1\linewidth}
+\vdmSpec{ClassExample.vpp}{Class Example}{VDM:ClassExample}
+\end{minipage}
+\vfill
+
+\scriptsize
+
+%Copyright \copyright\ 2008 Overture
+
+% Should change this to be date of file, not current date.
+%\verb!Revision: 1.00 , Date: 2008/10/26.!
+
+%http://www.vdmportal.org/twiki/bin/view/Main/VDMPPoverview
+
+\end{multicols}
+\end{document}

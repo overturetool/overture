@@ -1,0 +1,41 @@
+class Obstacle is subclass of GLOBAL
+
+instance variables
+ 
+  MSA            : MinimumSafetyAltitude ;
+  location       : Coordinates;
+  radius         : nat1;
+  securityRadius : nat;
+  type           : ObstacleType;
+  
+operations 
+ 
+public Obstacle : MinimumSafetyAltitude * Coordinates * nat * nat * 
+                  ObstacleType ==> Obstacle
+Obstacle(msa,loc,ra,secRa,tp) ==
+ (MSA := msa;
+  location := loc;
+  radius := ra;
+  securityRadius := secRa;
+  type := tp;
+ ); 
+
+public getType : () ==> ObstacleType 
+getType() == 
+  return type;
+ 
+public getCoordinates : () ==> Coordinates
+getCoordinates() ==
+  return location;
+
+public getSecureRange : () ==> nat1
+getSecureRange() ==
+  return radius + securityRadius;
+  
+public getMSA : () ==> MinimumSafetyAltitude
+getMSA() == 
+  return MSA;
+ 
+
+
+end Obstacle 

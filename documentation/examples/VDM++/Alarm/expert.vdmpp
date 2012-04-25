@@ -1,0 +1,29 @@
+\begin{vdm_al}
+class Expert
+
+instance variables
+
+quali : set of Qualification;
+\end{vdm_al}
+
+\begin{vdm_al}
+types 
+ 
+public Qualification = <Mech> | <Chem> | <Bio> | <Elec>;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public Expert: set of Qualification ==> Expert
+Expert(qs) ==
+  quali := qs;
+\end{vdm_al}
+  
+\begin{vdm_al}
+public GetQuali: () ==> set of Qualification
+GetQuali() ==
+  return quali;
+  
+end Expert
+\end{vdm_al}

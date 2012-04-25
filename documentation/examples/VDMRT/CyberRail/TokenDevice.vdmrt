@@ -1,0 +1,98 @@
+\section{TokenDevice class}
+
+\begin{vdm_al}
+
+class TokenDevice
+
+instance variables
+
+  private id_token : nat := 1;
+  private transportPlan : [TransportPlan] := nil;
+  private q_Env_out : Environment;
+  private q_APM_out : ActivePlanManager;
+
+
+operations
+ 
+ public TokenDevice : nat ==> TokenDevice
+ TokenDevice(id) == 
+    id_token := id;
+
+
+ public notifyPassenger : TransportPlan ==> ()
+ notifyPassenger(TransPlan) ==
+(
+	transportPlan := TransPlan;
+	q_Env_out.respons( transportPlan, nil,time);
+	Logger`write("Notify "); Logger`write(id_token); Logger`write(time);	
+);
+    
+
+  public requestTransportPlan : CyberRail`NavigationInput ==> ()
+  requestTransportPlan(NavInput) ==
+( 
+	Logger`write("RequestTP"); Logger`write(id_token); Logger`write(time);
+  	q_APM_out.addToClientQueue( mk_MessageTypes`REQUESTPLAN(NavInput, self));
+);
+
+public getTokenId : () ==> nat
+  getTokenId() == return id_token;
+
+public routeTraveled : () ==> ()
+  routeTraveled() == (transportPlan.routeTraveled();
+)
+pre transportPlan.routesRemaining() > 0;
+
+public setTransportPlan : TransportPlan ==> ()
+setTransportPlan(tp) ==	
+(
+	transportPlan := tp;
+);
+
+public travel : () ==> ()
+travel () == (
+		onTheRoad();
+		if( transportPlan <> nil and transportPlan.routesRemaining() > 0 ) 
+		then(
+		--dcl t : TransportPlan`Route := (transportPlan.getNextRoute());
+	transportPlan.routeTraveled(); 
+	)
+);
+
+public onTheRoad : () ==> ()
+onTheRoad () == skip;
+
+public isFinished : () ==> ()
+isFinished() == skip;
+
+
+		
+
+
+--Setup handles----------------------------------
+
+ 
+public setQ_Env_out : Environment ==> ()
+setQ_Env_out(env)== ( q_Env_out := env; );
+
+public setQ_APM_out : ActivePlanManager ==> ()
+setQ_APM_out(apm)== ( q_APM_out := apm; );
+
+
+thread
+periodic(2000E6,100,2900,200000)(travel);
+
+sync
+
+per onTheRoad => (transportPlan <> nil) and (len transportPlan.routeList > 0);
+
+per isFinished => (transportPlan = nil) or (len transportPlan.routeList = 0);
+
+mutex(requestTransportPlan);
+mutex(travel);
+
+end TokenDevice
+
+\end{vdm_al}
+
+

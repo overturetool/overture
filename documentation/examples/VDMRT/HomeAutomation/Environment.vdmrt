@@ -1,0 +1,161 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	Environment class of the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Environment
+
+--
+-- instance variables
+--
+instance variables
+
+  private io       : IO := new IO();
+  private inlines  : seq of inline := [];
+  private outlines : seq of outline := [];
+  private simtime  : nat;
+  private finished : bool := false;
+  private envTemp  : int := 20;
+  private envHumid : int := 75;
+--  inv envTemp >= 0;
+--  inv envHumid >= 0;
+
+--
+-- Types definition section
+--
+types
+
+-- Input file: TempIn, HumidIn, TimeIn
+public inline	= nat * nat * nat;
+-- Output: Time, TempValue, HumidValue
+public outline	= nat * nat * nat;
+
+--
+-- Operations definition section
+--
+operations
+ 
+public Environment: seq of char ==> Environment
+Environment(fname) ==
+ (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
+  in
+   (inlines := input;
+    simtime := t;
+    envTemp := 20;
+    envHumid := 75;
+   );
+ )
+pre fname <> []
+post inlines <> [] and simtime > 0;
+
+private CreateSignal: () ==> ()
+CreateSignal() ==
+ (if len inlines > 0
+  then (dcl curtime : nat := time;
+	def mk_ (tempIn, humidIn, timeIn) = hd inlines 
+        in
+         (if timeIn <= curtime
+          then (SetTemp(tempIn);
+                SetHumid(humidIn);              
+                inlines := tl inlines;
+                return
+               );
+         );
+       );
+  if (time >= simtime)
+  then (ShowResults();
+        finished := true;
+        return;
+       );
+ );	
+
+private ShowResults: () ==> ()
+ShowResults() ==
+ (IO`print("Time, Temperature, Humidity\n");
+
+  for all i in set inds outlines
+  do
+   (IO`print("\n");
+    IO`print(outlines(i));
+   );  
+ );
+
+public HandleEvent: nat * nat * nat ==> ()
+HandleEvent(curTime, TempValue, HumidValue) ==
+  outlines := outlines ^ [mk_ (curTime, TempValue, HumidValue)];
+
+public SetTemp: nat ==> ()
+SetTemp(t) ==
+ (envTemp := t;
+  HandleEvent(time, envTemp, envHumid);
+ );
+
+public SetHumid: nat ==> ()
+SetHumid(h) ==
+ (envHumid := h;
+  HandleEvent(time, envTemp, envHumid);
+ );
+
+public ReadTemp: () ==> int
+ReadTemp() ==
+  return envTemp;
+
+public IncTemp: () ==> ()
+IncTemp() ==
+ (envTemp := envTemp + 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
+
+public DecTemp: () ==> ()
+DecTemp() ==
+ (envTemp := envTemp - 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
+
+public ReadHumid: () ==> nat
+ReadHumid() ==
+  return envHumid;
+
+public IncHumid: () ==> ()
+IncHumid() ==
+ (envHumid := envHumid + 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
+
+public DecHumid: () ==> ()
+DecHumid() ==
+ (envHumid := envHumid - 1;
+  HandleEvent(time, envTemp, envHumid);
+ );
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+
+  mutex(IncTemp);
+  mutex(DecTemp);
+  mutex(SetTemp);
+  mutex(ReadTemp, IncTemp, DecTemp, SetTemp);
+  mutex(IncHumid);
+  mutex(DecHumid);
+  mutex(SetHumid);
+  mutex(ReadHumid, IncHumid, DecHumid, SetHumid);
+  mutex(HandleEvent);
+  per IsFinished => finished;
+
+--
+-- Thread definition section
+--
+thread
+
+-- period of thread (period, jitter, delay, offset)
+periodic(1000E6,0,0,0) (CreateSignal)
+
+end Environment

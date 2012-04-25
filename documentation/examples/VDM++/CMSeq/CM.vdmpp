@@ -1,0 +1,34 @@
+\begin{vdm_al}
+class CM
+
+instance variables
+
+-- maintain a link to the detector
+public static detector : MissileDetector := new MissileDetector();
+
+public static sensor0 : Sensor := new Sensor(detector,0);
+public static sensor1 : Sensor := new Sensor(detector,90);
+public static sensor2 : Sensor := new Sensor(detector,180);
+public static sensor3 : Sensor := new Sensor(detector,270);
+
+public static controller0 : FlareController := new FlareController(0);
+public static controller1 : FlareController := new FlareController(120);
+public static controller2 : FlareController := new FlareController(240);
+
+public static dispenser0 : FlareDispenser := new FlareDispenser(0);
+public static dispenser1 : FlareDispenser := new FlareDispenser(30);
+public static dispenser2 : FlareDispenser := new FlareDispenser(60);
+public static dispenser3 : FlareDispenser := new FlareDispenser(90);
+
+public static dispenser4 : FlareDispenser := new FlareDispenser(0);
+public static dispenser5 : FlareDispenser := new FlareDispenser(30);
+public static dispenser6 : FlareDispenser := new FlareDispenser(60);
+public static dispenser7 : FlareDispenser := new FlareDispenser(90);
+
+public static dispenser8 : FlareDispenser := new FlareDispenser(0);
+public static dispenser9 : FlareDispenser := new FlareDispenser(30);
+public static dispenser10 : FlareDispenser := new FlareDispenser(60);
+public static dispenser11 : FlareDispenser := new FlareDispenser(90);
+
+end CM
+\end{vdm_al}

@@ -1,0 +1,8 @@
+class AVLTree is subclass of Tree
+
+  functions
+
+  tree_isAVLTree : tree -> bool
+  tree_isAVLTree(t) == true
+
+end AVLTree

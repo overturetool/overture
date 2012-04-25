@@ -1,0 +1,30 @@
+--The TestComplete Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	Runs all test cases
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestComplete
+
+--
+-- Operations definition section
+--
+operations
+
+public Execute: () ==> ()
+	Execute() ==
+		(dcl ts : TestSuite := new TestSuite();
+--		ts.AddTest(new TestSurroundings("TestSurroundings"));
+		ts.AddTest(new TestSensor("TestSensor"));
+		ts.AddTest(new TestActuator("TestActuator"));
+		ts.AddTest(new TestHostController("TestHC"));
+		ts.Run();
+		);
+
+end TestComplete

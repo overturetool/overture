@@ -1,0 +1,58 @@
+\section{HandControlUnit Class}
+
+\begin{vdm_al}
+class HandControlUnit
+
+types
+  public Button = <Up> | <Down>;
+  public Mode = <Tran> | <Rot>;
+
+instance variables
+  x : Command`Direction;
+  pitch : Command`Direction;
+  yaw_y : Command`Direction;
+  roll_z : Command`Direction;
+  aahbutton : Button;
+  modeswitch : Mode;
+
+
+operations
+  public
+  SetAAH : Button ==> ()
+  SetAAH(aahbuttonarg) ==
+    aahbutton := aahbuttonarg;
+
+  public
+  ReadAAH : () ==> Button
+  ReadAAH() ==
+    return aahbutton;
+
+  public
+  SetGrip : Command`Direction * Command`Direction * Command`Direction *
+            Command`Direction ==> ()
+  SetGrip(xarg, pitcharg, yaw_yarg, roll_zarg) ==
+    (x := xarg;
+     pitch := pitcharg;
+     yaw_y := yaw_yarg;
+     roll_z := roll_zarg);
+
+  public
+  SetMode : Mode ==> ()
+  SetMode(m) ==
+    modeswitch := m;
+
+  public
+  ReadGrip : () ==> Command`Direction * Command`Direction * 
+                    Command`Direction * Command`Direction * Mode
+  ReadGrip() ==
+    return mk_(x, pitch, yaw_y, roll_z, modeswitch);
+
+
+end HandControlUnit
+\end{vdm_al}
+
+The test coverage table for the HandControlUnit class looks like:
+\begin{rtinfo}{vdm.tc}[HandControlUnit]
+\end{rtinfo}
+
+

@@ -1,0 +1,30 @@
+class World
+  
+instance variables  
+  
+public static
+  env : [Environment] := nil;
+
+public static 
+  timerRef : Timer := new Timer();    
+
+  
+   
+operations
+
+public 
+  World : () ==> World
+  World() ==
+    ( env := new Environment("scenario.txt");
+      env.setAirSpace(MSAW`airspace);
+      MSAW`atc.addRadar(MSAW`radar1);
+      MSAW`atc.addRadar(MSAW`radar2);
+      MSAW`atc.addObstacle(MSAW`militaryZone);
+    );
+  
+public 
+  Run : () ==> ()
+  Run() ==
+    env.Run();
+
+end World

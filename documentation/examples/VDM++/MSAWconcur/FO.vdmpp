@@ -1,0 +1,43 @@
+class FO is subclass of GLOBAL
+
+instance variables 
+  id    : FOId;
+  coord : Coordinates;
+  alt   : Altitude;  
+  
+ 
+operations
+
+public FO : FOId * Coordinates * Altitude ==> FO
+FO(idarg,coordarg,altarg) == 
+ (id := idarg;
+  coord := coordarg;
+  alt := altarg;
+ );
+    
+public getId : () ==> FOId
+getId() ==
+  return id;
+
+public getCoordinates : () ==> Coordinates
+getCoordinates() == 
+  return coord;
+
+public setCoordinates : Coordinates ==> ()
+setCoordinates(coordarg) ==
+  coord := coordarg;
+  
+public getAltitude : () ==> Altitude
+getAltitude() ==
+  return alt;
+    
+public setAltitude : Altitude ==> ()
+setAltitude(altarg) ==
+  alt := altarg;
+ 
+public getPosition : () ==> Position
+getPosition() == 
+  return mk_Position(coord,alt); 
+  
+
+end FO

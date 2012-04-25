@@ -1,0 +1,27 @@
+\begin{vdm_al}
+class Logger
+
+instance variables
+  -- using the VDMTools standard IO library to create a trace file
+  static io : IO := new IO();
+  static mode : <start> | <append> := <start>
+
+operations
+  -- printNetworkEvent writes a time trace to the file mytrace.txt
+  -- this file can be used for application specific post analysis
+  public printNetworkEvent: seq of char * seq of char * nat ==> ()
+  printNetworkEvent (psrc, pdest, pid) ==
+    def - = io.fwriteval[seq of (seq of char | nat)]
+      ("mytrace.txt", ["network", psrc, pdest, pid, time], mode)
+      in mode := <append>;
+ 
+  -- printInterruptEvent writes a time trace to the file mytrace.txt
+  -- this file can be used for application specific post analysis
+  public printInterruptEvent: seq of char * seq of char * nat ==> ()
+  printInterruptEvent (psrc, pdest, pid) ==
+    def - = io.fwriteval[seq of (seq of char | nat)]
+      ("mytrace.txt", ["interrupt", psrc, pdest, pid, time], mode)
+      in mode := <append>;
+
+end Logger
+\end{vdm_al}

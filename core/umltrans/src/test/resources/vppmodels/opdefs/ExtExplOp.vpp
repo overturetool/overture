@@ -1,0 +1,13 @@
+class ExtExplOp
+
+operations
+
+Op(n1, n2 : nat) r : nat ==
+  return n1 + n2;
+
+Op(i1,i2,i3: int) r : bool ==
+  is not yet specified
+pre i1 > i2
+post r = i3 < i2
+
+end ExtExplOp

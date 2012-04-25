@@ -1,0 +1,102 @@
+\section{The System Class}
+
+The System class is collecting all the different parts of the system together.
+
+\begin{vdm_al}
+class System
+
+values
+
+  c1 : Card = new Card(123456,1,1);
+  c2 : Card = new Card(123457,2,2);
+  c3 : Card = new Card(123458,3,3);
+  c4 : Card = new Card(123459,4,4); 
+  c5 : Card = new Card(123460,5,5);
+  c6 : Card = new Card(123461,6,5);
+  c7 : Card = new Card(123462,7,5);
+  cards : set of Card = {c1,c2,c3,c4,c5,c6,c7};
+  resource : CentralResource = new CentralResource();
+  tills : map TillId to Till = 
+                   {1 |-> new Till(resource),
+                    2 |-> new Till(resource),
+                    3 |-> new Till(resource)};
+        
+instance variables
+
+  clock : Clock := new Clock();
+  letterbox : Letterbox := new Letterbox();
+
+types
+
+  public TillId = nat;
+
+operations
+
+  public GetTill: TillId ==> Till
+  GetTill(tid) ==
+    return tills(tid);
+
+  public GetResource: () ==> CentralResource
+  GetResource() ==
+    return resource;
+
+  public System: () ==> System
+  System() ==
+    (clock.SetDate("150999");
+    let peter = new Cardholder().Create("Peter Gorm Larsen",
+                                        "Granvej 24"),
+        paul = new Cardholder().Create("Paul Mukherjee",
+                                        "Rugaardsvej 47"),
+        sten = new Cardholder().Create("Sten Agerholm",
+                                        "Teisensvej ??"),
+        kim = new Cardholder().Create("Kim Sunesen",
+                                      "??"),
+        CSK = new Cardholder().Create("CSK","Forskerparken 10A")
+     in
+       let pglacc1 = new Account().Create({1 |-> peter},5000),
+           saacc1  = new Account().Create({2 |-> sten},0),
+           ksacc1  = new Account().Create({3 |-> kim},9000),
+           pmacc1  = new Account().Create({4 |-> paul},6000),
+           ifacc1  = new Account().Create({5 |-> peter,
+                                           6 |-> sten,
+                                           7 |-> CSK},70000),
+           pglid1 = 1,
+           said1  = 2,
+           ksid1  = 3,
+           pmid1  = 4,
+           ifid1  = 5
+       in 
+         (resource.AddAccount(pglid1,pglacc1);
+          resource.AddAccount(said1,saacc1);              
+          resource.AddAccount(ksid1,ksacc1);
+          resource.AddAccount(pmid1,pmacc1);
+          resource.AddAccount(ifid1,ifacc1);
+ --         tills := ;
+ --         cards := {c1,c2,c3,c4,c5,c6,c7};
+          resource.AddLetterbox(clock,new Letterbox())));
+
+traces
+ 
+  T1: let c in set cards
+      in
+        let t in set rng tills
+        in
+          let p in set {123456,123457,123458,123459,123460,123461,123462}
+          in
+            (t.InsertCard(c);t.Validate(p);t.MakeWithdrawal(1000)) 
+            
+  T2: let c in set cards 
+      in
+        let t1, t2 in set rng tills
+        in
+          let p in set {123456,123457,123458,123459,123460,123461,123462}
+          in
+            ((t1.InsertCard(c); 
+              t2.InsertCard(c);
+              t1.Validate(p);
+              t1.MakeWithdrawal(1000);
+              t2.MakeWithdrawal(1000))|
+             (t1.Validate(p);
+              t1.MakeWithdrawal(3000)) )
+end System
+\end{vdm_al}

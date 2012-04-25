@@ -1,0 +1,60 @@
+table.mytable
+{
+	width: 100%;
+	padding: 0px;
+	border: none;
+	border: 1px solid #000000;
+}
+table.mytable td
+{
+	font-size: 11px;
+	border: none;
+	background-color: #EBEBEB;
+	vertical-align: middle;
+	padding: 7px;
+	font-weight: bold;
+	font-family: 'Courier New' , Courier, monospace;
+}
+
+table.mytable td.faild
+{
+	background-color: #F87676;
+}
+table.mytable td.ok
+{
+	background-color: #80F479;
+}
+
+table.mytable th
+{
+	border-style: none none double none;
+	border-width: medium;
+	border-color: inherit;
+	font-size: 12px;
+	background-color: #EBEBEB;
+	vertical-align: middle;
+	padding: 7px;
+	font-weight: bold;
+}
+table.mytable tr.special td
+{
+	border-bottom: 1px solid #ff0000;
+	border-bottom-color: #0033CC;
+}
+
+table.mytable tr.total
+{
+	border-style: none none none single;
+	border-width: medium;
+	border-color: inherit;
+}
+
+table.mytable a
+{
+	color: #000000;
+}
+
+body
+{
+	font-family: Arial, Helvetica, sans-serif;
+}

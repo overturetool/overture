@@ -1,0 +1,178 @@
+\section{VDMController Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			VDMController
+-- Description: 	VDMController main controller for the VDM system
+-----------------------------------------------
+
+--
+-- class definition
+--
+class VDMController
+
+--
+-- instance variables
+--
+instance variables
+public ctrlUnits : inmap nat to Controller := {|->};
+public lights : inmap nat to TrafficLight := {|->};
+inv dom ctrlUnits inter dom lights = {};
+inv forall id in set dom ctrlUnits & ctrlUnits(id).GetVehicleID() = id;
+inv forall id in set dom lights & lights(id).GetID() = id;
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public addController: Controller ==> ()
+addController(ctrl) ==
+(
+    ctrlUnits := ctrlUnits munion {ctrl.GetVehicleID() |->  ctrl} ;    
+)
+pre ctrl.GetVehicleID() not in set (dom ctrlUnits union dom lights);
+
+public addTrafficLight: TrafficLight ==> ()
+addTrafficLight(light) ==
+(
+    lights := lights munion {light.GetID() |-> light};    
+)
+pre light.GetID() not in set dom lights 
+				  and light.GetID() not in set dom ctrlUnits;
+
+public getController : nat ==> Controller
+getController(id) ==
+(
+  return ctrlUnits(id);
+)
+pre id in set dom ctrlUnits;
+
+public getTrafficLight : nat ==> TrafficLight
+getTrafficLight(id) ==
+(
+  return lights(id);
+)
+pre id in set dom lights;
+
+public Step: () ==> ()
+Step() ==
+(   
+   CalculateInRange();
+);
+
+public CalculateInRange: () ==> ()
+CalculateInRange() == 
+(
+   -- vehicles
+   let units = rng ctrlUnits in   
+    -- for all units, find the ones in range. 
+    -- This could be optimized given that if one unit can see another unit,
+    -- then they can see each other, no need to calculate the range again 
+    -- for units seeing each other. However this will be complex, given that 
+    -- one unit might have serveral units in its range that aren't in range 
+    -- of each other.              
+    for all unit in set units do 
+    (
+     let inrange = FindInRangeWithOppositeDirection(unit, units)  
+     in
+     (
+       -- only request data, the way the loop is built will ensure that all 
+       -- units will request data. 
+       if(card inrange > 0)
+       then
+       for all oncomingVehicle in set inrange do
+       (
+         unit.AddTrafficData(oncomingVehicle.GetVehicleID() 
+         					,oncomingVehicle.GetTrafficData());
+         
+         let vehicleDTO = unit.getVehicleDTO() in 
+         oncomingVehicle.AddOncomingVehicle(vehicleDTO); 
+       );
+      ) 
+    )
+);
+
+--
+-- Functions definition section
+--
+functions
+public static OppositeDirection : Types`Direction -> Types`Direction
+OppositeDirection(d) ==
+cases d:
+<NORTH> -> <SOUTH>,  
+<SOUTH> -> <NORTH>,  
+<EAST>  -> <WEST>, 
+<WEST>  -> <EAST>
+end;
+
+
+-- compare the range of a single vehicle/controller to a 
+-- set of vehicles/controllers
+public  FindInRange : Controller * set of Controller -> set of Controller
+FindInRange(v, vs) ==
+ let inrange = { ir | ir in set vs & v <> ir and InRange(v,ir) = true }
+  in
+  inrange;	
+  
+  
+  -- compare the range of two vehicles/controllers
+public InRange : Controller * Controller -> bool
+InRange(u1,u2) ==
+let pos1 = u1.GetPosition(), pos2 = u2.GetPosition()
+in
+pos1.inRange(pos2, Config`Range); 
+  
+  
+-- compare the range of a single vehicle/controller to a set of 
+-- vehicles/controllers moving in the opposite direction
+public FindInRangeWithOppositeDirection : Controller * set of Controller 
+	-> set of Controller
+FindInRangeWithOppositeDirection(u ,us) ==
+let dir = OppositeDirection(u.GetDirection()) in
+ let inrange = { ir | ir in set FindInRange(u, us) & dir = ir.GetDirection()}
+  in
+  inrange;
+
+
+--
+-- Values definition section
+--
+values
+
+
+--
+-- Thread definition section
+--
+thread
+(
+ while true do
+  (
+   duration(1000)
+   Step()
+  )
+)
+
+--
+-- sync definition section
+--
+sync
+per Step => #fin(addController) > 0; 
+-- has heavy performance loss
+mutex (CalculateInRange, addController, getController);
+mutex (addController);
+mutex (getController);
+mutex (CalculateInRange)
+end VDMController
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[VDMController]
+\end{rtinfo}

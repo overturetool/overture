@@ -1,0 +1,55 @@
+class HolSimpleTypeDefinition is subclass of HolTypeDefinition
+
+instance variables
+
+operations
+
+public HolSimpleTypeDefinition : HolTypeIdentifier * HolType * [HolFunction] ==> HolSimpleTypeDefinition
+HolSimpleTypeDefinition(newName, newType, newInv) ==
+(
+	name := newName;
+	type := newType;
+	invar  := newInv
+);
+
+public processTypeInformation : HolTypeDescription ==> HolTypeDescription
+processTypeInformation (typeDesc) == 
+	return typeDesc.setSynonymType(name, type);
+
+public provides : () ==> set of seq of char
+provides() == 
+(
+	dcl result : set of seq of char := {name.print(<plain>)};
+	
+	if invar <> nil then 
+		return result union {"inv_" ^ name.print(<plain>)}
+	else
+		return result
+);
+	
+-- Will only print the invariant. All synonym types should be substituted when used, the processTypeInfo function gives support for this
+public print : () ==> seq of char
+print () ==
+(
+	if invar = nil then
+		return 
+			new HolFunctionDefinition
+			(
+				conc ["inv_", name.print(<plain>)], 
+				new HolLambdaFunction
+				(
+					[new HolIdentifier("inv_param")],
+					new HolFunctionType([type], new HolNativeTypeIdentifier("bool")),
+					new HolNativeIdentifier("T")
+				)
+			).print()
+			^
+			"BasicProvers.export_rewrites([\"inv_" ^ name.print(<plain>) ^ "_def\"]);\n"
+	else
+		return 
+			(new HolFunctionDefinition(conc ["inv_", name.print(<plain>)], invar)).print()
+			^
+			"BasicProvers.export_rewrites([\"inv_" ^ name.print(<plain>) ^ "_def\"]);\n";
+)
+
+end HolSimpleTypeDefinition

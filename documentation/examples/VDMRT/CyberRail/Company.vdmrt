@@ -1,0 +1,57 @@
+
+\section{Company}
+
+\begin{vdm_al}
+class Company is subclass of Environment
+
+instance variables
+
+  private cyberrail : CyberRail;
+
+operations
+
+  public Company : seq of char ==> Company
+  Company(fname) ==
+   self.Environment(fname);
+
+  public composeTransportGrid : () ==> ()
+  composeTransportGrid() ==
+    is not yet specified;
+
+	public isFinished : () ==> ()
+		isFinished () == skip;
+
+  public stimulate : () ==> ()
+  stimulate() ==
+  (
+		if len inlines > 0
+		then (dcl done : bool := false; 
+				(
+				while not done do(
+					def mk_(nav,tid,route_id,t) = hd inlines in
+						if t <= time
+						then ( cyberrail.setInactiveRoute(route_id);
+								inlines := tl inlines
+								)
+						else
+							done :=  true;
+					)
+				);
+			)
+			else
+				busy := false;
+  )
+
+thread
+	while true do
+	(
+		if busy
+		then stimulate();
+	)
+
+sync
+
+per isFinished => not busy;
+end Company
+
+\end{vdm_al}

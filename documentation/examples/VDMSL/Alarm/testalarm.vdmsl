@@ -1,0 +1,63 @@
+values
+ 
+  p1:Period = mk_token("Monday day");
+  p2:Period = mk_token("Monday night");
+  p3:Period = mk_token("Tuesday day");
+  p4:Period = mk_token("Tuesday night");
+  p5:Period = mk_token("Wednesday day");
+  ps : set of Period = {p1,p2,p3,p4,p5};
+
+  eid1:ExpertId = mk_token(134);
+  eid2:ExpertId = mk_token(145);
+  eid3:ExpertId = mk_token(154);
+  eid4:ExpertId = mk_token(165);
+  eid5:ExpertId = mk_token(169);
+  eid6:ExpertId = mk_token(174);
+  eid7:ExpertId = mk_token(181);
+  eid8:ExpertId = mk_token(190);
+  
+  e1:Expert = mk_Expert(eid1,{<Elec>});
+  e2:Expert = mk_Expert(eid2,{<Mech>,<Chem>});
+  e3:Expert = mk_Expert(eid3,{<Bio>,<Chem>,<Elec>});
+  e4:Expert = mk_Expert(eid4,{<Bio>});
+  e5:Expert = mk_Expert(eid5,{<Chem>,<Bio>});
+  e6:Expert = mk_Expert(eid6,{<Elec>,<Chem>,<Bio>,<Mech>});
+  e7:Expert = mk_Expert(eid7,{<Elec>,<Mech>});
+  e8:Expert = mk_Expert(eid8,{<Mech>,<Bio>});
+  exs : set of Expert = {e1,e2,e3,e4,e5,e6,e7,e8};
+
+  s: map Period to set of Expert
+     = {p1 |-> {e7,e5,e1},
+        p2 |-> {e6},
+        p3 |-> {e1,e3,e8},
+        p4 |-> {e6}};
+
+  a1:Alarm = mk_Alarm("Power supply missing",<Elec>);
+  a2:Alarm = mk_Alarm("Tank overflow",<Mech>);
+  a3:Alarm = mk_Alarm("CO2 detected",<Chem>);
+  a4:Alarm = mk_Alarm("Biological attack",<Bio>);
+  alarms: set of Alarm = {a1,a2,a3,a4};
+  
+  plant1 : Plant = mk_Plant(s,{a1,a2,a3})
+  
+operations
+
+Run: Expert ==> set of Period
+Run(e) == return ExpertIsOnDuty(e, plant1);
+
+traces 
+
+  Test1: let a in set alarms
+         in
+           let p in set ps 
+           in
+             (NumberOfExperts(p,plant1);
+              pre_ExpertToPage(a,p,plant1);
+              let ex in set exs
+              in
+                post_ExpertToPage(a,p,plant1,ex))
+               
+  Test2: let ex in set exs
+         in
+           ExpertIsOnDuty(ex,plant1)
+ 

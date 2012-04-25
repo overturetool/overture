@@ -1,0 +1,27 @@
+class DataReader
+ 
+operations
+ public DataReader : () ==> DataReader
+ DataReader() ==
+   return self;
+ 
+ public Read : () ==> ()
+ Read() ==
+   skip;
+ 
+end DataReader
+
+class DataReaderTest is subclass of TestCase
+values
+ 
+operations
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () == skip;
+ 
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end DataReaderTest

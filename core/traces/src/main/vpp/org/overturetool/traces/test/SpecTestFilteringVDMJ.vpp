@@ -1,0 +1,25 @@
+class SpecTestFilteringVDMJ 
+
+instance variables
+     
+  io : IO := new IO();     
+
+operations
+
+public Run: IOmlSpecifications * seq of char ==> 
+            map seq of char to seq of seq of char
+Run(spec,name) ==
+let errorLog  : RTERR = new RTERR(),
+    exp : Expand = new Expand(3,errorLog),
+    classes = {},
+    expandedTraces = exp.ExpandSpecTraces(spec, classes),
+    tb : ToolBox = new VDMJToolBox({}),
+    filter = new Filtering(expandedTraces, tb,errorLog)
+in
+  return {|->};
+
+--Compare: seq of char * map seq of char to seq of seq of char ==> bool
+--Compare(filename,resvals) ==
+--  let mk_(-,val) = io.freadval
+
+end SpecTestFilteringVDMJ

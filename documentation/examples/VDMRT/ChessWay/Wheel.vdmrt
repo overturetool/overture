@@ -1,0 +1,78 @@
+% Wheel.vdmrt
+
+\subsubsection{Closing the feedback loop -- the \texttt{Wheel} class}
+
+The \texttt{Wheel} class is used to close the feedback loop in the environment model.
+It computes the new acceleration, speed and angular position, whenever the 
+\texttt{evaluate} operation is called by the environment.
+
+\begin{vdm_al}
+class Wheel
+
+values
+  -- maximum angular acceleration is 20 pi rad/sec^2
+  MAX_ACC : real = 62.8318531
+
+instance variables
+  -- the logical name of the wheel
+  mName : seq of char;
+
+  -- link to the environment
+  mEnvironment : Environment;
+
+  -- last evaluated at time step
+  last : nat := 0;
+
+  -- current angular acceleration
+  public acc : real := 0.0;
+
+  -- current angular speed
+  public speed : real := 0.0;
+
+  -- current angular position
+  public position : real := 0.0
+
+operations
+  -- constructor for the wheel class
+  public Wheel: seq of char * Environment ==> Wheel
+  Wheel (pname, penv) == ( mName := pname; mEnvironment := penv);
+
+  private isActuated: () ==> bool
+  isActuated () ==
+    return mEnvironment.getValue(mName^"_ACTUATED") = 1;
+
+  private getPWM: () ==> real
+  getPWM () ==
+    return mEnvironment.getValue(mName^"_PWM");
+
+  public evaluate: () ==> ()
+  evaluate () ==
+    ( dcl pwm       : real := if isActuated()
+                              then getPWM()
+                              else 0.0,
+          old_acc   : real := acc,
+          old_speed : real := speed,
+          now       : nat  := time;
+      -- compute the amount of time passed
+      def dt = (now - last) / World`SIM_RESOLUTION in
+        ( -- update the current wheel acceleration
+          acc := MAX_ACC * pwm;
+          -- update the wheel angular speed (Euler)
+          speed := speed + 0.5 * dt * (old_acc + acc);
+          -- update the wheel angular positiom (Euler)
+          position := position + 0.5 * dt * (old_speed + speed);
+          -- remember when we where executed
+          last := now )  )
+
+end Wheel
+\end{vdm_al}
+
+The \texttt{evaluate} operation first checks whether the \texttt{Wheel} is
+actuated by the controller (it may be running in \texttt{<FREERUNNING>} mode).
+If the motor is \texttt{<ACTUATED>}, then it will retrieve the current PWM
+value from the environment, which has been set by the controller.
+As a simple abstraction, the direct drive motor is considered ideal and a
+simple linear response is created. The new acceleration is computed by
+multiplying the PWM value with the maximum angular acceleration
+of the motor. The angular speed and position are computed by integration
+and double integration respectively, using the well-known Euler algorithm.

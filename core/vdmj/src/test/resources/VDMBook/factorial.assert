@@ -1,0 +1,1 @@
+new Factorial().factorial(5) = 120

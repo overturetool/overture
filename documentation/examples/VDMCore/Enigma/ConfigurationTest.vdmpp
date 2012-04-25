@@ -1,0 +1,31 @@
+\begin{vdm_al}
+class ConfigurationTest
+  is subclass of Configuration, TestCase
+
+values
+  cfg : inmap nat to nat =
+    { 1 |-> 2, 3 |-> 4 }
+    
+operations
+  public ConfigurationTest: seq of char ==> ConfigurationTest
+  ConfigurationTest(nm) == name := nm;
+
+  protected SetUp: () ==> ()
+  SetUp () == config := cfg;
+
+  protected RunTest: () ==> ()
+  RunTest () == 
+    ( AssertTrue(Encode(1) = 2);
+      AssertTrue(Encode(2) = 2);
+      AssertTrue(Encode(3) = 4);
+      AssertTrue(Encode(4) = 4);
+      AssertTrue(Decode(1) = 1);
+      AssertTrue(Decode(2) = 1);
+      AssertTrue(Decode(3) = 3);
+      AssertTrue(Decode(4) = 3) );
+
+  protected TearDown: () ==> ()
+  TearDown () == skip;
+
+end ConfigurationTest
+\end{vdm_al}

@@ -1,0 +1,25 @@
+class A
+
+types
+
+public T = nat
+inv n == n < 3;
+
+operations
+
+  public op : T ==> T
+  op(n) ==
+    return n;
+
+end A
+class UseA
+
+instance variables
+
+  obj : A := new A();
+
+traces
+
+trace1 : (let x in set {1,4} in obj.op(x)){1,3}
+
+end UseA

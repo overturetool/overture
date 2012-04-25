@@ -1,0 +1,6 @@
+class Rhombus is subclass of Parallelogram
+ 
+  instance variables
+  inv length (v1) = length (v2)
+ 
+end Rhombus

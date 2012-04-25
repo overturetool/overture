@@ -1,0 +1,84 @@
+\begin{vdm_al}
+class RadNavSys
+
+types
+  public perfdata = nat * nat * real
+
+instance variables
+  dispatch : EventDispatcher := new EventDispatcher();
+  appTasks : set of BasicTask := {};
+  envTasks : map seq of char to EnvironmentTask := {|->};
+  mode : nat 
+
+operations
+
+  public RadNavSys: () ==> RadNavSys
+  RadNavSys () ==
+   (addApplicationTask(new MMIHandleKeyPressOne(dispatch));
+    addApplicationTask(new RadioAdjustVolume(dispatch));
+    addApplicationTask(new MMIUpdateScreenVolume(dispatch));
+    addApplicationTask(new RadioHandleTMC(dispatch));
+    addApplicationTask(new NavigationDecodeTMC(dispatch));
+    addApplicationTask(new MMIUpdateScreenTMC(dispatch)) );
+               
+  -- the constructor initialises the system and starts the application
+  -- tasks. because there are no events from the environment tasks yet
+  -- all tasks will block in their own event handler loops. similarly
+  -- the dispatcher task is started and blocked
+  public RadNavSys: nat ==> RadNavSys
+  RadNavSys (pi) ==
+    ( mode := pi;
+      cases (mode) :
+        1 -> ( addApplicationTask(new MMIHandleKeyPressOne(dispatch));
+               addApplicationTask(new RadioAdjustVolume(dispatch));
+               addApplicationTask(new MMIUpdateScreenVolume(dispatch));
+               addApplicationTask(new RadioHandleTMC(dispatch));
+               addApplicationTask(new NavigationDecodeTMC(dispatch));
+               addApplicationTask(new MMIUpdateScreenTMC(dispatch)) ),
+        2 -> ( addApplicationTask(new MMIHandleKeyPressTwo(dispatch));
+               addApplicationTask(new NavigationDatabaseLookup(dispatch));
+               addApplicationTask(new MMIUpdateScreenAddress(dispatch));
+               addApplicationTask(new RadioHandleTMC(dispatch));
+               addApplicationTask(new NavigationDecodeTMC(dispatch));
+               addApplicationTask(new MMIUpdateScreenTMC(dispatch)) )
+      end;
+      startlist(appTasks); start(dispatch) )
+   pre pi in set {1, 2};
+
+  -- the addApplicationTask helper operation instantiates the callback
+  -- link to the task and adds it to the set of application tasks
+  addApplicationTask: BasicTask ==> ()
+  addApplicationTask (pbt) ==
+    ( appTasks := appTasks union {pbt};
+      dispatch.Register(pbt) );
+
+  -- the addEnvironmentTask helper operation instantiates the callback
+  -- link to the task and and starts the environment task. since the
+  -- VDMTools command-line always has the highest priority, the task will
+  -- not be scheduled for execution until some blocking operation is
+  -- called or the time slice is exceeded
+  addEnvironmentTask: EnvironmentTask ==> ()
+  addEnvironmentTask (pet) ==
+    ( envTasks := envTasks  munion {pet.getName() |-> pet};
+      dispatch.Register(pet);
+      pet.Run() );
+
+  -- the Run operation creates and starts the appropriate environment tasks
+  -- for this scenario. to ensure that the system model has ample time to
+  -- make progress (because RadNavSys will be started from the VDMTools
+  -- command-line which always has the highest priority) the calls to
+  -- getMinMaxAverage will block until all responses have been received
+  -- by the environment task
+  public Run: () ==> map seq of char to perfdata
+  Run () ==
+    ( cases (mode):
+        1 -> ( addEnvironmentTask(new VolumeKnob(dispatch,10));
+               addEnvironmentTask(new TransmitTMC(dispatch,10)) ),
+        2 -> ( addEnvironmentTask(new InsertAddress(dispatch,10));
+               addEnvironmentTask(new TransmitTMC(dispatch,10)) )
+      end;
+      return { name |-> envTasks(name).getMinMaxAverage() 
+             | name in set dom envTasks } )
+
+end RadNavSys
+\end{vdm_al}

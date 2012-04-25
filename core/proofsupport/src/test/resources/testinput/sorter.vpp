@@ -1,0 +1,10 @@
+class Sorter
+ 
+operations
+
+  public
+  Sort: seq of int ==> seq of int 
+  Sort(arg) ==
+    is subclass responsibility
+
+end Sorter

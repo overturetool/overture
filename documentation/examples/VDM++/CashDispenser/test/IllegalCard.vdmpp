@@ -1,0 +1,23 @@
+\section{The IllegalCard Testing Class}
+
+\begin{vdm_al}
+class IllegalCard is subclass of Event
+
+instance variables
+
+  mycard   : Card`CardId;
+
+operations
+
+  public Init : Card`CardId ==> IllegalCard
+  Init(c) ==
+    (mycard := c;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    (sys.GetResource().AddIllegalCard(mycard);
+     return true);
+
+end IllegalCard
+\end{vdm_al}

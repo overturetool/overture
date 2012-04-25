@@ -1,0 +1,19 @@
+\section{Accelerometer}
+
+This class models the accelerometer physical device containing 
+one only operation called stimulate wich will hand in the 
+stimulus to the rateController that process the information 
+from this sensor.
+
+\begin{vdm_al}
+class Accelerometer is subclass of GLOBAL
+
+operations
+
+ public 
+ stimulate : ActivityData ==> ()
+ stimulate (a) == Pacemaker`rateController.stimulate(a);
+
+end Accelerometer
+\end{vdm_al}
+

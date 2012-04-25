@@ -1,0 +1,91 @@
+\begin{vdm_al}
+class EnvironmentTask is subclass of AbstractTask
+
+instance variables
+  -- use a unique identifier for each generated event
+  static private num : nat := 0;
+
+  -- we limit the number of inserted stimuli
+  protected max_stimuli : nat := 0;
+
+  -- administration for the event traces
+  -- e2s is used for all out-going stimuli (environment to system)
+  -- s2e is used for all received responses (system to environment)
+  protected e2s : map nat to nat := {|->};
+  protected s2e : map nat to nat := {|->}
+
+functions
+  -- checkResponseTimes verifies for each received response whether
+  -- or not the elapse time did (not) exceed the user-defined limit
+  public checkResponseTimes: map nat to nat * map nat to nat * nat -> bool
+  checkResponseTimes (pe2s, ps2e, plim) ==
+    forall idx in set dom ps2e &
+      ps2e(idx) - pe2s(idx) <= plim
+  -- the responses received should also be sent
+  pre dom ps2e inter dom pe2s = dom ps2e
+  
+operations
+  public EnvironmentTask: seq of char * EventDispatcher * nat ==>
+         EnvironmentTask
+  EnvironmentTask (tnm, disp, pno) == 
+  ( max_stimuli := pno; AbstractTask(tnm,disp) );
+
+  protected handleEvent: Event ==> ()
+  handleEvent (-) == skip;
+  
+  public getNum: () ==> nat
+  getNum () == ( dcl res : nat := num; num := num + 1; return res );
+
+  -- setEvent is overloaded. Incoming messages are immediately handled
+  -- by calling handleEvent directly, in stead of added to an input queue.
+  public setEvent: Event ==> ()
+  setEvent (pe) == handleEvent(pe);
+
+  -- Run shall be overloaded to implement the event generation loop
+  -- towards the system. typically, it starts a periodic thread
+ public Run: () ==> ()
+ Run () == skip;
+
+  -- logEnvToSys is used to register when an event was inserted into
+  -- the system. note that the 'time' keyword refers to the internal
+  -- simulation wall clock of VDMTools
+  public logEnvToSys: nat ==> ()
+  logEnvToSys (pev) == e2s := e2s munion {pev |-> time};
+
+  -- logSysToEnv is used to register when an event was received from
+  -- the system. note that the 'time' keyword refers to the internal
+  -- simulation wall clock of VDMTools
+  public logSysToEnv: nat ==> ()
+  logSysToEnv (pev) == s2e := s2e munion {pev |-> time};
+
+  -- getMinMaxAverage calculates the minimum, maximum and average
+  -- response times that were observed during execution of the model
+  -- note that getMinMaxAverage is blocked until the number of
+  -- system responses is equal to the number of sent stimuli
+  -- termination is ensured because only a maximum number of stimuli
+  -- is allowed to be inserted in the system, so eventually all
+  -- stimuli can be processed by the system. this method only works
+  -- when each stimulus leads to exactly one response, which is the
+  -- case in this instance
+  public getMinMaxAverage: () ==> nat * nat * real
+  getMinMaxAverage () ==
+    ( dcl min : [nat] := nil, max : [nat] := nil, diff : nat := 0;
+      for all cnt in set dom s2e do
+        let dt = s2e(cnt) - e2s(cnt) in
+          ( if min = nil then min := dt
+            else (if min > dt then min := dt);
+            if max = nil then max := dt
+            else (if max < dt then max := dt);
+            diff := diff + dt );
+      return mk_(min, max, diff / card dom s2e) )
+
+sync
+  -- getNum is mutually exclusive to ensure unique values
+  mutex (getNum);
+  mutex(logEnvToSys);
+  mutex(logSysToEnv);
+  -- getMinMaxAverage is blocked until all responses have been received
+  per getMinMaxAverage => card dom s2e = max_stimuli
+
+end EnvironmentTask
+\end{vdm_al}

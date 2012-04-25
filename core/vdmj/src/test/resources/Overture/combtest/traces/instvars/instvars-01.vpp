@@ -1,0 +1,46 @@
+class Stack
+
+  instance variables
+    stack : seq of int := [];
+
+  operations
+
+    public
+    Reset : () ==> ()
+    Reset () ==
+      stack := [];
+
+    public
+    Pop : () ==> int
+    Pop() ==
+      def res = hd stack in
+        (stack := tl stack;
+         return res)
+    pre stack <> []
+    post stack~ = [RESULT]^stack;
+
+    public Push: int ==> ()
+    Push(elem) ==
+      stack := stack ^[elem];
+
+    public
+    Top : () ==> int
+    Top() ==
+      return (hd stack);
+
+ 
+end Stack
+class UseStack
+
+instance variables
+
+  s : Stack := new Stack();
+  t : set of nat := {7,42}
+
+traces 
+
+  PushBeforePop : s.Reset(); let x in set t
+                             in s.Push(x){1,3}; 
+                  s.Pop(){1,3}
+ 
+end UseStack

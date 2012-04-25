@@ -1,0 +1,102 @@
+\begin{vdm_al}
+class TimeStamp
+
+\end{vdm_al}
+Modified by Johanne U. Jensen to act as a thread barrier.
+
+Class used for concurrent VDM++ models. All threads should call the following operations:
+- WaitRelative(t): makes the thread periodic with t = the period
+- NotifyAll(): notified all threads sleeping in the wakeUpMap
+- Awake(): puts the thread to sleep - will wakeup when t time units has passed  
+
+TimeStamp(nat1 barrierCount);
+
+WaitRelative // blocks
+WaitAbsolute // blocks
+
+NotifyThread // Non blocking
+GetTime // Non blocking
+
+ThreadDone // Non Blocking
+
+\begin{vdm_al}
+
+values
+
+public stepLength : nat = 1;
+
+instance variables
+
+currentTime  : nat   := 0;
+wakeUpMap    : map nat to [nat] := {|->};
+barrierCount : nat1;
+
+operations
+
+public TimeStamp : nat1 ==> TimeStamp
+TimeStamp(count) ==
+	barrierCount := count;
+
+public WaitRelative : nat ==> ()
+WaitRelative(val) ==
+  WaitAbsolute(currentTime + val);
+ 
+public WaitAbsolute : nat ==> ()
+WaitAbsolute(val) == (
+  AddToWakeUpMap(threadid, val);
+  -- Last to enter the barrier notifies the rest.
+  BarrierReached();
+  -- Wait till time is up
+  Awake();
+);
+
+BarrierReached : () ==> ()
+BarrierReached() == 
+(
+	while  (card dom wakeUpMap = barrierCount) do
+  	(
+  		currentTime := currentTime + stepLength;
+  		let threadSet : set of nat = {th | th in set dom wakeUpMap 
+  										 & wakeUpMap(th) <> nil and wakeUpMap(th) <= currentTime }
+		in
+			for all t in set threadSet 
+			do
+				wakeUpMap := {t} <-: wakeUpMap;
+	);
+)
+post forall x in set rng wakeUpMap & x = nil or x >= currentTime;
+
+AddToWakeUpMap : nat * [nat] ==> ()
+AddToWakeUpMap(tId, val) ==
+   wakeUpMap := wakeUpMap ++ { tId |-> val };
+
+public NotifyThread : nat ==> ()
+NotifyThread(tId) ==
+ wakeUpMap := {tId} <-: wakeUpMap;
+
+public GetTime : () ==> nat
+GetTime() ==
+  return currentTime;
+
+Awake: () ==> ()
+Awake() == skip;
+
+public ThreadDone : () ==> ()
+ThreadDone() == 
+	AddToWakeUpMap(threadid, nil);
+
+sync
+  per Awake => threadid not in set dom wakeUpMap;
+
+  -- Is this really needed?
+  mutex(AddToWakeUpMap);
+  mutex(NotifyThread);
+  mutex(BarrierReached);
+  
+  mutex(AddToWakeUpMap, NotifyThread);
+  mutex(AddToWakeUpMap, BarrierReached);
+  mutex(NotifyThread, BarrierReached);
+  
+  mutex(AddToWakeUpMap, NotifyThread, BarrierReached);
+
+end TimeStamp

@@ -1,0 +1,14 @@
+\section{The Event Class}
+
+The Event class is the abstract super class of the class hierarchy of test events. Each class implementing this event class must define an execute operation.
+
+\begin{vdm_al}
+class Event
+
+operations 
+  public execute : System ==> Test`TestResult
+  execute(system) ==
+    is subclass responsibility;
+
+end Event
+\end{vdm_al}

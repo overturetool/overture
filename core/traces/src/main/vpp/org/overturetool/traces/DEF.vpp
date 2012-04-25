@@ -1,0 +1,182 @@
+\section{Global Considerations}
+
+\begin{vdm_al}
+class DEF
+
+instance variables
+
+  valm : map Identifier to ValueMap := {|->};
+
+  inherit : map Identifier to set of Identifier := {|->};
+
+  recdefs : map Name to map Identifier to nat1 := {|->};
+  
+  errorLog : RTERR;
+
+types
+
+public ValueMap = map Identifier to IOmlExpression;
+
+public Identifier = seq of char;
+
+public Name ::
+  clnm : Identifier
+  tnm  : Identifier;
+
+operations
+public DEF : IOmlSpecifications * RTERR ==> DEF
+DEF(spec,errLog) == 
+(
+  errorLog := errLog;
+  ExpandSpec(spec);
+);
+
+public ExpandSpec: IOmlSpecifications ==> ()
+ExpandSpec(spec) ==
+  for cl in spec.getClassList() do
+    let id    = cl.getIdentifier(),
+        supers = if cl.hasInheritanceClause()
+                then cl.getInheritanceClause().getIdentifierList()
+                else [],
+        body  = cl.getClassBody()
+    in
+      (valm(id)    := ExpandValueMap(body);
+       recdefs := recdefs ++ ExpandRecTypeDefs(id,body);
+       inherit(id) :=  elems supers); 
+
+ExpandValueMap: seq of IOmlDefinitionBlock ==> ValueMap
+ExpandValueMap(body_l) ==
+  (dcl v_m : ValueMap := {|->};
+   for body in body_l do
+    if isofclass(OmlValueDefinitions,body)
+    then v_m := v_m ++ ExpandValueDef(body)
+    elseif isofclass(OmlInstanceVariableDefinitions,body)
+    then v_m := v_m ++ ExpandInstVarDef(body);
+   return v_m
+  );
+  
+ExpandValueDef: IOmlValueDefinitions ==> ValueMap
+ExpandValueDef(body) ==
+  (dcl v_m : ValueMap := {|->};
+   for vdef in body.getValueList() do
+     let shape = vdef.getShape(),
+         pat   = shape.getPattern(),
+         expr  = shape.getExpression()
+     in
+       if isofclass(OmlPatternIdentifier,pat)
+       then v_m := v_m ++ MatchPatId2Expr(pat,expr)
+       else errorLog.ReportInternalError(pat,RTERR`ONLY_ID_SUPPORTED,false); 
+            -- proper pattern matching is NOT supported now
+    return v_m); 
+
+ExpandInstVarDef: IOmlInstanceVariableDefinitions ==> ValueMap
+ExpandInstVarDef(body) ==
+  (dcl v_m : ValueMap := {|->};
+   for instdef in body.getVariablesList() do
+     if not isofclass(OmlInstanceVariableInvariant,instdef)
+     then let instdef2 : OmlInstanceVariable = instdef,
+              idef = instdef2.getAssignmentDefinition(),
+              id   = idef.getIdentifier(),
+              expr = if idef.hasExpression()
+                     then idef.getExpression()
+                     else nil
+          in
+            if expr <> nil
+            then v_m := v_m ++ {id |-> expr};
+   return v_m); 
+
+ExpandRecTypeDefs: Identifier * seq of IOmlDefinitionBlock ==>
+                   map Name to map Identifier to nat1
+ExpandRecTypeDefs(clnm,body_l) ==
+  (dcl r_m : map Name to map Identifier to nat1 := {|->};
+   for body in body_l do
+    if isofclass(OmlTypeDefinitions,body)
+    then r_m := r_m ++ ExpandTypeDefs(clnm,body);
+   return r_m
+  );
+
+ExpandTypeDefs: Identifier * IOmlTypeDefinitions ==> 
+                map Name to map Identifier to nat1
+ExpandTypeDefs(clnm,body) ==
+  (dcl r_m : map Name to map Identifier to nat1 := {|->};
+   for tdef in body.getTypeList() do
+     let shape = tdef.getShape()
+     in
+       if isofclass(OmlComplexType,shape)
+       then r_m := r_m ++ ExpandComplexTypeDef(clnm,shape); 
+    return r_m); 
+
+ExpandComplexTypeDef: Identifier * IOmlComplexType ==> 
+                map Name to map Identifier to nat1
+ExpandComplexTypeDef(clnm,shape) ==
+  let id  = shape.getIdentifier(),
+      f_l = shape.getFieldList()
+  in
+    return {mk_Name(clnm,id) |-> {f_l(i).getIdentifier() |-> i 
+                                 | i in set inds f_l}};
+
+public LookUp: Identifier * Identifier ==> IOmlExpression
+LookUp(clnm,defnm) ==
+ (if clnm in set dom valm
+  then let vm = valm(clnm)
+       in
+         if defnm in set dom vm
+         then return vm(defnm)
+         elseif clnm in set dom inherit
+         then let supers = inherit(clnm)
+              in
+               (for all sup in set supers do
+                  if sup in set dom valm and defnm in set dom (valm(sup))
+                  then return valm(sup)(defnm);
+                errorLog.ReportInternalError(nil,RTERR`INTERNAL_ERROR,true))
+         else errorLog.ReportInternalError(nil,RTERR`INTERNAL_ERROR,true)
+  else errorLog.ReportInternalError(nil,RTERR`INTERNAL_ERROR,true);
+  return new OmlName(nil,"Dummy"));
+
+public LookUpRecSel: SEM`REC * Identifier * IOmlFieldSelect ==> SEM`VAL
+LookUpRecSel(recval,selid,expr) ==
+  let tag = recval.tag
+  in
+    if tag in set dom recdefs
+    then let sel_m = recdefs(tag)
+         in
+           if selid in set dom sel_m
+           then let num = sel_m(selid)
+                in
+                  return (recval.v)(num)
+           else (errorLog.ReportError(expr, RTERR`RECORD_FIELD_ID_UNKNOWN);
+                 return mk_SEM`NUM(1))
+    else (errorLog.ReportError(expr, RTERR`RECORD_FIELD_ID_UNKNOWN);
+          return mk_SEM`NUM(1));
+
+public UpdateRecVal: SEM`REC * Identifier * SEM`VAL *
+                     IOmlExpression ==> SEM`REC
+UpdateRecVal(recval,selid,val,expr) ==
+  let tag = recval.tag
+  in
+    if tag in set dom recdefs
+    then let sel_m = recdefs(tag)
+         in
+           if selid in set dom sel_m
+           then let num = sel_m(selid)
+                in
+                  return mu(recval,v |-> recval.v ++ {num |-> val})
+           else (errorLog.ReportError(expr, RTERR`RECORD_FIELD_ID_UNKNOWN);
+                 return mk_SEM`REC(mk_Name("",""),[]))
+    else (errorLog.ReportError(expr, RTERR`RECORD_FIELD_ID_UNKNOWN);
+          return mk_SEM`REC(mk_Name("",""),[]))
+
+functions
+
+static MatchPatId2Expr: IOmlPatternIdentifier * IOmlExpression -> ValueMap
+MatchPatId2Expr(patid,expr) ==
+  let id = patid.getIdentifier()
+  in
+    {id |-> expr};
+
+end DEF
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[DEF]
+\end{rtinfo}

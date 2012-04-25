@@ -1,0 +1,142 @@
+\section{RateController class}
+
+The RateController is the class that models the rate adaptation control. For doing that it has the sensed instance variable where the last accelerometer value is stored and the interval corresponds to the actual rate interval. 
+
+\begin{vdm_al}
+class RateController is subclass of GLOBAL
+
+instance variables
+ sensed   : [ActivityData];
+ interval : Time;
+ finished : bool; 
+\end{vdm_al}
+
+The other variables are used to control the value of the interval with an invariant restricting the values to the ranges defined in\cite{PaceSysSpec}.
+
+\begin{vdm_al}
+instance variables
+ LRL       : PPM;
+ MSR       : PPM;
+ threshold : nat1;
+ reactionT : Time;
+ recoveryT : Time;
+ responseF : nat1;
+inv threshold < 8
+    and
+    reactionT in set {10,...,50}
+    and
+    recoveryT in set {2,...,16}
+    and 
+    responseF <= 16;
+\end{vdm_al} 
+
+The Constructor initializes the instance variables with the default values as consulted in\cite{PaceSysSpec};
+
+\begin{vdm_al}
+operations
+  
+ public 
+ RateController: () ==> RateController
+ RateController() ==
+   (LRL       := 60;
+    MSR       := 120;
+    threshold := MED;
+    reactionT := 10; -- 10 s
+    recoveryT := 2; -- 2 minutes;
+    responseF := 8;
+    sensed    := nil; 
+    interval  := 1/((LRL/60)/1000);
+    finished  := false;
+
+   );
+\end{vdm_al} 
+
+This is the method that should be used to inspect wich is the actual value of the maximum interval between atrial events in order to achieve a bpm rate above or equal the LRL defined.
+
+\begin{vdm_al}
+public
+getInterval : () ==> Time
+getInterval () == return interval;
+\end{vdm_al}
+
+Each time step the controlRate operation will be invoked if there was some input from the accelerometer.
+
+\begin{vdm_al}
+
+ public 
+ Step : () ==> ()
+ Step () == if sensed <> nil then controlRate();
+
+\end{vdm_al} 
+
+The control of the rate is done regarding a threshold.
+
+\begin{vdm_al}
+ private
+ controlRate : () ==> ()
+ controlRate () == 
+    (
+    if sensed > threshold
+    then increaseRate()
+    elseif sensed < threshold
+    then decreaseRate()
+    else skip;
+    sensed := nil;
+    );
+\end{vdm_al}
+
+Stimulate is the handler wich the acclerometer will call to deliver input.
+
+\begin{vdm_al}
+ public 
+ stimulate : ActivityData ==> ()
+ stimulate (ad) == sensed := ad;
+\end{vdm_al} 
+
+These are the operations modelling the change in rate, at this modelling stage the increase as mentioned above is done imediatelly.
+
+\begin{vdm_al}
+ private
+ increaseRate : () ==> ()
+ increaseRate () == 
+   (
+    interval := 1 / ((MSR / 60) / 1000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+
+\end{vdm_al}
+
+Decresing the rate its also instantaneously.
+
+\begin{vdm_al}
+ private
+ decreaseRate : () ==> ()
+ decreaseRate () == 
+   (
+    interval := 1 / ((LRL / 60) / 1000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+\end{vdm_al}
+
+To improve readability the accelerometer outputs (ActivityData)
+are defined as values.
+
+\begin{vdm_al}
+values
+
+V_LOW : ActivityData = 1;
+LOW : ActivityData = 2;
+MED_LOW : ActivityData = 3;
+MED : ActivityData = 4;
+MED_HIGH : ActivityData = 5;
+HIGH : ActivityData = 6;
+V_HIGH : ActivityData = 7;
+
+end RateController
+\end{vdm_al} 
+
+\subsection*{Test coverage}
+
+\begin{rtinfo}
+{tc.info}[RateController]
+\end{rtinfo}

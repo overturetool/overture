@@ -1,0 +1,187 @@
+\documentclass[11pt]{article}
+\usepackage{durnew}
+\usepackage{vdmsl-2e}
+\usepackage{generated/latex/overture}
+\usepackage{graphicx}
+
+% Page usage. Big A4 size.
+\oddsidemargin 1pt
+\evensidemargin 1pt
+\marginparwidth 30pt
+\topmargin 1pt
+% \headheight 12pt
+% \headsep 8pt
+\footskip 24pt
+\textheight 650pt
+\textwidth 460pt
+% End of page usage.
+
+
+\itletters
+
+\parindent=0pt
+\parskip=.5\baselineskip
+
+
+\title{Modelling Railway Interlocking Systems\thanks{This work is supported by the
+    Danish State Railways, by the project Mathematical
+    Modelling of Computer Based Systems (MMaDS) at the Technical University of
+    Denmark, and by the Commission of the European Communities (CEC),
+    ESPRIT, Basic Research Action
+    proj.\ no.\ 7071: ``ProCoS II: Provably Correct Systems''.}}
+\author{Kirsten Mark Hansen\thanks{Department of Computer Science, Technical University
+of Denmark Build. 344, DK-2800 Lyngby, Denmark, and
+Danish State Railways, Infrastructure Management-Consult, Signalling
+Safety Assessment, 
+S\o lvgade 40, opg.\ F, 4.sal, DK-1349 K\o benhavn K, Denmark}}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In this report we present a model of interlocking systems, and
+describe how the model may be validated by simulation. Station
+topologies are modelled by graphs in which the nodes denote track
+segments, and the edges denote connectivity for train traffic. Points
+and signals are modelled by annotations on the edges, thereby
+restricting the driving possibilities. We define the safe station
+states as predicates on the graph, and present a first step towards an
+implementation of
+these predicates. Both the model of station topologies, the safety
+requirements, and the implementation are
+validated using the VDM tool-box. The model development
+illustrates how concepts may be captured and validated for a
+non-trivial system.
+
+\paragraph{CR Categories:} D.2.1, D.2.10, D.3.1, J.7
+\paragraph{CR General Terms:} Design. 
+\paragraph{Keywords:} Mathematical modelling, application of formal
+methods, VDM-SL, stepwise
+development, model validation, simulation, VDM tool-box, 
+railway interlocking.
+\end{abstract}
+
+
+\section{Introduction}
+
+The task of an
+interlocking system is primarily to prevent trains from colliding, and
+derailing, while at the same time allowing train movements. The Danish State
+Railways
+(DSB) has built and used interlocking systems for the past 150 years. The first
+interlocking systems were pure mechanical systems, but as electricity became
+common, the systems have developed through
+electro mechanical to relay based systems and more recently to
+computer based systems. Interlocking systems are safety
+critical systems, so there is a need to ensure that the system prevents
+dangerous
+situations. Therefore DSB recently
+decided to investigate the possibilities of using
+formal software development for interlocking systems. This report presents
+some of the
+results of this work, which has been done as a cooperation between DSB and
+the Department of Computer Science at the Technical University of
+Denmark. Parts of this report have previously been published
+in \cite{nsdcs94}, and in  \cite{fme94}.
+
+In making a
+formal model of interlocking systems,
+we encountered a number of
+difficulties, which seem to be general problems in
+system modelling:
+
+\begin{itemize}
+\item no overall system requirements
+
+\item a lack of precise concept definitions
+
+\item the persons who develop
+  interlocking systems had no knowledge of formal methods
+
+\item we had no knowledge of interlocking systems.
+\end{itemize}
+
+The missing overall system requirements was a major problem.
+There were informal specifications like
+\cite{kravspec}, but they only contained low
+level requirements like: `if the switching of a
+point is not terminated within 20 seconds, the setting of the train route is
+interrupted'.  There were no requirements stating the
+purpose
+of an interlocking system, and it turned out that
+defining the overall task of an interlocking system was not a simple task.
+One requirement could for instance be that an interlocking system
+should prevent train
+collision, but this is a matter for discussion, as joining
+two trains into one strictly speaking is a train collision.
+
+The second point was a lack of precise concept definitions.
+Some concepts were not defined at all, e.g.\ train collision, and for
+other concepts, the definition has changed over time, e.g.\ naming of
+point branches.
+
+Having made a system model there are generally two equal important aspects one
+would like to investigate:
+
+\begin{enumerate}
+\item Is the model an acceptable model of  reality?
+
+\item How is the model implemented?
+\end{enumerate}
+
+In formal program development one tends to focus on
+the second aspect, but due to the difficulties mentioned above, we decided
+to take validation seriously. 
+Having
+investigated a number of validation techniques, e.g.\ interviews,
+structured reading \cite{validate,king}, symbolic execution of
+specifications \cite{kneuper}, and prototyping (simulation)
+\cite{prototyping}, we decided primarily to use simulation.
+There were several reasons for this decision. First simulation is a
+well-established technique in conventional mathematical modelling.
+Next we had used interviews to reveal the requirements and therefore,
+we did not trust interviews to be the only validation technique.
+Structured reading means checking that there are no missing
+references in a document, that all functions used are defined etc.,
+but in choosing an executable specification language, we get this for
+free. Finally symbolic execution of specifications did not fit very
+well to our application as we had a specification with a small state
+space and only one operation. 
+By writing the specifications in VDM-SL
+\cite{vdmsl}, and by using the VDM tool-box \cite{toolbox}, we were
+able to execute the specification and thereby validate it. 
+
+We do not formalise a particular interlocking system, but focus on
+the principles and concepts upon which such systems are built. We take
+interlocking systems used by the
+DSB as starting point. Interlocking systems from other
+countries may differ from the systems described here.
+
+Other models
+for interlocking systems
+have been made in Higher Order Logic \cite{wai,morley3}, in
+CCS \cite{morley2}, using double node graphs \cite{markus2,markus1}, and by
+modelling tracks as units with end points \cite{sorenprehn}.
+Many researchers have furthermore used railway applications as case studies,
+e.g.\
+\cite{jus,broy}, but this work is not directly applicable to our work, 
+as it  either presents toy examples, or examples which have nothing to
+do with interlocking, like e.g. level crossings \cite{jus}.
+
+The content of the report is as follows: In Section~\ref{station} we
+develop a model of station topologies and define their 
+state spaces. In
+Section~\ref{invar}, we define the safety requirements which an
+interlocking system should fulfill, and in Section~\ref{intpre} we
+present an implementation of the requirements. We
+conclude in Section~\ref{concl} by
+discussing the model development and executable
+specifications for model validation. 
+
+
+\include{generated/latex/specification/rail.vdmsl}
+
+\end{document}

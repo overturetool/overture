@@ -1,0 +1,35 @@
+
+
+
+class SpecTest
+
+types
+  public String = seq of char;
+
+operations
+
+public Run: IOmlSpecifications * seq of char ==> 
+           map int to seq of char
+Run(model,name) ==
+(
+  test(model,name ^"CONVERTED.vpp");
+return {|->};
+);
+
+
+  test : IOmlSpecifications * String ==> ()
+  test(spec,fName) ==
+    let v :Vdm2Uml = new Vdm2Uml(),
+        tmp = v.Init(spec),
+        xmi :Uml2XmiEAxml = new Uml2XmiEAxml(),
+        xmlUmlModel : Xml2UmlModel = new Xml2UmlModel(),
+        u: Uml2Vdm = new Uml2Vdm(),
+        vpp:Oml2Vpp = new Oml2Vpp()
+      in
+      (
+        xmi.Save("testRun.xml",tmp,v.GetLog());
+        xmlUmlModel.VisitXmlDocument(xmi.doc);
+        vpp.Save(fName,u.Init(xmlUmlModel.result),new StatusLog());
+     );
+
+end SpecTest

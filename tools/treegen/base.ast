@@ -1,0 +1,70 @@
+class Base
+
+/*
+ *	TEST FILE FOR TREEGEN
+ */
+
+-- supports both single and multi-line comments
+ 
+values
+  -- top-level package name of all generated Java classes
+  package = "nl.marcelverhoef.base";
+  
+  -- top-level directory where all Java code will be stored
+  javadir = "d:\\workspace\\test\\src";
+  
+  -- top-level directory where all VDM code will be stored
+  vdmppdir = "d:\\workspace\\test\\vdm";
+  
+  -- top-level entry point(s) of the abstract syntax (for 'get' operations in Document class
+  toplevel = "Expression";
+  
+  -- indicate whether or not generated VDM should be split or collated
+  split = true
+
+instance variables
+  pos : token := mk_token("nl.marcelverhoef.position.Position")
+  
+types
+
+SeqOfChar = seq of char;
+
+Expression =
+	UnaryExpression |
+	BinaryExpression |
+	SequenceExpression |
+	NatLiteral;
+	
+UnaryExpression ::
+	operator : UnaryOperator
+	operand  : Expression;
+	
+BinaryExpression ::
+	lhs : Expression
+	operator : BinaryOperator
+	rhs : Expression;
+
+SequenceExpression ::
+	seq_expr : [seq of Expression]
+	set_expr : set of Expression
+	map1_expr : map nat to SeqOfChar
+	map2_expr : [map UnaryExpression to Expression]
+	seq2_expr : seq of real
+	set2_expr : set of nat;
+		
+UnaryOperator =
+   <PLUS> |
+   <MINUS>;
+   
+BinaryOperator =
+	<PLUS> |
+	<MINUS> |
+	<MULTIPLY> |
+	<DIVIDE>;
+	
+NatLiteral ::
+	val : nat
+	txt : SeqOfChar /* --++ := "test" */
+	tst : token --++ := mk_token("java.lang.String") */
+	
+end Base

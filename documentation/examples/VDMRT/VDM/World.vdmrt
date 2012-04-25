@@ -1,0 +1,92 @@
+\section{World Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			World
+-- Description: 	World class in the VDM project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class World
+
+--
+-- instance variables
+--
+instance variables
+
+public static env : [Environment] := nil;
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public World: () ==> World
+World() ==
+(
+ Printer`OutAlways("Creating World");
+ env := new Environment("inputvalues.txt");
+ 
+ --vehicle
+ VDM`vdmCtrl.addController(VDM`ctrl1);
+ VDM`vdmCtrl.addController(VDM`ctrl2);
+ VDM`vdmCtrl.addController(VDM`ctrl3);
+ VDM`vdmCtrl.addController(VDM`ctrl4);
+ VDM`vdmCtrl.addController(VDM`ctrl5);
+ VDM`vdmCtrl.addController(VDM`ctrl6);
+ VDM`vdmCtrl.addController(VDM`ctrl7);
+ VDM`vdmCtrl.addController(VDM`ctrl8);  
+ VDM`vdmCtrl.addController(VDM`ctrl9);
+ VDM`vdmCtrl.addController(VDM`ctrl10);
+ VDM`vdmCtrl.addController(VDM`ctrl11);
+ VDM`vdmCtrl.addController(VDM`ctrl12);
+ VDM`vdmCtrl.addController(VDM`ctrl13);
+ VDM`vdmCtrl.addController(VDM`ctrl14);
+ 
+ 
+ VDM`vdmCtrl.addTrafficLight(VDM`tl1);
+ env.setVDMCtrl(VDM`vdmCtrl);
+
+ Printer`OutAlways("World created: "  
+				 ^ " Maybe this world is another planet's hell.");
+ Printer`OutAlways("------------------------------------------\n");
+);
+
+public Run: () ==> ()
+Run() == 
+(
+  env.run();
+  env.isFinished();
+  duration(1000)
+  env.report();
+  Printer`OutAlways("End of this world");
+);
+
+public static Verbose : bool ==> ()
+Verbose(v) == Printer`Echo(v);
+
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+end World
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[World]
+\end{rtinfo}

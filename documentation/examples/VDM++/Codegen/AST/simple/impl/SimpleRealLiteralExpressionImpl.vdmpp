@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleRealLiteralExpressionImpl is subclass of SimpleRealLiteralExpression
+instance variables
+    private iv_value:real;
+
+operations
+    public SimpleRealLiteralExpressionImpl: real ==> SimpleRealLiteralExpressionImpl
+    SimpleRealLiteralExpressionImpl(p_value) ==
+    (
+        iv_value := p_value;
+    );
+
+    public getValue: () ==> real
+    getValue() == return iv_value;
+
+end SimpleRealLiteralExpressionImpl

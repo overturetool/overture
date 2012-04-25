@@ -1,0 +1,33 @@
+\section{A Test Class}
+
+The Test class defines an environment for executing test cases. The
+class maintains a reference to a KLV instance, and it provides two
+operations, runOneTest for execution of one test event, and runTests
+for execution of a sequence of test events. Different kinds of test
+events can be executed. These are defined by the Event class hierarchy
+defined below.  The data types represent different kinds of categories
+of results which in this case are simply booleans, natural numbers or
+nil.
+
+\begin{vdm_al}
+class Test
+types
+
+  public TestResult = [bool | nat | <PinOk> | <PinNotOk> | <Retained>]
+
+instance variables
+
+  system : System := new System();
+
+operations
+  public runTests : seq of Event ==> seq of TestResult
+  runTests(events) ==
+ (return [events(i).execute(system)
+         | i in set inds events ]);
+
+  public runOneTest : Event ==> TestResult
+  runOneTest(event) ==
+  return event.execute(system);
+
+end Test
+\end{vdm_al}

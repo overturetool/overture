@@ -1,0 +1,42 @@
+class WindMeasurementController
+ types
+ public WindSpeedType = nat
+ inv w == w <= 50
+
+ values
+ public static MAX_WIND : WindSpeedType = 50;
+
+ instance variables
+ mWindSpeedSeq : seq of WindSpeedType;
+ static mInstance : [WindMeasurementController] := nil;
+
+ operations
+ WindMeasurementController : seq of WindSpeedType ==> WindMeasurementController
+ WindMeasurementController(windSpeedSeq) ==
+  mWindSpeedSeq := windSpeedSeq;
+
+ public static CreateInstance : seq of WindSpeedType ==> ()
+ CreateInstance(windSpeedSeq) ==
+  if mInstance = nil 
+  then mInstance := new WindMeasurementController(windSpeedSeq);
+
+ public static GetInstance : () ==> WindMeasurementController
+ GetInstance() ==
+  return mInstance
+ pre mInstance <> nil;
+
+ public GetWindSpeed : () ==> WindSpeedType
+ GetWindSpeed() ==
+  return hd mWindSpeedSeq
+ pre mWindSpeedSeq <> [];
+
+ public IsFinished : () ==> bool
+ IsFinished() ==
+  return mWindSpeedSeq = []; 
+
+ public Run : () ==> ()
+ Run() ==
+  if mWindSpeedSeq <> [] 
+  then mWindSpeedSeq := tl mWindSpeedSeq;
+
+end WindMeasurementController

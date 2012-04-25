@@ -1,0 +1,133 @@
+\section{Test of Controller}
+
+\begin{vdm_al}
+------------------------------------------------
+-- Class:			TestController
+-- Description: 	Test the Controller class 
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestController is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+private pos : Position;
+--
+-- Operations definition section
+--
+operations
+public TestController: seq of char ==> TestController
+TestController(s) ==
+(
+	TestCase(s);
+);
+
+protected SetUp: () ==> ()
+SetUp () == pos := new Position(1,1); 
+
+protected RunTest: () ==> ()
+RunTest () ==
+(
+  dcl vec : Vehicle := new Vehicle(2, pos, 1, <NORTH>),
+  ctrl : Controller := new Controller(vec),
+  vec2 : Vehicle := new Vehicle(3, pos.deepCopy(), 1, <NORTH>),
+  ctrl2 : Controller := new Controller(vec2),
+  vec3 : Vehicle := new Vehicle(4, pos.deepCopy(), 1, <NORTH>),
+  ctrl3 : Controller := new Controller(vec3);
+
+  AssertTrue(ctrl.getVehicle() = vec);
+  AssertTrue(ctrl.GetDirection() = <NORTH>);
+  AssertTrue(ctrl.GetVehicleID() = 2);
+  AssertTrue(ctrl.GetPosition().X() = pos.X());
+  AssertTrue(ctrl.GetPosition().Y() = pos.Y());
+ 
+  --test get traffic data
+  vec.setLowGrip(true);
+  vec.setTurnIndicator(<LEFT>);
+  ctrl.Step();
+  let vs = ctrl.GetTrafficData() in
+  (
+   let v = vs(1) in
+   (
+   AssertTrue(v.GetPosition().X() = 1);
+   AssertTrue(v.GetPosition().Y() = 2);
+   AssertTrue(v.GetMessage() = <LowGrip>);
+   AssertTrue(v.GetDirection() = <NORTH>);
+   );
+   let v = vs(2) in
+   (
+   AssertTrue(v.GetPosition().X() = 1);
+   AssertTrue(v.GetPosition().Y() = 2);
+   AssertTrue(v.GetMessage() = <LeftTurn>);
+   AssertTrue(v.GetDirection() = <NORTH>);
+
+   )
+  );
+  
+  vec.SetSpeed(0);
+  vec.setTurnIndicator(<LEFT>);
+  ctrl.Step();
+  let vs = ctrl.GetTrafficData() in
+  (
+   let v = vs(1) in
+   (
+   AssertTrue(v.GetPosition().X() = 1);
+   AssertTrue(v.GetPosition().Y() = 2);
+   AssertTrue(v.GetMessage() = <LowGrip>);
+   AssertTrue(v.GetDirection() = <NORTH>);
+   );
+   let v = vs(2) in
+   (
+   AssertTrue(v.GetPosition().X() = 1);
+   AssertTrue(v.GetPosition().Y() = 2);
+   AssertTrue(v.GetMessage() = <LeftTurn>);
+   AssertTrue(v.GetDirection() = <NORTH>);
+   )
+  );
+  
+  ctrl.AddOncomingVehicle(ctrl2.getVehicleDTO());
+  ctrl.AddOncomingVehicle(ctrl3.getVehicleDTO());
+  ctrl.Step();
+  let vs = ctrl.GetTrafficData() in
+  let v = vs(3) in
+  (
+   AssertTrue(v.GetMessage() = <Congestion>);
+  );
+  
+  --  --test add of traffic data. Test that adding loops when more than five
+  ctrl.AddTrafficData(21, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(22, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(23, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(24, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(25, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(26, [new TrafficData(<LeftTurn>, pos , <NORTH>)]);
+
+  --test that the same vehicle can't communicate until pass threshold. 
+  ctrl.AddTrafficData(31, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(32, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(33, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(34, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(31, [new TrafficData(<LeftTurn>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(35, [new TrafficData(<Congestion>, pos , <NORTH>)]);
+  ctrl.AddTrafficData(31, [new TrafficData(<LeftTurn>, pos , <NORTH>)]);
+  
+  -- actually this can't be automatically tested. 
+  -- The added data is internal only. The test can only be verified  
+  -- by checking the handled events in environment. 
+  
+);
+  
+protected TearDown: () ==> ()
+TearDown () == skip;
+
+end TestController
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[TestController]
+\end{rtinfo}

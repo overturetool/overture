@@ -1,0 +1,210 @@
+class Bus
+	
+	instance variables
+		seats : set of Passenger;
+		inv card seats <= Config`BusCapacity;
+		
+		--bus line number
+		line : nat;
+
+		-- the route of road the bus is moving along
+		route : seq of Road;
+		-- what roads are left in the current pass of the route
+		curRoute : seq of Road;
+		-- where are we heading
+		nextWP : Waypoint;
+		-- what road are we currently on
+		currentRoad : Road;
+		--waypoints passed by the bus
+		wps : seq of Waypoint;
+		
+	operations
+		public Bus : nat * seq of Road * seq of Waypoint ==> Bus
+		Bus(linenumber, busroute, waypoints)==
+		(
+			line := linenumber;
+			route := busroute;
+			curRoute := busroute;
+			nextWP := hd waypoints;			
+
+			wps := waypoints;
+			seats := {};
+		)
+		pre len waypoints > 1; --ensure bus has somewhere to go
+
+		public GetOn : set of Passenger ==> ()
+		GetOn(ps) == 
+		(
+			seats := seats union ps;
+			World`graphics.busPassengerCountChanged(line, card seats);
+		)
+		pre card seats + card ps <= Config`BusCapacity; 
+
+		public GotOff : set of Passenger ==> ()
+		GotOff(p) == 	
+		(
+			seats := seats \ p;
+			World`graphics.busPassengerCountChanged(line, card seats);
+		)
+		pre p inter seats <> {};
+
+		public GetWaypoints : () ==> seq of Waypoint
+		GetWaypoints()== 
+			return wps;
+
+		public GetStops : () ==> seq of Busstop
+		GetStops()== 
+			return [wps(i) | i in set inds wps & wps(i).IsStop() ];
+		
+
+		private NextWaypoint : () ==> Waypoint
+		NextWaypoint()== 
+		(	
+			--start route over
+			if(len curRoute = 0) then
+ 				curRoute := route;
+
+			--next road
+			let nextRoad = hd curRoute in 
+			(
+				--move along route
+				curRoute := tl curRoute;
+				--what road are we on
+				currentRoad := nextRoad;
+				-- update waypoints
+				let currentWp = nextWP  in
+				(
+					nextWP := currentRoad.OppositeEnd(currentWp);
+					return currentWp;
+				)
+			);
+		);
+
+		--functionality to ensure thread start
+		public WaitForThreadStart : () ==> ()
+		WaitForThreadStart() == skip;
+
+		private ThreadStarted : () ==> ()
+		ThreadStarted() == skip;
+
+	sync
+		per GetOn => card seats < Config`BusCapacity;
+		per WaitForThreadStart => #fin(ThreadStarted) > 0
+	
+	thread
+	(
+		dcl passGettingOn : set of Passenger;
+		ThreadStarted();
+		let - = NextWaypoint() in skip; --prevent return
+
+		--loop which moves bus along route, and lets passengers on and off at stops
+		while true do
+		(
+			Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ ": running on " ^ 
+									VDMUtil`val2seq_of_char[Road`RoadNumber](currentRoad.GetRoadNumber()) ^
+									" with length " ^ Printer`natToString(currentRoad.GetLength()) ^ " and speedlimit " ^
+									 Printer`natToString(currentRoad.GetSpeedLimit()) ^
+									 " Next: " ^ VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](nextWP.GetId()) ^
+									 " Time: " ^ Printer`natToString(currentRoad.GetTimePenalty())
+							);
+ 
+			World`graphics.busInRouteTo(line,
+				VDMUtil`val2seq_of_char[Road`RoadNumber](currentRoad.GetRoadNumber()), 
+				VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](nextWP.GetId()),
+				currentRoad.GetTimePenalty());
+
+			--add to penalty for moving along road
+			World`timerRef.WaitRelative(currentRoad.GetTimePenalty());
+   			World`timerRef.NotifyAll();
+   			World`timerRef.Awake();
+
+			--next on bus route
+			let next = NextWaypoint() in
+			( 	
+				Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ 
+				" arrived at " ^ 
+				VDMUtil`val2seq_of_char[Waypoint`WaypointsEnum](next.GetId()));
+
+				let nextId = next.GetId() in
+				( 
+					--let passengers in at central station if 
+					--their destination is on the bus' route
+					if nextId = <Central> then
+					(
+						--bus returned with passengers; in the current model this should not be possible
+						--if(seats <> {}) then exit "Bus returned with passengers";
+						
+						let central : Busstop = next in
+						( 
+							--find passengers for bus
+							let potentialPassengers : set of Passenger = central.GetWaitingOn(wps) in 
+							(
+								if(card potentialPassengers > 0) then
+								(
+									--count available sets in bus
+									if((Config`BusCapacity - card seats) < card potentialPassengers) then 
+										--not room for all, select some
+										passGettingOn := SelectSubset(potentialPassengers, Config`BusCapacity - card seats)
+									else
+										passGettingOn := potentialPassengers;
+									
+									-- leave busstop and enter bus seats
+									central.PassengerLeft(passGettingOn);
+									GetOn(passGettingOn);
+									for all p in set passGettingOn do p.GotOnBus();
+
+									Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ ": " ^ 
+										Printer`natToString(card passGettingOn) ^ " got on");
+
+									--add to time penalty for stopping
+									World`graphics.busStopping(line);
+									World`timerRef.WaitRelative(3);
+			   						World`timerRef.NotifyAll();
+			   						World`timerRef.Awake();
+								)
+							);
+						);
+					);					
+
+					-- let passengers off at their destination
+					let gettingOff = { p | p in set seats & p.GetDestination() = next} in
+					(
+							if(card gettingOff > 0) then
+							(
+								GotOff(gettingOff);
+								Printer`OutWithTS("%Bus " ^ Printer`natToString(line) ^ ": " ^ 
+									Printer`natToString(card gettingOff) ^ " got off");
+								
+								World`env.TransportedPassengers(card gettingOff);
+
+								--add to time penalty for stopping
+								World`graphics.busStopping(line);
+								World`timerRef.WaitRelative(3);
+		   						World`timerRef.NotifyAll();
+		   						World`timerRef.Awake();
+							);
+					);
+				);
+			);
+
+		);
+	);
+
+	operations
+		private SelectSubset : set of Passenger * nat ==> set of Passenger
+		SelectSubset(ps, limit)==
+		(
+			--base case
+			if limit = 0 then 
+				return {};
+
+			--smaller than limit, return
+			if card ps <= limit then 
+				return ps;
+
+			--recusive
+			let sub in set ps in
+					return {sub} union SelectSubset(ps \ {sub}, limit -1); 
+		)
+
+end Bus

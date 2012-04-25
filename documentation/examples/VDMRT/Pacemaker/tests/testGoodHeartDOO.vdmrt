@@ -1,0 +1,8 @@
+class Test14
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioGoodHeart.arg",<DOO>).Run()
+;
+end Test14

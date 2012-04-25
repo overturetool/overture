@@ -1,0 +1,860 @@
+--
+-- OVERTURE VDM++ ABSTRACT SYNTAX DEFINITION
+--
+
+class Syn
+
+values
+  package = "org.overturetool.ast.syntax";
+  javadir = "d:\\workspace\\test\\src";
+  toplevel = "Specification,Expression";
+
+instance variables
+  location 	: token := mk_token("org.overturetool.vdmj.lex.ILexLocation");
+  value		: token := mk_token("org.overturetool.vdmj.lex.ILexToken");
+
+types
+
+Specification ::
+  modules : seq of SpecificationFragment;
+
+SpecificationFragment = Definition; -- | Module
+
+
+
+--DefinitionBlock =  
+--  FunctionDefinitions |
+--  TypeDefinitions;
+
+--
+-- Definitions
+--
+Definition = 	ClassDefinition |
+				TypeDefinition |
+				ValueDefinition |
+				FunctionDefinition |
+				EqualsDefinition;
+
+
+ClassDefinition ::
+  identifier : Identifier
+  superNames : seq of Name
+  class_body : seq of Definition
+  system_spec : bool;
+
+
+
+EqualsDefinition ::
+  pattern : Pattern
+  bind    : Bind
+  test    : Expression;
+---
+--- VALUE DEFINITIONS
+---
+
+ValueDefinition ::
+  access     : AccessSpecifier
+--  shape      : ValueShape;
+
+--ValueShape ::
+  pattern    : Pattern
+  type       : [Type]
+  expression : Expression;
+
+----
+---- TYPE DEFINITIONS
+----
+--TypeDefinitions ::
+--  type_list : seq of TypeDefinition;
+
+TypeDefinition ::
+  access : AccessSpecifier;
+--  shape  : TypeShape;
+
+AccessSpecifier ::
+  isAsync  : bool
+  isStatic : bool
+  access   : AccessScope;
+
+AccessScope =
+  <PUBLIC> | <PRIVATE> | <PROTECTED> | <DEFAULT>;
+
+--TypeShape =
+--  SimpleType | ComplexType;
+--
+--SimpleType ::
+--  identifier : Identifier
+--  type       : Type
+--  invariant  : [Invariant];
+
+--ComplexType ::
+--  identifier : Identifier
+--  field_list : seq of Field
+--  invariant  : [Invariant];
+
+Field ::
+--  identifier : [seq of char]
+  type : Type
+--  ignore : bool;
+  tagname : Name
+  tag  : seq of char
+  access : AccessSpecifier
+  equalityAbstration : bool;
+
+Type = 
+  BracketedType |
+--  QuoteType |
+--  CompositeType |
+  UnionType |
+  ProductType |
+  OptionalType |
+  SetType |
+--  Seq0Type |
+--  Seq1Type |
+--  GeneralMapType |
+--  InjectiveMapType |
+--  PartialFunctionType |
+--  TotalFunctionType |
+  OperationType |
+  EmptyType |
+  UnresolvedType |
+  TypeName |
+--  TypeVariable |
+  --new
+  --Field
+  FunctionType |
+--  InMapType |
+  MapType |
+  ParameterType |
+  QuoteType |
+
+--  RecordType |
+
+  UnknownType |
+  VoidType |
+  VoidReturnType |
+  
+  InvariantType |
+--  MapType |
+  BasicType |
+  SeqType;	
+
+BasicType =
+  BoolType |
+  CharType |   
+  TokenType |
+  NumericType;
+  
+NumericType =
+  NatType |
+  Nat1Type |
+  IntType |
+--  RatType |
+  RealType |
+  RationalType;
+  
+MapType =
+  GeneralMapType |
+  InjectiveMapType;
+  
+GeneralMapType ::
+  fromType : Type
+  toType   : Type;
+  
+InjectiveMapType ::
+  fromType : Type
+  toType   : Type;
+  
+  
+InvariantType =
+--  pattern : Pattern
+--  expression : Expression;
+  NamedType |
+  RecordType;
+
+NamedType :: 
+  type : Type
+  name : Name;
+  
+SeqType =
+  Seq0Type |
+  Seq1Type;
+  
+BracketedType ::
+  type : Type;
+
+BoolType :: ;
+
+NatType  :: ;
+
+Nat1Type :: ;
+
+IntType :: ;
+
+RationalType :: ;
+--RatType :: ;
+
+RealType :: ;
+
+CharType :: ;
+
+TokenType :: ;
+
+--QuoteType ::
+--  quote_literal : QuoteLiteral;
+
+--CompositeType ::
+--  identifier : Identifier
+--  field_list : seq of Field;
+  
+RecordType :: 
+  name : Name
+  fields : seq of Field;
+
+UnionType ::
+  lhs_type : Type
+  rhs_type : Type;
+
+ProductType ::
+  type_list : seq of Type;
+--  lhs_type : Type
+-- rhs_type : Type;
+
+OptionalType ::
+  type : Type;
+
+SetType ::
+  type : Type;
+
+Seq0Type ::
+  type : Type;
+
+Seq1Type ::
+  type : Type;                 
+
+--GeneralMapType ::
+--  dom_type : Type
+--  rng_type : Type;
+
+--InjectiveMapType ::
+--  dom_type : Type
+--  rng_type : Type;
+
+--PartialFunctionType ::
+--  dom_type : Type
+--  rng_type : Type;
+
+--TotalFunctionType ::
+--  dom_type : Type
+--  rng_type : Type;
+
+OperationType ::
+  parameters : seq of Type
+  result     : Type;
+--  dom_type : Type
+--  rng_type : Type;
+
+EmptyType ::;
+
+UnresolvedType ::
+  name : Name;
+  
+TypeName ::
+  name : Name;
+
+--TypeVariable ::
+--  identifier : Identifier;
+  
+-- new 
+FunctionType ::
+  result : Type
+  parameters : seq of Type;
+  
+
+    
+ParameterType ::
+  name : Name;
+  
+QuoteType ::
+  val : Identifier;
+  
+
+--  RecordType |
+
+UnknownType :: ;
+
+VoidType :: ;
+
+VoidReturnType :: ;
+
+---
+--- FUNCTION DEFINITIONS
+---
+FunctionDefinition =
+  ImplicitFunctionDefinition |
+  ExplicitFunctionDefinition;
+  
+ImplicitFunctionDefinition ::
+  name : Name
+--  nameScope : token --++ :="org.overturetool.vdmj.syntax.NameScope"
+--  pass : token --++ :="org.overturetool.vdmj.syntax.Pass"
+  accessSpecifier : AccessSpecifier
+  classDefinition : ClassDefinition
+
+  typeParams : seq of Name
+  parameterPatterns : seq of MultipleTypeBind
+  result : TypeBind
+  body : Expression
+  precondition : Expression
+  postcondition : Expression
+  measureName : Identifier
+  type : FunctionType
+  predef : ExplicitFunctionDefinition
+  postdef : ExplicitFunctionDefinition;
+ 
+ExplicitFunctionDefinition ::
+  name : Name
+--  nameScope : token --++ :="org.overturetool.vdmj.syntax.NameScope"
+--  pass : token --++ :="org.overturetool.vdmj.syntax.Pass"
+  accessSpecifier : AccessSpecifier
+  classDefinition : ClassDefinition
+
+  typeParams : seq of Name
+  type : FunctionType
+  paramPatternList : seq of Pattern
+  precondition : Expression
+  postcondition : Expression  
+  body : Expression
+  isTypeInvariant : bool  
+  measureName : Identifier
+  isCurried : bool
+  predef : ExplicitFunctionDefinition
+  postdef : ExplicitFunctionDefinition
+  paramDefinitionList : seq of Definition;
+
+
+  
+--  predef : ExplicitFunctionDefinition
+--  postdef : ExplicitFunctionDefinition;  
+
+--FunctionShape =
+--  ExplicitFunction ;
+
+--ExplicitFunction ::
+--  identifier : Identifier
+--  type_variable_list : seq of TypeVariable
+--  type : Type
+--  parameter_list : seq of Parameter
+--  body : FunctionBody
+--  trailer : FunctionTrailer;
+
+--Parameter ::
+--  pattern_list : seq of Pattern;
+
+
+--FunctionBody ::  
+--  function_body : [Expression];
+  --not_yet_specified : bool
+  --subclass_responsibility : bool;
+
+--FunctionTrailer ::
+--  pre_expression : [Expression]
+--  post_expression : [Expression];
+  
+
+
+---
+--- EXPRESSIONS
+---
+
+Expression =
+  BracketedExpression |
+  LetExpression |
+  LetBeExpression |
+  DefExpression |
+  IfExpression |
+  CasesExpression |
+  UnaryExpression |
+  BinaryExpression |
+  ForAllExpression |
+  ExistsExpression |
+  ExistsUniqueExpression |
+  IotaExpression |
+  TokenExpression |
+  SetEnumeration |
+  SetComprehension |
+  SetRangeExpression |
+  SequenceEnumeration |
+  SequenceComprehension |
+  SubsequenceExpression |
+  MapEnumeration |
+  MapComprehension |
+  TupleConstructor |
+  RecordConstructor |
+  MuExpression |
+  ApplyExpression |
+  FieldSelect |
+  FunctionTypeSelect |
+  FunctionTypeInstantiation |
+  LambdaExpression |
+  NewExpression |
+  SelfExpression |
+  ThreadIdExpression |
+  TimeExpression |
+  IsExpression |
+  UndefinedExpression |
+  PreconditionExpression |
+  IsOfBaseClassExpression |
+  IsOfClassExpression |
+  SameBaseClassExpression |
+  SameClassExpression |
+  HistoryExpression |
+ 
+  Name |
+  OldName |
+  
+  NotYetSpecifiedExpression |
+  SubclassResponsibilityExpression |
+  
+  Literal |
+  Maplet -- TODO: it is here to make the parser work
+  		 -- THIS IS WRONG!
+  ;
+
+--SymbolicLiteralExpression;
+
+BracketedExpression ::
+  expression : Expression;
+
+LetExpression ::
+  definition_list : seq of Definition --ValueShape
+  expression : Expression;
+
+LetBeExpression ::
+  bind : Bind
+  best : [Expression]
+  expression : Expression;
+
+DefExpression ::
+  pattern_bind_list : seq of PatternBindExpression
+  expression : Expression;
+
+PatternBindExpression ::
+  pattern_bind : PatternBind
+  expression : Expression;
+
+IfExpression ::
+  if_expression : Expression
+  then_expression : Expression
+  elseif_expression_list : seq of ElseIfExpression
+  else_expression : Expression;
+
+ElseIfExpression ::
+  elseif_expression : Expression
+  then_expression : Expression;
+
+CasesExpression ::
+  match              : Expression
+  casesAlternatives  : seq of CaseAlternative
+  other              : [Expression];
+
+CaseAlternative ::
+  pattern    : Pattern --seq of Pattern
+  expression : Expression;
+
+UnaryExpression ::
+  operator : UnaryOperator
+  expression : Expression;
+
+UnaryOperator =
+  <PLUS> |
+  <MINUS> |
+  <ABS> |
+  <FLOOR> |
+  <NOT> |
+  <CARD> |
+  <POWER> |
+  <DUNION> |
+  <DINTER> |
+  <HD> |
+  <TL> |
+  <LEN> |
+  <ELEMS> |
+  <INDS> |
+  <DCONC> |
+  <DOM> |
+  <RNG> |
+  <DMERGE> |
+  <INVERSE>|
+  -- new vdm 10
+  <REVERSE>;
+
+BinaryExpression ::
+  lhs_expression : Expression
+  operator : BinaryOperator
+  rhs_expression : Expression;
+
+BinaryOperator =
+--this is annoying why cant we just write what it is
+  <PLUS> |
+  <MINUS> |
+  <MULTIPLY> |
+  <DIVIDE> |
+  <DIV> |
+  <REM> |
+  <MOD> |
+  <LT> |
+  <LE> |
+  <GT> |
+  <GE> |
+  --<EQ> |
+  <EQUALS>|
+  <NE> |
+  <OR> |
+  <AND> |
+  <IMPLY> |
+ -- <EQUIV> |
+ <EQUIVALENT>|
+  <INSET> |
+  <NOTINSET> |
+  <SUBSET> |
+  <PSUBSET> |
+  <UNION> |
+  <DIFFERENCE> |
+  <INTER> |
+  <CONC> |
+  <MODIFY> |
+  <MUNION> |
+  <MAPDOMRESTO> |
+  <MAPDOMRESBY> |
+  <MAPRNGRESTO> |
+  <MAPRNGRESBY> |
+  <COMP> |
+  <ITERATE> |
+  <TUPLESELECT> |
+  --added could not fined
+  <PLUSPLUS> |
+  <TIMES>;
+
+ForAllExpression ::
+  bind_list : seq of Bind
+  expression : Expression;
+
+ExistsExpression ::
+  bind_list : seq of Bind
+  expression : Expression;
+
+ExistsUniqueExpression ::
+  bind : Bind
+  expression : Expression;
+
+IotaExpression ::
+  bind : Bind
+  expression : Expression;
+
+TokenExpression ::
+  expression : Expression;
+  
+SetEnumeration ::
+  expression_list : seq of Expression;
+
+SetComprehension ::
+  expression : Expression
+  bind_list : seq of Bind
+  guard : [Expression];
+
+SetRangeExpression ::
+  lower : Expression
+  upper : Expression;
+
+SequenceEnumeration ::
+  expression_list : seq of Expression;
+
+SequenceComprehension ::
+  expression : Expression
+  set_bind : SetBind
+  guard : [Expression];
+
+SubsequenceExpression ::
+  expression : Expression
+  lower : Expression
+  upper : Expression;
+
+MapEnumeration ::
+  maplet_list : seq of Maplet;
+
+Maplet ::
+  dom_expression : Expression
+  rng_expression : Expression;
+
+MapComprehension ::
+  expression : Maplet
+  bind_list : seq of Bind
+  guard : [Expression];
+
+TupleConstructor ::
+  expression_list : seq of Expression;
+
+RecordConstructor ::
+  typename : Name
+  expression_list : seq of Expression;
+
+MuExpression ::
+  expression : Expression
+  modifier_list : seq of RecordModifier;
+
+RecordModifier ::
+  identifier : Identifier
+  expression : Expression;
+
+ApplyExpression ::
+  expression : Expression
+  expression_list : seq of Expression;
+
+FieldSelect ::
+  expression : Expression
+  typename : Name;
+
+FunctionTypeSelect ::
+  expression : Expression
+  function_type_instantiation : FunctionTypeInstantiation;
+  
+FunctionTypeInstantiation ::
+  typename : Name
+  type_list : seq of Type;
+
+LambdaExpression ::
+  type_bind_list : seq of TypeBind
+  expression : Expression;
+
+NewExpression ::
+  typename : Name
+  expressions : seq of Expression;
+
+SelfExpression :: ;
+
+ThreadIdExpression :: ;
+
+TimeExpression :: ;
+
+IsExpression ::
+  type : Type
+  expression : Expression;
+
+UndefinedExpression ::;
+
+PreconditionExpression ::
+  expression_list : seq of Expression;
+
+IsOfBaseClassExpression ::
+  typename : Name
+  expression : Expression;
+
+IsOfClassExpression ::
+  typename : Name
+  expression : Expression;
+
+SameBaseClassExpression ::
+  lhs_expression : Expression
+  rhs_expression : Expression;
+
+SameClassExpression ::
+  lhs_expression : Expression
+  rhs_expression : Expression;
+
+
+HistoryExpression =  
+  ReqExpression |
+  ActExpression |
+  FinExpression |
+  ActiveExpression |
+  WaitingExpression;
+
+ReqExpression ::
+  name_list : seq of Name;
+
+ActExpression  ::
+  name_list : seq of Name;
+
+FinExpression  ::
+  name_list : seq of Name;
+
+ActiveExpression  ::
+  name_list : seq of Name;
+
+WaitingExpression ::
+  name_list : seq of Name;
+  
+Name ::
+  class_identifier : [Identifier]
+  identifier : Identifier;
+
+OldName ::
+  identifier : Identifier;
+
+--SymbolicLiteralExpression = Literal ;
+
+NotYetSpecifiedExpression :: ;
+
+SubclassResponsibilityExpression :: ;
+
+---
+--- PATTERNS
+---
+
+Pattern =
+--  DontCarePattern | --ignore
+  
+--  MatchValue | --expression
+
+  SetPattern |
+ 
+  SeqPattern |
+
+IgnorePattern |
+IdentifierPattern |
+  RecordPattern|
+ExpressionPattern |
+
+   ConcatenationPattern |
+  TuplePattern |  
+  UnionPattern |
+  SymbolicLiteralPattern  --int,real,bool,char,string,quote,nil
+;
+
+--DontCarePattern ::;
+
+IdentifierPattern ::
+  name : Name;
+
+--MatchValue ::
+--  expression : Expression;
+
+ExpressionPattern ::
+  exp : Expression;
+
+IgnorePattern :: ;
+  
+
+SetPattern ::
+  pattern_list : seq of Pattern;
+
+
+SeqPattern ::
+  pattern_list : seq of Pattern;
+
+ConcatenationPattern ::
+  lhs_pattern : Pattern
+  rhs_pattern : Pattern;
+
+
+RecordPattern ::
+  typename : Name
+  pattern_list : seq of Pattern;
+
+TuplePattern ::
+  pattern_list : seq of Pattern;
+
+UnionPattern ::
+  lhs_pattern : Pattern
+  rhs_pattern : Pattern;
+  
+SymbolicLiteralPattern =--::
+--  literal : Literal;
+  IntegerPattern |
+  RealPattern |
+  CharacterPattern |
+  StringPattern |
+  BooleanPattern |
+  NilPattern |
+  QuotePattern;
+  
+IntegerPattern :: ;
+
+RealPattern :: ;
+
+CharacterPattern :: ;
+
+StringPattern :: ;
+
+BooleanPattern :: ;
+
+NilPattern :: ;
+
+QuotePattern :: ;
+
+---
+--- BINDINGS
+---
+
+PatternBind =
+  Pattern |
+  Bind;
+
+Bind =
+  SetBind |
+  TypeBind |
+  MultipleBind;
+  
+MultipleBind = 
+  MultipleSetBind |
+  MultipleTypeBind;
+
+SetBind ::
+  pattern : Pattern --seq of Pattern
+  expression : Expression;
+  
+MultipleSetBind ::
+  pattern : seq of Pattern
+  expression : Expression;
+
+TypeBind ::
+  pattern : Pattern --seq of Pattern
+  type : Type;
+  
+MultipleTypeBind ::
+  pattern : seq of Pattern
+  type : Type;
+
+--
+-- Statements
+--
+Statement :: ;
+---
+--- LEXICAL ELEMENTS
+---
+
+Literal =
+  NumericLiteral |
+  RealLiteral |
+  BooleanLiteral |
+  NilLiteral |
+  CharacterLiteral |
+  TextLiteral | 
+  QuoteLiteral;
+
+NumericLiteral ::
+  val : int;
+
+RealLiteral ::
+  val : real;
+
+BooleanLiteral ::
+  val : bool;
+
+NilLiteral ::;
+
+CharacterLiteral ::
+  val : char;
+
+TextLiteral ::
+  val : seq of char;
+
+QuoteLiteral ::
+  val : seq of char;
+
+Identifier = seq of char;
+
+
+
+end Syn

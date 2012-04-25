@@ -1,0 +1,4 @@
+Test 1 = s.Reset(); s.Push(1); s.Pop()
+Result = [(), (), 1, PASSED]
+Test 2 = s.Reset(); s.Push(2); s.Pop()
+Result = [(), (), 2, PASSED]

@@ -2,58 +2,53 @@
   <parent>
     <groupId>org.overture.ide</groupId>
     <artifactId>org.overture.ide.plugins</artifactId>
-    <version>2.2.0</version>
+    <version>2.1.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.latex</artifactId>
   <name>org.overture.ide.plugins.latex</name>
-  <version>2.2.0</version>
+
   <dependencies>
   	<dependency>
   		<groupId>org.overture.ide</groupId>
   		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.2.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.overture.ide.vdmpp</groupId>
   		<artifactId>org.overture.ide.vdmpp.core</artifactId>
-  		<version>2.2.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.overture.ide.vdmrt</groupId>
   		<artifactId>org.overture.ide.vdmrt.core</artifactId>
-  		<version>2.2.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.overture.ide.vdmsl</groupId>
   		<artifactId>org.overture.ide.vdmsl.core</artifactId>
-  		<version>2.2.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
   		<groupId>org.overture.ide</groupId>
   		<artifactId>org.overture.ide.ui</artifactId>
-  		<version>2.2.0</version>
+  		<version>2.1.1</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
-  	<dependency>
-  		<groupId>org.overturetool.core</groupId>
-  		<artifactId>interpreter</artifactId>
-  		<version>2.2.0</version>
-  	</dependency>
   </dependencies>
   
-<build>
-		<plugins>
+    <!-- build>
+        <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -90,7 +85,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+	</build-->
 
 
 </project>

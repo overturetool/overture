@@ -1,0 +1,10 @@
+class visibilityBasicInstanceVariablesClass
+
+instance variables
+
+private instanceVariableChar : char;
+protected instanceVariableBool : bool;
+public instanceVariableInt : int;
+
+
+end visibilityBasicInstanceVariablesClass

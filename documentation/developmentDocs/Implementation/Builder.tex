@@ -1,0 +1,102 @@
+\section{Builder}
+
+\tikzstyle{abstract}=[rectangle, draw=black, rounded corners, fill=white, drop shadow,text centered, anchor=north, text=black]
+\tikzstyle{comment}=[rectangle, draw=black, rounded corners, fill=green, drop shadow,
+        text centered, anchor=north, text=white, text width=3cm]
+\tikzstyle{myarrow}=[->, >=open triangle 90, thick]
+\tikzstyle{line}=[-, thick]
+        
+\begin{center}
+\begin{tikzpicture}[node distance=1cm]
+
+ \node (IncrementalProjectBuilder) [abstract, rectangle split, rectangle split parts=1]
+        {
+			\textbf{IncrementalProjectBuilder}
+		  };
+
+    \node (VdmCoreBuilder) [abstract, rectangle split, rectangle split parts=1, below=of IncrementalProjectBuilder]
+        {
+            \textbf{VdmCoreBuilder}
+        };
+
+    \node (VdmBuilder) [abstract, rectangle split, rectangle split parts=2, below=of VdmCoreBuilder]
+        {
+            \textbf{VdmBuilder}
+            \nodepart{second}SafeBuilder loading BuildParticipant
+        };
+
+\draw[myarrow] (VdmCoreBuilder.north) -- ++(0,0.8) -| (IncrementalProjectBuilder.south);
+\draw[myarrow] (VdmBuilder.north) -- ++(0,0.8) -| (VdmCoreBuilder.south);
+
+\end{tikzpicture}
+\end{center}
+
+
+\begin{lstlisting}[language=XML]
+<!-- Basic builder for VDM -->
+  <extension
+        id="org.overture.ide.core.builder.VdmBuilder"
+        point="org.eclipse.core.resources.builders">
+     <builder
+           callOnEmptyDelta="false"
+           hasNature="false"
+           isConfigurable="true">
+        <run
+              class="org.overture.ide.core.builder.VdmBuilder">
+        </run>
+     </builder>
+  </extension>
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=XML]
+ <!-- Extension point for builders of VDM -->
+  <extension-point id="org.overture.ide.core.buildParticipant" name="Builder" schema="schema/org.overture.ide.core.builder.exsd"/>
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=XML]
+<schema targetNamespace="org.overture.ide.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.overture.ide.core" id="org.overture.ide.core.buildParticipant" name="Builder"/>
+      </appinfo>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="builder"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="builder">
+      <complexType>
+         <attribute name="class" type="string">
+            <annotation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="org.overture.ide.core.builder.BuildParcitipant:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+</schema>
+\end{lstlisting}
+

@@ -1,0 +1,113 @@
+\section{Position Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Position
+-- Description: 	Defines a X,Y position
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Position
+
+--
+-- instance variables
+--
+instance variables
+
+private x: int;
+private y: int;
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public Position: int * int ==> Position
+Position(x_, y_) ==
+(
+ x := x_;
+ y := y_;
+);
+		
+public X: () ==> int
+X() ==
+(
+	return x;
+);
+
+public Y: () ==> int
+Y() ==
+(
+	return y;
+);
+
+public setX : int ==> ()
+setX(newX) ==
+(
+  x := newX
+
+);
+
+public setY: int ==> ()
+setY(newY) ==
+(
+y := newY
+
+);
+
+public toString : () ==> seq of char
+toString() == 
+(
+	return "position X: " 
+	^ VDMUtil`val2seq_of_char[int](x) 
+	 ^ " Y: " ^ VDMUtil`val2seq_of_char[int](y) -- Printer`intToString(y) 
+);
+
+public inRange : Position * int ==> bool
+inRange(p, range) ==
+(
+    let xd = x - p.X(), yd = y -p.Y() in 
+    (
+        let d = MATH`sqrt((xd * xd) + (yd * yd)) in
+        (
+            return d <= range;   
+        )
+    )
+);
+
+public deepCopy : () ==> Position
+deepCopy() ==
+(
+ let newPos = new Position(x,y)
+ in 
+ return newPos;  
+)
+
+--
+-- Functions definition section
+--
+functions
+public static Compare: Position * Position -> bool
+Compare(a,b) ==
+a.X() = b.X() and a.Y() = b.Y() 
+
+
+--
+-- Values definition section
+--
+values
+
+end Position
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Position]
+\end{rtinfo}

@@ -1,0 +1,240 @@
+\section{CyberRail class}
+
+\begin{vdm_al}
+
+
+class CyberRail
+
+instance variables
+
+private normalState : bool := true;
+private curtime : nat := 0;
+
+private railway : RailwayGrid;
+private q_APM_out : ActivePlanManager;
+private q_Env_in : seq of MessageTypes`MessageT := []; 
+private q_APM_in : seq of MessageTypes`MessageT := []; 
+private busy : bool := false;
+private timeout : nat := 0;
+
+types
+
+public NavigationInput :: 
+departureLocation : String
+arrivalLocation : String
+transportChoice : Choice
+id_token : nat1
+
+inv n == len n.departureLocation > 0 and
+	len n.arrivalLocation > 0 ;
+	
+public String = seq of char;
+public Choice = <Cheapest>|<Quickest>
+
+
+operations
+
+
+public setRailwayGrid : RailwayGrid ==> ()
+setRailwayGrid(grid)== (
+	railway := grid;
+);
+
+public isFinished : () ==> ()
+isFinished () == skip;
+
+
+public calculateTransportPlan : NavigationInput * TokenDevice ==> 
+                                [TransportPlan`DTO]
+calculateTransportPlan(navInput, tokenDevice) ==
+(
+ dcl tempPlan : TransportPlan;
+ dcl tempGrid : RailwayGrid`Grid := railway.getGrid();
+ def l = {r | r in set tempGrid 
+            & r(1).departureLocation = navInput.departureLocation and
+              r(len r).arrivalLocation = navInput.arrivalLocation} 
+ in (
+  if card l = 0
+  then
+  (
+   return nil;
+  )
+  else if navInput.transportChoice = <Cheapest>
+  then
+   tempPlan :=  new TransportPlan(findCheapest(l), 
+                                  <Cheapest>, 
+                                  navInput.id_token)
+  else tempPlan :=  new TransportPlan(findQuickest(l), 
+                                      <Quickest>, 
+                                      navInput.id_token);
+ );
+ return tempPlan.getByValue(); 
+)
+pre exists r in set railway.getGrid() & 
+      r(1).departureLocation = navInput.departureLocation and 
+      r(len r).arrivalLocation = navInput.arrivalLocation;
+
+
+public setActiveRoute : nat ==> ()
+setActiveRoute(id_Route) == is not yet specified;
+
+
+private findCheapest : RailwayGrid`Grid ==> [seq of TransportPlan`Route]
+findCheapest(list) ==
+(
+	dcl sum : real := 0;
+	dcl cheap : real := 9999;
+	dcl rtn : seq of TransportPlan`Route := [];
+	
+	for all s in set list do
+	(
+		sum := 0;
+		for r in s do
+			sum := sum + r.fee;
+		if sum < cheap then
+		(
+			cheap := sum;
+			rtn := s;
+		);    
+	);
+	return rtn;
+);
+
+private findQuickest : RailwayGrid`Grid ==> [seq of TransportPlan`Route]
+findQuickest (list) == findCheapest(list);
+
+public setQ_APM_out : ActivePlanManager ==> ()
+setQ_APM_out(apm) == ( 
+	q_APM_out := apm;
+);
+
+async public addToStimuliQueue : MessageTypes`MessageT ==> ()
+addToStimuliQueue(msg) == 
+(
+	q_Env_in := q_Env_in ^ [msg];
+);
+
+public addToSystemQueue : MessageTypes`MessageT ==> ()
+addToSystemQueue(msg) == 
+( 
+	q_APM_in := q_APM_in ^ [msg];
+);
+
+public handleEvents : () ==> ()
+handleEvents() ==
+(
+	duration(0)(
+	if len q_Env_in > 0 or len q_APM_in > 0 
+	then(
+		busy := true;
+		if(len q_Env_in > 0)
+		then 
+			handleQ_Env_in()
+		
+		else if ( normalState and len q_APM_in > 0)
+		then 
+			 handleQ_APM_in();				
+		)
+		else
+			busy := false;
+
+		if(not normalState and (curtime + timeout) <= time)
+		then 
+			finalizeInactiveRoute();
+	);
+			
+);
+
+
+private handleQ_Env_in : () ==> ()
+handleQ_Env_in() == (
+let msg = hd q_Env_in 
+in 
+  (cases msg:
+	mk_MessageTypes`INACTIVEROUTE(-) -> handleInactiveRoute(msg), 
+	mk_MessageTypes`ACTIVEROUTE(-) -> skip,
+	mk_MessageTypes`ADDROUTE(-) -> skip,
+	mk_MessageTypes`REMOVEROUTE(-) -> skip
+   end;
+   );
+reduce_Q_Env();
+)
+pre len q_Env_in > 0;
+
+private handleQ_APM_in : () ==> ()
+handleQ_APM_in() == (
+let msg = hd q_APM_in 
+in
+  (cases msg: 
+	mk_MessageTypes`CALCPLAN(navi, tokenDevice) -> 
+	      handleCalcPlan(navi, tokenDevice)
+   end;
+   );
+reduce_Q_APM();
+)
+pre len q_APM_in > 0;
+
+private handleCalcPlan : CyberRail`NavigationInput * TokenDevice ==> ()
+handleCalcPlan(navi, tokenDevice)==(
+	q_APM_out.addToSystemQueue( mk_MessageTypes`RETURNPLAN( 
+	      calculateTransportPlan(navi, tokenDevice), tokenDevice))
+);
+
+private handleInactiveRoute : MessageTypes`MessageT ==> ()
+handleInactiveRoute(msg) ==
+(	
+	normalState := false;
+	curtime := time;
+	let mk_MessageTypes`INACTIVEROUTE(routeid) = msg in
+	(
+		q_APM_out.addToSystemQueue(mk_MessageTypes`STRATEGYINIT());
+		railway.setInactiveRoute(routeid);
+		q_APM_out.addToSystemQueue(mk_MessageTypes`STRATEGYNOTIFY(routeid));
+	);
+	
+);
+
+private finalizeInactiveRoute : () ==> ()
+finalizeInactiveRoute()==
+(
+	q_APM_out.addToSystemQueue(mk_MessageTypes`STRATEGYEND());
+	normalState := true;
+);
+
+
+public setInactiveRoute : nat ==> ()
+setInactiveRoute(id_Route) == (
+skip;
+);
+
+private reduce_Q_APM : () ==> ()
+reduce_Q_APM () == q_APM_in := tl q_APM_in
+pre len q_APM_in > 0; 
+
+private reduce_Q_Env : () ==> ()
+reduce_Q_Env () == q_Env_in := tl q_Env_in
+pre len q_APM_in > 0;
+
+thread
+	while(true) do
+	(
+		handleEvents();
+   )
+
+
+sync
+per handleEvents => (len q_Env_in + len q_APM_in) > 0;
+
+per isFinished =>  (len q_Env_in + len q_APM_in) = 0;
+
+mutex(reduce_Q_Env,addToStimuliQueue);
+mutex(reduce_Q_APM,addToSystemQueue);
+mutex(reduce_Q_Env);
+mutex(reduce_Q_APM);
+mutex(calculateTransportPlan);
+mutex(addToStimuliQueue);
+mutex(addToSystemQueue);
+end CyberRail
+\end{vdm_al}
+
+

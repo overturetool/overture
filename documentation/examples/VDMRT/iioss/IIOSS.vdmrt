@@ -1,0 +1,92 @@
+\begin{vdm_al}
+
+system IIOSS
+
+instance variables
+	-- CPUS
+	-- Server
+	cpu1 : CPU := new CPU (<FCFS>,1E6); -- server
+	--stablecontrollers
+	cpu2 : CPU := new CPU (<FCFS>,1E6); -- stablecontroller1
+	cpu3 : CPU := new CPU (<FCFS>,1E6); -- stablecontroller2
+	-- sensors
+	cpu4 : CPU := new CPU (<FCFS>,1E6);  -- stablecontroller1Sensor
+	cpu5 : CPU := new CPU (<FCFS>,1E6);  -- stablecontroller1Sensor
+	cpu6 : CPU := new CPU (<FCFS>,1E6);  -- stablecontroller2Sensor
+	cpu7 : CPU := new CPU (<FCFS>,1E6);  -- stablecontroller2Sensor
+	-- Actuators
+	cpu8 : CPU := new CPU (<FCFS>,1E6);  -- stablecontroller1
+	cpu9 : CPU := new CPU (<FCFS>,1E6); -- stablecontroller1
+	cpu10 : CPU := new CPU (<FCFS>,1E6); -- stablecontroller2
+	cpu11 : CPU := new CPU (<FCFS>,1E6); -- stablecontroller2	
+	
+	
+	--BUSs
+	-- Server to stablecontroller ?
+	bus1 : BUS := new BUS (<FCFS>,1E6,{cpu1,cpu2});
+	bus2 : BUS := new BUS (<FCFS>,1E6,{cpu1,cpu3});
+	-- stablecontroller1 to sensors
+	bus3 : BUS := new BUS (<FCFS>,1E6,{cpu2,cpu4,cpu5});
+	-- stablecontroller2 to sensors
+	bus4 : BUS := new BUS (<FCFS>,1E6,{cpu3,cpu6,cpu7});
+	-- stablecontroller1 to sensors
+	bus5 : BUS := new BUS (<FCFS>,1E6,{cpu2,cpu8,cpu9});
+	-- stablecontroller2 to sensors
+	bus6 : BUS := new BUS (<FCFS>,1E6,{cpu3,cpu10,cpu11});
+	
+	
+
+
+	-- stable controller
+	public static server : Server := new Server();
+	--public static server : Server := new Server("scenario.txt");
+	-- Stable controller
+	public static StableController1 : StableController := new StableController(server);
+	public static StableController2 : StableController := new StableController(server);
+
+	-- Sensors for stableController1
+	public static sensor1 : Sensor := new Sensor(StableController1);
+	public static sensor2 : Sensor := new Sensor(StableController1);
+	
+	-- Sensors for stableController2
+	public static sensor3 : Sensor := new Sensor(StableController2);
+	public static sensor4 : Sensor := new Sensor(StableController2);
+	public static sensor5 : Sensor := new Sensor(StableController2);
+	
+	-- Actuators for stableController1
+	public static actuator1 : Actuator := new Actuator();
+	public static actuator2 : Actuator := new Actuator();
+	
+	-- Actuators for stableController2
+	public static actuator3 : Actuator := new Actuator();
+	public static actuator4 : Actuator := new Actuator();
+
+operations
+public IIOSS: () ==> IIOSS
+IIOSS () ==
+(
+	cpu1.deploy(server);
+	-- StableController1
+	cpu2.deploy(StableController1);
+	-- StableController2
+	cpu3.deploy(StableController2);
+	-- Sensors
+	cpu4.deploy(sensor1);
+	cpu5.deploy(sensor2);
+	
+	cpu6.deploy(sensor3);
+	cpu7.deploy(sensor4);
+	-- actuators
+	cpu8.deploy(actuator1);
+	cpu9.deploy(actuator2);
+	
+	cpu10.deploy(actuator3);
+	cpu11.deploy(actuator4);
+
+);
+
+end IIOSS
+
+\end{vdm_al}
+
+

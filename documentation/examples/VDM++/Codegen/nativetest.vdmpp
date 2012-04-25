@@ -1,0 +1,59 @@
+class codegen_Util
+
+instance variables
+
+compiler : Compiler := new Compiler();
+codegen : Codegen := new Codegen();
+--io : IO := new IO();
+
+operations
+
+public Run : () ==> (bool|int|seq of char)
+Run() ==
+	let programs = getSimpleNames() in
+	Run(programs);
+				
+public Run : seq of seq of char ==> seq of char
+Run(programs) ==
+	if programs = [] then
+		return []
+	else
+		let
+			program = hd programs,
+			z = parseSimpleProgram(program),
+			a = compiler.Compile(program, z),
+			b = codegen.Generate(a),
+			real_b = b ^ " public static void main(String[] argv){ System.exit(x()); }}",
+			c = writeProgram(program, real_b),
+			d = compileProgram(program),
+			e = runProgram(program)
+		in
+			if e <> 42 then
+				return "\nTest " ^ program ^ " failed with code: " ^ iToS(e) ^ Run(tl programs)
+			else
+				return "\nTest " ^ program ^ " success" ^ Run(tl programs);
+	
+functions
+	public iToS : int -> seq of char
+	iToS(i) == is not yet specified;
+
+	public showType : int -> int
+	showType(type) == is not yet specified;
+
+	public getSimpleNames : () -> seq of seq of char
+	getSimpleNames() == is not yet specified;
+
+	public parseSimpleProgram : seq of char -> SimpleSpecification
+	parseSimpleProgram(filename) == is not yet specified;
+	
+	public writeProgram : seq of char * seq of char -> bool
+	writeProgram(fileName, contents) == is not yet specified;
+	
+	public compileProgram : seq of char -> bool
+	compileProgram(fileName) == is not yet specified;
+	
+	public runProgram : seq of char -> (int|bool)
+	runProgram(fileName) == is not yet specified;
+	
+end codegen_Util
+

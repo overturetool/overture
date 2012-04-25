@@ -1,0 +1,71 @@
+\section{VeMo System}
+
+\begin{vdm_al}
+
+-----------------------------------------------
+-- Class:			VeMo
+-- Description: 	VeMo is the system class in the VeMo project
+-----------------------------------------------
+
+--
+-- class definition
+--
+system VeMo
+
+--
+-- instance variables
+--
+instance variables
+
+public  cpu0 : CPU := new CPU (<FP>,1E6);		-- changed for setPriority to work
+public  cpu1 : CPU := new CPU (<FCFS>,1E6);
+public  cpu2 : CPU := new CPU (<FCFS>,1E6);
+public  cpu9 : CPU := new CPU (<FCFS>,1E6);
+
+public bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0, cpu1, cpu2, cpu9});
+
+static e : Environment := World`env;
+
+-- Vehicles
+public static ctrl1 : Controller := new Controller(
+									new Vehicle(1, 
+									new Position(17, -20), 1, <NORTH>));
+
+public static ctrl2 : Controller := new Controller(
+									new Vehicle(2, 
+									new Position(-4, 25), 3, <SOUTH>));
+
+public static ctrl9 : Controller := new Controller(
+									new Vehicle(9, 
+									new Position(23, 20), 1, <SOUTH>));
+
+
+--traffic lights
+public static tl1 : TrafficLight := new TrafficLight(20 
+													,new Position(1, 1)
+													, 100);
+
+public static vemoCtrl : VeMoController := new VeMoController();
+
+--
+-- Operations definition section
+--
+operations
+
+public VeMo: () ==> VeMo
+ VeMo() ==
+ (
+ cpu1.deploy(ctrl1); 
+ cpu2.deploy(ctrl2);
+ cpu9.deploy(ctrl9);
+ );
+
+
+end VeMo
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[VeMo]
+\end{rtinfo}

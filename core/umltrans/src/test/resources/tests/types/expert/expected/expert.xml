@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.0" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1">
+    <xmi:Documentation xmi:Exporter="Enterprise Architect" xmi:ExporterVersion="6.5"/>
+    <uml:Model name="Root" xmi:id="VDM.2" xmi:type="uml:Model">
+      <ownedMember xmi:type="uml:Package" xmi:id="VDM.0" name="VDM Generated model">
+        <ownedMember name="bool" visibility="public" isAbstract="false" isActive="false" isLeaf="false" xmi:id="VDM.3" xmi:type="uml:Class"/>
+        <ownedMember name="int" visibility="public" isAbstract="false" isActive="false" isLeaf="false" xmi:id="VDM.4" xmi:type="uml:Class"/>
+        <ownedMember name="char" visibility="public" isAbstract="false" isActive="false" isLeaf="false" xmi:id="VDM.5" xmi:type="uml:Class"/>
+        <ownedMember name="unlimitedNatural" visibility="public" isAbstract="false" isActive="false" isLeaf="false" xmi:id="VDM.6" xmi:type="uml:Class"/>
+        <ownedMember name="String" visibility="public" isAbstract="false" isActive="false" isLeaf="false" xmi:id="VDM.7" xmi:type="uml:Class"/>
+        <ownedMember name="NotSupportedType" visibility="public" isAbstract="false" isActive="false" isLeaf="false" xmi:id="VDM.8" xmi:type="uml:Class"/>
+        <ownedMember isAbstract="false" isActive="false" isLeaf="false" name="Expert" visibility="public" xmi:id="VDM.9" xmi:type="uml:Class">
+          <ownedOperation isAbstract="false" isLeaf="false" isQuery="false" name="Expert" ownerScope="instance" visibility="public" xmi:id="VDM.11" xmi:type="uml:Operation">
+            <ownedParameter name="qs" direction="in" xmi:id="VDM.12" type="VDM.10"/>
+            <ownedParameter name="return" direction="return" xmi:id="VDM.13" type="VDM.9"/>
+          </ownedOperation>
+          <ownedOperation isAbstract="false" isLeaf="false" isQuery="false" name="GetQuali" ownerScope="instance" visibility="public" xmi:id="VDM.14" xmi:type="uml:Operation">
+            <ownedParameter name="return" direction="return" xmi:id="VDM.15" type="VDM.10"/>
+          </ownedOperation>
+        </ownedMember>
+        <ownedMember isAbstract="false" isActive="false" isLeaf="false" name="Qualification" visibility="public" xmi:id="VDM.10" xmi:type="uml:Class">
+          <ownedAttribute name="Chem" ownerScope="instance" isReadOnly="true" isStatic="true" visibility="public" xmi:id="VDM.16" xmi:type="uml:Property" isOrdered="true">
+            <lowerValue value="0" xmi:id="VDM.17" xmi:type="uml:LiteralInteger"/>
+            <upperValue value="*" xmi:id="VDM.18" xmi:type="uml:LiteralString"/>
+            <type xmi:idref="VDM.4"/>
+          </ownedAttribute>
+          <ownedAttribute name="Elec" ownerScope="instance" isReadOnly="true" isStatic="true" visibility="public" xmi:id="VDM.19" xmi:type="uml:Property" isOrdered="true">
+            <lowerValue value="0" xmi:id="VDM.20" xmi:type="uml:LiteralInteger"/>
+            <upperValue value="*" xmi:id="VDM.21" xmi:type="uml:LiteralString"/>
+            <type xmi:idref="VDM.4"/>
+          </ownedAttribute>
+          <ownedAttribute name="Bio" ownerScope="instance" isReadOnly="true" isStatic="true" visibility="public" xmi:id="VDM.22" xmi:type="uml:Property" isOrdered="true">
+            <lowerValue value="0" xmi:id="VDM.23" xmi:type="uml:LiteralInteger"/>
+            <upperValue value="*" xmi:id="VDM.24" xmi:type="uml:LiteralString"/>
+            <type xmi:idref="VDM.4"/>
+          </ownedAttribute>
+          <ownedAttribute name="Mech" ownerScope="instance" isReadOnly="true" isStatic="true" visibility="public" xmi:id="VDM.25" xmi:type="uml:Property" isOrdered="true">
+            <lowerValue value="0" xmi:id="VDM.26" xmi:type="uml:LiteralInteger"/>
+            <upperValue value="*" xmi:id="VDM.27" xmi:type="uml:LiteralString"/>
+            <type xmi:idref="VDM.4"/>
+          </ownedAttribute>
+        </ownedMember>
+        <ownedMember isAbstract="false" isDerived="false" isLeaf="false" name="" xmi:id="VDM.28" xmi:type="uml:Association">
+          <ownedEnd aggregation="none" association="VDM.28" isNavigable="false" name="" visibility="private" xmi:id="VDM.29" xmi:type="uml:Property">
+            <type xmi:idref="VDM.9"/>
+          </ownedEnd>
+          <memberEnd xmi:idref="VDM.29"/>
+          <ownedEnd aggregation="none" association="VDM.28" isNavigable="true" name="quali" visibility="private" xmi:id="VDM.30" xmi:type="uml:Property" isOrdered="false" isStatic="false">
+            <lowerValue value="0" xmi:id="VDM.31" xmi:type="uml:LiteralInteger"/>
+            <upperValue value="*" xmi:id="VDM.32" xmi:type="uml:LiteralString"/>
+            <type xmi:idref="VDM.10"/>
+          </ownedEnd>
+          <memberEnd xmi:idref="VDM.30"/>
+        </ownedMember>
+        <packagedElement xmi:type="uml:Dependency" visibility="public" xmi:id="VDM.33" supplier="VDM.9" client="VDM.10"/>
+      </ownedMember>
+    </uml:Model>
+    <xmi:Extension extender="Enterprise Architect" extenderID="6.5">
+      <elements/>
+      <diagrams/>
+      <connectors>
+        <connector xmi:idref="VDM.29">
+          <properties ea_type="Association" direction="Unspecified"/>
+        </connector>
+        <connector xmi:idref="VDM.33">
+          <source xmi:idref="VDM.10"/>
+          <target xmi:idref="VDM.9"/>
+          <properties ea_type="Nesting" direction="Source -&gt; Destination"/>
+        </connector>
+      </connectors>
+    </xmi:Extension>
+  </xmi:XMI>

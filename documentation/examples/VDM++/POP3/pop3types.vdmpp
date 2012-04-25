@@ -1,0 +1,101 @@
+\section{The POP3 Types Class}
+
+\begin{vdm_al}
+class POP3Types
+types
+\end{vdm_al}
+
+\begin{vdm_al}
+types
+
+public ClientCommand = StandardClientCommand | 
+                       OptionalClientCommand;
+public StandardClientCommand = QUIT | STAT | LIST | RETR | 
+                               DELE | NOOP | RSET;
+public OptionalClientCommand = TOP | UIDL | USER | PASS | 
+                               APOP;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public QUIT :: ;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public STAT :: ;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public LIST :: messageNumber : [nat];
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public RETR :: messageNumber : nat;
+\end{vdm_al}
+
+\begin{vdm_al}
+public DELE :: messageNumber : nat;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public NOOP :: ;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public RSET :: ;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public TOP :: messageNumber : nat
+              numLines      : nat;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public UIDL :: messageNumber : [nat];
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public USER :: name : UserName;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public PASS :: string : seq of char;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public APOP :: name   : seq of char
+               digest : seq of char;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public UserName = seq of char;
+public Password = seq of char;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public ServerResponse = OkResponse | ErrResponse;
+public OkResponse ::  data : seq of char;
+public ErrResponse :: data : seq of char;
+\end{vdm_al}
+
+\begin{vdm_al}
+functions
+
+end POP3Types
+\end{vdm_al}
+
+
+
+

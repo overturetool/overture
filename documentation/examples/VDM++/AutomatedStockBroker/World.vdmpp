@@ -1,0 +1,67 @@
+class World is subclass of GLOBAL
+ 
+values
+ simTime : nat = 100; 
+ actionsLimit : nat = 4;
+ startCash : nat = 100;
+ public static simulate : bool = false;
+ 
+instance variables  
+
+ public static timerRef : Timer := new Timer();
+
+ public static stockMarket : StockMarket := new StockMarket();
+ asb : AutomatedStockBroker := new AutomatedStockBroker(startCash);  
+   
+operations
+
+public isFinished : () ==> bool
+ isFinished() == 
+    return (not len asb.GetActionLog() < actionsLimit) or 
+           (not timerRef.GetTime() <= simTime);
+
+ public Run : () ==> ()
+ Run() ==
+ ( 
+  stockMarket.AddStock(new Stock(mk_token("test"),10));
+  stockMarket.AddStock(new Stock(mk_token("test12"),10));
+  stockMarket.AddStock(new Stock(mk_token("test2"),10));
+
+  (dcl r1 : StockRecord := mk_StockRecord(mk_token("test"),
+     { <PotentialBuy> |-> mk_ActionTrigger([<LeavesNoActionRegion>,<LowerLimit>],<Buy>),
+       <Bought> |-> mk_ActionTrigger([<LeavesNoActionRegion>,<UpperLimit>],<Sell>)},
+        mk_Region(12,8),10,<Bought>),
+    r2 : StockRecord := mk_StockRecord(mk_token("test12"),
+     { <PotentialBuy> |-> mk_ActionTrigger([<LeavesNoActionRegion>,<LowerLimit>],<Buy>),
+       <Bought> |-> mk_ActionTrigger([<LeavesNoActionRegion>,<UpperLimit>],<Sell>)},
+        mk_Region(12,8),10,<Bought>),
+
+   r3 : StockRecord := mk_StockRecord(mk_token("test2"),
+     { <PotentialBuy> |-> mk_ActionTrigger([<LeavesNoActionRegion>,<LowerLimit>],<Buy>),
+       <Bought> |-> mk_ActionTrigger([<LeavesNoActionRegion>,<UpperLimit>],<Sell>)},
+        mk_Region(12,8),0,<PotentialBuy>);
+
+   asb.AddStock(r1,1);
+   asb.AddStock(r2,2);
+   asb.AddStock(r3,3);
+   
+   while not isFinished()
+   do 
+   (
+    IO`print("step : ");
+    IO`print(timerRef.GetTime());
+    IO`print("\n");
+ 
+    stockMarket.UpdateStocks();
+ 
+    asb.Step(timerRef.GetTime());
+       timerRef.StepTime();
+   );
+  )
+ );
+functions
+ public FindSmallestSeqLen: map String to seq of Event -> nat
+ FindSmallestSeqLen(m) == 
+ let x,y in set {len m(x) | x in set dom m} be st x <> y => x <= y in x; 
+
+end World

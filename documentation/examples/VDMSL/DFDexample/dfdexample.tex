@@ -1,0 +1,370 @@
+\documentclass[11pt]{article}
+\usepackage{a4}
+\usepackage{makeidx}
+%\usepackage{vdmsl-2e}
+%\usepackage{color}
+\usepackage{overture}
+\usepackage{termref}
+\usepackage{epsf}
+\usepackage{latexsym}
+\usepackage{longtable}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+
+\makeindex
+%\documentstyle[epsf,a4,11pt,vdmsl_v1.1.31,makeidx,termref]{article}
+\newcommand{\figdir}{/home/peter/toolbox}
+\newcommand{\SA}{{\small SA}}
+\newcommand{\SD}{{\small SD}}
+\newcommand{\SASD}{{\small SA/SD}}
+\newcommand{\VDM}{{\small VDM}}
+\newcommand{\VDMSL}{{\small VDM-SL}}
+\newcommand{\DFD}{{\small DFD}}
+\newcommand{\DFDs}{{\small DFD}s}
+
+\newcommand{\makefigure}[3]{\begin{figure}[ht]
+{\leavevmode
+\centering
+\epsfbox{\figdir/#1.eps}
+\caption{#2}\label{#3}}
+\end{figure}}
+
+\newcommand{\documenttype}{document}
+\makeindex
+\begin{document}
+
+\title{A Formal Semantics of Data Flow Diagrams}
+\author{Peter Gorm Larsen, Nico Plat and Hans Toetenel}
+\date{November 1993}
+\maketitle
+\begin{abstract}
+This document presents a full version of the
+formal semantics of data flow diagrams reported in \cite{Larsen&93b}.
+Data Flow Diagrams are used in Structured Analysis and are
+ based on an abstract model for data flow transformations.
+The semantics consists of a collection of \VDM\ functions,
+transforming an abstract syntax representation of a data flow
+diagram into an abstract syntax representation of a \VDM\
+specification. Since this transformation is executable, it
+becomes possible to provide a software analyst/designer with two `views' of
+the system being modeled: a graphical view in terms of a data
+flow diagram, and a textual view in terms of a \VDM\
+specification. The specification presented in this document have been
+processed by The IFAD VDM-SL Toolbox \cite{Lassen93} and the \LaTeX\ output is
+produced directly by means of this tool. The complete transformation has
+been syntax-checked, type-checked and tested using the
+{\small IFAD VDM-SL}\ Toolbox \cite{Lassen93}; this has given us
+confidence that the transformation we have defined is a reasonable one.
+\end{abstract}
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+
+The introduction of formal methods in industrial organizations
+may become easier if these methods can be used alongside the
+more widely used conventional techniques for software development,
+such as `structured methods'.
+Structured methods are methods for software analysis and design,
+based on the use of heuristics for making analysis and design decisions.
+They provide a relatively well-defined path, often in a cookbook-like
+fashion (hence the term `structured' methods), starting from the analysis
+of software requirements and ending at system coding.
+The design notations used are usually graphical and have no formal basis.
+In that sense structured and formal methods can be regarded as complementary.
+It is often suggested that the informal graphical notations as provided by
+structured methods are intuitively appealing to software analysts/designers.
+Therefore, a combined structured/formal method may not only increase the
+understanding of the use of formal methods in the software process, but 
+also may increase the acceptability of formal methods to these people.
+
+Our work in this area so far has concentrated on combining {\em Structured
+Analysis (SA)} \cite{Yourdon75,Demarco78,Gane77}
+with the {\em Vienna Development Method (VDM)}
+\cite{Bjorner&82b,Jones90a}; we provide a brief introduction to
+\SA, but we refer to text books such as \cite{Jones90a} and
+\cite{Andrews&91} for an introduction to \VDM.
+We think that a well-integrated combination of notations can be achieved
+by using {\em data flow diagrams (DFDs)} -- which we consider to be the main
+design notation of \SA\ --
+as a graphical view of the system and \VDM\ as a textual
+view. These different views emphasize different aspects of the
+specified system: the \DFD\ graphical view
+focuses on an overview of the {\em structure} of the system, whereas
+the \VDM\ textual view focuses on the detailed {\em functionality} of the system.
+The base of a combined structured/formal method consists of a formally defined
+relation between the structured method and the formal method.
+In \cite{Plat&91a} we describe several approaches to modeling \DFDs\ 
+using the \VDMSL\ specification language \cite{BSIVDM92b,Dawes91}.
+In this paper we discuss one such particular model in more detail,
+thus essentially providing a `formal semantics' of \DFDs.
+A discussion on the methodological aspects of the approach can be found in
+\cite{Larsen&91b}.
+
+The remainder of this paper is organized as follows.
+In the following section a brief introduction to \SA\ is given, focusing on the
+use of \DFDs.
+In Section~\ref{sec:motivation} we describe our strategy for
+transforming \DFDs\ into \VDM\ specifications, paying attention to the
+limitations of our approach.
+The main part of this paper is Section~\ref{transsec}, in which the formal
+transformation from \DFDs\ to \VDM\ is presented.
+Emphasis is put on the motivation for the choices
+made in the transformation. The main aspects of the transformation
+itself are described using \VDM\ functions together
+with a number of examples.
+In Section~\ref{sec:conclusions} we give an overview of related
+work on formal semantics for \DFDs, and present some conclusions and
+ideas for future work in this area.
+This is followed by a list of references, and two appendices and an
+index for the complete specification.
+In the first appendix, we describe the abstract syntax representation
+of \DFDs. In the second appendix we present the abstract syntax 
+representation we use for the generated
+\VDM\ specifications. This is a subset of the one used
+in \cite{BSIVDM92b}\footnote{%
+To be precise, the abstract syntax used for \VDM\ specifications is
+a partof the one
+called the `Outer Abstract Syntax' in \cite{BSIVDM92b}; a lack of knowledge about
+this Outer Abstract Syntax
+does not affect the understanding of this document, however.}).
+
+\section{Overview of Structured Analysis}
+\label{sec:sa}
+
+{\em Structured Analysis ({\small\it SA})}
+\cite{Yourdon75,Demarco78,Gane77} is one of
+the most widely used methods for software analysis.
+Often it is used in combination with {\em Structured Design ({\small\it SD})}
+\cite{Yourdon75}; the resulting combination is called {\em \SASD}.
+The approach to analysis taken in \SA\ is to concentrate on the functions
+to be carried out by the system, using data flow abstraction to
+describe the flow of data through a network of transforming
+processes, called data transformers, together with access to data stores.
+Such a network, which is the most important design product of \SA,
+is called a {\em data flow diagram (DFD)}. The original version of
+\SA\ was meant to be used to model sequential systems.  
+A \DFD\ is a {\em directed graph} consisting of elementary building blocks.
+Each building block has a graphical notation (figure~\ref{figexternalprocess}).
+
+%\makefigure{building_blocks}{Elementary building blocks of a DFD}{figexternalprocess}
+
+Through the years several dialects have evolved and extensions
+have been defined (e.g. {\small SSADM}\ \cite{Longworth&86} and {\small SA/RT}\
+\cite{Ward85}), 
+but we limit ourselves to \DFDs\ with a sequential model and
+a small number of building blocks:
+\begin{itemize}
+\item
+{\em Data transformers}. Data transformers denote a transformation from
+(an arbitrary number of) input values to
+(an arbitrary number of) output values, possibly with side effects.
+\item
+{\em Data flows}. Data flows are represented as arrows, connecting one
+data transformer to another. They represent a flow of data between the
+data transformers they connect.
+The flow of data is unidirectional in the direction of the arrow.
+\item
+{\em Data stores}. Data stores provide for (temporary) storage of data.
+\item
+{\em External processes.}
+External processes are processes that are not part of the system but belong
+to the outside world. They are used to show where the input to the system
+is coming from and where the output of the system is going to.
+\end{itemize}
+
+\DFD s are used to model the {\em information flow} through a system.
+As such they provide a limited view of the system:
+in their most rudimentary form they neither show the control flow of the system
+nor any timing aspects.
+Therefore, \DFDs\ are often combined with data dictionaries,
+control flow diagrams, state transition diagrams, decision tables
+and mini-specifications to provide a comprehensive view of all the 
+aspects of the system.
+
+The process of constructing a \DFD\ is an iterative process.
+Initially, the system to be designed is envisaged as one large data transformer,
+getting input from and providing output to external processes.
+This initial, high-level \DFD\ is called a {\em context diagram}.
+The next step is the {\em decomposition}
+of the context diagram into a network of data transformers,
+the total network providing the same functionality as the original
+context diagram.
+This process is repeated for each data transformer until the analyst/designer
+considers all the data transformers in the \DFD\ to be primitive,
+i.e. each data transformer performs a simple operation that does not
+need to be further decomposed.
+We call such a collection of \DFDs, describing the same system but at different
+levels of abstraction, a {\em hierarchy of DFDs}.
+
+\section{Approach to the Transformation}
+\label{sec:motivation}
+
+Before presenting the formal transformation from \DFDs\ to \VDM\ we first explain
+the underlying strategy for the transformation and the limitations
+imposed upon the \DFDs\ to make our transformation valid.
+
+\subsection{Underlying strategy}
+
+The starting point for our transformation is the work presented in
+\cite{Plat&91a}, in which the general properties of two transformations from
+DFDs to \VDM\ constructs are discussed.
+The main difference between these two transformations is the way data flows are
+modeled: in the first transformation they are modeled as (infinitely large)
+queues, in the second transformation they are modeled as operations combining
+the two data transformers connected by the data flow.
+The advantage of the latter transformation is that a more abstract
+interpretation of \DFDs\ can be achieved, because the transformation
+solely focuses on modeling the information flow through a \DFD.
+This is also the reason for choosing this transformation 
+as the basis for the transformation described in this paper.
+One simplification with respect to the transformation described in
+\cite{Plat&91a} is that the latter is
+more general because the order
+in which the `underlying' operations are called is left unspecified
+(i.e. it is loosely specified),
+which makes the operation modeling the data flow rather complicated.
+In this paper, however, we are dealing with purely sequential systems,
+and therefore we can assume that data flows between two
+data transformers are `direct' in the sense that 
+the data transformer that uses the data flow as input cannot be
+called before the data transformer that uses the data flow as output.
+
+\subsection{Transformation of DFD building blocks}
+
+
+When providing a formal semantics for \DFDs\ it is
+important to decide whether the \DFD\ is intended to model
+a concurrent system or a sequential system. More recent versions
+of \SA\ (like {\em SA/RT} \cite{Ward85}) include concurrency and can be
+used to develop real-time systems. However, originally \SA\
+was intended for the development of information systems
+implemented in traditional imperative programming languages.
+In that situation it seems natural to interpret the data transformers
+as {\em functions} or
+{\em operations} which, given input data, sequentially perform computations and
+produce output data.
+If the data flow diagrams are used to model a concurrent system
+it is more natural to interpret data transformers as {\em processes},
+possibly executing in parallel.
+Since we restrict ourselves to sequential systems we model data transformers
+as {\em VDM operations}\footnote{Data transformers neither having access to
+data stores nor being connected to external processes can also be modeled
+as {\em VDM functions}. In our approach only {\tiny VDM}
+operations are used because
+we want each different type of construct in a {\tiny DFD} to be mapped to 
+(semantically) the same construct in {\tiny VDM}.
+{\tiny VDM} functions and {\tiny VDM} operations
+(without side-effects) semantically differ in the way {\em looseness} is interpreted
+(see \cite{IFIP}).}.
+
+To ensure that the structure of the \VDM\ specification
+resembles the structure of the \DFD,
+we group the operations modeling data transformers at the same level in
+a hierarchy of \DFDs\ together in `modules'\footnote{%
+{\tiny VDM-SL} as described in \cite{BSIVDM92b} has no structuring mechanism.
+The structuring mechanism we used is based on a proposal by Bear
+\cite{Bear88}. The constructs we use are simple so that an intuitive
+interpretation suffices.}
+importing the necessary types and
+operations needed for the data transformers
+(figure~\ref{hierarchy}).
+
+%\makefigure{hierarchy}{Transformation of a hierarchy of DFDs into a VDM module structure (example)}{hierarchy}
+
+
+{\em External processes} can be considered as processes `executing' in parallel with
+the specified system.
+In our approach we model the data flows from and to external processes
+as {\em state components} in the \VDM\ specification.
+This is a minor difference with the transformation presented in
+\cite{Plat&91a},
+in which external processes are regarded as part of the system and
+are therefore modeled as \VDM\ operations in the same way as data transformers.
+
+
+{\em Data stores} are modeled as \VDM\ {\em state components}.
+This corresponds to the fact that data transformers
+(which can be used to access and change data stores)
+are modeled as \VDM\ operations,
+the constructs in \VDMSL\ that can access and change state components.
+
+
+We envisage {\em data flows} as constructs which can combine
+two data transformers by providing communication facilities between
+these two data transformers.
+A data flow is, therefore, modeled as an operation
+calling the operations that model the two data transformers connected by
+the data flow. 
+In this way a process of combining data transformers can be started during
+which in each step two data transformers (connected by a data flow) are
+integrated into a higher level data transformer, finally resulting in
+the context diagram.
+
+Generalizing this approach, we have chosen to combine 
+all the data transformers in a \DFD\ into a
+higher level data transformer in {\em one} step.
+The data transformer constructed in this way is modeled as a \VDM\ operation.
+
+\subsection{Limitations imposed upon the DFDs}
+
+Besides restricting the expressibility of the kind of \DFDs\
+for which we are able to provide semantics to sequential systems, we
+assume that:
+
+\begin{itemize}
+\item Data flows not connected
+      to an external process must form an acyclic
+      graph at each level in the hierarchy of \DFDs. This
+      is necessary because in our transformation we provide both
+	  explicit \VDM\ specifications as well as implicit \VDM\ specifications
+	  as models for \DFDs. Allowing general cyclic \DFDs\ would make the 
+	  transformation into an explicit \VDM\ specification impossible.
+	  The restriction furthermore simplifies the
+      transformation of \DFDs\ into implicit \VDM\ specifications.
+      In Section~\ref{depend} we come back to this restriction in more
+	  detail.
+\item There is a one-to-one mapping between the
+      input to the system and the output from the system.
+	  One-to-many mappings and many-to-one mappings are a common
+	  problem when interpreting \DFDs, described in more detail
+	  in \cite{Alabiso88}\footnote{%
+      In \cite{Alabiso88} this problem is called {\em I/O uncohesiveness}.
+      I/O uncohesiveness occurs if either a data transformer
+      must consume several pieces of input data before generating
+      output data, or if a data transformer generates pieces of output
+      independently of all other inputs and outputs.
+      Alabiso describes a solution called `the burial method',
+	  centered around the generation of terminator symbols
+      which indicate that `something is missing'.}.
+	  However, we are not entirely satisfied with the solution proposed by
+	  Alabiso, and since in our experience most of the \DFDs\ with
+	  one-to-many or many-to-one mappings should be regarded as design
+	  products and not as specification products, we feel that a
+	  restriction to one-to-one mappings is not a serious one for our
+	  purpose.
+      Alternatively, the analyst may supply a mini-specification for 
+      each non-primitive data transformer not obeying the restriction
+	  of a one-to-one mapping between input and output.
+
+\item To simplify the formal description the
+data flows must have unique names at each level in the hierarchy
+of \DFDs.
+\end{itemize}
+
+\include{generated/latex/specification/dfdexample.vdmsl}
+
+\newpage
+\bibliographystyle{abbrv}
+\bibliography{savdm} 
+
+\addcontentsline{toc}{section}{Index}
+\printindex
+
+\end{document}
+  

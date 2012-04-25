@@ -1,0 +1,70 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Thermostat sub class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Thermostat is subclass of Actuator
+
+--
+-- instance variables
+--
+instance variables
+
+  finished : bool := false;
+
+--
+-- Operations definition section
+--
+operations
+
+public Thermostat: nat * NetworkTypes`nodeType 
+==> Thermostat
+Thermostat (id, type) ==
+ (ID := id;
+  Type := type;
+  Corr := <NONE>;
+ );
+
+private PeriodicOp: () ==> ()
+PeriodicOp() ==
+  --cycles(1E3)
+ (dcl tempCorr: NetworkTypes`correction := GetCorrection();
+  if (tempCorr = <INC>)
+  then World`env.IncTemp()
+  elseif (tempCorr = <DEC>)
+  then World`env.DecTemp();
+ );
+
+async public SetCorrection: NetworkTypes`correction ==> ()
+SetCorrection(cor) ==
+  --cycles(1E3)
+  Corr := cor
+pre (cor = <INC>) or (cor = <DEC>) or (cor = <NONE>);
+
+public GetCorrection: () ==> NetworkTypes`correction
+GetCorrection() ==
+  return Corr;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+  --mutex(PeriodicOp); -- ADDED
+  per IsFinished => finished;
+  mutex(SetCorrection, GetCorrection);
+
+--
+-- Thread definition section
+--
+thread
+
+-- period of thread (period, jitter, delay, offset)
+periodic(1000E6,0,0,0) (PeriodicOp)
+
+end Thermostat

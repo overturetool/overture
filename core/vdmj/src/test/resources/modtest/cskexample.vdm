@@ -1,0 +1,42 @@
+module A
+exports all
+definitions
+
+types
+GroupName = <A> | <B> | <C> | <D> | <E> | <F> | <G> | <H>;
+Team = <France> | <Germany> | <England>;
+
+Score :: team : Team
+         won : nat
+         drawn : nat
+         lost : nat
+         points : nat;
+
+state GroupPhase of
+   gps : map GroupName to set of Score
+   
+	inv mk_GroupPhase(gps) ==
+	   forall gp in set rng gps &
+	      (card gp = 4 and
+	       forall sc in set gp & sc.won + sc.lost + sc.drawn <= 3)
+end
+
+operations
+
+Win (wt,lt: Team)
+ext wr gps : map GroupName to set of Score
+pre exists gp in set dom gps &
+          {wt,lt} subset {sc.team | sc in set gps(gp)}
+post exists gp in set dom gps &
+        {wt,lt} subset {sc.team | sc in set gps(gp)}
+        and gps = gps~ ++
+                         { gp |->
+                           {if sc.team = wt
+                            then mu(sc, won |-> sc.won + 1,
+                                         points |-> sc.points + 3)
+                            else if sc.team = lt
+                            then mu(sc, lost |-> sc.lost + 1)
+                            else sc
+                       | sc in set gps(gp)}};
+
+end A

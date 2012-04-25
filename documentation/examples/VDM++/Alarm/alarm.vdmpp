@@ -1,0 +1,33 @@
+\begin{vdm_al}
+class Alarm
+types
+\end{vdm_al}
+
+\begin{vdm_al}
+types
+
+public String = seq of char;
+
+instance variables 
+
+descr    : String;
+reqQuali : Expert`Qualification;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public Alarm: Expert`Qualification * String ==> Alarm
+Alarm(quali,str) ==
+( descr := str;
+  reqQuali := quali
+);
+\end{vdm_al}
+
+\begin{vdm_al}   
+public GetReqQuali: () ==> Expert`Qualification
+GetReqQuali() ==
+  return reqQuali;
+  
+end Alarm
+\end{vdm_al}

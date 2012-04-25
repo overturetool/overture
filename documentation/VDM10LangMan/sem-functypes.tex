@@ -1,0 +1,18 @@
+\item[Semantics of Operators:]  \mbox{}
+
+\begin{TypeSemantics}
+Function apply & yields the result of applying the function {\tt f}
+to the values of {\tt a$_j$}. See the definition of apply expressions
+in Section \protect\ref{app-expr}. \\ \hline
+
+Function composition & it yields the function equivalent to applying
+first {\tt f2} and then applying {\tt f1} to the result. {\tt f1}, but
+not {\tt f2} may be Curried. \\ \hline
+
+Function iteration & yields the funciton equivalent to applying {\tt
+  f} {\tt n} times. {\tt n=0} yields the identity function which just
+returns the value of its parameter; {\tt n=1} yields the function
+itself. For {\tt n>1}, the result of {\tt f} must be contained in its
+parameter type. \\ \hline
+\end{TypeSemantics}
+

@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{overture}%vdmsl-2e}
+
+\title{Abstract Metro Specifications in VDM-SL}
+\author{Sten Agerholm\\{\small IFAD, Forskerparken 10, DK-5230 Odense M,
+  Denmark}\\{\small Email: sten@ifad.dk}}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Below I'll provide three different abstract specifications of a metro
+door management system in VDM-SL. The purpose of the presentation is
+to describe alternatives to the Metro specification developed in the
+SPECTRUM project (Esprit project no.\ 23173) and presented in the
+Proceedings of FMSP'98, published by ACM SIGSOFT, March
+1998\footnote{Also available at {\small
+    ftp://ftp.ifad.dk/pub/papers/final.ps.gz}.}. The present document
+is a draft and the specifications have not tested, so there may be
+bugs!
+
+Basically, the metro door management system can be described as
+follows. There are three actors: the train driver, the train itself,
+and the doors. The train driver has four button that he can use to
+control the train and the doors: accelerate, break, open and
+close. Our main concern is the safety requirement that the train
+should not be able to move while the doors are open.
+
+\section{A First Straightforward Specification}
+The specification below models actions (or buttons) as VDM-SL
+operations. The state of the doors and the train is held in a VDM-SL state.
+
+\include{generated/latex/specification/metro.vdmsl}
+
+\end{document}
+
+

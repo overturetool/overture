@@ -1,0 +1,101 @@
+class Example3
+
+types 
+
+ADDR = <a0> | <a1> | <a2>;
+CON  = <c0> | <c1> | <c2>;
+
+
+types
+
+State :: mem    : map ADDR to CON
+         access : set of ADDR
+         used    : set of ADDR
+
+inv mk_State(mem,access,used) == used = dom mem;
+
+functions
+
+Safe : State -> bool
+Safe (mk_State(-,access,used)) ==
+  used subset access;
+
+Alloc : ADDR * State -> State
+Alloc (addr,mk_State(mem,access,used)) ==
+  let used' = used union {addr},
+      mem'  = mem ++ {addr |-> let c:CON in c} 
+  in
+      mk_State(mem',access,used')	
+pre addr not in set used;
+
+Alloc2 : ADDR * State -> State
+Alloc2 (addr,mk_State(mem,access,used)) ==
+  let used' = used union {addr},
+--      mem'  = mem ++ {addr |-> <c0>}
+      mem'  = mem munion {addr |-> let c:CON in c} 
+  in
+      mk_State(mem',access,used')	
+pre addr not in set used and
+    addr in set access;
+
+Alloc20 : ADDR * State -> State
+Alloc20 (addr,mk_State(mem,access,used)) ==
+  let used' = used union {addr},
+      mem'  = mem ++ {addr |-> <c0>}
+  in
+      mk_State(mem',access,used')	
+pre addr not in set used and
+    addr in set access;
+
+Alloc21 : ADDR * State -> State
+Alloc21 (addr,mk_State(-,access,used)) ==
+  let used' = used union {addr},
+--      mem'  = mem ++ {addr |-> <c0>}
+      mem'  = {addr |-> let c:CON in c} 
+  in
+      mk_State(mem',access,used')	
+pre addr not in set used and
+    addr in set access;
+
+
+Alloc3 : ADDR * State * map ADDR to CON -> State
+Alloc3 (addr,mk_State(mem,access,used),mem2) ==
+  let used' = used union {addr},
+--      mem'  = mem ++ {addr |-> <c0>}
+      mem'  = mem munion {addr |-> let c:CON in c} 
+  in
+      mk_State(mem',access,used')	
+pre addr not in set used and
+    addr in set access
+post mem2 =  mem munion {addr |-> let c:CON in c};
+
+functions -- conjecture
+
+AllocSafe : ADDR * State -> bool
+AllocSafe (addr,sta) == 
+     Safe(sta) => Safe(Alloc(addr,sta))
+post RESULT = true;
+
+AllocSafe0 : ADDR * State -> bool
+AllocSafe0 (addr,sta) == 
+     Safe(sta) => Safe(Alloc(addr,sta))
+pre addr not in set sta.used
+post RESULT = true;
+
+AllocSafe2 : ADDR * State -> bool
+AllocSafe2 (addr,sta) == 
+     Safe(sta) => Safe(Alloc(addr,sta))
+pre addr not in set sta.used and
+    addr in set sta.access
+post RESULT = true;
+
+operations
+
+public RunTest : () ==> bool
+RunTest () ==
+  (let s : State = mk_State({<a0> |-> <c0>}, {<a0>,<a1>}, {<a0>})
+   in
+     AllocSafe2(<a1>,s);
+  ); 
+
+end Example3

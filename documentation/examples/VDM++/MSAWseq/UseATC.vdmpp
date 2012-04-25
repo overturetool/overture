@@ -1,0 +1,27 @@
+class UseATC
+
+values
+
+  id : token = mk_token(1);
+  fo : FO = new FO(id,mk_GLOBAL`Coordinates(1,-1),50);
+  c1: GLOBAL`Coordinates = mk_GLOBAL`Coordinates(2,-2);
+  c2: GLOBAL`Coordinates = mk_GLOBAL`Coordinates(3,-3);
+  
+instance variables
+
+  atc: AirTrafficController := new AirTrafficController()
+
+traces
+ 
+TestATC: let r = new Radar(-8,-9,42)
+         in
+         let c in set {c1,c2}
+         in
+          ((atc.updateHistory() |
+            atc.cleanUpHistory() |
+            atc.addRadar(r) |
+            atc.findThreats() |
+            fo.setCoordinates(c)){2,4};
+           atc.getDirectionVectors(id))
+
+end UseATC

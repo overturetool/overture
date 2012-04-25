@@ -1,0 +1,64 @@
+-- ===============================================================================================================
+-- Item in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class Item
+	types
+	    public ItemTraySize = nat1
+	    inv it == it <= ItemMaxTrays;  	  -- Limitation on how many trays an item occupies 
+
+	values
+		public ItemMaxSize : nat = 1500;  -- Item maximum size in mm
+		public ItemMinSize : nat = 100;   -- Item minimum size in mm
+		public ItemMaxTrays: nat = 2;	  -- Maimum number of trays an item occupies
+
+	instance variables
+	    id : nat;	   		 			  -- Item ID for induction
+	    size : nat1;		 			  -- Item size in mm
+	    inv size >= ItemMinSize and size <= ItemMaxSize;
+	    
+	    sizeOfTrays : ItemTraySize; 	  -- Number of trays item occupies
+	    trays : set of Tray := {};
+	    
+	    -- If the item is on the sorter ring the size of trays the item occupies 
+	    -- must be equal to number of tray associations
+	    -- inv let t = card trays in t > 0 => sizeOfTrays = t;
+	      
+	operations
+	
+    -- InductionController constructor
+	public Item: nat1 * nat ==> Item
+	Item(s, i) ==
+	(
+		size := s;
+    	sizeOfTrays := size div Tray`TraySize + 1;
+		id := i;
+	);
+	
+	-- Return item id
+	public GetId: () ==> nat
+	GetId() == 
+		return id;
+	
+	-- Returns the number of trays the item occupies
+	public GetSizeOfTrays: () ==> ItemTraySize
+	GetSizeOfTrays() ==
+		return sizeOfTrays;
+
+	-- Return item size
+	public GetSize: () ==> nat
+	GetSize() == 
+		return size;
+
+	-- Creates association between item and tray
+	public AssignItemToTray: Tray ==> ()
+	AssignItemToTray(tray) ==
+		trays := trays union {tray};
+
+	-- Remove item from sorter ring - Implicit operation - not used yet
+	public RemoveItemFromTray ()
+	ext wr trays : set of Tray
+	post trays = {}; 
+				
+end Item

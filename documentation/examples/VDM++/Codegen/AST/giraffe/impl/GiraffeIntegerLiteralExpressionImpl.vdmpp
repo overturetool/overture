@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeIntegerLiteralExpressionImpl is subclass of GiraffeIntegerLiteralExpression
+instance variables
+    private iv_value:int;
+
+operations
+    public GiraffeIntegerLiteralExpressionImpl: int ==> GiraffeIntegerLiteralExpressionImpl
+    GiraffeIntegerLiteralExpressionImpl(p_value) ==
+    (
+        iv_value := p_value;
+    );
+
+    public getValue: () ==> int
+    getValue() == return iv_value;
+
+end GiraffeIntegerLiteralExpressionImpl

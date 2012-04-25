@@ -1,0 +1,147 @@
+-----------------------------------------
+-- Class: StdLib
+-- Version: 1.0.0.0
+-- Creation date: 17 oct 2008
+-- Created by: Kenneth Lausdahl
+-- Description:
+--   This lib is created to ease the
+--   creating of VDM++ models.
+--   It contain common used functionally
+--   Please fill free to extend the lib
+-----------------------------------------
+class StdLib
+types
+public String = seq of char;
+
+functions
+-----------------------------------------
+-- Convert @Elem to a String if supported
+-----------------------------------------
+public static ToString[@Elem]: @Elem -> String
+ToString(s) ==
+  cases true:
+    (is_int(s)) -> ToStringInt(s),
+    (is_nat(s)) -> ToStringInt(s),
+    (is_nat1(s)) -> ToStringInt(s),
+    (is_bool(s)) -> ToStringBool(s),
+    others -> undefined
+  end;
+-------------------------------------
+-- Convert a bool to a String
+-------------------------------------
+public static ToStringBool: bool -> String
+  ToStringBool (pval) ==
+    if pval then "true" else "false";
+
+-------------------------------------
+-- Convert a int to a String
+-------------------------------------
+public static ToStringInt : int | nat1 | nat -> String
+ToStringInt(val) ==
+  let result : int = val mod 10,
+      rest : int = val div 10
+  in if rest > 0 then
+       ToStringInt(rest) ^ GetStringFromNum(result)
+     else GetStringFromNum(result)
+pre val >= 0;
+    
+-------------------------------------
+-- Convert a int < 10 to a String
+-------------------------------------
+public static GetStringFromNum : int  -> String --| nat | real
+GetStringFromNum(val) == ["0123456789"(val+1)]
+pre val < 10;
+
+-------------------------------------
+-- Convert a String to a int
+-------------------------------------
+public static StringToInt : String  -> int --| nat | real
+StringToInt(text) == 
+  if len text = 1 then
+    CharToInt(hd text,len text) 
+  elseif hd text = '-'
+  then - StringToInt(tl text)
+  else
+    CharToInt(hd text,len text) + StringToInt(tl text);
+
+-------------------------------------
+-- Convert a Char to a int
+-- We implement the final version of this in Java Long.parseLong
+-------------------------------------
+private static CharToInt : char * int -> int
+CharToInt(c,pos) ==
+let valueMap = {'0'|->0,
+                '1'|->1,
+                '2'|->2,
+                '3'|->3,
+                '4'|->4,
+                '5'|->5,
+                '6'|->6,
+                '7'|->7,
+                '8'|->8,
+                '9'|->9} in
+    valueMap(c) * (10**(pos-1))
+pre exists tmp in set elems "1234567890" & tmp = c;
+
+-------------------------------------
+-- Convert set to a seq
+-------------------------------------
+public static SetToSeq[@Elem]: set of @Elem -> seq of @Elem
+SetToSeq(s) ==
+  if s = {} 
+  then []
+  else let x in set s in SetToSeq[@Elem](s\{x})^[x];
+    
+    
+-------------------------------------
+-- Convert a bool string to bool
+-------------------------------------
+public static StringToBool : String -> bool
+StringToBool(val) == val = "true";
+
+
+-------------------------------------
+-- Split a string by a delimiters
+-------------------------------------
+public static Split: seq of char * char -> seq of seq of char
+Split(text,delimiter)==
+let del_l = [i | i in set inds text & text(i) = delimiter]
+in
+  if del_l = [] 
+  then 
+    [text]
+  else
+    [text(1,...,del_l(1)-1)] ^
+    [text(del_l(i)+1,...,del_l(i+1)-1) | i in set inds del_l \{len del_l}] ^
+    [text(del_l(len del_l)+1,...,len text)]
+pre len text>1;
+
+
+--operations
+-------------------------------------
+-- Split a string by a delimiters
+-------------------------------------
+--public static Split : seq of char * char ==> seq of seq of char
+--Split(text,delimiter)==
+--(
+--    dcl i : nat:= 1,
+--        tmp : seq of seq of char := [],
+--        runningText : seq of char := "";
+--    while i < len text do
+--    let c : char = text(i) in
+--      if c = delimiter then
+--      (  --stop and create new text
+--        tmp := tmp ^ [runningText];
+--        runningText := "";
+--        i := i+1;
+--      )else
+--      (
+--       runningText := runningText ^ [text(i)];
+--       i := i+1;
+--      );
+--    runningText := runningText ^ [text(len text)];
+--    tmp := tmp ^ [runningText];
+--    return tmp;
+--)
+--pre len text>1;
+end StdLib

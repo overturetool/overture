@@ -1,0 +1,160 @@
+\section{Environment class}
+
+The environment class is the class responsible for read a file containing 
+inputs labelled by time and deliver them to the correct system sensor at 
+the right time. It also collects the (re)actions from the system and 
+provides functionality to enable the inspection of them.
+
+\begin{vdm_al}
+class Environment is subclass of GLOBAL
+
+ types 
+public InputTP   = (Time * seq of Inpline)
+inv inp == forall line in set elems inp.#2 & inp.#1 >= line.#4;
+
+public Inpline = (Sense * Chamber * ActivityData * Time);
+
+public Outline = (Pulse * Chamber * Time);  
+
+ instance variables
+
+-- Input/Output 
+io : IO := new IO();
+
+inplines : seq of Inpline := [];
+outlines : seq of Outline := [];
+
+-- Environment  
+
+busy : bool := true;
+
+-- Amount of time we want to simulate
+simtime : Time;
+\end{vdm_al}
+
+Then we define the sensors attachment place where the physician will screw the leads and where the accelerometer is set up.
+
+\begin{vdm_al}
+ instance variables
+-- Sensors
+
+-- Leads
+
+leads : map Chamber to Lead := {|->};
+
+-- Accelerometer
+accelerometer : Accelerometer;
+
+\end{vdm_al}
+
+The environment constructor reads the test file which name is provided in the variable fname, extracting the amount of time we want to simulate and the inputs in that amount of time.
+
+\begin{vdm_al}
+ operations
+
+-- Constructor
+public 
+Environment : seq1 of char ==> Environment
+Environment (fname) ==
+  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+  in (inplines := input;
+      simtime  := timeval
+     );
+
+\end{vdm_al}
+
+The operations to connect the environment with the system.
+
+\begin{vdm_al}
+public 
+addLeadSensor : Lead ==> ()
+addLeadSensor(lsens) == 
+   leads := leads ++ {lsens.getChamber() |-> lsens};
+
+public 
+addAccelerometer : Accelerometer ==> ()
+addAccelerometer(acc) == 
+   accelerometer := acc;
+
+\end{vdm_al}
+
+createSignal delivers stimuli to the different components
+
+\begin{vdm_al}
+private 
+createSignal : () ==> ()
+createSignal () == 
+   ( 
+    if len inplines > 0 
+    then (dcl curtime : Time := time,
+              done : bool := false;
+          while not done do
+             let mk_(sensed,chamber,accinfo,stime) = hd inplines 
+             in if stime <= curtime
+                then
+                (
+                 leads(chamber).stimulate(sensed);
+                 accelerometer.stimulate(accinfo);
+                 inplines := inplines(2,...,len(inplines));
+                 done := len inplines = 0
+                )
+                else done := true
+           );
+     if len inplines = 0 then busy := false;
+    );
+
+\end{vdm_al}
+
+The (re)actions from the pacemaker are delivered to the environment through the handleEvent operation which updates the collection of outputs.
+
+\begin{vdm_al}
+
+public 
+handleEvent : Pulse * Chamber * Time ==> ()
+handleEvent(p,c,t) == 
+  outlines := outlines ^ [mk_(p,c,t)]; 
+\end{vdm_al}
+
+ShowResult is an operation used to inspect that collection.
+
+\begin{vdm_al}
+public
+showResult : () ==> ()
+showResult () ==
+   def - = io.writeval[seq of Outline](convert(outlines)) in skip;
+
+functions
+
+convert : seq of Outline -> seq of Outline
+convert (s) == [mk_(s(i).#1,s(i).#2,floor(s(i).#3 / 10)) | i in set inds s];
+\end{vdm_al}
+
+The last operation called isFinished its used to have a mean of knowing if the environment finished the stimulation of the system phase.
+
+\begin{vdm_al}
+operations
+public 
+isFinished: () ==> ()
+isFinished () == skip
+\end{vdm_al}
+
+The complex concurrent thread definition is now redifined by a beautifull and clean periodic thread invocation.
+
+\begin{vdm_al}
+
+thread
+  periodic (1000E6,10,900,0) (createSignal);
+
+
+\end{vdm_al}
+
+\begin{vdm_al}
+sync 
+mutex (handleEvent,showResult);
+mutex (createSignal);
+
+per isFinished => not busy and time >= simtime;
+
+
+end Environment
+\end{vdm_al}

@@ -1,0 +1,32 @@
+module A
+definitions
+
+state Sigma of
+	A1: int
+	A2: int
+init s == s = mk_Sigma(1,1)
+end
+
+operations
+
+op1: int ==> int
+	op1(i) ==
+	(
+		dcl old:int := A1;
+		A1 := i;
+		return old;
+	)
+	pre i <> A1
+	post RESULT = A1~;
+	
+op2(i:int) r:int ==
+	(
+		dcl old:int := A1;
+		A1 := i;
+		return old;
+	)
+	ext wr A1
+	pre i <> A1
+	post r = A1~;
+
+end A

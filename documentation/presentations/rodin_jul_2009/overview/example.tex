@@ -1,0 +1,120 @@
+\documentclass[slidestop]{beamer}
+%\documentclass[slidestop,uncompress,mathserif]{beamer}
+
+% Beamer theme configuration %
+\usetheme{Copenhagen} 
+%\usetheme{Berlin} 
+%\usetheme{Berkeley} 
+%\usetheme{Singapore} 
+%\usetheme{Warsaw} 
+%\usetheme{umbc1} 
+%\usetheme{umbc2} 
+%\usetheme{umbc3} 
+%\usetheme{umbc4} 
+%\usefonttheme{structuresmallcapsserif}
+%\useoutertheme[subsection=false,footline=authorinstitute]{smoothbars}
+%\setbeamertemplate{navigation symbols}{}
+
+% Import packages %
+\usepackage{color, graphicx}
+
+% Util commands %
+\newcommand{\mail}[1]{{\small \texttt{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\green}[1]{{\color{green} #1}}
+
+\title[Overture Proof Component]{Introduction to the Overture Proof Support Component}
+
+\subtitle{The Fifth Overture Workshop}
+
+\author[K. Lausdahl, M. Ferreira]{
+  Kenneth Lausdahl \\
+  \mail{kennethemail AT email.com} \\
+  Miguel Ferreira \\
+  \mail{m.ferreira AT sig.nl}
+}
+
+\institute[IHA, SIG]{
+  Aarhus School of Engineering\\
+  Software Improvement Group
+}
+
+\date{July ?, 2009 --- Southampton}
+
+
+\begin{document} 
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents% [pausesections] %[current,currentsubsection]
+%  \tableofcontents[current]
+\end{frame}
+
+\section{Context} % (fold)
+\label{sec:context}
+
+\subsection{What for?} % (fold)
+\label{sub:tool_what_for}
+
+\begin{frame}
+  \frametitle{Some title}
+  \framesubtitle{Some sub title}
+
+  \begin{block}{Some block}
+	bla di bla
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{HOL Theorem Prover}
+	
+	\vspace{1.5cm}
+	
+	\begin{columns}[T]
+		\begin{column}{.7\textwidth}
+			\begin{alertblock}{High Order Logic (version 4)}
+				\begin{itemize}
+					\itemsep=.5cm
+
+					\item Small axiom base
+
+					\item \alert{Adding theorems by proof only}
+
+					\item Large number of libraries  
+
+					\item Automated proofs through tactics  
+				\end{itemize}
+			\end{alertblock}
+		\end{column}
+		
+		\pause
+		\begin{column}{.3\textwidth}
+		  \begin{exampleblock}{Pause example}
+				\begin{itemize}
+					\itemsep=.5cm
+
+					\pause
+					\item Small axiom base
+					
+					\pause
+					\item Adding theorems by proof only
+
+					\pause
+					\item Large number of libraries  
+
+				\end{itemize}
+
+		  \end{exampleblock}
+		  %\includegraphics[width=.9\textwidth]{images/hol.png}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\end{document} 

@@ -1,0 +1,2121 @@
+\section{Station Model} \label{station}
+
+\subsection{Station Topology}
+
+The station topology does not change very often. Once the tracks
+have
+been laid, they usually stay for quite a while. We therefore consider the
+station topology to be fixed, corresponding to a static data structure,
+defined by its
+components, i.e.\ track segments, points, crossings and signals.
+We begin by modelling the track topology.
+
+
+\subsubsection{Tracks}
+
+Rails are split into track segments where each
+track segment
+has
+a unique identification. We model a track topology by a graph in which the
+nodes represent
+ track segments and the edges represent
+connectivity for the train traffic,
+i.e. the possibility of driving from one track segment to another.
+
+
+\paragraph*{Example:}
+
+The track topology in Figure~\ref{spor}, which
+is built from the track segments 16 to 24,
+is modelled by the graph in Figure~\ref{graph}.
+This graph  is defined by the relation
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=2.5in]{spor}
+\caption{Track topology\label{spor}}
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=2.5in]{graph.png}
+\caption{Track topology graph\label{graph}}
+\end{center}
+\end{figure}
+
+%\bdisp
+\begin{tabular}{lll}
+   Tracks & = & \{ (16,17),\ (17,16),\  (17,18),\  (17,21),\ (17,22),\
+   (18,17),\\
+          & & \ \ (18,19),\ (19,18),\ (19,20),\
+                    (19,24),\ (20,19),\ (21,17),\\
+          & &\ \ (22,17),\ (22,23),\ (23,22),
+                 (23,24),\ (24,23),\ (24,19) \}
+\end{tabular}
+%\edisp
+
+\rule{2mm}{2mm}
+
+Written in VDM-SL \cite{vdmsl}, the model is\footnote{The lines 1.0 to
+2.1 contain the specification of the module interface.}.
+
+\begin{vdm_al}
+module station
+
+exports
+  types struct Station_topo;
+        struct Tracks;
+        struct Track_id ;
+        struct Points;
+        struct Point_state;
+        struct Crossings;
+        struct Signals;
+        struct Signal_id;
+        struct Station_state;
+        struct Track_states;
+        struct Point_states;
+        struct Signal_states;
+        struct Track_state;
+        struct Train_id;
+        struct Train_type;
+        struct Point_control;
+        struct Operation;
+        struct Signal_state
+
+  functions
+        Is_wf_Station_topo  : Station_topo +> bool ;
+        Is_wf_Station_state : Station_topo * Station_state +> bool
+
+definitions
+
+
+types
+        Tracks = set of (Track_id * Track_id);
+        Track_id  =  seq of char
+
+\end{vdm_al}
+
+
+A track topology is defined by a relation on track segments, where each track
+segment has a unique identification.
+The interpretation of the {\ttfamily Tracks} relation is that
+each pair of track segments in the relation is physically connected.
+
+The well-formedness constraints on the model are stated below. 
+
+\paragraph{Track well-formedness}
+
+\begin{enumerate}
+
+\item The {\ttfamily Tracks}  relation does not contain any elements\footnote{
+This restriction makes the functions simpler.}
+ of the form
+{\ttfamily (t,t)}.
+
+\begin{vdm_al}
+functions
+
+    NoReflexive : Tracks +> bool
+    NoReflexive (tracks) ==
+      forall mk_(t1,t2) in set tracks & t1 <> t2;
+\end{vdm_al}
+
+\item The {\ttfamily Tracks} relation is symmetric, i.e.\
+if it is possible to drive a train from one track segment to another,
+it is also possible to drive in the opposite direction.
+
+\begin{vdm_al}
+  Symmetric : Tracks +> bool
+  Symmetric (tracks) ==
+     forall mk_(t1,t2) in set tracks & mk_(t2,t1) in set tracks
+\end{vdm_al}
+
+\end{enumerate}
+
+Together the well-formedness constrains are
+
+\begin{vdm_al}
+functions
+
+    Is_wf_Tracks : Tracks +> bool
+    Is_wf_Tracks (tracks)  ==
+          NoReflexive (tracks) and
+          Symmetric (tracks)
+\end{vdm_al}
+
+Note that there is no requirement stating that the track topology should be
+connected. An example of a station where the tracks are not connected is Hjulby
+station at Funen, which consists of two parallel tracks.
+
+
+\subsubsection{Points and Crossings}
+
+In the above model we assumed that whenever a pair of track segments
+is in the {\ttfamily Tracks} 
+relation, they are physically connected, and therefore it is
+possible to drive a train
+from one track segment to the other. However,
+track segments connected to more than two track segments (points and
+crossings) impose
+limitations on the driving, due to their physical
+structure.
+For a point it is  not possible to drive
+from one branch to the other, and having entered a crossing it is  only
+possible to exit in one direction (assuming no reversing).
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=1in]{point.png}
+\caption{Point\label{point}}
+\end{center}
+\end{figure}
+
+In a point,
+the branches are named {\sc left} and {\sc right}, see
+Figure~\ref{point}. A point is said to have {\it control} in the
+left branch, if it is possible for a train to drive from the stem through the left branch of
+the point, and 
+similar
+for the right branch. If a train enters a point from one of the
+branches, the point must have control in that branch, otherwise the point may be
+damaged\footnote{We do not consider points which are
+constructed such that if a train enters a point from a branch in which the point
+does not have control, then the points tongue is forced to that
+branch.}. 
+
+The naming of point branches is an example of a
+definition which is system dependent.
+For relay systems (1953-54),
+point branches are named $+$ and $-$, such that $+$ is the point branch which
+has the least physical curvature. In the
+relay group systems (1964), the point branch corresponding to
+the non-broken line in the track and signal diagram\footnote{A drawing
+  of the station topology, which is used in the system development.} is named $+$ and the
+other $-$, no matter which is the physically least curved.
+In the {\bf ebilock} system (1990) the convention has been changed, such that
+the branches are now named
+right and left, seen from the stem of the point. We use this last
+convention.
+
+A point may only be in one state at a time, i.e.\ it
+can either have control in the left or in the right
+branch, not in both at the same
+time.
+
+\paragraph{Example, continued:}
+
+In Figure~\ref{spor}, the track segments 19 and 24
+are points.
+Thus, a train can only move between 19 and 20 when 19 has control in
+the left branch,
+and it can only move between 19 and 24 when both 19 and 24 have
+control in the right branches. Similarly, a train may only move between
+the track segments 23 and 24 when 24 has control in its left branch. 
+To model these restrictions, we
+add information about points to the model.
+Each edge in the graph that models the connection of a track
+segment to a point branch, is annotated with the branch in which the point
+should have control in order to allow a move between the track segment and the
+point. A connection between two points is annotated with the
+required control for both points, like e.g.\ the connection between
+node 19 and 24, in Figure~\ref{graphsp}.
+
+Each crossing is modelled by two track segments, corresponding
+to the two directions in which a crossing may
+be used. In Figure~\ref{spor}, track segment $17$ is a crossing. It is modelled
+in Figure~\ref{graphsp} by the track segments $17\slash$ and $17\backslash$.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=2.5in]{graphsp.png}
+\caption{Graph with points and crossings\label{graphsp}}
+\end{center}
+\end{figure}
+
+The formulas are
+
+%\bdisp
+  \begin{tabular}{lll}
+     Points & = & \{ \begin{array}[t]{lll}
+                     (19,20) & \Mapsto  & \{ 19 \Mapsto  \const{left}\} , \\
+                     (20,19) & \Mapsto  & \{ 19 \Mapsto  \const{left}\} , \\
+                     (19,24) & \Mapsto  & \{ 19 \Mapsto  \const{right},\ 24 \Mapsto  \const{right}\} , \\
+                     (24,19) & \Mapsto  & \{ 19 \Mapsto  \const{right},\
+24  \Mapsto  \const{right}\} , \\
+                     (24,23) & \Mapsto  & \{ 24 \Mapsto  \const{left}\} , \\
+                     (23,24) & \Mapsto  & \{ 24 \Mapsto  \const{left}\} \ \}
+                     \end{array}
+  \end{tabular}
+%\edisp
+
+\bdisp
+  \begin{array}{lll}
+    Crossings & = & \{(17\backslash ,17\slash)\}
+  \end{array}
+\edisp
+
+\rule{2mm}{2mm}
+
+The VDM-SL formulas are 
+
+\begin{vdm_al}
+types
+     Points      = map (Track_id * Track_id) to 
+                       (map Track_id to Point_control);
+     Point_control = <left> | <right>;
+     Crossings   =  set of (Track_id * Track_id)
+
+\end{vdm_al}
+
+ $Points$ formalises the annotation of connections to
+points, and $Crossings$ relates the pairs of track segments which
+constitute crossings.
+
+For each pair of track segments in the domain of
+$Points$, at least one of the two track segments
+(possibly both) is a point.
+The mapping
+defines the branches in which the point(s) must have control in order for
+a train to drive between the track segments.
+
+To keep the model simple we have chosen not to
+  consider double points. Their introduction is straight forward,
+  as they introduce no new concepts.
+
+Having
+points it is possible to do without crossings, as a crossing may be
+implemented by 2 points. However, crossings are much cheaper than
+points, and therefore they are often preferred.
+
+The well-formedness constrains for points and crossings are stated below. 
+
+\paragraph*{Point well-formedness}
+
+\begin{enumerate}
+\item The domain of  $Points$ is a subset of
+{\ttfamily Tracks}, i.e.\ for each pair of track segments in the domain of $Points$ it must be possible
+to drive between the two track segments.
+
+\begin{vdm_al}
+functions
+
+   PointsInTracks : Tracks * Points +> bool
+
+   PointsInTracks (tracks,points) ==
+    dom points subset tracks;
+
+\end{vdm_al}
+
+\item For each $(t1,t2)$ in the domain of $Points$, $Points
+  (t1,t2) = Points (t2,t1)$, i.e. if a point must have control in a certain
+  branch in order to move from $t1$ to $t2$, then it must have control in the same
+branch to move from $t2$ to $t1$.
+
+\begin{vdm_al}
+   Inverses : Points +> bool
+
+   Inverses (points) ==
+     forall mk_(t1,t2) in set dom points &
+      mk_(t2,t1) in set dom points and
+      points (mk_(t1,t2)) = points (mk_(t2,t1));
+\end{vdm_al}
+
+\item  For each pair of track segments, $(t1,t2)$, in the domain of $Points$
+  the domain of $Points (t1,t2)$ is a non-empty subset of $\{
+  t1,t2\}$, i.e.\  for each pair of track segments in the domain of
+  $Points$, at least one of the track segments is a point. 
+
+\begin{vdm_al}
+   OkDomRng: Points +> bool
+
+   OkDomRng (points) ==
+     forall mk_(t1,t2) in set dom points &
+      points (mk_(t1,t2)) <> {|->} and
+      dom (points (mk_(t1,t2))) subset {t1,t2};
+
+\end{vdm_al}
+
+
+\item In {\ttfamily Tracks}, a point is related to 3 track segments, whereas other
+  track segments are related to at most two track segments.
+Note that a track segment may be related to only  one other track
+segment, as it may be at the end of a track\footnote{We assume that
+  points are not situated at track ends.}
+
+\begin{vdm_al}
+   RelateToTracks: Tracks * Points +> bool
+
+   RelateToTracks (tracks,points) ==
+    (forall tpair in set dom points &
+     forall pid in set dom points (tpair) &
+      card {t | mk_(t,t') in set tracks & t' = pid } = 3) and
+    (forall mk_(t1,-) in set tracks &
+     (not exists tpair in set dom points & 
+             t1 in set dom points (tpair)) =>
+      card {t|mk_(t,t') in set tracks & t'=t1} <= 2 );
+\end{vdm_al}
+
+\item For each point, $p$, there exist two track segments $t1$ and
+  $t2$, such that $p \Mapsto  \const{left}$ is in $Points (t1,p)$
+  and $p \Mapsto  \const{right}$ is in $Points (t2,p)$, i.e.\ for each point
+it should be possible both to drive along the left and the right
+branch.
+
+\begin{vdm_al}
+   Control2Dir: Points +> bool
+
+   Control2Dir (points) ==
+     forall mk_(t1,t2) in set dom points &
+      ({t1} <: points (mk_(t1,t2)) = {t1 |->  <left>} =>
+           exists mk_(t,t') in set dom points &
+             t = t1 and
+            {t1} <: points (mk_(t1,t')) = {t1 |->  <right>}) and
+      ({t1} <: points (mk_(t1,t2)) = {t1 |->  <right>} =>
+           exists mk_(t,t') in set dom points &
+             t = t1 and
+            {t1} <: points (mk_(t1,t')) = {t1 |->  <left>});
+\end{vdm_al}
+
+\end{enumerate}
+
+Together the well-formedness constrains on points are
+
+\begin{vdm_al}
+   Is_wf_Points: Tracks * Points +> bool
+
+   Is_wf_Points (tracks,points) ==
+     PointsInTracks (tracks,points) and
+     Inverses (points)              and
+     OkDomRng (points)              and
+     RelateToTracks (tracks,points) and
+     Control2Dir (points);
+
+\end{vdm_al}
+
+\paragraph*{Crossing well-formedness}
+\begin{enumerate}
+\item The intersection of the relations {\ttfamily Tracks} and $Crossings$ is empty, i.e.\
+it is not possible to drive from one branch in a crossing to the other.
+
+\begin{vdm_al}
+   SeperateBranches: Tracks * Crossings +> bool
+
+   SeperateBranches (tracks,crossings) ==
+     crossings inter tracks = {};
+
+\end{vdm_al}
+
+\item All track segments in the $Crossings$ relation
+are in the {\ttfamily Tracks} relation.
+
+\begin{vdm_al}
+   CrossInTracks: Tracks * Crossings +> bool
+
+   CrossInTracks (tracks,crossings) ==
+     forall mk_(t1,t2) in set crossings &
+       (exists mk_(t3,-) in set tracks & t1 = t3) and
+       (exists mk_(t4,-) in set tracks & t2 = t4);
+
+\end{vdm_al}
+
+\item
+All track segments in
+the $Crossings$ relation are different.
+
+\begin{vdm_al}
+   UniqueCross: Crossings +> bool
+
+   UniqueCross (crossings) ==
+     forall mk_(t1,t2) in set crossings &
+       t1 <> t2 and
+      forall mk_(t3,t4) in set crossings \ {mk_(t1,t2)} &
+       (t1 <> t3 and t1 <> t4 and t2 <> t3 and t2 <> t4);
+
+\end{vdm_al}
+
+\item No track segment which is a point is in the $Crossings$ relation, i.e.\
+no part of a crossing can be a point.
+
+\begin{vdm_al}
+   DiffPointsCrossings: Points * Crossings +> bool
+
+   DiffPointsCrossings (points,crossings) ==
+     forall mk_(t1,t2) in set crossings &
+       forall pointcontrol in set rng points &
+         t1 not in set dom pointcontrol and
+         t2 not in set dom pointcontrol;
+\end{vdm_al}
+
+\end{enumerate}
+
+Together the well-formedness constraints on crossings are
+
+\begin{vdm_al}
+   Is_wf_Crossings: Tracks * Points * Crossings +> bool
+
+   Is_wf_Crossings (tracks,points,crossings) ==
+     SeperateBranches (tracks,crossings)    and
+     CrossInTracks (tracks,crossings)       and
+     UniqueCross (crossings)                and
+     DiffPointsCrossings (points,crossings)
+\end{vdm_al}
+
+
+\subsubsection{Signals}
+
+In order to control the trains speed, DSB uses signals placed along
+the tracks at track segment separations.
+The reason for placing signals at track segment separations is that it is
+only possible to observe whether there is a train at a track segment or
+not. It is impossible to detect the position of the train inside a
+track segment. 
+For each signal, the signalling is
+only
+readable from one direction. Each signal has an unique identification. 
+
+We model signals by annotating the edges in the graph with the signal
+identifiers. The direction of the signalling is modelled by changing  the
+graph to a directed graph.
+
+
+\paragraph*{Example, continued:}
+
+Imagine that there is a signal named $K$ placed at the separation
+between the track segments 19 and 20, readable from track segment 19, when
+moving towards track segment 20, and that there is a signal $A$ between the
+track segments
+21 and
+17, readable from 21, when moving towards track segment 17, see
+Figure~\ref{sporsig}.
+This is modelled by the graph in Figure~\ref{graphsig}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.5in]{sporsig.png}
+\caption{Track topology with signals\label{sporsig}}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.5in]{graphsig.png}
+\caption{Graph with points, crossings and signals\label{graphsig}}
+\end{center}
+\end{figure}
+
+Written in formulas we have
+
+\bdisp
+  \begin{array}{lll}
+     Signals & = & \{ \begin{array}[t]{lll}
+                      (19,20) & \Mapsto  & K, \\
+                      (21,17\slash) & \Mapsto  & A\ \}
+                      \end{array}
+  \end{array}
+\edisp
+
+\rule{2mm}{2mm}
+
+The VDM-SL formalisation of signals is:
+
+\begin{vdm_al}
+types
+     Signals   = map (Track_id * Track_id) to Signal_id;
+     Signal_id = seq of char
+\end{vdm_al}
+
+If a pair of track segments is in the domain of the
+signal mapping, this means that at the separation between the first and the
+second track segment there is a signal which is readable from the first track
+segment.
+
+The change of the graph  to a directed graph is not explicit observable in the
+VDM types, but is implicit in that the well-formedness constrains do
+not require the domain of the signals mapping to be symmetric.
+The well-formedness constrains for signals are stated below. 
+
+
+\paragraph{Signal Well-Formedness}
+
+\begin{enumerate}
+\item Every signal has a unique identification.
+
+\begin{vdm_al}
+functions
+
+   UniqueSignals: Signals +> bool
+
+   UniqueSignals (signals) ==
+     card rng signals = card dom signals;
+
+\end{vdm_al}
+
+\item The position of signals must conform to the {\it Tracks}
+relation, such that either the signal is placed at the interface (the
+track segment separation)
+between the station and the open line ({\tt "}{\it ol}{\tt "}), or it is placed at a track
+segment separation which is in the {\ttfamily Tracks} relation.
+
+\begin{vdm_al}
+   SigInTracks: Tracks * Signals +> bool
+
+   SigInTracks (tracks,signals) ==
+     forall mk_(t1,t2) in set dom signals &
+      (t1 = "ol" => card { t | mk_(t,t') in set tracks 
+                             & t' = t2 } = 1 ) and
+      (t2 = "ol" => card { t | mk_(t,t') in set tracks 
+                             & t' = t1 } = 1 ) and
+      (t1 <> "ol" and t2 <> "ol" => mk_(t1,t2) in set tracks );
+\end{vdm_al}
+\end{enumerate}
+
+Together the well-formedness constraints on the $Signals$ mapping are
+
+\begin{vdm_al}
+   Is_wf_Signals: Tracks * Signals +> bool
+
+   Is_wf_Signals (tracks,signals) ==
+     UniqueSignals (signals) and
+     SigInTracks (tracks,signals)
+
+\end{vdm_al}
+
+
+\subsubsection{Station}
+
+Putting the formalisation of tracks, points, crossings, and signals
+together, we obtain a model for a station topology
+
+\begin{vdm_al}
+types
+     Station_topo :: tracks    : Tracks
+                points    : Points
+                crossings : Crossings
+                signals   : Signals
+\end{vdm_al}
+
+The model has the previous stated well-formedness constraints for tracks,
+points, crossings and signals.
+
+\begin{vdm_al}
+functions
+   Is_wf_Station_topo: Station_topo +> bool
+
+   Is_wf_Station_topo (stationtopo) ==
+     Is_wf_Tracks (stationtopo.tracks) and
+     Is_wf_Points (stationtopo.tracks,stationtopo.points) and
+     Is_wf_Crossings (stationtopo.tracks,stationtopo.points,
+                      stationtopo.crossings) and
+     Is_wf_Signals (stationtopo.tracks,stationtopo.signals)
+\end{vdm_al}
+
+
+\subsection{Station State Space} \label{stationstate}
+
+Using the above model of
+station topologies,
+we now define the state space of stations.
+
+A station state is constituted by the state of the track
+segments,
+the points and the signals. The state of crossings is modelled by
+the states of the track segments constituting the crossing.
+
+\begin{vdm_al}
+
+types
+     Station_state :: trackstates  : Track_states
+                      pointstates  : Point_states
+                      signalstates : Signal_states;
+\end{vdm_al}
+
+The {\it trackstates} is a mapping from track segments to their states, the
+{\it pointstates} is a mapping from the track segments being points to the
+states of the points, and the {\it signalstates} is a mapping from signal
+identifiers to the states of the signals.
+
+\begin{vdm_al}
+     Track_states  = map Track_id  to Track_state;
+     Point_states  = map Track_id  to Point_state;
+     Signal_states = map Signal_id to Signal_state;
+\end{vdm_al}
+
+A track segment may be occupied by zero or more trains, where each train has an
+unique identification. Furthermore, each train has a type, that is a
+train  is either
+a fixed-route train or an autonomous  train. A fixed-route  
+train is a train for
+which the interlocking system determines the route the train
+should drive through the station.  An autonomous train is a train
+for which the train driver has been granted the permission of changing
+the state of some of the points at the station. Normally, a
+fixed-route train is driving according to a time-schedule, and an
+autonomous train is a shunting train. 
+
+\begin{vdm_al}
+   Track_state   =  map Train_id to Train_type;
+   Train_id      = seq of char;
+   Train_type    =  <fixedroute> | <autonomous> ;
+\end{vdm_al}
+
+A point state is composed of a point control and a point operation.
+A point may have control in one of the branches, 
+left or  right. We do not consider the state where the point is
+switching from one state to the other and thereby has not control.
+The reason for this is that we
+want to use the model to define the safety requirements, i.e.\ the invariants
+for the interlocking
+system. The invariants never
+require that a point does not have control. In a later
+model it will be natural to extend the point states with this state. 
+Point operation defines
+whether the point is released for manual operation or if it is
+controlled by the interlocking system. A point is released for manual
+operation if a train driver is granted the permission to switch the
+point, without control of the interlocking system.
+
+\begin{vdm_al}
+   Point_state    =  Point_control * Operation ;
+   Operation      =  <manual> | <interlock>;
+\end{vdm_al}
+
+
+A signal may signal stop or a drive aspect. In a later step of
+development, the signalling may be more differentiated as the drive aspect
+may be used to signal the allowed train speed.
+
+\begin{vdm_al}
+      Signal_state = <stop> | <driveaspect>
+\end{vdm_al}
+
+
+\subsubsection{Well-formedness} 
+
+The station state space must conform to the station topology such that
+
+\begin{enumerate}
+\item All track id's in the station state space
+   are track id's in the station
+topology, and all track id's in the station
+  topology
+  are track id's in the station state space.
+
+\begin{vdm_al}
+functions
+
+   ConformTracks: Tracks * Track_states  +> bool
+
+   ConformTracks (tracks,trackstates)  ==
+     TracksStateInTopo (tracks,trackstates) and
+     TracksTopoInState (tracks,trackstates);
+
+\end{vdm_al}
+
+\begin{vdm_al}
+   TracksStateInTopo: Tracks * Track_states  +> bool
+
+   TracksStateInTopo (tracks,trackstates)  ==
+     forall t in set dom trackstates &
+       exists mk_(t1,t2) in set tracks & t = t1 or t = t2;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+   TracksTopoInState: Tracks * Track_states  +> bool
+
+   TracksTopoInState (tracks,trackstates)  ==
+     forall mk_(t1,t2) in set tracks &
+       t1 in set dom trackstates and
+       t2 in set dom trackstates;
+
+\end{vdm_al}
+
+\item All track segments which are points in the station state space
+  are points in the station
+topology, and all track segments which are points in the station
+  topology
+  are points in the station state space.
+
+
+\begin{vdm_al}
+   ConformPoints: Points * Point_states  +> bool
+
+   ConformPoints (points,pointstates)  ==
+     PointsStateInTopo (points,pointstates) and
+     PointsTopoInState (points,pointstates);
+
+\end{vdm_al}
+
+\begin{vdm_al}
+   PointsStateInTopo: Points * Point_states  +> bool
+
+   PointsStateInTopo (points,pointstates)  ==
+     forall t in set dom pointstates &
+      exists mk_(t1,t2) in set dom points  &
+       t in set dom points (mk_(t1,t2));
+\end{vdm_al}
+
+\begin{vdm_al}
+   PointsTopoInState: Points * Point_states  +> bool
+
+   PointsTopoInState (points,pointstates)  ==
+     forall mk_(t1,t2) in set dom points &
+      (t1 in set dom points (mk_(t1,t2)) => 
+       t1 in set dom pointstates) and
+      (t2 in set dom points (mk_(t1,t2)) => 
+       t2 in set dom pointstates);
+\end{vdm_al}
+
+\item All signal id's in the station state space
+  are signal id's in the station
+topology, and all signal id's in the station
+  topology
+  are signal id's in the station state space.
+
+
+\begin{vdm_al}
+   ConformSignals: Signals * Signal_states  +> bool
+
+   ConformSignals (signals,signalstates)  ==
+     rng signals = dom signalstates;
+
+\end{vdm_al}
+
+\item Trains
+are unique, i.e.\ a train is either driving on a fixed route, 
+or it is an autonomous train, not both.
+Each train is connected, and it is placed correctly at the
+tracks according to the points and the crossings, i.e.\ if a train occupies a track segment
+  next to a point branch, it cannot occupy the track segment next
+  to the other branch in the same point as well, and if it occupies a track
+segment which is part of a crossing, it cannot occupy the other track segment in
+the same crossing as well.
+
+\begin{vdm_al}
+   Is_wf_Trains: Tracks * Points * Crossings * Track_states +> 
+                 bool
+
+   Is_wf_Trains (tracks,points,crossings,trackstates)  ==
+     UniqueTrain (trackstates)    and
+     let trains = Trains (trackstates,{|->}) in
+         Connected (trains,tracks)     and
+         OkPointTrains (trains,points) and
+         OkCrossTrains (trains,crossings);
+
+\end{vdm_al}
+
+The function $UniqueTrain$ checks that the same train identifier does
+not both denote a train driving on a fixed route and an autonomous
+train. 
+
+\begin{vdm_al}
+   UniqueTrain : Track_states +> bool
+
+   UniqueTrain (trackstates) ==
+     forall trackid in set dom trackstates &
+      forall trainid in set dom trackstates (trackid) &
+       (trackstates (trackid)(trainid) = <fixedroute> =>
+        (forall trackid' in set dom trackstates &
+        (trainid in set dom trackstates (trackid') =>
+         trackstates (trackid')(trainid) = <fixedroute>))) and
+       (trackstates (trackid)(trainid) = <autonomous> =>
+        (forall trackid' in set dom trackstates &
+        (trainid in set dom trackstates (trackid') =>
+         trackstates (trackid')(trainid) = <autonomous>)));
+\end{vdm_al}
+
+The function $Trains$ returns a mapping from a
+set of
+train identifiers to sets of track segments occupied by the trains.
+
+\begin{vdm_al}
+   Trains: Track_states * (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
+
+   Trains (trackstates,sorted)  ==
+     if   trackstates = {|->}
+     then sorted
+     else let t in set dom trackstates in
+              if   trackstates (t) = {|->}
+              then Trains ({t} <-: trackstates,sorted)
+              else Trains ({t} <-: trackstates, 
+                           Update (mk_(t,trackstates(t)),sorted));
+\end{vdm_al}
+
+The function $Update$ takes two arguments, one which is a pair of a
+track segment and a track state,
+and one which is a mapping
+from train identifiers to the track segments which the train
+occupy. $Update$ updates the second argument with the first argument.
+
+\begin{vdm_al}
+   Update: (Track_id * Track_state) * 
+           (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
+
+   Update (mk_(t,trackstate),sorted)  ==
+     if   trackstate = {|->}
+     then sorted
+     else let tid in set dom trackstate in
+              if   tid in set dom sorted
+              then Update (mk_(t,{tid} <-: trackstate), 
+                               sorted ++ 
+                               { tid |-> {t} union sorted (tid)} )
+              else Update (mk_(t,{tid} <-: trackstate), 
+                               sorted munion { tid |-> {t} } );
+\end{vdm_al}
+
+A train is connected if the track segments which it occupies form a path
+in the track topology.
+
+\begin{vdm_al}
+   Connected: (map Train_id to set of Track_id) * Tracks +> bool
+
+   Connected (trains,tracks)  ==
+     forall trackset in set rng trains &
+      ExistsPath (trackset,tracks);
+
+\end{vdm_al}
+
+To check whether the track segments form a path, the track segments
+are attempted ordered in a list according to the track topology.
+
+\begin{vdm_al}
+   ExistsPath: set of Track_id * Tracks +> bool
+
+   ExistsPath (trackset,tracks)  ==
+     exists t in set trackset &
+         Path (trackset \ {t},[t],tracks,{});
+
+\end{vdm_al}
+
+When ordering the track segments according to the track topology, an
+arbitrary track segment is selected as being the list of ordered track
+segments until now. For each of the remaining track segments, it is
+investigated whether that track segment may be added to the list,
+i.e.\ whether it together with the list forms a path in the track
+topology. 
+When no more track segments can be added to the list, it is
+investigated whether all track segments occupied by the train have
+been added to the list. If this is the case, the train forms a path in
+the track topology, otherwise it does not.
+
+\begin{vdm_al}
+   Path: set of Track_id * seq of Track_id * Tracks * 
+         set of Track_id +> bool
+
+   Path (trackset,connected,tracks,tried)  ==
+     if   trackset = {}
+     then tried = {}
+     else let t in set trackset in
+              if   mk_(t,hd connected) in set tracks
+              then Path ((trackset \ {t}) union tried,
+                          [t]^connected,tracks,{})
+              else if mk_(connected (len connected),t) in set 
+                      tracks
+                   then Path ((trackset \ {t}) union 
+                               tried,connected^[t],tracks,{})
+                   else Path ((trackset \ {t}),connected,tracks,
+                               tried union {t});
+\end{vdm_al}
+
+A train is placed correctly at the tracks according to the points, if it for each
+point only requires the point to be in one state.
+
+\begin{vdm_al}
+   OkPointTrains: (map Train_id to set of Track_id) * Points +> 
+                  bool
+
+   OkPointTrains (trains,points)  ==
+     forall trackset in set rng trains &
+      forall t1,t2 in set trackset &
+         (mk_(t1,t2) in set dom points and
+          t1 in set dom points (mk_(t1,t2))) =>
+          (forall t3 in set trackset &
+            mk_(t1,t3) in set dom points and
+            t1 in set dom points (mk_(t1,t3)) =>
+              points (mk_(t1,t2))(t1) = points (mk_(t1,t3))(t1) );
+\end{vdm_al}
+
+A train is placed correctly at crossings, if it for each crossing at most 
+occupies one of the track segments constituting the crossing.
+
+\begin{vdm_al}
+   OkCrossTrains: (map Track_id to set of Track_id) * Crossings +> 
+                  bool
+
+   OkCrossTrains (trains,crossings)  ==
+     forall trackidset in set rng trains &
+      forall t1,t2 in set trackidset &
+        mk_(t1,t2) not in set crossings;
+\end{vdm_al}
+\end{enumerate}
+
+A station state is well-formed if it satisfies all of the above
+well-formedness constraints.
+
+\begin{vdm_al}
+Is_wf_Station_state :  Station_topo * Station_state +> bool
+
+Is_wf_Station_state (stationtopo,stationstate) ==
+  ConformTracks (stationtopo.tracks,stationstate.trackstates)    and
+  ConformPoints (stationtopo.points,stationstate.pointstates)    and
+  ConformSignals (stationtopo.signals,stationstate.signalstates) and
+  Is_wf_Trains (stationtopo.tracks,stationtopo.points,
+                stationtopo.crossings,stationstate.trackstates)
+
+
+end station
+\end{vdm_al}
+
+In order to prepare for the simulation of the requirement
+specification, we have executed the above VDM specification, and
+thereby validated the invariants using the VDM tool-box.
+
+This concludes the modelling of stations.
+We are now ready to define the safety requirements which an interlocking
+system should fulfill.
+
+
+\section{Safety Requirements} \label{invar}
+
+Interlocking systems should implement the safety requirements:
+
+\begin{enumerate}
+\item Trains
+must not collide.
+
+\item Trains must not derail.
+\end{enumerate}
+
+\begin{vdm_al}
+module safe_req
+
+imports
+ from station
+  types Station_topo :: tracks : station`Tracks
+                   points : station`Points
+                   crossings : station`Crossings
+                   signals : station`Signals renamed Station_topo;
+        Tracks = set of (station`Track_id * station`Track_id) 
+        renamed Tracks; 
+        Track_id = seq of char renamed Track_id;
+        Points = map (station`Track_id * station`Track_id) to
+	         (map station`Track_id to station`Point_control)
+                 renamed Points;
+        Point_control = <left> | <right> renamed Point_control;
+        Crossings = set of (station`Track_id * station`Track_id) 
+                    renamed Crossings;
+        Signals  = map (station`Track_id * station`Track_id) 
+                   to station`Signal_id
+                   renamed Signals;
+        Signal_id = seq of char
+                    renamed Signal_id;  
+
+        Station_state :: trackstates  : station`Track_states
+                         pointstates  : station`Point_states
+                         signalstates : station`Signal_states
+                         renamed Station_state;
+        Track_states  = map station`Track_id  to station`Track_state
+                        renamed Track_states;
+        Track_state   =  map station`Train_id to station`Train_type
+                         renamed Track_state;
+        Train_id      =  seq of char
+                         renamed Train_id;
+        Train_type    = <fixedroute> | <autonomous> 
+                        renamed Train_type;
+        Point_states  = map station`Track_id  to station`Point_state
+                        renamed Point_states;
+        Point_state   = station`Point_control * station`Operation
+                        renamed Point_state;
+        Operation     = <manual> | <interlock> 
+                        renamed Operation; 
+        Signal_states = map station`Signal_id to station`Signal_state 
+                        renamed Signal_states;
+        Signal_state  = <stop> | <driveaspect> renamed Signal_state
+
+  functions
+        Is_wf_Station_topo  : station`Station_topo +> bool 
+                              renamed Is_wf_Station_topo;
+        Is_wf_Station_state : station`Station_topo * 
+                              station`Station_state +> 
+                              bool
+                              renamed Is_wf_Station_state
+
+exports
+   functions SafeReq : Station_topo * Station_state +> bool
+
+
+definitions
+
+\end{vdm_al}
+
+Given a station topology and a station state, the station state is
+safe if trains do not collide and do not derail.
+
+\begin{vdm_al}
+functions
+   SafeReq: Station_topo * Station_state +> bool
+
+   SafeReq (stationtopo,stationstate)  ==
+     NoCollision (stationtopo,stationstate) and
+     NoDerail (stationtopo,stationstate)
+
+  pre Is_wf_Station_topo (stationtopo) and 
+      Is_wf_Station_state (stationtopo,stationstate); 
+\end{vdm_al}
+
+In our model, a train collision means that there is more than one
+train on a track
+segment\footnote{We do not consider joining and
+splitting of trains. It may e.g.\ be assumed that joining and splitting
+take place at track segment separations.}.
+
+\begin{vdm_al}
+   NoCollision: Station_topo * Station_state +> bool
+
+   NoCollision (stationtopo,stationstate)  ==
+     forall tid in set dom stationstate.trackstates &
+      card dom (stationstate.trackstates(tid)) <= 1 and
+      OneTrainAtCross (stationtopo.crossings,stationstate.trackstates);
+\end{vdm_al}
+
+
+Remark: In reality there need not be a collision if there
+is more than one train at the same track segment, but we have refrained from
+specifying a more complex collision definition as the
+the technology used by DSB today, only allows us to
+observe whether there is a train at a
+certain track segment, and not where the train is located inside the track
+segment. Collision does not take place if there is always at most
+one train
+at each track segment.
+
+It must
+also be checked that for each crossing, there is at most one train in one of
+the two track segments constituting the crossing.
+
+\begin{vdm_al}
+   OneTrainAtCross: Crossings * Track_states +> bool
+
+   OneTrainAtCross (crossings,trackstates)  ==
+     forall mk_(tid1,tid2) in set crossings &
+      card dom (trackstates(tid1)) + card dom (trackstates(tid2)) <= 1;
+\end{vdm_al}
+
+A train may derail if a point does not have control in an appropriate
+state. That is, if a train occupies a point and a track segment next
+to one of the points branches, then the point must have control in
+that branch, otherwise it may derail, see Figure~\ref{derail}, where
+the thick line indicates the point control. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4.5in]{derail.png}
+\caption{Derailing in points} \label{derail}
+\end{center}
+\end{figure}
+
+\begin{vdm_al}
+   NoDerail: Station_topo * Station_state +> bool
+
+   NoDerail (stationtopo,stationstate)  ==
+     let trains = Trains (stationstate.trackstates,{|->}) in
+         forall t in set dom trains &
+          forall t1,t2 in set trains (t) &
+           mk_(t1,t2) in set dom stationtopo.points =>
+           Ok_Point_states (mk_(t1,t2),stationtopo.points,
+                            stationstate.pointstates);
+\end{vdm_al}
+
+The functions $Trains$ and $Update$ are the same as used in the
+function {\it Is\_wf\_Trains}. They are presented here without comments.
+
+\begin{vdm_al}
+   Trains: Track_states * (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
+   Trains (trackstates,sorted)  ==
+     if   trackstates = {|->}
+     then sorted
+     else let t in set dom trackstates in
+              if   trackstates (t) = {|->}
+              then Trains ({t} <-: trackstates,sorted)
+              else Trains ({t} <-: trackstates, 
+                           Update (mk_(t,trackstates(t)),sorted));
+\end{vdm_al}
+
+\begin{vdm_al}
+   Update: (Track_id * Track_state) * 
+           (map Train_id to set of Track_id) +> 
+   (map Train_id to set of Track_id)
+
+   Update (mk_(t,trainids),sorted)  ==
+     if   trainids = {|->}
+     then sorted
+     else let tid in set dom trainids in
+              if   tid in set dom sorted
+              then Update (mk_(t,{tid} <-: trainids), 
+                           sorted ++ 
+                           { tid |-> {t} union sorted (tid)} )
+              else Update (mk_(t,{tid} <-: trainids), 
+                           sorted ++ { tid |-> {t} });
+\end{vdm_al}
+
+The function {\it Ok\_Point\_states} checks whether the current point states
+are appropriate in order to drive between the pair of track segments in
+the first argument of the function, given that one of the two track
+segments is a point. 
+
+\begin{vdm_al}
+   Ok_Point_states: (Track_id * Track_id) * Points * Point_states +> 
+                    bool
+
+   Ok_Point_states (mk_(t1,t2),points,pointstates) ==
+     if   {t1,t2} = dom points (mk_(t1,t2))
+     then Point_state_ok (mk_(t1,t2),t1,points,pointstates) and
+          Point_state_ok (mk_(t1,t2),t2,points,pointstates)
+     else if   {t1} = dom points (mk_(t1,t2))
+          then Point_state_ok (mk_(t1,t2),t1,points,pointstates)
+          else Point_state_ok (mk_(t1,t2),t2,points,pointstates)
+               
+   pre mk_(t1,t2) in set dom points;
+\end{vdm_al}
+
+The function {\it Point\_state\_ok} checks whether a point $t$ has
+proper control in order
+for a train to drive from the first to the second track segment in
+$tpair$, given that only a point and one of its neighbours are
+considered. 
+
+\begin{vdm_al}
+   Point_state_ok: (Track_id * Track_id) * Track_id * Points * 
+                   Point_states +> bool
+
+   Point_state_ok (tpair,t,points,pointstates) ==
+     let mk_(pcnt,-) = pointstates (t) in
+         (points (tpair)) (t) = pcnt
+
+   pre t in set dom pointstates and tpair in set dom points and 
+       t in set dom points(tpair)
+
+end safe_req
+\end{vdm_al}
+
+To validate the safety requirements we have executed the 
+specification for a number of stations, using the VDM tool-box.
+
+The safety requirements are invariants which the interlocking system should
+maintain. The no collision requirement may
+be implemented in several ways. One
+implementation is  to allow at most one train at the station at
+a time. With the amount of train traffic today, this is however not a
+desirable solution. That this solution is not acceptable, is actually
+a requirement to the system, namely  that
+it should be able to handle more than one train at the station at a time. This
+requirement was validated by interviews.
+
+
+\section{Implementation} \label{intpre}
+
+We now define the safe station states, allowing
+several trains at the station at the time.
+
+An interlocking system may control train movement in two ways. The
+direction of train movement is controlled by points, and the speed
+of trains is controlled by the signalling. We therefore define the safe station
+states in terms of point and signal states.
+
+Given the station state in
+Figure~\ref{trainpaths}, where track segment 3 is a point which has
+control in the right branch and which is operated by the interlocking system,
+track segment
+8 is a crossing, all signals signal stop, and
+there are two trains at the station, one at the track segments 10 and
+11, and one at track segment 4. We consider this state to be safe, as
+the two trains are not able to proceed to a common track segment, and as point
+3 cannot cause any of the trains to derail. If instead point 3 had had control
+in left, the state would
+not be safe, as the two trains both could proceed to track segment 8,
+and thereby collide.
+
+In Figure~\ref{flankprot2}, all signals signal stop, 
+the track segments 3, 8, and 13 are points which are
+operated by the interlocking system, and track segment 4 is a point,
+released for manual operation. That point 4 is released for manual operation
+means that the train driver may switch it to any
+state, without control of the interlocking system, i.e.\ we
+cannot assume anything about the state for point 4. Assuming that the
+points controlled by the interlocking system do not change state, the
+station state in Figure~\ref{flankprot2} is safe, as the two trains are
+not able to proceed to a common track segment, and as all the points
+controlled by the interlocking system are in states such that the
+trains will not derail.
+
+To define the safe states, we introduce the concept of an area. An area is a
+set of track segments to which a train may move, assuming fixed signal states,
+fixed point states for the points operated by the interlocking system and 
+fixed point operation for the manually operated points, and assuming that
+trains obey the signalling. Given a station state we may thus deduce an area
+for each train at the station. The station state is safe, if no
+two areas have common track segments, and if no trains are able to derail. 
+
+In Figure~\ref{trainpaths}, the area for the train at track
+segment
+4 consists of the track segments,
+2,
+3,
+4, and
+5, and the area for the train at the track segments 10 and 11 consists of the
+track segments 8, 9, 10, and 11. Note that signal $B$ 
+cannot be used to define the area, as the train driver is not able to read the
+signalling.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4.5in]{trainpaths.png}
+\caption{Train areas\label{trainpaths}}
+\end{center}
+\end{figure}
+
+In Figure~\ref{flankprot2}, the area for the train at track
+segment 10 consists of the track segments 7, 8, 9, and 10. The train
+located at the track segments 2 and 3 may move to track segment 4. As
+track segment 4 is a point which is released for manual operation, the
+train driver may switch the point to any state, and therefore
+we cannot tell whether the train is going to move along the left of
+the right
+branch of the point. We therefore search the area in both directions. Thus the
+area for the train at the track segments 2 and 3 consist of the track segments
+1, 2, 3, 4, 5, 6, 13 and 14.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4.5in]{flankprot2.png}
+\caption{Shunting areas.} \label{flankprot2}
+\end{center}
+\end{figure}
+
+We now define an implementation of the safety requirements, using the
+area concept.
+
+\begin{vdm_al}
+module impl
+
+imports
+ from station
+  types Station_topo :: tracks : station`Tracks
+                   points : station`Points
+                   crossings : station`Crossings
+                   signals : station`Signals renamed Station_topo;
+        Tracks = set of (station`Track_id * station`Track_id) 
+                 renamed Tracks;
+        Track_id = seq of char renamed Track_id;
+        Points = map (station`Track_id * station`Track_id) to
+	         (map station`Track_id to station`Point_control)
+                 renamed Points;
+        Point_control = <left> | <right>
+                        renamed Point_control;
+        Crossings = set of (station`Track_id * station`Track_id) 
+        renamed Crossings;
+        Signals = map (station`Track_id * station`Track_id) 
+                  to station`Signal_id
+                  renamed Signals;
+        Signal_id = seq of char
+                    renamed Signal_id; 
+
+   Station_state :: trackstates : station`Track_states
+                     pointstates : station`Point_states
+                     signalstates: station`Signal_states
+                    renamed Station_state;
+
+   Track_states  =  map station`Track_id to station`Track_state
+                    renamed Track_states;
+   Track_state   =  map station`Train_id to station`Train_type
+                    renamed Track_state;
+   Train_id      = seq of char
+                   renamed Train_id;
+   Train_type    =  <fixedroute> | <autonomous>
+                    renamed Train_type;
+
+   Point_states   =  map station`Track_id to station`Point_state
+                     renamed Point_states;
+   Point_state    =  station`Point_control * station`Operation
+                     renamed Point_state;
+   Operation      =  <manual> | <interlock>
+                     renamed Operation;
+
+      Signal_states = map station`Signal_id to station`Signal_state
+                      renamed Signal_states;
+      Signal_state = <stop> | <driveaspect>
+                     renamed Signal_state
+
+  functions
+        Is_wf_Station_topo  : station`Station_topo +> bool 
+                              renamed Is_wf_Station_topo;
+        Is_wf_Station_state : station`Station_topo * 
+                              station`Station_state +> 
+                              bool
+                              renamed Is_wf_Station_state
+
+exports
+  functions Impl : Station_topo * Station_state +> bool
+
+definitions
+
+
+
+
+types
+     Areas = map Train_id to Area;
+     Area = set of Track_id
+\end{vdm_al}
+
+An area is a mapping from train identifiers to sets of track segments, for each
+train denoting the
+set of track segments to which the train may move.
+
+A station state is safe, if trains are not able to collide and
+not able to derail.
+
+\begin{vdm_al}
+functions
+   Impl: Station_topo * Station_state +> bool
+
+   Impl (stationtopo,stationstate) ==
+     let areas = FindAreas (stationtopo,stationstate) in
+         NoCollision (areas,stationtopo.crossings) and
+         NoDerail (areas,stationtopo,stationstate)
+
+   pre Is_wf_Station_topo (stationtopo) and 
+        Is_wf_Station_state (stationtopo,stationstate);
+
+
+\end{vdm_al}
+
+A collision is possible if two areas have common track segments, or if they
+contain two track segments which together constitute a crossing.
+
+\begin{vdm_al}
+   NoCollision: Areas * Crossings +> bool
+
+   NoCollision (areas,crossings) ==
+     forall train1, train2 in set dom areas &
+      train1 <> train2 =>
+       (areas (train1) inter areas (train2) = {} and
+                             forall t1 in set areas (train1) &
+                              (forall t2 in set areas (train2) &
+                                mk_(t1,t2) not in set crossings));
+\end{vdm_al}
+
+A train may derail if either the train occupies a track segment which
+is a point and this point is in a state which does not match with the trains
+position, or if the state of one of the points in the area does not
+match with the position and the type of the train. 
+
+\begin{vdm_al}
+   NoDerail: Areas * Station_topo * Station_state +> bool
+
+   NoDerail (areas,stationtopo,stationstate) ==
+     NoDerailUnderTrains (stationtopo,stationstate) and 
+     NoDerailPossible (areas,stationtopo,stationstate); 
+\end{vdm_al}
+
+The function $NoDerailUnderTrains$ is the same as the function
+$NoDerail$ from the module $Safe-req$. 
+
+\begin{vdm_al}
+   NoDerailUnderTrains: Station_topo * Station_state +> bool 
+
+   NoDerailUnderTrains (stationtopo,stationstate) == 
+     let trains = Trains (stationstate.trackstates,{|->}) in
+         forall t in set dom trains &
+          forall t1,t2 in set trains (t) &
+           mk_(t1,t2) in set dom stationtopo.points =>
+           Ok_Point_states (mk_(t1,t2),stationtopo.points,
+                            stationstate.pointstates);
+\end{vdm_al}
+
+A train may derail if just one of the points controlled by the
+interlocking system in the area
+does not have control in
+the branch which corresponds to the route, the train may drive through the point.
+It is not the responsibility of the interlocking system, if a train derails at
+a point, which is released for manual operation.
+However, for trains driving on a fixed route, all points
+must be controlled by the interlocking system. Points may only be released for
+manual operation for autonomous trains.
+
+\begin{vdm_al}
+  NoDerailPossible : Areas * Station_topo * Station_state +> bool 
+
+  NoDerailPossible (areas,stationtopo,stationstate) ==
+      forall area in set rng areas &
+      let traintype = TrainType (area,stationstate) in
+          if   traintype = <fixedroute>
+          then NoDerailFixed (area,stationtopo,stationstate)
+          else NoDerailAutonomous (area,stationtopo,stationstate);
+\end{vdm_al}
+
+The functions $Trains$ and $Update$ are the same functions as $Trains$
+and $Update$ from the module $safe-req$. 
+
+\begin{vdm_al}
+   Trains: Track_states * (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
+
+   Trains (trackstates,sorted)  ==
+     if   trackstates = {|->}
+     then sorted
+     else let t in set dom trackstates in
+              if   trackstates (t) = {|->}
+              then Trains ({t} <-: trackstates,sorted)
+              else Trains ({t} <-: trackstates, 
+                           Update (mk_(t,trackstates(t)),sorted));
+
+   Update: (Track_id * Track_state) * 
+           (map Train_id to set of Track_id) +> 
+           (map Train_id to set of Track_id)
+
+   Update (mk_(t,trainids),sorted)  ==
+     if   trainids = {|->}
+     then sorted
+     else let tid in set dom trainids in
+              if   tid in set dom sorted
+              then Update (mk_(t,{tid} <-: trainids), 
+                               sorted ++ 
+                               { tid |-> {t} union sorted (tid)} )
+              else Update (mk_(t,{tid} <-: trainids), 
+                               sorted ++ { tid |-> {t} });
+\end{vdm_al}
+
+In order to determine whether it is allowed to have points released
+for manual operation in the area, we deduce the type of the train in
+the area.
+
+\begin{vdm_al}
+   TrainType : Area * Station_state +> Train_type
+
+   TrainType (area,stationstate) ==
+      let t in set area be st stationstate.trackstates (t) <> {|->} in
+          let tt in set dom stationstate.trackstates (t) in
+              stationstate.trackstates (t) (tt)
+
+   pre forall t in set area & t in set dom stationstate.trackstates ;
+\end{vdm_al}
+
+To assure that a train driving on a fixed route does not
+derail, all points in the area must be in states such that they cannot
+cause the train to derail, and they must be controlled by the
+interlocking system.
+
+\begin{vdm_al}
+   NoDerailFixed : Area * Station_topo * Station_state +> bool
+
+   NoDerailFixed (area,stationtopo,stationstate) ==
+     forall t1,t2 in set area &
+      mk_(t1,t2) in set dom stationtopo.points => 
+      Ok_Point_states  (mk_(t1,t2),stationtopo.points,
+                        stationstate.pointstates) and
+      InterlockPoints (mk_(t1,t2),stationtopo.points,
+                       stationstate.pointstates);
+\end{vdm_al}
+
+The functions {\it Ok\_Point\_states} and $Point\_state\_ok$ were also defined in
+the safety requirements. They are stated here without comments.
+
+\begin{vdm_al}
+   Ok_Point_states: (Track_id * Track_id) * Points * Point_states +> 
+                    bool
+
+   Ok_Point_states (mk_(t1,t2),points,pointstates) ==
+     if   {t1,t2} = dom points (mk_(t1,t2))
+     then Point_state_ok (mk_(t1,t2),t1,points,pointstates) and
+          Point_state_ok (mk_(t1,t2),t2,points,pointstates)
+     else if   {t1} = dom points (mk_(t1,t2))
+          then Point_state_ok (mk_(t1,t2),t1,points,pointstates)
+          else Point_state_ok (mk_(t1,t2),t2,points,pointstates)
+               
+
+   pre mk_(t1,t2) in set dom points;
+
+
+   Point_state_ok: (Track_id * Track_id) * Track_id * Points * 
+                   Point_states +> bool
+
+   Point_state_ok (tpair,t,points,pointstates) ==
+     let mk_(pcnt,-) = pointstates (t) in
+         (points (tpair)) (t) = pcnt
+
+   pre t in set dom pointstates and tpair in set dom points and 
+       t in set dom points(tpair); 
+\end{vdm_al}
+
+Given a pair of track segments,
+{\it InterlockPoints} checks whether the
+points, which are required to have control in certain branches in order to move
+between the two track segments, are controlled by the interlocking
+system.
+
+\begin{vdm_al}
+   InterlockPoints: (Track_id * Track_id) * Points * Point_states +> 
+                    bool
+
+   InterlockPoints (mk_(t1,t2),points,pointstates) ==
+     if   IsPoint (t1,points) and IsPoint (t2,points)
+     then IsInterlockPoint (t1,points,pointstates) and
+          IsInterlockPoint (t2,points,pointstates)
+     else if   IsPoint (t1,points)
+          then IsInterlockPoint (t1,points,pointstates)
+          else IsInterlockPoint (t2,points,pointstates)
+
+pre IsPoint (t1,points) or IsPoint (t2,points);
+\end{vdm_al}
+
+The function $IsPoint$ checks whether a track segment is a point.
+
+\begin{vdm_al}
+   IsPoint: Track_id * Points +> bool
+
+   IsPoint (t,points) ==
+     exists mk_(t1,t2) in set dom points &
+      t in set dom points (mk_(t1,t2));
+\end{vdm_al}
+
+The function $IsInterlockPoint$ checks whether a track segment is a
+point, which is controlled by the interlocking system.
+
+\begin{vdm_al}
+   IsInterlockPoint: Track_id * Points * Point_states +> bool
+
+   IsInterlockPoint (t,points,pointstates) ==
+     if   IsPoint (t,points)
+     then let mk_(-,operation) = pointstates (t) in
+              operation = <interlock>
+     else false;
+\end{vdm_al}
+
+To prevent an autonomous train from derailing, all the points operated by the
+interlocking system must be in states such that they cannot cause the
+train to derail. The points which are manually operated 
+may have control in any branch.
+
+\begin{vdm_al}
+   NoDerailAutonomous: Area * Station_topo * Station_state +> bool
+
+   NoDerailAutonomous (area,stationtopo,stationstate) ==
+     forall t1,t2 in set area &
+      mk_(t1,t2) in set dom stationtopo.points =>  
+      OkAutonomPoint_states (mk_(t1,t2),stationtopo.points,
+                             stationstate.pointstates);
+
+
+   OkAutonomPoint_states: (Track_id * Track_id) * Points * 
+                          Point_states +> bool
+
+   OkAutonomPoint_states (mk_(t1,t2),points,pointstates) ==
+     if   IsInterlockPoint (t1,points,pointstates)  and
+          IsInterlockPoint (t2,points,pointstates)
+     then Point_state_ok (mk_(t1,t2),t1,points,pointstates) and
+          Point_state_ok (mk_(t1,t2),t2,points,pointstates)
+     else if   IsInterlockPoint (t1,points,pointstates)
+          then Point_state_ok (mk_(t1,t2),t1,points,pointstates)
+          else if IsInterlockPoint (t2,points,pointstates)
+               then Point_state_ok (mk_(t1,t2),t2,points,pointstates)
+               else true; 
+\end{vdm_al}
+
+Areas are deduced by for each train finding the nodes in the
+graph, to which the train may move. We begin the search at the train and for
+each edge we investigate whether it is possible to extend the area
+with the node with which the edge is connected.
+It is {\it not} possible to extend the  area  if the edge is labelled by a
+stop signal, or
+if the node from which we search is a point and the edge is labelled by a point
+state different from the one that the point is in\footnote{We do not check
+  the node which we are moving to. If that node is a point which does
+not have control in the proper branch, the train may derail. The node
+is
+  included in the area, and it is checked by the predicate $Derail$, that
+it
+  is in a proper state. }.
+
+\begin{vdm_al}
+   FindAreas : Station_topo * Station_state +> Areas
+
+   FindAreas (stationtopo,stationstate) ==
+     let occupied = Occupied (stationstate.trackstates,{|->}) in
+         DeduceAreas (occupied,stationtopo,stationstate);
+\end{vdm_al}
+
+The function $Occupied$, for each train, finds the track segments
+occupied by the train.
+
+\begin{vdm_al}
+   Occupied: Track_states * (map Train_id to set of Track_id) +> 
+             map Train_id to set of Track_id
+   Occupied (trackstates,occupied) ==
+     if   forall s in set rng trackstates & s = {|->}
+     then occupied
+     else let trains in set rng trackstates be st trains <> {|->} in
+              let train in set dom trains in
+                  Occupied (RemoveTrain (train,trackstates),
+                            occupied munion 
+                            {train |-> {tid 
+                                       | tid in set dom trackstates 
+                                        & train in set 
+                                          dom trackstates (tid)} } )
+
+   pre forall trackstate in set rng trackstates & 
+       dom trackstate inter dom occupied = {};
+
+\end{vdm_al}
+
+When the track segments occupied by a train have been deduced, the train is
+removed from the track segment states by the function $RemoveTrain$.
+
+\begin{vdm_al}
+   RemoveTrain : Train_id * Track_states +> Track_states
+
+   RemoveTrain (train,trackstates) ==
+     if   trackstates = {|->}
+     then {|->}
+     else let tid in set dom trackstates in
+              if   train in set dom trackstates (tid)
+              then RemoveTrain (train,trackstates ++ 
+                                      {tid |-> ({train} <-: 
+                                      trackstates (tid))})
+              else {tid |-> trackstates (tid)} munion 
+                   RemoveTrain (train,{tid} <-: trackstates);
+
+\end{vdm_al}
+
+The function $DeduceAreas$ deduces an area for each train at the station.
+
+\begin{vdm_al}
+   DeduceAreas: (map Train_id to set of Track_id) * 
+                Station_topo * Station_state +> Areas
+   DeduceAreas (occupied,stationtopo,stationstate) ==
+     if   occupied = {|->}
+     then {|->}
+     else let train in set dom occupied in
+          let area = FindArea (occupied (train),{},
+                               stationtopo,stationstate) in
+             {train |-> area} munion
+             DeduceAreas ({train} <-: occupied, 
+                          stationtopo,stationstate);
+\end{vdm_al}
+
+Each train is contained in exactly one area even though there is a stop signal
+`in the middle' of the train.
+
+The function {\it FindArea} deduces the area surrounding a train.
+The first argument of $FindArea$ contains the
+track segments which have been included in the area, and for 
+which we have to continue the search. 
+The second argument contains the track segments
+which are included in the area and for which all the edges have
+been investigated.
+The third and the fourth argument is the station topology and the station
+state.
+
+\begin{vdm_al}
+   FindArea : set of Track_id * Area * Station_topo * Station_state +> 
+              Area
+
+  FindArea (tracks,area,stationtopo,stationstate) ==
+    if   tracks = {}
+    then area
+    else let t in set tracks in
+             let neighbours = Neighbours (t,area,stationtopo,
+                                          stationstate) in
+                 FindArea ((tracks\ {t}) union neighbours, 
+                           area union {t},
+                           stationtopo,stationstate);
+
+\end{vdm_al}
+
+Given a track segment, $t$, i.e.\ a node in the graph,
+{\it Neighbours} first finds the nodes connected to $t$ by one edge, and
+next it investigates which of these nodes it is possible for the train
+to proceed to, assuming that the train is in node $t$.
+
+\begin{vdm_al}
+   Neighbours : Track_id * set of Track_id * Station_topo * 
+                Station_state +> 
+                set of Track_id
+
+   Neighbours (t,area,stationtopo,stationstate) ==
+     let neighcand = NeighbourCandidates (t,area,stationtopo.tracks) in
+         {t' | t' in set neighcand 
+             & OkEdge (mk_(t,t'),stationtopo,stationstate)};
+\end{vdm_al}
+
+The function $NeighbourCandidates$ finds all track segments which are
+related  to a track segment, $t$,
+in the {\ttfamily Tracks} relation and which have not already been included
+in the area.
+
+\begin{vdm_al}
+   NeighbourCandidates: Track_id * set of Track_id * Tracks +> 
+                        set of Track_id
+
+   NeighbourCandidates (t,area,tracks) ==
+     {t'| mk_(t1,t') in set tracks & t = t1 and t' not in set area };
+\end{vdm_al}
+
+An edge allows a track segment to be included in an area, if
+the point states on the edge do not prevent it,
+and if the edge is not labelled by a stop
+signal.
+
+\begin{vdm_al}
+   OkEdge: (Track_id * Track_id) * Station_topo * Station_state +> bool
+
+   OkEdge (tpair,stationtopo,stationstate) ==
+     OkPoints (tpair,stationtopo.points,stationstate.pointstates) and
+     not (StopSignal (tpair,stationtopo.signals,
+                      stationstate.signalstates));
+\end{vdm_al}
+
+Given two nodes, representing two track segments connected by an edge labelled
+with a point control. This point control can only prevent a train movement
+from the first node to the second node if the first node is a point
+which is controlled by the interlocking system, and if it is
+connected to the second node through one of its branches,
+{\it and} if it has control in a branch different from the label
+on the edge. In Figure~\ref{pointedges}, assume that track segment
+1 is a point controlled by the interlocking system. Further assume
+that 1 has control in its right branch, and that it 
+is included in the area, then track segment 2 is also included in
+the area, but track segment 3 is not. Note that if the situation is like in
+Figure~\ref{derailedge}, where 1 is in the area, then 2 is also
+included in the area even though it does not have control in the left
+branch. The reason for this is that it
+is possible for a train at track segment 1 to drive to track segment
+2, even though it may derail in trying. The predicate {\it Derail}
+checks whether there is a possibility of derailing in the area.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=1.5in]{pointedges.png}
+\caption{Point in area} \label{pointedges}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=1.5in]{derailedge.png}
+\caption{Point in area} \label{derailedge}
+\end{center}
+\end{figure}
+
+\begin{vdm_al}
+   OkPoints: (Track_id * Track_id) * Points * Point_states +> bool
+
+   OkPoints (mk_(t,t'),points,pointstates) ==
+     IsInterlockPoint (t,points,pointstates) and
+     Branch (mk_(t,t'),points) =>
+     Point_state_ok (mk_(t,t'),t,points,pointstates);
+\end{vdm_al}
+
+The function {\it StopSignal} returns true if the edge from the first
+node to the second node in tpair is labelled by a stop signal.
+Otherwise
+it returns false.
+
+\begin{vdm_al}
+   StopSignal: (Track_id * Track_id) * Signals * Signal_states +> bool
+
+   StopSignal (tpair,signals,signalstates) ==
+     if   tpair in set dom signals
+     then let sigid = signals (tpair) in
+              signalstates (sigid) = <stop>
+     else false;
+\end{vdm_al}
+
+The function {\it Branch} checks whether the first track segment in
+a pair of track segments is a point which is connected to the second
+track segment through one of its branches.
+
+\begin{vdm_al}
+   Branch : (Track_id * Track_id) * Points +> bool
+
+   Branch (mk_(t1,t2),points) ==
+     mk_(t1,t2) in set dom points and
+     t1 in set dom points (mk_(t1,t2))
+
+end impl 
+\end{vdm_al}
+
+With this interpretation, we can now
+implement the safety requirements by assigning each train an area
+corresponding to the route, which it should drive through the station.
+The task of the interlocking system is, in each area, to switch the
+points to states such that the train does not derail, and to make
+the areas such that they have no common track segments.
+
+This concludes the modelling of an implementation of the safety
+requirements. We want to stress that this is just one of the possible
+implementations, which satisfies the safety requirements. There are
+several others. As a specification generally has several
+implementations, it is important to validate that the chosen
+implementation is acceptable. Like the safety
+requirements, this implementation has been validated by executing it using the
+VDM tool-box. 
+
+We are aware that we have not
+considered splitting and joining of trains. Today, at stations
+where splitting and joining is controlled by the interlocking system,
+it is often done at track segment separations with
+signals. Another approach would be to allow train collision for trains
+moving with a sufficiently low speed. This calls however for an
+extension of the model.
+
+
+\subsection{Areas and Train Routes}
+
+To implement the safety requirements, that trains must not collide and not
+derail, DSB uses the concept of a train route. A train route is a
+connected set of track
+segments, which is reserved for a particular train. A train route consists of a
+plied part and a safety distance, see Figure~\ref{trainroute}. The plied part
+extends always
+from one signal to another, as this is the most usual way to signal stop and
+drive to the train driver.
+The safety distance is a connected set of track segments
+situated right after the end of the plied part of the train route. The
+number of track segments in the safety distance depends on the allowed
+train speed. The track
+segments in the safety distance 
+are reserved for safety reasons, that is if the train accidently passes the stop
+signal, then no accident will occur if the train driver manages to stop the train within the
+safety distance. A plied train route
+ is a
+train route, in which at least one of the track segments is occupied by a train.
+The difference between a
+plied train route and the plied part of a train route, is that there need not be a train
+at the plied part of a train route, but a train is expected to be there within a
+short while.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4.5in]{trainroute.png}
+\caption{Trainroute} \label{trainroute}
+\end{center}
+\end{figure}
+
+A train route may have a flank protection, that is points and signals
+surrounding the train route may be in states, such that is not possible for
+other trains to enter the train route. In Figure~\ref{flankprot},
+assume that the train at track segment 10 has been granted a train
+route consisting of the track segments 10, 11, 12, 13, 14, and 15,
+where 15 is the safety distance. Further assume that point 21 is operated 
+by the interlocking system and has control in the left branch, and that the
+signals $A$, $D$, $E$, $F$, and $K$ signal stop, whereas the signals $B$ and $C$
+signal a drive aspect. Then point
+$21$ and signal $E$ provide flank protection for the train route.
+If instead point $21$ had control in the right branch, the
+flank protection could be obtained by making the signals $B$ and $C$
+signal {\sf stop}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4.5in]{flankprot.png}
+\caption{Flank protection.} \label{flankprot}
+\end{center}
+\end{figure}
+
+Given an area for a train driving on a fixed route. If 
+the area satisfies the $NoDerail$ predicate, then the area is
+``linear".
+Further, if we assume that the train does not reverse, then the area
+corresponds to DSB's notion of a plied train route with no
+safety overlap.
+
+DSB has two ways of making areas for shunting trains. One is to
+release all points within an area for manual operation, corresponding
+to our notion of an area with points released for manual operation,
+and the
+other is to assign flank protection to  train routes.
+When all train routes have a flank protection, it is possible for one shunting
+train to drive outside the train routes with flank protection without
+any danger of collision 
+(assuming that the trains obey the
+signalling). 
+We have not
+ modelled flank protection explicit, but in assigning each train an area, which
+it cannot leave, we implicitly obtain flank protection. If we take 
+the complement to all the
+areas included in the flank protections, we obtain the shunting area, 
+see Figure~\ref{complement}. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=3.5in]{complement.png}
+\caption{Complement to train route with flank protection} \label{complement}
+\end{center}
+\end{figure}
+
+DSB's view on safety is
+more restrictive than ours, as they assign every train route (for
+which it is possible) a flank protection, no matter whether the train
+ is the only train at the station.
+
+
+\section{Conclusion} \label{concl}
+
+In the previous sections we have presented a model of station topologies, we
+have defined the safety requirements which an interlocking system should fulfill, and we have taken
+the first step towards an implementation. When presented in this way it seems to
+be fairly simple to define the model. Our experience in developing this
+model has however shown that it is {\it not} a simple task.
+During our work with interlocking systems, we have developed several
+models, which have later been rejected. One of the
+models which we actually believed in for several months, was very similar to the
+model presented here. The main difference was that we had not realised that
+points could be released for manual operation. This was discovered during one of
+the simulations of the model. The main conclusion of our work is
+that in order
+to assure a safe system behaviour, it is not enough to verify that the program
+implements
+the model. The model must also be validated to be an acceptable model of the
+system. We suggest that model validation is done by simulation.
+Simulation has several advantages. First the validation can be performed by
+persons who know the system, but who need not know formal methods.
+Next, the process of exercising the simulator brings
+forward errors in the specification, which are easier
+discovered when the
+specification is made executable.
+
+Using the VDM tool-box \cite{toolbox} has eased the model development, as
+we were able to execute the specification and thereby observe the consequences
+of our definitions. We are aware of the criticism of executable specifications
+\cite{jones}, but in our work so far the advantages of being able to execute the
+specification have been greater than the disadvantages. Instead of using an
+executable specification language, we could have chosen to specify our model in
+a non-executable language, e.g.\ predicate logic, and then simulate the model,
+using e.g.\ ML
+\cite{paulson}.
+This would however have caused us to make two models, and to prove that the ML
+program was an implementation of the predicate logic model.
+Another approach to simulation would have been to use the
+Raise development method \cite{raise}.
+
+\bibliography{dsb}
+\bibliographystyle{plain}
+
+
+\end{document}
+
+\begin{vdm_al}
+module Test
+
+exports all
+
+definitions
+values
+
+
+tracksv = { mk_("K12","26"), mk_("26","K12"),
+            mk_("25","26"),  mk_("26","25"),
+            mk_("25","24"),  mk_("25","17s"),
+            mk_("24","25"),  mk_("24","23"),
+            mk_("24","15"),  mk_("23","24"),
+            mk_("23","22"),  mk_("22","23"),
+            mk_("22","21"),  mk_("21","22"),
+            mk_("21","A12"), mk_("A12","21"),
+            mk_("M12","18"), mk_("18","M12"),
+            mk_("18","17b"), mk_("17b","18"),
+            mk_("17s","25"), mk_("17b","16"),
+            mk_("17s","27"), mk_("16","17b"),
+            mk_("16","19"),  mk_("16","15"),
+            mk_("15","24"),  mk_("15","16"),
+            mk_("15","14"),  mk_("14","15"),
+            mk_("14","13"),  mk_("13","14"),
+            mk_("13","11"),  mk_("11","13"),
+            mk_("11","C12"), mk_("C12","11"),
+            mk_("27","17s"), mk_("27","O12"),
+            mk_("O12","27"), mk_("19","16"),
+            mk_("19","Q12"), mk_("Q12","19") }; 
+
+pointsv = { mk_("25","26")  |-> { "25" |-> <right> },
+            mk_("26","25")  |-> { "25" |-> <right> },
+            mk_("25","17s") |-> { "25" |-> <left> },
+            mk_("17s","25") |-> { "25" |-> <left> },
+            mk_("24","23")  |-> { "24" |-> <left> },
+            mk_("23","24")  |-> { "24" |-> <left> },
+            mk_("24","15")  |-> { "24" |-> <right> ,
+                                  "15" |-> <right> },
+            mk_("15","24")  |-> { "24" |-> <right> ,
+                                  "15" |-> <right> },
+            mk_("16","17b") |-> { "16" |-> <right> },
+            mk_("17b","16") |-> { "16" |-> <right> },
+            mk_("16","19")  |-> { "16" |-> <left> },
+            mk_("19","16")  |-> { "16" |-> <left> },
+            mk_("16","15")  |-> { "15" |-> <left> },
+            mk_("15","16")  |-> { "15" |-> <left> } };
+
+crossingsv = { mk_("17s", "17b")};
+
+signalsv = { mk_("ol","K12") |-> "N",
+             mk_("26","K12") |-> "K",
+             mk_("22","23")  |-> "E2",
+             mk_("21","A12") |-> "D",
+             mk_("ol","A12") |-> "A",
+             mk_("ol","M12") |-> "M",
+             mk_("18","M12") |-> "L",
+             mk_("13","14")  |-> "E1",
+             mk_("11","C12") |-> "C",
+             mk_("ol","C12") |-> "B",
+             mk_("27","O12") |-> "O",
+             mk_("ol","O12") |-> "R",
+             mk_("ol","Q12") |-> "Q",
+             mk_("19","Q12") |-> "P" };
+
+
+trackstatev = { "K12" |-> {|->},
+                "26"  |-> {|->},
+                "25"  |-> {|->},
+                "24"  |-> {|->},
+                "23"  |-> {|->},
+                "22"  |-> {|->},
+                "21"  |-> {|->},
+                "A12" |-> {|->},
+                "M12" |-> {|->},
+                "18"  |-> {"t2" |-> <fixedroute>},
+                "17s" |-> {|-> },
+                "17b" |-> {|->},
+                "16"  |-> {|->},
+                "15"  |-> {|->},
+                "14"  |-> {|->},
+                "13"  |-> {|->},
+                "11"  |-> {|->},
+                "C12" |-> {|->},
+                "O12" |-> {|->},
+                "Q12" |-> {|->},
+                "19"  |-> {|->},
+                "27"  |-> {|->} };
+
+pointstatev = { "25" |-> mk_(<left>,<interlock>),
+                "24" |-> mk_(<right>,<interlock>),
+                "15" |-> mk_(<left>,<interlock>),
+                "16" |-> mk_(<right>,<interlock>) };
+
+signalstatev = { "N"  |-> <stop>,
+                 "K"  |-> <stop>,
+                 "E2" |-> <stop>,
+                 "D"  |-> <stop>,
+                 "A"  |-> <stop>,
+                 "M"  |-> <stop>,
+                 "L"  |-> <stop>,
+                 "E1" |-> <stop>,
+                 "C"  |-> <stop>,
+                 "B"  |-> <stop>, 
+                 "O"  |-> <stop>,
+                 "R"  |-> <stop>,
+                 "P"  |-> <driveaspect>,
+                 "Q"  |-> <stop> }
+end Test
+\end{vdm_al}

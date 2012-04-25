@@ -1,0 +1,116 @@
+\section{The Class CentralResource}
+
+This class models the central resource. We assume there is only one
+central resource in the system, though many tills can be connected to
+this. The central resource holds the accounts, ids of illegal cards,
+and connections to a clock and a letterbox.
+
+\begin{vdm_al}
+class CentralResource
+
+instance variables
+  accounts      : map Account`AccountId to Account := {|->};
+  numberOfTries : map Card`CardId to nat := {|->};
+  illegalCards  : set of Card`CardId := {};
+inv dom numberOfTries union illegalCards subset 
+    dunion {acc.GetCardIds() | acc in set rng accounts};
+
+  letterbox     : Letterbox;
+  clock         : Clock;
+\end{vdm_al}
+
+All cards for different accounts cannot be overlapping.
+
+\begin{vdm_al}
+  inv forall acc1,acc2 in set rng accounts &
+          acc1 <> acc2 =>
+          acc1.GetCardIds() inter acc2.GetCardIds() = {};
+
+values
+  maxNumberOfTries : nat = 3;
+
+operations
+  public AddLetterbox : Clock * Letterbox ==> ()
+  AddLetterbox(c,l) ==
+    (clock := c;
+     letterbox := l);
+\end{vdm_al}
+
+The following three operations provide the functionality requested in
+the requirements specification of the system. The operations first
+check that the requested functionality is allowed and then hand the
+actual processing over to each account. Note that the checks are
+necessary even though the till may have performed them as well. For
+example, a card may have been reported stolen or illegal in another
+way while it is being used at a till.
+
+\begin{vdm_al}
+  public GetBalance : Account`AccountId ==> [nat]
+  GetBalance(accountId) ==
+    if accountId in set dom accounts then
+      accounts(accountId).GetBalance()
+    else
+      return nil;
+
+  public Withdrawal : Account`AccountId * Card`CardId * nat ==> bool
+  Withdrawal(accountId,cardId,amount) ==
+    if IsLegalCard(accountId,cardId) then
+      accounts(accountId).Withdrawal(cardId,amount,clock.GetDate())
+    else
+      return false;
+
+  public PostStatement : Account`AccountId * Card`CardId ==> bool
+  PostStatement(accountId,cardId) ==
+    if IsLegalCard(accountId,cardId) then
+      (letterbox.PostStatement
+        (accounts(accountId).MakeStatement(cardId,clock.GetDate()));
+       return true)
+    else
+      return false;
+\end{vdm_al}
+
+Next some operations follow to check whether cards are legal and
+administrate number of tries stored for each card.
+
+\begin{vdm_al}
+  public IsLegalCard : Account`AccountId * Card`CardId ==> bool
+  IsLegalCard(accountId,cardId) ==
+    return
+      cardId not in set illegalCards and
+      accountId in set dom accounts and
+      cardId in set accounts(accountId).GetCardIds();
+
+  public NumberOfTriesExceeded : Card`CardId ==> bool
+  NumberOfTriesExceeded(cardId) ==
+    return numberOfTries(cardId) >= maxNumberOfTries;
+
+  public ResetNumberOfTries : Card`CardId ==> ()
+  ResetNumberOfTries(cardId) ==
+    numberOfTries(cardId) := 0;
+
+  public IncrNumberOfTries : Card`CardId ==> ()
+  IncrNumberOfTries(cardId) ==
+    numberOfTries(cardId) := numberOfTries(cardId) + 1;
+\end{vdm_al}
+
+The two operations below are used to update the central resource. 
+
+\begin{vdm_al}
+  public AddAccount : Account`AccountId * Account ==> ()
+  AddAccount(accId,acc) ==
+    atomic
+    (accounts := accounts ++ {accId |-> acc};
+     numberOfTries := numberOfTries ++
+                      {cId |-> 0 | cId in set acc.GetCardIds()};
+     )
+  pre accId not in set dom accounts;
+
+  public AddIllegalCard : Card`CardId ==> ()
+  AddIllegalCard(cId) ==
+    illegalCards := illegalCards union {cId};
+
+end CentralResource
+\end{vdm_al}
+
+
+

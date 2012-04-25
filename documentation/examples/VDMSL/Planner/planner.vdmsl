@@ -1,0 +1,162 @@
+\begin{vdm_al}
+types
+
+	Literal = seq of token; 
+	State = set of Literal;
+	Goal = set of Literal;
+	Action :: name : Literal
+		pra	 : set of Literal
+		add	 : set of Literal
+		del	 : set of Literal;
+	
+	Planning_Problem :: AS : set of Action
+		          I : State
+		          G : Goal
+
+	inv  mk_Planning_Problem ( AS, I, G) ==
+	forall l in set G &
+		 (l in set I or 
+		exists A in set AS & l in set
+		 A.add)
+	and 		   			                         
+	not (G subset I) and
+	forall A in set AS & not (exists p : Literal & p in set A.add and
+		p in set A.del); 
+
+Action_id = token;
+Action_instances = map Action_id to Action;
+
+Arc ::
+	  source	: Action_id
+          dest    	: Action_id;
+
+Bounded_Poset = set of Arc
+inv  p ==
+	forall x, y in set get_nodes(p) & 
+	not (before(x, y, p) and before(y, x, p)) and
+	x <> mk_token("pinit") => before(mk_token("pinit"), x, p) and 
+	x <> mk_token("goal") => before(x, mk_token("goal"), p);
+
+ Goal_instance :: 
+		   gl : Literal
+		   ai : Action_id;
+
+Goal_instances = set of Goal_instance
+
+state Partial_Plan of
+	pp: Planning_Problem
+	Os: Action_instances
+	Ts: Bounded_Poset
+	Ps: Goal_instances
+	As: Goal_instances
+inv  mk_Partial_Plan(pp, Os, Ts, Ps, As)== 
+	(Os(mk_token("pinit")) = mk_Action([mk_token("pinit")], { }, pp.I, { })) and
+	(Os(mk_token("goal")) = mk_Action([mk_token("goal")], pp.G, { }, { })) and
+	rng Os subset pp.AS union {Os(mk_token("pinit")), Os(mk_token("goal"))} and
+	dom Os = get_nodes(Ts) and
+	As inter Ps = {} and
+	forall A in set dom Os & (forall p in set Os(A).pra &  
+       		mk_Goal_instance(p, A) in set (Ps union As)) and
+	forall gi in set As & exists A in set dom Os & achieve(Os, Ts, A, gi)
+end
+
+functions
+
+get_nodes : set of Arc -> set of Action_id
+get_nodes(p) ==
+	{a.source | a in set p} union {a.dest | a in set p};
+
+before : Action_id * Action_id * set of Arc -> bool 
+before(x, z, p) ==
+	mk_Arc(x, z) in set p or
+	exists y in set get_nodes(p) & before(x, y, p) and before(y, z, p);
+
+possibly_before : Action_id * Action_id * set of Arc -> bool 
+possibly_before(x, z, p) ==
+	x <> z and not before(z, x, p);
+
+completion_of : Bounded_Poset * Bounded_Poset -> bool 
+completion_of(p, q) ==
+	(forall x, y in set get_nodes(p) & before(x, y, q) and before(x, y, p));
+
+initposet: () -> Bounded_Poset
+initposet() ==
+	{mk_Arc(mk_token("pinit"), mk_token("goal"))};
+
+add_node : Action_id * Bounded_Poset -> Bounded_Poset
+add_node(u, p) ==
+	p union {mk_Arc(mk_token("pinit"), u), mk_Arc(u, mk_token("goal"))};
+
+make_before : Action_id * Action_id * Bounded_Poset -> Bounded_Poset
+make_before(u, v, p) ==
+	if possibly_before(u, v, p) and {u, v} subset get_nodes(p)
+	then p union {mk_Arc(u, v)} else p;
+
+
+newid(isa : set of Action_id) i: Action_id 
+post i not in set isa;
+
+achieve : Action_instances * Bounded_Poset * Action_id * Goal_instance -> bool 
+achieve(Os, Ts, A, mk_Goal_instance(p, O)) ==
+	before(A, O, Ts) and
+	p in set Os(A).add and
+	not (exists C in set dom Os & 
+	possibly_before(C, O, Ts) and 
+	possibly_before(A, C, Ts) and
+	p in set Os(C).del); 
+
+declobber:Action_instances * Bounded_Poset * Action_id * Goal_instance -> bool 
+declobber(Os, Ts, NewA, mk_Goal_instance(q, C)) ==
+	before(C, NewA, Ts) or
+ 	not(q in set Os(NewA).del) or
+	exists W in set dom Os & 
+	(before(NewA, W, Ts) and
+	before(W, C, Ts) and
+	q in set Os(W).add)
+
+operations
+
+INIT (ppi : Planning_Problem)
+ext	wr pp : Planning_Problem
+	wr Os : Action_instances
+	wr Ts : Bounded_Poset
+	wr Ps : Goal_instances
+	wr As : Goal_instances
+post	pp = ppi and
+	Os =  {mk_token("pinit") |->  mk_Action([mk_token("pinit")], { }, 
+			ppi.I, { }), 
+			 mk_token("goal") |->
+				 mk_Action([mk_token ("goal")], ppi.G, { }, { })} and
+	Ts = initposet( ) and
+	Ps = {mk_Goal_instance(g, mk_token("goal")) | g in set ppi.G} and
+	As = { };
+
+
+ACHIEVE_1(gi : Goal_instance)
+ext	rd Os : Action_instances
+	wr Ts : Bounded_Poset
+	wr Ps : Goal_instances
+	wr As : Goal_instances
+pre	gi in set Ps
+post	exists A in set dom Os & achieve(Os, Ts, A, gi) and
+	completion_of (Ts, Ts~) and 
+	Ps = Ps~ \{gi} and 
+	As = As~ union {gi};
+
+
+ACHIEVE_2(gi: Goal_instance)
+ext	rd pp : Planning_Problem
+	wr Os : Action_instances
+	wr Ts : Bounded_Poset
+	wr Ps : Goal_instances
+	wr As : Goal_instances
+pre	gi in set Ps
+post	let NewA = newid(dom Os~) in
+	exists A in set pp.AS & Os = Os~ ++ {NewA |-> A} and
+	achieve(Os, Ts, NewA, gi) and
+	forall gj in set As~ & declobber(Os, Ts, NewA, gj) and
+	completion_of(Ts, add_node(NewA, Ts~)) and 
+	Ps = (Ps~ \ {gi}) union {mk_Goal_instance(p, NewA) | p in set A.pra} and
+	As = As~ union {gi}
+
+\end{vdm_al}

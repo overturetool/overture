@@ -1,0 +1,18 @@
+class HolType
+
+types
+public HolTypeSpecificationType = <type> | <term> | <plain>		-- Either it will go in a term, in a Hol_type, or no additional features will be added
+
+operations
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (-) ==
+	skip;
+
+public requires : () ==> set of seq of char
+requires() == is subclass responsibility;
+	
+public print : HolType`HolTypeSpecificationType ==> seq of char
+print (-) == is subclass responsibility
+
+end HolType

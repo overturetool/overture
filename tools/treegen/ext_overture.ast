@@ -1,0 +1,12 @@
+class ExtOml
+  is subclass of Oml
+  
+values
+  package = "org.overturetool.extast";
+  javadir = "d:\\workspace\\test\\src"
+
+instance variables
+  xpos : nat;
+  ypos : nat
+  
+end ExtOml

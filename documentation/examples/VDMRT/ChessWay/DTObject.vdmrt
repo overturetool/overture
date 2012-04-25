@@ -1,0 +1,14 @@
+class DTObject
+
+instance variables
+
+protected sampletime: real := 1.0E-9;
+
+operations
+
+public SetSampleTime: real ==> ()
+SetSampleTime(s) ==
+	sampletime := s
+pre s >= 0
+
+end DTObject

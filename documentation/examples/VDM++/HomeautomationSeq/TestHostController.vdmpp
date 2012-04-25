@@ -1,0 +1,179 @@
+--The TestHostController Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	Testing the HostController class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestHostController is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+
+--env		: Environment;
+world		: World;
+host		: HostController;
+tempSensor 	: TemperatureSensor;
+humidSensor	: HumidSensor;
+win 		: Window;
+therm		: Thermostat;
+
+--
+-- Operations definition section
+--
+operations
+
+public TestHostController: seq of char ==> TestHostController
+	TestHostController(nm) == name := nm;
+
+protected SetUp: () ==> ()
+	SetUp() ==
+	(--env := new Environment();
+	world := new World();
+	host := new HostController(23, 78);
+--	tempSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
+--	humidSensor := new HumidSensor(2, <HUMIDSENSOR>, 0);
+--	win := new Window(3, <WINDOW>);
+--	therm := new Thermostat(4, <THERMOSTAT>);
+	);
+
+protected Test: () ==> ()
+	Test() ==
+	(
+--	AssertTrue(HA`Host.GetAlgo() = <NONE>);
+
+--	HA`Host.AddNode(HA`TempNode.GetID(),HA`TempNode.GetType());
+--	AssertTrue(HA`Host.GetAlgo() = <NONE>);
+
+--	HA`Host.AddNode(HA`WinNode.GetID(),HA`WinNode.GetType());
+--	AssertTrue(HA`Host.GetAlgo() = <TW>);
+	
+--	HA`TempNode.Step();
+--	AssertTrue(HA`TempNode.ReadValue() = 20);
+
+--	HA`Host.UpdateValues();
+--	AssertTrue(HA`Host.GetTemp() = 20);
+--	AssertTrue(HA`Host.GetHumid() = 0);
+
+--	HA`Host.Algorithm();
+--	AssertTrue(HA`WinNode.GetCorrection() = <CLOSE>);
+
+-- ****************************************************
+--	HA`Host.AddNode(HA`ThermNode.GetID(),HA`ThermNode.GetType());
+--	AssertTrue(HA`Host.GetAlgo() = <TTW>);
+	
+--	HA`TempNode.Step();
+--	AssertTrue(HA`TempNode.ReadValue() = 20);
+
+--	HA`Host.UpdateValues();
+--	AssertTrue(HA`Host.GetTemp() = 20);
+--	AssertTrue(HA`Host.GetHumid() = 0);
+
+--	HA`Host.Algorithm();
+--	AssertTrue(HA`WinNode.GetCorrection() = <CLOSE>);
+--	AssertTrue(HA`ThermNode.GetCorrection() = <INC>);
+
+-- ****************************************************
+--	HA`Host.AddNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <THTW>);
+	
+	HA`TempNode.Step();
+	HA`HumidNode.Step();
+	AssertTrue(HA`TempNode.ReadValue() = 20);
+	AssertTrue(HA`HumidNode.ReadValue()= 85);
+
+	HA`Host.UpdateValues();
+	AssertTrue(HA`Host.GetTemp() = 20);
+	AssertTrue(HA`Host.GetHumid() = 85);
+
+	HA`Host.Algorithm();
+	AssertTrue(HA`WinNode.GetCorrection() = <OPEN>);
+	AssertTrue(HA`ThermNode.GetCorrection() = <NONE>);
+
+-- ****************************************************
+	HA`Host.RemoveNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <TTW>);	
+
+	HA`TempNode.Step();
+	AssertTrue(HA`TempNode.ReadValue() = 20);
+
+	HA`Host.UpdateValues();
+	AssertTrue(HA`Host.GetTemp() = 20);
+
+	HA`Host.Algorithm();
+	AssertTrue(HA`WinNode.GetCorrection() = <CLOSE>);
+	AssertTrue(HA`ThermNode.GetCorrection() = <INC>);
+
+-- ****************************************************
+	HA`Host.RemoveNode(HA`WinNode.GetID(),HA`WinNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <TT>);
+
+	HA`TempNode.Step();
+	AssertTrue(HA`TempNode.ReadValue() = 20);
+
+	HA`Host.UpdateValues();
+	AssertTrue(HA`Host.GetTemp() = 20);
+
+	HA`Host.Algorithm();
+	AssertTrue(HA`ThermNode.GetCorrection() = <INC>);
+
+-- ****************************************************
+	HA`Host.RemoveNode(HA`TempNode.GetID(),HA`TempNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <NONE>);
+
+	HA`Host.RemoveNode(HA`ThermNode.GetID(),HA`ThermNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <NONE>);
+
+	HA`Host.AddNode(HA`WinNode.GetID(),HA`WinNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <NONE>);
+	
+	HA`Host.AddNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <HW>);
+
+	HA`HumidNode.Step();
+	AssertTrue(HA`HumidNode.ReadValue() = 85);
+
+	HA`Host.UpdateValues();
+	AssertTrue(HA`Host.GetHumid() = 85);
+
+	HA`Host.Algorithm();
+	AssertTrue(HA`WinNode.GetCorrection() = <OPEN>);
+
+-- ****************************************************
+	HA`Host.RemoveNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <NONE>);
+
+	HA`Host.AddNode(HA`TempNode.GetID(),HA`TempNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <TW>);
+
+	HA`TempNode.Step();
+	AssertTrue(HA`TempNode.ReadValue() = 20);
+
+	HA`Host.UpdateValues();
+	AssertTrue(HA`Host.GetTemp() = 20);
+
+	HA`Host.Algorithm();
+	AssertTrue(HA`WinNode.GetCorrection() = <CLOSE>);
+
+-- ****************************************************
+	HA`Host.AddNode(HA`ThermNode.GetID(),HA`ThermNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <TTW>);
+
+	HA`Host.AddNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
+	AssertTrue(HA`Host.GetAlgo() = <THTW>);
+	);
+
+protected RunTest: () ==> ()
+	RunTest() == Test();
+
+protected TearDown: () ==> ()
+	TearDown() == skip;
+
+end TestHostController

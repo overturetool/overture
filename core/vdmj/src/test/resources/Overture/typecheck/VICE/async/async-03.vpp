@@ -1,0 +1,9 @@
+class A
+
+operations
+
+async Op: nat ==> nat
+Op(a) ==
+  return a
+
+end A

@@ -4,31 +4,29 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>root</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.1</version>
 	</parent>
 	<groupId>org.overturetool</groupId>
 	<artifactId>core</artifactId>
 	<packaging>pom</packaging>
-	<version>2.1.0</version>
+	<version>2.1.1</version>
 	<name>Core Tools</name>
 
 	<modules>
-
-  	<module>ast</module>
-	<module>ast_assistance</module>    	
-	<module>parser</module>
-	<module>typechecker</module>	
-	<module>interpreter</module>
-		
-	<module>pog</module>
-<!-- <module>vdmj_compatibility_tests</module> -->
-
 		<!--<module>jmltrans</module> -->
 		<!-- module>proofsupport</module-->
-		<!--module>stdlib</module>
-		<module>ast</module-->
+        <module>ast</module>
+        <module>ast_assistance</module>    	
+        <module>parser</module>
+        <module>typechecker</module>	
+        <module>interpreter</module>
+		
+        <module>pog</module>
+		<module>stdlib</module>
+		<module>ast-old</module>
+        <module>parser-old</module>
 		<!--module>astgen</module -->
-		<!--module>vdmunit</module>
+		<module>vdmunit</module>
 		<module>parser</module>
 		<module>potrans</module>
 		<module>umltrans</module>
@@ -41,6 +39,7 @@
 		<module>testframework</module>
 		<module>vdmexamples</module>
 		<module>vdm2java</module-->
+		<module>vdm2java</module>
 
 	</modules>
 

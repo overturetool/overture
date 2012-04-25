@@ -1,0 +1,28 @@
+\section{The GetBalance Testing Class}
+
+The event GetBalance corresponds to a client asking for a balance at one of the tills in this system.
+
+\begin{vdm_al}
+class GetBalance is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+
+operations
+
+  public Init : System`TillId ==> GetBalance
+  Init(tid) ==
+    (tillid := tid;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    let till = sys.GetTill(tillid)
+    in
+      if till.CardValidated()
+      then till.GetBalance()
+      else return false;
+
+end GetBalance
+\end{vdm_al}

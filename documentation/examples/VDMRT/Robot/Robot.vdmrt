@@ -1,0 +1,74 @@
+system Robot
+ 
+instance variables
+-- cpu speed has only influence on the model if cycles is used
+ cpu1 : CPU := new CPU( <FP>, 1E9);
+ cpu2 : CPU := new CPU( <FP>, 1E9);
+ cpu3 : CPU := new CPU( <FP>, 1E9);
+ cpu4 : CPU := new CPU( <FP>, 1E9);
+ cpu5 : CPU := new CPU( <FP>, 1E9);
+ 
+-- BUS speed does only have effect if large amount of data 
+-- is transfered between CPUs
+ bus1 : BUS := new BUS( <FCFS>, 1E9, {cpu1});      
+ -- steering and obs sensor
+ bus2 : BUS := new BUS( <FCFS>, 1E6, {cpu1,cpu2}); 
+ --sterring and mo observer
+ bus3 : BUS := new BUS( <FCFS>, 1E6, {cpu5,cpu1}); 
+ --sterring and datareader
+ bus4 : BUS := new BUS( <FCFS>, 1E6, {cpu3,cpu2}); 
+ --mo and move observer
+ bus5 : BUS := new BUS( <FCFS>, 1E6, {cpu4,cpu2}); 
+ --mo and move observer
+ 
+ 
+ private name : set of char;
+ public static obsSensorNorth : ObstacleSensor := new ObstacleSensor(<North>);
+ public static obsSensorSouth : ObstacleSensor := new ObstacleSensor(<South>);
+ public static obsSensorEast  : ObstacleSensor := new ObstacleSensor(<East>);
+ public static obsSensorWest : ObstacleSensor := new ObstacleSensor(<West>);
+ 
+ 
+ public static dataReader : DataReader := new DataReader();
+ public static steering   : SteeringController := new SteeringController();
+ 
+ public static mobs1 : MovingObstacle 
+                     := new MovingObstacle(mk_Grid`Point(5,0),<West>);
+ public static mobs2 : MovingObstacle 
+                     := new MovingObstacle(mk_Grid`Point(7,0),<West>);
+ public static mobs3 : MovingObstacle 
+                     := new MovingObstacle(mk_Grid`Point(20,20),<West>);
+ public static mobs4 : MovingObstacle 
+                     := new MovingObstacle(mk_Grid`Point(10,10),<South>);
+ 
+ public static nmc : NextMoveController := new NextMoveController();
+operations
+ public Robot : () ==> Robot
+ Robot() ==
+ (      
+   cpu1.deploy(obsSensorNorth);
+   cpu1.deploy(obsSensorSouth);
+    cpu1.deploy(obsSensorEast);
+   cpu1.deploy(obsSensorWest);
+ 
+   cpu5.deploy(dataReader);
+ 
+   cpu1.deploy(steering);
+   cpu1.setPriority(SteeringController`SetDiscoverInfo,80);
+ 
+   cpu3.deploy(mobs1);
+   cpu3.setPriority(MovingObstacle`Step,15);
+   cpu3.deploy(mobs2);
+    cpu3.setPriority(MovingObstacle`Step,15);
+ 
+   cpu4.deploy(mobs3);
+   cpu4.setPriority(MovingObstacle`Step,15);
+   cpu4.deploy(mobs4);
+   cpu4.setPriority(MovingObstacle`Step,15);
+ 
+   cpu2.deploy(nmc);
+   cpu2.setPriority(NextMoveController`LocateMovingObstacles,80);
+ 
+ );
+ 
+end Robot

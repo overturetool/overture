@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class MMIHandleKeyPressOne is subclass of BasicTask
+
+operations
+  public MMIHandleKeyPressOne: EventDispatcher ==> MMIHandleKeyPressOne
+  MMIHandleKeyPressOne (pde) ==  BasicTask("HandleKeyPress",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public HandleKeyPress: () ==> ()
+  HandleKeyPress () == duration (100) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( HandleKeyPress();
+      -- send message to next task in this scenario
+      sendMessage("AdjustVolume", pe.getEvent()) )
+
+end MMIHandleKeyPressOne
+\end{vdm_al}

@@ -1,0 +1,190 @@
+class Compiler
+	types
+
+	values
+	util : codegen_Util = new codegen_Util();
+	
+	instance variables
+	
+	typeDefs : seq of SimpleTypeDefinition := [];
+	
+	context : map seq of char to seq of char := {|->};
+	inv card dom context = card rng context;
+	
+	varDecls : seq of GiraffeVariableDeclStatement := [];
+	
+	uid : nat1 := 1;
+	
+	operations
+	
+private getUniqeName : () ==> seq of char
+getUniqeName() == let res = uid
+				in (uid := uid + 1;
+				return "v" ^ util.iToS(res))
+post RESULT not in set rng context;
+
+private getUniqeSimpleName : () ==> seq of char
+getUniqeSimpleName() == 
+(
+	while true do
+	(
+		let name : seq of char = getUniqeName() -- Use it as a source of new string     
+		in 
+			if (name not in set dom context) then
+				return name
+	);
+
+	return ""
+)
+post RESULT not in set dom context;
+
+public Compile : seq of char * SimpleSpecification ==> GiraffeSpecification
+Compile(programName, spec) ==
+	let name : GiraffeIdentifier = new GiraffeIdentifierImpl(programName),
+		defs : seq of SimpleDefinition = spec.getDefs(),
+		functionz : set of GiraffeMethodDefinition = {Compile(defs(i)) 
+													 | i in set inds defs 
+													 & isofclass(SimpleFunctionDefinition, defs(i))},
+		classDef : GiraffeClassDefinition = new GiraffeClassDefinitionImpl(name, functionz)
+	in 
+		(typeDefs := [defs(i) | i in set inds defs & isofclass(SimpleTypeDefinition, defs(i))];
+		return new GiraffeSpecificationImpl(classDef))
+pre len programName > 0 and programName(1) not in set {'0','1','2','3','4','5','6','7','8','9'};
+
+public Compile : SimpleFunctionDefinition ==> GiraffeMethodDefinition
+Compile(func) ==
+	let name : GiraffeIdentifier = new GiraffeIdentifierImpl(func.getName().getName()),
+		defs : seq of SimpleParameter = func.getParams(),
+		params : seq of GiraffeParameter = [Compile(defs(i)) 
+										   | i in set inds defs],
+		type : GiraffeType = Compile(GetType(func.getBody())),
+		body : seq of GiraffeStatement = varDecls ^ [new GiraffeReturnStatementImpl(Compile(func.getBody()))]
+	in (varDecls := [];
+		return new GiraffeMethodDefinitionImpl(name, params, type, body))
+pre varDecls = [] and context = {|->}
+post varDecls = [] and context = {|->};
+
+public Compile : SimpleParameter ==> GiraffeParameter
+Compile(param) ==
+	let name : GiraffeIdentifier = new GiraffeIdentifierImpl(param.getName().getName()),
+		type : GiraffeType = Compile(param.getType())
+	in return new GiraffeParameterImpl(type, name);
+
+public Compile : SimpleType ==> [GiraffeType]
+Compile(type) ==
+		if isofclass(SimpleIdentifier, type) then
+			let t : SimpleIdentifier = type
+			in return Compile(GetBasicType(t))--new GiraffeIdentifierImpl(t.getName())
+		else
+			let t : SimpleBasicType = type
+			in 
+				cases t.name:
+					"INT" 	-> return GiraffeBasicType`INT,
+					others -> return nil
+				end
+post RESULT <> nil;
+
+public Compile : SimpleExpression ==> [GiraffeExpression]
+Compile(exp) ==
+	cases true:
+		(isofclass(SimpleIntegerLiteralExpression, exp)) -> let e : SimpleIntegerLiteralExpression = exp
+																	in return new GiraffeIntegerLiteralExpressionImpl(e.getValue()),
+		(isofclass(SimpleBinaryExpression, exp)) -> let e : SimpleBinaryExpression = exp
+															in return Compile(e.getOp(), e.getLhs(), e.getRhs()),
+		(isofclass(SimpleCasesExpression, exp)) -> let e : SimpleCasesExpression = exp
+													in return CompileCases(e),
+		(isofclass(SimpleVariableExpression, exp)) ->	let e : SimpleVariableExpression = exp,
+															name : SimpleIdentifier = e.getName()
+														in	return new GiraffeVariableExpressionImpl(new GiraffeIdentifierImpl(context(name.getName()))),
+		(isofclass(SimpleLetExpression, exp)) ->	let e : SimpleLetExpression = exp
+													in return CompileLet(e),
+		(isofclass(SimpleIfExpression, exp)) -> let e : SimpleIfExpression = exp
+													in return CompileIf(e),
+		others -> return nil
+	end
+post RESULT <> nil;
+
+public CompileCases : SimpleCasesExpression ==> GiraffeExpression
+CompileCases(e) ==
+	let testVarName : SimpleIdentifier = new SimpleIdentifierImpl(getUniqeSimpleName()),
+		testVar : SimpleVariableExpression = new SimpleVariableExpressionImpl(testVarName),
+		testVarAss : SimpleLocalDefinition = new SimpleLocalDefinitionImpl(testVarName, e.getTest()),
+		letBody : SimpleExpression = 
+			if e.getAlts() = [] then
+				e.getDeflt()
+			else
+				let first : SimpleCaseAlternative = hd e.getAlts(),
+					ifTest : SimpleBinaryExpression = new SimpleBinaryExpressionImpl(testVar, SimpleBinaryOperator`EQUALS, first.getTest()),
+					rest : seq of SimpleCaseAlternative = tl e.getAlts(),
+					elsIfs : seq of SimpleElseIfExpression = [new SimpleElseIfExpressionImpl(new SimpleBinaryExpressionImpl(testVar, SimpleBinaryOperator`EQUALS, rest(i).getTest()), rest(i).getExp()) | i in set inds rest]
+				in 
+					new SimpleIfExpressionImpl(ifTest, first.getExp(), elsIfs, e.getDeflt())
+	in return Compile(new SimpleLetExpressionImpl([testVarAss], letBody))
+pre not e.hasDeflt(); -- Empty defaults not allowed as we do not want to implement runtime errors.
+-- not operator used due to a bug in ASTGEN
+
+public CompileLet : SimpleLetExpression ==> GiraffeExpression
+CompileLet(letExp) ==
+	let oldContext : map seq of char to seq of char = context
+	in (for x in letExp.getDefs() do
+			let name : seq of char = x.getName().getName(),
+				newName : seq of char = getUniqeName(),
+				type : SimpleType = GetType(x.getValue()),
+				gType : GiraffeType = Compile(type),
+				gName : GiraffeIdentifier = new GiraffeIdentifierImpl(newName),
+				gValue : GiraffeExpression = Compile(x.getValue()),
+				gStm : GiraffeVariableDeclStatement = new GiraffeVariableDeclStatementImpl(gType, gName, gValue)
+			in (context := context ++ {name |-> newName};
+				varDecls := varDecls ^ [gStm];);
+		let body : GiraffeExpression =  Compile(letExp.getBody())
+		in (context := oldContext; return body;))
+pre letExp.getDefs() <> [];
+
+public Compile : SimpleBinaryOperator * SimpleExpression * SimpleExpression ==> [GiraffeBinaryExpression]
+Compile(op, lhs, rhs) ==
+	cases op.name:
+		"EQUALS" -> let	glhs : GiraffeExpression = Compile(lhs),
+						gop : GiraffeBinaryOperator = GiraffeBinaryOperator`EQUALS,
+						grhs : GiraffeExpression = Compile(rhs)
+					in return new GiraffeBinaryExpressionImpl(glhs, gop, grhs),
+
+		"PLUS" -> let	glhs : GiraffeExpression = Compile(lhs),
+						gop : GiraffeBinaryOperator = GiraffeBinaryOperator`PLUS,
+						grhs : GiraffeExpression = Compile(rhs)
+				in return new GiraffeBinaryExpressionImpl(glhs, gop, grhs),
+		others -> 
+				return nil
+	end
+post RESULT <> nil;
+
+public GetType : SimpleExpression ==> SimpleType
+GetType(exp) ==
+	return SimpleBasicType`INT;
+	
+public GetBasicType : SimpleType ==> SimpleBasicType
+GetBasicType(type) ==
+	return SimpleBasicType`INT;
+
+functions
+
+public CompileIf : SimpleIfExpression -> GiraffeIfExpression
+CompileIf(selif) ==
+let
+	gTest : GiraffeExpression = Compile(selif.getTest()),
+	gThen : GiraffeExpression = Compile(selif.getThn()),
+	gElse : GiraffeExpression = deflatten(selif.getElif(), selif.getEse())
+	in
+		new GiraffeIfExpressionImpl(gTest,gThen,gElse);
+
+public deflatten : seq of SimpleElseIfExpression * SimpleExpression -> GiraffeExpression
+deflatten(elsif, els) ==
+	if (elsif = []) then
+		Compile(els)
+	else
+		let head : SimpleElseIfExpression = hd elsif,
+			gTest : GiraffeExpression = Compile(head.getTest()),
+			gThen : GiraffeExpression = Compile(head.getThn()),
+			gElse : GiraffeExpression = deflatten(tl elsif, els)
+		in new GiraffeIfExpressionImpl(gTest, gThen, gElse);
+		
+end Compiler

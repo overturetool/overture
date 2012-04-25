@@ -1,0 +1,133 @@
+class Util is subclass of StdLib
+
+instance variables
+
+  private static writeType : <append> | <start> := <start>;
+  public static outputFileName : seq1 of char := "tmp.xmi"; -- default file name
+  static buf : String := "";
+
+operations
+
+public static Put : String ==> ()
+  Put(pVal) == buf := buf ^pVal;
+
+public static ViewBuf : () ==> ()
+  ViewBuf() == (Print(buf); );
+
+public static SaveBuf : seq1 of char ==> ()
+  SaveBuf(fileName) == (SetFileName(fileName); PrintL(buf););
+
+public static Clear : () ==> ()
+  Clear() == buf := "";
+
+public static Print : seq of char ==> ()
+  Print(debugString) ==
+  (
+    def file = new IOProxy()
+    in
+      file.print(debugString) ;
+  );
+  
+public static SaveCharSeqMapSeqSeq : seq1 of char * map seq of char to seq of seq of char  ==> ()
+SaveCharSeqMapSeqSeq(filename,val) ==
+  let - = new IOProxy().fwriteval[map seq of char to seq of seq of char](filename,val,<start>)
+    in skip;
+ 
+
+public static GetNameOfTrace : seq of seq of char ==> seq of char
+GetNameOfTrace(names) ==
+(
+  dcl name : seq of char := "";
+  for n in names do
+    name := name ^ "/" ^ n;
+  return name(2,...,len name);
+);
+
+  
+--public static PrintInt: nat ==> ()
+-- PrintInt(i) ==
+-- (
+--   let file = new IO()
+--   in
+--   def - = file.fwriteval[nat]( outputFileName,i,writeType) in skip;
+--   writeType := <append>;
+
+--skip;
+-- );
+ 
+ 
+public static PrintL: seq of char  ==> ()
+ PrintL (line) ==
+ (
+   let file = new IOProxy()
+   in
+   file.overwrite(outputFileName,line);
+  -- def - = file.fwriteval[seq of char]( outputFileName,line,writeType) in skip;
+  -- writeType := <append>;
+ );
+ 
+--public static CreateFile : seq of char ==> ()
+--  CreateFile(fName) ==
+--  (
+--  outputFileName := fName;
+--  let file = new IOProxy(), line = " "
+--   in
+--   file.overwrite(outputFileName,line);
+   --def - = file.fwriteval[seq of char]( outputFileName,line,<start>) in skip;
+
+--);
+
+public static SetFileName : seq1 of char ==> ()
+SetFileName(name) ==
+(
+  outputFileName := name;
+  writeType := <start>;
+);
+
+
+public static ExpandSpecTracesToString : 
+  map DEF`Identifier to Expand`TraceDefExpMap ==> 
+  map seq of char to map seq of char to map nat1 to seq of seq of char
+ExpandSpecTracesToString(tc_m) ==
+return 
+  { clnm |-> { tdnm |-> let tc_l = tc_m(clnm)(tdnm)
+                        in
+                          {i |-> ExprToString(tc_l(i)) | i in set inds tc_l}
+             | tdnm in set dom tc_m(clnm)}
+  | clnm in set dom tc_m};
+
+
+public static ExprToString: seq of IOmlExpression ==> seq of String
+ExprToString(e_l) ==
+  (dcl argexpr_l : seq of seq of char := [];
+   for e in e_l do
+     let ppvisitor : Oml2VppVisitor = new Oml2VppVisitor() 
+     in 
+     (ppvisitor.visitExpression(e);
+      argexpr_l := argexpr_l ^ [ppvisitor.result]);
+   return argexpr_l);
+
+
+public static GetTraceDefinitionClasses : IOmlSpecifications ==> set of String
+GetTraceDefinitionClasses(spec) ==
+let classes : set of String =
+       { cl.getIdentifier()
+       | cl in set elems spec.getClassList()
+       & card { dfs 
+              | dfs in set elems cl.getClassBody()
+              & isofclass(IOmlTraceDefinitions,dfs)} > 0
+       }
+in return classes;
+
+functions
+
+public static RemoveDublicates[@T]: seq of @T * set of @T
+                  -> seq of @T
+RemoveDublicates(ll,s) ==
+  if ll =[]
+  then ll
+  elseif hd ll in set s
+  then RemoveDublicates[@T](tl ll,s)
+  else [hd ll] ^ RemoveDublicates[@T](tl ll,s union {hd ll});
+       
+end Util

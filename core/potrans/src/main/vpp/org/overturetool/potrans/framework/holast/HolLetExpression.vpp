@@ -1,0 +1,55 @@
+class HolLetExpression is subclass of HolExpression
+
+instance variables
+vars:		seq of HolIdentifier;
+varValues:	seq of HolExpression;
+body:		HolExpression
+
+operations
+
+public HolLetExpression :  seq of HolIdentifier * seq of HolExpression * HolExpression ==> HolLetExpression
+HolLetExpression (newVars, newVarValues, newBody) ==
+(
+	vars :=		newVars;
+	varValues :=	newVarValues;
+	body :=		newBody
+)
+pre len newVars = len newVarValues;
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+(
+	for i = 1 to len varValues do
+		varValues(i).setTypeInformation(typeInfo);
+	body.setTypeInformation(typeInfo)
+);
+
+public requires : () ==> set of seq of char
+requires() == 
+(
+	dcl 
+		subProvides : set of seq of char := {},
+		result : set of seq of char := {};
+	for i = 1 to len vars do
+		subProvides := subProvides union {vars(i).print()};
+	for i = 1 to len varValues do
+		result := result union varValues(i).requires();
+	return (body.requires() \ subProvides) union result		-- All required by the body, except for the ones that are bounded plus the ones required in the values of the let expressions
+);
+
+public print : () ==> seq of char
+print () ==
+(
+	dcl result : seq of char;
+	result := "let ";
+	for i = 1 to len vars do
+	(
+		result := conc [result, vars(i).print(), " = ", varValues(i).print()];
+		if i <> len vars then
+			result := conc [result, " and "];
+	);
+	return conc ["(", result, " in ", body.print(), ")"]
+)
+pre len vars = len varValues;
+
+end HolLetExpression

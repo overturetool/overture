@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleCasesExpression is subclass of SimpleExpression
+operations
+    public getTest: () ==> SimpleExpression
+    getTest() == is subclass responsibility;
+
+    public getAlts: () ==> seq of SimpleCaseAlternative
+    getAlts() == is subclass responsibility;
+
+    public hasDeflt: () ==> bool
+    hasDeflt() == is subclass responsibility;
+
+    public getDeflt: () ==> SimpleExpression
+    getDeflt() == is subclass responsibility;
+
+end SimpleCasesExpression

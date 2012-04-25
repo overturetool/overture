@@ -1,0 +1,65 @@
+class Stack
+  
+instance variables
+  stack : seq of nat := [];
+
+operations
+  
+public Push3 : nat ==> ()
+Push3(e) ==
+      stack := [e] ^ stack
+pre len stack < 3
+post stack = [e] ^ stack~;
+
+public Pop : () ==> nat
+Pop() ==
+def res = hd stack in
+(stack := tl stack;
+return res)
+pre stack <> []
+post stack~ = [RESULT]^stack;
+
+end Stack
+class A
+
+operations
+
+  public method : nat ==> ()
+  method(-) ==
+    skip;
+
+
+  public meth2: nat ==> nat
+  meth2 (m) ==
+    return m;
+
+end A
+class UseStack
+
+instance variables
+
+  s : Stack := new Stack();
+  var : A := new A();
+  var1 : A := new A();
+  var2 : A := new A();
+
+traces
+
+trace1 : s.Push3(1)*
+trace2 : s.Push3(1)+
+trace3 : s.Push3(1)?
+trace4 : s.Push3(1){2}
+trace5 : s.Push3(1){0,4}; s.Pop()
+trace6 : let x in set {1,5,10}
+         in s.Push3(x); s.Pop()
+trace7 : let x in set {1,...,3}
+         in s.Push3(x); s.Pop()
+trace8 : let x = 1
+         in s.Push3(x)
+trace9 : s.Push3(2) | s.Push3(3)
+trace10 : s.Push3(1); s.Push3(1); s.Push3(1)
+trace11 : let x = 1 in var.method(x)
+trace12 : var.method(1){1,2}
+trace13 : let x in set {1,2} in var1.method(x); var2.meth2(10)
+
+end UseStack

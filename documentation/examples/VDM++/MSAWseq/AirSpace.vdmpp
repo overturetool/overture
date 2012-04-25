@@ -1,0 +1,47 @@
+class AirSpace is subclass of GLOBAL
+
+instance variables
+
+--airspace : set of FO := {};
+--inv forall x,y in set airspace & x <> y => x.getId() <> y.getId();
+
+airspace : map FOId to FO := {|->};
+  
+operations
+
+public addFO : FO ==> ()
+addFO(fo) ==
+  airspace := airspace ++ {fo.getId() |-> fo};
+
+public removeFO : FOId ==> ()
+removeFO(id) ==
+  airspace := {id} <-: airspace;
+    
+public getFO : FOId ==> FO
+getFO(id) ==
+  return airspace(id)
+pre id in set dom airspace;
+
+public getAirspace : () ==> set of FO
+getAirspace() ==
+  return rng airspace;
+
+public updateFO : FOId * Coordinates * Altitude ==> ()
+updateFO(id,coord,alt) ==
+  if (id in set dom airspace)
+  then 
+   (let fo = airspace(id)
+    in 
+     (fo.setCoordinates(coord);
+      fo.setAltitude(alt);
+     -- fo.registerPosition())
+     )
+   )
+  else
+    (let newfo = new FO(id,coord,alt)
+     in airspace := airspace munion {id |-> newfo}
+    );
+    
+
+
+end AirSpace

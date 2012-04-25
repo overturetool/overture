@@ -1,0 +1,160 @@
+Overture 1.2.0 Release Notes - 09/03/2012
+=========================================
+
+
+What's New in Overture 1.2.0?
+-----------------------------
+
+This is, despite the minor revision bump, a bugfix update. 
+
+
+System Requirements
+-------------------
+
+Overture is based on the Eclipse platform. To run it, you must have a
+Java runtime system installed, version 5 or later.
+
+
+Downloading
+-----------
+Overture can be downloaded from the SourceForge site.
+
+Documentation, including download instructions, tutorials and a
+language manual, are available from the Overture portal site.
+
+
+Installing
+----------
+
+The download file is a ZIP archive. To install the tool, unzip the
+file in a convenient location. The main executable is in the top level
+directory, called overture.
+
+For Windows users, it is possible to use the Overture installer which
+can be found in SourceForge.
+
+Upgrading:
+* ATTENTION: If you are using the ZIP archive to update and if your
+  workspace was located inside the previous installation directory, DO
+  NOT FORGET TO BACKUP the workspace or it will be lost when the old
+  version is deleted.
+* If you are upgrading with the ZIP archive: do not unzip the latest
+  version on top of the oldest one. You will need to delete the
+  previous version before continuing the installation.
+* If you are updating with the installer: the installer will
+  automatically delete the previous version of Overture and preserve
+  your workspace, if it was inside the previous installation
+  directory.
+
+
+Uninstalling
+------------
+
+To uninstall Overture, remove the contents of the directory where you
+installed it. There are no other files stored on the system (apart
+from any workspace files you may have created).
+
+For Windows users, if the Overture installer was used previously, it
+is possible to uninstall via the uninstall shortcut created by the
+installer in the start programs or via the Uninstall menu in the
+Control Panel.
+
+
+SourceForge Bugs Fixed Since 1.1.1
+----------------------------------
+
+The number in [] is the ID of the report in Overture bug tracker on
+sourceforge
+
+[3486764] Behaviour of " key not consistent with most text editors
+[3483856] Unused imports in VDM-SL are not given warnings
+[3477736] Cases statements incorrectly report "not reachable" warnings
+[3474954] Incorrect set pattern matching sometimes
+[3472929] Exists1 expressions with type binds fail
+[3471319] Iota expressions with type binds fail
+[3467495] Problems with concatenation patterns
+[3462500] Parser error with near-empty blocks
+
+
+Known Issues
+------------
+
+The following issues are already known.  You can find the full list of
+Overture bugs at the SourceForge site.  Please check the bug list
+before raising new bugs.
+
+* LaTeX coverage files and VDM-RT log files do not correctly handle
+  international character encodings.
+* Error/warning locations may not be perfect if the source line is
+  indented with tabs, or mixtures of tabs and spaces. Similarly, LaTeX
+  coverage output does not correctly process tabs.
+* If VDM source is embedded in LaTeX, the first line of the file must
+  be a LaTeX document, section or subsection command, or a LaTeX
+  comment.
+* When an execution stops at a breakpoint, the Debug dialogue may not
+  open the stack of the current thread, or may focus on the stack of
+  another thread.
+* Combinatorial testing does not always refresh the results when tests
+  are evaluated. Click the Refresh button at the top of the view to
+  force a refresh.
+* There are several known issues or limitations in the VDMJ
+  engine. See the SourceForge bug list for details.
+* The output console showing the result of an evaluation, or an error
+  raised during evaluation, is not always visible when the evaluation
+  completes. Click the "Display Selected Console" button to cycle
+  through the consoles available.
+* It sometimes takes a long time to generate the GUI representation of
+  a VDM-RT log file, and the log files themselves can become quite
+  large.
+* You may find a Proof Obligation View remains open when you switch
+  out of the Proof Obligations perspective. Just close the view.
+* When you run a set of combinatorial tests, the coverage of the
+  specification is not measured. Individual tests' coverage is
+  measured if you "Send to Interpreter".
+
+
+Troubleshooting
+---------------
+
+If you encounter a problem with the Overture IDE itself, please
+contact the Overture project and we will try to help.  You can contact
+us here:
+
+* email: info@overturetool.org
+* forums: The Overture Help forum on SourceForge
+
+If you encounter a problem with a VDM specification, please try to
+make a small example that illustrates the problem before you contact
+us.  If you are sure the bug is not already known in the SourceForge
+list, you can create a new bug report.
+
+
+Frequently Asked Questions
+--------------------------
+
+* Who produced Overture?
+Overture was written by the members of the Overture project, a group
+of industry and academic researchers interested in the use of VDM.
+
+* How is Overture licensed?
+Overture is open source. It is released under a GPLv3 license.
+
+* What can I do to help?
+If you are interested in helping you can drop a mail to info@overturetool.org.
+
+* Where is Overture source code?
+Overture source code is hosted by SourceForge. 
+
+
+Other Resources and Links
+-------------------------
+
+The following links may be helpful:
+* Overture Community site - http://www.overturetool.org
+* Overture Wiki for developers - http://wiki.overturetool.org
+* VDM Tutorials - http://overturetool.org/?q=Documentation
+* VDM Examples - http://overturetool.org/?q=node/11
+* VDM Portal - http://www.vdmportal.org
+* VDM Books - http://www.vdmbook.com
+* Wikipedia on VDM - http://en.wikipedia.org/wiki/Vienna_Development_Method
+

@@ -1,0 +1,27 @@
+\section{The InsertCard Testing Class}
+
+The event InsertCard corresponds to a client inserting a credit card at one of the tills in this system.
+
+\begin{vdm_al}
+class InsertCard is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+  mycard : Card;
+
+operations
+
+  public Init : System`TillId * Card ==> InsertCard
+  Init(tid, c) ==
+    (tillid := tid;
+     mycard := c;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    (sys.GetTill(tillid).InsertCard(mycard);
+     return true);
+
+end InsertCard
+\end{vdm_al}

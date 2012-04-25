@@ -1,0 +1,161 @@
+-- ===============================================================================================================
+-- TrayAllocator in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class TrayAllocator
+
+	types
+		public ThroughputResult::
+						traysWithItemOnSorter : nat
+						twoTrayItemsOnSorter : nat 
+						traySteps : nat
+						inductedItems : nat
+						calcThroughput : real;
+
+	values
+		public InductionSeperation: nat = 2;
+		public NumOfInductions : nat = 3;
+		public NumOfTrays : nat = 20;
+		public SecInHour : nat = 3600 	-- Number of seconds in an hour
+
+	instance variables
+		-- Ensure sufficient number of trays on sorter ring based on inductions and separation
+		inv NumOfTrays > InductionSeperation * NumOfInductions; 
+
+		countTraySteps : nat := 0;  	-- Used for calculation of throughput
+		countItemsInducted : nat := 0;  -- Counts the number of items inducted 
+		
+		-- Induction group and invariants 
+		public inductionGroup : seq of InductionController := [];
+		inv len inductionGroup = NumOfInductions; 
+		-- Induction id and inds of inductionGroup sequence must be the same
+		inv forall id in set inds inductionGroup & inductionGroup(id).GetId() = id;
+			
+		-- Sorter ring and invariants	
+		public sorterRing : inmap Tray`UID to Tray;
+		inv card dom sorterRing = NumOfTrays;
+		-- Tray id and dom of sorterRing map must be the same
+		inv forall id in set dom sorterRing & sorterRing(id).GetId() = id;
+		
+		-- Tray at card reader and invariants
+		public trayAtCardReader : Tray`UID := 0;
+		-- trayAtCardReader must be a valid tray in sorterRing
+		inv trayAtCardReader > 0 => trayAtCardReader in set dom sorterRing;
+		
+		-- Allocation "strategy pattern" for one and two tray items
+		oneTrayStrategy : AllocatorOneTray;
+		twoTrayStrategy : AllocatorTwoTray;	
+						
+	operations
+	
+    -- TrayAllocator constructor
+	public TrayAllocator: SorterEnviroment==> TrayAllocator
+	TrayAllocator(e) ==
+	(
+	    sorterRing := {num |-> new Tray(num) | num in set {1,...,NumOfTrays}};
+	    inductionGroup := [new InductionController(self, num) | num in set {1,...,NumOfInductions}];
+        e.AssignInductionGroup(inductionGroup);
+        
+        -- Creating strategies for allocation of one and two tray items
+        oneTrayStrategy := new AllocatorOneTray(self);
+        twoTrayStrategy := new AllocatorTwoTray(self);
+	);
+
+    -- Simulate sorter-ring moved one tray step
+	public CardReader: Tray`UID * Tray`State  ==> ()
+	CardReader(uid, state) ==
+	(
+	   	-- Update current tray at card reader
+	    trayAtCardReader := uid;
+	    
+	    -- Simulate change of Tray state 
+	    -- sorterRing(trayAtCardReader).SetState(state);
+	 	
+	 	-- Count the number of tray steps 
+		countTraySteps := countTraySteps + 1;
+	)
+	pre uid in set dom sorterRing;
+	
+	-- Inducting item on sorter if empty trays and no higher induction priority
+	public InductItem: InductionController * Item ==> bool
+	InductItem(ic, item) ==
+	(
+		dcl strategy : AllocatorStrategy;
+		
+		-- Determine the strategy to compute the allocation of trays
+		let numTrays = item.GetSizeOfTrays()
+		in 
+			cases numTrays:
+				1 -> strategy := oneTrayStrategy,
+				2 -> strategy := twoTrayStrategy
+			end;
+		
+		-- Central part of the Tray allocation algorithm 
+		-- Look for inductions with higher priority before allocation of empty trays
+		if strategy.InductionsWithHigherPriority(ic)
+		then
+		 	return false
+		else
+			let trays = strategy.AllocateTray(ic.GetId())
+			in 
+			    if trays = {}
+			    then 
+			    	return false
+			    else
+			    ( 
+			    	countItemsInducted := countItemsInducted + 1;
+					IO`print("*Induction id " ^ String`NatToStr(ic.GetId()) ^ "\n");
+					-- Assign item to trays
+			    	PutItemOnTrays(item, trays);
+			    	return true;
+			    ) 
+	)
+	pre ic in set elems inductionGroup and item.GetSizeOfTrays() <= 2;  -- To be changed if Tray`ItemMaxTrays is increased
+	
+	-- Assign item on empty trays 
+	private PutItemOnTrays: Item * set of Tray ==> ()
+	PutItemOnTrays(item, trays) ==
+	 	for all t in set trays
+		do
+			t.ItemOnTray(item)
+	pre trays <> {} and forall t in set trays & t.IsTrayEmpty();
+	
+	-- Returns true if sorter is full
+	public IsSorterFull: () ==> bool
+	IsSorterFull() ==
+	 	return forall id in set dom sorterRing & sorterRing(id).GetState() = <Full>;
+
+	-- Returns calculated throughput of soter capacity for current state of sorter ring
+	public GetThroughput: () ==> ThroughputResult
+	GetThroughput () ==
+		CalculateThroughput(countTraySteps, rng sorterRing, countItemsInducted);
+		
+	functions
+
+	-- Calculates the current throughput based on items on sorter ring 
+	/*
+	Calculation as sum of simulation time steps = number of steps * Tray`TraySize/SorterEnviroment`Speed
+    throughput calculated as items inducted in simulation time converted to items/hour 
+    calculate the number of items inducted = number of tray with status equal <full> minus sum of two tray items divied by 2
+	*/
+	private CalculateThroughput: nat * set of Tray * nat-> ThroughputResult
+	CalculateThroughput(steps, trays, items) ==
+		let runTime :real = steps * (Tray`TraySize/SorterEnviroment`Speed),
+			traysWithItems = {twi | twi in set trays & twi.IsTrayFull()},
+			traysWith2Items = {tw2i | tw2i in set traysWithItems & tw2i.GetItem() <> nil and tw2i.GetItem().GetSizeOfTrays() = 2},
+			itemsOnSorter = card traysWithItems, 
+			twoTrayItemsOnSorter = card traysWith2Items,
+			throughput = itemsOnSorter * SecInHour/runTime
+		in 
+			mk_ThroughputResult(itemsOnSorter, twoTrayItemsOnSorter, steps, items, throughput)
+	pre trays <> {};
+	
+
+	sync
+
+	--thread
+
+	traces
+
+end TrayAllocator

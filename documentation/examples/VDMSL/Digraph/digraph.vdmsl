@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+-- Module   digraph. Used in SAMS (Software Analysis and Modeling System)
+-- Author:  Janusz Laski
+-- Purpose: Define functions for manipulating graphs 
+-- Version 2.0.0  (January 10,2010)
+
+-- This model is only an illustration of the problems germane to automatic 
+-- software anlaysis. To get a better understanding of the scope of the 
+-- analysis consult the text "Software Verification and Analysis, An 
+-- Integrated, Hands-on -- Approach," by Janusz Laski w/William Stanley, 
+-- Springer 2009. A brief online introduction is offered on the Website
+-- www.stadtools.com.
+-----------------------------------------------------------------
+
+
+
+module digraph 
+
+imports
+
+  from flowgraph_types all,
+  from relations all
+
+exports all
+
+definitions
+
+types 
+
+Node =  flowgraph_types`Node;
+
+Flowgraph = flowgraph_types`FlowGraph;
+
+functions
+
+succ: Flowgraph * Node  -> set of Node
+succ(G,n) == 
+  {k| k in set G.N & mk_(n,k) in set G.A};
+
+pred: Flowgraph * Node  -> set of Node
+pred(G,n) == 
+  {k| k in set G.N & mk_(k,n) in set G.A};
+
+existspath: Flowgraph * Node * Node -> bool
+existspath(MFG,n1,n2) == 
+  mk_(n1,n2) in set relations`Warshall(MFG.A);
+
+
+end digraph

@@ -1,0 +1,49 @@
+class Util is subclass of StdLib
+
+instance variables
+
+  private static writeType : <append> | <start> := <start>;
+  public static outputFileName : seq1 of char := "tmp.xmi"; -- default file name
+--  static buf : String := "";
+
+operations
+
+--public static Put : String ==> ()
+--  Put(pVal) == addToFile(pVal);--buf := buf ^pVal;
+--
+--public static ViewBuf : () ==> ()
+--  ViewBuf() == (Print(buf); );
+--
+--public static SaveBuf : seq1 of char ==> ()
+--  SaveBuf(fileName) == (SetFileName(fileName); PrintL(buf););
+--
+--public static Clear : () ==> ()
+--  Clear() == buf := "";
+
+public static DebugPrint : seq of char ==> ()
+DebugPrint(debugString) ==
+(
+  def file = new IOProxy()
+  in
+    file.print(debugString);
+);
+  
+public static CreateFile : seq of char ==> ()
+CreateFile(fName) ==
+(
+  outputFileName := fName;
+  writeType := <start>;
+  WriteFile("");
+  writeType := <append>;
+);
+
+public static CloseFile : () ==> ()
+CloseFile() == writeType := <start>;
+
+public static WriteFile : String ==> ()
+WriteFile(data) ==
+  let file = new IO()
+   in
+    def - = file.fwriteval[seq of char]( outputFileName,data,writeType) in skip;
+
+end Util

@@ -1,0 +1,21 @@
+class ClockTick is subclass of GLOBAL
+
+instance variables
+
+tid : int := -1;
+
+operations
+
+public ClockTick : Time ==> ClockTick
+ClockTick(t) == tid := t;
+
+
+thread 
+
+while true do
+ (World`timerRef.WaitRelative(1);
+  World`timerRef.NotifyAll();
+  World`timerRef.Awake();
+ )
+
+ end ClockTick

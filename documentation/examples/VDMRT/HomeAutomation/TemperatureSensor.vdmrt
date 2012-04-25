@@ -1,0 +1,53 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	TemperatureSensor subclass for HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TemperatureSensor is subclass of Sensor
+
+--
+-- instance variables
+--
+instance variables
+
+  finished : bool := false;
+
+--
+-- Operations definition section
+--
+operations
+
+public TemperatureSensor: nat * NetworkTypes`nodeType * int ==> TemperatureSensor
+TemperatureSensor (id, type, val) ==
+ (ID := id;
+  Type := type;
+  Value := val;
+ );
+
+public PeriodicOp: () ==> ()
+PeriodicOp() ==
+  --cycles(1E3)
+  Value := World`env.ReadTemp();
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+  --mutex(PeriodicOp); -- ADDED
+  per IsFinished => finished;
+
+--
+-- Thread definition section
+--
+thread
+
+-- period of thread (period, jitter, delay, offset)
+periodic(1000E6,0,0,0) (PeriodicOp)
+
+end TemperatureSensor

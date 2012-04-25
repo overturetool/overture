@@ -1,0 +1,26 @@
+class A
+instance variables
+	protected iv:nat := 123;
+
+operations	
+	public pop: nat ==> nat
+	pop(n) ==
+	(
+		iv := n;
+		return n
+	)
+	post iv~ < iv;
+
+end A
+
+class Test is subclass of A
+functions
+	public f: () -> seq of bool
+	f() ==
+	[
+		post_pop(1, 1, {"iv" |-> 1}, new A()),
+		post_pop(1, 1, {"iv" |-> 999}, new A())
+	];
+
+end Test
+

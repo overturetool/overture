@@ -1,0 +1,9 @@
+class ExplOpSubclassResp
+
+operations
+
+Op: nat ==> nat
+Op(n) ==
+  is subclass responsibility
+
+end ExplOpSubclassResp

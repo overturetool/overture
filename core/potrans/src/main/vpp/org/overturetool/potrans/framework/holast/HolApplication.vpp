@@ -1,0 +1,110 @@
+class HolApplication is subclass of HolExpression
+
+instance variables
+op:				HolExpression;
+parameters:		seq of HolExpression;
+parameterTypes:	[seq of HolType]
+
+operations
+
+public HolApplication : HolExpression * seq of HolExpression ==> HolApplication
+HolApplication(newOp, newParameters) ==
+(
+	op				:=	newOp;
+	parameters		:=	newParameters;
+	parameterTypes	:=	nil
+);
+
+public HolApplication : HolExpression * seq of HolExpression * seq of HolType ==> HolApplication
+HolApplication(newOp, newParameters, newTypes) ==
+(
+	op				:=	newOp;
+	parameters		:=	newParameters;
+	parameterTypes	:=	newTypes
+)
+pre (len parameters = len parameterTypes);
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+(
+	op.setTypeInformation(typeInfo);
+	for i = 1 to len parameters do
+		parameters(i).setTypeInformation(typeInfo);
+	if parameterTypes <> nil then 
+		for i = 1 to len parameterTypes do
+			parameterTypes(i).setTypeInformation(typeInfo);
+);
+
+public requires : () ==> set of seq of char
+requires() == 
+(
+	dcl result : set of seq of char := op.requires();
+	for i = 1 to len parameters do
+		result := result union parameters(i).requires();
+	if parameterTypes <> nil then 
+		for i = 1 to len parameterTypes do
+			result := result union parameterTypes(i).requires();
+	return result
+);	
+
+public print : () ==> seq of char
+print () ==
+(
+	if (isInfix(op) and len parameters = 2) then return printAsInfix()
+	else return printAsSuffix()
+)
+pre (parameterTypes <> nil) => (len parameters = len parameterTypes);
+
+printAsSuffix : () ==> seq of char
+printAsSuffix () ==
+(
+	dcl result : seq of char;
+	result := op.print();
+	for i = 1 to len parameters do
+	(
+		result := conc [result, " ", parameters(i).print()];
+		if parameterTypes <> nil then
+			result := conc [result, ":", parameterTypes(i).print(<plain>)];
+	);
+	return conc ["(", result, ")"]
+)
+pre (parameterTypes <> nil) => (len parameters = len parameterTypes);
+
+
+printAsInfix : () ==> seq of char
+printAsInfix () ==
+(
+	dcl result : seq of char;
+	result := "";
+	result := addParameter(1, result);
+	result := conc [result, " ", getInfixOperator(op), " "];
+	result := addParameter(2, result);
+	return conc ["(", result, ")"]
+)
+pre ((parameterTypes <> nil) => (len parameters = len parameterTypes)) and
+	len parameters = 2 and
+	isInfix(op);
+
+addParameter : int * seq of char ==> seq of char
+addParameter (index, existingPars) == 
+(
+	dcl result : seq of char;
+	result := conc [existingPars, parameters(index).print()];
+	if parameterTypes <> nil then
+		result := conc [result, ":", parameterTypes(index).print(<plain>)];
+	return conc [result, " "]
+)
+
+functions
+
+isInfix : HolExpression -> bool
+isInfix(oper) ==
+	oper.print()(1) = '$'
+;
+
+getInfixOperator : HolExpression -> seq of char
+getInfixOperator (oper) == 
+	tl(oper.print())
+pre isInfix(oper)
+
+end HolApplication

@@ -1,0 +1,27 @@
+class Set
+
+types
+
+Element = nat;
+
+Set = set of Element
+inv s == s <> {};
+
+
+functions
+
+inSet : Set * Element -> bool
+inSet(s,e) == e in set s;
+
+subSet : Set * Set -> bool
+subSet(s1,s2) == s1 inter s2 = s1;
+
+doNothing : Set -> Set
+doNothing(s) == s
+pre card s > 2;
+
+doSomething : Set -> Set
+doSomething(s) == doNothing(s);
+
+
+end Set

@@ -1,0 +1,15 @@
+\begin{vdm_al}
+class Event
+
+instance variables
+  val : nat
+
+operations
+  public Event: nat ==> Event
+  Event (pv) == val := pv;
+
+  public getEvent: () ==> nat
+  getEvent () == return val
+
+end Event
+\end{vdm_al}

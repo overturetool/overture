@@ -1,0 +1,18 @@
+class Pacemaker
+
+values
+
+public wrongTR: Heart`Trace = 
+                [<A>, nil, <V>, nil, nil, <A>, nil, nil, nil, nil ];
+  
+operations
+
+public Pace: Heart`Trace * nat1 * nat1 ==> Heart`Trace
+Pace(tr,aperi,vdel) ==
+  return [nil] ^
+         [ if (i mod aperi = vdel + 1) and tr(i) <> <V> 
+           then <V>
+           else nil
+         | i in set inds tl tr];
+
+end Pacemaker

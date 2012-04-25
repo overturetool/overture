@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:55 CET 2010
+--
+
+class SimpleVariableExpressionImpl is subclass of SimpleVariableExpression
+instance variables
+    private iv_name:SimpleIdentifier;
+
+operations
+    public SimpleVariableExpressionImpl: SimpleIdentifier ==> SimpleVariableExpressionImpl
+    SimpleVariableExpressionImpl(p_name) ==
+    (
+        iv_name := p_name;
+    );
+
+    public getName: () ==> SimpleIdentifier
+    getName() == return iv_name;
+
+end SimpleVariableExpressionImpl

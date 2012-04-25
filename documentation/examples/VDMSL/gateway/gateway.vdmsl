@@ -1,0 +1,83 @@
+-- A trusted gateway
+-- For Chapter 7 (Sequences)
+
+types
+
+  String = seq of char
+  inv s == s <> [];  
+
+  Message = String
+  inv m == len m <= 100;
+
+  Classification = <HI> | <LO>;
+
+  Category = set of String;
+
+  Ports :: high: seq of Message
+           low : seq of Message
+
+functions
+
+-- checking whether a substring occur in another string
+
+  Occurs: String * String -> bool
+  Occurs(substr,str) ==
+    exists i,j in set inds str & substr = str(i,...,j);
+
+-- Classifying messages
+
+  Classify: Message * Category -> Classification
+  Classify(m,cat) ==
+    if exists hi in set cat & Occurs(hi,m)
+    then <HI>
+    else <LO>;
+
+
+-- The main gateway function using recursion
+
+  Gateway: seq of Message * Category -> Ports
+  Gateway(ms,cat) ==
+    if ms = []
+    then mk_Ports([],[])
+    else let rest_p = Gateway(tl ms,cat)
+         in
+           ProcessMessage(hd ms,cat,rest_p)
+   measure MesLen;
+   
+   MesLen: seq of Message * Category -> nat
+   MesLen(list,-) ==
+     len list;
+
+-- Classify the message and add to the appropriate port.
+
+  ProcessMessage: Message * Category * Ports -> Ports
+  ProcessMessage(m,cat,ps) ==
+    if Classify(m,cat) = <HI>
+    then mk_Ports([m]^ps.high,ps.low)
+    else mk_Ports(ps.high,[m]^ps.low);
+
+
+-- The main gateway function without using recursion
+
+  Gateway2: seq of Message * Category -> Ports
+  Gateway2(ms,cat) ==
+    mk_Ports([ms(i)|i in set inds ms & Classify(ms(i),cat) = <HI>],
+             [ms(i)|i in set inds ms & Classify(ms(i),cat) = <LO>]);
+
+-- Functions illustrating other sequence operators. 
+
+  AnyHighClass: seq of Message * Category -> bool
+  AnyHighClass(ms,cat) ==
+    exists m in set elems ms & Classify(m,cat) = <HI>;
+
+  Censor: seq of Message * Category -> seq of Message
+  Censor(ms,cat) ==
+    [ms(i) | i in set inds ms & Classify(ms(i),cat) = <LO>];
+
+  FlattenMessages: seq of Message -> Message
+  FlattenMessages(ms) ==
+    conc ms
+  pre len conc ms <= 100 
+
+
+

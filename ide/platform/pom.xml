@@ -2,17 +2,45 @@
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>ide</artifactId>
-    <version>2.2.0</version>
+    <version>2.1.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide</groupId>
-  <artifactId>
-    org.overture.ide.platform
-  </artifactId>
-  <name>
-    org.overture.ide.platform
-  </name>
-  <version>2.2.0</version>
-  
+  <artifactId>org.overture.ide.platform</artifactId>
+  <name>org.overture.ide.platform</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jface</groupId>
+      <artifactId>org.eclipse.jface</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.swt</groupId>
+      <artifactId>org.eclipse.swt</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.swt</groupId>
+      <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.ui</groupId>
+      <artifactId>org.eclipse.ui</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.core</groupId>
+      <artifactId>org.eclipse.core.runtime</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+  </dependencies>
 </project>

@@ -1,0 +1,249 @@
+
+module LANG
+definitions
+types
+  Program :: decls : seq of Declaration
+             stmt  : Stmt;
+
+  Declaration :: id  : Identifier
+                 tp  : Type
+                 val : [Value];
+
+  Identifier = seq1 of char;
+  Type = <BoolType> | <IntType> ;
+  Value = BoolVal | IntVal;
+  BoolVal :: val : bool;
+  IntVal :: val : int;
+
+  Stmt = BlockStmt | AssignStmt | CondStmt | ForStmt | RepeatStmt;
+
+  BlockStmt :: decls : seq of Declaration
+               stmts : seq1 of Stmt;
+
+  AssignStmt :: lhs : Variable
+                rhs : Expr;
+  Variable :: id : Identifier;
+
+  Expr = BinaryExpr | Value | Variable;
+  BinaryExpr :: lhs : Expr
+                op  : Operator
+                rhs : Expr;
+
+  Operator = <Add> | <Sub> | <Div> | <Mul> | <Lt> | <Gt> | <Eq> | <And> | <Or>;
+
+  CondStmt :: guard  : Expr
+              thenst : Stmt
+              elsest : Stmt;
+
+  ForStmt :: start : AssignStmt
+             stop  : Expr
+             stmt  : Stmt;
+
+  RepeatStmt :: repeat : Stmt
+                until  : Expr;
+
+types
+  StatEnv = map Identifier to Type;
+
+functions
+  wf_Program : Program -> bool
+  wf_Program(mk_Program(decls, stmt)) ==
+    wf_Declarations(decls) and wf_Stmt(stmt, get_Declarations(decls));
+
+  wf_Declarations : seq of Declaration -> bool
+  wf_Declarations(decls) ==
+    (forall i1, i2 in set inds decls & 
+      i1 <> i2 => decls(i1).id <> decls(i2).id) and
+    (forall i in set inds decls & 
+      decls(i).val <> nil => 
+      ((is_BoolVal(decls(i).val) and decls(i).tp = <BoolType>) or 
+       (is_IntVal(decls(i).val) and decls(i).tp = <IntType>)));
+  get_Declarations : seq of Declaration -> StatEnv
+  get_Declarations(decls) ==
+    {id |-> tp | mk_Declaration(id, tp, -) in set elems decls};
+
+  wf_Stmt : Stmt * StatEnv -> bool
+  wf_Stmt(stmt, senv) ==
+    cases true :
+      (is_BlockStmt(stmt))  -> wf_BlockStmt(stmt, senv),
+      (is_AssignStmt(stmt)) -> let mk_(wf_ass, -) = wf_AssignStmt(stmt, senv)
+                               in wf_ass,
+      (is_CondStmt(stmt))   -> wf_CondStmt(stmt, senv),
+      (is_ForStmt(stmt))    -> wf_ForStmt(stmt, senv),
+      (is_RepeatStmt(stmt)) -> wf_RepeatStmt(stmt, senv),
+      others                -> false
+    end;
+  wf_BlockStmt : BlockStmt * StatEnv -> bool
+  wf_BlockStmt(mk_BlockStmt(decls, stmts), senv) ==
+    wf_Declarations(decls) and wf_Stmts(stmts, senv ++ get_Declarations(decls));
+  wf_Stmts : seq of Stmt * StatEnv -> bool
+  wf_Stmts(stmts, senv) ==
+    forall stmt in set elems stmts & wf_Stmt(stmt, senv);
+
+  wf_AssignStmt : AssignStmt * StatEnv -> bool * [Type]
+  wf_AssignStmt(mk_AssignStmt(lhs, rhs), senv) ==
+    let mk_(wf_var, tp_var) = wf_Variable(lhs, senv),
+        mk_(wf_ex, tp_ex) = wf_Expr(rhs, senv)
+    in mk_(wf_ex and wf_var and tp_var = tp_ex, tp_var);
+
+  wf_CondStmt : CondStmt * StatEnv -> bool
+  wf_CondStmt(mk_CondStmt(guard, thenst, elsest), senv) ==
+    let mk_(wf_ex, tp_ex) = wf_Expr(guard, senv)
+    in wf_ex and tp_ex = <BoolType> and 
+       wf_Stmt(thenst, senv) and wf_Stmt(elsest, senv);
+  wf_RepeatStmt : RepeatStmt * StatEnv -> bool
+  wf_RepeatStmt(mk_RepeatStmt(repeat, until), senv) ==
+    let mk_(wf_ex, tp_ex) = wf_Expr(until, senv)
+    in wf_ex and tp_ex = <BoolType> and wf_Stmt(repeat, senv);
+
+  wf_ForStmt : ForStmt * StatEnv -> bool
+  wf_ForStmt(mk_ForStmt(start, stop, stmt), senv) ==
+    let mk_(wf_ass, tp_ass) = wf_AssignStmt(start, senv),
+        mk_(wf_ex, tp_ex) = wf_Expr(stop, senv)
+    in wf_ass and wf_ex and tp_ass = <IntType> and tp_ex = <IntType> and 
+       wf_Stmt(stmt, senv);
+
+  wf_Expr : Expr * StatEnv -> bool * [Type]
+  wf_Expr(ex, senv) ==
+    cases true :
+      (is_BoolVal(ex))    -> mk_(true, <BoolType>),
+      (is_IntVal(ex))     -> mk_(true, <IntType>),
+      (is_Variable(ex))   -> wf_Variable(ex, senv),
+      (is_BinaryExpr(ex)) -> wf_BinaryExpr(ex, senv),
+      others              -> mk_(false, <IntType>)
+    end;
+  wf_Variable : Variable * StatEnv -> bool * [Type]
+  wf_Variable(mk_Variable(id), senv) ==
+    if id in set dom senv then
+      mk_(true, senv(id))
+    else
+      mk_(false, nil);
+
+  wf_BinaryExpr : BinaryExpr * StatEnv -> bool * [Type]
+  wf_BinaryExpr(mk_BinaryExpr(lhs, op, rhs), senv) ==
+    let mk_(wf_lhs, tp_lhs) = wf_Expr(lhs, senv), 
+        mk_(wf_rhs, tp_rhs) = wf_Expr(rhs, senv)
+    in cases op :
+       <Add>, <Sub>, <Div>, <Mul> -> 
+         mk_(wf_lhs and wf_rhs and tp_lhs = <IntType> and tp_rhs = <IntType>,
+             <IntType>),
+       <Lt>, <Gt>, <Eq> ->
+         mk_(wf_lhs and wf_rhs and tp_lhs = <IntType> and tp_rhs = <IntType>,
+             <BoolType>),
+       <And>, <Or> ->
+         mk_(wf_lhs and wf_rhs and tp_lhs = <BoolType> and tp_rhs = <BoolType>,
+             <BoolType>),
+       others -> mk_(false, nil)
+       end;
+
+types
+  DynEnv = map Identifier to Value;
+
+functions
+  EvalProgram : Program -> DynEnv
+  EvalProgram(mk_Program(decls, stmt)) ==
+    EvalStmt(stmt, EvalDeclarations(decls))
+  pre wf_Program(mk_Program(decls, stmt)) and 
+      pre_EvalStmt(stmt, EvalDeclarations(decls));
+
+  EvalDeclarations : seq of Declaration -> DynEnv
+  EvalDeclarations(decls) ==
+    {id |-> if val <> nil
+            then val 
+            else
+             if tp = <BoolType> 
+             then mk_BoolVal(false)
+             else mk_IntVal(0)  
+        | mk_Declaration(id, tp, val) in set elems decls};
+
+  EvalStmt : Stmt * DynEnv -> DynEnv
+  EvalStmt(stmt, denv) ==
+    cases true :
+      (is_BlockStmt(stmt))  -> EvalBlockStmt(stmt, denv),
+      (is_AssignStmt(stmt)) -> EvalAssignStmt(stmt, denv),
+      (is_CondStmt(stmt))   -> EvalCondStmt(stmt, denv),
+      (is_ForStmt(stmt))    -> EvalForStmt(stmt, denv),
+      (is_RepeatStmt(stmt)) -> EvalRepeatStmt(stmt, denv)
+    end
+  pre (is_BlockStmt(stmt)   => pre_EvalBlockStmt(stmt, denv)) and
+      (is_AssignStmt(stmt)  => pre_EvalAssignStmt(stmt, denv)) and
+      (is_CondStmt(stmt)    => pre_EvalCondStmt(stmt, denv)) and
+      (is_ForStmt(stmt)     => pre_EvalForStmt(stmt, denv)) and
+      (is_RepeatStmt(stmt)  => pre_EvalRepeatStmt(stmt, denv));
+  EvalBlockStmt : BlockStmt * DynEnv -> DynEnv
+  EvalBlockStmt(mk_BlockStmt(decls, stmts), denv) ==
+    let ldenv = EvalDeclarations(decls) in
+      let denv' = EvalStmts(stmts, denv ++ ldenv) in
+        denv ++ dom ldenv <-: denv'
+  pre let ldenv = EvalDeclarations(decls) 
+      in pre_EvalStmts(stmts, denv ++ ldenv);
+  EvalStmts : seq of Stmt * DynEnv -> DynEnv
+  EvalStmts(stmts, denv) ==
+    cases stmts :
+      [] -> denv,
+      others -> EvalStmts(tl stmts, EvalStmt(hd stmts, denv))
+    end
+  pre stmts <> [] => pre_EvalStmt(hd stmts, denv);
+  EvalAssignStmt : AssignStmt * DynEnv -> DynEnv
+  EvalAssignStmt(mk_AssignStmt(lhs, rhs), denv) ==
+    denv ++ {lhs.id |-> EvalExpr(rhs, denv)}
+  pre pre_EvalExpr(rhs, denv);
+  EvalCondStmt : CondStmt * DynEnv -> DynEnv
+  EvalCondStmt(mk_CondStmt(guard, thenst, elsest), denv) ==
+    if EvalExpr(guard, denv).val
+    then EvalStmt(thenst, denv) 
+    else EvalStmt(elsest, denv)
+  pre pre_EvalExpr(guard, denv) and
+      if EvalExpr(guard, denv).val
+      then pre_EvalStmt(thenst, denv) 
+      else pre_EvalStmt(elsest, denv);
+  EvalRepeatStmt : RepeatStmt * DynEnv -> DynEnv
+  EvalRepeatStmt(mk_RepeatStmt(repeat, until), denv) ==
+    let denv' = EvalStmt(repeat, denv) in
+    if EvalExpr(until, denv').val
+      then denv'
+      else EvalRepeatStmt(mk_RepeatStmt(repeat, until), denv')
+  pre pre_EvalStmt(repeat, denv) and
+      pre_EvalExpr(until, EvalStmt(repeat, denv));
+
+  EvalForStmt : ForStmt * DynEnv -> DynEnv
+  EvalForStmt(mk_ForStmt(start, stop, stmt), denv) ==
+    let denv' = EvalAssignStmt(start, denv) in
+    EvalForLoop(start.lhs, EvalExpr(stop, denv'), stmt, denv')
+  pre pre_EvalAssignStmt(start, denv) and
+      pre_EvalExpr(stop, EvalAssignStmt(start, denv));
+  EvalForLoop : Variable * Value * Stmt * DynEnv -> DynEnv
+  EvalForLoop(mk_Variable(id), val, stmt, denv) ==
+    if denv(id).val <= val.val
+      then let denv' = EvalStmt(stmt, denv)
+           in EvalForLoop(mk_Variable(id), val, stmt, 
+                          denv' ++ {id |-> mk_IntVal(denv'(id).val + 1)})
+      else denv
+  pre pre_EvalStmt(stmt, denv);
+
+  EvalExpr : Expr * DynEnv -> Value
+  EvalExpr(ex, denv) ==
+    cases ex :
+      mk_BoolVal(-),
+      mk_IntVal(-)         -> ex,
+      mk_Variable(id)      -> denv(id),
+      mk_BinaryExpr(-,-,-) -> EvalBinaryExpr(ex, denv)
+    end
+  pre is_BinaryExpr(ex) => pre_EvalBinaryExpr(ex, denv);
+  EvalBinaryExpr : BinaryExpr * DynEnv -> Value
+  EvalBinaryExpr(mk_BinaryExpr(lhs, op, rhs), denv) ==
+    let v1 = EvalExpr(lhs, denv).val,
+        v2 = EvalExpr(rhs, denv).val 
+    in cases op :
+       <Add> -> mk_IntVal(v1 + v2),
+       <Sub> -> mk_IntVal(v1 - v2),
+       <Div> -> mk_IntVal(v1 div v2),
+       <Mul> -> mk_IntVal(v1 * v2),
+       <Lt> ->  mk_BoolVal(v1 < v2),
+       <Gt> ->  mk_BoolVal(v1 > v2),
+       <Eq> ->  mk_BoolVal(v1 = v2),
+       <And> -> mk_BoolVal(v1 and v2),
+       <Or> ->  mk_BoolVal(v1 or v2)
+    end
+  pre op = <Div> => EvalExpr(rhs, denv).val <> 0;
+end LANG

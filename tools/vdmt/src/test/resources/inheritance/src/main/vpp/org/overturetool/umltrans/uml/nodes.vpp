@@ -1,0 +1,10 @@
+class IUmlNode
+
+end IUmlNode
+
+
+
+class IUmlModelElement
+ is subclass of IUmlNode
+
+end IUmlModelElement

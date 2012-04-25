@@ -1,0 +1,249 @@
+\documentclass{overturerep}
+
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow}
+\usepackage{hyperref}
+\usepackage{float}
+
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
+
+\floatstyle{ruled}
+\newfloat{program}{thp}{lop}
+\floatname{program}{Extension point}
+
+\newcommand{\vdmtools}{VDMTools}
+\newcommand{\vdmstyle}[1]{\texttt{#1}}
+\newcounter{exerciseno}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+%\newcounter{exerciseno}
+
+\newcommand\thebookexercise{\thechapter.\arabic{exerciseno}}
+\newenvironment{myexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise}\enskip}{$\Box$\\
+}
+\newenvironment{myhardexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise $\star$}\enskip}{$\Box$\\
+}
+\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+\newenvironment{mysolution}{
+} %% This will be replaced by a perl script extracting the solutions
+  %% and inserting them automatically into the solutions chapter.
+ 
+
+%\newcommand{\insertcommentedvdm*}[2]{}
+  %% This macro is identified by perl script which will move the
+  %% parameter to the solutions chapter.
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+
+
+% Slightly nicer XML printing than the default.
+\lstdefinelanguage{DCXML}
+{
+	morecomment=[n][keywordstyle]{<}{\ },
+	morecomment=[n][keywordstyle]{<}{\\},
+	morecomment=[n][keywordstyle]{<}{>},
+	morecomment=[n][keywordstyle]{<}{\	},	
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% Some nice defaults for listings
+\lstset{ 
+	basicstyle=\tiny, 
+%	identifierstyle=\textit, 
+	breaklines=true, 
+	frame=shadowbox, 
+	float=htbp, 
+	xleftmargin=5pt, 
+	xrightmargin=5pt,
+	keywordstyle=\color[rgb]{0,0,1},
+   commentstyle=\color[rgb]{0.133,0.545,0.133},
+   stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
+
+
+%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
+%			 frame=tb,
+%                         numbers=left,
+%			 gobble=0,
+%			 showstringspaces=false,
+%			 linewidth=345pt,
+%			 frameround=ffff,
+%			 framexleftmargin=8mm,
+%			 framexrightmargin=8mm,
+%			 framextopmargin=1mm,
+%			 framexbottommargin=1mm,
+%			 aboveskip=7mm,
+%			 belowskip=5mm,
+%			 xleftmargin=10mm,}
+
+\lstset{style=mystyle}
+\lstset{language=VDM++}
+\lstset{alsolanguage=Java}
+
+
+\newcommand{\kw}[1]{{\tt #1}}
+
+%%%%%%%%%%%%%%%%%% Commands for bibtex %%%%%%%%%%%%%%%%%%%%%%%
+%************************************************************************
+%                                                                       *
+%       Bibliography and Terminology supporting commands                *
+%                                                                       *
+%************************************************************************
+
+\newcommand{\bthisbibliography}[1]{\chapter*{References}%
+   \begin {list} {}%
+     {\settowidth {\labelwidth} {[#1]XX}%
+      \setlength {\leftmargin} {\labelwidth}%
+      \addtolength{\leftmargin} {\labelsep}%
+      \setlength {\parsep} {1ex}%
+      \setlength {\itemsep} {2ex}%
+     }
+  }
+\newcommand{\ethisbibliography}{\end{list}}
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
+
+% Requirements environment
+\newenvironment{reqs}{%
+\begin{enumerate}
+%\renewcommand{\labelenumi}{\textbf{R\theenumi}}
+\renewcommand{\theenumi}{\textbf{R\arabic{enumi}}}
+}{%
+\end{enumerate}}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+
+\newcommand{\experience}[1]{%
+\begin{center}
+\fbox{
+\begin{minipage}[t]{.8\textwidth}
+#1
+\end{minipage}}
+\end{center}}
+
+\newcommand{\markDone}[1]{{\color{Gray}#1}}
+\newcommand{\developer}[1]{{\scriptsize \fbox{#1}}}
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Tutorial to Overture/VDM-RT}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{overture}}}
+\fancyfoot[C]{\thepage}
+
+
+%%%%%%%%%%%%%%%%%%%%%% Commands associated with development docs
+\newcommand{\epoint}[1]{{\tt #1}}
+\newcommand{\class}[1]{\textit{#1}}
+\newcommand{\java}[1]{{\tt #1}}
+\newcommand{\lstjava}[1]{
+	\lstset
+	{
+		language=Java,
+		basicstyle=\ttfamily\footnotesize,
+		captionpos=b,
+		caption=#1
+	}
+}
+
+
+\begin{document}
+ 
+\title{Overture Development Documentation}
+\author{Kenneth Lausdahl\\
+        Augusto Ribeiro}
+
+\date{\today}
+
+%\frontmatter
+\reportno{TR-2010-04}     
+
+\pagenumbering{roman}
+\maketitle
+%\addtocounter{page}{2}
+\tableofcontents
+\newpage
+% \include{foreword/foreword}
+
+%\cleardoublepage
+%\mainmatter
+%\lhead{\nouppercase{\rightmark}}
+%\rhead{\nouppercase{\leftmark}}
+
+
+%\pagestyle{fancy}
+%\fancyhead{}
+%\fancyhead[LO]{\leftmark}
+%\fancyhead[RE]{Validated Designs for Object-oriented Systems}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{}
+%%\fancyfoot[LE,RO]{\thepage}
+
+\section{Document History}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Revision} & \textbf{Notes} & \textbf{Date} \\ \hline
+0.1 & Launcher and Editor sections added & 02.2010 \\ \hline
+\end{tabular}
+\end{center}
+
+
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+
+\chapter{Introduction}
+This document describes the way Overture is implemented in Eclipse.
+
+
+\input{Logistics/Logistics}
+
+\input{Implementation/Implementation}
+
+
+
+\bibliographystyle{acm}
+
+\bibliography{bib/bibliography}
+
+\end{document}

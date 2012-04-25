@@ -1,0 +1,43 @@
+\section{The Class Card}
+
+This class models physical cards. Each card has a code, a card id and
+an account id stored on it. The class provides operations to create a
+card and to read information stored on a card.
+
+\begin{vdm_al}
+class Card
+
+types
+  public CardId = nat;
+  public Code = nat;
+  public PinCode = nat;
+
+instance variables
+  code : Code;
+  cardId : CardId;
+  accountId : Account`AccountId;
+
+operations
+  public Card : Code * CardId * Account`AccountId ==> Card
+  Card(c,cid,a) ==
+    (code := c;
+     cardId := cid;
+     accountId := a);
+
+  public GetCode : () ==> Code
+  GetCode() ==
+    return code;
+
+  public GetAccountId : () ==> Account`AccountId
+  GetAccountId() ==
+    return accountId;
+
+  public GetCardId : () ==> CardId
+  GetCardId() ==
+    return cardId;
+
+end Card
+\end{vdm_al}
+
+
+

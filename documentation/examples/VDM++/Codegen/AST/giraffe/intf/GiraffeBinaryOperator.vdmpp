@@ -1,0 +1,29 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:15 CET 2010
+--
+
+class GiraffeBinaryOperator is subclass of GiraffeNode
+values
+    public AND = new GiraffeBinaryOperator("AND");
+    public DIV = new GiraffeBinaryOperator("DIV");
+    public EQUALS = new GiraffeBinaryOperator("EQUALS");
+    public GE = new GiraffeBinaryOperator("GE");
+    public GT = new GiraffeBinaryOperator("GT");
+    public LE = new GiraffeBinaryOperator("LE");
+    public LT = new GiraffeBinaryOperator("LT");
+    public MINUS = new GiraffeBinaryOperator("MINUS");
+    public MOD = new GiraffeBinaryOperator("MOD");
+    public NE = new GiraffeBinaryOperator("NE");
+    public OR = new GiraffeBinaryOperator("OR");
+    public PLUS = new GiraffeBinaryOperator("PLUS");
+    public TIMES = new GiraffeBinaryOperator("TIMES");
+
+instance variables
+    public name:[seq of char] := nil;
+
+operations
+    public GiraffeBinaryOperator: seq of char ==> GiraffeBinaryOperator
+    GiraffeBinaryOperator(n) == name := n;
+
+end GiraffeBinaryOperator

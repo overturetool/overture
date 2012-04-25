@@ -1,0 +1,115 @@
+\section{The Message Channel Class}
+
+\begin{vdm_al}
+class MessageChannel
+
+instance variables
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+  data : [POP3Types`ClientCommand |
+          POP3Types`ServerResponse]  := nil;
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+
+io : IO := new IO();
+debug : bool := true;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+Send: POP3Types`ClientCommand | 
+      POP3Types`ServerResponse ==> ()
+Send(msg) ==
+  data := msg;
+
+Listen: () ==> POP3Types`ClientCommand | 
+               POP3Types`ServerResponse
+Listen() ==
+let d = data in
+  ( data := nil; return d
+  );
+\end{vdm_al}
+ 
+\begin{vdm_al}
+operations
+
+public ServerSend: POP3Types`ServerResponse ==> ()
+ServerSend(p) == 
+( if debug                         
+  then let - = io.echo("***> ServerSend")
+       in skip;                          
+  Send(p);
+  if debug                               
+  then let - = io.echo("***> fin ServerSend")
+       in skip                               
+);                                           
+\end{vdm_al}
+
+\begin{vdm_al}
+public ClientListen: () ==> POP3Types`ServerResponse
+ClientListen() == 
+( if debug
+  then let - = io.echo("***> ClientListen")
+       in skip;
+  let r = Listen(),
+      - = if debug
+          then io.echo("***> fin ClientListen")
+          else false
+  in
+    return r;
+);
+
+public ClientSend: POP3Types`ClientCommand ==> ()
+ClientSend(p) == 
+( if debug
+  then let - = io.echo("***> ClientSend")
+       in skip;
+  Send(p);
+  if debug
+  then let - = io.echo("***> fin ClientSend")
+       in skip;
+);
+
+public ServerListen: () ==> POP3Types`ClientCommand
+ServerListen() == 
+( if debug
+  then let - = io.echo("***> ServerListen")
+       in skip;
+  let c = Listen(),
+      - = if debug
+          then io.echo("***> fin ServerListen")
+          else false
+  in 
+    return c
+);
+\end{vdm_al}
+
+\begin{vdm_al}
+sync 
+  per ServerListen => #fin(ClientSend) - 1 = 
+                      #fin(ServerListen);
+\end{vdm_al}
+
+\begin{vdm_al}
+  per ClientListen => #fin(ServerSend) - 1 = #fin(ClientListen);
+\end{vdm_al}
+
+\begin{vdm_al}
+  per ServerSend => #fin(ClientSend) = #fin(ServerListen) and
+                    #fin(ServerListen) - 1 = #fin(ServerSend);
+\end{vdm_al}
+
+\begin{vdm_al}
+  per ClientSend => #fin(ServerSend) = #fin(ClientListen) 
+                    and 
+                    #fin(ClientSend) = #fin(ServerListen) 
+                    and
+                    #fin(ServerSend) = #fin(ClientSend) ;
+
+end MessageChannel
+\end{vdm_al}

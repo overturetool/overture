@@ -1,0 +1,32 @@
+\begin{vdm_al}
+class VolumeKnob is subclass of EnvironmentTask
+
+operations
+  public VolumeKnob: EventDispatcher * nat ==> VolumeKnob
+  VolumeKnob (ped, pno) == EnvironmentTask("VolumeKnob", ped, pno);
+
+  -- handleEvent receives the responses from the system
+  -- and checks whether the response time for the matching
+  -- stimulus was less than or equal to 1500 time units
+  protected handleEvent: Event ==> ()
+  handleEvent (pev) == duration (0) logSysToEnv(pev.getEvent())
+  post checkResponseTimes(e2s,s2e,1500);
+
+  -- createSignal generates the stimuli for the system
+  createSignal: () ==> ()
+  createSignal () ==
+    duration (0)
+      if (card dom e2s < max_stimuli) then
+        ( dcl num : nat := getNum();
+          logEnvToSys(num);
+          raiseInterrupt("HandleKeyPress", num) );
+
+  -- start the thread of the task
+  public Run: () ==> ()
+  Run () == start(self)
+
+thread
+  periodic (1000,0,0,0) (createSignal)
+  
+end VolumeKnob
+\end{vdm_al}

@@ -1,0 +1,270 @@
+\section{Environment Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Environment
+-- Description: 	Environment class in the VDM project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Environment
+
+--
+-- instance variables
+--
+instance variables
+
+private vdmCtrl : VDMController;
+private io : IO := new IO();
+private inlines : seq of inline := [];
+private outlines : seq of char := [];
+private busy : bool := true;
+
+--
+-- Types definition section
+--
+types   
+inline  = Types`Event;
+InputTP   = seq of inline;
+--
+-- Operations definition section
+--
+operations
+
+public Environment: seq of char ==> Environment
+Environment(filename) ==
+(
+ 	Printer`OutWithTS("Environment created: "  
+ 					 ^ "Some aren't used to an environment"  
+					 ^ "where excellence is expected");
+
+	def mk_(-,input) = io.freadval[InputTP](filename) in
+	(
+	inlines := input;
+	);	 
+);
+
+  
+public Events: () ==> ()
+Events() ==
+(
+   if inlines <> []
+   then 
+   (  
+    dcl done : bool := false, 
+    eventOccurred : bool := false,
+    curtime : Types`Time := time;
+
+    while not done do
+    (
+     def event = hd inlines in      
+		cases event:
+			mk_Types`VechicleRun(-,-) ->
+			(
+				if event.t <= curtime
+				then
+				(
+				     Printer`OutWithTS("Environment: Start Vehicle event "
+				     					 ^ Printer`natToString(event.ID)); 
+					 let ctrl = vdmCtrl.getController(event.ID) in
+					 (
+					 ctrl.run();
+					 );
+			    	 eventOccurred := true;
+				)
+		    ),
+		    mk_Types`TrafficLightRun(-,-) ->
+		    (
+			    if event.t <= curtime
+				then
+				(
+			    	Printer`OutWithTS("Environment: " 
+			    					  ^ " Start TrafficLight event");
+			     
+			      	let light = vdmCtrl.getTrafficLight(event.ID) in 
+			      	start(light);
+
+			     	eventOccurred := true;
+			     )
+		    ),
+		    mk_Types`VehicleUpdateSpeed(-,-,-) ->
+		    (
+		    	if event.t <= curtime
+				then
+				(
+					 Printer`OutWithTS("Environment: SpeedUpdate event: " 
+					 					^ "For vehicle: " 
+					 					^ Printer`natToString(event.ID) 
+					 					^ " New Speed: " 
+					 					^ Printer`natToString(event.speed));
+					 					 
+					 let c = vdmCtrl.getController(event.ID) in 
+					     c.getVehicle().SetSpeed(event.speed);
+				
+					 eventOccurred := true;
+				) 
+		    ),
+		    mk_Types`VehicleUpdatePosition(-,-,-,-) ->
+		    (
+			 	if event.t <= curtime
+				then
+				(
+			 	 	let pos = new Position(event.posX, event.posY) in
+			 	 		let c = vdmCtrl.getController(event.ID) in 
+			       		(
+			       		c.getVehicle().SetPosition(pos); 
+			       		Printer`OutWithTS("Environment: PositionUpdate event: 
+									For vehicle: " 
+									^ Printer`natToString(event.ID) 
+									^ " New position:" 
+									^ pos.toString());
+			       		);
+			     
+			     	eventOccurred := true;
+			    )
+		    ),
+		    mk_Types`VehicleLowGrip (-,-,-) ->
+		    (
+    			if event.t <= curtime
+				then
+				(
+				 Printer`OutWithTS("Environment: LowGrip event: " 
+				 					^ "For vehicle: " 
+				 					^ Printer`natToString(event.ID)); 
+				 let c = vdmCtrl.getController(event.ID) in 
+			     c.getVehicle().setLowGrip(event.lowGrip); 
+			    
+			    eventOccurred := true;
+			    )
+		    ),
+		    mk_Types`VehicleTurnIndication(-,-,-) ->
+		    (
+		    	if event.t <= curtime
+				then
+				(
+				 Printer`OutWithTS("Environment: TurnIndication event: " 
+				 					^ "For vehicle: " 
+		 							^ Printer`natToString(event.ID) 
+		 							^ " New indicator: " 
+		 							^ Vehicle`IndicatorToString(event.turn));  
+				 let c = vdmCtrl.getController(event.ID) in 
+			     c.getVehicle().setTurnIndicator(event.turn); 
+			     
+			     eventOccurred := true;
+			     )
+		    ),
+		    mk_Types`VehicleUpdateDirection(-,-,-) ->
+		    (
+		    	if event.t <= curtime
+				then
+				(
+				 Printer`OutWithTS("Environment: DirectionUpdate event: " 
+				 				  ^ "For vehicle: " 
+				 				  ^ Printer`natToString(event.ID) 
+				 				  ^ " New Direction: " 
+				 				  ^ Types`DirectionToString(event.direction)); 
+			 	 let c = vdmCtrl.getController(event.ID) in 
+			     c.getVehicle().SetDirection(event.direction); 
+			    
+			     eventOccurred := true;
+			     )
+		    ),
+		    mk_Types`WasteTime(-) ->
+		    (
+		    	if event.t <= curtime
+				then
+				(		
+				 Printer`OutWithTS("Environment: Wasting time");	    
+			     eventOccurred := true;
+			    )
+		    ),
+		    others -> Printer`OutWithTS("Environment: No match found")
+		end;
+
+		if eventOccurred 
+	 	then
+	  	(
+	  	inlines := tl inlines;
+	  	done := len inlines = 0;  
+	  	) 
+	  	else done := true;
+		  
+		eventOccurred := false;
+    	);
+	  )
+      else busy := false;
+);
+   
+   public handleEvent : seq of char ==> ()
+   handleEvent(s) ==
+   (
+   Printer`OutWithTS("#Environment Handled System Event: " ^ s);
+   outlines := outlines ^ Printer`natToString(time) ^ ": " ^ s ^ "\n"; 
+   );
+   
+   
+   public report : () ==> ()
+   report() ==
+   (
+   Printer`OutAlways("\n\nHowever beautiful the strategy," ^ 
+   					"you should occasionally look at the results.");
+   Printer`OutAlways("**RESULT***");
+   Printer`OutAlways("***********");
+   Printer`OutAlways(outlines);
+   Printer`OutAlways("\n***********");
+   Printer`OutAlways("***********");
+   );
+   
+   public isFinished : () ==> () 
+   isFinished() == skip;
+   
+   public setVDMCtrl : VDMController ==> ()
+   setVDMCtrl(vdmController) == vdmCtrl := vdmController;
+
+   public run : () ==> ()
+   run() ==
+   (
+    start(self);
+    start(vdmCtrl);
+   )
+--
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+
+--
+-- Threads definition section
+--
+thread
+(
+ while busy do
+ (
+ duration(500)
+   Events();
+ );
+ 
+ Printer`OutAlways("No more events;");
+)
+--
+-- sync definition section
+--
+sync
+ per isFinished => not busy;
+ mutex(handleEvent)
+
+end Environment
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Environment]
+\end{rtinfo}

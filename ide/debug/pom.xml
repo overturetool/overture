@@ -2,32 +2,42 @@
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>ide</artifactId>
-    <version>2.2.0</version>
+    <version>2.1.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.debug</artifactId>
   <name>org.overture.ide.debug</name>
-  <version>2.2.0</version>
+  <version>2.1.1</version>
   
   <dependencies>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.2.0</version>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.ui</artifactId>
-  		<version>2.2.0</version>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overturetool.core</groupId>
-  		<artifactId>interpreter</artifactId>
-  		<version>2.2.0</version>
-  	</dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>2.1.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.ui</artifactId>
+      <version>2.1.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.debug</groupId>
+      <artifactId>org.eclipse.debug.core</artifactId>
+      <version>3.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.debug</groupId>
+      <artifactId>org.eclipse.debug.ui</artifactId>
+      <version>3.7.102</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>com.ibm.icu</artifactId>
+      <version>4.4.2</version>
+    </dependency>
   </dependencies>
 
 

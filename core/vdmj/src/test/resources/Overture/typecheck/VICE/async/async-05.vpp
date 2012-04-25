@@ -1,0 +1,9 @@
+class A
+
+operations
+
+async Op(a:nat)r: nat
+pre a > 7
+post r > 88
+
+end A

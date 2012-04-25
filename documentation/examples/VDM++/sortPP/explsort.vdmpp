@@ -1,0 +1,45 @@
+
+\section{ExplSort}
+
+The class {\em ExplSort} is a refinement of the algorithm described in
+{\em ImplSort}.
+
+\begin{vdm_al}
+class ExplSort is subclass of Sorter
+
+operations
+
+  public Sort: seq of int ==> seq of int
+  Sort(l) ==
+    let r in set Permutations(l) be st IsOrdered(r) in 
+    return r
+
+functions
+
+  Permutations: seq of int -> set of seq of int
+  Permutations(l) ==
+    cases l:
+      [],[-] -> {l},
+      others -> dunion {{[l(i)]^j | 
+                         j in set Permutations(RestSeq(l,i))} | 
+                         i in set inds l}
+    end
+  measure Len;
+
+  RestSeq: seq of int * nat -> seq of int
+  RestSeq(l,i) ==
+    [l(j) | j in set (inds l \ {i})]
+  pre i in set inds l
+  post elems RESULT subset elems l and
+       len RESULT = len l - 1;
+
+  IsOrdered: seq of int -> bool
+  IsOrdered(l) ==
+    forall i,j in set inds l & i > j => l(i) >= l(j);
+
+  Len: seq of int -> nat
+  Len(list) ==
+    len list
+
+end ExplSort
+\end{vdm_al}

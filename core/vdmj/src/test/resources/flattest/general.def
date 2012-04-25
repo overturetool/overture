@@ -1,0 +1,154 @@
+values
+
+s2 = { 2, 4, 6, 8};
+s3 = { };
+l1 = [3, 1, 4, 1, 5, 9, 2];
+l2 = [2, 7, 1, 8];
+m1 = { 1 |-> 2, 5 |-> 3, 6 |-> 6};
+m2 = { 1 |-> 2, 2 |-> 3, 3 |-> 4, 4 |-> 1};
+v16 = set_filter[nat](lambda n:nat & n mod 2 = 0)({1,...,10});
+
+
+
+functions
+
+-- explicit function example
+map_disj : (map nat to nat) * (map nat to nat) -> map nat to nat
+map_disj (m1,m2) ==
+  (dom m1 inter dom m2) <-: m1 munion
+  (dom m1 inter dom m2) <-: m2
+pre forall d in set dom m1 inter dom m2 & m1(d) = m2(d)
+post dom RESULT = (dom m1 union dom m2) \ (dom m1 inter dom m2) and
+     forall d in set dom RESULT & RESULT(d) = m1(d) or
+                                  RESULT(d) = m2(d);
+
+map_inter: (map nat to nat) * (map nat to nat) -> map nat to nat
+map_inter (m1,m2) ==
+  (dom m1 inter dom m2) <: m1
+pre forall d in set dom m1 inter dom m2 & m1(d) = m2(d)
+post dom RESULT = dom m1 inter dom m2 and
+     forall d in set dom RESULT & RESULT(d) = m1(d);
+
+-- implicit function example
+map_inter2 (m1,m2: map nat to nat) m: map nat to nat
+pre forall d in set dom m1 inter dom m2 & m1(d) = m2(d)
+post dom m = dom m1 inter dom m2 and
+     forall d in set dom m & m(d) = m1(d);
+
+map_partition: (map nat to nat) * (map nat to nat) -> 
+               (map nat to nat) * (map nat to nat)
+map_partition (m1,m2) ==
+  mk_(map_inter(m1,m2), map_disj(m1,m2));
+
+-- quoting pre and post conditions
+map_partition2 (m1,m2: map nat to nat) 
+               p:(map nat to nat) * (map nat to nat)
+pre pre_map_inter(m1,m2) and pre_map_disj(m1,m2)
+post let mk_(minter, mdisj) = p in
+       post_map_inter(m1,m2,minter) and
+       post_map_disj(m1,m2,mdisj);
+
+-- example of recursion
+--   note use of quantification in post condition
+map_dinter : seq1 of (map nat to nat) -> map nat to nat
+map_dinter (ms) ==
+  if len ms = 1
+  then hd ms
+  else map_inter (hd ms, map_dinter (tl ms))
+pre forall m1,m2 in set elems ms & pre_map_inter(m1,m2)
+post (len ms = 1 and RESULT = hd ms) or
+     (len ms > 1 and exists m: map nat to nat &
+                      post_map_inter (hd ms, m, RESULT) and
+                      post_map_dinter (tl ms, m));
+
+
+-- higher order functions
+nat_filter : (nat -> bool) * seq of nat -> seq of nat
+nat_filter (p,ns) ==
+  [ns(i) | i in set inds ns & p(ns(i))];
+
+-- polymorphic higher order function
+filter[@elem]: (@elem -> bool) * seq of @elem -> seq of @elem
+filter (p,l) ==
+  [l(i) | i in set inds l & p(l(i))];
+
+
+-- curried polymorphic higher order function
+fmap[@elem]: (@elem -> @elem) -> seq of @elem -> seq of @elem
+fmap (f)(l) ==
+  if l = []
+  then []
+  else [f(hd l)]^(fmap[@elem] (f)(tl l));
+
+-- let expressions
+--   c.f. map_disj (above)
+let_example1 : (map nat to nat) * (map nat to nat) -> (map nat to nat)
+let_example1 (m1,m2) ==
+  let inter_dom = dom m1 inter dom m2
+  in
+    (inter_dom <-: m1) munion (inter_dom <-: m2);
+
+-- using let to select from a set
+set_filter[@elem] : (@elem -> bool) -> (set of @elem) -> (set of @elem)
+set_filter(p)(s) ==
+  if s = {}
+  then {}
+  else let x in set s
+       in (if p(x) then {x} else {}) union
+          set_filter[@elem](p)(s \ {x});
+
+set_filter2[@elem] : (@elem -> bool) -> (set of @elem) -> (set of @elem)
+set_filter2(p)(s) ==
+  { x | x in set s & p(x)};
+
+
+-- quantified expressions
+min(s:set of nat) x:nat
+pre exists y in set s & true
+    -- better written as s <> {} !
+post x in set s and
+     forall y in set s \ {x} & y < x;
+
+pairset_is_map : set of (nat * nat) -> bool
+pairset_is_map (s) ==
+  let dom_s = { d | mk_(d,-) in set s },
+      rng_s = { r | mk_(-,r) in set s }
+  in forall d in set dom_s & 
+        exists1 r in set rng_s & mk_(d,r) in set s;
+
+
+-- patterns
+set2seq[@elem] : set of @elem -> seq of @elem
+set2seq(s) ==
+  cases s:
+    {} -> [],
+    s1 union s2 -> (set2seq[@elem](s1))^(set2seq[@elem](s2))
+  end
+
+operations
+
+-- while loops
+SquareRoot : real * real ==> real
+SquareRoot (r,e) ==
+  (dcl x:real := 1,
+       nextx:real := r;
+   while abs (x - nextx) >= e * x do
+     ( x := nextx;
+       nextx := ((r / x) + x) / 2;
+     );
+   return nextx
+  );
+
+SquareRootErr : real * real ==> real
+SquareRootErr (r,e) ==
+  if r < 0
+  then error
+  else
+    (dcl x:real := 1;
+     dcl nextx:real := r;
+     while abs (x - nextx) >= e * x do
+       ( x := nextx;
+         nextx := ((r / x) + x) / 2;
+       );
+     return nextx
+    )

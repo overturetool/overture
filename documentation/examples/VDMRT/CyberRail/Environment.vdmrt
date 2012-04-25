@@ -1,0 +1,57 @@
+\section{Envirioment}
+
+\begin{vdm_al}
+class Environment
+
+types 
+
+public outline = [TransportPlan] * [nat] * nat;
+public inline = [CyberRail`NavigationInput] * [nat] * [nat] * nat;
+
+instance variables
+  protected io : IO := new IO();
+  protected outfileName : seq of char := "";
+  protected  outlines : seq of outline := [];
+  protected  inlines : seq of inline := [];
+  protected  busy : bool := true;
+
+operations
+
+  public stimulate : () ==> ()
+  stimulate() ==
+    is subclass responsibility;
+
+  public isFinished : () ==> ()
+  isFinished() ==
+    is subclass responsibility;
+
+  public respons : [TransportPlan] * [TransportPlan`Route] * nat ==> ()
+  respons(plan, route, t) ==
+  	(outlines := outlines ^ [mk_(plan,route,t)]);
+
+  public showResults : () ==> ()
+  showResults() ==
+  def - = io.fwriteval[seq of outline](outfileName,outlines,<start>) in skip;
+
+  public Environment : seq of char ==> Environment
+  Environment(fname) ==(
+     def mk_ (-,input) = io.freadval[seq of inline](fname) in
+   inlines := input;
+	outfileName := "Results for " ^ fname;
+)
+
+sync
+	mutex(respons);
+	mutex(showResults);
+
+thread
+(
+	while true do
+	(
+		showResults();
+	)
+)
+
+end Environment
+
+\end{vdm_al}

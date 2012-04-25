@@ -1,0 +1,189 @@
+\section{The Abstract Syntax}
+
+The abstract syntax presented in this section is a simplified subset
+of the outer abstract syntax from the draft VDM-SL Standard
+\cite{ISOVDM93}.
+
+\subsection{Definitions}
+
+In this paper we only consider value definitions and explicit
+function definitions.
+
+\begin{vdm_al}
+
+
+-----------------------------------------------------------------------
+------------------- Abstract Syntax Definitions -----------------------
+-----------------------------------------------------------------------
+
+types
+
+
+-----------------------------------------------------------------------
+-------------------------- Definitions --------------------------------
+-----------------------------------------------------------------------
+
+Definitions :: valuem : seq of ValueDef
+               fnm : map Name to ExplFnDef;
+
+\end{vdm_al}
+
+\subsection{Value Definitions}
+
+The value definitions simply consist of a left hand side pattern and
+a right hand side expression.
+
+\begin{vdm_al}
+
+-----------------------------------------------------------------------
+-------------------------- Value Definitions --------------------------
+-----------------------------------------------------------------------
+
+ValueDef :: pat : Pattern                                     
+            val : Expr;
+\end{vdm_al}
+
+\subsection{Function Definitions}
+
+The abstract syntax of a function which are needed for the looseness
+analysis here is composed of the name of the function, the argument pattern
+and the body expression. Thus, information such as the type of the
+function is not needed in this context.
+
+\begin{vdm_al}
+-----------------------------------------------------------------------
+-------------------------- Functions Definitions ----------------------
+-----------------------------------------------------------------------
+
+ExplFnDef :: nm      : Name
+             pat     : Pattern
+             body    : Expr;
+\end{vdm_al}
+
+\subsection{Expressions}
+
+The expressions which are used in this paper are restricted to let
+expressions (including let-be-such-that expressions), conditional
+expressions, apply expressions (only for function application),
+literals, names, bracketed expressionsa nd (a few) binary expressions.
+These expressions have been selected because they are sufficient to
+show the principles in the loose evaluation presented in this paper.
+
+\begin{vdm_al}
+-----------------------------------------------------------------------
+-------------------------- Expressions --------------------------------
+-----------------------------------------------------------------------
+
+Expr = LetExpr | LetBeSTExpr| IfExpr | CasesExpr |
+       UnaryExpr | BinaryExpr | SetEnumerationExpr |
+       ApplyExpr | Literal | Name | BracketedExpr ;            
+
+
+BracketedExpr :: expr : Expr;
+
+LetExpr :: lhs   : Pattern
+           rhs   : Expr
+           body  : Expr;
+
+LetBeSTExpr :: lhs : Bind                                     
+               St  : Expr
+               In  : Expr;
+
+IfExpr :: test   : Expr                                          
+          cons   : Expr
+          altn   : Expr;
+
+CasesExpr :: sel    : Expr
+             altns  : seq of CaseAltn 
+             Others : [Expr];
+
+CaseAltn :: match : Pattern
+            body  : Expr;
+
+UnaryExpr  :: opr : UnaryOp
+              arg : Expr;
+
+UnaryOp = <NUMMINUS>;
+
+BinaryExpr :: left  : Expr
+              opr   : BinaryOp
+              right : Expr;
+
+BinaryOp = <EQ> | <NUMPLUS> | <NUMMINUS> | <NUMMULT> | <SETMINUS> ;
+
+SetEnumerationExpr :: els : seq of Expr;
+
+ApplyExpr :: fct : Name
+             arg : Expr;
+
+Name :: ids : seq of Id;
+
+Id = seq of char;
+\end{vdm_al}
+
+\subsection{Patterns and Binds}
+
+The patterns used in this paper are pattern identifiers (notice here
+how the position of the pattern has been incorporated as
+well\footnote{We will see later why this is essential, even though any
+other unique identification of the pattern name could be used.}), and
+set patterns (for set enumeration and set union patterns). For
+bindings we are only considering set bindings because we only
+investigate an executable subset of VDM-SL here.
+
+\begin{vdm_al}
+-----------------------------------------------------------------------
+-------------------- Patterns and Bindings ----------------------------
+-----------------------------------------------------------------------
+
+Pattern = PatternName | MatchVal | SetPattern;
+
+PatternName :: nm : [(Name * Position)];
+
+MatchVal :: val : Expr;
+
+SetPattern = SetEnumPattern | SetUnionPattern;
+
+SetEnumPattern :: Elems : seq of Pattern;
+
+SetUnionPattern :: lp : Pattern
+                   rp : Pattern;
+
+Position = nat * nat;
+
+Bind = SetBind;
+
+SetBind :: pat : Pattern
+           Set : Expr;
+\end{vdm_al}
+
+Only set bindings are considered.
+
+\subsection{Literals}
+
+We have chosen only to have numerical and boolean literals in this
+paper.
+
+\begin{vdm_al}
+-----------------------------------------------------------------------
+-------------------- Literals -----------------------------------------
+-----------------------------------------------------------------------
+
+Literal = BoolLit | NumLit;
+
+BoolLit:: val : bool;
+
+NumLit :: val : int
+
+values
+
+ pat : Pattern = mk_PatternName(mk_(mk_Name(["x"]),mk_(1,1)));
+ 
+ sexpr : Expr = mk_SetEnumerationExpr([mk_NumLit(1),mk_NumLit(2)]);
+ expr : Expr = mk_LetBeSTExpr(mk_SetBind(pat,sexpr), 
+                              mk_BoolLit(true), 
+                              mk_Name(["x"]));
+                              
+ expr2 : Expr = mk_BinaryExpr(expr, <NUMPLUS>, expr);
+
+\end{vdm_al}

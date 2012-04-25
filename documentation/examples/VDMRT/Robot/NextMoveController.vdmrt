@@ -1,0 +1,129 @@
+class NextMoveController
+ 
+instance variables
+obs : map Grid`Point to Grid`PointAvalibility;
+mobs : set of MovingObstacle := {};
+thread
+-- periodic (period,jitter,delay,offset) (operation
+periodic(2500E6,1,0,0)( LocateMovingObstacles);
+ 
+sync
+--check before move
+mutex (SetObs, IsPointBlocked);
+ 
+-- no simultanious calls
+mutex (SetObs);
+mutex (WaitForAvalibility);
+ 
+mutex (LocateMovingObstacles);
+mutex (GetNextPoint);
+per GetNextPoint => #fin(LocateMovingObstacles) > #fin(GetNextPoint);
+per IsPointBlocked => #fin(SetObs) > #fin(IsPointBlocked);
+ 
+operations
+ 
+ public NextMoveController: () ==> NextMoveController
+ NextMoveController () ==
+ (
+   skip;
+ );
+ 
+public AddMovingObsticle : MovingObstacle ==> ()
+ AddMovingObsticle(mo) ==
+   mobs := mobs union {mo};
+ 
+private LocateMovingObstacles : () ==>()
+ LocateMovingObstacles() ==
+ duration(100)
+ (
+ 
+    let m = { mo.GetPos()|-><Occupied> | mo in set mobs} in
+     SetObs(m);
+ );
+ 
+private SetObs: map Grid`Point to Grid`PointAvalibility ==> ()
+ SetObs(mp) ==
+  (
+   obs := { |->}; 
+   -- remove old data could be replaced by using the thread 
+   -- id of the thread
+   obs := obs ++ mp
+ );
+ 
+private WaitForAvalibility: Grid`Point ==> ()
+ WaitForAvalibility(p) ==
+   while IsPointBlocked(p) do
+    (
+     Util`PrintDebug("Waiting for obstacle on pos:");
+     Util`PrintValue(p);
+     Util`PrintInt(time);
+ 
+     skip;
+   );
+ 
+private IsPointBlocked: Grid`Point ==> bool
+ IsPointBlocked(p) ==
+(
+ 
+ 
+          Util`PrintDebug("Requesting Pos");
+          Util`PrintValue(p);
+          Util`PrintDebug("Mobs");
+          for all mo in set dom obs do
+            Util`PrintValue(mo);
+ 
+if p in set dom obs then
+Util`PrintDebug("in")
+else
+Util`PrintDebug("not");
+ 
+   return p in set dom obs;
+);
+ 
+ public GetNextPoint : set of Grid`Point * Grid`Point ==> [Grid`Point]
+ GetNextPoint(neighbours, dest) ==
+   let tmp={p| p in set neighbours 
+             & not exists q in set neighbours & 
+                      Distance(p, dest) > Distance(q, dest)}
+    in
+      for all p in set tmp      
+        do
+        (
+ 
+          WaitForAvalibility(p);
+          
+ 
+ 
+           return p
+        )
+ pre card neighbours > 0;
+ 
+functions
+ 
+  Distance: Grid`Point * Grid`Point -> nat
+  Distance(p1, p2) ==
+    def a = (p2.X-p1.X)* (p2.X-p1.X) + (p2.Y-p1.Y)* (p2.Y-p1.Y)
+      in
+        if 0<= a then
+          floor(MATH`sqrt(a))
+        else
+           0;
+ 
+end NextMoveController
+
+
+
+class NextMoveControllerTest is subclass of TestCase
+values
+ 
+operations
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () == skip;
+ 
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end NextMoveControllerTest

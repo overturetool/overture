@@ -1,0 +1,70 @@
+class Conveyor
+ 
+functions
+
+instance variables
+goods : seq of Colli := [];
+slides : seq of Slide := [];
+inv forall a,b in set inds slides & 
+ a<>b => slides(a).getID() <> slides(b).getID();
+
+operations
+
+ public addColli : Colli ==> ()
+ addColli(elem) == goods := goods ^ [elem];
+
+ public addSlide : Slide ==> ()
+ addSlide(elem) == slides := slides ^ [elem]
+pre forall a in set inds slides & elem.getID() <> slides(a).getID();
+
+ public getSlides : () ==> seq of Slide
+ getSlides() == return slides;
+
+ public
+ distributeGoods : () ==> ()
+ distributeGoods() ==
+ (dcl doomed : set of Colli := {};
+  for all x in set inds goods do 
+   for all y in set inds slides do 
+    if goods(x).getDestination() = slides(y).getID() 
+    then --hvis destination matcher slisk ID
+    (slides(y).addGoods(goods(x));
+     doomed := doomed union {goods(x)};
+    );
+  for all i in set doomed do 
+   removeGoods(i);
+ );
+
+ public removeGoods : Colli ==> ()
+ removeGoods(elem) ==
+  (goods := [goods(x)|x in set inds goods & goods(x) <> elem ]
+    --build a new sequence of all the elements <> input
+   --IO`print( "removeGoods called, goods: \n");
+   --IO`print(goods);
+  );
+
+ public checkForUndeliverableGoods : () ==> set of Colli
+ checkForUndeliverableGoods() ==
+ (
+  return {goods(x)|x in set inds goods & 
+   not exists s in set inds slides &
+   slides(s).getID() = goods(x).getDestination() };
+ );
+
+--print methods for testing
+ public printColli : () ==> ()
+ printColli()==
+ for all x in set inds goods do
+ (IO`print( goods(x).getID() );
+  IO`print("\t");
+ );
+
+ public printSlides : () ==> ()
+ printSlides()==
+ for all x in set inds slides do
+ (IO`print(slides(x).getID() );
+  IO`print("\t");
+ );
+
+end Conveyor
+  

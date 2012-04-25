@@ -1,0 +1,84 @@
+\documentclass[11pt,a4paper,oneside]{report}
+\usepackage[draft,danish]{fixme}
+\usepackage{url}
+\usepackage{hyperref}
+\begin{document}
+
+\chapter{Overture components descriptions}
+
+
+\section{Basic automatic checks and GUI}
+\begin{description}
+	\item[\textbf{Refactoring support}] Whenever systematic
+          changes needs to be made throughout a large model it is an
+          advantage to have automatic support assisting in these
+          updates. Eclipse and other IDEs have support for this called
+          refactoring but this needs to be adapted for Overture.
+
+	\item[\textbf{Editor with syntax highlighting}] Editor for editing VDM models in the same way as know for Java including syntax highlighting of keywords etc.
+
+	\item[\textbf{Syntax check}] Providing syntax check of VDM models. \textbf{VDMJ} Parser.
+
+	\item[\textbf{Type check}] Providing type checking of VDM model. \textbf{VDMJ} Type checker.
+
+\end{description}
+
+\section{Connections to standard development environments}
+\begin{description}
+	\item[\textbf{Code Generators C++, Java}] Code generator like in VDM Tools. Generating compilable source code from VDM models.
+
+	\item[\textbf{Reverse Engineering support}] Support for going
+          from a programming language such as Java up to a VDM++ model
+          would be desirable. A prototype of this was developed for VDMTools.
+
+	\item[\textbf{GUI generators}] Tool support for automatically
+          providing a basic GUI for each of the main
+          functions/operations in a VDM++ model could be made. EPROL
+          had somethinmg like this that could be used for inspiration
+          for a similar Overture feature.
+     
+	\item[\textbf{UML visualization support}] \textbf{umltrans}
+Enabling VDM models to be transformed into UML diagrams Class Diagrams, Sequence Diagram etc. A bidirectional transformations where a class can be modified in either VDM or UML and transfered into the other and merged.
+	\item[\textbf{SysML, AADL visualization support}] 
+The Systems Modeling Language (SysML), is a Domain-Specific Modeling language for systems engineering. It supports the specification, analysis, design, verification and validation of a broad range of systems and systems-of-systems. SysML was originally developed by an open source specification project, and includes an open source license for distribution and use. SysML is defined as an extension of a subset of the Unified Modeling Language (UML) using UML's profile mechanism. \href{http://en.wikipedia.org/wiki/Systems_Modeling_Language}{wiki}
+
+The AADL is a modeling language that supports early and repeated analyses of a system's architecture with respect to performance-critical properties through an extendable notation, a tool framework, and precisely defined semantics.
+
+The language employs formal modeling concepts for the description and analysis of application system architectures in terms of distinct components and their interactions. It includes abstractions of software, computational hardware, and system components for (a) specifying and analyzing real-time embedded and high dependability systems, complex systems of systems, and specialized performance capability systems and (b) mapping of software onto computational hardware elements.
+
+The AADL is especially effective for model-based analysis and specification of complex real-time embedded systems. This technical note is an introduction to the concepts, language structure, and application of the AADL
+
+\end{description}
+
+\section{Validation support}
+\begin{description}
+	\item[\textbf{Interpreter (with debug protocol)}] \textbf{VDMJ}. Enabling the execution of VDM models as in VDM Tools.
+
+	\item[\textbf{Test generation support}] Combinatorial Testing \textbf{traces}
+
+	\item[\textbf{Visualization for execution traces}] \textbf{ShowTrace}. Enabling a trace of execution to be visualized. If a VICE VDM model is traces all executions can be seen on the BUS'es and CPU's etc.
+
+	\item[\textbf{Pretty Printing with coverage}] \fixme{Is this VDMJ and if so. What stage is it in. Think I remember that VDMJ can create the coverarge info so only the presentation is missing}
+\end{description}
+
+\section{Verification support}
+\begin{description}
+	\item[\textbf{Proof obligation generation}] \textbf{VDMJ} but
+          user interface for this have to be developed.
+	\item[\textbf{Model checking support}] For a subset of VDM
+          model checking could be possible by translating to an
+          existing model checker. 
+
+	\item[\textbf{Interactive Proof support}] GUI for manually
+          applying proof rules whenever the automatic prover cannot
+          complete the task.
+
+	\item[\textbf{Automatic proof support}] At the moment this is
+          done by the the translation to HOL and the tactics defined
+          inside HOL specifically for VDM models that have been
+          translated to HOL.
+
+\end{description}
+
+
+\end{document}

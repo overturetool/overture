@@ -1,0 +1,23 @@
+class VDMToolsToolBox is subclass of ToolBox
+operations
+
+public VDMToolsToolBox : set of DEF`Identifier ==> VDMToolsToolBox
+VDMToolsToolBox(sp) ==
+  ( specsFiles := sp;
+   -- InitToolbox(sp);
+  );
+
+
+public InitToolbox: () ==> ()
+InitToolbox() ==
+  is not yet specified;
+  
+public IsPreError: InterpreterResult ==> bool
+IsPreError(res) ==
+  is not yet specified;
+
+protected runTestCase : String * seq of String ==> seq of InterpreterResult
+runTestCase(className, expressions) ==
+  is not yet specified;
+  
+end VDMToolsToolBox

@@ -1,0 +1,30 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeBinaryExpressionImpl is subclass of GiraffeBinaryExpression
+instance variables
+    private iv_lhs:GiraffeExpression;
+    private iv_op:GiraffeBinaryOperator;
+    private iv_rhs:GiraffeExpression;
+
+operations
+    public GiraffeBinaryExpressionImpl: GiraffeExpression * GiraffeBinaryOperator * GiraffeExpression ==> GiraffeBinaryExpressionImpl
+    GiraffeBinaryExpressionImpl(p_lhs, p_op, p_rhs) ==
+    (
+        iv_lhs := p_lhs;
+        iv_op := p_op;
+        iv_rhs := p_rhs;
+    );
+
+    public getLhs: () ==> GiraffeExpression
+    getLhs() == return iv_lhs;
+
+    public getOp: () ==> GiraffeBinaryOperator
+    getOp() == return iv_op;
+
+    public getRhs: () ==> GiraffeExpression
+    getRhs() == return iv_rhs;
+
+end GiraffeBinaryExpressionImpl

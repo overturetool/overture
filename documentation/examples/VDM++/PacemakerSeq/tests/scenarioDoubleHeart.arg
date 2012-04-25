@@ -1,0 +1,3 @@
+mk_(5000 ,[mk_(<PULSE>,<ATRIA> ,4 ,900) , mk_(<PULSE>,<ATRIA> ,4 ,950) ,
+mk_(<PULSE>,<ATRIA> ,4 ,1900) ,mk_(<PULSE>,<ATRIA> ,4 ,1940) ] )
+

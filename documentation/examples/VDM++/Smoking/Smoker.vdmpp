@@ -1,0 +1,46 @@
+class Smoker
+
+instance variables
+  smokerName : seq of char; 
+  elements: set of Table`Element;
+  orig_element : Table`Element;
+  cigarettes : nat := 0;
+  --inv cigarettes in set {0,1};
+  table : Table;
+
+operations
+
+public Smoker: seq of char * Table`Element * Table ==> Smoker
+Smoker(name ,element,tab) == (
+  smokerName := name;
+  elements := {element};
+  orig_element := element;
+  table := tab);
+
+Roll: () ==> ()
+Roll() == (
+  World`graphics.nowSmoking(gui_Graphics`ElementToNat(orig_element));
+  IO`print(smokerName ^ " rolling ");  
+  elements := {};
+  cigarettes := cigarettes + 1
+  )
+pre card elements = 3;
+
+Smoke: () ==> ()
+Smoke() ==(
+  IO`print("and smoking \n"); 
+  cigarettes := cigarettes - 1;
+  elements := {orig_element};
+);
+
+thread
+  while true do (
+    elements := elements union table.TakeElements(elements);
+    Roll();
+    Smoke()
+  )
+
+sync
+per Smoke => cigarettes > 0;
+
+end Smoker

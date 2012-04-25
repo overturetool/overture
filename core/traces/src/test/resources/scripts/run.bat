@@ -1,0 +1,1 @@
+java -Xmx1024m -jar traces-2.0.1-jar-with-dependencies.jar -outputPath . -c %1 -d %2 -max 1000 -r %3 -store false -vdmjOnly e -seed %4 -subset %5 -reduction %6 -log true -logAppend true -projectRoot %7

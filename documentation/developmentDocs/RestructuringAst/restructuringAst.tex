@@ -1,0 +1,764 @@
+\documentclass{overturerep}
+
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow}
+\usepackage{hyperref}
+\usepackage{float}
+
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
+
+\floatstyle{ruled}
+\newfloat{program}{thp}{lop}
+\floatname{program}{Extension point}
+
+\newcommand{\vdmtools}{VDMTools}
+\newcommand{\vdmstyle}[1]{\texttt{#1}}
+\newcounter{exerciseno}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+%\newcounter{exerciseno}
+
+\newcommand\thebookexercise{\thechapter.\arabic{exerciseno}}
+\newenvironment{myexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise}\enskip}{$\Box$\\
+}
+\newenvironment{myhardexercise}{\par
+  \refstepcounter{exerciseno}%
+  \indent\textbf{Exercise\ \thebookexercise $\star$}\enskip}{$\Box$\\
+}
+\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+\newenvironment{mysolution}{
+} %% This will be replaced by a perl script extracting the solutions
+  %% and inserting them automatically into the solutions chapter.
+ 
+
+%\newcommand{\insertcommentedvdm*}[2]{}
+  %% This macro is identified by perl script which will move the
+  %% parameter to the solutions chapter.
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\include{customlangdef}
+% define the layout for listings
+\lstdefinestyle{tool}{basicstyle=\ttfamily,
+                         frame=trBL, 
+			 showstringspaces=false, 
+			 frameround=ffff, 
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{basicstyle=\ttfamily,
+                         frame=trBL, 
+%                         numbers=left, 
+%			 gobble=0, 
+			 showstringspaces=false, 
+%			 linewidth=\textwidth, 
+			 frameround=fttt, 
+			 aboveskip=5mm,
+			 belowskip=5mm,
+			 framexleftmargin=0mm, 
+			 framexrightmargin=0mm}
+
+
+% Slightly nicer XML printing than the default.
+\lstdefinelanguage{DCXML}
+{
+	morecomment=[n][keywordstyle]{<}{\ },
+	morecomment=[n][keywordstyle]{<}{\\},
+	morecomment=[n][keywordstyle]{<}{>},
+	morecomment=[n][keywordstyle]{<}{\	},	
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% Some nice defaults for listings
+\lstset{ 
+	basicstyle=\tiny, 
+%	identifierstyle=\textit, 
+	breaklines=true, 
+	frame=shadowbox, 
+	float=htbp, 
+	xleftmargin=5pt, 
+	xrightmargin=5pt,
+	keywordstyle=\color[rgb]{0,0,1},
+   commentstyle=\color[rgb]{0.133,0.545,0.133},
+   stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
+
+
+
+
+\newcommand{\kw}[1]{{\tt #1}}
+
+%%%%%%%%%%%%%%%%%% Commands for bibtex %%%%%%%%%%%%%%%%%%%%%%%
+%************************************************************************
+%                                                                       *
+%       Bibliography and Terminology supporting commands                *
+%                                                                       *
+%************************************************************************
+
+\newcommand{\bthisbibliography}[1]{\chapter*{References}%
+   \begin {list} {}%
+     {\settowidth {\labelwidth} {[#1]XX}%
+      \setlength {\leftmargin} {\labelwidth}%
+      \addtolength{\leftmargin} {\labelsep}%
+      \setlength {\parsep} {1ex}%
+      \setlength {\itemsep} {2ex}%
+     }
+  }
+\newcommand{\ethisbibliography}{\end{list}}
+\newcommand{\refitem}[2]
+  {\bibitem[#1]{#2}}
+
+% Requirements environment
+\newenvironment{reqs}{%
+\begin{enumerate}
+%\renewcommand{\labelenumi}{\textbf{R\theenumi}}
+\renewcommand{\theenumi}{\textbf{R\arabic{enumi}}}
+}{%
+\end{enumerate}}
+
+%\newcommand{\Exercise}[1]{%
+%    \textbf{Exercise \thechapter.\theexerciseno}
+%   \refstepcounter{exerciseno} #1 $\Box$\\ }%}
+%\newcommand{\initexercise}{\setcounter{exerciseno}{0}}
+
+\newcommand{\experience}[1]{%
+\begin{center}
+\fbox{
+\begin{minipage}[t]{.8\textwidth}
+#1
+\end{minipage}}
+\end{center}}
+
+\newcommand{\markDone}[1]{{\color{Gray}#1}}
+\newcommand{\developer}[1]{{\scriptsize \fbox{#1}}}
+
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{Restructuring of AST}
+\fancyhead[RO,LE]{\resizebox{0.05\textwidth}{!}{\includegraphics{logo.jpg}}}
+\fancyfoot[C]{\thepage}
+
+
+%%%%%%%%%%%%%%%%%%%%%% Commands associated with development docs
+\newcommand{\epoint}[1]{{\tt #1}}
+\newcommand{\class}[1]{\textit{#1}}
+\newcommand{\java}[1]{{\tt #1}}
+\newcommand{\lstjava}[1]{
+	\lstset
+	{
+		language=Java,
+		basicstyle=\ttfamily\footnotesize,
+		captionpos=b,
+		caption=#1
+	}
+}
+
+
+\begin{document}
+ 
+\title{Restructuring of AST in Overture components: Overture-II}
+\author{Kenneth Lausdahl\\
+        Augusto Ribeiro}
+
+\date{\today}
+
+%\frontmatter
+\reportno{TR-2011-11}     
+
+\pagenumbering{roman}
+\maketitle
+%\addtocounter{page}{2}
+\tableofcontents
+\newpage
+
+
+\section*{Document History}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Revision} & \textbf{Notes} & \textbf{Date} \\ \hline
+1 & Initial proposed version& 5.2011 \\ \hline
+\end{tabular}
+\end{center}
+
+
+\pagenumbering{arabic} 
+\setcounter{page}{1}
+
+\chapter{Introduction}
+
+This internal Overture memo aims to provide an overview of the
+alternatives we have for restructuring the AST inside Overture such
+that we only have one common AST and VDMJ becomes divided in more
+manageable components in the overall plug-in architecture. In order to
+determine the optimal way to get this working small experiments have
+been carried out on a very small subset of VDM to see the pros and
+cons with different alternatives.
+
+\section{Goals}
+
+Our goals are to have:
+\begin{enumerate}
+\item A single VDM AST shared by all Overture
+  development. e.g. Parser, Type Checker, interpreter, IDE and other
+  kinds of analysis.
+\item An AST which only holds the VDM abstract syntax thus no code for
+  analysis directly inside the AST itself.
+\item An AST which is well structured and supports analysis through
+  pre defined tree visitors which should be able to visit the complete tree in a pre defined way.
+\begin{enumerate}
+\item Depth first ..
+\item ...
+\end{enumerate}
+\item An AST which can be used both in VDM models for interpretation,
+  pure Java code and code generated VDM models. This requirement is
+  necessary because we would like the ability to decide for each
+  component we develop on the Overture platform if we shall develop it
+  directly using Java or take our own medicine and model its
+  functionality in VDM and then automatically code generate it to Java
+  fitting into the new AST (note that this is currently the approach
+  that was used for the UML mapping).
+
+\item \textbf{The AST must support reuse of VDMJ both: Parser, Type Checker and interpreter. This means that the general way VDMJ works must be taken into account but not dictate the structure but a way to reshape the current code to fit the new AST must exist. ``This excludes complete redevelopment''.}
+\item The ability to develop new plug-ins (including ones not developed by Overture) which can do complete analysis of the AST without requiring any changes to the AST.
+\item The ability to either share an instance of the Overture AST among plugins or provide a clone working copy which a plug-in can manipulate.
+\end{enumerate}
+
+\section{Plan}
+
+\begin{enumerate}
+
+\item Decide which features the AST should have. Which methods do we require by \texttt{Node} to enable the different kinds of analysis we want. And what is needed to hold the kind of information we require.
+\item Create a tool which generates such an AST for Java.
+\item Define the structure of the Overture AST in the format required by the new tool.
+\item Split up the tasks of replacing the old AST with the new one:
+\begin{enumerate}
+\item Parser
+\item Type Checker
+\item Interpreter
+\item Proof obligation generator
+\item All IDE plug-ins
+\end{enumerate}
+\item During the development of the new projects where the new AST is used test cases must be created. This means for e.g.\ the parser that one positive and one negative test must be written for each expression implemented.
+
+\end{enumerate}
+
+
+
+\section{Analysis support}
+A number of questions has been raised about how the AST should be
+structured: In particular the need for having a visitor to the AST and
+the dislike of visitors in general for some kinds of analysis.
+A few of the needed features are:
+\begin{itemize}
+\item Link between: Parent $\leftrightarrow$ Child
+\item Search method; allowing any parent of a type X to be found to be found for a node
+\item Visitors
+\end{itemize}
+
+The following sections will try to address the problem with integration of the current type checker and interpreter with the AST which is implemented inside the current AST.
+
+
+\subsection{Visitor}
+A straitforward visitor would then have a visit method for all types of nodes like shown in listing~\ref{} and there is no return value.
+\lstset{tabsize=2,frame=single}
+
+\begin{lstlisting}[language=java]
+public abstract class Node
+{
+	/**
+	 * Applies this node to the {@link Analysis} visitor {@code analysis}.
+	 * @param analysis the {@link Analysis} to which this node is applied
+	 */
+	public abstract void apply(Analysis analysis);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=java]
+public class AnalysisAdaptor implements Analysis
+{
+	/**
+	* Called by the {@link ABinopExp} node from {@link ABinopExp#apply(Switch)}.
+	* @param node the calling {@link ABinopExp} node
+	*/
+	public void caseABinopExp(ABinopExp node)
+	{
+
+	}
+}
+\end{lstlisting}
+
+Invocation
+\begin{lstlisting}[language=java]
+node.accept(new AnalysisAdaptor());
+\end{lstlisting}
+
+\subsection{Supporting the VDMJ Type Checker through a \texttt{typeCheck} method}
+This idea have previously been discussed over email among a core group
+of core developers. It was discussed how the code from VDMJ which builds on the fact that each node knows how to type check it self and that the general feeling was that visitors is difficult to use.
+\begin{enumerate}
+\item Use a visitor to visit all nodes through a generated visit structure
+\item Implement a method in each node which delegates the method to an instance outside the node.
+\end{enumerate}
+
+\subsection{Delegation through explicit method invocation}
+To allow a node to behaviour like in the current AST a method could be added to the node itself to enable type check and eval. Listing~\ref{} shows this for the base class \texttt{Node}. It is important to understand that this approach requires the AST to be updated if a new analysis should be done also the type argument can not be made type safe do to the lack of knowledge of the type between \texttt{Node} and the return type of the concrete analysis.
+
+\textit{This was generally the preferred idea. However see section~\ref{} for a more general approach.}
+
+\begin{lstlisting}[language=java]
+public abstract class Node
+{
+	public <Typ extends Node> Typ typeCheck(TypeChecker tc, Environment env, NameScope scope, TypeList qualifiers)
+	{
+		return null;
+	}
+
+	public IValue eval(Eval evaluator, Context ctxt)
+	{
+		return null;
+	}
+}
+\end{lstlisting}
+
+An \texttt{ABinopExp} would then look like in listing~\ref{} where \texttt{TypeChecker} and \texttt{Evaluator} is two container classes for all type checkers: expression, pattern etc. And the same goes for eval.
+\begin{lstlisting}[language=java]
+public class ABinopExp extends PExp
+{
+	@Override
+	public <Typ extends Node> Typ typeCheck(TypeChecker tc, Environment env, NameScope scope, TypeList  qualifiers)
+	{
+		return tc.getPExp().caseABinopExp(this, env, scope, qualifiers);
+	}
+
+
+	@Override
+	public IValue eval(Eval evaluator, Context ctxt)
+	{
+		return evaluator.getPExp().caseABinopExp(this, ctxt);
+	}
+}
+\end{lstlisting}
+
+The idea presented in listing~\ref{} would then for the type checker be implemented as shown below in listing~\ref{} for expressions. It looks very similar to whats inside VDMJ and it is almost a direct copy/paste job. The same applies to eval.
+
+\begin{lstlisting}[language=java]
+public static class ExpressionTc extends PExpTypeChecker
+	{
+	@Override
+	public <Typ extends Node> Typ caseABinopExp(ABinopExp source,
+			Environment env, NameScope scope, TypeList qualifiers)
+	{
+		PType expected = null;
+		
+		if(source.getBinop() instanceof APlusBinop || source.getBinop() instanceof AMinusBinop)
+		{
+			expected = new AIntType();
+		}else if( source.getBinop() instanceof ALazyAndBinop ||source.getBinop() instanceof ALazyOrBinop)
+		{
+			expected = new ABoolType();
+		}
+		
+		Node ltype = source.getLeft().typeCheck(this.parent(), env, scope, null);
+		Node rtype = source.getRight().typeCheck(this.parent(), env, scope, null);
+
+		if (!expected.getClass().isInstance(ltype))
+		{
+			report(3065, "Left hand of " + source.getBinop() + " is not "
+					+ expected);
+		}
+
+		if (!expected.getClass().isInstance(rtype))
+		{
+			report(3066, "Right hand of " + source.getBinop() + " is not "
+					+ expected);
+		}
+		source.setType((PType) expected);
+		return (Typ) expected;
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=java]
+PExp exp = new ABinopExp(new AIntConstExp(new TNumbersLiteral("2")), 
+new APlusBinop(new TPlus()), 
+new AIntConstExp(new TNumbersLiteral("5")));
+//Type Check we get the type back
+PType n = exp.typeCheck(typeChecker, new Environment(), new NameScope(), null);
+//Eval we get a value back
+IValue n = exp.eval(new Eval(new PBinopEval(), new PUnopEval(), new CustomPExpEval(), new PBooleanEval(), new PTypeEval()), null);
+\end{lstlisting}
+
+\subsubsection{Generalization}
+If we take a closer look at the idea behind typecheck and eval from the node class we can see a pattern. This is just a visitor pattern wrapped as an QuestionAnswer visitor, so we could do this generally like:
+\begin{lstlisting}[language=java]
+public abstract class Node
+{
+	/**
+	 * Returns the answer for {@code answer} by applying this node with the
+	 * {@code question} to the {@link QuestionAnswer} visitor.
+	 * @param caller the {@link QuestionAnswer} to which this node is applied
+	 * @param question the question provided to {@code answer}
+	 * @return the answer as returned from {@code answer}
+	 */
+	public abstract <Q,A> A apply(QuestionAnswer<Q,A> caller, Q question);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=java]
+public class ABinopExp extends PExp
+{
+	/**
+	* Calls the {@link QuestionAnswer<Q, A>#caseABinopExp(ABinopExp)} of the {@link QuestionAnswer<Q, A>} {@code caller}.
+	* @param caller the {@link QuestionAnswer<Q, A>} to which this {@link ABinopExp} node is applied
+	* @param question the question provided to {@code caller}
+	*/
+	@Override
+	public <Q, A> A apply(QuestionAnswer<Q, A> caller, Q question)
+	{
+		return caller.caseABinopExp(this, question);
+	}
+}
+\end{lstlisting}
+This approach allows us to do any analysis in a type safe way like:
+
+And we define our type checker and evaluator as:
+\begin{lstlisting}[language=java]
+public class TypeCheckInfo
+{
+	public Environment env;
+	public NameScope scope;
+	public TypeList qualifiers;
+}
+
+public class TypeCheckVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, PType>
+{
+	@Override
+	public PType caseABinopExp(ABinopExp node, TypeCheckInfo question)
+	{
+		PType expected = null;
+
+		if (node.getBinop() instanceof APlusBinop
+				|| node.getBinop() instanceof AMinusBinop)
+		{
+			expected = new AIntType();
+		} else if (node.getBinop() instanceof ALazyAndBinop
+				|| node.getBinop() instanceof ALazyOrBinop)
+		{
+			expected = new ABoolType();
+		}
+
+		Node ltype = node.getLeft().apply(this,question);
+		Node rtype = node.getRight().apply(this,question);
+
+		if (!expected.getClass().isInstance(ltype))
+		{
+			report(3065, "Left hand of " + node.getBinop() + " is not "
+					+ expected);
+		}
+
+		if (!expected.getClass().isInstance(rtype))
+		{
+			report(3066, "Right hand of " + node.getBinop() + " is not "
+					+ expected);
+		}
+		node.setType((PType) expected);
+		return expected;
+	}
+}
+\end{lstlisting}
+
+and invoke this like
+
+\begin{lstlisting}[language=java]
+PType t = exp.apply(new TypeCheckVisitor(), new TypeCheckInfo());
+\end{lstlisting}
+
+This approach provides enables both a type checker and interpreter to be implemented and other things to be implemented through the same interface on the AST nodes.
+
+\subsection{Plug-in use and derived trees}
+
+There is generally three ways plug-ins might use the AST:
+\begin{enumerate}
+\item Read only. The tree is used as input in a read only style to do some internal processing.
+\item Read/Write. The plug-in will use the tree for internal processing and possibly add plug-in specific data to the AST.
+\item Read/Write. The plug-in will use the tree and possible rewrite the AST and add new information to it.
+\end{enumerate}
+
+The three different usage kinds differ be either leaving the source AST intact possibly adding plug-in specific data or changing the AST in any way. Thus the latter will require a AST clone, however the two first types could be direct access to the AST used in our IDE.
+
+When it comes to ``derived trees'' it might turn out to be very inefficient to copy and AST all the time especially for the parse/type check phases. Instead a visitor can potentially be implemented to instantiate a new AST-2 from a source AST, but this will add unnecessary complexity and break back tracking to the original AST.
+
+\subsection{Plug-in access}
+We can chose to either give access to the internal AST of the IDE or only allow access to a clone which a plug-in can obtain.
+
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns a deep clone of this {@link ARealType} node.
+	 * @return a deep clone of this {@link ARealType} node
+	 */
+	public ARealType clone()
+	{
+		...
+	}
+
+
+	/**
+	**
+	 * Creates a deep clone of this {@link ARealType} node while putting all
+	 * old node-new node relations in the map {@code oldToNewMap}.
+	 * @param oldToNewMap the map filled with the old node-new node relation
+	 * @return a deep clone of this {@link ARealType} node
+	 */
+	public ARealType clone(Map<Node,Node> oldToNewMap)
+	{
+		...
+	}
+\end{lstlisting}
+
+\subsection{Derived trees/custom plug-in data}
+We should keep it simple. Since the plug-in which exists now only need a feature to provide simple tags on certain nodes a complete AST copy to new identical classes with a number of new fields might be overdoing it. However a simple map in the \texttt{Node} class could hold such information. But this does not exclude the other derived AST idea from being implemented later, it will just be an implementation of the source AST visitor.
+
+\begin{lstlisting}[language=java]
+	String pluginId ="org.overture.ide.plugins.codegeneration";
+	String field="javaType";
+	exp.setCustomField(pluginId, field, String.class);
+	Class javaClass = exp.getCustomField(pluginId, field,Object.class);
+\end{lstlisting}
+
+
+\section{Illustration with a simple AST structure}
+To be written:
+
+\lstset{morekeywords={Tokens,Abstract,Syntax,Tree,Aspect,Declaration},morecomment=[l]{//}}
+\begin{lstlisting}
+Tokens
+
+  plus = '+';
+  int = 'int';
+  real = 'real';
+  bool = 'bool';
+  true = 'true';
+  false = 'false';
+  and_and = '&&';
+  or_or = '||';
+  numbers_literal = 'some regex for numbers';
+
+Abstract Syntax Tree
+
+binop
+    =  {plus} [token]:plus
+    |   {minus} [token]:minus
+    |   {lazy_and} [token]:and_and
+    |   {lazy_or} [token]:or_or
+    ;
+    
+unop
+    =   {negate} [token]:minus
+    ;
+    
+exp
+    =  {binop} [left]:exp binop [right]:exp
+    |   {unop} unop exp
+    |   {int_const} numbers_literal
+    |   {boolean_const} boolean
+    |   {apply} [root]:exp [args]:exp*
+    ;
+    
+boolean
+    =  {true}
+    |   {false}
+    ;
+    
+type
+    =  {real} [token]:real
+    |   {int} [token]:int
+    |   {bool} [token]:bool
+    ;
+
+Aspect Declaration
+
+exp 
+    = [type]:type
+    ;
+\end{lstlisting}
+
+\chapter{How to move forward}
+
+\section{AST Features}
+
+copy
+SL API
+OO structure - link to VDM PP classes
+
+\subsection{Structure}
+All nodes in the AST are linked by their parent. This means that any node knows who its parent is and can only be a child of a single node.
+
+\begin{lstlisting}[language=java]
+	/**
+	 * Sets the parent node of this node.
+	 * @param parent the new parent node of this node
+	 */
+	protected void parent(Node parent) {
+		this.parent = parent;
+	}
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=java]
+	public void removeChild(Node child)
+	{
+		//removes the child and sets the child of this node to null
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[language=java]
+//sets a new child of this node by first removing the current child from this node then removing the new one from its old parent and adding it	
+	public void setLeft(PExp value)
+	{
+		if (this._left != null) {
+			this._left.parent(null);
+		}
+		if (value != null) {
+			if (value.parent() != null) {
+				value.parent().removeChild(value);
+		}
+			value.parent(this);
+		}
+		this._left = value;
+	}
+\end{lstlisting}
+
+\subsection{Enumerated node types}
+All nodes must have return an element from a node enumeration identifying the specific node type. The same applies to derrived nodes which must return an element of an enumeration from the class it inherit from. e.g.:
+
+\begin{lstlisting}[language=java]
+public enum NodeEnum
+{
+	TOKEN,
+	BINOP,
+	UNOP,
+	EXP,
+	BOOLEAN,
+	TYPE
+}
+
+public abstract class PExp extends Node
+{
+	public NodeEnum kindNode()
+	{
+		return NodeEnum.EXP;
+	}
+}
+\end{lstlisting}
+
+\subsection{Copying}
+The AST must include the following clone methods, which either creates a single deep copy of the AST or creates a copy including a mapping from source to copy map.
+\begin{lstlisting}[language=java]
+	public @Override abstract Object clone();
+	public abstract Node clone(Map<Node,Node> oldToNewMap);
+\end{lstlisting}
+
+\subsection{Copy-extend}
+It should be possible to extend an AST with either new fields on nodes or by adding new subclasses the the AST, however this poses a challenge when such an extended tree should be constructed from from a smaller tree. $SourceAST \subset ExtendedAST$. The AST creator must be able to output a visitor which can instantiate any extended tree of its source tree.
+
+\begin{lstlisting}[language=java]
+@Override
+public ABinopExpExtended caseABinopExp(ABinopExp node)
+{//n.setLeft(node.getLeft().apply(this)) could also be an option
+	ABinopExpExtended n = new ABinopExpExtended(
+		node.getLeft().apply(this), 
+		node.getBinop().apply(this), 
+		node.getLeft().apply(this), 
+		null .....);
+	return n;
+}
+\end{lstlisting}
+
+\subsection{Navigation}
+
+\subsubsection{Get ancestor by type}
+Get an ancestor of a specific type from a node if it exists by searching up in the tree.
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns the nearest ancestor of this node (including itself)
+	 * which is a subclass of {@code classType}.
+	 * @param classType the superclass used
+	 * @return the nearest ancestor of this node
+	 */
+	public <T extends Node> T getAncestor(Class<T> classType) {
+		Node n = this;
+		while (!classType.isInstance(n)) {
+			n = n.parent();
+			if (n == null) return null;
+		}
+		return classType.cast(n);
+	}
+\end{lstlisting}
+
+\subsubsection{Standard visitor}
+The standard visitor implemented for each node a call to analysis where the method called is specific the the current node.
+\begin{lstlisting}[language=java]
+	/**
+	 * Applies this node to the {@link Analysis} visitor {@code analysis}.
+	 * @param analysis the {@link Analysis} to which this node is applied
+	 */
+	public abstract void apply(IAnalysis analysis);
+\end{lstlisting}
+
+\subsubsection{Answer visitor}
+An answer visitor implements a call for each node to the caller with a specific method for this node and allows a value of A to be returned.
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns the answer for {@code caller} by applying this node to the
+	 * {@link Answer} visitor.
+	 * @param caller the {@link Answer} to which this node is applied
+	 * @return the answer as returned from {@code caller}
+	 */
+	public abstract <A> A apply(IAnswer<A> caller);
+\end{lstlisting}
+
+\subsubsection{Question visitor}
+A question visitor implements a call for each node to the caller with a specific method for this node where a question of type Q can be parsed to the method.
+\begin{lstlisting}[language=java]
+	/**
+	 * Applies this node to the {@link Question} visitor {@code caller}.
+	 * @param caller the {@link Question} to which this node is applied
+	 * @param question the question provided to {@code caller}
+	 */
+	public abstract <Q> void apply(IQuestion<Q> caller, Q question);
+\end{lstlisting}
+
+\subsubsection{Question Answer visitor}
+A question visitor implements a call for each node to the caller with a specific method for this node where a question of type Q can be parsed to the method and a return value of A will be returned.
+\begin{lstlisting}[language=java]
+	/**
+	 * Returns the answer for {@code answer} by applying this node with the
+	 * {@code question} to the {@link QuestionAnswer} visitor.
+	 * @param caller the {@link QuestionAnswer} to which this node is applied
+	 * @param question the question provided to {@code answer}
+	 * @return the answer as returned from {@code answer}
+	 */
+	public abstract <Q,A> A apply(IQuestionAnswer<Q,A> caller, Q question);
+\end{lstlisting}
+
+\bibliographystyle{acm}
+
+\bibliography{bib/bibliography}
+
+\end{document}

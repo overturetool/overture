@@ -1,0 +1,25 @@
+-----------------------------------------------
+-- Class:			Config
+-- Description: 	Config contains configuration values
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Config
+
+--
+-- Values definition section
+--
+values
+
+--max passengers on bus
+public static BusCapacity : nat = 15;
+--speed limit on road, buses will always drive to the limit   		
+public static DefaultRoadSpeedLimit : nat = 10;   			
+--amount of waiting time beofre passengers become annoyed
+public static PassengerAnnoyanceLimit : nat = 40;   	
+--max value of passengers inflow 
+public static MaxInflow : nat = 10;   	
+
+end Config

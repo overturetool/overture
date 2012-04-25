@@ -1,0 +1,21 @@
+class Expert
+
+instance variables
+
+quali : set of Qualification;
+
+types
+ 
+public Qualification = <Mech> <Chem> | <Bio> | <Elec>;
+
+operations
+
+public Expert: set of Qualification ==> Expert
+Expert(qs) ==
+  quali := qs;
+
+public GetQuali: () ==> set of Qualification
+GetQuali() ==
+  return quali;
+  
+end Expert

@@ -1,0 +1,32 @@
+class Reflector
+  is subclass of Configuration
+
+instance variables
+  inv ReflectorInv(next, config, alph)
+
+functions
+  ReflectorInv:
+    [Component] * inmap nat to nat * Alphabet -> bool
+  ReflectorInv (pnext, pconfig, palph) ==
+    pnext = nil and
+    dom pconfig inter rng pconfig = {} and
+    dom pconfig union rng pconfig = palph.GetIndices()
+
+operations
+  public Reflector:
+    nat * Alphabet * inmap nat to nat ==> Reflector
+  Reflector (psp, pa, pcfg) ==
+    atomic (alph := pa;
+      config := {pa.Shift(i, psp-1) |->
+        pa.Shift(pcfg(i), psp-1) |
+        i in set dom pcfg})
+  pre psp in set pa.GetIndices() and
+      ReflectorInv(next, pcfg, pa);
+
+  public Substitute: nat ==> nat
+  Substitute (pidx) ==
+    if pidx in set dom config
+    then Encode(pidx)
+    else Decode(pidx)
+
+end Reflector

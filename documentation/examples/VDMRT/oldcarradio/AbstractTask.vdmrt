@@ -1,0 +1,69 @@
+\begin{vdm_al}
+class AbstractTask
+
+instance variables
+  -- keep the name of the task for easy logging
+  name : seq of char := [];
+
+  -- the queue for normal events to be handled by this task
+  events : seq of NetworkEvent := [];
+  -- the queue of high-priority events to be handled by this task
+  interrupts : seq of InterruptEvent := [];
+
+  -- a link to the dispatcher for out-going messages (events)
+  dispatcher : EventDispatcher
+
+operations
+  public AbstractTask: seq of char * EventDispatcher ==> AbstractTask
+  AbstractTask (pnm, ped) == atomic ( name := pnm; dispatcher := ped; );
+
+  public getName: () ==> seq of char
+  getName () == return name;
+
+  -- setEvent is a call-back used by the EventDispatcher to insert
+  -- events into the appropriate event queue of this AbstractTask instance
+  public setEvent: Event ==> ()
+  setEvent (pe) == 
+    if isofclass(NetworkEvent,pe)
+    then events := events ^ [pe]
+    else interrupts := interrupts ^ [pe];
+
+  -- getEvent is called by the event loop of this AbstractTask instance to 
+  -- process incoming events when they are available. note that getEvent 
+  -- is blocked by a permission predicate (see sync) when no events are 
+  -- available and also note that getEvent gives interrupts priority over 
+  -- other events
+  protected getEvent: () ==> Event
+  getEvent () ==
+    if len interrupts > 0
+    then ( dcl res: Event := hd interrupts;
+           interrupts := tl interrupts;
+           return res )
+    else ( dcl res: Event := hd events;
+           events := tl events;
+           return res );
+
+  -- handleEvent shall be overloaded by the derived classes to implement
+  -- the actual event loop handling. a typical event loop handler would be
+  -- thread while (true) do handleEvent(getEvent())
+  --protected handleEvent: Event ==> ()
+  --handleEvent (-) == is subclass responsibility;
+
+  -- sendMessage is used to send a message to another task
+  -- typically used for inter process communication
+  protected sendMessage: seq of char * nat ==> ()
+  sendMessage (pnm, pid) == dispatcher.SendNetwork(name, pnm, pid);
+
+  -- raiseInterrupt is used to send a high-priority message
+  -- typically used to communicate from environment to the system or vice versa
+  protected raiseInterrupt: seq of char * nat ==> ()
+  raiseInterrupt (pnm, pid) == dispatcher.SendInterrupt(name, pnm, pid)
+
+sync
+  -- setEvent and getEvent are mutually exclusive
+  mutex (setEvent, getEvent);
+  -- getEvent is blocked until at least one message is available
+  per getEvent => len events > 0 or len interrupts > 0
+
+end AbstractTask
+\end{vdm_al}

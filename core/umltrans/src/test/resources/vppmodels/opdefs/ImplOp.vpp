@@ -1,0 +1,12 @@
+class ImplOp
+
+operations
+
+Op(n1, n2 : nat) r : nat 
+post r = n1 + n2;
+
+Op(i1,i2,i3: int) r : bool 
+pre i1 > i2
+post r = i3 < i2
+
+end ImplOp

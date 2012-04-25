@@ -1,0 +1,55 @@
+--The TestSensor Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		14/5 - 2008
+-- Updated:
+-- Description: 	Test class to test Sensors
+-----------------------------------------------
+
+--
+-- class definition
+--
+class TestSensor is subclass of TestCase
+
+--
+-- instance variables
+--
+instance variables
+
+tempSensor 	: TemperatureSensor;
+humidSensor	: HumidSensor;
+
+--
+-- Operations definition section
+--
+operations
+
+public TestSensor: seq of char ==> TestSensor
+	TestSensor(nm) == name := nm;
+
+protected SetUp: () ==> ()
+	SetUp() ==
+	(tempSensor := new TemperatureSensor(1, <TEMPSENSOR>, 0);
+humidSensor := new HumidSensor(2, <HUMIDSENSOR>, 0);
+	);
+
+protected Test: () ==> ()
+	Test() ==
+		(AssertTrue(tempSensor.GetID() = 1);
+		AssertTrue(tempSensor.GetType() = <TEMPSENSOR>);
+		AssertTrue(tempSensor.ReadValue() = 0);
+
+		AssertTrue(humidSensor.GetID() = 2);
+		AssertTrue(humidSensor.GetType() = <HUMIDSENSOR>);
+		AssertTrue(humidSensor.ReadValue() = 0);		
+		);
+
+protected RunTest: () ==> ()
+	RunTest() == Test();
+
+protected TearDown: () ==> ()
+	TearDown() == skip;
+
+
+end TestSensor

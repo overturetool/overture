@@ -1,0 +1,29 @@
+-- ===============================================================================================================
+-- Allocator in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- (strategy pattern)
+-- ===============================================================================================================
+
+class AllocatorStrategy
+
+	instance variables
+		protected trayAllocator : [TrayAllocator] := nil; 			-- TrayAllocator
+		
+	operations
+		
+		public AllocateTray: nat ==> set of Tray
+		AllocateTray (-) ==
+			is subclass responsibility;
+		
+		public InductionsWithHigherPriority: InductionController ==> bool
+		InductionsWithHigherPriority(ic) ==
+			is subclass responsibility;
+			
+	functions
+	
+	    -- Calculate current tray UID at position in front of induction based on position of card reader 
+		protected InductionOffset: Tray`UID * nat -> Tray`UID
+		InductionOffset(trayAtCardReader, icid) ==
+			((trayAtCardReader + icid*TrayAllocator`InductionSeperation) mod TrayAllocator`NumOfTrays) + 1;
+
+end AllocatorStrategy

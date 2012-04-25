@@ -1,0 +1,428 @@
+--\section{Filtering dublicate errors away}
+--
+--\begin{vdm_al}
+class Filtering
+types
+  public ClassTraceMap = map String to TraceDefMap;
+  public TraceDefMap   = map nat1 to seq of IOmlExpression;
+  public String = seq of char;
+      
+public TraceResult :: 
+	status : 
+	    <OK>            -- Successfull test 
+	  | <FAIL>          -- Fail test
+	  | <INCONCLUSIVE>  -- Inconclusive pre condition violation
+	  | <SKIPPED>       -- Not tested
+	  | <EXPAND_FAIL>   -- Expansion fail, type error, no test performed
+	output : seq of char;
+
+instance variables
+	
+  allTestCases         : map String to ClassTraceMap;
+--                           Class         Trace     Num 
+  succTestCase         : map String to map String to set of nat1 := {|->}; 
+--                           Class         Trace         Num    Statement number 
+  failedTestCases      : map String to map String to map nat1 to nat := {|->}; 
+--                           Class         Trace         Num     Seq of results for each statement
+  testCaseResults      : map String to map String to map nat1 to seq of TraceResult := {|->};
+ --                           Class         Trace    Num 
+  inconclusiveTestCase : map String to map String to map nat1 to nat := {|->};
+--                           Class         Trace     Num 
+  skippedTestCase      : map String to map String to set of nat1 := {|->};
+--                           Class         Trace     Num 
+  expandFaildTestCase  : map String to map String to set of nat1 := {|->};   
+ 
+  tb : ToolBox; 
+  
+  errorLog : RTERR;
+ 	
+operations
+
+public Filtering : (map DEF`Identifier to Expand`TraceDefExpMap) * ToolBox * RTERR ==> Filtering
+Filtering(t,tool,errLog) == 
+(
+  errorLog := errLog;
+  allTestCases := fillMap(t); 
+  failedTestCases := {|->};
+  tb := tool;
+);
+
+
+-----------------------------------------------------------------
+-- Get operations
+-----------------------------------------------------------------
+public GetResult : String * String * nat1 ==> seq of String * seq of TraceResult
+GetResult(className, trace, num) ==
+  return 
+      mk_(Util`ExprToString(allTestCases(className)(trace)(num)),
+                            testCaseResults(className)(trace)(num));
+                            
+public GetResults : () ==> map String to map String to map nat1 to seq of TraceResult
+GetResults() == return testCaseResults;
+
+public GetStatements : () ==> map String to map String to map nat1 to seq of String
+GetStatements() == 
+(
+  dcl statements : map String to map String to map nat1 to seq of String := {|->};
+
+  for all clnm in set dom allTestCases do
+    let tc_ast = allTestCases(clnm)
+    in
+      for all tdnm in set dom tc_ast do
+        let tc_m = tc_ast(tdnm)
+        in
+          for all n in set dom tc_m do
+            statements(clnm)(tdnm)(n) := Util`ExprToString(tc_m(n));
+  return statements;
+);
+                            
+public GetTraceClassNames : () ==> set of String
+GetTraceClassNames() == 
+  return 
+    { clnm  | clnm in set dom allTestCases};
+    
+public GetTraces : String ==> set of String
+GetTraces(className) == 
+  return 
+   { clnm  | clnm in set dom allTestCases(className)};
+
+public GetTraceTestCases : String * String==> set of nat
+GetTraceTestCases(className,trace) == 
+  return 
+    { num  | num in set dom allTestCases(className)(trace)};
+  
+      
+      
+public GetTraceDefinitionString : IOmlSpecifications * String * String ==> String
+GetTraceDefinitionString(spec,className,trace) ==
+let  ppvisitor : Oml2VppVisitor = new Oml2VppVisitor(), 
+     td1 : set of IOmlNamedTrace = 
+       { let td in set
+           { df | df in set elems 
+             let tt in set 
+           
+             { let t : IOmlTraceDefinitions = dfs in t.getTraces() 
+             | dfs in set elems cl.getClassBody()
+             & isofclass(IOmlTraceDefinitions,dfs)}
+             in tt
+           & let t : IOmlNamedTrace = df in Util`GetNameOfTrace(t.getName()) = trace
+           }
+           in td
+         | cl in set elems spec.getClassList()
+         & cl.getIdentifier() = className}
+     in 
+     ( let tmp in set td1
+       in
+       ppvisitor.visitNamedTrace(tmp);
+       return ppvisitor.result;
+     );
+     
+public GetTraceDefinition : IOmlSpecifications * String * String ==> IOmlNamedTrace
+GetTraceDefinition(spec,className,trace) ==
+let  td1 : set of IOmlNamedTrace = 
+       { let td in set
+           { df | df in set elems 
+             let tt in set 
+           
+             { let t : IOmlTraceDefinitions = dfs in t.getTraces() 
+             | dfs in set elems cl.getClassBody()
+             & isofclass(IOmlTraceDefinitions,dfs)}
+             in tt
+           & let t : IOmlNamedTrace = df in Util`GetNameOfTrace(t.getName()) = trace
+           }
+           in td
+         | cl in set elems spec.getClassList()
+         & cl.getIdentifier() = className}
+     in 
+       let tmp in set td1
+       in
+         return tmp;
+
+public GetFaildCount : () ==> int
+GetFaildCount() ==
+(
+  dcl count : int := 0;
+
+  for all clnm in set dom failedTestCases do
+    let tc_ast = failedTestCases(clnm)
+    in
+      for all tdnm in set dom tc_ast do
+--      let m : map nat1 to nat = rng tc_ast(clnm)(tdnm)
+--      in
+        count := count + card dom tc_ast(tdnm);
+        
+  return count;
+);
+
+public GetInconclusiveCount : () ==> int
+GetInconclusiveCount() ==
+(
+  dcl count : int := 0;
+
+  for all clnm in set dom inconclusiveTestCase do
+    let tc_ast = inconclusiveTestCase(clnm)
+    in
+      for all tdnm in set dom tc_ast do
+        count := count + card rng tc_ast(tdnm);
+        
+  return count;
+);
+
+public GetTestCount : () ==> int
+GetTestCount() ==
+(
+  dcl count : int := 0;
+
+  for all clnm in set dom allTestCases do
+    let tc_ast = allTestCases(clnm)
+    in
+      for all tdnm in set dom tc_ast do
+        count := count + card dom tc_ast(tdnm);
+        
+  return count;
+);
+
+public GetSuccessCount : () ==> int
+GetSuccessCount() ==
+(
+  dcl count : int := 0;
+
+  for all clnm in set dom succTestCase do
+    let tc_ast = succTestCase(clnm)
+    in
+      --for all tdnm in set dom tc_ast do
+        count := count + card dunion rng tc_ast;
+        
+  return count;
+);         
+public GetSkippedCount : () ==> int
+GetSkippedCount() ==
+(
+  dcl count : int := 0;
+
+  for all clnm in set dom skippedTestCase do
+    let tc_ast = skippedTestCase(clnm)
+    in
+      --for all tdnm in set dom tc_ast do
+        count := count + card dunion rng tc_ast;
+        
+  return count;
+);
+
+public GetSkippedCount : String * String ==> int
+GetSkippedCount(clnm,trnm) ==
+(
+  if clnm in set dom skippedTestCase
+  then 
+    if trnm in set dom skippedTestCase(clnm)
+    then
+      return card skippedTestCase(clnm)(trnm);
+  return 0;
+);
+
+public GetExpandFaildCount : () ==> int
+GetExpandFaildCount() ==
+(
+  dcl count : int := 0;
+
+  for all clnm in set dom expandFaildTestCase do
+    let tc_ast = expandFaildTestCase(clnm)
+    in
+      --for all tdnm in set dom tc_ast do
+        count := count + card dunion rng tc_ast;
+        
+  return count;
+);        
+-----------------------------------------------------------------
+-- Set operations
+-----------------------------------------------------------------
+public SetFail : String * String * nat1 * nat==> ()
+SetFail(className, trace, num, statementNumber) ==
+  testCaseResults(className)(trace)(num)(statementNumber).status := <FAIL>;
+  
+public SetOk : String * String * nat1 * nat==> ()
+SetOk(className, trace, num, statementNumber) ==
+  testCaseResults(className)(trace)(num)(statementNumber).status := <OK>;
+
+public SetInconclusive : String * String * nat1 * nat==> ()
+SetInconclusive(className, trace, num, statementNumber) ==
+  testCaseResults(className)(trace)(num)(statementNumber).status := <INCONCLUSIVE>;
+  
+--\end{vdm_al}
+--
+--Running the actual test cases with filtering switched on is done by
+--the \texttt{filter} operation which in turns makes use of the
+--\texttt{RunTestCase} operation in case no earlier test cases have
+--failed on the same prefix.
+-- 
+--\begin{vdm_al}
+
+operations
+-----------------------------------------------------------------
+-- Execution of test cases
+-----------------------------------------------------------------
+
+-- Execute all tests cases
+public filterAll : () ==>  map String to map String to map nat1 to seq of TraceResult --seq of (seq of String * seq of TraceResult)
+filterAll() ==
+ (--dcl results : seq of (seq of String * seq of TraceResult) := [mk_([],[])];
+
+  for all clnm in set dom allTestCases do
+    let tc_ast = allTestCases(clnm)
+    in
+      for all tdnm in set dom tc_ast do
+        let tc_m = tc_ast(tdnm)
+        in
+          for all n in set dom tc_m do
+          let res = ExecuteTraceTestCase(clnm,tdnm,n,tc_m(n))
+          in
+          (
+            testCaseResults(clnm)(tdnm)(n) := res;
+          --  results  := results ^ [res];
+          );
+   return testCaseResults
+  );
+
+-- Execute a trace from its class name, trace name and trace case number
+public ExecuteTraceTestCase : String * String * nat1 ==> map String to map String to map nat1 to seq of TraceResult 
+ExecuteTraceTestCase(clnm,tdnm,n) ==
+ let tc_ast = allTestCases(clnm)(tdnm)(n),
+     res = ExecuteTraceTestCase(clnm,tdnm,n,tc_ast)
+ in
+ (
+   testCaseResults(clnm)(tdnm)(n) := res;
+   return {clnm |-> {tdnm |-> {n |-> res}}};
+ );
+
+ 
+-- Execute a single test case in the toolbox
+--  store the result and add the test case
+--  to a succ, fail or inconclusive map
+public ExecuteTraceTestCase : String * String * nat1 * 
+                              seq of IOmlExpression ==> 
+  seq of TraceResult --seq of String * 
+ExecuteTraceTestCase(clnm,tdnm,n,tc_ast) ==
+(  dcl res : seq of TraceResult := [],
+      index : nat;
+   if errorLog.HasError(clnm,tdnm)
+   then
+   (  
+     res := res ^ [mk_TraceResult(<EXPAND_FAIL>, "")];
+     expandFaildTestCase := AddTestCaseNum(clnm,tdnm,n,expandFaildTestCase); 
+   )
+   else
+   (
+     if not NoFailedPrefix(tc_ast)
+     then
+     (
+       let expressions : seq of String = Util`ExprToString(tc_ast)
+       in
+         let results : seq of ToolBox`InterpreterResult = 
+               tb.runTraceTestCase(clnm,expressions)
+         in
+         (
+           index := 1;
+           while index <= len results do
+           (
+             if not results(index).successfull 
+             then
+             (
+               if tb.IsPreError(results(index))
+               then
+               (
+                 res := res ^ [mk_TraceResult(<INCONCLUSIVE>, results(index).output)];
+                 inconclusiveTestCase(clnm)(tdnm)(n) := index;
+               )
+               else 
+               (
+                 res := res ^ [mk_TraceResult(<FAIL>, results(index).output)];
+                 failedTestCases(clnm)(tdnm)(n) := index;
+               );
+               index := len results;
+             )
+             else
+             (
+               res := res ^ [mk_TraceResult(<OK>, results(index).output)];
+               succTestCase := AddTestCaseNum(clnm,tdnm,n,succTestCase);
+             );
+             index := index + 1;
+           );          
+        --return res;
+       )
+    )
+    else
+    (
+      if clnm not in set dom failedTestCases or
+         tdnm not in set dom failedTestCases(clnm) or
+         n not in set dom failedTestCases(clnm)(tdnm)
+      then (res := res ^ [mk_TraceResult(<SKIPPED>, "")];
+            skippedTestCase := AddTestCaseNum(clnm,tdnm,n,skippedTestCase))
+      else 
+        res := testCaseResults(clnm)(tdnm)(n);
+    );
+   );
+  return res;
+);
+
+functions
+
+AddTestCaseNum: String * String * nat *
+                map String to map String to set of nat1 ->  
+                map String to map String to set of nat1
+AddTestCaseNum(clnm,tdnm,n,cltd_m) ==
+  if clnm in set dom cltd_m
+  then let tracedef_m = cltd_m(clnm),
+           update = if tdnm in set dom tracedef_m
+                    then tracedef_m(tdnm) union {n}
+                    else {n}
+       in
+         cltd_m ++ {clnm |-> tracedef_m ++ {tdnm |-> update}}
+  else cltd_m ++ {clnm |-> {tdnm |-> {n}}};
+
+operations
+
+-----------------------------------------------------------------
+-- Filtering of test cases
+-----------------------------------------------------------------
+-- Check if the current seq of Exp already has faild
+NoFailedPrefix: seq of IOmlExpression ==> bool
+NoFailedPrefix(e_l) ==
+  return exists clnm in set dom failedTestCases &
+           exists tcnm in set dom failedTestCases(clnm) &
+             exists n in set dom failedTestCases(clnm)(tcnm) &
+               let failindex = failedTestCases(clnm)(tcnm)(n)
+               in
+                 e_l(1,...,failindex) = 
+                 allTestCases(clnm)(tcnm)(n)(1,...,failindex);
+                 
+functions
+-----------------------------------------------------------------
+-- ?????
+-----------------------------------------------------------------
+public fillMap : map DEF`Identifier to Expand`TraceDefExpMap -> 
+                 map DEF`Identifier to ClassTraceMap
+fillMap(tc_m_s) ==
+  {clnm |-> fillForClass(tc_m_s(clnm)) | clnm in set dom tc_m_s};
+
+fillForClass: Expand`TraceDefExpMap -> ClassTraceMap
+fillForClass(tde_m) ==
+  {tdnm |-> SpreadTestCase(tde_m(tdnm)) | tdnm in set dom tde_m};
+
+SpreadTestCase: seq of seq of IOmlExpression ->
+                map nat1 to seq of IOmlExpression
+SpreadTestCase(tc_l) ==
+  {i |-> tc_l(i) | i in set inds tc_l};
+
+--Name2String: (DEF`Name * nat1) -> DEF`Identifier
+--Name2String(mk_(mk_DEF`Name(clnm,defnm),n)) ==
+--  clnm ^ "|" ^ defnm ^ "|" ^ StdLib`ToStringInt(n); 
+--\end{vdm_al}
+--
+--\begin{vdm_al}
+
+end Filtering
+--\end{vdm_al}
+--
+--\begin{rtinfo}
+--[TotalxCoverage]{vdm.tc}[Expanded]
+--\end{rtinfo}

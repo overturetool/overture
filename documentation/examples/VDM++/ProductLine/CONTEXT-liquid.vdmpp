@@ -1,0 +1,62 @@
+class Liquid
+
+instance variables
+  protected aap : AtmosphericAirPressure;      -- static property
+  protected boiling_point : map real to real;  -- static property
+  protected temperature : real;                -- dynamic property
+  protected amount : real;                     -- dynamic property
+
+operations
+  public
+  GetAap: () ==> AtmosphericAirPressure
+  GetAap() ==
+    return aap;
+
+  public
+  SetAap: AtmosphericAirPressure ==> ()
+  SetAap(a) ==
+    aap := a;
+
+  public
+  GetBoilingPoint: real ==> real
+  GetBoilingPoint(atm) ==
+    return boiling_point(atm)
+  pre atm in set dom boiling_point;
+
+  public
+  GetTemperature: () ==> real
+  GetTemperature() ==
+    return temperature;
+
+  public
+  SetTemperature: real ==> ()
+  SetTemperature(t) ==
+    temperature := t;
+
+  public
+  AddTemperature: () ==> ()
+  AddTemperature() ==
+    if temperature < boiling_point(aap.GetAtm())
+      then
+        temperature := temperature + 1.0
+      else
+       (temperature := boiling_point(aap.GetAtm());
+        amount := amount - 1.0  --- evaporation (1.0 is inadequate value!)
+       )
+  pre
+    aap.GetAtm() in set dom boiling_point and
+    temperature <= boiling_point(aap.GetAtm())
+  post
+    temperature <= boiling_point(aap.GetAtm());
+
+  public
+  GetAmount: () ==> real
+  GetAmount() ==
+    return amount;
+
+  public
+  SetAmount: real ==> ()
+  SetAmount(a) ==
+    amount := a;
+
+end Liquid

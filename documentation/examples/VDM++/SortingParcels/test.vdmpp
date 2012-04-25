@@ -1,0 +1,66 @@
+class Test
+
+instance variables
+
+goods : set of Colli := {new Colli(0,0),
+                         new Colli(1,1),
+                         new Colli(2,2),
+                         new Colli(3,3), --bad colli
+                         new Colli(4,0),
+                         new Colli(359,14) }; --bad colli
+slides : set of Slide := {new Slide(0),
+                          new Slide(1),
+                          new Slide(2) };
+--test inv and precondition
+conveyor : Conveyor := new Conveyor();
+
+operations
+public Run : () ==> ()
+Run() ==
+(dcl temp : set of Colli := {};
+ for all x in set goods do
+   conveyor.addColli(x);
+
+ for all y in set slides do
+   conveyor.addSlide(y);
+
+ IO`print("\nTest started..");
+
+ IO`print("\ngoods in conveyor:\n");
+ conveyor.printColli();
+ IO`print("\nslides in conveyor:\n");
+ conveyor.printSlides();
+
+ for all s in set elems conveyor.getSlides() do
+ (IO`print("\nSlide ID:\t");
+  IO`print(s.getID() );
+  IO`print(" has goods:");
+  s.printColli();
+ );
+
+ IO`print("\n\n..Distributing goods!\n");
+ conveyor.distributeGoods();
+
+ IO`print("\ngoods in conveyor:\n");
+ conveyor.printColli();
+ IO`print("\nslides in conveyor:\n");
+ conveyor.printSlides();
+
+ for all s in set elems conveyor.getSlides() do
+ (IO`print("\nSlide ID:\t");
+  IO`print(s.getID() );
+  IO`print(" has goods:");
+  s.printColli();
+ );
+
+ temp := conveyor.checkForUndeliverableGoods();
+
+ IO`print("\nundeliverable goods:\t");
+ for all s in set temp do
+ (IO`print(s.getID());
+  IO`print("\t");
+ );
+
+);
+
+end Test

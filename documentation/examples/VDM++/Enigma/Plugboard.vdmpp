@@ -1,0 +1,29 @@
+class Plugboard
+  is subclass of Configuration
+
+instance variables
+  inv PlugboardInv(config, alph)
+
+functions
+  PlugboardInv: inmap nat to nat * Alphabet -> bool
+  PlugboardInv (pconfig, palph) ==
+    dom pconfig subset palph.GetIndices()
+
+operations
+  public Plugboard:
+    Alphabet * inmap nat to nat ==> Plugboard
+  Plugboard (pa, pcfg) ==
+    atomic (alph := pa;
+      config := pcfg munion inverse pcfg)
+  pre dom pcfg inter rng pcfg = {} and
+      PlugboardInv(pcfg, pa);
+
+  public Substitute: nat ==> nat
+  Substitute (pidx) ==
+    (next.Rotate();
+     Configuration`Substitute(pidx))
+  pre pidx in set alph.GetIndices() and
+      (isofclass(Rotor,next) or
+       isofclass(Reflector,next))
+
+end Plugboard

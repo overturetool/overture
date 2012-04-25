@@ -1,0 +1,35 @@
+class HolConditional is subclass of HolExpression
+
+instance variables
+test :		HolExpression;	-- if
+success :	HolExpression;	-- then
+failure :	HolExpression	-- else
+
+operations
+
+public HolConditional : HolExpression * HolExpression * HolExpression ==> HolConditional
+HolConditional(newTest, newSuccess, newFailure) ==
+(
+	test	:= newTest;
+	success	:= newSuccess;
+	failure	:= newFailure;
+);
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+(
+	test.setTypeInformation(typeInfo);
+	success.setTypeInformation(typeInfo);
+	failure.setTypeInformation(typeInfo)
+);
+
+public requires : () ==> set of seq of char
+requires() == 
+	return test.requires() union success.requires() union failure.requires();
+
+public print : () ==> seq of char
+print () ==
+	return conc ["(if ", test.print(), " then ", success.print(), " else ", failure.print(), ")"]
+;
+
+end HolConditional

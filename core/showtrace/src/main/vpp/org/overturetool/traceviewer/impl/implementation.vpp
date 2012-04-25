@@ -1,0 +1,2063 @@
+\begin{vdm_al}
+class OmlBUSdecl is subclass of IOmlBUSdecl
+operations
+  public identity: () ==> seq of char
+  identity () == return "BUSdecl";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitBUSdecl(self);
+
+  public OmlBUSdecl:
+      (nat) *
+      (seq of char) *
+      (set of nat) ==> OmlBUSdecl
+  OmlBUSdecl (p1,p2,p3) == 
+   ( setId(p1);
+     setName(p2);
+     setTopo(p3) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "name" in
+        if fname in set dom data
+        then setName(data(fname));
+      let fname = "topo" in
+        if fname in set dom data
+        then setTopo(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivName : seq of char := []
+
+operations
+  public getName: () ==> seq of char
+  getName() == return ivName;
+
+  public setName: seq of char ==> ()
+  setName(parg) == ivName := parg;
+
+instance variables
+  private ivTopo : set of nat := {}
+
+operations
+  public getTopo: () ==> set of nat
+  getTopo() == return ivTopo;
+
+  public setTopo: set of nat ==> ()
+  setTopo(parg) == ivTopo := parg;
+
+  public addTopo: nat ==> ()
+  addTopo (parg) == ivTopo := ivTopo union {parg};
+
+end OmlBUSdecl
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlCPUdecl is subclass of IOmlCPUdecl
+operations
+  public identity: () ==> seq of char
+  identity () == return "CPUdecl";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitCPUdecl(self);
+
+  public OmlCPUdecl:
+      (nat) *
+      (bool) *
+      (seq of char) *
+      (seq of char) ==> OmlCPUdecl
+  OmlCPUdecl (p1,p2,p3,p4) == 
+   ( setId(p1);
+     setExpl(p2);
+     setSys(p3);
+     setName(p4) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "expl" in
+        if fname in set dom data
+        then setExpl(data(fname));
+      let fname = "sys" in
+        if fname in set dom data
+        then setSys(data(fname));
+      let fname = "name" in
+        if fname in set dom data
+        then setName(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivExpl : [bool] := nil
+
+operations
+  public getExpl: () ==> bool
+  getExpl() == return ivExpl;
+
+  public setExpl: bool ==> ()
+  setExpl(parg) == ivExpl := parg;
+
+instance variables
+  private ivSys : seq of char := []
+
+operations
+  public getSys: () ==> seq of char
+  getSys() == return ivSys;
+
+  public setSys: seq of char ==> ()
+  setSys(parg) == ivSys := parg;
+
+instance variables
+  private ivName : seq of char := []
+
+operations
+  public getName: () ==> seq of char
+  getName() == return ivName;
+
+  public setName: seq of char ==> ()
+  setName(parg) == ivName := parg;
+
+end OmlCPUdecl
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlDelayedThreadSwapIn is subclass of IOmlDelayedThreadSwapIn
+operations
+  public identity: () ==> seq of char
+  identity () == return "DelayedThreadSwapIn";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitDelayedThreadSwapIn(self);
+
+  public OmlDelayedThreadSwapIn:
+      (nat) *
+      [nat] *
+      [seq of char] *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) ==> OmlDelayedThreadSwapIn
+  OmlDelayedThreadSwapIn (p1,p2,p3,p4,p5,p6,p7) == 
+   ( setId(p1);
+     setObjref(p2);
+     setClnm(p3);
+     setCpunm(p4);
+     setDelay(p5);
+     setOverhead(p6);
+     setObstime(p7) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "delay" in
+        if fname in set dom data
+        then setDelay(data(fname));
+      let fname = "overhead" in
+        if fname in set dom data
+        then setOverhead(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : [seq of char] := nil
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm
+    pre hasClnm();
+
+  public hasClnm: () ==> bool
+  hasClnm () == return ivClnm <> nil;
+
+  public setClnm: [ seq of char ] ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivDelay : [nat] := nil
+
+operations
+  public getDelay: () ==> nat
+  getDelay() == return ivDelay;
+
+  public setDelay: nat ==> ()
+  setDelay(parg) == ivDelay := parg;
+
+instance variables
+  private ivOverhead : [nat] := nil
+
+operations
+  public getOverhead: () ==> nat
+  getOverhead() == return ivOverhead;
+
+  public setOverhead: nat ==> ()
+  setOverhead(parg) == ivOverhead := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlDelayedThreadSwapIn
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlDeployObj is subclass of IOmlDeployObj
+operations
+  public identity: () ==> seq of char
+  identity () == return "DeployObj";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitDeployObj(self);
+
+  public OmlDeployObj:
+      (nat) *
+      (nat) *
+      (seq of char) *
+      (nat) ==> OmlDeployObj
+  OmlDeployObj (p1,p2,p3,p4) == 
+   ( setObjref(p1);
+     setCpunm(p2);
+     setClnm(p3);
+     setObstime(p4) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref;
+
+  public setObjref: nat ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivClnm : seq of char := []
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm;
+
+  public setClnm: seq of char ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlDeployObj
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlDocument is subclass of IOmlDocument
+
+instance variables
+  private ivFilename : seq of char := []
+
+operations
+  public getFilename: () ==> seq of char
+  getFilename () == return ivFilename;
+
+  public setFilename: seq of char ==> ()
+  setFilename (pfilename) == ivFilename := pfilename;
+
+instance variables
+  private ivTopNode : [ IOmlNode ] := nil
+
+operations
+  public hasTraceFile: () ==> bool
+  hasTraceFile () == return isofclass(IOmlTraceFile,ivTopNode);
+
+  public getTraceFile: () ==> IOmlTraceFile
+  getTraceFile () == return ivTopNode
+    pre hasTraceFile();
+
+  public setTraceFile: IOmlTraceFile ==> ()
+  setTraceFile (pNode) == ivTopNode := pNode
+    pre ivTopNode = nil;
+
+instance variables
+  private ivLexems : seq of IOmlLexem := []
+
+operations
+  public getLexems : () ==> seq of IOmlLexem
+  getLexems () == return ivLexems;
+
+  public setLexems : seq of IOmlLexem ==> ()
+  setLexems (plexems) == ivLexems := plexems;
+
+  public createLexem: nat * nat * nat * seq of char * nat ==> IOmlLexem
+  createLexem (pline, pcolumn, plexval, ptext, ptype) ==
+    ( dcl res : IOmlLexem := new OmlLexem(pline, pcolumn, plexval, ptext, len ivLexems + 1, ptype);
+      ivLexems := ivLexems ^ [res];
+      return res );
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitDocument(self);
+
+  public toVdmSlValue: () ==> seq of char
+  toVdmSlValue () ==
+    ( dcl visitor : VdmSlVisitor := new VdmSlVisitor();
+      accept(visitor);
+      return visitor.result );
+
+  public toVdmPpValue: () ==> seq of char
+  toVdmPpValue () ==
+    ( dcl visitor : VdmPpVisitor := new VdmPpVisitor();
+      accept(visitor);
+      return visitor.result );
+
+  public OmlDocument: seq of char * IOmlNode * seq of IOmlLexem ==> OmlDocument
+  OmlDocument (pfilename, pnode, plexems) ==
+    ( setFilename(pfilename);
+      ivTopNode := pnode;
+      setLexems(plexems) )
+    pre isofclass(IOmlTraceFile,pnode)
+
+end OmlDocument
+\end{vdm_al}
+\begin{vdm_al}
+class OmlInstVarChange is subclass of IOmlInstVarChange
+operations
+  public identity: () ==> seq of char
+  identity () == return "InstVarChange";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitInstVarChange(self);
+
+  public OmlInstVarChange:
+      (seq of char) *
+      (seq of char) *
+      (nat) *
+      (nat) ==> OmlInstVarChange
+  OmlInstVarChange (p1,p2,p3,p4) == 
+   ( setInstnm(p1);
+     setVal(p2);
+     setObjref(p3);
+     setObstime(p4) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "instnm" in
+        if fname in set dom data
+        then setInstnm(data(fname));
+      let fname = "val" in
+        if fname in set dom data
+        then setVal(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivInstnm : seq of char := []
+
+operations
+  public getInstnm: () ==> seq of char
+  getInstnm() == return ivInstnm;
+
+  public setInstnm: seq of char ==> ()
+  setInstnm(parg) == ivInstnm := parg;
+
+instance variables
+  private ivVal : seq of char := []
+
+operations
+  public getVal: () ==> seq of char
+  getVal() == return ivVal;
+
+  public setVal: seq of char ==> ()
+  setVal(parg) == ivVal := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref;
+
+  public setObjref: nat ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlInstVarChange
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlLexem is subclass of IOmlLexem
+
+instance variables
+  private ivLine : nat := 0
+
+operations
+  public getLine: () ==> nat
+  getLine () == return ivLine;
+
+  public setLine: nat ==> ()
+  setLine (pline) == ivLine := pline
+
+instance variables
+  private ivColumn : nat := 0
+
+operations
+  public getColumn: () ==> nat
+  getColumn () == return ivColumn;
+
+  public setColumn: nat ==> ()
+  setColumn (pcolumn) == ivColumn := pcolumn
+
+instance variables
+  private ivLexval : nat := 0
+
+operations
+  public getLexval: () ==> nat
+  getLexval () == return ivLexval;
+
+  public setLexval: nat ==> ()
+  setLexval (plexval) == ivLexval := plexval
+
+instance variables
+  private ivText : seq of char := []
+
+operations
+  public getText: () ==> seq of char
+  getText () == return ivText;
+
+  public setText: seq of char ==> ()
+  setText (ptext) == ivText := ptext
+
+instance variables
+  private ivIndex : nat := 0
+
+operations
+  public getIndex: () ==> nat
+  getIndex () == return ivIndex;
+
+  public setIndex: nat ==> ()
+  setIndex (pindex) == ivIndex := pindex
+
+values
+  public ILEXEMUNKNOWN      : nat = 0;
+  public ILEXEMRESERVEDWORD : nat = 1;
+  public ILEXEMIDENTIFIER   : nat = 2;
+  public ILEXEMLINECOMMENT  : nat = 3;
+  public ILEXEMBLOCKCOMMENT : nat = 4
+
+instance variables
+  private ivType : nat := ILEXEMUNKNOWN
+
+operations
+  public getType: () ==> nat
+  getType () == return ivType;
+
+  public isReservedWord: () ==> bool
+  isReservedWord () == return ivType = ILEXEMRESERVEDWORD;
+
+  public isIdentifier: () ==> bool
+  isIdentifier () == return ivType = ILEXEMIDENTIFIER;
+
+  public isLineComment: () ==> bool
+  isLineComment () == return ivType = ILEXEMLINECOMMENT;
+
+  public isBlockComment: () ==> bool
+  isBlockComment () == return ivType = ILEXEMBLOCKCOMMENT;
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitLexem(self);
+
+  public OmlLexem: nat * nat * nat * seq of char * nat * nat ==> OmlLexem
+  OmlLexem (pline, pcolumn, plexval, ptext, pindex, ptype) ==
+    ( ivLine := pline;
+      ivColumn := pcolumn;
+      ivLexval := plexval;
+      ivText := ptext;
+      ivIndex := pindex;
+      ivType := ptype )
+
+end OmlLexem
+\end{vdm_al}
+\begin{vdm_al}
+class OmlMessageActivate is subclass of IOmlMessageActivate
+operations
+  public identity: () ==> seq of char
+  identity () == return "MessageActivate";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitMessageActivate(self);
+
+  public OmlMessageActivate:
+      (nat) *
+      (nat) ==> OmlMessageActivate
+  OmlMessageActivate (p1,p2) == 
+   ( setMsgid(p1);
+     setObstime(p2) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "msgid" in
+        if fname in set dom data
+        then setMsgid(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivMsgid : [nat] := nil
+
+operations
+  public getMsgid: () ==> nat
+  getMsgid() == return ivMsgid;
+
+  public setMsgid: nat ==> ()
+  setMsgid(parg) == ivMsgid := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlMessageActivate
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlMessageCompleted is subclass of IOmlMessageCompleted
+operations
+  public identity: () ==> seq of char
+  identity () == return "MessageCompleted";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitMessageCompleted(self);
+
+  public OmlMessageCompleted:
+      (nat) *
+      (nat) ==> OmlMessageCompleted
+  OmlMessageCompleted (p1,p2) == 
+   ( setMsgid(p1);
+     setObstime(p2) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "msgid" in
+        if fname in set dom data
+        then setMsgid(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivMsgid : [nat] := nil
+
+operations
+  public getMsgid: () ==> nat
+  getMsgid() == return ivMsgid;
+
+  public setMsgid: nat ==> ()
+  setMsgid(parg) == ivMsgid := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlMessageCompleted
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlMessageRequest is subclass of IOmlMessageRequest
+operations
+  public identity: () ==> seq of char
+  identity () == return "MessageRequest";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitMessageRequest(self);
+
+  public OmlMessageRequest:
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (seq of char) *
+      [nat] *
+      (nat) *
+      (nat) ==> OmlMessageRequest
+  OmlMessageRequest (p1,p2,p3,p4,p5,p6,p7,p8,p9) == 
+   ( setBusid(p1);
+     setFromcpu(p2);
+     setTocpu(p3);
+     setMsgid(p4);
+     setCallthr(p5);
+     setOpname(p6);
+     setObjref(p7);
+     setSize(p8);
+     setObstime(p9) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "busid" in
+        if fname in set dom data
+        then setBusid(data(fname));
+      let fname = "fromcpu" in
+        if fname in set dom data
+        then setFromcpu(data(fname));
+      let fname = "tocpu" in
+        if fname in set dom data
+        then setTocpu(data(fname));
+      let fname = "msgid" in
+        if fname in set dom data
+        then setMsgid(data(fname));
+      let fname = "callthr" in
+        if fname in set dom data
+        then setCallthr(data(fname));
+      let fname = "opname" in
+        if fname in set dom data
+        then setOpname(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "size" in
+        if fname in set dom data
+        then setSize(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivBusid : [nat] := nil
+
+operations
+  public getBusid: () ==> nat
+  getBusid() == return ivBusid;
+
+  public setBusid: nat ==> ()
+  setBusid(parg) == ivBusid := parg;
+
+instance variables
+  private ivFromcpu : [nat] := nil
+
+operations
+  public getFromcpu: () ==> nat
+  getFromcpu() == return ivFromcpu;
+
+  public setFromcpu: nat ==> ()
+  setFromcpu(parg) == ivFromcpu := parg;
+
+instance variables
+  private ivTocpu : [nat] := nil
+
+operations
+  public getTocpu: () ==> nat
+  getTocpu() == return ivTocpu;
+
+  public setTocpu: nat ==> ()
+  setTocpu(parg) == ivTocpu := parg;
+
+instance variables
+  private ivMsgid : [nat] := nil
+
+operations
+  public getMsgid: () ==> nat
+  getMsgid() == return ivMsgid;
+
+  public setMsgid: nat ==> ()
+  setMsgid(parg) == ivMsgid := parg;
+
+instance variables
+  private ivCallthr : [nat] := nil
+
+operations
+  public getCallthr: () ==> nat
+  getCallthr() == return ivCallthr;
+
+  public setCallthr: nat ==> ()
+  setCallthr(parg) == ivCallthr := parg;
+
+instance variables
+  private ivOpname : seq of char := []
+
+operations
+  public getOpname: () ==> seq of char
+  getOpname() == return ivOpname;
+
+  public setOpname: seq of char ==> ()
+  setOpname(parg) == ivOpname := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivSize : [nat] := nil
+
+operations
+  public getSize: () ==> nat
+  getSize() == return ivSize;
+
+  public setSize: nat ==> ()
+  setSize(parg) == ivSize := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlMessageRequest
+\end{vdm_al}
+
+\begin{vdm_al}
+class IOmlContextInfo
+
+operations
+  public accept: IOmlVisitor ==> ()
+  accept (-) == is subclass responsibility
+
+end IOmlContextInfo
+\end{vdm_al}
+
+\begin{vdm_al}
+-- important note: this class is renamed to OmlNode by the patch script!
+class IOmlNode
+
+values
+  public static prefix : seq of char = "Oml"
+
+types
+  public FieldValue = 
+    bool | char | nat | real | IOmlNode | 
+    seq of FieldValue |
+    set of FieldValue |
+    map FieldValue to FieldValue
+
+instance variables
+  private ivInfo : map nat to IOmlContextInfo := {|->}
+
+operations
+  public identity: () ==> seq of char
+  identity () == return "Node";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitNode(self);
+
+  public getContextInfo: nat ==> IOmlContextInfo
+  getContextInfo (pci) == return ivInfo(pci)
+    pre pci in set dom ivInfo;
+
+  public getContextInfoCount: () ==> nat
+  getContextInfoCount () == return card dom ivInfo;
+
+  public addContextInfo: IOmlContextInfo ==> nat
+  addContextInfo (pci) ==
+    ( dcl res : nat := card dom ivInfo + 1;
+      ivInfo := ivInfo munion {res |-> pci};
+      return res )
+
+instance variables
+  private ivLeftMostLexemIndex : [nat] := nil;
+  private ivRightMostLexemIndex : [nat] := nil
+
+operations
+  -- setLexemIndex as used by the VDM++ pretty printer code
+  public setLexemIndex: nat ==> IOmlNode
+  setLexemIndex (pli) ==
+    ( if ivLeftMostLexemIndex = nil
+      then ivLeftMostLexemIndex := pli
+      else if ivLeftMostLexemIndex > pli
+           then ivLeftMostLexemIndex := pli;
+      if ivRightMostLexemIndex = nil
+      then ivRightMostLexemIndex := pli
+      else if ivRightMostLexemIndex < pli
+           then ivRightMostLexemIndex := pli;
+      return self );
+
+  -- setLexem as used by the parser code
+  public setLexem: IOmlLexem ==> IOmlNode
+  setLexem (plexem) == return setLexemIndex(plexem.getIndex());
+
+  public hasPositionInfo: () ==> bool
+  hasPositionInfo () == return is_nat(ivLeftMostLexemIndex) and is_nat(ivRightMostLexemIndex);
+
+  public getLeftMostLexemIndex: () ==> nat
+  getLeftMostLexemIndex () == return ivLeftMostLexemIndex;
+
+  public getRightMostLexemIndex: () ==> nat
+  getRightMostLexemIndex () == return ivRightMostLexemIndex;
+
+end IOmlNode
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlOpActivate is subclass of IOmlOpActivate
+operations
+  public identity: () ==> seq of char
+  identity () == return "OpActivate";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitOpActivate(self);
+
+  public OmlOpActivate:
+      (nat) *
+      (seq of char) *
+      [nat] *
+      (seq of char) *
+      (nat) *
+      (bool) *
+      (nat) ==> OmlOpActivate
+  OmlOpActivate (p1,p2,p3,p4,p5,p6,p7) == 
+   ( setId(p1);
+     setOpname(p2);
+     setObjref(p3);
+     setClnm(p4);
+     setCpunm(p5);
+     setAsynchronous(p6);
+     setObstime(p7) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "opname" in
+        if fname in set dom data
+        then setOpname(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "async" in
+        if fname in set dom data
+        then setAsynchronous(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivOpname : seq of char := []
+
+operations
+  public getOpname: () ==> seq of char
+  getOpname() == return ivOpname;
+
+  public setOpname: seq of char ==> ()
+  setOpname(parg) == ivOpname := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : seq of char := []
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm;
+
+  public setClnm: seq of char ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivAsynchronous : [bool] := nil
+
+operations
+  public getAsynchronous: () ==> bool
+  getAsynchronous() == return ivAsynchronous;
+
+  public setAsynchronous: bool ==> ()
+  setAsynchronous(parg) == ivAsynchronous := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlOpActivate
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlOpCompleted is subclass of IOmlOpCompleted
+operations
+  public identity: () ==> seq of char
+  identity () == return "OpCompleted";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitOpCompleted(self);
+
+  public OmlOpCompleted:
+      (nat) *
+      (seq of char) *
+      [nat] *
+      (seq of char) *
+      (nat) *
+      (bool) *
+      [seq of char] *
+      (nat) ==> OmlOpCompleted
+  OmlOpCompleted (p1,p2,p3,p4,p5,p6,p7,p8) == 
+   ( setId(p1);
+     setOpname(p2);
+     setObjref(p3);
+     setClnm(p4);
+     setCpunm(p5);
+     setAsynchronous(p6);
+     setRes(p7);
+     setObstime(p8) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "opname" in
+        if fname in set dom data
+        then setOpname(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "async" in
+        if fname in set dom data
+        then setAsynchronous(data(fname));
+      let fname = "res" in
+        if fname in set dom data
+        then setRes(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivOpname : seq of char := []
+
+operations
+  public getOpname: () ==> seq of char
+  getOpname() == return ivOpname;
+
+  public setOpname: seq of char ==> ()
+  setOpname(parg) == ivOpname := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : seq of char := []
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm;
+
+  public setClnm: seq of char ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivAsynchronous : [bool] := nil
+
+operations
+  public getAsynchronous: () ==> bool
+  getAsynchronous() == return ivAsynchronous;
+
+  public setAsynchronous: bool ==> ()
+  setAsynchronous(parg) == ivAsynchronous := parg;
+
+instance variables
+  private ivRes : [seq of char] := nil
+
+operations
+  public getRes: () ==> seq of char
+  getRes() == return ivRes
+    pre hasRes();
+
+  public hasRes: () ==> bool
+  hasRes () == return ivRes <> nil;
+
+  public setRes: [ seq of char ] ==> ()
+  setRes(parg) == ivRes := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlOpCompleted
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlOpRequest is subclass of IOmlOpRequest
+operations
+  public identity: () ==> seq of char
+  identity () == return "OpRequest";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitOpRequest(self);
+
+  public OmlOpRequest:
+      (nat) *
+      (seq of char) *
+      [nat] *
+      (seq of char) *
+      (nat) *
+      (bool) *
+      [seq of char] *
+      (nat) ==> OmlOpRequest
+  OmlOpRequest (p1,p2,p3,p4,p5,p6,p7,p8) == 
+   ( setId(p1);
+     setOpname(p2);
+     setObjref(p3);
+     setClnm(p4);
+     setCpunm(p5);
+     setAsynchronous(p6);
+     setArgs(p7);
+     setObstime(p8) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "opname" in
+        if fname in set dom data
+        then setOpname(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "async" in
+        if fname in set dom data
+        then setAsynchronous(data(fname));
+      let fname = "args" in
+        if fname in set dom data
+        then setArgs(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivOpname : seq of char := []
+
+operations
+  public getOpname: () ==> seq of char
+  getOpname() == return ivOpname;
+
+  public setOpname: seq of char ==> ()
+  setOpname(parg) == ivOpname := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : seq of char := []
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm;
+
+  public setClnm: seq of char ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivAsynchronous : [bool] := nil
+
+operations
+  public getAsynchronous: () ==> bool
+  getAsynchronous() == return ivAsynchronous;
+
+  public setAsynchronous: bool ==> ()
+  setAsynchronous(parg) == ivAsynchronous := parg;
+
+instance variables
+  private ivArgs : [seq of char] := nil
+
+operations
+  public getArgs: () ==> seq of char
+  getArgs() == return ivArgs
+    pre hasArgs();
+
+  public hasArgs: () ==> bool
+  hasArgs () == return ivArgs <> nil;
+
+  public setArgs: [ seq of char ] ==> ()
+  setArgs(parg) == ivArgs := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlOpRequest
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlReplyRequest is subclass of IOmlReplyRequest
+operations
+  public identity: () ==> seq of char
+  identity () == return "ReplyRequest";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitReplyRequest(self);
+
+  public OmlReplyRequest:
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) *
+      (nat) ==> OmlReplyRequest
+  OmlReplyRequest (p1,p2,p3,p4,p5,p6,p7,p8,p9) == 
+   ( setBusid(p1);
+     setFromcpu(p2);
+     setTocpu(p3);
+     setMsgid(p4);
+     setOrigmsgid(p5);
+     setCallthr(p6);
+     setCalleethr(p7);
+     setSize(p8);
+     setObstime(p9) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "busid" in
+        if fname in set dom data
+        then setBusid(data(fname));
+      let fname = "fromcpu" in
+        if fname in set dom data
+        then setFromcpu(data(fname));
+      let fname = "tocpu" in
+        if fname in set dom data
+        then setTocpu(data(fname));
+      let fname = "msgid" in
+        if fname in set dom data
+        then setMsgid(data(fname));
+      let fname = "origmsgid" in
+        if fname in set dom data
+        then setOrigmsgid(data(fname));
+      let fname = "callthr" in
+        if fname in set dom data
+        then setCallthr(data(fname));
+      let fname = "calleethr" in
+        if fname in set dom data
+        then setCalleethr(data(fname));
+      let fname = "size" in
+        if fname in set dom data
+        then setSize(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivBusid : [nat] := nil
+
+operations
+  public getBusid: () ==> nat
+  getBusid() == return ivBusid;
+
+  public setBusid: nat ==> ()
+  setBusid(parg) == ivBusid := parg;
+
+instance variables
+  private ivFromcpu : [nat] := nil
+
+operations
+  public getFromcpu: () ==> nat
+  getFromcpu() == return ivFromcpu;
+
+  public setFromcpu: nat ==> ()
+  setFromcpu(parg) == ivFromcpu := parg;
+
+instance variables
+  private ivTocpu : [nat] := nil
+
+operations
+  public getTocpu: () ==> nat
+  getTocpu() == return ivTocpu;
+
+  public setTocpu: nat ==> ()
+  setTocpu(parg) == ivTocpu := parg;
+
+instance variables
+  private ivMsgid : [nat] := nil
+
+operations
+  public getMsgid: () ==> nat
+  getMsgid() == return ivMsgid;
+
+  public setMsgid: nat ==> ()
+  setMsgid(parg) == ivMsgid := parg;
+
+instance variables
+  private ivOrigmsgid : [nat] := nil
+
+operations
+  public getOrigmsgid: () ==> nat
+  getOrigmsgid() == return ivOrigmsgid;
+
+  public setOrigmsgid: nat ==> ()
+  setOrigmsgid(parg) == ivOrigmsgid := parg;
+
+instance variables
+  private ivCallthr : [nat] := nil
+
+operations
+  public getCallthr: () ==> nat
+  getCallthr() == return ivCallthr;
+
+  public setCallthr: nat ==> ()
+  setCallthr(parg) == ivCallthr := parg;
+
+instance variables
+  private ivCalleethr : [nat] := nil
+
+operations
+  public getCalleethr: () ==> nat
+  getCalleethr() == return ivCalleethr;
+
+  public setCalleethr: nat ==> ()
+  setCalleethr(parg) == ivCalleethr := parg;
+
+instance variables
+  private ivSize : [nat] := nil
+
+operations
+  public getSize: () ==> nat
+  getSize() == return ivSize;
+
+  public setSize: nat ==> ()
+  setSize(parg) == ivSize := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlReplyRequest
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlThreadCreate is subclass of IOmlThreadCreate
+operations
+  public identity: () ==> seq of char
+  identity () == return "ThreadCreate";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitThreadCreate(self);
+
+  public OmlThreadCreate:
+      (nat) *
+      (bool) *
+      [nat] *
+      [seq of char] *
+      (nat) *
+      (nat) ==> OmlThreadCreate
+  OmlThreadCreate (p1,p2,p3,p4,p5,p6) == 
+   ( setId(p1);
+     setPeriod(p2);
+     setObjref(p3);
+     setClnm(p4);
+     setCpunm(p5);
+     setObstime(p6) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "period" in
+        if fname in set dom data
+        then setPeriod(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivPeriod : [bool] := nil
+
+operations
+  public getPeriod: () ==> bool
+  getPeriod() == return ivPeriod;
+
+  public setPeriod: bool ==> ()
+  setPeriod(parg) == ivPeriod := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : [seq of char] := nil
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm
+    pre hasClnm();
+
+  public hasClnm: () ==> bool
+  hasClnm () == return ivClnm <> nil;
+
+  public setClnm: [ seq of char ] ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlThreadCreate
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlThreadKill is subclass of IOmlThreadKill
+operations
+  public identity: () ==> seq of char
+  identity () == return "ThreadKill";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitThreadKill(self);
+
+  public OmlThreadKill:
+      (nat) *
+      (nat) *
+      (nat) ==> OmlThreadKill
+  OmlThreadKill (p1,p2,p3) == 
+   ( setId(p1);
+     setCpunm(p2);
+     setObstime(p3) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlThreadKill
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlThreadSwapIn is subclass of IOmlThreadSwapIn
+operations
+  public identity: () ==> seq of char
+  identity () == return "ThreadSwapIn";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitThreadSwapIn(self);
+
+  public OmlThreadSwapIn:
+      (nat) *
+      [nat] *
+      [seq of char] *
+      (nat) *
+      (nat) *
+      (nat) ==> OmlThreadSwapIn
+  OmlThreadSwapIn (p1,p2,p3,p4,p5,p6) == 
+   ( setId(p1);
+     setObjref(p2);
+     setClnm(p3);
+     setCpunm(p4);
+     setOverhead(p5);
+     setObstime(p6) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "overhead" in
+        if fname in set dom data
+        then setOverhead(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : [seq of char] := nil
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm
+    pre hasClnm();
+
+  public hasClnm: () ==> bool
+  hasClnm () == return ivClnm <> nil;
+
+  public setClnm: [ seq of char ] ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivOverhead : [nat] := nil
+
+operations
+  public getOverhead: () ==> nat
+  getOverhead() == return ivOverhead;
+
+  public setOverhead: nat ==> ()
+  setOverhead(parg) == ivOverhead := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlThreadSwapIn
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlThreadSwapOut is subclass of IOmlThreadSwapOut
+operations
+  public identity: () ==> seq of char
+  identity () == return "ThreadSwapOut";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitThreadSwapOut(self);
+
+  public OmlThreadSwapOut:
+      (nat) *
+      [nat] *
+      [seq of char] *
+      (nat) *
+      (nat) *
+      (nat) ==> OmlThreadSwapOut
+  OmlThreadSwapOut (p1,p2,p3,p4,p5,p6) == 
+   ( setId(p1);
+     setObjref(p2);
+     setClnm(p3);
+     setCpunm(p4);
+     setOverhead(p5);
+     setObstime(p6) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "id" in
+        if fname in set dom data
+        then setId(data(fname));
+      let fname = "objref" in
+        if fname in set dom data
+        then setObjref(data(fname));
+      let fname = "clnm" in
+        if fname in set dom data
+        then setClnm(data(fname));
+      let fname = "cpunm" in
+        if fname in set dom data
+        then setCpunm(data(fname));
+      let fname = "overhead" in
+        if fname in set dom data
+        then setOverhead(data(fname));
+      let fname = "time" in
+        if fname in set dom data
+        then setObstime(data(fname)) );
+
+instance variables
+  private ivId : [nat] := nil
+
+operations
+  public getId: () ==> nat
+  getId() == return ivId;
+
+  public setId: nat ==> ()
+  setId(parg) == ivId := parg;
+
+instance variables
+  private ivObjref : [nat] := nil
+
+operations
+  public getObjref: () ==> nat
+  getObjref() == return ivObjref
+    pre hasObjref();
+
+  public hasObjref: () ==> bool
+  hasObjref () == return ivObjref <> nil;
+
+  public setObjref: [ nat ] ==> ()
+  setObjref(parg) == ivObjref := parg;
+
+instance variables
+  private ivClnm : [seq of char] := nil
+
+operations
+  public getClnm: () ==> seq of char
+  getClnm() == return ivClnm
+    pre hasClnm();
+
+  public hasClnm: () ==> bool
+  hasClnm () == return ivClnm <> nil;
+
+  public setClnm: [ seq of char ] ==> ()
+  setClnm(parg) == ivClnm := parg;
+
+instance variables
+  private ivCpunm : [nat] := nil
+
+operations
+  public getCpunm: () ==> nat
+  getCpunm() == return ivCpunm;
+
+  public setCpunm: nat ==> ()
+  setCpunm(parg) == ivCpunm := parg;
+
+instance variables
+  private ivOverhead : [nat] := nil
+
+operations
+  public getOverhead: () ==> nat
+  getOverhead() == return ivOverhead;
+
+  public setOverhead: nat ==> ()
+  setOverhead(parg) == ivOverhead := parg;
+
+instance variables
+  private ivObstime : [nat] := nil
+
+operations
+  public getObstime: () ==> nat
+  getObstime() == return ivObstime;
+
+  public setObstime: nat ==> ()
+  setObstime(parg) == ivObstime := parg;
+
+end OmlThreadSwapOut
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlTraceEvent is subclass of IOmlTraceEvent
+operations
+  public identity: () ==> seq of char
+  identity () == return "TraceEvent";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitTraceEvent(self);
+
+end OmlTraceEvent
+\end{vdm_al}
+\begin{vdm_al}
+class OmlTraceFile is subclass of IOmlTraceFile
+operations
+  public identity: () ==> seq of char
+  identity () == return "TraceFile";
+
+  public accept: IOmlVisitor ==> ()
+  accept (pVisitor) == pVisitor.visitTraceFile(self);
+
+  public OmlTraceFile:
+      (seq of IOmlTraceEvent) ==> OmlTraceFile
+  OmlTraceFile (p1) == 
+   ( setTrace(p1) );
+
+  public init: map seq of char to [FieldValue] ==> ()
+  init (data) ==
+    ( let fname = "Trace" in
+        if fname in set dom data
+        then setTrace(data(fname)) );
+
+instance variables
+  private ivTrace : seq of IOmlTraceEvent := []
+
+operations
+  public getTrace: () ==> seq of IOmlTraceEvent
+  getTrace() == return ivTrace;
+
+  public setTrace: seq of IOmlTraceEvent ==> ()
+  setTrace(parg) == ivTrace := parg;
+
+  public addTrace: IOmlNode ==> ()
+  addTrace (parg) == ivTrace := ivTrace ^ [parg];
+
+end OmlTraceFile
+\end{vdm_al}
+
+\begin{vdm_al}
+class OmlVisitor is subclass of IOmlVisitor
+operations
+  public visitDocument: IOmlDocument ==> ()
+  visitDocument (-) == skip;
+
+  public visitLexem: IOmlLexem ==> ()
+  visitLexem (-) == skip;
+
+  public visitDeployObj: IOmlDeployObj ==> ()
+  visitDeployObj (-) == skip;
+
+  public visitInstVarChange: IOmlInstVarChange ==> ()
+  visitInstVarChange (-) == skip;
+
+  public visitThreadSwapOut: IOmlThreadSwapOut ==> ()
+  visitThreadSwapOut (-) == skip;
+
+  public visitThreadSwapIn: IOmlThreadSwapIn ==> ()
+  visitThreadSwapIn (-) == skip;
+
+  public visitDelayedThreadSwapIn: IOmlDelayedThreadSwapIn ==> ()
+  visitDelayedThreadSwapIn (-) == skip;
+
+  public visitReplyRequest: IOmlReplyRequest ==> ()
+  visitReplyRequest (-) == skip;
+
+  public visitOpRequest: IOmlOpRequest ==> ()
+  visitOpRequest (-) == skip;
+
+  public visitMessageActivate: IOmlMessageActivate ==> ()
+  visitMessageActivate (-) == skip;
+
+  public visitCPUdecl: IOmlCPUdecl ==> ()
+  visitCPUdecl (-) == skip;
+
+  public visitOpCompleted: IOmlOpCompleted ==> ()
+  visitOpCompleted (-) == skip;
+
+  public visitTraceFile: IOmlTraceFile ==> ()
+  visitTraceFile (-) == skip;
+
+  public visitThreadCreate: IOmlThreadCreate ==> ()
+  visitThreadCreate (-) == skip;
+
+  public visitMessageCompleted: IOmlMessageCompleted ==> ()
+  visitMessageCompleted (-) == skip;
+
+  public visitMessageRequest: IOmlMessageRequest ==> ()
+  visitMessageRequest (-) == skip;
+
+  public visitBUSdecl: IOmlBUSdecl ==> ()
+  visitBUSdecl (-) == skip;
+
+  public visitThreadKill: IOmlThreadKill ==> ()
+  visitThreadKill (-) == skip;
+
+  public visitOpActivate: IOmlOpActivate ==> ()
+  visitOpActivate (-) == skip;
+
+  public visitContextInfo: IOmlContextInfo ==> ()
+  visitContextInfo (-) == skip;
+
+  public visitNode: IOmlNode ==> ()
+  visitNode (pNode) ==
+    ( if isofclass(IOmlDeployObj,pNode) then visitDeployObj(pNode)
+      elseif isofclass(IOmlInstVarChange,pNode) then visitInstVarChange(pNode)
+      elseif isofclass(IOmlThreadSwapOut,pNode) then visitThreadSwapOut(pNode)
+      elseif isofclass(IOmlThreadSwapIn,pNode) then visitThreadSwapIn(pNode)
+      elseif isofclass(IOmlTraceEvent,pNode) then visitTraceEvent(pNode)
+      elseif isofclass(IOmlDelayedThreadSwapIn,pNode) then visitDelayedThreadSwapIn(pNode)
+      elseif isofclass(IOmlReplyRequest,pNode) then visitReplyRequest(pNode)
+      elseif isofclass(IOmlOpRequest,pNode) then visitOpRequest(pNode)
+      elseif isofclass(IOmlMessageActivate,pNode) then visitMessageActivate(pNode)
+      elseif isofclass(IOmlCPUdecl,pNode) then visitCPUdecl(pNode)
+      elseif isofclass(IOmlOpCompleted,pNode) then visitOpCompleted(pNode)
+      elseif isofclass(IOmlTraceFile,pNode) then visitTraceFile(pNode)
+      elseif isofclass(IOmlMessageCompleted,pNode) then visitMessageCompleted(pNode)
+      elseif isofclass(IOmlThreadCreate,pNode) then visitThreadCreate(pNode)
+      elseif isofclass(IOmlMessageRequest,pNode) then visitMessageRequest(pNode)
+      elseif isofclass(IOmlBUSdecl,pNode) then visitBUSdecl(pNode)
+      elseif isofclass(IOmlOpActivate,pNode) then visitOpActivate(pNode)
+      elseif isofclass(IOmlThreadKill,pNode) then visitThreadKill(pNode)
+      else error );
+
+  public visitTraceEvent: IOmlTraceEvent ==> ()
+  visitTraceEvent (pNode) ==
+    ( if isofclass(IOmlDeployObj,pNode) then visitDeployObj(pNode)
+      elseif isofclass(IOmlInstVarChange,pNode) then visitInstVarChange(pNode)
+      elseif isofclass(IOmlThreadSwapOut,pNode) then visitThreadSwapOut(pNode)
+      elseif isofclass(IOmlThreadSwapIn,pNode) then visitThreadSwapIn(pNode)
+      elseif isofclass(IOmlDelayedThreadSwapIn,pNode) then visitDelayedThreadSwapIn(pNode)
+      elseif isofclass(IOmlReplyRequest,pNode) then visitReplyRequest(pNode)
+      elseif isofclass(IOmlOpRequest,pNode) then visitOpRequest(pNode)
+      elseif isofclass(IOmlMessageActivate,pNode) then visitMessageActivate(pNode)
+      elseif isofclass(IOmlCPUdecl,pNode) then visitCPUdecl(pNode)
+      elseif isofclass(IOmlOpCompleted,pNode) then visitOpCompleted(pNode)
+      elseif isofclass(IOmlMessageCompleted,pNode) then visitMessageCompleted(pNode)
+      elseif isofclass(IOmlThreadCreate,pNode) then visitThreadCreate(pNode)
+      elseif isofclass(IOmlMessageRequest,pNode) then visitMessageRequest(pNode)
+      elseif isofclass(IOmlBUSdecl,pNode) then visitBUSdecl(pNode)
+      elseif isofclass(IOmlThreadKill,pNode) then visitThreadKill(pNode)
+      elseif isofclass(IOmlOpActivate,pNode) then visitOpActivate(pNode)
+      else error );
+
+end OmlVisitor
+\end{vdm_al}

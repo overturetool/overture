@@ -1,0 +1,60 @@
+Overture Tool Release Notes
+
+Release: 1.0.0
+Date: 27 of February, 2011
+
+Overture is a community-based project developing the next generation
+of tools to support modelling and analysis in the design of computer-based
+systems using VDM (Vienna Development Method).
+
+This software is Open Source and destributed under the GPLv3 license.
+
+Requirements:
+Java 1.5 JRE (Java Runtime Environment) or later.
+
+
+Installation instructions: (TBD: link to instructions)
+
+User manual: http://wiki.overturetool.org/images/5/54/OvertureIDEUserGuideV1.pdf
+
+Release note archive: (TBD: link to release note archive)
+
+
+-- Additions 
+* The right thread is selected in the Debug View when a breakpoint is hit.
+* Improved syntax coloring.
+* Run mode added.
+* Improved the outline view.
+
+-- Fixes
+* Diverse latex generation fixes.
+* Fixed console default to pinned when created.
+* Fixed missing variables in variable view.
+* Fixed NullPointerException when trying to generating proof obligations without type checking the project.
+
+-- Known Issues
+* Bug list - http://sourceforge.net/tracker/?limit=100&func=&group_id=141350&atid=749152&assignee=&status=2&category=&artgroup=&keyword=&submitter=&artifact_id=&assignee=&status=1&category=&artgroup=&submitter=&keyword=&artifact_id=&submit=Filter
+* Problems with Japanese characters and Latex.
+* Latex text and model source is not recognized independently.
+
+
+-- FAQ
+
+* Who makes Overture?
+Overture is made by the contribution of people all over the world. 
+You can reach these people in overturetool-core@overturetool.org
+
+* What can I do to help? 
+If you are interested in helping you can drop a mail to the Overture Mailing list overturetool-core@overturetool.org.
+For inspiration you can take a look at some suggested projects: http://wiki.overturetool.org/index.php/Overture_projects
+
+* Where is Overture source code?
+Overture source code is available for download in http://sourceforge.net/projects/overture/develop
+
+
+-- Other resources and links
+* Overture Wiki - wiki.overturetool.org
+* VDM Language Manual - http://wiki.overturetool.org/images/9/95/VDM10_lang_man.pdf
+* VDM Tutorials - http://overturetool.org/?q=Documentation
+* VDM Examples - http://overturetool.org/?q=Examples
+* VDM Portal - http://www.vdmportal.org

@@ -1,0 +1,831 @@
+\section{Implicit and explicit specifications}
+
+This report presents two versions of the specification. First an implicit
+version ($SOCCER-IMPL$) is given then an explicit version ($SOCCER-EXPL$), which may be executed
+with the toolbox, is presented.
+
+
+ 
+\begin{vdm_al}
+module SOCCER_IMPL
+
+exports all
+
+definitions
+\end{vdm_al}
+
+\section{Constants, types and state variables}
+
+Two constants are introduced to denote the maximum numbers of substitutions for
+goalkeepers ($gk-subs-max$) and field players ($fp-subs-max$). An alternate
+model could consider these constants as variables that must be defined before
+the match begins.
+
+
+\begin{vdm_al}
+values gk_subs_max : nat1 = 1;
+       fp_subs_max : nat1 = 2
+\end{vdm_al}
+
+A type $player$ is introduced as a renaming for natural numbers. It may as well
+be further constrained to a range of numbers (e.g.\ natural numbers less
+than 17). 
+
+\begin{vdm_al}
+types  player = nat1
+\end{vdm_al}
+
+The state of the referee's book may be abstracted to five variables:
+
+\begin{itemize}
+\item the set of players on the field
+\item the set of potential substitutes
+\item the player who is the goal keeper (he is usually a member of the players
+on the field, but this is not mandatory if the team is able to play without
+goalkeeper!)
+\item the number of goalkeeper substitutions already performed
+\item the number of field player substitutions already performed
+\end{itemize}
+
+\begin{vdm_al}
+state  R_Book of
+         on_field_players : set of player
+         potential_substitutes : set of player
+         goalkeeper : player
+         nb_gk_subs : nat
+         nb_fp_subs : nat
+
+inv mk_R_Book(ofp,ps,gk, ngk, nfp) == 
+    leq_eleven_players(ofp) and 
+    within_allowed_limits(ngk,nfp) and
+    gk not in set ps and 
+    ofp inter ps = {}
+
+init r == r = 
+       mk_R_Book({1,2,3,4,5,6,7,8,9,10,11},
+                 {12,13,14,15,16},1,0,0)
+end
+\end{vdm_al}
+
+The state invariant states that there are at most eleven players of the team on
+the field, and that the numbers of performed substitutions are less than or equal 
+to the maxima allowed. 
+It also states that the goalkeeper is not within the substitutes. In fact, most
+of the time $gk \in ofp$, except when he has been excluded from the field
+($RED-CARD$). It is thus wrong to state as an invariant that the goalkeeper is
+member of $on-field-players$. Finally, the invariant states that a player is
+either playing or is a substitute.
+
+The initial state states the initial values of the
+variables as a series of equalities (not very useful for the IFAD tools, but
+allowed by the standard). The initial values are the usual ones in soccer
+matches.
+
+%\newpage
+\section{Functions}
+
+Two boolean functions are needed for the specification of the invariant.
+
+
+\begin{vdm_al}
+functions
+\end{vdm_al}
+
+
+$leq-eleven-players$ states that there are at most eleven players in the set
+passed as argument.
+\begin{vdm_al}
+leq_eleven_players : set of player +> bool
+leq_eleven_players(f) == (card f) <= 11
+   ;
+\end{vdm_al}
+
+$within-allowed-limits$ states that its arguments are less than or equal to
+the two constants $gk-subs-max$ and $fp-subs-max$ respectively.
+
+\begin{vdm_al}
+within_allowed_limits : nat * nat +> bool
+within_allowed_limits (ngk , nfp ) == 
+     (ngk <= gk_subs_max) and (nfp <= fp_subs_max)
+\end{vdm_al}
+
+\section{Operations}
+
+There are three operations allowed on this state:
+
+\begin{itemize}
+\item the referee gives a red card to one of the players
+\item the goalkeeper is changed to another field player
+\item the substitution of a player by another player
+\end{itemize}
+
+\begin{vdm_al}
+operations
+\end{vdm_al}   
+
+The $RED-CARD$ operation takes the excluded player as argument.
+The player may be any of the team players, so the pre-condition states that he
+is in one of both sets $on-field-players$ and $potential-substitutes$. The
+post-condition states that he no longer appears in any of these sets and that
+everything else remains unchanged.
+
+\begin{vdm_al}
+RED_CARD (p : player)
+ext wr on_field_players : set of player
+    wr potential_substitutes : set of player
+   pre p in set on_field_players or p in set potential_substitutes
+  post on_field_players = on_field_players~ \ {p}
+       and potential_substitutes = potential_substitutes~ \ {p}
+      ;
+\end{vdm_al}
+
+The second operation $CHANGE-GOALKEEPER$ expresses that one of the field
+players takes the role of goal keeper. The pre-condition states that the player
+is on the field (not really mandatory, but often useful) and the post-condition
+that he is the goal keeper.
+
+\begin{vdm_al}
+CHANGE_GOALKEEPER (p : player)
+ext wr goalkeeper : player
+    rd on_field_players : set of player
+  pre p in set on_field_players
+  post goalkeeper = p
+      ;
+\end{vdm_al}
+
+The last operation expresses the substitution of a player by another. Depending
+on the status of goalkeeper of the player who quits the field, the relevant
+variable ($nb-gk-subs$ or $nb-fp-subs$) is updated. The pre-condition states
+that the player is on the field, that the substitute is a valid substitute, and
+that the maximum number of substitutions has not yet been reached. The
+post-condition states that the substitute is on the field and that $pl$ no
+longer participates in the match. It also states that $subs$ is the new
+goalkeeper if $pl$ was goalkeeper. Finally, it updates the substitution
+counters.
+
+\begin{vdm_al}
+SUBSTITUTION (pl : player, subs: player)
+ext wr on_field_players : set of player
+    wr potential_substitutes : set of player
+    wr goalkeeper : player
+    wr nb_gk_subs : nat
+    wr nb_fp_subs : nat
+   pre pl in set on_field_players and subs in set potential_substitutes
+       and (pl = goalkeeper => within_allowed_limits(nb_gk_subs+1,nb_fp_subs))
+       and (pl <> goalkeeper => within_allowed_limits(nb_gk_subs,nb_fp_subs+1))
+  post on_field_players = on_field_players~ union {subs} \ {pl}
+       and potential_substitutes = potential_substitutes~ \ {subs}
+       and (pl = goalkeeper~ =>
+           	 ((goalkeeper = subs) 
+                 and (nb_gk_subs = nb_gk_subs~ +1 )
+                 and (nb_fp_subs = nb_fp_subs~)))
+       and (pl <> goalkeeper~ =>
+                ((goalkeeper = goalkeeper~) 
+                 and (nb_gk_subs = nb_gk_subs~)
+                 and (nb_fp_subs = nb_fp_subs~ +1)))
+;
+\end{vdm_al}
+
+\subsection*{Alternate specification}
+
+An alternate way to state this specification is to express two distinct
+operations for the goalkeeper and the field player substitutions and then to
+combine the results into a single explicit operation.
+
+\begin{vdm_al}
+SUBSTITUTION_GK (pl : player, subs: player)
+ext wr on_field_players : set of player
+    wr potential_substitutes : set of player
+    wr goalkeeper : player
+    wr nb_gk_subs : nat
+    rd nb_fp_subs : nat
+   pre pl in set on_field_players and subs in set potential_substitutes
+       and pl = goalkeeper  and within_allowed_limits(nb_gk_subs+1,nb_fp_subs)
+  post on_field_players = on_field_players~ union {subs} \ {pl}
+       and potential_substitutes = potential_substitutes~ \ {subs}
+       and goalkeeper = subs and nb_gk_subs = nb_gk_subs~ +1 
+;
+SUBSTITUTION_FP (pl : player, subs: player)
+ext wr on_field_players : set of player
+    wr potential_substitutes : set of player
+    rd goalkeeper : player
+    rd nb_gk_subs : nat
+    wr nb_fp_subs : nat
+   pre pl in set on_field_players and subs in set potential_substitutes
+       and pl <> goalkeeper and within_allowed_limits(nb_gk_subs,nb_fp_subs+1)
+  post on_field_players = on_field_players~ union {subs} \ {pl}
+       and potential_substitutes = potential_substitutes~ \ {subs}
+       and nb_fp_subs = nb_fp_subs~ +1
+;
+SUBSTITUTION_EXPL : player * player ==> ()
+SUBSTITUTION_EXPL (pl , subs)
+== if pl = goalkeeper then SUBSTITUTION_GK(pl,subs)
+			else SUBSTITUTION_FP(pl,subs)
+pre (pl = goalkeeper => 
+          pre_SUBSTITUTION_GK(pl,subs,
+                              mk_R_Book(on_field_players,potential_substitutes,
+                                        goalkeeper,nb_gk_subs, nb_fp_subs)))
+    and (pl <> goalkeeper => 
+          pre_SUBSTITUTION_FP(pl,subs,
+                              mk_R_Book(on_field_players,potential_substitutes,
+                                        goalkeeper,nb_gk_subs,nb_fp_subs)))
+end SOCCER_IMPL
+\end{vdm_al}
+%
+% Note: this results in the following error in tc def
+%vdm> tc SOCCER_IMPL def
+%Typechecking module SOCCER_IMPL ...
+%ERRORS: 2    WARNINGS: 0
+%Error : Function is not applied with parameters of the correct type
+%act : ( player * player * compose R_Book of ( set of player | {} ) ( set of player | {} ) player nat nat end )
+%exp : ( player * player * inv_(compose R_Book of ( set of player | {} ) ( set of player | {} ) player nat nat end) )
+%At line: 298  column: 51
+%
+% The explanation for this error is that the third argument is not a simple
+% composite but is associated to an invariant. The system is not able to
+% check that this invariant is fulfilled.
+
+\section{Italy vs Norway}
+
+We are now able to analyse the Italy-Norway game. Actually, the following
+sequence of operations is invalid:
+
+\begin{verbatim}
+RED_CARD(1)
+SUBSTITUTION(10,12)
+SUBSTITUTION(2,13)
+SUBSTITUTION(3,14)
+\end{verbatim}
+
+Because three field players have left the game. Moreover, Pagliuka has remained
+goal keeper for the whole match. The right sequence is:
+
+\begin{verbatim}
+RED_CARD(1)
+CHANGE_GOALKEEPER(10)
+SUBSTITUTION(10,12)
+SUBSTITUTION(2,13)
+SUBSTITUTION(3,14)
+\end{verbatim}
+
+So Baggio has exited the match as being the goalkeeper.
+%\footnote{I don't claim
+%that this formalisation of the soccer rules is the right one; but I hope it
+%provides an entertaining  example.}
+
+\subsection*{Animation of the specification}
+
+The specification of the soccer referee's book is sufficiently precise to
+reason about the valid and invalid sequences of operations and to decide that
+Baggio had to exit the match in the role of the goalkeeper. Still, one might
+find it interesting to simulate these sequences of operations by ``executing''
+the specification. The IFAD toolbox 
+\cite{elmstrom94} allows to execute VDM specifications expressed in an explicit
+style. This style sets several restrictions on the way the initial state is
+specified and also requires the operations to be expressed in terms of
+imperative statements rather than pre- and post-conditions.  
+
+The soccer referee's book may be easily translated into an explicit style.
+It turns out that the post-conditions of operations are  conjunctions of
+equalities. These can be implemented by sequences of assignments. Appendix
+\ref{VDMexplcode} presents an explicit version of the specification. This
+explicit version may be executed with the toolbox as shown in appendix 
+\ref{VDMexe}. The dynamic  evaluation of pre-condition helps to detect the
+wrong sequences of operations.
+
+The soccer referee's book specification was originally developped with the
+KIDS/VDM environment 
+\cite{ledru92b,ledru94b}. 
+This environment is based on the program synthesis capabilities of the KIDS
+system \cite{smith90b}. It allows the  semi-automatic translation of 
+VDM specifications into the REFINE language. 
+Appendix \ref{REFINEcode} shows the REFINE code generated from the implicit
+specification. This synthesis process is semi-automatic, i.e.\ it is a
+combination of automatic generation and user interaction. Nevertheless, every
+synthesis step is performed under the control of the tool which guarantees the
+correspondence between the implicit VDM specification and the resulting code.
+The execution of this code is given in appendix \ref{REFINEexe}. It is very
+similar to the execution performed with the toolbox, except that pre- and
+post-condition are not checked at execution time.
+
+\subsection*{Acknowledgments}
+
+Thanks to Marie-Laure Potet and Peter Gorm Larsen for their comments on a first
+version of this document.
+
+\bibliographystyle{alpha}
+%
+%\bibliography{/users/ledru/bib/these}
+
+\begin{thebibliography}{ELL94}
+
+\bibitem[ELL94]{elmstrom94}
+R.~Elmstrom, P.~G. Larsen, and P.~B. Lassen.
+\newblock The {IFAD VDM-SL} toolbox : a practical approach to formal
+  specifications.
+\newblock {\em ACM SIGPLAN Notices}, 29(9), 1994.
+
+\bibitem[Led94]{ledru94b}
+Y.~Ledru.
+\newblock Proof-based development of specifications with {KIDS/VDM}.
+\newblock In M.~Naftalin, Tim Denvir, and Miquel Bertran, editors, {\em FME'94:
+  Industrial Benefit of Formal Methods}, volume 873 of {\em Lecture Notes in
+  Computer Science}, pages 214--232. Springer-Verlag, 1994.
+
+\bibitem[LL92]{ledru92b}
+Y.~Ledru and M.-H. Li\'{e}geois.
+\newblock {Prototyping VDM specifications with KIDS}.
+\newblock In {\em Proceedings of the 7th Knowledge-Based Software Engineering
+  Conference}. IEEE Computer Society Press, 1992.
+
+\bibitem[Smi90]{smith90b}
+D.R. Smith.
+\newblock {KIDS: a semi-automatic program development system}.
+\newblock {\em IEEE Transactions on Software Engineering --- Special Issue on
+  Formal Methods,}, 16(9), 1990.
+
+\end{thebibliography}
+
+\newpage
+\appendix
+
+\section{Explicit definition}\label{VDMexplcode}
+This appendix provides an explicit specification to the Referee's Book specification. 
+
+\begin{vdm_al}
+module SOCCER_EXPL
+
+exports all
+
+definitions
+
+values gk_subs_max : nat1 = 1;
+       fp_subs_max : nat1 = 2
+\end{vdm_al}
+
+
+\begin{vdm_al}
+types  player = nat1
+\end{vdm_al}
+
+\begin{vdm_al}
+state  R_Book of
+         on_field_players : set of player
+         potential_substitutes : set of player
+         goalkeeper : player
+         nb_gk_subs : nat
+         nb_fp_subs : nat
+inv mk_R_Book(ofp,ps,gk, ngk, nfp) == 
+    leq_eleven_players(ofp) and 
+    within_allowed_limits(ngk,nfp) and 
+    gk not in set ps and 
+    ofp inter ps = {}
+
+init r == r = mk_R_Book({1,2,3,4,5,6,7,8,9,10,11}, {12,13,14,15,16}, 1, 0, 0)
+end
+\end{vdm_al}
+
+\begin{vdm_al}
+functions
+\end{vdm_al}
+
+\begin{vdm_al}
+leq_eleven_players : set of player +> bool
+leq_eleven_players(f) == (card f) <= 11
+   ;
+\end{vdm_al}
+
+\begin{vdm_al}
+within_allowed_limits : nat * nat +> bool
+within_allowed_limits (ngk , nfp ) == 
+     (ngk <= gk_subs_max) and (nfp <= fp_subs_max)
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+\end{vdm_al}   
+
+\begin{vdm_al}
+RED_CARD :  player ==> ()
+RED_CARD (p) ==
+(
+on_field_players := on_field_players \ {p};
+potential_substitutes := potential_substitutes \ {p}
+)
+pre p in set on_field_players or p in set potential_substitutes
+post on_field_players = on_field_players~ \ {p}
+       and potential_substitutes = potential_substitutes~ \ {p}
+      ;
+\end{vdm_al}
+
+\begin{vdm_al}
+CHANGE_GOALKEEPER : player ==> ()
+CHANGE_GOALKEEPER (p) ==
+(
+goalkeeper := p
+)
+pre p in set on_field_players
+post goalkeeper = p
+      ;
+\end{vdm_al}
+
+\begin{vdm_al}
+SUBSTITUTION : player * player ==> ()
+SUBSTITUTION (pl, subs) ==
+( on_field_players := on_field_players union {subs} \ {pl};
+  potential_substitutes := potential_substitutes \ {subs};
+  if pl = goalkeeper 
+  then (goalkeeper := subs; 
+		nb_gk_subs := nb_gk_subs +1)
+  else nb_fp_subs := nb_fp_subs +1
+)
+pre pl in set on_field_players and subs in set potential_substitutes
+       and (pl = goalkeeper => within_allowed_limits(nb_gk_subs+1,nb_fp_subs))
+       and (pl <> goalkeeper => within_allowed_limits(nb_gk_subs,nb_fp_subs+1))
+post on_field_players = on_field_players~ union {subs} \ {pl}
+       and potential_substitutes = potential_substitutes~ \ {subs}
+       and (pl = goalkeeper~ =>
+           	 ((goalkeeper = subs) 
+                 and (nb_gk_subs = nb_gk_subs~ +1 )
+                 and (nb_fp_subs = nb_fp_subs~)))
+       and (pl <> goalkeeper~ =>
+                ((goalkeeper = goalkeeper~) 
+                 and (nb_gk_subs = nb_gk_subs~)
+                 and (nb_fp_subs = nb_fp_subs~ +1)))
+;
+\end{vdm_al}
+
+\begin{vdm_al}
+SUBSTITUTION_GK : player * player ==> ()
+SUBSTITUTION_GK (pl , subs) ==
+(
+ on_field_players := on_field_players union {subs} \ {pl};
+ potential_substitutes  := potential_substitutes \ {subs};
+ goalkeeper := subs;
+ nb_gk_subs := nb_gk_subs +1
+)
+   pre pl in set on_field_players and subs in set potential_substitutes
+       and pl = goalkeeper  and within_allowed_limits(nb_gk_subs+1,nb_fp_subs)
+  post on_field_players = on_field_players~ union {subs} \ {pl}
+       and potential_substitutes = potential_substitutes~ \ {subs}
+       and goalkeeper = subs and nb_gk_subs = nb_gk_subs~ +1 
+;
+SUBSTITUTION_FP : player *player ==> ()
+SUBSTITUTION_FP (pl , subs) ==
+(
+ on_field_players := on_field_players union {subs} \ {pl};
+ potential_substitutes := potential_substitutes \ {subs};
+ nb_fp_subs := nb_fp_subs +1
+)
+   pre pl in set on_field_players and subs in set potential_substitutes
+       and pl <> goalkeeper and within_allowed_limits(nb_gk_subs,nb_fp_subs+1)
+  post on_field_players = on_field_players~ union {subs} \ {pl}
+       and potential_substitutes = potential_substitutes~ \ {subs}
+       and nb_fp_subs = nb_fp_subs~ +1
+;
+SUBSTITUTION_EXPL : player * player ==> ()
+SUBSTITUTION_EXPL (pl , subs) ==
+  if pl = goalkeeper 
+  then SUBSTITUTION_GK(pl,subs)
+  else SUBSTITUTION_FP(pl,subs)
+pre (pl = goalkeeper => 
+          pre_SUBSTITUTION_GK(pl,subs,
+                              mk_R_Book(on_field_players,potential_substitutes,
+                                        goalkeeper,nb_gk_subs, nb_fp_subs)))
+    and (pl <> goalkeeper => 
+          pre_SUBSTITUTION_FP(pl,subs,
+                              mk_R_Book(on_field_players,potential_substitutes,
+                                        goalkeeper,nb_gk_subs,nb_fp_subs)))
+
+end SOCCER_EXPL
+\end{vdm_al}
+
+\section{Execution of the explicit specification}\label{VDMexe}
+
+This can be experimented with the VDM debugger of the IFAD toolbox.
+
+{\small \begin{verbatim}
+First execution : leads to an incorrect state.
+
+vdm> init
+Initializing specification ...
+vdm> set pre
+pre set
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 1,2,3,4,5,6,7,8,9,10,11 }
+{ 12,13,14,15,16 }
+1
+0
+0
+vdm> sdebug RED_CARD(1)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 2,3,4,5,6,7,8,9,10,11 }
+{ 12,13,14,15,16 }
+1
+0
+0
+vdm> sdebug SUBSTITUTION_EXPL(10,12)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 2,3,4,5,6,7,8,9,11,12 }
+{ 13,14,15,16 }
+1
+0
+1
+vdm> sdebug SUBSTITUTION_EXPL(2,13)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 3,4,5,6,7,8,9,11,12,13 }
+{ 14,15,16 }
+1
+0
+2
+vdm> sdebug SUBSTITUTION_EXPL(3,14)
+Run-Time Error 58: The pre-condition evaluated to false 
+At line: 141  column: 5
+vdm> 
+
+Second execution : Baggio is a goalkeeper.
+vdm> init
+Initializing specification ...
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 1,2,3,4,5,6,7,8,9,10,11 }
+{ 12,13,14,15,16 }
+1
+0
+0
+vdm> sdebug RED_CARD(1)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 2,3,4,5,6,7,8,9,10,11 }
+{ 12,13,14,15,16 }
+1
+0
+0
+vdm> sdebug CHANGE_GOALKEEPER(10)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 2,3,4,5,6,7,8,9,10,11 }
+{ 12,13,14,15,16 }
+10
+0
+0
+vdm> sdebug SUBSTITUTION_EXPL(10,12)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 2,3,4,5,6,7,8,9,11,12 }
+{ 13,14,15,16 }
+12
+1
+0
+vdm> sdebug SUBSTITUTION_EXPL(2,13)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 3,4,5,6,7,8,9,11,12,13 }
+{ 14,15,16 }
+12
+1
+1
+vdm> sdebug SUBSTITUTION_EXPL(3,14)
+(no return value)
+vdm> print on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs
+{ 4,5,6,7,8,9,11,12,13,14 }
+{ 15,16 }
+12
+1
+2
+vdm> 
+\end{verbatim}}
+
+
+\section{REFINE code synthesized with KIDS/VDM}\label{REFINEcode}
+
+The following REFINE\footnote{REFINE is a trademark of Reasoning Systems.}
+code has been synthesized semi-automaticaly with the KIDS/VDM system from the
+implicit specification $SOCCER-IMPL$. 
+
+
+
+\vspace{0.5cm}
+
+% The following macros are taken from the KIDS preamble file
+\def\NEWLINE{\hspace*{1em}\newline}
+\def\ASSIGN{$\leftarrow$}
+\def\NLSET{\{}\def\BLSET{{\large\tt\char'173}}
+\def\NRSET{\/$\}$}\def\BRSET{{\large\tt\char'175}}
+\def\SETDIFF{$\backslash$}
+\def\UNION{$\cup$}
+\def\MATHDE{\it{\gdef\useridentifier{\it}\gdef\LSET{\NLSET}\gdef\RSET{\NRSET}\gdef\LMAP{\NLMAP}\gdef\RMAP{\NRMAP}}}
+
+\def\MATHEM{\bf{\gdef\useridentifier{\bf}\gdef\LSET{\BLSET}\gdef\RSET{\BRSET}\gdef\LMAP{\BLMAP}\gdef\RMAP{\BRMAP}}}
+
+\def\ENDMATH{\rm}
+
+
+\MATHDE
+type\ PLAYER\ =\ integer\MATHDE 
+
+\NEWLINE
+constant\ GK-SUBS-MAX:\ integer\ =\ 1\MATHDE 
+
+\NEWLINE
+constant\ FP-SUBS-MAX:\ integer\ =\ 2\MATHDE 
+
+\NEWLINE
+var\ ON-FIELD-PLAYERS:\ set(integer)\ =\ undefined\MATHDE 
+
+\NEWLINE
+var\ POTENTIAL-SUBSTITUTES:\ set(integer)\ =\ undefined\MATHDE 
+
+\NEWLINE
+var\ GOALKEEPER:\ integer\ =\ undefined\MATHDE 
+
+\NEWLINE
+var\ NB-GK-SUBS:\ integer\ =\ undefined\MATHDE 
+
+\NEWLINE
+var\ NB-FP-SUBS:\ integer\ =\ undefined\MATHDE 
+
+\NEWLINE
+function\ INIT\ ():\ any-type\NEWLINE
+\hspace*{1.36em} =\ ON-FIELD-PLAYERS\ \ASSIGN\ \LSET 1,\ 2,\ 3,\ 4,\ 5,\ 6,\ 7,\ 8,\ 9,\ 10,\ 11\RSET;\ \NEWLINE
+\hspace*{2.27em} POTENTIAL-SUBSTITUTES\ \ASSIGN\ \LSET 12,\ 13,\ 14,\ 15,\ 16\RSET;\ \NEWLINE
+\hspace*{2.27em} GOALKEEPER\ \ASSIGN\ 1;\ \NEWLINE
+\hspace*{2.27em} NB-GK-SUBS\ \ASSIGN\ 0;\ \NEWLINE
+\hspace*{2.27em} NB-FP-SUBS\ \ASSIGN\ 0\MATHDE 
+
+\NEWLINE
+function\ RED-CARD\ (P:\ integer):\ any-type\NEWLINE
+\hspace*{1.36em} =\ ON-FIELD-PLAYERS\ \ASSIGN\ ON-FIELD-PLAYERS\ \SETDIFF\ \LSET P\RSET;\ \NEWLINE
+\hspace*{2.27em} POTENTIAL-SUBSTITUTES\ \ASSIGN\ POTENTIAL-SUBSTITUTES\ \SETDIFF\ \LSET P\RSET\MATHDE 
+
+\NEWLINE
+function\ CHANGE-GOALKEEPER\ (P:\ integer):\ any-type\NEWLINE
+\hspace*{1.36em} =\ GOALKEEPER\ \ASSIGN\ P\MATHDE 
+
+\NEWLINE
+function\ SUBSTITUTION-GK\ (PL:\ integer,\ SUBS:\ integer):\ any-type\NEWLINE
+\hspace*{1.36em} =\ ON-FIELD-PLAYERS\ \ASSIGN\ ON-FIELD-PLAYERS\ \SETDIFF\ \LSET PL\RSET\ \UNION\ (\LSET SUBS\RSET\ \SETDIFF\ \LSET PL\RSET);\ \NEWLINE
+\hspace*{2.27em} POTENTIAL-SUBSTITUTES\ \ASSIGN\ POTENTIAL-SUBSTITUTES\ \SETDIFF\ \LSET SUBS\RSET;\ \NEWLINE
+\hspace*{2.27em} GOALKEEPER\ \ASSIGN\ SUBS;\ \NEWLINE
+\hspace*{2.27em} NB-GK-SUBS\ \ASSIGN\ NB-GK-SUBS\ +\ 1\MATHDE 
+
+\NEWLINE
+function\ SUBSTITUTION-FP\ (PL:\ integer,\ SUBS:\ integer):\ any-type\NEWLINE
+\hspace*{1.36em} =\ ON-FIELD-PLAYERS\ \ASSIGN\ ON-FIELD-PLAYERS\ \SETDIFF\ \LSET PL\RSET\ \UNION\ (\LSET SUBS\RSET\ \SETDIFF\ \LSET PL\RSET);\ \NEWLINE
+\hspace*{2.27em} POTENTIAL-SUBSTITUTES\ \ASSIGN\ POTENTIAL-SUBSTITUTES\ \SETDIFF\ \LSET SUBS\RSET;\ \NEWLINE
+\hspace*{2.27em} NB-FP-SUBS\ \ASSIGN\ NB-FP-SUBS\ +\ 1\MATHDE 
+
+\ENDMATH 
+
+\section{Execution of the REFINE code}\label{REFINEexe}
+
+Here comes a trace of the execution of the REFINE code. It is very similar to
+the execution of the explicit VDM specification. The only difference is that 
+this execution  does not evaluate the pre- and post-conditions, so no error is
+reported. One way to detect these problems is to synthesize code for the pre-
+and post-conditions, or for the invariant and evaluate these on the state
+before and after each operation.
+
+{\small \begin{verbatim}
+First execution : leads to an incorrect state.
+.> (init)
+0
+.> on-field-players
+(1 2 3 4 5 6 7 8 9 10 
+  11)
+.> potential-substitutes
+(12 13 14 15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+0
+.> (red-card 1)
+(12 13 14 15 16)
+.> on-field-players
+(2 3 4 5 6 7 8 9 10 11)
+.> potential-substitutes
+(12 13 14 15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+0
+.> (substitution-fp 10 12)
+1
+.> on-field-players
+(12 2 3 4 5 6 7 8 9 11)
+.> potential-substitutes
+(13 14 15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+1
+.> (substitution-fp 2 13)
+2
+.> on-field-players
+(13 12 3 4 5 6 7 8 9 11)
+.> potential-substitutes
+(14 15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+2
+.> (substitution-fp 3 14)
+3
+.> on-field-players
+(14 13 12 4 5 6 7 8 9 11)
+.> potential-substitutes
+(15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+3
+
+---> The user detects here an invalid state!
+
+Second execution : Baggio is a goalkeeper.
+.> (init)
+0
+.> on-field-players
+(1 2 3 4 5 6 7 8 9 10 
+  11)
+.> potential-substitutes
+(12 13 14 15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+0
+.> (red-card 1)
+(12 13 14 15 16)
+.> on-field-players
+(2 3 4 5 6 7 8 9 10 11)
+.> potential-substitutes
+(12 13 14 15 16)
+.> goalkeeper
+1
+.> nb-gk-subs
+0
+.> nb-fp-subs
+0
+.> (change-goalkeeper 10)
+10
+.> on-field-players
+(2 3 4 5 6 7 8 9 10 11)
+.> potential-substitutes
+(12 13 14 15 16)
+.> goalkeeper
+10
+.> nb-gk-subs
+0
+.> nb-fp-subs
+0
+.> (substitution-gk 10 12)
+1
+.> on-field-players
+(12 2 3 4 5 6 7 8 9 11)
+.> potential-substitutes
+(13 14 15 16)
+.> goalkeeper
+12
+.> nb-gk-subs
+1
+.> nb-fp-subs
+0
+.> (substitution-fp 2 13)
+1
+.> on-field-players
+(13 12 3 4 5 6 7 8 9 11)
+.> potential-substitutes
+(14 15 16)
+.> goalkeeper
+12
+.> nb-gk-subs
+1
+.> nb-fp-subs
+1
+.> (substitution-fp 3 14)
+2
+.> on-field-players
+(14 13 12 4 5 6 7 8 9 11)
+.> potential-substitutes
+(15 16)
+.> goalkeeper
+12
+.> nb-gk-subs
+1
+.> nb-fp-subs
+2
+\end{verbatim}}

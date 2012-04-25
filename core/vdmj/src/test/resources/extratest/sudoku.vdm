@@ -1,0 +1,45 @@
+module Sudoku
+exports all
+definitions
+types
+
+Cell :: r:nat c:nat;
+Puzzle = map Cell to nat
+
+values
+
+allCells = { mk_Cell(a, b) | a, b in set {1,...,9} };
+
+functions
+
+get3x3: Cell -> Cell
+get3x3(cell) ==
+	mk_Cell(((cell.r-1) div 3) * 3 + 1, ((cell.c-1) div 3) * 3 + 1);
+	
+in3x3: Cell * Cell -> bool
+in3x3(cell, origin) ==
+	cell.r >= origin.r and cell.r <= origin.r + 2 and
+	cell.c >= origin.c and cell.c <= origin.c + 2;
+
+allowed: Cell * nat * Puzzle -> bool
+allowed(cell, n, puzzle) ==
+	(not exists other in set dom puzzle &
+		puzzle(other) = n and (other.r = cell.r or other.c = cell.c))
+	and
+		let origin = get3x3(cell) in
+			not exists other in set dom puzzle &
+				puzzle(other) = n and in3x3(other, origin);
+				
+solve: Puzzle * nat -> bool
+solve(puzzle, l) ==
+	let free = allCells \ dom puzzle in
+		if free = {}
+		then true		-- puzzle is solved
+		else
+			exists n in set {1,...,9}, c in set free &
+				allowed(c, n, puzzle) and solve(puzzle munion {c |-> n}, l+1);
+				
+empty: () -> bool
+empty() == solve({|->}, 1);
+
+end Sudoku

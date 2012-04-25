@@ -1,0 +1,10 @@
+class HolNode
+
+operations
+
+public print : () ==> seq of char
+print () == is subclass responsibility
+
+functions
+
+end HolNode

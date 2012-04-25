@@ -1,0 +1,63 @@
+-----------------------------------------------
+-- Class:			World
+-- Description: 	World class
+-----------------------------------------------
+
+-- Rules of this world
+-- In the model, the city map is fixed and the buses and their route are defined in the inputvalues.txt
+--
+--		 _ _ _ _ WP2_ _ _ _ _ C _ _ _ _ _ _ F _ _ _ _ _R8
+--		|		  | 	R5	  |		R7	 R15|		   |
+--		|		  |			R6|_ D _ _ _ _ _|WP4	   | 
+--		|R4		  |R3			 |	  R11	|		   |
+--		|		  |			  R14|			|R10	   |
+--	   A|_ _ _ _ B|_ _ _ _ _ _ _ WP1_ _R16_WP3_ _ _ _ _| Central 
+--		|	R1			 R2		  |			|	   R9  |
+--		|					  R13 |_ _ E _ _|R12	   |
+--		|											   |
+--		|											   |
+--		|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ | 
+--							 HW1
+--
+-- ¤ Passengers arrive at a certain inflow rate on central station, their destination is randomly picked
+-- ¤ Buses always drives at full speed according to the roads speed limit
+-- ¤ Passengers will not get on buses that do not pass their stop
+-- ¤ Passenger will not change between multiple buses to get to a stop
+-- ¤ Buses always drives in cicles. i.e. the start and the stop of a route must be the same
+-- ¤ A bus route is defined by roads, and the bus will stop at all stops it passes on these roads
+-- ¤ The roads in the bus route must be connected end to end, as the bus can not jump passed pieces of road
+-- ¤ Roads are connected by waypoints, some of these waypoints function as bus stops where passengers get off. 
+
+class World
+
+instance variables
+public static graphics : gui_Graphics:= new gui_Graphics();
+
+public static env : [Environment] := new Environment("inputvalues.txt");
+public static timerRef : TimeStamp := new TimeStamp();  
+
+operations
+
+	public World: () ==> World
+	World() ==
+	(
+	 	Printer`Out("World created: ");
+		Printer`Out("------------------------------------------\n");
+	);
+
+	public Run: () ==> ()
+	Run() == 
+	(
+		graphics.init();
+		env.run();
+	  	env.isFinished();
+
+		env.report();
+
+	  	Printer`Out("End of this world");
+	);
+
+
+
+
+end World

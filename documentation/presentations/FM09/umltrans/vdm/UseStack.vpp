@@ -1,0 +1,11 @@
+class Stack
+... !\emph{The usual kinds of basic Stack definitions}£
+end Stack
+class UseStack
+instance variables
+  stack : Stack := new Stack();
+traces
+ TS: stack.Reset() ;
+     let x in set {2,8} in stack.Push(x){1,4};
+     (stack.Push(5) | stack.Pop())
+end UseStack

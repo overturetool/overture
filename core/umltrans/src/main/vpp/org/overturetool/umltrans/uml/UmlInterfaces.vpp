@@ -1,0 +1,985 @@
+
+\begin{vdm_al}
+class IUmlAssociation
+ is subclass of IUmlModelElement
+
+operations
+  public getOwnedEnds: () ==> set of IUmlProperty
+  getOwnedEnds() == is subclass responsibility;
+
+operations
+  public getOwnedNavigableEnds: () ==> set of IUmlProperty
+  getOwnedNavigableEnds() == is subclass responsibility;
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+  public hasName: () ==> bool
+  hasName () == is subclass responsibility;
+
+operations
+  public getId: () ==> seq of char
+  getId() == is subclass responsibility;
+
+end IUmlAssociation
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlBes
+ is subclass of IUmlInteractionFragment
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getStartOs: () ==> IUmlMos
+  getStartOs() == is subclass responsibility;
+
+operations
+  public getFinishOs: () ==> IUmlMos
+  getFinishOs() == is subclass responsibility;
+
+operations
+  public getCovered: () ==> set of IUmlLifeLine
+  getCovered() == is subclass responsibility;
+
+end IUmlBes
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlBoolType
+ is subclass of IUmlType
+
+end IUmlBoolType
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlCallEvent
+ is subclass of IUmlNode
+
+operations
+  public getOperation: () ==> IUmlOperation
+  getOperation() == is subclass responsibility;
+
+end IUmlCallEvent
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlCharType
+ is subclass of IUmlType
+
+end IUmlCharType
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlClass
+ is subclass of IUmlModelElement
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getClassBody: () ==> set of IUmlDefinitionBlock
+  getClassBody() == is subclass responsibility;
+
+operations
+  public getIsAbstract: () ==> bool
+  getIsAbstract() == is subclass responsibility;
+
+operations
+  public getSuperClass: () ==> seq of IUmlClassNameType
+  getSuperClass() == is subclass responsibility;
+
+operations
+  public getVisibility: () ==> IUmlVisibilityKind
+  getVisibility() == is subclass responsibility;
+
+operations
+  public getIsStatic: () ==> bool
+  getIsStatic() == is subclass responsibility;
+
+operations
+  public getIsActive: () ==> bool
+  getIsActive() == is subclass responsibility;
+
+operations
+  public getTemplatesignature: () ==> IUmlTemplateSignature
+  getTemplatesignature() == is subclass responsibility;
+
+  public hasTemplatesignature: () ==> bool
+  hasTemplatesignature () == is subclass responsibility;
+
+end IUmlClass
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlClassNameType
+ is subclass of IUmlType
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+end IUmlClassNameType
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlCollaboration
+ is subclass of IUmlModelElement
+
+operations
+  public getOwnedBehavior: () ==> set of IUmlInteraction
+  getOwnedBehavior() == is subclass responsibility;
+
+end IUmlCollaboration
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlCombinedFragment
+ is subclass of IUmlInteractionFragment
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getInteractionOperator: () ==> IUmlInteractionOperatorKind
+  getInteractionOperator() == is subclass responsibility;
+
+operations
+  public getOperand: () ==> seq of IUmlInteractionOperand
+  getOperand() == is subclass responsibility;
+
+operations
+  public getCovered: () ==> set of IUmlLifeLine
+  getCovered() == is subclass responsibility;
+
+end IUmlCombinedFragment
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlConstraint
+ is subclass of IUmlModelElement
+
+operations
+  public getConstraintElements: () ==> set of seq of char
+  getConstraintElements() == is subclass responsibility;
+
+operations
+  public getSpecification: () ==> IUmlValueSpecification
+  getSpecification() == is subclass responsibility;
+
+end IUmlConstraint
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlDefinitionBlock
+ is subclass of IUmlNode
+
+end IUmlDefinitionBlock
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlDocument
+
+operations
+  public getFilename: () ==> seq of char
+  getFilename () == is subclass responsibility;
+
+  public hasModel: () ==> bool
+  hasModel () == is subclass responsibility;
+
+  public getModel: () ==> IUmlModel
+  getModel () == is subclass responsibility;
+
+  public getLexems: () ==> seq of IUmlLexem
+  getLexems () == is subclass responsibility;
+
+
+
+  public accept: IUmlVisitor ==> ()
+  accept (-) == is subclass responsibility
+
+end IUmlDocument
+\end{vdm_al}
+
+\begin{vdm_al}
+class IUmlIntegerType
+ is subclass of IUmlType
+
+end IUmlIntegerType
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlInteraction
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getLifeLines: () ==> set of IUmlLifeLine
+  getLifeLines() == is subclass responsibility;
+
+operations
+  public getFragments: () ==> set of IUmlInteractionFragment
+  getFragments() == is subclass responsibility;
+
+operations
+  public getMessages: () ==> seq of IUmlMessage
+  getMessages() == is subclass responsibility;
+
+end IUmlInteraction
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlInteractionConstraint
+ is subclass of IUmlNode
+
+operations
+  public getMinint: () ==> IUmlValueSpecification
+  getMinint() == is subclass responsibility;
+
+  public hasMinint: () ==> bool
+  hasMinint () == is subclass responsibility;
+
+operations
+  public getMaxint: () ==> IUmlValueSpecification
+  getMaxint() == is subclass responsibility;
+
+  public hasMaxint: () ==> bool
+  hasMaxint () == is subclass responsibility;
+
+end IUmlInteractionConstraint
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlInteractionFragment
+ is subclass of IUmlNode
+
+end IUmlInteractionFragment
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlInteractionOperand
+ is subclass of IUmlInteractionFragment
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getFragments: () ==> seq of IUmlInteractionFragment
+  getFragments() == is subclass responsibility;
+
+operations
+  public getCovered: () ==> set of IUmlMos
+  getCovered() == is subclass responsibility;
+
+operations
+  public getGuard: () ==> IUmlInteractionConstraint
+  getGuard() == is subclass responsibility;
+
+  public hasGuard: () ==> bool
+  hasGuard () == is subclass responsibility;
+
+end IUmlInteractionOperand
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlInteractionOperatorKind
+ is subclass of IUmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IUmlInteractionOperatorKind
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlLexem
+
+values
+  static public ILEXEMUNKNOWN      : nat = 0;
+  static public ILEXEMKEYWORD      : nat = 1;
+  static public ILEXEMIDENTIFIER   : nat = 2;
+  static public ILEXEMLINECOMMENT  : nat = 3;
+  static public ILEXEMBLOCKCOMMENT : nat = 4
+
+operations
+  public accept: IUmlVisitor ==> ()
+  accept (-) == is subclass responsibility;
+
+  public getLine: () ==> nat
+  getLine () == is subclass responsibility;
+
+  public getColumn: () ==> nat
+  getColumn () == is subclass responsibility;
+
+  public getLexval: () ==> nat
+  getLexval () == is subclass responsibility;
+
+  public getText: () ==> seq of char
+  getText () == is subclass responsibility;
+
+  public getType: () ==> nat
+  getType () == is subclass responsibility;
+
+  public isKeyword: () ==> bool
+  isKeyword () == is subclass responsibility;
+
+  public isIdentifier: () ==> bool
+  isIdentifier () == is subclass responsibility;
+
+  public isComment: () ==> bool
+  isComment () == is subclass responsibility;
+
+  public isLineComment: () ==> bool
+  isLineComment () == is subclass responsibility;
+
+  public isBlockComment: () ==> bool
+  isBlockComment () == is subclass responsibility;
+
+end IUmlLexem
+\end{vdm_al}
+
+\begin{vdm_al}
+class IUmlLifeLine
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getRepresents: () ==> IUmlType
+  getRepresents() == is subclass responsibility;
+
+  public hasRepresents: () ==> bool
+  hasRepresents () == is subclass responsibility;
+
+end IUmlLifeLine
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlLiteralInteger
+ is subclass of IUmlValueSpecification
+
+operations
+  public getValue: () ==> nat
+  getValue() == is subclass responsibility;
+
+end IUmlLiteralInteger
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlLiteralString
+ is subclass of IUmlValueSpecification
+
+operations
+  public getValue: () ==> seq of char
+  getValue() == is subclass responsibility;
+
+end IUmlLiteralString
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlMessage
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getMessageKind: () ==> IUmlMessageKind
+  getMessageKind() == is subclass responsibility;
+
+operations
+  public getMessageSort: () ==> IUmlMessageSort
+  getMessageSort() == is subclass responsibility;
+
+operations
+  public getSendEvent: () ==> IUmlMos
+  getSendEvent() == is subclass responsibility;
+
+operations
+  public getSendReceive: () ==> IUmlMos
+  getSendReceive() == is subclass responsibility;
+
+operations
+  public getArgument: () ==> seq of IUmlValueSpecification
+  getArgument() == is subclass responsibility;
+
+end IUmlMessage
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlMessageKind
+ is subclass of IUmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IUmlMessageKind
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlMessageSort
+ is subclass of IUmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IUmlMessageSort
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlModel
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getDefinitions: () ==> set of IUmlModelElement
+  getDefinitions() == is subclass responsibility;
+
+end IUmlModel
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlModelElement
+ is subclass of IUmlNode
+
+end IUmlModelElement
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlMos
+ is subclass of IUmlInteractionFragment
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getMessage: () ==> IUmlMessage
+  getMessage() == is subclass responsibility;
+
+  public hasMessage: () ==> bool
+  hasMessage () == is subclass responsibility;
+
+operations
+  public getCovered: () ==> IUmlLifeLine
+  getCovered() == is subclass responsibility;
+
+operations
+  public getEvent: () ==> IUmlCallEvent
+  getEvent() == is subclass responsibility;
+
+  public hasEvent: () ==> bool
+  hasEvent () == is subclass responsibility;
+
+end IUmlMos
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlMultiplicityElement
+ is subclass of IUmlNode
+
+operations
+  public getIsOrdered: () ==> bool
+  getIsOrdered() == is subclass responsibility;
+
+operations
+  public getIsUnique: () ==> bool
+  getIsUnique() == is subclass responsibility;
+
+operations
+  public getLower: () ==> nat
+  getLower() == is subclass responsibility;
+
+operations
+  public getUpper: () ==> nat
+  getUpper() == is subclass responsibility;
+
+  public hasUpper: () ==> bool
+  hasUpper () == is subclass responsibility;
+
+end IUmlMultiplicityElement
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlNestedClassifiers
+ is subclass of IUmlDefinitionBlock
+
+operations
+  public getTypeList: () ==> set of IUmlType
+  getTypeList() == is subclass responsibility;
+
+end IUmlNestedClassifiers
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlOperation
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getVisibility: () ==> IUmlVisibilityKind
+  getVisibility() == is subclass responsibility;
+
+operations
+  public getMultiplicity: () ==> IUmlMultiplicityElement
+  getMultiplicity() == is subclass responsibility;
+
+operations
+  public getIsQuery: () ==> bool
+  getIsQuery() == is subclass responsibility;
+
+operations
+  public getType: () ==> IUmlType
+  getType() == is subclass responsibility;
+
+  public hasType: () ==> bool
+  hasType () == is subclass responsibility;
+
+operations
+  public getIsStatic: () ==> bool
+  getIsStatic() == is subclass responsibility;
+
+operations
+  public getOwnedParameters: () ==> IUmlParameters
+  getOwnedParameters() == is subclass responsibility;
+
+  public hasOwnedParameters: () ==> bool
+  hasOwnedParameters () == is subclass responsibility;
+
+end IUmlOperation
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlOwnedOperations
+ is subclass of IUmlDefinitionBlock
+
+operations
+  public getOperationList: () ==> set of IUmlOperation
+  getOperationList() == is subclass responsibility;
+
+end IUmlOwnedOperations
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlOwnedProperties
+ is subclass of IUmlDefinitionBlock
+
+operations
+  public getPropetityList: () ==> set of IUmlProperty
+  getPropetityList() == is subclass responsibility;
+
+end IUmlOwnedProperties
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlParameter
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getType: () ==> IUmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getMultiplicity: () ==> IUmlMultiplicityElement
+  getMultiplicity() == is subclass responsibility;
+
+operations
+  public getDefault: () ==> seq of char
+  getDefault() == is subclass responsibility;
+
+operations
+  public getDirection: () ==> IUmlParameterDirectionKind
+  getDirection() == is subclass responsibility;
+
+end IUmlParameter
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlParameterDirectionKind
+ is subclass of IUmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IUmlParameterDirectionKind
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlParameters
+ is subclass of IUmlNode
+
+operations
+  public getParameterList: () ==> seq of IUmlParameter
+  getParameterList() == is subclass responsibility;
+
+end IUmlParameters
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlProperty
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+operations
+  public getVisibility: () ==> IUmlVisibilityKind
+  getVisibility() == is subclass responsibility;
+
+operations
+  public getMultiplicity: () ==> IUmlMultiplicityElement
+  getMultiplicity() == is subclass responsibility;
+
+  public hasMultiplicity: () ==> bool
+  hasMultiplicity () == is subclass responsibility;
+
+operations
+  public getType: () ==> IUmlType
+  getType() == is subclass responsibility;
+
+operations
+  public getIsReadOnly: () ==> bool
+  getIsReadOnly() == is subclass responsibility;
+
+  public hasIsReadOnly: () ==> bool
+  hasIsReadOnly () == is subclass responsibility;
+
+operations
+  public getDefault: () ==> IUmlValueSpecification
+  getDefault() == is subclass responsibility;
+
+  public hasDefault: () ==> bool
+  hasDefault () == is subclass responsibility;
+
+operations
+  public getIsComposite: () ==> bool
+  getIsComposite() == is subclass responsibility;
+
+operations
+  public getIsDerived: () ==> bool
+  getIsDerived() == is subclass responsibility;
+
+  public hasIsDerived: () ==> bool
+  hasIsDerived () == is subclass responsibility;
+
+operations
+  public getIsStatic: () ==> bool
+  getIsStatic() == is subclass responsibility;
+
+  public hasIsStatic: () ==> bool
+  hasIsStatic () == is subclass responsibility;
+
+operations
+  public getOwnerClass: () ==> seq of char
+  getOwnerClass() == is subclass responsibility;
+
+operations
+  public getQualifier: () ==> IUmlType
+  getQualifier() == is subclass responsibility;
+
+  public hasQualifier: () ==> bool
+  hasQualifier () == is subclass responsibility;
+
+end IUmlProperty
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlStringType
+ is subclass of IUmlType
+
+end IUmlStringType
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlTemplateParameter
+ is subclass of IUmlNode
+
+operations
+  public getName: () ==> seq of char
+  getName() == is subclass responsibility;
+
+end IUmlTemplateParameter
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlTemplateSignature
+ is subclass of IUmlNode
+
+operations
+  public getTemplateParameters: () ==> set of IUmlTemplateParameter
+  getTemplateParameters() == is subclass responsibility;
+
+end IUmlTemplateSignature
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlType
+ is subclass of IUmlNode
+
+end IUmlType
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlUnlimitedNatural
+ is subclass of IUmlType
+
+end IUmlUnlimitedNatural
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlValueSpecification
+ is subclass of IUmlNode
+
+end IUmlValueSpecification
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlVisibilityKind
+ is subclass of IUmlNode
+
+operations
+  public getValue: () ==> nat
+  getValue () == is subclass responsibility;
+
+  public getStringValue: () ==> seq of char
+  getStringValue() == is subclass responsibility
+
+end IUmlVisibilityKind
+\end{vdm_al}
+ 
+
+\begin{vdm_al}
+class IUmlVisitor
+operations
+  public visitDocument: IUmlDocument ==> ()
+  visitDocument (-) == is subclass responsibility;
+
+  public visitLexem: IUmlLexem ==> ()
+  visitLexem (-) == is subclass responsibility;
+
+  public visitParameters: IUmlParameters ==> ()
+  visitParameters (-) == is subclass responsibility;
+
+  public visitOperation: IUmlOperation ==> ()
+  visitOperation (-) == is subclass responsibility;
+
+  public visitModel: IUmlModel ==> ()
+  visitModel (-) == is subclass responsibility;
+
+  public visitAssociation: IUmlAssociation ==> ()
+  visitAssociation (-) == is subclass responsibility;
+
+  public visitLifeLine: IUmlLifeLine ==> ()
+  visitLifeLine (-) == is subclass responsibility;
+
+  public visitNestedClassifiers: IUmlNestedClassifiers ==> ()
+  visitNestedClassifiers (-) == is subclass responsibility;
+
+  public visitIntegerType: IUmlIntegerType ==> ()
+  visitIntegerType (-) == is subclass responsibility;
+
+  public visitConstraint: IUmlConstraint ==> ()
+  visitConstraint (-) == is subclass responsibility;
+
+  public visitCallEvent: IUmlCallEvent ==> ()
+  visitCallEvent (-) == is subclass responsibility;
+
+  public visitProperty: IUmlProperty ==> ()
+  visitProperty (-) == is subclass responsibility;
+
+  public visitOwnedOperations: IUmlOwnedOperations ==> ()
+  visitOwnedOperations (-) == is subclass responsibility;
+
+  public visitCombinedFragment: IUmlCombinedFragment ==> ()
+  visitCombinedFragment (-) == is subclass responsibility;
+
+  public visitClassNameType: IUmlClassNameType ==> ()
+  visitClassNameType (-) == is subclass responsibility;
+
+  public visitMos: IUmlMos ==> ()
+  visitMos (-) == is subclass responsibility;
+
+  public visitInteractionConstraint: IUmlInteractionConstraint ==> ()
+  visitInteractionConstraint (-) == is subclass responsibility;
+
+  public visitBoolType: IUmlBoolType ==> ()
+  visitBoolType (-) == is subclass responsibility;
+
+  public visitTemplateSignature: IUmlTemplateSignature ==> ()
+  visitTemplateSignature (-) == is subclass responsibility;
+
+  public visitParameter: IUmlParameter ==> ()
+  visitParameter (-) == is subclass responsibility;
+
+  public visitInteraction: IUmlInteraction ==> ()
+  visitInteraction (-) == is subclass responsibility;
+
+  public visitTemplateParameter: IUmlTemplateParameter ==> ()
+  visitTemplateParameter (-) == is subclass responsibility;
+
+  public visitLiteralInteger: IUmlLiteralInteger ==> ()
+  visitLiteralInteger (-) == is subclass responsibility;
+
+  public visitCharType: IUmlCharType ==> ()
+  visitCharType (-) == is subclass responsibility;
+
+  public visitMessage: IUmlMessage ==> ()
+  visitMessage (-) == is subclass responsibility;
+
+  public visitMultiplicityElement: IUmlMultiplicityElement ==> ()
+  visitMultiplicityElement (-) == is subclass responsibility;
+
+  public visitStringType: IUmlStringType ==> ()
+  visitStringType (-) == is subclass responsibility;
+
+  public visitBes: IUmlBes ==> ()
+  visitBes (-) == is subclass responsibility;
+
+  public visitVoidType: IUmlVoidType ==> ()
+  visitVoidType (-) == is subclass responsibility;
+
+  public visitInteractionOperand: IUmlInteractionOperand ==> ()
+  visitInteractionOperand (-) == is subclass responsibility;
+
+  public visitClass: IUmlClass ==> ()
+  visitClass (-) == is subclass responsibility;
+
+  public visitCollaboration: IUmlCollaboration ==> ()
+  visitCollaboration (-) == is subclass responsibility;
+
+  public visitLiteralString: IUmlLiteralString ==> ()
+  visitLiteralString (-) == is subclass responsibility;
+
+  public visitOwnedProperties: IUmlOwnedProperties ==> ()
+  visitOwnedProperties (-) == is subclass responsibility;
+
+  public visitUnlimitedNatural: IUmlUnlimitedNatural ==> ()
+  visitUnlimitedNatural (-) == is subclass responsibility;
+
+  public visitContextInfo: IUmlContextInfo ==> ()
+  visitContextInfo (-) == is subclass responsibility;
+
+  public visitNode: IUmlNode ==> ()
+  visitNode (-) == is subclass responsibility;
+
+  public visitParameterDirectionKind: IUmlParameterDirectionKind ==> ()
+  visitParameterDirectionKind (-) == is subclass responsibility;
+
+  public visitMessageKind: IUmlMessageKind ==> ()
+  visitMessageKind (-) == is subclass responsibility;
+
+  public visitType: IUmlType ==> ()
+  visitType (-) == is subclass responsibility;
+
+  public visitValueSpecification: IUmlValueSpecification ==> ()
+  visitValueSpecification (-) == is subclass responsibility;
+
+  public visitMessageSort: IUmlMessageSort ==> ()
+  visitMessageSort (-) == is subclass responsibility;
+
+  public visitDefinitionBlock: IUmlDefinitionBlock ==> ()
+  visitDefinitionBlock (-) == is subclass responsibility;
+
+  public visitInteractionOperatorKind: IUmlInteractionOperatorKind ==> ()
+  visitInteractionOperatorKind (-) == is subclass responsibility;
+
+  public visitInteractionFragment: IUmlInteractionFragment ==> ()
+  visitInteractionFragment (-) == is subclass responsibility;
+
+  public visitVisibilityKind: IUmlVisibilityKind ==> ()
+  visitVisibilityKind (-) == is subclass responsibility;
+
+  public visitModelElement: IUmlModelElement ==> ()
+  visitModelElement (-) == is subclass responsibility;
+
+end IUmlVisitor
+\end{vdm_al}
+
+
+\begin{vdm_al}
+class IUmlVoidType
+ is subclass of IUmlType
+
+end IUmlVoidType
+\end{vdm_al}
+

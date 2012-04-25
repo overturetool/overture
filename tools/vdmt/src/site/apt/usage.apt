@@ -1,0 +1,102 @@
+Introduction
+
+ This plug-in for Maven provides an easy integration VDM Tools into in the maven build cycle.
+   
+ 
+
+Usage
+
+ The goals of the plugin is described below.
+ 
+*----------+------------------------------+
+| codec    | Code generate vdm files through the VDM Tools CORBA interface |
+*----------+------------------------------+
+| code     | Code generate vdm files through the VDM Tools commandline interface  |
+*----------+------------------------------+
+| speclog  | Create a file wilh all vdm files in the project  |
+*----------+------------------------------+ 
+| project  | Create a VDM Tools project file from the vdm files in the project, includeing the depended projects. The file is output in src/main/java which enables code generation in VDM Tools.  |
+*----------+------------------------------+
+| type     | Type check the vdm files through the VDM Tools commandline interface  |
+*----------+------------------------------+
+| eclipse  | Create a eclipse project file with the linked source of the project. The DLTK script builder is added as builder and the nature is set to VDM-PP. The file is output in the target directory. .project |
+*----------+------------------------------+
+| keep     | Print a list of all places in the generated source where a KEEP=YES have been specified |
+*----------+------------------------------+
+   
+* Commands
+
+ Execute the goal like shown below for type check: 
+ 
++-------------------------------+
+mvn vdmt:type
++-------------------------------+
+
+ Remember that you need to have the plug-in group enabled else you need the full name of vdmt. Enable the plug-in group like this in your settings file:
+
++-------------------------------+
+<pluginGroups>
+  <pluginGroup>org.overturetool.tools</pluginGroup> 
+</pluginGroups>
++-------------------------------+
+
+* Enable the plugin in the POM file
+
++-------------------------------+
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.overturetool.tools</groupId>
+      <artifactId>vdmt</artifactId>
+      <configuration>
+      
+        <excludePackages>
+          <param>org.overturetool.umltrans.test</param>
+          <param>org.overturetool.umltrans.test.spec</param>
+          <param>org.overturetool.api.vdmunit</param>
+        </excludePackages>
+
+        <excludeClasses>
+
+        </excludeClasses>
+
+        <importPackages>
+          <param>org.overturetool.ast.itf</param>
+          <param>org.overturetool.ast.imp</param>
+          <param>org.overturetool.api.io</param>
+        </importPackages>
+        
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
++-------------------------------+
+
+* Configuration
+ 
+ The plugin include some configuration options which are needed to make the source compile directly after code generation.
+ 
+*----------+------------------------------+
+| excludePackages    | This element is used to inducate packages which should not be generated such as test packages shown above in the example |
+*----------+------------------------------+
+| excludeClasses     | Can be used to exclude a specific class, used if a VDM class is made to take care of stadnard java lib functions.   |
+*----------+------------------------------+
+| importPackages  | This is imports which is added to each generated files import section.  |
+*----------+------------------------------+
+
+* Requirement
+
+ VDM Tools must be installed and set in the active profile
+ 
++-------------------------------+
+<profile>
+  <id>default</id>
+  <activation>
+    <activeByDefault>true</activeByDefault>
+  </activation>
+  <properties>
+    <user.vppde.bin>c:\Program Files\The VDM++ Toolbox v8.2.1b\bin\vppde.exe</user.vppde.bin>
+    <user.javac>c:\Program Files\Java\jdk1.6.0_12\bin\javac.exe</user.javac>
+  </properties>
+</profile>
++-------------------------------+

@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class MMIHandleKeyPressTwo is subclass of BasicTask
+
+operations
+  public MMIHandleKeyPressTwo: EventDispatcher ==> MMIHandleKeyPressTwo
+  MMIHandleKeyPressTwo (pde) == BasicTask("HandleKeyPress",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public HandleKeyPress: () ==> ()
+  HandleKeyPress () == duration (100) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( HandleKeyPress();
+	-- send message to next task in this scenario
+      sendMessage("DatabaseLookup", pe.getEvent()) )
+
+end MMIHandleKeyPressTwo
+\end{vdm_al}

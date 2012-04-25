@@ -1,0 +1,30 @@
+\begin{vdm_al} 
+class Actuator is subclass of IIOSSTYPES
+
+instance variables
+	actuatorID : nat;
+operations
+	public Actuator: (nat) ==> Actuator
+	Actuator(actID) ==
+	(
+	  actuatorID := actID;
+	  return self;
+	);
+
+	public SetValues : EventId * PigPosition ==> ()
+	SetValues(eventId, val) == 
+	(
+							-- eventID, eventType, text, eventTime
+		World`env.handleEvent(eventId, <SHOW_PIG>, 
+                              " PigPosition " ^ VDMUtil`val2seq_of_char[PigPosition](val), 
+                              time);
+	);
+sync
+	mutex(SetValues);
+end Actuator
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Actuator]
+\end{rtinfo}

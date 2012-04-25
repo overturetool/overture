@@ -1,0 +1,67 @@
+class Enviroment
+ 
+instance variables
+ private file : Storage;
+ public completeGrid : Grid;
+ private currentRobotPosition : Grid`Point;
+ private busy : bool := true;
+operations
+ public Enviroment : () ==> Enviroment
+ Enviroment() ==
+ (
+   file := new Storage();
+   completeGrid := new Grid(mk_Grid`Point(0,0),mk_Grid`Point(100,100));
+ );
+ 
+ public GetPointAvalibility: Grid`Point ==> Grid`PointAvalibility
+ GetPointAvalibility(p) ==
+   return completeGrid.GetPointAvalibility(p.X,p.Y);
+   
+public handleEvent : Grid * seq of SteeringController`Route * 
+                     Grid`Point * bool==> ()
+handleEvent(g, routes,dest,b) ==
+   file.Save(g,routes,dest,b);
+ 
+public isFinished : () ==> ()
+ isFinished () == Robot`steering.isFinished();
+ 
+thread
+ (--here we have to interact with the robot, 
+  --punch, shoot...something
+ 
+   completeGrid := file.Load("testmap.map");
+   start(Robot`nmc);   --observe
+   start(Robot`mobs1); --move
+   start(Robot`mobs2); --move
+   start(Robot`mobs3); --move
+   start(Robot`mobs4); --move
+   start(Robot`steering);
+   Robot`steering.SetDiscoverInfo(file.startingPoint,
+                                  file.dest, file.battery);
+ 
+   busy := false;
+ 
+ )
+ 
+sync
+ 
+per isFinished => not busy;
+ 
+ 
+end Enviroment
+
+
+class EnviromentTest is subclass of TestCase
+values
+ 
+operations
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () == skip;
+ 
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end EnviromentTest

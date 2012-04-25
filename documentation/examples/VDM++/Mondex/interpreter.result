@@ -1,0 +1,1 @@
+RESULT:result:-1:-1,-1:nullmk_AbWorld({mk_token(1), mk_token(2)}, {mk_token(1) |-> mk_AbPurse(70, 0), mk_token(2) |-> mk_AbPurse(40, 0)})

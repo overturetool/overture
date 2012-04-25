@@ -1,0 +1,139 @@
+\section{Traffic Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Traffic
+-- Description: 	Traffic contains the vehicles known in a VDM
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Traffic
+
+--
+-- instance variables
+--
+instance variables
+
+private vehicles: seq of Vehicle := [];
+inv len vehicles <= 5;
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public AddVehicle: Vehicle ==> () 
+AddVehicle(vehicle) ==
+(
+ if(len vehicles < Config`TrafficCongestionTrack)
+ then 
+ vehicles := vehicles ^ [vehicle]
+ else
+ vehicles :=  tl vehicles ^ [vehicle]
+)
+pre vehicle not in set elems vehicles; 
+  
+ 
+public ExistVehicle : Vehicle ==> bool
+ExistVehicle(v) == 
+(
+return {vec | vec in set elems vehicles & v.GetID() = vec.GetID()} <> {};
+);
+
+
+public ExistVehicleData : VehicleData ==> bool
+ExistVehicleData(v) == 
+(
+return {vec | vec in set elems vehicles & v.GetID() = vec.GetID()} <> {};
+);
+
+
+public GetVehicles: () ==> seq of Vehicle 
+GetVehicles() ==
+return vehicles;
+	
+	
+public Congestion: () ==> bool
+Congestion() ==
+(	
+ dcl inrange : set of Vehicle := {};
+ 
+ for v in vehicles do
+ (
+  let vs = FindInRangeWithSameDirection(v,vehicles)
+  in
+  inrange := inrange union vs;
+ ); 
+ 
+ if card inrange = 0
+ then return false;
+ 
+ let avgspeed = AverageSpeed(inrange) 
+ in 
+ (
+ return avgspeed < Config`TrafficCongestionThreshold;
+ )
+);
+	
+	
+private AverageSpeed: set of Vehicle ==> nat
+AverageSpeed(vs) ==
+( 
+  dcl sumSpeed: nat := 0;
+  for all v in set vs do
+      sumSpeed := sumSpeed + v.GetSpeed();
+    return (sumSpeed/card vs)
+)
+pre card vs <> 0;
+--
+-- Functions definition section
+--
+functions
+
+ -- compare the range of two vehicles
+public InRange : Vehicle * Vehicle -> bool
+InRange(v1,v2) ==
+let pos1 = v1.GetPosition(), pos2 = v2.GetPosition()
+in
+pos1.inRange(pos2, Config`TrafficCongestionRange);
+
+
+-- compare the range of a single vehicle to a set of vehicles moving in 
+-- the same direction
+public FindInRangeWithSameDirection : Vehicle * seq of Vehicle 
+	 -> set of Vehicle
+FindInRangeWithSameDirection(v ,vs) ==
+let dir = v.GetDirection() in
+ { ir | ir in set elems vs & v <> ir 
+ 						   and dir = ir.GetDirection() 
+ 						   and InRange(v,ir) = true }
+
+
+--
+-- Values definition section
+--
+values
+
+--
+-- sync definition section
+--
+sync
+mutex(Congestion, AddVehicle);
+mutex(ExistVehicle, AddVehicle);
+mutex(GetVehicles, AddVehicle);
+mutex(AddVehicle);
+
+end Traffic
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Traffic]
+\end{rtinfo}

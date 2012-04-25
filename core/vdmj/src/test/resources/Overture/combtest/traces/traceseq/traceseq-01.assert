@@ -1,0 +1,2 @@
+Test 1 = s.Reset(); s.Push(6)
+Result = [(), (), PASSED]

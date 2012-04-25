@@ -1,0 +1,167 @@
+\section{ThrusterControl Class}
+
+\begin{vdm_al}
+class ThrusterControl
+
+values  -- two thruster selection tables...
+  bf_thrusters : ThrusterSelectionTable`ThrSelMap = {|->};
+
+  bf_thrusters1 : ThrusterSelectionTable`ThrSelMap = 
+     {mk_(<Neg>, <Neg>, <Neg>) |-> mk_ThrSel({<B4>}, {<B2>, <B3>}),
+      mk_(<Neg>,<Neg>,<Zero>) |-> mk_ThrSel({<B3>,<B4>},{}),
+      mk_(<Neg>,<Neg>,<Pos>) |-> mk_ThrSel({<B3>},{<B1>,<B4>}),
+--
+      mk_(<Neg>,<Zero>,<Neg>) |-> mk_ThrSel({<B2>,<B4>},{}),
+      mk_(<Neg>,<Zero>,<Zero>) |-> mk_ThrSel({<B1>,<B4>},{<B2>,<B3>}),
+      mk_(<Neg>,<Zero>,<Pos>) |-> mk_ThrSel({<B1>,<B3>},{}),
+----
+      mk_(<Neg>,<Pos>,<Neg>) |-> mk_ThrSel({<B2>},{<B1>,<B4>}),
+      mk_(<Neg>,<Pos>,<Zero>) |-> mk_ThrSel({<B1>,<B2>},{}),
+      mk_(<Neg>,<Pos>,<Pos>) |-> mk_ThrSel({<B1>},{<B2>,<B3>}),
+------
+      mk_(<Zero>,<Neg>,<Neg>) |-> mk_ThrSel({<B4>,<F1>},{}),
+      mk_(<Zero>,<Neg>,<Zero>) |-> mk_ThrSel({<B4>,<F2>},{}),
+      mk_(<Zero>,<Neg>,<Pos>) |-> mk_ThrSel({<B3>,<F2>},{}),
+--
+      mk_(<Zero>,<Zero>,<Neg>) |-> mk_ThrSel({<B2>,<F1>},{}),
+      mk_(<Zero>,<Zero>,<Zero>) |-> mk_ThrSel({},{}),
+      mk_(<Zero>,<Zero>,<Pos>) |-> mk_ThrSel({<B3>,<F4>},{}),
+----
+      mk_(<Zero>,<Pos>,<Neg>) |-> mk_ThrSel({<B2>,<F3>},{}),
+      mk_(<Zero>,<Pos>,<Zero>) |-> mk_ThrSel({<B1>,<F3>},{}),
+      mk_(<Zero>,<Pos>,<Pos>) |-> mk_ThrSel({<B1>,<F4>},{}),
+------
+      mk_(<Pos>,<Neg>,<Neg>) |-> mk_ThrSel({<F1>},{<F2>,<F3>}),
+      mk_(<Pos>,<Neg>,<Zero>) |-> mk_ThrSel({<F1>,<F2>},{}),
+      mk_(<Pos>,<Neg>,<Pos>) |-> mk_ThrSel({<F2>},{<F1>,<F4>}),
+--
+      mk_(<Pos>,<Zero>,<Neg>) |-> mk_ThrSel({<F1>,<F3>},{}),
+      mk_(<Pos>,<Zero>,<Zero>) |-> mk_ThrSel({<F2>,<F3>},{<F1>,<F4>}),
+      mk_(<Pos>,<Zero>,<Pos>) |-> mk_ThrSel({<F2>,<F4>},{}),
+----
+      mk_(<Pos>,<Pos>,<Neg>) |-> mk_ThrSel({<F3>},{<F1>,<F4>}),
+      mk_(<Pos>,<Pos>,<Zero>) |-> mk_ThrSel({<F3>,<F4>},{}),
+      mk_(<Pos>,<Pos>,<Pos>) |-> mk_ThrSel({<F4>},{<F2>,<F3>})};
+
+  lrud_thrusters : ThrusterSelectionTable`ThrSelMap = {|->};
+
+  lrud_thrusters1 : ThrusterSelectionTable`ThrSelMap =
+     {mk_(<Neg>,<Neg>,<Neg>) |-> mk_ThrSel({},{}),
+      mk_(<Neg>,<Neg>,<Zero>) |-> mk_ThrSel({},{}),
+      mk_(<Neg>,<Neg>,<Pos>) |-> mk_ThrSel({},{}),
+--
+      mk_(<Neg>,<Zero>,<Neg>) |-> mk_ThrSel({<L1R>},{<L1F>,<L3F>}),
+      mk_(<Neg>,<Zero>,<Zero>) |-> mk_ThrSel({<L1R>,<L3R>},{<L1F>,<L3F>}),
+      mk_(<Neg>,<Zero>,<Pos>) |-> mk_ThrSel({<L3R>},{<L1F>,<L3F>}),
+----
+      mk_(<Neg>,<Pos>,<Neg>) |-> mk_ThrSel({},{}),
+      mk_(<Neg>,<Pos>,<Zero>) |-> mk_ThrSel({},{}),
+      mk_(<Neg>,<Pos>,<Pos>) |-> mk_ThrSel({},{}),
+------
+      mk_(<Zero>,<Neg>,<Neg>) |-> mk_ThrSel({<U3R>},{<U3F>,<U4F>}),
+      mk_(<Zero>,<Neg>,<Zero>) |-> mk_ThrSel({<U3R>,<U4R>},{<U3F>,<U4F>}),
+      mk_(<Zero>,<Neg>,<Pos>) |-> mk_ThrSel({<U4R>},{<U3F>,<U4F>}),
+--
+      mk_(<Zero>,<Zero>,<Neg>) |-> mk_ThrSel({<L1R>,<R4R>},{}),
+      mk_(<Zero>,<Zero>,<Zero>) |-> mk_ThrSel({},{}),
+      mk_(<Zero>,<Zero>,<Pos>) |-> mk_ThrSel({<R2R>,<L3R>},{}),
+----
+      mk_(<Zero>,<Pos>,<Neg>) |-> mk_ThrSel({<D2R>},{<D1F>,<D2F>}),
+      mk_(<Zero>,<Pos>,<Zero>) |-> mk_ThrSel({<D1R>,<D2R>},{<D1F>,<D2F>}),
+      mk_(<Zero>,<Pos>,<Pos>) |-> mk_ThrSel({<D1R>},{<D1F>,<D2F>}),
+------
+      mk_(<Pos>,<Neg>,<Neg>) |-> mk_ThrSel({},{}),
+      mk_(<Pos>,<Neg>,<Zero>) |-> mk_ThrSel({},{}),
+      mk_(<Pos>,<Neg>,<Pos>) |-> mk_ThrSel({},{}),
+--
+      mk_(<Pos>,<Zero>,<Neg>) |-> mk_ThrSel({<R4R>},{<R2F>,<R4F>}),
+      mk_(<Pos>,<Zero>,<Zero>) |-> mk_ThrSel({<R2R>,<R4R>},{<R2F>,<R4F>}),
+      mk_(<Pos>,<Zero>,<Pos>) |-> mk_ThrSel({<R2R>},{<R2F>,<R4F>}),
+----
+      mk_(<Pos>,<Pos>,<Neg>) |-> mk_ThrSel({},{}),
+      mk_(<Pos>,<Pos>,<Zero>) |-> mk_ThrSel({},{}),
+      mk_(<Pos>,<Pos>,<Pos>) |-> mk_ThrSel({},{})};
+ 
+  public ThrusterSet : set of ThrusterPosition = 
+    {<B1>, <B2>, <B3>, <B4>, <F1>, <F2>, <F3>, <F4>, <L1R>, <L1F>, <R2R>, 
+     <R2F>, <L3R>, <L3F>, <R4R>, <R4F>, <D1R>, <D1F>, <D2R>, <D2F>, <U3R>, 
+     <U3F>, <U4R>, <U4F>};
+
+types
+  public
+  ThrusterPosition = <B1> | <B2> | <B3> | <B4> | <F1> | <F2> | <F3> | <F4> |
+                     <L1R>| <L1F>| <R2R>| <R2F>| <L3R>| <L3F>| <R4R>| <R4F>|
+                     <D1R>| <D1F>| <D2R>| <D2F>| <U3R>| <U3F>| <U4R>| <U4F>;
+
+  public
+  ThrSel :: always_on : set of ThrusterPosition
+            optional : set of ThrusterPosition;
+
+instance variables
+  vda : ValveDriveAssembly;
+  intcmd : IntegratedCommand;
+  selected : set of ThrusterPosition := {};
+  tslogic1 : ThrusterSelectionTable := InitTable(bf_thrusters1);
+  tslogic2 : ThrusterSelectionTable := InitTable(lrud_thrusters1);
+--  tslogic1 : ThrusterSelectionTable := new ThrusterSelectionTable();
+--  tslogic2 : ThrusterSelectionTable := new ThrusterSelectionTable();
+
+operations
+
+  public
+  InitTable : ThrusterSelectionTable`ThrSelMap ==> 
+              ThrusterSelectionTable
+  InitTable(table) == 
+    (dcl tmp:ThrusterSelectionTable := new ThrusterSelectionTable(); 
+     tmp.MakeTable(table); return tmp);
+
+  PrintSelected : () ==> set of ThrusterPosition
+  PrintSelected() ==
+    return selected;
+
+  public
+  SetIntCmdLink : IntegratedCommand ==> ()
+  SetIntCmdLink(i) ==
+    intcmd := i;
+
+  public
+  SetVDALink : ValveDriveAssembly ==> ()
+  SetVDALink(v) == 
+    vda := v;  
+
+  public
+  SelectThrusters : () ==> ()
+  SelectThrusters() ==
+    let mk_(tran, rot) = intcmd.GetCommand(),
+        lookup1 =  tslogic1.Lookup(tran(Command`X), rot(Command`PITCH),
+                                   rot(Command`YAW)),
+        lookup2 = tslogic2.Lookup(tran(Command`Y), tran(Command`Z), 
+                                  rot(Command`ROLL)),
+        bf_thr = if rot(Command`ROLL) = <Zero> 
+                 then lookup1.always_on union lookup1.optional
+                 else lookup1.always_on,
+        lrud_thr = if rot(Command`PITCH) = <Zero> and 
+                      rot(Command`YAW) = <Zero> 
+                   then lookup2.optional union lookup2.always_on
+                   else lookup2.always_on
+     in selected := bf_thr union lrud_thr;
+
+  public
+  SignalThrusters : () ==> ()
+  SignalThrusters() ==
+    vda.UpdateThrusters(selected);
+
+  InitializeTables : () ==> ()
+  InitializeTables() ==
+    (tslogic1.MakeTable(bf_thrusters); 
+     tslogic2.MakeTable(lrud_thrusters));
+
+end ThrusterControl
+\end{vdm_al}
+
+The test coverage table for the ThrusterControl class looks like:
+
+\begin{rtinfo}{vdm.tc}[ThrusterControl]
+\end{rtinfo}
+
+

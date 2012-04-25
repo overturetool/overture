@@ -1,0 +1,246 @@
+
+load "finite_mapTheory";
+load "stringTheory";
+load "HolSatLib";
+load "mesonLib";
+load "simpLib";
+load "intLib";
+load "numLib";
+load "realLib";
+load "tautLib";
+load "reduceLib";
+load "prim_recTheory";
+load "arithmeticTheory";
+load "realTheory";
+
+open finite_mapTheory;
+open pred_setLib;
+open HolSatLib;
+open mesonLib;
+open simpLib;
+open prim_recTheory;
+open arithmeticTheory;
+
+load "listLib";
+open listTheory;
+
+fun VDM_REWRITE_TAC () = fn g => 
+   let  val srwss = srw_ss()
+    in RW_TAC srwss [] g end;
+
+fun VDM_FULL_SIMP_TAC () = fn g => 
+   let  val srwss = srw_ss()
+    in FULL_SIMP_TAC srwss [boolTheory.LET_THM] g end;
+
+val VDM_ARITH_TAC =
+(
+    (numLib.ARITH_TAC)
+    ORELSE
+    (intLib.ARITH_TAC)
+    ORELSE
+    (realLib.REAL_ARITH_TAC)
+);
+
+val VDM_GENERIC_PROVE_TAC = 
+(
+    tautLib.TAUT_TAC
+    ORELSE
+    (mesonLib.GEN_MESON_TAC 0 10 1 [])
+    ORELSE
+    DECIDE_TAC
+    ORELSE
+    VDM_ARITH_TAC
+    ORELSE
+    reduceLib.REDUCE_TAC
+);
+
+val VDM_GENERIC_TAC = 
+(
+    (VDM_REWRITE_TAC())
+    THEN
+    (VDM_FULL_SIMP_TAC())
+    THEN
+    VDM_GENERIC_PROVE_TAC 
+);
+
+
+
+
+
+save_thm( "UNION_SUBSET_FDOM", prove(
+``! a b. FDOM a SUBSET FDOM a UNION FDOM b /\ FDOM b SUBSET FDOM a UNION FDOM b``,
+    VDM_GENERIC_TAC
+));
+BasicProvers.export_rewrites(["UNION_SUBSET_FDOM"]);
+
+save_thm( "SUBSET_FDOM_FUNION", prove(
+``!a b c.a SUBSET FDOM b ==> a SUBSET FDOM (FUNION b c)``,
+        VDM_GENERIC_TAC 
+        THEN (REWRITE_TAC [FDOM_FUNION])
+        THEN (`FDOM b SUBSET FDOM b UNION FDOM c` by (MESON_TAC [theorem "UNION_SUBSET_FDOM"]))
+        THEN (PROVE_TAC [pred_setTheory.SUBSET_TRANS])
+));
+BasicProvers.export_rewrites(["SUBSET_FDOM_FUNION"]);
+
+save_thm( "IN_FDOM_FUNION", prove(
+``! x A B. x IN FDOM A ==> x IN FDOM (FUNION A B)``,
+        VDM_GENERIC_TAC 
+        THEN (REWRITE_TAC [FDOM_FUNION])
+        THEN (PROVE_TAC [pred_setTheory.IN_UNION])
+));
+BasicProvers.export_rewrites(["IN_FDOM_FUNION"]);
+
+save_thm( "IN_SUBSET", prove(
+``!x A. (x IN A) ==> ({x} SUBSET A)``,
+        VDM_GENERIC_TAC));
+BasicProvers.export_rewrites(["IN_SUBSET"]);
+
+
+
+
+
+val tacticSimplificationTheorems = 
+[
+    FUNION_FUPDATE_1,
+    FUNION_FUPDATE_2,
+    FUNION_FEMPTY_1,
+    FUNION_FEMPTY_2,
+    FDOM_FEMPTY,
+    
+    finite_mapTheory.FUPDATE_COMMUTES,
+    finite_mapTheory.FAPPLY_FUPDATE,
+    
+    
+    finite_mapTheory.FAPPLY_FUPDATE_THM,
+    
+    finite_mapTheory.DRESTRICT_DEF,
+    pred_setTheory.IN_COMPL,
+
+    listTheory.NIL,
+    listTheory.CONS,
+    listTheory.list_Axiom,
+    listTheory.list_INDUCT,
+    listTheory.list_CASES,
+    listTheory.CONS_11,
+    listTheory.NOT_NIL_CONS,
+    listTheory.NOT_CONS_NIL,
+    listTheory.NULL,
+    listTheory.HD,
+    listTheory.TL,
+    listTheory.MEM,
+    listTheory.APPEND,
+    listTheory.FLAT,
+    listTheory.LENGTH,
+    listTheory.LEN_DEF,
+    listTheory.list_size_def,
+    listTheory.EL
+];
+
+fun SRW_RW_TAC (thmList) = fn g => 
+   let  val srwss = srw_ss()
+    in RW_TAC srwss thmList g end;
+
+fun SRW_FULL_SIMP_TAC (thmList) = fn g => 
+   let  val srwss = srw_ss()
+    in FULL_SIMP_TAC srwss thmList g end;
+
+val VDM_SIMPLIFICATION_TAC = 
+(
+    (SRW_RW_TAC []) THEN
+    (FULL_SIMP_TAC std_ss [boolTheory.LET_THM]) THEN
+    reduceLib.REDUCE_TAC THEN
+    (RW_TAC (std_ss) tacticSimplificationTheorems) THEN
+    (SRW_FULL_SIMP_TAC tacticSimplificationTheorems) THEN   
+    (SRW_RW_TAC tacticSimplificationTheorems)
+);
+
+
+
+
+
+save_thm( "FAPPLY_IN_FRANGE", prove(
+``! m x. x IN FDOM m ==> (FAPPLY m x) IN FRANGE m``,
+        VDM_SIMPLIFICATION_TAC THEN (RW_TAC std_ss [finite_mapTheory.FRANGE_DEF]) THEN (SRW_FULL_SIMP_TAC []) THEN VDM_GENERIC_PROVE_TAC));
+BasicProvers.export_rewrites(["FAPPLY_IN_FRANGE"]);
+
+val tacticCustomTheorems = 
+[
+    theorem "UNION_SUBSET_FDOM",
+    theorem "SUBSET_FDOM_FUNION",
+    theorem "IN_FDOM_FUNION", 
+    theorem "IN_SUBSET",
+    theorem "FAPPLY_IN_FRANGE"
+];
+
+val tacticBuiltInTheorems = 
+[
+    pred_setTheory.UNION_SUBSET,
+    pred_setTheory.SUBSET_DEF,
+    pred_setTheory.SUBSET_TRANS,
+    pred_setTheory.UNION_SUBSET,
+    
+    finite_mapTheory.FDOM_FUNION,
+    finite_mapTheory.FAPPLY_FUPDATE_THM,    
+    finite_mapTheory.FDOM_FUPDATE,
+        
+    finite_mapTheory.FUPDATE_COMMUTES,
+    finite_mapTheory.FAPPLY_FUPDATE,
+    
+    pred_setTheory.IN_INSERT,
+    pred_setTheory.SUBSET_INSERT,
+    pred_setTheory.DIFF_SUBSET,
+    
+    pred_setTheory.IN_COMPL,
+    pred_setTheory.IN_DIFF,
+
+    listTheory.NIL,
+    listTheory.CONS,
+    listTheory.list_Axiom,
+    listTheory.list_INDUCT,
+    listTheory.list_CASES,
+    listTheory.CONS_11,
+    listTheory.NOT_NIL_CONS,
+    listTheory.NOT_CONS_NIL,
+    listTheory.NULL,
+    listTheory.HD,
+    listTheory.TL,
+    listTheory.MEM,
+    listTheory.APPEND,
+    listTheory.FLAT,
+    listTheory.LENGTH,
+    listTheory.LEN_DEF,
+    listTheory.list_size_def,
+    listTheory.EL
+];
+
+
+val VDM_ADDITIONAL_TAC = 
+(
+    VDM_SIMPLIFICATION_TAC THEN
+    (
+        (
+            Q.UNABBREV_ALL_TAC THEN
+            VDM_SIMPLIFICATION_TAC THEN
+            VDM_GENERIC_PROVE_TAC THEN
+            (PROVE_TAC (tacticBuiltInTheorems @ tacticCustomTheorems))
+        )
+        ORELSE
+        (
+            VDM_GENERIC_PROVE_TAC THEN
+            (PROVE_TAC (tacticBuiltInTheorems @ tacticCustomTheorems))
+        )
+    )
+);
+
+val VDM_ADDITIONAL2_TAC = 
+(
+    VDM_SIMPLIFICATION_TAC THEN
+    (
+        (
+            Q.UNABBREV_ALL_TAC THEN
+            VDM_SIMPLIFICATION_TAC THEN
+            VDM_GENERIC_PROVE_TAC 
+            )
+    )
+);
+    

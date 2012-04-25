@@ -1,0 +1,13 @@
+\begin{vdm_al}
+class IIOSSTest
+operations
+	public Execute: () ==> ()
+	Execute () ==
+	    (dcl ts : TestSuite := new TestSuite();
+	     ts.AddTest(new IIOSSTestCase2("Unit test"));
+	     ts.Run()
+		)
+     
+end IIOSSTest
+\end{vdm_al}
+

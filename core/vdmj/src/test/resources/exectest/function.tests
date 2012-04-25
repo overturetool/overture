@@ -1,0 +1,25 @@
+-- Assertions for function.vdm
+
+inv_T(mk_T(1)) = true
+inv_U(1) = true
+inv_U(20) = false
+fact(4) = 24
+inc(1) = 2
+pre_inc(1) = true
+pre_inc(15) = false
+post_inc(1,2) = true
+post_inc(2,2) = false
+fret() = fact
+curry(fact, fact) = cret()
+curry(fact, fact)(mk_(3,3)) = 12
+args(mk_(1, mk_(2,3))) = 6
+lamb()(mk_(1,2)) = 3
+iter(fact, 2)(3) = 720
+cmp(inc,inc)(1) = 3
+fmaptest() = [1, 4, 9, 16, 25]
+extimp(1) = 2
+pre_extimp(0) = false
+pre_extimp(1) = true
+post_extimp(1,2) = true
+post_extimp(2,2) = false
+loose({{1,2},{3,4},{5,6}}) = loose({{6,5},{4,3},{2,1}})

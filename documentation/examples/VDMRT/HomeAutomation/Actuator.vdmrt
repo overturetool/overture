@@ -1,0 +1,39 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Actuator super class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Actuator
+
+--
+-- instance variables
+--
+instance variables
+
+  protected ID   : nat;
+  protected Type : NetworkTypes`nodeType;
+  protected Corr : NetworkTypes`correction;
+
+--
+-- Operations definition section
+--
+operations
+
+public GetID: () ==> nat
+GetID() ==
+  return ID;
+
+public GetType: () ==> NetworkTypes`nodeType
+GetType() ==
+  return Type;
+
+public Step: () ==> ()
+Step() ==
+  is subclass responsibility
+
+end Actuator

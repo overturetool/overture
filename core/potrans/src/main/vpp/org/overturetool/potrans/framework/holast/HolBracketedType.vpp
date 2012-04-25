@@ -1,0 +1,31 @@
+class HolBracketedType is subclass of HolType
+
+instance variables
+val : HolType
+
+
+operations
+
+public HolBracketedType : HolType ==> HolBracketedType
+HolBracketedType(newVal) ==
+(
+	val := newVal
+);
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (typeInfo) ==
+(
+	val.setTypeInformation(typeInfo)
+);
+
+public requires : () ==> set of seq of char
+requires() == 
+	return val.requires();
+
+public print : HolType`HolTypeSpecificationType ==> seq of char
+print (specType) ==	-- TODO make union generic (not just enumeration)
+	return conc [" (", val.print(<type>), ") "]
+pre specType = <type>
+;
+
+end HolBracketedType

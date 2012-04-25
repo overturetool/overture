@@ -1,0 +1,26 @@
+class Sensor is subclass of ISensorReal
+
+instance variables
+
+-- sensor value
+value: real;
+
+operations
+
+-- constructor for Sensor
+public Sensor: real ==> Sensor
+Sensor(v) ==
+	value := v;
+
+-- default constructor for Sensor
+public Sensor: () ==> Sensor
+Sensor() ==
+	Sensor(0.0);
+
+-- get sensor value
+public GetValue: () ==> real
+GetValue() ==
+  ( IO`printf("GetValue = %s\n", [value]);
+	return value );
+
+end Sensor

@@ -1,0 +1,17 @@
+class Thermistor
+
+instance variables
+  realworld_liquid : Liquid;
+
+operations
+  public
+  Setup: RealWorld1 | RealWorld2 ==> ()
+  Setup(realworld) ==
+    realworld_liquid := realworld.liquid;
+
+  public
+  GetTemperature: () ==> real
+  GetTemperature() ==
+    return realworld_liquid.GetTemperature();
+
+end Thermistor

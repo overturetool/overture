@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class RadioHandleTMC is subclass of BasicTask
+
+operations
+  public RadioHandleTMC: EventDispatcher ==> RadioHandleTMC
+  RadioHandleTMC (pde) == BasicTask("HandleTMC",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public HandleTMC: () ==> ()
+  HandleTMC () == duration (1000) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( HandleTMC();
+      -- send message to the next task in this scenario
+      sendMessage("DecodeTMC", pe.getEvent()) )
+
+end RadioHandleTMC
+\end{vdm_al}

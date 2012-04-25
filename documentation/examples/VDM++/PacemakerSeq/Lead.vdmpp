@@ -1,0 +1,110 @@
+\section{Lead class}
+
+The Lead models a Pacemaker lead that read and write pulse values from and to the heart. Each lead its attached to a specific chamber and this is captured using the instance variable chamber.
+
+
+\begin{vdm_al}
+class Lead is subclass of GLOBAL
+
+instance variables
+
+ private chamber : Chamber;       
+ private scheduledPulse   : [(Time * Pulse)];
+\end{vdm_al}
+
+Also a scheduledPulse variable keeps track of a possible pulse that was scheduled by the HeartContorller.
+
+\begin{vdm_al}
+operations
+
+ public 
+ Lead: Chamber ==> Lead
+ Lead(chm) == 
+   (
+    chamber := chm;
+    scheduledPulse := nil;
+   );
+\end{vdm_al}
+
+getChamber is an auxiliar operation that inspect the chamber where this lead is 
+attached to.
+
+\begin{vdm_al} 
+
+ public 
+ getChamber: () ==> Chamber
+ getChamber () == return chamber;
+\end{vdm_al}
+
+Whenever theres an electrical pulse in the chamber corresponding to this lead the environment will call the following stimulate operation. And the lead will transmit it immediately to the HeartController.
+
+\begin{vdm_al}
+
+ public 
+ stimulate : Sense ==> ()
+ stimulate (s) == Pacemaker`heartController.sensorNotify(s,chamber);
+
+\end{vdm_al}
+
+The stepping mechanism in this class is just for each time unit check if there is a scheuled pulse that is made by followPlan.
+
+\begin{vdm_al}
+ public
+ Step: () ==> ()
+ Step () == followPlan();
+\end{vdm_al}
+
+A lead its in a finish state if there's no scheduledPulse.
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> bool
+ isFinished () == return scheduledPulse = nil;
+
+\end{vdm_al}
+
+The following operation its used by the HeartController when a pulse should be delivered. Its logic is simple if a pulse is to be delivered right now does it, otherwise schedules it. Because there will be always just one scheduled pulse a precondition is set accordingly.
+
+\begin{vdm_al}
+public
+ addLeadPace : Pulse * Time ==> ()
+ addLeadPace (p,t) == 
+   if t <= World`timerRef.GetTime()
+   then dischargePulse(p)
+   else (scheduledPulse := mk_(t,p);
+         return)
+pre t > World`timerRef.GetTime() => scheduledPulse = nil;
+\end{vdm_al}
+
+Then the private function dischargePulse delivers the pulse to the environment.
+
+\begin{vdm_al}
+ private 
+ dischargePulse : Pulse ==> ()
+ dischargePulse (p) ==
+    World`env.handleEvent(p,chamber,World`timerRef.GetTime());
+\end{vdm_al}
+
+The followPlan is invoked each Step in order to discharge the pulse that eventually was scheduled. 
+
+\begin{vdm_al}
+ private 
+ followPlan : () ==> ()
+ followPlan () ==
+    (
+     dcl curTime : Time := World`timerRef.GetTime();
+     if scheduledPulse <> nil
+     then if(curTime >= scheduledPulse.#1) 
+          then (dischargePulse(scheduledPulse.#2);
+                scheduledPulse := nil);
+     
+   );
+
+end Lead 
+\end{vdm_al}
+
+\subsection*{Test coverage}
+
+\begin{rtinfo}
+{tc.info}[Lead]
+\end{rtinfo}

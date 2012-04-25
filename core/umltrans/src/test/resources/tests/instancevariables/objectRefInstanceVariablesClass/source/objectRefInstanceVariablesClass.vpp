@@ -1,0 +1,12 @@
+class objectRefInstanceVariablesClass
+
+instance variables
+
+instanceVariableA : objectRefInstanceVariablesClassA
+
+end objectRefInstanceVariablesClass
+
+
+class objectRefInstanceVariablesClassA
+
+end objectRefInstanceVariablesClassA

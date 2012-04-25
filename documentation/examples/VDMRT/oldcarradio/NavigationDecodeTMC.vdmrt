@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class NavigationDecodeTMC is subclass of BasicTask
+
+operations
+  public NavigationDecodeTMC: EventDispatcher ==> NavigationDecodeTMC
+  NavigationDecodeTMC (pde) == BasicTask("DecodeTMC",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public DecodeTMC: () ==> ()
+  DecodeTMC () == duration (500) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( DecodeTMC();
+      -- send message to next task in this scenario
+      sendMessage("UpdateScreenTMC", pe.getEvent()) )
+
+end NavigationDecodeTMC
+\end{vdm_al}

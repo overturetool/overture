@@ -1,0 +1,57 @@
+module A
+definitions
+
+types
+
+R :: f1:int f2:int
+
+state S of
+	S1: int
+	S2: int
+	S3: R 
+	S4: map int to int
+end
+
+values
+
+V1:int = 0;
+
+functions
+
+expf: int -> int
+	expf(a) == V1 + a;
+	
+implf(a:int) r:int
+pre a + V1 > 0
+post a + r + V1 > 0;
+
+extimplf(a:int) r:int
+	==  V1 + a
+pre a + V1 > 0
+post a + r + V1 > 0;
+
+operations
+
+expop: int ==> int
+	expop(a) ==	(dcl D:int := 0; return a + D + V1 + S1 + S2)
+pre a < S1 and a < S2 and a > V1
+post a > S1 and a > S2 and a > V1;
+
+implop(a:int) r:int
+ext rd S1 rd S2
+pre a < S1 and a > S2 and a > V1
+post a > S1 and a < S2 and a > V1 and r < 0;
+
+extimplop(a:int, S1:int) r:int ==			-- S1 local of same name as state
+(
+	dcl D:int := 0;
+	-- S1 := 0;		-- Used to be OK (VDMTools bug)
+	S3.f1 := S1;
+	S4(S1) := S2;
+	return a + D + V1 + S1 + S2 + S3.f1 + S4(1)
+)
+ext wr S1 rd S2 wr S3 wr S4
+pre a < S1 and a > S2 and a > V1
+post a > S1 and a < S2 and a > V1 and r < 0;
+
+end A

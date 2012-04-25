@@ -1,0 +1,772 @@
+\documentclass[a4wide,dvips,11pt]{article}
+\usepackage[dvips]{color}
+\usepackage{vdmsl-2e}
+\usepackage{longtable}
+% \usepackage{alltt}
+\usepackage{makeidx}
+%\usepackage{ifad}
+
+\newcommand{\StateDef}[1]{{\bf #1}}
+\newcommand{\TypeDef}[1]{{\bf #1}}
+\newcommand{\TypeOcc}[1]{{\it #1}}
+\newcommand{\FuncDef}[1]{{\bf #1}}
+\newcommand{\FuncOcc}[1]{#1}
+\newcommand{\ModDef}[1]{{\tiny #1}}
+\makeindex
+
+\definecolor{covered}{rgb}{0,0,0}      %black
+\definecolor{not_covered}{gray}{0.5}   %gray for previewing
+%\definecolor{not_covered}{gray}{0.6}   %gray for printing
+%\definecolor{not_covered}{rgb}{1,0,0}  %red
+
+\title{Modelling of Realms in VDM-SL}
+\author{Peter Gorm Larsen\thanks{Produced during a visit to
+UNU/IIST in Macau.}\\ IFAD}
+\date{January 1996}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This small note is simply an attempt to model the basic data
+structures and auxiliary functions necessary to represent realms. The
+basis for the definitions presented in this is note is the paper
+\cite{Guting&93} and a draft of the formalisation of these concepts
+in RSL \cite{Tao96}. In this note we will therefore assume that the readers
+already have read these two other documents. This assumption is made
+in order to avoid repeating the basic explanation of what a realm is
+and what it is used for. The specification made here is written in
+VDM-SL. 
+
+\section{Points and Segments}
+
+The basis for realms is a finite two-dimentional (in this case)
+grid. Inside such a grid we can introduce notions such a points,
+$NPoint$, and line (or segments), $NSeg$. The miximal size of the grid
+have in this specification abitrarily been set to 10.
+ 
+\begin{vdm_al}
+module REALM
+
+imports from TEST all
+
+exports all
+
+definitions
+
+values
+
+  max: nat = 10
+
+types
+
+  N = nat
+  inv n == n < max;
+\end{vdm_al}
+
+Thus we have a grid going from 0 to $max - 1$ in two dimentions.
+
+\begin{vdm_al}
+  NPoint ::
+    x : N 
+    y : N;
+
+  NSeg :: 
+    pts: set of NPoint 
+  inv mk_NSeg(ps) == card ps = 2
+\end{vdm_al}
+
+Note that segments are modeled as sets with two points. This have been
+done in order to emphasise that the segments does not have a
+direction. A loosely defined auxiliary function $SelPoints$ is then
+used to extract the points from a segment.
+
+\begin{vdm_al}
+functions
+
+  SelPoints: NSeg +> NPoint * NPoint
+  SelPoints(mk_NSeg(pts)) ==
+    let p in set pts
+    in 
+      let q in set pts \ {p}
+      in
+        mk_(p,q)
+\end{vdm_al}
+
+\section{Auxiliary Functions on Points and Segments}
+
+Given a N-segment the function $Points$ will derive the set of
+N-Points directly on this segment (including the start and end points
+of the segment).
+
+\begin{vdm_al}
+functions
+
+  Points: NSeg +> set of NPoint
+  Points(s) ==
+    let mk_(p1,p2) = SelPoints(s)
+    in
+      {mk_NPoint(x,y)| x in set DiffX(p1,p2), y in set DiffY(p1,p2) &
+                       let p = mk_NPoint(x,y) in
+                         RatEq(Slope(p,p1),Slope(p2,p)) or p = p1 or p = p2}
+\end{vdm_al}
+In order to reduce numerical errors produced by real number
+manipulation it has been chosen to introduce a new representation of
+rational numbers:
+
+\begin{vdm_al}
+types
+
+  Rat = int * int
+\end{vdm_al}
+
+With the $Rat$ type it is possible to calculate the slope between two
+points as:
+\begin{vdm_al}
+functions
+
+  Slope: NPoint * NPoint +> Rat
+  Slope(mk_NPoint(x1,y1),mk_NPoint(x2,y2)) ==
+    mk_((y2-y1),(x2-x1));
+\end{vdm_al}
+
+Two rational numbers with this representation may be compared as:
+
+\begin{vdm_al}
+  RatEq: Rat * Rat +> bool
+  RatEq(mk_(x1,y1),mk_(x2,y2)) ==
+    x1 * y2 = x2 * y1;
+\end{vdm_al}
+
+The set of x-coordinates between (and including) two point is found be
+$DiffX$. Similarly the y-coordinates is found by $DiffY$.
+
+\begin{vdm_al}
+  DiffX: NPoint * NPoint +> set of N
+  DiffX(mk_NPoint(x1,-),mk_NPoint(x2,-)) ==
+    if x1 < x2
+    then {x1,...,x2}
+    else {x2,...,x1};
+
+  DiffY: NPoint * NPoint +> set of N
+  DiffY(mk_NPoint(-,y1),mk_NPoint(-,y2)) ==
+    if y1 < y2
+    then {y1,...,y2}
+    else {y2,...,y1};
+\end{vdm_al}
+
+Checking whether a point is on a segment is done by the function $On$.
+
+\begin{vdm_al}
+  On: NPoint * NSeg +> bool
+  On(p,s) ==
+     p in set Points(s);
+\end{vdm_al}
+
+To check whether a point is inside (i.e.\ not the end points) of a
+segment one would use $In$.
+
+\begin{vdm_al}
+  In: NPoint * NSeg +> bool
+  In(p,s) ==
+    On(p,s) and p not in set s.pts;
+\end{vdm_al}
+
+Checking whether two segments have exactly one end point in common is
+done by $Meet$.
+
+\begin{vdm_al}
+  Meet: NSeg * NSeg +> bool
+  Meet(mk_NSeg(pts1),mk_NSeg(pts2)) ==
+    card (pts1 inter pts2) = 1;
+\end{vdm_al}
+
+Checking whether two segments have the same slope is done by
+$Parallel$.
+
+\begin{vdm_al}
+  Parallel: NSeg * NSeg +> bool
+  Parallel(s,t) ==
+    let mk_(p1,p2) = SelPoints(s),
+        mk_(p3,p4) = SelPoints(t)
+    in
+      Slope(p1,p2) = Slope(p3,p4);
+\end{vdm_al}
+
+Checking whether two segments have more than one point in common is
+done by $Overlap$.
+
+\begin{vdm_al}
+  Overlap: NSeg * NSeg +> bool
+  Overlap(s1,s2) ==
+    card (Points(s1) inter Points(s2)) > 1;
+\end{vdm_al}
+
+Checking whether two segments are aligned is done by $Aligned$.
+
+\begin{vdm_al}
+  Aligned: NSeg * NSeg +> bool
+  Aligned(s1,s2) ==
+    Coliner(s1,s2) and not Overlap(s1,s2);
+\end{vdm_al}
+
+Checking whether two segments intersect is copied from
+\cite{Guting&93} in the function $Intersect$.
+
+\begin{vdm_al}
+  Intersect: NSeg * NSeg +> bool
+  Intersect(s,t) ==
+    let mk_(mk_NPoint(x11,y11),mk_NPoint(x12,y12)) = SelPoints(s),
+        mk_(mk_NPoint(x21,y21),mk_NPoint(x22,y22)) = SelPoints(t)
+    in
+      let a11 = x11 - x12,
+          a12 = x22 - x21,
+          a21 = y11 - y12,
+          a22 = y22 - y21,
+          b1  = x11 - x21,
+          b2  = y11 - y21
+      in
+        let d1 = b1 * a22 - b2 * a12,
+            d2 = b2 * a11 - b1 * a21,
+            d  = a11 * a22 - a12 * a21
+        in
+          d <> 0 and 
+          let l = d1 / d,
+              m = d2 / d
+          in
+            0 < l and l < 1 and
+            0 < m and m < 1;
+
+  Coliner: NSeg * NSeg +> bool
+  Coliner(s,t) ==
+    let mk_(p1,p2) = SelPoints(s),
+        mk_(p3,p4) = SelPoints(t) 
+    in
+      RatEq(Slope(p1,p2),Slope(p3,p4)) and 
+      (RatEq(Slope(p1,p3),Slope(p1,p4)) or
+       RatEq(Slope(p3,p1),Slope(p1,p4)));
+\end{vdm_al}
+
+Checking for disjointness of two segments are carried out by
+$Disjoint$.
+
+\begin{vdm_al}
+  Disjoint: NSeg * NSeg +> bool
+  Disjoint(s1,s2) ==
+    s1 <> s2 and not Meet(s1,s2) and not Intersect(s1,s2);
+\end{vdm_al}
+
+When two segments intersect the N-point closest to the real
+intersection point can be calculated by the function $Intersection$.
+THe algorithm for this function is copied from \cite{Guting&93}.
+
+\begin{vdm_al}
+  Intersection: NSeg * NSeg -> NPoint
+  Intersection(s,t) ==
+    let mk_(mk_NPoint(x11,y11),mk_NPoint(x12,y12)) = SelPoints(s),
+        mk_(mk_NPoint(x21,y21),mk_NPoint(x22,y22)) = SelPoints(t)
+    in
+      let a11 = x11 - x12,
+          a12 = x22 - x21,
+          a21 = y11 - y12,
+          a22 = y22 - y21,
+          b1  = x11 - x21,
+          b2  = y11 - y21
+      in
+        let d1 = b1 * a22 - b2 * a12,
+            d  = a11 * a22 - a12 * a21
+        in
+          if d <> 0
+          then let x0 = x11 * d + d1 * (x12 - x11),
+                   y0 = y11 * d + d1 * (y12 - y11)
+               in
+                 mk_NPoint(RoundToN(abs x0,abs d),RoundToN(abs y0,abs d))
+          else undefined
+  pre Intersect(s,t);
+
+  RoundToN: nat * nat +> nat 
+  RoundToN(a,b) ==
+    let mk_(z,aa) = if a >= b
+                    then mk_(a div b, a mod b)
+                    else mk_(0,a)
+    in
+      if aa = 0 or 2 * aa <= b
+      then z
+      else z + 1
+\end{vdm_al}
+
+\section{Realm}
+
+A realm is modelled as a pair of points and segments. However, an
+invariant is included to describe that (.3) all end points from the
+segments must be present as points themselves, (.4) points inside the
+segments must not be present and (.5) the segments do not overlap or
+intersect with each other.
+
+\begin{vdm_al}
+types
+
+  Realm ::
+    points: set of NPoint
+    segs  : set of NSeg
+  inv mk_Realm(ps,ss) ==
+    (forall mk_NSeg(pts) in set ss & pts subset ps) and
+    (forall s in set ss, p in set ps & not In(p,s)) and
+    (forall s1,s2 in set ss & s1 <> s2 => (not Intersect(s1,s2) and not Overlap(s1,s2)))
+\end{vdm_al}
+
+It is naturally very important to ensure that all functions yielding
+reals obey this invariant. Thus, some of the functions manipulating
+realms will have pre-conditions ensuring this. In \cite{Guting&93}
+the treatment of realm objects is done using unique identifiers for
+realm objects and for spatial components. We have chosen to abstract
+entirely away from such identifiers and thus manipulate the realms by
+the realm objects drectly.
+ 
+Inserting a new point into a realm is done by $InsertNPoint$. In case
+the point is already present in the realm no change is made. If the
+point is new and it is not included into any envelopes for segments
+the point is simply added to the first component of the realm. Finally
+the complex case where the new point falls into at least one segment
+envelope all the segments which have their envelopes entered must then
+be chopped up into new segments going from the orginal end points to
+the new point.
+
+\begin{vdm_al}
+functions
+
+  InsertNPoint: Realm * NPoint +> Realm
+  InsertNPoint(mk_Realm(ps,ss),p) ==
+    if p in set ps
+    then mk_Realm(ps,ss)
+    elseif forall s in set ss & p not in set E(s)
+    then mk_Realm(ps union {p},ss)
+    else let s_env = {s|s in set ss & p in set E(s)}
+         in
+           let ss1 = dunion{{mk_NSeg({p1,p}),mk_NSeg({p,p2})}
+                           |mk_NSeg({p1,p2}) in set s_env 
+                           & p not in set {p1,p2}}
+           in
+             mk_Realm(ps union {p},(ss union ss1)\s_env) 
+  pre not exists s in set ss & In(p,s);
+\end{vdm_al}
+
+When one wish to insert segments into realms it is even more
+complicated. THis is taken care of by the function
+$InsertNSegment$\footnote{The algorithm for this function in
+\cite{Guting&93} is wrong to require segments to be disjoint because
+that would exclude them from meeting each other.} 
+In case the segment is in the realm already no change is
+made. If the segment is new and does not touch anything it is simply
+included as a new segment in the realm. Finally the segment may
+intersect other segments from the realm and/or its envelope touches
+some realm points. This is the complex case where all the points in
+its envelope and the segments which intersect with this new segment
+must be dealt with seperately. Two recursive functions are used to
+deal with this. The first one is called $ChopNPoints$ and it is used
+for chopping the new segment into smaller segments between its
+original end points and the points in its envelope. The other function
+is called $ChopNSegs$ and it is used to chop the new segment (which
+potentially allready have been chopped into smaller pieces)
+corresponding with the intersection is has with the existing segments
+in the realm. In this process it is also necessary to chop the
+existing segments in the same intersection point and finally these new
+intersection points must be added to the points of the realm.
+
+\begin{vdm_al}
+  InsertNSegment: Realm * NSeg +> Realm
+  InsertNSegment(mk_Realm(ps,ss),s) ==
+    if s in set ss
+    then mk_Realm(ps,ss)
+    elseif (forall p in set ps & p not in set E(s)\EndPoints(ss)) and 
+           (forall t in set ss & not Intersect(s,t) and not Overlap(s,t)) 
+    then mk_Realm(ps,ss union {s})
+    else let p_env = {p | p in set ps inter E(s)}\EndPoints(ss),
+             s_inter = {t|t in set ss & Intersect(s,t)}
+         in
+           let ss1 = ChopNPoints(p_env,{s})
+           in
+             let mk_(new_ps, new_ss) = ChopNSegs(ss, s_inter,ss1,{})
+             in
+               mk_Realm(ps union new_ps,new_ss)
+  pre s.pts subset ps;
+\end{vdm_al}
+
+The recursive function $ChopNPoints$ takes two arguments. The
+recursion is done over the first argument which is the set of points
+which have not yet been taken into account. The second argument is the
+set of segments which have been produced in the chopping so far. In
+the base case when the set of points is empty the set of segments
+produced is returned. In the recursive case an arbitrary point is
+selected and for that particular point the segments which has this
+point in its envelope is found and for such a segment the chopping is
+done and recursion is introduced with the rest.
+
+\begin{vdm_al}
+  ChopNPoints: set of NPoint * set of NSeg +> set of NSeg
+  ChopNPoints(ps,ss) ==
+    if ps = {}
+    then ss
+    else let p in set ps
+         in
+           let s_env = {s | s in set ss & p in set E(s) and
+                                          p not in set s.pts}
+           in
+             let s in set s_env
+             in
+               let mk_(p1,p2) = SelPoints(s)
+               in
+                 ChopNPoints(ps\{p},(ss \{s}) union {mk_NSeg({p1,p}),mk_NSeg({p2,p})})
+  pre forall p in set ps & exists s in set ss & p in set E(s) and p not in set s.pts;
+\end{vdm_al}
+
+It is necessary to introduce the auxiliary function $ChopNSegs$
+because the chopping up of the new segments with respect to the
+existing segments and points in the realm depends upon the different
+intersections. Thus, $ChopNSegs$ chops one part of the new segment
+every time. This function has four parameters:
+
+\begin{enumerate}
+\item The first argument is the orginal set of segments in the
+      realm. This component is gradually cut down whenever an existing
+      segment must be removed from the realm because it is being chooped
+      into pieces. However, the new segments which the original ones
+      are being cut into are included here instead.
+\item The second argument is the one which contains the segments from
+      the orginal realm which intersect with the new segment. Recursion is
+      done over this argument which is decreased whenever a new one have
+      been dealt with. 
+\item The third argument is used for accumulating the new segments
+      resulting from the chopping of the orginal segments in the realm and
+      the new segment we are adding.
+\item Finally the fourth argument is used for accumulating the newly
+      created points from the intersection points. These must be included
+      into the set of points for the new realm.
+\end{enumerate}
+
+\begin{vdm_al}
+
+  ChopNSegs: set of NSeg * set of NSeg * set of NSeg * set of NPoint +> 
+             set of NPoint * set of NSeg
+  ChopNSegs(ss,s_inter,newss,ps) ==
+    if s_inter = {}
+    then mk_(ps,ss union newss)
+    else let t in set s_inter
+         in
+           let {s} = {s |s in set newss & Intersect(s,t)}
+           in
+             let p = Intersection(t,s)
+             in
+               let chop_s = {mk_NSeg({p,sp})|sp in set s.pts & p <> sp},
+                   chop_t = {mk_NSeg({p,tp})|tp in set t.pts & p <> tp}
+               in
+                 ChopNSegs((ss \ {t}) union chop_t,
+                           s_inter\{t}, (newss \ {s}) union chop_s, ps union{p});
+\end{vdm_al}
+
+The envelope of a segment (that is the grid points immediately above
+or below the segment) can be found
+by using the auxiliary function $E$:
+
+\begin{vdm_al}
+  E: NSeg +> set of NPoint
+  E(s) ==
+    let mk_(p1,p2) = SelPoints(s)
+    in
+      {mk_NPoint(x,y) | x in set DiffX(p1,p2), y in set DiffY(p1,p2) &
+                        (0 < y and y < max - 1 and 
+                              Intersect(mk_NSeg({mk_NPoint(x,y-1),mk_NPoint(x,y+1)}),s)) or
+                        (0 < x and x < max - 1 and
+                              Intersect(mk_NSeg({mk_NPoint(x-1,y),mk_NPoint(x+1,y)}),s))};
+\end{vdm_al}
+
+In some occations it is essential not to include the end points into
+the envelopes. This is dealt with by $EndPoints$:
+
+\begin{vdm_al}
+  EndPoints: set of NSeg -> set of NPoint
+  EndPoints(ss) ==
+    dunion{pts|mk_NSeg(pts) in set ss};
+\end{vdm_al}
+
+\section{Introducing Cycles}
+
+Whether a set of segments form a cycle is tested by the predicate
+$CycleCheck$\footnote{In the description in \cite{Guting&93} the
+indecing using (i+1) mod m is wrong.}: 
+
+\begin{vdm_al}
+
+  CycleCheck: set of NSeg +> bool
+  CycleCheck(ss) ==
+    exists sl in set AllLists(ss) &
+      forall i in set inds sl &
+        Meet(sl(i),sl(if i = len sl then 1 else i+1)) and
+        forall j in set inds sl \ {if i = 1 then len sl else i-1,
+                                   i,
+                                   if i = len sl then 1 else i+1} & 
+          not Meet(sl(i),sl(j));
+\end{vdm_al}
+
+The auxiliary function $AllLists$ is simply used to produce a set of
+all possible sequences of segments. In case one was not interested in
+an executable version of this specification this function could be
+replaced by a type binding plus a restriction on the sequence of
+segments inside the body of the universial quantification.
+
+\begin{vdm_al}
+  AllLists: set of NSeg +> set of seq of NSeg
+  AllLists(ss) ==
+    cases ss:
+      {}     -> {[]},
+      {s}    -> {[s]},
+      others -> dunion {{[s]^l | 
+                         l in set AllLists(ss \{s})} | 
+                         s in set ss}
+    end
+\end{vdm_al}
+
+Because the concept of a cycle will be used often we will make a type
+definition for it:
+
+\begin{vdm_al}
+types
+
+  Cycle = set of NSeg
+  inv ss == CycleCheck(ss)
+\end{vdm_al}
+
+Given we have a cycle checking whether a point is on a cycle is
+performed by $OnCycle$. Similar checks are made by $InsideCycle$ and
+$OutsideCycle$ to check whether a point is respectively inside or
+outside a cycle.
+
+\begin{vdm_al}
+functions
+
+  OnCycle: NPoint * Cycle +> bool
+  OnCycle(p,c) ==
+    exists s in set c & On(p,s);
+
+  InsideCycle: NPoint * Cycle +> bool
+  InsideCycle(p,c) ==
+    not OnCycle(p,c) and IsOdd(card SR(p,c) + card SI(p,c)) ;
+
+  OutsideCycle: NPoint * Cycle +> bool
+  OutsideCycle(p,c) ==
+    not (OnCycle(p,c) or InsideCycle(p,c));
+\end{vdm_al}
+
+Three auxiliary functions called $SR$, $SI$ and $SP$ are used
+here. $SP$ produces a segment from its argument point and upwards to
+the edge of the grid. $SR$ creates the segments which have one end
+point on the $SP$ segment. Finally $SI$ produces the segments which
+intersect with the $SP$ segment.
+
+\begin{vdm_al}
+  SR: NPoint * Cycle +> set of NSeg
+  SR(p,ss) ==
+    {s | s in set ss & let mk_(p1,p2) = SelPoints(s)
+                       in
+                         (p.y < max - 1 and not On(p1,SP(p)) and On(p2,SP(p))) or
+                         (p.y < max - 1 and not On(p2,SP(p)) and On(p1,SP(p)))}
+  pre CycleCheck(ss);  
+
+  SI: NPoint * Cycle +> set of NSeg
+  SI(p,ss) ==
+    {s | s in set ss & p.y < max - 1 and Intersect(s,SP(p))};  
+
+  SP: NPoint +> NSeg
+  SP(mk_NPoint(x,y)) ==
+    mk_NSeg({mk_NPoint(x,y),mk_NPoint(x,max - 1)})
+  pre y < max - 1;
+ 
+  IsOdd: nat +> bool
+  IsOdd(n) ==
+    n mod 2 <> 0;
+\end{vdm_al}
+All the points in the grid can be partitioned into three subsets: 1)
+the points which are inside a cycle, 2) the points which are
+on a cycle and 3) the points which are outside the cycle. A higher
+order function called $Partition$ is used to deal with this where
+$OnCycle$, $InsideCycle$ or $OutsideCycle$ can be used depending on
+the desired partition.
+
+\begin{vdm_al}
+
+  Partition: (NPoint * set of NSeg -> bool) * Cycle +> set of NPoint
+  Partition(pred,ss) ==
+    {mk_NPoint(x,y) | x in set {0,...,max-1}, y in set {0,...,max-1} & 
+                      pred(mk_NPoint(x,y),ss)};
+\end{vdm_al}
+
+This higher order function can also be used get hold of the points
+which are either on a cycle or inside a cycle. This is done by the
+function $P$:
+
+\begin{vdm_al}
+
+  P: Cycle +> set of NPoint
+  P(ss) ==
+    Partition(OnCycle,ss) union Partition(InsideCycle,ss);
+\end{vdm_al}
+
+\section{Relating Cycles}
+
+In case we have more than one cycle it becomes possible to relate the
+cycles to each other. All these notions are briefly described in
+\cite{Guting&93} so we will not explain these any futher here. The
+definitions relating cycles are:
+
+\begin{vdm_al}
+
+  AreaInside: Cycle * Cycle +> bool
+  AreaInside(c1,c2) ==
+    P(c1) subset P(c2);
+
+  EdgeInside: Cycle * Cycle +> bool
+  EdgeInside(c1,c2) ==
+    AreaInside(c1,c2) and c1 inter c2 = {};
+
+  VertexInside: Cycle * Cycle +> bool
+  VertexInside(c1,c2) ==
+    EdgeInside(c1,c2) and 
+    Partition(OnCycle,c1) inter Partition(OnCycle,c2) = {};
+      
+  AreaDisjoint: Cycle * Cycle +> bool
+  AreaDisjoint(c1,c2) ==
+    Partition(InsideCycle,c1) inter P(c2) = {} and
+    Partition(InsideCycle,c2) inter P(c1) = {};
+
+  EdgeDisjoint: Cycle * Cycle +> bool
+  EdgeDisjoint(c1,c2) ==
+    AreaDisjoint(c1,c2) and c1 inter c2 = {};
+
+  VertexDisjoint: Cycle * Cycle +> bool
+  VertexDisjoint(c1,c2) ==
+    P(c1) inter P(c2) = {};
+
+  AdjacentCycles: Cycle * Cycle +> bool
+  AdjacentCycles(c1,c2) ==
+    AreaDisjoint(c1,c2) and c1 inter c2 <> {};
+
+  MeetCycles: Cycle * Cycle +> bool
+  MeetCycles(c1,c2) ==
+    EdgeDisjoint(c1,c2) and
+    Partition(OnCycle,c1) inter Partition(OnCycle,c2) <> {};
+\end{vdm_al}
+
+One can observe similar ways of how a segment can lie within a cycle:
+
+\begin{vdm_al}
+
+  SAreaInside: NSeg * Cycle +> bool
+  SAreaInside(s,c) ==
+    let mk_(p1,p2) = SelPoints(s)
+    in
+      PAreaInside(p1,c) and PAreaInside(p2,c);
+
+  SEdgeInside: NSeg * Cycle +> bool
+  SEdgeInside(s,c) ==
+    let mk_(p1,p2) = SelPoints(s)
+    in
+      (PAreaInside(p1,c) and PVertexInside(p2,c)) or
+      (PAreaInside(p2,c) and PVertexInside(p1,c));
+
+  SVertexInside: NSeg * Cycle +> bool
+  SVertexInside(s,c) ==
+    let mk_(p1,p2) = SelPoints(s)
+    in
+      PVertexInside(p1,c) and PVertexInside(p2,c);
+\end{vdm_al}
+
+For a point we have two possibilities:
+
+\begin{vdm_al}
+
+  PAreaInside: NPoint * Cycle +> bool
+  PAreaInside(p,c) ==
+    p in set P(c);
+
+  PVertexInside: NPoint * Cycle +> bool
+  PVertexInside(p,c) ==
+    p in set Partition(InsideCycle,c)
+\end{vdm_al}
+
+\section{Introducing Faces}
+
+On top of cycles one can introduce the notion of faces. A face is a
+pair of a cycle and a (possibly empty) set of cycles which are
+entirely encapsulated inside the first cycle. Formally this can be
+defined as:
+
+\begin{vdm_al}
+types
+
+  Face :: c  : Cycle
+          hs : set of Cycle
+  inv mk_Face(c,hs) == 
+    (forall h in set hs & EdgeInside(h,c)) and
+    (forall h1,h2 in set hs & h1 <> h2 => EdgeDisjoint(h1,h2)) and
+    (forall ss in set power (c union dunion hs) & 
+           CycleCheck(ss) => ss in set hs union {c}) 
+\end{vdm_al}
+
+The possible relationships between points or segments and a face are:
+
+\begin{vdm_al}
+functions
+
+  PAreaInsideF: NPoint * Face +> bool
+  PAreaInsideF(p,mk_Face(c,hs)) ==
+    PAreaInside(p,c) and forall h in set hs & not PVertexInside(p,h);
+
+  SAreaInsideF: NSeg * Face +> bool
+  SAreaInsideF(s,mk_Face(c,hs)) ==
+    SAreaInside(s,c) and forall h in set hs & not SEdgeInside(s,h);
+\end{vdm_al}
+
+Naturally one can define a similar kind of relationships between faces
+as one can between cycles:
+
+\begin{vdm_al}
+
+  FAreaInside: Face * Face +> bool
+  FAreaInside(mk_Face(c1,hs1),mk_Face(c2,hs2)) ==
+    AreaInside(c1,c2) and 
+    forall h2 in set hs2 & AreaDisjoint(h2,c1) or 
+           exists h1 in set hs1 & AreaInside(h2,h1);
+
+  FAreaDisjoint: Face * Face +> bool
+  FAreaDisjoint(mk_Face(c1,hs1),mk_Face(c2,hs2)) ==
+    AreaDisjoint(c1,c2) or
+    (exists h2 in set hs2 & AreaInside(c1,h2)) or
+    (exists h1 in set hs1 & AreaInside(c2,h1));
+
+  FEdgeDisjoint: Face * Face +> bool
+  FEdgeDisjoint(mk_Face(c1,hs1),mk_Face(c2,hs2)) ==
+    EdgeDisjoint(c1,c2) or 
+    (exists h2 in set hs2 & EdgeInside(c1,h2)) or
+    (exists h1 in set hs1 & EdgeInside(c2,h1))
+    
+end REALM
+\end{vdm_al}
+
+\newpage    
+\input{test.vdm.tex}
+
+\newpage
+
+\section{Test Coverage Overview}
+
+\begin{rtinfo}[InsertNSegment]{vdm.tc}[DefaultMod]
+\end{rtinfo}
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{realm}
+
+\newpage
+\printindex
+\end{document}

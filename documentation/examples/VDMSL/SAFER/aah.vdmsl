@@ -1,0 +1,91 @@
+\begin{vdm_al}
+
+
+module AAH
+
+imports from AUX all,
+        from HCM all
+
+exports all
+
+definitions
+
+state AAH of 
+      active_axes : set of AUX`RotAxis
+      ignore_hcm  : set of AUX`RotAxis
+      toggle      : EngageState
+      timeout     : nat
+init s ==
+  s = mk_AAH({},{},<AAH_off>,0)
+end      
+         
+types
+
+  EngageState = <AAH_off> | <AAH_started> | <AAH_on> | <pressed_once> |
+                <AAH_closing> | <pressed_twice>;
+
+values
+  
+  click_timeout: nat = 10 -- was 100, changed for test purposes
+
+operations
+
+  Transition: HCM`ControlButton * AUX`SixDofCommand * nat ==> ()
+  Transition(button_pos,hcm_cmd,clock) ==
+    let 
+      engage = ButtonTransition(toggle,button_pos,active_axes,clock,timeout),
+      starting = (toggle = <AAH_off>) and (engage = <AAH_started>)
+    in
+      (active_axes:= {a | a in set AUX`rot_axis_set & 
+                          starting or 
+                          (engage <> <AAH_off> and a in set active_axes and
+                           (hcm_cmd.rot(a) = <Zero> or a in set ignore_hcm))};
+       ignore_hcm:= {a | a in set AUX`rot_axis_set & 
+                         (starting and hcm_cmd.rot(a) <> <Zero>) or 
+                         (not starting and a in set ignore_hcm)};
+       timeout:= if toggle = <AAH_on> and engage = <pressed_once>
+                 then clock + click_timeout
+                 else timeout;
+       toggle:= engage);
+
+  ActiveAxes: () ==> set of AUX`RotAxis
+  ActiveAxes() == return active_axes;
+
+  IgnoreHcm: () ==> set of AUX`RotAxis
+  IgnoreHcm() == return ignore_hcm;
+
+  Toggle: () ==> EngageState
+  Toggle() == return toggle
+
+functions
+
+  AllAxesOff: set of AUX`RotAxis +> bool
+  AllAxesOff(active) == active = {};
+
+  ButtonTransition: EngageState * HCM`ControlButton * set of AUX`RotAxis * 
+                    nat * nat +> EngageState
+  ButtonTransition(estate,button,active,clock,timeout) ==
+    cases mk_(estate,button) :
+      mk_(<AAH_off>,<Up>)         -> <AAH_off>,
+      mk_(<AAH_off>,<Down>)       -> <AAH_started>,
+      mk_(<AAH_started>,<Up>)     -> <AAH_on>,
+      mk_(<AAH_started>,<Down>)   -> <AAH_started>,
+      mk_(<AAH_on>,<Up>)          -> if AllAxesOff(active)
+                                     then <AAH_off>
+                                     else <AAH_on>,
+      mk_(<AAH_on>,<Down>)        -> <pressed_once>,
+      mk_(<pressed_once>,<Up>)    -> <AAH_closing>,
+      mk_(<pressed_once>,<Down>)  -> <pressed_once>,
+      mk_(<AAH_closing>,<Up>)     -> if AllAxesOff(active)
+                                     then <AAH_off>
+                                     elseif clock > timeout
+                                     then <AAH_on>
+                                     else <AAH_closing>,
+      mk_(<AAH_closing>,<Down>)   -> <pressed_twice>,
+      mk_(<pressed_twice>,<Up>)   -> <AAH_off>,
+      mk_(<pressed_twice>,<Down>) -> <pressed_twice>
+    end;
+
+end AAH
+
+\end{vdm_al}

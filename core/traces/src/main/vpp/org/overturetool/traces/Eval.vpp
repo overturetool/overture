@@ -1,0 +1,1236 @@
+\section{Evaluation of Expressions}
+
+Inside traces it is possible to use expressions and these expressions
+are used to identify numerous test cases. Thus these needs to be
+evaluated to determine the required looseness in the test cases. The
+evaluation operations/functions takes an AST for an expression and a
+context and yields a semantic value. The context is a mapping from
+identifier to a semantic value. Only a small subset of expressions are 
+covered right now.
+
+\begin{vdm_al}
+class Eval
+
+types
+
+public Context = map DEF`Identifier to SEM`VAL;
+
+instance variables
+
+specdefs : DEF;
+curcl : DEF`Identifier;
+ errorLog : RTERR;
+operations
+
+public Eval: DEF`Identifier * DEF * RTERR ==> Eval
+Eval(clid,defs,errLog) ==
+(
+  errorLog := errLog;
+  curcl := clid;
+  specdefs := defs
+);
+
+public evaluateExpression :
+  IOmlExpression * Context ==>
+  SEM`VAL
+evaluateExpression(expr,cxt) ==
+  cases true:
+    (isofclass(IOmlSymbolicLiteralExpression,expr)) 
+     -> return getValueOfSymLit(expr),
+    (isofclass(IOmlSequenceEnumeration,expr))
+     -> return evaluateSeqEnumeration(expr,cxt),
+    (isofclass(IOmlSequenceComprehension,expr))
+     -> return evaluateSeqComprehension(expr,cxt),
+    (isofclass(IOmlSubsequenceExpression,expr))
+     -> return evaluateSubsequenceExpression(expr,cxt),
+    (isofclass(IOmlSetEnumeration,expr))
+     -> return evaluateSetEnumeration(expr,cxt),
+    (isofclass(IOmlMapEnumeration,expr))
+     -> return evaluateMapEnumeration(expr,cxt),
+    (isofclass(IOmlSetRangeExpression,expr))
+     -> return evaluateSetRange(expr,cxt),
+    (isofclass(IOmlName,expr))
+     -> return evaluateName(expr,cxt),
+    (isofclass(IOmlBinaryExpression,expr))
+     -> return evaluateBinary(expr,cxt),
+    (isofclass(IOmlUnaryExpression,expr))
+     -> return evaluateUnary(expr,cxt),
+    (isofclass(IOmlBracketedExpression,expr))
+     -> return evaluateBracketedExpression(expr,cxt),
+    (isofclass(IOmlSetComprehension,expr))
+     -> return evaluateSetComprehension(expr,cxt),
+    (isofclass(IOmlMapComprehension,expr))
+     -> return evaluateMapComprehension(expr,cxt),
+    (isofclass(IOmlNewExpression,expr))
+     -> return evaluateNewExpression(expr,cxt),
+    (isofclass(IOmlIfExpression,expr))
+     -> return evaluateIfExpression(expr,cxt),
+    (isofclass(IOmlLetExpression,expr))
+     -> return evaluateLetExpression(expr,cxt),
+    (isofclass(IOmlLetBeExpression,expr))
+     -> return evaluateLetBeExpression(expr,cxt),
+    (isofclass(IOmlFieldSelect,expr))
+     -> return evaluateFieldSelect(expr,cxt),
+    (isofclass(IOmlRecordConstructor,expr))
+     -> return evaluateRecordConstructor(expr,cxt),
+    (isofclass(IOmlTupleConstructor,expr))
+     -> return evaluateTupleConstructor(expr,cxt),
+    (isofclass(IOmlApplyExpression,expr))
+     -> return evaluateApplyExpression(expr,cxt),
+    (isofclass(IOmlTokenExpression,expr))
+     -> return evaluateTokenExpression(expr,cxt),
+    (isofclass(IOmlMuExpression,expr))
+     -> return evaluateMuExpression(expr,cxt),
+    others
+     -> error
+  end;
+\end{vdm_al}
+
+\subsection{Sequence Enumeration}
+Evaluation of a sequence enumeration expression is simply an evaluation of
+the element expressions and then placing all of them in a semantic sequence.
+
+\begin{vdm_al}
+public evaluateSeqEnumeration : 
+  IOmlSequenceEnumeration * Context ==> 
+  SEM`VAL
+evaluateSeqEnumeration(expr,cxt) == 
+  let s = expr.getExpressionList()
+  in return mk_SEM`SEQ([ evaluateExpression(s(i),cxt) | i in set inds s ]);
+\end{vdm_al}
+
+\subsection{Sequence Comprehension}
+
+\begin{vdm_al}
+public evaluateSeqComprehension : 
+  IOmlSequenceComprehension * Context ==> 
+  SEM`VAL
+evaluateSeqComprehension(expr,cxt) == 
+  let elem  = expr.getExpression(),
+      bind  = expr.getSetBind(),
+      pred  = if expr.hasGuard() then expr.getGuard() else nil,
+      cxt_l = evalBind(bind,cxt)
+  in 
+    if forall cxt in set elems cxt_l & 
+          (forall m in set elems cxt_l & card dom m = 1) and
+          (forall elem in set rng cxt &
+              is_SEM`NUM(elem) and is_nat(elem.v))
+    then let n_s  : set of nat = 
+                    {val.v | val in set dunion 
+                    { rng m | m in set elems cxt_l}},
+             {id} = let m in set elems cxt_l in dom m
+         in
+           return mk_SEM`SEQ([ let cxt2 = cxt ++ {id |-> mk_SEM`NUM(i)}
+                               in
+                                 evaluateExpression(elem,cxt2)
+                             | i in set n_s  
+                             & pred = nil or
+                               let cxt2 = cxt ++ {id |-> mk_SEM`NUM(i)},
+                                   p_val = evaluateExpression(pred,cxt2)
+                               in
+                                 p_val = mk_SEM`BOOL(true)])
+    else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+          return mk_SEM`SEQ([]));
+\end{vdm_al}
+
+\subsection{Subsequence Expressions}
+
+\begin{vdm_al}
+public evaluateSubsequenceExpression :
+  IOmlSubsequenceExpression * Context ==> 
+  SEM`VAL
+evaluateSubsequenceExpression(expr,cxt) == 
+  let sub  = expr.getExpression(),
+      low  = expr.getLower(),
+      up   = expr.getUpper(),
+      val  = evaluateExpression(sub,cxt),
+      l_v  = evaluateExpression(low,cxt),
+      u_v  = evaluateExpression(up,cxt)
+  in 
+    if is_SEM`NUM(l_v) and is_SEM`NUM(u_v)
+    then if is_SEM`SEQ(val)
+         then return mk_SEM`SEQ(val.v(l_v.v,...,u_v.v))
+         else (errorLog.ReportError(sub, RTERR`SEQ_EXPECTED); 
+               return mk_SEM`SEQ([]))
+    else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+          return mk_SEM`SEQ([]));
+\end{vdm_al}
+
+\subsection{Bracketed Expression}
+
+Basically the expression inside the brackets simply needs to be evaluated.
+
+\begin{vdm_al}
+public evaluateBracketedExpression : 
+  IOmlBracketedExpression * Context ==> 
+  SEM`VAL
+evaluateBracketedExpression(expr,cxt) == 
+  let e = expr.getExpression()
+  in 
+    evaluateExpression(e,cxt);
+\end{vdm_al}
+
+\subsection{Set Enumeration}
+
+Evaluation of a set enumeration expression is simply an evaluation of
+the element expressions and then placing all of them in a semantic set.
+
+\begin{vdm_al}
+public evaluateSetEnumeration : 
+  IOmlSetEnumeration * Context ==> 
+  SEM`VAL
+evaluateSetEnumeration(expr,cxt) == 
+  let s = expr.getExpressionList()
+  in return mk_SEM`SET({ evaluateExpression(s(i),cxt) | i in set inds s});
+\end{vdm_al}
+
+\subsection{Map Enumeration}
+
+Evaluation of a map enumeration expression is simply an evaluation of
+the element maplet expressions and then placing all of them in a semantic map.
+
+\begin{vdm_al}
+public evaluateMapEnumeration : 
+  IOmlMapEnumeration * Context ==> 
+  SEM`VAL
+evaluateMapEnumeration(expr,cxt) == 
+  let s = expr.getMapletList()
+  in return mk_SEM`MAP({evaluateExpression(s(i).getDomExpression(),cxt) |->
+                        evaluateExpression(s(i).getRngExpression(),cxt)
+                       | i in set inds s });
+\end{vdm_al}
+
+\subsection{Set Range Expression}
+
+Evaluating a set range expression is done by evaluation of the lower and 
+upper ranges. In case these are both numbers the resulting set is the integers 
+between these numbers. Otherwise an error must be returned.
+
+\begin{vdm_al}
+public evaluateSetRange :
+  IOmlSetRangeExpression * Context ==>
+  SEM`VAL
+evaluateSetRange(expr,cxt) == 
+  let l = evaluateExpression(expr.getLower(),cxt),
+      u = evaluateExpression(expr.getUpper(),cxt),
+      s : set of int = if is_SEM`NUM(l) and is_SEM`NUM(u)
+                       then {l.v,...,u.v}
+                       else {}
+  in 
+   (if not is_SEM`NUM(l) 
+    then errorLog.ReportError(expr, RTERR`LOWER_BOUND_NOT_A_NUMBER); 
+    if not is_SEM`NUM(u)
+    then errorLog.ReportError(expr, RTERR`UPPER_BOUND_NOT_A_NUMBER);
+    return mk_SEM`SET({mk_SEM`NUM(i) | i in set s})); 
+\end{vdm_al}
+
+\subsection{Set Comprehension}
+
+Evaluation of set comprehension expressions is done by running over the 
+possible bindings made by the syntactic binding and then in all the cases 
+where the guard evaluates to true the element expression is evaluated and each
+of these are placed in the resulting set.
+
+\begin{vdm_al}
+public evaluateSetComprehension : 
+  IOmlSetComprehension * Context ==> 
+  SEM`VAL
+evaluateSetComprehension(expr,cxt) == 
+  let elem   = expr.getExpression(),
+      bind_l = expr.getBindList(),
+      guard  = if expr.hasGuard() then expr.getGuard() else nil,
+      cxt_l  = evalBindList(bind_l,cxt)
+  in return
+     mk_SEM`SET(
+       {let cxt3 = cxt ++ cxt2
+        in
+          if guard = nil or 
+             evaluateExpression(guard,cxt3) = mk_SEM`BOOL(true)
+          then evaluateExpression(elem,cxt3)
+          else <NoVAL>
+       | cxt2 in set elems cxt_l} \ {<NoVAL>});
+
+public evaluateMapComprehension : 
+  IOmlMapComprehension * Context ==> 
+  SEM`VAL
+evaluateMapComprehension(expr,cxt) == 
+  let maplet = expr.getExpression(),
+      bind_l = expr.getBindList(),
+      guard  = if expr.hasGuard() then expr.getGuard() else nil,
+      cxt_l  = evalBindList(bind_l,cxt)
+  in 
+    let m_s =
+       {let cxt3 = cxt ++ cxt2
+        in
+          if guard = nil or 
+             evaluateExpression(guard,cxt3) = mk_SEM`BOOL(true)
+          then let dom_e = maplet.getDomExpression(),
+                   rng_e = maplet.getRngExpression(),
+                   dom_v = evaluateExpression(dom_e,cxt3),
+                   rng_v = evaluateExpression(rng_e,cxt3)
+               in
+                 {dom_v |-> rng_v}
+          else {|->}
+       | cxt2 in set elems cxt_l}
+     in
+       if forall x,y in set m_s & x <> y => 
+                                  forall z in set (dom x inter dom y) & x(z) = y(z)
+       then return mk_SEM`MAP(merge m_s)
+       else (errorLog.ReportError(expr, RTERR`DUPLICATES_NOT_EQUAL);
+             return mk_SEM`MAP({|->}));
+\end{vdm_al}
+
+\subsection{Binary Expression}
+
+\begin{vdm_al}
+public evaluateBinary :
+  IOmlBinaryExpression * Context ==>
+  SEM`VAL
+evaluateBinary(expr,cxt) ==
+  let l_expr = expr.getLhsExpression(),
+      operat = expr.getOperator(),
+      r_expr = expr.getRhsExpression()
+  in let l_v = evaluateExpression(l_expr,cxt),
+         op = operat.getValue()
+     in
+       if (op = OmlBinaryOperatorQuotes`IQAND and 
+           l_v = mk_SEM`BOOL(false))
+       then return mk_SEM`BOOL(false)
+       elseif (op = OmlBinaryOperatorQuotes`IQOR and 
+               l_v = mk_SEM`BOOL(true)) or
+              (op = OmlBinaryOperatorQuotes`IQIMPLY and
+               l_v = mk_SEM`BOOL(false))
+       then return mk_SEM`BOOL(true)
+       else let r_v = evaluateExpression(r_expr,cxt)
+            in
+              return BinOpApply(l_v,op,r_v,expr);
+
+BinOpApply: SEM`VAL * nat * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+BinOpApply(l_v,op,r_v,expr) ==
+  return cases op:    
+  (OmlBinaryOperatorQuotes`IQMODIFY     )-> EvalModify(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQGE         )-> EvalGE(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQLT         )-> EvalLT(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQPSUBSET    )-> EvalPSubset(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMOD        )-> EvalMod(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMAPDOMRESBY)-> EvalDomResBy(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQINTER      )-> EvalInter(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQCOMP       )-> EvalComp(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMINUS      )-> EvalMinus(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQREM        )-> EvalRem(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQAND        )-> EvalAnd(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQUNION      )-> EvalUnion(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQINSET      )-> EvalInSet(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQEQUIV      )-> EvalEquiv(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMAPRNGRESTO)-> EvalMapRngResTo(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQITERATE    )-> EvalIterate(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQSUBSET     )-> EvalSubset(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMAPRNGRESBY)-> EvalMapRngResBy(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQTUPSEL     )-> EvalTupSel(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQNOTINSET   )-> EvalNotInSet(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMULTIPLY   )-> EvalMult(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQIMPLY      )-> EvalImply(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQOR         )-> EvalOr(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQGT         )-> EvalGt(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQPLUS       )-> EvalPlus(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMUNION     )-> EvalMUnion(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQMAPDOMRESTO)-> EvalMapDomResTo(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQEQ         )-> EvalEq(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQDIV        )-> EvalDiv(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQDIFFERENCE )-> EvalDifference(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQCONC       )-> EvalConc(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQLE         )-> EvalLE(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQDIVIDE     )-> EvalDivide(l_v,r_v,expr),
+  (OmlBinaryOperatorQuotes`IQNE         )-> EvalNE(l_v,r_v,expr)
+end;
+
+EvalGE: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalGE(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`BOOL(l_v.v >= r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true)); 
+
+EvalModify: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalModify(l_v,r_v,expr) ==
+  if not is_SEM`MAP(r_v)
+  then (errorLog.ReportError(expr,RTERR`MAP_EXPECTED);
+        return mk_SEM`NUM(1))
+  elseif is_SEM`MAP(l_v)
+  then EvalMapOverrideExpr(l_v, r_v)
+  elseif is_SEM`SEQ(l_v)
+  then EvalSeqModifyExpr(l_v, r_v, expr)
+  else (errorLog.ReportError(expr,RTERR`MAP_OR_SEQ_EXPECTED);
+        return mk_SEM`NUM(1));
+
+EvalMapOverrideExpr: SEM`MAP * SEM`MAP ==> SEM`VAL
+EvalMapOverrideExpr(l_v,r_v) ==
+  return mk_SEM`MAP(l_v.v ++ r_v.v);
+  
+EvalSeqModifyExpr: SEM`SEQ * SEM`MAP * IOmlBinaryExpression ==> SEM`VAL
+EvalSeqModifyExpr(l_v,r_v,expr) ==
+( dcl res_lv : seq of SEM`VAL := l_v.v;
+  let mk_SEM`MAP(m) = r_v in
+  ( for all d_v in set dom m do 
+      let r_v = m(d_v) 
+      in
+        if is_SEM`NUM(d_v)
+        then let mk_SEM`NUM(d) = d_v in
+               if (d >= 1 and d <= len res_lv and is_nat1(d)) 
+               then let maplet : map nat1 to SEM`VAL = { d |-> r_v }
+                    in
+                      res_lv := res_lv ++ maplet
+               else (errorLog.ReportError(expr,RTERR`ILLEGAL_INDICES);
+                     return mk_SEM`NUM(1))
+        else (errorLog.ReportError(expr,RTERR`INT_EXPECTED);
+              return mk_SEM`NUM(1));
+    return mk_SEM`SEQ(res_lv)
+  )
+);
+  
+EvalLT: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalLT(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`BOOL(l_v.v < r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalPSubset: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalPSubset(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`BOOL(l_v.v psubset r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalMod: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMod(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v mod r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(0));
+
+EvalDomResBy: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalDomResBy(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`MAP(r_v)
+  then return mk_SEM`MAP(l_v.v <-: r_v.v)
+  elseif not is_SEM`SET(l_v)
+  then (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`MAP({|->}))
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalInter: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalInter(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`SET(l_v.v inter r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalComp: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalComp(l_v,r_v,expr) ==
+  error;
+
+EvalMinus: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMinus(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v - r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(0));
+
+EvalRem: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalRem(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v rem r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(0));
+
+EvalAnd: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalAnd(l_v,r_v,expr) ==
+  if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
+  then return mk_SEM`BOOL(l_v.v and r_v.v)
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalUnion: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalUnion(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`SET(l_v.v union r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalInSet: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalInSet(l_v,r_v,expr) ==
+  if is_SEM`SET(r_v)
+  then return mk_SEM`BOOL(l_v in set r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalEquiv: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalEquiv(l_v,r_v,expr) ==
+  if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
+  then return mk_SEM`BOOL(l_v = r_v)
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalMapRngResTo: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMapRngResTo(l_v,r_v,expr) ==
+  if is_SEM`MAP(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`MAP(l_v.v :> r_v.v)
+  elseif is_SEM`MAP(l_v)
+  then (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}))
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalIterate: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalIterate(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then let mk_SEM`NUM(n1) = l_v,
+           mk_SEM`NUM(n2) = r_v
+       in
+         return mk_SEM`NUM(n1 ** n2)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalSubset: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalSubset(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`BOOL(l_v.v subset r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalMapRngResBy: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMapRngResBy(l_v,r_v,expr) ==
+  if is_SEM`MAP(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`MAP(l_v.v :-> r_v.v)
+  elseif not is_SEM`MAP(l_v)
+  then (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}))
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalTupSel: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalTupSel(l_v,r_v,expr) ==
+  if is_SEM`TUPLE(l_v) and is_SEM`NUM(r_v) and
+     r_v.v in set inds l_v.v
+  then return l_v.v(r_v.v)
+  elseif not is_SEM`TUPLE(l_v)
+  then (errorLog.ReportError(expr, RTERR`TUPLE_EXPECTED); 
+        return mk_SEM`NUM(0))
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(0));
+
+EvalNotInSet: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalNotInSet(l_v,r_v,expr) ==
+  if is_SEM`SET(r_v)
+  then return mk_SEM`BOOL(l_v not in set r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`BOOL(false));
+
+EvalMult: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMult(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v * r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalImply: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalImply(l_v,r_v,expr) ==
+  if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
+  then return mk_SEM`BOOL(l_v.v => r_v.v)
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalOr: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalOr(l_v,r_v,expr) ==
+  if is_SEM`BOOL(l_v) and is_SEM`BOOL(r_v)
+  then return mk_SEM`BOOL(l_v.v or r_v.v)
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalGt: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalGt(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`BOOL(l_v.v > r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalPlus: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalPlus(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v + r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(0));
+
+EvalMUnion: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMUnion(l_v,r_v,expr) ==
+  if is_SEM`MAP(l_v) and is_SEM`MAP(r_v) and
+     let tmpLv : SEM`MAP = l_v,
+         tmpRv : SEM`MAP = r_v
+     in
+     let lv : map SEM`VAL to SEM`VAL = tmpLv.v,
+         rv : map SEM`VAL to SEM`VAL = tmpRv.v,
+         lvD: set of SEM`VAL = dom lv,
+         rvD: set of SEM`VAL = dom rv,
+          s = lvD inter rvD 
+     in
+       forall e in set s & lv(e) = rv(e)
+  then 
+     let tmpLv : SEM`MAP = l_v,
+         tmpRv : SEM`MAP = r_v
+     in
+     let lv : map SEM`VAL to SEM`VAL = tmpLv.v,
+         rv : map SEM`VAL to SEM`VAL = tmpRv.v
+    in
+      return mk_SEM`MAP(lv munion rv)
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalMapDomResTo: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalMapDomResTo(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`MAP(r_v)
+  then return mk_SEM`MAP(l_v.v <: r_v.v)
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalEq: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalEq(l_v,r_v,-) ==
+  return mk_SEM`BOOL(l_v = r_v);
+
+EvalDiv: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalDiv(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v div r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalDifference: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalDifference(l_v,r_v,expr) ==
+  if is_SEM`SET(l_v) and is_SEM`SET(r_v)
+  then return mk_SEM`SET(l_v.v \ r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalConc: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalConc(l_v,r_v,expr) ==
+  if is_SEM`SEQ(l_v) and is_SEM`SEQ(r_v)
+  then return mk_SEM`SEQ(l_v.v ^ r_v.v)
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
+        return mk_SEM`SEQ([]));
+
+EvalLE: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalLE(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`BOOL(l_v.v <= r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalDivide: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalDivide(l_v,r_v,expr) ==
+  if is_SEM`NUM(l_v) and is_SEM`NUM(r_v)
+  then return mk_SEM`NUM(l_v.v / r_v.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalNE: SEM`VAL * SEM`VAL * IOmlBinaryExpression ==> SEM`VAL
+EvalNE(l_v,r_v,-) ==
+  return mk_SEM`BOOL(l_v <> r_v);
+
+functions
+
+public evaluateUnary :
+  IOmlUnaryExpression * Context ->
+  SEM`VAL
+evaluateUnary(expr,cxt) ==
+  let exprarg = expr.getExpression(),
+      operat  = expr.getOperator()
+  in let v = evaluateExpression(exprarg,cxt),
+         op = operat.getValue()
+     in
+       UnOpApply(v,op,expr);
+
+operations
+
+UnOpApply: SEM`VAL * nat * IOmlUnaryExpression ==> SEM`VAL
+UnOpApply(val,op,expr) ==
+  cases op:
+    (OmlUnaryOperatorQuotes`IQABS    ) -> EvalAbs(val,expr),
+    (OmlUnaryOperatorQuotes`IQINVERSE) -> EvalInverse(val,expr),
+    (OmlUnaryOperatorQuotes`IQHD     ) -> EvalHd(val,expr),
+    (OmlUnaryOperatorQuotes`IQELEMS  ) -> EvalElems(val,expr),
+    (OmlUnaryOperatorQuotes`IQINDS   ) -> EvalInds(val,expr),
+    (OmlUnaryOperatorQuotes`IQTL     ) -> EvalTl(val,expr),
+    (OmlUnaryOperatorQuotes`IQCARD   ) -> EvalCard(val,expr),
+    (OmlUnaryOperatorQuotes`IQDUNION ) -> EvalDUnion(val,expr),
+    (OmlUnaryOperatorQuotes`IQPOWER  ) -> EvalPower(val,expr),
+    (OmlUnaryOperatorQuotes`IQLEN    ) -> EvalLen(val,expr),
+    (OmlUnaryOperatorQuotes`IQPLUS   ) -> EvalUPlus(val,expr),
+    (OmlUnaryOperatorQuotes`IQDOM    ) -> EvalDom(val,expr),
+    (OmlUnaryOperatorQuotes`IQDMERGE ) -> EvalMerge(val,expr),
+    (OmlUnaryOperatorQuotes`IQDINTER ) -> EvalDInter(val,expr),
+    (OmlUnaryOperatorQuotes`IQNOT    ) -> EvalNot(val,expr),
+    (OmlUnaryOperatorQuotes`IQMINUS  ) -> EvalUMinus(val,expr),
+    (OmlUnaryOperatorQuotes`IQRNG    ) -> EvalRng(val,expr),
+    (OmlUnaryOperatorQuotes`IQFLOOR  ) -> EvalFloor(val,expr),
+    (OmlUnaryOperatorQuotes`IQDCONC  ) -> EvalDConc(val,expr),
+    others -> error
+  end;
+
+EvalAbs: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalAbs(val,expr) ==
+  if is_SEM`NUM(val)
+  then return mk_SEM`NUM(abs val.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalInverse: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalInverse(val,expr) ==
+  if is_SEM`MAP(val)
+  then 
+    let tmp : SEM`MAP = val
+    in 
+      return mk_SEM`MAP(inverse tmp.v)
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalHd: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalHd(val,expr) ==
+  if is_SEM`SEQ(val) and val.v <> []
+  then return hd val.v
+  elseif is_SEM`SEQ(val)
+  then (errorLog.ReportError(expr, RTERR`NONEMPTY_SEQ_EXPECTED); 
+        return mk_SEM`NUM(1))
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalElems: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalElems(val,expr) ==
+  if is_SEM`SEQ(val)
+  then return mk_SEM`SET(elems val.v)
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalInds: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalInds(val,expr) ==
+  if is_SEM`SEQ(val)
+  then return mk_SEM`SET({mk_SEM`NUM(i) | i in set inds val.v})
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalTl: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalTl(val,expr) ==
+  if is_SEM`SEQ(val) and val.v <> []
+  then return mk_SEM`SEQ(tl val.v)
+  elseif is_SEM`SEQ(val)
+  then (errorLog.ReportError(expr, RTERR`NONEMPTY_SEQ_EXPECTED); 
+        return mk_SEM`NUM(1))
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalCard: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalCard(val,expr) ==
+  if is_SEM`SET(val) 
+  then return mk_SEM`NUM(card val.v)
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`NUM(0));
+
+EvalDUnion: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalDUnion(val,expr) ==
+  if is_SEM`SET(val) and forall s in set val.v & is_SEM`SET(s) 
+  then return mk_SEM`SET(dunion {s.v | s in set val.v})
+  elseif is_SEM`SET(val)
+  then (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`NUM(1))
+  else (errorLog.ReportError(expr, RTERR`ALL_SETS_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalPower: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalPower(val,expr) ==
+  if is_SEM`SET(val) 
+  then return mk_SEM`SET({mk_SEM`SET(s) | s in set power (val.v)})
+  else (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalLen: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalLen(val,expr) ==
+  if is_SEM`SEQ(val) 
+  then return mk_SEM`NUM(len val.v)
+  else (errorLog.ReportError(expr, RTERR`SEQ_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalUPlus: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalUPlus(val,expr) ==
+  if is_SEM`NUM(val) 
+  then return val
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalDom: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalDom(val,expr) ==
+  if is_SEM`MAP(val) 
+  then return mk_SEM`SET(dom val.v)
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalMerge: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalMerge(val,expr) ==
+  if is_SEM`SET(val) and forall m in set val.v & is_SEM`MAP(m) 
+  then return mk_SEM`MAP(merge {m.v | m in set val.v})
+  elseif is_SEM`SET(val)
+  then (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`MAP({|->}))
+  else (errorLog.ReportError(expr, RTERR`ALL_MAPS_EXPECTED); 
+        return mk_SEM`MAP({|->}));
+
+EvalDInter: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalDInter(val,expr) ==
+  if is_SEM`SET(val) and forall s in set val.v & is_SEM`SET(s) 
+  then return mk_SEM`SET(dinter {s.v | s in set val.v})
+  elseif is_SEM`SET(val)
+  then (errorLog.ReportError(expr, RTERR`SET_EXPECTED); 
+        return mk_SEM`SET({}))
+  else (errorLog.ReportError(expr, RTERR`ALL_SETS_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalNot: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalNot(val,expr) ==
+  if is_SEM`BOOL(val)
+  then return mk_SEM`BOOL(not val.v)
+  else (errorLog.ReportError(expr, RTERR`BOOL_EXPECTED); 
+        return mk_SEM`BOOL(true));
+
+EvalUMinus: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalUMinus(val,expr) ==
+  if is_SEM`NUM(val) 
+  then return mk_SEM`NUM(- val.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalRng: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalRng(val,expr) ==
+  if is_SEM`MAP(val) 
+  then return mk_SEM`SET(rng val.v)
+  else (errorLog.ReportError(expr, RTERR`MAP_EXPECTED); 
+        return mk_SEM`SET({}));
+
+EvalFloor: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalFloor(val,expr) ==
+  if is_SEM`NUM(val)
+  then return mk_SEM`NUM(floor val.v)
+  else (errorLog.ReportError(expr, RTERR`NUM_EXPECTED); 
+        return mk_SEM`NUM(1));
+
+EvalDConc: SEM`VAL * IOmlUnaryExpression ==> SEM`VAL
+EvalDConc(val,expr) ==
+  if is_SEM`SEQ(val) and forall s in set elems let tmp1 :SEM`SEQ =val in tmp1.v & is_SEM`SEQ(s) 
+  then let tmp : SEM`SEQ = val,
+           l : seq of SEM`SEQ = tmp.v
+       in
+         return mk_SEM`SEQ(conc [let tmp2 : SEM`SEQ = l(i)
+                          in tmp2.v | i in set inds l])
+  else (errorLog.ReportError(expr, RTERR`ALL_SEQS_EXPECTED); 
+        return mk_SEM`SEQ([]));
+
+
+operations
+
+public evaluateNewExpression : 
+  IOmlNewExpression * Context ==> 
+  SEM`VAL
+evaluateNewExpression(expr,cxt) == 
+  let clnm  = expr.getName(),
+      par_l = expr.getExpressionList(),
+      v_l   = [evaluateExpression(par_l(i),cxt) | i in set inds par_l]
+  in 
+    return mk_SEM`OBJ(clnm.getIdentifier(), v_l);
+
+public evaluateIfExpression : 
+  IOmlIfExpression * Context ==> 
+  SEM`VAL
+evaluateIfExpression(expr,cxt) == 
+  let testexpr   = expr.getIfExpression(),
+      thenexpr   = expr.getThenExpression(),
+      elseifexpr = expr.getElseifExpressionList(),
+      elseexpr   = expr.getElseExpression(),
+      testval    = evaluateExpression(testexpr,cxt)
+  in 
+    if not is_SEM`BOOL(testval)
+    then error
+    elseif testval = mk_SEM`BOOL(true)
+    then evaluateExpression(thenexpr,cxt)
+    elseif elseifexpr = []
+    then evaluateExpression(elseexpr,cxt)
+    else evaluateElseIfExpression(elseifexpr, elseexpr,cxt);
+
+public evaluateElseIfExpression:
+   seq1 of IOmlElseIfExpression * IOmlExpression * Context ==> SEM`VAL
+evaluateElseIfExpression(elseifexpr_l, elseexpr,cxt) ==
+  let first    = hd elseifexpr_l,
+      testexpr = first.getElseifExpression(),
+      thenexpr = first.getThenExpression(),
+      testval  = evaluateExpression(testexpr,cxt)
+  in
+    if not is_SEM`BOOL(testval)
+    then error
+    elseif testval = mk_SEM`BOOL(true)
+    then evaluateExpression(thenexpr,cxt)
+    elseif len elseifexpr_l = 1
+    then evaluateExpression(elseexpr,cxt)
+    else evaluateElseIfExpression(tl elseifexpr_l, elseexpr,cxt);
+
+
+public evaluateLetExpression : 
+  IOmlLetExpression * Context ==> 
+  SEM`VAL
+evaluateLetExpression(expr,cxt) == 
+  let def_l  = expr.getDefinitionList(),
+      inexpr = expr.getExpression(),
+      cxt2   = EvalDefList(def_l, cxt)
+  in 
+    evaluateExpression(inexpr,cxt2);
+
+EvalDefList: seq of IOmlValueShape * Context ==> Context
+EvalDefList(defi_l, cxt) ==
+  (dcl cxt2 : Context := cxt;
+   for defi in defi_l do
+     let pat  = defi.getPattern(),
+         expr = defi.getExpression(),
+         val  = evaluateExpression(expr,cxt2)
+     in
+       cxt2 := cxt2 ++ PatternMatch(pat,val);
+   return cxt2);
+
+public evaluateLetBeExpression : 
+  IOmlLetBeExpression * Context ==> 
+  SEM`VAL
+evaluateLetBeExpression(expr,cxt) == 
+  let bind    = expr.getBind(),
+      bestex  = if expr.hasBest() then expr.getBest() else nil,
+      inexpr  = expr.getExpression(),
+      bestval = if bestex = nil 
+                then mk_SEM`BOOL(true) 
+                else evaluateExpression(bestex,cxt),
+      cxt_l   = evalBind(bind,cxt)
+  in 
+    let cxt2 = hd cxt_l
+    in
+      evaluateExpression(inexpr,cxt ++ cxt2);
+
+public evaluateFieldSelect : 
+  IOmlFieldSelect * Context ==> 
+  SEM`VAL
+evaluateFieldSelect(expr,cxt) == 
+  let argexpr = expr.getExpression(),
+      name    = expr.getName(),
+      val     = evaluateExpression(argexpr,cxt),
+      id      = name.getIdentifier()
+  in 
+    if is_SEM`REC(val)
+    then specdefs.LookUpRecSel(val,id,expr)
+    elseif is_SEM`OBJ(val)
+    then let clnm  = val.nm,
+             cexpr = specdefs.LookUp(clnm,id)
+         in 
+           evaluateExpression(cexpr,cxt)
+    else error;
+
+public evaluateRecordConstructor : 
+  IOmlRecordConstructor * Context ==> 
+  SEM`VAL
+evaluateRecordConstructor(expr,cxt) ==
+  let name = expr.getName(),
+      e_l  = expr.getExpressionList(),
+      clnm = if name.hasClassIdentifier()
+             then name.getClassIdentifier()
+             else curcl,
+      id   = name.getIdentifier(),
+      v_l  = [evaluateExpression(e_l(i),cxt) | i in set inds e_l]
+  in
+    return mk_SEM`REC(mk_DEF`Name(clnm,id),v_l);
+
+public evaluateTupleConstructor : 
+  IOmlTupleConstructor * Context ==> 
+  SEM`VAL
+evaluateTupleConstructor(expr,cxt) ==
+  let e_l  = expr.getExpressionList(),
+      v_l  = [evaluateExpression(e_l(i),cxt) | i in set inds e_l]
+  in
+    return mk_SEM`TUPLE(v_l);
+
+public evaluateApplyExpression : 
+  IOmlApplyExpression * Context ==> 
+  SEM`VAL
+--evaluateApplyExpression(expr,cxt) == 
+--  let morl  = expr.getExpression(),
+--      arg_l = expr.getExpressionList(),
+--      val   = evaluateExpression(morl,cxt),
+--      a_l   = [evaluateExpression(arg_l(i),cxt) | i in set inds arg_l]
+--  in 
+--    if len a_l = 1
+--    then let arg = hd a_l,
+--             v   = val.v
+--         in
+--           if is_SEM`MAP(val) 
+--           then  if arg in set dom v
+--                 then let v2 : map SEM`VAL to SEM`VAL = v
+--                      in
+--                        return v2(arg)
+--                 else (errorLog.ReportError(expr, RTERR`ARG_NOT_IN_DOM); 
+--                      return mk_SEM`NUM(1))
+--           elseif is_SEM`SEQ(val)
+--           then if arg.v in set inds v
+--                then let v2 : seq of SEM`VAL = v
+--                     in
+--                       return v2(arg.v)
+--                else (errorLog.ReportError(expr, RTERR`ILLEGAL_INDICES); 
+--                      return mk_SEM`NUM(1))
+--           else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+--                 return mk_SEM`NUM(1))
+--    else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+--          return mk_SEM`NUM(1));
+
+evaluateApplyExpression(expr,cxt) == 
+  let morl  = expr.getExpression(),
+      arg_l = expr.getExpressionList(),
+      val   = evaluateExpression(morl,cxt),
+      a_l   = [evaluateExpression(arg_l(i),cxt) | i in set inds arg_l]
+  in 
+    if len a_l = 1
+    then let arg = hd a_l
+         in
+           if is_SEM`MAP(val) 
+           then let val2 : SEM`MAP = val,
+                    v = val2.v
+                in
+                  if arg in set dom v
+                  then let v2 : map SEM`VAL to SEM`VAL = v
+                       in
+                         return v2(arg)
+                  else (errorLog.ReportError(expr, RTERR`ARG_NOT_IN_DOM); 
+                        return mk_SEM`NUM(1))
+           elseif is_SEM`SEQ(val)
+           then let val2 : SEM`SEQ = val,
+                    v = val2.v
+                in
+                  if is_nat(arg.v)
+                  then let v2 : seq of SEM`VAL = v,
+                           v3 : nat = arg.v
+                       in
+                         if v3 in set inds v2
+                         then return v2(v3)
+                         else (errorLog.ReportError(expr, RTERR`ILLEGAL_INDICES); 
+                               return mk_SEM`NUM(1))
+                  else (errorLog.ReportError(expr, RTERR`ILLEGAL_INDICES); 
+                        return mk_SEM`NUM(1))
+           else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+                 return mk_SEM`NUM(1))
+    else (errorLog.ReportError(expr, RTERR`MAP_OR_SEQ_EXPECTED); 
+          return mk_SEM`NUM(1));
+
+public evaluateTokenExpression : 
+  IOmlTokenExpression * Context ==> 
+  SEM`VAL
+evaluateTokenExpression(texpr,cxt) == 
+  let expr  = texpr.getExpression(),
+      val   = evaluateExpression(expr,cxt)
+  in 
+    return mk_SEM`TOKEN(val);
+
+public evaluateMuExpression : 
+  IOmlMuExpression * Context ==> 
+  SEM`VAL
+evaluateMuExpression(expr,cxt) == 
+  let recexpr = expr.getExpression(),
+      modlist = expr.getModifierList(),
+      recval  = evaluateExpression(expr,cxt) 
+  in 
+    if is_SEM`REC(recval)
+    then return evaluateRecordModifier(recval,modlist,expr,cxt)
+    else (errorLog.ReportError(expr, RTERR`REC_EXPECTED); 
+          return mk_SEM`SEQ([]));
+
+public evaluateRecordModifier : 
+  SEM`REC * seq of IOmlRecordModifier * IOmlExpression * Context ==> 
+  SEM`REC
+evaluateRecordModifier(val,mod_l,expr,cxt) ==
+  (dcl rec : SEM`REC := val;
+   for m in mod_l do
+     let id   = m.getIdentifier(),
+         expr = m.getExpression(),
+         val  = evaluateExpression(expr,cxt)
+     in
+       rec := specdefs.UpdateRecVal(rec,id,val,expr);
+   return rec);
+
+public evaluateName :
+  IOmlName * Context ==>
+  SEM`VAL
+evaluateName(expr,cxt) ==
+  let nm = expr.getIdentifier()
+  in
+    if nm in set dom cxt
+    then return cxt(nm)
+    else let hascl = expr.hasClassIdentifier(),
+             clnm  = if hascl 
+                     then expr.getClassIdentifier() 
+                     else curcl,
+             expr2 = specdefs.LookUp(clnm,nm)
+         in
+           evaluateExpression(expr2,cxt);
+
+public getValueOfSymLit :
+  IOmlSymbolicLiteralExpression ==>
+  SEM`VAL
+getValueOfSymLit(expr) == 
+  let val = expr.getLiteral()
+  in return getValue(val);
+
+public getValue : IOmlLiteral ==> SEM`VAL
+getValue(lit) ==
+  cases true:
+    (isofclass(IOmlNumericLiteral,lit))
+     -> return getValueNumeric(lit),
+    (isofclass(IOmlRealLiteral,lit))
+     -> return getValueReal(lit),
+    (isofclass(IOmlBooleanLiteral,lit))
+     -> return getValueBoolean(lit),
+    (isofclass(IOmlCharacterLiteral,lit))
+     -> return getValueChar(lit),
+    (isofclass(IOmlTextLiteral,lit))
+     -> return getValueText(lit),
+    (isofclass(IOmlQuoteLiteral,lit))
+     -> return getValueQuote(lit),
+    (isofclass(IOmlNilLiteral,lit))
+     -> return getValueNil(lit),
+     others -> error
+  end;
+
+public getValueNumeric :
+  IOmlNumericLiteral ==>
+  SEM`NUM
+getValueNumeric(lit) ==
+  return mk_SEM`NUM(lit.getVal());
+
+public getValueReal :
+  IOmlRealLiteral ==>
+  SEM`NUM
+getValueReal(lit) ==
+  return mk_SEM`NUM(lit.getVal());
+
+public getValueBoolean :
+  IOmlBooleanLiteral ==>
+  SEM`BOOL
+getValueBoolean(lit) ==
+  return mk_SEM`BOOL(lit.getVal());
+
+public getValueChar :
+  IOmlCharacterLiteral ==>
+  SEM`CHAR
+getValueChar(lit) ==
+  return mk_SEM`CHAR(lit.getVal());
+
+public getValueText :
+  IOmlTextLiteral ==>
+  SEM`SEQ
+getValueText(lit) ==
+  let str = lit.getVal()
+  in
+    return mk_SEM`SEQ([mk_SEM`CHAR(str(i)) | i in set inds str]);
+
+public getValueQuote :
+  IOmlQuoteLiteral ==>
+  SEM`QUOTE
+getValueQuote(lit) ==
+  return mk_SEM`QUOTE(lit.getVal());
+
+public getValueNil :
+  IOmlNilLiteral ==>
+  SEM`NIL
+getValueNil(-) ==--lit
+  return mk_SEM`NIL();
+\end{vdm_al}
+
+\subsection{Evaluation of Patterns and Bindings}
+
+\begin{vdm_al}
+
+functions
+
+evalBindList: seq of IOmlBind * Context -> seq of Context
+evalBindList(b_l,cxt) ==
+  if b_l = []
+  then [{|->}]
+  else let c_l1 = evalBind(hd b_l,cxt),
+           c_l2 = evalBindList(tl b_l,cxt)
+       in
+         CombineContexts(c_l1,c_l2);
+
+operations
+
+evalBind: IOmlBind * Context ==> seq of Context
+evalBind(bind,cxt) ==
+  if isofclass(IOmlSetBind,bind)
+  then evalSetBind(bind,cxt)
+  else (errorLog.ReportError(bind, RTERR`TYPE_BIND_EVAL); 
+        return [{|->}]); 
+
+evalSetBind: IOmlSetBind * Context ==> seq of Context
+evalSetBind(bind,cxt) ==
+  let p_l   = bind.getPattern(),
+      s     = bind.getExpression(),
+      s_v   = evaluateExpression(s,cxt),
+      c_l_s = if is_SEM`SET(s_v)
+              then {[PatternMatch(p_l(i),v) | i in set inds p_l]
+                   | v in set s_v.v}
+              else {}
+  in
+    (if not is_SEM`SET(s_v)
+     then (errorLog.ReportError(bind, RTERR`TYPE_BIND_EVAL); 
+           return [{|->}])
+     else return VDMUtil`set2seq[Context]
+                         ({MergeContextList(c_l) | c_l in set c_l_s}));
+
+functions
+
+public CombineContexts: seq of Context * seq of Context -> 
+                 seq of Context
+CombineContexts(c_l1,c_l2) ==
+  Util`RemoveDublicates[Context](
+  conc [ [c_l1(j) ++ c_l2(i)
+         | j in set inds c_l1]
+       | i in set inds c_l2],{});
+
+public MergeContextList: seq1 of Context -> Context
+MergeContextList(cxt_l) ==
+  if len cxt_l = 1
+  then hd cxt_l
+  else hd cxt_l ++ MergeContextList(tl cxt_l)
+measure LenCList;
+
+LenCList: seq1 of Context -> nat
+LenCList(c_l) ==
+  len c_l;
+
+operations
+
+public PatternMatch: IOmlPattern * SEM`VAL ==> Context
+PatternMatch(pat,val) ==
+  if isofclass(IOmlPatternIdentifier,pat)
+  then return MatchPatternId(pat, val)
+  else error; -- pattern matching is not yet made
+
+functions
+  
+MatchPatternId: IOmlPatternIdentifier * SEM`VAL -> Context
+MatchPatternId(patid,val) ==
+  let id = patid.getIdentifier()
+  in
+    {id |-> val};
+
+end Eval
+\end{vdm_al}
+
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Eval]
+\end{rtinfo}

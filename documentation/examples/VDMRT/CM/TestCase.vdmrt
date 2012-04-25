@@ -1,0 +1,47 @@
+
+\begin{vdm_al}
+class TestCase
+  is subclass of Test
+
+instance variables
+  protected name : seq of char
+
+operations
+  public TestCase: seq of char ==> TestCase
+  TestCase(nm) == name := nm;
+
+  public GetName: () ==> seq of char
+  GetName () == return name;
+\end{vdm_al}
+\begin{vdm_al}
+  protected AssertTrue: bool ==> ()
+  AssertTrue (pb) == if not pb then exit <FAILURE>;
+
+  protected AssertFalse: bool ==> ()
+  AssertFalse (pb) == if pb then exit <FAILURE>;
+\end{vdm_al}
+
+\begin{vdm_al}
+  public Run: TestResult ==> ()
+  Run (ptr) ==
+    trap <FAILURE>
+      with 
+        ptr.AddFailure(self)
+      in
+        (SetUp();
+	 RunTest();
+	 TearDown());
+\end{vdm_al}
+
+\begin{vdm_al}
+  protected SetUp: () ==> ()
+  SetUp () == is subclass responsibility;
+
+  protected RunTest: () ==> ()
+  RunTest () == is subclass responsibility;
+
+  protected TearDown: () ==> ()
+  TearDown () == is subclass responsibility
+
+end TestCase
+\end{vdm_al}

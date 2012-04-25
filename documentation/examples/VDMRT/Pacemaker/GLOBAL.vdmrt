@@ -1,0 +1,86 @@
+\section{Global class}
+
+This is the common parent of the other classes where the shared knowledge 
+between all the objects as types definitions is defined.
+
+\begin{vdm_al}
+class GLOBAL
+
+types 
+
+\end{vdm_al}
+
+While poling the leads either a pulse is sensed or nothing, that is 
+modelled by the union type LeadSense.
+
+\begin{vdm_al}
+-- Sensed activity
+public
+Sense = <NONE> | <PULSE>;
+\end{vdm_al}
+
+These senses are associated to the chamber where they were produced and 
+again the uninon type is a good representation of it.
+
+\begin{vdm_al}
+-- Heart chamber identifier
+public 
+Chamber = <ATRIA> | <VENTRICLE>;
+\end{vdm_al}
+
+Diferently the output the accelerometer provides to the heart-controller
+is defined below consitently to the requirement analisys definition that 
+is a linear order and thus the choice of a subset of the natural numbers. 
+
+\begin{vdm_al}
+
+-- Accelerometer output
+public 
+ActivityData = nat1
+inv a == a <= 7;
+
+\end{vdm_al}
+
+The heart controller can actuate in two different manners: either do 
+nothing or discharge a pulse. The pulse was refined into two categories 
+to distinguish if the system outputed an totally artificial pulse or a 
+triggered response to sensing.
+
+\begin{vdm_al}
+-- Paced actvity
+public
+Pulse = <PULSE> | <TRI_PULSE>;
+\end{vdm_al}
+
+The operation modes are defined as a enumeration of the different
+quotes corresponding to each mode.
+
+\begin{vdm_al}
+-- Operation mode
+public 
+Mode = <OFF> | <AOO> | <AAI> | <AOOR> | <AAT> | <DOO> | <DDD>;
+
+\end{vdm_al}
+
+Pulses per minute is an instance of nat1
+
+\begin{vdm_al}
+-- PPM
+public 
+PPM = nat1
+inv ppm == ppm >= 30 and ppm <= 175;
+
+\end{vdm_al}
+
+And to promote readabillity Time is defined as nat type synonym. 
+
+\begin{vdm_al}
+-- Time
+public 
+Time = nat;
+    
+end GLOBAL
+\end{vdm_al}
+
+
+

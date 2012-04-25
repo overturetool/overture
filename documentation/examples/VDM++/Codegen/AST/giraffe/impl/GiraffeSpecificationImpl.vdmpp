@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 13:43:16 CET 2010
+--
+
+class GiraffeSpecificationImpl is subclass of GiraffeSpecification
+instance variables
+    private iv_clazz:GiraffeClassDefinition;
+
+operations
+    public GiraffeSpecificationImpl: GiraffeClassDefinition ==> GiraffeSpecificationImpl
+    GiraffeSpecificationImpl(p_clazz) ==
+    (
+        iv_clazz := p_clazz;
+    );
+
+    public getClazz: () ==> GiraffeClassDefinition
+    getClazz() == return iv_clazz;
+
+end GiraffeSpecificationImpl

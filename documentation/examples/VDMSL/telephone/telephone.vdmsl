@@ -1,0 +1,147 @@
+\section{The Formal Specification}
+\subsection{Types}
+\begin{vdm_al}
+module EXCH
+definitions
+ types
+   Subscriber = token;
+
+   Initiator =  <AI> | <WI> | <SI>;
+
+   Recipient = <WR> | <SR>;
+
+   Status = <fr> | <un> | Initiator | Recipient;
+\end{vdm_al}
+\subsection{The System State and Events} 
+
+\begin{vdm_al}
+ state Exchange of
+   status: map Subscriber to Status
+   calls:  inmap Subscriber to Subscriber
+ inv mk_Exchange(status, calls) == 
+    forall i in set dom calls & 
+       (status(i) = <WI> and status(calls(i)) = <WR>) 
+       or
+       (status(i) = <SI> and status(calls(i)) = <SR>)
+ end
+
+\end{vdm_al}
+
+This invariant formalizes the fact that, in this telephone exchange, telephone
+conversions are between two subscribers only (that is, we have no conference
+calls). Furthermore a call between two subscribers is established if the two
+are waiting in order to speak or both are speaking.
+
+
+In the following the possible events of the exchange are specified.
+\subsubsection{Lift}
+The event $Lift$ is caused by a free subscriber lifting his handset. He thus
+becomes an attempting initiator with status $AI$.
+
+\begin{vdm_al}
+
+operations
+
+  Lift(s: Subscriber)
+  ext wr status
+  pre s in set dom (status :> {<fr>})
+-- pre s in set dom status and status(s) = <fr>
+  post status = status~ ++ {s |-> <AI>};
+\end{vdm_al}
+\subsubsection{Connect}
+The event Connect is caused by a spontaneous activity of the exchange which,
+connects an attempting initiator to a free subscriber. This two subscribers
+become respectively a waiting initiator and a waiting recipient (whose 
+telephone starts to ring).
+\begin{vdm_al}
+  Connect(i: Subscriber, r: Subscriber)
+  ext wr status
+      wr calls
+  pre i in set dom (status :> {<AI>}) and
+      r in set dom (status :> {<fr>})
+  post status = status~ ++ {i |-> <WI>, r |-> <WR>} and
+       calls = calls~ ++ {i |-> r};
+\end{vdm_al}
+
+\subsubsection{MakeUn}
+The event MakeUn is also caused by a spontaneous activity of the exchange
+which decides to punish an attempting initiator who has seized a line for too
+long a period of time without succeeding in connecting to another subscriber.
+
+\begin{vdm_al}
+  MakeUn(i: Subscriber)
+  ext wr status
+  pre i in set dom (status :> {<AI>}) 
+  post status = status~ ++ {i |-> <un>};
+\end{vdm_al}
+
+\subsubsection{Answer}
+The event Answer is caused by a waiting recipient lifting his handset: he
+might do so because his telephone is ringing or, spontaneously, after he has
+temporarily suspended an already engaged telephone conversation.
+
+\begin{vdm_al}
+  Answer(r: Subscriber)    
+  ext rd calls
+      wr status
+  pre r in set dom (status :> {<WR>}) 
+  post status = status~ ++ {r |-> <SR>, (inverse calls)(r) |-> <SI>};  
+\end{vdm_al}
+
+\subsubsection{ClearAttempt, ClearWait, ClearSpeak}
+These events clears a telephone conversation and are  caused by an
+initiator who hangs up. 
+
+After all three events the initiator reenters the status $fr$. In the second
+and third cases, there exists a corresponding recipient who enters the status
+$fr$ (if he is waiting) or $un$ (if he is speaking).
+\begin{vdm_al}
+  ClearAttempt(i: Subscriber)
+  ext wr status
+  pre  i in set dom (status :> {<AI>}) 
+  post status = status~ ++ {i |-> <fr>};
+\end{vdm_al}
+
+
+\begin{vdm_al}
+  ClearWait(i: Subscriber)
+  ext wr status
+      wr calls
+  pre  i in set dom (status :> {<WI>}) 
+  post status = status~ ++ {i |-> <fr>, calls(i) |-> <fr>} and
+       calls =  {i} <-: calls~;
+\end{vdm_al}
+
+
+\begin{vdm_al}
+  ClearSpeak(i: Subscriber)
+  ext wr status
+      wr calls
+  pre  i in set dom (status :> {<SI>}) 
+  post status = status~ ++ {i |-> <fr>, calls(i) |-> <un>} and
+       calls =  {i} <-: calls~;
+\end{vdm_al}
+\subsubsection{Suspend}
+When a speaking recipient hangs up, the corresponding event is called Suspend
+because, the conversation is only suspended. In fact, both our recipient and
+his corresponding initiator enter a waiting status. As can be seen, we reach
+exactly the same situation as was the case after the Connect event, the only
+difference being that, this time, the recipient's telephone is not ringing. 
+\begin{vdm_al}
+  Suspend(r: Subscriber)
+  ext rd calls
+      wr status
+  pre r in set dom (status :> {<SR>}) 
+  post status = status~ ++ {r |-> <WR>, (inverse calls)(r) |-> <WI>};
+\end{vdm_al}
+\subsubsection{ClearUn}
+The last event to consider is the one by which an unavailable subscriber
+hangs up. The subscriber becomes free again.
+\begin{vdm_al}
+  ClearUn(s: Subscriber)
+  ext wr status
+  pre s in set dom (status :> {<un>})
+  post  status = status~ ++ {s |-> <fr>}
+
+end EXCH  
+\end{vdm_al}

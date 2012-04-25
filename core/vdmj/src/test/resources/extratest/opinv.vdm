@@ -1,0 +1,51 @@
+module A
+exports
+	types
+		struct State
+		
+	functions
+		pre_op: int * State +> bool;
+		post_op: int * int * State * State +> bool
+		
+	operations
+		op: int ==> int
+		
+definitions
+
+state State of
+	x:int
+end
+
+operations
+
+op(p:int) r:int
+	pre p < 10
+	post r + p < 10;
+
+end A
+
+------------------------------------------
+
+module B
+imports
+	from A
+		types
+			State
+			
+		functions
+			pre_op;
+			post_op
+		
+		operations
+			op: int ==> int
+		
+definitions
+operations
+
+op: () ==> int
+op() ==
+	if A`pre_op(1, mk_A`State(1))
+	then return A`op(1)
+	else return A`op(2);
+	
+end B

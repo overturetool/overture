@@ -1,0 +1,34 @@
+class HolNativeTypeIdentifier is subclass of HolTypeIdentifier
+
+instance variables
+
+operations
+
+public HolNativeTypeIdentifier : seq of char ==> HolNativeTypeIdentifier
+HolNativeTypeIdentifier(newName) ==	
+(
+	name := new HolIdentifier(newName);
+	type := nil
+);
+
+public HolNativeTypeIdentifier : HolIdentifier ==> HolNativeTypeIdentifier
+HolNativeTypeIdentifier(newId) ==
+(
+	name := newId;
+	type := nil
+);
+
+public setTypeInformation : HolTypeDescription ==> ()
+setTypeInformation (-) ==
+	skip;
+
+public requires : () ==> set of seq of char
+requires() == 
+	return {};
+
+public print : HolType`HolTypeSpecificationType ==> seq of char
+print (-) ==
+	return name.print();
+
+end HolNativeTypeIdentifier
+

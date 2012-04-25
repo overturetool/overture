@@ -1,0 +1,78 @@
+\section{Types}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Types
+-- Description: 	Defines simple types
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Types
+
+types   
+public Time = nat;
+public Direction = <NORTH> | <SOUTH> | <EAST> | <WEST>;
+
+public Event = VechicleRun | TrafficLightRun | VehicleUpdateSpeed 
+			   | VehicleUpdatePosition | VehicleUpdateDirection 
+			   | VehicleLowGrip | VehicleTurnIndication | WasteTime;
+
+public VechicleRun ::
+        ID : nat
+        t : Time; 
+        
+public TrafficLightRun ::
+        ID : nat
+        t : Time; 
+        
+public VehicleUpdateSpeed ::
+        ID : nat
+        speed : real
+        t : Time;     
+        
+public VehicleUpdatePosition ::
+		ID : nat
+   		posX : nat
+        posY : nat
+        t : Time;
+        
+public VehicleUpdateDirection ::
+		ID : nat
+		direction : Direction
+        t : Time;
+
+public VehicleLowGrip ::
+        ID : nat
+        lowGrip : bool
+        t : Time;
+
+public VehicleTurnIndication ::
+        ID : nat
+        turn : Vehicle`Indicator
+        t : Time;
+public WasteTime ::
+        t : Time;
+            
+functions
+  public static DirectionToString : Direction -> seq of char 
+  DirectionToString(d) ==
+  (
+  	cases d:
+  	<NORTH>-> "NORTH",
+  	<SOUTH>-> "SOUTH",
+  	<EAST>-> "EAST",
+  	<WEST>-> "WEST"
+  	end
+  );
+  
+  
+end Types
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Types]
+\end{rtinfo}

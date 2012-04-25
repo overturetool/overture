@@ -1,0 +1,9 @@
+class A
+
+operations
+
+async Op(a:nat)r: nat ==
+  return a
+pre a > 7
+
+end A

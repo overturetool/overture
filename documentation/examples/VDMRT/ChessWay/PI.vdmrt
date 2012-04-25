@@ -1,0 +1,47 @@
+class PI is subclass of DTControl
+
+instance variables
+
+-- design parameters
+protected k: real;
+protected tauI: real;
+
+-- variables
+protected uP: real;
+protected uI: real;
+
+operations
+
+-- constructor for PI
+public PI: real * real ==> PI
+PI(k_, tauI_) ==
+(
+    k := k_;
+	tauI := tauI_;
+	-- initial values
+	uP := 0;
+    uI := 0
+);
+
+-- default constructor for PI
+public PI: () ==> PI
+PI() ==
+    PI(DEF_K, DEF_TAUI);
+
+-- calculates output, based on the error
+public Output: real ==> real
+Output(err) == 
+(
+	dcl bi: real := k * sampletime / tauI;
+	uP := k * err;
+	uI := uI + bi* err;
+	return uP + uI;
+);
+
+values
+
+-- defaults
+DEF_K: real = 1;
+DEF_TAUI: real = 0.5;
+
+end PI

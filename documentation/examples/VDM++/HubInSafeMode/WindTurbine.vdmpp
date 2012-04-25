@@ -1,0 +1,34 @@
+class WindTurbine
+ instance variables
+ mHubController : HubController;
+ mMainShaftController : MainShaftController;
+ mOperatingPanel : OperatingPanel;
+
+ operations
+ public WindTurbine : seq of Enviroment`TestData ==> WindTurbine
+ WindTurbine(testData) ==
+ (
+  WindMeasurementController`CreateInstance([testData(i).Wind | i in set inds testData]);
+  mMainShaftController := new MainShaftController();
+  mHubController := new HubController([testData(i).EStop | i in set inds testData], 
+                                      mMainShaftController);
+  mOperatingPanel := new OperatingPanel( [testData(i).Cmds | i in set inds testData], 
+                                         mHubController );
+ );
+
+ public Run : () ==> ()
+ Run() ==
+  while(not WindMeasurementController`GetInstance().IsFinished())
+  do
+  (
+   mOperatingPanel.RunCmdInterface();
+   
+   mMainShaftController.Run();
+   mHubController.Run();
+
+   mOperatingPanel.RunDisplayInterface();
+      
+   WindMeasurementController`GetInstance().Run();
+  )
+
+end WindTurbine

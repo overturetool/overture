@@ -1,0 +1,73 @@
+--The Environment Class
+
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	Environment class of the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Environment
+
+--
+-- instance variables
+--
+instance variables
+
+private ha		: HA;
+private envTemp		: nat;
+private envHumid	: nat;
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public Environment: () ==> Environment
+	Environment() ==
+		(ha := new HA();
+		envTemp := 20;
+		envHumid := 85;
+		);
+
+public ReadTemp: () ==> nat
+	ReadTemp() ==
+		return envTemp;
+
+public IncTemp: () ==> ()
+	IncTemp() ==
+		envTemp := envTemp + 1;
+
+public DecTemp: () ==> ()
+	DecTemp() ==
+		envTemp := envTemp - 1;
+
+public SetTemp: nat ==> ()
+	SetTemp(t) ==
+		envTemp := t;
+
+public ReadHumid: () ==> nat
+	ReadHumid() ==
+		return envHumid;
+
+public IncHumid: () ==> ()
+	IncHumid() ==
+		envHumid := envHumid + 1;
+
+public DecHumid: () ==> ()
+	DecHumid() ==
+		envHumid := envHumid - 1;
+
+public SetHumid: nat ==> ()
+	SetHumid(h) ==
+		envHumid := h;
+
+end Environment

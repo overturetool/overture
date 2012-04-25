@@ -1,0 +1,70 @@
+\chapter{Overture Source status}
+\section{Component status}
+
+\subsection{Core}
+\begin{description}
+
+\item[ast] Scheduled for replacement
+\item[astgenerator] Scheduled for replacement
+\item[jmltrans] Carlos has taken an action to redevelop the initial JML transformation.
+\item[parser] Scheduled for replacement
+\item[potrans] Unknown
+\item[proofsupport] Unknown
+\item[showtrace] Stable, besides that unknown
+\item[stdlib] Has beem split up and now only a few VDM libraries it still located here.
+\item[traces] Stable contains CT for all dialects including filtering. 
+\item[umltrans] Stable for VDMPP and VDMRT. Only from VDM to UML. The other direction is incomplete do to upgrades for VDM to UML.
+\item[vdmj] Stable. New check for history counters, Delegation to Java added including a RemoteControl feature.
+\item[vdmjc] Unknown
+\item[vdmtools] Unknown
+\item[vdmunit] Unknown
+
+\end{description}
+
+\subsection{IDE}
+
+\subsubsection{Plug-ins}
+
+\begin{description}
+
+
+\item[Idedebughelper] discontinues.
+\item[Latex] Supports Latex document generation of a complete specification including coverage tables and colouring. Support is provided for all dialects: SL, PP and RT.
+
+\item[PO Viewer] Viewer/Generator of PO's for all dialects SL, PP and RT.
+\item[Proofsupport] Stable but not implemented to an extend where it is usable in the IDE. (To limited)
+\item[Showtrace / Real Time Log viewer] Viewer of RT log files. Stable but has an performance issue with large files. Navigation buttons also needs some work, it is not clear where they are located.
+\item[Traces / Combinatorial Testing] Implemented for all dialects SL, PP and RT. Stable for now but needs to be redeveloped because of they way it evaluates traces using the internal IDE AST. Error null is currently being printed in the console when an evaluation is impossible because of a AST out of state.
+\item[Umltrans] Implementation is stable for the PP and RT except the system class.
+\end{description}
+
+\subsubsection{IDE}
+\begin{description}
+\item[ast] Stable, scheduled to be moved to \textit{org.overutre.ide.core}
+\item[builders/core]
+\item[builders/vdmj]
+\item[debug/core]
+\item[debug/launching] Stable, VM arguments updated to a set of arguments can be parsed to the debuggibg VM.
+
+\item[parsers/vdmj]
+\item[platform]
+
+\item[ui]
+\item[utility]Stable, scheduled to be moved to \textit{org.overutre.ide.core}
+\item[vdmpp/core]
+\item[vdmpp/ui]
+\item[vdmpp/debug/core]
+\item[vdmpp/debug/ui]
+
+\item[vdmrt/core]
+\item[vdmrt/ui]
+\item[vdmrt/debug/core]
+\item[vdmrt/debug/ui]
+
+\item[vdmsl/core]
+\item[vdmsl/ui]
+\item[vdmsl/debug/core]
+\item[vdmsl/debug/ui]
+
+\end{description}
+

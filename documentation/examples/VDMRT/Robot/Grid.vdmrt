@@ -1,0 +1,80 @@
+class Grid
+ 
+types
+public PointAvalibility = <Free> | <Occupied> | <Unknown>;
+public Point ::
+      X: int
+      Y: int
+ 
+instance variables
+public points: map Point to PointAvalibility := {|->};
+ 
+private maxPoint: Point := mk_Point(10E6,10E6);
+ 
+inv forall p in set dom points & IsValidGridPoint(p) 
+--& exists pa in set rng points & points(p)=pa;
+ 
+operations
+ 
+ public Grid : Point * Point ==> Grid
+ Grid(startPoint,p) ==
+ (
+   points := { startPoint |-> <Free>};
+   maxPoint := p;
+ )
+ pre IsValidGridPoint(startPoint) and IsValidGridPoint(p);
+ 
+ public GetPointAvalibility : int * int ==> PointAvalibility
+ GetPointAvalibility(x, y) ==
+   if mk_Point(x,y) in set dom points
+     then                       
+        return(points(mk_Point(x,y)))
+     else
+       return <Unknown>
+ 
+  pre IsValidGridPoint(mk_Point(x,y));
+ 
+ public SetPointMP : map Point to PointAvalibility ==> ()
+ SetPointMP(mapping) ==
+   points := points ++ mapping
+ pre forall p in set dom mapping & IsValidGridPoint(p);
+ 
+ 
+ public IsValidGridPoint : Point ==> bool
+ IsValidGridPoint(p)==
+   return maxPoint.X >= p.X and p.X >= 0 and maxPoint.Y >= p.Y and p.Y >=0
+   
+end Grid
+
+
+class GridTest is subclass of TestCase
+values
+ sta : Grid`Point = mk_Grid`Point(0,0);
+ max : Grid`Point = mk_Grid`Point(100,100);
+ 
+operations
+
+ public GridTest : seq of char ==> GridTest
+ GridTest(name) == TestCase(name);
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () ==
+    (
+      dcl tc : Grid := new Grid(sta,max);
+       AssertTrue(tc.GetPointAvalibility(sta.X, sta.Y) = <Free>);
+       AssertFalse(tc.IsValidGridPoint(mk_Grid`Point(-999999,-999999)));
+       AssertFalse(tc.IsValidGridPoint(mk_Grid`Point(999999,999999)));
+       AssertTrue( tc.IsValidGridPoint(mk_Grid`Point (4,1)));
+       AssertTrue(<Unknown> = tc.GetPointAvalibility(4,1));
+       AssertTrue(<Unknown> = tc.GetPointAvalibility(4,2));
+       AssertTrue(<Unknown> = tc.GetPointAvalibility(4,3));
+       AssertTrue(<Unknown> = tc.GetPointAvalibility(5,4));
+   );
+    
+  
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end GridTest

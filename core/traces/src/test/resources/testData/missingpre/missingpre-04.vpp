@@ -1,0 +1,48 @@
+class Stack
+
+  instance variables
+    stack : seq of set of int := [];
+    inv len stack < 3;
+
+  operations
+
+    public
+    Reset : () ==> ()
+    Reset () ==
+      stack := [];
+
+    public
+    Pop : () ==> set of int
+    Pop() ==
+      def res = hd stack in
+        (stack := tl stack;
+         return res)
+--    pre stack <> []
+    post stack~ = stack ^ [RESULT];
+
+    public Push: set of int ==> ()
+    Push(elem) ==
+      if elem = {}
+      then error
+      else stack := stack ^[elem];
+
+    public
+    Top : () ==> set of int
+    Top() ==
+      return (hd stack);
+
+ 
+end Stack
+class UseStack
+
+instance variables
+
+  s : Stack := new Stack();
+
+traces
+
+  PushBeforePop : let x = {i | i in set {3,2,3,7,5} & mk_(i,i).#1 mod 2 <> 0}
+                  in
+                    s.Push(x){2,4}; s.Pop(){1,3}; s.Top()
+ 
+end UseStack

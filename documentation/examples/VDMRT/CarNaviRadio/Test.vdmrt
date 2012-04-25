@@ -1,0 +1,21 @@
+class Test
+
+instance variables
+
+mmi   : MMI        := new MMI();
+radio : Radio      := new Radio();
+nav   : Navigation := new Navigation();
+
+traces
+
+TT: let x in set {1,2,3}
+    in
+      ((mmi.HandleKeyPress(x,x) | 
+       mmi.UpdateScreen(x,x) | 
+       radio.AdjustVolume(x) |
+       radio.HandleTMC(x) |
+       nav.DatabaseLookup(x) |
+       nav.DecodeTMC(x));
+       EnvironmentTask`IsFinished())
+ 
+end Test

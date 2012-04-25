@@ -1,0 +1,8 @@
+class AltExt
+  is subclass of Base
+
+values
+  package = "nl.marcelverhoef.altext";
+  javadir = "d:\\workspace\\test\\src"
+
+end AltExt

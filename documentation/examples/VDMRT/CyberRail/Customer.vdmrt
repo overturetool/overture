@@ -1,0 +1,111 @@
+\section{Customer}
+
+\begin{vdm_al}
+class Customer is subclass of Environment
+
+instance variables
+  public static tokenDevices : map nat to TokenDevice := {|->};
+private cyberrail : CyberRail;
+
+operations
+
+public Customer : seq of char ==> Customer
+Customer(fname) ==
+(
+	def mk_ (-,input) = io.freadval[seq of inline](fname) in
+		inlines := input;
+		
+	outfileName := "Results for " ^ fname
+);
+
+public Customer : () ==> Customer
+Customer()==(
+	tokenDevices :=  {0|-> new TokenDevice(0)};
+);
+
+public addCyberRail : CyberRail ==> ()
+addCyberRail (cr) == cyberrail := cr;
+
+public addTokenDevice : TokenDevice ==> ()
+addTokenDevice(td) ==
+	--tokenDevices := td;
+	tokenDevices := tokenDevices munion { td.getTokenId() |-> td};
+
+	public isFinished : () ==> ()
+		isFinished () == skip;
+
+	public test : () ==> map nat to TokenDevice
+	test () == return tokenDevices;
+
+
+  public stimulate : () ==> ()
+  stimulate() ==
+  (
+		duration(1) (
+	
+		if len inlines > 0
+		then( 
+				dcl curtime : nat := time,
+				done : bool := false; 
+				(
+				while not done do(
+					def mk_(nav,tid,route_id,t) = hd inlines in
+						if (t < time)
+						then ( 
+							if ( route_id = nil )
+							then tokenDevices(tid).requestTransportPlan(nav)
+							else cyberrail.addToStimuliQueue(
+							        mk_MessageTypes`INACTIVEROUTE(route_id));
+								
+							reduceInline();
+							done := len inlines = 0;
+						)
+						else(
+							done :=  true;
+						)	
+					)
+				);
+			)
+			else(
+				busy := false;
+				)
+	);
+  );
+
+private isDone : () ==> ()
+isDone() == skip;	
+
+private reduceInline : () ==> ()
+reduceInline () == 
+(if(len inlines > 0) then
+	inlines := tl inlines;
+)
+pre len inlines > 0;
+
+inputStimuli : () ==> ()
+inputStimuli() == 
+	(
+		duration(1) (
+		if len inlines > 0
+		then (
+			stimulate()
+			)
+		else (
+				busy := false;
+		);
+	);
+);
+
+thread
+periodic(2000E6,100,1900,0) (inputStimuli);
+
+
+sync
+mutex(addTokenDevice);
+mutex(stimulate);
+mutex(reduceInline);
+per isFinished => not busy; --Ensure interleaving in World
+
+end Customer
+
+\end{vdm_al}

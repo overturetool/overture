@@ -1,0 +1,1207 @@
+class TC is subclass of TestCase
+
+operations
+public TC: () ==> TC
+TC() == TestCase("TC");
+
+protected SetUp: () ==> ()
+ SetUp () == skip;
+
+public test_expanderror_expanderror_01: () ==> ()
+test_expanderror_expanderror_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_expanderror_expanderror_01().getSpecifications(), 
+                           "expanderror-01.vpp") = {|->})
+);
+
+public test_expanderror_expanderror_02: () ==> ()
+test_expanderror_expanderror_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_expanderror_expanderror_02().getSpecifications(), 
+                           "expanderror-02.vpp") = {|->})
+);
+
+public test_logical_logical_01: () ==> ()
+test_logical_logical_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_logical_logical_01().getSpecifications(), 
+                           "logical-01.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if ( true => false ) and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), -7, 8.7} then 78-65 div 2 else 66+11)", "s.Push(if (( true <=> true ) and 5<>8) or  false  then 8/4 else 1234)"]})
+);
+
+public test_logical_logical_02: () ==> ()
+test_logical_logical_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_logical_logical_02().getSpecifications(), 
+                           "logical-02.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x42  =77  in s.Push(x42)", "let x42  =77  in s.Push(x42)", "let x43  =2  in s.Push(x43)"]})
+);
+
+public test_numminus_numminus_01: () ==> ()
+test_numminus_numminus_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_numminus_numminus_01().getSpecifications(), 
+                           "numminus-01.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_setinter_setinter_01: () ==> ()
+test_setinter_setinter_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_setinter_setinter_01().getSpecifications(), 
+                           "setinter-01.vpp") = {"UseTree|T2|1" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|2" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|3" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|4" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|5" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|14" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|13" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|12" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|7" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T1|3" |-> ["t1.addRoot(8)", "let x  =6  in t1.insertNode(x)"], "UseTree|T2|11" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|6" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T1|4" |-> ["t1.addRoot(8)", "let x  =9  in t1.insertNode(x)"], "UseTree|T2|10" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|9" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T2|8" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)", "let x  =5  in t1.insertNode(x-(x div 2))", "let x  =5  in t1.insertNode(x-(x div 2))"], "UseTree|T1|1" |-> ["t1.addRoot(8)", "let x  =1  in t1.insertNode(x)"], "UseTree|T1|2" |-> ["t1.addRoot(8)", "let x  =3  in t1.insertNode(x)"]})
+);
+
+public test_setunion_setunion_01: () ==> ()
+test_setunion_setunion_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_setunion_setunion_01().getSpecifications(), 
+                           "setunion-01.vpp") = {"UseTree|T2|1" |-> ["t2.addRoot(8)", "let x  =1  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|2" |-> ["t2.addRoot(8)", "let x  =4  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|3" |-> ["t2.addRoot(8)", "let x  =5  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|4" |-> ["t2.addRoot(8)", "let x  =5.1  in t1.insertNode(x-(x rem 2))"], "UseTree|T2|5" |-> ["t2.addRoot(8)", "let x  =1  in t2.insertNode(x*x)"], "UseTree|T2|7" |-> ["t2.addRoot(8)", "let x  =5  in t2.insertNode(x*x)"], "UseTree|T2|6" |-> ["t2.addRoot(8)", "let x  =4  in t2.insertNode(x*x)"], "UseTree|T2|9" |-> ["t2.addRoot(8)", "t1.leftBranch()"], "UseTree|T2|8" |-> ["t2.addRoot(8)", "let x  =5.1  in t2.insertNode(x*x)"]})
+);
+
+public test_ifthen_ifthen_01: () ==> ()
+test_ifthen_ifthen_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_01().getSpecifications(), 
+                           "ifthen-01.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =46  in s.Push(x)", "let x  =46  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_ifthen_ifthen_02: () ==> ()
+test_ifthen_ifthen_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_02().getSpecifications(), 
+                           "ifthen-02.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 else 66+11)"]})
+);
+
+public test_ifthen_ifthen_03: () ==> ()
+test_ifthen_ifthen_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_03().getSpecifications(), 
+                           "ifthen-03.vpp") = {"UseStack|PushBeforePop|8" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)", "s.Push(if  true  and  nil  in set {7, 'c', <Q>,  nil , mk_token(8), 8.7} then 78-65 div 2 elseif 99.8 in set {<RR>, 88, 7} then 77 mod 2 else 66+11)"]})
+);
+
+public test_ifthen_ifthen_04: () ==> ()
+test_ifthen_ifthen_04 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_04().getSpecifications(), 
+                           "ifthen-04.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =77  in s.Push(x)", "let x  =77  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_ifthen_ifthen_05: () ==> ()
+test_ifthen_ifthen_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_ifthen_ifthen_05().getSpecifications(), 
+                           "ifthen-05.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_letexpr_letexpr_01: () ==> ()
+test_letexpr_letexpr_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_letexpr_letexpr_01().getSpecifications(), 
+                           "letexpr-01.vpp") = {"UseStack|PushBeforePop|9" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|12" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|8" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|11" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|10" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_lookup_lookup_01: () ==> ()
+test_lookup_lookup_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_lookup_lookup_01().getSpecifications(), 
+                           "lookup-01.vpp") = {"UseStack|Test2Dir2|4" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|3" |-> ["let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|2" |-> ["let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|1" |-> [], "UseStack|Test2Dir2|8" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|7" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|6" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir|1" |-> ["s2.Reset()"], "UseStack|Test2Dir2|5" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir|2" |-> ["s2.Reset()", "let a  =1 , b  =2  in s.Push(a)", "let a  =1 , b  =2  in s2.Push(b)"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|9" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|13" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|12" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|11" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|10" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|15" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|14" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"]})
+);
+
+public test_lookup_lookup_02: () ==> ()
+test_lookup_lookup_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_lookup_lookup_02().getSpecifications(), 
+                           "lookup-02.vpp") = {"UseStack|Test2Dir2|4" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|3" |-> ["let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|2" |-> ["let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|1" |-> [], "UseStack|Test2Dir2|8" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|7" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|6" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir|1" |-> ["s2.Reset()"], "UseStack|Test2Dir2|5" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir|2" |-> ["s2.Reset()", "let a  =1 , b  =2  in s.Push(a)", "let a  =1 , b  =2  in s2.Push(b)"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|9" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"], "UseStack|Test2Dir2|13" |-> ["let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|12" |-> ["let z  =4  in s.Push(z)", "let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|11" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|10" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =4  in s.Push(z)"], "UseStack|Test2Dir2|15" |-> ["let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"], "UseStack|Test2Dir2|14" |-> ["let z  =4  in s.Push(z)", "let z  =5  in s.Push(z)", "let z  =5  in s.Push(z)"]})
+);
+
+public test_mapexpr_mapexpr_01: () ==> ()
+test_mapexpr_mapexpr_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_mapexpr_mapexpr_01().getSpecifications(), 
+                           "mapexpr-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  ={8|->7, 5|->9}  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_mapexpr_mapexpr_02: () ==> ()
+test_mapexpr_mapexpr_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_mapexpr_mapexpr_02().getSpecifications(), 
+                           "mapexpr-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  ={9|->5, 7|->8} , y  ={3, 5, 8, 9, 7} , z  ={9|->81, 7|->49, 8|->64, 5|->25, 3|->9}  in s.Push(z)", "s.Pop()"]})
+);
+
+public test_mapexpr_mapexpr_03: () ==> ()
+test_mapexpr_mapexpr_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_mapexpr_mapexpr_03().getSpecifications(), 
+                           "mapexpr-03.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(let x  ={7|->8, 9|->5} , y  =dom x union rng x union elems [3, 3] , z  ={e|->e**2|e  in set y}  in z)", "s.Pop()"]})
+);
+
+public test_newexpr_newexpr_01: () ==> ()
+test_newexpr_newexpr_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_newexpr_newexpr_01().getSpecifications(), 
+                           "newexpr-01.vpp") = {"UseOS|startok|2" |-> ["let p  =new Kerneld() , rl  =1  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =1  in os.bootSequenceList(rl)"], "UseOS|startok|3" |-> ["let p  =new Httpd() , rl  =2  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =2  in os.bootSequenceList(rl)"], "UseOS|startok|1" |-> ["let p  =new Httpd() , rl  =1  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =1  in os.bootSequenceList(rl)"], "UseOS|startok|6" |-> ["let p  =new Kerneld() , rl  =1  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =1  in os.bootSequence(rl)"], "UseOS|startok|7" |-> ["let p  =new Httpd() , rl  =2  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =2  in os.bootSequence(rl)"], "UseOS|startok|4" |-> ["let p  =new Kerneld() , rl  =2  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =2  in os.bootSequenceList(rl)"], "UseOS|startok|5" |-> ["let p  =new Httpd() , rl  =1  in os.addProcess(rl, p)", "let p  =new Httpd() , rl  =1  in os.bootSequence(rl)"], "UseOS|startok|8" |-> ["let p  =new Kerneld() , rl  =2  in os.addProcess(rl, p)", "let p  =new Kerneld() , rl  =2  in os.bootSequence(rl)"]})
+);
+
+public test_recordconstructor_recordconstructor_01: () ==> ()
+test_recordconstructor_recordconstructor_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_recordconstructor_recordconstructor_01().getSpecifications(), 
+                           "recordconstructor-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =mk_Stack`R(2)  in s.Push(x.a)", "s.Pop()"]})
+);
+
+public test_recordconstructor_recordconstructor_02: () ==> ()
+test_recordconstructor_recordconstructor_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_recordconstructor_recordconstructor_02().getSpecifications(), 
+                           "recordconstructor-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(mk_Stack`R(2).a)", "s.Pop()"]})
+);
+
+public test_recordconstructor_recordconstructor_03: () ==> ()
+test_recordconstructor_recordconstructor_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_recordconstructor_recordconstructor_03().getSpecifications(), 
+                           "recordconstructor-03.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =mk_UseStack`T(2)  in s.Push(x.a)", "s.Pop()"]})
+);
+
+public test_seqcomp_seqcomp_01: () ==> ()
+test_seqcomp_seqcomp_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_seqcomp_seqcomp_01().getSpecifications(), 
+                           "seqcomp-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =[2, 3, 4]  in s.Push(x(3))", "s.Pop()"]})
+);
+
+public test_seqcomp_seqcomp_02: () ==> ()
+test_seqcomp_seqcomp_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_seqcomp_seqcomp_02().getSpecifications(), 
+                           "seqcomp-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =[1, 2, 3, 4]  in s.Push(x(3))", "s.Pop()"]})
+);
+
+public test_setcomp_setcomp_01: () ==> ()
+test_setcomp_setcomp_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_setcomp_setcomp_01().getSpecifications(), 
+                           "setcomp-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  ={4, 3, 2}  in s.Push(let y  in set xy)", "s.Pop()"]})
+);
+
+public test_instvars_instvars_01: () ==> ()
+test_instvars_instvars_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_instvars_instvars_01().getSpecifications(), 
+                           "instvars-01.vpp") = {"UseStack|PushBeforePop|39" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|21" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|38" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|20" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|37" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|23" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|36" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|22" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|35" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|13" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|14" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|15" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|42" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|16" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|17" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|40" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|18" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|41" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|19" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|9" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|12" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|30" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|8" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|11" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|7" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|10" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|34" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|33" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|32" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|31" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|26" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|27" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|24" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|25" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "let x  =42  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|28" |-> ["s.Reset()", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "let x  =7  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|29" |-> ["s.Reset()", "let x  =42  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"]})
+);
+
+public test_missingpre_missingpre_01: () ==> ()
+test_missingpre_missingpre_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_01().getSpecifications(), 
+                           "missingpre-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["let x  =19  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  =73  in s.Push(x)", "s.Pop()", "s.Top()"]})
+);
+
+public test_missingpre_missingpre_02: () ==> ()
+test_missingpre_missingpre_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_02().getSpecifications(), 
+                           "missingpre-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["let x  ={}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|3" |-> ["let x  ={}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  ={}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"]})
+);
+
+public test_missingpre_missingpre_03: () ==> ()
+test_missingpre_missingpre_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_03().getSpecifications(), 
+                           "missingpre-03.vpp") = {"UseStack|PushBeforePop|9" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|8" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|7" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|6" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|1" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|5" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|4" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|3" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"]})
+);
+
+public test_missingpre_missingpre_04: () ==> ()
+test_missingpre_missingpre_04 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_missingpre_missingpre_04().getSpecifications(), 
+                           "missingpre-04.vpp") = {"UseStack|PushBeforePop|9" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|8" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|7" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|6" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|1" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|5" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|4" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|3" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"], "UseStack|PushBeforePop|2" |-> ["let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "let x  ={7, 5, 3}  in s.Push(x)", "s.Pop()", "s.Top()"]})
+);
+
+public test_simpletraces_simpletraces_01: () ==> ()
+test_simpletraces_simpletraces_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_simpletraces_simpletraces_01().getSpecifications(), 
+                           "simpletraces-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()"]})
+);
+
+public test_tracebind_tracebind_01: () ==> ()
+test_tracebind_tracebind_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_01().getSpecifications(), 
+                           "tracebind-01.vpp") = {"UseStack|DD|1" |-> ["let x  =3 , y  =4  in s.Push(y)"], "UseStack|PushBeforePop|6" |-> ["let x  =3 , y  =8  in s.Push(x+1)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|1" |-> ["let x  ='f' , y  =3  in s.Push(x+1)", "let x  ='f' , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|5" |-> ["let x  =3 , y  =3  in s.Push(x+1)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|4" |-> ["let x  =1 , y  =8  in s.Push(x+1)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|DD|4" |-> ["let x  =['k', 'k', 'k'] , y  =0  in s.Push(y)"], "UseStack|PushBeforePop|3" |-> ["let x  =1 , y  =3  in s.Push(x+1)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|DD|3" |-> ["let x  =3 , y  =0  in s.Push(y)"], "UseStack|PushBeforePop|2" |-> ["let x  ='f' , y  =8  in s.Push(x+1)", "let x  ='f' , y  =8  in s.Push(y)"], "UseStack|DD|2" |-> ["let x  =['k', 'k', 'k'] , y  =4  in s.Push(y)"]})
+);
+
+public test_tracebind_tracebind_02: () ==> ()
+test_tracebind_tracebind_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_02().getSpecifications(), 
+                           "tracebind-02.vpp") = {"UseStack|PushBeforePop|12" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|9" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|11" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|8" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|10" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =3 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|7" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|6" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|1" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|5" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =1 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|4" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|3" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|2" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =1 , y  =3  in s.Push(y)"], "UseStack|PushBeforePop|13" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|14" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|15" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"], "UseStack|PushBeforePop|16" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =3 , y  =8  in s.Push(y)"]})
+);
+
+public test_tracebind_tracebind_03: () ==> ()
+test_tracebind_tracebind_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_03().getSpecifications(), 
+                           "tracebind-03.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "let x  =28  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =28  in s.Push(x)"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "let x  =28  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =28  in s.Push(x)", "let x  =28  in s.Push(x)"]})
+);
+
+public test_tracebind_tracebind_04: () ==> ()
+test_tracebind_tracebind_04 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_04().getSpecifications(), 
+                           "tracebind-04.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "let x  =1  in s.Push(x)", "s.Pop()"]})
+);
+
+public test_tracebind_tracebind_05: () ==> ()
+test_tracebind_tracebind_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_05().getSpecifications(), 
+                           "tracebind-05.vpp") = {"W1Use|S1|1" |-> ["let i  =-1 , j  =-1  in t.op1(i*j)"], "W1Use|S1|5" |-> ["let i  =0 , j  =0  in t.op1(i*j)"], "W1Use|S1|4" |-> ["let i  =0 , j  =-1  in t.op1(i*j)"], "W1Use|S1|3" |-> ["let i  =-1 , j  =1  in t.op1(i*j)"], "W1Use|S1|2" |-> ["let i  =-1 , j  =0  in t.op1(i*j)"], "W1Use|S1|9" |-> ["let i  =1 , j  =1  in t.op1(i*j)"], "W1Use|S1|8" |-> ["let i  =1 , j  =0  in t.op1(i*j)"], "W1Use|S1|7" |-> ["let i  =1 , j  =-1  in t.op1(i*j)"], "W1Use|S1|6" |-> ["let i  =0 , j  =1  in t.op1(i*j)"]})
+);
+
+public test_tracebind_tracebind_06: () ==> ()
+test_tracebind_tracebind_06 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_06().getSpecifications(), 
+                           "tracebind-06.vpp") = {"UseQueue|S1|116" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|255" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|115" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|254" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|118" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|257" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|117" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|256" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|13" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|251" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|119" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|12" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|250" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|11" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|253" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|10" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|252" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|110" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|112" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|259" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|111" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|258" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|114" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|113" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|16" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|17" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|14" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|15" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|260" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|18" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|19" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|129" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|268" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|128" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|267" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|127" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|20" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|266" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|126" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|265" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|22" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|264" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|21" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|263" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|24" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|262" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|23" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|261" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|121" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|120" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|125" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|124" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|123" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|122" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|269" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|25" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|270" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|26" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|271" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|27" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|28" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|29" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|231" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|230" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|138" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|233" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|137" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|232" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|235" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|139" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|234" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|134" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|237" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|133" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|236" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|136" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|239" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|135" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|238" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|130" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|132" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|131" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|242" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|241" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|240" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|246" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|245" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|149" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|244" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|148" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|243" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|147" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|146" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|249" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|145" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|248" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|144" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|247" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|143" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|142" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|141" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|140" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|150" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|218" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|219" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|214" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|215" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|216" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|217" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|52" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|210" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|53" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|211" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|50" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|212" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|51" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|213" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|56" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|57" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|54" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|55" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|59" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|58" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|229" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|227" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|228" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|225" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|60" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|226" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|61" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|223" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|62" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|224" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|63" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|221" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|64" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|222" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|65" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|66" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|220" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|67" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|68" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|69" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|306" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|307" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|308" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|309" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|302" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|303" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|304" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|305" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|34" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|35" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|32" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|300" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|33" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|301" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|30" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|31" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|39" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|38" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|37" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|36" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|102" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|205" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|103" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|206" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|100" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|203" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|101" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|9" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|204" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|8" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|209" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|7" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|6" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|207" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|5" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|208" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|43" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|4" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|44" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|3" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|108" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|45" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|2" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|109" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|46" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|1" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|106" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|201" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|202" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|107" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|40" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|104" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|41" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|105" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|42" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|200" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|48" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|47" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|49" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|95" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|94" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|97" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|96" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|99" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|323" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|98" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|322" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|321" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|320" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|324" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|91" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|90" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|93" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|92" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|310" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|312" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|311" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|314" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|313" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|316" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|199" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|315" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|198" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|318" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|197" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|317" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|196" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|195" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|319" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|77" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|76" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|79" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|78" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|73" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|72" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|75" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|74" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|71" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|70" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|89" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|88" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|87" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|86" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|85" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|84" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|83" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|82" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|81" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|80" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|170" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|172" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|171" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|166" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|167" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|168" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|169" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|162" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|163" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|164" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|165" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|161" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|160" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|157" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|158" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|155" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|156" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|153" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|154" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|151" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|152" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|296" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|297" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|294" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|295" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|159" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|298" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|299" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|291" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|290" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|293" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|292" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|190" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|192" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|191" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|194" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|193" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|184" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|185" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|186" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|187" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|188" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|189" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|287" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|288" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|289" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|283" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|284" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|285" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|286" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|282" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|281" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|280" |-> ["let i  =1 , s  =[1]  in q.empty()", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.enQueue(i, s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)", "let i  =1 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|183" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|182" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|181" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|180" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|175" |-> ["let i  =2 , s  =[1, 2]  in q.empty()", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)", "let i  =2 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|176" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|173" |-> ["let i  =2 , s  =[]  in q.empty()", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.enQueue(i, s)", "let i  =2 , s  =[]  in q.deQueue(s)", "let i  =2 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|174" |-> ["let i  =2 , s  =[1, 2, 3]  in q.empty()", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =2 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|179" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|177" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|178" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|278" |-> ["let i  =1 , s  =[1, 2, 3]  in q.empty()", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =1 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|279" |-> ["let i  =1 , s  =[1, 2]  in q.empty()", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)", "let i  =1 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|276" |-> ["let i  =3 , s  =[1]  in q.empty()", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.enQueue(i, s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)", "let i  =3 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|277" |-> ["let i  =1 , s  =[]  in q.empty()", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.enQueue(i, s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)", "let i  =1 , s  =[]  in q.deQueue(s)"], "UseQueue|S1|274" |-> ["let i  =3 , s  =[1, 2, 3]  in q.empty()", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)", "let i  =3 , s  =[1, 2, 3]  in q.deQueue(s)"], "UseQueue|S1|275" |-> ["let i  =3 , s  =[1, 2]  in q.empty()", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.enQueue(i, s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)", "let i  =3 , s  =[1, 2]  in q.deQueue(s)"], "UseQueue|S1|272" |-> ["let i  =2 , s  =[1]  in q.empty()", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.enQueue(i, s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)", "let i  =2 , s  =[1]  in q.deQueue(s)"], "UseQueue|S1|273" |-> ["let i  =3 , s  =[]  in q.empty()", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.enQueue(i, s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)", "let i  =3 , s  =[]  in q.deQueue(s)"]})
+);
+
+public test_tracebind_tracebind_07: () ==> ()
+test_tracebind_tracebind_07 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebind_tracebind_07().getSpecifications(), 
+                           "tracebind-07.vpp") = {"UseStack|DD|1" |-> ["let x  =3 , y  =8  in s.Push(y)", "let x  =3 , y  =8  in s.Push(x)"], "UseStack|DD|2" |-> ["let x  =8 , y  =3  in s.Push(y)", "let x  =8 , y  =3  in s.Push(x)"]})
+);
+
+public test_tracebracket_tracebracket_01: () ==> ()
+test_tracebracket_tracebracket_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebracket_tracebracket_01().getSpecifications(), 
+                           "tracebracket-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["let x  =1 , y  =3  in s.Push(x)", "let x  =1 , y  =3  in let z  =6  in s.Push(y)", "let x  =1 , y  =3  in let z  =6  in s.Push(z)"], "UseStack|PushBeforePop|4" |-> ["let x  =3 , y  =8  in s.Push(x)", "let x  =3 , y  =8  in let z  =6  in s.Push(y)", "let x  =3 , y  =8  in let z  =6  in s.Push(z)"], "UseStack|PushBeforePop|3" |-> ["let x  =3 , y  =3  in s.Push(x)", "let x  =3 , y  =3  in let z  =6  in s.Push(y)", "let x  =3 , y  =3  in let z  =6  in s.Push(z)"], "UseStack|PushBeforePop|2" |-> ["let x  =1 , y  =8  in s.Push(x)", "let x  =1 , y  =8  in let z  =6  in s.Push(y)", "let x  =1 , y  =8  in let z  =6  in s.Push(z)"]})
+);
+
+public test_tracebracket_tracebracket_02: () ==> ()
+test_tracebracket_tracebracket_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracebracket_tracebracket_02().getSpecifications(), 
+                           "tracebracket-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Push(1)", "s.Pop()", "s.Push(2)", "s.Top()"]})
+);
+
+public test_tracechoice_tracechoice_01: () ==> ()
+test_tracechoice_tracechoice_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_01().getSpecifications(), 
+                           "tracechoice-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()"], "UseStack|PushBeforePop|2" |-> ["s.Push(6)"]})
+);
+
+public test_tracechoice_tracechoice_02: () ==> ()
+test_tracechoice_tracechoice_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_02().getSpecifications(), 
+                           "tracechoice-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()"], "UseStack|PushBeforePop|5" |-> ["s.Push(6)", "s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|4" |-> ["s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|3" |-> ["s.Push(6)"], "UseStack|PushBeforePop|2" |-> []})
+);
+
+public test_tracechoice_tracechoice_03: () ==> ()
+test_tracechoice_tracechoice_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_03().getSpecifications(), 
+                           "tracechoice-03.vpp") = {"CUP|InitBeforePlay|2" |-> ["gp.Win(<Norway>, <Morocco>)"], "CUP|InitBeforePlay|1" |-> ["gp.Win(<Brazil>, <Denmark>)"]})
+);
+
+public test_tracechoice_tracechoice_04: () ==> ()
+test_tracechoice_tracechoice_04 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracechoice_tracechoice_04().getSpecifications(), 
+                           "tracechoice-04.vpp") = {"UseTree|insertionBST|13" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|14" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|11" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|12" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|15" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|16" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.isEmpty()"], "UseTree|insertionBST|10" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|8" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|9" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.inorder()"], "UseTree|insertionBST|4" |-> ["let n  =2  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.breadth_first_search()"], "UseTree|insertionBST|5" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|6" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|7" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.depth_first_search()"], "UseTree|insertionBST|1" |-> ["let n  =1  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.breadth_first_search()"], "UseTree|insertionBST|2" |-> ["let n  =2  in t1.Insert(n)", "let n  =1  in t1.Insert(n)", "t1.breadth_first_search()"], "UseTree|insertionBST|3" |-> ["let n  =1  in t1.Insert(n)", "let n  =2  in t1.Insert(n)", "t1.breadth_first_search()"]})
+);
+
+public test_tracerepeat_tracerepeat_01: () ==> ()
+test_tracerepeat_tracerepeat_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_01().getSpecifications(), 
+                           "tracerepeat-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)"]})
+);
+
+public test_tracerepeat_tracerepeat_02: () ==> ()
+test_tracerepeat_tracerepeat_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_02().getSpecifications(), 
+                           "tracerepeat-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Push(6)", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()"]})
+);
+
+public test_tracerepeat_tracerepeat_03: () ==> ()
+test_tracerepeat_tracerepeat_03 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_03().getSpecifications(), 
+                           "tracerepeat-03.vpp") = {"UseStack|PushBeforePop|6" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)", "s.Pop()"], "UseStack|PushBeforePop|5" |-> ["s.Reset()", "s.Push(6)", "s.Pop()", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|4" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|3" |-> ["s.Reset()", "s.Push(6)", "s.Pop()", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "s.Push(6)", "s.Push(6)", "s.Pop()"]})
+);
+
+public test_tracerepeat_tracerepeat_04: () ==> ()
+test_tracerepeat_tracerepeat_04 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_04().getSpecifications(), 
+                           "tracerepeat-04.vpp") = {"UseStack|PushBeforePop|1" |-> [], "UseStack|PushBeforePop|3" |-> ["s.Push(6)", "s.Push(6)"], "UseStack|PushBeforePop|2" |-> ["s.Push(6)"]})
+);
+
+public test_tracerepeat_tracerepeat_05: () ==> ()
+test_tracerepeat_tracerepeat_05 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_05().getSpecifications(), 
+                           "tracerepeat-05.vpp") = {"UseStack|trace7|1" |-> ["let x  =1  in s.Push3(x)", "s.Pop()"], "UseStack|trace7|2" |-> ["let x  =2  in s.Push3(x)", "s.Pop()"], "UseStack|trace7|3" |-> ["let x  =3  in s.Push3(x)", "s.Pop()"], "UseStack|trace8|1" |-> ["let x  =1  in s.Push3(x)"], "UseStack|trace5|1" |-> ["s.Pop()"], "UseStack|trace3|2" |-> [], "UseStack|trace10|1" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)"], "UseStack|trace3|1" |-> ["s.Push3(1)"], "UseStack|trace4|1" |-> ["s.Push3(1)", "s.Push3(1)"], "UseStack|trace9|1" |-> ["s.Push3(2)"], "UseStack|trace1|1" |-> [], "UseStack|trace1|3" |-> ["s.Push3(1)", "s.Push3(1)"], "UseStack|trace9|2" |-> ["s.Push3(3)"], "UseStack|trace1|2" |-> ["s.Push3(1)"], "UseStack|trace13|1" |-> ["let x  =1  in var1.method(x)", "var2.meth2(10)"], "UseStack|trace13|2" |-> ["let x  =2  in var1.method(x)", "var2.meth2(10)"], "UseStack|trace1|4" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)"], "UseStack|trace12|1" |-> ["var.method(1)"], "UseStack|trace6|3" |-> ["let x  =5  in s.Push3(x)", "s.Pop()"], "UseStack|trace6|1" |-> ["let x  =1  in s.Push3(x)", "s.Pop()"], "UseStack|trace12|2" |-> ["var.method(1)", "var.method(1)"], "UseStack|trace6|2" |-> ["let x  =10  in s.Push3(x)", "s.Pop()"], "UseStack|trace2|3" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)"], "UseStack|trace2|1" |-> ["s.Push3(1)"], "UseStack|trace2|2" |-> ["s.Push3(1)", "s.Push3(1)"], "UseStack|trace5|3" |-> ["s.Push3(1)", "s.Push3(1)", "s.Pop()"], "UseStack|trace5|2" |-> ["s.Push3(1)", "s.Pop()"], "UseStack|trace11|1" |-> ["let x  =1  in var.method(x)"], "UseStack|trace5|5" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)", "s.Push3(1)", "s.Pop()"], "UseStack|trace5|4" |-> ["s.Push3(1)", "s.Push3(1)", "s.Push3(1)", "s.Pop()"]})
+);
+
+public test_tracerepeat_tracerepeat_06: () ==> ()
+test_tracerepeat_tracerepeat_06 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_06().getSpecifications(), 
+                           "tracerepeat-06.vpp") = {"UseA|trace1|14" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|13" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|12" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|1" |-> ["let x  =1  in obj.op(x)"], "UseA|trace1|2" |-> ["let x  =2  in obj.op(x)"], "UseA|trace1|5" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|6" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|3" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|4" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|10" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|9" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|11" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|7" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|8" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"]})
+);
+
+public test_tracerepeat_tracerepeat_07: () ==> ()
+test_tracerepeat_tracerepeat_07 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_07().getSpecifications(), 
+                           "tracerepeat-07.vpp") = {"UseA|trace1|14" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|13" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|12" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|1" |-> ["let x  =1  in obj.op(x)"], "UseA|trace1|2" |-> ["let x  =2  in obj.op(x)"], "UseA|trace1|5" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|6" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|3" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|4" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|10" |-> ["let x  =2  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|9" |-> ["let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|11" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =2  in obj.op(x)"], "UseA|trace1|7" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|8" |-> ["let x  =2  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"]})
+);
+
+public test_tracerepeat_tracerepeat_08: () ==> ()
+test_tracerepeat_tracerepeat_08 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_tracerepeat_tracerepeat_08().getSpecifications(), 
+                           "tracerepeat-08.vpp") = {"UseA|trace1|14" |-> ["let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|13" |-> ["let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|12" |-> ["let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|1" |-> ["let x  =1  in obj.op(x)"], "UseA|trace1|2" |-> ["let x  =4  in obj.op(x)"], "UseA|trace1|5" |-> ["let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|6" |-> ["let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|3" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|4" |-> ["let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|10" |-> ["let x  =4  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|9" |-> ["let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|11" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =4  in obj.op(x)"], "UseA|trace1|7" |-> ["let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"], "UseA|trace1|8" |-> ["let x  =4  in obj.op(x)", "let x  =1  in obj.op(x)", "let x  =1  in obj.op(x)"]})
+);
+
+public test_traceseq_traceseq_01: () ==> ()
+test_traceseq_traceseq_01 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_traceseq_traceseq_01().getSpecifications(), 
+                           "traceseq-01.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(6)"]})
+);
+
+public test_traceseq_traceseq_02: () ==> ()
+test_traceseq_traceseq_02 () ==
+(  let specTest : SpecTest = new SpecTest()
+  in
+   assertTrue(specTest.Run(TCTestData`test_traceseq_traceseq_02().getSpecifications(), 
+                           "traceseq-02.vpp") = {"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"]})
+);
+
+public runTest: ( TestResult ) ==> ()
+runTest (ptr) ==( 
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_expanderror_expanderror_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_expanderror_expanderror_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_expanderror_expanderror_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_expanderror_expanderror_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_logical_logical_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_logical_logical_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_logical_logical_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_logical_logical_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_numminus_numminus_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_numminus_numminus_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_setinter_setinter_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_setinter_setinter_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_setunion_setunion_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_setunion_setunion_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_ifthen_ifthen_05();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_ifthen_ifthen_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_letexpr_letexpr_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_letexpr_letexpr_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_lookup_lookup_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_lookup_lookup_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_lookup_lookup_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_lookup_lookup_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_mapexpr_mapexpr_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_mapexpr_mapexpr_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_mapexpr_mapexpr_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_mapexpr_mapexpr_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_newexpr_newexpr_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_newexpr_newexpr_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_recordconstructor_recordconstructor_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_recordconstructor_recordconstructor_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_recordconstructor_recordconstructor_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_recordconstructor_recordconstructor_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_seqcomp_seqcomp_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_seqcomp_seqcomp_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_seqcomp_seqcomp_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_seqcomp_seqcomp_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_setcomp_setcomp_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_setcomp_setcomp_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_instvars_instvars_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_instvars_instvars_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_missingpre_missingpre_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_missingpre_missingpre_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_simpletraces_simpletraces_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_simpletraces_simpletraces_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_05();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_06();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_06();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebind_tracebind_07();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebind_tracebind_07();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebracket_tracebracket_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracebracket_tracebracket_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracebracket_tracebracket_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracechoice_tracechoice_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracechoice_tracechoice_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_02();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_03();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_03();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_04();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_04();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_05();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_05();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_06();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_06();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_07();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_07();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_tracerepeat_tracerepeat_08();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_tracerepeat_tracerepeat_08();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_traceseq_traceseq_01();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_traceseq_traceseq_01();
+       );
+
+
+
+  -- execute the sub-tests
+  trap exc : Throwable
+  with
+    if isofclass(AssertionFailedError,exc)
+    then ptr.addFailure(self, exc,"test_traceseq_traceseq_02();")
+    else if isofbaseclass(Throwable, exc)
+         then ptr.addError(self, exc)
+         else error
+   in (
+        test_traceseq_traceseq_02();
+       );
+
+
+
+);
+
+protected TearDown: () ==> ()
+
+TearDown () == skip;
+
+end TC
+

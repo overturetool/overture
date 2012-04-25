@@ -1,0 +1,825 @@
+
+
+
+\begin{vdm_al}
+class Xml2UmlModel is subclass of XmlVisitor
+   
+types
+
+public String = seq of char;
+public QualifierInfo ::
+                       classId : String
+                       qualifier : String;
+                       
+values
+
+eaTypePrefixes : set of String = {
+"EAJava_", 
+"EAVisual Basic_", 
+"EAActionScript_", 
+"EAnone_", 
+"EAC_", 
+"EAVBNet_", 
+"EAC++_", 
+"EAPHP_", 
+"EAPython_", 
+"EAC#_"};
+
+
+instance variables
+
+public result : [IUmlModel] := nil;
+
+primiticeTypes    : set of String :={"char","int","bool","String","unlimitedNatural"};--,"NotSupportedType"
+classes           : set of IUmlClass                   := {};
+associations      : set of IUmlAssociation             := {};
+constraints       : set of IUmlConstraint              := {};
+classesTypeMap    : map String to String               := {|->};
+collaborations    : set of IUmlCollaboration           := {};
+
+idToclassesMap    : map String to IUmlClass            := {|->};
+idToOperationMap  : map String to IUmlOperation        := {|->};
+idToClallEventMap : map String to IUmlCallEvent        := {|->};
+
+lifeLineMap       : map String to IUmlLifeLine         := {|->};
+mosMap            : map String to IUmlMos              := {|->};
+besMap            : map String to IUmlBes              := {|->};
+combiMap          : map String to IUmlCombinedFragment := {|->};
+
+associationToQualifier 
+                  : map String to QualifierInfo        := {|->};
+
+log               : StatusLog                          := new StatusLog();
+operations
+
+public Xml2UmlModel : StatusLog ==> Xml2UmlModel
+Xml2UmlModel(l) == log := l;
+
+-- Create UML model form document
+-- If a valid document is passed the result variable
+--  will contain the result parsed document
+public VisitXmlDocument: XmlDocument ==> ()
+VisitXmlDocument (doc) == 
+(
+  dcl root : XmlEntity := hd doc.entities.entities;
+  dcl firstPackageAndRoot : seq of XmlEntity := root.entities.entities ^ [root]; --compatibility EX and EUML
+  dcl model : XmlEntity := hd [firstPackageAndRoot(i) 
+                              | i in set inds firstPackageAndRoot 
+                              & firstPackageAndRoot(i).name ="uml:Model"];
+                              
+  dcl extention : XmlEntity := hd [firstPackageAndRoot(i) 
+                                  | i in set inds firstPackageAndRoot 
+                                  & HasAttributeValue(firstPackageAndRoot(i),"extender","Enterprise Architect") 
+                                  and HasAttributeValue(firstPackageAndRoot(i),"extenderID","6.5") ];
+                                    
+  dcl package : XmlEntity := hd [model.entities.entities(i) 
+                                | i in set inds model.entities.entities 
+                                & IsAttributeType(model.entities.entities(i),"uml:Package")];
+  
+  let pes = package.entities.entities
+  in
+  (
+    classesTypeMap := classesTypeMap ++ {GetAttribute(pes(i),"xmi:id").val |-> GetNameAttribute(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Class") };
+    
+    classes := classes union {ExstractClass(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Class") and
+                   (GetNameAttribute(pes(i)) not in set primiticeTypes)};
+                   
+    let connectors : set of XmlEntity =
+                              dunion 
+                              { elems e.entities.entities 
+                              | e in set elems extention.entities.entities 
+                              & e.name = "connectors" }
+                              --GetElement(pes(i),"connectors") | i in set inds pes & 
+                              --HasAttributeValue(pes(i),"extender","Enterprise Architect") and
+                              --HasAttributeValue(pes(i),"extenderID","6.5") and 
+                              --GetElement(pes(i),"connectors") <> nil}
+                              in 
+                              for all v in set connectors
+                              do
+                                BuildAssociationQualifier(v);
+                   
+    associations := associations union 
+                    {BuildAssociation(pes(i)) 
+                    | i in set inds pes 
+                    & IsAttributeType(pes(i),"uml:Association") or
+                      IsAttributeType(pes(i),"uml:Connector")};
+                   
+    constraints := constraints union {BuildConstraint(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Constraint")};
+    -- requires operatios to be populated first               
+    idToClallEventMap := BuildCallEventMap({(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:CallEvent")});
+                   
+    collaborations := collaborations union {BuildCollobration(pes(i)) | i in set inds pes & 
+                   IsAttributeType(pes(i),"uml:Collaboration")};
+  );
+    
+  result := new UmlModel(GetNameAttribute(package),
+                         classes union associations union constraints union collaborations);
+
+);
+-- Exstract UML class from XML element
+private ExstractClass : XmlEntity ==> IUmlClass
+ExstractClass(e) ==
+  let name       : seq of char  = GetNameAttribute(e),
+      
+      dBlocks    : (set of IUmlDefinitionBlock) =BuildDefBlock(e,name),
+      abstract   : bool = if HasAttribute(e,"isAbstract") then StdLib`StringToBool(GetAttribute(e,"isAbstract").val) else false,
+      supers     : seq of IUmlClassNameType = let eg = e.entities.entities in
+        [ExstractGeneralization(eg(i)) 
+         | i in set inds eg  
+         & IsAttributeType(eg(i),"uml:Generalization")],
+      visibility : (IUmlVisibilityKind) = 
+        new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC), -- dont care VDM has only public
+      isStatic   : (bool) = false,
+      active     : (bool) = if HasAttribute(e,"isActive") 
+                            then let a = GetAttribute(e,"isActive") in 
+                                   if a <> nil 
+                                   then StdLib`StringToBool(a.val) 
+                                   else false
+                            else false,
+      template   : [IUmlTemplateSignature] = nil,
+      id         : String = GetAttribute(e,"xmi:id").val,
+      cls        : IUmlClass = 
+       new UmlClass(name,
+                 dBlocks,
+                 abstract,
+                 supers,
+                 visibility, 
+                 isStatic,
+                 active,
+                 template)
+  in
+  (
+    idToclassesMap := idToclassesMap ++ {id |-> cls};
+    log.addNewClassInfo(name,id);
+    return cls;
+  )    
+pre IsAttributeType(e,"uml:Class");
+
+-- Create super class references
+private ExstractGeneralization : XmlEntity ==> IUmlClassNameType
+ExstractGeneralization(e) ==
+  let super = GetAttribute(e,"general").val
+  --look up the class id in the class it to class map
+  in return new UmlClassNameType(classesTypeMap(super))
+pre IsAttributeType(e,"uml:Generalization");
+
+-- Create property definitions form XML property element
+-- Attribute type is property
+private BuildDefBlock : XmlEntity * String ==> (set of IUmlDefinitionBlock)
+BuildDefBlock(e,name) ==
+  let eList = e.entities.entities, 
+      props = { BuildProperty(eList(i),name,nil)| 
+            i in set inds eList & IsAttributeType(eList(i),"uml:Property")},
+      ops   = { BuildOperation(p)| 
+            p in set elems eList & IsAttributeType(p,"uml:Operation") or p.name = "ownedOperation"}
+  in
+    return {new UmlOwnedProperties(props)} union {new UmlOwnedOperations(ops)};
+           
+-- Create property from property element
+private BuildProperty : XmlEntity * String * [String] ==> IUmlProperty
+BuildProperty(e,ownerClass,associationId) ==
+  let name         : seq of char = if HasAttribute(e,"name")
+                                   then GetNameAttribute(e)
+                                   else "",
+      visibility   : (IUmlVisibilityKind) = if HasAttribute(e,"visibility") 
+                                            then GetVisibility(GetAttribute(e,"visibility")) 
+                                            else
+                                              new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPRIVATE), 
+      multiplicity : [IUmlMultiplicityElement] = GetMultiplicity(e),
+      typeId : String = GetTypeId(e),
+      type         : (IUmlType) = FindType(typeId),-- | i in set inds e.entities.entities & e.entities.entities(i).name = "type"}),
+      isReadOnly   : [bool] = if HasAttribute(e,"isReadOnly") 
+                                            then StdLib`StringToBool(GetAttribute(e,"isReadOnly").val) 
+                                            else false,
+      default      : [IUmlValueSpecification] = let dValue = { el 
+                                                             | el in set elems e.entities.entities 
+                                                             & el.name = "defaultValue"} 
+                                                in if card dValue > 0
+                                                   then GetDefaultValue(let d in set dValue in d)
+                                                   else nil,
+      isComposite  : (bool) = false,
+      isDerived    : [bool] = false,
+      isStatic     : [bool] = false, 
+      --ownerClass   : [seq of char] = ,
+      qualifier    : [IUmlType] = if associationId <> nil 
+                                     and associationId in set dom associationToQualifier
+                                     and associationToQualifier(associationId).classId = typeId
+                                  then 
+                                    let qInfo = associationToQualifier(associationId)
+                                    in FindType(qInfo.qualifier)
+                                  else 
+                                    nil 
+  in
+    return new UmlProperty(name,
+                    visibility,
+                    multiplicity,
+                    type,
+                    isReadOnly,
+                    default,
+                    isComposite,
+                    isDerived,
+                    isStatic,
+                    ownerClass,
+                    qualifier)
+pre IsAttributeType(e,"uml:Property");
+
+-- Get default value. Initial value
+private GetDefaultValue : XmlEntity ==> [IUmlValueSpecification]
+GetDefaultValue(e) ==
+let --eList = e.entities.entities,
+  --tmp  = --{GetAttribute(el,"value").val | el in set elems eList & el.name = "defaultValue"},
+  val  = GetAttribute(e,"value").val,--let t in set tmp in t,
+  --tmp1 = {GetAttribute(el,"xmi:type").val | el in set elems eList & el.name = "defaultValue"},
+  typ  = GetAttribute(e,"xmi:type").val --let t in set tmp1 in t
+in
+  return cases typ:
+   ("uml:LiteralString") -> new UmlLiteralString(val),
+   ("uml:LiteralInteger") -> new UmlLiteralInteger(StdLib`StringToInt(val)),
+   others -> nil
+  end
+pre e.name ="defaultValue";
+  
+-- Get multiplicity
+private GetMultiplicity : XmlEntity ==> [IUmlMultiplicityElement]
+GetMultiplicity(e) ==
+let eList = e.entities.entities,
+    lowerSet =  {GetAttribute(el,"value").val | el in set elems eList & el.name = "lowerValue" and HasAttribute(el,"value")},
+    upperSet =  {GetAttribute(el,"value").val | el in set elems eList & el.name = "upperValue" and HasAttribute(el,"value")}
+in
+  if card upperSet = 0 and card lowerSet = 0 then
+    return nil
+  else
+    let lower : nat = if card lowerSet = 0 then 0 else let p in set lowerSet in StdLib`StringToInt(p),
+        upVal : nat = let p in set upperSet in if p = "*" then -1 else StdLib`StringToInt(p),
+        upper : [nat] = if card upperSet = 0 or upVal < 0 then nil else upVal
+    in
+      return new UmlMultiplicityElement(false,false,lower,upper);
+
+
+-- Create operation from xml element element
+private BuildOperation : XmlEntity ==> IUmlOperation
+BuildOperation(e) ==
+  let name         : seq of char = GetNameAttribute(e),
+      visibility   : (IUmlVisibilityKind) = GetVisibility(GetAttribute(e,"visibility")), 
+      multiplicity : IUmlMultiplicityElement = new UmlMultiplicityElement(false,false,0,0), --FIXME this is added since the static model isend implemented with this yet
+      isQuery      : bool = if HasAttribute(e,"isQuery") then StdLib`StringToBool(GetAttribute(e,"isQuery").val) else false,
+      type         : [IUmlType] = nil,
+      isStatic     : bool = if HasAttribute(e,"isStatic") then StdLib`StringToBool(GetAttribute(e,"isStatic").val) else false,
+      id           : String = GetAttribute(e,"xmi:id").val,
+      params = CreateOperstionParameters(e),
+      parameters = if params = nil then nil else new UmlParameters(params),
+      operation    : IUmlOperation = new UmlOperation(name,
+                                                      visibility,
+                                                      multiplicity,
+                                                      isQuery,
+                                                      type,
+                                                      isStatic,
+                                                      parameters)
+  in
+  (
+    idToOperationMap := idToOperationMap ++ {id |-> operation};
+      return operation;
+  )
+pre IsAttributeType(e,"uml:Operation");
+
+-- Create operation parameter to XML model
+protected CreateOperstionParameters : XmlEntity ==> [seq of IUmlParameter]
+CreateOperstionParameters(e) ==
+  let elist = e.entities.entities,
+      parms = [new UmlParameter(GetNameAttribute(elist(i)),
+                             LookUpType(elist(i)),-- GetAttribute(p,"xmi:type").val
+                             new UmlMultiplicityElement(false,false,1,1),
+                             "",
+                             ConvertParameterDirectionKind(
+                               GetAttribute(elist(i),"direction").val))
+           | i in set inds elist 
+           & elist(i).name = "ownedParameter"]
+  in 
+    return if len parms = 0 then nil else parms
+pre IsAttributeType(e,"uml:Operation");
+
+functions
+-- Convert parameter direction kind to AST type
+ConvertParameterDirectionKind : String -> IUmlParameterDirectionKind
+ConvertParameterDirectionKind(val) ==
+cases val:
+  ("in")    -> 
+    new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQIN),
+  ("out")   -> 
+    new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQOUT),
+  ("return") -> 
+    new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQRETURN),
+  ("inout") -> 
+    new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes`IQINOUT)
+end;
+
+-- Create constraint from constraint elements
+private BuildConstraint : XmlEntity -> IUmlConstraint
+BuildConstraint(e) ==
+  let elist = e.entities.entities,
+      ids = { GetAttribute(p,"xmi:idref").val | p in set elems elist & HasAttribute(p,"xmi:idref")},
+      specification : String = hd Util`SetToSeq[seq of char]({p.data.data | p in set elems elist & p.name = "body"})
+  in
+    new UmlConstraint(ids,new UmlLiteralString(specification))
+pre IsAttributeType(e,"uml:Constraint");
+
+operations
+-- Create association from association element
+private BuildAssociation : XmlEntity ==> IUmlAssociation
+BuildAssociation(e) ==
+  let elist = e.entities.entities,
+      associationId : [String] = if HasAttribute(e,"xmi:id") then GetAttribute(e,"xmi:id").val else nil, 
+      props = {elist(i) | i in set inds elist & IsAttributeType(elist(i),"uml:Property")},
+      ownedNavivableEnds : (set of IUmlProperty) = 
+                           { BuildProperty(p,"",associationId) 
+                           | p in set props & not HasAttribute(p,"name") or
+                                              HasAttributeValue(p,"name","")},
+      one = Util`SetToSeq[IUmlProperty](ownedNavivableEnds),
+      ownerClassType = hd [ one(i).getType() | i in set inds one],
+      ownerClass = let ct : IUmlClassNameType = ownerClassType in ct.getName(),
+      ownedEnds : (set of IUmlProperty) = 
+                  {BuildProperty(p,ownerClass,associationId) 
+                  | p in set props 
+                  & HasAttribute(p,"name") and 
+                    len GetAttribute(p,"name").val>0},
+      name : seq of char = if HasAttribute(e,"name")
+                           then GetNameAttribute(e)
+                           else "",
+      id : String = GetAttribute(e,"xmi:id").val
+  in
+    return new UmlAssociation(ownedEnds,ownedNavivableEnds,name,id)
+pre IsAttributeType(e,"uml:Association");
+
+--build qualifier info
+private BuildAssociationQualifier : XmlEntity ==> ()
+BuildAssociationQualifier(e) ==
+  let list = [ e.entities.entities(i) 
+             | i in set inds e.entities.entities 
+             & e.entities.entities(i).name = "source" 
+             or e.entities.entities(i).name = "target"],
+      qualifiers : set of [QualifierInfo] =
+        {GetQualifierInfo(sOrT) | sOrT in set elems list}
+      --  , 
+     -- qualifiersTarget : set of [QualifierInfo] =
+       -- {GetQualifierInfo(GetElement(list(i),"target")) 
+         --                                   | i in set inds list 
+           --                                 & GetElement(list(i),"target") <> nil
+             --                               }                                             
+  in
+  (
+    associationToQualifier := associationToQualifier 
+                                 munion
+                                 { let id : String = GetAttribute(e,"xmi:idref").val in id 
+                                   |-> q
+                                 | q in set qualifiers & q <> nil
+                                 };
+ --   associationToQualifier := associationToQualifier 
+ --                                munion {let id : String = GetAttribute(e,"xmi:idref").val in id 
+   --                                     |-> let a in set 
+--                                            {GetQualifierInfo(GetElement(list(i),"source")) 
+--                                            | i in set inds list 
+--                                            & GetElement(list(i),"source") <> nil
+--                                            } 
+--                                            in a};
+--    associationToQualifier := associationToQualifier 
+--                                 munion {let id : String = GetAttribute(e,"xmi:idref").val in id 
+--                                        |-> let a in set 
+--                                            {GetQualifierInfo(GetElement(list(i),"target")) 
+--                                            | i in set inds list 
+--                                            & GetElement(list(i),"target") <> nil
+--                                            } 
+--                                            in a};   
+  
+  
+  );
+ 
+private GetQualifierInfo : XmlEntity ==> [QualifierInfo]
+GetQualifierInfo(e) == 
+  let ec  = GetElement(e,"constraints")
+  in
+    if ec <> nil then
+      let a   : [String] = if HasAttribute(ec,"qualifier") then GetAttribute(ec,"qualifier").val else nil,
+          id  : [String] = if HasAttribute(e,"xmi:idref") then GetAttribute(e,"xmi:idref").val else nil
+      in
+      (
+        if a <> nil then 
+          return mk_QualifierInfo(id,a)
+        else
+          return nil;
+      )
+    else 
+      return nil;
+
+-- Get UmlType from  XML type name
+private LookUpType : XmlEntity ==> IUmlType
+LookUpType(e) ==
+  return FindType(GetTypeId(e));
+
+private GetTypeId : XmlEntity ==> String
+GetTypeId(e) ==
+  let elist = e.entities.entities,
+  typeOption1 = if HasAttribute(e,"type") 
+                then {GetAttribute(e,"type").val} 
+                else { GetAttribute(elist(i),"xmi:idref").val  | i in set inds elist & elist(i).name = "type"}--,
+  --typeOption2 =  union
+   --    {a.val | a in set {GetAttribute(e,"type")} & a <> nil}
+  in 
+    let id in set typeOption1-- union typeOption2 
+      in
+        return id;
+
+
+private FindType : String ==> IUmlType
+FindType(name) ==
+      let typeName = if name in set dom classesTypeMap 
+                     then classesTypeMap(name) 
+                     else nil 
+      in
+        cases typeName:
+        (nil) -> (log.warn("Issuing unknown type: "^name);return new UmlClassNameType(RemoveEaPrefix(name))),
+        -- (nil)-> return new UmlIntegerType(),
+         ("String")-> return new UmlStringType(),
+         ("int")-> return new UmlIntegerType(),
+         ("bool")-> return new UmlBoolType(),
+         ("char")-> return new UmlCharType(),
+         ("unlimitedNatural")-> return new UmlUnlimitedNatural(),
+         others -> return new UmlClassNameType(typeName)
+        end;
+        
+--private tryFindType : String ==> IUmlType
+--tryFindType(id) ==
+--  let t : IUmlType = FindType(id),
+--      typeNameOnFailure : String = t
+--  in
+--     cases true:
+--    (isofclass(IUmlClassNameType,t))-> 
+--      let nct : IUmlClassNameType = t
+--      in if nct.getName() = nil
+--         then return new UmlClassNameType(typeNameOnFailure)
+--         else return nct
+--    others -> return t
+--  end;
+
+-- Visit element and build classes or association dependet on
+--  the element type attribute
+public VisitXmlEntity: XmlEntity ==> ()
+VisitXmlEntity (e) == 
+( 
+  classes := classes union {ExstractClass(entity) | entity in set {e} & 
+                   IsAttributeType(entity,"uml:Class") and
+                   (GetNameAttribute(entity) not in set primiticeTypes)};
+                   
+  associations := associations union {BuildAssociation(entity) | entity in set {e} & 
+                   IsAttributeType(entity,"uml:Association")};
+
+);
+
+functions
+-- Test if a element has an attribute with a specific name
+private HasAttribute : XmlEntity * String -> bool
+HasAttribute(e,name) ==
+  let list = e.attributes.attributes
+  in
+   exists i in set inds list & list(i).name=name;
+
+-- Test if a element has a specific element with a specific name and type
+private HasAttributeValue : XmlEntity * String * String -> bool
+HasAttributeValue(e,name,val) ==
+  let list = e.attributes.attributes
+  in
+   exists i in set inds list & list(i).name=name and list(i).val = val;
+ 
+-- Test if a element has a specific type
+--  By looking up the type attribute
+private IsAttributeType : XmlEntity * String -> bool
+IsAttributeType(e,val) == 
+  HasAttributeValue(e,"xmi:type",val);
+
+-- Get the UML type attribute value or the name of the element if no such attribute exists
+private GetElementType : XmlEntity -> String
+GetElementType(e) == 
+  if GetAttribute(e,"xmi:type") <> nil 
+  then GetAttribute(e,"xmi:type").val
+  else e.name;
+
+-- Get XML element from name. If unknown return nil
+private GetElement : XmlEntity * String -> [XmlEntity]
+GetElement(e,name) ==
+  let list = e.entities.entities,
+      allList = [ list(i) | i in set inds list & list(i).name=name ]
+  in 
+    if len allList > 0 then 
+      hd allList
+    else
+      nil;
+
+-- Get XML attribute from name. If unknown return nil
+private GetAttribute : XmlEntity * String -> [XmlAttribute]
+GetAttribute(e,name) ==
+  let list = e.attributes.attributes,
+      attList = [ list(i) | i in set inds list & list(i).name=name ]
+  in 
+    if len attList > 0 then 
+      hd attList
+    else
+      nil;
+    
+-- Convert visibility name to UmlVisibility type
+private static GetVisibility : [XmlAttribute] -> IUmlVisibilityKind
+GetVisibility(v) ==
+  if v <> nil then
+  cases v.val:
+    ("private") -> 
+      new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPRIVATE),
+    ("public") -> 
+      new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPUBLIC),
+--    ("package") -> return new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPACKAGE),
+    ("protected") -> 
+      new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPROTECTED)
+  end
+  else 
+    new UmlVisibilityKind(UmlVisibilityKindQuotes`IQPRIVATE);
+operations
+------------------------------------------------
+-- Dynamic model
+------------------------------------------------ 
+    
+-- Create a Collaboration from a XML node
+private BuildCollobration : XmlEntity ==> IUmlCollaboration
+BuildCollobration(e) ==
+  let elist = e.entities.entities,
+      interactions = { BuildInteraction(p) | p in set elems elist & IsAttributeType(p,"uml:Interaction")}
+  in
+    return new UmlCollaboration(interactions)
+pre IsAttributeType(e,"uml:Collaboration");
+
+-- Create a Collaboration from a XML node
+private BuildInteraction : XmlEntity ==> IUmlInteraction
+BuildInteraction(e) ==
+  let elist = e.entities.entities,
+      props : map String to IUmlProperty = { GetAttribute(p,"xmi:id").val |-> BuildProperty(p,"",nil) | p in set elems elist & IsAttributeType(p,"uml:Property")}
+  in
+  (
+      
+      lifeLineMap := lifeLineMap ++ {GetAttribute(p,"xmi:id").val |-> 
+                                       new UmlLifeLine(GetNameAttribute(p),
+                                           props(GetAttribute(p,"represents").val).getType()) 
+                                     | p in set elems elist 
+                                     & p.name = "lifeline"};
+
+      let
+      name : seq of char = GetNameAttribute(e),
+      lifeLines : set of IUmlLifeLine = rng lifeLineMap,
+      mosfragments : set of IUmlInteractionFragment = 
+        {BuildFragment(f) | f in set elems elist 
+                           & IsAttributeType(f,"uml:MessageOccurrenceSpecification")},
+      besfragments : set of IUmlInteractionFragment = 
+        {BuildFragment(f) | f in set elems elist 
+                           & IsAttributeType(f,"uml:BehaviorExecutionSpecification")},
+      combifragments : set of IUmlInteractionFragment = 
+        {BuildFragment(f) | f in set elems elist 
+                           & IsAttributeType(f,"uml:CombinedFragment")},
+      messages : seq of IUmlMessage = 
+        [BuildMessage(elist(i)) | i in set inds elist 
+                                 & elist(i).name = "message"]--,
+     -- mm =dunion {{let moss : UmlMos = mos in mk_( moss,m) | mos in set mosfragments & isofclass(UmlMos,mos) and mos in set {m.getSendEvent(), m.getSendReceive()}} | m in set elems messages}
+      
+      in
+   --   (for all t in set mm do (let - = t.#1.SetMessage(t.#2)in skip);
+        return new UmlInteraction(name,
+                                  lifeLines,
+                                  mosfragments union besfragments union combifragments,
+                                  messages)
+     --                             )
+  )
+pre IsAttributeType(e,"uml:Interaction");
+
+
+
+-- Create a Collaboration from a XML node
+private BuildMessage : XmlEntity ==> IUmlMessage
+BuildMessage(e) ==
+  let --name = GetAttribute(e,"name").val,
+      messageKind : IUmlMessageKind = new UmlMessageKind(UmlMessageKindQuotes`IQCOMPLETE),
+      messageSort : IUmlMessageSort = new UmlMessageSort(UmlMessageSortQuotes`IQSYNCHCALL),
+      mosSend : IUmlMos = mosMap(GetAttribute(e,"sendEvent").val),
+      mosRecive : IUmlMos = mosMap(GetAttribute(e,"receiveEvent").val), 
+      args : (seq of IUmlValueSpecification)= [],
+      name : String = mosRecive.getEvent().getOperation().getName()
+  in
+    return new UmlMessage(name,
+                          messageKind,
+                          messageSort,
+                          mosSend,
+                          mosRecive,
+                          args)
+pre e.name ="message";
+
+
+-- Delegating the creation of a fragment to the responsible operation
+--  only needed because limitation in Java Code Gen
+private BuildFragment : XmlEntity ==> IUmlInteractionFragment
+BuildFragment(e) ==
+  cases GetElementType(e):
+    ("uml:MessageOccurrenceSpecification") ->
+      return BuildMos(e),
+    ("uml:BehaviorExecutionSpecification") ->
+      return BuildBes(e),
+    ("uml:CombinedFragment") -> 
+      return BuildCombi(e),
+    others -> error
+  end
+pre IsAttributeType(e,"uml:MessageOccurrenceSpecification") or
+    IsAttributeType(e,"uml:BehaviorExecutionSpecification") or
+    IsAttributeType(e,"uml:CombinedFragment");
+
+-- Create MOS from XmlElement
+private BuildMos : XmlEntity ==> IUmlMos
+BuildMos(e) ==
+  let name = GetNameAttribute(e),
+      message : [IUmlMessage] = nil,
+      lifeLines : IUmlLifeLine = let l in set {lifeLineMap(c) | c in set elems GetCovered(e)} in l,
+      id = GetAttribute(e,"xmi:id").val,
+      event :IUmlCallEvent = idToClallEventMap(GetAttribute(e,"event").val),
+      mos = new UmlMos(name,
+                       message,
+                       lifeLines,
+                       event) 
+  in
+  (
+    mosMap := mosMap ++ {id |-> mos};
+    return mos
+  )
+pre IsAttributeType(e,"uml:MessageOccurrenceSpecification");
+
+-- Create BES from XmlElement
+private BuildBes : XmlEntity ==> IUmlBes
+BuildBes(e) ==
+  let name               = GetNameAttribute(e),
+      startOc : IUmlMos  = mosMap(GetAttribute(e,"start").val),
+      finishOc : IUmlMos = mosMap(GetAttribute(e,"finish").val),
+      covered : set of IUmlLifeLine = {lifeLineMap(c) | c in set elems GetCovered(e)},
+      id = GetAttribute(e,"xmi:id").val,
+      bes = new UmlBes(name,
+                       startOc,
+                       finishOc,
+                       covered) 
+  in
+  (
+    besMap := besMap ++ {id |-> bes};
+    return bes
+  )
+pre IsAttributeType(e,"uml:BehaviorExecutionSpecification");
+
+-- Create CombinedFragment from XmlElement
+private BuildCombi : XmlEntity ==> IUmlCombinedFragment
+BuildCombi(e) ==
+  let elist = e.entities.entities,
+      name               = GetNameAttribute(e),
+      interactionOperatorKind : IUmlInteractionOperatorKind = GetIntOperationKind(GetAttribute(e,"interactionOperator").val),
+      operands : seq of IUmlInteractionOperand = [BuildOperand(elist(i)) | i in set inds elist & elist(i).name ="operand"  ],
+      covered : set of IUmlLifeLine = {lifeLineMap(c) | c in set elems GetCovered(e)},
+      id = GetAttribute(e,"xmi:id").val,
+      combi = new UmlCombinedFragment(name,
+                                    interactionOperatorKind,
+                                    operands,
+                                    covered) 
+  in
+  (
+    combiMap := combiMap ++ {id |-> combi};
+    return combi
+  )
+pre IsAttributeType(e,"uml:CombinedFragment");
+functions
+-- Get interaction kind from a string
+private GetIntOperationKind : String -> IUmlInteractionOperatorKind
+GetIntOperationKind(text) ==
+  cases text:
+    ("alt")-> new UmlInteractionOperatorKind(UmlInteractionOperatorKindQuotes`IQALT),
+    ("loop")-> new UmlInteractionOperatorKind(UmlInteractionOperatorKindQuotes`IQLOOP)
+  end
+pre text = "alt" or text = "loop";
+
+operations
+-- Create Operand from XmlElement
+private BuildOperand : XmlEntity ==> IUmlInteractionOperand
+BuildOperand(e) ==
+  let elist = e.entities.entities,
+      name : seq of char              = "",
+      fragments :  seq of IUmlInteractionFragment = [],
+      covered : set of IUmlMos = {mosMap(c) | c in set elems StdLib`Split( conc
+                                   [GetCoveredExtension(elist(i)) | i in set inds elist 
+                                                           & HasAttributeValue(elist(i),"extender","umltrans")],' ') },
+      guard : [IUmlInteractionConstraint] = if exists gu in set elems elist & gu.name ="guard" 
+                                            then GetGuard(let g in set {p | p in set elems elist & p.name ="guard"} in g) 
+                                            else nil
+  in
+     return new UmlInteractionOperand(name,
+                       fragments,
+                       covered,
+                       guard) 
+
+pre e.name = "operand";
+
+-- remove EA prefix from name overridden in Java
+-- TODO IMPORTANT not supported by CG
+public RemoveEaPrefix : String ==> String
+RemoveEaPrefix(name) == 
+  return 
+  cases name:
+     "EAJava_" ^ nm, 
+     "EAVisual Basic_" ^nm, 
+     "EAActionScript_" ^nm, 
+     "EAnone_" ^nm, 
+     "EAC_" ^nm, 
+     "EAVBNet_" ^nm, 
+     "EAC++_" ^nm, 
+     "EAPHP_" ^ nm, 
+     "EAPython_" ^nm, 
+     "EAC#_" ^nm -> nm,
+     others -> name
+  end;
+
+
+-- gets the name attribyte but removes EA prefixes first
+public GetNameAttribute : XmlEntity ==> String
+GetNameAttribute(e) == return RemoveEaPrefix(GetAttribute(e,"name").val)
+
+functions
+-- Get covered extension. Exstracts covered string
+private GetCoveredExtension : XmlEntity -> seq of char
+GetCoveredExtension(e) ==
+  let elist = e.entities.entities in
+      let p in set {co.data.data | co in set elems elist & co.name ="covered"}
+      in p
+pre HasAttributeValue(e,"extender","umltrans") and 
+    exists el in set elems e.entities.entities & el.data <> nil and el.name = "covered";
+
+-- Get covered seq of ids
+private GetCovered : XmlEntity -> seq of String
+GetCovered(e)==
+let text : String = GetAttribute(e,"covered").val
+  in
+    StdLib`Split(text,' ')
+pre HasAttribute(e,"covered");
+
+-- Get guard from entity
+private GetGuard : XmlEntity -> IUmlInteractionConstraint
+GetGuard(e)==
+let elist = e.entities.entities,
+    minint = let tmp in set {GetGuardConstraintValue(p) 
+                             | p in set elems elist 
+                             & p.name = "minint"} in tmp, 
+    maxint = let tmp in set {GetGuardConstraintValue(p) 
+                             | p in set elems elist 
+                             & p.name = "maxint"} in tmp
+  in
+    new UmlInteractionConstraint(minint,maxint)
+pre e.name="guard";
+
+-- Get value of constraint on a guard
+private GetGuardConstraintValue : XmlEntity -> [IUmlValueSpecification]
+GetGuardConstraintValue(e) ==
+  if HasAttribute(e,"value") and IsAttributeType(e,"uml:LiteralInteger") 
+  then new UmlLiteralInteger(StdLib`StringToInt(GetAttribute(e,"value").val))
+  else nil; 
+
+operations
+-- Build id to callEvent map
+private BuildCallEventMap : set of XmlEntity ==> map String to IUmlCallEvent
+BuildCallEventMap(elist) ==
+  let m = { GetAttribute(e,"xmi:id").val |-> new UmlCallEvent(idToOperationMap(GetAttribute(e,"operation").val)) |  
+            e in set elist}
+  in
+    return m
+pre forall e in set elist & IsAttributeType(e,"uml:CallEvent");
+
+
+--private GetClassFromId : String ==> [IUmlClass]
+--GetClassFromId(id) ==
+--  if id in set dom idToclassesMap 
+--  then return idToclassesMap(id)
+--  else return nil; 
+
+-- Not used
+public VisitXmlAttribute: XmlAttribute ==> ()
+VisitXmlAttribute (-) == skip;
+-- not used
+public VisitXmlData: XmlData ==> ()
+VisitXmlData (-) == skip;
+  
+public SetEncoding : seq of char ==>()
+SetEncoding(-) == skip;
+  
+end Xml2UmlModel
+\end{vdm_al}
+
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Xml2UmlModel]
+
+\end{rtinfo}

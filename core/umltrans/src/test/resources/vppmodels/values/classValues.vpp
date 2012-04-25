@@ -1,0 +1,12 @@
+class classValues
+
+values 
+
+classValue : classValuesA = new classValuesA(); 
+
+
+end classValues
+
+class classValuesA
+
+end classValuesA

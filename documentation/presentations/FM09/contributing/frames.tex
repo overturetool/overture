@@ -1,0 +1,537 @@
+%
+% Table of conent frame
+%
+\begin{frame}[c]
+	\titlepage
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Outline}
+  \tableofcontents %[pausesections] %[current,currentsubsection]
+%  \tableofcontents[current]
+\end{frame}
+
+
+%#######################################################################
+\section{Overture}
+%-----------------------------------------------------------------------
+\frame
+{
+  \frametitle{The Overture project}
+
+\begin{block}<+->{Mission}
+	Overture's mission is twofold: 
+  \begin{itemize}
+  		\item to provide an industrial-strength tool that supports the use of precise abstract models in software development, and 
+  		\item to foster an environment that allows researchers and other interested parties to experiment with modifications and extensions to the tool.      
+
+  \end{itemize}
+\end{block}
+
+The Overture tools are being developed by volunteers, researchers and students.
+}
+
+
+
+%-----------------------------------------------------------------------
+\subsection{Sites}
+%-----------------------------------------------------------------------
+\frame
+{
+  \frametitle{Sites}
+
+
+\begin{center}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Main page (Twiki): \url{www.overturetool.org}
+  		\item Download page: \url{http://sf.net/projects/overture}
+  		\item Documentation: \url{http://overture.sf.net/maven/doc}
+  \end{itemize}
+\end{center}
+}
+%-----------------------------------------------------------------------
+\subsection{Development environment}
+%-----------------------------------------------------------------------
+\frame
+{
+  \frametitle{Development environment}
+
+
+\begin{block}<1->{Base environment}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Maven 2 + Overture repositories
+  		\item Java SDK 1.5 or newer
+  \end{itemize}
+\end{block}
+
+\begin{block}<2->{GUI environment}
+  \begin{itemize}
+	%\itemsep=1cm
+  		\item Eclipse 3.5.1 Classic
+		\item Maven Integration for Eclipse
+  		\item DLTK 1.0
+  \end{itemize}
+\end{block}
+}
+
+%#######################################################################
+\section{Contributing}
+%-----------------------------------------------------------------------
+%
+% Outline
+%
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[current]
+\end{frame}
+
+%-----------------------------------------------------------------------
+\subsection{Contributing}
+%-----------------------------------------------------------------------
+
+\frame
+{
+  \frametitle{How to contribute}
+
+\begin{itemize}
+\item Join us at Source Forge
+	\begin{itemize}
+	\item Project name: \textbf{Overture Tool}
+	\end{itemize}
+\item Send us a short description of the project
+\item Check out the source
+\end{itemize}
+
+}
+
+%-----------------------------------------------------------------------
+\subsection{Project structure}
+%-----------------------------------------------------------------------
+\frame
+{
+  \frametitle{Project structure}
+
+\begin{columns}
+\begin{column}{5cm}
+	\begin{block}{Core}
+		\begin{itemize}
+			\item AST
+			\item Parser
+			\item VDMJ Interpreter
+			\item Proofsupport
+			\item Traces
+			\item Umltrans
+		\end{itemize}
+	 \end{block}
+\end{column}
+\begin{column}{5cm}
+\pause
+	\begin{block}{IDE}
+		\begin{itemize}
+			\item Base Editor
+			\item VDM-SL editor
+			\item VDM-PP editor
+			\item VDM-RT editor
+			\item \textbf{Generated} plug-ins
+			\item GUI plug-ins
+		\end{itemize}
+		
+	\end{block}
+\end{column}
+\end{columns}
+\pause
+\begin{block}{Tools}
+	Maven pst, ASTGen, VDMT
+\end{block}
+
+}
+
+\note
+{
+\begin{itemize}
+		\item Maven pst. Enables Maven-Eclipse integration (generated plugins)
+		\item ASTGen - AST generation
+		\item VDMT - VDM Tools integration
+\end{itemize}
+
+}
+
+\frame
+{
+  \frametitle{IDE packages}
+
+\begin{center}
+	\includegraphics<1->[width=0.8\textwidth]{images/idepackages.png}%
+\end{center}
+}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Project structure - Eclipse plug-ins}
+
+The Overture Eclipse plug-ins are structured into two groups
+
+\vspace{1cm}
+\begin{center}
+
+
+\tikzstyle{int}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{init} = [pin edge={to-,thin,black}]
+\begin{tikzpicture}[node distance=3cm,auto,>=latex']
+    \node [int] (a) {Core};
+    \node (b) [left of=a,node distance=1cm, coordinate] {};
+    \node [int] (c) [right of=a] {Generated plug-in};
+    \node [coordinate] (end) [right of=c, node distance=1cm]{};
+	\node [int] (d) [right of=end] {GUI plug-in};
+%\node [coordinate1] (end1) [right of=d, node distance=1cm]{};
+    \path[->] (b) edge node {} (a);
+    \path[->] (a) edge node {} (c);
+    \path[->] (c) edge node {} (d);
+%    \draw[->] (d) edge node {} (end1) ;
+\end{tikzpicture}
+\end{center}
+
+\begin{columns}
+\begin{column}{5cm}
+	\begin{block}<2->{Generated}
+	\begin{itemize}
+	%\itemsep=1cm
+		\item VDMJ Interpreter
+		\item Proofsupport
+		\item Traces
+		\item Umltrans
+		
+	 \end{itemize}
+	\end{block}
+\end{column}
+\begin{column}{5cm}
+	\pause
+	\begin{block}<2->{GUI plug-ins}
+	\begin{itemize}
+		\item Combinatorial Testing
+		\item UML Transformation
+	\end{itemize}
+	\end{block}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+%-----------------------------------------------------------------------
+\subsection{Getting the sources}
+%-----------------------------------------------------------------------
+
+\frame
+{
+  \frametitle{Check out}
+
+Subversion on Source Forge:
+\begin{block}{SVN}
+\small \texttt{svn checkout https://overture.svn.sourceforge.net/svnroot/overture/trunk overture}
+\end{block}
+
+Prepare source for development after check-out
+\begin{block}{Prepare source}
+\begin{itemize}
+	\item Windows: \small \texttt{make.bat install}
+	\item Linux and Mac: \small \texttt{./make.sh install}
+\end{itemize}
+\end{block}
+
+}
+
+\note
+{
+\begin{block}{Use full maven goals}
+\begin{itemize}
+	\item install - installs a plugin in the local repository
+	\item eclipse:eclipse - generates eclipse project files (needed before eclipse import)
+	\item psteclipse:eclipse-plugin - fetched jar files from local repository and generated binary plugins from e.g. the Manifest files
+\end{itemize}
+\end{block}
+}
+
+%#######################################################################
+\section{Example}
+%-----------------------------------------------------------------------
+%
+% Outline
+%
+\begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[current]
+\end{frame}
+
+
+%-----------------------------------------------------------------------
+\subsection{Core}
+%-----------------------------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Adding a core component}
+  
+  Navigate to \ttfamily{trunk/core}
+   
+  \lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\ttfamily\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+  \begin{lstlisting}
+  mvn archetype:create -DgroupId=org.overturetool -DartifactId=umltrans
+  \end{lstlisting}
+
+\begin{columns}
+\begin{column}{5cm}
+	\begin{itemize}
+	%\itemsep=1cm 
+		\item Create pom "umltrans"
+		\begin{itemize}
+			\item Name
+			\item Group
+			\item Version
+			\item Description
+			\item Depended artifacts
+		\end{itemize}
+		
+	 \end{itemize}
+\end{column}
+\begin{column}{6cm}
+	\pause
+	\lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\ttfamily\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+	\begin{lstlisting}
+<project>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.0.0</version>
+  </parent>
+  <groupId>org.overturetool</groupId>
+  <artifactId>umltrans</artifactId>
+  <version>2.0.0</version>
+  <name>Bi-directional UML translator</name>
+  <description>A descriping text
+  </description>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>stdlib</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+  </dependencies>
+</project>
+	\end{lstlisting}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+%-----------------------------------------------------------------------
+\subsection{Eclipse}
+%-----------------------------------------------------------------------
+
+
+\frame
+{
+  \frametitle{How to create a GUI}
+\begin{enumerate}
+	\item Install core artifact
+	\item Create core artifact plug-in wrapper
+	\item Run maven psteclipse:eclipse.plugin to create the eclipse plug-in
+	\item Create the gui plug-in
+	\item Reference the wrapped core plug-in
+\end{enumerate}
+
+
+}
+
+\begin{frame}[fragile]
+  \frametitle{Wrap core component into a plug-in}
+
+Navigate to \ttfamily{ide/generated/}
+  \lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\ttfamily\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+  \begin{lstlisting}
+  mvn archetype:create 
+		-DgroupId=org.overture.ide.generated
+		-DartifactId=org.overture.ide.generated.umltrans 
+  \end{lstlisting}
+
+
+
+\onslide<2->{ 
+\begin{tikzpicture}
+[
+	overlay,
+	xscale	= 1,	% to scale horizontally everything but the text
+	yscale	= 1,	% to scale vertically everything but the text
+]
+	\node[fill=green!20,text height=0.2ex,text width=30ex, text depth=0.25ex]	at	(2.5,-2.2) (t1){ };
+
+\end{tikzpicture}
+}
+
+\lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\ttfamily\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+\begin{lstlisting}
+<project>
+  ...
+  <groupId>org.overture.ide.generated</groupId>
+  <artifactId>org.overture.ide.generated.umltrans</artifactId>
+  <name>org.overture.ide.generated.umltrans</name>
+  <version>2.0.0</version>
+
+  <packaging>binary-plugin</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool</groupId>
+      <artifactId>umltrans</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+  </dependencies>
+</project>
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Creating Eclipse plug-in}
+
+Navigate to ide/plugins/
+  \lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\ttfamily\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+  \begin{lstlisting}
+  mvn archetype:create 
+	-DgroupId=org.overture.ide.plugins
+	-DartifactId=org.overture.ide.plugins.umltrans 
+  \end{lstlisting}
+
+
+\onslide<2->{ 
+\begin{tikzpicture}
+[
+	overlay,
+	xscale	= 1,	% to scale horizontally everything but the text
+	yscale	= 1,	% to scale vertically everything but the text
+]
+	\node[fill=green!20,text height=0.2ex,text width=28ex, text depth=0.25ex]	at	(2.8,-2.8) (t1){ };
+
+\end{tikzpicture}
+}
+
+\lstset{language=XML,
+		frame=ltrb,
+		framesep=5pt,
+		showtabs=true,
+		basicstyle=\ttfamily\tiny,
+		keywordstyle=\ttfamily,
+		identifierstyle=\ttfamily\color{blue}\bfseries,
+		commentstyle=\color{Brown},
+		stringstyle=\ttfamily,
+		showstringspaces=ture}
+\begin{lstlisting}
+<project>
+...
+  <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.overture.ide.plugins</groupId>
+  <artifactId>org.overture.ide.plugins.umltrans</artifactId>
+  <name>org.overture.ide.plugins.umltrans</name>
+  <version>2.0.0</version>
+
+  <packaging>source-plugin</packaging>
+
+</project>
+\end{lstlisting}
+\end{frame}
+
+\frame
+{
+  \frametitle{Import in Eclipse}
+  \begin{columns}
+\begin{column}{5cm}
+\begin{enumerate}
+	\item<1-> Run make install
+	\item<2-> Import Maven Projects
+	\item<4-> Update classpath and clean generated plugins
+	\item<6-> Add reference in manifest to generated plugin
+	\item<7-> Ready to build GUI
+\end{enumerate}
+\end{column}
+\begin{column}{6cm}
+
+
+
+\includegraphics<2>[width=0.9\textwidth]{images/import.png}%
+\includegraphics<3>[width=\textwidth]{images/importide.png}%
+\includegraphics<4>[width=\textwidth]{images/classpath.png}%
+\includegraphics<5>[width=\textwidth]{images/clean.png}%
+\includegraphics<6>[width=\textwidth]{images/dependencies.png}%
+\includegraphics<7>[width=\textwidth]{images/eclipseready.png}%
+
+
+\end{column}
+\end{columns}
+
+
+\begin{block}<1>{Prepare source}
+\begin{itemize}
+	\item Windows: \small \texttt{make.bat install}
+	\item Linux and Mac: \small \texttt{./make.sh install}
+\end{itemize}
+\end{block}
+
+}
+
+\begin{frame}[plain,c]
+  \begin{center}
+	\LARGE \structure{Thank you!}
+
+	\vspace{2cm}
+	\href{www.overturetool.org}{www.overturetool.org}
+\end{center}
+\end{frame}

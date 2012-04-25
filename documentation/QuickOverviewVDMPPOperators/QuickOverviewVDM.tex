@@ -1,0 +1,171 @@
+\subsection{The Boolean type}\label{bool}
+
+
+\begin{tabular}{|l|l|l|}\hline
+    Operator       & Name       & Signature                       \\ \hline
+    {\tt \keyw{not} b}& Negation   & \TO{\keyw{bool}}{\keyw{bool}} \sindex{not@\kw{not}}\sindex{negation}\\
+    {\tt a \keyw{and} b}& Conjunction & \TO{\PROD{\keyw{bool}}{\keyw{bool}}}{\keyw{bool}} \sindex{and@\kw{and}} \sindex{conjunction}\\
+    {\tt a \keyw{or} b}& Disjunction & \TO{\PROD{\keyw{bool}}{\keyw{bool}}}{\keyw{bool}} \sindex{or@\kw{or}} \sindex{disjunction}\\
+    {\tt a => b}& Implication & \TO{\PROD{\keyw{bool}}{\keyw{bool}}}{\keyw{bool}} \sindex{implication}\\
+    {\tt a <=> b}& Biimplication & \TO{\PROD{\keyw{bool}}{\keyw{bool}}}{\keyw{bool}} \sindex{biimplication}\\
+    {\tt a = b} & Equality   & \TO{\PROD{\keyw{bool}}{\keyw{bool}}}{\keyw{bool}} \sindex{equality}\\
+    {\tt a <> b}& Inequality & \TO{\PROD{\keyw{bool}}{\keyw{bool}}}{\keyw{bool}} \sindex{inequality}\\
+    \hline
+  \end{tabular}
+
+\subsection{The numeric types}\label{subsub:numeric}
+
+
+
+  \begin{tabular}{|l|l|l|}\hline
+    Operator       & Name & Signature \\ \hline
+    {\tt -x}& Unary minus & \TO{\keyw{real}}{\keyw{real}} \\
+    {\tt \keyw{abs} x}& Absolute value & \TO{\keyw{real}}{\keyw{real}}\sindex{abs@\kw{abs}|textbf} \\
+  {\tt \keyw{floor} x}& Floor & \TO{\keyw{real}}{\keyw{int}}\sindex{floor@\kw{floor}|textbf} \\
+    {\tt x + y}& Sum    & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{real}} \\
+    {\tt x - y}& Difference & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{real}} \\
+    {\tt x * y}& Product  & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{real}} \\
+    {\tt x / y}& Division & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{real}} \\
+    {\tt x \keyw{div} y}& Integer division & \TO{\PROD{\keyw{int}}{\keyw{int}}}{\keyw{int}} \sindex{div@\kw{div}|textbf}\\
+ {\tt x \keyw{rem} y}& Remainder & \TO{\PROD{\keyw{int}}{\keyw{int}}}{\keyw{int}} \sindex{rem@\kw{rem}|textbf}\\
+    {\tt x \keyw{mod} y}& Modulus   & \TO{\PROD{\keyw{int}}{\keyw{int}}}{\keyw{int}} \sindex{mod@\kw{mod}|textbf}\\
+    {\tt x**y}& Power & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{real}} \\
+    {\tt x < y}& Less than & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{bool}} \\
+    {\tt x > y}& Greater than & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{bool}} \\
+    {\tt x <= y}& Less or equal & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{bool}} \\
+    {\tt x >= y}& Greater or equal & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{bool}} \\
+    {\tt x = y}& Equal  & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{bool}} \sindex{equality}\\
+    {\tt x <> y}& Not equal & \TO{\PROD{\keyw{real}}{\keyw{real}}}{\keyw{bool}} \\
+    \hline     
+  \end{tabular}
+
+\subsection{The character, quote and token types}\label{subsec:chars}
+
+
+
+  \begin{tabular}{|l|l|l|}\hline
+    Operator       & Name      & Signature \\ \hline
+    {\tt c1 = c2}  & Equal     & \TO{\PROD{\keyw{char}}{\keyw{char}}}{\keyw{bool}} \sindex{equality}\\
+    {\tt c1 <> c2} & Not equal & \TO{\PROD{\keyw{char}}{\keyw{char}}}{\keyw{bool}} \sindex{inequality}\\
+    \hline
+  \end{tabular}
+
+
+
+\subsection{Tuple types}\label{tuples}
+
+
+
+  \begin{tabular}{|l|l|l|} \hline
+    Operator & Name & Signature \\ \hline
+    {\tt t1 = t2}  & Equality   & \TO{\PROD{T}{T}}{\keyw{bool}} \sindex{equality}\\
+    {\tt t1 <> t2} & Inequality & \TO{\PROD{T}{T}}{\keyw{bool}} \sindex{inequality}\\
+    \hline
+  \end{tabular}
+
+\subsection{Record types}\label{records}
+
+
+ 
+
+  \begin{tabular}{|l|l|l|} \hline
+    Operator & Name & Signature \\ \hline
+    {\tt r.i} & Field select & \TO{\PROD{A}{Id}}{Ai} \sindex{record!selector}\\
+    {\tt r1 = r2} & Equality & \TO{\PROD{A}{A}}{\keyw{bool}} \sindex{equality}\\
+    {\tt r1 <> r2} & Inequality & \TO{\PROD{A}{A}}{\keyw{bool}} \sindex{inequality}\\
+    {\tt \keyw{is\_}A(r1)} & Is & \TO{\PROD{Id}{\texttt{MasterA}}}{\keyw{bool}} \sindex{is expression}\\
+    \hline
+  \end{tabular}
+\vspace{1ex}
+
+
+
+\subsection{Union and optional types}\label{unions}
+
+
+  \begin{tabular}{|l|l|l|}\hline
+    Operator & Name & Signature \\ \hline
+    {\tt t1 = t2} & Equality & \TO{\PROD{A}{A}}{\keyw{bool}} \sindex{equality}\\
+    {\tt t1 <> t2} & Inequality & \TO{\PROD{A}{A}}{\keyw{bool}} \sindex{inequality}\\
+    \hline
+  \end{tabular}
+
+
+
+\subsection{Set types}
+\label{sets}
+
+
+
+  
+  \begin{tabular}{|l|l|l|}\hline
+    Operator & Name & Signature \\ \hline
+    {\tt e \keyw{in set} s1} & Membership & \TO{\PROD{A}{\SET{A}}}{\keyw{bool}}\sindex{in set@\kw{in set}} \sindex{set!membership}\\
+    {\tt e \keyw{not in set} s1} & Not membership & \TO{\PROD{A}{\SET{A}}}{\keyw{bool}} \sindex{not in set@\kw{not in set}}\\
+    {\tt s1 \keyw{union} s2}& Union & \TO{\PROD{\SET{A}}{\SET{A}}}{\SET{A}} \sindex{union@\kw{union}}\sindex{set!union}\\
+    {\tt s1 \keyw{inter} s2}& Intersection & \TO{\PROD{\SET{A}}{\SET{A}}}{\SET{A}} \sindex{inter@\kw{inter}} \sindex{set!intersection}\\
+    {\tt s1 {\tt \char'134} s2}& Difference & \TO{\PROD{\SET{A}}{\SET{A}}}{\SET{A}}\sindex{set!difference} \\
+    {\tt s1 \keyw{subset} s2}& Subset & \TO{\PROD{\SET{A}}{\SET{A}}}{\keyw{bool}} \sindex{subset@\kw{subset}}\sindex{set!subset}\\
+    {\tt s1 \keyw{psubset} s2} & Proper subset & \TO{\PROD{\SET{A}}{\SET{A}}}{\keyw{bool}} \sindex{psubset@\kw{psubset}}\sindex{set!proper subset} \\
+    {\tt s1 = s2}& Equality & \TO{\PROD{\SET{A}}{\SET{A}}}{\keyw{bool}} \sindex{equality}\\
+    {\tt s1 <> s2}& Inequality & \TO{\PROD{\SET{A}}{\SET{A}}}{\keyw{bool}} \sindex{inequality}\\
+    {\tt \keyw{card} s1}& Cardinality & \TO{\SET{A}}{\keyw{nat}} \sindex{char@\kw{char}}\sindex{set!cardinality}\\
+    {\tt \keyw{dunion} ss}& Distributed union& \TO{\SET{\SET{A}}}{\SET{A}} \sindex{dunion@\kw{dunion}}\sindex{set!union!distributed}\\
+    {\tt \keyw{dinter} ss}&Distributed intersection &
+    \TO{\SET{\SET{A}}}{\SET{A}} \sindex{dinter@\kw{dinter}} \sindex{set!intersection!distributed}\\
+  {\tt \keyw{power} ss}&Finite power set &
+    \TO{\SET{A}}{\SET{\SET{A}}} \sindex{power@\kw{power}} \sindex{set!intersection!distributed}\\
+    \hline
+  \end{tabular}
+
+
+
+
+\subsection{Sequence types}
+\label{sequences}
+
+
+  
+  \begin{tabular}{|l|l|l|}\hline
+    Operator & Name & Signature \\ \hline
+    {\tt \keyw{hd} l} & Head & \TO{\NSEQ{A}}{A} \sindex{hd@\kw{hd}}\sindex{sequence!head}\\
+    {\tt \keyw{tl} l} & Tail & \TO{\NSEQ{A}}{\SEQ{A}} \sindex{tl@\kw{tl}}\sindex{sequence!tail}\\
+    {\tt \keyw{len} l} & Length & \TO{\SEQ{A}}{\keyw{nat}} \sindex{len@\kw{len}}\sindex{sequence!length}\\
+    {\tt \keyw{elems} l} & Elements & \TO{\SEQ{A}}{\SET{A}} \sindex{elems@\kw{elems}}\sindex{sequence!elements}\\
+    {\tt \keyw{inds} l} & Indices & \TO{\SEQ{A}}{\SET{\keyw{nat1}}} \sindex{inds@\kw{inds}}\sindex{sequence!indices}\\
+    {\tt l1 \char'136\ l2} & Concatenation & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\SEQ{A}} \sindex{sequence!concatenation}\\
+    {\tt \keyw{reverse} l} & Reverse & \TO{\SEQ{A}}{\SEQ{A}}\\
+    {\tt \keyw{conc} ll} & Distributed concatenation & \TO{\SEQ{\SEQ{A}}}{\SEQ{A}}\sindex{conc@\kw{conc}}\sindex{sequence!concatenation!distributed}\\
+    {\tt l ++ m} & Sequence modification & \TO{\PROD{\SEQ{A}}{\MAP{\keyw{nat}}{A}}}{\SEQ{A}}\sindex{sequence!modification}\\
+    {\tt l(i)} & Sequence index & \TO{\PROD{\SEQ{A}}{\keyw{nat1}}}{A} \sindex{sequence!index}\\
+    {\tt l1 = l2} & Equality & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\keyw{bool}} \sindex{equality}\\
+    {\tt l1 <> l2} & Inequality & \TO{\PROD{(\SEQ{A})}{(\SEQ{A})}}{\keyw{bool}} \sindex{inequality}\\
+    \hline
+  \end{tabular}
+
+
+
+\subsection{Mapping types}\label{maps}
+
+
+
+{\small  
+  \begin{tabular}{|l|l|l|}\hline
+    Operator & Name & Signature \\ \hline
+    {\tt \keyw{dom} m} & Domain & \TO{(\MAP{A}{B})}{\SET{A}} \sindex{dom@\kw{dom}}\sindex{mapping!domain}\\
+    {\tt \keyw{rng} m} & Range & \TO{(\MAP{A}{B})}{\SET{B}} \sindex{rng@\kw{rng}}\sindex{mapping!range}\\
+    {\tt m1 \keyw{munion} m2} & Map union & \TO{\PROD{(\MAP{A}{B})}{(\MAP{A}{B})}}{\MAP{A}{B}} \sindex{munion@\kw{munion}}\sindex{mapping!union}\\
+    {\tt m1 ++ m2} & Override & \TO{\PROD{(\MAP{A}{B})}{(\MAP{A}{B})}}{\MAP{A}{B}} \sindex{mapping!override}\\
+    {\tt \keyw{merge} ms} & Distributed merge &
+    \TO{\SET{(\MAP{A}{B})}}{\MAP{A}{B}}
+    \sindex{merge@\kw{merge}}\sindex{mapping!distributed merge}\\
+    {\tt s <: m} & Domain restrict to & \TO{\PROD{(\SET{A})}{(\MAP{A}{B})}}{\MAP{A}{B}} \sindex{mapping!domain restriction}\\
+    {\tt s <-: m} & Domain restrict by & \TO{\PROD{(\SET{A})}{(\MAP{A}{B})}}{\MAP{A}{B}} \sindex{mapping!domain subtraction}\\
+    {\tt m :> s} & Range restrict to & \TO{\PROD{(\MAP{A}{B})}{(\SET{B})}}{\MAP{A}{B}} \sindex{mapping!range restriction}\\
+    {\tt m :-> s} & Range restrict by & \TO{\PROD{(\MAP{A}{B})}{(\SET{B})}}{\MAP{A}{B}} \sindex{mapping!range subtraction}\\
+    {\tt m(d)} & Mapping apply & \TO{\PROD{(\MAP{A}{B})}{A}}{B} \sindex{mapping!application}\\
+  {\tt \keyw{inverse} m} & Map inverse & \TO{{\INMAP{A}{B}}}{\INMAP{B}{A}} \sindex{inverse}\\
+    {\tt m1 = m2} & Equality & \TO{\PROD{(\MAP{A}{B})}{(\MAP{A}{B})}}{\keyw{bool}} \sindex{equality}\\
+    {\tt m1 <> m2} & Inequality & \TO{\PROD{(\MAP{A}{B})}{(\MAP{A}{B})}}{\keyw{bool}} \sindex{inequality}\\
+    \hline
+  \end{tabular}}

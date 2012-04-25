@@ -1,0 +1,89 @@
+\section{VehicleData Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Vehicle
+-- Description: 	DTO representing the data in the Vehicle class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class VehicleData
+
+--
+-- instance variables
+--
+instance variables
+
+private dir: Types`Direction;
+private speed : nat;
+private lowgrip : bool;
+private turnIndicator : Indicator := <NONE>;
+private pos : Position;
+private id : nat;
+--
+-- Types definition section
+--
+types  
+public Indicator = <LEFT> | <RIGHT> | <NONE>;
+--
+-- Operations definition section
+--
+operations
+
+public VehicleData : nat * Position * nat * Types`Direction * bool 
+	==> VehicleData
+VehicleData(identifier, p, s, d, grip) ==
+(
+  pos := p;
+  speed := s;
+  dir := d;
+  id := identifier;
+  lowgrip := grip;
+);
+
+public GetDirection: () ==> Types`Direction 
+GetDirection() ==
+return dir;
+
+public GetSpeed: () ==> nat 
+GetSpeed() ==
+return speed;
+	
+public getLowGrip: () ==> bool 
+getLowGrip() ==
+(
+return lowgrip
+);
+	
+public TurnIndicator: () ==> Indicator 
+TurnIndicator() ==
+return turnIndicator;	
+	
+public GetPosition: () ==> Position 
+GetPosition() ==
+return pos.deepCopy();
+
+public GetID: () ==> nat
+GetID() ==
+return id;
+
+
+--
+-- Values definition section
+--
+values
+
+--
+-- sync definition section
+--
+ 
+end VehicleData
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[VehicleData]
+\end{rtinfo}

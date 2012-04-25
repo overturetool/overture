@@ -1,0 +1,45 @@
+class Busstop is subclass of Waypoint
+
+	instance variables
+		waiting : set of Passenger := {};
+
+	operations
+		public Busstop : Waypoint`BusStops ==> Busstop
+		Busstop(s) == 
+		(
+			id := s;
+			isStop := true;
+		);
+
+		--number of passenger waiting
+		public GetWaitingCount : () ==> nat
+		GetWaitingCount() ==
+			return card waiting;
+		
+		--get passengers waiting
+		public GetWaiting : () ==> set of Passenger
+		GetWaiting() ==
+			return waiting;
+
+		-- get passengers waiting on a bus which passes specific stops 
+		public GetWaitingOn : seq of Waypoint==> set of Passenger
+		GetWaitingOn(stopsAt)==
+			let stops = elems stopsAt in
+			return  {p | p in set waiting & {p.GetDestination()} inter stops <> {}};
+
+		--passenger arrived at the busstop
+		public AddPassenger : Passenger ==> ()
+		AddPassenger(p) == 
+			waiting := waiting union {p}; 
+		
+		--passenger got on a bus
+		public PassengerLeft : set of Passenger ==> ()
+		PassengerLeft(p) ==
+			waiting := waiting \ p
+		pre p inter waiting <> {};
+
+sync
+	---protect waiting instance variable
+	mutex(GetWaitingCount, AddPassenger, PassengerLeft)
+
+end Busstop

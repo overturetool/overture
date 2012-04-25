@@ -1,0 +1,6 @@
+class A
+operations
+	public op: () ==> ()
+	op() == return;
+	
+end A

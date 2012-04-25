@@ -508,6 +508,7 @@ Handlers
            class="org.overture.ide.ui.handlers.RemoveSourceFolderFromBuildPathCommandHandler"
            commandId="org.overture.ide.ui.commands.removeFromBuildPath">
      </handler>
+
   </extension>
   
 </plugin>

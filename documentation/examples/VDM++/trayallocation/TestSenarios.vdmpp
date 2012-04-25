@@ -1,0 +1,45 @@
+-- ===============================================================================================================
+-- TestTraces in tray allocation for a sortation system
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class TestTraces
+	types
+
+	values
+
+	instance variables								
+		env  : SorterEnviroment := new SorterEnviroment();
+		
+	    testfile1 : seq1 of char := "\\scenario1.txt";
+		loader1 : ItemLoader := new ItemLoader(testfile1);
+
+	    testfile2 : seq1 of char := "\\scenario2.txt";
+		loader2 : ItemLoader := new ItemLoader(testfile2);
+		tests : set of ItemLoader := {loader1, loader2};
+
+	operations
+
+	functions
+
+	sync
+
+	--thread
+
+	traces
+    
+    -- To run TestSenarious - IO`print has to be commented out
+  	TestSenario1: (
+  					let loader in set tests
+  					in
+  					(
+  						env.AssignItemLoader(loader);
+  				   		let step in set {1,...,loader.GetNumTimeSteps()}
+				   		in (
+				   			env.TimeStep(step)
+							--env.sc.allocator.GetThroughput()	
+							)			   		
+					)
+				   );
+
+end TestTraces

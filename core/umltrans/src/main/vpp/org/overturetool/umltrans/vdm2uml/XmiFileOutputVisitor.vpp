@@ -1,0 +1,13 @@
+class XmiFileOutputVisitor
+  is subclass of XmlFileOutputVisitor
+
+operations
+
+-- override  
+protected print: seq of char ==> ()
+print (text) == Util`WriteFile(text);
+
+-- override 
+public SetEncoding : seq of char ==>()
+SetEncoding(-) == skip;  
+end XmiFileOutputVisitor

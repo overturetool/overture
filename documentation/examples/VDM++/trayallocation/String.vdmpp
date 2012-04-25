@@ -1,0 +1,37 @@
+-- ===============================================================================================================
+-- String helper class for converting numbers
+-- By José Antonio Esparza and Kim Bjerge - spring 2010
+-- ===============================================================================================================
+
+class String
+	types
+
+	values
+
+	instance variables
+		static numeric : seq1 of char := "0123456789"; 
+
+	operations
+
+	static public NatToStr: nat ==> seq1 of char
+	NatToStr (val) ==
+	(	
+		dcl string : seq1 of char := " ";
+		dcl x1 : nat := val;
+		dcl x2 : nat;
+		
+		if val = 0 then string := "0";
+		
+		while x1 > 0 do
+		( 
+			x2 := (x1 mod 10) + 1;
+			string := [numeric(x2)] ^ string;
+			x1 := x1 div 10;
+		);
+		
+		return string;
+	);
+
+	functions
+
+end String

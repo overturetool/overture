@@ -1,0 +1,91 @@
+\section{World Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			World
+-- Description: 	World class in the VeMo project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class World
+
+--
+-- instance variables
+--
+instance variables
+
+public static env : [Environment] := new Environment("inputvalues.txt");
+
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+
+public World: () ==> World
+World() ==
+(
+ Printer`OutAlways("Creating World");
+ 
+ --vehicle
+ VeMo`vemoCtrl.addController(VeMo`ctrl1);
+ VeMo`vemoCtrl.addController(VeMo`ctrl2);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl3);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl4);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl5);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl6);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl7);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl8);  
+ VeMo`vemoCtrl.addController(VeMo`ctrl9);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl10);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl11);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl12);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl13);
+ --VeMo`vemoCtrl.addController(VeMo`ctrl14);
+ 
+ 
+-- VeMo`vemoCtrl.addTrafficLight(VeMo`tl1);
+ env.setVeMoCtrl(VeMo`vemoCtrl);
+
+ Printer`OutAlways("World created: "  
+				 ^ " Maybe this world is another planet's hell.");
+ Printer`OutAlways("------------------------------------------\n");
+);
+
+public Run: () ==> ()
+Run() == 
+(
+  env.run();
+  env.isFinished();
+  duration(1000)
+  env.report();
+  Printer`OutWithTS("End of this world");
+);
+
+public static Verbose : bool ==> ()
+Verbose(v) == Printer`Echo(v);
+
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+
+end World
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[World]
+\end{rtinfo}

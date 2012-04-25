@@ -1,0 +1,20 @@
+--
+-- Created automatically by VDMJ ASTgen. DO NOT EDIT.
+-- Wed Mar 17 17:56:54 CET 2010
+--
+
+class SimpleBasicType is subclass of SimpleType
+values
+    public BOOL = new SimpleBasicType("BOOL");
+    public INT = new SimpleBasicType("INT");
+    public NAT = new SimpleBasicType("NAT");
+    public REAL = new SimpleBasicType("REAL");
+
+instance variables
+    public name:[seq of char] := nil;
+
+operations
+    public SimpleBasicType: seq of char ==> SimpleBasicType
+    SimpleBasicType(n) == name := n;
+
+end SimpleBasicType
