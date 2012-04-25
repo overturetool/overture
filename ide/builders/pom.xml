@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>ide</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
   </parent>
 
   <groupId>org.overture.ide</groupId>
@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
   <name>Overture IDE Builders</name>
   <description>Top level for all builders in the Overture IDE</description>
-
+	<version>2.2.0</version>
   <modules>
     <!-- Put all child Eclipse Plugin projects(modules) here -->
     <module>vdmj</module>

@@ -46,4 +46,5 @@ Eclipse-AutoStart: true
 Bundle-ClassPath: .,
  ast-2.2.0.jar,
  ast_assistance-2.2.0.jar,
- parser-2.2.0.jar
+ parser-2.2.0.jar,
+ vdmj-2.1.1.jar

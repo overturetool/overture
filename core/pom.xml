@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>root</artifactId>
-		<version>2.1.1</version>
+		<version>2.2.0</version>
 	</parent>
 	<groupId>org.overturetool</groupId>
 	<artifactId>core</artifactId>
 	<packaging>pom</packaging>
-	<version>2.1.1</version>
+	<!--version>2.1.1</version-->
 	<name>Core Tools</name>
 
 	<modules>
@@ -22,24 +22,22 @@
         <module>interpreter</module>
 		
         <module>pog</module>
-		<module>stdlib</module>
-		<module>ast-old</module>
+	<module>stdlib</module>
+	<module>ast-old</module>
         <module>parser-old</module>
 		<!--module>astgen</module -->
-		<module>vdmunit</module>
-		<module>parser</module>
-		<module>potrans</module>
-		<module>umltrans</module>
-		<module>vdmtools</module>
-		<module>traces</module>
-		<module>vdmj</module>
-		<module>vdmjc</module>
-		<module>showtrace</module>
-		<module>xmljunit</module>
-		<module>testframework</module>
-		<module>vdmexamples</module>
-		<module>vdm2java</module-->
-		<module>vdm2java</module>
+	<module>vdmunit</module>	
+	<module>potrans</module>
+	<module>umltrans</module>
+	<module>vdmtools</module>
+	<module>traces</module>
+	<module>vdmj</module>
+	<module>vdmjc</module>
+	<module>showtrace</module>
+	<module>xmljunit</module>
+	<module>testframework</module>
+	<module>vdmexamples</module>
+	<module>vdm2java</module>
 
 	</modules>
 
