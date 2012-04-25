@@ -350,7 +350,7 @@ public class AExplicitFunctionDefinitionAssistant {
 		
 		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
 				d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false, null,
-				d.getAccess(), (List<LexNameToken>) d.getTypeParams().clone(), paramPatterns, 
+				d.getAccess().clone(), (List<LexNameToken>) d.getTypeParams().clone(), paramPatterns, 
 				AFunctionTypeAssistant.getCurriedPreType(d.getType(),d.getIsCurried()), d.getPrecondition(), 
 				null, null, 
 				null, null, null, null, null, false, false, null, 

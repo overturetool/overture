@@ -246,7 +246,7 @@ public class AImplicitFunctionDefinitionAssistant {
 			List<PDefinition> defsList = new LinkedList<PDefinition>();
 			defsList.add(def);
 			def.getType().setDefinitions(defsList);
-			def.setAccess(d.getAccess());
+			def.setAccess(d.getAccess().clone());
 			def.setClassDefinition(d.getClassDefinition());
 			return def;
 	}
