@@ -8,9 +8,22 @@
 		<version>2.2.0</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
-	<artifactId>interpreter</artifactId>
+	<artifactId>interpreterV2</artifactId>
 	<version>2.2.0</version>
-	<name>The VDM Interpreter</name>
+	<name>The VDM Interpreter V2</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>astV2</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>typecheckerV2</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 
@@ -92,16 +105,5 @@
 
 
 
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>typechecker</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-	</dependencies>
+	
 </project>

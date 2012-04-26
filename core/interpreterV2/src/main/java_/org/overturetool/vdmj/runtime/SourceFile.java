@@ -32,11 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.BacktrackInputReader;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmjV2.config.Properties;
+import org.overturetool.vdmjV2.lex.BacktrackInputReader;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameToken;
 
 /**
  * A class to hold a source file for source debug output.
