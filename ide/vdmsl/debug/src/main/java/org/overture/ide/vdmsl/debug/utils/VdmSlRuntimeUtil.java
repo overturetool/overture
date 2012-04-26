@@ -7,15 +7,15 @@ import org.overture.typecheck.ModuleEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.util.modules.ModuleList;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.VDMErrorsException;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.utilV2.modules.ModuleList;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexException;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.messages.Console;
+import org.overturetool.vdmjV2.messages.VDMErrorsException;
+import org.overturetool.vdmjV2.syntax.ExpressionReader;
+import org.overturetool.vdmjV2.syntax.ParserException;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class VdmSlRuntimeUtil
 {

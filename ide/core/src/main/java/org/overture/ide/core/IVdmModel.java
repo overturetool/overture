@@ -28,8 +28,8 @@ import org.overture.ast.node.INode;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.ast.VdmModelWorkingCopy;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.util.modules.ModuleList;
+import org.overturetool.utilV2.definitions.ClassList;
+import org.overturetool.utilV2.modules.ModuleList;
 
 public interface IVdmModel extends IVdmElement
 {

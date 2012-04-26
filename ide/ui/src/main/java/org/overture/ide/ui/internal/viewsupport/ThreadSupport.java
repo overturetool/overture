@@ -25,7 +25,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AOperationType;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexNameToken;
 
 public class ThreadSupport extends AExplicitOperationDefinition {
 

@@ -28,7 +28,7 @@ import org.overture.ide.core.IVdmModel;
 
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.FileUtility;
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexLocation;
 
 public abstract class AbstractVdmBuilder
 {

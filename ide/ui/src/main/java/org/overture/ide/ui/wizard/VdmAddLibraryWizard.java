@@ -30,7 +30,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.wizard.pages.LibraryIncludePage;
 import org.overture.ide.ui.wizard.pages.LibraryUtil;
-import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmjV2.lex.Dialect;
 
 public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 {

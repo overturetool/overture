@@ -7,10 +7,10 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeChecker;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.InternalException;
+import org.overturetool.utilV2.definitions.ClassList;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.messages.InternalException;
 
 /***
  * VDM PP builder

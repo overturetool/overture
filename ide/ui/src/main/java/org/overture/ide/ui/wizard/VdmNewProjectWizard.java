@@ -28,8 +28,8 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.LanguageManager;
 import org.overture.ide.ui.wizard.pages.LibraryIncludePage;
 import org.overture.ide.ui.wizard.pages.LibraryUtil;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.lex.Dialect;
 
 /*
  * Abstract wizard for creating a VDM project

@@ -53,13 +53,13 @@ import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.util.modules.ModuleList;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
+import org.overturetool.utilV2.definitions.ClassList;
+import org.overturetool.utilV2.modules.ModuleList;
+import org.overturetool.vdmjV2.config.Properties;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.syntax.ClassReader;
+import org.overturetool.vdmjV2.syntax.ModuleReader;
 
 @SuppressWarnings("restriction")
 public abstract class CoverageEditor

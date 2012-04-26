@@ -43,7 +43,7 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overturetool.parser.imp.ParserError;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.ParseException;
-import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmjV2.lex.Dialect;
 
 
 public class Vdm2UmlAction implements IObjectActionDelegate

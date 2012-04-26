@@ -25,7 +25,7 @@
     </dependency>
     <dependency>
         <groupId>org.overturetool.core</groupId>
-        <artifactId>interpreter</artifactId>
+        <artifactId>interpreterV2</artifactId>
         <version>2.2.0</version>
     </dependency>
     <dependency>

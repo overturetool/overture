@@ -43,7 +43,7 @@ import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pogV2.obligations.ProofObligationList;
 
 public abstract class ViewPosAction implements IObjectActionDelegate
 {

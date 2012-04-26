@@ -38,7 +38,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overturetool.vdmj.Release;
+import org.overturetool.vdmjV2.Release;
 
 @SuppressWarnings("restriction")
 public class VdmLanguagePropertyPage extends PropertyPage implements

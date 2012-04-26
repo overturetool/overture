@@ -20,7 +20,7 @@
     </dependency>
     <dependency>
         <groupId>org.overturetool.core</groupId>
-        <artifactId>typechecker</artifactId>
+        <artifactId>typecheckerV2</artifactId>
         <version>2.2.0</version>
         <scope>compile</scope>
     </dependency>

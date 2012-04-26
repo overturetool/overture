@@ -40,12 +40,12 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.overture.ide.debug.core.model.IVdmLineBreakpoint;
 import org.overture.ide.ui.editor.core.VdmSourceViewer;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexException;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.messages.Console;
+import org.overturetool.vdmjV2.syntax.ExpressionReader;
+import org.overturetool.vdmjV2.syntax.ParserException;
 
 public class BreakpointConditionEditor
 {

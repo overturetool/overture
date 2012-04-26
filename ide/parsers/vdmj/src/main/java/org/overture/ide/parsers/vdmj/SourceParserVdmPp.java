@@ -26,15 +26,15 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.utilV2.definitions.ClassList;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.config.Properties;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.lex.BacktrackInputReader.ReaderType;
+import org.overturetool.vdmjV2.messages.InternalException;
+import org.overturetool.vdmjV2.syntax.ClassReader;
 
 public class SourceParserVdmPp extends AbstractParserParticipant
 {

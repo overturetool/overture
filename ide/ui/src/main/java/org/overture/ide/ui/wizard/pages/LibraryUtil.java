@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Path;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.utility.PluginFolderInclude;
-import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmjV2.lex.Dialect;
 
 public class LibraryUtil
 {
