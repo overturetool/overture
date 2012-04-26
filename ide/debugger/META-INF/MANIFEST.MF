@@ -23,6 +23,6 @@ Require-Bundle: org.eclipse.debug.core;bundle-version="3.5.0";visibility:=reexpo
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,
- ast-2.1.0.jar,
- vdmj-2.1.0.jar,
- cglib-2.1.0.jar
+ ast-2.1.1.jar,
+ vdmj-2.1.1.jar,
+ cglib-2.1.1.jar
