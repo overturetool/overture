@@ -1,7 +1,7 @@
 package org.overture.ast.patterns.assistants;
 
 import org.overture.ast.patterns.AIdentifierPattern;
-import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameList;
 
 public class AIdentifierPatternAssistant {
 

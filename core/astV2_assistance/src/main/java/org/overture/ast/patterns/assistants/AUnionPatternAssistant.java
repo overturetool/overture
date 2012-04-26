@@ -1,7 +1,7 @@
 package org.overture.ast.patterns.assistants;
 
 import org.overture.ast.patterns.AUnionPattern;
-import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameList;
 
 public class AUnionPatternAssistant {
 

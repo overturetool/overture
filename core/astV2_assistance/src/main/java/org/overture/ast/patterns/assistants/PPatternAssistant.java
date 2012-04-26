@@ -8,7 +8,7 @@ import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameList;
 
 public class PPatternAssistant {
 

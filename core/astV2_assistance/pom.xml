@@ -8,14 +8,14 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.core</groupId>
-	<artifactId>ast_assistance</artifactId>
+	<artifactId>astV2_assistance</artifactId>
 	<version>2.2.0</version>
-	<name>The Overture AST Assistants</name>
+	<name>The Overture AST V2 Assistants</name>
 	
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast</artifactId>
+			<artifactId>astV2</artifactId>
 			<version>2.2.0</version>
 		</dependency>
 	</dependencies>
