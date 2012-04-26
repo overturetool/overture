@@ -8,11 +8,37 @@
 		<version>2.2.0</version>
 	</parent>
 	<groupId>org.overturetool.core</groupId>
-	<artifactId>pog</artifactId>
-<version>2.2.0</version>
+	<artifactId>pogV2</artifactId>
+	<version>2.2.0</version>
 	<name>VDM Proof Obligation Generator</name>
 
+	<dependencies>
+		
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>astV2</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>parserV2</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>astV2_assistance</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>typecheckerV2</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -32,31 +58,5 @@
 
 
 
-	<dependencies>
-		
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>parser</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast_assistance</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>typechecker</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-
-	</dependencies>
+	
 </project>

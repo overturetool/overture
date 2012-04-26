@@ -14,26 +14,26 @@ import junit.framework.TestCase;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.pog.obligations.POContextStack;
-import org.overture.pog.obligations.ProofObligation;
-import org.overture.pog.obligations.ProofObligationList;
-import org.overture.pog.visitors.PogVisitor;
+import org.overture.pogV2.obligations.POContextStack;
+import org.overture.pogV2.obligations.ProofObligation;
+import org.overture.pogV2.obligations.ProofObligationList;
+import org.overture.pogV2.visitors.PogVisitor;
 import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.syntax.SyntaxReader;
-import org.overturetool.vdmj.util.Base64;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexException;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.messages.VDMError;
+import org.overturetool.vdmjV2.messages.VDMWarning;
+import org.overturetool.vdmjV2.syntax.ClassReader;
+import org.overturetool.vdmjV2.syntax.ModuleReader;
+import org.overturetool.vdmjV2.syntax.ParserException;
+import org.overturetool.vdmjV2.syntax.SyntaxReader;
+import org.overturetool.vdmjV2.util.Base64;
 
 public class ModuleTestCase extends TestCase
 {
