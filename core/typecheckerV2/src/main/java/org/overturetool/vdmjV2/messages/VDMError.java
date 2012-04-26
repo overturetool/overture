@@ -25,6 +25,7 @@ package org.overturetool.vdmjV2.messages;
 
 import org.overturetool.vdmjV2.lex.LexLocation;
 import org.overturetool.vdmjV2.messages.LocatedException;
+import org.overturetool.vdmjV2.messages.VDMMessage;
 
 
 /**

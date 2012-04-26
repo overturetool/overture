@@ -2,7 +2,7 @@ package org.overture.ast.types.assistants;
 
 import java.util.HashMap;
 
-import org.overturetool.vdmj.util.HelpLexNameToken;
+import org.overturetool.vdmjV2.util.HelpLexNameToken;
 import org.overturetool.vdmjV2.lex.LexNameToken;
 import org.overturetool.vdmjV2.messages.InternalException;
 

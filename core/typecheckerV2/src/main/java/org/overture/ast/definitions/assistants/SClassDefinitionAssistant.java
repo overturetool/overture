@@ -32,7 +32,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.vdmj.util.HelpLexNameToken;
+import org.overturetool.vdmjV2.util.HelpLexNameToken;
 import org.overturetool.vdmjV2.lex.LexLocation;
 import org.overturetool.vdmjV2.lex.LexNameList;
 import org.overturetool.vdmjV2.lex.LexNameToken;

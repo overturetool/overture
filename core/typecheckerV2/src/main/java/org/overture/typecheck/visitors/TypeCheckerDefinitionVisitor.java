@@ -84,7 +84,7 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
-import org.overturetool.vdmj.util.HelpLexNameToken;
+import org.overturetool.vdmjV2.util.HelpLexNameToken;
 import org.overturetool.vdmjV2.lex.LexNameToken;
 import org.overturetool.vdmjV2.lex.VDMToken;
 import org.overturetool.vdmjV2.typechecker.NameScope;

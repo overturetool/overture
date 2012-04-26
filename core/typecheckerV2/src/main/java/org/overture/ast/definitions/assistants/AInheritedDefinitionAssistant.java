@@ -7,7 +7,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.PType;
-import org.overturetool.vdmj.util.HelpLexNameToken;
+import org.overturetool.vdmjV2.util.HelpLexNameToken;
 import org.overturetool.vdmjV2.lex.LexNameList;
 import org.overturetool.vdmjV2.lex.LexNameToken;
 import org.overturetool.vdmjV2.typechecker.NameScope;
