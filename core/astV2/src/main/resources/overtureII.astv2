@@ -21,7 +21,7 @@ Tokens
   LexRealToken = 'java:node:org.overturetool.vdmjV2.lex.LexRealToken';
   LexStringToken = 'java:node:org.overturetool.vdmjV2.lex.LexStringToken';
   clonableFile ='java:org.overturetool.utilV2.ClonableFile';
-  clonableString ='java:org.overturetool.util.ClonableString';
+  clonableString ='java:org.overturetool.utilV2.ClonableString';
   ClassDefinitionSettings = 'java:enum:org.overturetool.vdmjV2.typechecker.ClassDefinitionSettings';
   location = 'java:org.overturetool.vdmjV2.lex.LexLocation';
   nameScope = 'java:enum:org.overturetool.vdmjV2.typechecker.NameScope';

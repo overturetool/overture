@@ -1,7 +1,7 @@
 To String Extensions
 // import packages used by external $$ java code
-import org.overturetool.util.Utils;
-import org.overturetool.util.ToStringUtil;
+import org.overturetool.utilV2.Utils;
+import org.overturetool.utilV2.ToStringUtil;
 
 
 //  Expressions
