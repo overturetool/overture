@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.overture.ast.patterns.PPattern;
 import org.overture.parser.tests.framework.BaseParserTestCase;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.syntax.PatternReader;
+import org.overturetool.vdmjV2.lex.LexException;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.syntax.ParserException;
+import org.overturetool.vdmjV2.syntax.PatternReader;
 
 public class PatternTestCase extends BaseParserTestCase<PatternReader>
 {

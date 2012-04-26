@@ -7,13 +7,13 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.syntax.SyntaxReader;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexException;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.syntax.ParserException;
+import org.overturetool.vdmjV2.syntax.SyntaxReader;
 
 public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 		TestCase
