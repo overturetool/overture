@@ -9,7 +9,6 @@
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.vdmpp</artifactId>
   <packaging>pom</packaging>
-  <version>2.1.1</version>
   <name>Overture IDE VDM-PP Top-level</name>
   <description>Top level of the Overture IDE for VDM-PP</description>
   

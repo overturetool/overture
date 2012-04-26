@@ -1,141 +1,123 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>2.1.1</version>
-	</parent>
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>umltrans</artifactId>
-	<version>2.1.1</version>
-	<name>Bi-directional OML to UML translator</name>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<includes>
-						<include>**/*Test.java</include>
-						<include>**/*TestSuite.java</include>
-						<include>**/*Test?.java</include>
-					</includes>
-				</configuration>
-			</plugin>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.1.1</version>
+  </parent>
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>umltrans</artifactId>
+  <name>Bi-directional OML to UML translator</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>xmljunit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>stdlib</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>args4j</groupId>
+      <artifactId>args4j</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+  </dependencies>
 
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>vdmt</artifactId>
-				<version>2.1.1</version>
-				<configuration>
-					<excludePackages>
-						<param>
-							org.overturetool.umltrans.test
+  <build>
+    <plugins>
+      <plugin>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.5</version>
+	<configuration>
+	  <testFailureIgnore>true</testFailureIgnore>
+	  <includes>
+	    <include>**/*Test.java</include>
+	    <include>**/*TestSuite.java</include>
+	    <include>**/*Test?.java</include>
+	  </includes>
+	</configuration>
+      </plugin>
+      <plugin>
+	<groupId>org.overturetool.tools</groupId>
+	<artifactId>vdmt</artifactId>
+	<version>${project.version}</version>
+	<configuration>
+	  <excludePackages>
+	    <param>
+	      org.overturetool.umltrans.test
             </param>
-						<param>
-							org.overturetool.umltrans.test.spec
+	    <param>
+	      org.overturetool.umltrans.test.spec
             </param>
-						<param>
-							org.overturetool.api.vdmunit
+	    <param>
+	      org.overturetool.api.vdmunit
             </param>
-
-
-					</excludePackages>
-					<excludeClasses>
-
-					</excludeClasses>
-					<importPackages>
-						<param>org.overturetool.ast.itf</param>
-						<param>org.overturetool.ast.imp</param>
-						<param>org.overturetool.api.io</param>
-					</importPackages>
-				</configuration>
-			</plugin>
-
-			<!-- plugin> <groupId>org.overturetool.tools</groupId> <artifactId>astgen</artifactId> 
-				<configuration> <prefix>Uml</prefix> <packageName>org.overturetool.umltrans.uml</packageName> 
-				<top> <param>Model</param> </top> </configuration> </plugin -->
-
-
-			<plugin>
-				<!-- NOTE: We don't need a groupId specification because the group is 
-					org.apache.maven.plugins ...which is assumed by default. -->
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.2</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.overturetool.umltrans.Main.MainClass</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-
-
-		</plugins>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>parser</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>xmljunit</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>stdlib</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>args4j</groupId>
-			<artifactId>args4j</artifactId>
-			<version>2.0.9</version>
-		</dependency>
-	</dependencies>
-
-	<developers>
-		<developer>
-			<id>KennethLausdahl</id>
-			<name>Kenneth Lausdahl</name>
-			<email />
-			<url>http://www.lausdahl.com</url>
-			<organization>IHA</organization>
-			<organizationUrl>http://iha.dk</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>HansKristianLintrup</id>
-			<name>Hans Kristian Lintrup</name>
-			<email />
-			<url>-</url>
-			<organization>-</organization>
-			<organizationUrl>-</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-	</developers>
-	<!--repositories>
-		<repository>
-			<id>java.net</id>
-			<url>http://download.java.net/maven/2
-			</url>
-			<layout>legacy</layout>
-		</repository>
-	</repositories-->
+	  </excludePackages>
+	  <excludeClasses>
+	  </excludeClasses>
+	  <importPackages>
+	    <param>org.overturetool.ast.itf</param>
+	    <param>org.overturetool.ast.imp</param>
+	    <param>org.overturetool.api.io</param>
+	  </importPackages>
+	</configuration>
+      </plugin>
+      <!-- plugin> <groupId>org.overturetool.tools</groupId> <artifactId>astgen</artifactId> 
+	   <configuration> <prefix>Uml</prefix> <packageName>org.overturetool.umltrans.uml</packageName> 
+	   <top> <param>Model</param> </top> </configuration> </plugin -->
+      <plugin>
+	<!-- NOTE: We don't need a groupId specification because the group is 
+	     org.apache.maven.plugins ...which is assumed by default. -->
+	<artifactId>maven-assembly-plugin</artifactId>
+	<version>2.2.2</version>
+	<configuration>
+	  <descriptorRefs>
+	    <descriptorRef>jar-with-dependencies</descriptorRef>
+	  </descriptorRefs>
+	  <archive>
+	    <manifest>
+	      <mainClass>org.overturetool.umltrans.Main.MainClass</mainClass>
+	    </manifest>
+	  </archive>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
+ 
+  <developers>
+    <developer>
+      <id>KennethLausdahl</id>
+      <name>Kenneth Lausdahl</name>
+      <email />
+      <url>http://www.lausdahl.com</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://iha.dk</organizationUrl>
+      <roles>
+	<role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>HansKristianLintrup</id>
+      <name>Hans Kristian Lintrup</name>
+      <email />
+      <url>-</url>
+      <organization>-</organization>
+      <organizationUrl>-</organizationUrl>
+      <roles>
+	<role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 </project>

@@ -14,26 +14,26 @@
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>umltrans</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.core</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmpp</groupId>
       <artifactId>org.overture.ide.vdmpp.core</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmrt</groupId>
       <artifactId>org.overture.ide.vdmrt.core</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -42,11 +42,6 @@
       <artifactId>org.eclipse.ui.console</artifactId>
       <version>3.5.100</version>
     </dependency>
-    <!-- <dependency> -->
-    <!--   <groupId>org.eclipse.ui</groupId> -->
-    <!--   <artifactId>org.eclipse.ui</artifactId> -->
-    <!--   <version>3.7.0</version> -->
-    <!-- </dependency> -->
     <dependency>
       <groupId>org.eclipse.swt</groupId>
       <artifactId>org.eclipse.swt</artifactId>

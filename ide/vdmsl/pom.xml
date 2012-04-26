@@ -9,18 +9,13 @@
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.vdmsl</artifactId>
   <packaging>pom</packaging>
-  <version>2.1.1</version>
   <name>Overture IDE VDM-SL top level</name>
   <description>Top level for the Overture IDE for VDM-SL</description>
 
   <modules>
     <!-- Put all child Eclipse Plugin projects(modules) here -->
-
     <module>core</module>
     <module>ui</module>
-  <module>debug</module>
-
+    <module>debug</module>
   </modules>
-  
- 
 </project>

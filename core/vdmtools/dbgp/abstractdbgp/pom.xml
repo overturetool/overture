@@ -8,7 +8,4 @@
   <groupId>org.overturetool.vdmtools.dbgp</groupId>
   <artifactId>abstractdbgp</artifactId>
   <name>abstractdbgp</name>
-  <version>2.1.1</version>
-  
-  
 </project>

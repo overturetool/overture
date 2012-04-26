@@ -1,104 +1,96 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>2.1.1</version>
-	</parent>
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>traces</artifactId>
-	<name>Combinatorial Testing of VDM++ models</name>
-	<version>2.1.1</version>
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>vdmj</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>parser</artifactId>
-			<version>2.1.1</version>
-		</dependency>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.1.1</version>
+  </parent>
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>traces</artifactId>
+  <name>Combinatorial Testing of VDM++ models</name>
 
-		<dependency>
-			<groupId>org.overturetool.core.vdmtools</groupId>
-			<artifactId>vdmtoolsapi</artifactId>
-			<version>2.1.1</version>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>vdmj</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core.vdmtools</groupId>
+      <artifactId>vdmtoolsapi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
-	</dependencies>
+  <build>
+    <plugins>
+      <plugin>
+	<!-- NOTE: We don't need a groupId specification because the group is 
+	     org.apache.maven.plugins ...which is assumed by default. -->
+	<artifactId>maven-assembly-plugin</artifactId>
+	<version>2.2.2</version>
+	<configuration>
+	  <descriptorRefs>
+	    <descriptorRef>jar-with-dependencies</descriptorRef>
+	  </descriptorRefs>
+	  <archive>
+	    <manifest>
+	      <mainClass>org.overturetool.traces.MainClass</mainClass>
+	    </manifest>
+	  </archive>
+	</configuration>
+      </plugin>
+      <plugin>
+	<groupId>org.overturetool.tools</groupId>
+	<artifactId>vdmt</artifactId>
+	<version>${project.version}</version>
+	<configuration>
+	  <excludePackages>
+	    <param>org.overturetool.traces.test</param>
+	    <param>org.overturetool.traces.astspec</param>
+	    <param>org.overturetool.traces.API.vdmunit</param>
+	  </excludePackages>
+	  <excludeClasses>
+	  </excludeClasses>
+	  <importPackages>
+	    <param>org.overturetool.ast.itf</param>
+	    <param>org.overturetool.ast.imp</param>
+	  </importPackages>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-
-	<build>
-		<plugins>
-
-			<plugin>
-				<!-- NOTE: We don't need a groupId specification because the group is 
-					org.apache.maven.plugins ...which is assumed by default. -->
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.2</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.overturetool.traces.MainClass</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>vdmt</artifactId>
-				<version>2.1.1</version>
-				<configuration>
-					<excludePackages>
-						<param>org.overturetool.traces.test</param>
-						<param>org.overturetool.traces.astspec</param>
-						<param>org.overturetool.traces.API.vdmunit</param>
-					</excludePackages>
-					<excludeClasses>
-
-					</excludeClasses>
-					<importPackages>
-						<param>org.overturetool.ast.itf</param>
-						<param>org.overturetool.ast.imp</param>
-					</importPackages>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-
-	<developers>
-		<developer>
-			<id>KennethLausdahl</id>
-			<name>Kenneth Lausdahl</name>
-			<email />
-			<url>http://www.lausdahl.com</url>
-			<organization>IHA</organization>
-			<organizationUrl>http://iha.dk</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>PeterGormLarsen</id>
-			<name>Peter Gorm Larsen</name>
-			<email />
-			<url>-</url>
-			<organization>IHA</organization>
-			<organizationUrl>http://www.iha.dk</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-	</developers>
+  <developers>
+    <developer>
+      <id>KennethLausdahl</id>
+      <name>Kenneth Lausdahl</name>
+      <email />
+      <url>http://www.lausdahl.com</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://iha.dk</organizationUrl>
+      <roles>
+	<role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>PeterGormLarsen</id>
+      <name>Peter Gorm Larsen</name>
+      <email />
+      <url>-</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://www.iha.dk</organizationUrl>
+      <roles>
+	<role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 </project>

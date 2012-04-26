@@ -1,58 +1,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>root</artifactId>
-		<version>2.1.1</version>
-	</parent>
-	<groupId>org.overturetool</groupId>
-	<artifactId>core</artifactId>
-	<packaging>pom</packaging>
-	<version>2.1.1</version>
-	<name>Core Tools</name>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>root</artifactId>
+    <version>2.1.1</version>
+  </parent>
+  <groupId>org.overturetool</groupId>
+  <artifactId>core</artifactId>
+  <packaging>pom</packaging>
+  <name>Core Tools</name>
 
-	<modules>
-		<!--<module>jmltrans</module> -->
-		<!-- module>proofsupport</module-->
-		<module>stdlib</module>
-		<module>ast</module>
-		<!--module>astgen</module -->
-		<module>vdmunit</module>
-		<module>parser</module>
-		<module>potrans</module>
-		<module>umltrans</module>
-		<module>vdmtools</module>
-		<module>traces</module>
-		<module>vdmj</module>
-		<module>vdmjc</module>
-		<module>showtrace</module>
-		<module>xmljunit</module>
-		<module>testframework</module>
-		<module>vdmexamples</module>
-		<module>vdm2java</module>
+  <modules>
+    <!--<module>jmltrans</module> -->
+    <!-- module>proofsupport</module-->
+    <module>stdlib</module>
+    <module>ast</module>
+    <!--module>astgen</module -->
+    <module>vdmunit</module>
+    <module>parser</module>
+    <module>potrans</module>
+    <module>umltrans</module>
+    <module>vdmtools</module>
+    <module>traces</module>
+    <module>vdmj</module>
+    <module>vdmjc</module>
+    <module>showtrace</module>
+    <module>xmljunit</module>
+    <module>testframework</module>
+    <module>vdmexamples</module>
+    <module>vdm2java</module>
+  </modules>
 
-	</modules>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<!-- http://mojo.codehaus.org/cobertura-maven-plugin/usage.html -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5.1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>2.3.3-SNAPSHOT</version>
-			</plugin>
-		</plugins>
-	</reporting>
-
+  <reporting>
+    <plugins>
+      <plugin>
+	<!-- http://mojo.codehaus.org/cobertura-maven-plugin/usage.html -->
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-checkstyle-plugin</artifactId>
+	<version>2.3</version>
+      </plugin>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>cobertura-maven-plugin</artifactId>
+	<version>2.5.1</version>
+      </plugin>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>findbugs-maven-plugin</artifactId>
+	<version>2.3.3-SNAPSHOT</version>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

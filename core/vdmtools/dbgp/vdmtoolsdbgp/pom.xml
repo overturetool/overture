@@ -8,20 +8,17 @@
   <groupId>org.overturetool.vdmtools.dbgp</groupId>
   <artifactId>vdmtoolsdbgp</artifactId>
   <name>vdmtoolsdbgp</name>
-  <version>2.1.1</version>
   
   <dependencies>
-   
     <dependency>
     	<groupId>org.overturetool.vdmtools.dbgp</groupId>
     	<artifactId>abstractdbgp</artifactId>
-    	<version>2.1.1</version>
+    	<version>${project.version}</version>
     </dependency>
     <dependency>
     	<groupId>org.overturetool</groupId>
     	<artifactId>vdmtoolsapi</artifactId>
-    	<version>2.1.1</version>
+    	<version>${project.version}</version>
     </dependency>
   </dependencies>
- 
 </project>

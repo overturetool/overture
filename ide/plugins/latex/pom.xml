@@ -10,43 +10,40 @@
   <name>org.overture.ide.plugins.latex</name>
 
   <dependencies>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide.vdmpp</groupId>
-  		<artifactId>org.overture.ide.vdmpp.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide.vdmrt</groupId>
-  		<artifactId>org.overture.ide.vdmrt.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide.vdmsl</groupId>
-  		<artifactId>org.overture.ide.vdmsl.core</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.overture.ide</groupId>
-  		<artifactId>org.overture.ide.ui</artifactId>
-  		<version>2.1.1</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.core</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmpp</groupId>
+      <artifactId>org.overture.ide.vdmpp.core</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmrt</groupId>
+      <artifactId>org.overture.ide.vdmrt.core</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide.vdmsl</groupId>
+      <artifactId>org.overture.ide.vdmsl.core</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.ide</groupId>
+      <artifactId>org.overture.ide.ui</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
-  
-
-
 </project>

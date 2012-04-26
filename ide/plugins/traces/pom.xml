@@ -15,38 +15,38 @@
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>traces</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.core</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.ui</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.debug</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmsl</groupId>
       <artifactId>org.overture.ide.vdmsl.debug</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmpp</groupId>
       <artifactId>org.overture.ide.vdmpp.debug</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmrt</groupId>
       <artifactId>org.overture.ide.vdmrt.debug</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.core</groupId>

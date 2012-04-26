@@ -14,21 +14,21 @@
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.debug</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.core</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmpp</groupId>
       <artifactId>org.overture.ide.vdmpp.core</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

@@ -8,10 +8,8 @@
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.proofsupport</artifactId>
   <name>Overture IDE Proofsupport plugin</name>
-  <version>2.1.1</version>
   <packaging>eclipse-plugin</packaging>
  
   <packaging>source-plugin</packaging>
-<description>Graphical tool which provides a userinterface for the proofobligation discharge.</description>
-
+  <description>Graphical tool which provides a userinterface for the proofobligation discharge.</description>
 </project>
