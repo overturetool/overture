@@ -8,9 +8,9 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.core</groupId>
-	<artifactId>ast</artifactId>
+	<artifactId>astV2</artifactId>
 	<version>2.2.0</version>
-	<name>The Overture Abstract Syntax Tree</name>
+	<name>The Overture Abstract Syntax Tree V2</name>
 	<build>
 		<plugins>
 			<plugin>
