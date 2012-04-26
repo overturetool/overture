@@ -11,8 +11,8 @@ import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.SValueImport;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class SValueImportAssistant {
 

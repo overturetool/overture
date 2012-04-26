@@ -32,9 +32,9 @@ import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.assistants.AModuleModulesAssistant;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 
 /**

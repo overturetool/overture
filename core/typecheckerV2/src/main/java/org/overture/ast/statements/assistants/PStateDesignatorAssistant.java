@@ -5,7 +5,7 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.EStateDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 
 public class PStateDesignatorAssistant {

@@ -41,8 +41,8 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexNameToken;
 
 public class PTypeAssistant
 {

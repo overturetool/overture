@@ -11,7 +11,7 @@ import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class ACaseAlternativeAssistant {
 

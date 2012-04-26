@@ -32,9 +32,9 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 
 

@@ -21,10 +21,10 @@ import org.overture.ast.types.assistants.PTypeList;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class AStateDefinitionAssistant {
 

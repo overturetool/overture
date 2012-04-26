@@ -3,7 +3,7 @@ package org.overture.typecheck;
 import java.util.LinkedList;
 
 import org.overture.ast.types.PType;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class TypeCheckInfo
 {

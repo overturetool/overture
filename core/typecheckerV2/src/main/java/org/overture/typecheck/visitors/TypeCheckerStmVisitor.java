@@ -93,11 +93,11 @@ import org.overture.typecheck.PublicClassEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexStringToken;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexStringToken;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 
 public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, PType> 

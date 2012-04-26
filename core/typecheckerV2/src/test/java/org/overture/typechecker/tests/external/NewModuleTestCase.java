@@ -5,9 +5,9 @@ import java.io.File;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
 import org.overturetool.test.framework.TestResourcesResultTestCase;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.Dialect;
 
 public class NewModuleTestCase extends TestResourcesResultTestCase
 {

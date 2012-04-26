@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameList;
 
 public class AClassInvariantDefinitionAssistant {
 

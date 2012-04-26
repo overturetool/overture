@@ -14,13 +14,13 @@ import org.overture.typecheck.TypeChecker;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
-import org.overturetool.vdmj.syntax.SyntaxReader;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.messages.VDMError;
+import org.overturetool.vdmjV2.messages.VDMWarning;
+import org.overturetool.vdmjV2.syntax.ClassReader;
+import org.overturetool.vdmjV2.syntax.ModuleReader;
+import org.overturetool.vdmjV2.syntax.SyntaxReader;
 
 public class OvertureTestHelper
 {

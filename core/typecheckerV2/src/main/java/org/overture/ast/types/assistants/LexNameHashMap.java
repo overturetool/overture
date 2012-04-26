@@ -2,9 +2,9 @@ package org.overture.ast.types.assistants;
 
 import java.util.HashMap;
 
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.util.HelpLexNameToken;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.messages.InternalException;
 
 public class LexNameHashMap<V> extends HashMap<LexNameToken, V> {
 

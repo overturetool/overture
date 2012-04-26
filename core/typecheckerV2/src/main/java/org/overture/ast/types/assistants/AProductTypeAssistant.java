@@ -9,7 +9,7 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmjV2.util.Utils;
 
 public class AProductTypeAssistant {
 

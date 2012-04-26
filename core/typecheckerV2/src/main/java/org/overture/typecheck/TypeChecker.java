@@ -27,11 +27,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMMessage;
-import org.overturetool.vdmj.messages.VDMWarning;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.messages.InternalException;
+import org.overturetool.vdmjV2.messages.VDMError;
+import org.overturetool.vdmjV2.messages.VDMMessage;
+import org.overturetool.vdmjV2.messages.VDMWarning;
 
 
 /**

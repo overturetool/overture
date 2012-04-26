@@ -18,7 +18,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexLocation;
 
 
 public class AUnionTypeAssistat {

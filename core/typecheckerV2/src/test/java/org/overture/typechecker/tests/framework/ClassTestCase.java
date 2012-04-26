@@ -16,15 +16,15 @@ import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
 import org.overture.typechecker.tests.framework.TCStruct.Type;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmjV2.lex.LexException;
+import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.vdmjV2.messages.VDMError;
+import org.overturetool.vdmjV2.messages.VDMWarning;
+import org.overturetool.vdmjV2.syntax.ClassReader;
+import org.overturetool.vdmjV2.syntax.ParserException;
 
 public class ClassTestCase extends TestCase
 {

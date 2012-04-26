@@ -12,9 +12,9 @@ import org.overture.typecheck.Environment;
 import org.overture.typecheck.PrivateClassEnvironment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.lex.LexIdentifierToken;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class AClassTypeAssistant {
 

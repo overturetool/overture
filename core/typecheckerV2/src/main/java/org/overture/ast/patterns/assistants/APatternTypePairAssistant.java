@@ -9,7 +9,7 @@ import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class APatternTypePairAssistant {
 

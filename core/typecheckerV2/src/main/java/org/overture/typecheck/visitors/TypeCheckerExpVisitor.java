@@ -80,11 +80,11 @@ import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexRealToken;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.Release;
+import org.overturetool.vdmjV2.Settings;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexRealToken;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class TypeCheckerExpVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType>

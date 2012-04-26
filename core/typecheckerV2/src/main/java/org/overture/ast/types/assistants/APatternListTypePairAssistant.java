@@ -13,7 +13,7 @@ import org.overture.ast.patterns.assistants.PPatternListAssistant;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 public class APatternListTypePairAssistant {
 

@@ -9,7 +9,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexLocation;
 
 public class PPatternListAssistant {
 

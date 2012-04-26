@@ -1,6 +1,6 @@
 package org.overture.typecheck;
 
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexLocation;
 
 public class TypeCheckerErrors {
 

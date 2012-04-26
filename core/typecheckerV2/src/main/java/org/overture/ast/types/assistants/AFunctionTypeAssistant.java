@@ -13,8 +13,8 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmjV2.lex.LexNameToken;
+import org.overturetool.vdmjV2.util.Utils;
 
 
 public class AFunctionTypeAssistant {

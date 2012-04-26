@@ -1,7 +1,7 @@
 package org.overturetool.vdmj.util;
 
 import org.overture.typecheck.TypeComparator;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexNameToken;
 
 public class HelpLexNameToken {
 

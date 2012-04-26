@@ -20,9 +20,9 @@ import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.lex.LexNameList;
+import org.overturetool.vdmjV2.lex.LexNameToken;
 
 public class AUnknownTypeAssistant {
 

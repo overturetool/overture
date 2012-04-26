@@ -26,7 +26,7 @@ package org.overture.typecheck;
 import java.util.List;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmjV2.typechecker.NameScope;
 
 
 

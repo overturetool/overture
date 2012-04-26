@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ModuleEnvironment;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
+import org.overturetool.vdmjV2.lex.LexIdentifierToken;
 
 public class AModuleModulesAssistant
 {

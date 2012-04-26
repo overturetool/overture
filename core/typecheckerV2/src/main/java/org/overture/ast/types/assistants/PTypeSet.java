@@ -12,8 +12,8 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.util.Utils;
+import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmjV2.util.Utils;
 
 @SuppressWarnings("serial")
 public class PTypeSet extends TreeSet<PType>

@@ -1,6 +1,6 @@
 package org.overture.typecheck;
 
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmjV2.lex.LexNameToken;
 
 public class LexNameTokenAssistent {
 	public static boolean isEqual(LexNameToken token, Object other) {
