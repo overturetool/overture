@@ -12,33 +12,32 @@
 	<!--version>2.1.1</version-->
 	<name>Core Tools</name>
 
-	<modules>
-		<!--<module>jmltrans</module> -->
-		<!-- module>proofsupport</module-->
+	<modules>		
         <module>ast</module>
-        <module>ast_assistance</module>    	
+	<!--module>astgen</module-->
+	<module>astV2</module>
+        <module>astV2_assistance</module>    
+	<module>interpreterV2</module>	
+	<!--<module>jmltrans</module> -->
         <module>parser</module>
-        <module>typechecker</module>	
-        <module>interpreter</module>
-		
-        <module>pog</module>
-	<module>stdlib</module>
-	<module>ast-old</module>
-        <module>parser-old</module>
-		<!--module>astgen</module -->
-	<module>vdmunit</module>	
+        <module>parserV2</module>
+        <module>pogV2</module>
 	<module>potrans</module>
-	<module>umltrans</module>
-	<module>vdmtools</module>
-	<module>traces</module>
-	<module>vdmj</module>
-	<module>vdmjc</module>
+	<!-- module>proofsupport</module-->
 	<module>showtrace</module>
-	<module>xmljunit</module>
+	<module>stdlib</module>
 	<module>testframework</module>
+	<module>traces</module>
+        <module>typecheckerV2</module>	
+	<module>umltrans</module>        
+	<module>vdm2java</module>		
 	<module>vdmexamples</module>
-	<module>vdm2java</module>
-
+	<module>vdmj</module>
+	<!-- module>vdmj_compatibility_testsV2</module-->
+	<module>vdmjc</module>
+	<module>vdmtools</module>
+	<module>vdmunit</module>	
+	<module>xmljunit</module>
 	</modules>
 
 	<reporting>
