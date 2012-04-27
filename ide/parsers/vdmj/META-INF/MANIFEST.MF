@@ -10,7 +10,4 @@ Bundle-SymbolicName: org.overture.ide.parsers.vdmj;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.overture.ide.core;bundle-version="2.2.0"
 Bundle-Activator: org.overture.ide.parsers.vdmj.Activator
-Bundle-ClassPath: .,
- ast-2.2.0.jar,
- ast_assistance-2.2.0.jar,
- parser-2.2.0.jar
+Bundle-ClassPath: .

@@ -15,9 +15,9 @@
 	<modules>
 		<module>astCreator</module>
 		<module>astCreatorPlugin</module>
-		<module>vdmt</module>
+		<!--module>vdmt</module-->
 		<module>overturetemplategen</module>
-		<module>packworkspace</module>
+		<!--module>packworkspace</module-->
 		<!-- <module>maven-pst</module> -->
 		<!-- <module>treegen</module> -->
 		<!-- <module>treegenplugin</module> -->
