@@ -30,7 +30,7 @@ import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
-import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public class VdmSourceUnit implements IVdmSourceUnit
 {

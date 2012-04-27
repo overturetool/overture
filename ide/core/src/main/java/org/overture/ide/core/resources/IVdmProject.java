@@ -31,8 +31,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
-import org.overturetool.vdmjV2.Release;
-import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.lex.Dialect;
 
 public interface IVdmProject extends IAdaptable
 {

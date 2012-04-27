@@ -61,14 +61,14 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
-import org.overturetool.utilV2.definitions.ClassList;
-import org.overturetool.utilV2.modules.ModuleList;
-import org.overturetool.vdmjV2.lex.Dialect;
-import org.overturetool.vdmjV2.lex.LexLocation;
-import org.overturetool.vdmjV2.lex.LexTokenReader;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.util.modules.ModuleList;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.LatexSourceFile;
-import org.overturetool.vdmjV2.syntax.ClassReader;
-import org.overturetool.vdmjV2.syntax.ModuleReader;
+import org.overturetool.vdmj.syntax.ClassReader;
+import org.overturetool.vdmj.syntax.ModuleReader;
 
 @SuppressWarnings("restriction")
 public class LatexCoverageAction implements IObjectActionDelegate

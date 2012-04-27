@@ -18,14 +18,14 @@
     </dependency>
     <dependency>
             <groupId>org.overturetool.core</groupId>
-            <artifactId>astV2</artifactId>
+            <artifactId>ast</artifactId>
             <version>2.2.0</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.overturetool.core</groupId>
-            <artifactId>parserV2</artifactId>
+            <artifactId>parser</artifactId>
             <version>2.2.0</version>
         </dependency>
     <dependency>

@@ -8,17 +8,17 @@ import org.overture.typecheck.PublicClassEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.utilV2.definitions.ClassList;
-import org.overturetool.vdmjV2.lex.Dialect;
-import org.overturetool.vdmjV2.lex.LexException;
-import org.overturetool.vdmjV2.lex.LexLocation;
-import org.overturetool.vdmjV2.lex.LexNameToken;
-import org.overturetool.vdmjV2.lex.LexTokenReader;
-import org.overturetool.vdmjV2.messages.Console;
-import org.overturetool.vdmjV2.messages.VDMErrorsException;
-import org.overturetool.vdmjV2.syntax.ExpressionReader;
-import org.overturetool.vdmjV2.syntax.ParserException;
-import org.overturetool.vdmjV2.typechecker.NameScope;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.VDMErrorsException;
+import org.overturetool.vdmj.syntax.ExpressionReader;
+import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.typechecker.NameScope;
 
 public class VdmPpRuntimeUtil
 {

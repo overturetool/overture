@@ -35,7 +35,7 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.internal.core.resources.VdmProject;
 import org.overturetool.vdmj.lex.DocStreamReader;
 import org.overturetool.vdmj.lex.DocxStreamReader;
-import org.overturetool.vdmjV2.lex.LexLocation;
+import org.overturetool.vdmj.lex.LexLocation;
 
 import org.overturetool.vdmj.lex.ODFStreamReader;
 

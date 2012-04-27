@@ -23,9 +23,9 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
-import org.overture.pogV2.obligations.POContextStack;
-import org.overture.pogV2.obligations.ProofObligationList;
-import org.overture.pogV2.visitors.PogVisitor;
+import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pog.visitors.PogVisitor;
 
 public class ViewPosActionPp extends ViewPosAction {
 

@@ -71,13 +71,13 @@ import org.overture.ide.ui.outline.DisplayNameCreator;
 import org.overture.ide.ui.outline.ExecutableFilter;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overturetool.utilV2.ClonableFile;
-import org.overturetool.vdmjV2.lex.Dialect;
-import org.overturetool.vdmjV2.lex.LexException;
-import org.overturetool.vdmjV2.lex.LexTokenReader;
-import org.overturetool.vdmjV2.messages.Console;
-import org.overturetool.vdmjV2.syntax.ExpressionReader;
-import org.overturetool.vdmjV2.syntax.ParserException;
+import org.overturetool.util.ClonableFile;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.LexException;
+import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.syntax.ExpressionReader;
+import org.overturetool.vdmj.syntax.ParserException;
 
 /**
  * Main launch configuration tab for overture scripts

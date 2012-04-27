@@ -62,8 +62,8 @@ import org.overture.ide.core.utility.LanguageManager;
 
 import org.overture.ide.internal.core.ResourceManager;
 import org.overture.ide.internal.core.ast.VdmModelManager;
-import org.overturetool.vdmjV2.Release;
-import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.lex.Dialect;
 
 public class VdmProject implements IVdmProject
 {

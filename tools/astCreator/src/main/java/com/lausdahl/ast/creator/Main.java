@@ -35,11 +35,11 @@ public class Main
 
 	private static final String INPUT_FILENAME_OVERTURE_II = "..\\..\\core\\ast\\src\\main\\resources\\overtureII.astv2".replace('\\', File.separatorChar);
 	private static final String INPUT_FILENAME_OVERTURE_II_INTERPRETER = "..\\..\\core\\interpreter\\src\\main\\resources\\overtureII.astv2".replace('\\', File.separatorChar);
-	private static final String INPUT_FILENAME_TEST = "src\\main\\resources\\testdata\\nested1.astV2";
-	// private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\extend\\t1.astV2";
+	private static final String INPUT_FILENAME_TEST = "src\\main\\resources\\testdata\\nested1.ast";
+	// private static final String INPUT_FILENAME = "src\\main\\resources\\testdata\\extend\\t1.ast";
 	//
 	private static final String TESTDATA_BASE = "src\\main\\resources\\testdata\\";
-	// private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\extend\\t2.astV2";
+	// private static final String INPUT_FILENAME2 = "src\\main\\resources\\testdata\\extend\\t2.ast";
 	// private static final String ANALYSIS_PACKAGE_NAME = "org.overture.ast.analysis";
 	private static File generated = null;
 

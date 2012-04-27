@@ -23,9 +23,9 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
-import org.overture.pogV2.obligations.POContextStack;
-import org.overture.pogV2.obligations.ProofObligationList;
-import org.overture.pogV2.visitors.PogVisitor;
+import org.overture.pog.obligations.POContextStack;
+import org.overture.pog.obligations.ProofObligationList;
+import org.overture.pog.visitors.PogVisitor;
 
 public class ViewPosActionSl extends ViewPosAction {
 

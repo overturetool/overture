@@ -114,7 +114,7 @@ import org.overturetool.vdmj.values.Value;
  * @author kela
  *
  */
-public class DBGPReaderV2 extends DBGPReader implements Serializable {
+public class DBGPReader extends DBGPReader implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final int SHORT_STRING_MAX = 200;
@@ -433,7 +433,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					RemoteControl remote = (remoteClass == null) ? null
 							: remoteClass.newInstance();
 
-					new DBGPReaderV2(host, port, ideKey, i, expression, null)
+					new DBGPReader(host, port, ideKey, i, expression, null)
 							.startup(remote);
 
 					if (coverage != null) {
@@ -461,17 +461,17 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		}
 	}
 
-	public DBGPReaderV2(String host, int port, String ideKey,
+	public DBGPReader(String host, int port, String ideKey,
 			Interpreter interpreter, String expression, CPUValue cpu) {
 		super(host, port, ideKey, interpreter, expression, cpu);
 	}
 
 	/**
-	 * Overrides to use DBGPReaderV2 debug reader
+	 * Overrides to use DBGPReader debug reader
 	 */
 	@Override
-	public DBGPReaderV2 newThread(CPUValue _cpu) {
-		DBGPReaderV2 r = new DBGPReaderV2(host, port, ideKey, interpreter,
+	public DBGPReader newThread(CPUValue _cpu) {
+		DBGPReader r = new DBGPReader(host, port, ideKey, interpreter,
 				null, _cpu);
 		r.command = DBGPCommandType.UNKNOWN;
 		r.transaction = "?";

@@ -20,7 +20,7 @@ package org.overture.ide.core.utility;
 
 import java.util.List;
 
-import org.overturetool.vdmjV2.lex.Dialect;
+import org.overturetool.vdmj.lex.Dialect;
 
 public interface ILanguage
 {

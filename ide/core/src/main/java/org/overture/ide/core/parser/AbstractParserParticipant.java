@@ -33,10 +33,10 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
-import org.overturetool.vdmjV2.lex.BacktrackInputReader.ReaderType;
-import org.overturetool.vdmjV2.lex.LexLocation;
-import org.overturetool.vdmjV2.messages.VDMError;
-import org.overturetool.vdmjV2.messages.VDMWarning;
+import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
 
 public abstract class AbstractParserParticipant implements ISourceParser
 {

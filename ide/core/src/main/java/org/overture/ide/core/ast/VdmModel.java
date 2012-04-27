@@ -39,8 +39,8 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.utilV2.definitions.ClassList;
-import org.overturetool.utilV2.modules.ModuleList;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.util.modules.ModuleList;
 
 public class VdmModel implements IVdmModel
 {

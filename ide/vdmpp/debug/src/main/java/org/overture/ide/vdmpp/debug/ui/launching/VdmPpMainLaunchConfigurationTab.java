@@ -28,11 +28,11 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.ide.vdmpp.debug.Activator;
 import org.overture.ide.vdmpp.debug.utils.VdmPpRuntimeUtil;
-import org.overturetool.utilV2.definitions.ClassList;
-import org.overturetool.vdmjV2.Settings;
-import org.overturetool.vdmjV2.lex.Dialect;
-import org.overturetool.vdmjV2.messages.Console;
-import org.overturetool.vdmjV2.messages.VDMErrorsException;
+import org.overturetool.util.definitions.ClassList;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.VDMErrorsException;
 
 public class VdmPpMainLaunchConfigurationTab extends
 		AbstractVdmMainLaunchConfigurationTab

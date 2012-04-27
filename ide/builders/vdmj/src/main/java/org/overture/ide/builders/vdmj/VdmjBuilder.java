@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.overture.ide.core.builder.AbstractVdmBuilder;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overturetool.vdmjV2.messages.VDMError;
-import org.overturetool.vdmjV2.messages.VDMWarning;
+import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
 
 public abstract class VdmjBuilder extends AbstractVdmBuilder
 {

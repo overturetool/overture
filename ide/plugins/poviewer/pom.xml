@@ -48,7 +48,7 @@
     </dependency>
     <dependency> 
         <groupId>org.overturetool.core</groupId> 
-        <artifactId>pogV2</artifactId>
+        <artifactId>pog</artifactId>
         <version>2.2.0</version>
     </dependency>
     <dependency>
