@@ -43,7 +43,7 @@ public class ClassList extends Vector<SClassDefinition>
 	@Override
 	public boolean add(SClassDefinition cdef)
 	{
-		map.put(cdef.getName().name, cdef);
+		map.put(cdef.getName().name, cdef); 
 
 		return super.add(cdef);
 	}

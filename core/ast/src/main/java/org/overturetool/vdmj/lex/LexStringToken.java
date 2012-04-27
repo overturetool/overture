@@ -54,7 +54,7 @@ public class LexStringToken extends LexToken {
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) {
-		return caller.caseLexStringToken(this);
+		return caller.caseLexStringToken(this); 
 	}
 
 	@Override

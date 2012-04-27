@@ -11,20 +11,20 @@ Tokens
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
-  LexToken = 'java:node:org.overturetool.vdmjV2.lex.LexToken';
-  LexNameToken = 'java:node:org.overturetool.vdmjV2.lex.LexNameToken';
-  LexIdentifierToken = 'java:node:org.overturetool.vdmjV2.lex.LexIdentifierToken';
-  LexBooleanToken = 'java:node:org.overturetool.vdmjV2.lex.LexBooleanToken';
-  LexCharacterToken = 'java:node:org.overturetool.vdmjV2.lex.LexCharacterToken';
-  LexIntegerToken = 'java:node:org.overturetool.vdmjV2.lex.LexIntegerToken';
-  LexQuoteToken = 'java:node:org.overturetool.vdmjV2.lex.LexQuoteToken';
-  LexRealToken = 'java:node:org.overturetool.vdmjV2.lex.LexRealToken';
-  LexStringToken = 'java:node:org.overturetool.vdmjV2.lex.LexStringToken';
-  clonableFile ='java:org.overturetool.utilV2.ClonableFile';
-  clonableString ='java:org.overturetool.utilV2.ClonableString';
-  ClassDefinitionSettings = 'java:enum:org.overturetool.vdmjV2.typechecker.ClassDefinitionSettings';
-  location = 'java:org.overturetool.vdmjV2.lex.LexLocation';
-  nameScope = 'java:enum:org.overturetool.vdmjV2.typechecker.NameScope';
+  LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
+  LexNameToken = 'java:node:org.overturetool.vdmj.lex.LexNameToken';
+  LexIdentifierToken = 'java:node:org.overturetool.vdmj.lex.LexIdentifierToken';
+  LexBooleanToken = 'java:node:org.overturetool.vdmj.lex.LexBooleanToken';
+  LexCharacterToken = 'java:node:org.overturetool.vdmj.lex.LexCharacterToken';
+  LexIntegerToken = 'java:node:org.overturetool.vdmj.lex.LexIntegerToken';
+  LexQuoteToken = 'java:node:org.overturetool.vdmj.lex.LexQuoteToken';
+  LexRealToken = 'java:node:org.overturetool.vdmj.lex.LexRealToken';
+  LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
+  clonableFile ='java:org.overturetool.util.ClonableFile';
+  clonableString ='java:org.overturetool.util.ClonableString';
+  ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
+  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+  nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
   
   //Java
   java_Boolean = 'java:java.lang.Boolean';

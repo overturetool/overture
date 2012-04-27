@@ -7,7 +7,7 @@ public class AIdentifierPatternAssistant {
 
 	public static LexNameList getVariableNames(AIdentifierPattern pattern) {
 		LexNameList list = new LexNameList();
-		list.add(pattern.getName());
+		list.add(pattern.getName()); 
 		return list;
 	}
 

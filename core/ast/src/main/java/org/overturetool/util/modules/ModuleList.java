@@ -41,7 +41,7 @@ public class ModuleList extends Vector<AModuleModules>
 	}
 
 	public Set<File> getSourceFiles()
-	{
+	{ 
 		Set<File> files = new HashSet<File>();
 
 		for (AModuleModules def : this)

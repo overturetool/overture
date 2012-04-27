@@ -19,7 +19,7 @@ public class AApplyExpAssistant {
 		List<PType> ptypes = ft.getParameters();
 
 		if (node.getArgs().size() > ptypes.size())
-		{
+		{ 
 			TypeCheckerErrors.concern(isSimple, 3059, "Too many arguments",node.getLocation(),node);
 			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
 			return ft.getResult();

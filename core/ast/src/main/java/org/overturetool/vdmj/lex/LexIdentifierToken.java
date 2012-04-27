@@ -67,7 +67,7 @@ public class LexIdentifierToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) {
-		analysis.caseLexIdentifierToken(this);
+		analysis.caseLexIdentifierToken(this); 
 	}
 
 	@Override

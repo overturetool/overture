@@ -54,7 +54,7 @@ public class LexRealToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) {
-		analysis.caseLexRealToken(this);
+		analysis.caseLexRealToken(this); 
 	}
 
 	@Override

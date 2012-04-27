@@ -28,7 +28,7 @@ public class CombinedDefaultModule extends AModuleModules
 	final Set<AModuleModules> modules = new HashSet<AModuleModules>();
 
 	public CombinedDefaultModule(Set<AModuleModules> modules)
-	{
+	{ 
 		super(new LexIdentifierToken("DEFAULT", false, new LexLocation()), null, null, new Vector<PDefinition>(), new Vector<ClonableFile>(), true, false);
 		this.modules.addAll(modules);
 

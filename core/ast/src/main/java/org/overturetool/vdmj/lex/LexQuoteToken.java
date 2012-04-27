@@ -28,47 +28,42 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 
-public class LexBooleanToken extends LexToken {
+public class LexQuoteToken extends LexToken {
 	private static final long serialVersionUID = 1L;
-	public final boolean value;
+	public final String value;
 
-	public LexBooleanToken(VDMToken value, LexLocation location) {
-		super(location, value);
-		this.value = (value == VDMToken.TRUE);
-	}
-
-	public LexBooleanToken(boolean value, LexLocation location) {
-		super(location, value ? VDMToken.TRUE : VDMToken.FALSE);
+	public LexQuoteToken(String value, LexLocation location) {
+		super(location, VDMToken.QUOTE);
 		this.value = value;
 	}
 
 	@Override
 	public String toString() {
-		return Boolean.toString(value);
+		return "<" + value + ">";
 	}
 
 	@Override
-	public Object clone() {
-		return new LexBooleanToken(value, location);
+	public LexQuoteToken clone() {
+		return new LexQuoteToken(value, location);
 	}
 	
 	@Override
 	public void apply(IAnalysis analysis) {
-		analysis.caseLexBooleanToken(this);
+		analysis.caseLexQuoteToken(this); 
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) {
-		return caller.caseLexBooleanToken(this);
+		return caller.caseLexQuoteToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) {
-		caller.caseLexBooleanToken(this, question);
+		caller.caseLexQuoteToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
-		return caller.caseLexBooleanToken(this, question);
+		return caller.caseLexQuoteToken(this, question);
 	}
 }

@@ -14,30 +14,28 @@
 
 	<modules>		
         <module>ast</module>
-	<!--module>astgen</module-->
-	<module>ast</module>
+	<!--module>astgen</module-->	
         <module>ast_assistance</module>    
 	<module>interpreter</module>	
 	<!--<module>jmltrans</module> -->
         <module>parser</module>
-        <module>parser</module>
         <module>pog</module>
-	<module>potrans</module>
-	<!-- module>proofsupport</module-->
-	<module>showtrace</module>
-	<module>stdlib</module>
+	<!--module>potrans</module-->
+	<!--module>proofsupport</module-->
+	<!--module>showtrace</module-->
+	<!--module>stdlib</module-->
 	<module>testframework</module>
-	<module>traces</module>
+	<!--module>traces</module-->
         <module>typechecker</module>	
-	<module>umltrans</module>        
-	<module>vdm2java</module>		
+	<!--module>umltrans</module-->        
+	<!--module>vdm2java</module-->		
 	<module>vdmexamples</module>
-	<module>vdmj</module>
+	<!--module>vdmj</module-->
 	<!-- module>vdmj_compatibility_tests</module-->
-	<module>vdmjc</module>
-	<module>vdmtools</module>
-	<module>vdmunit</module>	
-	<module>xmljunit</module>
+	<!--module>vdmjc</module-->
+	<!--module>vdmtools</module-->
+	<!--module>vdmunit</module-->	
+	<!--module>xmljunit</module-->
 	</modules>
 
 	<reporting>
