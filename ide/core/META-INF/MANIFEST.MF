@@ -40,20 +40,10 @@ Export-Package: org.overture.ast.analysis,
  org.overturetool.vdmj.messages,
  org.overturetool.vdmj.syntax,
  org.overturetool.vdmj.typechecker,
- org.overturetool.vdmj.util,
- org.overturetool.vdmj,
- org.overturetool.vdmj.config,
- org.overturetool.vdmj.lex,
- org.overturetool.vdmj.messages,
- org.overturetool.vdmj.syntax,
- org.overturetool.vdmj.typechecker,
  org.overturetool.vdmj.util
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,
- ast-2.1.1.jar,
  ast-2.2.0.jar,
  ast_assistance-2.2.0.jar,
- parser-2.2.0.jar,
- vdmj-2.1.1.jar,
- cglib-2.1.1.jar
+ parser-2.2.0.jar
