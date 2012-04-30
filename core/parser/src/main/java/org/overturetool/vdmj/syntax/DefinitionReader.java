@@ -954,6 +954,15 @@ public class DefinitionReader extends SyntaxReader
 			initExpression = getExpressionReader().readExpression();
 		}
 
+		// Be forgiving about the inv/init order
+		if (lastToken().is(VDMToken.INV) && invExpression == null) {
+			nextToken();
+			invPattern = getPatternReader().readPattern();
+			checkFor(VDMToken.EQUALSEQUALS, 2098,
+					"Expecting '==' after pattern in invariant");
+			invExpression = getExpressionReader().readExpression();
+		}
+		
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 		// return new AStateDefinition(name.location,idToName(name),NameScope.STATE,null,null,null,
 		// null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,

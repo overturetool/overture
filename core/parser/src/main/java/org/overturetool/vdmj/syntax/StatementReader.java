@@ -731,24 +731,30 @@ public class StatementReader extends SyntaxReader
 	public PStm readBlockStatement(LexLocation token) throws ParserException,
 			LexException
 	{
+		LexToken start = lastToken();
 		checkFor(VDMToken.BRA, 2224, "Expecting statement block");
 		ABlockSimpleBlockStm block = new ABlockSimpleBlockStm(token, null, readDclStatements());
-
+		boolean problems = false;
+		
 		while (true) // Loop for continue in exceptions
 		{
 			try
 			{
-				block.getStatements().add(readStatement());
-
 				while (!lastToken().is(VDMToken.KET))
 				{
-					checkFor(VDMToken.SEMICOLON, 2225, "Expecting ';' after statement");
+					
 					block.getStatements().add(readStatement());
+					if (lastToken().isNot(VDMToken.KET) && lastToken().isNot(VDMToken.SEMICOLON))
+    				{
+    					throwMessage(2225, "Expecting ';' after statement");
+    				}
+					ignore(VDMToken.SEMICOLON);
 				}
 
 				break;
 			} catch (ParserException e)
 			{
+				problems = true;
 				if (lastToken().is(VDMToken.KET)
 						|| lastToken().is(VDMToken.EOF))
 				{
@@ -763,6 +769,11 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.KET, 2226, "Expecting ')' at end of statement block");
+		
+		if (!problems && block.getStatements().isEmpty())
+		{
+			throwMessage(2296, "Block cannot be empty", start);
+		}
 		return block;
 	}
 
