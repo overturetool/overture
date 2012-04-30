@@ -9,3 +9,6 @@ Replace 2.1.1 with the version that it's currently at, and replace
 Make sure you leave the "<!--Replaceable: Main Version-->" portion of
 the string in place, otherwise this method will break and Joey will
 come after you with sharp, pointy objects.
+
+Note: there is still some version number magic in the MANIFEST.MF files
+
