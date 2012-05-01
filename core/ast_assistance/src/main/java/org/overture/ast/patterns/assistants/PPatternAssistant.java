@@ -12,8 +12,6 @@ import org.overturetool.vdmj.lex.LexNameList;
 
 public class PPatternAssistant {
 
-	
-
 	public static LexNameList getVariableNames(PPattern pattern) {
 		switch (pattern.kindPPattern()) {
 		case CONCATENATION:

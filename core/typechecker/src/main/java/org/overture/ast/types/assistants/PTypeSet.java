@@ -74,7 +74,7 @@ public class PTypeSet extends TreeSet<PType>
 			{
 				if (x instanceof SNumericBasicType)
 				{
-					if (SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)))
+					if (SNumericBasicTypeAssistantTC.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistantTC.getWeight(PTypeAssistant.getNumeric(t)))
 					{
 						remove(x);
 						break;
@@ -140,7 +140,7 @@ public class PTypeSet extends TreeSet<PType>
 			AUnionType uType = new AUnionType(location, false, false, false);
 			uType.setTypes(types);
 			uType.setProdCard(-1);
-			AUnionTypeAssistant.expand(uType);
+			AUnionTypeAssistantTC.expand(uType);
 			result = uType;
 		}
 

@@ -28,9 +28,9 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.modules.assistants.AModuleModulesAssistant;
+import org.overture.ast.modules.assistants.AModuleModulesAssistantTC;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
@@ -123,7 +123,7 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				Environment env = new ModuleEnvironment(m);
-				PDefinitionListAssistant.implicitDefinitions(m.getDefs(), env);
+				PDefinitionListAssistantTC.implicitDefinitions(m.getDefs(), env);
 			}
 		}
 
@@ -133,7 +133,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistant.processExports(m);			// Populate exportDefs
+				AModuleModulesAssistantTC.processExports(m);			// Populate exportDefs
 			}
 		}
 
@@ -144,7 +144,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistant.processImports(m,modules);	// Populate importDefs
+				AModuleModulesAssistantTC.processImports(m,modules);	// Populate importDefs
 			}
 		}
 
@@ -227,12 +227,12 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				//TODO
-				AModuleModulesAssistant.processImports(m,modules); // Re-populate importDefs
+				AModuleModulesAssistantTC.processImports(m,modules); // Re-populate importDefs
 
     			try
     			{
     				//TODO
-    				AModuleModulesAssistant.typeCheckImports(m);
+    				AModuleModulesAssistantTC.typeCheckImports(m);
 //    				m.typeCheckImports();		// Imports compared to exports
     			}
     			catch (TypeCheckException te)
@@ -249,8 +249,8 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				PDefinitionListAssistant.unusedCheck(m.getImportdefs());
-				PDefinitionListAssistant.unusedCheck(m.getDefs());
+				PDefinitionListAssistantTC.unusedCheck(m.getImportdefs());
+				PDefinitionListAssistantTC.unusedCheck(m.getDefs());
 			}
 		}
 	}

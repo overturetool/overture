@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
@@ -60,7 +60,7 @@ public class POFunctionDefinitionContext extends POContext
 		this.name = definition.getName();
 		this.deftype = definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitFunctionDefinitionAssistant.getParamPatternList(definition);
+		this.paramPatternList = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 	}
 

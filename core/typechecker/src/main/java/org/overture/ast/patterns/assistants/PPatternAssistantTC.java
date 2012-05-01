@@ -1,37 +1,14 @@
 package org.overture.ast.patterns.assistants;
 
-import java.lang.reflect.Method;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.ACharLiteralExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.ANilExp;
-import org.overture.ast.expressions.AQuoteLiteralExp;
-import org.overture.ast.expressions.ARealLiteralExp;
-import org.overture.ast.expressions.ASeqConcatBinaryExp;
-import org.overture.ast.expressions.ASeqEnumSeqExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
-import org.overture.ast.expressions.ASetUnionBinaryExp;
-import org.overture.ast.expressions.AStringLiteralExp;
-import org.overture.ast.expressions.ATupleExp;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
@@ -49,17 +26,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeComparator;
-import org.overturetool.vdmj.lex.LexBooleanToken;
-import org.overturetool.vdmj.lex.LexCharacterToken;
-import org.overturetool.vdmj.lex.LexIntegerToken;
-import org.overturetool.vdmj.lex.LexKeywordToken;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexQuoteToken;
-import org.overturetool.vdmj.lex.LexRealToken;
-import org.overturetool.vdmj.lex.LexStringToken;
-import org.overturetool.vdmj.lex.LexToken;
-import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class PPatternAssistantTC extends PPatternAssistant
@@ -158,30 +124,9 @@ public class PPatternAssistantTC extends PPatternAssistant
 				break;
 			default:
 				pattern.setResolved(false);
+				break;
 		}
 	}
-
-	// public static LexNameList getVariableNames(PPattern pattern) {
-	// switch (pattern.kindPPattern()) {
-	// case RECORD:
-	// return ARecordPatternAssistant.getVariableNames((ARecordPattern)pattern);
-	// case SEQ:
-	// return ASeqPatternAssistant.getVariableNames((ASeqPattern)pattern);
-	// case SET:
-	// return ASetPatternAssistant.getVariableNames((ASetPattern)pattern);
-	// case TUPLE:
-	// return ATuplePatternAssistant.getVariableNames((ATuplePattern)pattern);
-	// case UNION:
-	// return AUnionPatternAssistant.getVariableNames((AUnionPattern)pattern);
-	// default:
-	// return getVariableNamesBaseCase(pattern);
-	// }
-	// }
-	//
-	// public static LexNameList getVariableNamesBaseCase(PPattern pattern)
-	// {
-	// return new LexNameList();
-	// }
 
 	public static PType getPossibleType(PPattern pattern)
 	{
@@ -230,262 +175,49 @@ public class PPatternAssistantTC extends PPatternAssistant
 		return TypeComparator.compatible(getPossibleType(pattern), expType);
 	}
 
-//	public static List<PExp> getMatchingExpressionList(List<PPattern> pl)
-//	{
-//		List<PExp> list = new Vector<PExp>();
-//
-//		for (PPattern p : pl)
-//		{
-//			list.add(getMatchingExpression(p));
-//		}
-//
-//		return list;
-//	}
-//
-//	public static <T extends PPattern> PExp getMatchingExpression(T p)
-//	{
-//		switch (p.kindNode())
-//		{
-//			case ACCESS:
-//			case ACCESSSPECIFIER:
-//			case ALTERNATIVE:
-//			case ALTERNATIVESTM:
-//			case BIND:
-//			case CASE:
-//			case CLAUSE:
-//			case DEFINITION:
-//			case EXP:
-//			case EXPORT:
-//			case EXPORTS:
-//			case ExternalDefined:
-//			case FIELD:
-//			case IMPORT:
-//			case IMPORTS:
-//			case MODIFIER:
-//			case MODULES:
-//			case MULTIPLEBIND:
-//			case OBJECTDESIGNATOR:
-//			case PAIR:
-//			case PATTERN:
-//			{
-//				if (p instanceof AIgnorePattern)
-//				{	
-//					return getExpression((AIgnorePattern)p);
-//				}
-//				
-//				return getExpression(p);
-//			}
-//			case PATTERNBIND:
-//			case STATEDESIGNATOR:
-//			case STM:
-//			case STMTALTERNATIVE:
-//			case TOKEN:
-//			case TRACECOREDEFINITION:
-//			case TRACEDEFINITION:
-//			case TYPE:
-//
-//			default:
-//				// TODO: NOT IMPLEMENTED
-//				System.out.println("PPatternAssistantTC - getMatchingExpression - NOT IMPLEMENTED "
-//						+ p.kindNode());
-//				assert (false);
-//				return null;
-//		}
-//	}
-//
-//	// Runtime mapping from Class<T extends PPattern> to a method taking T as
-//	// argument
-//	private static Map<Class<?>, Method> map;
-//
-//	private static <T extends PPattern> void addNewPatternClass(Class<T> pc)
-//	{
-//		map.put(pc, getMethod("getExpression", PPatternAssistantTC.class, pc));
-//	}
-//
-//	private static Method getMethod(String s, Class<?> base,
-//			Class<?>... argTypes)
-//	{
-//		try
-//		{
-//			Method declMethod = base.getDeclaredMethod(s, argTypes);
-//			declMethod.setAccessible(true);
-//			return declMethod;
-//		} catch (Exception e)
-//		{
-//			throw new RuntimeException("Could not find method: " + e);
-//		}
-//	}
-//
-//	// Static initializer adding handled class to the map
-//	static
-//	{
-//		map = new HashMap<Class<?>, Method>();
-//		addNewPatternClass(AIdentifierPattern.class);
-//		addNewPatternClass(ABooleanPattern.class);
-//		addNewPatternClass(ARecordPattern.class);
-//		addNewPatternClass(ACharacterPattern.class);
-//		addNewPatternClass(AExpressionPattern.class);
-//		addNewPatternClass(AIgnorePattern.class);
-//		addNewPatternClass(AIntegerPattern.class);
-//		addNewPatternClass(AConcatenationPattern.class);
-//		addNewPatternClass(ANilPattern.class);
-//		addNewPatternClass(AQuotePattern.class);
-//		addNewPatternClass(ASeqPattern.class);
-//		addNewPatternClass(ASetPattern.class);
-//		addNewPatternClass(ARealPattern.class);
-//		addNewPatternClass(AStringPattern.class);
-//		addNewPatternClass(ATuplePattern.class);
-//		addNewPatternClass(AUnionPattern.class);
-//
-//	}
-//
-//	private static <T> T typeSafeClone(T o, Class<T> clz)
-//
-//	{
-//		Method cloneMethod = getMethod("clone", clz);
-//		try
-//		{
-//			return clz.cast(cloneMethod.invoke(o));
-//		} catch (Exception e)
-//		{
-//			throw new RuntimeException("Not cloneable ast-node: "
-//					+ o.getClass().getSimpleName());
-//		}
-//	}
-//
-//	// A boolean pattern should yield a boolean const expression
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ABooleanPattern bp)
-//	{
-//		LexBooleanToken tok = bp.getValue();
-//		ABooleanConstExp res = new ABooleanConstExp(null, bp.getLocation(), typeSafeClone(tok, LexBooleanToken.class));
-//		return res;
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ACharacterPattern chr)
-//	{
-//		LexCharacterToken v = chr.getValue();
-//		return new ACharLiteralExp(null, chr.getLocation(), typeSafeClone(v, LexCharacterToken.class));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AConcatenationPattern ccp)
-//	{
-//		LexToken op = new LexKeywordToken(VDMToken.CONCATENATE, ccp.getLocation());
-//		PExp le = getMatchingExpression(ccp.getLeft());
-//		PExp re = getMatchingExpression(ccp.getRight());
-//		return new ASeqConcatBinaryExp(null, ccp.getLocation(), le, op, re);
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ADefPatternBind dpb)
-//	{
-//		return null;
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AExpressionPattern eptrn)
-//	{
-//		return eptrn.getExp();
-//	}
-//
-//	// An Identifier should yield a variable expression.
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AIdentifierPattern idp)
-//	{
-//
-//		LexNameToken name = idp.getName();
-//		LexLocation loc = idp.getLocation().clone();
-//		return new AVariableExp(typeSafeClone(loc, LexLocation.class), typeSafeClone(name, LexNameToken.class), name != null ? name.getName()
-//				: "");
-//	}
-//
-//	private static int var = 1;
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AIgnorePattern iptrn)
-//	{
-//		LexNameToken any = new LexNameToken("", "any" + var++, typeSafeClone(iptrn.getLocation(), LexLocation.class));
-//		return new AVariableExp(typeSafeClone(iptrn.getLocation(), LexLocation.class), any, any.getName());
-//
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AIntegerPattern intptrn)
-//	{
-//		return new AIntLiteralExp(null, intptrn.getLocation().clone(), typeSafeClone(intptrn.getValue(), LexIntegerToken.class));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ANilPattern np)
-//	{
-//		return new ANilExp(null, np.getLocation());
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AQuotePattern qp)
-//	{
-//		LexQuoteToken v = qp.getValue();
-//		return new AQuoteLiteralExp(null, qp.getLocation(), typeSafeClone(v, LexQuoteToken.class));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ARealPattern rp)
-//	{
-//		LexRealToken v = rp.getValue();
-//		return new ARealLiteralExp(null, rp.getLocation(), typeSafeClone(v, LexRealToken.class));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ARecordPattern ptrn)
-//	{
-//		List<PExp> list = new LinkedList<PExp>();
-//
-//		for (PPattern p : ptrn.getPlist())
-//		{
-//			list.add(getMatchingExpression(p));
-//		}
-//
-//		// FIXME Consider Type info here that is set to null (type and record
-//		// type) is that correct?
-//		LexNameToken tpName = ptrn.getTypename();
-//		return new AMkTypeExp(ptrn.getLocation(), typeSafeClone(tpName, LexNameToken.class), list);
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ASeqPattern seqp)
-//	{
-//		return new ASeqEnumSeqExp(seqp.getLocation(), getMatchingExpressionList(seqp.getPlist()));
-//
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ASetPattern sp)
-//	{
-//		return new ASetEnumSetExp(sp.getLocation(), getMatchingExpressionList(sp.getPlist()));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AStringPattern sp)
-//	{
-//		LexStringToken v = sp.getValue();
-//		return new AStringLiteralExp(null, sp.getLocation(), typeSafeClone(v, LexStringToken.class));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(ATuplePattern tp)
-//	{
-//		return new ATupleExp(tp.getLocation(), getMatchingExpressionList(tp.getPlist()));
-//	}
-//
-//	@SuppressWarnings("unused")
-//	private static PExp getExpression(AUnionPattern up)
-//	{
-//		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
-//		return new ASetUnionBinaryExp(null, up.getLocation(), getMatchingExpression(up.getLeft()), op, getMatchingExpression(up.getRight()));
-//
-//	}
+	
+	
+	public static PExp getMatchingExpression(PPattern p) {
+		switch (p.kindPPattern()) {
+		case BOOLEAN:
+			return ABooleanPatternAssistantTC.getMatchingExpression((ABooleanPattern) p);
+		case CHARACTER:
+			return ACharacterPatternAssistantTC.getMatchingExpression((ACharacterPattern)p);
+		case CONCATENATION:
+			return AConcatenationPatternAssistantTC.getMatchingExpression((AConcatenationPattern)p);
+		case EXPRESSION:
+			return AExpressionPatternAssistantTC.getMatchingExpression((AExpressionPattern) p);
+		case IDENTIFIER:
+			return AIdentifierPatternAssistantTC.getMatchingExpression((AIdentifierPattern) p);
+		case IGNORE:
+			return AIgnorePatternAssistantTC.getMatchingExpression((AIgnorePattern) p);
+		case INTEGER:
+			return AIntegerPatternAssistantTC.getMatchingExpression((AIntegerPattern) p);
+		case NIL:
+			return ANilPatternAssistantTC.getMatchingExpression((ANilPattern) p);
+		case QUOTE:
+			return AQuotePatternAssistantTC.getMatchingExpression((AQuotePattern) p);
+		case REAL:
+			return ARealPatternAssistantTC.getMatchingExpression((ARealPattern) p);
+		case RECORD:
+			return ARecordPatternAssistantTC.getMatchingExpression((ARecordPattern) p);
+		case SEQ:
+			return ASeqPatternAssistantTC.getMatchingExpression((ASeqPattern) p);
+		case SET:
+			return ASetPatternAssistantTC.getMatchingExpression((ASetPattern) p);
+		case STRING:
+			return AStringPatternAssistantTC.getMatchingExpression((AStringPattern) p);
+		case TUPLE:
+			return ATuplePatternAssistantTC.getMatchingExpression((ATuplePattern) p);
+		case UNION:
+			return AUnionPatternAssistantTC.getMatchingExpression((AUnionPattern) p);
+		default:
+			assert false : "Should not happen";
+			return null;
+		}
+	}
+	
+
 //
 //	private static Random r = new Random();
 //

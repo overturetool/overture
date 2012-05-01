@@ -18,17 +18,16 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistant;
-import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistantTC;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
-import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
-import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.ast.expressions.*;
-import org.overture.ast.expressions.assistants.AApplyExpAssistant;
-import org.overture.ast.expressions.assistants.ACaseAlternativeAssistant;
-import org.overture.ast.expressions.assistants.SBinaryExpAssistant;
+import org.overture.ast.expressions.assistants.AApplyExpAssistantTC;
+import org.overture.ast.expressions.assistants.ACaseAlternativeAssistantTC;
+import org.overture.ast.expressions.assistants.SBinaryExpAssistantTC;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -36,8 +35,9 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.ATypeBindAssistant;
-import org.overture.ast.patterns.assistants.PBindAssistant;
+import org.overture.ast.patterns.assistants.ATypeBindAssistantTC;
+import org.overture.ast.patterns.assistants.PBindAssistantTC;
+import org.overture.ast.patterns.assistants.PMultipleBindAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
@@ -66,13 +66,13 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.AClassTypeAssistant;
-import org.overture.ast.types.assistants.AFunctionTypeAssistant;
-import org.overture.ast.types.assistants.AOperationTypeAssistant;
-import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
+import org.overture.ast.types.assistants.AClassTypeAssistantTC;
+import org.overture.ast.types.assistants.AFunctionTypeAssistantTC;
+import org.overture.ast.types.assistants.AOperationTypeAssistantTC;
+import org.overture.ast.types.assistants.ARecordInvariantTypeAssistantTC;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
-import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
+import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.LexNameTokenAssistent;
@@ -90,6 +90,10 @@ public class TypeCheckerExpVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType>
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerExpVisitor(TypeCheckVisitor typeCheckVisitor)
@@ -171,14 +175,14 @@ public class TypeCheckerExpVisitor extends
 		if (PTypeAssistant.isFunction(node.getType()))
 		{
 			AFunctionType ft = PTypeAssistant.getFunction(node.getType());
-			AFunctionTypeAssistant.typeResolve(ft, null, rootVisitor, question);
-			results.add(AApplyExpAssistant.functionApply(node, isSimple, ft));
+			AFunctionTypeAssistantTC.typeResolve(ft, null, rootVisitor, question);
+			results.add(AApplyExpAssistantTC.functionApply(node, isSimple, ft));
 		}
 
 		if (PTypeAssistant.isOperation(node.getType()))
 		{
 			AOperationType ot = PTypeAssistant.getOperation(node.getType());
-			AOperationTypeAssistant.typeResolve(ot, null, rootVisitor, question);
+			AOperationTypeAssistantTC.typeResolve(ot, null, rootVisitor, question);
 
 			if (inFunction && Settings.release == Release.VDM_10)
 			{
@@ -187,20 +191,20 @@ public class TypeCheckerExpVisitor extends
 				results.add(new AUnknownType(node.getLocation(), false, null));
 			} else
 			{
-				results.add(AApplyExpAssistant.operationApply(node, isSimple, ot));
+				results.add(AApplyExpAssistantTC.operationApply(node, isSimple, ot));
 			}
 		}
 
 		if (PTypeAssistant.isSeq(node.getType()))
 		{
 			SSeqType seq = PTypeAssistant.getSeq(node.getType());
-			results.add(AApplyExpAssistant.sequenceApply(node, isSimple, seq));
+			results.add(AApplyExpAssistantTC.sequenceApply(node, isSimple, seq));
 		}
 
 		if (PTypeAssistant.isMap(node.getType()))
 		{
 			SMapType map = PTypeAssistant.getMap(node.getType());
-			results.add(AApplyExpAssistant.mapApply(node, isSimple, map));
+			results.add(AApplyExpAssistantTC.mapApply(node, isSimple, map));
 		}
 
 		if (results.isEmpty())
@@ -218,7 +222,7 @@ public class TypeCheckerExpVisitor extends
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question)
 	{
-		node.setType(SBinaryExpAssistant.binaryCheck(node, new ABooleanBasicType(node.getLocation(), false, null), rootVisitor, question));
+		node.setType(SBinaryExpAssistantTC.binaryCheck(node, new ABooleanBasicType(node.getLocation(), false, null), rootVisitor, question));
 		return node.getType();
 	}
 
@@ -465,7 +469,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new AIntNumericBasicType(node.getLocation(), false, null));
 		return node.getType();
 	}
@@ -475,7 +479,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new ARealNumericBasicType(node.getLocation(), false, null));
 		return node.getType();
 	}
@@ -485,7 +489,7 @@ public class TypeCheckerExpVisitor extends
 			AGreaterEqualNumericBinaryExp node, TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new ABooleanBasicType(node.getLocation(), false, null));
 		return node.getType();
 	}
@@ -495,7 +499,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new ABooleanBasicType(node.getLocation(), false, null));
 		return node.getType();
 	}
@@ -505,7 +509,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new ANatNumericBasicType(node.getLocation(), false, null));
 		return node.getType();
 
@@ -515,7 +519,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			TypeCheckInfo question)
 	{
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 
 		SNumericBasicType ln = PTypeAssistant.getNumeric(node.getLeft().getType());
 		SNumericBasicType rn = PTypeAssistant.getNumeric(node.getRight().getType());
@@ -553,7 +557,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new AIntNumericBasicType(node.getLocation(), false, null));
 		return node.getType();
 
@@ -564,7 +568,7 @@ public class TypeCheckerExpVisitor extends
 			ASubstractNumericBinaryExp node, TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 
 		if (node.getLeft().getType() instanceof ARealNumericBasicType
 				|| node.getRight().getType() instanceof ARealNumericBasicType)
@@ -583,7 +587,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 
 		SNumericBasicType ln = PTypeAssistant.getNumeric(node.getLeft().getType());
 		SNumericBasicType rn = PTypeAssistant.getNumeric(node.getRight().getType());
@@ -1001,7 +1005,7 @@ public class TypeCheckerExpVisitor extends
 
 		for (ACaseAlternative c : node.getCases())
 		{
-			rtypes.add(ACaseAlternativeAssistant.typeCheck(c, rootVisitor, question, expType));
+			rtypes.add(ACaseAlternativeAssistantTC.typeCheck(c, rootVisitor, question, expType));
 		}
 
 		if (node.getOthers() != null)
@@ -1038,10 +1042,16 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question)
 	{
-		node.setDef(new AMultiBindListDefinition(node.getBind().getLocation(), null, null, null, null, null, null, PBindAssistant.getMultipleBindList(node.getBind()), null));
+		node.setDef(new AMultiBindListDefinition(node.getBind().getLocation(), null, null, null, null, null, null, PBindAssistantTC.getMultipleBindList(node.getBind()), null));
 		node.getDef().apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
+		if (node.getBind() instanceof ATypeBind)
+		{
+			ATypeBind tb = (ATypeBind)node.getBind();
+			ATypeBindAssistantTC.typeResolve(tb, rootVisitor, question);
+		}
+		
 		question.qualifiers = null;
 		if (!PTypeAssistant.isType(node.getPredicate().apply(rootVisitor, new TypeCheckInfo(local, question.scope)), ABooleanBasicType.class))
 		{
@@ -1092,7 +1102,7 @@ public class TypeCheckerExpVisitor extends
 		if (PTypeAssistant.isRecord(root))
 		{
 			ARecordInvariantType rec = PTypeAssistant.getRecord(root);
-			AFieldField cf = ARecordInvariantTypeAssistant.findField(rec, node.getField().name);
+			AFieldField cf = ARecordInvariantTypeAssistantTC.findField(rec, node.getField().name);
 
 			if (cf != null)
 			{
@@ -1113,11 +1123,11 @@ public class TypeCheckerExpVisitor extends
 
 			if (memberName == null)
 			{
-				memberName = AClassTypeAssistant.getMemberName(cls, node.getField());
+				memberName = AClassTypeAssistantTC.getMemberName(cls, node.getField());
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = AClassTypeAssistant.findName(cls, memberName);
+			PDefinition fdef = AClassTypeAssistantTC.findName(cls, memberName);
 
 			if (fdef == null)
 			{
@@ -1126,7 +1136,7 @@ public class TypeCheckerExpVisitor extends
 
 				List<PType> oldq = memberName.getTypeQualifier();
 				memberName.setTypeQualifier(null);
-				fdef = AClassTypeAssistant.findName(cls, memberName);
+				fdef = AClassTypeAssistantTC.findName(cls, memberName);
 				memberName.setTypeQualifier(oldq); // Just for error text!
 			}
 
@@ -1161,7 +1171,7 @@ public class TypeCheckerExpVisitor extends
 				{
 					question.env.listAlternatives(memberName);
 				}
-			} else if (SClassDefinitionAssistant.isAccessible(question.env, fdef, false))
+			} else if (SClassDefinitionAssistantTC.isAccessible(question.env, fdef, false))
 			{
 				// The following gives lots of warnings for self.value access
 				// to values as though they are fields of self in the CSK test
@@ -1347,8 +1357,8 @@ public class TypeCheckerExpVisitor extends
 
 					node.setActualTypes(fixed);
 
-					node.setType(node.getExpdef() == null ? AImplicitFunctionDefinitionAssistant.getType(node.getImpdef(), node.getActualTypes())
-							: AExplicitFunctionDefinitionAssistant.getType(node.getExpdef(), node.getActualTypes()));
+					node.setType(node.getExpdef() == null ? AImplicitFunctionDefinitionAssistantTC.getType(node.getImpdef(), node.getActualTypes())
+							: AExplicitFunctionDefinitionAssistantTC.getType(node.getExpdef(), node.getActualTypes()));
 
 					// type = expdef == null ?
 					// impdef.getType(actualTypes) :
@@ -1467,7 +1477,7 @@ public class TypeCheckerExpVisitor extends
 		false, null, // classdef
 		null, // access specifier
 		null, // type
-		PBindAssistant.getMultipleBindList(temp), null // defs
+		PBindAssistantTC.getMultipleBindList(temp), null // defs
 		);
 
 		def.apply(rootVisitor, question);
@@ -1595,14 +1605,14 @@ public class TypeCheckerExpVisitor extends
 		// node.setParamPatterns(paramPatterns);
 		for (ATypeBind tb : node.getBindList())
 		{
-			mbinds.addAll(ATypeBindAssistant.getMultipleBindList(tb));
+			mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb));
 			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(PTypeAssistant.typeResolve(tb.getType(), null, rootVisitor, question));
 		}
 
-		PDefinitionListAssistant.implicitDefinitions(paramDefinitions, question.env);
-		PDefinitionListAssistant.typeCheck(paramDefinitions, rootVisitor, question);
+		PDefinitionListAssistantTC.implicitDefinitions(paramDefinitions, question.env);
+		PDefinitionListAssistantTC.typeCheck(paramDefinitions, rootVisitor, question);
 
 		node.setParamDefinitions(paramDefinitions);
 
@@ -1621,7 +1631,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question)
 	{
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistantTC.getDefault(), null, PMultipleBindAssistant.getMultipleBindList((PMultipleBind) node.getBind()), null);
+		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistantTC.getDefault(), null, PMultipleBindAssistantTC.getMultipleBindList((PMultipleBind) node.getBind()), null);
 
 		def.apply(rootVisitor, question);
 		node.setDef((AMultiBindListDefinition) def);
@@ -1932,7 +1942,7 @@ public class TypeCheckerExpVisitor extends
 			{
 				PType mtype = rm.getValue().apply(rootVisitor, question);
 				modTypes.add(mtype);
-				AFieldField f = ARecordInvariantTypeAssistant.findField(node.getRecordType(), rm.getTag().name);
+				AFieldField f = ARecordInvariantTypeAssistantTC.findField(node.getRecordType(), rm.getTag().name);
 
 				if (f != null)
 				{
@@ -1987,14 +1997,14 @@ public class TypeCheckerExpVisitor extends
 			argtypes.add(a.apply(rootVisitor, question));
 		}
 
-		PDefinition opdef = SClassDefinitionAssistant.findConstructor(classdef, argtypes);
+		PDefinition opdef = SClassDefinitionAssistantTC.findConstructor(classdef, argtypes);
 
 		if (opdef == null)
 		{
 			if (!node.getArgs().isEmpty()) // Not having a default ctor is OK
 			{
 				TypeCheckerErrors.report(3134, "Class has no constructor with these parameter types", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
+				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
 			} else if (classdef instanceof ACpuClassDefinition
 					|| classdef instanceof ABusClassDefinition)
 			{
@@ -2005,13 +2015,13 @@ public class TypeCheckerExpVisitor extends
 			if (!PDefinitionAssistantTC.isCallableOperation(opdef))
 			{
 				TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
-			} else if (!SClassDefinitionAssistant.isAccessible(question.env, opdef, false)) // (opdef.accessSpecifier.access
+				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
+			} else if (!SClassDefinitionAssistantTC.isAccessible(question.env, opdef, false)) // (opdef.accessSpecifier.access
 																							// ==
 																							// Token.PRIVATE)
 			{
 				TypeCheckerErrors.report(3292, "Constructor is not accessible", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", SClassDefinitionAssistant.getCtorName(classdef, argtypes));
+				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
 			} else
 			{
 				node.setCtorDefinition(opdef);
@@ -2198,7 +2208,7 @@ public class TypeCheckerExpVisitor extends
 		node.getSetBind().setSet(setBindSet.clone());
 		node.getSetBind().setPattern(setBindPattern.clone());
 
-		if (!PTypeAssistant.isNumeric(PDefinitionAssistantTC.getType(def)))
+		if (PPatternAssistantTC.getVariableNames(node.getSetBind().getPattern()).size() != 1 || !PTypeAssistant.isNumeric(PDefinitionAssistantTC.getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable", node.getLocation(), node);
 		}
@@ -2477,7 +2487,7 @@ public class TypeCheckerExpVisitor extends
 			{
 				if (vardef.getClassDefinition() != null)
 				{
-					if (!SClassDefinitionAssistant.isAccessible(env, vardef, true))
+					if (!SClassDefinitionAssistantTC.isAccessible(env, vardef, true))
 					{
 						TypeCheckerErrors.report(3180, "Inaccessible member "
 								+ name + " of class "
@@ -2581,7 +2591,7 @@ public class TypeCheckerExpVisitor extends
 			ALessEqualNumericBinaryExp node, TypeCheckInfo question)
 	{
 
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new ABooleanBasicType(node.getLocation(), false));
 		return node.getType();
 	}
@@ -2590,7 +2600,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseALessNumericBinaryExp(ALessNumericBinaryExp node,
 			TypeCheckInfo question)
 	{
-		SNumericBasicTypeAssistant.checkNumeric(node, rootVisitor, question);
+		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(new ABooleanBasicType(node.getLocation(), false));
 		return node.getType();
 	}

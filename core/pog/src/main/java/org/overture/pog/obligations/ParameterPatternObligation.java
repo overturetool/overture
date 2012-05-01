@@ -31,9 +31,9 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.AExplicitOperationDefinitionAssistant;
-import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
-import org.overture.ast.definitions.assistants.AImplicitOperationDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AExplicitOperationDefinitionAssistantTC;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistantTC;
+import org.overture.ast.definitions.assistants.AImplicitOperationDefinitionAssistantTC;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
@@ -61,7 +61,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(AImplicitFunctionDefinitionAssistant.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
+			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -70,7 +70,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate( AExplicitOperationDefinitionAssistant.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
+			generate( AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -79,7 +79,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate( AImplicitOperationDefinitionAssistant.getListParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
+			generate( AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	private String generate(List<List<PPattern>> plist, List<PType> params, PType result)

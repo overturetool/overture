@@ -48,7 +48,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
+import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
 
 
 /**
@@ -706,7 +706,7 @@ public class TypeComparator
 					SNumericBasicType subn = (SNumericBasicType) sub;
 					SNumericBasicType supn = (SNumericBasicType) sup;
 
-					return (SNumericBasicTypeAssistant.getWeight(subn) <= SNumericBasicTypeAssistant.getWeight(supn)) ? Result.Yes
+					return (SNumericBasicTypeAssistantTC.getWeight(subn) <= SNumericBasicTypeAssistantTC.getWeight(supn)) ? Result.Yes
 							: Result.No;
 				}
 			} else if (sub instanceof AProductType)

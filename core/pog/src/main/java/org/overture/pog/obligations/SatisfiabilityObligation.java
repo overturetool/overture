@@ -33,7 +33,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
-import org.overture.ast.patterns.assistants.PPatternAssistantTC;
+import org.overture.ast.patterns.assistants.PPatternListAssistantTC;
 import org.overturetool.util.Utils;
 
 public class SatisfiabilityObligation extends ProofObligation
@@ -180,7 +180,7 @@ public class SatisfiabilityObligation extends ProofObligation
 	{
 		for (APatternListTypePair pltp : params)
 		{
-			List<PExp> expList = PPatternAssistantTC.getMatchingExpressionList(pltp.getPatterns());
+			List<PExp> expList = PPatternListAssistantTC.getMatchingExpressionList(pltp.getPatterns());
 			sb.append(separator);
 			sb.append(Utils.listToString(expList));
 			separator = ", ";

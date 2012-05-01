@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ASetType;
@@ -26,7 +28,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 
 		try
 		{
-			PPatternListAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
+			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -37,7 +39,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 	}
 
 	public static void unResolve(ASetPattern pattern) {
-		PPatternListAssistant.unResolve(pattern.getPlist());
+		PPatternListAssistantTC.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 		
 	}
@@ -84,5 +86,9 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 		t.setSetof(new AUnknownType(pattern.getLocation(), false));
 		return t;
 	}
+
+	public static PExp getMatchingExpression(ASetPattern sp) {
+		return new ASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
+	} 
 
 }

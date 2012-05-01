@@ -21,6 +21,10 @@ import org.overture.typecheck.TypeCheckerErrors;
 public class TypeCheckVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7872917857726484626L;
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcStm = new TypeCheckerStmVisitor(
 			this);
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> tcExp = new TypeCheckerExpVisitor(

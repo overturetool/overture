@@ -31,7 +31,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
-import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -74,7 +74,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public PDefinition findName(LexNameToken name, NameScope scope)
 	{
-		PDefinition def = SClassDefinitionAssistant.findName(classes,name, scope);
+		PDefinition def = SClassDefinitionAssistantTC.findName(classes,name, scope);
 
 		if (def != null && PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
 		{
@@ -87,7 +87,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public PDefinition findType(LexNameToken name, String fromModule)
 	{
-		PDefinition def = SClassDefinitionAssistant.findType(classes,name);
+		PDefinition def = SClassDefinitionAssistantTC.findType(classes,name);
 
 		if (def != null && PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
 		{
@@ -100,7 +100,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(LexNameToken name)
 	{
-		Set<PDefinition> defs = SClassDefinitionAssistant.findMatches(classes,name);
+		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classes,name);
 
 		if (outer != null)
 		{
@@ -113,7 +113,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		SClassDefinitionAssistant.unusedCheck(classes);
+		SClassDefinitionAssistantTC.unusedCheck(classes);
 	}
 
 	@Override
