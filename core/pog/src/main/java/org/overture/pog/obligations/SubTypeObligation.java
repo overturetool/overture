@@ -71,7 +71,7 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
-import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
+import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 
@@ -481,7 +481,7 @@ public class SubTypeObligation extends ProofObligation {
 				if (atype instanceof SNumericBasicType) {
 					SNumericBasicType ant = (SNumericBasicType) atype;
 
-					if (SNumericBasicTypeAssistant.getWeight(ant) > SNumericBasicTypeAssistant
+					if (SNumericBasicTypeAssistantTC.getWeight(ant) > SNumericBasicTypeAssistantTC
 							.getWeight(nt)) {
 						if (nt instanceof ANatOneNumericBasicType) {
 							sb.append(exp);

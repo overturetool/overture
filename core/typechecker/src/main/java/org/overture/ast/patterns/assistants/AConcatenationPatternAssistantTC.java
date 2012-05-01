@@ -4,10 +4,17 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ASeqConcatBinaryExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AConcatenationPattern;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexKeywordToken;
+import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
@@ -43,6 +50,19 @@ public class AConcatenationPatternAssistantTC extends AConcatenationPatternAssis
 		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),ptype, scope));
 		return list;
 		
+	}
+
+	public static PType getPossibleType(AConcatenationPattern pattern) {
+		ASeqSeqType t = new ASeqSeqType(pattern.getLocation(), false, false);
+		t.setSeqof( new AUnknownType(pattern.getLocation(), false));
+		return t;
+	}
+
+	public static PExp getMatchingExpression(AConcatenationPattern ccp) {
+		LexToken op = new LexKeywordToken(VDMToken.CONCATENATE, ccp.getLocation());
+		PExp le = PPatternAssistantTC.getMatchingExpression(ccp.getLeft());
+		PExp re = PPatternAssistantTC.getMatchingExpression(ccp.getRight());
+		return new ASeqConcatBinaryExp(null, ccp.getLocation(), le, op, re);
 	}
 
 }

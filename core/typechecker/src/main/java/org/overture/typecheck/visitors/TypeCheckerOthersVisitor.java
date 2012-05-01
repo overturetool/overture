@@ -8,13 +8,13 @@ import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.Node;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
-import org.overture.ast.patterns.assistants.PBindAssistant;
+import org.overture.ast.patterns.assistants.PBindAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AFieldObjectDesignator;
@@ -37,8 +37,8 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.AApplyObjectDesignatorAssistant;
-import org.overture.ast.types.assistants.ARecordInvariantTypeAssistant;
+import org.overture.ast.types.assistants.AApplyObjectDesignatorAssistantTC;
+import org.overture.ast.types.assistants.ARecordInvariantTypeAssistantTC;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.Environment;
@@ -53,6 +53,10 @@ import org.overturetool.vdmj.typechecker.NameScope;
 public class TypeCheckerOthersVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1883409865766439618L;
 	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 	
 	public TypeCheckerOthersVisitor(TypeCheckVisitor typeCheckVisitor) {
@@ -108,7 +112,7 @@ public class TypeCheckerOthersVisitor extends
 			}
 
 			PDefinition def =new AMultiBindListDefinition(node.getBind().getLocation(), null, null, false, null, 
-					PAccessSpecifierAssistant.getDefault(), null, PBindAssistant.getMultipleBindList(node.getBind()), null);
+					PAccessSpecifierAssistant.getDefault(), null, PBindAssistantTC.getMultipleBindList(node.getBind()), null);
 
 			def.apply(rootVisitor, question);
 			LinkedList<PDefinition> defs = new LinkedList<PDefinition>();
@@ -140,7 +144,7 @@ public class TypeCheckerOthersVisitor extends
 		{
 			
     		ARecordInvariantType rec = PTypeAssistant.getRecord(type);
-    		AFieldField rf = ARecordInvariantTypeAssistant.findField(rec, field.name);
+    		AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, field.name);
 
     		if (rf == null)
     		{
@@ -159,7 +163,7 @@ public class TypeCheckerOthersVisitor extends
 			String cname = ctype.getName().name;
 
 			node.setObjectfield( new LexNameToken(cname, field.name, node.getObject().getLocation()));
-			PDefinition fdef = SClassDefinitionAssistant.findName(ctype.getClassdef(),node.getObjectfield(), NameScope.STATE);
+			PDefinition fdef = SClassDefinitionAssistantTC.findName(ctype.getClassdef(),node.getObjectfield(), NameScope.STATE);
 
 			if (fdef == null)
 			{
@@ -212,7 +216,7 @@ public class TypeCheckerOthersVisitor extends
 			}
 			else if (def.getClassDefinition() != null)
 			{
-    			if (!SClassDefinitionAssistant.isAccessible(env, def, true))
+    			if (!SClassDefinitionAssistantTC.isAccessible(env, def, true))
     			{
     				TypeCheckerErrors.report(3180, "Inaccessible member '" + name + "' of class " +
     					def.getClassDefinition().getName().name,name.getLocation(),name);
@@ -342,27 +346,27 @@ public class TypeCheckerOthersVisitor extends
 		if (PTypeAssistant.isMap(type))
 		{
 			SMapType map = PTypeAssistant.getMap(type);
-			result.add(AApplyObjectDesignatorAssistant.mapApply(node,map, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node,map, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
 		if (PTypeAssistant.isSeq(type))
 		{
 			SSeqType seq = PTypeAssistant.getSeq(type);
-			result.add(AApplyObjectDesignatorAssistant.seqApply(node,seq, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node,seq, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
 		if (PTypeAssistant.isFunction(type))
 		{
 			AFunctionType ft = PTypeAssistant.getFunction(type);
 			PTypeAssistant.typeResolve(ft, null, rootVisitor, new TypeCheckInfo(question.env));
-			result.add(AApplyObjectDesignatorAssistant.functionApply(node,ft, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,ft, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
 		if (PTypeAssistant.isOperation(type))
 		{
 			AOperationType ot = PTypeAssistant.getOperation(type);
 			PTypeAssistant.typeResolve(ot, null, rootVisitor, new TypeCheckInfo(question.env));
-			result.add(AApplyObjectDesignatorAssistant.operationApply(node,ot, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
+			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node,ot, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
 		if (result.isEmpty())
@@ -428,7 +432,7 @@ public class TypeCheckerOthersVisitor extends
 		{
 			String sname = (node.getFieldName() != null) ? node.getFieldName().name : node.getClassName().toString();
 			ARecordInvariantType rec = PTypeAssistant.getRecord(type);
-			AFieldField rf = ARecordInvariantTypeAssistant.findField(rec, sname);
+			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, sname);
 
 			if (rf == null)
 			{

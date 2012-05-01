@@ -27,7 +27,7 @@
             <groupId>org.overturetool.core</groupId>
             <artifactId>parser</artifactId>
             <version>2.2.0</version>
-        </dependency>
+        </dependency>       
     <dependency>
       <groupId>org.eclipse.core</groupId>
       <artifactId>org.eclipse.core.runtime</artifactId>

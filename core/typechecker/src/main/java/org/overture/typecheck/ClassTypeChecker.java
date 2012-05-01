@@ -28,7 +28,7 @@ import java.util.List;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
 
 /**
@@ -98,7 +98,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.getIsTypeChecked())
 			{
-				SClassDefinitionAssistant.implicitDefinitions(c, allClasses);
+				SClassDefinitionAssistantTC.implicitDefinitions(c, allClasses);
 			}
 		}
 
@@ -109,7 +109,7 @@ public class ClassTypeChecker extends TypeChecker
     			try
     			{
     				Environment self = new PrivateClassEnvironment(c, allClasses);
-    				SClassDefinitionAssistant.typeResolve(c, null, new TypeCheckInfo(self));
+    				SClassDefinitionAssistantTC.typeResolve(c, null, new TypeCheckInfo(self));
     			}
     			catch (TypeCheckException te)
     			{
@@ -122,7 +122,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.getIsTypeChecked())
 			{
-				SClassDefinitionAssistant.checkOver(c);
+				SClassDefinitionAssistantTC.checkOver(c);
 			}
 		}
 		TypeCheckVisitor tc = new TypeCheckVisitor();
@@ -135,7 +135,7 @@ public class ClassTypeChecker extends TypeChecker
     				try
     				{
     					Environment self = new PrivateClassEnvironment(c, allClasses);
-    	         		SClassDefinitionAssistant.typeCheckPass(c,pass, self,tc);
+    	         		SClassDefinitionAssistantTC.typeCheckPass(c,pass, self,tc);
     				}
     				catch (TypeCheckException te)
     				{
@@ -149,7 +149,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.getIsTypeChecked())
 			{
-				SClassDefinitionAssistant.initializedCheck(c);
+				SClassDefinitionAssistantTC.initializedCheck(c);
 				PDefinitionAssistantTC.unusedCheck(c);
 			}
 		}

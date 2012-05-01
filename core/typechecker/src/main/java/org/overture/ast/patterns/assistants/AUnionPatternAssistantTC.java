@@ -5,12 +5,20 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ASetUnionBinaryExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.AUnionPattern;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overturetool.vdmj.lex.LexKeywordToken;
+import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class AUnionPatternAssistantTC {
@@ -41,15 +49,6 @@ public class AUnionPatternAssistantTC {
 		
 	}
 
-//	public static LexNameList getVariableNames(AUnionPattern pattern) {
-//		LexNameList list = new LexNameList();
-//
-//		list.addAll(PPatternTCAssistant.getVariableNames(pattern.getLeft()));
-//		list.addAll(PPatternTCAssistant.getVariableNames(pattern.getRight()));
-//
-//		return list;
-//	}
-
 	public static List<PDefinition> getDefinitions(AUnionPattern rp,
 			PType type, NameScope scope) {
 		
@@ -64,6 +63,23 @@ public class AUnionPatternAssistantTC {
 		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),type, scope));
 
 		return defs;
+	}
+
+	public static PType getPossibleTypes(AUnionPattern unionPattern) {
+		PTypeSet set = new PTypeSet();
+
+		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getLeft()));
+		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getRight()));
+
+		PType s = set.getType(unionPattern.getLocation());
+
+		return PTypeAssistant.isUnknown(s) ? new ASetType(unionPattern.getLocation(), false, null, new AUnknownType(unionPattern.getLocation(), false), true, false)
+				: s;
+	}
+
+	public static PExp getMatchingExpression(AUnionPattern up) {
+		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
+		return new ASetUnionBinaryExp(null, up.getLocation(), PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
 	}
 
 }

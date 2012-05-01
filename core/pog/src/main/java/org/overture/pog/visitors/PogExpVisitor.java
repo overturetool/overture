@@ -11,7 +11,7 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.expressions.*;
-import org.overture.ast.expressions.assistants.PExpAssistant;
+import org.overture.ast.expressions.assistants.PExpAssistantTC;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -102,7 +102,7 @@ public class PogExpVisitor extends
 		if (!PTypeAssistant.isUnknown(type) && PTypeAssistant.isFunction(type))
 		{
 			AFunctionType funcType = PTypeAssistant.getFunction(type);
-			String prename = PExpAssistant.getPreName(root);
+			String prename = PExpAssistantTC.getPreName(root);
 			if (prename == null || !prename.equals(""))
 			{
 				obligations.add(new FunctionApplyObligation(node.getRoot(), node.getArgs(), prename, question));
@@ -1006,8 +1006,8 @@ public class PogExpVisitor extends
 
 		if (PTypeAssistant.isFunction(lType))
 		{
-			String pref1 = PExpAssistant.getPreName(lExp);
-			String pref2 = PExpAssistant.getPreName(rExp);
+			String pref1 = PExpAssistantTC.getPreName(lExp);
+			String pref2 = PExpAssistantTC.getPreName(rExp);
 
 			if (pref1 == null || !pref1.equals(""))
 				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
@@ -1207,7 +1207,7 @@ public class PogExpVisitor extends
 
 		if (PTypeAssistant.isFunction(lType))
 		{
-			String preName = PExpAssistant.getPreName(lExp);
+			String preName = PExpAssistantTC.getPreName(lExp);
 			if (preName == null || !preName.equals(""))
 			{
 				obligations.add(new org.overture.pog.obligations.FuncIterationObligation(node, preName, question));

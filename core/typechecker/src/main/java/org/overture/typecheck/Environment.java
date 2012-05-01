@@ -31,7 +31,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -70,7 +70,7 @@ abstract public class Environment
 
 	protected void dupHideCheck(List<PDefinition> list, NameScope scope)
 	{
-		LexNameList allnames = PDefinitionListAssistant.getVariableNames(list);
+		LexNameList allnames = PDefinitionListAssistantTC.getVariableNames(list);
 
 		for (LexNameToken n1: allnames)
 		{

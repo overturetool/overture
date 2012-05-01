@@ -33,4 +33,5 @@ Export-Package: org.overture.ide.ui,
  org.overture.ide.ui.utility,
  org.overture.ide.ui.utility.ast,
  org.overture.ide.ui.wizard
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ typechecker-2.2.0.jar

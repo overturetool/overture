@@ -8,7 +8,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
@@ -29,6 +29,10 @@ import org.overturetool.vdmj.typechecker.NameScope;
 public class TypeCheckerImportsVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6883311293059829368L;
 	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 	
 	
@@ -49,7 +53,7 @@ public class TypeCheckerImportsVisitor extends
 			LexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
 			def.setType((SInvariantType)PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(def),null,rootVisitor,question));
-			PDefinition expdef = PDefinitionListAssistant.findType(from.getExportdefs(),name, null);
+			PDefinition expdef = PDefinitionListAssistantTC.findType(from.getExportdefs(),name, null);
 
 			if (expdef != null)
 			{
@@ -75,7 +79,7 @@ public class TypeCheckerImportsVisitor extends
 		if (type != null && from != null)
 		{
 			type = PTypeAssistant.typeResolve(type, null, rootVisitor, question);
-			PDefinition expdef = PDefinitionListAssistant.findName(from.getExportdefs(), name, NameScope.NAMES);
+			PDefinition expdef = PDefinitionListAssistantTC.findName(from.getExportdefs(), name, NameScope.NAMES);
 
 			if (expdef != null)
 			{

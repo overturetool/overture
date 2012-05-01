@@ -44,5 +44,5 @@ public class Settings
 
 	public static boolean usingDBGP = false;
 	public static boolean usingCmdLine = false;
-	public static File DGBPbaseDir;
+	public static File baseDir = new File(".").getParentFile();
 }

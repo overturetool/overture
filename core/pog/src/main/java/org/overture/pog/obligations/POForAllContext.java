@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -41,8 +40,9 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.ASetBindAssistant;
-import org.overture.ast.patterns.assistants.PBindAssistant;
+import org.overture.ast.patterns.assistants.ASetBindAssistantTC;
+import org.overture.ast.patterns.assistants.PBindAssistantTC;
+import org.overture.ast.patterns.assistants.PMultipleBindAssistantTC;
 
 public class POForAllContext extends POContext
 {
@@ -60,7 +60,7 @@ public class POForAllContext extends POContext
 
 	public POForAllContext(ASeqCompSeqExp exp)
 	{
-		this.bindings = ASetBindAssistant.getMultipleBindList(exp.getSetBind());
+		this.bindings = ASetBindAssistantTC.getMultipleBindList(exp.getSetBind());
 	}
 
 	public POForAllContext(AForAllExp exp)
@@ -75,12 +75,12 @@ public class POForAllContext extends POContext
 
 	public POForAllContext(AExists1Exp exp)
 	{
-		this.bindings = PBindAssistant.getMultipleBindList(exp.getBind());
+		this.bindings = PBindAssistantTC.getMultipleBindList(exp.getBind());
 	}
 
 	public POForAllContext(AIotaExp exp)
 	{
-		this.bindings = PBindAssistant.getMultipleBindList(exp.getBind());
+		this.bindings = PBindAssistantTC.getMultipleBindList(exp.getBind());
 	}
 
 	public POForAllContext(ALambdaExp exp)
@@ -98,7 +98,7 @@ public class POForAllContext extends POContext
 
 	public POForAllContext(ALetBeStExp exp)
 	{
-		this.bindings = PMultipleBindAssistant.getMultipleBindList(exp.getBind());
+		this.bindings = PMultipleBindAssistantTC.getMultipleBindList(exp.getBind());
 	}
 
 	@Override

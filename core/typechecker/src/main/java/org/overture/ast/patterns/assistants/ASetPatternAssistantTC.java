@@ -5,9 +5,12 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckException;
@@ -25,7 +28,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 
 		try
 		{
-			PPatternListAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
+			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -36,7 +39,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 	}
 
 	public static void unResolve(ASetPattern pattern) {
-		PPatternListAssistant.unResolve(pattern.getPlist());
+		PPatternListAssistantTC.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 		
 	}
@@ -77,5 +80,15 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 
 		return defs;
 	}
+
+	public static PType getPossibleTypes(ASetPattern pattern) {
+		ASetType t = new ASetType(pattern.getLocation(), false,  true, false);
+		t.setSetof(new AUnknownType(pattern.getLocation(), false));
+		return t;
+	}
+
+	public static PExp getMatchingExpression(ASetPattern sp) {
+		return new ASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
+	} 
 
 }

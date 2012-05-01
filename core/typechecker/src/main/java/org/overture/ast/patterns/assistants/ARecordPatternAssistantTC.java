@@ -1,11 +1,14 @@
 package org.overture.ast.patterns.assistants;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
@@ -15,6 +18,7 @@ import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 public class ARecordPatternAssistantTC {
@@ -26,7 +30,7 @@ public class ARecordPatternAssistantTC {
 
 		try
 		{
-			PPatternListAssistant.typeResolve(pattern.getPlist(),rootVisitor,question);
+			PPatternListAssistantTC.typeResolve(pattern.getPlist(),rootVisitor,question);
 			pattern.setType(PTypeAssistant.typeResolve(pattern.getType(),null, rootVisitor,question));
 		}
 		catch (TypeCheckException e)
@@ -97,6 +101,21 @@ public class ARecordPatternAssistantTC {
 		}
 
 		return defs;
+	}
+
+	public static PType getPossibleTypes(ARecordPattern pattern) {
+		return pattern.getType();
+	}
+
+	public static PExp getMatchingExpression(ARecordPattern ptrn) {
+		List<PExp> list = new LinkedList<PExp>();
+
+		for (PPattern p : ptrn.getPlist()) {
+			list.add(PPatternAssistantTC.getMatchingExpression(p));
+		}
+		
+		LexNameToken tpName = ptrn.getTypename();
+		return new AMkTypeExp(ptrn.getLocation(),tpName.clone(), list);
 	}
 	
 }

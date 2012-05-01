@@ -31,7 +31,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.SClassDefinitionAssistant;
+import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.ast.statements.AAssignmentStm;
 
 public class StateInvariantObligation extends ProofObligation
@@ -106,7 +106,7 @@ public class StateInvariantObligation extends ProofObligation
 	private String invDefs(SClassDefinition def)
 	{
 		StringBuilder sb = new StringBuilder();
-		List<PDefinition> invdefs = SClassDefinitionAssistant.getInvDefs(def);
+		List<PDefinition> invdefs = SClassDefinitionAssistantTC.getInvDefs(def);
 		String sep = "";
 
 		for (PDefinition d: invdefs)

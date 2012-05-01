@@ -27,12 +27,12 @@ import java.util.List;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistant;
+import org.overture.ast.definitions.assistants.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternAssistantTC;
+import org.overture.ast.patterns.assistants.PPatternListAssistantTC;
 import org.overturetool.vdmj.util.Utils;
 
 public class FuncPostConditionObligation extends ProofObligation
@@ -47,7 +47,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		for (List<PPattern> pl : func.getParamPatternList())
 		{
 			String postfix = "";
-			for (PExp p : PPatternAssistantTC.getMatchingExpressionList(pl))
+			for (PExp p : PPatternListAssistantTC.getMatchingExpressionList(pl))
 			{
 				params.append(postfix);
 				params.append(p);
@@ -83,9 +83,9 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		StringBuilder params = new StringBuilder();
 
-		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistant.getParamPatternList(func))
+		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(func))
 		{
-			params.append(Utils.listToString(PPatternAssistantTC.getMatchingExpressionList(pl)));
+			params.append(Utils.listToString(PPatternListAssistantTC.getMatchingExpressionList(pl)));
 		}
 
 		String body = null;

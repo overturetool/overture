@@ -5,8 +5,12 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckException;
@@ -25,7 +29,7 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 
 		try
 		{
-			PPatternListAssistant.typeResolve(pattern.getPlist(), rootVisitor, question);
+			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
 		}
 		catch (TypeCheckException e)
 		{
@@ -36,7 +40,7 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 	}
 
 	public static void unResolve(ASeqPattern pattern) {
-		PPatternListAssistant.unResolve(pattern.getPlist());
+		PPatternListAssistantTC.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 		
 	}
@@ -72,6 +76,16 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 		}
 
 		return defs;
+	}
+
+	public static PType getPossibleTypes(ASeqPattern pattern) {
+		ASeqSeqType t = new ASeqSeqType(pattern.getLocation(), false, false);
+		t.setSeqof( new AUnknownType(pattern.getLocation(), false));
+		return t;
+	}
+
+	public static PExp getMatchingExpression(ASeqPattern seqp) {
+		return new ASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
 	}
 
 }

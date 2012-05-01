@@ -1,10 +1,10 @@
 package org.overture.typecheck.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.assistants.PMultipleBindAssistant;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
-import org.overture.ast.patterns.assistants.PPatternListAssistant;
+import org.overture.ast.patterns.assistants.PMultipleBindAssistantTC;
+import org.overture.ast.patterns.assistants.PPatternListAssistantTC;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -16,6 +16,10 @@ import org.overture.typecheck.TypeComparator;
 public class TypeCheckerPatternVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3210904929412698065L;
 	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 	
 	
@@ -28,7 +32,7 @@ public class TypeCheckerPatternVisitor extends
 			TypeCheckInfo question) {
 		
 		
-		PPatternListAssistant.typeResolve(node.getPlist(), rootVisitor, question);
+		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
 		question.qualifiers = null;
 		PType type = node.getSet().apply(rootVisitor, question);
 		PType result = new AUnknownType(node.getLocation(),false);
@@ -45,7 +49,7 @@ public class TypeCheckerPatternVisitor extends
 			if (!st.getEmpty())
 			{
 				result = st.getSetof();
-				PType ptype = PMultipleBindAssistant.getPossibleType(node);
+				PType ptype = PMultipleBindAssistantTC.getPossibleType(node);
 
 				if (!TypeComparator.compatible(ptype, result))
 				{
@@ -66,9 +70,9 @@ public class TypeCheckerPatternVisitor extends
 	public PType caseATypeMultipleBind(ATypeMultipleBind node,
 			TypeCheckInfo question) {
 		
-		PPatternListAssistant.typeResolve(node.getPlist(), rootVisitor, question);
+		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
 		PType type = PTypeAssistant.typeResolve(node.getType(),null,rootVisitor,question);
-		PType ptype = PPatternListAssistant.getPossibleType(node.getPlist(), node.getLocation());
+		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(), node.getLocation());
 
 		if (!TypeComparator.compatible(ptype, type))
 		{
