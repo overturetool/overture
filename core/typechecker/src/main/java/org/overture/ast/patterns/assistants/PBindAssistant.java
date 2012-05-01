@@ -6,6 +6,7 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overturetool.vdmj.lex.LexNameList;
 
 public class PBindAssistant {
 
@@ -19,6 +20,20 @@ public class PBindAssistant {
 		
 		}
 		return null;
+		
+	}
+	
+	public static LexNameList getOldNames(PBind bind)
+	{
+		switch (bind.kindPBind()) {
+		case SET:
+			return ASetBindAssistant.getOldNames((ASetBind)bind);
+		case TYPE:
+			return ATypeBindAssistant.getOldNames((ATypeBind)bind);
+		default:
+			assert false : "Should not happen";
+			return null;	
+		}
 		
 	}
 

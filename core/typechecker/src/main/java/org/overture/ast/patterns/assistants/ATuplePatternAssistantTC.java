@@ -11,6 +11,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeList;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -75,6 +76,17 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 		}
 
 		return defs;
+	}
+
+	public static PType getPossibleTypes(ATuplePattern tupplePattern) {		
+		PTypeList list = new PTypeList();
+
+		for (PPattern p : tupplePattern.getPlist())
+		{
+			list.add(PPatternAssistantTC.getPossibleType(p));
+		}
+
+		return list.getType(tupplePattern.getLocation());
 	}
 
 }

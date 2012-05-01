@@ -5,6 +5,8 @@ import java.util.List;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.AConcatenationPattern;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -43,6 +45,12 @@ public class AConcatenationPatternAssistantTC extends AConcatenationPatternAssis
 		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),ptype, scope));
 		return list;
 		
+	}
+
+	public static PType getPossibleType(AConcatenationPattern pattern) {
+		ASeqSeqType t = new ASeqSeqType(pattern.getLocation(), false, false);
+		t.setSeqof( new AUnknownType(pattern.getLocation(), false));
+		return t;
 	}
 
 }

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.expressions.assistants.PExpAssistant;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overturetool.vdmj.lex.LexNameList;
 
 
 public class ASetBindAssistant {
@@ -19,6 +21,10 @@ public class ASetBindAssistant {
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
 		mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist, bind.getSet().clone()));
 		return mblist;
+	}
+
+	public static LexNameList getOldNames(ASetBind bind) {
+		return PExpAssistant.getOldNames(bind.getSet());
 	}
 
 }

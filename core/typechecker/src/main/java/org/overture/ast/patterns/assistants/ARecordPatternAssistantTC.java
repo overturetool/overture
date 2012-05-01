@@ -98,5 +98,9 @@ public class ARecordPatternAssistantTC {
 
 		return defs;
 	}
+
+	public static PType getPossibleTypes(ARecordPattern pattern) {
+		return pattern.getType();
+	}
 	
 }

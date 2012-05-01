@@ -11,6 +11,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexNameList;
 
 public class ATypeBindAssistant {
 
@@ -28,6 +29,10 @@ public class ATypeBindAssistant {
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
 		mblist.add(new ATypeMultipleBind(bind.getLocation(),plist, bind.getType().clone()));
 		return mblist;
+	}
+
+	public static LexNameList getOldNames(ATypeBind bind) {
+		return new LexNameList();
 	}
 
 }
