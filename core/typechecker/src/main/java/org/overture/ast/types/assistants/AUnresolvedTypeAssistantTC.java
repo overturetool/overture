@@ -105,7 +105,7 @@ public class AUnresolvedTypeAssistantTC {
 	}
 
 	public static String toDisplay(AUnresolvedType exptype) {
-		return "(unresolved " + exptype.getName() + ")";
+		return "(unresolved " + exptype.getName().getExplicit(true) + ")";
 		
 	}
 

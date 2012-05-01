@@ -10,11 +10,16 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.util.Utils;
@@ -104,7 +109,12 @@ public class AOperationTypeAssistantTC {
 		}
 		else if (classname != null && !isStatic)
 		{
-			params.add(new AUnresolvedType(classname.getLocation(),false,null, classname.getName()));
+			AMapMapType map = new AMapMapType(type.getLocation(), false, null,
+					new ASeqSeqType(type.getLocation(), false, null,
+							new ACharBasicType(type.getLocation(), false),
+							false),
+					new AUnknownType(type.getLocation(), false), false);
+			params.add(map);
 			params.add(new AUnresolvedType(classname.getLocation(),false,null, classname.getName()));
 		}
 

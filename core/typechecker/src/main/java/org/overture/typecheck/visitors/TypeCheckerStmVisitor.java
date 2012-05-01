@@ -565,6 +565,11 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		{
 			rtypes.add(node.getOthers().apply(rootVisitor, question));
 		}
+		else
+		{
+			rtypes.add(new AVoidType(node.getLocation(), false));
+		}
+		
 		node.setType(rtypes.getType(node.getLocation()));
 		return node.getType();
 	}

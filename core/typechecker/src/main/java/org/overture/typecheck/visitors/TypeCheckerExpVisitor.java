@@ -1127,7 +1127,7 @@ public class TypeCheckerExpVisitor extends
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = AClassTypeAssistantTC.findName(cls, memberName);
+			PDefinition fdef = AClassTypeAssistantTC.findName(cls, memberName,question.scope);
 
 			if (fdef == null)
 			{
@@ -1136,7 +1136,7 @@ public class TypeCheckerExpVisitor extends
 
 				List<PType> oldq = memberName.getTypeQualifier();
 				memberName.setTypeQualifier(null);
-				fdef = AClassTypeAssistantTC.findName(cls, memberName);
+				fdef = AClassTypeAssistantTC.findName(cls, memberName,question.scope);
 				memberName.setTypeQualifier(oldq); // Just for error text!
 			}
 

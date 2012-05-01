@@ -10,6 +10,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
@@ -64,6 +65,12 @@ public class AOptionalTypeAssistantTC {
 
 	public static boolean isType(AOptionalType b,
 			Class<? extends PType> typeclass) {
+		
+		if(typeclass.equals(AVoidType.class))
+		{
+			return false; // Optionals are never void
+		}
+		
 		return PTypeAssistant.isType(b.getType(), typeclass);
 	}
 

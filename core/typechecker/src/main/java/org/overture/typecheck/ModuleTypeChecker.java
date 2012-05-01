@@ -161,7 +161,10 @@ public class ModuleTypeChecker extends TypeChecker
 				alldefs.add(d);
 				if (!m.getTypeChecked())	checkDefs.add(d);
 			}
-
+		}
+		
+		for(AModuleModules m: modules)
+		{
 			for (PDefinition d: m.getDefs())
 			{
 				alldefs.add(d);

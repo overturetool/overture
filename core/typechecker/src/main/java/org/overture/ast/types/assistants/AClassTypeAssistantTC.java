@@ -24,8 +24,8 @@ public class AClassTypeAssistantTC {
 		return new LexNameToken(cls.getName().name, id.name, id.location, false, false);
 	}
 
-	public static PDefinition findName(AClassType cls, LexNameToken tag) {
-		return  SClassDefinitionAssistantTC.findName(cls.getClassdef(),tag, NameScope.NAMESANDSTATE);
+	public static PDefinition findName(AClassType cls, LexNameToken tag, NameScope scope) {
+		return  SClassDefinitionAssistantTC.findName(cls.getClassdef(),tag, scope);
 	}
 
 	public static boolean hasSupertype(AClassType sclass, PType other) {
