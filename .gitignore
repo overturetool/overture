@@ -26,6 +26,15 @@
 *.sql
 *.sqlite
 
+# LaTeX Files #
+###############
+*.out
+*.aux
+*.toc
+*.blg
+*.bbl
+*.pdfsync
+
 # OS generated files #
 ######################
 .DS_Store*
