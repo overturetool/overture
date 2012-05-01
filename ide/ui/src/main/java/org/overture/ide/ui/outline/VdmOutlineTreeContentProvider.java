@@ -29,7 +29,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionListAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
@@ -54,7 +54,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 		if (parentElement instanceof SClassDefinition)
 		{
 			// get definitions from the current class without inherited definitions
-			List<PDefinition> defs = PDefinitionListAssistant.singleDefinitions(((SClassDefinition) parentElement).getDefinitions());
+			List<PDefinition> defs = PDefinitionListAssistantTC.singleDefinitions(((SClassDefinition) parentElement).getDefinitions());
 			// defs.addAll(((ClassDefinition) parentElement).localInheritedDefinitions);
 
 			// defs = checkForThreads(defs);
@@ -71,7 +71,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 			{
 				all.add(new ImportsContainer(module.getImports(), module.getImportdefs()));
 			}
-			all.addAll(filterDefinitionList(PDefinitionListAssistant.singleDefinitions(((AModuleModules) parentElement).getDefs())));
+			all.addAll(filterDefinitionList(PDefinitionListAssistantTC.singleDefinitions(((AModuleModules) parentElement).getDefs())));
 			filterSLModule(all);
 			// all.addAll(((Module) parentElement).defs.singleDefinitions());
 			return all.toArray();
