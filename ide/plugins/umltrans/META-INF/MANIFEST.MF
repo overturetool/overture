@@ -17,6 +17,16 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.overture.ide.plugins.umltrans.Activator
 Bundle-ClassPath: .,
  args4j-2.0.9.jar,
+ org.overture.ide.core-2.1.2.jar,
+ org.overture.ide.vdmpp.core-2.1.2.jar,
+ org.overture.ide.vdmrt.core-2.1.2.jar,
+ ast-2.1.2.jar,
+ parser-2.1.2.jar,
+ stdlib-2.1.2.jar,
+ umltrans-2.1.2.jar,
+ vdmj-2.1.2.jar,
+ xmljunit-2.1.2.jar,
+ cglib-2.1.2.jar,
  xalan-2.7.0.jar,
  xercesImpl-2.9.0.jar,
  xml-apis-1.0.b2.jar

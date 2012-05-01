@@ -76,4 +76,7 @@ Export-Package: org.overture.ide.core;
  org.overturetool.vdmj.values
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.1.2.jar,
+ vdmj-2.1.2.jar,
+ cglib-2.1.2.jar

@@ -20,4 +20,15 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
  org.overture.ide.vdmrt.ui;bundle-version="2.1.2",
  org.overture.ide.vdmsl.ui;bundle-version="2.1.2"
 Bundle-Activator: org.overture.ide.plugins.coverageeditor.Activator
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ org.overture.ide.core-2.1.2.jar,
+ org.overture.ide.ui-2.1.2.jar,
+ org.overture.ide.vdmpp.core-2.1.2.jar,
+ org.overture.ide.vdmpp.ui-2.1.2.jar,
+ org.overture.ide.vdmrt.core-2.1.2.jar,
+ org.overture.ide.vdmrt.ui-2.1.2.jar,
+ org.overture.ide.vdmsl.core-2.1.2.jar,
+ org.overture.ide.vdmsl.ui-2.1.2.jar,
+ ast-2.1.2.jar,
+ vdmj-2.1.2.jar,
+ cglib-2.1.2.jar
