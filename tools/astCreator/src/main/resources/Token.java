@@ -1,5 +1,7 @@
 //COPYRIGHT
 package %generated.node%;
+import java.util.Hashtable;
+import java.util.Map;
 /**
  * {@code Token} is the superclass of all tokens is the AST.
  */
@@ -98,4 +100,8 @@ public abstract class %Token% extends %Node% implements %IToken% {
 //	@Override void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild) {
 //		throw new RuntimeException("Not a child.");
 //	}
+	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	{
+		return new Hashtable<String,Object>();
+	}
 }
