@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -23,6 +24,7 @@ import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.EPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
@@ -149,6 +151,7 @@ public class Vdm2Uml {
 		for (PDefinition pDefinition : definitions) {
 			switch (pDefinition.kindPDefinition()) {
 			case EXPLICITFUNCTION:
+				functionDefinitions.add(buildDefinitionBlock((AExplicitFunctionDefinition) pDefinition));
 				break;
 			case IMPLICITFUNCTION:
 				break;
@@ -172,6 +175,46 @@ public class Vdm2Uml {
 		}
 		
 		return result;
+	}
+
+	private IUmlOperation buildDefinitionBlock(
+			AExplicitFunctionDefinition pDefinition) throws CGException {
+		
+		String name = pDefinition.getName().name;
+		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
+		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
+		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
+		IUmlType type = Vdm2UmlUtil.convertType(PDefinitionAssistantTC.getType(pDefinition));
+		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
+		
+		AFunctionType funcType = (AFunctionType) PDefinitionAssistantTC.getType(pDefinition);
+		
+		LinkedList<List<PPattern>> pnames = pDefinition.getParamPatternList();
+		
+		Vector<IUmlParameter> params = null;
+		if(pDefinition.getPostcondition() == null)
+		{
+			if(pnames.size() > 0)
+			{
+				params = Vdm2UmlUtil.buildParameters(pnames.getFirst(),funcType);
+			}
+		}
+		else
+		{
+			//TODO: function with post condition == extendedexplicit in OML
+		}
+		
+		
+		
+				
+		
+		return new UmlOperation(name, 
+                visibility, 
+                multiplicity, 
+                true,
+                type, 
+                isStatic,
+                new UmlParameters(params));
 	}
 
 	private IUmlOperation buildDefinitionBlock(
@@ -206,9 +249,17 @@ public class Vdm2Uml {
 		IUmlType type = null;
 		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
 		//TODO: I dont get the parameters right now
-		Vector<IUmlParameter> params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));
+		Vector<IUmlParameter> params = null;
+		if(pDefinition.getPostcondition() == null)
+		{
+			params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));	
+		}
+		else
+		{
+			//TODO:operation with post condition == extendedexplicit in OML
+		}
 		
-		return new UmlOperation(name, visibility, multiplicity, false, type, isStatic , new UmlParameters());
+		return new UmlOperation(name, visibility, multiplicity, false, type, isStatic , new UmlParameters(params));
 		
 	}
 

@@ -27,6 +27,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -408,5 +409,26 @@ public class Vdm2UmlUtil {
 	public static Vector<IUmlParameter> buildFnResult(APatternTypePair result) {
 		
 		return new Vector<IUmlParameter>();
+	}
+
+	public static Vector<IUmlParameter> buildParameters(List<PPattern> first,
+			AFunctionType funcType) throws CGException {
+		Vector<IUmlParameter> result = new Vector<IUmlParameter>();
+		
+		for (PPattern aPattern : first) {
+			String name = "-";
+			
+			if(aPattern.kindPPattern() == EPattern.IDENTIFIER)
+			{
+				name = ((AIdentifierPattern)aPattern).getName().name;
+			}
+			result.add(new UmlParameter(name, 
+					null,//TODO: missing type
+					null,//TODO: missing multiplicity
+					"",
+					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQIN)));
+		}
+		
+		return result;
 	}
 }
