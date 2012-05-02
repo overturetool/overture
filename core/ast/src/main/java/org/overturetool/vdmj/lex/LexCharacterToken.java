@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.lex;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
@@ -69,5 +72,22 @@ public class LexCharacterToken extends LexToken {
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
 		return caller.caseLexCharacterToken(this, question);
+	}
+	
+	/**
+	 * Creates a map of all field names and their value
+	 * @param includeInheritedFields if true all inherited fields are included
+	 * @return a a map of names to values of all fields
+	 */
+	@Override
+	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	{
+		Map<String,Object> fields = new HashMap<String,Object>();
+		if(includeInheritedFields)
+		{
+			fields.putAll(super.getChildren(includeInheritedFields));
+		}
+		fields.put("unicode",this.unicode);
+		return fields;
 	}
 }
