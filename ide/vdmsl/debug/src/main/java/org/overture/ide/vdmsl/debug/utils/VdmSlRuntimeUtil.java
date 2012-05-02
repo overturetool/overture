@@ -24,7 +24,8 @@ public class VdmSlRuntimeUtil
 	public static boolean typeCheck(ModuleList modules, String expression)
 			throws VDMErrorsException, ParserException, LexException
 	{
-		modules.combineDefaults();
+		//modules.combineDefaults();
+		
 		String defaultModuleName = null;
 		if (expression.contains(STATIC_CALL_SEPERATOR))
 		{
@@ -50,6 +51,10 @@ public class VdmSlRuntimeUtil
 
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		TypeChecker.clearErrors();
+		if(defaultModule==null)
+		{
+			return false;//FIXME throw approiate error
+		}
 		Environment env = new ModuleEnvironment(defaultModule);
 		PExp expr;
 
