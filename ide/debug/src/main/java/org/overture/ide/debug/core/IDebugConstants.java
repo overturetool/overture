@@ -69,7 +69,7 @@ public interface IDebugConstants
 	
 	//debugger
 	public static final String DEBUG_ENGINE_BUNDLE_ID = "org.overture.ide.debugger.vdmj";//ICoreConstants.PLUGIN_ID;//"org.overture.ide.generated.vdmj";
-	public static final String DEBUG_ENGINE_CLASS = "org.overturetool.vdmj.debug.DBGPReader";
+	public static final String DEBUG_ENGINE_CLASS = "org.overturetool.vdmj.debug.DBGPReaderV2";
 	static final String EXTENSION_POINT_VDM_BREAKPOINT_LISTENERS = "breakpointListeners";
 	
 	/**

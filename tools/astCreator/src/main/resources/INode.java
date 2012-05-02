@@ -79,4 +79,6 @@ public interface %INode%
 	 */
 	public abstract <Q, A> A apply(%IQuestionAnswer<Q,A>% caller, Q question);
 
+	
+	public abstract Map<String,Object> getChildren(Boolean includeInheritedFields);
 }

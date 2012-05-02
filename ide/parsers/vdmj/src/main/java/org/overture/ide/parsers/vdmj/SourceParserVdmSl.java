@@ -118,6 +118,11 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 
 			result.setWarnings(reader.getWarnings());
 		}
+		
+//		if(reader.getErrorCount()==0)
+//		{
+//			org.overture.internal.ast.preview.Main.show(result.getAst().get(0), false);
+//		}
 
 		result.setAllLocation(LexLocation.getAllLocations());
 		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());

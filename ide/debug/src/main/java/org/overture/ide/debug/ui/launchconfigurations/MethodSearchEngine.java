@@ -30,8 +30,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.node.Token;
-import org.overture.ast.patterns.assistants.PatternList;
+import org.overture.ast.patterns.assistants.PatternListTC;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 
 
@@ -179,7 +178,7 @@ public class MethodSearchEngine
 				}
 
 				if (exfu.getParamPatternList() != null
-						&& (exfu.getParamPatternList().size() > 0 && exfu.getParamPatternList().get(0) instanceof PatternList && ((PatternList)exfu.getParamPatternList().get(0)).size()>0))
+						&& (exfu.getParamPatternList().size() > 0 && exfu.getParamPatternList().get(0) instanceof PatternListTC && ((PatternListTC)exfu.getParamPatternList().get(0)).size()>0))
 				{
 					continue;
 				}

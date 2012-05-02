@@ -1,5 +1,6 @@
 //COPYRIGHT
 package %generated.node%;
+import java.util.Map;
 /**
  * {@code Token} is the superclass of all tokens is the AST.
  */
@@ -77,4 +78,6 @@ public interface %IToken% extends %INode% {
 //	@Override void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild) {
 //		throw new RuntimeException("Not a child.");
 //	}
+	
+	public abstract Map<String,Object> getChildren(Boolean includeInheritedFields);
 }

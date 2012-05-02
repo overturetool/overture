@@ -17,11 +17,11 @@
     <module>coverageeditor</module>
     <module>csk</module>
     <!--module>quickinterpreter</module-->
-    <!--module>externaleditor</module-->
+    <module>externaleditor</module>
     <module>latex</module>
     <module>poviewer</module>
     <!--module>umltrans</module-->
-    <!--module>showtrace</module-->
+    <module>showtrace</module>
     <!--module>traces</module-->
   </modules>
 </project>
