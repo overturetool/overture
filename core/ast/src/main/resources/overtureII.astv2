@@ -509,7 +509,7 @@ stm {-> package='org.overture.ast.statements'}
                      [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
     |   {call} [name]:LexNameToken [args]:exp*
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
-    |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
+    |   {classInvariant} [name]:LexNameToken (invDefs):definition*
     |   {cycles} [cycles]:exp [statement]:stm (value):java_Long
     |   {duration} [duration]:exp [statement]:stm (step):java_Long
     |   {elseIf} [elseIf]:exp [thenStm]:stm

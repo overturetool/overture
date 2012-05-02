@@ -679,17 +679,25 @@ public class AUnionTypeAssistantTC
 			{
 				PDefinition def = new ALocalDefinition(synthname.location, NameScope.GLOBAL, false, null, null, common.get(synthname).getType(type.getLocation()), false, synthname);
 
-				def.setAccess(access.get(synthname));
+				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);
 			}
 
-			AClassClassDefinition class_ = new AClassClassDefinition(classname.getLocation(), classname, null, false, null, null, type, null, new LexNameList(), newdefs, null, null, null, null, null, null, newdefs, null, null, null, null, null, null);
-			for (PDefinition pDefinition : newdefs)
+			
+			if(classname == null)
 			{
-				pDefinition.setClassDefinition(class_);
+				type.setClassType(null);
 			}
-			type.setClassType((classname == null) ? null
-					: new AClassType(type.getLocation(), false, null,classname, class_));
+			else
+			{
+				AClassClassDefinition class_ = new AClassClassDefinition(classname.getLocation(), classname, null, false, null, null, type, null, new LexNameList(), newdefs, null, null, null, null, null, null, newdefs, null, null, null, null, null, null);
+				for (PDefinition pDefinition : newdefs)
+				{
+					pDefinition.setClassDefinition(class_);
+				}
+				type.setClassType(new AClassType(type.getLocation(), false, null,classname.clone(), class_));
+			}
+			
 		}
 
 		return type.getClassType();

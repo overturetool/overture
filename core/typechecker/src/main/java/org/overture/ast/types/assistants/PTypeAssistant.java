@@ -96,7 +96,15 @@ public class PTypeAssistant
 			case MAP:
 				return new AMapMapType(location, false, definitions, polymorph(((AMapMapType) type).getFrom(), pname, actualType), polymorph(((AMapMapType) type).getTo(), pname, actualType), ((AMapMapType) type).getEmpty());
 			case OPTIONAL:
-				return new AOptionalType(location, false, definitions, polymorph(type, pname, actualType));
+			{
+				PType newType = type;
+				while(newType instanceof AOptionalType)
+				{
+					newType = ((AOptionalType) newType).getType();
+				}
+				return new AOptionalType(location, false, definitions, polymorph(newType, pname, actualType));
+			}
+				
 			case PRODUCT:
 				List<PType> polytypes = new Vector<PType>();
 

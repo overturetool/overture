@@ -371,7 +371,7 @@ public class SClassDefinitionAssistantTC {
 		LexNameToken invname =
 			new LexNameToken(d.getName().name, "inv_" + d.getName().name, invloc);
 
-		PStm body = new AClassInvariantStm(d.getLocation(),invname, invdefs);
+		PStm body = new AClassInvariantStm(d.getLocation(),null,invname, invdefs);
 
 		
 //		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
@@ -434,7 +434,7 @@ public class SClassDefinitionAssistantTC {
 
 			if (PDefinitionListAssistantTC.findName(definition.getDefinitions(),localname, NameScope.NAMESANDSTATE) == null)
 			{
-				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(), d.getAccess().clone(), null, d, null);
+				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(), d.getAccess().clone(), null, d, localname.getOldName());
 				definition.getLocalInheritedDefinitions().add(local);
 			}
 		}
@@ -485,7 +485,7 @@ public class SClassDefinitionAssistantTC {
 
 				if (PDefinitionListAssistantTC.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
-					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(),d.getAccess().clone(),null,d, null);
+					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(),d.getAccess().clone(),null,d, localname.getOldName());
 					defs.add(local);
 				}
 			}

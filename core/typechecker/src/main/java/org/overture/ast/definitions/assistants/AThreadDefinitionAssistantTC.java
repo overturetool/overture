@@ -50,7 +50,7 @@ public class AThreadDefinitionAssistantTC {
 				false,
 				null, PAccessSpecifierAssistant.getDefault(),
 				new Vector<PPattern>(),
-				d.getStatement(),
+				d.getStatement().clone(),
 				null, null, type,
 				null, null, null, null, null, false);
 

@@ -5,6 +5,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -64,7 +65,7 @@ public class AClassTypeAssistantTC {
 					}
 				}
 				question = new TypeCheckInfo(self,question.scope,question.qualifiers);				
-				PTypeAssistant.typeResolve(d.getType(), root, rootVisitor, question);
+				PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), root, rootVisitor, question);
 			}
 
 			return type;

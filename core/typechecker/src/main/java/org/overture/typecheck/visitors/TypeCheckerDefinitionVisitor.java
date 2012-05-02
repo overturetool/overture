@@ -1072,7 +1072,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 			for (LexNameToken other : node.getOperations())
 			{
-				if (opname != other && opname.equals(other))
+				if (opname != other && HelpLexNameToken.isEqual(opname,other))
 				{
 					TypeCheckerErrors.report(3041, "Duplicate mutex name", opname.location, opname);
 				}

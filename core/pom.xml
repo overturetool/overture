@@ -27,7 +27,8 @@
 	<module>testframework</module>
 	<!--module>traces</module-->
         <module>typechecker</module>	
-	<!--module>umltrans</module-->        
+        <module>umlMapper</module>	
+	<module>umltrans</module>        
 	<!--module>vdm2java</module-->		
 	<!--module>vdmexamples</module-->
 	<!--module>vdmj</module-->

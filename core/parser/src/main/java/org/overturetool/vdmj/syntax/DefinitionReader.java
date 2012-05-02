@@ -1391,7 +1391,7 @@ public class DefinitionReader extends SyntaxReader
 				LexNameToken name = readNameToken("Expecting name after 'per'");
 				checkFor(VDMToken.IMPLIES, 2116, "Expecting <name> => <exp>");
 				PExp exp = getExpressionReader().readPerExpression();
-				return new APerSyncDefinition(token.location, name, null, null, null, null, null, null, exp);
+				return new APerSyncDefinition(token.location, name.getPerName(token.location), null, null, null, getDefaultAccess(), null, name, exp);
 				// return new PerSyncDefinition(token.location, name, exp);
 
 			case MUTEX:

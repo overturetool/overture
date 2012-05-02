@@ -1,6 +1,7 @@
 package org.overture.ast.definitions.assistants;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -31,6 +32,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistant;
 import org.overture.typecheck.Environment;
@@ -616,7 +618,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		case MUTEXSYNC:
 			return new AUnknownType(def.getLocation(), false);
 		case NAMEDTRACE:
-			return new AOperationType(def.getLocation(), false, null, null, null);
+			return new AOperationType(def.getLocation(), false, null, new Vector<PType>(), new AVoidType(def.getLocation(),false));
 		case PERSYNC:
 			return new ABooleanBasicType(def.getLocation(), false);
 		case RENAMED:
