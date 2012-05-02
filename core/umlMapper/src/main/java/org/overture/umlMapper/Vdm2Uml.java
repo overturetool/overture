@@ -8,44 +8,46 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.AInheritedDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.expressions.EExp;
-import org.overture.ast.statements.EStm;
-import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.PType;
 import org.overturetool.umltrans.StatusLog;
+import org.overturetool.umltrans.uml.IUmlAssociation;
 import org.overturetool.umltrans.uml.IUmlClass;
 import org.overturetool.umltrans.uml.IUmlClassNameType;
+import org.overturetool.umltrans.uml.IUmlConstraint;
 import org.overturetool.umltrans.uml.IUmlDefinitionBlock;
 import org.overturetool.umltrans.uml.IUmlModel;
-import org.overturetool.umltrans.uml.IUmlOwnedProperties;
+import org.overturetool.umltrans.uml.IUmlMultiplicityElement;
+import org.overturetool.umltrans.uml.IUmlNode;
 import org.overturetool.umltrans.uml.IUmlProperty;
+import org.overturetool.umltrans.uml.IUmlType;
+import org.overturetool.umltrans.uml.IUmlValueSpecification;
 import org.overturetool.umltrans.uml.IUmlVisibilityKind;
+import org.overturetool.umltrans.uml.UmlAssociation;
 import org.overturetool.umltrans.uml.UmlClass;
 import org.overturetool.umltrans.uml.UmlClassNameType;
+import org.overturetool.umltrans.uml.UmlConstraint;
+import org.overturetool.umltrans.uml.UmlLiteralString;
 import org.overturetool.umltrans.uml.UmlModel;
 import org.overturetool.umltrans.uml.UmlProperty;
 import org.overturetool.umltrans.uml.UmlVisibilityKind;
 import org.overturetool.umltrans.uml.UmlVisibilityKindQuotes;
-import org.overturetool.vdmj.lex.LexNameToken;
 
 public class Vdm2Uml {
 
 	private StatusLog log = null;	
 	private Vector<String> filteredClassNames = null;
 	private Set<IUmlClass> nestedClasses = new HashSet<IUmlClass>();
+	private Set<IUmlAssociation> associations = new HashSet<IUmlAssociation>();
+	private Set<IUmlConstraint> constraints = new HashSet<IUmlConstraint>();
+	private int runningId = 0;
 	
 	public Vdm2Uml() {
 		
@@ -57,6 +59,10 @@ public class Vdm2Uml {
 		}
 		
 		filteredClassNames = new Vector<String>();
+	}
+	
+	private String getNextId() {
+		return Integer.toString(runningId++);
 	}
 	
 	public IUmlModel init(List<SClassDefinition> classes)
@@ -76,7 +82,7 @@ public class Vdm2Uml {
 
 	private IUmlModel buildUml(List<SClassDefinition> classes) throws CGException {
 		
-		HashSet<IUmlClass> umlClasses = new HashSet<IUmlClass>();
+		HashSet<IUmlNode> umlClasses = new HashSet<IUmlNode>();
 		
 		for (SClassDefinition sClass : classes) {
 			
@@ -96,36 +102,23 @@ public class Vdm2Uml {
 		String name = sClass.getName().name;
 		log.addNewClassInfo(name);
 		
-		
-		
 		boolean isStatic = false;
-		boolean isActive = isClassActive(sClass);
-		boolean isAbstract = hasSubclassResponsabilityDefinition(sClass.getDefinitions());
+		boolean isActive = Vdm2UmlUtil.isClassActive(sClass);
+		boolean isAbstract = Vdm2UmlUtil.hasSubclassResponsabilityDefinition(sClass.getDefinitions());
 		HashSet<IUmlDefinitionBlock> dBlocks = buildDefinitionBlocks(sClass.getDefinitions(),name);
-		Vector<IUmlClassNameType> supers = getSuperClasses(sClass);
+		Vector<IUmlClassNameType> supers = Vdm2UmlUtil.getSuperClasses(sClass);
 		IUmlVisibilityKind visibility = new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPUBLIC);
-		
 		
 		return new UmlClass(name,dBlocks,isAbstract,supers,visibility,isStatic,isActive,null);
 	}
 
-	private Vector<IUmlClassNameType> getSuperClasses(SClassDefinition sClass) throws CGException {
-		Vector<IUmlClassNameType> result = new Vector<IUmlClassNameType>();
-		List<LexNameToken> superNames = sClass.getSupernames();
-		
-		for (LexNameToken superName : superNames) {
-			result.add(new UmlClassNameType(superName.name));
-		}
-		
-		return result;
-	}
+	
 
 	private HashSet<IUmlDefinitionBlock> buildDefinitionBlocks(
 			LinkedList<PDefinition> definitions, String owner) throws CGException {
 
 		HashSet<IUmlDefinitionBlock> result = new HashSet<IUmlDefinitionBlock>();
 		HashSet<IUmlProperty> instanceVariables = new HashSet<IUmlProperty>();
-		
 		
 		for (PDefinition pDefinition : definitions) {
 			switch (pDefinition.kindPDefinition()) {
@@ -154,86 +147,179 @@ public class Vdm2Uml {
 
 	private IUmlProperty buildDefinitionBlock(AInstanceVariableDefinition variable,
 			String owner) throws CGException {
-		
+		PType defType = PDefinitionAssistantTC.getType(variable);
 		AAccessSpecifierAccessSpecifier accessSpecifier = variable.getAccess();
 		String name = variable.getName().name;
-		IUmlVisibilityKind visibility = convertAccessSpecifierToVisibility(accessSpecifier);
+		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(accessSpecifier);
+		IUmlMultiplicityElement multiplicity = Vdm2UmlUtil.extractMultiplicity(defType);
+		IUmlType type = Vdm2UmlUtil.convertPropertyType(defType,owner);
 		boolean isReadOnly = false;
+		IUmlValueSpecification defaultValue = Vdm2UmlUtil.getDefaultValue(variable.getExpression());
+		boolean isSimple = Vdm2UmlUtil.isSimpleType(defType);
+		boolean isDerived = false;
 		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(accessSpecifier);
+		IUmlType qualifier = Vdm2UmlUtil.getQualifier(defType);
 		
+		IUmlProperty result = new UmlProperty(name, visibility , multiplicity, type, isReadOnly, defaultValue , isSimple, isDerived, isStatic, owner, qualifier);
 		
-		
-		//IUmlProperty result = new UmlProperty(name, visibility , p3, p4, p5, p6, p7, p8, p9, p10, p11)
-		return null ;
-	}
-
-	private IUmlVisibilityKind convertAccessSpecifierToVisibility(
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws CGException {
-		
-		if(PAccessSpecifierAssistantTC.isPrivate(accessSpecifier))
+		if(!isSimple)
 		{
-			return new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPRIVATE);
+			createAssociationFromProperty(result,defType);
+			return null;
 		}
-		else if(PAccessSpecifierAssistantTC.isProtected(accessSpecifier))
+		else
 		{
-			return new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPROTECTED);
+			return result;	
 		}
-		
-		return new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPUBLIC);
 		
 	}
 
-	private boolean hasSubclassResponsabilityDefinition(
-			LinkedList<PDefinition> definitions) {
+	private void createAssociationFromProperty(IUmlProperty property,
+			PType defType) throws CGException {
 		
-		for (PDefinition pDefinition : definitions) {
-			if(isSubclassResponsability(pDefinition))
-				return true;
+		switch (defType.kindPType()) {
+		case PRODUCT:
+			createAssociationFromPropertyProductType(property,defType);
+		case UNION:
+			createAssociationFromPropertyUnionType(property,defType);
+		default:
+			createAssociationFromPropertyGeneral(property,defType);
+			break;
 		}
 		
-		return false;
 	}
 
-	private boolean isSubclassResponsability(PDefinition pDefinition) {
+	private void createAssociationFromPropertyUnionType(IUmlProperty property,
+			PType defType) throws CGException {
+		String name = property.getName();
+		UmlProperty prop = Vdm2UmlUtil.cloneProperty(property);
 		
-		if(PDefinitionAssistantTC.isOperation(pDefinition))
+		HashSet<IUmlProperty> props = new HashSet<IUmlProperty>();
+		props.addAll(createEndProperty(defType,name));
+		
+		prop.setName("");
+		HashSet<IUmlProperty> propSet = new HashSet<IUmlProperty>();
+		propSet.add(prop);
+		
+		if(props.size() > 1)
 		{
-			if(pDefinition instanceof AExplicitOperationDefinition)
-			{
-				if(((AExplicitOperationDefinition)pDefinition).getBody().kindPStm() == EStm.SUBCLASSRESPONSIBILITY)
-				{
-					return true;
-				}
+			HashSet<IUmlAssociation> assocs = new HashSet<IUmlAssociation>();
+			
+			for (IUmlProperty p : props) {
+				HashSet<IUmlProperty> pSet = new HashSet<IUmlProperty>();
+				pSet.add(p);
+				assocs.add(new UmlAssociation(pSet, propSet, null, getNextId()));
 			}
-			else if(pDefinition instanceof AImplicitOperationDefinition)
-			{				
-				PStm body = ((AImplicitOperationDefinition)pDefinition).getBody();
-				//implicit operations may or may not have a body
-				if(body == null)
-				{
-					return true;
-				}
-				else
-				{
-					if(body.kindPStm() == EStm.SUBCLASSRESPONSIBILITY)
-					{
-						return true;
-					}
-				}
+			associations.addAll(assocs);
+			
+			HashSet<String> idsSet = new HashSet<String>();
+			for (IUmlAssociation association : assocs) {
+				idsSet.add(association.getId());
 			}
+			
+			constraints.add(new UmlConstraint(idsSet, new UmlLiteralString("xor")));
 		}
-		
-		return false;
 	}
 
-	private boolean isClassActive(SClassDefinition sClass) {
+	private void createAssociationFromPropertyProductType(
+			IUmlProperty property, PType defType) throws CGException {
 		
-		for (PDefinition def : sClass.getDefinitions()) {
-			if(def.kindPDefinition() == EDefinition.THREAD)
-				return true;
+		String name = property.getName();
+		UmlProperty prop = Vdm2UmlUtil.cloneProperty(property);
+		
+		HashSet<IUmlProperty> props = new HashSet<IUmlProperty>();
+		props.addAll(createEndProperty(defType,name));
+		
+		prop.setName("");
+		HashSet<IUmlProperty> propSet = new HashSet<IUmlProperty>();
+		propSet.add(prop);
+		
+		if(props.size() > 1)
+		{
+			associations.add(new UmlAssociation(props, propSet, null, getNextId()));
 		}
-		return false;
+		
 	}
+
+	private HashSet<IUmlProperty> createEndProperty(PType defType, String name) throws CGException {
+		
+		HashSet<IUmlProperty> result = new HashSet<IUmlProperty>();
+		
+		switch (defType.kindPType()) {
+		case PRODUCT:
+			AProductType productType = (AProductType) defType;
+			for (PType type : productType.getTypes()) {
+				result.addAll(createEndProperty(type, name));
+			}
+			break;
+		case UNION:
+			AUnionType unionType = (AUnionType) defType;
+			for (PType type : unionType.getTypes()) {
+				result.addAll(createEndProperty(type, name));
+			}
+			break;
+		default:
+			result.add(new UmlProperty(
+					name, 
+					new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPRIVATE),
+					Vdm2UmlUtil.extractMultiplicity(defType), 
+					Vdm2UmlUtil.convertType(defType), 
+					null,
+					null,
+					false,
+					null,
+					null,
+					"Implementation postponed", 
+					Vdm2UmlUtil.getQualifier(defType)));
+			break;
+		}
+		
+		return result;
+	}
+
+	private void createAssociationFromPropertyGeneral(IUmlProperty property,
+			PType defType) throws CGException {
+		
+		String ownerClassName = null;
+		
+		if(property.getType() instanceof IUmlClassNameType)
+		{
+			ownerClassName = ((IUmlClassNameType)property.getType()).getName();
+		}
+		else
+		{
+			ownerClassName = Vdm2UmlUtil.getSimpleTypeName(property.getType());
+		}
+		
+		IUmlProperty propOtherEnd = new UmlProperty("", 
+				new  UmlVisibilityKind(UmlVisibilityKindQuotes.IQPRIVATE),
+				null,
+				new UmlClassNameType(property.getOwnerClass()),
+				null,
+				null,
+				false,
+				null,
+				null,
+				ownerClassName,
+				null);
+		
+		HashSet<IUmlProperty> propertyThisEndSet = new HashSet<IUmlProperty>();
+		propertyThisEndSet.add(property);
+		
+		HashSet<IUmlProperty> propertyOtherEndSet = new HashSet<IUmlProperty>();
+		propertyOtherEndSet.add(propOtherEnd);
+		
+		associations.add(new UmlAssociation(propertyOtherEndSet,propertyThisEndSet, null, getNextId()));
+	}
+
+	
+
+	
+
+	
+
+
+	
 
 	
 	
