@@ -4,7 +4,7 @@ package %generated.node%;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -241,6 +241,6 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 		
 	public Map<String,Object> getChildren(Boolean includeInheritedFields)
 	{
-		return new Hashtable<String,Object>();
+		return new HashMap<String,Object>();
 	}
 }

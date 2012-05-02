@@ -68,7 +68,11 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 			// + NameUtil.getClassName(c.getSuperDef().getName().getName()
 
 			this.body += "(" + getAdditionalBodyCallArguments() + ");";
-		} else
+		} else if(c instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)c).extendsNode)
+		{
+			this.body = "\t\t" + (addReturnToBody ? "return " : "") + "default"+defaultPostFix+env.iNode.getName().getName();
+			this.body += "(" + getAdditionalBodyCallArguments() + ");";
+		}else
 		{
 			this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
 		}

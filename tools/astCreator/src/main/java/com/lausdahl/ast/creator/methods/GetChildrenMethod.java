@@ -18,7 +18,7 @@ public class GetChildrenMethod extends Method {
 	public Set<String> getRequiredImports() {
 		Set<String> imports =  super.getRequiredImports();
 		imports.add("java.util.Map");
-		imports.add("java.util.Hashtable");
+		imports.add("java.util.HashMap");
 		imports.add(env.iNode.getName().getCanonicalName());
 		return imports;
 	}
@@ -47,7 +47,7 @@ public class GetChildrenMethod extends Method {
 		fields.addAll(classDefinition.getFields());
 
 
-		sb.append("\t\t"+this.returnType+" fields = new Hashtable<String,Object>();\n");
+		sb.append("\t\t"+this.returnType+" fields = new HashMap<String,Object>();\n");
 		sb.append("\t\tif(includeInheritedFields)\n");
 		sb.append("\t\t{\n");
 		sb.append("\t\t\tfields.putAll(super."+this.name+"(includeInheritedFields));\n");

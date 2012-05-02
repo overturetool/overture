@@ -1,6 +1,6 @@
 //COPYRIGHT
 package %generated.node%;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 /**
  * {@code Token} is the superclass of all tokens is the AST.
@@ -102,6 +102,6 @@ public abstract class %Token% extends %Node% implements %IToken% {
 //	}
 	public Map<String,Object> getChildren(Boolean includeInheritedFields)
 	{
-		return new Hashtable<String,Object>();
+		return new HashMap<String,Object>();
 	}
 }
