@@ -8,13 +8,23 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.EPattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overturetool.umltrans.StatusLog;
@@ -26,7 +36,11 @@ import org.overturetool.umltrans.uml.IUmlDefinitionBlock;
 import org.overturetool.umltrans.uml.IUmlModel;
 import org.overturetool.umltrans.uml.IUmlMultiplicityElement;
 import org.overturetool.umltrans.uml.IUmlNode;
+import org.overturetool.umltrans.uml.IUmlOperation;
+import org.overturetool.umltrans.uml.IUmlOwnedProperties;
+import org.overturetool.umltrans.uml.IUmlParameter;
 import org.overturetool.umltrans.uml.IUmlProperty;
+import org.overturetool.umltrans.uml.IUmlTemplateSignature;
 import org.overturetool.umltrans.uml.IUmlType;
 import org.overturetool.umltrans.uml.IUmlValueSpecification;
 import org.overturetool.umltrans.uml.IUmlVisibilityKind;
@@ -34,8 +48,14 @@ import org.overturetool.umltrans.uml.UmlAssociation;
 import org.overturetool.umltrans.uml.UmlClass;
 import org.overturetool.umltrans.uml.UmlClassNameType;
 import org.overturetool.umltrans.uml.UmlConstraint;
+import org.overturetool.umltrans.uml.UmlIntegerType;
 import org.overturetool.umltrans.uml.UmlLiteralString;
 import org.overturetool.umltrans.uml.UmlModel;
+import org.overturetool.umltrans.uml.UmlMultiplicityElement;
+import org.overturetool.umltrans.uml.UmlOperation;
+import org.overturetool.umltrans.uml.UmlOwnedProperties;
+import org.overturetool.umltrans.uml.UmlParameter;
+import org.overturetool.umltrans.uml.UmlParameters;
 import org.overturetool.umltrans.uml.UmlProperty;
 import org.overturetool.umltrans.uml.UmlVisibilityKind;
 import org.overturetool.umltrans.uml.UmlVisibilityKindQuotes;
@@ -105,7 +125,8 @@ public class Vdm2Uml {
 		boolean isStatic = false;
 		boolean isActive = Vdm2UmlUtil.isClassActive(sClass);
 		boolean isAbstract = Vdm2UmlUtil.hasSubclassResponsabilityDefinition(sClass.getDefinitions());
-		HashSet<IUmlDefinitionBlock> dBlocks = buildDefinitionBlocks(sClass.getDefinitions(),name);
+		Vector<IUmlDefinitionBlock> dBlocksSeq = buildDefinitionBlocks(sClass.getDefinitions(),name);
+		HashSet<IUmlDefinitionBlock> dBlocks = new HashSet<IUmlDefinitionBlock>(dBlocksSeq);
 		Vector<IUmlClassNameType> supers = Vdm2UmlUtil.getSuperClasses(sClass);
 		IUmlVisibilityKind visibility = new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPUBLIC);
 		
@@ -114,28 +135,36 @@ public class Vdm2Uml {
 
 	
 
-	private HashSet<IUmlDefinitionBlock> buildDefinitionBlocks(
+	private Vector<IUmlDefinitionBlock> buildDefinitionBlocks(
 			LinkedList<PDefinition> definitions, String owner) throws CGException {
 
-		HashSet<IUmlDefinitionBlock> result = new HashSet<IUmlDefinitionBlock>();
-		HashSet<IUmlProperty> instanceVariables = new HashSet<IUmlProperty>();
+		Vector<IUmlDefinitionBlock> result = new Vector<IUmlDefinitionBlock>();
+		
+		Vector<IUmlProperty> instanceVariables = new Vector<IUmlProperty>();
+		Vector<IUmlProperty> valueDefinitions = new Vector<IUmlProperty>();
+		Vector<IUmlType> typeDefinitions = new Vector<IUmlType>();
+		Vector<IUmlOperation> operationDefinitions = new Vector<IUmlOperation>();
+		Vector<IUmlOperation> functionDefinitions = new Vector<IUmlOperation>();
 		
 		for (PDefinition pDefinition : definitions) {
 			switch (pDefinition.kindPDefinition()) {
 			case EXPLICITFUNCTION:
 				break;
-			case EXPLICITOPERATION:
-				break;
 			case IMPLICITFUNCTION:
 				break;
+			case EXPLICITOPERATION:
+				operationDefinitions.add(buildDefinitionBlock((AExplicitOperationDefinition)pDefinition));
 			case IMPLICITOPERATION:
+				operationDefinitions.add(buildDefinitionBlock((AImplicitOperationDefinition)pDefinition));
 				break;
 			case INSTANCEVARIABLE:
 				instanceVariables.add(buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,owner));
 				break;
 			case TYPE:
+				typeDefinitions.add(buildDefinitionBlock((ATypeDefinition)pDefinition));
 				break;
 			case VALUE:
+				valueDefinitions.add(buildDefinitionBlock((AValueDefinition)pDefinition, owner));
 				break;
 			default:
 				break;
@@ -143,6 +172,187 @@ public class Vdm2Uml {
 		}
 		
 		return result;
+	}
+
+	private IUmlOperation buildDefinitionBlock(
+			AImplicitOperationDefinition pDefinition) throws CGException {
+		
+		String name = pDefinition.getName().name;
+		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
+		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
+		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
+		IUmlType type = null;
+		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
+		
+		
+		LinkedList<APatternListTypePair> patternTypePairs = pDefinition.getParameterPatterns();
+		
+		APatternTypePair result = pDefinition.getResult();
+		
+		Vector<IUmlParameter> params = Vdm2UmlUtil.buildParameters(patternTypePairs);
+		Vector<IUmlParameter> results = Vdm2UmlUtil.buildFnResult(result);
+		params.addAll(results);
+		
+		return new UmlOperation(name,visibility,multiplicity,false,type,isStatic, new UmlParameters(params));
+	}
+
+	private IUmlOperation buildDefinitionBlock(
+			AExplicitOperationDefinition pDefinition) throws CGException {
+		
+		String name = pDefinition.getName().name;
+		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
+		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
+		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
+		IUmlType type = null;
+		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
+		//TODO: I dont get the parameters right now
+		Vector<IUmlParameter> params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));
+		
+		return new UmlOperation(name, visibility, multiplicity, false, type, isStatic , new UmlParameters());
+		
+	}
+
+	private IUmlType buildDefinitionBlock(ATypeDefinition pDefinition) throws CGException {
+		
+		nestedClasses.add(buildClassFromType(pDefinition));
+		
+		return new UmlClassNameType(pDefinition.getName().name);
+	}
+
+	private IUmlClass buildClassFromType(ATypeDefinition pDefinition) throws CGException {
+		PType type = PDefinitionAssistantTC.getType(pDefinition);
+		String name = pDefinition.getName().name;
+		
+		IUmlDefinitionBlock classBody = buildTypeDefinitionBlocks(name,type);
+		HashSet<IUmlDefinitionBlock> classBodySet = new HashSet<IUmlDefinitionBlock>(); 
+		classBodySet.add(classBody);
+		boolean isAbstract = false;
+		Vector<IUmlClassNameType> superClasses = new Vector<IUmlClassNameType>();
+		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(pDefinition.getAccess());
+		boolean isStatic = false;
+		boolean isActive = false;
+		IUmlTemplateSignature templateSignature = null;
+		
+		return new UmlClass(name, classBodySet, isAbstract, superClasses, visibility, isStatic, isActive, templateSignature);
+		
+	}
+
+	private IUmlDefinitionBlock buildTypeDefinitionBlocks(String name,
+			PType type) throws CGException {
+		HashSet<IUmlDefinitionBlock> accumulator = new HashSet<IUmlDefinitionBlock>();
+		
+		switch (type.kindPType()) {
+		case UNION:
+			AUnionType unionType = (AUnionType) type;
+			for (PType itType : unionType.getTypes()) {
+				accumulator.add(buildTypeDefinitionBlocks(name, itType));
+			}
+			
+			HashSet<IUmlProperty> allProperties = new HashSet<IUmlProperty>();
+			for (IUmlDefinitionBlock ownedProperties : accumulator) {
+				allProperties.addAll(((UmlOwnedProperties)ownedProperties).getPropetityList());
+			}
+			return new UmlOwnedProperties(allProperties);
+			
+		case QUOTE:
+			AQuoteType quoteType = (AQuoteType) type;
+			HashSet<IUmlProperty> props = buildValueFromQuoteType(name,quoteType);
+			return new UmlOwnedProperties(props);
+		default:
+			return new UmlOwnedProperties(new HashSet<IUmlProperty>());
+		}
+	}
+
+	private HashSet<IUmlProperty> buildValueFromQuoteType(String ownerName,
+			AQuoteType quoteType) throws CGException {
+		
+		String name = quoteType.getValue().value;
+		IUmlVisibilityKind visibility = new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPUBLIC);
+		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(true,false,(long)0, null);
+		IUmlType type = new UmlIntegerType();
+		boolean isReadOnly = true;
+		IUmlValueSpecification defaultValue = null;
+		boolean isSimple = Vdm2UmlUtil.isSimpleType(quoteType);
+		boolean isDerived = false;
+		boolean isStatic = true;
+		IUmlType qualifier = null;
+		
+		IUmlProperty property = new UmlProperty(name, 
+				visibility, 
+				multiplicity, 
+				type,
+				isReadOnly,
+				defaultValue,
+				isSimple,
+				isDerived,
+				isStatic,
+				ownerName, 
+				qualifier);
+		
+		HashSet<IUmlProperty> result = new HashSet<IUmlProperty>();
+		result.add(property);
+		return result;
+	}
+
+	private IUmlProperty buildDefinitionBlock(AValueDefinition value,
+			String owner) throws CGException {
+		
+		AAccessSpecifierAccessSpecifier accessSpecifier = value.getAccess();
+		
+		if(value.getExpType() == null)
+		{
+			//TODO: status log log.mappingNotSupported(item);
+			return null;
+		}
+		
+		PPattern pattern = value.getPattern();
+		
+		if(pattern.kindPPattern() == EPattern.IDENTIFIER)
+		{
+			AIdentifierPattern identPattern = (AIdentifierPattern) pattern;
+			
+			String name = identPattern.getName().name;
+			IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(accessSpecifier);
+			PType valueType = value.getType();
+			
+			IUmlMultiplicityElement multiplicity = Vdm2UmlUtil.extractMultiplicity(valueType);
+			IUmlType type = Vdm2UmlUtil.convertPropertyType(valueType,owner);
+			boolean isReadOnly = true;
+			IUmlValueSpecification defaultValue = Vdm2UmlUtil.getDefaultValue(value.getExpression());
+			boolean isSimple = Vdm2UmlUtil.isSimpleType(valueType);
+			boolean isDerived = false;
+			boolean isStatic = PAccessSpecifierAssistantTC.isStatic(accessSpecifier);
+			IUmlType qualifier = Vdm2UmlUtil.getQualifier(valueType);
+			
+			IUmlProperty property = new UmlProperty(
+					name,
+					visibility,
+					multiplicity,
+					type,
+					isReadOnly,
+					defaultValue,
+					isSimple,
+					isDerived,
+					isStatic,
+					owner,
+					qualifier);
+			
+			if(!isSimple)
+			{
+				createAssociationFromProperty(property, valueType);
+				return null;
+			}
+			else
+			{
+				return property;
+			}
+		}
+		else
+		{
+			//TODO: report warning that value defs without pattern identifiers are not supported
+			return null;
+		}
+		
 	}
 
 	private IUmlProperty buildDefinitionBlock(AInstanceVariableDefinition variable,

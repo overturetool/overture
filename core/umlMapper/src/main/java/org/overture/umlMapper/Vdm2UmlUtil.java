@@ -17,13 +17,17 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.EPattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.EStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AInMapMapType;
-import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
@@ -39,6 +43,7 @@ import org.overturetool.umltrans.uml.IUmlCharType;
 import org.overturetool.umltrans.uml.IUmlClassNameType;
 import org.overturetool.umltrans.uml.IUmlIntegerType;
 import org.overturetool.umltrans.uml.IUmlMultiplicityElement;
+import org.overturetool.umltrans.uml.IUmlParameter;
 import org.overturetool.umltrans.uml.IUmlProperty;
 import org.overturetool.umltrans.uml.IUmlType;
 import org.overturetool.umltrans.uml.IUmlValueSpecification;
@@ -50,9 +55,11 @@ import org.overturetool.umltrans.uml.UmlIntegerType;
 import org.overturetool.umltrans.uml.UmlLiteralInteger;
 import org.overturetool.umltrans.uml.UmlLiteralString;
 import org.overturetool.umltrans.uml.UmlMultiplicityElement;
+import org.overturetool.umltrans.uml.UmlParameter;
+import org.overturetool.umltrans.uml.UmlParameterDirectionKind;
+import org.overturetool.umltrans.uml.UmlParameterDirectionKindQuotes;
 import org.overturetool.umltrans.uml.UmlProperty;
 import org.overturetool.umltrans.uml.UmlUnlimitedNatural;
-import org.overturetool.umltrans.uml.UmlValueSpecification;
 import org.overturetool.umltrans.uml.UmlVisibilityKind;
 import org.overturetool.umltrans.uml.UmlVisibilityKindQuotes;
 import org.overturetool.umltrans.uml.UmlVoidType;
@@ -334,5 +341,72 @@ public class Vdm2UmlUtil {
 				property.getIsStatic(),
 				property.getOwnerClass(),
 				property.getQualifier());
+	}
+
+	public static Vector<IUmlParameter> buildParameters(
+			AExplicitOperationDefinition pDefinition, PType pType) throws CGException {
+		
+		Vector<IUmlParameter> parameters = new Vector<IUmlParameter>();
+		AOperationType opType = (AOperationType) pType;
+		int i = 0;
+		for (PPattern parameter : pDefinition.getParameterPatterns()) {
+			String name = "-";
+			if(parameter.kindPPattern() == EPattern.IDENTIFIER)
+			{
+				name = ((AIdentifierPattern) parameter).getName().name;
+			}
+			
+			
+			parameters.add(new UmlParameter(
+					name +" " + i++,
+					null,
+					null, 
+					"", 
+					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQIN)
+					));
+		}
+		
+		IUmlParameter returnType = new UmlParameter("return", 
+				Vdm2UmlUtil.convertType(opType.getResult()), 
+				Vdm2UmlUtil.extractMultiplicity(opType.getResult()),
+				"", 
+				new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQRETURN));
+		
+		parameters.add(returnType);
+		return parameters;
+		
+	}
+
+	public static Vector<IUmlParameter> buildParameters(
+			LinkedList<APatternListTypePair> patternTypePairs) throws CGException {
+		
+		Vector<IUmlParameter> result = new Vector<IUmlParameter>();
+		
+		for (APatternListTypePair aPair : patternTypePairs) {
+			LinkedList<PPattern> patterns = aPair.getPatterns();
+			PType type = aPair.getType();
+			
+			for (PPattern aPattern : patterns) {
+				String name = "-";
+				
+				if(aPattern.kindPPattern() == EPattern.IDENTIFIER)
+				{
+					name = ((AIdentifierPattern)aPattern).getName().name;
+				}
+				result.add(new UmlParameter(name, 
+						Vdm2UmlUtil.convertType(type),
+						Vdm2UmlUtil.extractMultiplicity(type),
+						"",
+						new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQIN)));
+			}
+		}
+		
+		return result;
+		
+	}
+
+	public static Vector<IUmlParameter> buildFnResult(APatternTypePair result) {
+		
+		return new Vector<IUmlParameter>();
 	}
 }
