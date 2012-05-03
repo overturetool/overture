@@ -29,7 +29,6 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overturetool.umltrans.StatusLog;
 import org.overturetool.umltrans.uml.IUmlAssociation;
 import org.overturetool.umltrans.uml.IUmlClass;
 import org.overturetool.umltrans.uml.IUmlClassNameType;
@@ -39,7 +38,6 @@ import org.overturetool.umltrans.uml.IUmlModel;
 import org.overturetool.umltrans.uml.IUmlMultiplicityElement;
 import org.overturetool.umltrans.uml.IUmlNode;
 import org.overturetool.umltrans.uml.IUmlOperation;
-import org.overturetool.umltrans.uml.IUmlOwnedProperties;
 import org.overturetool.umltrans.uml.IUmlParameter;
 import org.overturetool.umltrans.uml.IUmlProperty;
 import org.overturetool.umltrans.uml.IUmlTemplateSignature;
@@ -47,6 +45,7 @@ import org.overturetool.umltrans.uml.IUmlType;
 import org.overturetool.umltrans.uml.IUmlValueSpecification;
 import org.overturetool.umltrans.uml.IUmlVisibilityKind;
 import org.overturetool.umltrans.uml.UmlAssociation;
+import org.overturetool.umltrans.uml.UmlBoolType;
 import org.overturetool.umltrans.uml.UmlClass;
 import org.overturetool.umltrans.uml.UmlClassNameType;
 import org.overturetool.umltrans.uml.UmlConstraint;
@@ -54,9 +53,13 @@ import org.overturetool.umltrans.uml.UmlIntegerType;
 import org.overturetool.umltrans.uml.UmlLiteralString;
 import org.overturetool.umltrans.uml.UmlModel;
 import org.overturetool.umltrans.uml.UmlMultiplicityElement;
+import org.overturetool.umltrans.uml.UmlNestedClassifiers;
 import org.overturetool.umltrans.uml.UmlOperation;
+import org.overturetool.umltrans.uml.UmlOwnedOperations;
 import org.overturetool.umltrans.uml.UmlOwnedProperties;
 import org.overturetool.umltrans.uml.UmlParameter;
+import org.overturetool.umltrans.uml.UmlParameterDirectionKind;
+import org.overturetool.umltrans.uml.UmlParameterDirectionKindQuotes;
 import org.overturetool.umltrans.uml.UmlParameters;
 import org.overturetool.umltrans.uml.UmlProperty;
 import org.overturetool.umltrans.uml.UmlVisibilityKind;
@@ -64,8 +67,8 @@ import org.overturetool.umltrans.uml.UmlVisibilityKindQuotes;
 
 public class Vdm2Uml {
 
-	private StatusLog log = null;	
-	private Vector<String> filteredClassNames = null;
+	//private StatusLog log = null;	
+	private Vector<String> filteredClassNames = new Vector<String>();
 	private Set<IUmlClass> nestedClasses = new HashSet<IUmlClass>();
 	private Set<IUmlAssociation> associations = new HashSet<IUmlAssociation>();
 	private Set<IUmlConstraint> constraints = new HashSet<IUmlConstraint>();
@@ -73,14 +76,7 @@ public class Vdm2Uml {
 	
 	public Vdm2Uml() {
 		
-		try {
-			log = new StatusLog();
-		} catch (CGException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		filteredClassNames = new Vector<String>();
 	}
 	
 	private String getNextId() {
@@ -89,10 +85,15 @@ public class Vdm2Uml {
 	
 	public IUmlModel init(List<SClassDefinition> classes)
 	{
-		IUmlModel model = null;
+		UmlModel model = null;
 		
 		try {
 			model = buildUml(classes);
+			@SuppressWarnings("rawtypes")
+			HashSet definitions = model.getDefinitions();
+			definitions.addAll(associations);
+			definitions.addAll(constraints);
+			model.setDefinitions(definitions);
 		} catch (CGException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,7 +103,7 @@ public class Vdm2Uml {
 		return model;
 	}
 
-	private IUmlModel buildUml(List<SClassDefinition> classes) throws CGException {
+	private UmlModel buildUml(List<SClassDefinition> classes) throws CGException {
 		
 		HashSet<IUmlNode> umlClasses = new HashSet<IUmlNode>();
 		
@@ -122,7 +123,7 @@ public class Vdm2Uml {
 	private IUmlClass buildClass(SClassDefinition sClass) throws CGException {
 		
 		String name = sClass.getName().name;
-		log.addNewClassInfo(name);
+		//TODO: log - log.addNewClassInfo(name);
 		
 		boolean isStatic = false;
 		boolean isActive = Vdm2UmlUtil.isClassActive(sClass);
@@ -142,38 +143,56 @@ public class Vdm2Uml {
 
 		Vector<IUmlDefinitionBlock> result = new Vector<IUmlDefinitionBlock>();
 		
-		Vector<IUmlProperty> instanceVariables = new Vector<IUmlProperty>();
-		Vector<IUmlProperty> valueDefinitions = new Vector<IUmlProperty>();
-		Vector<IUmlType> typeDefinitions = new Vector<IUmlType>();
-		Vector<IUmlOperation> operationDefinitions = new Vector<IUmlOperation>();
-		Vector<IUmlOperation> functionDefinitions = new Vector<IUmlOperation>();
+		HashSet<IUmlProperty> instanceVariables = new HashSet<IUmlProperty>();
+		HashSet<IUmlProperty> valueDefinitions = new HashSet<IUmlProperty>();
+		HashSet<IUmlType> typeDefinitions = new HashSet<IUmlType>();
+		HashSet<IUmlOperation> operationDefinitions = new HashSet<IUmlOperation>();
+		HashSet<IUmlOperation> functionDefinitions = new HashSet<IUmlOperation>();
 		
 		for (PDefinition pDefinition : definitions) {
 			switch (pDefinition.kindPDefinition()) {
 			case EXPLICITFUNCTION:
-				functionDefinitions.add(buildDefinitionBlock((AExplicitFunctionDefinition) pDefinition));
+				if(!Vdm2UmlUtil.hasPolymorphic((AExplicitFunctionDefinition) pDefinition))
+				{
+					functionDefinitions.add(buildDefinitionBlock((AExplicitFunctionDefinition) pDefinition));	
+				}
+				
 				break;
 			case IMPLICITFUNCTION:
 				break;
-			case EXPLICITOPERATION:
+			case EXPLICITOPERATION:				
 				operationDefinitions.add(buildDefinitionBlock((AExplicitOperationDefinition)pDefinition));
+				break;
 			case IMPLICITOPERATION:
 				operationDefinitions.add(buildDefinitionBlock((AImplicitOperationDefinition)pDefinition));
 				break;
 			case INSTANCEVARIABLE:
-				instanceVariables.add(buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,owner));
+				IUmlProperty instVar = buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,owner);
+				if(instVar != null)
+				{
+					instanceVariables.add(instVar);	
+				}
 				break;
 			case TYPE:
 				typeDefinitions.add(buildDefinitionBlock((ATypeDefinition)pDefinition));
 				break;
 			case VALUE:
-				valueDefinitions.add(buildDefinitionBlock((AValueDefinition)pDefinition, owner));
+				IUmlProperty valueDef = buildDefinitionBlock((AValueDefinition)pDefinition, owner);
+				if(valueDef != null)
+				{
+					valueDefinitions.add(valueDef);	
+				}
 				break;
 			default:
 				break;
 			}
 		}
 		
+		result.add(new UmlOwnedProperties(instanceVariables));
+		result.add(new UmlOwnedProperties(valueDefinitions));
+		result.add(new UmlNestedClassifiers(typeDefinitions));
+		result.add(new UmlOwnedOperations(operationDefinitions));
+		result.add(new UmlOwnedOperations(functionDefinitions));
 		return result;
 	}
 
@@ -202,8 +221,15 @@ public class Vdm2Uml {
 		else
 		{
 			//TODO: function with post condition == extendedexplicit in OML
+			params = new Vector<IUmlParameter>();
+			
+			IUmlParameter returnType = new UmlParameter("return", 
+					new UmlBoolType(),//TODO: missing type
+					new UmlMultiplicityElement(true, true,(long)0, (long)0),//TODO: missing multiplicity
+					"", 
+					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQRETURN));
+			params.add(returnType);
 		}
-		
 		
 		
 				
@@ -257,6 +283,8 @@ public class Vdm2Uml {
 		else
 		{
 			//TODO:operation with post condition == extendedexplicit in OML
+			params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));
+			
 		}
 		
 		return new UmlOperation(name, visibility, multiplicity, false, type, isStatic , new UmlParameters(params));
@@ -421,6 +449,7 @@ public class Vdm2Uml {
 		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(accessSpecifier);
 		IUmlType qualifier = Vdm2UmlUtil.getQualifier(defType);
 		
+		//fixme: need to add isUnique
 		IUmlProperty result = new UmlProperty(name, visibility , multiplicity, type, isReadOnly, defaultValue , isSimple, isDerived, isStatic, owner, qualifier);
 		
 		if(!isSimple)

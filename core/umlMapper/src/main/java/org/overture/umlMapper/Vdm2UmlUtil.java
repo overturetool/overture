@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.EDefinition;
@@ -13,6 +14,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
@@ -30,9 +33,11 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SMapType;
@@ -258,19 +263,32 @@ public class Vdm2UmlUtil {
 	public static IUmlValueSpecification getDefaultValue(PExp expression) throws CGException {
 		IUmlValueSpecification result = null;
 		
+		// UmlProperty.default
 		switch (expression.kindPExp()) {
+//		case NIL:
+//			result = new UmlLiteralString("nil");
+//			break;
+//		case CHARLITERAL:
+//			ACharLiteralExp charLiteral = (ACharLiteralExp) expression;
+//			result = new UmlLiteralString(new Character(charLiteral.getValue().unicode).toString());
+//			break;
+//		case BOOLEANCONST:
+//			ABooleanConstExp boolLiteral = (ABooleanConstExp) expression;
+//			result = new UmlLiteralString( new Boolean(boolLiteral.getValue().value).toString());
+//			break;
 		case INTLITERAL:
 			AIntLiteralExp intLiteral = (AIntLiteralExp) expression;
 			result = new UmlLiteralInteger(intLiteral.getValue().value);
 			break;
-		case REALLITERAL:
-			ARealLiteralExp realLiteral = (ARealLiteralExp) expression;
-			result = new UmlLiteralInteger((long)realLiteral.getValue().value);
-			break;
+//		case REALLITERAL:
+//			ARealLiteralExp realLiteral = (ARealLiteralExp) expression;
+//			result = new UmlLiteralInteger((long)realLiteral.getValue().value);
+//			break;
 		case STRINGLITERAL:
 			AStringLiteralExp stringLiteral = (AStringLiteralExp) expression;
 			result = new UmlLiteralString(stringLiteral.getValue().value);
 		default:
+			System.out.println("Not supported value: " + expression.toString() + " " + expression.getLocation().toString() );
 			break;
 		}
 		
@@ -348,7 +366,8 @@ public class Vdm2UmlUtil {
 			AExplicitOperationDefinition pDefinition, PType pType) throws CGException {
 		
 		Vector<IUmlParameter> parameters = new Vector<IUmlParameter>();
-		AOperationType opType = (AOperationType) pType;
+		AOperationType opType = (AOperationType) pType;		
+		List<PType> paramTypes = opType.getParameters();
 		int i = 0;
 		for (PPattern parameter : pDefinition.getParameterPatterns()) {
 			String name = "-";
@@ -357,14 +376,15 @@ public class Vdm2UmlUtil {
 				name = ((AIdentifierPattern) parameter).getName().name;
 			}
 			
-			
+			PType paramType = paramTypes.get(i++);
 			parameters.add(new UmlParameter(
-					name +" " + i++,
-					null,
-					null, 
+					name,
+					Vdm2UmlUtil.convertType(paramType),//TODO: missing type
+					Vdm2UmlUtil.extractMultiplicity(paramType),
 					"", 
 					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQIN)
 					));
+			
 		}
 		
 		IUmlParameter returnType = new UmlParameter("return", 
@@ -406,9 +426,20 @@ public class Vdm2UmlUtil {
 		
 	}
 
-	public static Vector<IUmlParameter> buildFnResult(APatternTypePair result) {
+	public static Vector<IUmlParameter> buildFnResult(APatternTypePair result) throws CGException {
 		
-		return new Vector<IUmlParameter>();
+		//TODO
+		Vector<IUmlParameter> parameters = new Vector<IUmlParameter>();
+		
+		IUmlParameter returnType = new UmlParameter("return", 
+				new UmlBoolType(),//TODO: missing type
+				new UmlMultiplicityElement(true, true,(long)0, (long)0),//TODO: missing multiplicity
+				"", 
+				new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQRETURN));
+		
+		parameters.add(returnType);
+		
+		return parameters;
 	}
 
 	public static Vector<IUmlParameter> buildParameters(List<PPattern> first,
@@ -423,12 +454,32 @@ public class Vdm2UmlUtil {
 				name = ((AIdentifierPattern)aPattern).getName().name;
 			}
 			result.add(new UmlParameter(name, 
-					null,//TODO: missing type
-					null,//TODO: missing multiplicity
+					new UmlBoolType(),//TODO: missing type
+					new UmlMultiplicityElement(true, true,(long)0, (long)0),//TODO: missing multiplicity
 					"",
 					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQIN)));
 		}
 		
 		return result;
+	}
+
+	public static boolean hasPolymorphic(AExplicitFunctionDefinition pDefinition) {
+
+		AFunctionType funcType = (AFunctionType) PDefinitionAssistantTC.getType(pDefinition);
+		
+		
+		for (PType t : funcType.getParameters()) {
+			if(PTypeAssistant.isType(t, AParameterType.class))
+			{
+				return true;
+			}			
+		}
+		
+		if(PTypeAssistant.isType(funcType.getResult(), AParameterType.class))
+		{
+			return true;
+		}
+		
+		return false;
 	}
 }
