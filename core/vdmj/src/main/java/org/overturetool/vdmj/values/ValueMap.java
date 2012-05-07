@@ -24,15 +24,20 @@
 package org.overturetool.vdmj.values;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
-import java.util.HashMap;
+import java.util.Vector;
+
+import org.overturetool.vdmj.traces.PermuteArray;
 
 /**
  * A map of value/values.
  */
 
 @SuppressWarnings("serial")
-public class ValueMap extends HashMap<Value, Value>
+public class ValueMap extends LinkedHashMap<Value, Value>
 {
 	public ValueMap()
 	{
@@ -88,5 +93,41 @@ public class ValueMap extends HashMap<Value, Value>
 		}
 
 		return copy;
+	}
+
+	public List<ValueMap> permutedMaps()
+	{
+		// This is a 1st order permutation, which does not take account of the possible
+		// nesting of maps or the presence of other permutable values with them (sets).
+
+		List<ValueMap> results = new Vector<ValueMap>();
+		Object[] entries = entrySet().toArray();
+		int size = entries.length;
+
+		if (size == 0)
+		{
+			results.add(new ValueMap());	// Just {|->}
+		}
+		else
+		{
+			PermuteArray p = new PermuteArray(size);
+
+			while (p.hasNext())
+			{
+				ValueMap m = new ValueMap();
+				int[] perm = p.next();
+
+				for (int i=0; i<size; i++)
+				{
+					@SuppressWarnings("unchecked")
+					Entry<Value, Value> entry = (Entry<Value, Value>)entries[perm[i]];
+					m.put(entry.getKey(), entry.getValue());
+				}
+
+				results.add(m);
+			}
+		}
+
+		return results;
 	}
 }

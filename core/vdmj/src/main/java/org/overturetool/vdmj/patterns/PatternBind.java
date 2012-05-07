@@ -122,7 +122,7 @@ public class PatternBind implements Serializable
 					"Can't typecheck a pattern without a type";
 
 			pattern.typeResolve(base);
-			defs = pattern.getDefinitions(type, NameScope.LOCAL);
+			defs = pattern.getAllDefinitions(type, NameScope.LOCAL);
 		}
 	}
 }

@@ -115,7 +115,7 @@ public class UnionPattern extends Pattern
 	}
 
 	@Override
-	public DefinitionList getDefinitions(Type type, NameScope scope)
+	public DefinitionList getAllDefinitions(Type type, NameScope scope)
 	{
 		DefinitionList defs = new DefinitionList();
 
@@ -124,19 +124,19 @@ public class UnionPattern extends Pattern
 			report(3206, "Matching expression is not a set type");
 		}
 
-		defs.addAll(left.getDefinitions(type, scope));
-		defs.addAll(right.getDefinitions(type, scope));
+		defs.addAll(left.getAllDefinitions(type, scope));
+		defs.addAll(right.getAllDefinitions(type, scope));
 
 		return defs;
 	}
 
 	@Override
-	public LexNameList getVariableNames()
+	public LexNameList getAllVariableNames()
 	{
 		LexNameList list = new LexNameList();
 
-		list.addAll(left.getVariableNames());
-		list.addAll(right.getVariableNames());
+		list.addAll(left.getAllVariableNames());
+		list.addAll(right.getAllVariableNames());
 
 		return list;
 	}

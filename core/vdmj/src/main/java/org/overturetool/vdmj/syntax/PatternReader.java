@@ -23,6 +23,11 @@
 
 package org.overturetool.vdmj.syntax;
 
+import java.util.List;
+import java.util.Vector;
+
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
 import org.overturetool.vdmj.lex.LexException;
@@ -43,6 +48,9 @@ import org.overturetool.vdmj.patterns.ExpressionPattern;
 import org.overturetool.vdmj.patterns.IdentifierPattern;
 import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.IntegerPattern;
+import org.overturetool.vdmj.patterns.MapPattern;
+import org.overturetool.vdmj.patterns.MapUnionPattern;
+import org.overturetool.vdmj.patterns.MapletPattern;
 import org.overturetool.vdmj.patterns.NilPattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
@@ -70,7 +78,7 @@ public class PatternReader extends SyntaxReader
 	{
 		Pattern pattern = readSimplePattern();
 
-		while (lastToken().is(Token.UNION) || lastToken().is(Token.CONCATENATE))
+		while (lastToken().is(Token.UNION) || lastToken().is(Token.CONCATENATE) || lastToken().is(Token.MUNION))
 		{
 			LexToken token = lastToken();
 
@@ -84,6 +92,18 @@ public class PatternReader extends SyntaxReader
 				case CONCATENATE:
 					nextToken();
 					pattern = new ConcatenationPattern(pattern, token.location, readPattern());
+					break;
+
+				case MUNION:
+					if (Settings.release == Release.VDM_10)
+					{
+						nextToken();
+						pattern = new MapUnionPattern(pattern, token.location, readPattern());
+					}
+					else
+					{
+						throwMessage(2298, "Map patterns not available in VDM classic");
+					}
 					break;
 			}
 		}
@@ -141,9 +161,44 @@ public class PatternReader extends SyntaxReader
 				{
 					pattern = new SetPattern(token.location, new PatternList());
 				}
+				else if (lastToken().is(Token.MAPLET))
+				{
+					if (Settings.release == Release.VDM_10)
+					{
+						pattern = new MapPattern(token.location, new Vector<MapletPattern>());
+						nextToken();
+						checkFor(Token.SET_CLOSE, 2299, "Expecting {|->} empty map pattern");
+						rdtok = false;
+					}
+					else
+					{
+						throwMessage(2298, "Map patterns not available in VDM classic");
+					}
+				}
 				else
 				{
-					pattern = new SetPattern(token.location, readPatternList());
+					reader.push();
+					readPattern();	// ignored
+
+					if (lastToken().is(Token.MAPLET))
+					{
+						reader.pop();
+
+						if (Settings.release == Release.VDM_10)
+						{
+	    					pattern = new MapPattern(token.location, readMapletPatternList());
+						}
+						else
+						{
+							throwMessage(2298, "Map patterns not available in VDM classic");
+						}
+					}
+					else
+					{
+						reader.pop();
+    					pattern = new SetPattern(token.location, readPatternList());
+					}
+
 					checkFor(Token.SET_CLOSE, 2181, "Mismatched braces in pattern");
 					rdtok = false;
 				}
@@ -231,6 +286,28 @@ public class PatternReader extends SyntaxReader
 
 		if (rdtok) nextToken();
 		return pattern;
+	}
+
+	private List<MapletPattern> readMapletPatternList() throws LexException, ParserException
+	{
+		List<MapletPattern> list = new Vector<MapletPattern>();
+		list.add(readMaplet());
+
+		while (ignore(Token.COMMA))
+		{
+			list.add(readMaplet());
+		}
+
+		return list;
+	}
+
+	private MapletPattern readMaplet() throws LexException, ParserException
+	{
+		Pattern key = readPattern();
+		checkFor(Token.MAPLET, 2297, "Expecting '|->' in map pattern");
+		Pattern value = readPattern();
+
+		return new MapletPattern(key, value);
 	}
 
 	public PatternList readPatternList() throws ParserException, LexException

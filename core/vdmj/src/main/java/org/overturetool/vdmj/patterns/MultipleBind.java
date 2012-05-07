@@ -89,7 +89,7 @@ public abstract class MultipleBind implements Serializable
 
 		for (Pattern p: plist)
 		{
-			defs.addAll(p.getDefinitions(type, scope));
+			defs.addAll(p.getAllDefinitions(type, scope));
 		}
 
 		return defs;
