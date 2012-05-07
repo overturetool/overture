@@ -12,17 +12,12 @@
   <description>Graphical tool which provides a userinterface for the (traces) combinatorial testing plugin.</description>
 
   <dependencies>
-    <dependency>
+    <!-- dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>traces</artifactId>
-      <version>2.1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.core</artifactId>
       <version>2.2.0</version>
-      <scope>compile</scope>
-    </dependency>
+    </dependency-->
+   
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.ui</artifactId>
@@ -87,6 +82,16 @@
       <groupId>org.eclipse.swt</groupId>
       <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
       <version>3.7.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.overture.ide</groupId>
+    	<artifactId>org.overture.ide.core</artifactId>
+    	<version>2.2.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.overturetool.core.combinatorialtesting</groupId>
+    	<artifactId>ctutils</artifactId>
+    	<version>2.2.0</version>
     </dependency>
   </dependencies>
 

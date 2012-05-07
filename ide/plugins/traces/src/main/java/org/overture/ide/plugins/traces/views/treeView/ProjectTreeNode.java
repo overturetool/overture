@@ -21,17 +21,17 @@ package org.overture.ide.plugins.traces.views.treeView;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.overture.ide.core.resources.IVdmProject;
 
 
 
 public 	class ProjectTreeNode implements IAdaptable,ITreeNode {
 	private List<ITreeNode> children;
 	private ITreeNode parent;
-	private IProject project;
+	final public IVdmProject project;
 
-	public ProjectTreeNode(IProject project) {
+	public ProjectTreeNode(IVdmProject project) {
 		this.project = project;
 		children = new ArrayList<ITreeNode>();
 	}
@@ -62,10 +62,10 @@ public 	class ProjectTreeNode implements IAdaptable,ITreeNode {
 		child.setParent(this);
 	}
 
-	public void removeChild(ClassTreeNode child) {
-		children.remove(child);
-		child.setParent(null);
-	}
+//	public void removeChild(ClassTreeNode child) {
+//		children.remove(child);
+//		child.setParent(null);
+//	}
 
 	public List<ITreeNode> getChildren() {
 		return children;

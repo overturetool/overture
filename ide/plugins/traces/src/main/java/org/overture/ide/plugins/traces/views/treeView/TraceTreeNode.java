@@ -24,49 +24,45 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.widgets.Display;
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceInfo;
-import org.overture.ide.plugins.traces.internal.VdmjTracesHelper;
-import org.overturetool.traces.utility.ITracesHelper;
-import org.overturetool.traces.utility.TraceHelperNotInitializedException;
-import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.vdmj.definitions.NamedTraceDefinition;
+import org.overture.ide.plugins.traces.store.StorageManager;
+import org.overture.ide.plugins.traces.views.TraceAstUtility;
+import org.overturetool.ct.utils.TraceHelperNotInitializedException;
+import org.overturetool.ct.utils.TraceTestResult;
 import org.xml.sax.SAXException;
 
-
-public class TraceTreeNode implements IAdaptable,ITreeNode
+public class TraceTreeNode implements IAdaptable, ITreeNode
 {
 
-	private NamedTraceDefinition traceDefinition;
+	private ANamedTraceDefinition traceDefinition;
 	private ITreeNode parent;
 	private List<ITreeNode> children;
 	private int testSkippedCount = 0;
 	private int testTotal = 0;
-	private ITracesHelper traceHelper;
+	private StorageManager traceStore;
 	private TraceInfo info;
 
-	public TraceTreeNode(NamedTraceDefinition traceDef,
-			ITracesHelper traceHelper, String className) throws SAXException, IOException, ClassNotFoundException, TraceHelperNotInitializedException
+	public TraceTreeNode(ANamedTraceDefinition traceDef) throws SAXException,
+			IOException, ClassNotFoundException,
+			TraceHelperNotInitializedException
 	{
 		this.traceDefinition = traceDef;
-		this.setTraceHelper(traceHelper);
+		traceStore = new StorageManager(TraceAstUtility.getProject(traceDef), traceDef);
 		this.children = new ArrayList<ITreeNode>();
+
 		
-		
-		
-		if(traceHelper instanceof VdmjTracesHelper)
-		{
-			setInfo(((VdmjTracesHelper)traceHelper).getTraceInfo(className, traceDef.getName()));
-		}
-		
-		Integer totalTests = traceHelper.getTraceTestCount(className,
-				traceDef.getName());
+			setInfo( traceStore.getTraceInfo());
+
+		Integer totalTests = traceStore.getTraceTestCount( );
 		this.setTestTotal(totalTests);
 
-		this.setSkippedCount(traceHelper.getSkippedCount(className,
-				traceDef.getName()));
+		this.setSkippedCount(traceStore.getSkippedCount( traceDef.getName().name));
 
 		if (totalTests > 0)
+		{
 			this.addChild(new NotYetReadyTreeNode());
+		}
 	}
 
 	public ITreeNode getParent()
@@ -74,7 +70,7 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 		return parent;
 	}
 
-	public NamedTraceDefinition getTraceDefinition()
+	public ANamedTraceDefinition getTraceDefinition()
 	{
 		return traceDefinition;
 	}
@@ -97,7 +93,7 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 	public String getName()
 	{
 
-		return traceDefinition.name.name;
+		return traceDefinition.getName().name;
 
 	}
 
@@ -173,148 +169,128 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 		return testTotal;
 	}
 
-//	public void LoadTests() throws Exception
-//	{
-//		children.clear();
-//
-//		Long size = new Long(getTraceHelper().GetTraceTestCount(
-//				parent.getName(),
-//				getName()));
-//
-//		if (size <= TraceTestGroup.GROUP_SIZE)
-//		{
-//			List<TraceTestResult> traceStatus = getTraceHelper().GetTraceTests(
-//					parent.getName(),
-//					getName());
-//			for (TraceTestResult traceTestStatus : traceStatus)
-//			{
-//				this.addChild(new TraceTestTreeNode(traceTestStatus));
-//			}
-//		} else
-//		{
-//			Double numberOfGroups = Math.ceil(size.doubleValue()
-//					/ TraceTestGroup.GROUP_SIZE);
-//			// Double t = TraceTestGroup.NumberOfLevels(size,
-//			// TraceTestGroup.GROUP_SIZE);
-//
-//			if (numberOfGroups > TraceTestGroup.GROUP_SIZE)
-//				numberOfGroups = TraceTestGroup.GROUP_SIZE.doubleValue();
-//
-//			Long testCountInGroup = (size) / numberOfGroups.longValue();
-//			
-//			if(testCountInGroup<TraceTestGroup.GROUP_SIZE && size>=TraceTestGroup.GROUP_SIZE)
-//				testCountInGroup= TraceTestGroup.GROUP_SIZE; //top up all groups
-//			
-//			Long currentCount = new Long(0);
-//			for (int i = 0; i < numberOfGroups - 1 && currentCount<size; i++)
-//			{
-//				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
-//						currentCount + testCountInGroup.longValue() + 1);
-//				currentCount += testCountInGroup;
-//				this.addChild(group);
-//			}
-//			if (!currentCount.equals( size))
-//			{
-//				TraceTestGroup group = new TraceTestGroup(currentCount + 1,
-//						size + 1);
-//				this.addChild(group);
-//
-//			}
-//		}
-//	}
+	// public void LoadTests() throws Exception
+	// {
+	// children.clear();
+	//
+	// Long size = new Long(getTraceHelper().GetTraceTestCount(
+	// parent.getName(),
+	// getName()));
+	//
+	// if (size <= TraceTestGroup.GROUP_SIZE)
+	// {
+	// List<TraceTestResult> traceStatus = getTraceHelper().GetTraceTests(
+	// parent.getName(),
+	// getName());
+	// for (TraceTestResult traceTestStatus : traceStatus)
+	// {
+	// this.addChild(new TraceTestTreeNode(traceTestStatus));
+	// }
+	// } else
+	// {
+	// Double numberOfGroups = Math.ceil(size.doubleValue()
+	// / TraceTestGroup.GROUP_SIZE);
+	// // Double t = TraceTestGroup.NumberOfLevels(size,
+	// // TraceTestGroup.GROUP_SIZE);
+	//
+	// if (numberOfGroups > TraceTestGroup.GROUP_SIZE)
+	// numberOfGroups = TraceTestGroup.GROUP_SIZE.doubleValue();
+	//
+	// Long testCountInGroup = (size) / numberOfGroups.longValue();
+	//
+	// if(testCountInGroup<TraceTestGroup.GROUP_SIZE && size>=TraceTestGroup.GROUP_SIZE)
+	// testCountInGroup= TraceTestGroup.GROUP_SIZE; //top up all groups
+	//
+	// Long currentCount = new Long(0);
+	// for (int i = 0; i < numberOfGroups - 1 && currentCount<size; i++)
+	// {
+	// TraceTestGroup group = new TraceTestGroup(currentCount + 1,
+	// currentCount + testCountInGroup.longValue() + 1);
+	// currentCount += testCountInGroup;
+	// this.addChild(group);
+	// }
+	// if (!currentCount.equals( size))
+	// {
+	// TraceTestGroup group = new TraceTestGroup(currentCount + 1,
+	// size + 1);
+	// this.addChild(group);
+	//
+	// }
+	// }
+	// }
 
 	public void loadTests() throws Exception
 	{
 		children.clear();
 
-		Long size = new Long(getTraceHelper().getTraceTestCount(
-				parent.getName(),
-				getName()));
-		
+		Long size = new Long(traceStore.getTraceTestCount( ));
+
 		GroupSizeCalculator gs = new GroupSizeCalculator(size);
 
 		if (!gs.hasGroups())
 		{
-			List<TraceTestResult> traceStatus = getTraceHelper().getTraceTests(
-					parent.getName(),
-					getName());
+			List<TraceTestResult> traceStatus = traceStore.getTraceTests( );
 			for (TraceTestResult traceTestStatus : traceStatus)
 			{
 				this.addChild(new TraceTestTreeNode(traceTestStatus));
 			}
 		} else
 		{
-						
+
 			Long currentCount = new Long(0);
-			for (int i = 0; i < gs.getNumberOfGroups() - 1 && currentCount<size; i++)
+			for (int i = 0; i < gs.getNumberOfGroups() - 1
+					&& currentCount < size; i++)
 			{
-				final TraceTestGroup group = new TraceTestGroup(currentCount + 1,
-						currentCount + gs.getGroupSize() + 1);
+				final TraceTestGroup group = new TraceTestGroup(currentCount + 1, currentCount
+						+ gs.getGroupSize() + 1);
 				currentCount += gs.getGroupSize();
 				this.addChild(group);
 				Display.getCurrent().syncExec(new Runnable()
 				{
-					
+
 					public void run()
 					{
-						
+
 						try
 						{
 							group.loadGroupStatus();
 						} catch (Exception e)
 						{
 							e.printStackTrace();
-						} 
+						}
 					}
 				});
-				
+
 			}
-			if (!currentCount.equals( size))
+			if (!currentCount.equals(size))
 			{
-			final	TraceTestGroup group = new TraceTestGroup(currentCount + 1,
-						size + 1);
+				final TraceTestGroup group = new TraceTestGroup(currentCount + 1, size + 1);
 				this.addChild(group);
 				Display.getCurrent().syncExec(new Runnable()
 				{
-					
+
 					public void run()
 					{
-						
+
 						try
 						{
 							group.loadGroupStatus();
 						} catch (Exception e)
 						{
 							e.printStackTrace();
-						} 
+						}
 					}
 				});
 			}
 		}
 	}
-	
+
 	public void unloadTests()
 	{
 		children.clear();
 		children.add(new NotYetReadyTreeNode());
 	}
 
-	/**
-	 * @param traceHelper
-	 *            the traceHelper to set
-	 */
-	public void setTraceHelper(ITracesHelper traceHelper)
-	{
-		this.traceHelper = traceHelper;
-	}
-
-	/**
-	 * @return the traceHelper
-	 */
-	public ITracesHelper getTraceHelper()
-	{
-		return traceHelper;
-	}
 
 	private void setInfo(TraceInfo info)
 	{
@@ -326,6 +302,9 @@ public class TraceTreeNode implements IAdaptable,ITreeNode
 		return info;
 	}
 
-	
+	public StorageManager getTraceStore()
+	{
+		return traceStore;
+	}
 
 }

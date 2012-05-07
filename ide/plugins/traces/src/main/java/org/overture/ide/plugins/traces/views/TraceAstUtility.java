@@ -1,0 +1,123 @@
+package org.overture.ide.plugins.traces.views;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
+import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.plugins.traces.views.ViewContentProvider.TraceContainerSearch;
+import org.overture.ide.plugins.traces.views.ViewContentProvider.TraceSearch;
+
+public class TraceAstUtility
+{
+	static Map<INode, IVdmProject> cache = new HashMap<INode, IVdmProject>();
+
+	static public Set<IVdmProject> getProjects()
+	{
+		Set<IVdmProject> projects = new HashSet<IVdmProject>();
+		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] iprojects = iworkspaceRoot.getProjects();
+		for (IProject iProject : iprojects)
+		{
+			IVdmProject vdmProject = (IVdmProject) iProject.getAdapter(IVdmProject.class);
+
+			if (vdmProject != null)
+			{
+				projects.add(vdmProject);
+			}
+		}
+
+		return projects;
+	}
+
+	static public IVdmProject getProject(INode node)
+	{
+		if (cache.containsKey(node))
+		{
+			return cache.get(node);
+		}
+		for (IVdmProject project : getProjects())
+		{
+			for (INode projectNode : project.getModel().getRootElementList())
+			{
+				if (node instanceof SClassDefinition
+						|| node instanceof AModuleModules)
+				{
+					if (node == projectNode)
+					{
+						cache.put(node, project);
+						return project;
+					}
+				} else if (node instanceof ANamedTraceDefinition)
+				{
+					LinkedList<PDefinition> definitions = null;
+					if (projectNode instanceof SClassDefinition)
+					{
+						definitions = ((SClassDefinition) projectNode).getDefinitions();
+					} else if (projectNode instanceof AModuleModules)
+					{
+						definitions = ((AModuleModules) projectNode).getDefs();
+					}
+
+					for (PDefinition pDefinition : definitions)
+					{
+						if (node == pDefinition)
+						{
+							cache.put(node, project);
+							return project;
+						}
+					}
+				} else
+				{
+					// not supported
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Set<INode> getTraceContainers(IVdmProject project)
+	{
+		TraceContainerSearch analysis = new TraceContainerSearch();
+		Set<INode> containers = new HashSet<INode>();
+		for (INode node : project.getModel().getRootElementList())
+		{
+			containers.addAll(analysis.getTraceContainers(node));
+		}
+
+		for (INode iNode : containers)
+		{
+			cache.put(iNode, project);
+		}
+		return containers;
+
+	}
+	
+	public static String getContainerName(INode node)
+	{
+		if(node instanceof SClassDefinition)
+		{
+			return ((SClassDefinition)node).getName().name;
+		}else if(node instanceof AModuleModules)
+		{
+			return ((AModuleModules)node).getName().name;
+		}
+		return null;
+	}
+	
+	public static List<ANamedTraceDefinition> getTraceDefinitions(INode node)
+	{
+		return new TraceSearch().getTraces(node);
+	}
+}

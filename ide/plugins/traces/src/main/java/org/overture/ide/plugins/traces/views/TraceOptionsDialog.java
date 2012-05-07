@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.overturetool.vdmj.traces.TraceReductionType;
+import org.overturetool.ct.utils.TraceReductionType;
 
 public class TraceOptionsDialog extends Composite
 {

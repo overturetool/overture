@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.traces.utility.TraceXmlWrapper;
-import org.overturetool.traces.utility.XmlFileWriter;
-import org.overturetool.vdmj.traces.TraceReductionType;
-import org.overturetool.vdmj.traces.Verdict;
+import org.overturetool.ct.utils.TraceReductionType;
+import org.overturetool.ct.utils.TraceTestResult;
+import org.overturetool.ct.utils.TraceXmlWrapper;
+import org.overturetool.ct.utils.Verdict;
+import org.overturetool.ct.utils.XmlFileWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -204,6 +204,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 
 		FileReader r = new FileReader(this.file);
 		xr.parse(new InputSource(r));
+		r.close();
 
 	}
 

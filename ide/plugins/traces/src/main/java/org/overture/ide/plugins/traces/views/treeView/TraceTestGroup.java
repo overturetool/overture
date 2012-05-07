@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.traces.utility.TraceHelperNotInitializedException;
-import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.vdmj.traces.Verdict;
+import org.overturetool.ct.utils.TraceHelperNotInitializedException;
+import org.overturetool.ct.utils.TraceTestResult;
+import org.overturetool.ct.utils.Verdict;
 import org.xml.sax.SAXException;
 
 public class TraceTestGroup extends TraceTestTreeNode
@@ -172,19 +172,19 @@ public class TraceTestGroup extends TraceTestTreeNode
 		if (t != null)
 		{
 
-			List<TraceTestResult> traceStatus = t.getTraceHelper().getTraceTests(t.getParent().getName(), t.getName(), startNumber.intValue(), stopNumber.intValue());
+			List<TraceTestResult> traceStatus = t.getTraceStore().getTraceTests(startNumber.intValue(), stopNumber.intValue());
 			Verdict status = null;
 			for (TraceTestResult traceTestStatus : traceStatus)
 			{
 				lastKnownStatus = calculateStatus(status, traceTestStatus.getStatus());
-				if(lastKnownStatus == Verdict.FAILED)
+				if (lastKnownStatus == Verdict.FAILED)
 				{
 					break;
 				}
 			}
-//			System.out.println(getName()+ " "+ lastKnownStatus);
-//			int i = 0;
-			
+			// System.out.println(getName()+ " "+ lastKnownStatus);
+			// int i = 0;
+
 		}
 	}
 
@@ -194,7 +194,7 @@ public class TraceTestGroup extends TraceTestTreeNode
 		if (t != null)
 		{
 
-			List<TraceTestResult> traceStatus = t.getTraceHelper().getTraceTests(t.getParent().getName(), t.getName(), startNumber.intValue(), stopNumber.intValue());
+			List<TraceTestResult> traceStatus = t.getTraceStore().getTraceTests(startNumber.intValue(), stopNumber.intValue());
 
 			for (TraceTestResult traceTestStatus : traceStatus)
 			{

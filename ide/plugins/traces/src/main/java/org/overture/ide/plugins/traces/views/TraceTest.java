@@ -51,8 +51,8 @@ import org.overture.ide.plugins.traces.ITracesConstants;
 import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
-import org.overturetool.traces.utility.TraceTestResult;
-import org.overturetool.vdmj.traces.Verdict;
+import org.overturetool.ct.utils.TraceTestResult;
+import org.overturetool.ct.utils.Verdict;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -259,42 +259,6 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		
 	}
 
-	// private void hookContextMenu() {
-	// MenuManager menuMgr = new MenuManager("#PopupMenu");
-	// menuMgr.setRemoveAllWhenShown(true);
-	// menuMgr.addMenuListener(new IMenuListener() {
-	// public void menuAboutToShow(IMenuManager manager) {
-	// TraceTest.this.fillContextMenu(manager);
-	// }
-	// });
-	// Menu menu = menuMgr.createContextMenu(viewer.getControl());
-	// viewer.getControl().setMenu(menu);
-	// getSite().registerContextMenu(menuMgr, viewer);
-	// }
-	//
-	// private void contributeToActionBars() {
-	// IActionBars bars = getViewSite().getActionBars();
-	// fillLocalPullDown(bars.getMenuManager());
-	// fillLocalToolBar(bars.getToolBarManager());
-	// }
-
-	// private void fillLocalPullDown(IMenuManager manager) {
-	// manager.add(action1);
-	// manager.add(new Separator());
-	// manager.add(action2);
-	// }
-	//
-	// private void fillContextMenu(IMenuManager manager) {
-	// manager.add(action1);
-	// manager.add(action2);
-	// // Other plug-ins can contribute there actions here
-	// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	// }
-	//
-	// private void fillLocalToolBar(IToolBarManager manager) {
-	// manager.add(action1);
-	// manager.add(action2);
-	// }
 
 	private void makeActions()
 	{
