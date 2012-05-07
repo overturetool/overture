@@ -11,6 +11,7 @@ import org.overture.ast.node.ExternalNode;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.IToken;
 import org.overture.ast.node.NodeList;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 {
@@ -156,11 +157,15 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 	@Override
 	public void defaultINode(INode node, DotPair question)
 	{
-		if(visitedNodes.contains(node)|| node == null)
+		if(!(node instanceof LexNameToken )&&visitedNodes.contains(node)|| node == null)
 		{
 			return;
 		}
+		
+		if(!(node instanceof LexNameToken))
+		{
 		visitedNodes.add(node);
+		}
 		
 		DotPair parentNode = new DotPair(createDotNode(question, node), null);
 

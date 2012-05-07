@@ -63,6 +63,14 @@ public class Main {
 		show(exp, true);
 	}
 	
+	public static void makeImage(INode node, String type,File output)
+	{
+		DotGraphVisitor visitor = new DotGraphVisitor();
+		node.apply(visitor, null);
+		GraphViz gv = new GraphViz();
+		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
+	}
+	
 	public static void show(INode node,final boolean exitOnClose){
 		DotGraphVisitor visitor = new DotGraphVisitor();
 		node.apply(visitor, null);
