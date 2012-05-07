@@ -32,7 +32,7 @@
 	<!--module>vdm2java</module-->		
 	<!--module>vdmexamples</module-->
 	<!--module>vdmj</module-->
-	<!--module>vdmj_compatibility_tests</module-->
+	<module>vdmj_compatibility_tests</module>
 	<!--module>vdmjc</module-->
 	<!--module>vdmtools</module-->
 	<!--module>vdmunit</module-->	

@@ -244,7 +244,7 @@ public class Uml2XmiEAxml extends Uml2Xmi {
   public void Save (final String fileName, final IUmlModel model, final StatusLog inLog) throws CGException {
 
     XmlVisitor xmlVisitor = (XmlVisitor) new XmiFileOutputVisitor();
-    log = (StatusLog) UTIL.clone(inLog);
+   // log = (StatusLog) UTIL.clone(inLog);
     Util.CreateFile(fileName);
     CreateXmlFile((IUmlModel) model);
     xmlVisitor.SetEncoding(new String("UTF-8"));
@@ -810,7 +810,9 @@ public class Uml2XmiEAxml extends Uml2Xmi {
     String tmppar_78 = null;
     tmppar_78 = cl.getName();
     par_76 = UTIL.ConvertToString(classes.get(tmppar_78));
-    log.endClass(par_75, par_76);
+   // log.endClass(par_75, par_76);
+    //TODO:log
+    System.out.println("end class" + par_75 + "," + par_76);
     {
 
       HashSet ncs = new HashSet();
@@ -1630,7 +1632,7 @@ public class Uml2XmiEAxml extends Uml2Xmi {
         }
       }
       else 
-        log.info(new String("Cannot handle nested type"));
+        System.out.println(new String("Cannot handle nested type"));
     }
   }
 // ***** VDMTOOLS END Name=AddNestedClassifiers#2|String|IUmlNestedClassifiers

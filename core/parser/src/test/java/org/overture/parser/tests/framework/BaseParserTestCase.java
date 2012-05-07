@@ -19,7 +19,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 		TestCase
 {
 
-public final static boolean DEBUG = false;
+public final static boolean DEBUG = true;
 	File file;
 	String name;
 	String content;
@@ -105,8 +105,9 @@ public final static boolean DEBUG = false;
 				StringWriter s = new StringWriter();
 				reader.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
 				errorMessages ="\n"+s.toString()+"\n";
-if(DEBUG){
-				System.out.println(s.toString());}
+				if(DEBUG){
+					System.out.println(s.toString());
+				}
 			}
 			assertEquals(errorMessages,0,reader.getErrorCount());
 

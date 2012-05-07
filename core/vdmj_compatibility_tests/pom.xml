@@ -13,7 +13,7 @@
 	<name>VDMJ Compatibility Tests</name>
 
 	<modules>
-	
+	<module>vdmj_compatibility_utils</module>
 	<module>vdmjparsertest</module>
 	<module>vdmjtypecheckertest</module>
 	<!--module>vdmjpog</module-->		
