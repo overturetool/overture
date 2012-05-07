@@ -26,6 +26,7 @@
 	<!--module>stdlib</module-->
 	<module>testframework</module>
 	<!--module>traces</module-->
+	<module>combinatorialtesting</module>
         <module>typechecker</module>	
         <!--module>umlMapper</module-->	
 	<module>umltrans</module>        
