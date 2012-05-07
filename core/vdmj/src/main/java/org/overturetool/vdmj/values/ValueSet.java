@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.traces.PermuteArray;
 import org.overturetool.vdmj.util.Utils;
 
 
@@ -138,63 +139,33 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 		}
 	}
 
-	// BEWARE: This can generate a lot of sets if there are sets with
-	// sub-subsets etc.
-
 	public List<ValueSet> permutedSets()
 	{
-		List<ValueSet> results = new Vector<ValueSet>();
+		// This is a 1st order permutation, which does not take account of the possible
+		// nesting of sets or the presence of other permutable values with them (maps).
 
-		if (size() == 0)
+		List<ValueSet> results = new Vector<ValueSet>();
+		int size = size();
+
+		if (size == 0)
 		{
 			results.add(new ValueSet());	// Just {}
 		}
-		else if (size() == 1)
-		{
-			Value element = get(0).deref();
-
-			if (element instanceof SetValue)
-			{
-				ValueSet subset = ((SetValue)element).values;
-
-    			for (ValueSet vs: subset.permutedSets())
-    			{
-    				results.add(new ValueSet(new SetValue(vs)));
-    			}
-			}
-			else
-			{
-				results.add(new ValueSet(this));
-			}
-		}
 		else
 		{
-    		for (Value element: this)
+    		PermuteArray p = new PermuteArray(size);
+
+    		while (p.hasNext())
     		{
-    			ValueSet remainder = new ValueSet(this);
-    			remainder.remove(element);
+    			ValueSet m = new ValueSet();
+    			int[] perm = p.next();
 
-    			if (element instanceof SetValue)
+    			for (int i=0; i<size; i++)
     			{
-    				ValueSet subset = ((SetValue)element).values;
+    				m.add(get(perm[i]));
+    			}
 
-    				for (ValueSet ss: subset.permutedSets())
-    				{
-            			for (ValueSet vs: remainder.permutedSets())
-            			{
-            				vs.add(new SetValue(ss));
-            				results.add(vs);
-            			}
-    				}
-    			}
-    			else
-    			{
-        			for (ValueSet vs: remainder.permutedSets())
-        			{
-        				vs.add(element);
-        				results.add(vs);
-        			}
-    			}
+    			results.add(m);
     		}
 		}
 

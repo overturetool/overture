@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2012 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -25,11 +25,12 @@ package org.overturetool.vdmj.patterns;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.SeqConcatExpression;
+import org.overturetool.vdmj.expressions.MapUnionExpression;
 import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -42,24 +43,25 @@ import org.overturetool.vdmj.traces.Permutor;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
-import org.overturetool.vdmj.types.SeqType;
+import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.Type;
+import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.values.MapValue;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
-import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueMap;
 
 
-public class ConcatenationPattern extends Pattern
+public class MapUnionPattern extends Pattern
 {
 	private static final long serialVersionUID = 1L;
 	public final Pattern left;
 	public final Pattern right;
 
-	public ConcatenationPattern(Pattern left, LexLocation location, Pattern right)
+	public MapUnionPattern(Pattern left, LexLocation location, Pattern right)
 	{
 		super(location);
 		this.left = left;
@@ -94,23 +96,15 @@ public class ConcatenationPattern extends Pattern
 	@Override
 	public String toString()
 	{
-		return left + " ^ " + right;
+		return left + " union " + right;
 	}
 
 	@Override
 	public Expression getMatchingExpression()
 	{
-		LexToken op = new LexKeywordToken(Token.CONCATENATE, location);
-		return new SeqConcatExpression(
+		LexToken op = new LexKeywordToken(Token.MUNION, location);
+		return new MapUnionExpression(
 			left.getMatchingExpression(), op, right.getMatchingExpression());
-	}
-
-	@Override
-	public DefinitionList getAllDefinitions(Type type, NameScope scope)
-	{
-		DefinitionList list = left.getAllDefinitions(type, scope);
-		list.addAll(right.getAllDefinitions(type, scope));
-		return list;
 	}
 
 	@Override
@@ -119,6 +113,22 @@ public class ConcatenationPattern extends Pattern
 		int llen = left.getLength();
 		int rlen = right.getLength();
 		return (llen == ANY || rlen == ANY) ? ANY : llen + rlen;
+	}
+
+	@Override
+	public DefinitionList getAllDefinitions(Type type, NameScope scope)
+	{
+		DefinitionList defs = new DefinitionList();
+
+		if (!type.isMap())
+		{
+			report(3315, "Matching expression is not a map type");
+		}
+
+		defs.addAll(left.getAllDefinitions(type, scope));
+		defs.addAll(right.getAllDefinitions(type, scope));
+
+		return defs;
 	}
 
 	@Override
@@ -136,11 +146,11 @@ public class ConcatenationPattern extends Pattern
 	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
-		ValueList values = null;
+		ValueMap values = null;
 
 		try
 		{
-			values = expval.seqValue(ctxt);
+			values = expval.mapValue(ctxt);
 		}
 		catch (ValueException e)
 		{
@@ -155,7 +165,7 @@ public class ConcatenationPattern extends Pattern
 			(rlen == ANY && llen > size) ||
 			(rlen != ANY && llen != ANY && size != llen + rlen))
 		{
-			patternFail(4108, "Sequence concatenation pattern does not match expression");
+			patternFail(4155, "Map union pattern does not match expression");
 		}
 
 		// If the left and right sizes are zero (ie. flexible) then we have to
@@ -195,88 +205,111 @@ public class ConcatenationPattern extends Pattern
 			leftSizes.add(llen);
 		}
 
+		// Since the left and right may have specific element members, we
+		// have to permute through the various map orderings to see
+		// whether there are any which match both sides. If the patterns
+		// are not constrained however, the initial ordering will be
+		// fine.
+
+		List<ValueMap> allMaps;
+
+		if (isConstrained())
+		{
+			allMaps = values.permutedMaps();
+		}
+		else
+		{
+			allMaps = new Vector<ValueMap>();
+			allMaps.add(values);
+		}
+
 		// Now loop through the various splits and attempt to match the l/r
-		// sub-patterns to the split sequence value.
+		// sub-patterns to the split map value.
 
 		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
 
 		for (Integer lsize: leftSizes)
 		{
-			Iterator<Value> iter = values.iterator();
-			ValueList head = new ValueList();
-
-			for (int i=0; i<lsize; i++)
+			for (ValueMap setPerm: allMaps)
 			{
-				head.add(iter.next());
-			}
+				Iterator<Entry<Value, Value>> iter = setPerm.entrySet().iterator();
+				ValueMap first = new ValueMap();
 
-			ValueList tail = new ValueList();
+				for (int i=0; i<lsize; i++)
+				{
+					Entry<Value, Value> e = iter.next();
+					first.put(e.getKey(), e.getValue());
+				}
 
-			while (iter.hasNext())	// Everything else in second
-			{
-				tail.add(iter.next());
-			}
+				ValueMap second = new ValueMap();
 
-			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
-			int psize = 2;
-			int[] counts = new int[psize];
+				while (iter.hasNext())	// Everything else in second
+				{
+					Entry<Value, Value> e = iter.next();
+					second.put(e.getKey(), e.getValue());
+				}
 
-			try
-			{
-				List<NameValuePairList> lnvps = left.getAllNamedValues(new SeqValue(head), ctxt);
-				nvplists.add(lnvps);
-				counts[0] = lnvps.size();
+				List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+				int psize = 2;
+				int[] counts = new int[psize];
 
-				List<NameValuePairList> rnvps = right.getAllNamedValues(new SeqValue(tail), ctxt);
-				nvplists.add(rnvps);
-				counts[1] = rnvps.size();
-			}
-			catch (PatternMatchException e)
-			{
-				continue;
-			}
-
-			Permutor permutor = new Permutor(counts);
-
-			while (permutor.hasNext())
-			{
 				try
 				{
-					NameValuePairMap results = new NameValuePairMap();
-					int[] selection = permutor.next();
+					List<NameValuePairList> lnvps = left.getAllNamedValues(new MapValue(first), ctxt);
+					nvplists.add(lnvps);
+					counts[0] = lnvps.size();
 
-					for (int p=0; p<psize; p++)
+					List<NameValuePairList> rnvps = right.getAllNamedValues(new MapValue(second), ctxt);
+					nvplists.add(rnvps);
+					counts[1] = rnvps.size();
+				}
+				catch (Exception e)
+				{
+					continue;
+				}
+
+				Permutor permutor = new Permutor(counts);
+
+				while (permutor.hasNext())
+				{
+					try
 					{
-						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
-						{
-							Value v = results.get(nvp.name);
+						NameValuePairMap results = new NameValuePairMap();
+						int[] selection = permutor.next();
 
-							if (v == null)
+						for (int p=0; p<psize; p++)
+						{
+							for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 							{
-								results.put(nvp);
-							}
-							else	// Names match, so values must also
-							{
-								if (!v.equals(nvp.value))
+								Value v = results.get(nvp.name);
+
+								if (v == null)
 								{
-									patternFail(4109, "Values do not match concatenation pattern");
+									results.put(nvp);
+								}
+								else	// Names match, so values must also
+								{
+									if (!v.equals(nvp.value))
+									{
+										patternFail(4126, "Values do not match union pattern");
+									}
 								}
 							}
 						}
-					}
 
-					finalResults.add(results.asList());		// Consistent set of nvps
-				}
-				catch (PatternMatchException pme)
-				{
-					// try next perm
+						finalResults.add(results.asList());
+					}
+					catch (PatternMatchException pme)
+					{
+						// Try next perm then...
+					}
 				}
 			}
 		}
 
 		if (finalResults.isEmpty())
 		{
-			patternFail(4109, "Values do not match concatenation pattern");
+			patternFail(4156, "Cannot match map pattern");
 		}
 
 		return finalResults;
@@ -285,7 +318,15 @@ public class ConcatenationPattern extends Pattern
 	@Override
 	public Type getPossibleType()
 	{
-		return new SeqType(location, new UnknownType(location));
+		TypeSet list = new TypeSet();
+
+		list.add(left.getPossibleType());
+		list.add(right.getPossibleType());
+
+		Type s = list.getType(location);
+
+		return s.isUnknown() ?
+			new MapType(location, new UnknownType(location), new UnknownType(location)) : s;
 	}
 
 	@Override

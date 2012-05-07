@@ -24,4 +24,22 @@ functions
 	public e4: set of nat -> seq of set of nat
 	e4(a union b) == [a, b];
 	
+	public t1: () -> nat
+	t1() == let { 1 |-> a } = { 1 |-> 2 } in a;
+
+	public t2: () -> seq of nat
+	t2() == let { 1 |-> a, a |-> b, b |-> c } = { 1 |-> 4, 2 |-> 3, 4 |-> 2 } in [a, b, c];
+
+	public t3: () -> set of nat
+	t3() == { a | { 1 |-> a } munion - in set { { 1 |-> 2, 3 |-> 5, 6 |-> 'a' } } };
+
+	public t4: () -> nat
+	t4() == let { - union {a} |-> {a} union - } = { {1,2,3,4,5,6} |-> {4,5,6} } in a;
+	
+	public t5: () -> nat
+	t5() == let {{{-, a}} union -, mk_(a, -), { a |-> - } munion - } =
+				{mk_(1,2), {2|->3, 1|->2}, {{3,4}, {1,2}, 5}}
+				in a;
+	
+	
 end A

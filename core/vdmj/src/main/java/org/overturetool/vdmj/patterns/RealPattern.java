@@ -57,7 +57,7 @@ public class RealPattern extends Pattern
 	}
 
 	@Override
-	public DefinitionList getDefinitions(Type type, NameScope scope)
+	public DefinitionList getAllDefinitions(Type type, NameScope scope)
 	{
 		return new DefinitionList();
 	}
