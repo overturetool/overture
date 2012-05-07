@@ -29,13 +29,11 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
 import org.overture.ide.plugins.traces.views.TraceAstUtility;
-import org.overturetool.ct.utils.TraceHelperNotInitializedException;
 import org.overturetool.ct.utils.TraceReductionType;
 
-public class VdmjTracesHelper // implements ITracesHelper
+public class VdmjTracesHelper 
 {
 	String projectName;
-	// final String TRACE_STORE_DIR_NAME = "generated/traces";
 	final String COVERAGE_DIR_NAME = "generated/coverage";
 	public final IVdmProject project;
 	Map<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
@@ -49,46 +47,7 @@ public class VdmjTracesHelper // implements ITracesHelper
 	{
 		this.project = vdmProject;
 		this.shell = shell;
-		// IProject project = (IProject) vdmProject.getAdapter(IProject.class);
-		// Assert.isNotNull(project, "Project could not be adapted");
-
-		// project.refreshLocal(IResource.DEPTH_INFINITE, null);
-
-		// this.projectDir = new File(project.getLocation().toFile(), TRACE_STORE_DIR_NAME.replace('/',
-		// File.separatorChar));
-		// if (!this.projectDir.exists())
-		// this.projectDir.mkdirs();
-
-		// this.coverageBaseDir = new File(project.getLocation().toFile(), COVERAGE_DIR_NAME.replace('/',
-		// File.separatorChar));
-		// if (!this.coverageBaseDir.exists())
-		// this.coverageBaseDir.mkdirs();
-
-		// vdmProject.getModel().refresh(false, null);
-		// AbstractBuilder.parseMissingFiles(project, nature, contentTypeId,
-		// null);
-
 	}
-
-	// private ClassList getClasses() throws NotAllowedException
-	// {
-	// RootNode root = AstManager.instance().getRootNode(project.getProject(),
-	// nature);
-	// if (root != null)
-	// return root.getClassList();
-	// else
-	// return new ClassList();
-	// }
-	//
-	// private ModuleList getModules() throws NotAllowedException
-	// {
-	// RootNode root = AstManager.instance().getRootNode(project.getProject(),
-	// nature);
-	// if (root != null)
-	// return root.getModuleList();
-	// else
-	// return new ModuleList();
-	// }
 
 	public File getCTRunCoverageDir()
 	{
@@ -100,145 +59,6 @@ public class VdmjTracesHelper // implements ITracesHelper
 			coverageDir.mkdirs();
 
 		return coverageDir;
-	}
-
-	// public List<String> getClassNamesWithTraces() throws IOException
-	// {
-	//
-	// List<String> classNames = new ArrayList<String>();
-	//
-	// try
-	// {
-	// if (project.getDialect() == Dialect.VDM_SL)
-	// {
-	// for (AModuleModules classdef : project.getModel().getModuleList())
-	// {
-	// for (Object string : classdef.getDefs())
-	// {
-	// if (string instanceof ANamedTraceDefinition)
-	// {
-	//
-	// classNames.add(classdef.getName().name);
-	// break;
-	// }
-	// }
-	// }
-	//
-	// } else
-	// {
-	// for (SClassDefinition classdef : project.getModel().getClassList())
-	// {
-	// for (Object string : classdef.getDefinitions())
-	// {
-	// if (string instanceof ANamedTraceDefinition)
-	// {
-	//
-	// classNames.add(classdef.getName().name);
-	// break;
-	// }
-	// }
-	// }
-	// }
-	//
-	// } catch (NotAllowedException e)
-	// {
-	// // TODO Auto-generated catch block
-	// // e.printStackTrace();
-	// return classNames;
-	// }
-	//
-	// return classNames;
-	// }
-
-	// public File getFile(String className)
-	// throws TraceHelperNotInitializedException, ClassNotFoundException
-	// {
-	// checkInitialization();
-	//
-	// if (project.getDialect()== Dialect.VDM_SL)
-	// {
-	// AModuleModules module = findModule(className);
-	// if (module == null)
-	// throw new ClassNotFoundException("Module: " + className);
-	//
-	// return module.getFiles().get(0);
-	// } else
-	// {
-	// SClassDefinition classdef = findClass(className);
-	// if (classdef == null)
-	// throw new ClassNotFoundException(className);
-	//
-	// return classdef.getLocation().file;
-	// }
-	// }
-
-	// public TraceTestResult getResult(String className, String trace, Integer num)
-	// throws IOException, SAXException
-	// {
-	//
-	// return classTraceReaders.get(className).getTraceTestResults(trace, num, num).get(0);
-	//
-	// }
-
-	// public int getSkippedCount(String className, String traceName)
-	//
-	// {
-	// if (classTraceReaders.containsKey(className))
-	// {
-	// Map<String, TraceStatusXml> traceStatus = classTraceReaders.get(className).getTraceStatus();
-	// if (traceStatus != null && traceStatus.containsKey(traceName))
-	// {
-	// return traceStatus.get(traceName).getSkippedTestCount();
-	// }
-	// }
-	//
-	// return 0;
-	// }
-
-	// public TraceTestStatus getStatus(String className, String trace, Integer num)
-	//
-	// {
-	//
-	// return null;
-	// }
-
-	// public void processClassTraces(String className, Object monitor)
-	// throws ClassNotFoundException, TraceHelperNotInitializedException,
-	// IOException, Exception
-	// {
-	// File coverageDir = getCTRunCoverageDir();
-	//
-	// MessageConsole myConsole = findConsole("TracesConsole");
-	// MessageConsoleStream out = myConsole.newMessageStream();
-	// // out.println(message);
-	// new TraceTestEngine().launch(project, className, null, coverageDir, out);
-	//
-	// copySourceFilesForCoverage(coverageDir);
-	// try
-	// {
-	// IProject p = (IProject) project.getAdapter(IProject.class);
-	// p.refreshLocal(IResource.DEPTH_INFINITE, null);
-	// } catch (CoreException e)
-	// {
-	//
-	// }
-	// }
-
-	public void processClassTraces(String className, float subset,
-			TraceReductionType traceReductionType, long seed, Object monitor)
-			throws ClassNotFoundException, TraceHelperNotInitializedException,
-			IOException, Exception
-	{
-
-		// FIXME: //if (dialect == Dialect.VDM_SL)
-		// interpeter.processTrace(project.getModel().getModuleList(), className, false, storage, dialect,
-		// project.getLanguageVersion(), subset, traceReductionType, seed);
-		// else
-		// interpeter.processTrace(project.getModel().getClassList(), className, false, storage, dialect,
-		// project.getLanguageVersion(), subset, traceReductionType, seed);
-
-		// copySourceFilesForCoverage(coverageDir);
-
 	}
 
 	private void copySourceFilesForCoverage(File coverageDir)
@@ -275,149 +95,6 @@ public class VdmjTracesHelper // implements ITracesHelper
 		outputStream.close();
 	}
 
-	// void buildProjectIfRequired()
-	// {
-	// shell.getDisplay().syncExec(new Runnable()
-	// {
-	//
-	// public void run()
-	// {
-	// VdmTypeCheckerUi.typeCheck(shell, project);
-	//
-	// }
-	//
-	// });
-	//
-	// try
-	// {
-	// IProject aproject = (IProject) project.getAdapter(IProject.class);
-	// aproject.refreshLocal(IResource.DEPTH_INFINITE, null);
-	// } catch (CoreException e)
-	// {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// }
-
-	// public List<ANamedTraceDefinition> getTraceDefinitions(String className)
-	// throws IOException, SAXException, ClassNotFoundException,
-	// TraceHelperNotInitializedException
-	//
-	// {
-	// checkInitialization();
-	// List<ANamedTraceDefinition> traces = new Vector<ANamedTraceDefinition>();
-	//
-	// if (project.getDialect() == Dialect.VDM_SL)
-	// {
-	// AModuleModules moduledef = findModule(className);
-	// if (moduledef == null)
-	// throw new ClassNotFoundException(className);
-	// for (Object string : moduledef.getDefs())
-	// {
-	// if (string instanceof ANamedTraceDefinition)
-	// {
-	// ANamedTraceDefinition mtd = (ANamedTraceDefinition) string;
-	// traces.add(mtd);
-	// }
-	// }
-	// } else
-	// {
-	//
-	// SClassDefinition classdef = findClass(className);
-	// if (classdef == null)
-	// throw new ClassNotFoundException(className);
-	// for (Object string : classdef.getDefinitions())
-	// {
-	// if (string instanceof ANamedTraceDefinition)
-	// {
-	// ANamedTraceDefinition mtd = (ANamedTraceDefinition) string;
-	// traces.add(mtd);
-	// }
-	// }
-	// }
-	// // Look for result file
-	// File classTraceXmlFile = new File(projectDir.getAbsolutePath()
-	// + File.separatorChar + className + ".xml");
-	// if (classTraceXmlFile.exists())
-	// {
-	// try
-	// {
-	// // result file exists, create reader
-	// TracesXmlStoreReader reader = new TracesXmlStoreReader(classTraceXmlFile, className);
-	// classTraceReaders.put(className, reader);
-	// } catch (SAXException e)
-	// {
-	// // e.printStackTrace();
-	// // TODO could not parse file. Posible not found
-	// }
-	//
-	// }
-	//
-	// return traces;
-	// }
-
-	// private SClassDefinition findClass(String className)
-	// {
-	//
-	// try
-	// {
-	// for (SClassDefinition cl : project.getModel().getClassList())
-	// {
-	// if (cl.getName().name.equals(className))
-	// return cl;
-	// }
-	// } catch (NotAllowedException e)
-	// {
-	//
-	// }
-	// return null;
-	// }
-
-	// private AModuleModules findModule(String moduleName)
-	// {
-	//
-	// try
-	// {
-	// AModuleModules m = new AModuleModules();
-	// List<ClonableFile> files = new Vector<ClonableFile>();
-	// for (AModuleModules cl : project.getModel().getModuleList())
-	// {
-	// if (cl.getName().name.equals(moduleName))
-	// {
-	// m.getDefs().addAll(cl.getDefs());
-	// files.addAll(cl.getFiles());
-	// }
-	// }
-	// m.setFiles(files);
-	// return m;
-	// } catch (NotAllowedException e)
-	// {
-	//
-	// }
-	// return null;
-	// }
-
-	// public List<TraceTestResult> getTraceTests(String className, String trace)
-	// throws IOException, SAXException
-	//
-	// {
-	//
-	// List<TraceTestResult> testStatus = classTraceReaders.get(className).getTraceTestResults(trace, 1,
-	// classTraceReaders.get(className).getTraceTestCount(trace));
-	//
-	// return testStatus;
-	//
-	// }
-
-	// public void processSingleTrace(String className, String traceName,
-	// Object monitor) throws ClassNotFoundException,
-	// TraceHelperNotInitializedException
-	//
-	// {
-	//
-	// }
-
 	public void consolePrint(String message)
 	{
 
@@ -445,42 +122,6 @@ public class VdmjTracesHelper // implements ITracesHelper
 			IProgressMonitor monitor, ITracesDisplay display)
 			throws IOException, CoreException
 	{
-//		List<TraceExecutionSetup> traceSetups = new Vector<TraceExecutionSetup>();
-//
-//		if (container != null)
-//		{
-//			if (traceDef != null)
-//			{
-//				TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), traceDef.getName().name, getCTRunCoverageDir());
-//				traceSetups.add(texe);
-//			} else
-//			{
-//				for (ANamedTraceDefinition tDef : TraceAstUtility.getTraceDefinitions(container))
-//				{
-//					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), tDef.getName().name, getCTRunCoverageDir());
-//					traceSetups.add(texe);
-//				}
-//			}
-//		}else
-//		{
-//			for (INode c : TraceAstUtility.getTraceContainers(project))
-//			{
-//				if (traceDef != null)
-//				{
-//					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), traceDef.getName().name, getCTRunCoverageDir());
-//					traceSetups.add(texe);
-//				} else
-//				{
-//					for (ANamedTraceDefinition tDef : TraceAstUtility.getTraceDefinitions(c))
-//					{
-//						TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), tDef.getName().name, getCTRunCoverageDir());
-//						traceSetups.add(texe);
-//					}
-//				}
-//			}
-//		}
-//
-//		execute(monitor, display, traceSetups);
 		evaluateTraces(container, traceDef, 0,null,0,monitor, display, false);
 	}
 
@@ -554,58 +195,5 @@ public class VdmjTracesHelper // implements ITracesHelper
 
 		}
 	}
-
-	// public Integer getTraceTestCount(String className, String trace)
-	// {
-	// if (classTraceReaders.containsKey(className))
-	// return classTraceReaders.get(className).getTraceTestCount(trace);
-	// else
-	// return 0;
-	//
-	// }
-	//
-	// public TraceInfo getTraceInfo(String className, String trace)
-	// {
-	// if (classTraceReaders.containsKey(className))
-	// return classTraceReaders.get(className).getTraceInfo(trace);
-	//
-	// return null;
-	// }
-
-	// public List<TraceTestResult> getTraceTests(String className, String trace,
-	// Integer startNumber, Integer stopNumber) throws IOException,
-	// SAXException
-	// {
-	//
-	// List<TraceTestResult> list = classTraceReaders.get(className).getTraceTestResults(trace, startNumber,
-	// stopNumber);
-	//
-	// return list;
-	// }
-
-	// private void checkInitialization()
-	// throws TraceHelperNotInitializedException
-	// {
-	// try
-	// {
-	// if (project.getDialect() == Dialect.VDM_SL
-	// && project.getModel().getModuleList() != null
-	// && project.getModel().getModuleList().size() > 0)
-	// return;
-	// else if (project.getModel().getClassList() != null
-	// && project.getModel().getClassList().size() > 0)
-	// return;
-	//
-	// throw new TraceHelperNotInitializedException(projectName);
-	// } catch (NotAllowedException e)
-	// {
-	// throw new TraceHelperNotInitializedException(projectName);
-	// }
-	// }
-
-	// public String getProjectName()
-	// {
-	// return projectName;
-	// }
 
 }
