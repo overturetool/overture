@@ -65,7 +65,7 @@ public class IdentifierPattern extends Pattern
 	}
 
 	@Override
-	public DefinitionList getDefinitions(Type ptype, NameScope scope)
+	public DefinitionList getAllDefinitions(Type ptype, NameScope scope)
 	{
 		DefinitionList defs = new DefinitionList();
 		defs.add(new LocalDefinition(location, name, scope, ptype));
@@ -73,7 +73,7 @@ public class IdentifierPattern extends Pattern
 	}
 
 	@Override
-	public LexNameList getVariableNames()
+	public LexNameList getAllVariableNames()
 	{
 		LexNameList list = new LexNameList();
 		list.add(name);

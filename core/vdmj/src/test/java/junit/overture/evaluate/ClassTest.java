@@ -23,6 +23,8 @@
 
 package junit.overture.evaluate;
 
+import org.overturetool.vdmj.Release;
+
 import junit.overture.OvertureTest;
 
 public class ClassTest extends OvertureTest
@@ -44,7 +46,7 @@ public class ClassTest extends OvertureTest
 
 	public void test_Patterns()
 	{
-		evaluate("patterns", ResultType.TRUE);
+		evaluate("patterns", ResultType.TRUE, 0, Release.VDM_10);
 	}
 
 	public void test_Measures()

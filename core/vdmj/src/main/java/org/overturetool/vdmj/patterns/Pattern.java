@@ -24,10 +24,13 @@
 package org.overturetool.vdmj.patterns;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
+import org.overturetool.vdmj.definitions.DefinitionSet;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -56,7 +59,7 @@ public abstract class Pattern implements Serializable
 
 	/** A flag to prevent recursive type resolution problems. */
 	boolean resolved = false;
-	
+
 	/** A value for getLength meaning "any length" */
 	protected static int ANY = -1;
 
@@ -94,8 +97,23 @@ public abstract class Pattern implements Serializable
 		resolved = false;
 	}
 
-	/** Get a list of definitions for the pattern's variables. */
-	abstract public DefinitionList getDefinitions(Type type, NameScope scope);
+	/**
+	 * Get a set of definitions for the pattern's variables. Note that if the
+	 * pattern includes duplicate variable names, these are collapse into one.
+	 */
+
+	public DefinitionList getDefinitions(Type type, NameScope scope)
+	{
+		DefinitionSet set = new DefinitionSet();
+		set.addAll(getAllDefinitions(type, scope));
+		return set.asList();
+	}
+
+	/**
+	 * Get a complete list of all definitions, including duplicates.
+	 */
+
+	abstract protected DefinitionList getAllDefinitions(Type type, NameScope scope);
 
 	/** Get a name/value pair list for the pattern's variables. */
 	public NameValuePairList getNamedValues(Value expval, Context ctxt)	throws PatternMatchException
@@ -146,8 +164,22 @@ public abstract class Pattern implements Serializable
 		return TypeComparator.compatible(getPossibleType(), type);
 	}
 
-	/** Get a list of the pattern's variable names. */
+	/**
+	 * Get a set of names for the pattern's variables. Note that if the
+	 * pattern includes duplicate variable names, these are collapse into one.
+	 */
+
 	public LexNameList getVariableNames()
+	{
+		Set<LexNameToken> set = new HashSet<LexNameToken>();
+		set.addAll(getAllVariableNames());
+		LexNameList list = new LexNameList();
+		list.addAll(set);
+		return list;
+	}
+
+	/** Get a complete list of the pattern's variable names, including duplicates. */
+	protected LexNameList getAllVariableNames()
 	{
 		return new LexNameList();	// Most are empty
 	}

@@ -32,6 +32,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
+import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
 import org.overturetool.vdmj.definitions.ClassList;
@@ -164,6 +165,13 @@ abstract public class OvertureTest extends TestCase
 
 	protected void evaluate(String rpath, ResultType rt, int error)
 	{
+		evaluate(rpath, rt, error, Release.DEFAULT);
+	}
+
+	protected void evaluate(String rpath, ResultType rt, int error, Release release)
+	{
+		Settings.release = release;
+
 		setNames("/Overture/evaluate/", rpath);
 		List<VDMMessage> actual = new Vector<VDMMessage>();
 		ClassList classes = parse(actual);

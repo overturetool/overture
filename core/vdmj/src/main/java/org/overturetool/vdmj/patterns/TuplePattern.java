@@ -106,7 +106,7 @@ public class TuplePattern extends Pattern
 	}
 
 	@Override
-	public DefinitionList getDefinitions(Type type, NameScope scope)
+	public DefinitionList getAllDefinitions(Type type, NameScope scope)
 	{
 		DefinitionList defs = new DefinitionList();
 
@@ -122,7 +122,7 @@ public class TuplePattern extends Pattern
 
 		for (Pattern p: plist)
 		{
-			defs.addAll(p.getDefinitions(ti.next(), scope));
+			defs.addAll(p.getAllDefinitions(ti.next(), scope));
 		}
 
 		return defs;
@@ -208,13 +208,13 @@ public class TuplePattern extends Pattern
 	}
 
 	@Override
-	public LexNameList getVariableNames()
+	public LexNameList getAllVariableNames()
 	{
 		LexNameList list = new LexNameList();
 
 		for (Pattern p: plist)
 		{
-			list.addAll(p.getVariableNames());
+			list.addAll(p.getAllVariableNames());
 		}
 
 		return list;

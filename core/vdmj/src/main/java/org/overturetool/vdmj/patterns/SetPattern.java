@@ -110,7 +110,7 @@ public class SetPattern extends Pattern
 	}
 
 	@Override
-	public DefinitionList getDefinitions(Type type, NameScope scope)
+	public DefinitionList getAllDefinitions(Type type, NameScope scope)
 	{
 		DefinitionList defs = new DefinitionList();
 
@@ -127,7 +127,7 @@ public class SetPattern extends Pattern
 			{
         		for (Pattern p: plist)
         		{
-        			defs.addAll(p.getDefinitions(set.setof, scope));
+        			defs.addAll(p.getAllDefinitions(set.setof, scope));
         		}
 			}
 		}
@@ -136,13 +136,13 @@ public class SetPattern extends Pattern
 	}
 
 	@Override
-	public LexNameList getVariableNames()
+	public LexNameList getAllVariableNames()
 	{
 		LexNameList list = new LexNameList();
 
 		for (Pattern p: plist)
 		{
-			list.addAll(p.getVariableNames());
+			list.addAll(p.getAllVariableNames());
 		}
 
 		return list;

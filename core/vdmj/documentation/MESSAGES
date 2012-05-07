@@ -345,7 +345,9 @@ as the expected and actual values.
 2294, "Expecting ')' ending || clause"
 2295, "Can't use old name here"
 2296, "Block cannot be empty"
-
+2297, "Expecting '|->' in map pattern"
+2298, "Map patterns not available in VDM classic"
+2299, "Expecting {|->} empty map pattern"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
@@ -659,6 +661,8 @@ as the expected and actual values.
 3311, "Pattern cannot match"
 3312, "Void operation returns non-void value"
 3313, "Operation returns void value"
+3314, "Map pattern is not matched against map type"
+3315, "Matching expression is not a map type"
 
 
 4000, "Cannot instantiate abstract class <class>"
@@ -808,6 +812,11 @@ as the expected and actual values.
 4149, (Overture)
 4150, (Overture)
 4151, "Cannot take dinter of empty set"
+4152, "Wrong number of elements for map pattern"
+4153, "Values do not match map pattern"
+4154, "Cannot match map pattern"
+4155, "Map union pattern does not match expression"
+4156, "Cannot match map pattern"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"
