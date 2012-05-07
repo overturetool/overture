@@ -3,15 +3,28 @@ package org.overture.parser.tests.framework;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
+import org.overture.vdmjUtils.VdmjCompatibilityUtils;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.Message;
+import org.overturetool.test.framework.results.Result;
+import org.overturetool.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 
@@ -99,18 +112,31 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 			if (reader != null && reader.getErrorCount() > 0)
 			{
 				// perrs += reader.getErrorCount();
-				StringWriter s = new StringWriter();
+				StringWriter s = new StringWriter();					
 				reader.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
 				errorMessages ="\n"+s.toString()+"\n";
 				System.out.println(s.toString());
 			}
-			assertEquals(errorMessages,reader.getErrorCount(), 0);
+			//assertEquals(errorMessages,reader.getErrorCount(), 0);
 
 			if (reader != null && reader.getWarningCount() > 0)
 			{
 				// pwarn += reader.getWarningCount();
 //				reader.printWarnings(new PrintWriter(System.out));
 			}
+			
+			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
+			
+			xmlResult.setResult("parser", VdmjCompatibilityUtils.convertToResult(reader,file,name));
+			try {
+				xmlResult.saveInXml();
+				
+				xmlResult.loadFromXml();
+			} catch (Exception e)
+			{
+				//e.printStackTrace();
+			}
+			
 		} finally
 		{
 			if(!hasRunBefore())
@@ -124,12 +150,14 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 				System.out.println("|___________________________________________________________________________________________________________");
 				
 			}
-			System.out.println(pad("Parsed " + getReaderTypeName(),20) +" - "+pad(getReturnName(result),35)+ ": "+
-					pad(result+"",35).replace('\n', ' ')+" from \""+ (content+"").replace('\n', ' ') + "\""  );
-			System.out.flush();
+//			System.out.println(pad("Parsed " + getReaderTypeName(),20) +" - "+pad(getReturnName(result),35)+ ": "+
+//					pad(result+"",35).replace('\n', ' ')+" from \""+ (content+"").replace('\n', ' ') + "\""  );
+//			System.out.flush();
 		}
 	}
 
+
+	
 
 	protected abstract void setHasRunBefore(boolean b);
 

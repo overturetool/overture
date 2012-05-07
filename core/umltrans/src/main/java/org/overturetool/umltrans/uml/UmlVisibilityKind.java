@@ -22,8 +22,6 @@ package org.overturetool.umltrans.uml;
 
 import jp.co.csk.vdm.toolbox.VDM.*;
 import java.util.*;
-import org.overturetool.ast.itf.*;
-import org.overturetool.ast.imp.*;
 import org.overturetool.api.io.*;
 import org.overturetool.api.io.*;
 import org.overturetool.api.xml.*;

@@ -28,12 +28,12 @@
 	<!--module>traces</module-->
 	<module>combinatorialtesting</module>
         <module>typechecker</module>	
-        <!--module>umlMapper</module-->	
+        <module>umlMapper</module>	
 	<module>umltrans</module>        
 	<!--module>vdm2java</module-->		
 	<!--module>vdmexamples</module-->
 	<!--module>vdmj</module-->
-	<!--module>vdmj_compatibility_tests</module-->
+	<module>vdmj_compatibility_tests</module>
 	<!--module>vdmjc</module-->
 	<!--module>vdmtools</module-->
 	<!--module>vdmunit</module-->	

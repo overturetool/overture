@@ -49,7 +49,7 @@ public class BaseTestSuite extends TestSuite
 	
 	private static void createCompleteFile(TestSuite suite, File file, @SuppressWarnings("rawtypes") Constructor ctor) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
 	{
-		if (file.getName().startsWith("."))
+		if (file.getName().startsWith(".") || file.getName().endsWith(".result"))
 		{
 			return;
 		}
@@ -141,7 +141,7 @@ public class BaseTestSuite extends TestSuite
 	
 	protected static File getFile(String pathname)
 	{
-		pathname ="..\\parser\\"+pathname;
+		pathname ="..\\vdmjparsertest\\"+pathname;
 		return new File(pathname.replace('\\', File.separatorChar).replace('/', File.separatorChar));
 	}
 }

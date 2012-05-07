@@ -43,7 +43,14 @@
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>testframework</artifactId>
-			<version>2.1.0</version>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>
+				org.overturetool.core.vdmj_compatibility_tests
+			</groupId>
+			<artifactId>vdmj_compatibility_utils</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 	</dependencies>
 </project>

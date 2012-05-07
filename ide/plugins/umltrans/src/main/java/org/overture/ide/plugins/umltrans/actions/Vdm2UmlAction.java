@@ -33,16 +33,23 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.parser.imp.ParserError;
+import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.umlMapper.Vdm2Uml;
 import org.overturetool.umltrans.Main.CmdLineProcesser;
 import org.overturetool.umltrans.Main.ParseException;
+import org.overturetool.umltrans.uml.IUmlModel;
+import org.overturetool.umltrans.vdm2uml.Uml2XmiEAxml;
+import org.overturetool.util.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 
 
@@ -93,11 +100,23 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 			List<IVdmSourceUnit> files = new Vector<IVdmSourceUnit>();// = ProjectUtility.getFiles(selectedProject);
 			
 			IVdmProject p = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
-			
+			IVdmModel model = p.getModel();
 			if(p != null)
 			{				
 				if(p.getDialect() == Dialect.VDM_PP || p.getDialect() == Dialect.VDM_RT)
 				{
+					
+					if(!model.isTypeChecked())
+					{
+						VdmTypeCheckerUi.typeCheck(shell, p);
+					}
+					
+					if(!model.isTypeCorrect())
+					{
+						ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Not TypeChecked", "Not TypeChecked", new Status(IStatus.ERROR, "umlTrans", "Project is not type checked"));
+						return;
+					}
+					
 					files = p.getSpecFiles();
 				}else
 				{
@@ -105,11 +124,18 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 				}
 			}
 			
+			ClassList cList = model.getClassList();
+			System.out.println(cList);
+			
 //			if (selectedProject.hasNature(VdmPpProjectNature.VDM_PP_NATURE))
 //				files= ProjectUtility.getFiles(selectedProject, VdmPpCorePluginConstants.CONTENT_TYPE);
 //			
 //			if (selectedProject.hasNature(VdmRtProjectNature.VDM_RT_NATURE))
 //				files= ProjectUtility.getFiles(selectedProject, VdmRtCorePluginConstants.CONTENT_TYPE);
+			Vdm2Uml vdm2umlMapper = new Vdm2Uml();
+			IUmlModel umlModel = vdm2umlMapper.init(cList);
+			
+
 			
 			List<File> filesPathes = new Vector<File>();
 			for (IVdmSourceUnit file : files)
@@ -129,10 +155,13 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 					selectedProject.getName() + ".xmi");
 			if (outFile != null)
 			{
-
+				Uml2XmiEAxml xmi = new Uml2XmiEAxml();
+				xmi.Save(outFile.getAbsolutePath(),
+						umlModel,
+						null);
 //				if (!(outFile.endsWith(".xml") || outFile.endsWith(".xml")))
 //					outFile += ".xml";
-				translate(filesPathes, outFile,selectedProject);
+				//translate(filesPathes, outFile,selectedProject);
 
 
 			}
@@ -171,16 +200,16 @@ public class Vdm2UmlAction implements IObjectActionDelegate
 							 "Translation error in file", e);
 				}catch(ParseException e)
 				{
-					for (ParserError error : e.getErrors())
-					{
-						try{
-							System.out.println(error.toString());
-						//FileUtility.addMarker(ProjectUtility.findIFile(selectedProject, error.file), error.message, error.line,error.col, IMarker.SEVERITY_ERROR);
-						}catch(Exception ex)
-						{
-							
-						}
-					}
+//					for (ParserError error : e.getErrors())
+//					{
+//						try{
+//							System.out.println(error.toString());
+//						//FileUtility.addMarker(ProjectUtility.findIFile(selectedProject, error.file), error.message, error.line,error.col, IMarker.SEVERITY_ERROR);
+//						}catch(Exception ex)
+//						{
+//							
+//						}
+//					}
 					
 					e.printStackTrace();
 				}

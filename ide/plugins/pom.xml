@@ -20,7 +20,7 @@
     <module>externaleditor</module>
     <module>latex</module>
     <module>poviewer</module>
-    <!--module>umltrans</module-->
+    <module>umltrans</module>
     <module>showtrace</module>
     <module>traces</module>
 	 <module>ctruntime</module>
