@@ -23,6 +23,8 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private static boolean DEBUG_PRINT = false;
+
 	/**
 	 * Best match to the offset. This means that this node has a location where the offset is within
 	 */
@@ -61,14 +63,21 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 	/**
 	 * Search method to find the closest node to a location specified by a test offset
-	 * @param nodes The nodes to search within
-	 * @param offSet The offset to match a node to
+	 * 
+	 * @param nodes
+	 *            The nodes to search within
+	 * @param offSet
+	 *            The offset to match a node to
 	 * @return The node closest to the offset or null
 	 */
 	public static INode search(List<INode> nodes, int offSet)
 	{
 		synchronized (seacher)
 		{
+			if (DEBUG_PRINT)
+			{
+				System.out.println("Search start");
+			}
 			seacher.init();
 			seacher.offSet = offSet;
 			try
@@ -108,8 +117,12 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 	private void check(INode node, LexLocation location)
 	{
-		// System.out.println("Checking location span" + offSet + ": "
-		// + location.startOffset + " to " + location.endOffset);
+		if (DEBUG_PRINT)
+		{
+			System.out.println("Checking location span " + offSet + ": "
+					+ location.startOffset + " to " + location.endOffset
+					+ " line: " + location.startLine + ":" + location.startPos);
+		}
 		if (location.startOffset - 1 <= this.offSet
 				&& location.endOffset - 1 >= this.offSet)
 		{
@@ -119,11 +132,38 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 		// Store the last best match where best is closest with abs
 		if (bestAlternativeLocation == null
-				|| Math.abs(offSet - location.startOffset) < Math.abs(offSet
+				|| Math.abs(offSet - location.startOffset) <= Math.abs(offSet
 						- bestAlternativeLocation.startOffset))
 		{
 			bestAlternativeLocation = location;
 			bestAlternativeHit = node;
+			if (DEBUG_PRINT)
+			{
+				System.out.println("Now best is: " + offSet + ": "
+						+ location.startOffset + " to " + location.endOffset
+						+ " line: " + location.startLine + ":"
+						+ location.startPos);
+			}
+		} else if (bestAlternativeLocation == null
+				|| (offSet - bestAlternativeLocation.startOffset > 0)
+				&& Math.abs(offSet - location.startOffset) > Math.abs(offSet
+						- bestAlternativeLocation.startOffset))
+		{
+			if (DEBUG_PRINT)
+			{
+				System.out.println("Going back...");
+			}
+		} else
+		{
+			if (DEBUG_PRINT)
+			{
+				System.out.println("Rejected is: " + offSet + ": "
+						+ location.startOffset + " to " + location.endOffset
+						+ " line: " + location.startLine + ":"
+						+ location.startPos);
+			}
+
+			throw new UndeclaredThrowableException(null, "Hit found stop search");
 		}
 	}
 
@@ -139,11 +179,12 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		{
 			return getNodeOffset(((PStm) node).getLocation());
 		}
-		return new int[]{-1,-1};
+		return new int[] { -1, -1 };
 	}
-	
+
 	public static int[] getNodeOffset(LexLocation location)
 	{
-		return new int[]{ location.startOffset-1, location.endOffset-location.startOffset};
+		return new int[] { location.startOffset - 1,
+				location.endOffset - location.startOffset };
 	}
 }
