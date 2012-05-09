@@ -4,7 +4,7 @@
       label="Overture RCP"
       version="0.3.0.qualifier">
 
-  <description>
+   <description>
       %description
    </description>
 
@@ -28,24 +28,12 @@
          id="org.overture.ide.plugins.features.poviewer"
          version="0.0.0"/>
 
-   <!--includes
-         id="org.overture.ide.plugins.features.quickinterpreter"
-         version="0.0.0"/-->
-
    <includes
          id="org.overture.ide.plugins.features.realtimelogviewer"
          version="0.0.0"/>
 
    <includes
          id="org.overture.ide.features.plugins.coverageeditor"
-         version="0.0.0"/>
-
-   <!--includes
-         id="org.overture.ide.plugins.features.ct"
-         version="0.0.0"/-->
-
-   <includes
-         id="org.overture.ide.plugins.features.umltrans"
          version="0.0.0"/>
 
    <includes

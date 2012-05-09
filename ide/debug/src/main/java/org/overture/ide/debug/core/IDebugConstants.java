@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.overture.ide.debug.core;
 
-import org.overture.ide.core.ICoreConstants;
 
 public interface IDebugConstants
 {
