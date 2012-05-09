@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
+import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -73,19 +74,19 @@ import org.overturetool.vdmj.lex.LexNameToken;
 
 public class Vdm2UmlUtil {
 	
-	public static IUmlVisibilityKind convertAccessSpecifierToVisibility(
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws CGException {
+	public static VisibilityKind convertAccessSpecifierToVisibility(
+			AAccessSpecifierAccessSpecifier accessSpecifier)  {
 		
 		if(PAccessSpecifierAssistantTC.isPrivate(accessSpecifier))
 		{
-			return new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPRIVATE);
+			return VisibilityKind.PRIVATE_LITERAL;
 		}
 		else if(PAccessSpecifierAssistantTC.isProtected(accessSpecifier))
 		{
-			return new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPROTECTED);
+			return VisibilityKind.PROTECTED_LITERAL;
 		}
 		
-		return new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPUBLIC);
+		return VisibilityKind.PUBLIC_LITERAL;
 		
 	}
 

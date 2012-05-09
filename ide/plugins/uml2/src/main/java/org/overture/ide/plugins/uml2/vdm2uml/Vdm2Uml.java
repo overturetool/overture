@@ -6,8 +6,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-//import jp.co.csk.vdm.toolbox.VDM.CGException;
-
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Operation;
+import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -29,50 +34,16 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overturetool.umltrans.uml.IUmlAssociation;
-import org.overturetool.umltrans.uml.IUmlClass;
-import org.overturetool.umltrans.uml.IUmlClassNameType;
-import org.overturetool.umltrans.uml.IUmlConstraint;
-import org.overturetool.umltrans.uml.IUmlDefinitionBlock;
-import org.overturetool.umltrans.uml.IUmlModel;
-import org.overturetool.umltrans.uml.IUmlMultiplicityElement;
-import org.overturetool.umltrans.uml.IUmlNode;
-import org.overturetool.umltrans.uml.IUmlOperation;
-import org.overturetool.umltrans.uml.IUmlParameter;
-import org.overturetool.umltrans.uml.IUmlProperty;
-import org.overturetool.umltrans.uml.IUmlTemplateSignature;
-import org.overturetool.umltrans.uml.IUmlType;
-import org.overturetool.umltrans.uml.IUmlValueSpecification;
-import org.overturetool.umltrans.uml.IUmlVisibilityKind;
-import org.overturetool.umltrans.uml.UmlAssociation;
-import org.overturetool.umltrans.uml.UmlBoolType;
-import org.overturetool.umltrans.uml.UmlClass;
-import org.overturetool.umltrans.uml.UmlClassNameType;
-import org.overturetool.umltrans.uml.UmlConstraint;
-import org.overturetool.umltrans.uml.UmlIntegerType;
-import org.overturetool.umltrans.uml.UmlLiteralString;
-import org.overturetool.umltrans.uml.UmlModel;
-import org.overturetool.umltrans.uml.UmlMultiplicityElement;
-import org.overturetool.umltrans.uml.UmlNestedClassifiers;
-import org.overturetool.umltrans.uml.UmlOperation;
-import org.overturetool.umltrans.uml.UmlOwnedOperations;
-import org.overturetool.umltrans.uml.UmlOwnedProperties;
-import org.overturetool.umltrans.uml.UmlParameter;
-import org.overturetool.umltrans.uml.UmlParameterDirectionKind;
-import org.overturetool.umltrans.uml.UmlParameterDirectionKindQuotes;
-import org.overturetool.umltrans.uml.UmlParameters;
-import org.overturetool.umltrans.uml.UmlProperty;
-import org.overturetool.umltrans.uml.UmlVisibilityKind;
-import org.overturetool.umltrans.uml.UmlVisibilityKindQuotes;
 
 public class Vdm2Uml {
 
 	//private StatusLog log = null;	
 	private Vector<String> filteredClassNames = new Vector<String>();
-	private Set<IUmlClass> nestedClasses = new HashSet<IUmlClass>();
-	private Set<IUmlAssociation> associations = new HashSet<IUmlAssociation>();
-	private Set<IUmlConstraint> constraints = new HashSet<IUmlConstraint>();
+//	private Set<IUmlClass> nestedClasses = new HashSet<IUmlClass>();
+//	private Set<IUmlAssociation> associations = new HashSet<IUmlAssociation>();
+//	private Set<IUmlConstraint> constraints = new HashSet<IUmlConstraint>();
 	private int runningId = 0;
+	private Model modelWorkingCopy = null; 
 	
 	public Vdm2Uml() {
 		
@@ -83,12 +54,13 @@ public class Vdm2Uml {
 		return Integer.toString(runningId++);
 	}
 	
-	public IUmlModel init(List<SClassDefinition> classes)
+	public Model init(List<SClassDefinition> classes)
 	{
-		UmlModel model = null;
+		modelWorkingCopy = UMLFactory.eINSTANCE.createModel();		
 		
 		try {
-			model = buildUml(classes);
+			buildUml(classes);
+			
 			@SuppressWarnings("rawtypes")
 			HashSet definitions = model.getDefinitions();
 			definitions.addAll(associations);
@@ -100,84 +72,95 @@ public class Vdm2Uml {
 		}
 		
 		
-		return model;
+		return modelWorkingCopy;
 	}
 
-	private UmlModel buildUml(List<SClassDefinition> classes) throws CGException {
+	private void buildUml(List<SClassDefinition> classes)  {
 		
-		HashSet<IUmlNode> umlClasses = new HashSet<IUmlNode>();
+		//HashSet<IUmlNode> umlClasses = new HashSet<IUmlNode>();
 		
 		for (SClassDefinition sClass : classes) {
 			
 			if(!filteredClassNames.contains(sClass.getName().name))
 			{
-				umlClasses.add(buildClass(sClass));	
+				buildClass(sClass);	
 			}
 			
 		}
 		
-		umlClasses.addAll(nestedClasses);
-		return new UmlModel("Root", umlClasses);
+		//umlClasses.addAll(nestedClasses);
+		//return new UmlModel("Root", umlClasses);
 	}
 
-	private IUmlClass buildClass(SClassDefinition sClass) throws CGException {
+	private void buildClass(SClassDefinition sClass)  {
 		
 		String name = sClass.getName().name;
-		//TODO: log - log.addNewClassInfo(name);
-		
-		boolean isStatic = false;
-		boolean isActive = Vdm2UmlUtil.isClassActive(sClass);
 		boolean isAbstract = Vdm2UmlUtil.hasSubclassResponsabilityDefinition(sClass.getDefinitions());
-		Vector<IUmlDefinitionBlock> dBlocksSeq = buildDefinitionBlocks(sClass.getDefinitions(),name);
-		HashSet<IUmlDefinitionBlock> dBlocks = new HashSet<IUmlDefinitionBlock>(dBlocksSeq);
-		Vector<IUmlClassNameType> supers = Vdm2UmlUtil.getSuperClasses(sClass);
-		IUmlVisibilityKind visibility = new UmlVisibilityKind(UmlVisibilityKindQuotes.IQPUBLIC);
+		org.eclipse.uml2.uml.Class class_ = modelWorkingCopy.createOwnedClass(name, isAbstract);
 		
-		return new UmlClass(name,dBlocks,isAbstract,supers,visibility,isStatic,isActive,null);
+		boolean isActive = Vdm2UmlUtil.isClassActive(sClass);
+		class_.setIsActive(isActive);
+		
+		class_.setVisibility(VisibilityKind.PUBLIC_LITERAL);
+		
+		buildDefinitionBlocks(class_,sClass.getDefinitions());
+		
+		
+		//TODO: static seems not to exist for classes
+		//boolean isStatic = false;
+		
+		//TODO: investigate how to declare super classes
+		//Vector<IUmlClassNameType> supers = Vdm2UmlUtil.getSuperClasses(sClass);
+				
+		
+		
+		
+		//return new UmlClass(name,dBlocks,isAbstract,supers,visibility,isStatic,isActive,null);
 	}
 
 	
 
-	private Vector<IUmlDefinitionBlock> buildDefinitionBlocks(
-			LinkedList<PDefinition> definitions, String owner) throws CGException {
+	private void buildDefinitionBlocks(
+			Class class_, LinkedList<PDefinition> defs)  {
 
-		Vector<IUmlDefinitionBlock> result = new Vector<IUmlDefinitionBlock>();
+//		Vector<IUmlDefinitionBlock> result = new Vector<IUmlDefinitionBlock>();
+//		
+//		HashSet<IUmlProperty> instanceVariables = new HashSet<IUmlProperty>();
+//		HashSet<IUmlProperty> valueDefinitions = new HashSet<IUmlProperty>();
+//		HashSet<IUmlType> typeDefinitions = new HashSet<IUmlType>();
+//		HashSet<IUmlOperation> operationDefinitions = new HashSet<IUmlOperation>();
+//		HashSet<IUmlOperation> functionDefinitions = new HashSet<IUmlOperation>();
 		
-		HashSet<IUmlProperty> instanceVariables = new HashSet<IUmlProperty>();
-		HashSet<IUmlProperty> valueDefinitions = new HashSet<IUmlProperty>();
-		HashSet<IUmlType> typeDefinitions = new HashSet<IUmlType>();
-		HashSet<IUmlOperation> operationDefinitions = new HashSet<IUmlOperation>();
-		HashSet<IUmlOperation> functionDefinitions = new HashSet<IUmlOperation>();
-		
-		for (PDefinition pDefinition : definitions) {
+		for (PDefinition pDefinition : defs) {
 			switch (pDefinition.kindPDefinition()) {
 			case EXPLICITFUNCTION:
 				if(!Vdm2UmlUtil.hasPolymorphic((AExplicitFunctionDefinition) pDefinition))
 				{
-					functionDefinitions.add(buildDefinitionBlock((AExplicitFunctionDefinition) pDefinition));	
+					buildDefinitionBlock((AExplicitFunctionDefinition) pDefinition,class_);
+					//functionDefinitions.add(buildDefinitionBlock((AExplicitFunctionDefinition) pDefinition));	
 				}
 				
 				break;
 			case IMPLICITFUNCTION:
 				break;
 			case EXPLICITOPERATION:				
-				operationDefinitions.add(buildDefinitionBlock((AExplicitOperationDefinition)pDefinition));
+				buildDefinitionBlock((AExplicitOperationDefinition)pDefinition,class_);
 				break;
 			case IMPLICITOPERATION:
-				operationDefinitions.add(buildDefinitionBlock((AImplicitOperationDefinition)pDefinition));
+				buildDefinitionBlock((AImplicitOperationDefinition)pDefinition,class_);
 				break;
 			case INSTANCEVARIABLE:
-				IUmlProperty instVar = buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,owner);
+				IUmlProperty instVar = buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,linkedList);
 				if(instVar != null)
 				{
 					instanceVariables.add(instVar);	
 				}
 				break;
 			case TYPE:
-				typeDefinitions.add(buildDefinitionBlock((ATypeDefinition)pDefinition));
+				buildDefinitionBlock((ATypeDefinition)pDefinition);
 				break;
 			case VALUE:
-				IUmlProperty valueDef = buildDefinitionBlock((AValueDefinition)pDefinition, owner);
+				IUmlProperty valueDef = buildDefinitionBlock((AValueDefinition)pDefinition, linkedList);
 				if(valueDef != null)
 				{
 					valueDefinitions.add(valueDef);	
@@ -196,123 +179,186 @@ public class Vdm2Uml {
 		return result;
 	}
 
-	private IUmlOperation buildDefinitionBlock(
-			AExplicitFunctionDefinition pDefinition) throws CGException {
-		
+	private void buildDefinitionBlock(
+			AExplicitFunctionDefinition pDefinition, Class class_)  {
 		String name = pDefinition.getName().name;
+		
+		Operation op = class_.createOwnedOperation(name, null, null, null);
+		
+		
+//		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
+//		 vdm_init_UmlMultiplicityElement();
+//		    {
+//
+//		      setIsOrdered(p1);
+//		      setIsUnique(p2);
+//		      setLower(p3);
+//		      setUpper(p4);
+//		    }
+		//Setting multiplicity
+		op.setIsOrdered(false);
+		op.setIsUnique(false);
+		op.setLower(1);
+		op.setUpper(1);
+		
+		//setting visibility
 		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
-		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
-		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
-		IUmlType type = Vdm2UmlUtil.convertType(PDefinitionAssistantTC.getType(pDefinition));
+		VisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
+		op.setVisibility(visibility);
+		
+		//setting static?
 		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
+		op.setIsStatic(isStatic);
 		
-		AFunctionType funcType = (AFunctionType) PDefinitionAssistantTC.getType(pDefinition);
 		
-		LinkedList<List<PPattern>> pnames = pDefinition.getParamPatternList();
-		
-		Vector<IUmlParameter> params = null;
-		if(pDefinition.getPostcondition() == null)
-		{
-			if(pnames.size() > 0)
-			{
-				params = Vdm2UmlUtil.buildParameters(pnames.getFirst(),funcType);
-			}
-		}
-		else
-		{
-			//TODO: function with post condition == extendedexplicit in OML
-			params = new Vector<IUmlParameter>();
-			
-			IUmlParameter returnType = new UmlParameter("return", 
-					new UmlBoolType(),//TODO: missing type
-					new UmlMultiplicityElement(true, true,(long)0, (long)0),//TODO: missing multiplicity
-					"", 
-					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQRETURN));
-			params.add(returnType);
-		}
+		//TODO: missing type information
+//		IUmlType type = Vdm2UmlUtil.convertType(PDefinitionAssistantTC.getType(pDefinition));				
+//		AFunctionType funcType = (AFunctionType) PDefinitionAssistantTC.getType(pDefinition);
+//		
+//		LinkedList<List<PPattern>> pnames = pDefinition.getParamPatternList();
+//		
+//		Vector<IUmlParameter> params = null;
+//		if(pDefinition.getPostcondition() == null)
+//		{
+//			if(pnames.size() > 0)
+//			{
+//				params = Vdm2UmlUtil.buildParameters(pnames.getFirst(),funcType);
+//			}
+//		}
+//		else
+//		{
+//			//TODO: function with post condition == extendedexplicit in OML
+//			params = new Vector<IUmlParameter>();
+//			
+//			IUmlParameter returnType = new UmlParameter("return", 
+//					new UmlBoolType(),//TODO: missing type
+//					new UmlMultiplicityElement(true, true,(long)0, (long)0),//TODO: missing multiplicity
+//					"", 
+//					new UmlParameterDirectionKind(UmlParameterDirectionKindQuotes.IQRETURN));
+//			params.add(returnType);
+//		}
 		
 		
 				
 		
-		return new UmlOperation(name, 
-                visibility, 
-                multiplicity, 
-                true,
-                type, 
-                isStatic,
-                new UmlParameters(params));
+//		return new UmlOperation(name, 
+//                visibility, 
+//                multiplicity, 
+//                true,
+//                type, 
+//                isStatic,
+//                new UmlParameters(params));
 	}
 
-	private IUmlOperation buildDefinitionBlock(
-			AImplicitOperationDefinition pDefinition) throws CGException {
+	private void buildDefinitionBlock(
+			AImplicitOperationDefinition pDefinition,Class class_)  {
 		
 		String name = pDefinition.getName().name;
+		Operation op = class_.createOwnedOperation(name, null, null, null);
+		
+		//visibility
 		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
-		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
-		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
-		IUmlType type = null;
+		VisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
+		op.setVisibility(visibility);
+		
+		
+		//multiplicity
+		op.setIsOrdered(false);
+		op.setIsUnique(false);
+		op.setLower(1);
+		op.setUpper(1);
+		
+		//static?
 		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
+		op.setIsStatic(isStatic);
 		
-		
-		LinkedList<APatternListTypePair> patternTypePairs = pDefinition.getParameterPatterns();
-		
-		APatternTypePair result = pDefinition.getResult();
-		
-		Vector<IUmlParameter> params = Vdm2UmlUtil.buildParameters(patternTypePairs);
-		Vector<IUmlParameter> results = Vdm2UmlUtil.buildFnResult(result);
-		params.addAll(results);
-		
-		return new UmlOperation(name,visibility,multiplicity,false,type,isStatic, new UmlParameters(params));
+//		IUmlType type = null;
+//		LinkedList<APatternListTypePair> patternTypePairs = pDefinition.getParameterPatterns();
+//		
+//		APatternTypePair result = pDefinition.getResult();
+//		
+//		Vector<IUmlParameter> params = Vdm2UmlUtil.buildParameters(patternTypePairs);
+//		Vector<IUmlParameter> results = Vdm2UmlUtil.buildFnResult(result);
+//		params.addAll(results);
+//		
+//		return new UmlOperation(name,visibility,multiplicity,false,type,isStatic, new UmlParameters(params));
 	}
 
-	private IUmlOperation buildDefinitionBlock(
-			AExplicitOperationDefinition pDefinition) throws CGException {
+	private void buildDefinitionBlock(
+			AExplicitOperationDefinition pDefinition, Class class_) {
 		
 		String name = pDefinition.getName().name;
-		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
-		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
-		IUmlMultiplicityElement multiplicity = new UmlMultiplicityElement(false, false, (long)1,(long)1);
-		IUmlType type = null;
-		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
-		//TODO: I dont get the parameters right now
-		Vector<IUmlParameter> params = null;
-		if(pDefinition.getPostcondition() == null)
-		{
-			params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));	
-		}
-		else
-		{
-			//TODO:operation with post condition == extendedexplicit in OML
-			params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));
-			
-		}
+		Operation op = class_.createOwnedOperation(name, null, null, null);
 		
-		return new UmlOperation(name, visibility, multiplicity, false, type, isStatic , new UmlParameters(params));
+		//visibility
+		AAccessSpecifierAccessSpecifier access = pDefinition.getAccess();
+		VisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(access);
+		op.setVisibility(visibility);
+	
+		//multiplicity 
+		op.setIsOrdered(false);
+		op.setIsUnique(false);
+		op.setLower(1);
+		op.setUpper(1);
+		
+		//static?
+		boolean isStatic = PAccessSpecifierAssistantTC.isStatic(access);
+		op.setIsStatic(isStatic);
+//		
+//		IUmlType type = null;
+//		
+//		//TODO: I dont get the parameters right now
+//		Vector<IUmlParameter> params = null;
+//		if(pDefinition.getPostcondition() == null)
+//		{
+//			params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));	
+//		}
+//		else
+//		{
+//			//TODO:operation with post condition == extendedexplicit in OML
+//			params = Vdm2UmlUtil.buildParameters(pDefinition,PDefinitionAssistantTC.getType(pDefinition));
+//			
+//		}
+//		
+//		return new UmlOperation(name, visibility, multiplicity, false, type, isStatic , new UmlParameters(params));
 		
 	}
 
-	private IUmlType buildDefinitionBlock(ATypeDefinition pDefinition) throws CGException {
+	private void buildDefinitionBlock(ATypeDefinition pDefinition) {
 		
-		nestedClasses.add(buildClassFromType(pDefinition));
+		Class class_ = buildClassFromType(pDefinition);
+		modelWorkingCopy.createOwnedType(pDefinition.getName().name, UMLPackage.eINSTANCE.getType() );
+		
+		nestedClasses.add();
 		
 		return new UmlClassNameType(pDefinition.getName().name);
 	}
 
-	private IUmlClass buildClassFromType(ATypeDefinition pDefinition) throws CGException {
-		PType type = PDefinitionAssistantTC.getType(pDefinition);
+	private Class buildClassFromType(ATypeDefinition pDefinition)  {
+		
 		String name = pDefinition.getName().name;
+		Class class_  = modelWorkingCopy.createOwnedClass(name, false);
 		
-		IUmlDefinitionBlock classBody = buildTypeDefinitionBlocks(name,type);
-		HashSet<IUmlDefinitionBlock> classBodySet = new HashSet<IUmlDefinitionBlock>(); 
-		classBodySet.add(classBody);
-		boolean isAbstract = false;
-		Vector<IUmlClassNameType> superClasses = new Vector<IUmlClassNameType>();
-		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(pDefinition.getAccess());
-		boolean isStatic = false;
-		boolean isActive = false;
-		IUmlTemplateSignature templateSignature = null;
+		PType type = PDefinitionAssistantTC.getType(pDefinition);
 		
-		return new UmlClass(name, classBodySet, isAbstract, superClasses, visibility, isStatic, isActive, templateSignature);
+		
+//		IUmlDefinitionBlock classBody = buildTypeDefinitionBlocks(name,type);
+//		HashSet<IUmlDefinitionBlock> classBodySet = new HashSet<IUmlDefinitionBlock>(); 
+//		classBodySet.add(classBody);
+		//TODO: investigate body
+		
+		//boolean isAbstract = false;
+		//Vector<IUmlClassNameType> superClasses = new Vector<IUmlClassNameType>();
+		
+		VisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(pDefinition.getAccess());
+		
+		class_.setVisibility(visibility);
+		class_.setIsActive(false);
+		
+		//IUmlTemplateSignature templateSignature = null;
+		
+		return class_;
+		//return new UmlClass(name, classBodySet, isAbstract, superClasses, visibility, isStatic, isActive, templateSignature);
 		
 	}
 
