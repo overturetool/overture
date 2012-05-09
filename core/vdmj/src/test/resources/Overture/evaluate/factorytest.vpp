@@ -1,0 +1,69 @@
+class ValueFactoryTest
+types
+public Person ::
+ b : bool
+ n : char;
+operations
+
+
+public static test : () ==>int
+test()==
+(
+println(getRecord(1));
+println(getNil(1));
+println(getQuote(1));
+println(getInt(1));
+println(getToken(1));
+println(getBool(1));
+println(getChar(1));
+println(getReal(1));
+println(getSeqChar(1));
+println(getMap(1));
+println(getSeq(1));
+println(getSet(1));
+println(getTuple(1));
+return 1;
+);
+
+public static getRecord: int ==> Person
+getRecord(b) == is not yet specified;
+
+public static getNil: int ==> [Person]
+getNil(b) == is not yet specified;
+
+public static getQuote: int ==> <A>
+getQuote(b) == is not yet specified;
+
+public static getInt: int ==> int
+getInt(b) == is not yet specified;
+
+public static getToken: int ==> token
+getToken(b) == is not yet specified;
+
+public static getBool: int ==> bool
+getBool(b) == is not yet specified;
+
+public static getChar: int ==> char
+getChar(b) == is not yet specified;
+
+public static getReal: int ==> real
+getReal(b) == is not yet specified;
+
+public static getSeqChar: int ==> seq of char
+getSeqChar(b) == is not yet specified;
+
+public static getMap: int ==> map int to int
+getMap(b) == is not yet specified;
+
+public static getSeq: int ==> seq of int
+getSeq(b) == is not yet specified;
+
+public static getSet: int ==> set of int
+getSet(b) == is not yet specified;
+
+public static getTuple: int ==> int* int
+getTuple(b) == is not yet specified;
+
+public static println : ? ==> ()
+println(c)== is not yet specified;
+end ValueFactoryTest

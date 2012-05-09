@@ -61,4 +61,9 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("postcond", ResultType.TRUE);
 	}
+	
+	public void test_ValueFactory()
+	{
+		evaluate("factorytest", ResultType.TRUE);
+	}
 }
