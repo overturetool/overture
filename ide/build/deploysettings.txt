@@ -1,0 +1,6 @@
+user.rcp.build.base=/home/jenkins/resources/eclipse371
+user.rcp.build.equinox.launcher.plugin.version=1.2.0.v20110502
+user.rcp.build.pde.build.plugin.version=3.7.0.v20110512-1320
+user.rcp.build.baseos=linux
+user.rcp.build.basews=gtk
+user.rcp.build.basearch=x86_64
