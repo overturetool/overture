@@ -48,6 +48,10 @@
          id="org.eclipse.platform"
          version="0.0.0"/>
 
+   <includes
+         id="org.overture.ide.plugins.features.ct"
+         version="0.0.0"/>
+
    <plugin
          id="org.eclipse.ui.views.log"
          download-size="0"
