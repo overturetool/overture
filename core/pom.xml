@@ -28,8 +28,9 @@
 	<!--module>traces</module-->
 	<module>combinatorialtesting</module>
         <module>typechecker</module>	
-        <module>umlMapper</module>	
-	<module>umltrans</module>        
+		
+        <!--module>umlMapper</module>	
+	<module>umltrans</module-->        
 	<!--module>vdm2java</module-->		
 	<!--module>vdmexamples</module-->
 	<!--module>vdmj</module-->
