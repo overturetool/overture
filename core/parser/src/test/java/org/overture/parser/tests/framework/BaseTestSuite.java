@@ -51,7 +51,7 @@ public class BaseTestSuite extends TestSuite
 	
 	private static void createCompleteFile(TestSuite suite, File file, @SuppressWarnings("rawtypes") Constructor ctor) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
 	{
-		if (file.getName().startsWith("."))
+		if (file.getName().startsWith(".") || file.getName().endsWith(".result"))
 		{
 			return;
 		}

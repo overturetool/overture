@@ -34,7 +34,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	public ModuleTestCase() {
 		super("test");
-
+		this.name = "blabla";
 	}
 
 	public ModuleTestCase(File file) {

@@ -14,8 +14,11 @@ import junit.framework.TestCase;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
+import org.overture.typechecker.tests.OvertureTestHelper;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
 import org.overture.typechecker.tests.framework.TCStruct.Type;
+import org.overturetool.test.framework.ResultTestCase;
+import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -26,7 +29,7 @@ import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class ModuleTestCase extends TestCase
+public class ModuleTestCase extends ResultTestCase
 {
 
 	public static final String tcHeader = "-- TCErrors:";
@@ -44,13 +47,13 @@ public class ModuleTestCase extends TestCase
 
 	public ModuleTestCase()
 	{
-		super("test");
+		super();
 
 	}
 
 	public ModuleTestCase(File file)
 	{
-		super("test");
+		super(file);
 		this.parserType = ParserType.Module;
 		this.file = file;
 		this.content = file.getName();
@@ -83,100 +86,14 @@ public class ModuleTestCase extends TestCase
 	private void moduleTc(String module) throws ParserException, LexException,
 			IOException
 	{
-		System.out.flush();
-		System.err.flush();
 
-		parseFileHeader(file);
-		List<AModuleModules> modules = null;
-		try
-		{
-			modules = parse(file);
-		} catch (ParserException e)
-		{
-			isParseOk = false;
-		} catch (LexException e)
-		{
-			isParseOk = false;
-		}
-
-		if (isParseOk)
-		{
-
-			ModuleTypeChecker mtc = new ModuleTypeChecker(modules);
-			mtc.typeCheck();
-
-			int tcfound = tcHeaderList.size();
-			int total = TypeChecker.getErrorCount()
-					+ TypeChecker.getWarningCount();
-			String status = "Errors/Warnings: %s" + "\n by VDMJ: "
-					+ tcHeaderList.getErrorCount() + "/"
-					+ tcHeaderList.getWarningCount() + "\n by TCv2: "
-					+ TypeChecker.getErrorCount() + "/"
-					+ TypeChecker.getWarningCount();
-
-			if (mtc != null && TypeChecker.getErrorCount() > 0)
-			{
-
-				for (VDMError error : TypeChecker.getErrors())
-				{
-					if (!tcHeaderList.markTCStruct(error))
-					{
-						errors.add(error);
-					}
-				}
-			}
-
-			if (mtc != null && TypeChecker.getWarningCount() > 0)
-			{
-				for (VDMWarning warning : TypeChecker.getWarnings())
-				{
-					if (!tcHeaderList.markTCStruct(warning))
-					{
-						warnings.add(warning);
-					}
-				}
-			}
-
-			if (!(tcHeaderList.size() == 0 && total == tcfound))
-			{
-				System.out.println("----------- Type checking starting for... "
-						+ file.getName() + " -----------");
-				System.out.println(String.format(status, "WRONG"));
-				for (VDMError error : errors)
-				{
-					System.out.println(error.toString());
-				}
-
-				for (VDMWarning warning : warnings)
-				{
-					System.out.println(warning.toString());
-				}
-
-				System.out.println("Missing errors/warnings:");
-				System.out.println(tcHeaderList.toString());
-			} else
-			{
-				if (printOks)
-				{
-					System.out.println("----------- Type checking starting for... "
-							+ file.getName() + " -----------");
-					System.out.println(String.format(status, "OK"));
-				}
-			}
-
-			// System.out.println("----------- Type checking ended for... " + file.getName() + " -----------");
-			assertTrue("TEST FAILED: difference in errors: "
-					+ Math.abs(total - tcfound), tcHeaderList.size() == 0
-					&& total == tcfound);
-		}
+		Result result = new OvertureTestHelper().typeCheckSl(file);
+		
+		compareResults(result, file.getAbsolutePath());
+		
 
 	}
 
-	private List<AModuleModules> parse(File file) throws ParserException,
-			LexException
-	{
-		return internal(new LexTokenReader(file, Settings.dialect));
-	}
 
 	protected List<AModuleModules> internal(LexTokenReader ltr)
 			throws ParserException, LexException
@@ -222,39 +139,15 @@ public class ModuleTestCase extends TestCase
 		return new ModuleReader(ltr);
 	}
 
-	private void parseFileHeader(File file) throws IOException
-	{
+	
 
-		FileReader in = new FileReader(file);
-		BufferedReader br = new BufferedReader(in);
+	@Override
+	protected File createResultFile(String filename) {
+		return new File(filename + ".result");
+	}
 
-		String line = null;
-		boolean more = true;
-
-		while (more)
-		{
-			line = br.readLine();
-			if (line.startsWith(tcHeader))
-			{
-				line = line.substring(tcHeader.length()).trim();
-				if (line.equals(""))
-				{
-					more = false;
-					break;
-				}
-				String[] errors = line.split(" ");
-				for (String error : errors)
-				{
-					String[] parsedError = error.split(":");
-					String[] parsedLocation = parsedError[2].split(",");
-
-					tcHeaderList.add(new TCStruct(Type.valueOf(parsedError[0]), Integer.parseInt(parsedError[1]), Integer.parseInt(parsedLocation[0]), Integer.parseInt(parsedLocation[1])));
-				}
-			} else
-			{
-				more = false;
-			}
-		}
-
+	@Override
+	protected File getResultFile(String filename) {
+		return new File(filename + ".result");
 	}
 }

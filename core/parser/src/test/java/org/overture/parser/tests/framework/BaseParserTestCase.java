@@ -1,12 +1,22 @@
 package org.overture.parser.tests.framework;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.TestCase;
 
+import org.overture.vdmjUtils.VdmjCompatibilityUtils;
+import org.overturetool.test.framework.ResultTestCase;
+import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.Result;
+import org.overturetool.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -14,9 +24,10 @@ import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
+import org.xml.sax.SAXException;
 
 public abstract class BaseParserTestCase<T extends SyntaxReader> extends
-		TestCase
+		ResultTestCase
 {
 
 public final static boolean DEBUG = true;
@@ -27,20 +38,23 @@ public final static boolean DEBUG = true;
 
 	public BaseParserTestCase()
 	{
-		super("skip");
+		//super("skip");
+		super();
 	}
 	
 
 	public BaseParserTestCase(File file)
 	{
-		super("test");
+		//super("test");
+		super(file);
 		this.file = file;
 		this.content = file.getName();
 	}
 
 	public BaseParserTestCase(String name, String content)
 	{
-		super("test");
+		//super("test");
+		super();
 		this.content = content;
 		this.name = name;
 	}
@@ -99,29 +113,30 @@ public final static boolean DEBUG = true;
 			reader = getReader(ltr);
 			result = read(reader);
 
-			if (reader != null && reader.getErrorCount() > 0)
-			{
-				// perrs += reader.getErrorCount();
-				StringWriter s = new StringWriter();
-				reader.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
-				errorMessages ="\n"+s.toString()+"\n";
-				if(DEBUG){
-					System.out.println(s.toString());
-				}
-			}
-			assertEquals(errorMessages,0,reader.getErrorCount());
+			System.out.println();
+			
+			Set<IMessage> warnings = new HashSet<IMessage>();
+			Set<IMessage> errors = new HashSet<IMessage>();
+			
+			VdmjCompatibilityUtils.collectParserErrorsAndWarnings(reader, errors, warnings);
+			Result<Object> resultFinal = new Result<Object>(result, warnings, errors);
+			
+			compareResults(resultFinal, file.getAbsolutePath());
+			//compareResults(result, file.getAbsolutePath());
+			
+				//Result<String> resultFile = xmlreaderWritter.loadFromXml();
+				
+				
+			
+			
 
-			if (reader != null && reader.getWarningCount() > 0)
-			{
-				// pwarn += reader.getWarningCount();
-//				reader.printWarnings(new PrintWriter(System.out));
-			}
+			
 		} finally
 		{
 			if(!hasRunBefore())
 			{
 				setHasRunBefore( true);
-if(DEBUG){
+				if(DEBUG){
 				System.out.println("============================================================================================================");
 				
 				System.out.println("|");
@@ -175,4 +190,14 @@ if(DEBUG){
 	}
 	
 	public void skip(){};
+	
+	@Override
+	protected File createResultFile(String filename) {
+		return new File(filename + ".result");
+	}
+
+	@Override
+	protected File getResultFile(String filename) {
+		return new File(filename + ".result");
+	}
 }

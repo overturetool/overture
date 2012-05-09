@@ -45,10 +45,10 @@ public class XmlResultReaderWritter {
 		this.file = file;
 	}
 	
-	public XmlResultReaderWritter(String path)
-	{
-		this(new File(path));
-	}
+//	public XmlResultReaderWritter(String path)
+//	{
+//		this(new File(path));
+//	}
 	
 	public void setResult(String type, Result result)
 	{
@@ -60,7 +60,7 @@ public class XmlResultReaderWritter {
 	public void saveInXml() throws ParserConfigurationException, TransformerException
 	{
 		
-		File resultFile = new File(file.getAbsoluteFile()+ ".result");
+		
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
  
@@ -78,7 +78,7 @@ public class XmlResultReaderWritter {
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		DOMSource source = new DOMSource(doc);
-		StreamResult result = new StreamResult(resultFile);
+		StreamResult result = new StreamResult(file);
 		//transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		// Output to console for testing
 		// StreamResult result = new StreamResult(System.out);
@@ -89,8 +89,8 @@ public class XmlResultReaderWritter {
 
 	private void createWarningsAndErrors(Document doc, Element rootElement) {
 		
-		Set<IMessage> warnings = (Set<IMessage>) result.warnings;
-		Set<IMessage> errors = (Set<IMessage>) result.errors;
+		Set<IMessage> warnings = (Set<IMessage>) getResult().warnings;
+		Set<IMessage> errors = (Set<IMessage>) getResult().errors;
 		
 		for (IMessage warning : warnings) {
 			Element message = doc.createElement("message");
@@ -115,30 +115,33 @@ public class XmlResultReaderWritter {
 		}
 	}	
 	
-	public void loadFromXml() throws ParserConfigurationException, SAXException, IOException {
-		File resultFile = new File(file.getAbsoluteFile()+ ".result");
+	public boolean loadFromXml(){
+		//File resultFile = new File(file.getAbsoluteFile()+ ".result");
 		Set<IMessage> warnings = new HashSet<IMessage>();
 		Set<IMessage> errors = new HashSet<IMessage>();
 		
-		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(resultFile);
-		doc.getDocumentElement().normalize();
-		NodeList nodeLst = doc.getElementsByTagName("message");
-		for(int i=0; i < nodeLst.getLength(); i++)
-		{
-			Node node = nodeLst.item(i);
-			if(node.getAttributes().getNamedItem("messageType").getNodeValue().equals("error"))
-			{
-				convertNodeToMessage(errors,node);
+		DocumentBuilder db;
+		try {
+			db = dbf.newDocumentBuilder();
+
+			Document doc = db.parse(file);
+			doc.getDocumentElement().normalize();
+			NodeList nodeLst = doc.getElementsByTagName("message");
+			for (int i = 0; i < nodeLst.getLength(); i++) {
+				Node node = nodeLst.item(i);
+				if (node.getAttributes().getNamedItem("messageType")
+						.getNodeValue().equals("error")) {
+					convertNodeToMessage(errors, node);
+				} else {
+					convertNodeToMessage(warnings, node);
+				}
 			}
-			else
-			{
-				convertNodeToMessage(warnings,node);
-			}			
+			setResult(new Result<String>(file.getName(), warnings, errors));
+		} catch (Exception e) {
+			return false;
 		}
-		result = new Result<String>(file.getName(), warnings, errors);
+		return true;
 	}
 
 	private void convertNodeToMessage(Set<IMessage> set, Node node) {
@@ -153,5 +156,32 @@ public class XmlResultReaderWritter {
 				);
 		set.add(m);
 	}
+
+	public Result<String> getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
+	}
+
+	public Set<IMessage> getWarnings() {
+		if(result != null)
+		{
+			return result.warnings;
+		}
+		
+		return null;
+	}
+
+	public Set<IMessage> getErrors() {
+		if(result != null)
+		{
+			return result.errors;
+		}
+		
+		return null;
+	}
+
 	
 }
