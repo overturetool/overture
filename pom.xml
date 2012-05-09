@@ -34,6 +34,23 @@
       <url>http://build.overturetool.org/builds/mt4e-m2repo-eclipse3.7.2/</url>
       <layout>default</layout>
     </repository>
+	
+	 <repository>
+          <id>overture.sf.net</id>
+          <name>Overture SF Snapshots</name>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+          <url>http://overture.sourceforge.net/maven/repo</url>
+          <layout>default</layout>
+        </repository>
   </repositories>
 
   <build>
