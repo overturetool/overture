@@ -45,4 +45,24 @@ public class VdmjCompatibilityUtils {
 		
 		return  new Result<String>(name, warnings, errors);
 	}
+	
+	public static void collectParserErrorsAndWarnings(SyntaxReader reader,
+			Set<IMessage> errors, Set<IMessage> warnings)
+	{
+		if (reader != null && reader.getErrorCount() > 0)
+		{
+			for (VDMError msg : reader.getErrors())
+			{
+				errors.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			}
+		}
+
+		if (reader != null && reader.getWarningCount() > 0)
+		{
+			for (VDMWarning msg : reader.getWarnings())
+			{
+				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			}
+		}
+	}
 }

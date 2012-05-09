@@ -22,10 +22,14 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.IResultCombiner;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.test.util.MessageReaderWritter;
+import org.overturetool.test.util.XmlResultReaderWritter;
 
 public abstract class ResultTestCase extends BaseTestCase
 {
@@ -52,21 +56,32 @@ public abstract class ResultTestCase extends BaseTestCase
 	{
 		if(Properties.recordTestResults)
 		{
-			MessageReaderWritter mrw = new MessageReaderWritter(createResultFile(filename));
-			mrw.set(result);
-			mrw.save();
+			//MessageReaderWritter mrw = new MessageReaderWritter(createResultFile(filename));
+			//mrw.set(result);
+			//mrw.save();
+			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(createResultFile(filename));
+			xmlResult.setResult(result);
+			try {
+				xmlResult.saveInXml();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			return;
 		}
 		
 		File file = getResultFile(filename);
 
 		assertNotNull("Result file " + filename + " was not found", file);
-
-		MessageReaderWritter mrw = new MessageReaderWritter(file);
-
-		assertTrue("Result file " + filename + " does not exist", mrw.exists());
-
-		boolean parsed = mrw.load();
+		assertTrue("Result file " + filename + " does not exist", file.exists());
+		
+		//MessageReaderWritter mrw = new MessageReaderWritter(file);
+		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
+		boolean parsed = xmlResult.loadFromXml();
 
 		assertTrue("Could not read result file: " + file.getName(), parsed);
 
@@ -76,8 +91,11 @@ public abstract class ResultTestCase extends BaseTestCase
 			{//FIXME: remote this filter when SAFER is fixed in the warning reporting
 				return;
 			}
-			checkMessages("warning", mrw.getWarnings(), result.warnings);
-			checkMessages("error", mrw.getErrors(), result.errors);
+			
+			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings);
+			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors) || errorsFound;
+			
+			assertFalse("Errors found in file \"" + filename + "\"", errorsFound);
 		}
 	}
 
@@ -86,20 +104,34 @@ public abstract class ResultTestCase extends BaseTestCase
 
 	protected abstract File getResultFile(String filename);
 
-	public void checkMessages(String typeName, Set<IMessage> expectedList,
+	public boolean checkMessages(String typeName, Set<IMessage> expectedList,
 			Set<IMessage> list)
 	{
-//		assertEquals("Number of " + typeName + "s do not match expected.", expectedList.size(), list.size());
 		String TypeName = typeName.toUpperCase().toCharArray()[0]
 				+ typeName.substring(1);
+		boolean errorFound = false;
 		for (IMessage w : list)
 		{
-			assertTrue(TypeName + " not exspected: " + w, containedIn(expectedList, w));
+			boolean isContainedIn = containedIn(expectedList, w);
+			if(!isContainedIn)
+			{
+				System.out.println(TypeName + " not expected: " + w);
+				errorFound = true;
+			}
+			
+//			assertTrue(TypeName + " not expected: " + w, isContainedIn);
 		}
 		for (IMessage w : expectedList)
 		{
-			assertTrue(TypeName + " exspected but not found: " + w, containedIn(list, w));
+			boolean isContainedIn = containedIn(list, w);
+			if(!isContainedIn)
+			{
+				System.out.println(TypeName + " expected but not found: " + w);
+				errorFound = true;
+			}
+			//assertTrue(TypeName + " expected but not found: " + w, isContainedIn);
 		}
+		return errorFound;
 	}
 
 	private static boolean containedIn(Set<IMessage> list, IMessage m)
