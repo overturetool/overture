@@ -15,12 +15,7 @@
       <groupId>org.overturetool.core</groupId>
       <artifactId>umltrans</artifactId>
       <version>2.1.1</version>
-    </dependency>   
-	<dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>umlMapper</artifactId>
-      <version>2.2.0</version>
-    </dependency>
+    </dependency>   	
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.core</artifactId>
