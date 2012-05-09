@@ -114,7 +114,7 @@ public class RecordPattern extends Pattern
 	}
 
 	@Override
-	public DefinitionList getDefinitions(Type exptype, NameScope scope)
+	public DefinitionList getAllDefinitions(Type exptype, NameScope scope)
 	{
 		DefinitionList defs = new DefinitionList();
 
@@ -149,7 +149,7 @@ public class RecordPattern extends Pattern
     		{
     			Field pf = patfi.next();
     			// defs.addAll(p.getDefinitions(usingrec.findField(pf.tag).type, scope));
-    			defs.addAll(p.getDefinitions(pf.type, scope));
+    			defs.addAll(p.getAllDefinitions(pf.type, scope));
     		}
 		}
 
@@ -157,13 +157,13 @@ public class RecordPattern extends Pattern
 	}
 
 	@Override
-	public LexNameList getVariableNames()
+	public LexNameList getAllVariableNames()
 	{
 		LexNameList list = new LexNameList();
 
 		for (Pattern p: plist)
 		{
-			list.addAll(p.getVariableNames());
+			list.addAll(p.getAllVariableNames());
 		}
 
 		return list;

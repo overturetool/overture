@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2012 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,14 +23,15 @@
 
 package org.overturetool.vdmj.patterns;
 
+import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.expressions.SeqEnumExpression;
+import org.overturetool.vdmj.expressions.MapEnumExpression;
+import org.overturetool.vdmj.expressions.MapletExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.runtime.Context;
@@ -40,31 +41,36 @@ import org.overturetool.vdmj.traces.Permutor;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
-import org.overturetool.vdmj.types.SeqType;
+import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnknownType;
+import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.NameValuePair;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueMap;
 
 
-public class SeqPattern extends Pattern
+public class MapPattern extends Pattern
 {
 	private static final long serialVersionUID = 1L;
-	public final PatternList plist;
+	public final List<MapletPattern> maplets;
 
-	public SeqPattern(LexLocation location, PatternList list)
+	public MapPattern(LexLocation location, List<MapletPattern> maplets)
 	{
 		super(location);
-		this.plist = list;
+		this.maplets = maplets;
 	}
 
 	@Override
 	public void unResolve()
 	{
-		plist.unResolve();
+		for (MapletPattern mp: maplets)
+		{
+			mp.unResolve();
+		}
+
 		resolved = false;
 	}
 
@@ -75,7 +81,10 @@ public class SeqPattern extends Pattern
 
 		try
 		{
-			plist.typeResolve(env);
+			for (MapletPattern mp: maplets)
+			{
+				mp.unResolve();
+			}
 		}
 		catch (TypeCheckException e)
 		{
@@ -87,26 +96,26 @@ public class SeqPattern extends Pattern
 	@Override
 	public String toString()
 	{
-		return "[" + plist.toString() + "]";
+		return Utils.listToString("{", maplets, ", ", "}");
 	}
 
 	@Override
 	public Expression getMatchingExpression()
 	{
-		ExpressionList list = new ExpressionList();
+		List<MapletExpression> list = new Vector<MapletExpression>();
 
-		for (Pattern p: plist)
+		for (MapletPattern p: maplets)
 		{
-			list.add(p.getMatchingExpression());
+			list.add(p.getMapletExpression());
 		}
 
-		return new SeqEnumExpression(location, list);
+		return new MapEnumExpression(location, list);
 	}
 
 	@Override
 	public int getLength()
 	{
-		return plist.size();
+		return maplets.size();
 	}
 
 	@Override
@@ -114,18 +123,22 @@ public class SeqPattern extends Pattern
 	{
 		DefinitionList defs = new DefinitionList();
 
-		if (!type.isSeq())
+		if (!type.isMap())
 		{
-			report(3203, "Sequence pattern is matched against " + type);
+			report(3314, "Map pattern is not matched against map type");
+			detail("Actual type", type);
 		}
 		else
 		{
-			Type elem = type.getSeq().seqof;
+			MapType map = type.getMap();
 
-    		for (Pattern p: plist)
-    		{
-    			defs.addAll(p.getAllDefinitions(elem, scope));
-    		}
+			if (!map.empty)
+			{
+        		for (MapletPattern p: maplets)
+        		{
+        			defs.addAll(p.getDefinitions(map, scope));
+        		}
+			}
 		}
 
 		return defs;
@@ -136,9 +149,9 @@ public class SeqPattern extends Pattern
 	{
 		LexNameList list = new LexNameList();
 
-		for (Pattern p: plist)
+		for (MapletPattern p: maplets)
 		{
-			list.addAll(p.getAllVariableNames());
+			list.addAll(p.getVariableNames());
 		}
 
 		return list;
@@ -148,82 +161,112 @@ public class SeqPattern extends Pattern
 	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
-		ValueList values = null;
+		ValueMap values = null;
 
 		try
 		{
-			values = expval.seqValue(ctxt);
+			values = expval.mapValue(ctxt);
 		}
 		catch (ValueException e)
 		{
 			patternFail(e);
 		}
 
-		if (values.size() != plist.size())
+		if (values.size() != maplets.size())
 		{
-			patternFail(4117, "Wrong number of elements for sequence pattern");
+			patternFail(4152, "Wrong number of elements for map pattern");
 		}
 
-		ListIterator<Value> iter = values.listIterator();
-		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
-		int psize = plist.size();
-		int[] counts = new int[psize];
-		int i = 0;
+		// Since the member patterns may indicate specific map members, we
+		// have to permute through the various map orderings to see
+		// whether there are any which match both sides. If the members
+		// are not constrained however, the initial ordering will be
+		// fine.
 
-		for (Pattern p: plist)
+		List<ValueMap> allMaps;
+
+		if (isConstrained())
 		{
-			List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next(), ctxt);
-			nvplists.add(pnvps);
-			counts[i++] = pnvps.size();
+			allMaps = values.permutedMaps();
+		}
+		else
+		{
+			allMaps = new Vector<ValueMap>();
+			allMaps.add(values);
 		}
 
-		Permutor permutor = new Permutor(counts);
 		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+		int psize = maplets.size();
 
-		if (plist.isEmpty())
+		if (maplets.isEmpty())
 		{
 			finalResults.add(new NameValuePairList());
 			return finalResults;
 		}
 
-		while (permutor.hasNext())
+		for (ValueMap mapPerm: allMaps)
 		{
+			Iterator<Entry<Value, Value>> iter = mapPerm.entrySet().iterator();
+
+			List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+			int[] counts = new int[psize];
+			int i = 0;
+
 			try
 			{
-				NameValuePairMap results = new NameValuePairMap();
-				int[] selection = permutor.next();
-
-				for (int p=0; p<psize; p++)
+				for (MapletPattern p: maplets)
 				{
-					for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
-					{
-						Value v = results.get(nvp.name);
+					List<NameValuePairList> pnvps = p.getAllNamedValues(iter.next(), ctxt);
+					nvplists.add(pnvps);
+					counts[i++] = pnvps.size();
+				}
+			}
+			catch (Exception e)
+			{
+				continue;
+			}
 
-						if (v == null)
+			Permutor permutor = new Permutor(counts);
+
+			while (permutor.hasNext())
+			{
+				try
+				{
+					NameValuePairMap results = new NameValuePairMap();
+					int[] selection = permutor.next();
+
+					for (int p=0; p<psize; p++)
+					{
+						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
 						{
-							results.put(nvp);
-						}
-						else	// Names match, so values must also
-						{
-							if (!v.equals(nvp.value))
+							Value v = results.get(nvp.name);
+
+							if (v == null)
 							{
-								patternFail(4118, "Values do not match sequence pattern");
+								results.put(nvp);
+							}
+							else	// Names match, so values must also
+							{
+								if (!v.equals(nvp.value))
+								{
+									patternFail(4153, "Values do not match map pattern");
+								}
 							}
 						}
 					}
-				}
 
-				finalResults.add(results.asList());		// Consistent set of nvps
-			}
-			catch (PatternMatchException pme)
-			{
-				// try next perm
+					finalResults.add(results.asList());
+				}
+				catch (PatternMatchException pme)
+				{
+					// Try next perm then...
+				}
 			}
 		}
 
 		if (finalResults.isEmpty())
 		{
-			patternFail(4118, "Values do not match sequence pattern");
+			patternFail(4154, "Cannot match map pattern");
 		}
 
 		return finalResults;
@@ -232,13 +275,13 @@ public class SeqPattern extends Pattern
 	@Override
 	public Type getPossibleType()
 	{
-		return new SeqType(location, new UnknownType(location));
+		return new MapType(location, new UnknownType(location), new UnknownType(location));
 	}
 
 	@Override
 	public boolean isConstrained()
 	{
-		for (Pattern p: plist)
+		for (MapletPattern p: maplets)
 		{
 			if (p.isConstrained()) return true;
 		}
@@ -251,7 +294,7 @@ public class SeqPattern extends Pattern
 	{
 		List<IdentifierPattern> list = new Vector<IdentifierPattern>();
 
-		for (Pattern p: plist)
+		for (MapletPattern p: maplets)
 		{
 			list.addAll(p.findIdentifiers());
 		}

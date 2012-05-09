@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.splash.BasicSplashHandler;
-import org.overture.ide.platform.Activator;
+//import org.overture.ide.platform.Activator;
 
 public class SplashHandler extends BasicSplashHandler
 {
@@ -44,7 +44,7 @@ public class SplashHandler extends BasicSplashHandler
 		foregroundColorInteger & 0xFF));
 
 		final Point buildIdPoint = new Point(350, 200);
-		final String bundleVersion = "v1.2.1";
+		final String bundleVersion = "v1.2.2";
 		//FIXME: this needs to be reverted
 		///		+ Activator.getDefault().getBundle().getHeaders().get("Bundle-Version");
 
