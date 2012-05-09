@@ -150,11 +150,8 @@ public class Vdm2Uml {
 				buildDefinitionBlock((AImplicitOperationDefinition)pDefinition,class_);
 				break;
 			case INSTANCEVARIABLE:
-				IUmlProperty instVar = buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,linkedList);
-				if(instVar != null)
-				{
-					instanceVariables.add(instVar);	
-				}
+				buildDefinitionBlock((AInstanceVariableDefinition)pDefinition,class_);
+				
 				break;
 			case TYPE:
 				buildDefinitionBlock((ATypeDefinition)pDefinition);
@@ -327,11 +324,12 @@ public class Vdm2Uml {
 	private void buildDefinitionBlock(ATypeDefinition pDefinition) {
 		
 		Class class_ = buildClassFromType(pDefinition);
+		class_.createO
 		modelWorkingCopy.createOwnedType(pDefinition.getName().name, UMLPackage.eINSTANCE.getType() );
 		
-		nestedClasses.add();
+		//TODO: nested class?
 		
-		return new UmlClassNameType(pDefinition.getName().name);
+		//return new UmlClassNameType(pDefinition.getName().name);
 	}
 
 	private Class buildClassFromType(ATypeDefinition pDefinition)  {
@@ -363,7 +361,7 @@ public class Vdm2Uml {
 	}
 
 	private IUmlDefinitionBlock buildTypeDefinitionBlocks(String name,
-			PType type) throws CGException {
+			PType type)  {
 		HashSet<IUmlDefinitionBlock> accumulator = new HashSet<IUmlDefinitionBlock>();
 		
 		switch (type.kindPType()) {
@@ -480,11 +478,21 @@ public class Vdm2Uml {
 		
 	}
 
-	private IUmlProperty buildDefinitionBlock(AInstanceVariableDefinition variable,
-			String owner) throws CGException {
+	private void buildDefinitionBlock(AInstanceVariableDefinition variable,
+			Class class_){
+		
+		PType defType = PDefinitionAssistantTC.getType(variable);
+		String name = variable.getName().name;
+		int upper =  Vdm2UmlUtil.extractUpper(defType);
+		int lower =  Vdm2UmlUtil.extractLower(defType);
+		//TODO:type is null for now
+		class_.createOwnedAttribute(name, null, lower, upper);
+		
+		
+		
 		PType defType = PDefinitionAssistantTC.getType(variable);
 		AAccessSpecifierAccessSpecifier accessSpecifier = variable.getAccess();
-		String name = variable.getName().name;
+		
 		IUmlVisibilityKind visibility = Vdm2UmlUtil.convertAccessSpecifierToVisibility(accessSpecifier);
 		IUmlMultiplicityElement multiplicity = Vdm2UmlUtil.extractMultiplicity(defType);
 		IUmlType type = Vdm2UmlUtil.convertPropertyType(defType,owner);

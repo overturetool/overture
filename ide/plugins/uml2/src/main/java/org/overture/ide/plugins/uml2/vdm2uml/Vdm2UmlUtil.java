@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -90,47 +94,112 @@ public class Vdm2UmlUtil {
 		
 	}
 
-	public static IUmlMultiplicityElement extractMultiplicity(PType type) throws CGException {
-		Boolean isOrdered = false;
-		Boolean isUnique = true;
-		Long lower = (long) 1;
-		Long upper = (long) 1;
+	public static int extractUpper(PType type)  {
+		
+		int upper =  1;
 		
 		if(PTypeAssistant.isType(type, ASetType.class))
 		{
-			upper = null;
-			lower = (long) 0;
+			upper = LiteralUnlimitedNatural.UNLIMITED;
+		}
+		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		{
+			upper = LiteralUnlimitedNatural.UNLIMITED;
+		}
+		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		{
+			upper = LiteralUnlimitedNatural.UNLIMITED;
+		}
+		else if(PTypeAssistant.isType(type, SMapType.class))
+		{
+			upper = LiteralUnlimitedNatural.UNLIMITED;
+		}
+		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		{
+			
+		}
+		
+		return upper;
+	}
+	
+	public static int extractLower(PType type) {
+		int lower = 0;
+		
+		if(PTypeAssistant.isType(type, ASetType.class))
+		{
+		}
+		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		{
+		}
+		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		{
+			lower = 1;
+		}
+		else if(PTypeAssistant.isType(type, SMapType.class))
+		{
+		
+		}
+		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		{
+			
+		}
+		
+		return lower;
+	}
+	
+	public static boolean extractIsOrdered(PType type)  {
+		Boolean isOrdered = false;
+		
+		if(PTypeAssistant.isType(type, ASetType.class))
+		{
 			isOrdered = false;
 		}
 		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
 		{
-			lower = (long) 0;
-			upper = null;
 			isOrdered = true;
-			isUnique = false;
 		}
 		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
 		{
-			lower = (long) 1;
-			upper = null;
 			isOrdered = true;
-			isUnique = false;
 		}
 		else if(PTypeAssistant.isType(type, SMapType.class))
 		{
 			isOrdered = true;
-			upper = null;
-			lower = (long) 0;
+		}
+		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		{
+			
+		}
+		
+		return isOrdered;
+	}
+	
+	public static boolean extractIsUnique(PType type)  {
+		Boolean isUnique = true;
+		
+		if(PTypeAssistant.isType(type, ASetType.class))
+		{
+		}
+		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		{
+			isUnique = false;
+		}
+		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		{
+			isUnique = false;
+		}
+		else if(PTypeAssistant.isType(type, SMapType.class))
+		{
 			isUnique = false;
 		}
 		else if(PTypeAssistant.isType(type, AOptionalType.class))
 		{
-			upper = (long) 1;
-			lower = (long) 0;
 		}
 		
-		return new UmlMultiplicityElement(isOrdered, isUnique, lower, upper);
+		return isUnique;
 	}
+	
+	
 
 	public static IUmlType convertType(PType type) throws CGException {
 		switch (type.kindPType()) {
@@ -261,9 +330,9 @@ public class Vdm2UmlUtil {
 		
 	}
 
-	public static IUmlValueSpecification getDefaultValue(PExp expression) throws CGException {
-		IUmlValueSpecification result = null;
+	public static EAttribute getDefaultValue(PExp expression) {
 		
+		EAttribute value = null;
 		// UmlProperty.default
 		switch (expression.kindPExp()) {
 //		case NIL:
@@ -279,7 +348,9 @@ public class Vdm2UmlUtil {
 //			break;
 		case INTLITERAL:
 			AIntLiteralExp intLiteral = (AIntLiteralExp) expression;
-			result = new UmlLiteralInteger(intLiteral.getValue().value);
+			value = UMLPackage.eINSTANCE.getLiteralInteger_Value();
+			value.setDefaultValue(intLiteral.getValue().value);
+			return value;
 			break;
 //		case REALLITERAL:
 //			ARealLiteralExp realLiteral = (ARealLiteralExp) expression;
@@ -483,4 +554,6 @@ public class Vdm2UmlUtil {
 		
 		return false;
 	}
+
+	
 }
