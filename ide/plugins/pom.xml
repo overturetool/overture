@@ -23,7 +23,8 @@
     <!--module>umltrans</module-->
     <module>showtrace</module>
     <module>traces</module>
-	 <module>ctruntime</module>
-	  <module>developerutils</module>
+    <module>ctruntime</module>
+    <module>developerutils</module>
+    <module>uml2</module>
   </modules>
 </project>
