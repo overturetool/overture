@@ -18,18 +18,11 @@
  *******************************************************************************/
 package org.overture.ide.plugins.traces.views;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.CancellationException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -49,7 +42,6 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
@@ -84,6 +76,9 @@ import org.overture.ide.plugins.traces.OvertureTracesPlugin;
 import org.overture.ide.plugins.traces.debug.TraceDebugLauncher;
 import org.overture.ide.plugins.traces.internal.ITracesDisplay;
 import org.overture.ide.plugins.traces.internal.VdmjTracesHelper;
+import org.overture.ide.plugins.traces.views.internal.InconclusiveTraceViewerFilter;
+import org.overture.ide.plugins.traces.views.internal.OkTraceViewerFilter;
+import org.overture.ide.plugins.traces.views.internal.TraceViewerSorter;
 import org.overture.ide.plugins.traces.views.treeView.ITreeNode;
 import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.ProjectTreeNode;
@@ -91,7 +86,6 @@ import org.overture.ide.plugins.traces.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTreeNode;
 import org.overture.ide.ui.utility.EditorUtility;
-import org.overturetool.ct.utils.Verdict;
 
 public class TracesTreeView extends ViewPart implements ITracesDisplay
 {
@@ -104,13 +98,14 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 	private Action actionSetInconclusiveFilter;
 	private Action actionSendToInterpreter;
 
-
 	private Action refreshAction;
 	final Display display = Display.getCurrent();
 
-	private IProject projectToUpdate = null;
 	Button buttonSetSort = null;
 
+	private ViewerFilter okFilter = new OkTraceViewerFilter();
+	private ViewerSorter traceSorter = new TraceViewerSorter();
+	private ViewerFilter inconclusiveFilter = new InconclusiveTraceViewerFilter();
 
 	/**
 	 * The constructor.
@@ -144,44 +139,43 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 		init();
 
-//		new IResourceChangeListener()
-//		{
-//			public void resourceChanged(IResourceChangeEvent event)
-//			{
-//				try
-//				{
-//					switch (event.getType())
-//					{
-//						case IResourceChangeEvent.POST_CHANGE:
-//
-//							IResourceDelta[] delta = event.getDelta().getAffectedChildren();
-//
-//							for (IResourceDelta resourceDelta : delta)
-//							{
-//
-//								if (resourceDelta.getResource() instanceof IProject
-//										&& isValidProject(((IProject) resourceDelta.getResource())))
-//								{
-//
-//									if (isFileChange(resourceDelta)
-//											|| (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED)
-//									{
-//										projectToUpdate = ((IProject) resourceDelta.getResource());
-//										expandTraces(0);
-//									}
-//								}
-//							}
-//							break;
-//					}
-//				} catch (Exception e)
-//				{
-//					OvertureTracesPlugin.log(e);
-//				}
-//			}
-//
-//		};
+		// new IResourceChangeListener()
+		// {
+		// public void resourceChanged(IResourceChangeEvent event)
+		// {
+		// try
+		// {
+		// switch (event.getType())
+		// {
+		// case IResourceChangeEvent.POST_CHANGE:
+		//
+		// IResourceDelta[] delta = event.getDelta().getAffectedChildren();
+		//
+		// for (IResourceDelta resourceDelta : delta)
+		// {
+		//
+		// if (resourceDelta.getResource() instanceof IProject
+		// && isValidProject(((IProject) resourceDelta.getResource())))
+		// {
+		//
+		// if (isFileChange(resourceDelta)
+		// || (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED)
+		// {
+		// projectToUpdate = ((IProject) resourceDelta.getResource());
+		// expandTraces(0);
+		// }
+		// }
+		// }
+		// break;
+		// }
+		// } catch (Exception e)
+		// {
+		// OvertureTracesPlugin.log(e);
+		// }
+		// }
+		//
+		// };
 	}
-
 
 	private void hookContextMenu()
 	{
@@ -223,7 +217,8 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 		if (obj instanceof ProjectTreeNode /* || obj instanceof ClassTreeNode */
 				|| obj instanceof SClassDefinition
-				|| obj instanceof AModuleModules) // ||
+				|| obj instanceof AModuleModules
+				|| obj instanceof TraceTreeNode) // ||
 		{
 			manager.add(actionRunSelected);
 			manager.add(actionRunSelectedAdvanced);
@@ -269,67 +264,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				ISelection selection = viewer.getSelection();
 				final Object obj = ((IStructuredSelection) selection).getFirstElement();
 
-				String projectName = "";
-				Dictionary<INode, List<String>> classTracesTestCase = new Hashtable<INode, List<String>>();
-				if (obj instanceof ProjectTreeNode)
-				{
-					ProjectTreeNode pn = (ProjectTreeNode) obj;
-					projectName = pn.getName();
-				} else if (obj instanceof SClassDefinition
-						|| obj instanceof AModuleModules)
-				{
-					projectName = TraceAstUtility.getProject((INode) obj).getName();
-					classTracesTestCase.put(((INode) obj), new Vector<String>());
-				}
-
-				final Dictionary<INode, List<String>> finalClassTracesTestCase = classTracesTestCase;
-				final String finalProjectName = projectName;
-
-				Job executeTestJob = new Job("CT evaluating selected tests")
-				{
-					@Override
-					protected IStatus run(IProgressMonitor monitor)
-					{
-						try
-						{
-							// ITracesHelper th = traceHelpers.get(finalProjectName);
-
-							projectToUpdate = getProject(finalProjectName);
-
-							if (finalClassTracesTestCase.size() == 0)
-								evaluateTraces(projectToUpdate, null, null, null, monitor);
-							else
-							{
-								Enumeration<INode> classKeys = finalClassTracesTestCase.keys();
-								while (classKeys.hasMoreElements())
-								{
-									INode className = classKeys.nextElement();
-									try
-									{
-										evaluateTraces(projectToUpdate, className, null, null, monitor);
-									} catch (CancellationException e)
-									{
-										ConsolePrint(e.getMessage());
-									} catch (Exception e)
-									{
-										ConsoleError(e.getMessage());
-										OvertureTracesPlugin.log(e);
-									}
-
-								}
-								monitor.done();
-							}
-
-						} catch (Exception e)
-						{
-							OvertureTracesPlugin.log(e);
-						}
-
-//						expandTraces(0);
-						return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
-					}
-				};
-				executeTestJob.schedule();
+				handleEvaluateTrace(obj, null);
 			}
 		};
 		actionRunSelected.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
@@ -368,69 +303,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				ISelection selection = viewer.getSelection();
 				final Object obj = ((IStructuredSelection) selection).getFirstElement();
 
-				String projectName = "";
-				Dictionary<INode, List<String>> classTracesTestCase = new Hashtable<INode, List<String>>();
-				if (obj instanceof ProjectTreeNode)
-				{
-					ProjectTreeNode pn = (ProjectTreeNode) obj;
-					projectName = pn.getName();
-				} else if (obj instanceof SClassDefinition
-						|| obj instanceof AModuleModules)
-				{
-					projectName = TraceAstUtility.getProject((INode) obj).getName();
-					classTracesTestCase.put(((INode) obj), new Vector<String>());
-				}
-
-				final Dictionary<INode, List<String>> finalClassTracesTestCase = classTracesTestCase;
-				final String finalProjectName = projectName;
-
-				Job executeTestJob = new Job("CT evaluating selected tests")
-				{
-					@Override
-					protected IStatus run(IProgressMonitor monitor)
-					{
-						try
-						{
-							// ITracesHelper th = traceHelpers.get(finalProjectName);
-
-							projectToUpdate = getProject(finalProjectName);
-
-							if (finalClassTracesTestCase.size() == 0)
-							{
-								evaluateTraces(projectToUpdate, null, null, d, monitor);
-								// runTestProject(th, monitor);
-							} else
-							{
-								Enumeration<INode> classKeys = finalClassTracesTestCase.keys();
-								while (classKeys.hasMoreElements())
-								{
-									INode className = classKeys.nextElement();
-									try
-									{
-										// projectToUpdate.refreshLocal(IResource.DEPTH_INFINITE, null);
-										// th.processClassTraces(className, d.getSubset(), d.getTraceReductionType(),
-										// d.getSeed(), monitor);
-										evaluateTraces(projectToUpdate, className, null, d, monitor);
-									} catch (CancellationException e)
-									{
-										ConsolePrint(e.getMessage());
-									} catch (Exception e)
-									{
-										ConsoleError(e.getMessage());
-										OvertureTracesPlugin.log(e);
-									}
-								}
-							}
-						} catch (Exception e)
-						{
-							OvertureTracesPlugin.log(e);
-						}
-						//expandTraces(0);
-						return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
-					}
-
-				};
-				executeTestJob.schedule();
+				handleEvaluateTrace(obj, d);
 			}
 		};
 		actionRunSelectedAdvanced.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
@@ -440,82 +313,15 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			@Override
 			public void run()
 			{
-				Job runAllTestsJob = new Job("CT evaluation all projects")
+				for (IVdmProject project : TraceAstUtility.getProjects())
 				{
-					@Override
-					protected IStatus run(IProgressMonitor monitor)
-					{
-//						IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-//						IProject[] iprojects = iworkspaceRoot.getProjects();
-//						int totalCount = 0;
-//						for (final IProject project : iprojects)
-//						{
-//							try
-//							{
-//								if (isValidProject(project))
-//								{
-//									// ITracesHelper th = traceHelpers.get(project.getName());
-//									// if (th != null)
-//									// for (String className : th.getClassNamesWithTraces())
-//									// {
-//									// totalCount += th.getTraceDefinitions(className).size();
-//									// }
-//								}
-//							} catch (Exception e)
-//							{
-//								OvertureTracesPlugin.log(e);
-//							}
-//						}
-//
-//						for (final IProject project : iprojects)
-//						{
-//							if (monitor.isCanceled())
-//							{
-//								break;
-//							}
-//							try
-//							{
-//								// if (isValidProject(project)
-//								// && traceHelpers.containsKey(project.getName()))
-//								// {
-//								// ITracesHelper th = traceHelpers.get(project.getName());
-//								// for (String className : th.getClassNamesWithTraces())
-//								// {
-//								// if (monitor.isCanceled())
-//								// {
-//								// break;
-//								// }
-//								// th.processClassTraces(className, monitor);
-//								// }
-//								// }
-//							} catch (CancellationException e)
-//							{
-//								ConsolePrint(e.getMessage());
-//							} catch (Exception e)
-//							{
-//								OvertureTracesPlugin.log(e);
-//							}
-//						}
-//						display.asyncExec(new Runnable()
-//						{
-//							public void run()
-//							{
-//								updateTraceTestCasesNodeStatus();
-//							}
-//						});
-//						refreshTree();
-						return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
-					}
-
-				};
-
-				runAllTestsJob.schedule();
+					handleEvaluateTrace(project, null);
+				}
 			}
 		};
 
 		actionRunAll.setToolTipText("Run all");
 		actionRunAll.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_ALL_TRACES));
-
 
 		actionSetOkFilter = new Action("Filter ok results")
 		{
@@ -631,7 +437,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 		actionSendToInterpreter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_INTERPRETER));
 	}
-
 
 	private void hookTreeAction()
 	{
@@ -771,67 +576,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		viewer.getControl().setFocus();
 	}
 
-	private ViewerFilter okFilter = new ViewerFilter()
-	{
-
-		@Override
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element)
-		{
-			if (element instanceof TraceTestTreeNode
-					&& ((TraceTestTreeNode) element).getStatus() == Verdict.PASSED)
-			{
-				return false;
-			} else
-			{
-				return true;
-			}
-		}
-
-	};
-
-	private ViewerFilter inconclusiveFilter = new ViewerFilter()
-	{
-
-		@Override
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element)
-		{
-			if (element instanceof TraceTestTreeNode
-					&& ((TraceTestTreeNode) element).getStatus() == Verdict.INCONCLUSIVE)
-			{
-				return false;
-			} else
-			{
-				return true;
-			}
-		}
-
-	};
-
-	private ViewerSorter traceSorter = new ViewerSorter()
-	{
-		@Override
-		public int category(Object element)
-		{
-			if (element instanceof TraceTestTreeNode)
-			{
-				Verdict res = ((TraceTestTreeNode) element).getStatus();
-				if (res == Verdict.FAILED)
-				{
-					return 1;
-				} else if (res == Verdict.INCONCLUSIVE)
-				{
-					return 2;
-				} else if (res == Verdict.PASSED)
-				{
-					return 3;
-				}
-			}
-			return 3;
-			// return super.category(element);
-		}
-	};
 
 	private void ConsolePrint(final String message)
 	{
@@ -894,8 +638,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			return;
 		}
 
-		IVdmProject vdmProject = TraceAstUtility.getProject(tn.getTraceDefinition());// (IVdmProject)
-																						// iproject.getAdapter(IVdmProject.class);
+		IVdmProject vdmProject = TraceAstUtility.getProject(tn.getTraceDefinition());
 
 		IFile file = vdmProject.findIFile(tn.getTraceDefinition().getLocation().file);
 
@@ -920,23 +663,70 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		return myConsole;
 	}
 
-	private IProject getProject(String finalProjectName) throws CoreException
+	private void handleEvaluateTrace(Object selectedItem,
+			final TraceOptionsDialog optionsDialog)
 	{
-		IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IProject[] iprojects = iworkspaceRoot.getProjects();
+		IVdmProject project = null;
+		INode container = null;
+		ANamedTraceDefinition traceDef = null;
 
-		for (final IProject project : iprojects)
+		if (selectedItem instanceof ProjectTreeNode)
 		{
-
-			if (project.isOpen() && project.getName().equals(finalProjectName))
-			{
-				return project;
-			}
+			ProjectTreeNode pn = (ProjectTreeNode) selectedItem;
+			project = pn.project;
+		} else if (selectedItem instanceof SClassDefinition
+				|| selectedItem instanceof AModuleModules)
+		{
+			project = TraceAstUtility.getProject((INode) selectedItem);
+			container = (INode) selectedItem;
+		} else if (selectedItem instanceof TraceTreeNode)
+		{
+			traceDef = ((TraceTreeNode) selectedItem).getTraceDefinition();
+			container = TraceAstUtility.getTraceDefinitionContainer(traceDef);
+			project = TraceAstUtility.getProject(traceDef);
+		}else if(selectedItem instanceof IVdmProject)
+		{
+			project = (IVdmProject) selectedItem;
 		}
-		return null;
+
+		final IVdmProject finalProject = project;
+		final INode finalContainer = container;
+		final ANamedTraceDefinition finalTraceDef = traceDef;
+
+		Job executeTestJob = new Job("CT evaluating selected tests")
+		{
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				try
+				{
+					try
+					{
+						evaluateTraces(finalProject, finalContainer, finalTraceDef, optionsDialog, monitor);
+					} catch (CancellationException e)
+					{
+						ConsolePrint(e.getMessage());
+					} catch (Exception e)
+					{
+						ConsoleError(e.getMessage());
+						OvertureTracesPlugin.log(e);
+					}
+
+					monitor.done();
+
+				} catch (Exception e)
+				{
+					OvertureTracesPlugin.log(e);
+				}
+
+				// expandTraces(0);
+				return new Status(IStatus.OK, ITracesConstants.PLUGIN_ID, IStatus.OK, "CT Test evaluation finished", null);
+			}
+		};
+		executeTestJob.schedule();
 	}
 
-	private void evaluateTraces(final IProject project, INode container,
+	private void evaluateTraces(final IVdmProject project, INode container,
 			ANamedTraceDefinition traceDef, TraceOptionsDialog filterDialog,
 			IProgressMonitor monitor) throws Exception
 	{
@@ -945,21 +735,18 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			return;
 		}
 
-		// d.getSubset(), d.getTraceReductionType(), d.getSeed()
-		VdmjTracesHelper traceRunner = new VdmjTracesHelper(getSite().getShell(), (IVdmProject) project.getAdapter(IVdmProject.class));
+		VdmjTracesHelper traceRunner = new VdmjTracesHelper(getSite().getShell(), project);
 
 		if (filterDialog == null)
 		{
-			traceRunner.evaluateTraces(container, traceDef, monitor,this);
+			traceRunner.evaluateTraces(container, traceDef, monitor, this);
 		} else
 		{
-			traceRunner.evaluateTraces(container, traceDef, filterDialog.getSubset(), filterDialog.getTraceReductionType(), filterDialog.getSeed(), monitor,this);
+			traceRunner.evaluateTraces(container, traceDef, filterDialog.getSubset(), filterDialog.getTraceReductionType(), filterDialog.getSeed(), monitor, this);
 		}
 
-		
 	}
-	
-	
+
 	public void updateView(final IVdmProject project)
 	{
 		display.asyncExec(new Runnable()
@@ -979,9 +766,9 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 					if (treeItem.getData() instanceof ProjectTreeNode
 							&& ((ProjectTreeNode) treeItem.getData()).getName().equals(project.getName()))
 					{
-						if(viewer.getContentProvider() instanceof ViewContentProvider)
+						if (viewer.getContentProvider() instanceof ViewContentProvider)
 						{
-							((ViewContentProvider)viewer.getContentProvider()).resetCache(project);
+							((ViewContentProvider) viewer.getContentProvider()).resetCache(project);
 						}
 						viewer.refresh();
 						viewer.getControl().update();
@@ -992,7 +779,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		});
 		try
 		{
-			((IProject)project.getAdapter(IProject.class)).refreshLocal(IResource.DEPTH_INFINITE, null);
+			((IProject) project.getAdapter(IProject.class)).refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e)
 		{
 		}

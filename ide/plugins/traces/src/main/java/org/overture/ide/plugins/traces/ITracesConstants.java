@@ -24,8 +24,10 @@ public interface ITracesConstants
 	public final String TRACES_TEST_ID = "org.overture.ide.plugins.traces.views.TraceTest";
 	public final String PLUGIN_ID = "org.overture.ide.plugins.traces";
 	
-	String REMOTE_DEBUG = "remote_debug";
-	public final boolean DEBUG = false;
+	//String REMOTE_DEBUG = "remote_debug";
+	public boolean DEBUG = false;
+	public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
+	public final String REMOTE_DEBUG_PREFERENCE = "ct_enable_remote_debug";
 
 	public static final String TEST_ENGINE_BUNDLE_ID = "org.overture.ide.plugins.ctruntime";
 	public static final String TEST_ENGINE_CLASS = "org.overturetool.ct.ctruntime.TraceRunnerMain";

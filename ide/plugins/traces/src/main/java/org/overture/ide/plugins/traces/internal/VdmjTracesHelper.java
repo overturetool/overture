@@ -33,14 +33,10 @@ import org.overturetool.ct.utils.TraceReductionType;
 
 public class VdmjTracesHelper 
 {
-	String projectName;
 	final String COVERAGE_DIR_NAME = "generated/coverage";
 	public final IVdmProject project;
 	Map<String, TracesXmlStoreReader> classTraceReaders = new HashMap<String, TracesXmlStoreReader>();
-	File projectDir;
 	Shell shell;
-
-	private File coverageBaseDir;
 
 	public VdmjTracesHelper(Shell shell, IVdmProject vdmProject)
 			throws Exception
@@ -52,7 +48,7 @@ public class VdmjTracesHelper
 	public File getCTRunCoverageDir()
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		File coverageDir = new File(coverageBaseDir, "CT_"
+		File coverageDir = new File(project.getModelBuildPath().getOutput().getLocation().toFile(), "CT_"
 				+ dateFormat.format(new Date()));
 
 		if (!coverageDir.exists())

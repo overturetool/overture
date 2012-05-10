@@ -44,5 +44,14 @@
             icon="icons/ctool16/ct_tsk.png">
       </perspective>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.overture.ide.ui.vdm"
+            class="org.overture.ide.plugins.traces.preferences.WorkbenchPreferencePageMain"
+            id="org.overture.ide.plugins.traces.pageMain"
+            name="Combinatorial Testing">
+      </page>
+   </extension>
 
 </plugin>

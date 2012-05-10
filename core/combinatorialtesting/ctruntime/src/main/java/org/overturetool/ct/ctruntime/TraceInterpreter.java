@@ -43,7 +43,7 @@ public class TraceInterpreter
 		this.monitor = monitor;
 	}
 
-	public TraceInterpreter(IProgressMonitor monitor,float subset,
+	public TraceInterpreter(IProgressMonitor monitor, float subset,
 			TraceReductionType traceReductionType, long seed)
 	{
 		this(monitor);
@@ -93,14 +93,18 @@ public class TraceInterpreter
 			Settings.dynamictypechecks = true;
 
 			if (storage != null)
+			{
 				storage.StartClass(className);
+			}
 
 			Integer numberOfTraces = 0;
 
 			for (Object string : definitions)
 			{
 				if (string instanceof NamedTraceDefinition)
+				{
 					numberOfTraces++;
+				}
 
 			}
 			processingClass(className, numberOfTraces);
@@ -109,10 +113,14 @@ public class TraceInterpreter
 			{
 				if (definition instanceof NamedTraceDefinition)
 				{
-					interpreter.init(null);
-					Context ctxt = interpreter.getInitialTraceContext((NamedTraceDefinition) definition, false);
+					if (traceName == null
+							|| ((NamedTraceDefinition) definition).name.name.equals(traceName))
+					{
+						interpreter.init(null);
+						Context ctxt = interpreter.getInitialTraceContext((NamedTraceDefinition) definition, false);
 
-					evaluateTests(className, storage, definition, ctxt);
+						evaluateTests(className, storage, definition, ctxt);
+					}
 				}
 			}
 
@@ -127,13 +135,16 @@ public class TraceInterpreter
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally
 		{
 			if (storage != null)
+			{
 				storage.Stop();
+			}
 		}
 	}
 
@@ -153,7 +164,9 @@ public class TraceInterpreter
 
 		processingTrace(className, mtd.name.name, tests.size());
 		if (storage != null)
-			storage.StartTrace(mtd.name.name, mtd.location.file.getName(), mtd.location.startLine, mtd.location.startPos, tests.size(), new Float(subset),org.overturetool.ct.utils.TraceReductionType.valueOf( traceReductionType.toString()), new Long(seed));
+		{
+			storage.StartTrace(mtd.name.name, mtd.location.file.getName(), mtd.location.startLine, mtd.location.startPos, tests.size(), new Float(subset), org.overturetool.ct.utils.TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+		}
 
 		int n = 1;
 
@@ -192,18 +205,22 @@ public class TraceInterpreter
 				tests.filter(result, test, n);
 
 				if (result.get(result.size() - 1) == Verdict.FAILED)
+				{
 					faildCount++;
+				}
 
 				else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
+				{
 					inconclusiveCount++;
-				
+				}
+
 				for (int i = 0; i < result.size(); i++)
 				{
-					if(result.get(i) instanceof Verdict)
+					if (result.get(i) instanceof Verdict)
 					{
 						result.set(i, org.overturetool.ct.utils.Verdict.valueOf(result.get(i).toString()));
 					}
-					
+
 				}
 
 				if (storage != null)
@@ -220,9 +237,12 @@ public class TraceInterpreter
 		{
 			Verdict worstVerdict = Verdict.PASSED;
 			if (faildCount > 0)
+			{
 				worstVerdict = Verdict.FAILED;
-			else if (inconclusiveCount > 0)
+			} else if (inconclusiveCount > 0)
+			{
 				worstVerdict = Verdict.INCONCLUSIVE;
+			}
 
 			storage.AddTraceStatus(org.overturetool.ct.utils.Verdict.valueOf(worstVerdict.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
 			storage.StopElement();
@@ -234,19 +254,19 @@ public class TraceInterpreter
 	protected void processingTraceFinished(String className, String name,
 			int size, int faildCount, int inconclusiveCount, int skippedCount)
 	{
-//		System.out.println("Finished " + className + "`" + name + ":"
-//				+ "faild=" + faildCount + " inc=" + inconclusiveCount
-//				+ " skipped=" + skippedCount + " ok="
-//				+ (size - (faildCount + inconclusiveCount + skippedCount)));
+		// System.out.println("Finished " + className + "`" + name + ":"
+		// + "faild=" + faildCount + " inc=" + inconclusiveCount
+		// + " skipped=" + skippedCount + " ok="
+		// + (size - (faildCount + inconclusiveCount + skippedCount)));
 
 	}
 
 	private void processingClass(String className, Integer traceCount)
 	{
-//		beginClass = System.currentTimeMillis();
-//		activeClass = className;
-//		System.out.println("Executing: " + className + " - Trace count: "
-//				+ traceCount);
+		// beginClass = System.currentTimeMillis();
+		// activeClass = className;
+		// System.out.println("Executing: " + className + " - Trace count: "
+		// + traceCount);
 
 		preProcessingClass(className, traceCount);
 	}
@@ -261,15 +281,15 @@ public class TraceInterpreter
 	{
 		if (monitor != null)
 		{
-			monitor.progressStartTrace(className+"`"+traceName);
+			monitor.progressStartTrace(className + "`" + traceName);
 			currentPct = 0;
 		}
-//		printTraceStatus();
-//		beginTrace = System.currentTimeMillis();
-//		activeTrace = traceName;
-//		System.out.println(className + " - " + traceName + " Test count = "
-//				+ testCount + " Reduction: seed=" + seed + " subset=" + subset
-//				+ " type=" + traceReductionType);
+		// printTraceStatus();
+		// beginTrace = System.currentTimeMillis();
+		// activeTrace = traceName;
+		// System.out.println(className + " - " + traceName + " Test count = "
+		// + testCount + " Reduction: seed=" + seed + " subset=" + subset
+		// + " type=" + traceReductionType);
 
 		preProcessingTrace(className, traceName, testCount);
 	}
@@ -303,9 +323,9 @@ public class TraceInterpreter
 		}
 		printTraceStatus();
 
-//		long endClass = System.currentTimeMillis();
-//		System.out.println("Class " + activeClass + " processed in "
-//				+ (double) (endClass - beginClass) / 1000 + " secs");
+		// long endClass = System.currentTimeMillis();
+		// System.out.println("Class " + activeClass + " processed in "
+		// + (double) (endClass - beginClass) / 1000 + " secs");
 
 		preCompleted();
 	}
@@ -345,13 +365,13 @@ public class TraceInterpreter
 
 	private void printTraceStatus()
 	{
-//		if (activeTrace != null && beginTrace != 0)
-//		{
-//			long endTrace = System.currentTimeMillis();
-//			System.out.println("Trace " + activeClass + " - " + activeTrace
-//					+ " processed in " + (double) (endTrace - beginTrace)
-//					/ 1000 + " secs");
-//		}
+		// if (activeTrace != null && beginTrace != 0)
+		// {
+		// long endTrace = System.currentTimeMillis();
+		// System.out.println("Trace " + activeClass + " - " + activeTrace
+		// + " processed in " + (double) (endTrace - beginTrace)
+		// / 1000 + " secs");
+		// }
 		prePrintTraceStatus();
 	}
 
@@ -365,18 +385,18 @@ public class TraceInterpreter
 		this.coverage = coverageDir;
 	}
 
-//	private static void writeCoverage(Interpreter interpreter, File coverage)
-//			throws IOException
-//	{
-//		for (File f : interpreter.getSourceFiles())
-//		{
-//			SourceFile source = interpreter.getSourceFile(f);
-//
-//			File data = new File(coverage.getPath() + File.separator
-//					+ f.getName() + ".covtbl");
-//			PrintWriter pw = new PrintWriter(data);
-//			source.writeCoverage(pw);
-//			pw.close();
-//		}
-//	}
+	// private static void writeCoverage(Interpreter interpreter, File coverage)
+	// throws IOException
+	// {
+	// for (File f : interpreter.getSourceFiles())
+	// {
+	// SourceFile source = interpreter.getSourceFile(f);
+	//
+	// File data = new File(coverage.getPath() + File.separator
+	// + f.getName() + ".covtbl");
+	// PrintWriter pw = new PrintWriter(data);
+	// source.writeCoverage(pw);
+	// pw.close();
+	// }
+	// }
 }
