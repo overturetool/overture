@@ -9,17 +9,7 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.uml2;singleton:=true
 Require-Bundle: org.overture.ide.ui;bundle-version="0.3.0",
  org.eclipse.uml2.uml;bundle-version="3.2.100"
-Bundle-Activator: org.overture.ide.plugins.showtrace.viewer.TracefileViewerPlugin
+Bundle-Activator: Activator
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .,
- org.overture.ide.core-2.2.0.jar,
- org.overture.ide.ui-2.2.0.jar,
- ast-2.2.0.jar,
- ast_assistance-2.2.0.jar,
- parser-2.2.0.jar,
- showtrace-2.1.1.jar,
- testframework-2.2.0.jar,
- typechecker-2.2.0.jar,
- vdmj-2.1.0.jar,
- vdmj_compatibility_utils-2.2.0.jar,
- cglib-2.1.1.jar
+ typechecker-2.2.0.jar
