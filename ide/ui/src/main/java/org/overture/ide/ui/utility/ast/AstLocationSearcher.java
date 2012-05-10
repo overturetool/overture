@@ -1,13 +1,17 @@
 package org.overture.ide.ui.utility.ast;
 
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
+import org.overture.ide.core.IVdmElement;
 import org.overturetool.vdmj.lex.LexLocation;
 
 /**
@@ -44,6 +48,12 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 	private static final AstLocationSearcher seacher = new AstLocationSearcher();
 
+	private static final Map<IVdmElement, Map<LexLocation, INode>> elementNodeCache = new HashMap<IVdmElement, Map<LexLocation, INode>>();
+
+	private IVdmElement currentElement = null;
+
+	private boolean indexing = false;
+
 	/**
 	 * Private constructor, special care is needed to the state of the class this no instanciation allowed outside this
 	 * class
@@ -59,6 +69,8 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		seacher.bestHit = null;
 		seacher.bestAlternativeHit = null;
 		seacher.bestAlternativeLocation = null;
+		seacher.currentElement = null;
+		seacher.indexing = false;
 	}
 
 	/**
@@ -97,6 +109,71 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 	}
 
+	/**
+	 * Search method to find the closest node to a location specified by a test offset
+	 * 
+	 * @param nodes
+	 *            The nodes to search within
+	 * @param offSet
+	 *            The offset to match a node to
+	 * @param element
+	 * @return The node closest to the offset or null
+	 */
+	public static INode searchCache(List<INode> nodes, int offSet,
+			IVdmElement element)
+	{
+		synchronized (seacher)
+		{
+			if (DEBUG_PRINT)
+			{
+				System.out.println("Search start");
+			}
+			seacher.init();
+			seacher.offSet = offSet;
+			seacher.currentElement = element;
+			try
+			{
+				if (elementNodeCache.get(element) == null
+						|| elementNodeCache.get(element).isEmpty())
+				{
+//					elementNodeCache.put(element, new HashMap<LexLocation, INode>());
+//					seacher.indexing = true;
+//					for (INode node : nodes)
+//					{
+//						node.apply(seacher);
+//					}
+					return null;
+				} else
+				{
+					for (Entry<LexLocation, INode> entry : elementNodeCache.get(element).entrySet())
+					{
+						seacher.check(entry.getValue(), entry.getKey());
+					}
+				}
+
+			} catch (UndeclaredThrowableException e)
+			{
+				// We found what we are looking for
+			}
+
+			return seacher.bestHit != null ? seacher.bestHit
+					: seacher.bestAlternativeHit;
+		}
+
+	}
+	
+	public static void createIndex(List<INode> nodes, IVdmElement element)
+	{
+		seacher.init();
+		seacher.currentElement = element;
+		elementNodeCache.put(element, new HashMap<LexLocation, INode>());
+		seacher.indexing = true;
+		for (INode node : nodes)
+		{
+			node.apply(seacher);
+		}
+	}
+
 	@Override
 	public void defaultInPDefinition(PDefinition node)
 	{
@@ -123,11 +200,18 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 					+ location.startOffset + " to " + location.endOffset
 					+ " line: " + location.startLine + ":" + location.startPos);
 		}
+		if (currentElement != null)
+		{
+			elementNodeCache.get(currentElement).put(location, node);
+		}
 		if (location.startOffset - 1 <= this.offSet
 				&& location.endOffset - 1 >= this.offSet)
 		{
 			bestHit = node;
-			throw new UndeclaredThrowableException(null, "Hit found stop search");
+			if (!indexing)
+			{
+				throw new UndeclaredThrowableException(null, "Hit found stop search");
+			}
 		}
 
 		// Store the last best match where best is closest with abs
@@ -162,8 +246,10 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 						+ " line: " + location.startLine + ":"
 						+ location.startPos);
 			}
-
-			throw new UndeclaredThrowableException(null, "Hit found stop search");
+			if (!indexing)
+			{
+				throw new UndeclaredThrowableException(null, "Hit found stop search");
+			}
 		}
 	}
 
