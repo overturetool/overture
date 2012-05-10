@@ -43,38 +43,41 @@ public class Vdm2UmlCommand extends AbstractHandler {
 				IVdmModel model = vdmProject.getModel();
 				if(model.isParseCorrect())
 				{
+					ClassList classes = null;
+					try {
+						classes = model.getClassList();
+					} catch (NotAllowedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if(!model.isTypeChecked())
 					{
+						
+						ClassTypeChecker tc = new ClassTypeChecker(classes);
+						tc.typeCheck();
+					}
+
+					if (ClassTypeChecker.getErrorCount() == 0) {
+						Vdm2Uml vdm2uml = new Vdm2Uml();
+						vdm2uml.init(classes);
+
+						IFile iFile = project.getFile(project.getName());
+						java.net.URI absolutePath = iFile.getLocationURI();
+						URI uri = URI.createFileURI(absolutePath.getPath());
 						try {
-							ClassList classes = model.getClassList();
-							ClassTypeChecker tc = new ClassTypeChecker(classes);
-							tc.typeCheck();
-							
-							Vdm2Uml vdm2uml = new Vdm2Uml();
-							vdm2uml.init(classes);
-							
-							IFile iFile = project.getFile(project.getName());
-							java.net.URI absolutePath = iFile.getLocationURI();
-							URI uri = URI.createFileURI(absolutePath.getPath());
-							System.out.println(uri.toString());
-							try {
-								vdm2uml.save(uri);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-						} catch (NotAllowedException e) {
+							vdm2uml.save(uri);
+						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+
 					}
+
 				}
-				
+
 			}
-			
+
 		}
-		
 		
 		return null;
 	}
