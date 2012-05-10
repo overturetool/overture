@@ -30,6 +30,7 @@
     <module>builders</module>
     <module>plugins</module>
     <module>help</module>
+    <!-- make sure this is last! -->
     <module>build</module>
   </modules>
 
