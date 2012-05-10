@@ -738,7 +738,7 @@ public abstract class VdmEditor extends TextEditor
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret = offset + styledText.getCaretOffset();
 		}
-System.out.println("Compute element at "+caret);
+//System.out.println("Compute element at "+caret);
 		INode element = getElementAt(caret, false);
 
 		// if (!(element instanceof INode))
