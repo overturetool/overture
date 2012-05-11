@@ -33,18 +33,14 @@ public class TraceTestEngine
 			{
 				IPreferenceStore preferences = OvertureTracesPlugin.getDefault().getPreferenceStore();
 
-				// IProject project = (IProject) vdmProject.getAdapter(IProject.class);
-
 				if (!texe.coverageFolder.exists()
 						&& !texe.coverageFolder.mkdirs())
 				{
 					System.out.println("Failed in creating coverage directory for CT:"
 							+ texe.coverageFolder.getAbsolutePath());
 				}
-				// File outputFolder = new File(project.getLocation().toFile(), "generated");
 				File traceFolder = StorageManager.getCtOutputFolder(texe.project);// new File(outputFolder, "traces");
 				traceFolder.mkdirs();
-				// File coverage = new File(outputFolder, "coverage");
 				Process p = null;
 				ConnectionListener conn = null;
 				try
@@ -152,30 +148,30 @@ public class TraceTestEngine
 						}
 					}).start();
 
-					new Thread(new Runnable()
-					{
-
-						public void run()
-						{
-							while (true)
-							{
-								try
-								{
-									Thread.sleep(1000);
-									if (finalP.exitValue() != 0)
-									{
-										System.err.println("Client exited with errors: "
-												+ finalP.exitValue());
-									}
-									threadFinished();
-									return;
-								} catch (Exception e)
-								{
-								}
-
-							}
-						}
-					}).start();
+//					new Thread(new Runnable()
+//					{
+//
+//						public void run()
+//						{
+//							while (true)
+//							{
+//								try
+//								{
+//									Thread.sleep(1000);
+//									if (finalP.exitValue() != 0)
+//									{
+//										System.err.println("Client exited with errors: "
+//												+ finalP.exitValue());
+//									}
+//									threadFinished();
+//									return;
+//								} catch (Exception e)
+//								{
+//								}
+//
+//							}
+//						}
+//					}).start();
 				}
 
 				while (!monitor.isCanceled() && isRunning)

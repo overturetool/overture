@@ -94,7 +94,7 @@ public class VdmjTracesHelper
 	public void consolePrint(String message)
 	{
 
-		MessageConsole myConsole = findConsole("TracesConsole");
+		MessageConsole myConsole = findConsole("Combinatorial Testing");
 		MessageConsoleStream out = myConsole.newMessageStream();
 		out.println(message);
 
