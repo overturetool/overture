@@ -140,7 +140,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
 				 	
-			return AstFactory.createAClassClassDefinition(className, superclasses, members);
+			return AstFactory.newAClassClassDefinition(className, superclasses, members);
 			
 			//SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,null, null, superclasses, members,null,null,false,ClassDefinitionSettings.UNSET , null, false, null, false,false,false, null,false,null);
 			//PDefinitionAssistant.setClassDefinition(def,def);
@@ -216,7 +216,7 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
 
-			return AstFactory.createASystemClassDefinition(className,members);// new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null, null,null, new LexNameList(), members,null,null,false,null, null, false, null, false,false,false,null,false,null);
+			return AstFactory.newASystemClassDefinition(className,members);// new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null, null,null, new LexNameList(), members,null,null,false,null, null, false, null, false,false,false,null,false,null);
 //			for (PDefinition pDefinition : def.getDefinitions())
 //			{
 //				pDefinition.setClassDefinition(def);

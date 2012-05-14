@@ -1,29 +1,32 @@
 package org.overture.ast.definitions.assistants;
 
-import org.overture.ast.definitions.APrivateAccess;
-import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overturetool.vdmj.typechecker.Access;
 
 public class PAccessSpecifierAssistant {
 
 	
 	public static AAccessSpecifierAccessSpecifier getDefault()
 	{
-		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
+		return new AAccessSpecifierAccessSpecifier(Access.PRIVATE, false, false);
 	}
 	
 	public static boolean isStatic(AAccessSpecifierAccessSpecifier access) {
 		
-		return access != null && access.getStatic() != null;
+		return access != null && access.getStatic();
 	}
 	
 	public static boolean isPublic(AAccessSpecifierAccessSpecifier access) {
 		
-		return access != null && access.getAccess() instanceof APublicAccess;
+		return access != null && access.getAccess() == Access.PUBLIC;
 	}
 
 	public static AAccessSpecifierAccessSpecifier getPublic() {
-		return new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
+		return new AAccessSpecifierAccessSpecifier(Access.PUBLIC, false, false);
+	}
+
+	public static AAccessSpecifierAccessSpecifier getProtected() {
+		return new AAccessSpecifierAccessSpecifier(Access.PROTECTED, false, false);
 	}
 	
 }

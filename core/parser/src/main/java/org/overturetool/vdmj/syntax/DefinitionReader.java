@@ -24,62 +24,32 @@
 package org.overturetool.vdmj.syntax;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.AMutexSyncDefinition;
-import org.overture.ast.definitions.ANamedTraceDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
-import org.overture.ast.definitions.APrivateAccess;
-import org.overture.ast.definitions.AProtectedAccess;
-import org.overture.ast.definitions.APublicAccess;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
-import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
-import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
-import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.node.tokens.TAsync;
-import org.overture.ast.node.tokens.TStatic;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.ASetBind;
-import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.PPatternAssistant;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.AExternalClause;
-import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -87,14 +57,9 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
-import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overturetool.util.ClonableString;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
@@ -109,8 +74,8 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
+import org.overturetool.vdmj.typechecker.Access;
 import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.util.Utils;
 
 /**
  * A syntax analyser to parse definitions.
@@ -118,12 +83,6 @@ import org.overturetool.vdmj.util.Utils;
 
 public class DefinitionReader extends SyntaxReader
 {
-//	private AAccessSpecifierAccessSpecifier getDefaultAccess()
-//	{
-//		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
-//	}
-
-	
 
 	public DefinitionReader(LexTokenReader reader)
 	{
@@ -282,10 +241,10 @@ public class DefinitionReader extends SyntaxReader
 		// Defaults
 		// boolean isStatic = false;
 		// boolean isAsync = false;
-		TStatic isStatic = null;
-		TAsync isAsync = null;
+		boolean isStatic = false;
+		boolean isAsync = false;
 		// VDMToken access = VDMToken.PRIVATE;
-		PAccess access = new APrivateAccess();
+		Access access = Access.PRIVATE;
 
 		boolean more = true;
 
@@ -296,7 +255,7 @@ public class DefinitionReader extends SyntaxReader
 				case ASYNC:
 					if (async)
 					{
-						isAsync = new TAsync();
+						isAsync = true;
 						nextToken();
 					} else
 					{
@@ -306,21 +265,21 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case STATIC:
-					isStatic = new TStatic();
+					isStatic = true;
 					nextToken();
 					break;
 
 				case PUBLIC:
-					access = new APublicAccess();
+					access = Access.PUBLIC;
 					nextToken();
 					break;
 				case PRIVATE:
-					access = new APrivateAccess();
+					access = Access.PRIVATE;
 					nextToken();
 					break;
 				case PROTECTED:
 					// access = lastToken().type;
-					access = new AProtectedAccess();
+					access = Access.PROTECTED;
 					nextToken();
 					break;
 
@@ -330,7 +289,7 @@ public class DefinitionReader extends SyntaxReader
 			}
 		}
 
-		return new AAccessSpecifierAccessSpecifier(access, isStatic, isAsync);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(access, isStatic, isAsync);
 	}
 
 	public ATypeDefinition readTypeDefinition() throws ParserException,
@@ -344,9 +303,8 @@ public class DefinitionReader extends SyntaxReader
 		{
 			case EQUALS:
 				nextToken();
-				// NamedType nt = new NamedType(idToName(id), tr.readType());
 				PType type = tr.readType();
-				ANamedInvariantType nt = AstFactory.createANamedInvariantType(idToName(id), type);
+				ANamedInvariantType nt = AstFactory.newANamedInvariantType(idToName(id), type);
 
 				if (type instanceof AUnresolvedType
 						&& ((AUnresolvedType) type).getName().equals(idToName(id)))
@@ -359,7 +317,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case COLONCOLON:
 				nextToken();
-				invtype = AstFactory.createARecordInvariantType(idToName(id), tr.readFieldList());// new ARecordInvariantType(id.location, false, idToName(id), tr.readFieldList());
+				invtype = AstFactory.newARecordInvariantType(idToName(id), tr.readFieldList());
 				break;
 
 			default:
@@ -377,7 +335,7 @@ public class DefinitionReader extends SyntaxReader
 			invExpression = getExpressionReader().readExpression();
 		}
 		
-		return AstFactory.createATypeDefinition(idToName(id), invtype, invPattern, invExpression); 
+		return AstFactory.newATypeDefinition(idToName(id), invtype, invPattern, invExpression); 
 
 	}
 
@@ -391,7 +349,7 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
-				access.setStatic(new TStatic());
+				access.setStatic(true);
 				ATypeDefinition def = readTypeDefinition();
 
 				// Force all type defs (invs) to be static
@@ -421,7 +379,7 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
-				access.setStatic(new TStatic());
+				access.setStatic(true);
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
 
 				// Force all values to be static
@@ -466,7 +424,7 @@ public class DefinitionReader extends SyntaxReader
 				if (Settings.release == Release.VDM_10)
 				{
 					// Force all functions to be static for VDM-10
-					access.setStatic(new TStatic());
+					access.setStatic(true);
 					def.setAccess(access);
 				} else
 				{
@@ -715,22 +673,10 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 
-		// return new AExplicitFunctionDefinition(funcName.location,
-		// idToName(funcName), scope,false,null,getDefaultAccess(),typeParams,
-		// parameters,type,body,precondition,postcondition,measure,
-		// null,null,null,null,false,false,0,null,null,false,false);
-		//
-		return AstFactory.createAExplicitFunctionDefinition(
+		return AstFactory.newAExplicitFunctionDefinition(
 				idToName(funcName), scope, typeParams,
 				type, parameters, body, precondition, postcondition,
 				false, measure);
-		
-//		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure, null, null, null, null, false, false, 0, null, null, null, parameters.size() > 1, null);
-//		// AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName),
-//		// scope,
-//		// false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
-//		type.getDefinitions().add(res);
-//		return res;
 	}
 
 	private PDefinition readImplicitFunctionDefinition(
@@ -749,13 +695,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			List<PPattern> pl = pr.readPatternList();
 			checkFor(VDMToken.COLON, 2093, "Missing colon after pattern/type parameter");
-			parameterPatterns.add(new APatternListTypePair(false, pl, tr.readType()));
+			parameterPatterns.add(AstFactory.newAPatternListTypePair(pl, tr.readType()));
 
 			while (ignore(VDMToken.COMMA))
 			{
 				pl = pr.readPatternList();
 				checkFor(VDMToken.COLON, 2093, "Missing colon after pattern/type parameter");
-				parameterPatterns.add(new APatternListTypePair(false, pl, tr.readType()));
+				parameterPatterns.add(AstFactory.newAPatternListTypePair(pl, tr.readType()));
 			}
 		}
 
@@ -768,8 +714,7 @@ public class DefinitionReader extends SyntaxReader
 		do
 		{
 			LexIdentifierToken rname = readIdToken("Expecting result identifier");
-			LexNameToken tempName = idToName(rname);
-			resultNames.add(new AIdentifierPattern(tempName.location, null, false, tempName));
+			resultNames.add(AstFactory.newAIdentifierPattern(idToName(rname)));
 			checkFor(VDMToken.COLON, 2094, "Missing colon in identifier/type return value");
 			resultTypes.add(tr.readType());
 		} while (ignore(VDMToken.COMMA));
@@ -783,10 +728,13 @@ public class DefinitionReader extends SyntaxReader
 
 		if (resultNames.size() > 1)
 		{
-			resultPattern = new APatternTypePair(false, new ATuplePattern(firstResult.location, null, false, resultNames), new AProductType(firstResult.location, false, null, resultTypes));
+			resultPattern = AstFactory.newAPatternTypePair(
+					AstFactory.newATuplePattern(firstResult.location, resultNames),
+					AstFactory.newAProductType(firstResult.location, resultTypes)
+					);
 		} else
 		{
-			resultPattern = new APatternTypePair(false, resultNames.get(0), resultTypes.get(0));
+			resultPattern = AstFactory.newAPatternTypePair(resultNames.get(0), resultTypes.get(0)); 
 		}
 
 		ExpressionReader expr = getExpressionReader();
@@ -827,7 +775,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 
-		return AstFactory.createAImplicitFunctionDefinition(idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
+		return AstFactory.newAImplicitFunctionDefinition(idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
 				body, precondition, postcondition, measure);
 		
 	}
@@ -880,7 +828,7 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
 
-		return AstFactory.createAValueDefinition(p, scope, type, getExpressionReader().readExpression());
+		return AstFactory.newAValueDefinition(p, scope, type, getExpressionReader().readExpression());
 	}
 
 	private PDefinition readStateDefinition() throws ParserException,
@@ -922,7 +870,7 @@ public class DefinitionReader extends SyntaxReader
 		
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 
-		return AstFactory.createAStateDefinition(idToName(name), fieldList,
+		return AstFactory.newAStateDefinition(idToName(name), fieldList,
 				invPattern, invExpression, initPattern, initExpression);		
 	}
 
@@ -999,15 +947,9 @@ public class DefinitionReader extends SyntaxReader
 			nextToken();
 			postcondition = getExpressionReader().readExpression();
 		}
-		// super(Pass.DEFS, name.location, name, NameScope.GLOBAL);
-
-		// AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location,
-		// idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(), type, parameters,body,
-		// precondition,postcondition,type,null,null,null,null,null,false);
-
-		AExplicitOperationDefinition def = new AExplicitOperationDefinition(funcName.location, idToName(funcName), NameScope.GLOBAL, false, null, getDefaultAccess(), parameters, body, precondition, postcondition, type, null, null, null, null, null, false);
-
-		return def;
+		
+		return AstFactory.newAExplicitOperationDefinition(idToName(funcName), type,
+				parameters, precondition, postcondition, body);
 	}
 
 	private PDefinition readImplicitOperationDefinition(
@@ -1024,13 +966,13 @@ public class DefinitionReader extends SyntaxReader
 		{
 			List<PPattern> pl = pr.readPatternList();
 			checkFor(VDMToken.COLON, 2103, "Missing colon after pattern/type parameter");
-			parameterPatterns.add(new APatternListTypePair(false, pl, tr.readType()));
+			parameterPatterns.add(AstFactory.newAPatternListTypePair(pl, tr.readType()));
 
 			while (ignore(VDMToken.COMMA))
 			{
 				pl = pr.readPatternList();
 				checkFor(VDMToken.COLON, 2103, "Missing colon after pattern/type parameter");
-				parameterPatterns.add(new APatternListTypePair(false, pl, tr.readType()));
+				parameterPatterns.add(AstFactory.newAPatternListTypePair(pl, tr.readType()));
 			}
 		}
 
@@ -1047,7 +989,7 @@ public class DefinitionReader extends SyntaxReader
 			do
 			{
 				LexIdentifierToken rname = readIdToken("Expecting result identifier");
-				resultNames.add(new AIdentifierPattern(rname.location, null, false, idToName(rname)));
+				resultNames.add(AstFactory.newAIdentifierPattern(idToName(rname)));
 				checkFor(VDMToken.COLON, 2104, "Missing colon in identifier/type return value");
 				resultTypes.add(tr.readType());
 			} while (ignore(VDMToken.COMMA));
@@ -1059,10 +1001,14 @@ public class DefinitionReader extends SyntaxReader
 
 			if (resultNames.size() > 1)
 			{
-				resultPattern = new APatternTypePair(false, new ATuplePattern(firstResult.location, null, false, resultNames), new AProductType(firstResult.location, false, null, resultTypes));
+				resultPattern = AstFactory.newAPatternTypePair(
+						AstFactory.newATuplePattern(firstResult.location, resultNames),
+						AstFactory.newAProductType(firstResult.location, resultTypes)
+						);
 			} else
 			{
-				resultPattern = new APatternTypePair(false, resultNames.get(0), resultTypes.get(0));
+				resultPattern = 
+						AstFactory.newAPatternTypePair(resultNames.get(0), resultTypes.get(0));
 			}
 		}
 
@@ -1076,20 +1022,7 @@ public class DefinitionReader extends SyntaxReader
 
 		ASpecificationStm spec = readSpecification(funcName.location, body == null);
 
-		List<PType> ptypes = new Vector<PType>();
-
-		for (APatternListTypePair ptp : parameterPatterns)
-		{
-			ptypes.addAll(getTypeList(ptp));
-		}
-		AOperationType operationType = new AOperationType(funcName.location, false, null, ptypes, (resultPattern == null ? new AVoidType(funcName.location, false, null)
-				: resultPattern.getType()));
-
-		// AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location,
-		// idToName(funcName),NameScope.GLOBAL,false,null,getDefaultAccess(),null, parameterPatterns, resultPattern,
-		// body,spec.getExternals(),spec.getPrecondition(),spec.getPostcondition(),spec.getErrors(),operationType,null,null,null,null,null,false);
-
-		AImplicitOperationDefinition def = new AImplicitOperationDefinition(funcName.location, idToName(funcName), NameScope.GLOBAL, false, null, getDefaultAccess(), parameterPatterns, resultPattern, body, spec.getExternals(), spec.getPrecondition(), spec.getPostcondition(), spec.getErrors(), operationType, null, null, null, null, null, false);
+		AImplicitOperationDefinition def = AstFactory.newAImplicitOperationDefinition(idToName(funcName), parameterPatterns, resultPattern, body, spec);
 
 		return def;
 	}
@@ -1153,7 +1086,7 @@ public class DefinitionReader extends SyntaxReader
 				PExp left = expr.readExpression();
 				checkFor(VDMToken.ARROW, 2107, "Expecting '->' in errs clause");
 				PExp right = expr.readExpression();
-				errors.add(new AErrorCase(name, left, right));
+				errors.add(AstFactory.newAErrorCase(name, left, right));
 			}
 
 			if (errors.isEmpty())
@@ -1162,7 +1095,8 @@ public class DefinitionReader extends SyntaxReader
 			}
 		}
 
-		return new ASpecificationStm(location, externals, precondition, postcondition, errors);
+		return AstFactory.newASpecificationStm(location,
+				externals, precondition, postcondition, errors);
 	}
 
 	private AExternalClause readExternal() throws ParserException, LexException
@@ -1191,8 +1125,8 @@ public class DefinitionReader extends SyntaxReader
 			type = getTypeReader().readType();
 		}
 
-		return new AExternalClause(mode, names, (type == null) ? new AUnknownType(names.get(0).location, false)
-				: type);
+		return AstFactory.newAExternalClause(mode, names, type);
+		
 	}
 
 	public AEqualsDefinition readEqualsDefinition() throws ParserException,
@@ -1222,8 +1156,7 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.EQUALS, 2108, "Expecting <pattern>=<exp>");
 			PExp test = getExpressionReader().readExpression();
 			reader.unpush();
-
-			return new AEqualsDefinition(location, null, null, null, null, null, null, pattern, null, null, test, null, null, null);
+			return AstFactory.newAEqualsDefinition(location, pattern, test);
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -1239,8 +1172,7 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.EQUALS, 2109, "Expecting <type bind>=<exp>");
 			PExp test = getExpressionReader().readExpression();
 			reader.unpush();
-
-			return new AEqualsDefinition(location, null, null, null, null, null, null, null, typebind, null, test, null, null, null);
+			return AstFactory.newAEqualsDefinition(location, typebind, test);
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -1256,10 +1188,11 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.IN, 2110, "Expecting <pattern> in set <set exp>");
 			checkFor(VDMToken.SET, 2111, "Expecting <pattern> in set <set exp>");
 			AEqualsBinaryExp test = getExpressionReader().readDefEqualsExpression();
-			ASetBind setbind = new ASetBind(pattern.getLocation(), pattern, test.getLeft());
+			ASetBind setbind = AstFactory.newASetBind(pattern, test.getLeft());
 			reader.unpush();
-
-			return new AEqualsDefinition(location, null, null, null, null, null, null, null, null, setbind, test.getRight(), null, null, pattern.getDefinitions());
+			return AstFactory.newAEqualsDefinition(location, setbind, test.getRight());
+			//TODO: why does this have patterns.getDefinitions() for defs?!
+			//return new AEqualsDefinition(location, null, null, null, null, null, null, null, null, null, setbind, test.getRight(), null, null, pattern.getDefinitions());
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -1279,14 +1212,12 @@ public class DefinitionReader extends SyntaxReader
 			PExp exp = getExpressionReader().readExpression();
 			String str = getCurrentModule();
 			LexNameToken className = new LexNameToken(str, str, token.location);
-			return new AClassInvariantDefinition(token.location, className.getInvName(token.location), null, null, null, null, null, exp);
-			// return new ClassInvariantDefinition(
-			// className.getInvName(token.location), exp);
+			return AstFactory.newAClassInvariantDefinition(className.getInvName(token.location), exp);
 		} else
 		{
 			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
-			AInstanceVariableDefinition ivd = new AInstanceVariableDefinition(def.getName().location, def.getName().clone(), NameScope.STATE, null, null, access, def.getType(), def.getExpression(), null, !(def.getExpression() instanceof AUndefinedExp), def.getName().getOldName());
+			AInstanceVariableDefinition ivd = AstFactory.newAInstanceVariableDefinition(def.getName(), def.getType(), def.getExpression());
 			ivd.setAccess(access);
 			return ivd;
 		}
@@ -1306,12 +1237,12 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.BRA, 2114, "Expecting '(' after periodic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after periodic(...)");
 			checkFor(VDMToken.KET, 2115, "Expecting (name) after periodic(...)");
-			PStm statement = new APeriodicStm(token.location, name, args);
-			return new AThreadDefinition(name.location, name, NameScope.GLOBAL, null, null, new AAccessSpecifierAccessSpecifier(new AProtectedAccess(), null, null), null, statement, LexNameToken.getThreadName(statement.getLocation()), null);
+			//PStm statement = AstFactory.newAPeriodicStm(token.location, name, args);
+			return AstFactory.newAThreadDefinition(name,args);
 		} else
 		{
 			PStm stmt = getStatementReader().readStatement();
-			return new AThreadDefinition(stmt.getLocation(), null, NameScope.GLOBAL, null, null, new AAccessSpecifierAccessSpecifier(new AProtectedAccess(), null, null), null, stmt, LexNameToken.getThreadName(stmt.getLocation()), null);
+			return AstFactory.newAThreadDefinition(stmt);
 		}
 	}
 
@@ -1327,8 +1258,7 @@ public class DefinitionReader extends SyntaxReader
 				LexNameToken name = readNameToken("Expecting name after 'per'");
 				checkFor(VDMToken.IMPLIES, 2116, "Expecting <name> => <exp>");
 				PExp exp = getExpressionReader().readPerExpression();
-				return new APerSyncDefinition(token.location, name.getPerName(token.location), null, null, null, getDefaultAccess(), null, name, exp);
-				// return new PerSyncDefinition(token.location, name, exp);
+				return AstFactory.newAPerSyncDefinition(token.location, name, exp);
 
 			case MUTEX:
 				nextToken();
@@ -1356,7 +1286,7 @@ public class DefinitionReader extends SyntaxReader
 						break;
 				}
 
-				return new AMutexSyncDefinition(token.location, null, null, null, null, null, null, opnames);
+				return AstFactory.newAMutexSyncDefinition(token.location, opnames);
 
 			default:
 				throwMessage(2028, "Expecting 'per' or 'mutex'");
@@ -1372,24 +1302,7 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.COLON, 2264, "Expecting ':' after trace name(s)");
 		List<List<PTraceDefinition>> traces = readTraceDefinitionList();
 
-		// return new NamedTraceDefinition(start, names, traces);
-		// TODO
-		LexNameToken name = new LexNameToken(start.module, Utils.listToString(names, "_"), start);
-		AAccessSpecifierAccessSpecifier access = new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
-		
-		List<ClonableString> namesClonable = new Vector<ClonableString>();
-		for (String string : names)
-		{
-			namesClonable.add( new ClonableString(string));
-		}
-		
-		List<ATraceDefinitionTerm> tracesTerms = new Vector<ATraceDefinitionTerm>();
-		for (List<PTraceDefinition> list : traces)
-		{
-			tracesTerms.add( new ATraceDefinitionTerm(list));
-		}
-		
-		return new ANamedTraceDefinition(start, name, NameScope.GLOBAL, false, null, access, null, namesClonable,tracesTerms);
+		return AstFactory.newANamedTraceDefinition(start, names, traces);
 	}
 
 	private List<String> readTraceIdentifierList() throws ParserException,
@@ -1520,7 +1433,7 @@ public class DefinitionReader extends SyntaxReader
 				break;
 		}
 
-		return new ARepeatTraceDefinition(token.location, core, from, to);
+		return AstFactory.newARepeatTraceDefinition(token.location, core, from, to);
 	}
 
 	private PTraceDefinition readTraceBinding() throws ParserException,
@@ -1586,7 +1499,7 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2231, "Expecting 'in' after local definitions");
 		PTraceDefinition body = readTraceDefinition();
 
-		return new ALetDefBindingTraceDefinition(start.location, localDefs, body);
+		return AstFactory.newALetDefBindingTraceDefinition(start.location, localDefs, body);
 	}
 
 	private PTraceDefinition readLetBeStBinding() throws ParserException,
@@ -1606,7 +1519,7 @@ public class DefinitionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2233, "Expecting 'in' after bind in let statement");
 		PTraceDefinition body = readTraceDefinition();
 
-		return new ALetBeStBindingTraceDefinition(start.location, bind, stexp, body, null);
+		return AstFactory.newALetBeStBindingTraceDefinition(start.location, bind, stexp, body);
 	}
 
 	private PTraceCoreDefinition readCoreTraceDefinition()
@@ -1628,13 +1541,13 @@ public class DefinitionReader extends SyntaxReader
 					throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);
 				}
 
-				return new AApplyExpressionTraceCoreDefinition(stmt.getLocation(), stmt, getCurrentModule());
+				return AstFactory.newAApplyExpressionTraceCoreDefinition(stmt, getCurrentModule());
 
 			case BRA:
 				nextToken();
 				List<List<PTraceDefinition>> list = readTraceDefinitionList();
 				checkFor(VDMToken.KET, 2269, "Expecting '(trace definitions)'");
-				return new ABracketedExpressionTraceCoreDefinition(token.location, list);
+				return AstFactory.newABracketedExpressionTraceCoreDefinition(token.location, list);
 
 			case PIPEPIPE:
 				nextToken();
@@ -1651,7 +1564,7 @@ public class DefinitionReader extends SyntaxReader
 				}
 
 				checkFor(VDMToken.KET, 2294, "Expecting ')' ending || clause");
-				return new AConcurrentExpressionTraceCoreDefinition(token.location, defs);
+				return AstFactory.newAConcurrentExpressionTraceCoreDefinition(token.location, defs);
 
 			default:
 				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);

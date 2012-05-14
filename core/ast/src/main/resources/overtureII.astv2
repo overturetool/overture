@@ -26,6 +26,7 @@ Tokens
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
   Pass = 'java:enum:org.overturetool.vdmj.typechecker.Pass';
+  Access = 'java:enum:org.overturetool.vdmj.typechecker.Access';
   
   //Java
   java_Boolean = 'java:java.lang.Boolean';
@@ -263,13 +264,9 @@ field {-> package='org.overture.ast.types'}
                 [tag]:java_String (type):type [equalityAbstraction]:java_Boolean
     ;
 accessSpecifier  {-> package='org.overture.ast.types'}
-  = {accessSpecifier} [access]:access [static]:static [async]:async 
+  = {accessSpecifier} [access]:Access [static]:java_Boolean [async]:java_Boolean 
   ;
-access  {-> package='org.overture.ast.definitions'}
-    =   {public}
-    |   {protected}
-    |   {private}
-    ;
+
 
 pattern {-> package='org.overture.ast.patterns'}
     =   {boolean} [value]:LexBooleanToken
