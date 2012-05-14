@@ -64,6 +64,10 @@ public class PogExpVisitor extends
 		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7899640121529246521L;
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
 
 	public PogExpVisitor(PogVisitor pogVisitor)
@@ -598,10 +602,12 @@ public class PogExpVisitor extends
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
+		@SuppressWarnings("unchecked")
 		Queue<PExp> args = (Queue<PExp>) node.getArgs().clone();
 		for (PExp arg : args)
 			obligations.addAll(arg.apply(this, question));
 
+		@SuppressWarnings("unchecked")
 		Queue<PType> argTypes = (Queue<PType>) node.getArgTypes().clone();
 
 		ARecordInvariantType recordType = node.getRecordType();

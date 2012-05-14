@@ -49,6 +49,10 @@ public class PogStmVisitor extends
 		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6212386772005972258L;
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
 
 	public PogStmVisitor(PogVisitor pogVisitor)
