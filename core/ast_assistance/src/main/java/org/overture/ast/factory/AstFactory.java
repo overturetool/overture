@@ -40,31 +40,50 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.ADomainResByBinaryExp;
 import org.overture.ast.expressions.ADomainResToBinaryExp;
+import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFieldNumberExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AHistoryExp;
+import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfBaseClassExp;
+import org.overture.ast.expressions.AIsOfClassExp;
+import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapCompMapExp;
+import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
+import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
@@ -73,6 +92,7 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
+import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
@@ -80,10 +100,17 @@ import org.overture.ast.expressions.ARangeResToBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASameClassExp;
 import org.overture.ast.expressions.ASelfExp;
+import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
@@ -98,6 +125,9 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SMapExp;
+import org.overture.ast.expressions.SSeqExp;
+import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -148,6 +178,7 @@ import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.Access;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
@@ -1320,7 +1351,266 @@ public class AstFactory {
 		
 		return result;
 	}
-	
+
+	public static AIsExp newAIsExp(LexLocation location, PType type, PExp test) {
+		AIsExp result = new AIsExp();
+		location.executable(true);
+		
+		result.setLocation(location);
+		result.setBasicType(type);
+		result.setTypeName(null);
+		result.setTest(test);
+		
+		return result;
+	}
+
+	public static APreExp newAPreExp(LexLocation location, PExp function,
+			List<PExp> args) {
+		APreExp result = new APreExp();
+		result.setLocation(location);
+		result.setFunction(function);
+		result.setArgs(args);
+		return result;
+	}
+
+	public static ASetEnumSetExp newASetEnumSetExp(LexLocation start) {
+		ASetEnumSetExp result = new ASetEnumSetExp();
+		result.setLocation(start);
+		result.setMembers(new Vector<PExp>());
+		return result;
+	}
+
+	public static AMapEnumMapExp newAMapEnumMapExp(LexLocation start) {
+		AMapEnumMapExp result = new AMapEnumMapExp();
+		result.setLocation(start);
+		result.getLocation().executable(true);
+		result.setMembers(new Vector<AMapletExp>());
+		return result;
+	}
+
+	public static AMapletExp newAMapletExp(PExp left, LexToken op,
+			PExp right) {
+		AMapletExp result = new AMapletExp(op.location, left, right);
+		return result;
+	}
+
+	public static ASetCompSetExp newASetCompSetExp(LexLocation start, PExp first,
+			List<PMultipleBind> bindings, PExp predicate) {
+		ASetCompSetExp result = new ASetCompSetExp(start, first, bindings, predicate);
+		start.executable(true);
+		return result;
+	}
+
+	public static ASetRangeSetExp newASetRangeSetExp(LexLocation start, PExp first,
+			PExp last) {
+		ASetRangeSetExp result = new ASetRangeSetExp(start, first, last);
+		start.executable(true);
+		return result;
+	}
+
+	public static AMapCompMapExp newAMapCompMapExp(LexLocation start,
+			AMapletExp first, List<PMultipleBind> bindings, PExp predicate) {
+		AMapCompMapExp result = new AMapCompMapExp(start, first, bindings, predicate);
+		start.executable(true);
+		return result;
+	}
+
+	public static AMapEnumMapExp newAMapEnumMapExp(LexLocation start,
+			List<AMapletExp> members) {
+		AMapEnumMapExp result = new AMapEnumMapExp();
+		result.setLocation(start);
+		result.getLocation().executable(true);
+		result.setMembers(members);
+		return result;
+	}
+
+	public static ASeqEnumSeqExp newASeqEnumSeqExp(LexLocation start) {
+		ASeqEnumSeqExp result = new ASeqEnumSeqExp(start, new Vector<PExp>());
+		start.executable(true);
+		return result;
+	}
+
+	public static ASeqCompSeqExp newASeqCompSeqExp(LexLocation start, PExp first,
+			ASetBind setbind, PExp predicate) {
+		ASeqCompSeqExp result = new ASeqCompSeqExp(start,first,setbind,predicate);
+		start.executable(true);
+		return result;
+	}
+
+	public static ASeqEnumSeqExp newASeqEnumSeqExp(LexLocation start,
+			List<PExp> members) {
+		ASeqEnumSeqExp result = new ASeqEnumSeqExp(start, members);
+		start.executable(true);
+		return result;
+	}
+
+	public static AIfExp newAIfExp(LexLocation start, PExp test, PExp thenExp,
+			List<AElseIfExp> elseList, PExp elseExp) {
+		
+		AIfExp result = new AIfExp(start, test, thenExp, elseList, elseExp);
+		start.executable(true);
+		return result;
+	}
+
+	public static AElseIfExp newAElseIfExp(LexLocation start, PExp elseIfExp,
+			PExp thenExp) {
+		AElseIfExp result = new AElseIfExp(start, elseIfExp, thenExp);
+		start.executable(true);
+		return result;
+	}
+
+	public static ACasesExp newACasesExp(LexLocation start, PExp exp,
+			List<ACaseAlternative> cases, PExp others) {
+		ACasesExp result = new ACasesExp(start, exp, cases, others);
+		start.executable(true);
+		return result;
+	}
+
+	public static ACaseAlternative newACaseAlternative(PExp cexp,
+			PPattern pattern, PExp resultExp) {
+		ACaseAlternative result = new ACaseAlternative();
+		result.setLocation(pattern.getLocation());
+		result.setCexp(cexp);
+		result.setPattern(pattern);
+		result.setResult(resultExp);
+		return result;
+	}
+
+	public static ALetDefExp newALetDefExp(LexLocation start,
+			List<PDefinition> localDefs, PExp readConnectiveExpression) {
+		ALetDefExp result = new ALetDefExp(start, localDefs, readConnectiveExpression);
+		start.executable(true);
+		return result;
+	}
+
+	public static ALetBeStExp newALetBeStExp(LexLocation start,
+			PMultipleBind bind, PExp suchThat, PExp value) {
+		ALetBeStExp result = new ALetBeStExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setBind(bind);
+		result.setSuchThat(suchThat);
+		result.setValue(value);
+		
+		return result;
+	}
+
+	public static AForAllExp newAForAllExp(LexLocation start,
+			List<PMultipleBind> bindList, PExp predicate) {
+		AForAllExp result = new AForAllExp(start, bindList, predicate);
+		start.executable(true);
+		return result;
+	}
+
+	public static AExistsExp newAExistsExp(LexLocation start,
+			List<PMultipleBind> bindList, PExp predicate) {
+		AExistsExp result = new AExistsExp(start, bindList, predicate);
+		start.executable(true);
+		return result;
+	}
+
+	public static AExists1Exp newAExists1Exp(LexLocation start, PBind bind,
+			PExp predicate) {
+		AExists1Exp result = new AExists1Exp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setBind(bind);
+		result.setPredicate(predicate);
+		return result;
+	}
+
+	public static AIotaExp newAIotaExp(LexLocation start, PBind bind,
+			PExp predicate) {
+		AIotaExp result = new AIotaExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setBind(bind);
+		result.setPredicate(predicate);
+		return result;
+	}
+
+	public static ALambdaExp newALambdaExp(LexLocation start,
+			List<ATypeBind> bindList, PExp expression) {
+		ALambdaExp result = new ALambdaExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setBindList(bindList);
+		result.setExpression(expression);
+		return result;
+	}
+
+	public static ADefExp newADefExp(LexLocation start,
+			List<PDefinition> equalsDefs, PExp expression) {
+		ADefExp result = new ADefExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setLocalDefs(equalsDefs);
+		result.setExpression(expression);
+		return result;
+	}
+
+	public static ANewExp newANewExp(LexLocation start,
+			LexIdentifierToken classname, List<PExp> args) {
+		ANewExp result = new ANewExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setClassName(classname);
+		result.setArgs(args);
+		classname.location.executable(true);
+		return result;
+	}
+
+	public static AIsOfBaseClassExp newAIsOfBaseClassExp(LexLocation start,
+			LexNameToken classname, PExp pExp) {
+		AIsOfBaseClassExp result = new AIsOfBaseClassExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setBaseClass(classname.getExplicit(false));
+		result.setExp(pExp);
+		return result;
+	}
+
+	public static AIsOfClassExp newAIsOfClassExp(LexLocation start,
+			LexNameToken classname, PExp pExp) {
+		AIsOfClassExp result = new AIsOfClassExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setClassName(classname.getExplicit(false));
+		result.setExp(pExp);
+		return result;
+	}
+
+	public static ASameBaseClassExp newASameBaseClassExp(LexLocation start,
+			List<PExp> args) {
+		ASameBaseClassExp result = new ASameBaseClassExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setLeft(args.get(0));
+		result.setRight(args.get(1));
+		return result;
+	}
+
+	public static ASameClassExp newASameClassExp(LexLocation start,
+			List<PExp> args) {
+		ASameClassExp result = new ASameClassExp();
+		result.setLocation(start);
+		start.executable(true);
+		result.setLeft(args.get(0));
+		result.setRight(args.get(1));
+		return result;
+	}
+
+	public static AHistoryExp newAHistoryExp(LexLocation location, LexToken op,
+			LexNameList opnames) {
+		AHistoryExp result = new AHistoryExp();
+		result.setLocation(location);
+		location.executable(true);
+		result.setHop(op);
+		result.setOpnames(opnames);
+		
+		return result;
+	}
+
 	
 	
 	

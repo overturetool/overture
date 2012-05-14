@@ -27,7 +27,53 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.*;
+import org.overture.ast.expressions.AAbsoluteUnaryExp;
+import org.overture.ast.expressions.ACardinalityUnaryExp;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.ADefExp;
+import org.overture.ast.expressions.ADistConcatUnaryExp;
+import org.overture.ast.expressions.ADistIntersectUnaryExp;
+import org.overture.ast.expressions.ADistMergeUnaryExp;
+import org.overture.ast.expressions.ADistUnionUnaryExp;
+import org.overture.ast.expressions.AElementsUnaryExp;
+import org.overture.ast.expressions.AElseIfExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AFloorUnaryExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AHeadUnaryExp;
+import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.AIndicesUnaryExp;
+import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfBaseClassExp;
+import org.overture.ast.expressions.AIsOfClassExp;
+import org.overture.ast.expressions.ALambdaExp;
+import org.overture.ast.expressions.ALenUnaryExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.AMapRangeUnaryExp;
+import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.APowerSetUnaryExp;
+import org.overture.ast.expressions.APreExp;
+import org.overture.ast.expressions.ARecordModifier;
+import org.overture.ast.expressions.AReverseUnaryExp;
+import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASameClassExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ATailUnaryExp;
+import org.overture.ast.expressions.AUnaryMinusUnaryExp;
+import org.overture.ast.expressions.AUnaryPlusUnaryExp;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SMapExp;
+import org.overture.ast.expressions.SSeqExp;
+import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.ASetBind;
@@ -35,14 +81,6 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ACharBasicType;
-import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
-import org.overture.ast.types.ARationalNumericBasicType;
-import org.overture.ast.types.ARealNumericBasicType;
-import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
@@ -1107,8 +1145,7 @@ public class ExpressionReader extends SyntaxReader
 				exp = AstFactory.newAIsExp(ve.getLocation(), nt.getName(), test);
 			} else
 			{
-				exp = new AIsExp(null, ve.getLocation(), null, type, test, null);
-				// exp = new IsExpression(ve.location, type, test);
+				exp = AstFactory.newAIsExp(ve.getLocation(), type, test); 
 			}
 		} else
 		{
@@ -1120,43 +1157,35 @@ public class ExpressionReader extends SyntaxReader
 				switch (type)
 				{
 					case BOOL:
-						exp = new AIsExp(null, ve.getLocation(), null, new ABooleanBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newABooleanBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case NAT:
-						exp = new AIsExp(null, ve.getLocation(), null, new ANatNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case NAT1:
-						exp = new AIsExp(null, ve.getLocation(), null, new ANatOneNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatOneNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case INT:
-						exp = new AIsExp(null, ve.getLocation(), null, new AIntNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newAIntNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case RAT:
-						exp = new AIsExp(null, ve.getLocation(), null, new ARationalNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARationalNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case REAL:
-						exp = new AIsExp(null, ve.getLocation(), null, new ARealNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARealNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case CHAR:
-						exp = new AIsExp(null, ve.getLocation(), null, new ACharBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newACharBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new AIsExp(null, ve.getLocation(), null, new ATokenBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newATokenBasicType(ve.getLocation()), readExpression());
 						break;
 
 					default:
@@ -1164,8 +1193,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 			} else
 			{
-				exp = new AIsExp(null, ve.getLocation(), typename, null, readExpression(), null);
-				// exp = new IsExpression(ve.location, typename, readExpression());
+				exp = AstFactory.newAIsExp(ve.getLocation(), typename, readExpression());
 			}
 		}
 
@@ -1186,8 +1214,7 @@ public class ExpressionReader extends SyntaxReader
 
 		checkFor(VDMToken.KET, 2134, "Expecting pre_(function [,args])");
 
-		return new APreExp(null, ve.getLocation(), function, args);
-		// return new PreExpression(ve.location, function, args);
+		return AstFactory.newAPreExp(ve.getLocation(), function, args);
 	}
 
 	private PExp readSetOrMapExpression(LexLocation start)
@@ -1198,14 +1225,12 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.SET_CLOSE))
 		{
 			nextToken();
-			return new ASetEnumSetExp(start, null); // TODO
-			// return new SetEnumExpression(start); // empty set
+			return AstFactory.newASetEnumSetExp(start); // empty set
 		} else if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
 			checkFor(VDMToken.SET_CLOSE, 2135, "Expecting '}' in empty map");
-			return new AMapEnumMapExp(null, start, null, null, null);
-			// return new MapEnumExpression(start); // empty map
+			return AstFactory.newAMapEnumMapExp(start); // empty map
 		}
 
 		PExp first = readExpression();
@@ -1214,8 +1239,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
-			AMapletExp maplet = new AMapletExp(null, token.location, first, readExpression());
-			// MapletExpression maplet = new MapletExpression(first, token, readExpression());
+			AMapletExp maplet = AstFactory.newAMapletExp(first, token, readExpression());
 			return readMapExpression(start, maplet);
 		} else
 		{
@@ -1223,12 +1247,10 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	// private SetExpression readSetExpression(LexLocation start, PExp first)
 	private SSetExp readSetExpression(LexLocation start, PExp first)
 			throws ParserException, LexException
 	{
 		SSetExp result = null;
-		// SetExpression result = null;
 
 		if (lastToken().is(VDMToken.PIPE))
 		{
@@ -1244,8 +1266,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
-			result = new ASetCompSetExp(start, first, bindings, exp);
-			// result = new SetCompExpression(start, first, bindings, exp);
+			result = AstFactory.newASetCompSetExp(start, first, bindings, exp);
 		} else
 		{
 			if (lastToken().is(VDMToken.COMMA))
@@ -1259,8 +1280,7 @@ public class ExpressionReader extends SyntaxReader
 					PExp end = readExpression();
 					checkFor(VDMToken.SET_CLOSE, 2138, "Expecting '}' after set range");
 					reader.unpush();
-					return new ASetRangeSetExp(start, first, end); // TODO inheritance issue?
-					// return new SetRangeExpression(start, first, end);
+					return AstFactory.newASetRangeSetExp(start, first, end); 
 				}
 
 				reader.pop(); // Not a set range then...
@@ -1276,13 +1296,11 @@ public class ExpressionReader extends SyntaxReader
 
 			checkFor(VDMToken.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
 			result = new ASetEnumSetExp(start, members);
-			// result = new SetEnumExpression(start, members);
 		}
 
 		return result;
 	}
 
-	// private MapExpression readMapExpression(LexLocation start, MapletExpression first)
 	private SMapExp readMapExpression(LexLocation start, AMapletExp first)
 			throws ParserException, LexException
 	{
@@ -1302,12 +1320,10 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2140, "Expecting '}' after map comprehension");
-			result = new AMapCompMapExp(null, start, first, bindings, exp); // TODO bindings should be list
-			// result = new MapCompExpression(start, first, bindings, exp);
+			result = AstFactory.newAMapCompMapExp(start, first, bindings, exp); 
 		} else
 		{
 			List<AMapletExp> members = new Vector<AMapletExp>();
-			// List<MapletExpression> members = new Vector<MapletExpression>();
 			members.add(first);
 
 			while (ignore(VDMToken.COMMA))
@@ -1318,8 +1334,7 @@ public class ExpressionReader extends SyntaxReader
 				if (token.is(VDMToken.MAPLET))
 				{
 					nextToken();
-					AMapletExp maplet = new AMapletExp(null, token.location, member, readExpression());
-					// MapletExpression maplet = new MapletExpression(member, token, readExpression());
+					AMapletExp maplet = AstFactory.newAMapletExp( member,token, readExpression());
 					members.add(maplet);
 				} else
 				{
@@ -1328,26 +1343,22 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2141, "Expecting '}' after map enumeration");
-			result = new AMapEnumMapExp(null, start, members, null, null);
-			// result = new MapEnumExpression(start, members);
+			result = AstFactory.newAMapEnumMapExp(start, members);
 		}
 
 		return result;
 	}
 
-	// private SeqExpression readSeqExpression(LexLocation start)
 	private SSeqExp readSeqExpression(LexLocation start)
 			throws ParserException, LexException
 	{
 		if (lastToken().is(VDMToken.SEQ_CLOSE))
 		{
 			nextToken();
-			return new ASeqEnumSeqExp(start, null);
-			// return new SeqEnumExpression(start); // empty list
+			return AstFactory.newASeqEnumSeqExp(start);
 		}
 
 		SSeqExp result = null;
-		// SeqExpression result = null;
 		PExp first = readExpression();
 
 		if (lastToken().is(VDMToken.PIPE))
@@ -1355,7 +1366,6 @@ public class ExpressionReader extends SyntaxReader
 			nextToken();
 			BindReader br = getBindReader();
 			ASetBind setbind = br.readSetBind();
-			// PSet setbind = br.readSetBind();
 			PExp exp = null;
 
 			if (lastToken().is(VDMToken.AMPERSAND))
@@ -1365,8 +1375,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SEQ_CLOSE, 2142, "Expecting ']' after list comprehension");
-			result = new ASeqCompSeqExp(null, start, first, setbind, exp);
-			// result = new SeqCompExpression(start, first, setbind, exp);
+			result = AstFactory.newASeqCompSeqExp(start, first, setbind, exp);
 		} else
 		{
 			List<PExp> members = new NodeList<PExp>(null);
@@ -1378,8 +1387,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SEQ_CLOSE, 2143, "Expecting ']' after list enumeration");
-			result = new ASeqEnumSeqExp(start, members);
-			// result = new SeqEnumExpression(start, members);
+			result = AstFactory.newASeqEnumSeqExp(start, members);
 		}
 
 		return result;
@@ -1392,7 +1400,6 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.THEN, 2144, "Missing 'then'");
 		PExp thenExp = readExpression();
 		List<AElseIfExp> elseList = new Vector<AElseIfExp>();
-		// List<ElseIfExpression> elseList = new Vector<ElseIfExpression>();
 
 		while (lastToken().is(VDMToken.ELSEIF))
 		{
@@ -1411,8 +1418,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2040, "Expecting 'else' in 'if' expression");
 		}
 
-		return new AIfExp(null, start, exp, thenExp, elseList, elseExp);
-		// return new IfExpression(start, exp, thenExp, elseList, elseExp);
+		return AstFactory.newAIfExp(start, exp, thenExp, elseList, elseExp);
 	}
 
 	private AElseIfExp readElseIfExpression(LexLocation start)
@@ -1421,8 +1427,7 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readExpression();
 		checkFor(VDMToken.THEN, 2145, "Missing 'then' after 'elseif'");
 		PExp thenExp = readExpression();
-		return new AElseIfExp(null, exp.getLocation(), exp, thenExp);
-		// return new ElseIfExpression(start, exp, thenExp);
+		return AstFactory.newAElseIfExp(start, exp, thenExp);
 	}
 
 	private ACasesExp readCasesExpression(LexLocation start)
@@ -1432,7 +1437,6 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.COLON, 2146, "Expecting ':' after cases expression");
 
 		List<ACaseAlternative> cases = new Vector<ACaseAlternative>();
-		// List<CaseAlternative> cases = new Vector<CaseAlternative>();
 		PExp others = null;
 		cases.addAll(readCaseAlternatives(exp));
 
@@ -1454,8 +1458,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.END, 2148, "Expecting 'end' after cases");
-		return new ACasesExp(null, start, exp, cases, others);
-		// return new CasesExpression(start, exp, cases, others);
+		return AstFactory.newACasesExp(start, exp, cases, others);
 	}
 
 	private List<ACaseAlternative> readCaseAlternatives(PExp exp)
@@ -1463,14 +1466,12 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<ACaseAlternative> alts = new Vector<ACaseAlternative>();
 		List<PPattern> plist = getPatternReader().readPatternList();
-		// PatternList plist = getPatternReader().readPatternList();
 		checkFor(VDMToken.ARROW, 2149, "Expecting '->' after case pattern list");
 		PExp then = readExpression();
 
 		for (PPattern p : plist)
 		{
-			alts.add(new ACaseAlternative(null, exp.clone(), p.clone(), then.clone(), null));
-			// alts.add(new CaseAlternative(exp, p, then));
+			alts.add(AstFactory.newACaseAlternative(exp.clone(), p.clone(), then.clone()));
 		}
 
 		return alts;
@@ -1485,7 +1486,6 @@ public class ExpressionReader extends SyntaxReader
 		{
 			reader.push();
 			ALetDefExp exp = readLetDefExpression(start);
-			// LetDefExpression exp = readLetDefExpression(start);
 			reader.unpush();
 			return exp;
 		} catch (ParserException e)
@@ -1499,7 +1499,6 @@ public class ExpressionReader extends SyntaxReader
 		{
 			reader.push();
 			ALetBeStExp exp = readLetBeStExpression(start);
-			// LetBeStExpression exp = readLetBeStExpression(start);
 			reader.unpush();
 			return exp;
 		} catch (ParserException e)
@@ -1527,8 +1526,7 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2150, "Expecting 'in' after local definitions");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new ALetDefExp(null, start, localDefs, readConnectiveExpression());
-		// return new LetDefExpression(start, localDefs, readConnectiveExpression());
+		return AstFactory.newALetDefExp(start, localDefs, readConnectiveExpression());
 	}
 
 	private ALetBeStExp readLetBeStExpression(LexLocation start)
@@ -1547,8 +1545,7 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2152, "Expecting 'in' after bind in let expression");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new ALetBeStExp(null, start, bind, stexp, readConnectiveExpression(), null);
-		// return new LetBeStExpression(start, bind, stexp, readConnectiveExpression());
+		return AstFactory.newALetBeStExp(start, bind, stexp, readConnectiveExpression());
 	}
 
 	private AForAllExp readForAllExpression(LexLocation start)
@@ -1556,8 +1553,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<PMultipleBind> bindList = getBindReader().readBindList();
 		checkFor(VDMToken.AMPERSAND, 2153, "Expecting '&' after bind list in forall");
-		return new AForAllExp(null, start, bindList, readExpression());
-		// return new ForAllExpression(start, bindList, readExpression());
+		return AstFactory.newAForAllExp(start, bindList, readExpression());
 	}
 
 	private AExistsExp readExistsExpression(LexLocation start)
@@ -1565,28 +1561,23 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<PMultipleBind> bindList = getBindReader().readBindList();
 		checkFor(VDMToken.AMPERSAND, 2154, "Expecting '&' after bind list in exists");
-		return new AExistsExp(null, start, bindList, readExpression());
-		// return new ExistsExpression(start, bindList, readExpression());
+		return AstFactory.newAExistsExp(start, bindList, readExpression());
 	}
 
 	private AExists1Exp readExists1Expression(LexLocation start)
 			throws ParserException, LexException
 	{
 		PBind bind = getBindReader().readBind();
-		// Bind bind = getBindReader().readBind();
 		checkFor(VDMToken.AMPERSAND, 2155, "Expecting '&' after single bind in exists1");
-		return new AExists1Exp(null, start, bind, readExpression(), null);
-		// return new Exists1Expression(start, bind, readExpression());
+		return AstFactory.newAExists1Exp(start, bind, readExpression());
 	}
 
 	private AIotaExp readIotaExpression(LexLocation start)
 			throws ParserException, LexException
 	{
 		PBind bind = getBindReader().readBind();
-		// Bind bind = getBindReader().readBind();
 		checkFor(VDMToken.AMPERSAND, 2156, "Expecting '&' after single bind in iota");
-		return new AIotaExp(null, start, bind, readExpression());
-		// return new IotaExpression(start, bind, readExpression());
+		return AstFactory.newAIotaExp(start, bind, readExpression());
 	}
 
 	private ALambdaExp readLambdaExpression(LexLocation start)
@@ -1594,8 +1585,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<ATypeBind> bindList = getBindReader().readTypeBindList();
 		checkFor(VDMToken.AMPERSAND, 2157, "Expecting '&' after bind list in lambda");
-		return new ALambdaExp(null, start, bindList, readExpression(), null, null, null);
-		// return new LambdaExpression(start, bindList, readExpression());
+		return AstFactory.newALambdaExp(start, bindList, readExpression());
 	}
 
 	private ADefExp readDefExpression(LexLocation start)
@@ -1611,8 +1601,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2158, "Expecting 'in' after equals definitions");
-		return new ADefExp(null, start, equalsDefs, readExpression());
-		// return new DefExpression(start, equalsDefs, readExpression());
+		return AstFactory.newADefExp(start, equalsDefs, readExpression());
 	}
 
 	private ANewExp readNewExpression(LexLocation start)
@@ -1635,8 +1624,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
-		return new ANewExp(start, name, args);
-		// return new NewExpression(start, name, args);
+		return AstFactory.newANewExp(start, name, args);
 	}
 
 	private AIsOfBaseClassExp readIsOfBaseExpression(LexLocation start)
@@ -1663,8 +1651,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfBaseClassExp(null, start, classname.getExplicit(false), args.get(1));
-		// return new IsOfBaseClassExpression(start, classname, args.get(1));
+		return AstFactory.newAIsOfBaseClassExp(start, classname, args.get(1));
 	}
 
 	private AIsOfClassExp readIsOfClassExpression(LexLocation start)
@@ -1691,8 +1678,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfClassExp(null, start, classname.getExplicit(false), null, args.get(1));
-		// return new IsOfClassExpression(start, classname, args.get(1));
+		return AstFactory.newAIsOfClassExp(start, classname, args.get(1));
 	}
 
 	private ASameBaseClassExp readSameBaseExpression(LexLocation start)
@@ -1707,8 +1693,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2045, "Expecting two expressions in 'samebaseclass'");
 		}
 
-		return new ASameBaseClassExp(null, start, args.get(0), args.get(1));
-		// return new SameBaseClassExpression(start, args);
+		return AstFactory.newASameBaseClassExp(start, args);
 	}
 
 	private ASameClassExp readSameClassExpression(LexLocation start)
@@ -1723,8 +1708,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2046, "Expecting two expressions in 'sameclass'");
 		}
 
-		return new ASameClassExp(null, start, args.get(0), args.get(1));
-		// return new SameClassExpression(start, args);
+		return AstFactory.newASameClassExp(start, args);
 	}
 
 	private boolean inPerExpression = false;
@@ -1769,8 +1753,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				checkFor(VDMToken.KET, 2169, "Expecting " + s + "(name(s))");
-				return new AHistoryExp(null, location, op, opnames);
-				// return new HistoryExpression(location, op.type, opnames);
+				return AstFactory.newAHistoryExp(location, op, opnames);
 
 			default:
 				throwMessage(2048, "Expecting #act, #active, #fin, #req or #waiting");
