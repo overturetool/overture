@@ -120,4 +120,16 @@ public class TraceAstUtility
 	{
 		return new TraceSearch().getTraces(node);
 	}
+	
+	public static INode getTraceDefinitionContainer(ANamedTraceDefinition node)
+	{
+		INode parent = null;
+		parent =node.getAncestor(SClassDefinition.class);
+		if(parent!=null)
+		{
+			return parent;
+		}
+		parent =node.getAncestor(AModuleModules.class);
+		return parent;
+	}
 }

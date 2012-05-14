@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -94,6 +98,23 @@ public abstract class VdmEditor extends TextEditor
 	// protected SourceReferenceManager sourceReferenceManager = null;
 
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
+	
+	private Job indexEditorInputJob = new Job("Indexing Editor")
+	{
+		
+		@Override
+		protected IStatus run(IProgressMonitor arg0)
+		{
+			IVdmElement element = getInputVdmElement();
+			List<INode> nodes = null;
+			if (element instanceof IVdmSourceUnit)
+			{
+				nodes = ((IVdmSourceUnit) element).getParseList();
+			}
+			 AstLocationSearcher.createIndex(nodes, element);
+			 return Status.OK_STATUS;
+		}
+	};
 
 	public VdmEditor()
 	{
@@ -390,6 +411,9 @@ public abstract class VdmEditor extends TextEditor
 
 		// if (isShowingOverrideIndicators())
 		// installOverrideIndicator(false);
+		
+		
+		indexEditorInputJob.schedule();
 
 	}
 
@@ -714,7 +738,7 @@ public abstract class VdmEditor extends TextEditor
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret = offset + styledText.getCaretOffset();
 		}
-
+//System.out.println("Compute element at "+caret);
 		INode element = getElementAt(caret, false);
 
 		// if (!(element instanceof INode))
@@ -762,7 +786,7 @@ public abstract class VdmEditor extends TextEditor
 		{
 			nodes = ((IVdmSourceUnit) element).getParseList();
 		}
-		INode node = AstLocationSearcher.search(nodes, offset);
+		INode node = AstLocationSearcher.searchCache(nodes, offset,element);
 
 		// System.out.println(getSourceViewer().getTextWidget().getText(offset, offset+1));
 		// System.out.println("Found element with offset: "+offset+" = "+(node!=null?node.getClass():"null")+" - offset:"+AstLocationSearcher.getNodeOffset(node)+

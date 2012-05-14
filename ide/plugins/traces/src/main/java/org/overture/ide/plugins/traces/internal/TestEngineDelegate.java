@@ -32,7 +32,7 @@ public class TestEngineDelegate
 
 		pb.directory(project.getLocation().toFile());
 
-		if (ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))
 		{
 			return null;
 		} else
@@ -47,7 +47,7 @@ public class TestEngineDelegate
 	{
 		List<String> commandList = null;
 		Integer debugSessionId = new Integer(getSessionId());
-		if (useRemoteDebug(preferences) || ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences) )//|| ITracesConstants.DEBUG)
 		{
 			debugSessionId = 1;
 			// debugComm.removeSession(debugSessionId.toString());
@@ -113,7 +113,7 @@ public class TestEngineDelegate
 		// commandList.addAll(getExtendedCommands(vdmProject, configuration));
 
 		commandList.addAll(getSpecFiles(texe.project));
-		if (useRemoteDebug(preferences) || ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))//|| ITracesConstants.DEBUG)
 		{
 			System.out.println("Debugger Arguments:\n"
 					+ getArgumentString(commandList));
@@ -124,6 +124,12 @@ public class TestEngineDelegate
 		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
+		if (useDebugInfo(preferences) )//|| ITracesConstants.DEBUG)
+		{
+			System.out.println("Full Debugger Arguments:\n"
+					+ getArgumentString(commandList));
+		}
+		
 		return commandList;
 	}
 
@@ -142,7 +148,13 @@ public class TestEngineDelegate
 	private boolean useRemoteDebug(IPreferenceStore preferences)
 			throws CoreException
 	{
-		return preferences.getBoolean(ITracesConstants.REMOTE_DEBUG);
+		return preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE);
+	}
+	
+	private boolean useDebugInfo(IPreferenceStore preferences)
+			throws CoreException
+	{
+		return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
 	}
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException

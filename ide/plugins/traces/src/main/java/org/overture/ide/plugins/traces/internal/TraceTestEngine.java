@@ -33,13 +33,14 @@ public class TraceTestEngine
 			{
 				IPreferenceStore preferences = OvertureTracesPlugin.getDefault().getPreferenceStore();
 
-				// IProject project = (IProject) vdmProject.getAdapter(IProject.class);
-
-				texe.coverageFolder.mkdirs();
-				// File outputFolder = new File(project.getLocation().toFile(), "generated");
+				if (!texe.coverageFolder.exists()
+						&& !texe.coverageFolder.mkdirs())
+				{
+					System.out.println("Failed in creating coverage directory for CT:"
+							+ texe.coverageFolder.getAbsolutePath());
+				}
 				File traceFolder = StorageManager.getCtOutputFolder(texe.project);// new File(outputFolder, "traces");
 				traceFolder.mkdirs();
-				// File coverage = new File(outputFolder, "coverage");
 				Process p = null;
 				ConnectionListener conn = null;
 				try
@@ -54,15 +55,15 @@ public class TraceTestEngine
 
 						public void initialize(String module)
 						{
-							System.out.println("CT init recieved");
-							out.println(module);
+							// System.out.println("CT init recieved");
+							out.println("Initialized: "+module);
 							monitor.subTask(module);
 						}
 
 						public void progress(String traceName, Integer progress)
 						{
-							System.out.println("CT progress " + traceName + " "
-									+ progress);
+							// System.out.println("CT progress " + traceName + " "
+							// + progress);
 							out.println("Worked(" + traceName + "): "
 									+ progress);
 							// monitor.worked(progress);
@@ -84,8 +85,8 @@ public class TraceTestEngine
 						}
 					});
 					conn.start();
-					System.out.println("Starting CT runtime with: "
-							+ texe.container + "-" + texe.traceName);
+					// System.out.println("Starting CT runtime with: "
+					// + texe.container + "-" + texe.traceName);
 					p = new TestEngineDelegate().launch(texe, preferences, traceFolder, port);
 
 				} catch (Exception e)
@@ -95,86 +96,89 @@ public class TraceTestEngine
 				}
 
 				final Process finalP = p;
-				new Thread(new Runnable()
+				if (preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE))
 				{
-
-					public void run()
+					new Thread(new Runnable()
 					{
-						try
-						{
 
-							BufferedReader reader = new BufferedReader(new InputStreamReader(finalP.getErrorStream()));
-							while (true)
-							{
-
-								try
-								{
-									String line = reader.readLine();
-									if (line == null)
-										break;
-									System.err.println(line);
-								} catch (IOException e)
-								{
-
-									e.printStackTrace();
-									break;
-								}
-							}
-
-							reader = new BufferedReader(new InputStreamReader(finalP.getInputStream()));
-							while (true)
-							{
-
-								try
-								{
-									String line = reader.readLine();
-									if (line == null)
-										break;
-									System.err.println(line);
-								} catch (IOException e)
-								{
-
-									e.printStackTrace();
-									break;
-								}
-							}
-						} catch (Exception e)
-						{
-
-						}
-					}
-				}).start();
-
-				new Thread(new Runnable()
-				{
-
-					public void run()
-					{
-						while (true)
+						public void run()
 						{
 							try
 							{
-								Thread.sleep(1000);
-								if (finalP.exitValue() != 0)
+
+								BufferedReader reader = new BufferedReader(new InputStreamReader(finalP.getErrorStream()));
+								while (true)
 								{
-									System.err.println("Client exited with errors: "
-											+ finalP.exitValue());
+
+									try
+									{
+										String line = reader.readLine();
+										if (line == null)
+											break;
+										System.err.println(line);
+									} catch (IOException e)
+									{
+
+										e.printStackTrace();
+										break;
+									}
 								}
-								threadFinished();
-								return;
+
+								reader = new BufferedReader(new InputStreamReader(finalP.getInputStream()));
+								while (true)
+								{
+
+									try
+									{
+										String line = reader.readLine();
+										if (line == null)
+											break;
+										System.out.println(line);
+									} catch (IOException e)
+									{
+
+										e.printStackTrace();
+										break;
+									}
+								}
 							} catch (Exception e)
 							{
-							}
 
+							}
 						}
-					}
-				}).start();
+					}).start();
+
+//					new Thread(new Runnable()
+//					{
+//
+//						public void run()
+//						{
+//							while (true)
+//							{
+//								try
+//								{
+//									Thread.sleep(1000);
+//									if (finalP.exitValue() != 0)
+//									{
+//										System.err.println("Client exited with errors: "
+//												+ finalP.exitValue());
+//									}
+//									threadFinished();
+//									return;
+//								} catch (Exception e)
+//								{
+//								}
+//
+//							}
+//						}
+//					}).start();
+				}
 
 				while (!monitor.isCanceled() && isRunning)
 				{
 					millisleep();
 				}
-				System.out.println("CT eval runtime finished");
+				// System.out.println("CT eval runtime finished");
 
 				try
 				{

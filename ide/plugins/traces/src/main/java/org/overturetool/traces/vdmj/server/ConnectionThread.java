@@ -33,7 +33,7 @@ public class ConnectionThread extends Thread
 	private boolean connected;
 	private static boolean trace = false;
 	private static boolean quiet = false;
-	private static ConnectionThread focus = null;
+//	private static ConnectionThread focus = null;
 
 	private final IClientMonitor monitor;
 
@@ -68,10 +68,10 @@ public class ConnectionThread extends Thread
 		return quiet;
 	}
 
-	public static synchronized void setFocus(ConnectionThread f)
-	{
-		focus = f;
-	}
+//	public static synchronized void setFocus(ConnectionThread f)
+//	{
+//		focus = f;
+//	}
 
 	@Override
 	public void run()
@@ -90,7 +90,6 @@ public class ConnectionThread extends Thread
 			}
 		} catch (SocketException e)
 		{
-			e.printStackTrace();
 			// Caused by die(), and VDMJ death
 		} catch (IOException e)
 		{
@@ -116,15 +115,15 @@ public class ConnectionThread extends Thread
 		}
 	}
 
-	private synchronized void write(String cmd) throws IOException
-	{
-		if (trace)
-			System.err.println("[" + id + "] " + cmd); // diags!
-
-		output.write(cmd.getBytes("UTF-8"));
-		output.write('\n');
-		output.flush();
-	}
+//	private synchronized void write(String cmd) throws IOException
+//	{
+//		if (trace)
+//			System.err.println("[" + id + "] " + cmd); // diags!
+//
+//		output.write(cmd.getBytes("UTF-8"));
+//		output.write('\n');
+//		output.flush();
+//	}
 
 	private void receive() throws IOException
 	{
@@ -187,7 +186,7 @@ public class ConnectionThread extends Thread
 
 	private void process(byte[] data) throws IOException
 	{
-		System.out.println(new String(data));
+//		System.out.println(new String(data));
 		XMLParser parser = new XMLParser(data);
 		XMLNode node = parser.readNode();
 
@@ -236,8 +235,6 @@ public class ConnectionThread extends Thread
 				output.flush();
 			} catch (IOException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			monitor.completed();
 			
