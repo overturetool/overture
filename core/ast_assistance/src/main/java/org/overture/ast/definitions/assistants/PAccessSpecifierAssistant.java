@@ -21,5 +21,9 @@ public class PAccessSpecifierAssistant {
 		
 		return access != null && access.getAccess() instanceof APublicAccess;
 	}
+
+	public static AAccessSpecifierAccessSpecifier getPublic() {
+		return new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
+	}
 	
 }

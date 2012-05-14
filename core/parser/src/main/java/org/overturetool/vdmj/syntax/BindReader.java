@@ -26,6 +26,7 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -59,8 +60,7 @@ public class BindReader extends SyntaxReader
 			reader.push();
 			PBind bind = readBind();
 			reader.unpush();
-			return new ADefPatternBind(bind.getLocation(), null, bind);
-			// return new PPatternBind(bind.getLocation(), bind);
+			return AstFactory.createADefPatternBind(bind.getLocation(),bind);			
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -73,8 +73,7 @@ public class BindReader extends SyntaxReader
 			reader.push();
 			PPattern p = getPatternReader().readPattern();
 			reader.unpush();
-			return new ADefPatternBind(p.getLocation(), p, null);
-			// return new PPatternBind(p.location, p);
+			return AstFactory.createADefPatternBind(p.getLocation(),p);
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -124,7 +123,7 @@ public class BindReader extends SyntaxReader
 			if (nextToken().is(VDMToken.SET))
 			{
 				nextToken();
-				sb = new ASetBind(pattern.getLocation(), pattern, getExpressionReader().readExpression());
+				sb = AstFactory.createASetBind(pattern, getExpressionReader().readExpression());
 			} else
 			{
 				throwMessage(2000, "Expecting 'in set' after pattern in set binding");
@@ -145,7 +144,7 @@ public class BindReader extends SyntaxReader
 		if (lastToken().is(VDMToken.COLON))
 		{
 			nextToken();
-			tb = new ATypeBind(pattern.getLocation(), pattern, getTypeReader().readType());
+			tb = AstFactory.createATypeBind(pattern, getTypeReader().readType());
 		} else
 		{
 			throwMessage(2002, "Expecting ':' in type bind");
@@ -180,7 +179,7 @@ public class BindReader extends SyntaxReader
 				if (nextToken().is(VDMToken.SET))
 				{
 					nextToken();
-					mb = new ASetMultipleBind(plist.get(0).getLocation(), plist, getExpressionReader().readExpression());
+					mb = AstFactory.createASetMultipleBind(plist, getExpressionReader().readExpression());
 				} else
 				{
 					throwMessage(2003, "Expecting 'in set' after pattern in binding");
@@ -189,7 +188,7 @@ public class BindReader extends SyntaxReader
 
 			case COLON:
 				nextToken();
-				mb = new ATypeMultipleBind(plist.get(0).getLocation(), plist, getTypeReader().readType());
+				mb = AstFactory.createATypeMultipleBind(plist,getTypeReader().readType());
 				break;
 
 			default:

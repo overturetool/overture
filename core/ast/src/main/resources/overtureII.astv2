@@ -25,6 +25,7 @@ Tokens
   ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
+  Pass = 'java:enum:org.overturetool.vdmj.typechecker.Pass';
   
   //Java
   java_Boolean = 'java:java.lang.Boolean';
@@ -610,7 +611,7 @@ Aspect Declaration
         (classDefinition):definition.#class 
         [access]:accessSpecifier.accessSpecifier
         (type):type 
-        // [pass]:pass
+        [pass]:Pass
     ;
 
 %definition->#class

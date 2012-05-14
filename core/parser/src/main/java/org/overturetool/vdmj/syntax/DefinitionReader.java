@@ -63,6 +63,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.tokens.TAsync;
 import org.overture.ast.node.tokens.TStatic;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -117,25 +118,12 @@ import org.overturetool.vdmj.util.Utils;
 
 public class DefinitionReader extends SyntaxReader
 {
-	private AAccessSpecifierAccessSpecifier getDefaultAccess()
-	{
-		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
-	}
+//	private AAccessSpecifierAccessSpecifier getDefaultAccess()
+//	{
+//		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
+//	}
 
-	public List<PType> getTypeList(APatternListTypePair node)
-	{
-		List<PType> list = new Vector<PType>();
-
-		for (int i = 0; i < node.getPatterns().size(); i++)
-		{
-			PType type = (PType) node.getType();// .clone();//Use clone since we don't want to make a switch for all
-												// types.
-			// type.parent(null);//Create new type not in the tree yet.
-			list.add(type);
-		}
-
-		return list;
-	}
+	
 
 	public DefinitionReader(LexTokenReader reader)
 	{
@@ -288,8 +276,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		if (dialect == Dialect.VDM_SL)
 		{
-			return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
-			// return AccessSpecifier.DEFAULT;
+			return PAccessSpecifierAssistant.getDefault();
 		}
 
 		// Defaults
@@ -359,7 +346,7 @@ public class DefinitionReader extends SyntaxReader
 				nextToken();
 				// NamedType nt = new NamedType(idToName(id), tr.readType());
 				PType type = tr.readType();
-				ANamedInvariantType nt = new ANamedInvariantType(id.location, false, null, false, null, idToName(id), type);
+				ANamedInvariantType nt = AstFactory.createANamedInvariantType(idToName(id), type);
 
 				if (type instanceof AUnresolvedType
 						&& ((AUnresolvedType) type).getName().equals(idToName(id)))
@@ -372,7 +359,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case COLONCOLON:
 				nextToken();
-				invtype = new ARecordInvariantType(id.location, false, idToName(id), tr.readFieldList());
+				invtype = AstFactory.createARecordInvariantType(idToName(id), tr.readFieldList());// new ARecordInvariantType(id.location, false, idToName(id), tr.readFieldList());
 				break;
 
 			default:
@@ -389,10 +376,9 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.EQUALSEQUALS, 2087, "Expecting '==' after pattern in invariant");
 			invExpression = getExpressionReader().readExpression();
 		}
+		
+		return AstFactory.createATypeDefinition(idToName(id), invtype, invPattern, invExpression); 
 
-		return new ATypeDefinition(id.location, null, false, null, null, null, invtype, invPattern, invExpression, null, false, idToName(id));
-
-		// return new TypeDefinition(idToName(id), invtype, invPattern, invExpression);
 	}
 
 	private List<PDefinition> readTypes() throws LexException, ParserException
@@ -734,12 +720,17 @@ public class DefinitionReader extends SyntaxReader
 		// parameters,type,body,precondition,postcondition,measure,
 		// null,null,null,null,false,false,0,null,null,false,false);
 		//
-		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure, null, null, null, null, false, false, 0, null, null, null, parameters.size() > 1, null);
-		// AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName),
-		// scope,
-		// false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
-		type.getDefinitions().add(res);
-		return res;
+		return AstFactory.createAExplicitFunctionDefinition(
+				idToName(funcName), scope, typeParams,
+				type, parameters, body, precondition, postcondition,
+				false, measure);
+		
+//		AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure, null, null, null, null, false, false, 0, null, null, null, parameters.size() > 1, null);
+//		// AExplicitFunctionDefinition res = new AExplicitFunctionDefinition(funcName.location, idToName(funcName),
+//		// scope,
+//		// false, getDefaultAccess(), typeParams, parameters, type, body, precondition, postcondition, measure);
+//		type.getDefinitions().add(res);
+//		return res;
 	}
 
 	private PDefinition readImplicitFunctionDefinition(
@@ -835,35 +826,10 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 
-		List<PType> ptypes = new LinkedList<PType>();
 
-		for (APatternListTypePair ptp : parameterPatterns)
-		{
-			ptypes.addAll(getTypeList(ptp));
-		}
-
-		// NB: implicit functions are always +> total, apparently
-		AFunctionType functionType = new AFunctionType(funcName.location, false, null, false, ptypes, (PType) resultPattern.getType());
-		// functionType.setDefinitions(value) = new DefinitionList(this);
-
-		// AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location,
-		// idToName(funcName), scope, false, null, getDefaultAccess(), functionType, typeParams, parameterPatterns,
-		// resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, 0, null,
-		// functionType);
-
-		AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location, idToName(funcName), scope, false, null, getDefaultAccess(), typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure, null, null, null, false, false, null, null, functionType);
-		// AImplicitFunctionDefinition functionDef = new AImplicitFunctionDefinition(funcName.location,
-		// idToName(funcName),
-		// scope, false, getDefaultAccess(), typeParams, parameterPatterns, resultPattern, body, precondition,
-		// postcondition, measure, functionType);
-
-		List<PDefinition> defs = new Vector<PDefinition>();
-		defs.add(functionDef);
-		functionType.setDefinitions(defs);
-		return functionDef;
-		// return new ImplicitFunctionDefinition(
-		// idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
-		// body, precondition, postcondition, measure);
+		return AstFactory.createAImplicitFunctionDefinition(idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
+				body, precondition, postcondition, measure);
+		
 	}
 
 	public PDefinition readLocalDefinition(NameScope scope)
@@ -914,16 +880,7 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
 
-		List<PDefinition> defs = new Vector<PDefinition>();
-
-		for (LexNameToken var : PPatternAssistant.getVariableNames(p))
-		{
-			defs.add(new AUntypedDefinition(lastToken().location, var, scope, false, null, PAccessSpecifierAssistant.getDefault(), null));
-		}
-
-		return new AValueDefinition(p.getLocation(), null, scope, false, null, PAccessSpecifierAssistant.getDefault(), type, p, getExpressionReader().readExpression(), defs, null);
-		// return new ValueDefinition(
-		// p, scope, type, getExpressionReader().readExpression());
+		return AstFactory.createAValueDefinition(p, scope, type, getExpressionReader().readExpression());
 	}
 
 	private PDefinition readStateDefinition() throws ParserException,
@@ -964,30 +921,9 @@ public class DefinitionReader extends SyntaxReader
 		}
 		
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
-		// return new AStateDefinition(name.location,idToName(name),NameScope.STATE,null,null,null,
-		// null,fieldList,invPattern, invExpression,null, initPattern, initExpression, null,
-		// null,null, null);
 
-		ARecordInvariantType recordType = new ARecordInvariantType(name.location, false, idToName(name), fieldList);
-		ALocalDefinition recordDefinition = new ALocalDefinition(name.location, NameScope.STATE, true, null, getDefaultAccess(), recordType, false, idToName(name));
-		// recordDefinition.markUsed(); // Can't be exported anyway
-		// statedefs.add(recordDefinition);
-
-		AStateDefinition stateDef = new AStateDefinition(name.location, idToName(name), NameScope.STATE, false, null, getDefaultAccess(), null, fieldList, invPattern, invExpression, null, initPattern, initExpression, null, null, recordDefinition, recordType.clone(), null);
-
-		stateDef.getStateDefs().add(recordDefinition);
-
-		for (AFieldField f : fieldList)
-		{
-			stateDef.getStateDefs().add(new ALocalDefinition(f.getTagname().location, NameScope.STATE, false, null, getDefaultAccess(), f.getType(), false, f.getTagname()));
-
-			ALocalDefinition ld = new ALocalDefinition(f.getTagname().location, NameScope.OLDSTATE, true, null, getDefaultAccess(), f.getType(), false, f.getTagname().getOldName());
-
-			// ld.markUsed(); // Else we moan about unused ~x names
-			stateDef.getStateDefs().add(ld);
-		}
-
-		return stateDef;
+		return AstFactory.createAStateDefinition(idToName(name), fieldList,
+				invPattern, invExpression, initPattern, initExpression);		
 	}
 
 	private PDefinition readOperationDefinition() throws ParserException,

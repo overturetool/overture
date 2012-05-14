@@ -26,13 +26,10 @@ package org.overturetool.vdmj.syntax;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.factory.AstFactory;
 import org.overturetool.util.definitions.ClassList;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -43,8 +40,6 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
-import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
-import org.overturetool.vdmj.typechecker.NameScope;
 
 /**
  * A syntax analyser to parse class definitions.
@@ -144,12 +139,12 @@ public class ClassReader extends SyntaxReader
 			{
 				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
-				 			 	
-			SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,null, superclasses, members,null,null,false,ClassDefinitionSettings.UNSET , null, false, null, false,false,false, null,false,null);
-							
-			PDefinitionAssistant.setClassDefinition(def,def);
+				 	
+			return AstFactory.createAClassClassDefinition(className, superclasses, members);
 			
-			return def;
+			//SClassDefinition def = new AClassClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null,null, null, superclasses, members,null,null,false,ClassDefinitionSettings.UNSET , null, false, null, false,false,false, null,false,null);
+			//PDefinitionAssistant.setClassDefinition(def,def);
+			//return def;
 
 		}
 		else
@@ -221,13 +216,12 @@ public class ClassReader extends SyntaxReader
 				throwMessage(2007, "Expecting 'end " + classId.getName() + "'");
 			}
 
-//			return new ASystemClassDefinition(className, members);
-			ASystemClassDefinition def = new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null, null,new LexNameList(), members,null,null,false,null, null, false, null, false,false,false,null,false,null);
-			for (PDefinition pDefinition : def.getDefinitions())
-			{
-				pDefinition.setClassDefinition(def);
-			}
-			return def;
+			return AstFactory.createASystemClassDefinition(className,members);// new ASystemClassDefinition(className.location,className,NameScope.CLASSNAME,true,null,new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null),null, null,null, new LexNameList(), members,null,null,false,null, null, false, null, false,false,false,null,false,null);
+//			for (PDefinition pDefinition : def.getDefinitions())
+//			{
+//				pDefinition.setClassDefinition(def);
+//			}
+//			return def;
 		}
 		else
 		{
