@@ -1,5 +1,6 @@
 package org.overture.ast.factory;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -128,6 +129,23 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SMapExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
+import org.overture.ast.modules.AAllExport;
+import org.overture.ast.modules.AAllImport;
+import org.overture.ast.modules.AFromModuleImports;
+import org.overture.ast.modules.AFunctionExport;
+import org.overture.ast.modules.AFunctionValueImport;
+import org.overture.ast.modules.AModuleExports;
+import org.overture.ast.modules.AModuleImports;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.modules.AOperationExport;
+import org.overture.ast.modules.AOperationValueImport;
+import org.overture.ast.modules.ATypeExport;
+import org.overture.ast.modules.ATypeImport;
+import org.overture.ast.modules.AValueExport;
+import org.overture.ast.modules.AValueValueImport;
+import org.overture.ast.modules.PExport;
+import org.overture.ast.modules.PImport;
+import org.overture.ast.modules.SValueImport;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -166,6 +184,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overturetool.util.ClonableFile;
 import org.overturetool.util.ClonableString;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
@@ -1611,7 +1630,188 @@ public class AstFactory {
 		return result;
 	}
 
+	public static AAllImport newAAllImport(LexNameToken name) {
+		AAllImport result = new AAllImport();
+		result.setLocation(name.location);
+		result.setName(name);
+		result.setRenamed(null);
+		return result;
+	}
+
+	public static AFromModuleImports newAFromModuleImports(
+			LexIdentifierToken name, List<List<PImport>> signatures) {
+		return new AFromModuleImports(name, signatures);
+	}
+
+	public static AModuleModules newAModuleModules(File file,
+			List<PDefinition> definitions) {
+		
+		AModuleModules result = new AModuleModules();
+
+		if (definitions.isEmpty())
+		{
+			result.setName(defaultName(new LexLocation()));
+		} else
+		{
+			result.setName(defaultName(definitions.get(0).getLocation()));
+		}
+
+		
+		result.setImports(null);
+		result.setExports(null);
+		result.setDefs(definitions);
+		
+		List<ClonableFile> files = new Vector<ClonableFile>();
+		if (file != null)
+		{
+			files.add(new ClonableFile(file));
+		}
+		result.setFiles(files);
+		
+		result.setExportdefs(new Vector<PDefinition>()); // Export nothing
+		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
+		
+		result.setIsFlat(true);
+		return result;
+	}
+
+	/**
+	 * Generate the default module name.
+	 * 
+	 * @param location
+	 *            The textual location of the name
+	 * @return The default module name.
+	 */
+
+	private static LexIdentifierToken defaultName(LexLocation location)
+	{
+		return new LexIdentifierToken("DEFAULT", false, location);
+	}
+
+	public static AModuleModules newAModuleModules(LexIdentifierToken name,
+			AModuleImports imports, AModuleExports exports,
+			List<PDefinition> defs) {
+		AModuleModules result = new AModuleModules();
+		
+		result.setName(name);
+		result.setImports(imports);
+		result.setExports(exports);
+		result.setDefs(defs);
+		
+		List<ClonableFile> files = new Vector<ClonableFile>();
+		files.add(new ClonableFile(name.location.file));
+		result.setFiles(files);
+		
+		result.setExportdefs(new Vector<PDefinition>()); // By default, export nothing
+		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 	
+		return result;
+	}
+
+	public static AModuleExports newAModuleExports(
+			List<List<PExport>> exports) {
+		return new AModuleExports(exports);
+	}
+
+	public static AAllExport newAAllExport(LexLocation location) {
+		AAllExport result = new AAllExport();
+		result.setLocation(location);
+		return result;
+	}
+
+	public static ATypeExport newATypeExport(LexNameToken name, boolean struct) {
+		ATypeExport result = new ATypeExport();
+		result.setLocation(name.location);
+		result.setName(name);
+		result.setStruct(struct);
+		return result;
+	}
+
+	public static AValueExport newAValueExport(LexLocation location,
+			List<LexNameToken> nameList, PType type) {
+		AValueExport result = new AValueExport();
+		result.setLocation(location);
+		result.setNameList(nameList);
+		result.setExportType(type);
+		return result;
+	}
+
+	public static AFunctionExport newAFunctionExport(LexLocation location,
+			List<LexNameToken> nameList, PType type) {
+		AFunctionExport result = new AFunctionExport();
+		result.setLocation(location);
+		result.setNameList(nameList);
+		result.setExportType(type);
+		return result;
+	}
+
+	public static AOperationExport newAOperationExport(LexLocation location,
+			List<LexNameToken> nameList, PType type) {
+		AOperationExport result = new AOperationExport();
+		result.setLocation(location);
+		result.setNameList(nameList);
+		result.setExportType(type);
+		return result;
+	}
+
+	public static AModuleImports newAModuleImports(LexIdentifierToken name,
+			List<AFromModuleImports> imports) {
+		return new AModuleImports(name, imports);
+	}
+
+	public static ATypeImport newATypeImport(ATypeDefinition def,
+			LexNameToken renamed) {
+		ATypeImport result = new ATypeImport();
+		result.setLocation(def.getName().location);
+		result.setName(def.getName());
+		result.setRenamed(renamed);
+		result.setDef(def);
+		return result;
+	}
+
+	public static ATypeImport newATypeImport(LexNameToken defname,
+			LexNameToken renamed) {
+		ATypeImport result = new ATypeImport();
+		result.setLocation(defname.location);
+		result.setName(defname);
+		result.setRenamed(renamed);
+		result.setDef(null);
+		return result;
+	}
+
+	public static AValueValueImport newAValueValueImport(LexNameToken defname,
+			PType type, LexNameToken renamed) {
+		AValueValueImport result = new AValueValueImport();
+		result.setLocation(defname.location);
+		result.setName(defname);
+		result.setRenamed(renamed);
+		result.setImportType(type);
+		return result;
+	}
+
+	public static AFunctionValueImport newAFunctionValueImport(
+			LexNameToken defname, PType type, LexNameList typeParams,
+			LexNameToken renamed) {
+		AFunctionValueImport result = new AFunctionValueImport();
+		result.setLocation(defname.location);
+		result.setName(defname);
+		result.setRenamed(renamed);
+		result.setImportType(type);
+		result.setTypeParams(typeParams);
+		
+		return result;
+	}
+
+	public static AOperationValueImport newAOperationValueImport(
+			LexNameToken defname, PType type, LexNameToken renamed) {
+		AOperationValueImport result = new AOperationValueImport();
+		result.setLocation(defname.location);
+		result.setName(defname);
+		result.setRenamed(renamed);
+		result.setImportType(type);
+		
+		return result;
+	}
 	
 	
 	
