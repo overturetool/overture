@@ -348,6 +348,7 @@ as the expected and actual values.
 2297, "Expecting '|->' in map pattern"
 2298, "Map patterns not available in VDM classic"
 2299, "Expecting {|->} empty map pattern"
+2300, "mk_<type> must have a single argument"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
