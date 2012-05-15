@@ -7,13 +7,12 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -141,7 +140,7 @@ public class ATypeDefinitionAssistantTC {
 		if (d.getInvType() instanceof ARecordInvariantType)
 		{
 			// Records are inv_R: R +> bool
-			ptypes.add(new AUnresolvedType(d.getLocation(),false, null, d.getName().clone()));
+			ptypes.add(AstFactory.newAUnresolvedType(d.getName().clone()));
 		}
 		else
 		{
@@ -151,33 +150,17 @@ public class ATypeDefinitionAssistantTC {
 		}
 
 		AFunctionType ftype =
-			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
+			AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(loc, d.getName().getInvName(loc), 
-				NameScope.GLOBAL, false, null, 
-				PAccessSpecifierAssistant.getDefault(), null, parameters, 
-				ftype, d.getInvExpression(), null, null, null, null, null, null, 
-				null, false, false, null, null, null, null, parameters.size() > 1, null);
+		AExplicitFunctionDefinition def = 
+				AstFactory.newAExplicitFunctionDefinition(
+						d.getName().getInvName(loc), 
+						NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), 
+						null, null, true, null);
 		
-//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-//				loc,
-//				d.getName().getInvName(loc),
-//				NameScope.GLOBAL, 
-//				false,
-//				PAccessSpecifierAssistant.getDefault(),
-//				null,
-//				parameters,
-//				ftype, 
-//				d.getInvExpression().clone(),
-//				null, null, null);
-		def.setTypeInvariant(true);
-
 		def.setAccess(d.getAccess().clone());	// Same as type's
 		def.setClassDefinition(d.getClassDefinition());
 		
-		List<PDefinition> defList = new Vector<PDefinition>();
-		defList.add(def);
-		ftype.setDefinitions(defList);
 		return def;
 	}
 

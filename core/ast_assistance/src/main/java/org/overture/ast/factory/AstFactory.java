@@ -14,11 +14,14 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
@@ -27,6 +30,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.AUnionTypeAssistant;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
@@ -178,6 +182,7 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.ACyclesStm;
 import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.ADurationStm;
@@ -212,19 +217,29 @@ import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
@@ -435,6 +450,8 @@ public class AstFactory {
 		result.setMeasure(measure);
 		result.setIsCurried(parameters.size() > 1);
 		
+		List<PDefinition> defsList = new LinkedList<PDefinition>();
+		defsList.add(result);
 		type.getDefinitions().add(result);
 		
 		return result;
@@ -479,7 +496,7 @@ public class AstFactory {
 		return result;
 	}
 	
-	private static AFunctionType newAFunctionType(LexLocation location,
+	public static AFunctionType newAFunctionType(LexLocation location,
 			boolean partial, List<PType> parameters, PType resultType) {
 		AFunctionType result = new AFunctionType();
 		
@@ -580,7 +597,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static ALocalDefinition newALocalDefinition(LexLocation location,
+	public static ALocalDefinition newALocalDefinition(LexLocation location,
 			LexNameToken name, NameScope state, PType type) {
 		
 		ALocalDefinition result = new ALocalDefinition();
@@ -592,7 +609,7 @@ public class AstFactory {
 		return result;
 	}
 
-	public static PDefinition newAExplicitOperationDefinition(
+	public static AExplicitOperationDefinition newAExplicitOperationDefinition(
 			LexNameToken name, AOperationType type,
 			List<PPattern> parameters, PExp precondition, PExp postcondition,
 			PStm body) {
@@ -640,7 +657,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static AOperationType newAOperationType(LexLocation location,
+	public static AOperationType newAOperationType(LexLocation location,
 			List<PType> parameters, PType resultType) {
 		AOperationType result = new AOperationType();
 		
@@ -651,7 +668,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static AVoidType newAVoidType(LexLocation location) {
+	public static AVoidType newAVoidType(LexLocation location) {
 		AVoidType result = new AVoidType();
 		result.setLocation(location);
 		return result;
@@ -683,7 +700,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static PType newAUnknownType(LexLocation location) {
+	public static PType newAUnknownType(LexLocation location) {
 		AUnknownType result = new AUnknownType();
 		result.setLocation(location);
 		return result;
@@ -2308,6 +2325,185 @@ public class AstFactory {
 		
 		return result;
 	}
+
+	public static AUnionType newAUnionType(LexLocation location, PType a,
+			PType b) {
+		AUnionType result = new AUnionType();
+		result.setLocation(location);
+		
+		List<PType> list = new Vector<PType>();
+		list.add(a);
+		list.add(b);
+		result.setTypes(list);
+		result.setProdCard(-1);
+		AUnionTypeAssistant.expand(result);
+		return result;
+	}
+
+	public static AFieldField newAFieldField(LexNameToken tagname, String tag,
+			PType type, boolean equalityAbstraction) {
+		AFieldField result = new AFieldField();
+		
+		result.setAccess(null);
+		result.setTagname(tagname);
+		result.setTag(tag);
+		result.setType(type);
+		result.setEqualityAbstraction(equalityAbstraction);
+		
+		return result;
+	}
+
+	public static AMapMapType newAMapMapType(LexLocation location, PType from,
+			PType to) {
+		
+		AMapMapType result = new AMapMapType();
+		result.setLocation(location);
+		result.setFrom(from);
+		result.setTo(to);
+		result.setEmpty(false);
+		
+		return result;
+	}
+
+	public static AInMapMapType newAInMapMapType(LexLocation location, PType from,
+			PType to) {
+		AInMapMapType result = new AInMapMapType();
+		result.setLocation(location);
+		result.setFrom(from);
+		result.setTo(to);
+		result.setEmpty(false);
+		
+		return result;
+	}
+
+	public static ASetType newASetType(LexLocation location, PType type) {
+		ASetType result = new ASetType();
+		
+		result.setLocation(location);
+		result.setSetof(type);
+		result.setEmpty(false);
+		
+		return result;
+	}
+
+	public static ASeqSeqType newASeqSeqType(LexLocation location, PType type) {
+		ASeqSeqType result = new ASeqSeqType();
+		
+		result.setLocation(location);
+		result.setSeqof(type);
+		result.setEmpty(false);
+		
+		return result;
+	}
+
+	public static ASeq1SeqType newASeq1SeqType(LexLocation location, PType type) {
+		ASeq1SeqType result = new ASeq1SeqType();
+		
+		result.setLocation(location);
+		result.setSeqof(type);
+		result.setEmpty(false);
+		
+		return result;
+	}
+
+	public static AQuoteType newAQuoteType(LexQuoteToken token) {
+		AQuoteType result = new AQuoteType();
+		result.setLocation(token.location);
+		result.setValue(token);
+		
+		return result;
+	}
+
+	public static ABracketType newABracketType(LexLocation location, PType type) {
+		ABracketType result = new ABracketType();
+		result.setLocation(location);
+		result.setType(type);
+		
+		return result;
+	}
+
+	public static AOptionalType newAOptionalType(LexLocation location, PType type) {
+		AOptionalType result = new AOptionalType();
+		result.setLocation(location);
+		
+		while (type instanceof AOptionalType)
+		{
+			type = ((AOptionalType)type).getType();
+		}
+
+		result.setType(type);
+		return result;
+	}
+
+	public static AUnresolvedType newAUnresolvedType(LexNameToken typename) {
+		AUnresolvedType result = new AUnresolvedType();
+		result.setLocation(typename.location);
+		result.setName(typename);
+		
+		return result;
+	}
+
+	public static AParameterType newAParameterType(LexNameToken name) {
+		AParameterType result = new AParameterType();
+		result.setLocation(name.location);
+		result.setName(name);
+		return result;
+	}
+
+	public static AOperationType newAOperationType(LexLocation location) {
+		AOperationType result = new AOperationType();
+		result.setLocation(location);
+		result.setParameters(new Vector<PType>());
+		result.setResult(AstFactory.newAVoidType(location));
+		
+		return result;
+	}
+
+	public static AClassInvariantStm newAClassInvariantStm(LexNameToken name,
+			List<PDefinition> invdefs) {
+		AClassInvariantStm result = new AClassInvariantStm();
+		initStatement(result, name.location);
+		
+		result.setName(name);
+		result.setInvDefs(invdefs);
+		name.location.executable(false);
+		
+		return result;
+	}
+
+	public static AInheritedDefinition newAInheritedDefinition(
+			LexNameToken localname, PDefinition d) {
+		AInheritedDefinition result = new AInheritedDefinition();
+		initDefinition(result, d.getPass(), d.getLocation(), localname, d.getNameScope());
+		
+		result.setSuperdef(d);
+		result.setOldname(localname.getOldName());
+		
+		result.setClassDefinition(d.getClassDefinition());
+		result.setAccess(d.getAccess().clone());
+		
+		return result;
+	}
+
+	public static AImportedDefinition newAImportedDefinition(LexLocation location,
+			PDefinition d) {
+		AImportedDefinition result = new AImportedDefinition();
+		initDefinition(result, Pass.DEFS, location, d.getName(), d.getNameScope());
+		result.setDef(d);
+		
+		return result;
+	}
+
+	public static ARenamedDefinition newARenamedDefinition(LexNameToken name,
+			PDefinition def) {
+		ARenamedDefinition result = new ARenamedDefinition();
+		initDefinition(result, def.getPass() , name.location, name, def.getNameScope());
+		result.setDef(def);
+		
+		return result;
+	}
+	
+	
 	
 	
 	

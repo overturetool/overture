@@ -3,22 +3,20 @@ package org.overture.ast.definitions.assistants;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.APatternTypePairAssistant;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFunctionTypeAssistantTC;
 import org.overture.ast.types.assistants.APatternListTypePairAssistantTC;
@@ -54,8 +52,10 @@ public class AImplicitFunctionDefinitionAssistantTC {
 
 		for (LexNameToken pname: node.getTypeParams())
 		{
-			PDefinition p = new ALocalDefinition(
-				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
+			PDefinition p = 
+					AstFactory.newALocalDefinition(pname.location, pname.clone(), NameScope.NAMES, AstFactory.newAParameterType(pname.clone()));
+//					new ALocalDefinition(
+//				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
 			PDefinitionAssistantTC.markUsed(p);
 			defs.add(p);
@@ -195,27 +195,22 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		parameters.get(0).add(d.getResult().getPattern().clone());
 
 		
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPostcondition().getLocation(), 
-				d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, false, 
-				null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>)d.getTypeParams().clone(), 
-				parameters, AFunctionTypeAssistantTC.getPostType(d.getType()), 
-				d.getPostcondition(), null, null, null, null, null, null, 
-				null, false, false, null, null, null, null, parameters.size() > 1, null);
+		@SuppressWarnings("unchecked")
+		AExplicitFunctionDefinition def =
+				AstFactory.newAExplicitFunctionDefinition(
+						d.getName().getPostName(d.getPostcondition().getLocation()), 
+						NameScope.GLOBAL, 
+						(List<LexNameToken>)d.getTypeParams().clone(), 
+						AFunctionTypeAssistantTC.getPostType(d.getType()), 
+						parameters, d.getPostcondition(), null, null, false, null);
+				 
+//				new AExplicitFunctionDefinition(d.getPostcondition().getLocation(), 
+//				d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, false, 
+//				null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>)d.getTypeParams().clone(), 
+//				parameters, AFunctionTypeAssistantTC.getPostType(d.getType()), 
+//				d.getPostcondition(), null, null, null, null, null, null, 
+//				null, false, false, null, null, null, null, parameters.size() > 1, null);
 		
-//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-//			d.getPostcondition().getLocation(),
-//			d.getName().getPostName(d.getPostcondition().getLocation()), 
-//			NameScope.GLOBAL,
-//			false,
-//			PAccessSpecifierAssistant.getDefault(),
-//			(List<LexNameToken>)d.getTypeParams().clone(), 
-//			parameters,
-//			AFunctionTypeAssistant.getPostType(d.getType()),
-//			d.getPostcondition().clone(), 
-//			null, null, null);
-		List<PDefinition> defsList = new LinkedList<PDefinition>();
-		defsList.add(def);
-		def.getType().setDefinitions(defsList);
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
@@ -224,33 +219,29 @@ public class AImplicitFunctionDefinitionAssistantTC {
 	private static AExplicitFunctionDefinition getPreDefinition(
 			AImplicitFunctionDefinition d) {
 		
-		List<List<PPattern>> parameters = getParamPatternList(d);
+		@SuppressWarnings("unchecked")
+		AExplicitFunctionDefinition def = 
+				AstFactory.newAExplicitFunctionDefinition(
+						d.getName().getPreName(d.getPrecondition().getLocation()), 
+						NameScope.GLOBAL,
+						(List<LexNameToken>) d.getTypeParams().clone(),
+						AFunctionTypeAssistantTC.getPreType(d.getType()),
+						getParamPatternList(d),
+						d.getPrecondition(), null, null, false,null);
+				
+				
+//				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
+//				d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false, 
+//				null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>) d.getTypeParams().clone(), 
+//				parameters, AFunctionTypeAssistantTC.getPreType(d.getType()), d.getPrecondition(), 
+//				null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1, null);
 		
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
-				d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false, 
-				null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>) d.getTypeParams().clone(), 
-				parameters, AFunctionTypeAssistantTC.getPreType(d.getType()), d.getPrecondition(), 
-				null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1, null);
-		
-//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-//				d.getPrecondition().getLocation(),
-//				d.getName().getPreName(d.getPrecondition().getLocation()), 
-//				NameScope.GLOBAL,
-//				false,
-//				PAccessSpecifierAssistant.getDefault(),
-//				(List<LexNameToken>) d.getTypeParams().clone(), 
-//				getParamPatternList(d),
-//				AFunctionTypeAssistant.getPreType(d.getType()),
-//				d.getPrecondition().clone(), 
-//				null, null, null);
-			List<PDefinition> defsList = new LinkedList<PDefinition>();
-			defsList.add(def);
-			def.getType().setDefinitions(defsList);
 			def.setAccess(d.getAccess().clone());
 			def.setClassDefinition(d.getClassDefinition());
 			return def;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<List<PPattern>> getParamPatternList(
 			AImplicitFunctionDefinition d) {
 		

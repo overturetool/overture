@@ -16,6 +16,7 @@ import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.PStm;
@@ -313,9 +314,10 @@ public class SClassDefinitionAssistantTC {
 	public static PDefinition getSelfDefinition(
 			SClassDefinition classDefinition) {
 
-		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
-				NameScope.LOCAL,
-				false, null, null, PDefinitionAssistantTC.getType(classDefinition), false,classDefinition.getName().getSelfName());
+		PDefinition def = 
+				AstFactory.newALocalDefinition(classDefinition.getLocation(), 
+						classDefinition.getName().getSelfName(), 
+						NameScope.LOCAL, PDefinitionAssistantTC.getType(classDefinition));
 		PDefinitionAssistantTC.markUsed(def);
 		return def;
 	}
@@ -365,22 +367,16 @@ public class SClassDefinitionAssistantTC {
 		// Location of last local invariant
 		LexLocation invloc = invdefs.get(invdefs.size() - 1).getLocation();
 
-		AOperationType type = new AOperationType(
-			invloc, false,null, new Vector<PType>(), new ABooleanBasicType(invloc,false,null));
+		AOperationType type = AstFactory.newAOperationType(
+			invloc, new Vector<PType>(), AstFactory.newABooleanBasicType(invloc));
 
 		LexNameToken invname =
 			new LexNameToken(d.getName().name, "inv_" + d.getName().name, invloc);
 
-		PStm body = new AClassInvariantStm(d.getLocation(),null,invname, invdefs);
-
+		PStm body = AstFactory.newAClassInvariantStm(invname, invdefs);
 		
-//		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
-		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, d, PAccessSpecifierAssistantTC.getDefault(), null, body, null, null, type, null,null, invdefs, null, null, false);
-		res.setParameterPatterns(new Vector<PPattern>());
-		
-		return res;
-		
-		
+		return AstFactory.newAExplicitOperationDefinition(invname, type, new Vector<PPattern>(),
+						null, null, body);
 	}
 	
 	public static List<PDefinition> getInvDefs(SClassDefinition def)
@@ -434,7 +430,8 @@ public class SClassDefinitionAssistantTC {
 
 			if (PDefinitionListAssistantTC.findName(definition.getDefinitions(),localname, NameScope.NAMESANDSTATE) == null)
 			{
-				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(), d.getAccess().clone(), null, d, localname.getOldName());
+				AInheritedDefinition local = 
+						AstFactory.newAInheritedDefinition(localname,d);
 				definition.getLocalInheritedDefinitions().add(local);
 			}
 		}
@@ -485,7 +482,8 @@ public class SClassDefinitionAssistantTC {
 
 				if (PDefinitionListAssistantTC.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
-					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(),d.getAccess().clone(),null,d, localname.getOldName());
+					AInheritedDefinition local = 
+							AstFactory.newAInheritedDefinition(localname, d);
 					defs.add(local);
 				}
 			}

@@ -12,6 +12,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.AUnionTypeAssistant;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
@@ -40,7 +41,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.util.Utils;
 
-public class AUnionTypeAssistantTC
+public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 {
 
 	public static PType typeResolve(AUnionType type, ATypeDefinition root,
@@ -103,43 +104,7 @@ public class AUnionTypeAssistantTC
 
 	}
 
-	public static void expand(AUnionType type)
-	{
-
-		if (type.getExpanded())
-			return;
-
-		Set<PType> exptypes = new HashSet<PType>();
-
-		for (PType t : type.getTypes())
-		{
-			if (t instanceof AUnionType)
-			{
-				AUnionType ut = (AUnionType) t;
-				ut.setExpanded(false);
-				expand(ut);
-				exptypes.addAll(ut.getTypes());
-			} else
-			{
-				exptypes.add(t);
-			}
-		}
-
-		Vector<PType> v = new Vector<PType>(exptypes);
-		type.setTypes(v);
-		type.setExpanded(true);
-		List<PDefinition> definitions = type.getDefinitions();
-
-		for (PType t : type.getTypes())
-		{
-			if (t.getDefinitions() != null)
-			{
-				definitions.addAll(t.getDefinitions());
-			}
-		}
-
-	}
-
+	
 	public static SSeqType getSeq(AUnionType type)
 	{
 		if (!type.getSeqDone())

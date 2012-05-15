@@ -3,11 +3,9 @@ package org.overture.ast.modules.assistants;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.AImportedDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -29,11 +27,11 @@ public class ATypeImportAssistantTC {
 		{
 			if (imp.getRenamed() != null)
 			{
-				expdef = new ARenamedDefinition(imp.getRenamed().location,imp.getRenamed(), expdef.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, expdef);
+				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(),expdef);
 			}
 			else
 			{
-				expdef = new AImportedDefinition(imp.getName().location, expdef.getNameScope(), false, null, PAccessSpecifierAssistant.getDefault(), null, expdef,expdef.getName());
+				expdef = AstFactory.newAImportedDefinition(imp.getName().location,expdef);
 			}
 
 			list.add(expdef);

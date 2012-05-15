@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;

@@ -9,11 +9,10 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AStateInitExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFieldFieldAssistantTC;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -142,36 +141,18 @@ public class AStateDefinitionAssistantTC {
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
-		ptypes.add(new AUnresolvedType(d.getLocation(),false,null, d.getName()));
+		ptypes.add(AstFactory.newAUnresolvedType(d.getName()));
 		AFunctionType ftype =
-			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
+				AstFactory.newAFunctionType( loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
 		PExp body = new AStateInitExp(null,d.getLocation(),d);
 
 		AExplicitFunctionDefinition def = 
-			new AExplicitFunctionDefinition(loc, d.getName().getInitName(loc), NameScope.GLOBAL, false, 
-					null, PAccessSpecifierAssistant.getDefault(), null, parameters, 
-					ftype, body, null, null, null, null, 
-					null, null, null, false, false, 
-					null, null, null, 
-					null, parameters.size() > 1, null);
-		
-//		AExplicitFunctionDefinition def =
-//			new AExplicitFunctionDefinition(
-//					loc,
-//					d.getName().getInitName(loc), 
-//					NameScope.GLOBAL,
-//					false,
-//					PAccessSpecifierAssistant.getDefault(),
-//					null,
-//					parameters,
-//					ftype,
-//					body, 
-//					null, null, null);
-
-		List<PDefinition> defList = new Vector<PDefinition>();
-		defList.add(def);
-		ftype.setDefinitions(defList);
+				AstFactory.newAExplicitFunctionDefinition(
+						d.getName().getInitName(loc), 
+						NameScope.GLOBAL, 
+						null, ftype, parameters, body, null, null, false, null);
+	
 		return def;
 	}
 
@@ -186,35 +167,13 @@ public class AStateDefinitionAssistantTC {
 		parameters.add(params);
 
 		PTypeList ptypes = new PTypeList();
-		ptypes.add(new AUnresolvedType(d.getLocation(),false, null, d.getName()));
+		ptypes.add(AstFactory.newAUnresolvedType(d.getName()));
 		AFunctionType ftype =
-			new AFunctionType(loc, false, null, false, ptypes, new ABooleanBasicType(loc,false));
+			AstFactory.newAFunctionType( loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
-		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(loc, 
-				d.getName().getInvName(loc),
-				NameScope.GLOBAL,
-				false, null, PAccessSpecifierAssistant.getDefault(), null, parameters, 
-				ftype, d.getInvExpression(), null, null, null, null, 
-				null, null, null, false, false, 
-				null, null, null, null, parameters.size() > 1, null);
-		
-//		AExplicitFunctionDefinition def = new AExplicitFunctionDefinition(
-//				loc,
-//				d.getName().getInvName(loc),
-//				NameScope.GLOBAL,
-//				false,
-//				PAccessSpecifierAssistant.getDefault(),
-//				null,
-//				parameters,
-//				ftype, 
-//				d.getInvExpression().clone(), 
-//				null, null, null);
-		def.setTypeInvariant(true);
-
-		List<PDefinition> defList = new Vector<PDefinition>();
-		defList.add(def);
-		ftype.setDefinitions(defList);
-		return def;
+		return AstFactory.newAExplicitFunctionDefinition(
+						d.getName().getInvName(loc), NameScope.GLOBAL, 
+						null, ftype, parameters, d.getInvExpression(),  null, null, true, null);
 	}
 
 }

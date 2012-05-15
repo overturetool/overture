@@ -1,10 +1,9 @@
 package org.overture.ast.definitions.assistants;
 
-import org.overture.ast.definitions.EAccess;
-import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
+import org.overturetool.vdmj.typechecker.Access;
 
 public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 
@@ -12,27 +11,27 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getAccess().kindPAccess() == EAccess.PUBLIC;
+			return a.getAccess() == Access.PUBLIC;
 		}		
 		return false;
 	}
 	
 	public static boolean isPrivate(AAccessSpecifierAccessSpecifier access) {
-		return access.getAccess().kindPAccess() == EAccess.PRIVATE;
+		return access.getAccess() == Access.PRIVATE;
 	}
 	
 	public static boolean isProtected(PAccessSpecifier access) {
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getAccess().kindPAccess() == EAccess.PROTECTED;
+			return a.getAccess() == Access.PROTECTED;
 		}		
 		return false;
 	}
 
 	public static boolean isStatic(AAccessSpecifierAccessSpecifier access) {
 		
-		return access.getStatic() != null;
+		return access.getStatic();
 	}
 	
 	public static boolean isAsync(PAccessSpecifier access) {
@@ -52,12 +51,12 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 		
 	}
 
-	private static boolean narrowerThan(PAccess access, PAccess other) {
-		switch (access.kindPAccess()) {
+	private static boolean narrowerThan(Access access, Access other) {
+		switch (access) {
 		case PRIVATE:
-			return other.kindPAccess() != EAccess.PRIVATE;
+			return other != Access.PRIVATE;
 		case PROTECTED:
-			return other.kindPAccess() == EAccess.PUBLIC;
+			return other == Access.PUBLIC;
 		case PUBLIC:
 			return false;		
 		}
@@ -69,7 +68,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 		AAccessSpecifierAccessSpecifier paccess = d.getAccess();
 		if(paccess instanceof AAccessSpecifierAccessSpecifier)
 		{			
-			return new AAccessSpecifierAccessSpecifier(paccess.getAccess().clone(), asStatic && paccess.getStatic() != null ?  paccess.getStatic().clone() : null, paccess.getAsync() != null ?  paccess.getAsync().clone() : null);
+			return new AAccessSpecifierAccessSpecifier(paccess.getAccess(), asStatic && paccess.getStatic() ?  paccess.getStatic() : false , paccess.getAsync()  ?  paccess.getAsync() : false);
 		}
 		assert false: "PAccessSpecifier must be instance of AAccessSpecifierAccessSpecifier";
 		return null;
