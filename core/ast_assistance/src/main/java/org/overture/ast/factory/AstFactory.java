@@ -1,7 +1,6 @@
 package org.overture.ast.factory;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -126,9 +125,6 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.SMapExp;
-import org.overture.ast.expressions.SSeqExp;
-import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.modules.AAllExport;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFromModuleImports;
@@ -145,16 +141,29 @@ import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
-import org.overture.ast.modules.SValueImport;
+import org.overture.ast.patterns.ABooleanPattern;
+import org.overture.ast.patterns.ACharacterPattern;
+import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.ADefPatternBind;
+import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.AQuotePattern;
+import org.overture.ast.patterns.ARealPattern;
+import org.overture.ast.patterns.ARecordPattern;
+import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.ASetPattern;
+import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -180,6 +189,7 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -190,6 +200,7 @@ import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexIntegerToken;
+import org.overturetool.vdmj.lex.LexKeywordToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -197,7 +208,6 @@ import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
-import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.Access;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
@@ -1810,6 +1820,118 @@ public class AstFactory {
 		result.setRenamed(renamed);
 		result.setImportType(type);
 		
+		return result;
+	}
+
+	public static AUnionPattern newAUnionPattern(PPattern left,
+			LexLocation location, PPattern right) {
+		AUnionPattern result = new AUnionPattern();
+		result.setLocation(location);
+		result.setLeft(left);
+		result.setRight(right);
+		return result;
+	}
+
+	public static AConcatenationPattern newAConcatenationPattern(PPattern left,
+			LexLocation location, PPattern right) {
+		AConcatenationPattern result = new AConcatenationPattern();
+		result.setLocation(location);
+		result.setLeft(left);
+		result.setRight(right);
+		return result;
+	}
+
+	public static AIntegerPattern newAIntegerPattern(LexIntegerToken token) {
+		AIntegerPattern result =  new AIntegerPattern();
+		result.setLocation(token.location);
+		result.setValue(token);
+		return result;
+	}
+
+	public static ARealPattern newARealPattern(LexRealToken token) {
+		ARealPattern result =  new ARealPattern();
+		result.setLocation(token.location);
+		result.setValue(token);
+		return result;
+	}
+
+	public static ACharacterPattern newACharacterPattern(LexCharacterToken token) {
+		ACharacterPattern result =  new ACharacterPattern();
+		result.setLocation(token.location);
+		result.setValue(token);
+		return result;
+	}
+
+	public static AStringPattern newAStringPattern(LexStringToken token) {
+		AStringPattern result =  new AStringPattern();
+		result.setLocation(token.location);
+		result.setValue(token);
+		return result;
+	}
+
+	public static AQuotePattern newAQuotePattern(LexQuoteToken token) {
+		AQuotePattern result =  new AQuotePattern();
+		result.setLocation(token.location);
+		result.setValue(token);
+		return result;
+	}
+
+	public static ABooleanPattern newABooleanPattern(LexBooleanToken token) {
+		ABooleanPattern result =  new ABooleanPattern();
+		result.setLocation(token.location);
+		result.setValue(token);
+		return result;
+	}
+
+	public static ANilPattern newANilPattern(LexKeywordToken token) {
+		ANilPattern result =  new ANilPattern();
+		result.setLocation(token.location);
+		return result;
+	}
+
+	public static AExpressionPattern newAExpressionPattern(PExp expression) {
+		AExpressionPattern result = new AExpressionPattern();
+		result.setLocation(expression.getLocation());
+		result.setExp(expression);
+		return result;
+	}
+
+	public static ASetPattern newASetPattern(LexLocation location,
+			List<PPattern> list) {
+		ASetPattern result = new ASetPattern();
+		result.setLocation(location);
+		result.setPlist(list);
+		return result;
+	}
+
+	public static ASeqPattern newASeqPattern(LexLocation location,
+			List<PPattern> list) {
+		ASeqPattern result = new ASeqPattern();
+		result.setLocation(location);
+		result.setPlist(list);
+		return result;
+	}
+
+	public static ARecordPattern newARecordPattern(LexNameToken typename,
+			List<PPattern> list) {
+		ARecordPattern result = new ARecordPattern();
+		result.setLocation(typename.location);
+		result.setPlist(list);
+		result.setTypename(typename);
+		result.setType(AstFactory.getAUnresolvedType(typename));
+		return result;
+	}
+
+	private static AUnresolvedType getAUnresolvedType(LexNameToken typename) {
+		AUnresolvedType result = new AUnresolvedType();
+		result.setLocation(typename.location);
+		result.setName(typename);
+		return result;
+	}
+
+	public static AIgnorePattern newAIgnorePattern(LexLocation location) {
+		AIgnorePattern result = new AIgnorePattern();
+		result.setLocation(location);
 		return result;
 	}
 	
