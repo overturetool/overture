@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -168,10 +169,46 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AApplyObjectDesignator;
+import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.AAtomicStm;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACallObjectStm;
+import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.ACasesStm;
+import org.overture.ast.statements.ACyclesStm;
+import org.overture.ast.statements.ADefLetDefStm;
+import org.overture.ast.statements.ADurationStm;
+import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorCase;
+import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AExternalClause;
+import org.overture.ast.statements.AFieldObjectDesignator;
+import org.overture.ast.statements.AFieldStateDesignator;
+import org.overture.ast.statements.AForAllStm;
+import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierObjectDesignator;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.AMapSeqStateDesignator;
+import org.overture.ast.statements.ANewObjectDesignator;
+import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
+import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
+import org.overture.ast.statements.ATrapStm;
+import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PObjectDesignator;
+import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
@@ -290,14 +327,10 @@ public class AstFactory {
 			List<PDefinition> members) {
 		 
 		AClassClassDefinition result = new AClassClassDefinition();
-		result.setPass(Pass.DEFS);
-		result.setLocation(className.location);
-		result.setName(className);
-		result.setNameScope(NameScope.CLASSNAME);
+		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
+
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
-		
 		result.setUsed(true);
-		
 		result.setSupernames(superclasses);
 		result.setSuperDefs(new ArrayList<SClassDefinition>());
 		result.setSupertypes(new ArrayList<PType>());
@@ -320,15 +353,10 @@ public class AstFactory {
 	public static ASystemClassDefinition newASystemClassDefinition(
 			LexNameToken className, List<PDefinition> members) {
 		ASystemClassDefinition result = new ASystemClassDefinition();
+		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
 		
-		result.setPass(Pass.DEFS);
-		result.setLocation(className.location);
-		result.setName(className);
-		result.setNameScope(NameScope.CLASSNAME);
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
-		
 		result.setUsed(true);
-				
 		result.setSuperDefs(new ArrayList<SClassDefinition>());
 		result.setSupertypes(new ArrayList<PType>());
 		result.setSuperInheritedDefinitions(new ArrayList<PDefinition>());
@@ -341,8 +369,6 @@ public class AstFactory {
 		// Classes are all effectively public types
 		PDefinitionAssistant.setClassDefinition(result,result);
 
-		
-		
 		//others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
 		
@@ -377,12 +403,7 @@ public class AstFactory {
 			SInvariantType type, PPattern invPattern, PExp invExpression) {
 		
 		ATypeDefinition result = new ATypeDefinition();
-		
-		result.setPass(Pass.TYPES);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.TYPENAME);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.TYPES, name.location, name, NameScope.TYPENAME);
 		
 		result.setType(type);
 		result.setInvPattern(invPattern);
@@ -400,11 +421,8 @@ public class AstFactory {
 		AExplicitFunctionDefinition result = new AExplicitFunctionDefinition();
 		
 		//Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		initDefinition(result, Pass.DEFS, name.location, name, scope);
+
 		
 		//AExplicitFunctionDefinition initialization
 		result.setTypeParams(typeParams);
@@ -431,12 +449,9 @@ public class AstFactory {
 		
 		AImplicitFunctionDefinition result = new AImplicitFunctionDefinition();
 
+		
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		initDefinition(result, Pass.DEFS, name.location, name, scope);
 		
 		//AImplicitFunctionDefinition initialization
 		result.setTypeParams(typeParams);
@@ -497,11 +512,7 @@ public class AstFactory {
 		AValueDefinition result = new AValueDefinition();
 		
 		// Definition initialization
-		result.setPass(Pass.VALUES);
-		result.setLocation(p.getLocation());
-		result.setName(null);
-		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.VALUES, p.getLocation(), null, scope);
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
@@ -520,11 +531,7 @@ public class AstFactory {
 
 		AUntypedDefinition result = new AUntypedDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(location);
-		result.setName(name);
-		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, location, name, scope);
 		
 		return result;
 	}
@@ -535,11 +542,7 @@ public class AstFactory {
 		
 		AStateDefinition result = new AStateDefinition();
 		// Definition initialization
-		result.setPass(Pass.TYPES);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.STATE);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.TYPES, name.location, name, NameScope.STATE);
 		
 		//AStateDefinition init
 		result.setFields(fields);
@@ -582,11 +585,7 @@ public class AstFactory {
 		
 		ALocalDefinition result = new ALocalDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.STATE);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, name.location, name, NameScope.STATE);
 		
 		result.setType(type);
 		
@@ -600,11 +599,7 @@ public class AstFactory {
 		
 		AExplicitOperationDefinition result = new AExplicitOperationDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, name.location, name, NameScope.GLOBAL);
 		
 		result.setType(type);
 		result.setParameterPatterns(parameters);
@@ -622,11 +617,7 @@ public class AstFactory {
 		
 		AImplicitOperationDefinition result = new AImplicitOperationDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, name.location, name, NameScope.GLOBAL);
 		
 		result.setParameterPatterns(parameterPatterns);
 		result.setResult(resultPattern);
@@ -671,8 +662,8 @@ public class AstFactory {
 			PExp precondition, PExp postcondition, List<AErrorCase> errors) {
 		
 		ASpecificationStm result = new ASpecificationStm();
-		
-		result.setLocation(location);
+		initStatement(result, location);
+
 		result.setExternals(externals);
 		result.setPrecondition(precondition);
 		result.setPostcondition(postcondition);
@@ -701,18 +692,14 @@ public class AstFactory {
 	private static AEqualsDefinition newAEqualsDefinition(LexLocation location) {
 		AEqualsDefinition result = new AEqualsDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(location);
-		result.setName(null);
-		result.setNameScope(NameScope.LOCAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, location, null, NameScope.LOCAL);
 		return result;
 	}
 	
 	public static AEqualsDefinition newAEqualsDefinition(LexLocation location,
 			PPattern pattern, PExp test) {
 		AEqualsDefinition result = AstFactory.newAEqualsDefinition(location);
-				
+		
 		result.setPattern(pattern);
 		result.setTypebind(null);
 		result.setSetbind(null);
@@ -749,11 +736,7 @@ public class AstFactory {
 			LexNameToken name, PExp expression) {
 		AClassInvariantDefinition result = new AClassInvariantDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, name.location, name, NameScope.GLOBAL);
 		
 		result.setExpression(expression);
 		
@@ -765,12 +748,8 @@ public class AstFactory {
 		AInstanceVariableDefinition result = new AInstanceVariableDefinition();
 		
 		// Definition initialization
-		result.setPass(Pass.VALUES);
-		result.setLocation(name.location);
-		result.setName(name);
-		result.setNameScope(NameScope.STATE);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
-		
+		initDefinition(result, Pass.VALUES, name.location, name, NameScope.STATE);
+
 		result.setType(type);
 		result.setExpression(expression);
 		result.getLocation().executable(false);
@@ -784,12 +763,8 @@ public class AstFactory {
 		AThreadDefinition result = new AThreadDefinition();
 
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(statement.getLocation());
-		result.setName(null);
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
-		
+		initDefinition(result, Pass.DEFS, statement.getLocation(), null, NameScope.GLOBAL);
+
 		result.setStatement(statement);
 		result.setOperationName(LexNameToken.getThreadName(statement.getLocation()));
 		result.setAccess(PAccessSpecifierAssistant.getProtected());
@@ -807,12 +782,10 @@ public class AstFactory {
 	private static APeriodicStm newAPeriodicStm(LexNameToken opname,
 			List<PExp> args) {
 		APeriodicStm result = new APeriodicStm();
-		
+
 		//Statement initialization
-		result.setLocation(opname.location);
-		//this.breakpoint = new Breakpoint(location);
-		result.getLocation().executable(true);
-		
+		initStatement(result, opname.location);
+
 		result.setOpname(opname);
 		result.setArgs(args);
 		
@@ -823,11 +796,7 @@ public class AstFactory {
 			LexNameToken opname, PExp guard) {
 		APerSyncDefinition result = new APerSyncDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(location);
-		result.setName(opname.getPerName(location));
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		initDefinition(result, Pass.DEFS, location, opname.getPerName(location), NameScope.GLOBAL);
 		
 		result.setOpname(opname);
 		result.setGuard(guard);
@@ -839,12 +808,8 @@ public class AstFactory {
 			LexNameList operations) {
 		AMutexSyncDefinition result = new AMutexSyncDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(location);
-		result.setName(null);
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
-		
+		initDefinition(result, Pass.DEFS, location, null, NameScope.GLOBAL);
+
 		result.setOperations(operations);
 		
 		return result;
@@ -854,13 +819,9 @@ public class AstFactory {
 			List<String> pathname, List<List<PTraceDefinition>> terms) {
 		ANamedTraceDefinition result = new ANamedTraceDefinition();
 		// Definition initialization
-		result.setPass(Pass.DEFS);
-		result.setLocation(location);
-		result.setName(new LexNameToken(
-				location.module, Utils.listToString(pathname, "_"), location));
-		result.setNameScope(NameScope.GLOBAL);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
-		
+		initDefinition(result, Pass.DEFS, location, new LexNameToken(
+				location.module, Utils.listToString(pathname, "_"), location), NameScope.GLOBAL);
+
 		List<ClonableString> namesClonable = new Vector<ClonableString>();
 		for (String string : pathname)
 		{
@@ -1932,6 +1893,419 @@ public class AstFactory {
 	public static AIgnorePattern newAIgnorePattern(LexLocation location) {
 		AIgnorePattern result = new AIgnorePattern();
 		result.setLocation(location);
+		return result;
+	}
+
+	public static ANotYetSpecifiedStm newANotYetSpecifiedStm(LexLocation location) {
+		ANotYetSpecifiedStm result = new ANotYetSpecifiedStm();
+		result.setLocation(location);
+		location.executable(false); // ie. ignore coverage for these
+		return result;
+	}
+
+	public static ASubclassResponsibilityStm newASubclassResponsibilityStm(LexLocation location) {
+		ASubclassResponsibilityStm result = new ASubclassResponsibilityStm();
+		result.setLocation(location);
+		location.hit(); // ie. ignore coverage for these
+		return result;
+	}
+
+	public static AExitStm newAExitStm(LexLocation token, PExp exp) {
+		AExitStm result = new AExitStm();
+		result.setLocation(token);
+		token.executable(true);
+		result.setExpression(exp);
+		return result;
+	}
+
+	public static PStm newAExitStm(LexLocation token) {
+		AExitStm result = new AExitStm();
+		result.setLocation(token);
+		token.executable(true);
+		result.setExpression(null);
+		return result;
+	}
+
+	public static ATixeStm newATixeStm(LexLocation token,
+			List<ATixeStmtAlternative> traps, PStm body) {
+		ATixeStm result = new ATixeStm();
+		result.setLocation(token);
+		token.executable(true);
+		result.setTraps(traps);
+		result.setBody(body);
+		return result;
+	}
+
+	public static ATrapStm newATrapStm(LexLocation token,
+			ADefPatternBind patternBind, PStm with, PStm body) {
+		ATrapStm result = new ATrapStm();
+		result.setLocation(token);
+		token.executable(true);
+		
+		result.setPatternBind(patternBind);
+		result.setWith(with);
+		result.setBody(body);
+		
+		return result;
+	}
+
+	public static AAlwaysStm newAAlwaysStm(LexLocation token, PStm always, PStm body) {
+		AAlwaysStm result = new AAlwaysStm();
+		result.setLocation(token);
+		token.executable(true);
+		
+		result.setAlways(always);
+		result.setBody(body);
+		
+		return result;
+	}
+
+	public static ANonDeterministicSimpleBlockStm newANonDeterministicSimpleBlockStm(
+			LexLocation token) {
+		ANonDeterministicSimpleBlockStm result = new ANonDeterministicSimpleBlockStm();
+		result.setLocation(token);
+		token.executable(true);
+		
+		result.setStatements(new Vector<PStm>());
+		
+		return result;
+	}
+
+	public static AAtomicStm newAAtomicStm(LexLocation token,
+			List<AAssignmentStm> assignments) {
+		AAtomicStm result = new AAtomicStm();
+		result.setLocation(token);
+		token.executable(true);
+		
+		result.setAssignments(assignments);
+		return result;
+	}
+
+	public static ACallStm newACallStm(LexNameToken name, List<PExp> args) {
+		ACallStm result = new ACallStm();
+		result.setLocation(name.location);
+		name.location.executable(true);
+		result.setName(name);
+		result.setArgs(args);
+		
+		return result;
+	}
+
+	public static ACallObjectStm newACallObjectStm(PObjectDesignator designator,
+			LexNameToken classname, List<PExp> args) {
+		ACallObjectStm result = new ACallObjectStm();
+		result.setLocation(designator.getLocation());
+		designator.getLocation().executable(true);
+		
+		result.setDesignator(designator);
+		result.setClassname(classname);
+		result.setFieldname(null);
+		result.setArgs(args);
+		result.setExplicit(classname.explicit);
+		
+		return result;
+	}
+
+	public static ACallObjectStm newACallObjectStm(PObjectDesignator designator,
+			LexIdentifierToken fieldname, List<PExp> args) {
+		ACallObjectStm result = new ACallObjectStm();
+		result.setLocation(designator.getLocation());
+		designator.getLocation().executable(true);
+		
+		result.setDesignator(designator);
+		result.setClassname(null);
+		result.setFieldname(fieldname);
+		result.setArgs(args);
+		result.setExplicit(false);
+		
+		return result;
+	}
+
+	public static AFieldObjectDesignator newAFieldObjectDesignator(
+			PObjectDesignator object, LexIdentifierToken fieldname) {
+		AFieldObjectDesignator result = new AFieldObjectDesignator();
+		result.setLocation(object.getLocation());
+		result.setObject(object);
+		result.setClassName(null);
+		result.setFieldName(fieldname);
+		
+		return result;
+	}
+
+	public static PObjectDesignator newAFieldObjectDesignator(
+			PObjectDesignator object, LexNameToken classname) {
+		AFieldObjectDesignator result = new AFieldObjectDesignator();
+		result.setLocation(object.getLocation());
+		result.setObject(object);
+		result.setClassName(classname);
+		result.setFieldName(null);
+		
+		return result;
+	}
+
+	public static AApplyObjectDesignator newAApplyObjectDesignator(
+			PObjectDesignator object, List<PExp> args) {
+		
+		AApplyObjectDesignator result = new AApplyObjectDesignator();
+		result.setLocation(object.getLocation());
+		result.setObject(object);
+		result.setArgs(args);
+		
+		return result;
+	}
+
+	public static ASelfObjectDesignator newASelfObjectDesignator(
+			LexLocation location) {
+		
+		ASelfObjectDesignator result = new ASelfObjectDesignator();
+		result.setLocation(location);
+		result.setSelf(new LexNameToken(location.module, "self", location));
+		return result;
+	}
+
+	public static AIdentifierObjectDesignator newAIdentifierObjectDesignator(
+			LexNameToken name) {
+		AIdentifierObjectDesignator result = new AIdentifierObjectDesignator();
+		result.setLocation(name.location);
+		result.setName(name);
+		result.setExpression(AstFactory.newAVariableExp(name.getExplicit(true)));
+		return result;
+	}
+
+	public static ANewObjectDesignator newANewObjectDesignator(
+			LexIdentifierToken classname, List<PExp> args) {
+		ANewObjectDesignator result = new ANewObjectDesignator();
+		result.setLocation(classname.location);
+		result.setExpression(AstFactory.newANewExp(classname.location, classname, args));
+		return result;
+	}
+
+	public static AWhileStm newAWhileStm(LexLocation token, PExp exp, PStm body) {
+		AWhileStm result = new AWhileStm();
+		initStatement(result,token);
+		result.setExp(exp);
+		result.setStatement(body);
+		return result;
+	}
+
+	private static void initStatement(PStm result, LexLocation token) {
+		result.setLocation(token);
+		token.executable(true);
+	}
+
+	public static AForAllStm newAForAllStm(LexLocation token, PPattern pattern, PExp set,
+			PStm stmt) {
+		AForAllStm result = new AForAllStm();
+		initStatement(result, token);
+		
+		result.setPattern(pattern);
+		result.setSet(set);
+		result.setStatement(stmt);
+		return null;
+	}
+
+	public static AForPatternBindStm newAForPatternBindStm(LexLocation token,
+			ADefPatternBind pb, boolean reverse, PExp exp, PStm body) {
+		AForPatternBindStm result = new AForPatternBindStm();
+		initStatement(result, token);
+		
+		result.setPatternBind(pb);
+		result.setReverse(reverse);
+		result.setExp(exp);
+		result.setStatement(body);
+		return result;
+	}
+
+	public static AForIndexStm newAForIndexStm(LexLocation token,
+			LexNameToken var, PExp from, PExp to, PExp by, PStm body) {
+		
+		AForIndexStm result = new AForIndexStm();
+		initStatement(result, token);
+		
+		result.setVar(var);
+		result.setFrom(from);
+		result.setTo(to);
+		result.setBy(by);
+		result.setStatement(body);
+		
+		return result;
+	}
+
+	public static AIfStm newAIfStm(LexLocation token, PExp ifExp, PStm thenStmt,
+			List<AElseIfStm> elseIfList, PStm elseStmt) {
+		
+		AIfStm result = new AIfStm();
+		initStatement(result, token);
+		
+		result.setIfExp(ifExp);
+		result.setThenStm(thenStmt);
+		result.setElseIf(elseIfList);
+		result.setElseStm(elseStmt);
+		
+		return result;
+	}
+
+	public static AElseIfStm newAElseIfStm(LexLocation token, PExp elseIfExp,
+			PStm thenStmt) {
+		AElseIfStm result = new AElseIfStm();
+		initStatement(result, token);
+		
+		result.setElseIf(elseIfExp);
+		result.setThenStm(thenStmt);
+		
+		return result;
+	}
+
+	public static AAssignmentStm newAAssignmentStm(LexLocation token,
+			PStateDesignator target, PExp exp) {
+		AAssignmentStm result = new AAssignmentStm();
+		initStatement(result, token);
+		
+		result.setExp(exp);
+		result.setTarget(target);
+		return result;
+	}
+
+	public static AFieldStateDesignator newAFieldStateDesignator(
+			PStateDesignator object, LexIdentifierToken field) {
+		AFieldStateDesignator result = new AFieldStateDesignator();
+		initStateDesignator(result,object.getLocation());
+		
+		result.setObject(object);
+		result.setField(field);
+		
+		return result;
+	}
+
+	private static void initStateDesignator(PStateDesignator result,
+			LexLocation location) {
+		result.setLocation(location);
+	}
+
+	public static AMapSeqStateDesignator newAMapSeqStateDesignator(
+			PStateDesignator mapseq, PExp exp) {
+		AMapSeqStateDesignator result = new AMapSeqStateDesignator();
+		initStateDesignator(result, mapseq.getLocation());
+		
+		result.setMapseq(mapseq);
+		result.setExp(exp);
+		return result;
+	}
+
+	public static ABlockSimpleBlockStm newABlockSimpleBlockStm(
+			LexLocation token, List<PDefinition> assignmentDefs) {
+		ABlockSimpleBlockStm result = new ABlockSimpleBlockStm();
+		initStatement(result, token);
+		
+		result.setAssignmentDefs(assignmentDefs);
+		return result;
+	}
+
+	public static AAssignmentDefinition newAAssignmentDefinition(
+			LexNameToken name, PType type, PExp exp) {
+		AAssignmentDefinition result = new AAssignmentDefinition();
+		initDefinition(result,Pass.VALUES,name.location,name,NameScope.STATE);
+		
+		result.setType(type);
+		result.setExpression(exp);
+		result.getLocation().executable(false);
+		return result;
+	}
+
+	private static void initDefinition(PDefinition result,
+			Pass values, LexLocation location, LexNameToken name, NameScope scope) {
+		result.setPass(values);
+		result.setLocation(location);
+		result.setName(name);
+		result.setNameScope(scope);
+		result.setAccess(PAccessSpecifierAssistant.getDefault());
+	}
+
+	public static AReturnStm newAReturnStm(LexLocation token, PExp exp) {
+		AReturnStm result = new AReturnStm();
+		initStatement(result, token);
+		
+		result.setExpression(exp);
+		return result;
+	}
+
+	public static PStm newAReturnStm(LexLocation token) {
+		AReturnStm result = new AReturnStm();
+		initStatement(result, token);
+		
+		result.setExpression(null);
+		return result;
+	}
+
+	public static ADefLetDefStm newADefLetDefStm(LexLocation token,
+			List<PDefinition> localDefs, PStm readStatement) {
+		ADefLetDefStm result = new ADefLetDefStm();
+		initStatement(result, token);
+		
+		result.setLocalDefs(localDefs);
+		result.setStatement(readStatement);
+		return result;
+	}
+
+	public static ALetBeStStm newALetBeStStm(LexLocation token,
+			PMultipleBind bind, PExp stexp, PStm statement) {
+		ALetBeStStm result = new ALetBeStStm();
+		initStatement(result, token);
+		
+		result.setBind(bind);
+		result.setSuchThat(stexp);
+		result.setStatement(statement);
+		
+		return result;
+	}
+
+	public static ACasesStm newACasesStm(LexLocation token, PExp exp,
+			List<ACaseAlternativeStm> cases, PStm others) {
+		ACasesStm result = new ACasesStm();
+		initStatement(result, token);
+		
+		result.setExp(exp);
+		result.setCases(cases);
+		result.setOthers(others);
+		
+		return result;
+	}
+
+	public static ACaseAlternativeStm newACaseAlternativeStm(PPattern pattern,
+			PStm stmt) {
+		ACaseAlternativeStm result = new ACaseAlternativeStm();
+		result.setLocation(pattern.getLocation());
+		result.setPattern(pattern);
+		result.setResult(stmt);
+		return result;	
+	}
+
+	public static AStartStm newAStartStm(LexLocation location, PExp obj) {
+		AStartStm result = new AStartStm();
+		initStatement(result, location);
+		
+		result.setObj(obj);
+		return result;
+	}
+
+	public static ADurationStm newADurationStm(LexLocation location, PExp duration,
+			PStm stmt) {
+		ADurationStm result = new ADurationStm();
+		initStatement(result, location);
+		
+		result.setDuration(duration);
+		result.setStatement(stmt);
+		return result;
+	}
+
+	public static ACyclesStm newACyclesStm(LexLocation location, PExp duration,
+			PStm stmt) {
+		ACyclesStm result = new ACyclesStm();
+		initStatement(result, location);
+		
+		result.setCycles(duration);
+		result.setStatement(stmt);
+		
 		return result;
 	}
 	
