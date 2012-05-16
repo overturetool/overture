@@ -5,14 +5,13 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -60,14 +59,14 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistant.isSet(type))
+		if (!PTypeAssistantTC.isSet(type))
 		{
 			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type",rp.getLocation(),rp);
 			TypeCheckerErrors.detail("Actual type", type);
 		}
 		else
 		{
-			ASetType set = PTypeAssistant.getSet(type);
+			ASetType set = PTypeAssistantTC.getSet(type);
 
 			if (!set.getEmpty())
 			{
@@ -82,13 +81,11 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 	}
 
 	public static PType getPossibleTypes(ASetPattern pattern) {
-		ASetType t = new ASetType(pattern.getLocation(), false,  true, false);
-		t.setSetof(new AUnknownType(pattern.getLocation(), false));
-		return t;
+		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
 
 	public static PExp getMatchingExpression(ASetPattern sp) {
-		return new ASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
+		return AstFactory.newASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
 	} 
 
 }

@@ -27,48 +27,29 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AAbsoluteUnaryExp;
-import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ADefExp;
-import org.overture.ast.expressions.ADistConcatUnaryExp;
-import org.overture.ast.expressions.ADistIntersectUnaryExp;
-import org.overture.ast.expressions.ADistMergeUnaryExp;
-import org.overture.ast.expressions.ADistUnionUnaryExp;
-import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.AIfExp;
-import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AIsOfBaseClassExp;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapDomainUnaryExp;
-import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.APowerSetUnaryExp;
 import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.ARecordModifier;
-import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ASameBaseClassExp;
 import org.overture.ast.expressions.ASameClassExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
-import org.overture.ast.expressions.ATailUnaryExp;
-import org.overture.ast.expressions.AUnaryMinusUnaryExp;
-import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SMapExp;
@@ -528,80 +509,67 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case PLUS:
 				nextToken();
-				exp = new AUnaryPlusUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new UnaryPlusExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAUnaryPlusUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case MINUS:
 				nextToken();
-				exp = new AUnaryMinusUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new UnaryMinusExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAUnaryMinusUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case CARD:
 				nextToken();
-				exp = new ACardinalityUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new CardinalityExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newACardinalityUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DOM:
 				nextToken();
-				exp = new AMapDomainUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new MapDomainExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAMapDomainUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case LEN:
 				nextToken();
-				exp = new ALenUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new LenExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newALenUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case POWER:
 				nextToken();
-				exp = new APowerSetUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new PowerSetExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAPowerSetUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case RNG:
 				nextToken();
-				exp = new AMapRangeUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new MapRangeExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAMapRangeUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case ELEMS:
 				nextToken();
-				exp = new AElementsUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new ElementsExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAElementsUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case ABS:
 				nextToken();
-				exp = new AAbsoluteUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new AbsoluteExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAAbsoluteUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DINTER:
 				nextToken();
-				exp = new ADistIntersectUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistIntersectExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistIntersectUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case MERGE:
 				nextToken();
-				exp = new ADistMergeUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistMergeExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistMergeUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case HEAD:
 				nextToken();
-				exp = new AHeadUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new HeadExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAHeadUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case TAIL:
 				nextToken();
-				exp = new ATailUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new TailExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newATailUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case REVERSE:
@@ -611,32 +579,27 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				nextToken();
-				exp = new AReverseUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new ReverseExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAReverseUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case FLOOR:
 				nextToken();
-				exp = new AFloorUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new FloorExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAFloorUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DUNION:
 				nextToken();
-				exp = new ADistUnionUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistUnionExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistUnionUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DISTCONC:
 				nextToken();
-				exp = new ADistConcatUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistConcatExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistConcatUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case INDS:
 				nextToken();
-				exp = new AIndicesUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new IndicesExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAIndicesUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			default:
@@ -1295,7 +1258,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
-			result = new ASetEnumSetExp(start, members);
+			result = AstFactory.newASetEnumSetExp(start,members);
 		}
 
 		return result;

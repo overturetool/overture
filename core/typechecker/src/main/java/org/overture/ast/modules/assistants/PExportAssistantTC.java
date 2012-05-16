@@ -20,7 +20,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -52,7 +52,7 @@ public class PExportAssistantTC
 						PType act = PDefinitionAssistantTC.getType(def);
 						PType type = ((AFunctionExport)exp).getExportType();
 
-						if (act != null && !PTypeAssistant.equals(act, type))
+						if (act != null && !PTypeAssistantTC.equals(act, type))
 						{
 							TypeCheckerErrors.report(3184, "Exported " + name + " function type incorrect",name.location,exp);
 							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
@@ -82,7 +82,7 @@ public class PExportAssistantTC
 							PType act = def.getType();
 							PType type = ((AOperationExport)exp).getExportType();
 
-							if (act != null && !PTypeAssistant.equals(act, type))
+							if (act != null && !PTypeAssistantTC.equals(act, type))
 							{
 								TypeCheckerErrors.report(3186, "Exported operation type does not match actual type",name.location,exp);
 								TypeCheckerErrors.detail2("Exported", type, "Actual", act);

@@ -37,7 +37,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.AApplyObjectDesignatorAssistantTC;
 import org.overture.ast.types.assistants.ARecordInvariantTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
@@ -101,7 +101,7 @@ public class TypeCheckerOthersVisitor extends
 			else
 			{
 				ASetBind setbind = (ASetBind)node.getBind();
-				ASetType settype = PTypeAssistant.getSet(setbind.getSet().apply(rootVisitor, question));
+				ASetType settype = PTypeAssistantTC.getSet(setbind.getSet().apply(rootVisitor, question));
 				if (!TypeComparator.compatible(type, settype.getSetof()))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
@@ -135,13 +135,13 @@ public class TypeCheckerOthersVisitor extends
 		
 		PType type = node.getObject().apply(rootVisitor,question);
 		PTypeSet result = new PTypeSet();
-		boolean unique = !PTypeAssistant.isUnion(type);
+		boolean unique = !PTypeAssistantTC.isUnion(type);
 		LexIdentifierToken field = node.getField();
 		
-		if (PTypeAssistant.isRecord(type))
+		if (PTypeAssistantTC.isRecord(type))
 		{
 			
-    		ARecordInvariantType rec = PTypeAssistant.getRecord(type);
+    		ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
     		AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, field.name);
 
     		if (rf == null)
@@ -155,9 +155,9 @@ public class TypeCheckerOthersVisitor extends
     		}
 		}
 
-		if (PTypeAssistant.isClass(type))
+		if (PTypeAssistantTC.isClass(type))
 		{
-			AClassType ctype = PTypeAssistant.getClassType(type);
+			AClassType ctype = PTypeAssistantTC.getClassType(type);
 			String cname = ctype.getName().name;
 
 			node.setObjectfield( new LexNameToken(cname, field.name, node.getObject().getLocation()));
@@ -272,9 +272,9 @@ public class TypeCheckerOthersVisitor extends
 		PType rtype = node.getMapseq().apply(rootVisitor, new TypeCheckInfo(question.env));
 		PTypeSet result = new PTypeSet();
 
-		if (PTypeAssistant.isMap(rtype))
+		if (PTypeAssistantTC.isMap(rtype))
 		{
-			node.setMapType(PTypeAssistant.getMap(rtype));
+			node.setMapType(PTypeAssistantTC.getMap(rtype));
 
 			if (!TypeComparator.compatible(node.getMapType().getFrom(), etype))
 			{
@@ -287,11 +287,11 @@ public class TypeCheckerOthersVisitor extends
 			}
 		}
 
-		if (PTypeAssistant.isSeq(rtype))
+		if (PTypeAssistantTC.isSeq(rtype))
 		{
-			node.setSeqType(PTypeAssistant.getSeq(rtype));
+			node.setSeqType(PTypeAssistantTC.getSeq(rtype));
 
-			if (!PTypeAssistant.isNumeric(etype))
+			if (!PTypeAssistantTC.isNumeric(etype))
 			{
 				TypeCheckerErrors.report(3243, "Seq element assignment is not numeric",node.getLocation(),node);
 				TypeCheckerErrors.detail("Actual", etype);
@@ -338,32 +338,32 @@ public class TypeCheckerOthersVisitor extends
 		}
 
 		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, null, argtypes));
-		boolean unique = !PTypeAssistant.isUnion(type);
+		boolean unique = !PTypeAssistantTC.isUnion(type);
 		PTypeSet result = new PTypeSet();
 
-		if (PTypeAssistant.isMap(type))
+		if (PTypeAssistantTC.isMap(type))
 		{
-			SMapType map = PTypeAssistant.getMap(type);
+			SMapType map = PTypeAssistantTC.getMap(type);
 			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node,map, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
-		if (PTypeAssistant.isSeq(type))
+		if (PTypeAssistantTC.isSeq(type))
 		{
-			SSeqType seq = PTypeAssistant.getSeq(type);
+			SSeqType seq = PTypeAssistantTC.getSeq(type);
 			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node,seq, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
-		if (PTypeAssistant.isFunction(type))
+		if (PTypeAssistantTC.isFunction(type))
 		{
-			AFunctionType ft = PTypeAssistant.getFunction(type);
-			PTypeAssistant.typeResolve(ft, null, rootVisitor, new TypeCheckInfo(question.env));
+			AFunctionType ft = PTypeAssistantTC.getFunction(type);
+			PTypeAssistantTC.typeResolve(ft, null, rootVisitor, new TypeCheckInfo(question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,ft, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
-		if (PTypeAssistant.isOperation(type))
+		if (PTypeAssistantTC.isOperation(type))
 		{
-			AOperationType ot = PTypeAssistant.getOperation(type);
-			PTypeAssistant.typeResolve(ot, null, rootVisitor, new TypeCheckInfo(question.env));
+			AOperationType ot = PTypeAssistantTC.getOperation(type);
+			PTypeAssistantTC.typeResolve(ot, null, rootVisitor, new TypeCheckInfo(question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node,ot, question.env, NameScope.NAMESANDSTATE, unique,rootVisitor));
 		}
 
@@ -395,11 +395,11 @@ public class TypeCheckerOthersVisitor extends
 		
 		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, null, question.qualifiers));
 		PTypeSet result = new PTypeSet();
-		boolean unique = !PTypeAssistant.isUnion(type);
+		boolean unique = !PTypeAssistantTC.isUnion(type);
 
-		if (PTypeAssistant.isClass(type))
+		if (PTypeAssistantTC.isClass(type))
 		{
-			AClassType ctype = PTypeAssistant.getClassType(type);
+			AClassType ctype = PTypeAssistantTC.getClassType(type);
 			
 			if (node.getClassName() == null)
 			{
@@ -426,10 +426,10 @@ public class TypeCheckerOthersVisitor extends
 			}
 		}
 
-		if (PTypeAssistant.isRecord(type))
+		if (PTypeAssistantTC.isRecord(type))
 		{
 			String sname = (node.getFieldName() != null) ? node.getFieldName().name : node.getClassName().toString();
-			ARecordInvariantType rec = PTypeAssistant.getRecord(type);
+			ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
 			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, sname);
 
 			if (rf == null)

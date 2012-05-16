@@ -16,15 +16,13 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternListAssistantTC;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFunctionTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
@@ -100,7 +98,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 				// This is a type/param mismatch, reported elsewhere. But we
 				// have to create definitions to avoid a cascade of errors.
 
-				PType unknown = new AUnknownType(location,false,null);
+				PType unknown = AstFactory.newAUnknownType(location);
 
 				for (PPattern p: plist)
 				{
@@ -161,7 +159,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 			for (LexNameToken pname: efd.getTypeParams())
 			{
 				PType ptype = ti.next();
-				ftype = (AFunctionType) PTypeAssistant.polymorph(ftype,pname, ptype);
+				ftype = (AFunctionType) PTypeAssistantTC.polymorph(ftype,pname, ptype);
 			}
 		}
 
@@ -221,11 +219,11 @@ public class AExplicitFunctionDefinitionAssistantTC {
 			
 			TypeCheckInfo newQuestion = new TypeCheckInfo(params,question.scope);			
 			
-			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, newQuestion));
+			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, newQuestion));
 		}
 		else
 		{
-			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
 		}
 
 		if (question.env.isVDMPP())
@@ -299,7 +297,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 		}
 
 		LexNameToken result = new LexNameToken(d.getName().module, "RESULT", d.getLocation());
-		last.add(new AIdentifierPattern(d.getLocation(),null,false,result));
+		last.add(AstFactory.newAIdentifierPattern(result));
 
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 

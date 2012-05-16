@@ -8,7 +8,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 
@@ -39,13 +39,13 @@ public class ALocalDefinitionAssistantTC {
 		
 		if (d.getType() != null)
    		{
-   			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
+   			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
    		}
 		
 	}
 
 	public static boolean isFunction(ALocalDefinition def) {
-		return (def.getValueDefinition() || PTypeAssistant.isType(PDefinitionAssistantTC.getType(def),AParameterType.class)) ? false : PTypeAssistant.isFunction(PDefinitionAssistantTC.getType(def));
+		return (def.getValueDefinition() || PTypeAssistantTC.isType(PDefinitionAssistantTC.getType(def),AParameterType.class)) ? false : PTypeAssistantTC.isFunction(PDefinitionAssistantTC.getType(def));
 	}
 
 	

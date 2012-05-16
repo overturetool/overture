@@ -2,10 +2,7 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.SNumericBinaryExp;
-import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
-import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.typecheck.TypeCheckInfo;
@@ -21,18 +18,18 @@ public class SNumericBasicTypeAssistantTC {
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
 
-		if (!PTypeAssistant.isNumeric(node.getLeft().getType()))
+		if (!PTypeAssistantTC.isNumeric(node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3139, "Left hand of " + node.getOp() + " is not numeric",node.getLocation(),node);
 			TypeCheckerErrors.detail("Actual", node.getLeft().getType());
-			node.getLeft().setType(new ARealNumericBasicType(node.getLocation(),false,null));
+			node.getLeft().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
 
-		if (!PTypeAssistant.isNumeric(node.getRight().getType()))
+		if (!PTypeAssistantTC.isNumeric(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3140, "Right hand of " + node.getOp() + " is not numeric",node.getLocation(),node);
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
-			node.getRight().setType(new ARealNumericBasicType(node.getLocation(),false,null));
+			node.getRight().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
 		
 	}
@@ -40,15 +37,15 @@ public class SNumericBasicTypeAssistantTC {
 	public static PType typeOf(long value, LexLocation location) {
 		if (value > 0)
 		{
-			return new ANatOneNumericBasicType(location,false);
+			return AstFactory.newANatOneNumericBasicType(location);
 		}
 		else if (value >= 0)
 		{
-			return new ANatNumericBasicType(location,false);
+			return AstFactory.newANatNumericBasicType(location);
 		}
 		else
 		{
-			return new AIntNumericBasicType(location,false);
+			return AstFactory.newAIntNumericBasicType(location);
 		}
 	}
 

@@ -5,9 +5,10 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeList;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -56,8 +57,7 @@ public class AMultiBindListDefinitionAssistantTC {
 			types.add(definition.getType());
 		}
 
-		AUnionType result = new AUnionType(def.getLocation(), false, false, false);
-		result.setTypes(types);
+		AUnionType result = AstFactory.newAUnionType(def.getLocation(),types);		
 		
 		return result;
 	}

@@ -35,6 +35,7 @@ import org.overture.typecheck.visitors.TypeCheckVisitor;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.Pass;
 
 
 /**
@@ -204,7 +205,7 @@ public class ModuleTypeChecker extends TypeChecker
     				{
 //    					System.out.println("Number of Defs: " + m.getDefs().size());
 //    					System.out.println("Def to typecheck: " + d.getName());
-    					if (PDefinitionAssistantTC.getPass(d) == pass)//TODO we properly need to add this to all definitions
+    					if (d.getPass() == pass)
     					{
     						try
     						{

@@ -4,10 +4,10 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -24,7 +24,7 @@ public class AApplyObjectDesignatorAssistantTC {
 
 		if (node.getArgs().size() != 1) {
 			TypeCheckerErrors.concern(unique, 3250, "Map application must have one argument",node.getLocation(),node);
-			return new AUnknownType(node.getLocation(),false);
+			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
 		PType argtype = node.getArgs().get(0).apply(rootVisitor,new TypeCheckInfo(env, scope));
@@ -45,12 +45,12 @@ public class AApplyObjectDesignatorAssistantTC {
 		if (node.getArgs().size() != 1)
 		{
 			TypeCheckerErrors.concern(unique, 3252, "Sequence application must have one argument",node.getLocation(),node);
-			return new AUnknownType(node.getLocation(),false);
+			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
 		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(env, scope));
 
-		if (!PTypeAssistant.isNumeric(argtype))
+		if (!PTypeAssistantTC.isNumeric(argtype))
 		{
 			TypeCheckerErrors.concern(unique, 3253, "Sequence argument is not numeric",node.getLocation(),node);
 			TypeCheckerErrors.detail(unique, "Type", argtype);

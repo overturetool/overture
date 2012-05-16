@@ -7,16 +7,15 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AStateInitExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFieldFieldAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.ast.types.assistants.PTypeList;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -105,7 +104,7 @@ public class AStateDefinitionAssistantTC {
 			}
 		}
 
-		d.setRecordType(PTypeAssistant.typeResolve(d.getRecordType(), null, rootVisitor, question));
+		d.setRecordType(PTypeAssistantTC.typeResolve(d.getRecordType(), null, rootVisitor, question));
 
 		if (d.getInvPattern() != null)
 		{
@@ -145,7 +144,7 @@ public class AStateDefinitionAssistantTC {
 		AFunctionType ftype =
 				AstFactory.newAFunctionType( loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
-		PExp body = new AStateInitExp(null,d.getLocation(),d);
+		PExp body = AstFactory.newAStateInitExp(d);
 
 		AExplicitFunctionDefinition def = 
 				AstFactory.newAExplicitFunctionDefinition(

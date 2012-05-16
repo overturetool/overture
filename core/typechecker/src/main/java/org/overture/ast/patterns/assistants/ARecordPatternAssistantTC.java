@@ -7,14 +7,14 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -31,7 +31,7 @@ public class ARecordPatternAssistantTC {
 		try
 		{
 			PPatternListAssistantTC.typeResolve(pattern.getPlist(),rootVisitor,question);
-			pattern.setType(PTypeAssistant.typeResolve(pattern.getType(),null, rootVisitor,question));
+			pattern.setType(PTypeAssistantTC.typeResolve(pattern.getType(),null, rootVisitor,question));
 		}
 		catch (TypeCheckException e)
 		{
@@ -42,7 +42,7 @@ public class ARecordPatternAssistantTC {
 	}
 
 	public static void unResolve(ARecordPattern pattern) {
-		PTypeAssistant.unResolve(pattern.getType());
+		PTypeAssistantTC.unResolve(pattern.getType());
 		pattern.setResolved(false);		
 	}
 
@@ -65,15 +65,15 @@ public class ARecordPatternAssistantTC {
 
 		PType type = rp.getType();
 		
-		if (!PTypeAssistant.isRecord(type))
+		if (!PTypeAssistantTC.isRecord(type))
 		{
 			TypeCheckerErrors.report(3200, "Mk_ expression is not a record type",rp.getLocation(),rp);
 			TypeCheckerErrors.detail("Type", type);
 			return defs;
 		}
 
-		ARecordInvariantType pattype = PTypeAssistant.getRecord(type);
-		PType using = PTypeAssistant.isType(exptype, pattype.getName().getName());
+		ARecordInvariantType pattype = PTypeAssistantTC.getRecord(type);
+		PType using = PTypeAssistantTC.isType(exptype, pattype.getName().getName());
 
 		if (using == null || !(using instanceof ARecordInvariantType))
 		{
@@ -115,7 +115,7 @@ public class ARecordPatternAssistantTC {
 		}
 		
 		LexNameToken tpName = ptrn.getTypename();
-		return new AMkTypeExp(ptrn.getLocation(),tpName.clone(), list);
+		return AstFactory.newAMkTypeExp(tpName.clone(), list);
 	}
 	
 }

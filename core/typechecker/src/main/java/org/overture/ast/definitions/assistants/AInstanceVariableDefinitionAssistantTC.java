@@ -7,7 +7,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -44,11 +44,11 @@ public class AInstanceVariableDefinitionAssistantTC {
 		
 		try
 		{
-			d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 		}
 		catch (TypeCheckException e)
 		{
-			PTypeAssistant.unResolve(d.getType());
+			PTypeAssistantTC.unResolve(d.getType());
 			throw e;
 		}
 		

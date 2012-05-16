@@ -10,13 +10,13 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.ast.types.assistants.PTypeList;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -87,7 +87,7 @@ public class ATypeDefinitionAssistantTC {
 		try
 		{
 			d.setInfinite(false);
-			d.setInvType((SInvariantType) PTypeAssistant.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
+			d.setInvType((SInvariantType) PTypeAssistantTC.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
 
 			if (d.getInfinite())
 			{
@@ -107,7 +107,7 @@ public class ATypeDefinitionAssistantTC {
 		}
 		catch (TypeCheckException e)
 		{
-			PTypeAssistant.unResolve(d.getInvType());
+			PTypeAssistantTC.unResolve(d.getInvType());
 			throw e;
 		}
 	}

@@ -5,13 +5,11 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AUnionPattern;
-import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -54,7 +52,7 @@ public class AUnionPatternAssistantTC {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistant.isSet(type))
+		if (!PTypeAssistantTC.isSet(type))
 		{
 			TypeCheckerErrors.report(3206, "Matching expression is not a set type",rp.getLocation(),rp);
 		}
@@ -73,13 +71,13 @@ public class AUnionPatternAssistantTC {
 
 		PType s = set.getType(unionPattern.getLocation());
 
-		return PTypeAssistant.isUnknown(s) ? new ASetType(unionPattern.getLocation(), false, null, new AUnknownType(unionPattern.getLocation(), false), true, false)
-				: s;
+		return PTypeAssistantTC.isUnknown(s) ? 
+				AstFactory.newASetType(unionPattern.getLocation(), AstFactory.newAUnknownType(unionPattern.getLocation())) : s;
 	}
 
 	public static PExp getMatchingExpression(AUnionPattern up) {
 		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
-		return new ASetUnionBinaryExp(null, up.getLocation(), PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
+		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
 	}
 
 }

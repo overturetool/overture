@@ -15,14 +15,13 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AOperationTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -96,7 +95,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 
-		d.setType(PTypeAssistant.typeResolve(d.getType(), null, rootVisitor, question));
+		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 
 		if (question.env.isVDMPP())
 		{
@@ -156,25 +155,26 @@ public class AExplicitOperationDefinitionAssistantTC {
 		{
     		LexNameToken result =
     			new LexNameToken(d.getName().module, "RESULT", d.getLocation());
-    		plist.add(new AIdentifierPattern(d.getLocation(),null, false,result));
+    		plist.add(AstFactory.newAIdentifierPattern(result));
 		}
 		
 		AStateDefinition state = d.getState();
 
 		if (state != null)	// Two args, called Sigma~ and Sigma
 		{
-			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName().getOldName()));
-			plist.add(new AIdentifierPattern(state.getLocation(),null, false,state.getName()));
+			plist.add(AstFactory.newAIdentifierPattern(state.getName().getOldName()));
+			plist.add(AstFactory.newAIdentifierPattern(state.getName()));
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
 			// Two arguments called "self~" and "self"
-			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName().getOldName()));
-			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName()));
+			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName().getOldName()));
+			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 		}
 
 		parameters.add(plist);
-		APostOpExp postop = new APostOpExp(null,d.getLocation(), d.getName().clone(), d.getPrecondition(), d.getPostcondition(), null, state, null);
+		APostOpExp postop = 
+				AstFactory.newAPostOpExp(d.getName().clone(),d.getPrecondition(),d.getPostcondition(),null,d.getState()); 
 
 		AExplicitFunctionDefinition def = 
 				AstFactory.newAExplicitFunctionDefinition(
@@ -215,15 +215,16 @@ public class AExplicitOperationDefinitionAssistantTC {
 
 		if (d.getState() != null)
 		{
-			plist.add(new AIdentifierPattern(d.getLocation(),null, false, d.getState().getName()));
+			plist.add(AstFactory.newAIdentifierPattern(d.getState().getName()));
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
-			plist.add(new AIdentifierPattern(d.getLocation(),null,false, d.getName().getSelfName()));
+			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 		}
 
 		parameters.add(plist);
-		APreOpExp preop = new APreOpExp(null,d.getLocation(),d.getName().clone(), d.getPrecondition(), null, d.getState());
+		APreOpExp preop = 
+				AstFactory.newAPreOpExp(d.getName().clone(), d.getPrecondition(),null,d.getState());
 
 		AExplicitFunctionDefinition def = 
 				AstFactory.newAExplicitFunctionDefinition(

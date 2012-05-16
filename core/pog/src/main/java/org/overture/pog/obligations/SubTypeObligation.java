@@ -69,7 +69,7 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
 import org.overture.typecheck.TypeComparator;
@@ -187,7 +187,7 @@ public class SubTypeObligation extends ProofObligation {
 		StringBuilder sb = new StringBuilder();
 		String prefix = "";
 
-		etype = PTypeAssistant.deBracket(etype);
+		etype = PTypeAssistantTC.deBracket(etype);
 
 		if (etype instanceof AUnionType) {
 			AUnionType ut = (AUnionType) etype;

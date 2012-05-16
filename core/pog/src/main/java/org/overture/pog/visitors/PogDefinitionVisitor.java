@@ -29,7 +29,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.pog.obligations.FuncPostConditionObligation;
 import org.overture.pog.obligations.OperationPostConditionObligation;
@@ -491,10 +491,10 @@ public class PogDefinitionVisitor extends
 
 		if (!(pattern instanceof AIdentifierPattern)
 				&& !(pattern instanceof AIgnorePattern)
-				&& PTypeAssistant.isUnion(type))
+				&& PTypeAssistantTC.isUnion(type))
 		{
 			PType patternType = PPatternAssistantTC.getPossibleType(pattern);
-			AUnionType ut = PTypeAssistant.getUnion(type);
+			AUnionType ut = PTypeAssistantTC.getUnion(type);
 			PTypeSet set = new PTypeSet();
 
 			for (PType u : ut.getTypes())

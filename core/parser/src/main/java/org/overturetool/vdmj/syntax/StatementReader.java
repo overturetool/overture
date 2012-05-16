@@ -28,7 +28,6 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ADefPatternBind;
@@ -41,13 +40,10 @@ import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AFieldObjectDesignator;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
-import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
-import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.PObjectDesignator;
@@ -155,12 +151,12 @@ public class StatementReader extends SyntaxReader
 				break;
 
 			case ERROR:
-				stmt = new AErrorStm(location);
+				stmt = AstFactory.newAErrorStm(location);
 				nextToken();
 				break;
 
 			case SKIP:
-				stmt = new ASkipStm(location);
+				stmt = AstFactory.newASkipStm(location);
 				nextToken();
 				break;
 
@@ -241,7 +237,7 @@ public class StatementReader extends SyntaxReader
 			ADefPatternBind patternBind = br.readPatternOrBind();
 			checkFor(VDMToken.MAPLET, 2193, "Expecting '|->' after pattern bind");
 			PStm result = readStatement();
-			traps.add(new ATixeStmtAlternative(patternBind, result));
+			traps.add(AstFactory.newATixeStmtAlternative(patternBind, result));
 			ignore(VDMToken.COMMA);
 		}
 
@@ -678,7 +674,7 @@ public class StatementReader extends SyntaxReader
 	{
 		LexNameToken name = readNameToken("Expecting name in assignment statement");
 
-		PStateDesignator sd = new AIdentifierStateDesignator(name.location, null, name);
+		PStateDesignator sd = AstFactory.newAIdentifierStateDesignator(name);
 
 		while (lastToken().is(VDMToken.POINT) || lastToken().is(VDMToken.BRA))
 		{
@@ -791,7 +787,7 @@ public class StatementReader extends SyntaxReader
 			throwMessage(2069, "Expecting <identifier>:<type> := <expression>");
 		} else
 		{
-			exp = new AUndefinedExp(type, name.location);
+			exp = AstFactory.newAUndefinedExp(name.location);
 		}
 
 		return AstFactory.newAAssignmentDefinition(idToName(name), type, exp);

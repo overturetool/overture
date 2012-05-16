@@ -6,8 +6,8 @@ import java.util.Vector;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.assistants.PExpAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.assistants.ASetBindAssistantTC;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -52,7 +52,7 @@ public class AEqualsDefinitionAssistantTC {
 	}
 
 	public static PType getType(AEqualsDefinition def) {
-		return def.getDefType() != null ? def.getDefType() : new AUnknownType(def.getLocation(),false);
+		return def.getDefType() != null ? def.getDefType() : AstFactory.newAUnknownType(def.getLocation());
 	}
 
 	public static LexNameList getOldNames(AEqualsDefinition def) {

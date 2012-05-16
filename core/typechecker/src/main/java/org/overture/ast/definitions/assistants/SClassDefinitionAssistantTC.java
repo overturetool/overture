@@ -11,34 +11,31 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatEnvironment;
-import org.overture.typecheck.Pass;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.vdmj.util.HelpLexNameToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.Pass;
+import org.overturetool.vdmj.util.HelpLexNameToken;
 
 
 public class SClassDefinitionAssistantTC {
@@ -119,7 +116,7 @@ public class SClassDefinitionAssistantTC {
 	public static boolean hasSupertype(SClassDefinition classDefinition,
 			PType other) {
 		
-		if (PTypeAssistant.equals(getType(classDefinition),other))
+		if (PTypeAssistantTC.equals(getType(classDefinition),other))
 		{
 			return true;
 		}
@@ -154,7 +151,7 @@ public class SClassDefinitionAssistantTC {
 			AClassType selftype =  (AClassType) getType(self);
 			AClassType targtype = (AClassType) getType(target);
 
-			if (!PTypeAssistant.equals(selftype, targtype))
+			if (!PTypeAssistantTC.equals(selftype, targtype))
 			{
 				if (AClassTypeAssistantTC.hasSupertype(selftype,targtype))
 				{
@@ -549,7 +546,6 @@ public class SClassDefinitionAssistantTC {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
@@ -580,7 +576,7 @@ public class SClassDefinitionAssistantTC {
 	public static PType getType(SClassDefinition def) {
 		if (def.getClasstype() == null)
 		{
-			def.setClasstype(new AClassType(def.getLocation(), false, null,def.getName().clone(), def));
+			def.setClasstype(AstFactory.newAClassType(def.getLocation(), def)); 
 		}
 
 		return def.getClasstype();
@@ -770,13 +766,13 @@ public class SClassDefinitionAssistantTC {
 
 		for (PDefinition d: c.getDefinitions())
 		{
-			if (PDefinitionAssistantTC.getPass(d)== p)
+			if (d.getPass() == p)
 			{
 				d.apply(tc,new TypeCheckInfo(base, NameScope.NAMES));
 			}
 		}
 
-		if (c.getInvariant() != null && PDefinitionAssistantTC.getPass(c.getInvariant()) == p)
+		if (c.getInvariant() != null && c.getInvariant().getPass() == p)
 		{
 			c.getInvariant().apply(tc,new TypeCheckInfo(base, NameScope.NAMES));
 		}

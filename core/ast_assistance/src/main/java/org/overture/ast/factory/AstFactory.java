@@ -44,94 +44,7 @@ import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
-import org.overture.ast.expressions.AAndBooleanBinaryExp;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.ACharLiteralExp;
-import org.overture.ast.expressions.ACompBinaryExp;
-import org.overture.ast.expressions.ADefExp;
-import org.overture.ast.expressions.ADivNumericBinaryExp;
-import org.overture.ast.expressions.ADivideNumericBinaryExp;
-import org.overture.ast.expressions.ADomainResByBinaryExp;
-import org.overture.ast.expressions.ADomainResToBinaryExp;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
-import org.overture.ast.expressions.AExists1Exp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AFieldExp;
-import org.overture.ast.expressions.AFieldNumberExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AFuncInstatiationExp;
-import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
-import org.overture.ast.expressions.AGreaterNumericBinaryExp;
-import org.overture.ast.expressions.AHistoryExp;
-import org.overture.ast.expressions.AIfExp;
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
-import org.overture.ast.expressions.AInSetBinaryExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.AIotaExp;
-import org.overture.ast.expressions.AIsExp;
-import org.overture.ast.expressions.AIsOfBaseClassExp;
-import org.overture.ast.expressions.AIsOfClassExp;
-import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
-import org.overture.ast.expressions.ALessNumericBinaryExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapCompMapExp;
-import org.overture.ast.expressions.AMapEnumMapExp;
-import org.overture.ast.expressions.AMapInverseUnaryExp;
-import org.overture.ast.expressions.AMapUnionBinaryExp;
-import org.overture.ast.expressions.AMapletExp;
-import org.overture.ast.expressions.AMkBasicExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.AModNumericBinaryExp;
-import org.overture.ast.expressions.AMuExp;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.ANilExp;
-import org.overture.ast.expressions.ANotEqualBinaryExp;
-import org.overture.ast.expressions.ANotInSetBinaryExp;
-import org.overture.ast.expressions.ANotUnaryExp;
-import org.overture.ast.expressions.ANotYetSpecifiedExp;
-import org.overture.ast.expressions.AOrBooleanBinaryExp;
-import org.overture.ast.expressions.APlusNumericBinaryExp;
-import org.overture.ast.expressions.APlusPlusBinaryExp;
-import org.overture.ast.expressions.APreExp;
-import org.overture.ast.expressions.AProperSubsetBinaryExp;
-import org.overture.ast.expressions.AQuoteLiteralExp;
-import org.overture.ast.expressions.ARangeResByBinaryExp;
-import org.overture.ast.expressions.ARangeResToBinaryExp;
-import org.overture.ast.expressions.ARealLiteralExp;
-import org.overture.ast.expressions.ARecordModifier;
-import org.overture.ast.expressions.ARemNumericBinaryExp;
-import org.overture.ast.expressions.ASameBaseClassExp;
-import org.overture.ast.expressions.ASameClassExp;
-import org.overture.ast.expressions.ASelfExp;
-import org.overture.ast.expressions.ASeqCompSeqExp;
-import org.overture.ast.expressions.ASeqConcatBinaryExp;
-import org.overture.ast.expressions.ASeqEnumSeqExp;
-import org.overture.ast.expressions.ASetCompSetExp;
-import org.overture.ast.expressions.ASetDifferenceBinaryExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
-import org.overture.ast.expressions.ASetIntersectBinaryExp;
-import org.overture.ast.expressions.ASetRangeSetExp;
-import org.overture.ast.expressions.ASetUnionBinaryExp;
-import org.overture.ast.expressions.AStarStarBinaryExp;
-import org.overture.ast.expressions.AStringLiteralExp;
-import org.overture.ast.expressions.ASubclassResponsibilityExp;
-import org.overture.ast.expressions.ASubseqExp;
-import org.overture.ast.expressions.ASubsetBinaryExp;
-import org.overture.ast.expressions.ASubstractNumericBinaryExp;
-import org.overture.ast.expressions.AThreadIdExp;
-import org.overture.ast.expressions.ATimeExp;
-import org.overture.ast.expressions.ATimesNumericBinaryExp;
-import org.overture.ast.expressions.ATupleExp;
-import org.overture.ast.expressions.AUndefinedExp;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.*;
 import org.overture.ast.modules.AAllExport;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFromModuleImports;
@@ -175,6 +88,7 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.assistants.PPatternAssistant;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
@@ -190,6 +104,7 @@ import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorCase;
+import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.statements.AFieldObjectDesignator;
@@ -198,6 +113,7 @@ import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.AMapSeqStateDesignator;
@@ -207,6 +123,7 @@ import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASelfObjectDesignator;
+import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
@@ -2521,7 +2438,7 @@ public class AstFactory {
 	}
 
 	public static AClassType newAClassType(LexLocation location,
-			AClassClassDefinition classdef) {
+			SClassDefinition classdef) {
 		AClassType result = new AClassType();
 		result.setLocation(location);
 		
@@ -2605,8 +2522,235 @@ public class AstFactory {
 		result.setLocation(location);
 		return result;
 	}
+
+	public static AUnaryPlusUnaryExp newAUnaryPlusUnaryExp(LexLocation location,
+			PExp exp) {
+		AUnaryPlusUnaryExp result = new AUnaryPlusUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
 	
 	
+	private static void initExpressionUnary(SUnaryExp result,
+			LexLocation location, PExp exp) {
+		initExpression(result,location);
+		result.setExp(exp);
+	}
+
+	private static void initExpression(PExp result, LexLocation location) {
+		result.setLocation(location);
+		location.executable(true);
+	}
+
+	public static AUnaryMinusUnaryExp newAUnaryMinusUnaryExp(LexLocation location,
+			PExp exp) {
+		AUnaryMinusUnaryExp result = new AUnaryMinusUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ACardinalityUnaryExp newACardinalityUnaryExp(LexLocation location,
+			PExp exp) {
+		ACardinalityUnaryExp result = new ACardinalityUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AMapDomainUnaryExp newAMapDomainUnaryExp(LexLocation location,
+			PExp exp) {
+		AMapDomainUnaryExp result = new AMapDomainUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ALenUnaryExp newALenUnaryExp(LexLocation location,
+			PExp exp) {
+		ALenUnaryExp result = new ALenUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static APowerSetUnaryExp newAPowerSetUnaryExp(LexLocation location,
+			PExp exp) {
+		APowerSetUnaryExp result = new APowerSetUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AMapRangeUnaryExp newAMapRangeUnaryExp(LexLocation location,
+			PExp exp) {
+		AMapRangeUnaryExp result = new AMapRangeUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AElementsUnaryExp newAElementsUnaryExp(LexLocation location,
+			PExp exp) {
+		AElementsUnaryExp result = new AElementsUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AAbsoluteUnaryExp newAAbsoluteUnaryExp(LexLocation location,
+			PExp exp) {
+		AAbsoluteUnaryExp result = new AAbsoluteUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ADistIntersectUnaryExp newADistIntersectUnaryExp(LexLocation location,
+			PExp exp) {
+		ADistIntersectUnaryExp result = new ADistIntersectUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ADistMergeUnaryExp newADistMergeUnaryExp(LexLocation location,
+			PExp exp) {
+		ADistMergeUnaryExp result = new ADistMergeUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AHeadUnaryExp newAHeadUnaryExp(LexLocation location,
+			PExp exp) {
+		AHeadUnaryExp result = new AHeadUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ATailUnaryExp newATailUnaryExp(LexLocation location,
+			PExp exp) {
+		ATailUnaryExp result = new ATailUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AReverseUnaryExp newAReverseUnaryExp(LexLocation location,
+			PExp exp) {
+		AReverseUnaryExp result = new AReverseUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AFloorUnaryExp newAFloorUnaryExp(LexLocation location,
+			PExp exp) {
+		AFloorUnaryExp result = new AFloorUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ADistUnionUnaryExp newADistUnionUnaryExp(LexLocation location,
+			PExp exp) {
+		ADistUnionUnaryExp result = new ADistUnionUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ADistConcatUnaryExp newADistConcatUnaryExp(LexLocation location,
+			PExp exp) {
+		ADistConcatUnaryExp result = new ADistConcatUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static AIndicesUnaryExp newAIndicesUnaryExp(LexLocation location,
+			PExp exp) {
+		AIndicesUnaryExp result = new AIndicesUnaryExp();
+		initExpressionUnary(result,location,exp);
+		return result;
+	}
+
+	public static ASetEnumSetExp newASetEnumSetExp(LexLocation start,
+			List<PExp> members) {
+		ASetEnumSetExp result = new ASetEnumSetExp();
+		initExpression(result, start);
+		result.setMembers(members);
+		
+		return result;
+	}
+
+	public static AIdentifierStateDesignator newAIdentifierStateDesignator(
+			LexNameToken name) {
+		AIdentifierStateDesignator result = new AIdentifierStateDesignator();
+		initStateDesignator(result, name.location);
+		result.setName(name);
+		return result;
+	}
+
+	public static AErrorStm newAErrorStm(LexLocation location) {
+		AErrorStm result = new AErrorStm();
+		initStatement(result, location);
+		return result;
+	}
+
+	public static ASkipStm newASkipStm(LexLocation location) {
+		ASkipStm result = new ASkipStm();
+		initStatement(result, location);
+		return result;
+	}
+
+	public static ATixeStmtAlternative newATixeStmtAlternative(
+			ADefPatternBind patternBind, PStm resultStm) {
+		ATixeStmtAlternative result = new ATixeStmtAlternative();
+		result.setPatternBind(patternBind);
+		result.setStatement(resultStm);
+		return result;
+	}
+
+	public static APostOpExp newAPostOpExp(LexNameToken opname,
+			PExp preexpression, PExp postexpression, List<AErrorCase> errors,
+			AStateDefinition state) {
+		APostOpExp result = new APostOpExp();
+		initExpression(result, postexpression.getLocation());
+		
+		result.setOpname(opname);
+		result.setPreexpression(preexpression);
+		result.setPostexpression(postexpression);
+		result.setErrors(errors);
+		result.setState(state);
+		
+		return result;
+	}
+
+	public static APreOpExp newAPreOpExp(LexNameToken opname, PExp expression,
+			List<AErrorCase> errors, AStateDefinition state) {
+		APreOpExp result = new APreOpExp();
+		initExpression(result, expression);
+		
+		result.setOpname(opname);
+		result.setExpression(expression);
+		result.setErrors(errors);
+		result.setState(state);
+		
+		return result;
+	}
+
+	private static void initExpression(PExp result, PExp expression) {
+		initExpression(result, expression.getLocation());
+		
+	}
+
+	public static AUnionType newAUnionType(LexLocation location, PTypeList types) {
+		AUnionType result = new AUnionType();
+		initType(result,location);
+		result.setTypes(types);
+		AUnionTypeAssistant.expand(result);
+		return result;
+	}
+
+	private static void initType(PType result, LexLocation location) {
+		result.setLocation(location);
+	}
+
+	public static AStateInitExp newAStateInitExp(AStateDefinition state) {
+		AStateInitExp result = new AStateInitExp();
+		initExpression(result, state.getLocation());
+		result.setState(state);
+		result.getLocation().executable(false);
+		return result;
+	}
 	
 	
 	

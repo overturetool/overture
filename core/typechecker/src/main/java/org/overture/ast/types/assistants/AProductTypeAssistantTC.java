@@ -5,10 +5,12 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.util.Utils;
 
 public class AProductTypeAssistantTC {
@@ -25,7 +27,7 @@ public class AProductTypeAssistantTC {
 
 			for (PType t: type.getTypes())
 			{
-				PType rt = PTypeAssistant.typeResolve(t, root, rootVisitor, question);
+				PType rt = PTypeAssistantTC.typeResolve(t, root, rootVisitor, question);
 				fixed.add(rt);
 			}
 
@@ -44,7 +46,7 @@ public class AProductTypeAssistantTC {
 
 		for (PType t: type.getTypes())
 		{
-			PTypeAssistant.unResolve(t);
+			PTypeAssistantTC.unResolve(t);
 		}		
 	}
 
@@ -61,12 +63,12 @@ public class AProductTypeAssistantTC {
 	}
 
 	public static boolean equals(AProductType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AProductType)
 		{
 			AProductType pother = (AProductType)other;
-			return PTypeAssistant.equals(type.getTypes(),pother.getTypes());
+			return PTypeAssistantTC.equals(type.getTypes(),pother.getTypes());
 		}
 
 		return false;
@@ -78,6 +80,18 @@ public class AProductTypeAssistantTC {
 
 	public static boolean isProduct(AProductType type) {
 		return true;
+	}
+
+	public static PType polymorph(AProductType type, LexNameToken pname,
+			PType actualType) {
+		List<PType> polytypes = new Vector<PType>();
+
+		for (PType ptype : ((AProductType) type).getTypes())
+		{
+			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
+		}
+
+		return AstFactory.newAProductType(type.getLocation(), polytypes);
 	}
 
 }

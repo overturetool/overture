@@ -51,7 +51,6 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -76,7 +75,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.APatternListTypePairAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.FlatEnvironment;
@@ -112,7 +111,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		question.qualifiers = null;
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
-		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(node), null, rootVisitor, question));
+		node.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -151,7 +150,7 @@ public class TypeCheckerDefinitionVisitor extends
 		// TODO: This should be a call to the assignment definition typecheck but instance is not an subclass of
 		// assignment in our tree
 		node.setExpType(node.getExpression().apply(rootVisitor, new TypeCheckInfo(cenv, NameScope.NAMESANDSTATE, question.qualifiers)));
-		node.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(node), null, rootVisitor, question));
+		node.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(node), null, rootVisitor, question));
 
 		if (node.getExpType() instanceof AVoidType)
 		{
@@ -167,8 +166,7 @@ public class TypeCheckerDefinitionVisitor extends
 		return node.getType();
 
 	}
-
-	// TODO: No type check for classes
+	
 
 	@Override
 	public PType caseAClassInvariantDefinition(AClassInvariantDefinition node,
@@ -179,7 +177,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question.scope = NameScope.NAMESANDSTATE;
 		PType type = node.getExpression().apply(rootVisitor, question);
 
-		if (!PTypeAssistant.isType(type, ABooleanBasicType.class))
+		if (!PTypeAssistantTC.isType(type, ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3013, "Class invariant is not a boolean expression", node.getLocation(), node);
 		}
@@ -220,13 +218,13 @@ public class TypeCheckerDefinitionVisitor extends
 			question.qualifiers = null;
 			PType st = node.getSetbind().getSet().apply(rootVisitor, question);
 
-			if (!PTypeAssistant.isSet(st))
+			if (!PTypeAssistantTC.isSet(st))
 			{
 				TypeCheckerErrors.report(3015, "Set bind is not a set type?", node.getLocation(), node);
 				node.setDefType(node.getExpType());
 			} else
 			{
-				PType setof = PTypeAssistant.getSet(st).getSetof();
+				PType setof = PTypeAssistantTC.getSet(st).getSetof();
 
 				if (!TypeComparator.compatible(node.getExpType(), setof))
 				{
@@ -294,9 +292,9 @@ public class TypeCheckerDefinitionVisitor extends
 			// building the new scope for subtypechecks
 
 			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(local, NameScope.NAMES));
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeChecker.report(3018, "Precondition returns unexpected type", node.getLocation());
 				TypeChecker.detail2("Actual", b, "Expected", expected);
@@ -306,15 +304,15 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getPostdef() != null)
 		{
 			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
-			PPattern rp = new AIdentifierPattern(null, null, null, result);
+			PPattern rp = AstFactory.newAIdentifierPattern(result);
 			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp, expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post = new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
 
 			// building the new scope for subtypechecks
 			PType b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post, NameScope.NAMES));
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeChecker.report(3018, "Postcondition returns unexpected type", node.getLocation());
 				TypeChecker.detail2("Actual", b, "Expected", expected);
@@ -334,7 +332,7 @@ public class TypeCheckerDefinitionVisitor extends
 			TypeChecker.detail2("Actual", node.getActualResult(), "Expected", expectedResult);
 		}
 
-		if (PTypeAssistant.narrowerThan(node.getType(), node.getAccess()))
+		if (PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3019, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
@@ -384,7 +382,7 @@ public class TypeCheckerDefinitionVisitor extends
 				{
 					if (mtype.getResult().kindPType() == EType.PRODUCT)
 					{
-						AProductType pt = PTypeAssistant.getProduct(mtype.getResult());
+						AProductType pt = PTypeAssistantTC.getProduct(mtype.getResult());
 
 						for (PType t : pt.getTypes())
 						{
@@ -467,7 +465,7 @@ public class TypeCheckerDefinitionVisitor extends
 			}
 		}
 
-		if (PTypeAssistant.narrowerThan(PDefinitionAssistantTC.getType(node), node.getAccess()))
+		if (PTypeAssistantTC.narrowerThan(PDefinitionAssistantTC.getType(node), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
@@ -475,9 +473,9 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getPredef() != null)
 		{
 			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(local, question.scope));
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -503,9 +501,9 @@ public class TypeCheckerDefinitionVisitor extends
 				b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(local, NameScope.NAMES));
 			}
 
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Postcondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -555,9 +553,9 @@ public class TypeCheckerDefinitionVisitor extends
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType))
 				{
-					if (PTypeAssistant.isProduct(mtype.getResult()))
+					if (PTypeAssistantTC.isProduct(mtype.getResult()))
 					{
-						AProductType pt = PTypeAssistant.getProduct(mtype.getResult());
+						AProductType pt = PTypeAssistantTC.getProduct(mtype.getResult());
 
 						for (PType t : pt.getTypes())
 						{
@@ -631,11 +629,18 @@ public class TypeCheckerDefinitionVisitor extends
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
 				}
 
-				if (PTypeAssistant.isClass(node.getType().getResult()))
+				if (PTypeAssistantTC.isClass(node.getType().getResult()))
 				{
-					AClassType ctype = PTypeAssistant.getClassType(node.getType().getResult());
+					AClassType ctype = PTypeAssistantTC.getClassType(node.getType().getResult());
 
-					// TODO: THIS IS COULD BE A HACK if (ctype.getClassdef() != node.getClassDefinition())
+					
+					if(ctype.getClassdef() != node.getClassDefinition())
+					{
+						//FIXME: This is a TEST, it should be tried to see if it is valid
+						TypeCheckerErrors.report(3025, "Constructor operation must have return type "
+								+ node.getClassDefinition().getName().name, node.getType().getResult().getLocation(), node.getType().getResult());
+					}
+					// TODO: THIS COULD BE A HACK to code (ctype.getClassdef() != node.getClassDefinition())
 					if (!HelpLexNameToken.isEqual(ctype.getClassdef().getName(), node.getClassDefinition().getName()))
 					{
 						TypeCheckerErrors.report(3025, "Constructor operation must have return type "
@@ -656,9 +661,9 @@ public class TypeCheckerDefinitionVisitor extends
 
 			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(pre, NameScope.NAMESANDSTATE));
 
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -668,14 +673,14 @@ public class TypeCheckerDefinitionVisitor extends
 		if (node.getPostdef() != null)
 		{
 			LexNameToken result = new LexNameToken(node.getName().module, "RESULT", node.getLocation());
-			PPattern rp = new AIdentifierPattern(null, null, false, result);
+			PPattern rp = AstFactory.newAIdentifierPattern(result);
 			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp, node.getType().getResult(), NameScope.NAMESANDANYSTATE);
 			FlatEnvironment post = new FlatEnvironment(rdefs, local);
 			post.setEnclosingDefinition(node.getPostdef());
 			PType b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post, NameScope.NAMESANDANYSTATE));
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Postcondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -687,22 +692,22 @@ public class TypeCheckerDefinitionVisitor extends
 		boolean compatible = TypeComparator.compatible(node.getType().getResult(), node.getActualResult());
 				
 		if ((node.getIsConstructor()
-				&& !PTypeAssistant.isType(node.getActualResult(), AVoidType.class) && !compatible)
+				&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class) && !compatible)
 				|| (!node.getIsConstructor() && !compatible))
 		{
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getType().getResult());
 		}
-		else if (!node.getIsConstructor() && !PTypeAssistant.isUnknown(actualResult))
+		else if (!node.getIsConstructor() && !PTypeAssistantTC.isUnknown(actualResult))
 		{
-			if (PTypeAssistant.isType(node.getType().getResult(),AVoidType.class) && 
-					!PTypeAssistant.isType(actualResult,AVoidType.class))
+			if (PTypeAssistantTC.isType(node.getType().getResult(),AVoidType.class) && 
+					!PTypeAssistantTC.isType(actualResult,AVoidType.class))
     		{
 				TypeCheckerErrors.report(3312, "Void operation returns non-void value", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", actualResult, "Expected", node.getType().getResult());
     		}
-    		else if (!PTypeAssistant.isType(node.getType().getResult(),AVoidType.class) && 
-    				PTypeAssistant.isType(actualResult,AVoidType.class))
+    		else if (!PTypeAssistantTC.isType(node.getType().getResult(),AVoidType.class) && 
+    				PTypeAssistantTC.isType(actualResult,AVoidType.class))
     		{
     			TypeCheckerErrors.report(3313, "Operation returns void value",node.getLocation(),node);
     			TypeCheckerErrors.detail2("Actual", actualResult, "Expected", node.getType().getResult());
@@ -710,13 +715,13 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
-				&& !PTypeAssistant.isType(node.getType().getResult(), AVoidType.class))
+				&& !PTypeAssistantTC.isType(node.getType().getResult(), AVoidType.class))
 		{
 			TypeCheckerErrors.report(3293, "Asynchronous operation "
 					+ node.getName() + " cannot return a value", node.getLocation(), node);
 		}
 
-		if (PTypeAssistant.narrowerThan(node.getType(), node.getAccess()))
+		if (PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3028, "Operation parameter visibility less than operation definition", node.getLocation(), node);
 		}
@@ -782,7 +787,7 @@ public class TypeCheckerDefinitionVisitor extends
 					} else
 					{
 						if (!(clause.getType() instanceof AUnknownType)
-								&& !PTypeAssistant.equals(sdef.getType(), clause.getType()))
+								&& !PTypeAssistantTC.equals(sdef.getType(), clause.getType()))
 						{
 							TypeCheckerErrors.report(3032, "State variable "
 									+ exname + " is not this type", node.getLocation(), node);
@@ -839,9 +844,9 @@ public class TypeCheckerDefinitionVisitor extends
 						TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
 					}
 
-					if (PTypeAssistant.isClass(node.getType().getResult()))
+					if (PTypeAssistantTC.isClass(node.getType().getResult()))
 					{
-						AClassType ctype = PTypeAssistant.getClassType(node.getType().getResult());
+						AClassType ctype = PTypeAssistantTC.getClassType(node.getType().getResult());
 
 						if (ctype.getClassdef() != node.getClassDefinition())
 						{
@@ -861,20 +866,20 @@ public class TypeCheckerDefinitionVisitor extends
 			boolean compatible = TypeComparator.compatible(node.getType().getResult(), node.getActualResult());
 
 			if ((node.getIsConstructor()
-					&& !PTypeAssistant.isType(node.getActualResult(), AVoidType.class) && !compatible)
+					&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class) && !compatible)
 					|| (!node.getIsConstructor() && !compatible))
 			{
 				TypeCheckerErrors.report(3035, "Operation returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getType().getResult());
 			}
-			else if (!node.getIsConstructor() && !PTypeAssistant.isUnknown(node.getActualResult()))
+			else if (!node.getIsConstructor() && !PTypeAssistantTC.isUnknown(node.getActualResult()))
 			{
-				if (PTypeAssistant.isVoid(node.getType().getResult()) && !PTypeAssistant.isVoid(node.getActualResult()))
+				if (PTypeAssistantTC.isVoid(node.getType().getResult()) && !PTypeAssistantTC.isVoid(node.getActualResult()))
 	    		{
 					TypeCheckerErrors.report(3312, "Void operation returns non-void value",node.getLocation(),node);
 					TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getType().getResult());
 	    		}
-	    		else if (!PTypeAssistant.isVoid(node.getType().getResult()) && PTypeAssistant.hasVoid(node.getActualResult()))
+	    		else if (!PTypeAssistantTC.isVoid(node.getType().getResult()) && PTypeAssistantTC.hasVoid(node.getActualResult()))
 	    		{
 	    			TypeCheckerErrors.report(3313, "Operation returns void value",node.getLocation(),node);
 	    			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getType().getResult());
@@ -883,13 +888,13 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
-				&& !PTypeAssistant.isType(node.getType().getResult(), AVoidType.class))
+				&& !PTypeAssistantTC.isType(node.getType().getResult(), AVoidType.class))
 		{
 			TypeCheckerErrors.report(3293, "Asynchronous operation "
 					+ node.getName() + " cannot return a value", node.getLocation(), node);
 		}
 
-		if (PTypeAssistant.narrowerThan(node.getType(), node.getAccess()))
+		if (PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3036, "Operation parameter visibility less than operation definition", node.getLocation(), node);
 		}
@@ -899,9 +904,9 @@ public class TypeCheckerDefinitionVisitor extends
 			FlatEnvironment pre = new FlatEnvironment(new Vector<PDefinition>(), local);
 			pre.setEnclosingDefinition(node.getPredef());
 			PType b = node.getPredef().getBody().apply(rootVisitor, new TypeCheckInfo(pre, NameScope.NAMESANDSTATE));
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -929,9 +934,9 @@ public class TypeCheckerDefinitionVisitor extends
 				b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post, NameScope.NAMESANDANYSTATE));
 			}
 
-			ABooleanBasicType expected = new ABooleanBasicType(node.getLocation(), false, null);
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Postcondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -945,7 +950,7 @@ public class TypeCheckerDefinitionVisitor extends
 				TypeCheckInfo newQuestion = new TypeCheckInfo(local, NameScope.NAMESANDSTATE);
 				PType a = error.getLeft().apply(rootVisitor, newQuestion);
 
-				if (!PTypeAssistant.isType(a, ABooleanBasicType.class))
+				if (!PTypeAssistantTC.isType(a, ABooleanBasicType.class))
 				{
 					TypeCheckerErrors.report(3307, "Errs clause is not bool -> bool", error.getLeft().getLocation(), error.getLeft());
 				}
@@ -953,7 +958,7 @@ public class TypeCheckerDefinitionVisitor extends
 				newQuestion.scope = NameScope.NAMESANDANYSTATE;
 				PType b = error.getRight().apply(rootVisitor, newQuestion);
 
-				if (!PTypeAssistant.isType(b, ABooleanBasicType.class))
+				if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
 				{
 					TypeCheckerErrors.report(3307, "Errs clause is not bool -> bool", error.getRight().getLocation(), error.getRight());
 				}
@@ -992,7 +997,7 @@ public class TypeCheckerDefinitionVisitor extends
 	{
 		if (node.getType() != null)
 		{
-			node.setType(PTypeAssistant.typeResolve(node.getType(), null, rootVisitor, question));
+			node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, rootVisitor, question));
 		}
 
 		return node.getType();
@@ -1159,7 +1164,7 @@ public class TypeCheckerDefinitionVisitor extends
 		local.setEnclosingDefinition(node); // Prevent op calls
 		PType rt = node.getGuard().apply(rootVisitor, new TypeCheckInfo(local, NameScope.NAMESANDSTATE));
 
-		if (!PTypeAssistant.isType(rt, ABooleanBasicType.class))
+		if (!PTypeAssistantTC.isType(rt, ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3046, "Guard is not a boolean expression", node.getGuard().getLocation(), node.getGuard());
 		}
@@ -1328,7 +1333,7 @@ public class TypeCheckerDefinitionVisitor extends
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
 		if (node.getStexp() != null &&
-			!PTypeAssistant.isType(
+			!PTypeAssistantTC.isType(
 					node.getStexp().apply(rootVisitor, new TypeCheckInfo(local, question.scope)), 
 					ABooleanBasicType.class))
 		{

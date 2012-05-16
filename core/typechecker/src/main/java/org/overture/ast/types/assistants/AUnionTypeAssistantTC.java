@@ -13,17 +13,16 @@ import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
@@ -61,7 +60,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 				if (root != null)
 					root.setInfinite(false);
 
-				fixed.add(PTypeAssistant.typeResolve(t, root, rootVisitor, question));
+				fixed.add(PTypeAssistantTC.typeResolve(t, root, rootVisitor, question));
 
 				if (root != null)
 					type.setInfinite(type.getInfinite() && root.getInfinite());
@@ -94,7 +93,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 		for (PType t : type.getTypes())
 		{
-			PTypeAssistant.unResolve(t);
+			PTypeAssistantTC.unResolve(t);
 		}
 
 	}
@@ -105,15 +104,15 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getSeqDone())
 		{
 			type.setSeqDone(true); // Mark early to avoid recursion.
-			type.setSeqType(PTypeAssistant.getSeq(AstFactory.newAUnknownType(type.getLocation())));
+			type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet set = new PTypeSet();
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isSeq(t))
+				if (PTypeAssistantTC.isSeq(t))
 				{
-					set.add(PTypeAssistant.getSeq(t).getSeqof());
+					set.add(PTypeAssistantTC.getSeq(t).getSeqof());
 				}
 			}
 			
@@ -132,15 +131,15 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getSetDone())
 		{
 			type.setSetDone(true); // Mark early to avoid recursion.
-			type.setSetType(PTypeAssistant.getSet(AstFactory.newAUnknownType(location)));
+			type.setSetType(PTypeAssistantTC.getSet(AstFactory.newAUnknownType(location)));
 
 			PTypeSet set = new PTypeSet();
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isSet(t))
+				if (PTypeAssistantTC.isSet(t))
 				{
-					set.add(PTypeAssistant.getSet(t).getSetof());
+					set.add(PTypeAssistantTC.getSet(t).getSetof());
 				}
 			}
 
@@ -158,25 +157,22 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getMapDone())
 		{
 			type.setMapDone(true); // Mark early to avoid recursion.
-			type.setMapType(PTypeAssistant.getMap(new AUnknownType(location, false)));
+			type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
 
 			PTypeSet from = new PTypeSet();
 			PTypeSet to = new PTypeSet();
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isMap(t))
+				if (PTypeAssistantTC.isMap(t))
 				{
-					from.add(PTypeAssistant.getMap(t).getFrom());
-					to.add(PTypeAssistant.getMap(t).getTo());
+					from.add(PTypeAssistantTC.getMap(t).getFrom());
+					to.add(PTypeAssistantTC.getMap(t).getTo());
 				}
 			}
 
-			AMapMapType mm = new AMapMapType(location, false, false);
-			mm.setFrom(from.getType(location));
-			mm.setTo(to.getType(location));
 			type.setMapType(from.isEmpty() ? null
-					: mm );
+					: AstFactory.newAMapMapType(location, from.getType(location), to.getType(location)) );
 		}
 
 		return type.getMapType();
@@ -206,7 +202,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (type.getProdCard() != n)
 		{
 			type.setProdCard(n);
-			type.setProdType(PTypeAssistant.getProduct(new AUnknownType(type.getLocation(), false), n));
+			type.setProdType(PTypeAssistantTC.getProduct(AstFactory.newAUnknownType(type.getLocation()), n));
 
 			// Build a N-ary product type, making the types the union of the
 			// original N-ary products' types...
@@ -215,10 +211,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if ((n == 0 && PTypeAssistant.isProduct(t))
-						|| PTypeAssistant.isProduct(t, n))
+				if ((n == 0 && PTypeAssistantTC.isProduct(t))
+						|| PTypeAssistantTC.isProduct(t, n))
 				{
-					AProductType pt = PTypeAssistant.getProduct(t, n);
+					AProductType pt = PTypeAssistantTC.getProduct(t, n);
 					int i = 0;
 
 					for (PType member : pt.getTypes())
@@ -245,7 +241,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 
 			type.setProdType(list.isEmpty() ? null
-					: new AProductType(type.getLocation(), false,null, list));
+					: AstFactory.newAProductType(type.getLocation(), list));
 		}
 
 		return type.getProdType();
@@ -265,7 +261,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	{
 		for (PType t : b.getTypes())
 		{
-			if (PTypeAssistant.isType(t, typeclass))
+			if (PTypeAssistantTC.isType(t, typeclass))
 			{
 				return true;
 			}
@@ -278,7 +274,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	{
 		for (PType t : exptype.getTypes())
 		{
-			PType rt = PTypeAssistant.isType(t, typename);
+			PType rt = PTypeAssistantTC.isType(t, typename);
 
 			if (rt != null)
 			{
@@ -291,7 +287,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean equals(AUnionType type, PType other)
 	{
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 		PTypeSet types = new PTypeSet(type.getTypes());
 
 		if (other instanceof AUnionType)
@@ -322,7 +318,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getFuncDone())
 		{
 			type.setFuncDone(true);
-			type.setFuncType(PTypeAssistant.getFunction(new AUnknownType(type.getLocation(), false)));
+			type.setFuncType(PTypeAssistantTC.getFunction(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet();
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
@@ -330,11 +326,11 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isFunction(t))
+				if (PTypeAssistantTC.isFunction(t))
 				{
 					if (t.getDefinitions() != null)
 						defs.addAll(t.getDefinitions());
-					AFunctionType f = PTypeAssistant.getFunction(t);
+					AFunctionType f = PTypeAssistantTC.getFunction(t);
 					result.add(f.getResult());
 
 					for (int p = 0; p < f.getParameters().size(); p++)
@@ -365,7 +361,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 					plist.add(pt);
 				}
 
-				type.setFuncType(new AFunctionType(type.getLocation(), false, null, true, plist, rtype));
+				type.setFuncType(AstFactory.newAFunctionType(type.getLocation(), true, plist, rtype));
 				type.getFuncType().setDefinitions(defs);
 			} else
 			{
@@ -387,7 +383,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getOpDone())
 		{
 			type.setOpDone(true);
-			type.setOpType(PTypeAssistant.getOperation(AstFactory.newAUnknownType(type.getLocation())));
+			type.setOpType(PTypeAssistantTC.getOperation(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet();
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
@@ -395,11 +391,11 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isOperation(t))
+				if (PTypeAssistantTC.isOperation(t))
 				{
 					if (t.getDefinitions() != null)
 						defs.addAll(t.getDefinitions());
-					AOperationType op = PTypeAssistant.getOperation(t);
+					AOperationType op = PTypeAssistantTC.getOperation(t);
 					result.add(op.getResult());
 
 					for (int p = 0; p < op.getParameters().size(); p++)
@@ -455,7 +451,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	{
 		for (PType t: type.getTypes())
 		{
-			if (PTypeAssistant.isUnknown(t))
+			if (PTypeAssistantTC.isUnknown(t))
 			{
 				return true;
 			}
@@ -474,9 +470,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isNumeric(t))
+				if (PTypeAssistantTC.isNumeric(t))
 				{
-					SNumericBasicType nt = PTypeAssistant.getNumeric(t);
+					SNumericBasicType nt = PTypeAssistantTC.getNumeric(t);
 
 					if (SNumericBasicTypeAssistantTC.getWeight(nt) > SNumericBasicTypeAssistantTC.getWeight(type.getNumType()))
 					{
@@ -514,7 +510,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.
-			type.setRecType(PTypeAssistant.getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
 
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
@@ -524,9 +520,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isRecord(t))
+				if (PTypeAssistantTC.isRecord(t))
 				{
-					for (AFieldField f : PTypeAssistant.getRecord(t).getFields())
+					for (AFieldField f : PTypeAssistantTC.getRecord(t).getFields())
 					{
 						PTypeSet current = common.get(f.getTag());
 
@@ -566,7 +562,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getClassDone())
 		{
 			type.setClassDone(true); // Mark early to avoid recursion.
-			type.setClassType(PTypeAssistant.getClassType(AstFactory.newAUnknownType(type.getLocation())));
+			type.setClassType(PTypeAssistantTC.getClassType(AstFactory.newAUnknownType(type.getLocation())));
 
 			// Build a class type with the common fields of the contained
 			// class types, making the field types the union of the original
@@ -578,9 +574,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isClass(t))
+				if (PTypeAssistantTC.isClass(t))
 				{
-					AClassType ct = PTypeAssistant.getClassType(t);
+					AClassType ct = PTypeAssistantTC.getClassType(t);
 
 					if (classname == null)
 					{
@@ -669,7 +665,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 		for (PType t : type.getTypes())
 		{
-			if (PTypeAssistant.narrowerThan(t, accessSpecifier))
+			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
 			{
 				return true;
 			}
@@ -683,7 +679,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	{
 		for (PType t: type.getTypes())
 		{
-			if (!PTypeAssistant.isVoid(t))
+			if (!PTypeAssistantTC.isVoid(t))
 			{
 				return false;		// NB. Only true if ALL void, not ANY void (see hasVoid)
 			}
@@ -696,13 +692,30 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	{
 		for (PType t: type.getTypes())
 		{
-			if (PTypeAssistant.isVoid(t))
+			if (PTypeAssistantTC.isVoid(t))
 			{
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	public static PType polymorph(AUnionType type, LexNameToken pname,
+			PType actualType) {
+		
+		PTypeSet polytypes = new PTypeSet();
+
+		for (PType ptype : ((AUnionType) type).getTypes())
+		{
+			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
+		}
+		
+		//TODO: Types in unionType should be a SET
+		PTypeList result = new PTypeList();
+		result.addAll(polytypes);
+		
+		return AstFactory.newAUnionType(type.getLocation(), result);
 	}
 
 }

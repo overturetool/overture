@@ -6,8 +6,7 @@ import org.overture.ast.types.assistants.PTypeSet;
 public class ACaseAlternativeStmAssistantTC {
 
 	public static PTypeSet exitCheck(ACaseAlternativeStm c) {
-		//TODO:
-		return null;//return PStmAssistant.exitCheck(c.getResult())
+		return PStmAssistantTC.exitCheck(c.getResult());
 	}
 
 }

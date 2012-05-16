@@ -20,7 +20,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AFunctionTypeAssistantTC;
 import org.overture.ast.types.assistants.APatternListTypePairAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
@@ -39,7 +39,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		{
 			PType ptype = ti.next();
 			//AFunctionTypeAssistent.
-			ftype = (AFunctionType)PTypeAssistant.polymorph(ftype,pname, ptype);
+			ftype = (AFunctionType)PTypeAssistantTC.polymorph(ftype,pname, ptype);
 		}
 
 		return ftype;
@@ -116,12 +116,12 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);			
-			d.setType(PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, new TypeCheckInfo(params, question.scope,question.qualifiers)));
+			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, new TypeCheckInfo(params, question.scope,question.qualifiers)));
 		}
 		else
 		{
 			question.qualifiers = null;
-			d.setType(PTypeAssistant.typeResolve( PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve( PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
 		}
 
 		if (d.getResult() != null)

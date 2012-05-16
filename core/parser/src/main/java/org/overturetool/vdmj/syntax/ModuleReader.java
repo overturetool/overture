@@ -30,8 +30,6 @@ import java.util.Vector;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.modules.AAllExport;
-import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AFunctionExport;
 import org.overture.ast.modules.AFunctionValueImport;
@@ -43,7 +41,6 @@ import org.overture.ast.modules.AOperationValueImport;
 import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.AValueExport;
-import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
@@ -477,7 +474,7 @@ public class ModuleReader extends SyntaxReader
 		{
 			LexNameToken all = new LexNameToken(getCurrentModule(), "all", lastToken().location);
 			List<PImport> impAll = new Vector<PImport>();
-			impAll.add(new AAllImport(all.getLocation(), all, all, null));
+			impAll.add(AstFactory.newAAllImport(all));
 			types.add(impAll);
 			nextToken();
 			return types;
