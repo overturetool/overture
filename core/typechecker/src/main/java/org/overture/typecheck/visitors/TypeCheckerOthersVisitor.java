@@ -4,12 +4,11 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExternalDefinition;
-import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.Node;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.ASetBind;
@@ -33,7 +32,6 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -111,8 +109,8 @@ public class TypeCheckerOthersVisitor extends
 				}
 			}
 
-			PDefinition def =new AMultiBindListDefinition(node.getBind().getLocation(), null, null, false, null, 
-					PAccessSpecifierAssistant.getDefault(), null, PBindAssistantTC.getMultipleBindList(node.getBind()), null);
+			PDefinition def =
+					AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind()));
 
 			def.apply(rootVisitor, question);
 			LinkedList<PDefinition> defs = new LinkedList<PDefinition>();
@@ -149,7 +147,7 @@ public class TypeCheckerOthersVisitor extends
     		if (rf == null)
     		{
     			TypeCheckerErrors.concern(unique, 3246, "Unknown field name, '" + field + "'",node.getLocation(),field);
-    			result.add(new AUnknownType(field.location,false));
+    			result.add(AstFactory.newAUnknownType(field.location));
     		}
     		else
     		{
@@ -168,7 +166,7 @@ public class TypeCheckerOthersVisitor extends
 			if (fdef == null)
 			{
 				TypeCheckerErrors.concern(unique, 3260, "Unknown class field name, '" + field + "'",node.getLocation(),node);
-				result.add(new AUnknownType(node.getLocation(),false));
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 			else
 			{
@@ -180,7 +178,7 @@ public class TypeCheckerOthersVisitor extends
 		{
 			TypeCheckerErrors.report(3245, "Field assignment is not of a record or object type",node.getLocation(),node);
 			TypeCheckerErrors.detail2("Expression", node.getObject(), "Type", type);
-			node.setType(new AUnknownType(field.location,false));
+			node.setType(AstFactory.newAUnknownType(field.location));
 			return node.getType();
 		}
 
@@ -205,13 +203,13 @@ public class TypeCheckerOthersVisitor extends
 			if (def == null)
 			{
 				TypeCheckerErrors.report(3247, "Unknown variable '" + name + "' in assignment",name.getLocation(),name);
-				node.setType(new AUnknownType(name.getLocation(),false));
+				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
 			}
 			else if (!PDefinitionAssistantTC.isUpdatable(def))
 			{
 				TypeCheckerErrors.report(3301, "Variable '" + name + "' in scope is not updatable",name.getLocation(),name);
-				node.setType(new AUnknownType(name.getLocation(),false));
+				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
 			}
 			else if (def.getClassDefinition() != null)
@@ -220,13 +218,13 @@ public class TypeCheckerOthersVisitor extends
     			{
     				TypeCheckerErrors.report(3180, "Inaccessible member '" + name + "' of class " +
     					def.getClassDefinition().getName().name,name.getLocation(),name);
-    				node.setType(new AUnknownType(name.getLocation(),false));
+    				node.setType(AstFactory.newAUnknownType(name.getLocation()));
     				return node.getType();
     			}
     			else if (!PDefinitionAssistantTC.isStatic(def) && env.isStatic())
     			{
     				TypeCheckerErrors.report(3181, "Cannot access " + name + " from a static context",name.getLocation(),name);
-    				node.setType(new AUnknownType(name.getLocation(),false));
+    				node.setType(AstFactory.newAUnknownType(name.getLocation()));
     				return node.getType();
     			}
 			}
@@ -242,13 +240,13 @@ public class TypeCheckerOthersVisitor extends
 			if (def == null)
 			{
 				TypeCheckerErrors.report(3247, "Unknown state variable '" + name + "' in assignment",name.getLocation(),name);
-				node.setType(new AUnknownType(name.getLocation(),false));
+				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
 			}
 			else if (!PDefinitionAssistantTC.isUpdatable(def))
 			{
 				TypeCheckerErrors.report(3301, "Variable '" + name + "' in scope is not updatable",name.getLocation(),name);
-				node.setType(new AUnknownType(name.getLocation(),false));
+				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
 			}
 			else if (def instanceof AExternalDefinition)
@@ -307,7 +305,7 @@ public class TypeCheckerOthersVisitor extends
 		if (result.isEmpty())
 		{
 			TypeCheckerErrors.report(3244, "Expecting a map or a sequence",node.getLocation(),node);
-			node.setType(new AUnknownType(node.getLocation(),false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -323,7 +321,7 @@ public class TypeCheckerOthersVisitor extends
 		if (def == null)
 		{
 			TypeCheckerErrors.report(3263, "Cannot reference 'self' from here",node.getSelf().location,node.getSelf());
-			return new AUnknownType(node.getSelf().location,false);
+			return AstFactory.newAUnknownType(node.getSelf().location);
 		}
 
 		return PDefinitionAssistantTC.getType(def);
@@ -373,7 +371,7 @@ public class TypeCheckerOthersVisitor extends
 		{
 			TypeCheckerErrors.report(3249, "Object designator is not a map, sequence, function or operation",node.getLocation(),node);
 			TypeCheckerErrors.detail2("Designator", node.getObject(), "Type", type);
-			return new AUnknownType(node.getLocation(),false);
+			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
 		return result.getType(node.getLocation());
@@ -420,7 +418,7 @@ public class TypeCheckerOthersVisitor extends
 			if (fdef == null)
 			{
 				TypeCheckerErrors.concern(unique, 3260, "Unknown class member name, '" + field + "'",node.getLocation(),node);
-				result.add(new AUnknownType(node.getLocation(),false));
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 			else
 			{
@@ -437,7 +435,7 @@ public class TypeCheckerOthersVisitor extends
 			if (rf == null)
 			{
 				TypeCheckerErrors.concern(unique, 3261, "Unknown field name, '" + sname + "'",node.getLocation(),node);
-				result.add(new AUnknownType(node.getLocation(),false));
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 			else
 			{
@@ -449,7 +447,7 @@ public class TypeCheckerOthersVisitor extends
 		{
 			TypeCheckerErrors.report(3262, "Field assignment is not of a class or record type",node.getLocation(),node);
 			TypeCheckerErrors.detail2("Expression", node.getObject(), "Type", type);
-			return new AUnknownType(node.getLocation(),false);
+			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
 		return result.getType(node.getLocation());

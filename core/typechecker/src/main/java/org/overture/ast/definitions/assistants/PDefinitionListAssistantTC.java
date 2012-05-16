@@ -122,13 +122,7 @@ public class PDefinitionListAssistantTC {
 
 	}
 
-	public static void setClassDefinition(List<PDefinition> defs,
-			SClassDefinition classDefinition) {
-		for (PDefinition d : defs) {
-			d.setClassDefinition(classDefinition);
-		}
-
-	}
+	
 
 	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		for (PDefinition definition : definitions) {
@@ -174,5 +168,11 @@ public class PDefinitionListAssistantTC {
 		}
 
 		return list;
+	}
+
+	public static void setClassDefinition(List<PDefinition> defs,
+			SClassDefinition classDefinition) {
+		PDefinitionAssistant.setClassDefinition(defs, classDefinition);
+		
 	}
 }

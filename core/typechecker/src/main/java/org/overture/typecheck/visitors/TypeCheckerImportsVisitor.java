@@ -4,18 +4,16 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.AOperationValueImport;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.SValueImport;
-import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.assistants.PTypeAssistant;
@@ -111,8 +109,8 @@ public class TypeCheckerImportsVisitor extends
 
     		for (LexNameToken pname: node.getTypeParams())
     		{
-    			PDefinition p = new ALocalDefinition(
-    				pname.location, NameScope.NAMES, false, null, PAccessSpecifierAssistantTC.getDefault(), new AParameterType(pname.getLocation(),false,pname.clone()), false,pname.clone());
+    			PDefinition p = 
+    					AstFactory.newALocalDefinition(pname.location, pname, NameScope.NAMES, AstFactory.newAParameterType(pname));
 
     			PDefinitionAssistantTC.markUsed(p);
     			defs.add(p);

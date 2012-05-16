@@ -7,7 +7,7 @@ Tokens
 /* This section declared tokens as internal types or external classes
  * internal definitions:
  *  plus='+';
- * 
+ *  
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */

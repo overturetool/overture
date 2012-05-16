@@ -12,12 +12,14 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
@@ -219,6 +221,7 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AInMapMapType;
@@ -239,9 +242,11 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -260,6 +265,7 @@ import org.overturetool.vdmj.lex.LexQuoteToken;
 import org.overturetool.vdmj.lex.LexRealToken;
 import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
+import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.InternalException;
 import org.overturetool.vdmj.typechecker.Access;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
@@ -354,10 +360,10 @@ public class AstFactory {
 		result.setAllInheritedDefinitions(new ArrayList<PDefinition>());
 
 		//this.delegate = new Delegate(name.name, definitions);
-				result.setDefinitions(members);
+		result.setDefinitions(members);
 		
 		// Classes are all effectively public types
-		PDefinitionAssistant.setClassDefinition(result,result);
+		PDefinitionAssistant.setClassDefinition(result.getDefinitions(),result);
 		
 		//others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
@@ -2500,6 +2506,103 @@ public class AstFactory {
 		initDefinition(result, def.getPass() , name.location, name, def.getNameScope());
 		result.setDef(def);
 		
+		return result;
+	}
+
+	public static AClassClassDefinition newAClassClassDefinition() {
+		AClassClassDefinition result = AstFactory.newAClassClassDefinition(
+				new LexNameToken("CLASS", "DEFAULT", new LexLocation()),
+				new LexNameList(), 
+				new Vector<PDefinition>());
+		//TODO: missing types in AClassClassDefinition
+//		privateStaticValues = new NameValuePairMap();
+//		publicStaticValues = new NameValuePairMap();
+		return result;
+	}
+
+	public static AClassType newAClassType(LexLocation location,
+			AClassClassDefinition classdef) {
+		AClassType result = new AClassType();
+		result.setLocation(location);
+		
+		result.setClassdef(classdef);
+		result.setName(classdef.getName());
+		
+		return result;
+	}
+
+	public static AMapMapType newAMapMapType(LexLocation location) {
+		AMapMapType result = new AMapMapType();
+		result.setLocation(location);
+		
+		result.setFrom(AstFactory.newAUnknownType(location));
+		result.setTo(AstFactory.newAUnknownType(location));
+		result.setEmpty(true);
+		
+		return result;
+	}
+
+	public static ASetType newASetType(LexLocation location) {
+		ASetType result = new ASetType();
+		result.setLocation(location);
+		
+		result.setSetof(AstFactory.newAUnknownType(location));
+		result.setEmpty(true);
+		
+		return result;
+	}
+
+
+
+	public static ASeqSeqType newASeqSeqType(LexLocation location) {
+		ASeqSeqType result = new ASeqSeqType();
+		result.setLocation(location);
+		result.setSeqof(AstFactory.newAUnknownType(location));
+		result.setEmpty(true);
+		
+		return result;
+	}
+
+	public static ARecordInvariantType newARecordInvariantType(LexLocation location,
+			List<AFieldField> fields) {
+		ARecordInvariantType result = new ARecordInvariantType();
+		result.setLocation(location);
+		
+		result.setName(new LexNameToken("?", "?", location));
+		result.setFields(fields);
+		
+		return result;
+	}
+
+	public static AExternalDefinition newAExternalDefinition(PDefinition state,
+			LexToken mode) {
+		AExternalDefinition result = new AExternalDefinition();
+		initDefinition(result, Pass.DEFS, state.getLocation(), state.getName(), NameScope.STATE);
+		
+		result.setState(state);
+		result.setReadOnly(mode.is(VDMToken.READ));
+		result.setOldname(result.getReadOnly() ? null : state.getName().getOldName());
+		
+		return result;
+	}
+
+	public static AMultiBindListDefinition newAMultiBindListDefinition(
+			LexLocation location, List<PMultipleBind> bindings) {
+		AMultiBindListDefinition result = new AMultiBindListDefinition();
+		initDefinition(result, Pass.DEFS, location, null, null);
+		result.setBindings(bindings);
+		return result;
+	}
+
+	public static AUndefinedType newAUndefinedType(LexLocation location) {
+		AUndefinedType result = new AUndefinedType();
+		result.setLocation(location);
+		return result;
+	}
+
+	public static AVoidReturnType newAVoidReturnType(LexLocation location) {
+		AVoidReturnType result = new AVoidReturnType();
+		result.setLocation(location);
 		return result;
 	}
 	

@@ -1,31 +1,26 @@
 package org.overture.ast.types.assistants;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.AUnionTypeAssistant;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapMapType;
-import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
@@ -110,7 +105,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getSeqDone())
 		{
 			type.setSeqDone(true); // Mark early to avoid recursion.
-			type.setSeqType(PTypeAssistant.getSeq(new AUnknownType(type.getLocation(), false)));
+			type.setSeqType(PTypeAssistant.getSeq(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet set = new PTypeSet();
 
@@ -121,10 +116,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 					set.add(PTypeAssistant.getSeq(t).getSeqof());
 				}
 			}
-			ASeqSeqType tt = new ASeqSeqType(type.getLocation(), false, false);
-			tt.setSeqof(set.getType(type.getLocation()));
+			
 			type.setSeqType(set.isEmpty() ? null
-					: tt);
+					: AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
 		}
 
 		return type.getSeqType();
@@ -138,7 +132,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getSetDone())
 		{
 			type.setSetDone(true); // Mark early to avoid recursion.
-			type.setSetType(PTypeAssistant.getSet(new AUnknownType(location, false)));
+			type.setSetType(PTypeAssistant.getSet(AstFactory.newAUnknownType(location)));
 
 			PTypeSet set = new PTypeSet();
 
@@ -151,7 +145,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 
 			type.setSetType(set.isEmpty() ? null
-					: new ASetType(location, false,null, set.getType(location), false, false));
+					: AstFactory.newASetType(location, set.getType(location)));
 		}
 
 		return type.getSetType();
@@ -393,7 +387,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getOpDone())
 		{
 			type.setOpDone(true);
-			type.setOpType(PTypeAssistant.getOperation(new AUnknownType(type.getLocation(), false)));
+			type.setOpType(PTypeAssistant.getOperation(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet();
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
@@ -436,8 +430,8 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 					plist.add(pt);
 				}
 
-				type.setOpType(new AOperationType(type.getLocation(), false, defs, plist, rtype));
-				// type.getOpType().setDefinitions(defs);
+				type.setOpType(AstFactory.newAOperationType(type.getLocation(), plist, rtype));
+				type.getOpType().setDefinitions(defs);
 			} else
 			{
 				type.setOpType(null);
@@ -475,7 +469,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getNumDone())
 		{
 			type.setNumDone(true);
-			type.setNumType(new ANatNumericBasicType(type.getLocation(), false)); // lightest default
+			type.setNumType(AstFactory.newANatNumericBasicType(type.getLocation())); // lightest default
 			boolean found = false;
 
 			for (PType t : type.getTypes())
@@ -520,7 +514,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.
-			type.setRecType(PTypeAssistant.getRecord(new AUnknownType(type.getLocation(), false)));
+			type.setRecType(PTypeAssistant.getRecord(AstFactory.newAUnknownType(type.getLocation())));
 
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
@@ -552,11 +546,11 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			for (String tag : common.keySet())
 			{
 				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
-				fields.add(new AFieldField(null, tagname, tag, common.get(tag).getType(type.getLocation()), false));
+				fields.add(AstFactory.newAFieldField(tagname, tag, common.get(tag).getType(type.getLocation()), false));
 			}
 
 			type.setRecType(fields.isEmpty() ? null
-					: new ARecordInvariantType(type.getLocation(), false, new LexNameToken("?", "?", type.getLocation()), fields));
+					: AstFactory.newARecordInvariantType(type.getLocation(), fields));
 		}
 
 		return type.getRecType();
@@ -572,7 +566,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getClassDone())
 		{
 			type.setClassDone(true); // Mark early to avoid recursion.
-			type.setClassType(PTypeAssistant.getClassType(new AUnknownType(type.getLocation(), false)));
+			type.setClassType(PTypeAssistant.getClassType(AstFactory.newAUnknownType(type.getLocation())));
 
 			// Build a class type with the common fields of the contained
 			// class types, making the field types the union of the original
@@ -642,26 +636,17 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (LexNameToken synthname : common.keySet())
 			{
-				PDefinition def = new ALocalDefinition(synthname.location, NameScope.GLOBAL, false, null, null, common.get(synthname).getType(type.getLocation()), false, synthname);
+				PDefinition def = 
+						AstFactory.newALocalDefinition(synthname.location, synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
 
 				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);
 			}
 
-			
-			if(classname == null)
-			{
-				type.setClassType(null);
-			}
-			else
-			{
-				AClassClassDefinition class_ = new AClassClassDefinition(classname.getLocation(), classname, null, false, null, null, type, null, new LexNameList(), newdefs, null, null, null, null, null, null, newdefs, null, null, null, null, null, null);
-				for (PDefinition pDefinition : newdefs)
-				{
-					pDefinition.setClassDefinition(class_);
-				}
-				type.setClassType(new AClassType(type.getLocation(), false, null,classname.clone(), class_));
-			}
+			type.setClassType((classname == null) ? null : AstFactory
+					.newAClassType(type.getLocation(), AstFactory
+							.newAClassClassDefinition(classname,
+									new LexNameList(), newdefs)));
 			
 		}
 

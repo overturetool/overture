@@ -49,6 +49,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -788,10 +789,7 @@ public class TypeCheckerDefinitionVisitor extends
 							TypeCheckerErrors.detail2("Declared", sdef.getType(), "ext type", clause.getType());
 						} else
 						{
-							LexNameToken oldname = clause.getMode().type == VDMToken.READ ? null
-									: sdef.getName().getOldName();
-
-							defs.add(new AExternalDefinition(sdef.getLocation(), sdef.getName(), NameScope.STATE, false, null, null, null, sdef, clause.getMode().type == VDMToken.READ, oldname));
+							defs.add(AstFactory.newAExternalDefinition(sdef,clause.getMode()));
 
 							// VDM++ "ext wr" clauses in a constructor effectively
 							// initialize the instance variable concerned.
@@ -1325,12 +1323,9 @@ public class TypeCheckerDefinitionVisitor extends
 	@Override
 	public PType caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
 	{
-		AMultiBindListDefinition def = new AMultiBindListDefinition(node.getBind().getLocation(),
-				null,null,null,null,null,null,PMultipleBindAssistantTC.getMultipleBindList(node.getBind()),null); 
-		node.setDef(def);
-		//PDefinitionListAssistant.typeResolve(def, rootVisitor, question);
+		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PMultipleBindAssistantTC.getMultipleBindList(node.getBind())));
 		node.getDef().apply(rootVisitor,question);
-		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
+		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
 		if (node.getStexp() != null &&
 			!PTypeAssistant.isType(

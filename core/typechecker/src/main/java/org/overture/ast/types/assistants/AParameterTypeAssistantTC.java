@@ -3,30 +3,25 @@ package org.overture.ast.types.assistants;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
@@ -60,14 +55,14 @@ public class AParameterTypeAssistantTC {
 
 		for (int i=0; i<n; i++)
 		{
-			tl.add(new AUnknownType(type.getLocation(),false));
+			tl.add(AstFactory.newAUnknownType(type.getLocation()));
 		}
 
-		return new AProductType(type.getLocation(),false,null, tl);
+		return AstFactory.newAProductType(type.getLocation(), tl);
 	}
 
 	public static AProductType getProduct(AProductType type) {
-		return new AProductType(type.getLocation(),false,null, new NodeList<PType>(null));
+		return AstFactory.newAProductType(type.getLocation(),new NodeList<PType>(null));
 	}
 
 	public static boolean isType(AParameterType b,
@@ -76,7 +71,7 @@ public class AParameterTypeAssistantTC {
 	}
 
 	public static PType isType(AParameterType exptype, String typename) {
-		return new AUnknownType(exptype.getLocation(),false);
+		return AstFactory.newAUnknownType(exptype.getLocation());
 	}
 
 	public static boolean equals(AParameterType type, PType other) {
@@ -96,7 +91,7 @@ public class AParameterTypeAssistantTC {
 	}
 
 	public static SSeqType getSeq(AParameterType type) {
-		return new ASeqSeqType(type.getLocation(),false,true);
+		return AstFactory.newASeqSeqType(type.getLocation()); //empty
 	}
 
 	public static boolean isNumeric(AParameterType type) {
@@ -104,7 +99,7 @@ public class AParameterTypeAssistantTC {
 	}
 
 	public static ARealNumericBasicType getNumeric(AParameterType type) {
-		return new ARealNumericBasicType(type.getLocation(), false);
+		return AstFactory.newARealNumericBasicType(type.getLocation());
 	}
 
 	public static boolean isMap(AParameterType type) {
@@ -112,9 +107,7 @@ public class AParameterTypeAssistantTC {
 	}
 
 	public static SMapType getMap(AParameterType type) {
-		AMapMapType m = new AMapMapType(type.getLocation(), false,true);
-		m.setTo(new AUnknownType(type.getLocation(), false));m.setFrom(new AUnknownType(type.getLocation(), false)); 
-		return m;
+		return AstFactory.newAMapMapType(type.getLocation());	// Unknown |-> Unknown	
 	}
 
 	public static boolean isSet(AParameterType type) {
@@ -122,7 +115,7 @@ public class AParameterTypeAssistantTC {
 	}
 
 	public static ASetType getSet(AParameterType type) {
-		return new ASetType(type.getLocation(), false,null, new AUnknownType(type.getLocation(), false), true, false);
+		return AstFactory.newASetType(type.getLocation()); //empty
 	}
 
 	public static boolean isRecord(AParameterType type) {
@@ -130,7 +123,7 @@ public class AParameterTypeAssistantTC {
 	}
 	
 	public static ARecordInvariantType getRecord(AParameterType type) {
-		return new ARecordInvariantType(type.getLocation(),false, new LexNameToken("?", "?", type.getLocation()), new Vector<AFieldField>());
+		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>());				
 	}
 
 	public static boolean isClass(AParameterType type) {
@@ -138,16 +131,7 @@ public class AParameterTypeAssistantTC {
 	}
 	
 	public static AClassType getClassType(AParameterType type) {
-		return new AClassType(type.getLocation(),false, null,null, 
-				new AClassClassDefinition(
-						new LexLocation(),
-						new LexNameToken("CLASS", "DEFAULT", new LexLocation()),
-				null, 
-				false, 
-				null, 
-				null, 
-				null, 
-				null, new LexNameList(), new Vector<PDefinition>(), null, null, null, null, null, null, null, null, null, null, null, null, null));
+		return AstFactory.newAClassType(type.getLocation(),AstFactory.newAClassClassDefinition());
 	}
 
 	public static boolean isProduct(AParameterType type) {

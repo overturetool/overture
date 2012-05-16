@@ -1,5 +1,7 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.List;
+
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -48,5 +50,12 @@ public class PDefinitionAssistant {
 		pDefinition.setClassDefinition(def);
 	}
 
+	public static void setClassDefinition(List<PDefinition> defs,
+			SClassDefinition classDefinition) {
+		for (PDefinition d : defs) {
+			d.setClassDefinition(classDefinition);
+		}
+
+	}
 	
 }

@@ -2,6 +2,7 @@ package org.overture.typecheck.visitors;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -21,6 +22,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.ASetBind;
@@ -790,8 +792,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			}
 		}
 		
-		PDefinition vardef = new ALocalDefinition(node.getVar().getLocation(), 
-				NameScope.LOCAL, false, null, PAccessSpecifierAssistantTC.getDefault(), ft, false,node.getVar());
+		PDefinition vardef = 
+				AstFactory.newALocalDefinition(node.getVar().getLocation(), node.getVar(), NameScope.LOCAL, ft);
 		Environment local = new FlatCheckedEnvironment(vardef, question.env, question.scope);
 		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local,question.scope));
 		local.unusedCheck();
@@ -827,7 +829,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		else
 		{
-			rtypes.add(new AVoidType(node.getLocation(), false));
+			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
 		}
 		
 		node.setType(rtypes.getType(node.getLocation()));
@@ -838,8 +840,8 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question) 
 	{
 		 
-		node.setDef(new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistantTC.getDefault(),
-				null, PMultipleBindAssistantTC.getMultipleBindList(node.getBind()), null));
+		node.setDef(
+				AstFactory.newAMultiBindListDefinition(node.getLocation(), PMultipleBindAssistantTC.getMultipleBindList(node.getBind())));				
 		node.getDef().apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
@@ -886,18 +888,16 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			TypeCheckerErrors.warning(5016, "Some statements will not be reached",node.getLocation(),node);
 		}
 
-		return rtypes.isEmpty() ?
-			new AVoidType(node.getLocation(),false) : rtypes.getType(node.getLocation());
-		
-//		node.setType(r);
-//		return r;
+		node.setType(rtypes.isEmpty() ?
+			 AstFactory.newAVoidType(node.getLocation()) : rtypes.getType(node.getLocation()));
+		return node.getType();
 	}
 	
 	@Override
 	public PType caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
 			TypeCheckInfo question) 
 	{
-		node.setType(new AUnknownType(node.getLocation(), false));	// Because we terminate anyway
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));	// Because we terminate anyway
 		return node.getType();
 	}
 	
@@ -907,7 +907,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 		if (node.getExpression()== null)
 		{
-			node.setType(new AVoidReturnType(node.getLocation(), false));
+			node.setType(AstFactory.newAVoidReturnType(node.getLocation()));
 			return node.getType();
 		}
 		else
@@ -921,7 +921,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	@Override
 	public PType caseASkipStm(ASkipStm node, TypeCheckInfo question) 
 	{
-		node.setType(new AVoidType(node.getLocation(), false));
+		node.setType(AstFactory.newAVoidType(node.getLocation()));
 		return node.getType();
 	}
 	
@@ -947,8 +947,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
     				}
     				else
     				{
-    					defs.add(new ALocalDefinition(name.location, NameScope.STATE, false, null, 
-    							PAccessSpecifierAssistantTC.getDefault(), clause.getType(), false,name));
+    					defs.add(AstFactory.newALocalDefinition(name.location, name, NameScope.STATE, clause.getType()));
     				}
     			}
     		}
@@ -991,7 +990,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 					node.getPostcondition());
 		}
 
-		node.setType(new AVoidType(node.getLocation(), false));
+		node.setType(AstFactory.newAVoidType(node.getLocation()));
 		return node.getType();
 	}
 	
@@ -1010,7 +1009,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		if (extype.isEmpty())
 		{
 			TypeCheckerErrors.report(3241, "Body of trap statement does not throw exceptions",node.getLocation(),node);
-			ptype = new AUnknownType(body.getLocation(),false);
+			ptype = AstFactory.newAUnknownType(body.getLocation());
 		}
 		else
 		{
@@ -1103,14 +1102,14 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		if (opdef == null)
 		{
 			TypeCheckerErrors.report(3228, opname + " is not in scope",node.getLocation(),node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
 		// Operation must be "() ==> ()"
 
 		AOperationType expected =
-			new AOperationType(node.getLocation(),false, null, new LinkedList<PType>(), new AVoidType(node.getLocation(),false));
+				AstFactory.newAOperationType(node.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(node.getLocation()));			
 		
 		opdef = PDefinitionAssistantTC.deref(opdef);
 
@@ -1144,9 +1143,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			TypeCheckerErrors.report(3232, opname + " is not an operation name",node.getLocation(),node);
 		}
 
-		
-		
-		node.setType(new AVoidType(node.getLocation(),false));
+		node.setType(AstFactory.newAVoidType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -1190,7 +1187,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 					node.getObj().getLocation(), node.getObj());
 		}
 
-		node.setType(new AVoidType(node.getLocation(), false));
+		node.setType(AstFactory.newAVoidType(node.getLocation()));
 		return node.getType();
 	}
 	
@@ -1198,7 +1195,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	@Override
 	public PType caseASubclassResponsibilityStm(ASubclassResponsibilityStm node, TypeCheckInfo question) 
 	{
-		node.setType(new AUnknownType(node.getLocation(), false));	// Because we terminate anyway
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));	// Because we terminate anyway
 		return node.getType(); 
 	}
 	
@@ -1274,7 +1271,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			}
 
 			PDefinition def =
-				new AMultiBindListDefinition(bind.getLocation(), null, null, null, null, null, null, PBindAssistantTC.getMultipleBindList(bind), null);
+					AstFactory.newAMultiBindListDefinition(bind.getLocation(), PBindAssistantTC.getMultipleBindList(bind));				
 
 			def.apply(rootVisitor, question);
 			List<PDefinition> defs = new LinkedList<PDefinition>();

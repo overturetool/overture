@@ -12,9 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.TestCase;
 
-import org.overture.vdmjUtils.VdmjCompatibilityUtils;
 import org.overturetool.test.framework.ResultTestCase;
 import org.overturetool.test.framework.results.IMessage;
+import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
@@ -22,6 +22,8 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overturetool.vdmj.messages.VDMError;
+import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.xml.sax.SAXException;
@@ -118,7 +120,7 @@ public final static boolean DEBUG = true;
 			Set<IMessage> warnings = new HashSet<IMessage>();
 			Set<IMessage> errors = new HashSet<IMessage>();
 			
-			VdmjCompatibilityUtils.collectParserErrorsAndWarnings(reader, errors, warnings);
+			collectParserErrorsAndWarnings(reader, errors, warnings);
 			Result<Object> resultFinal = new Result<Object>(result, warnings, errors);
 			
 			compareResults(resultFinal, file.getAbsolutePath());
@@ -199,5 +201,25 @@ public final static boolean DEBUG = true;
 	@Override
 	protected File getResultFile(String filename) {
 		return new File(filename + ".result");
+	}
+	
+	private static void collectParserErrorsAndWarnings(SyntaxReader reader,
+			Set<IMessage> errors, Set<IMessage> warnings)
+	{
+		if (reader != null && reader.getErrorCount() > 0)
+		{
+			for (VDMError msg : reader.getErrors())
+			{
+				errors.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			}
+		}
+
+		if (reader != null && reader.getWarningCount() > 0)
+		{
+			for (VDMWarning msg : reader.getWarnings())
+			{
+				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			}
+		}
 	}
 }

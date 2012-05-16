@@ -28,6 +28,7 @@ import org.overture.ast.expressions.*;
 import org.overture.ast.expressions.assistants.AApplyExpAssistantTC;
 import org.overture.ast.expressions.assistants.ACaseAlternativeAssistantTC;
 import org.overture.ast.expressions.assistants.SBinaryExpAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -188,7 +189,7 @@ public class TypeCheckerExpVisitor extends
 			{
 				TypeCheckerErrors.report(3300, "Operation '" + node.getRoot()
 						+ "' cannot be called from a function", node.getLocation(), node);
-				results.add(new AUnknownType(node.getLocation(), false, null));
+				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else
 			{
 				results.add(AApplyExpAssistantTC.operationApply(node, isSimple, ot));
@@ -211,7 +212,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3054, "Type " + node.getType()
 					+ " cannot be applied", node.getLocation(), node);
-			return new AUnknownType(node.getLocation(), false, null);
+			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
 		node.setType(results.getType(node.getLocation()));
@@ -263,7 +264,7 @@ public class TypeCheckerExpVisitor extends
 			{
 				TypeCheckerErrors.report(3070, "Right hand of function 'comp' is not a function", node.getLocation(), node);
 				TypeCheckerErrors.detail("Type", node.getRight().getType());
-				node.setType(new AUnknownType(node.getLocation(), false, null));
+				node.setType(AstFactory.newAUnknownType(node.getLocation()));
 				return node.getType();
 			} else
 			{
@@ -292,7 +293,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3074, "Left hand of 'comp' is neither a map nor a function", node.getLocation(), node);
 			TypeCheckerErrors.detail("Type", node.getLeft().getType());
-			node.setType(new AUnknownType(node.getLocation(), false, null));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -1042,7 +1043,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question)
 	{
-		node.setDef(new AMultiBindListDefinition(node.getBind().getLocation(), null, null, null, null, null, null, PBindAssistantTC.getMultipleBindList(node.getBind()), null));
+		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind())));
 		node.getDef().apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(node.getDef(), question.env, question.scope);
 
@@ -1059,7 +1060,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		node.setType(new ABooleanBasicType(node.getLocation(), false, null));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -1067,7 +1068,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAExistsExp(AExistsExp node, TypeCheckInfo question)
 	{
 
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, node.getBindList(), null);
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList()); 				
 		def.apply(rootVisitor, question);
 
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
@@ -1078,7 +1079,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		node.setType(new ABooleanBasicType(node.getLocation(), false, null));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -1247,7 +1248,8 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAForAllExp(AForAllExp node, TypeCheckInfo question)
 	{
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, null, null, null, null, node.getBindList(), null);
+		PDefinition def = 
+				AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
 		def.apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
 		if (!PTypeAssistant.isType(node.getPredicate().apply(rootVisitor, new TypeCheckInfo(local, question.scope)), ABooleanBasicType.class))
@@ -1256,7 +1258,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		node.setType(new ABooleanBasicType(node.getLocation(), false, null));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -1472,13 +1474,8 @@ public class TypeCheckerExpVisitor extends
 	{
 
 		PBind temp = (PBind) node.getBind().clone();
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, // name
-		null, // namescope
-		false, null, // classdef
-		null, // access specifier
-		null, // type
-		PBindAssistantTC.getMultipleBindList(temp), null // defs
-		);
+		PDefinition def = 
+				AstFactory.newAMultiBindListDefinition(node.getLocation(), PBindAssistantTC.getMultipleBindList(temp));
 
 		def.apply(rootVisitor, question);
 
@@ -1616,7 +1613,7 @@ public class TypeCheckerExpVisitor extends
 
 		node.setParamDefinitions(paramDefinitions);
 
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, null, null, mbinds, null);
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), mbinds);
 		def.apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
 		TypeCheckInfo newInfo = new TypeCheckInfo(local, question.scope);
@@ -1624,14 +1621,14 @@ public class TypeCheckerExpVisitor extends
 		PType result = node.getExpression().apply(rootVisitor, newInfo);
 		local.unusedCheck();
 
-		node.setType(new AFunctionType(node.getLocation(), false, null, true, ptypes, result));
+		node.setType(AstFactory.newAFunctionType(node.getLocation(), true, ptypes, result));
 		return node.getType();
 	}
 
 	@Override
 	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question)
 	{
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, PAccessSpecifierAssistantTC.getDefault(), null, PMultipleBindAssistantTC.getMultipleBindList((PMultipleBind) node.getBind()), null);
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), PMultipleBindAssistantTC.getMultipleBindList((PMultipleBind) node.getBind())); 
 
 		def.apply(rootVisitor, question);
 		node.setDef((AMultiBindListDefinition) def);
@@ -1743,7 +1740,8 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAMapCompMapExp(AMapCompMapExp node, TypeCheckInfo question)
 	{
 
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, null, false, null, null, null, node.getBindings(), null);
+		PDefinition def = 
+				AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindings());
 		def.apply(rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
 
@@ -1771,7 +1769,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (node.getMembers().isEmpty())
 		{
-			node.setType(new AMapMapType(node.getLocation(), false, null, new AUnknownType(node.getLocation(), false), new AUnknownType(node.getLocation(), false), true));
+			node.setType(AstFactory.newAMapMapType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -1794,7 +1792,7 @@ public class TypeCheckerExpVisitor extends
 				node.getRngTypes().add(maplet.getTo());
 			}
 		}
-		node.setType(new AMapMapType(node.getLocation(), false, null, dom.getType(node.getLocation()), rng.getType(node.getLocation()), false));
+		node.setType(AstFactory.newAMapMapType(node.getLocation(), dom.getType(node.getLocation()), rng.getType(node.getLocation())));
 		return node.getType();
 
 	}
@@ -1805,7 +1803,7 @@ public class TypeCheckerExpVisitor extends
 
 		PType ltype = node.getLeft().apply(rootVisitor, question);
 		PType rtype = node.getRight().apply(rootVisitor, question);
-		node.setType(new AMapMapType(node.getLocation(), false, null, ltype, rtype, false));
+		node.setType(AstFactory.newAMapMapType(node.getLocation(), ltype, rtype));
 		return node.getType();
 	}
 
@@ -1834,7 +1832,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3126, "Unknown type '"
 					+ node.getTypeName() + "' in constructor", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false, null));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -1883,7 +1881,7 @@ public class TypeCheckerExpVisitor extends
 
 			AExplicitFunctionDefinition inv = recordType.getInvDef();
 
-			recordType = new ARecordInvariantType(null, false, recordType.getName().getExplicit(true), (List<AFieldField>) recordType.getFields().clone());
+			recordType = AstFactory.newARecordInvariantType(recordType.getName().getExplicit(true), (List<AFieldField>) recordType.getFields().clone());
 			recordType.setInvDef(inv);
 		}
 
@@ -1976,7 +1974,7 @@ public class TypeCheckerExpVisitor extends
 		{
 			TypeCheckerErrors.report(3133, "Class name " + node.getClassName()
 					+ " not in scope", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -2044,7 +2042,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			TypeCheckInfo question)
 	{
-		node.setType(new AUnknownType(node.getLocation(), false, null));
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType(); // Because we terminate anyway
 	}
 
@@ -2068,7 +2066,7 @@ public class TypeCheckerExpVisitor extends
 			a.apply(rootVisitor, question);
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2084,7 +2082,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAQuoteLiteralExp(AQuoteLiteralExp node,
 			TypeCheckInfo question)
 	{
-		node.setType(new AQuoteType(node.getLocation(), false, node.getValue().clone()));
+		node.setType(AstFactory.newAQuoteType(node.getValue().clone()));
 		return node.getType();
 	}
 
@@ -2099,20 +2097,20 @@ public class TypeCheckerExpVisitor extends
 		{
 			if (value.value < 0)
 			{
-				node.setType(new AIntNumericBasicType(node.getLocation(), false));
+				node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 				return node.getType();
 			} else if (value.value == 0)
 			{
-				node.setType(new ANatNumericBasicType(node.getLocation(), false));
+				node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 				return node.getType();
 			} else
 			{
-				node.setType(new ANatOneNumericBasicType(node.getLocation(), false));
+				node.setType(AstFactory.newANatOneNumericBasicType(node.getLocation()));
 				return node.getType();
 			}
 		} else
 		{
-			node.setType(new ARealNumericBasicType(node.getLocation(), false));
+			node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 			return node.getType();
 		}
 	}
@@ -2141,7 +2139,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2167,7 +2165,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2179,7 +2177,7 @@ public class TypeCheckerExpVisitor extends
 		if (cdef == null)
 		{
 			TypeCheckerErrors.report(3154, node.getName() + " not in scope", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -2190,23 +2188,23 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question)
 	{
+		//TODO: check if this is still needed?!
 		//save these so we can clone them after they have been type checked
-		PExp setBindSet = node.getSetBind().getSet();
-		PPattern setBindPattern = node.getSetBind().getPattern();
+//		PExp setBindSet = node.getSetBind().getSet();
+//		PPattern setBindPattern = node.getSetBind().getPattern();
+//		
+//		List<PPattern> plist = new ArrayList<PPattern>();
+//		plist.add(setBindPattern);
+//		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
+//		mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist, setBindSet));
 		
-		List<PPattern> plist = new ArrayList<PPattern>();
-		plist.add(setBindPattern);
-		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist, setBindSet));
-		
-		PDefinition def = new AMultiBindListDefinition(node.getLocation(), null, 
-				null, null, null, null, null, 
-				mblist, null);
+		PDefinition def = 
+				AstFactory.newAMultiBindListDefinition(node.getLocation(), PBindAssistantTC.getMultipleBindList( node.getSetBind()));			
 		def.apply(rootVisitor, question);
 		
 		//now they are typechecked, add them again
-		node.getSetBind().setSet(setBindSet.clone());
-		node.getSetBind().setPattern(setBindPattern.clone());
+//		node.getSetBind().setSet(setBindSet.clone());
+//		node.getSetBind().setPattern(setBindPattern.clone());
 
 		if (PPatternAssistantTC.getVariableNames(node.getSetBind().getPattern()).size() != 1 || !PTypeAssistant.isNumeric(PDefinitionAssistantTC.getType(def)))
 		{
@@ -2228,7 +2226,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		node.setType(new ASeqSeqType(node.getLocation(), false, null, etype, false));
+		node.setType(AstFactory.newASeqSeqType(node.getLocation(),etype));
 		return node.getType();
 	}
 
@@ -2248,8 +2246,8 @@ public class TypeCheckerExpVisitor extends
 			types.add(mt);
 		}
 
-		node.setType(ts.isEmpty() ? new ASeqSeqType(node.getLocation(), false, null, new AUnknownType(node.getLocation(), false, null), true)
-				: new ASeq1SeqType(node.getLocation(), false, null, ts.getType(node.getLocation()), false));
+		node.setType(ts.isEmpty() ? AstFactory.newASeqSeqType(node.getLocation()) 
+				: AstFactory.newASeq1SeqType(node.getLocation(), ts.getType(node.getLocation())));
 
 		return node.getType();
 	}
@@ -2257,7 +2255,8 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseASetCompSetExp(ASetCompSetExp node, TypeCheckInfo question)
 	{
-		PDefinition def = new AMultiBindListDefinition(node.getFirst().getLocation(), null, null, null, null, null, null, node.getBindings(), null);
+		PDefinition def = 
+				AstFactory.newAMultiBindListDefinition(node.getFirst().getLocation(),  node.getBindings());				
 		def.apply(rootVisitor, question);
 
 		Environment local = new FlatCheckedEnvironment(def, question.env, question.scope);
@@ -2275,7 +2274,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		local.unusedCheck();
-		ASetType setType = new ASetType(node.getLocation(), false, null,etype, false, false);
+		ASetType setType = AstFactory.newASetType(node.getLocation(),etype);
 		node.setType(setType);
 		node.setSetType(setType);
 		return setType;
@@ -2296,8 +2295,8 @@ public class TypeCheckerExpVisitor extends
 			types.add(mt);
 		}
 
-		node.setType(ts.isEmpty() ? new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), true, false)
-				: new ASetType(node.getLocation(), false,null, ts.getType(node.getLocation()), false, false));
+		node.setType(ts.isEmpty() ? AstFactory.newASetType(node.getLocation())
+				:  AstFactory.newASetType(node.getLocation(), ts.getType(node.getLocation())));
 
 		return node.getType();
 	}
@@ -2328,7 +2327,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3167, "Set range type must be an number", ltype.getLocation(), ltype);
 		}
 
-		node.setType(new ASetType(first.getLocation(), false,null, new AIntNumericBasicType(node.getLocation(), false), false, false));
+		node.setType(AstFactory.newASetType(first.getLocation(), AstFactory.newAIntNumericBasicType(node.getLocation())));
 		return node.getType();
 	}
 
@@ -2371,7 +2370,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		node.getState().setCanBeExecuted(canBeExecuted);
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2382,13 +2381,12 @@ public class TypeCheckerExpVisitor extends
 
 		if (node.getValue().value.isEmpty())
 		{
-			ASeqSeqType tt = new ASeqSeqType(node.getLocation(), false,  false);
-			tt.setSeqof(new ACharBasicType(node.getLocation(), false, null));
+			ASeqSeqType tt = AstFactory.newASeqSeqType(node.getLocation(),AstFactory.newACharBasicType(node.getLocation()));			
 			node.setType(tt);
 			return node.getType();
 		} else
 		{
-			node.setType(new ASeq1SeqType(node.getLocation(), false, null, new ACharBasicType(node.getLocation(), false, null), false));
+			node.setType(AstFactory.newASeq1SeqType(node.getLocation(), AstFactory.newACharBasicType(node.getLocation())));
 			return node.getType();
 		}
 	}
@@ -2397,7 +2395,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseASubclassResponsibilityExp(
 			ASubclassResponsibilityExp node, TypeCheckInfo question)
 	{
-		node.setType(new AUnknownType(node.getLocation(), false));
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType(); // Because we terminate anyway
 	}
 
@@ -2434,14 +2432,14 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAThreadIdExp(AThreadIdExp node, TypeCheckInfo question)
 	{
-		node.setType(new ANatNumericBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
 
 	@Override
 	public PType caseATimeExp(ATimeExp node, TypeCheckInfo question)
 	{
-		node.setType(new ANatOneNumericBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newANatOneNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2458,14 +2456,14 @@ public class TypeCheckerExpVisitor extends
 			types.add(arg.apply(rootVisitor, question));
 		}
 
-		node.setType(new AProductType(node.getLocation(), false, null, types));
+		node.setType(AstFactory.newAProductType(node.getLocation(), types));
 		return node.getType(); // NB mk_() is a product
 	}
 
 	@Override
 	public PType caseAUndefinedExp(AUndefinedExp node, TypeCheckInfo question)
 	{
-		node.setType(new AUndefinedType(node.getLocation(), false));
+		node.setType(AstFactory.newAUndefinedType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2492,14 +2490,14 @@ public class TypeCheckerExpVisitor extends
 						TypeCheckerErrors.report(3180, "Inaccessible member "
 								+ name + " of class "
 								+ vardef.getClassDefinition().getName().name, node.getLocation(), node);
-						node.setType(new AUnknownType(node.getLocation(), false));
+						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
 					} else if (!PAccessSpecifierAssistantTC.isStatic(vardef.getAccess())
 							&& env.isStatic())
 					{
 						TypeCheckerErrors.report(3181, "Cannot access " + name
 								+ " from a static context", node.getLocation(), node);
-						node.setType(new AUnknownType(node.getLocation(), false));
+						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
 					}
 				}
@@ -2570,7 +2568,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3182, "Name '" + name
 					+ "' is not in scope", node.getLocation(), node);
 			env.listAlternatives(name);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		} else
 		{
@@ -2592,7 +2590,7 @@ public class TypeCheckerExpVisitor extends
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2601,7 +2599,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question)
 	{
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2620,7 +2618,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3053, "Argument of 'abs' is not numeric", node.getLocation(), node);
 		} else if (t instanceof AIntNumericBasicType)
 		{
-			t = new ANatNumericBasicType(t.getLocation(), false);
+			t = AstFactory.newANatNumericBasicType(t.getLocation());
 		}
 
 		node.setType(t);
@@ -2639,7 +2637,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3067, "Argument of 'card' is not a set", exp.getLocation(), exp);
 		}
 
-		node.setType(new ANatNumericBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2663,7 +2661,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		TypeCheckerErrors.report(3075, "Argument of 'conc' is not a seq of seq", node.getLocation(), node);
-		node.setType(new AUnknownType(node.getLocation(), false));
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2689,7 +2687,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		TypeCheckerErrors.report(3076, "Argument of 'dinter' is not a set of sets", node.getLocation(), node);
-		node.setType(new AUnknownType(node.getLocation(), false));
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2715,10 +2713,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		TypeCheckerErrors.report(3077, "Merge argument is not a set of maps", node.getLocation(), node);
-		AMapMapType mm = new AMapMapType(node.getLocation(), false,  true);
-		mm.setFrom(new AUnknownType(node.getLocation(), false));mm.setTo(new AUnknownType(node.getLocation(), false));
-		return  mm;// Unknown
-																																							// types
+		return AstFactory.newAMapMapType(node.getLocation()); // Unknown types
 	}
 
 	@Override
@@ -2743,7 +2738,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		TypeCheckerErrors.report(3078, "dunion argument is not a set of sets", node.getLocation(), node);
-		node.setType(new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), false, false));
+		node.setType(AstFactory.newASetType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
 		return node.getType();
 	}
 
@@ -2759,7 +2754,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3096, "Argument to floor is not numeric", node.getLocation(), node);
 		}
 
-		node.setType(new AIntNumericBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2774,7 +2769,7 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(etype))
 		{
 			TypeCheckerErrors.report(3104, "Argument to 'hd' is not a sequence", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
@@ -2798,7 +2793,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.detail("Actual type", etype);
 		}
 
-		node.setType(new ASetType(node.getLocation(), false,null, new ANatOneNumericBasicType(node.getLocation(), false), false, false));
+		node.setType(AstFactory.newASetType(node.getLocation(), AstFactory.newANatOneNumericBasicType(node.getLocation())));
 		return node.getType();
 	}
 
@@ -2816,7 +2811,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3116, "Argument to 'len' is not a sequence", node.getLocation(), node);
 		}
 
-		node.setType(new ANatNumericBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2833,12 +2828,12 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isMap(etype))
 		{
 			TypeCheckerErrors.report(3120, "Argument to 'dom' is not a map", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
 		SMapType mt = PTypeAssistant.getMap(etype);
-		node.setType(new ASetType(node.getLocation(), false,null, mt.getFrom(), false, false));
+		node.setType(AstFactory.newASetType(node.getLocation(),mt.getFrom()));
 		return node.getType();
 	}
 
@@ -2855,15 +2850,12 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isMap(etype))
 		{
 			TypeCheckerErrors.report(3111, "Argument to 'inverse' is not a map", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
-		// TODO:NOT SURE ABOUT THIS ONE:
 		node.setMapType(PTypeAssistant.getMap(etype));
-		AMapMapType mm = new AMapMapType(node.getLocation(), false, false);
-		mm.setFrom(node.getMapType().getTo());
-		mm.setTo( node.getMapType().getFrom());// RWL TO AND FROM are twisted?
+		AMapMapType mm = AstFactory.newAMapMapType(node.getLocation(), node.getMapType().getTo(), node.getMapType().getFrom());
 		node.setType(mm);
 
 		return node.getType();
@@ -2881,12 +2873,12 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isMap(etype))
 		{
 			TypeCheckerErrors.report(3122, "Argument to 'rng' is not a map", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
 		SMapType mt = PTypeAssistant.getMap(etype);
-		node.setType(new ASetType(node.getLocation(), false, null, mt.getTo(), false, false));
+		node.setType(AstFactory.newASetType(node.getLocation(), mt.getTo()));
 		return node.getType();
 	}
 
@@ -2903,7 +2895,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckerErrors.report(3137, "Not expression is not a boolean", node.getLocation(), node);
 		}
 
-		node.setType(new ABooleanBasicType(node.getLocation(), false));
+		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -2919,11 +2911,11 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSet(etype))
 		{
 			TypeCheckerErrors.report(3145, "Argument to 'power' is not a set", node.getLocation(), node);
-			node.setType(new AUnknownType(node.getLocation(), false));
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
-		node.setType(new ASetType(node.getLocation(), false,null, etype, false, false));
+		node.setType(AstFactory.newASetType(node.getLocation(), etype));
 		return node.getType();
 	}
 
@@ -2940,8 +2932,7 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(etype))
 		{
 			TypeCheckerErrors.report(3295, "Argument to 'reverse' is not a sequence", node.getLocation(), node);
-			ASeqSeqType tt = new ASeqSeqType(node.getLocation(), false, true);
-			tt.setSeqof(new AUnknownType(node.getLocation(), false));
+			ASeqSeqType tt = AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation()));
 			node.setType(tt);
 			return node.getType();
 		}
@@ -2961,9 +2952,7 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(etype))
 		{
 			TypeCheckerErrors.report(3179, "Argument to 'tl' is not a sequence", node.getLocation(), node);
-			ASeqSeqType tt = new ASeqSeqType(node.getLocation(), false,  true);
-			tt.setSeqof(new AUnknownType(node.getLocation(), false));
-			node.setType(tt);
+			node.setType(AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
 			return node.getType();
 		}
 		node.setType(etype);
@@ -2980,7 +2969,7 @@ public class TypeCheckerExpVisitor extends
 		if (t instanceof ANatNumericBasicType
 				|| t instanceof ANatOneNumericBasicType)
 		{
-			t = new AIntNumericBasicType(node.getLocation(), false);
+			t = AstFactory.newAIntNumericBasicType(node.getLocation());
 		}
 
 		node.setType(t);
@@ -3009,13 +2998,13 @@ public class TypeCheckerExpVisitor extends
 		if (!PTypeAssistant.isSeq(arg))
 		{
 			TypeCheckerErrors.report(3085, "Argument of 'elems' is not a sequence", node.getLocation(), node);
-			node.setType(new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), true, false));
+			node.setType(AstFactory.newASetType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
 			return node.getType();
 		}
 
 		SSeqType seq = PTypeAssistant.getSeq(arg);
-		node.setType(seq.getEmpty() ? new ASetType(node.getLocation(), false,null, new AUnknownType(node.getLocation(), false), true, false)
-				: new ASetType(node.getLocation(), false,null, seq.getSeqof(), false, false));
+		node.setType(seq.getEmpty() ? AstFactory.newASetType(node.getLocation())
+				: AstFactory.newASetType(node.getLocation(), seq.getSeqof()));
 		return node.getType();
 	}
 }
