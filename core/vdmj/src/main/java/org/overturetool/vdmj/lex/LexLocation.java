@@ -241,10 +241,16 @@ public class LexLocation implements Serializable
 			name.location.startPos,
 			upto.location.endLine,
 			upto.location.endPos);
-
+		
+		if (nameSpans.get(name) != null)
+		{
+			// Overloaded names use line numbers to distinguish them
+			name = new LexNameToken(name.module, name.name + ":" + name.location.startLine, name.location);
+		}
+		
 		nameSpans.put(name, span);
 	}
-
+	
 	public static LexNameList getSpanNames(File filename)
 	{
 		LexNameList list = new LexNameList();
