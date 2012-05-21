@@ -12,15 +12,14 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.expressions.*;
 import org.overture.ast.expressions.assistants.PExpAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -989,13 +988,13 @@ public class PogExpVisitor extends
 		PType rType = rExp.getType();
 		if (lType instanceof AUnionType)
 		{
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question));
 		}
 
 		if (rType instanceof AUnionType)
 		{
 
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question));
 		}
 		return obligations;
 	}
@@ -1123,12 +1122,12 @@ public class PogExpVisitor extends
 		if (lType instanceof AUnionType)
 		{
 
-			obligations.add(new SubTypeObligation(left, new ARealNumericBasicType(right.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(left, AstFactory.newARealNumericBasicType(right.getLocation()), lType, question));
 		}
 
 		if (rType instanceof AUnionType)
 		{
-			obligations.add(new SubTypeObligation(right, new ARealNumericBasicType(right.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(right,  AstFactory.newARealNumericBasicType(right.getLocation()), rType, question));
 		}
 
 		obligations.addAll(left.apply(this, question));
@@ -1249,13 +1248,13 @@ public class PogExpVisitor extends
 		if (PTypeAssistantTC.isUnion(lType))
 		{
 
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question));
 		}
 
 		if (PTypeAssistantTC.isUnion(rType))
 		{
 			question.push(new POImpliesContext(lExp));
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question));
 			question.pop();
 		}
 
@@ -1281,12 +1280,12 @@ public class PogExpVisitor extends
 
 		if (PTypeAssistantTC.isUnion(lType))
 		{
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question));
 		}
 
 		if (PTypeAssistantTC.isUnion(rType))
 		{
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question));
 		}
 
 		obligations.addAll(lExp.apply(this, question));
@@ -1323,13 +1322,13 @@ public class PogExpVisitor extends
 
 		if (lType instanceof AUnionType)
 		{
-			obligations.add(new SubTypeObligation(lExp, new ABooleanBasicType(lExp.getLocation(), false), lType, question));
+			obligations.add(new SubTypeObligation(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question));
 		}
 
 		if (rType instanceof AUnionType)
 		{
 			question.push(new PONotImpliesContext(lExp));
-			obligations.add(new SubTypeObligation(rExp, new ABooleanBasicType(rExp.getLocation(), false), rType, question));
+			obligations.add(new SubTypeObligation(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question));
 			question.pop();
 		}
 
@@ -1390,12 +1389,12 @@ public class PogExpVisitor extends
 		
 		if (PTypeAssistantTC.isUnion(ltype))
 		{
-			obligations.add(new SubTypeObligation(left, new ARealNumericBasicType(left.getLocation(), false), ltype, question));
+			obligations.add(new SubTypeObligation(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question));
 		}
 
 		if (PTypeAssistantTC.isUnion(rtype))
 		{
-			obligations.add(new SubTypeObligation(right, new ARealNumericBasicType(right.getLocation(), false), rtype, question));
+			obligations.add(new SubTypeObligation(right, AstFactory.newARealNumericBasicType(right.getLocation()), rtype, question));
 		}
 
 		obligations.addAll(left.apply(this, question));

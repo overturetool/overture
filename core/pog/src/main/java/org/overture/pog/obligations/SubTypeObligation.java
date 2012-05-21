@@ -31,7 +31,6 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
@@ -46,6 +45,7 @@ import org.overture.ast.expressions.ASubseqExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATuplePattern;
@@ -54,7 +54,6 @@ import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -93,14 +92,13 @@ public class SubTypeObligation extends ProofObligation {
 				|| func.getBody() instanceof ASubclassResponsibilityExp) {
 			// We have to say "f(a)" because we have no body
 
-			PExp root = new AVariableExp(func.getName().getLocation(),
-					func.getName(), func.getName().getName());
+			PExp root = AstFactory.newAVariableExp(func.getName());
 			List<PExp> args = new ArrayList<PExp>();
 
 			for (PPattern p : func.getParamPatternList().get(0)) {
 				args.add(PPatternAssistantTC.getMatchingExpression(p));
 			}
-			body = new AApplyExp(root.getLocation(), root, args);
+			body = AstFactory.newAApplyExp(root, args);
 
 		} else {
 			body = func.getBody();
@@ -119,8 +117,7 @@ public class SubTypeObligation extends ProofObligation {
 				|| func.getBody() instanceof ASubclassResponsibilityExp) {
 			// We have to say "f(a)" because we have no body
 
-			PExp root = new AVariableExp(func.getName().getLocation(),
-					func.getName(), func.getName().getName());
+			PExp root = AstFactory.newAVariableExp(func.getName());
 			List<PExp> args = new ArrayList<PExp>();
 
 			for (APatternListTypePair pltp : func.getParamPatterns()) {
@@ -129,7 +126,7 @@ public class SubTypeObligation extends ProofObligation {
 				}
 			}
 
-			body = new AApplyExp(root.getLocation(), root, args);
+			body = AstFactory.newAApplyExp(root, args);
 		} else {
 			body = func.getBody();
 		}
@@ -141,10 +138,8 @@ public class SubTypeObligation extends ProofObligation {
 			PType actualResult, POContextStack ctxt) {
 		super(def.getLocation(), POType.SUB_TYPE, ctxt);
 
-		LexNameToken tok = new LexNameToken(def.getName().module, "RESULT",
-				def.getLocation());
-		AVariableExp result = new AVariableExp(def.getLocation(), tok,
-				tok.getName());
+		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().module, "RESULT",
+				def.getLocation()));
 
 		value = ctxt.getObligation(oneType(false, result, def.getType()
 				.getResult(), actualResult));
@@ -158,19 +153,17 @@ public class SubTypeObligation extends ProofObligation {
 		if (def.getResult().getPattern() instanceof AIdentifierPattern) {
 			AIdentifierPattern ip = (AIdentifierPattern) def.getResult()
 					.getPattern();
-			result = new AVariableExp(ip.getName().getLocation(),
-					ip.getName(), ip.getName().getName());
+			result = AstFactory.newAVariableExp(ip.getName());
 		} else {
 			ATuplePattern tp = (ATuplePattern) def.getResult().getPattern();
 			List<PExp> args = new ArrayList<PExp>();
 
 			for (PPattern p : tp.getPlist()) {
 				AIdentifierPattern ip = (AIdentifierPattern) p;
-				args.add(new AVariableExp(ip.getName().getLocation(), ip
-						.getName(), ip.getName().getName()));
+				args.add(AstFactory.newAVariableExp(ip.getName()));
 			}
 
-			result = new ATupleExp(def.getLocation(), args);
+			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
 
 		value = ctxt.getObligation(oneType(false, result, def.getType()
@@ -316,8 +309,7 @@ public class SubTypeObligation extends ProofObligation {
 				}
 			} else if (exp instanceof ASubseqExp) {
 				ASubseqExp subseq = (ASubseqExp) exp;
-				PType itype = new ANatOneNumericBasicType(exp.getLocation(),
-						false);
+				PType itype = AstFactory.newANatOneNumericBasicType(exp.getLocation());
 				String s = oneType(true, subseq.getFrom(), itype,
 						subseq.getFtype());
 
@@ -403,7 +395,7 @@ public class SubTypeObligation extends ProofObligation {
 			} else if (exp instanceof ASetRangeSetExp) {
 				ASetType stype = (ASetType) etype;
 				ASetRangeSetExp range = (ASetRangeSetExp) exp;
-				PType itype = new AIntNumericBasicType(exp.getLocation(), false);
+				PType itype = AstFactory.newAIntNumericBasicType(exp.getLocation());
 				prefix = "";
 
 				String s = oneType(true, range.getFirst(), itype,
