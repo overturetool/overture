@@ -67,7 +67,8 @@ public abstract class BasicTypeCheckTestCase extends TestCase {
 		try {
 			reader = getReader(type, ltr);
 			result = read(type, reader);
-			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
+			File resultFile = new File(file.getAbsolutePath() + ".result");
+			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(resultFile);
 			if (reader != null && reader.getErrorCount() > 0) {
 				xmlResult.setResult("parser", VdmjCompatibilityUtils.convertToResult(reader,file,"vdmj type checker"));
 			}

@@ -1,6 +1,3 @@
--- TCErrors: WARNING:5000:134,7
-
-
 --shmem.vdmsl
 
 module M

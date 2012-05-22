@@ -317,8 +317,8 @@ public class AstFactory {
 			LexNameToken typeName, PType type) {
 
 		ANamedInvariantType result = new ANamedInvariantType();
+		initType(result, typeName.location);
 		
-		result.setLocation(typeName.location);
 		result.setName(typeName);
 		result.setType(type);
 		
@@ -330,7 +330,7 @@ public class AstFactory {
 		
 		ARecordInvariantType result = new ARecordInvariantType();
 		
-		result.setLocation(name.location);
+		initType(result,name.location);
 		result.setName(name);
 		result.setFields(fields);
 		
@@ -343,7 +343,7 @@ public class AstFactory {
 		ATypeDefinition result = new ATypeDefinition();
 		initDefinition(result, Pass.TYPES, name.location, name, NameScope.TYPENAME);
 		
-		result.setType(type);
+		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
 		
@@ -415,6 +415,7 @@ public class AstFactory {
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(result);
 		type.setDefinitions(defs);
+		result.setType(type);
 		
 		return result;
 	}
@@ -422,8 +423,8 @@ public class AstFactory {
 	public static AFunctionType newAFunctionType(LexLocation location,
 			boolean partial, List<PType> parameters, PType resultType) {
 		AFunctionType result = new AFunctionType();
-		
-		result.setLocation(location);
+		initType(result, location);
+
 		result.setParameters(parameters);
 		result.setResult(resultType);
 		result.setPartial(partial);
@@ -453,6 +454,11 @@ public class AstFactory {
 		
 		// Definition initialization
 		initDefinition(result, Pass.VALUES, p.getLocation(), null, scope);
+		
+		result.setPattern(p);
+		result.setType(type);
+		result.setExpression(readExpression);
+		
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
@@ -574,7 +580,7 @@ public class AstFactory {
 			ptypes.addAll(getTypeList(ptp));
 		}
 		AOperationType operationType = AstFactory.newAOperationType(result.getLocation(), ptypes,
-				(result == null ? AstFactory.newAVoidType(name.location) : result.getResult().getType())); 
+				(result.getResult() == null ? AstFactory.newAVoidType(name.location) : result.getResult().getType())); 
 		result.setType(operationType);
 		
 		return result;
@@ -583,8 +589,8 @@ public class AstFactory {
 	public static AOperationType newAOperationType(LexLocation location,
 			List<PType> parameters, PType resultType) {
 		AOperationType result = new AOperationType();
+		initType(result,location);
 		
-		result.setLocation(location);
 		result.setParameters(parameters);
 		result.setResult(resultType);
 		
@@ -593,7 +599,8 @@ public class AstFactory {
 
 	public static AVoidType newAVoidType(LexLocation location) {
 		AVoidType result = new AVoidType();
-		result.setLocation(location);
+		initType(result, location);
+
 		return result;
 	}
 
@@ -625,7 +632,7 @@ public class AstFactory {
 
 	public static PType newAUnknownType(LexLocation location) {
 		AUnknownType result = new AUnknownType();
-		result.setLocation(location);
+		initType(result,location);
 		return result;
 	}
 
@@ -835,7 +842,8 @@ public class AstFactory {
 	public static AProductType newAProductType(LexLocation location,
 			List<PType> types) {
 		AProductType result = new AProductType();
-		result.setLocation(location);
+
+		initType(result, location);
 		result.setTypes(types);
 		return result;
 	}
@@ -1571,6 +1579,7 @@ public class AstFactory {
 		result.setImports(null);
 		result.setExports(null);
 		result.setDefs(definitions);
+		result.setTypeChecked(false);
 		
 		List<ClonableFile> files = new Vector<ClonableFile>();
 		if (file != null)
@@ -2041,7 +2050,7 @@ public class AstFactory {
 		result.setPattern(pattern);
 		result.setSet(set);
 		result.setStatement(stmt);
-		return null;
+		return result;
 	}
 
 	public static AForPatternBindStm newAForPatternBindStm(LexLocation token,
@@ -2252,13 +2261,13 @@ public class AstFactory {
 	public static AUnionType newAUnionType(LexLocation location, PType a,
 			PType b) {
 		AUnionType result = new AUnionType();
-		result.setLocation(location);
+		initType(result, location);
+		initUnionType(result);
 		
 		List<PType> list = new Vector<PType>();
 		list.add(a);
 		list.add(b);
 		result.setTypes(list);
-		result.setProdCard(-1);
 		AUnionTypeAssistant.expand(result);
 		return result;
 	}
@@ -2280,7 +2289,8 @@ public class AstFactory {
 			PType to) {
 		
 		AMapMapType result = new AMapMapType();
-		result.setLocation(location);
+		initType(result, location);
+
 		result.setFrom(from);
 		result.setTo(to);
 		result.setEmpty(false);
@@ -2291,7 +2301,8 @@ public class AstFactory {
 	public static AInMapMapType newAInMapMapType(LexLocation location, PType from,
 			PType to) {
 		AInMapMapType result = new AInMapMapType();
-		result.setLocation(location);
+		initType(result, location);
+		
 		result.setFrom(from);
 		result.setTo(to);
 		result.setEmpty(false);
@@ -2302,7 +2313,7 @@ public class AstFactory {
 	public static ASetType newASetType(LexLocation location, PType type) {
 		ASetType result = new ASetType();
 		
-		result.setLocation(location);
+		initType(result, location);
 		result.setSetof(type);
 		result.setEmpty(false);
 		
@@ -2312,7 +2323,7 @@ public class AstFactory {
 	public static ASeqSeqType newASeqSeqType(LexLocation location, PType type) {
 		ASeqSeqType result = new ASeqSeqType();
 		
-		result.setLocation(location);
+		initType(result, location);
 		result.setSeqof(type);
 		result.setEmpty(false);
 		
@@ -2322,7 +2333,7 @@ public class AstFactory {
 	public static ASeq1SeqType newASeq1SeqType(LexLocation location, PType type) {
 		ASeq1SeqType result = new ASeq1SeqType();
 		
-		result.setLocation(location);
+		initType(result, location);
 		result.setSeqof(type);
 		result.setEmpty(false);
 		
@@ -2331,7 +2342,8 @@ public class AstFactory {
 
 	public static AQuoteType newAQuoteType(LexQuoteToken token) {
 		AQuoteType result = new AQuoteType();
-		result.setLocation(token.location);
+		initType(result, token.location);
+
 		result.setValue(token);
 		
 		return result;
@@ -2339,7 +2351,7 @@ public class AstFactory {
 
 	public static ABracketType newABracketType(LexLocation location, PType type) {
 		ABracketType result = new ABracketType();
-		result.setLocation(location);
+		initType(result, location);
 		result.setType(type);
 		
 		return result;
@@ -2347,7 +2359,7 @@ public class AstFactory {
 
 	public static AOptionalType newAOptionalType(LexLocation location, PType type) {
 		AOptionalType result = new AOptionalType();
-		result.setLocation(location);
+		initType(result, location);
 		
 		while (type instanceof AOptionalType)
 		{
@@ -2360,7 +2372,8 @@ public class AstFactory {
 
 	public static AUnresolvedType newAUnresolvedType(LexNameToken typename) {
 		AUnresolvedType result = new AUnresolvedType();
-		result.setLocation(typename.location);
+		initType(result, typename.location);
+		
 		result.setName(typename);
 		
 		return result;
@@ -2368,14 +2381,15 @@ public class AstFactory {
 
 	public static AParameterType newAParameterType(LexNameToken name) {
 		AParameterType result = new AParameterType();
-		result.setLocation(name.location);
+		
+		initType(result, name.location);
 		result.setName(name);
 		return result;
 	}
 
 	public static AOperationType newAOperationType(LexLocation location) {
 		AOperationType result = new AOperationType();
-		result.setLocation(location);
+		initType(result, location);
 		result.setParameters(new Vector<PType>());
 		result.setResult(AstFactory.newAVoidType(location));
 		
@@ -2440,7 +2454,7 @@ public class AstFactory {
 	public static AClassType newAClassType(LexLocation location,
 			SClassDefinition classdef) {
 		AClassType result = new AClassType();
-		result.setLocation(location);
+		initType(result, location);
 		
 		result.setClassdef(classdef);
 		result.setName(classdef.getName());
@@ -2450,7 +2464,7 @@ public class AstFactory {
 
 	public static AMapMapType newAMapMapType(LexLocation location) {
 		AMapMapType result = new AMapMapType();
-		result.setLocation(location);
+		initType(result, location);
 		
 		result.setFrom(AstFactory.newAUnknownType(location));
 		result.setTo(AstFactory.newAUnknownType(location));
@@ -2461,7 +2475,7 @@ public class AstFactory {
 
 	public static ASetType newASetType(LexLocation location) {
 		ASetType result = new ASetType();
-		result.setLocation(location);
+		initType(result, location);
 		
 		result.setSetof(AstFactory.newAUnknownType(location));
 		result.setEmpty(true);
@@ -2473,7 +2487,7 @@ public class AstFactory {
 
 	public static ASeqSeqType newASeqSeqType(LexLocation location) {
 		ASeqSeqType result = new ASeqSeqType();
-		result.setLocation(location);
+		initType(result, location);
 		result.setSeqof(AstFactory.newAUnknownType(location));
 		result.setEmpty(true);
 		
@@ -2483,7 +2497,7 @@ public class AstFactory {
 	public static ARecordInvariantType newARecordInvariantType(LexLocation location,
 			List<AFieldField> fields) {
 		ARecordInvariantType result = new ARecordInvariantType();
-		result.setLocation(location);
+		initType(result, location);
 		
 		result.setName(new LexNameToken("?", "?", location));
 		result.setFields(fields);
@@ -2513,13 +2527,13 @@ public class AstFactory {
 
 	public static AUndefinedType newAUndefinedType(LexLocation location) {
 		AUndefinedType result = new AUndefinedType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static AVoidReturnType newAVoidReturnType(LexLocation location) {
 		AVoidReturnType result = new AVoidReturnType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
@@ -2735,13 +2749,29 @@ public class AstFactory {
 	public static AUnionType newAUnionType(LexLocation location, PTypeList types) {
 		AUnionType result = new AUnionType();
 		initType(result,location);
+		initUnionType(result);
+		
 		result.setTypes(types);
 		AUnionTypeAssistant.expand(result);
 		return result;
 	}
 
+	private static void initUnionType(AUnionType result) {
+		result.setSetDone(false);
+		result.setSeqDone(false);
+		result.setMapDone(false);
+		result.setRecDone(false);
+		result.setNumDone(false);
+		result.setFuncDone(false);
+		result.setOpDone(false);
+		result.setClassDone(false);
+		result.setProdCard(-1);
+		result.setExpanded(false);
+	}
+
 	private static void initType(PType result, LexLocation location) {
 		result.setLocation(location);
+		result.setResolved(false);
 	}
 
 	public static AStateInitExp newAStateInitExp(AStateDefinition state) {
