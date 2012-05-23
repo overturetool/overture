@@ -31,8 +31,12 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AProtectedAccess;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
@@ -245,7 +249,7 @@ public class DefinitionReader extends SyntaxReader
 		boolean isStatic = false;
 		boolean isAsync = false;
 		// VDMToken access = VDMToken.PRIVATE;
-		Access access = Access.PRIVATE;
+		PAccess access = new APrivateAccess();
 
 		boolean more = true;
 
@@ -271,16 +275,16 @@ public class DefinitionReader extends SyntaxReader
 					break;
 
 				case PUBLIC:
-					access = Access.PUBLIC;
+					access = new APublicAccess();
 					nextToken();
 					break;
 				case PRIVATE:
-					access = Access.PRIVATE;
+					access = new APrivateAccess();
 					nextToken();
 					break;
 				case PROTECTED:
 					// access = lastToken().type;
-					access = Access.PROTECTED;
+					access = new AProtectedAccess();
 					nextToken();
 					break;
 

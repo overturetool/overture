@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.AUnionTypeAssistant;
@@ -61,6 +62,8 @@ import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
+import org.overture.ast.node.tokens.TAsync;
+import org.overture.ast.node.tokens.TStatic;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.patterns.AConcatenationPattern;
@@ -898,11 +901,11 @@ public class AstFactory {
 	public static AConcurrentExpressionTraceCoreDefinition newAConcurrentExpressionTraceCoreDefinition(
 			LexLocation location, List<PTraceDefinition> defs) {
 		return new AConcurrentExpressionTraceCoreDefinition(location,defs);
-	}
+	} 
 
 	public static AAccessSpecifierAccessSpecifier newAAccessSpecifierAccessSpecifier(
-			Access access, boolean isStatic, boolean isAsync) {
-		return new AAccessSpecifierAccessSpecifier(access,isStatic,isAsync);
+			PAccess access, boolean isStatic, boolean isAsync) {		
+		return new AAccessSpecifierAccessSpecifier(access,isStatic ? new TStatic() : null,isAsync ? new TAsync() : null);
 	}
 
 	public static APatternListTypePair newAPatternListTypePair(
