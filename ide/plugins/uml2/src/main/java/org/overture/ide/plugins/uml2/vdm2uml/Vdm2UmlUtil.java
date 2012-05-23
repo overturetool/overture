@@ -34,7 +34,7 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 
 public class Vdm2UmlUtil {
 	
@@ -58,23 +58,23 @@ public class Vdm2UmlUtil {
 		
 		int upper =  1;
 		
-		if(PTypeAssistant.isType(type, ASetType.class))
+		if(PTypeAssistantTC.isType(type, ASetType.class))
 		{
 			upper = LiteralUnlimitedNatural.UNLIMITED;
 		}
-		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeqSeqType.class))
 		{
 			upper = LiteralUnlimitedNatural.UNLIMITED;
 		}
-		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeq1SeqType.class))
 		{
 			upper = LiteralUnlimitedNatural.UNLIMITED;
 		}
-		else if(PTypeAssistant.isType(type, SMapType.class))
+		else if(PTypeAssistantTC.isType(type, SMapType.class))
 		{
 			upper = LiteralUnlimitedNatural.UNLIMITED;
 		}
-		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		else if(PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			
 		}
@@ -85,21 +85,21 @@ public class Vdm2UmlUtil {
 	public static int extractLower(PType type) {
 		int lower = 0;
 		
-		if(PTypeAssistant.isType(type, ASetType.class))
+		if(PTypeAssistantTC.isType(type, ASetType.class))
 		{
 		}
-		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeqSeqType.class))
 		{
 		}
-		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeq1SeqType.class))
 		{
 			lower = 1;
 		}
-		else if(PTypeAssistant.isType(type, SMapType.class))
+		else if(PTypeAssistantTC.isType(type, SMapType.class))
 		{
 		
 		}
-		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		else if(PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			
 		}
@@ -110,23 +110,23 @@ public class Vdm2UmlUtil {
 	public static boolean extractIsOrdered(PType type)  {
 		Boolean isOrdered = false;
 		
-		if(PTypeAssistant.isType(type, ASetType.class))
+		if(PTypeAssistantTC.isType(type, ASetType.class))
 		{
 			isOrdered = false;
 		}
-		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeqSeqType.class))
 		{
 			isOrdered = true;
 		}
-		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeq1SeqType.class))
 		{
 			isOrdered = true;
 		}
-		else if(PTypeAssistant.isType(type, SMapType.class))
+		else if(PTypeAssistantTC.isType(type, SMapType.class))
 		{
 			isOrdered = true;
 		}
-		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		else if(PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			
 		}
@@ -137,22 +137,22 @@ public class Vdm2UmlUtil {
 	public static boolean extractIsUnique(PType type)  {
 		Boolean isUnique = true;
 		
-		if(PTypeAssistant.isType(type, ASetType.class))
+		if(PTypeAssistantTC.isType(type, ASetType.class))
 		{
 		}
-		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
-		{
-			isUnique = false;
-		}
-		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeqSeqType.class))
 		{
 			isUnique = false;
 		}
-		else if(PTypeAssistant.isType(type, SMapType.class))
+		else if(PTypeAssistantTC.isType(type, ASeq1SeqType.class))
 		{
 			isUnique = false;
 		}
-		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		else if(PTypeAssistantTC.isType(type, SMapType.class))
+		{
+			isUnique = false;
+		}
+		else if(PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 		}
 		
@@ -166,7 +166,7 @@ public class Vdm2UmlUtil {
 //		case BASIC:
 //			return convertBasicType((SBasicType) type);
 //		case BRACKET:
-//			return convertType(PTypeAssistant.deBracket(type));
+//			return convertType(PTypeAssistantTC.deBracket(type));
 //		case MAP:
 //			return convertType(((SMapType) type).getTo());
 //		case OPTIONAL:
@@ -352,7 +352,7 @@ public class Vdm2UmlUtil {
 //
 //	public static IUmlType getQualifier(PType defType) throws CGException {
 //		
-//		if(PTypeAssistant.isType(defType, SMapType.class))
+//		if(PTypeAssistantTC.isType(defType, SMapType.class))
 //		{
 //			return convertType(((SMapType) defType).getFrom());
 //		}
@@ -501,13 +501,13 @@ public class Vdm2UmlUtil {
 		
 		
 		for (PType t : funcType.getParameters()) {
-			if(PTypeAssistant.isType(t, AParameterType.class))
+			if(PTypeAssistantTC.isType(t, AParameterType.class))
 			{
 				return true;
 			}			
 		}
 		
-		if(PTypeAssistant.isType(funcType.getResult(), AParameterType.class))
+		if(PTypeAssistantTC.isType(funcType.getResult(), AParameterType.class))
 		{
 			return true;
 		}

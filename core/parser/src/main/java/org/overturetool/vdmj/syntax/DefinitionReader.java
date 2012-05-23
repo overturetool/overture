@@ -40,6 +40,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.node.tokens.TStatic;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.ASetBind;
@@ -349,7 +350,7 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
-				access.setStatic(true);
+				access.setStatic(new TStatic());
 				ATypeDefinition def = readTypeDefinition();
 
 				// Force all type defs (invs) to be static
@@ -379,7 +380,7 @@ public class DefinitionReader extends SyntaxReader
 			try
 			{
 				AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
-				access.setStatic(true);
+				access.setStatic(new TStatic());
 				PDefinition def = readValueDefinition(NameScope.GLOBAL);
 
 				// Force all values to be static
@@ -424,7 +425,7 @@ public class DefinitionReader extends SyntaxReader
 				if (Settings.release == Release.VDM_10)
 				{
 					// Force all functions to be static for VDM-10
-					access.setStatic(true);
+					access.setStatic(new TStatic());
 					def.setAccess(access);
 				} else
 				{
