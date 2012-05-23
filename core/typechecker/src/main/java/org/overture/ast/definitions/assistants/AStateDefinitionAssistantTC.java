@@ -56,10 +56,10 @@ public class AStateDefinitionAssistantTC {
     		}
 		}
 		
-		if ( PDefinitionAssistantTC.findName(definition.getRecordDefinition(), sought, scope) != null)
-		{
-			return definition.getRecordDefinition();
-		}
+//		if ( PDefinitionAssistantTC.findName(definition.getRecordDefinition(), sought, scope) != null)
+//		{
+//			return definition.getRecordDefinition();
+//		}
 
 		for (PDefinition d: definition.getStateDefs())
 		{

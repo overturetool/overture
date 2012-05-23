@@ -76,7 +76,8 @@ public class Message implements IMessage
 		if (obj instanceof IMessage)
 		{
 			IMessage other = (IMessage) obj;
-			return this.resource.equals(other.getResource()) && this.number == other.getNumber()
+			return // this.resource.equals(other.getResource()) && //removed the resource  
+					this.number == other.getNumber()
 					&& this.col == other.getCol()
 					&& this.line == other.getLine();
 		}
@@ -98,5 +99,7 @@ public class Message implements IMessage
 	{
 		return resource;
 	}
+	
+	
 
 }

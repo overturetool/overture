@@ -193,6 +193,80 @@ import org.overturetool.vdmj.util.Utils;
 
 public class AstFactory {
 
+	
+	/*
+	 *  Init Methods - correspond to constructors of the abstract classes, e.g. Definition, Pattern, Type, etc.
+	 */
+	private static void initPattern(PPattern result,
+			LexLocation location) {
+		result.setLocation(location);
+		result.setResolved(false);
+		
+	}
+	
+	private static void initStatement(PStm result, LexLocation token) {
+		result.setLocation(token);
+		token.executable(true);
+	}
+	
+	private static void initStateDesignator(PStateDesignator result,
+			LexLocation location) {
+		result.setLocation(location);
+	}
+		
+	private static void initDefinition(PDefinition result,
+			Pass values, LexLocation location, LexNameToken name, NameScope scope) {
+		result.setPass(values);
+		result.setLocation(location);
+		result.setName(name);
+		result.setNameScope(scope);
+		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		result.setUsed(false);
+	}
+	
+	private static void initExpressionUnary(SUnaryExp result,
+			LexLocation location, PExp exp) {
+		initExpression(result,location);
+		result.setExp(exp);
+	}
+
+	private static void initExpression(PExp result, LexLocation location) {
+		result.setLocation(location);
+		location.executable(true);
+	}
+	
+	private static void initExpression(PExp result, PExp expression) {
+		initExpression(result, expression.getLocation());
+		
+	}
+	
+	private static void initUnionType(AUnionType result) {
+		result.setSetDone(false);
+		result.setSeqDone(false);
+		result.setMapDone(false);
+		result.setRecDone(false);
+		result.setNumDone(false);
+		result.setFuncDone(false);
+		result.setOpDone(false);
+		result.setClassDone(false);
+		result.setProdCard(-1);
+		result.setExpanded(false);
+	}
+
+	private static void initType(PType result, LexLocation location) {
+		result.setLocation(location);
+		result.setResolved(false);
+	}
+	
+	private static void initInvariantType(SInvariantType result) {
+		result.setOpaque(false);
+		
+	}
+	
+	/*
+	 * Constructors for each type
+	 */
+	
 	public static ADefPatternBind newADefPatternBind(LexLocation location,
 			Object patternOrBind) {
 		
@@ -318,6 +392,7 @@ public class AstFactory {
 
 		ANamedInvariantType result = new ANamedInvariantType();
 		initType(result, typeName.location);
+		initInvariantType(result);
 		
 		result.setName(typeName);
 		result.setType(type);
@@ -325,12 +400,16 @@ public class AstFactory {
 		return result;
 	}
 
+	
+
 	public static ARecordInvariantType newARecordInvariantType(
 			LexNameToken name, List<AFieldField> fields) {
 		
 		ARecordInvariantType result = new ARecordInvariantType();
 		
 		initType(result,name.location);
+		initInvariantType(result);
+		
 		result.setName(name);
 		result.setFields(fields);
 		
@@ -372,6 +451,9 @@ public class AstFactory {
 		result.setIsTypeInvariant(typeInvariant);
 		result.setMeasure(measure);
 		result.setIsCurried(parameters.size() > 1);
+		result.setRecursive(false);
+		result.setIsUndefined(false);
+		result.setMeasureLexical(0);
 		
 		List<PDefinition> defsList = new LinkedList<PDefinition>();
 		defsList.add(result);
@@ -401,6 +483,10 @@ public class AstFactory {
 		result.setPrecondition(precondition);
 		result.setPostcondition(postcondition);
 		result.setMeasure(measure);
+		result.setRecursive(false);
+		result.setIsUndefined(false);
+		result.setMeasureLexical(0);
+		
 		
 		List<PType> ptypes = new LinkedList<PType>();
 
@@ -499,7 +585,7 @@ public class AstFactory {
 		
 		List<PDefinition> stateDefs = new Vector<PDefinition>();
 		
-		result.setStateDefs(stateDefs);
+		
 		
 		for (AFieldField f : fields)
 		{
@@ -511,7 +597,7 @@ public class AstFactory {
 			stateDefs.add(ld);
 		}
 		
-		result.setRecordType(AstFactory.newARecordInvariantType(name, fields));
+		result.setRecordType(AstFactory.newARecordInvariantType(name.clone(), fields));
 		
 		ALocalDefinition recordDefinition = null;
 		
@@ -522,18 +608,20 @@ public class AstFactory {
 		recordDefinition = AstFactory.newALocalDefinition(result.getLocation(), name.getOldName(), NameScope.OLDSTATE, result.getRecordType());
 		recordDefinition.setUsed(true); // Can't be exported anyway
 		stateDefs.add(recordDefinition);
+		result.setStateDefs(stateDefs);
 		
 		return result;
 	}
 
 	public static ALocalDefinition newALocalDefinition(LexLocation location,
-			LexNameToken name, NameScope state, PType type) {
+			LexNameToken name, NameScope scope, PType type) {
 		
 		ALocalDefinition result = new ALocalDefinition();
 		// Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, NameScope.STATE);
+		initDefinition(result, Pass.DEFS, name.location, name, scope);
 		
 		result.setType(type);
+		result.setValueDefinition(false);
 		
 		return result;
 	}
@@ -552,6 +640,7 @@ public class AstFactory {
 		result.setPrecondition(precondition);
 		result.setPostcondition(postcondition);
 		result.setBody(body);
+		result.setIsConstructor(false);
 		
 		return result;
 	}
@@ -572,6 +661,7 @@ public class AstFactory {
 		result.setPrecondition(spec.getPrecondition());
 		result.setPostcondition(spec.getPostcondition());
 		result.setErrors(spec.getErrors());
+		result.setIsConstructor(false);
 		
 		List<PType> ptypes = new Vector<PType>();
 		
@@ -826,15 +916,21 @@ public class AstFactory {
 
 	public static AIdentifierPattern newAIdentifierPattern(LexNameToken token) {
 		AIdentifierPattern result = new AIdentifierPattern();
+		initPattern(result,token.location);
+		
+		
 		result.setLocation(token.location);
 		result.setName(token);
 		return result;
 	}
 
+	
+
 	public static ATuplePattern newATuplePattern(LexLocation location,
 			List<PPattern> list) {
 		ATuplePattern result = new ATuplePattern();
-		result.setLocation(location);
+		initPattern(result, location);
+		
 		result.setPlist(list);
 		return result;
 	}
@@ -851,6 +947,7 @@ public class AstFactory {
 	public static APatternTypePair newAPatternTypePair(
 			PPattern pattern, PType type) {
 		APatternTypePair result = new APatternTypePair();
+		result.setResolved(false);
 		result.setPattern(pattern);
 		result.setType(type);
 		return result;
@@ -1579,7 +1676,8 @@ public class AstFactory {
 		result.setImports(null);
 		result.setExports(null);
 		result.setDefs(definitions);
-		result.setTypeChecked(false);
+		result.setTypeChecked(false);		
+		result.setIsDLModule(false); //TODO: this does not exist in VDMj
 		
 		List<ClonableFile> files = new Vector<ClonableFile>();
 		if (file != null)
@@ -1621,6 +1719,9 @@ public class AstFactory {
 		List<ClonableFile> files = new Vector<ClonableFile>();
 		files.add(new ClonableFile(name.location.file));
 		result.setFiles(files);
+		result.setIsFlat(false);
+		result.setTypeChecked(false);
+		result.setIsDLModule(false); //TODO: this does not exist in VDMj
 		
 		result.setExportdefs(new Vector<PDefinition>()); // By default, export nothing
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
@@ -1736,7 +1837,7 @@ public class AstFactory {
 	public static AUnionPattern newAUnionPattern(PPattern left,
 			LexLocation location, PPattern right) {
 		AUnionPattern result = new AUnionPattern();
-		result.setLocation(location);
+		initPattern(result, location);
 		result.setLeft(left);
 		result.setRight(right);
 		return result;
@@ -1745,7 +1846,7 @@ public class AstFactory {
 	public static AConcatenationPattern newAConcatenationPattern(PPattern left,
 			LexLocation location, PPattern right) {
 		AConcatenationPattern result = new AConcatenationPattern();
-		result.setLocation(location);
+		initPattern(result, location);
 		result.setLeft(left);
 		result.setRight(right);
 		return result;
@@ -1753,55 +1854,58 @@ public class AstFactory {
 
 	public static AIntegerPattern newAIntegerPattern(LexIntegerToken token) {
 		AIntegerPattern result =  new AIntegerPattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
 		result.setValue(token);
 		return result;
 	}
 
 	public static ARealPattern newARealPattern(LexRealToken token) {
 		ARealPattern result =  new ARealPattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
 		result.setValue(token);
 		return result;
 	}
 
 	public static ACharacterPattern newACharacterPattern(LexCharacterToken token) {
 		ACharacterPattern result =  new ACharacterPattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
 		result.setValue(token);
 		return result;
 	}
 
 	public static AStringPattern newAStringPattern(LexStringToken token) {
 		AStringPattern result =  new AStringPattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
 		result.setValue(token);
 		return result;
 	}
 
 	public static AQuotePattern newAQuotePattern(LexQuoteToken token) {
 		AQuotePattern result =  new AQuotePattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
 		result.setValue(token);
 		return result;
 	}
 
 	public static ABooleanPattern newABooleanPattern(LexBooleanToken token) {
 		ABooleanPattern result =  new ABooleanPattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
+
 		result.setValue(token);
 		return result;
 	}
 
 	public static ANilPattern newANilPattern(LexKeywordToken token) {
 		ANilPattern result =  new ANilPattern();
-		result.setLocation(token.location);
+		initPattern(result, token.location);
+
 		return result;
 	}
 
 	public static AExpressionPattern newAExpressionPattern(PExp expression) {
 		AExpressionPattern result = new AExpressionPattern();
-		result.setLocation(expression.getLocation());
+		initPattern(result, expression.getLocation());
+
 		result.setExp(expression);
 		return result;
 	}
@@ -1809,6 +1913,7 @@ public class AstFactory {
 	public static ASetPattern newASetPattern(LexLocation location,
 			List<PPattern> list) {
 		ASetPattern result = new ASetPattern();
+		initPattern(result, location);
 		result.setLocation(location);
 		result.setPlist(list);
 		return result;
@@ -1817,7 +1922,7 @@ public class AstFactory {
 	public static ASeqPattern newASeqPattern(LexLocation location,
 			List<PPattern> list) {
 		ASeqPattern result = new ASeqPattern();
-		result.setLocation(location);
+		initPattern(result, location);
 		result.setPlist(list);
 		return result;
 	}
@@ -1825,7 +1930,7 @@ public class AstFactory {
 	public static ARecordPattern newARecordPattern(LexNameToken typename,
 			List<PPattern> list) {
 		ARecordPattern result = new ARecordPattern();
-		result.setLocation(typename.location);
+		initPattern(result, typename.location);
 		result.setPlist(list);
 		result.setTypename(typename);
 		result.setType(AstFactory.getAUnresolvedType(typename));
@@ -1841,7 +1946,7 @@ public class AstFactory {
 
 	public static AIgnorePattern newAIgnorePattern(LexLocation location) {
 		AIgnorePattern result = new AIgnorePattern();
-		result.setLocation(location);
+		initPattern(result, location);
 		return result;
 	}
 
@@ -2037,10 +2142,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static void initStatement(PStm result, LexLocation token) {
-		result.setLocation(token);
-		token.executable(true);
-	}
+	
 
 	public static AForAllStm newAForAllStm(LexLocation token, PPattern pattern, PExp set,
 			PStm stmt) {
@@ -2126,10 +2228,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static void initStateDesignator(PStateDesignator result,
-			LexLocation location) {
-		result.setLocation(location);
-	}
+	
 
 	public static AMapSeqStateDesignator newAMapSeqStateDesignator(
 			PStateDesignator mapseq, PExp exp) {
@@ -2161,14 +2260,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static void initDefinition(PDefinition result,
-			Pass values, LexLocation location, LexNameToken name, NameScope scope) {
-		result.setPass(values);
-		result.setLocation(location);
-		result.setName(name);
-		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
-	}
+	
 
 	public static AReturnStm newAReturnStm(LexLocation token, PExp exp) {
 		AReturnStm result = new AReturnStm();
@@ -2546,16 +2638,7 @@ public class AstFactory {
 
 	
 	
-	private static void initExpressionUnary(SUnaryExp result,
-			LexLocation location, PExp exp) {
-		initExpression(result,location);
-		result.setExp(exp);
-	}
-
-	private static void initExpression(PExp result, LexLocation location) {
-		result.setLocation(location);
-		location.executable(true);
-	}
+	
 
 	public static AUnaryMinusUnaryExp newAUnaryMinusUnaryExp(LexLocation location,
 			PExp exp) {
@@ -2741,10 +2824,7 @@ public class AstFactory {
 		return result;
 	}
 
-	private static void initExpression(PExp result, PExp expression) {
-		initExpression(result, expression.getLocation());
-		
-	}
+	
 
 	public static AUnionType newAUnionType(LexLocation location, PTypeList types) {
 		AUnionType result = new AUnionType();
@@ -2756,23 +2836,6 @@ public class AstFactory {
 		return result;
 	}
 
-	private static void initUnionType(AUnionType result) {
-		result.setSetDone(false);
-		result.setSeqDone(false);
-		result.setMapDone(false);
-		result.setRecDone(false);
-		result.setNumDone(false);
-		result.setFuncDone(false);
-		result.setOpDone(false);
-		result.setClassDone(false);
-		result.setProdCard(-1);
-		result.setExpanded(false);
-	}
-
-	private static void initType(PType result, LexLocation location) {
-		result.setLocation(location);
-		result.setResolved(false);
-	}
 
 	public static AStateInitExp newAStateInitExp(AStateDefinition state) {
 		AStateInitExp result = new AStateInitExp();
