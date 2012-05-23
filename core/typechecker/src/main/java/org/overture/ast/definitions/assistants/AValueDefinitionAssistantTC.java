@@ -49,7 +49,7 @@ public class AValueDefinitionAssistantTC {
 	}
 
 	public static LexNameList getVariableNames(AValueDefinition d) {
-		return PPatternAssistantTC.getVariableNames(d.getPattern());
+		return PPatternAssistantTC.getAllVariableNames(d.getPattern());
 	}
 
 	public static void typeResolve(AValueDefinition d,

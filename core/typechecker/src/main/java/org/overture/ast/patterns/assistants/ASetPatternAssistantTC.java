@@ -54,7 +54,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 //		return list;
 //	}
 
-	public static List<PDefinition> getDefinitions(ASetPattern rp, PType type,
+	public static List<PDefinition> getAllDefinitions(ASetPattern rp, PType type,
 			NameScope scope) {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -72,7 +72,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 			{
         		for (PPattern p: rp.getPlist())
         		{
-        			defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
+        			defs.addAll(PPatternAssistantTC.getAllDefinitions(p, set.getSetof(), scope));
         		}
 			}
 		}

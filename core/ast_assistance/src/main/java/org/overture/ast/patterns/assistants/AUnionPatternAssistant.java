@@ -7,11 +7,11 @@ public class AUnionPatternAssistant {
 
 	
 
-	public static LexNameList getVariableNames(AUnionPattern pattern) {
+	public static LexNameList getAllVariableNames(AUnionPattern pattern) {
 		LexNameList list = new LexNameList();
 
-		list.addAll(PPatternAssistant.getVariableNames(pattern.getLeft()));
-		list.addAll(PPatternAssistant.getVariableNames(pattern.getRight()));
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getLeft()));
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getRight()));
 
 		return list;
 	}

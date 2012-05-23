@@ -16,7 +16,7 @@ public class AIdentifierPatternAssistantTC {
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
 
-	public static List<PDefinition> getDefinitions(AIdentifierPattern rp,
+	public static List<PDefinition> getAllDefinitions(AIdentifierPattern rp,
 			PType ptype, NameScope scope) {
 		List<PDefinition> defs = new ArrayList<PDefinition>();
 		defs.add(AstFactory.newALocalDefinition(rp.getLocation(), rp.getName().clone(), scope, ptype));

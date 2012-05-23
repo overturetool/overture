@@ -39,7 +39,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
-   			defs.addAll(PPatternAssistantTC.getDefinitions(p,titer.next(), NameScope.LOCAL));
+   			defs.addAll(PPatternAssistantTC.getAllDefinitions(p,titer.next(), NameScope.LOCAL));
 		}
 
 		return new Vector<PDefinition>(defs);

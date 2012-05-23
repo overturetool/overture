@@ -72,6 +72,9 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.AMapPattern;
+import org.overture.ast.patterns.AMapUnionPattern;
+import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
@@ -551,7 +554,7 @@ public class AstFactory {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (LexNameToken var : PPatternAssistant.getVariableNames(p))
+		for (LexNameToken var : PPatternAssistant.getAllVariableNames(p))
 		{
 			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 		}
@@ -2849,8 +2852,30 @@ public class AstFactory {
 	}
 	
 	
+	public static AMapletPatternMaplet newAMapletPatternMaplet(PPattern from, PPattern to)
+	{
+		AMapletPatternMaplet result = new AMapletPatternMaplet();
+		result.setFrom(from);
+		result.setTo(to);
+		
+		return result;
+	}
 	
+	public static AMapPattern newAMapPattern(LexLocation location, List<AMapletPatternMaplet> maplets)
+	{
+		AMapPattern result = new AMapPattern();
+		initPattern(result, location);
+		result.setMaplets(maplets);
+		return result;
+	}
 	
-
+	public static AMapUnionPattern newAMapUnionPattern(PPattern left,LexLocation location, PPattern right)
+	{
+		AMapUnionPattern result = new AMapUnionPattern();
+		initPattern(result, location);
+		result.setLeft(left);
+		result.setRight(right);
+		return result;
+	}
 	
 }

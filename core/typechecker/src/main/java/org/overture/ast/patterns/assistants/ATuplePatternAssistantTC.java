@@ -56,7 +56,7 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 //		return list;
 //	}
 
-	public static List<PDefinition> getDefinitions(ATuplePattern rp,
+	public static List<PDefinition> getAllDefinitions(ATuplePattern rp,
 			PType type, NameScope scope) {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -73,7 +73,7 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 
 		for (PPattern p: rp.getPlist())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p,ti.next(), scope));
+			defs.addAll(PPatternAssistantTC.getAllDefinitions(p,ti.next(), scope));
 		}
 
 		return defs;

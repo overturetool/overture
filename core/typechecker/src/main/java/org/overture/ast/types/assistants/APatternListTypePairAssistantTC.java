@@ -23,7 +23,7 @@ public class APatternListTypePairAssistantTC {
 
 		for (PPattern p: pltp.getPatterns())
 		{
-			list.addAll(PPatternAssistantTC.getDefinitions(p, pltp.getType(), scope));
+			list.addAll(PPatternAssistantTC.getAllDefinitions(p, pltp.getType(), scope));
 		}
 
 		return list;

@@ -54,7 +54,7 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 //		return list;
 //	}
 
-	public static List<PDefinition> getDefinitions(ASeqPattern rp, PType type,
+	public static List<PDefinition> getAllDefinitions(ASeqPattern rp, PType type,
 			NameScope scope) {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -69,7 +69,7 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 
     		for (PPattern p: rp.getPlist())
     		{
-    			defs.addAll(PPatternAssistantTC.getDefinitions(p, elem, scope));
+    			defs.addAll(PPatternAssistantTC.getAllDefinitions(p, elem, scope));
     		}
 		}
 

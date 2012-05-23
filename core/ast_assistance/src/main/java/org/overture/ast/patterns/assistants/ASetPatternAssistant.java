@@ -8,12 +8,12 @@ public class ASetPatternAssistant {
 
 
 
-	public static LexNameList getVariableNames(ASetPattern pattern) {
+	public static LexNameList getAllVariableNames(ASetPattern pattern) {
 		LexNameList list = new LexNameList();
 
 		for (PPattern p: pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getVariableNames(p));
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
 		}
 
 		return list;
