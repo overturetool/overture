@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sortPPPP</name>
+	<name>Alarm++proofPP</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -37,7 +37,7 @@
 
 				<dictionary>
 					<key>LANGUAGE_VERSION</key>
-					<value>vdm10</value>
+					<value>classic</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
