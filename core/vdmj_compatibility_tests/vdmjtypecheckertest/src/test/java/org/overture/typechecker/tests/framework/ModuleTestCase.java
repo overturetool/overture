@@ -10,6 +10,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Vector;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.overture.vdmjUtils.VdmjCompatibilityUtils;
+import org.overturetool.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -34,7 +39,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	public ModuleTestCase() {
 		super("test");
-		this.name = "blabla";
+		//this.name = "blabla";
 	}
 
 	public ModuleTestCase(File file) {
@@ -60,12 +65,6 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 
 	private void moduleTc(String expressionString) throws ParserException,
 			LexException, IOException {
-if(DEBUG){
-		System.out.flush();
-		System.err.flush();
-		insertTCHeader();}
-
-		//printFile(file);
 	
 		ModuleList modules = parse(ParserType.Module, file);
 		
@@ -73,28 +72,44 @@ if(DEBUG){
 		ModuleTypeChecker moduleTC = new ModuleTypeChecker(modules);
 		moduleTC.typeCheck();
 
-if(DEBUG){
-		if (TypeChecker.getErrorCount() > 0) {
-			// perrs += reader.getErrorCount();
-			StringWriter s = new StringWriter();
-			TypeChecker.printErrors(new PrintWriter(s));// new
-														// PrintWriter(System.out));
-			System.out.println(s.toString());
+		File resultFile = new File(file.getAbsolutePath() + ".result");
+		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(resultFile);
+		
+		xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(moduleTC,file,"vdmj type checker"));
+		try {
+			xmlResult.saveInXml();			
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		
+		
+//		if (reader != null && reader.getErrorCount() > 0) {
+//			xmlResult.setResult("parser", VdmjCompatibilityUtils.convertToResult(reader,file,"vdmj type checker"));
+//		}
+//		else
+//		{
+//			if(reader instanceof ModuleReader)
+//			{
+//				ModuleTypeChecker moduleTC = new ModuleTypeChecker((ModuleList) result);
+//				moduleTC.typeCheck();
+//				xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(moduleTC,file,"vdmj type checker"));					
+//			}
+//		}
+//		try {
+//			xmlResult.saveInXml();
+//			
+//			xmlResult.loadFromXml();
+//		} catch (Exception e)
+//		{
+//			//e.printStackTrace();
+//		} 
+		
 
-		//assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
-
-		if (showWarnings && TypeChecker.getWarningCount() > 0) {
-			// perrs += reader.getErrorCount();
-			StringWriter s = new StringWriter();
-			TypeChecker.printWarnings(new PrintWriter(s));// new
-															// PrintWriter(System.out));
-			// String warningMessages = "\n" + s.toString() + "\n";
-			System.out.println(s.toString());
-		}
-
-		printTCHeader();
-}
 	}
 
 
