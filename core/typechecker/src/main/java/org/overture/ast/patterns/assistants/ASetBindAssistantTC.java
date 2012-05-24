@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.expressions.assistants.PExpAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetBind;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -19,7 +19,7 @@ public class ASetBindAssistantTC {
 		List<PPattern> plist = new ArrayList<PPattern>();
 		plist.add(bind.getPattern().clone());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist, bind.getSet().clone()));
+		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet().clone()));
 		return mblist;
 	}
 

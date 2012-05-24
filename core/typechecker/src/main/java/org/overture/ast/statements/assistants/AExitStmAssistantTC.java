@@ -1,7 +1,7 @@
 package org.overture.ast.statements.assistants;
 
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.statements.AExitStm;
-import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.assistants.PTypeSet;
 
 public class AExitStmAssistantTC {
@@ -12,7 +12,7 @@ public class AExitStmAssistantTC {
 
 		if (statement.getExpression() == null)
 		{
-			types.add(new AVoidType(statement.getLocation(),false));
+			types.add(AstFactory.newAVoidType(statement.getLocation()));
 		}
 		else
 		{

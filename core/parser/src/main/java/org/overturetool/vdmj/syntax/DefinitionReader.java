@@ -79,7 +79,6 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.LocatedException;
-import org.overturetool.vdmj.typechecker.Access;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 /**

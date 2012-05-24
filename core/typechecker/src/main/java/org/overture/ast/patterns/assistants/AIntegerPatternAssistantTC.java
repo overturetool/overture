@@ -1,7 +1,7 @@
 package org.overture.ast.patterns.assistants;
 
-import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
@@ -14,7 +14,7 @@ public class AIntegerPatternAssistantTC {
 	}
 
 	public static PExp getMatchingExpression(AIntegerPattern intptrn) {
-		return new AIntLiteralExp(null, intptrn.getLocation(), (LexIntegerToken) intptrn.getValue().clone());
+		return AstFactory.newAIntLiteralExp((LexIntegerToken) intptrn.getValue().clone());
 	}
 
 }

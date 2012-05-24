@@ -2,6 +2,7 @@ package org.overture.ast.statements.assistants;
 
 import java.util.Set;
 
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
@@ -12,7 +13,7 @@ public class ABlockSimpleBlockStmAssistantTC {
 	{
 		if (add instanceof AVoidReturnType)
 		{
-			rtypes.add(new AVoidType(add.getLocation(), false));
+			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
 		}
 		else if (!(add instanceof AVoidType))
 		{
