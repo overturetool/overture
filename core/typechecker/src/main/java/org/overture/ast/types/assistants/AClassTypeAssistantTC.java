@@ -85,7 +85,7 @@ public class AClassTypeAssistantTC {
 
     		for (PDefinition d: type.getClassdef().getDefinitions())
     		{
-    			PTypeAssistantTC.unResolve(d.getType());
+    			PTypeAssistantTC.unResolve(PDefinitionAssistantTC.getType(d));
     		}
 		}
 		

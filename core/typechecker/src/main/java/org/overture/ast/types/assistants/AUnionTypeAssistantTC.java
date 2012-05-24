@@ -641,7 +641,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			type.setClassType((classname == null) ? null : AstFactory
 					.newAClassType(type.getLocation(), AstFactory
-							.newAClassClassDefinition(classname,
+							.newAClassClassDefinition(classname.clone(),
 									new LexNameList(), newdefs)));
 			
 		}

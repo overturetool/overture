@@ -356,6 +356,9 @@ public class AstFactory {
 
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
 		result.setUsed(true);
+		result.setIsTypeChecked(false);
+		result.setGettingInvDefs(false);
+		result.setGettingInheritable(false);
 		result.setSupernames(superclasses);
 		result.setSuperDefs(new ArrayList<SClassDefinition>());
 		result.setSupertypes(new ArrayList<PType>());
@@ -2379,6 +2382,7 @@ public class AstFactory {
 		AAssignmentStm result = new AAssignmentStm();
 		initStatement(result, token);
 		
+		result.setInConstructor(false);
 		result.setExp(exp);
 		result.setTarget(target);
 		return result;
