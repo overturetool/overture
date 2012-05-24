@@ -190,7 +190,6 @@ import org.overturetool.vdmj.lex.LexStringToken;
 import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.VDMToken;
 import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.typechecker.Access;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
@@ -236,6 +235,14 @@ public class AstFactory {
 		result.setExp(exp);
 	}
 
+	private static void initExpressionBinary(SBinaryExp result, PExp left, LexToken op, PExp right)
+	{
+		initExpression(result, op.location);
+		result.setLeft(left);
+		result.setOp(op);
+		result.setRight(right);
+	}
+	
 	private static void initExpression(PExp result, LexLocation location) {
 		result.setLocation(location);
 		location.executable(true);
@@ -908,7 +915,11 @@ public class AstFactory {
 
 	public static AAccessSpecifierAccessSpecifier newAAccessSpecifierAccessSpecifier(
 			PAccess access, boolean isStatic, boolean isAsync) {		
-		return new AAccessSpecifierAccessSpecifier(access,isStatic ? new TStatic() : null,isAsync ? new TAsync() : null);
+		AAccessSpecifierAccessSpecifier result = new AAccessSpecifierAccessSpecifier();
+		result.setAccess(access);
+		result.setStatic(isStatic ? new TStatic() : null);
+		result.setAsync(isAsync ? new TAsync() : null);
+		return result;
 	}
 
 	public static APatternListTypePair newAPatternListTypePair(
@@ -978,10 +989,7 @@ public class AstFactory {
 			PExp right) {
 		AEquivalentBooleanBinaryExp result = new AEquivalentBooleanBinaryExp();
 		//Binary Expression init
-		result.setLocation(op.location);
-		result.setLeft(left);
-		result.setRight(right);
-		result.setOp(op);
+		initExpressionBinary(result, left, op, right);		
 		
 		return result;
 		
@@ -991,10 +999,7 @@ public class AstFactory {
 			PExp right) {
 		AImpliesBooleanBinaryExp result = new AImpliesBooleanBinaryExp();
 		//Binary Expression init
-		result.setLocation(op.location);
-		result.setLeft(left);
-		result.setRight(right);
-		result.setOp(op);
+		initExpressionBinary(result, left, op, right);
 		
 		return result;
 	}
@@ -1003,10 +1008,7 @@ public class AstFactory {
 			PExp right) {
 		AOrBooleanBinaryExp result = new AOrBooleanBinaryExp();
 		//Binary Expression init
-		result.setLocation(op.location);
-		result.setLeft(left);
-		result.setRight(right);
-		result.setOp(op);
+		initExpressionBinary(result, left, op, right);
 		
 		return result;
 	}
@@ -1015,157 +1017,214 @@ public class AstFactory {
 			PExp right) {
 		AAndBooleanBinaryExp result = new AAndBooleanBinaryExp();
 		//Binary Expression init
-		result.setLocation(op.location);
-		result.setLeft(left);
-		result.setRight(right);
-		result.setOp(op);
+		initExpressionBinary(result, left, op, right);;
 		
 		return result;
 	}
 
 	public static ANotUnaryExp newANotUnaryExp(LexLocation location,
 			PExp readNotExpression) {
-		return new ANotUnaryExp(location, readNotExpression);
+		ANotUnaryExp result = new ANotUnaryExp();
+		initExpressionUnary(result, location, readNotExpression);
+		return result;
 	}
 
-	public static AEqualsBinaryExp newAEqualsBinaryExp(PExp exp,
-			LexToken token, PExp readEvaluatorP1Expression) {
-		return new AEqualsBinaryExp(token.location, exp, token, readEvaluatorP1Expression);
+	public static AEqualsBinaryExp newAEqualsBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AEqualsBinaryExp result = new AEqualsBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ALessNumericBinaryExp newALessNumericBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new ALessNumericBinaryExp(token.location,exp,token,readNotExpression);
+	public static ALessNumericBinaryExp newALessNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ALessNumericBinaryExp result = new ALessNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ALessEqualNumericBinaryExp newALessEqualNumericBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new ALessEqualNumericBinaryExp(token.location,exp,token,readNotExpression);
+	public static ALessEqualNumericBinaryExp newALessEqualNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ALessEqualNumericBinaryExp result = new ALessEqualNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		
+		return result;
 	}
 
-	public static AGreaterNumericBinaryExp newAGreaterNumericBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new AGreaterNumericBinaryExp(token.location,exp,token,readNotExpression);
+	public static AGreaterNumericBinaryExp newAGreaterNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AGreaterNumericBinaryExp result = new AGreaterNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		
+		return result;
 	}
 
-	public static AGreaterEqualNumericBinaryExp newAGreaterEqualNumericBinaryExp(PExp exp,
-			LexToken token, PExp readNotExpression) {
-		return new AGreaterEqualNumericBinaryExp(token.location,exp,token,readNotExpression);
+	public static AGreaterEqualNumericBinaryExp newAGreaterEqualNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AGreaterEqualNumericBinaryExp result = new AGreaterEqualNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ANotEqualBinaryExp newANotEqualBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new ANotEqualBinaryExp(token.location,exp,token,readNotExpression);
+	public static ANotEqualBinaryExp newANotEqualBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ANotEqualBinaryExp result = new ANotEqualBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ASubsetBinaryExp newASubsetBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new ASubsetBinaryExp(token.location,exp,token,readNotExpression);
+	public static ASubsetBinaryExp newASubsetBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ASubsetBinaryExp result = new ASubsetBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static AProperSubsetBinaryExp newAProperSubsetBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new AProperSubsetBinaryExp(token.location,exp,token,readNotExpression);
+	public static AProperSubsetBinaryExp newAProperSubsetBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AProperSubsetBinaryExp result = new AProperSubsetBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static AInSetBinaryExp newAInSetBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new AInSetBinaryExp(token.location,exp,token,readNotExpression);
+	public static AInSetBinaryExp newAInSetBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AInSetBinaryExp result = new AInSetBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ANotInSetBinaryExp newANotInSetBinaryExp(PExp exp, LexToken token,
-			PExp readNotExpression) {
-		return new ANotInSetBinaryExp(token.location,exp,token,readNotExpression);
+	public static ANotInSetBinaryExp newANotInSetBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ANotInSetBinaryExp result = new ANotInSetBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static APlusNumericBinaryExp newAPlusNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new APlusNumericBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static APlusNumericBinaryExp newAPlusNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		APlusNumericBinaryExp result = new APlusNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ASubstractNumericBinaryExp newASubstractNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new ASubstractNumericBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static ASubstractNumericBinaryExp newASubstractNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ASubstractNumericBinaryExp result = new ASubstractNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ASetUnionBinaryExp newASetUnionBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new ASetUnionBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static ASetUnionBinaryExp newASetUnionBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ASetUnionBinaryExp result = new ASetUnionBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ASetDifferenceBinaryExp newASetDifferenceBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new ASetDifferenceBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static ASetDifferenceBinaryExp newASetDifferenceBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ASetDifferenceBinaryExp result = new ASetDifferenceBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static AMapUnionBinaryExp newAMapUnionBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new AMapUnionBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static AMapUnionBinaryExp newAMapUnionBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AMapUnionBinaryExp result = new AMapUnionBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static APlusPlusBinaryExp newAPlusPlusBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new APlusPlusBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static APlusPlusBinaryExp newAPlusPlusBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		APlusPlusBinaryExp result = new APlusPlusBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ASeqConcatBinaryExp newASeqConcatBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP2Expression) {
-		return new ASeqConcatBinaryExp(token.location,exp,token,readEvaluatorP2Expression);
+	public static ASeqConcatBinaryExp newASeqConcatBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ASeqConcatBinaryExp result = new ASeqConcatBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ATimesNumericBinaryExp newATimesNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP3Expression) {
-		return new ATimesNumericBinaryExp(token.location,exp,token,readEvaluatorP3Expression);
+	public static ATimesNumericBinaryExp newATimesNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ATimesNumericBinaryExp result = new ATimesNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ADivideNumericBinaryExp newADivideNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP3Expression) {
-		return new ADivideNumericBinaryExp(token.location,exp,token,readEvaluatorP3Expression);
+	public static ADivideNumericBinaryExp newADivideNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ADivideNumericBinaryExp result = new ADivideNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ARemNumericBinaryExp newARemNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP3Expression) {
-		return new ARemNumericBinaryExp(token.location,exp,token,readEvaluatorP3Expression);
+	public static ARemNumericBinaryExp newARemNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ARemNumericBinaryExp result = new ARemNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static AModNumericBinaryExp newAModNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP3Expression) {
-		return new AModNumericBinaryExp(token.location,exp,token,readEvaluatorP3Expression);
+	public static AModNumericBinaryExp newAModNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		AModNumericBinaryExp result = new AModNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ADivNumericBinaryExp newADivNumericBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP3Expression) {
-		return new ADivNumericBinaryExp(token.location,exp,token,readEvaluatorP3Expression);
+	public static ADivNumericBinaryExp newADivNumericBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ADivNumericBinaryExp result = new ADivNumericBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ASetIntersectBinaryExp newASetIntersectBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP3Expression) {
-		return new ASetIntersectBinaryExp(token.location,exp,token,readEvaluatorP3Expression);
+	public static ASetIntersectBinaryExp newASetIntersectBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ASetIntersectBinaryExp result = new ASetIntersectBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
 	public static AMapInverseUnaryExp newAMapInverseUnaryExp(LexLocation location,
-			PExp readEvaluatorP3Expression) {
-		return new AMapInverseUnaryExp(location, readEvaluatorP3Expression);
+			PExp exp) {
+		AMapInverseUnaryExp result = new AMapInverseUnaryExp();
+		initExpressionUnary(result, location, exp);
+		return result;
 	}
 
-	public static ADomainResToBinaryExp newADomainResToBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP5Expression) {
-		return new ADomainResToBinaryExp(token.location,exp,token,readEvaluatorP5Expression);
+	public static ADomainResToBinaryExp newADomainResToBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ADomainResToBinaryExp result = new ADomainResToBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ADomainResByBinaryExp newADomainResByBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP5Expression) {
-		return new ADomainResByBinaryExp(token.location,exp,token,readEvaluatorP5Expression);
+	public static ADomainResByBinaryExp newADomainResByBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ADomainResByBinaryExp result = new ADomainResByBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ARangeResToBinaryExp newARangeResToBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP6Expression) {
-		return new ARangeResToBinaryExp(token.location,exp,token,readEvaluatorP6Expression);
+	public static ARangeResToBinaryExp newARangeResToBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ARangeResToBinaryExp result = new ARangeResToBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
-	public static ARangeResByBinaryExp newARangeResByBinaryExp(PExp exp, LexToken token,
-			PExp readEvaluatorP6Expression) {
-		return new ARangeResByBinaryExp(token.location,exp,token,readEvaluatorP6Expression);
+	public static ARangeResByBinaryExp newARangeResByBinaryExp(PExp left,
+			LexToken op, PExp right) {
+		ARangeResByBinaryExp result = new ARangeResByBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
 	public static AApplyExp newAApplyExp(PExp root) {
@@ -1233,86 +1292,135 @@ public class AstFactory {
 
 	public static ACompBinaryExp newACompBinaryExp(PExp left, LexToken op,
 			PExp right) {
-		return new ACompBinaryExp(op.location,left,op,right);
+		ACompBinaryExp result = new ACompBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
 	public static AStarStarBinaryExp newAStarStarBinaryExp(PExp left, LexToken op,
 			PExp right) {
-		return new AStarStarBinaryExp(op.location,left,op,right);
+		AStarStarBinaryExp result = new AStarStarBinaryExp();
+		initExpressionBinary(result, left, op, right);
+		return result;
 	}
 
 	public static AIntLiteralExp newAIntLiteralExp(LexIntegerToken value) {
-		return new AIntLiteralExp(value.location,value);
+		AIntLiteralExp result = new AIntLiteralExp();
+		initExpression(result, value.location);
+		result.setValue(value);
+		return result;
 	}
 
 	public static ARealLiteralExp newARealLiteralExp(LexRealToken value) {
-		return new ARealLiteralExp(value.location, value);
+		ARealLiteralExp result = new ARealLiteralExp();
+		initExpression(result, value.location);
+		result.setValue(value);
+		return result;
 	}
 
 	public static AVariableExp newAVariableExp(LexNameToken name) {
-		return new AVariableExp(name.location,name,name.getName());
+		AVariableExp result = new AVariableExp();
+		initExpression(result, name.location);
+		result.setName(name);
+		result.setOriginal(name.getName());
+		return result;
 	}
 
-	public static AStringLiteralExp newAStringLiteralExp(LexStringToken token) {
-		return new AStringLiteralExp(token.location, token);
+	public static AStringLiteralExp newAStringLiteralExp(LexStringToken value) {
+		AStringLiteralExp result = new AStringLiteralExp();
+		initExpression(result, value.location);
+		result.setValue(value);
+		return result;
 	}
 
-	public static ACharLiteralExp newACharLiteralExp(LexCharacterToken token) {
-		return new ACharLiteralExp(token.location,token);
+	public static ACharLiteralExp newACharLiteralExp(LexCharacterToken value) {
+		ACharLiteralExp result = new ACharLiteralExp();
+		initExpression(result, value.location);
+		result.setValue(value);
+		return result;
 	}
 
-	public static AQuoteLiteralExp newAQuoteLiteralExp(LexQuoteToken token) {
-		return new AQuoteLiteralExp(token.location, token);
+	public static AQuoteLiteralExp newAQuoteLiteralExp(LexQuoteToken value) {
+		AQuoteLiteralExp result = new AQuoteLiteralExp();
+		initExpression(result, value.location);
+		result.setValue(value);
+		return result;
 	}
 
-	public static ABooleanConstExp newABooleanConstExp(LexBooleanToken token) {
-		return new ABooleanConstExp(token.location, token);
+	public static ABooleanConstExp newABooleanConstExp(LexBooleanToken value) {
+		ABooleanConstExp result = new ABooleanConstExp();
+		initExpression(result, value.location);
+		result.setValue(value);
+		return result;
 	}
 
 	public static AUndefinedExp newAUndefinedExp(LexLocation location) {
-		return new AUndefinedExp(location);
+		AUndefinedExp result = new AUndefinedExp();
+		initExpression(result, location);
+		return result;
 	}
 
 	public static ANilExp newANilExp(LexLocation location) {
-		return new ANilExp(location);
+		ANilExp result = new ANilExp();
+		initExpression(result, location);
+		return result;
 	}
 
 	public static AThreadIdExp newAThreadIdExp(LexLocation location) {
-		return new AThreadIdExp(location);
+		AThreadIdExp result = new AThreadIdExp();
+		initExpression(result, location);
+		return result;
 	}
 
 	public static ASelfExp newASelfExp(LexLocation location) {
-		return new ASelfExp(location, new LexNameToken(location.module, "self",location));
+		ASelfExp result = new ASelfExp();
+		initExpression(result, location);
+		result.setName(new LexNameToken(location.module, "self",location));
+		return result;
 	}
 
 	public static ANotYetSpecifiedExp newANotYetSpecifiedExp(LexLocation location) {
-		ANotYetSpecifiedExp result = new ANotYetSpecifiedExp(location);
+		ANotYetSpecifiedExp result = new ANotYetSpecifiedExp();
+		initExpression(result, location);
 		result.getLocation().executable(false); // ie. ignore coverage for these
 		return result;
 	}
 
 	public static ASubclassResponsibilityExp newASubclassResponsibilityExp(LexLocation location) {
-		ASubclassResponsibilityExp result = new ASubclassResponsibilityExp(location);
+		ASubclassResponsibilityExp result = new ASubclassResponsibilityExp();
+		initExpression(result, location);
 		location.hit();
 		return result;
 	}
 
 	public static ATimeExp newATimeExp(LexLocation location) {
-		return new ATimeExp(location);
+		ATimeExp result = new ATimeExp();
+		initExpression(result, location);
+		return result;
 	}
 
 	public static AMuExp newAMuExp(LexLocation location, PExp record,
 			List<ARecordModifier> args) {
-		return new AMuExp(location, record, args);
+		AMuExp result = new AMuExp();
+		initExpression(result, location);
+		result.setRecord(record);
+		result.setModifiers(args);
+		return result;
 	}
 
 	public static ARecordModifier newARecordModifier(LexIdentifierToken tag,
 			PExp value) {
-		return new ARecordModifier(tag, value);
+		ARecordModifier result = new ARecordModifier();
+		result.setTag(tag);
+		result.setValue(value);
+		return result;
 	}
 
 	public static ATupleExp newATupleExp(LexLocation location, List<PExp> args) {
-		return new ATupleExp(location, args);
+		ATupleExp result = new ATupleExp();
+		initExpression(result, location);
+		result.setArgs(args);
+		return result;
 	}
 
 	public static ABooleanBasicType newABooleanBasicType(LexLocation location) {
@@ -1324,7 +1432,7 @@ public class AstFactory {
 	public static AMkBasicExp newAMkBasicExp(SBasicType type,
 			PExp arg) {
 		AMkBasicExp result = new AMkBasicExp();
-		result.setLocation(type.getLocation());
+		initExpression(result, type.getLocation());
 		result.setType(type);
 		result.setArg(arg);
 		return result;
@@ -1332,49 +1440,49 @@ public class AstFactory {
 
 	public static ANatNumericBasicType newANatNumericBasicType(LexLocation location) {
 		ANatNumericBasicType result = new ANatNumericBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static ANatOneNumericBasicType newANatOneNumericBasicType(LexLocation location) {
 		ANatOneNumericBasicType result = new ANatOneNumericBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static AIntNumericBasicType newAIntNumericBasicType(LexLocation location) {
 		AIntNumericBasicType result = new AIntNumericBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static ARationalNumericBasicType newARationalNumericBasicType(LexLocation location) {
 		ARationalNumericBasicType result = new ARationalNumericBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static ARealNumericBasicType newARealNumericBasicType(LexLocation location) {
 		ARealNumericBasicType result = new ARealNumericBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static ACharBasicType newACharBasicType(LexLocation location) {
 		ACharBasicType result = new ACharBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static ATokenBasicType newATokenBasicType(LexLocation location) {
 		ATokenBasicType result = new ATokenBasicType();
-		result.setLocation(location);
+		initType(result, location);
 		return result;
 	}
 
 	public static AMkTypeExp newAMkTypeExp(LexNameToken typename, List<PExp> args) {
 		AMkTypeExp result = new AMkTypeExp();
-		result.setLocation(typename.getLocation());
+		initExpression(result, typename.getLocation());
 		result.setTypeName(typename);
 		result.setArgs(args);
 		return result;
@@ -1383,9 +1491,9 @@ public class AstFactory {
 	public static AIsExp newAIsExp(LexLocation location,
 			LexNameToken name, PExp test) {
 		AIsExp result = new AIsExp();
-		location.executable(true);
+		initExpression(result, location);
 		
-		result.setLocation(location);
+				
 		result.setBasicType(null);
 		result.setTypeName(name);
 		result.setTest(test);
@@ -1395,9 +1503,9 @@ public class AstFactory {
 
 	public static AIsExp newAIsExp(LexLocation location, PType type, PExp test) {
 		AIsExp result = new AIsExp();
-		location.executable(true);
+		initExpression(result, location);
 		
-		result.setLocation(location);
+		
 		result.setBasicType(type);
 		result.setTypeName(null);
 		result.setTest(test);
@@ -1408,7 +1516,8 @@ public class AstFactory {
 	public static APreExp newAPreExp(LexLocation location, PExp function,
 			List<PExp> args) {
 		APreExp result = new APreExp();
-		result.setLocation(location);
+		initExpression(result, location);
+		
 		result.setFunction(function);
 		result.setArgs(args);
 		return result;
@@ -1416,43 +1525,64 @@ public class AstFactory {
 
 	public static ASetEnumSetExp newASetEnumSetExp(LexLocation start) {
 		ASetEnumSetExp result = new ASetEnumSetExp();
-		result.setLocation(start);
+		initExpression(result, start);
+
 		result.setMembers(new Vector<PExp>());
 		return result;
 	}
 
 	public static AMapEnumMapExp newAMapEnumMapExp(LexLocation start) {
 		AMapEnumMapExp result = new AMapEnumMapExp();
-		result.setLocation(start);
-		result.getLocation().executable(true);
+		initExpression(result, start);
+		
+		
 		result.setMembers(new Vector<AMapletExp>());
 		return result;
 	}
 
 	public static AMapletExp newAMapletExp(PExp left, LexToken op,
 			PExp right) {
-		AMapletExp result = new AMapletExp(op.location, left, right);
+		AMapletExp result = new AMapletExp();
+		initExpression(result, op.location);
+		result.setLeft(left);
+		result.setRight(right);
+		
 		return result;
 	}
 
 	public static ASetCompSetExp newASetCompSetExp(LexLocation start, PExp first,
 			List<PMultipleBind> bindings, PExp predicate) {
-		ASetCompSetExp result = new ASetCompSetExp(start, first, bindings, predicate);
-		start.executable(true);
+		ASetCompSetExp result = new ASetCompSetExp();
+		initExpression(result, start);
+		
+		
+		result.setFirst(first);
+		result.setBindings(bindings);
+		result.setPredicate(predicate);
+		
 		return result;
 	}
 
 	public static ASetRangeSetExp newASetRangeSetExp(LexLocation start, PExp first,
 			PExp last) {
-		ASetRangeSetExp result = new ASetRangeSetExp(start, first, last);
-		start.executable(true);
+		ASetRangeSetExp result = new ASetRangeSetExp();
+		initExpression(result, start);
+		
+		result.setFirst(first);
+		result.setLast(last);
+		
+		
 		return result;
 	}
 
 	public static AMapCompMapExp newAMapCompMapExp(LexLocation start,
 			AMapletExp first, List<PMultipleBind> bindings, PExp predicate) {
-		AMapCompMapExp result = new AMapCompMapExp(start, first, bindings, predicate);
-		start.executable(true);
+		AMapCompMapExp result = new AMapCompMapExp();//start, first, bindings, predicate);
+		initExpression(result, start);
+		
+		result.setFirst(first);
+		result.setBindings(bindings);
+		result.setPredicate(predicate);
 		return result;
 	}
 
@@ -1460,50 +1590,74 @@ public class AstFactory {
 			List<AMapletExp> members) {
 		AMapEnumMapExp result = new AMapEnumMapExp();
 		result.setLocation(start);
-		result.getLocation().executable(true);
+		
 		result.setMembers(members);
 		return result;
 	}
 
 	public static ASeqEnumSeqExp newASeqEnumSeqExp(LexLocation start) {
-		ASeqEnumSeqExp result = new ASeqEnumSeqExp(start, new Vector<PExp>());
-		start.executable(true);
+		ASeqEnumSeqExp result = new ASeqEnumSeqExp();	
+		initExpression(result, start);
+		
+		result.setMembers(new Vector<PExp>());
+		
 		return result;
 	}
 
 	public static ASeqCompSeqExp newASeqCompSeqExp(LexLocation start, PExp first,
 			ASetBind setbind, PExp predicate) {
-		ASeqCompSeqExp result = new ASeqCompSeqExp(start,first,setbind,predicate);
-		start.executable(true);
+		ASeqCompSeqExp result = new ASeqCompSeqExp();
+		initExpression(result, start);
+		
+		result.setFirst(first);
+		result.setSetBind(setbind);
+		result.setPredicate(predicate);
+		
 		return result;
 	}
 
 	public static ASeqEnumSeqExp newASeqEnumSeqExp(LexLocation start,
 			List<PExp> members) {
-		ASeqEnumSeqExp result = new ASeqEnumSeqExp(start, members);
-		start.executable(true);
+		ASeqEnumSeqExp result = new ASeqEnumSeqExp();	
+		initExpression(result, start);
+		
+		result.setMembers(members);
+		
 		return result;
 	}
 
 	public static AIfExp newAIfExp(LexLocation start, PExp test, PExp thenExp,
 			List<AElseIfExp> elseList, PExp elseExp) {
 		
-		AIfExp result = new AIfExp(start, test, thenExp, elseList, elseExp);
-		start.executable(true);
+		AIfExp result = new AIfExp();
+		initExpression(result, start);
+
+		result.setTest(test);
+		result.setThen(thenExp);
+		result.setElseList(elseList);
+		result.setElse(elseExp);
 		return result;
 	}
 
 	public static AElseIfExp newAElseIfExp(LexLocation start, PExp elseIfExp,
 			PExp thenExp) {
-		AElseIfExp result = new AElseIfExp(start, elseIfExp, thenExp);
-		start.executable(true);
+		AElseIfExp result = new AElseIfExp();
+		initExpression(result, start);
+		
+		result.setElseIf(elseIfExp);
+		result.setThen(thenExp);		
 		return result;
 	}
 
 	public static ACasesExp newACasesExp(LexLocation start, PExp exp,
 			List<ACaseAlternative> cases, PExp others) {
-		ACasesExp result = new ACasesExp(start, exp, cases, others);
-		start.executable(true);
+		ACasesExp result = new ACasesExp();
+		initExpression(result, start);
+		
+		result.setExpression(exp);
+		result.setCases(cases);
+		result.setOthers(others);
+		
 		return result;
 	}
 
@@ -1519,16 +1673,19 @@ public class AstFactory {
 
 	public static ALetDefExp newALetDefExp(LexLocation start,
 			List<PDefinition> localDefs, PExp readConnectiveExpression) {
-		ALetDefExp result = new ALetDefExp(start, localDefs, readConnectiveExpression);
-		start.executable(true);
+		ALetDefExp result = new ALetDefExp();
+		initExpression(result, start);
+		
+		result.setLocalDefs(localDefs);
+		result.setExpression(readConnectiveExpression);
 		return result;
 	}
 
 	public static ALetBeStExp newALetBeStExp(LexLocation start,
 			PMultipleBind bind, PExp suchThat, PExp value) {
 		ALetBeStExp result = new ALetBeStExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+
 		result.setBind(bind);
 		result.setSuchThat(suchThat);
 		result.setValue(value);
@@ -1538,23 +1695,31 @@ public class AstFactory {
 
 	public static AForAllExp newAForAllExp(LexLocation start,
 			List<PMultipleBind> bindList, PExp predicate) {
-		AForAllExp result = new AForAllExp(start, bindList, predicate);
-		start.executable(true);
+		AForAllExp result = new AForAllExp();
+		initExpression(result, start);
+		
+		result.setBindList(bindList);
+		result.setPredicate(predicate);
+		
 		return result;
 	}
 
 	public static AExistsExp newAExistsExp(LexLocation start,
 			List<PMultipleBind> bindList, PExp predicate) {
-		AExistsExp result = new AExistsExp(start, bindList, predicate);
-		start.executable(true);
+		AExistsExp result = new AExistsExp();
+		initExpression(result, start);
+		
+		result.setBindList(bindList);
+		result.setPredicate(predicate);
+		
 		return result;
 	}
 
 	public static AExists1Exp newAExists1Exp(LexLocation start, PBind bind,
 			PExp predicate) {
 		AExists1Exp result = new AExists1Exp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setBind(bind);
 		result.setPredicate(predicate);
 		return result;
@@ -1563,8 +1728,8 @@ public class AstFactory {
 	public static AIotaExp newAIotaExp(LexLocation start, PBind bind,
 			PExp predicate) {
 		AIotaExp result = new AIotaExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setBind(bind);
 		result.setPredicate(predicate);
 		return result;
@@ -1573,8 +1738,8 @@ public class AstFactory {
 	public static ALambdaExp newALambdaExp(LexLocation start,
 			List<ATypeBind> bindList, PExp expression) {
 		ALambdaExp result = new ALambdaExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setBindList(bindList);
 		result.setExpression(expression);
 		return result;
@@ -1583,8 +1748,8 @@ public class AstFactory {
 	public static ADefExp newADefExp(LexLocation start,
 			List<PDefinition> equalsDefs, PExp expression) {
 		ADefExp result = new ADefExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setLocalDefs(equalsDefs);
 		result.setExpression(expression);
 		return result;
@@ -1593,8 +1758,8 @@ public class AstFactory {
 	public static ANewExp newANewExp(LexLocation start,
 			LexIdentifierToken classname, List<PExp> args) {
 		ANewExp result = new ANewExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setClassName(classname);
 		result.setArgs(args);
 		classname.location.executable(true);
@@ -1604,8 +1769,8 @@ public class AstFactory {
 	public static AIsOfBaseClassExp newAIsOfBaseClassExp(LexLocation start,
 			LexNameToken classname, PExp pExp) {
 		AIsOfBaseClassExp result = new AIsOfBaseClassExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setBaseClass(classname.getExplicit(false));
 		result.setExp(pExp);
 		return result;
@@ -1614,8 +1779,8 @@ public class AstFactory {
 	public static AIsOfClassExp newAIsOfClassExp(LexLocation start,
 			LexNameToken classname, PExp pExp) {
 		AIsOfClassExp result = new AIsOfClassExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+
 		result.setClassName(classname.getExplicit(false));
 		result.setExp(pExp);
 		return result;
@@ -1624,8 +1789,8 @@ public class AstFactory {
 	public static ASameBaseClassExp newASameBaseClassExp(LexLocation start,
 			List<PExp> args) {
 		ASameBaseClassExp result = new ASameBaseClassExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+
 		result.setLeft(args.get(0));
 		result.setRight(args.get(1));
 		return result;
@@ -1634,8 +1799,8 @@ public class AstFactory {
 	public static ASameClassExp newASameClassExp(LexLocation start,
 			List<PExp> args) {
 		ASameClassExp result = new ASameClassExp();
-		result.setLocation(start);
-		start.executable(true);
+		initExpression(result, start);
+		
 		result.setLeft(args.get(0));
 		result.setRight(args.get(1));
 		return result;
@@ -1644,8 +1809,8 @@ public class AstFactory {
 	public static AHistoryExp newAHistoryExp(LexLocation location, LexToken op,
 			LexNameList opnames) {
 		AHistoryExp result = new AHistoryExp();
-		result.setLocation(location);
-		location.executable(true);
+		initExpression(result, location);
+		
 		result.setHop(op);
 		result.setOpnames(opnames);
 		
@@ -1945,7 +2110,8 @@ public class AstFactory {
 
 	private static AUnresolvedType getAUnresolvedType(LexNameToken typename) {
 		AUnresolvedType result = new AUnresolvedType();
-		result.setLocation(typename.location);
+		initType(result, typename.location);
+		
 		result.setName(typename);
 		return result;
 	}
@@ -1958,30 +2124,31 @@ public class AstFactory {
 
 	public static ANotYetSpecifiedStm newANotYetSpecifiedStm(LexLocation location) {
 		ANotYetSpecifiedStm result = new ANotYetSpecifiedStm();
-		result.setLocation(location);
+		initStatement(result, location);
+		
 		location.executable(false); // ie. ignore coverage for these
 		return result;
 	}
 
 	public static ASubclassResponsibilityStm newASubclassResponsibilityStm(LexLocation location) {
 		ASubclassResponsibilityStm result = new ASubclassResponsibilityStm();
-		result.setLocation(location);
+		initStatement(result, location);
 		location.hit(); // ie. ignore coverage for these
 		return result;
 	}
 
 	public static AExitStm newAExitStm(LexLocation token, PExp exp) {
 		AExitStm result = new AExitStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
+
 		result.setExpression(exp);
 		return result;
 	}
 
 	public static PStm newAExitStm(LexLocation token) {
 		AExitStm result = new AExitStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
+		
 		result.setExpression(null);
 		return result;
 	}
@@ -1989,8 +2156,8 @@ public class AstFactory {
 	public static ATixeStm newATixeStm(LexLocation token,
 			List<ATixeStmtAlternative> traps, PStm body) {
 		ATixeStm result = new ATixeStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
+		
 		result.setTraps(traps);
 		result.setBody(body);
 		return result;
@@ -1999,8 +2166,7 @@ public class AstFactory {
 	public static ATrapStm newATrapStm(LexLocation token,
 			ADefPatternBind patternBind, PStm with, PStm body) {
 		ATrapStm result = new ATrapStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
 		
 		result.setPatternBind(patternBind);
 		result.setWith(with);
@@ -2011,8 +2177,7 @@ public class AstFactory {
 
 	public static AAlwaysStm newAAlwaysStm(LexLocation token, PStm always, PStm body) {
 		AAlwaysStm result = new AAlwaysStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
 		
 		result.setAlways(always);
 		result.setBody(body);
@@ -2023,8 +2188,7 @@ public class AstFactory {
 	public static ANonDeterministicSimpleBlockStm newANonDeterministicSimpleBlockStm(
 			LexLocation token) {
 		ANonDeterministicSimpleBlockStm result = new ANonDeterministicSimpleBlockStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
 		
 		result.setStatements(new Vector<PStm>());
 		
@@ -2034,8 +2198,7 @@ public class AstFactory {
 	public static AAtomicStm newAAtomicStm(LexLocation token,
 			List<AAssignmentStm> assignments) {
 		AAtomicStm result = new AAtomicStm();
-		result.setLocation(token);
-		token.executable(true);
+		initStatement(result, token);
 		
 		result.setAssignments(assignments);
 		return result;
@@ -2043,8 +2206,8 @@ public class AstFactory {
 
 	public static ACallStm newACallStm(LexNameToken name, List<PExp> args) {
 		ACallStm result = new ACallStm();
-		result.setLocation(name.location);
-		name.location.executable(true);
+		initStatement(result, name.location);
+
 		result.setName(name);
 		result.setArgs(args);
 		
@@ -2054,8 +2217,7 @@ public class AstFactory {
 	public static ACallObjectStm newACallObjectStm(PObjectDesignator designator,
 			LexNameToken classname, List<PExp> args) {
 		ACallObjectStm result = new ACallObjectStm();
-		result.setLocation(designator.getLocation());
-		designator.getLocation().executable(true);
+		initStatement(result, designator.getLocation());
 		
 		result.setDesignator(designator);
 		result.setClassname(classname);
@@ -2069,8 +2231,7 @@ public class AstFactory {
 	public static ACallObjectStm newACallObjectStm(PObjectDesignator designator,
 			LexIdentifierToken fieldname, List<PExp> args) {
 		ACallObjectStm result = new ACallObjectStm();
-		result.setLocation(designator.getLocation());
-		designator.getLocation().executable(true);
+		initStatement(result, designator.getLocation());
 		
 		result.setDesignator(designator);
 		result.setClassname(null);
