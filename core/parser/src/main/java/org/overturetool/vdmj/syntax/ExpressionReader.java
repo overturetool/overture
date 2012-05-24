@@ -1020,6 +1020,11 @@ public class ExpressionReader extends SyntaxReader
 
 			if (type != null)
 			{
+				if(args.size() != 1)
+				{
+					throwMessage(2300, "mk_<type> must have a single argument");
+				}
+				
 				PExp value = args.get(0);
 
 				switch (type)
