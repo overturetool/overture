@@ -3,9 +3,9 @@ package org.overture.ast.definitions.assistants;
 import org.overture.ast.definitions.EAccess;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
-import org.overturetool.vdmj.typechecker.Access;
 
 public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 
@@ -70,7 +70,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 		AAccessSpecifierAccessSpecifier paccess = d.getAccess();
 		if(paccess instanceof AAccessSpecifierAccessSpecifier)
 		{			
-			return new AAccessSpecifierAccessSpecifier(paccess.getAccess().clone(), asStatic && paccess.getStatic() != null ?  paccess.getStatic().clone() : null, paccess.getAsync() != null ?  paccess.getAsync().clone() : null);
+			return AstFactory.newAAccessSpecifierAccessSpecifier(paccess.getAccess().clone(), asStatic && paccess.getStatic() != null , paccess.getAsync() != null);
 		}
 		assert false: "PAccessSpecifier must be instance of AAccessSpecifierAccessSpecifier";
 		return null;

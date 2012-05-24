@@ -27,7 +27,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.ast.patterns.PPattern;
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.LexBooleanToken;
 import org.overturetool.vdmj.lex.LexCharacterToken;
 import org.overturetool.vdmj.lex.LexException;
@@ -72,6 +75,17 @@ public class PatternReader extends SyntaxReader
 				case CONCATENATE:
 					nextToken();
 					pattern = AstFactory.newAConcatenationPattern(pattern, token.location, readPattern());
+					break;
+				case MUNION:
+					if(Settings.release == Release.VDM_10)
+					{
+						nextToken();
+						pattern = AstFactory.newAMapUnionPattern(pattern, token.location, readPattern());
+					}
+					else
+					{
+						throwMessage(2298, "Map patterns not available in VDM classic");
+					}
 					break;
 			}
 		}
@@ -128,9 +142,44 @@ public class PatternReader extends SyntaxReader
 				if (nextToken().is(VDMToken.SET_CLOSE))
 				{
 					pattern = AstFactory.newASetPattern(token.location, new Vector<PPattern>());
-				} else
+				} 
+				else if(lastToken().is(VDMToken.MAPLET))
 				{
-					pattern = AstFactory.newASetPattern(token.location, readPatternList());
+					if(Settings.release == Release.VDM_10)
+					{
+						pattern = AstFactory.newAMapPattern(token.location, new Vector<AMapletPatternMaplet>());
+						nextToken();
+						checkFor(VDMToken.SET_CLOSE, 2299, "Expecting {|->} empty map pattern");
+						rdtok = false;
+					}
+					else
+					{
+						throwMessage(2298, "Map patterns not available in VDM classic");
+					}
+				}
+				else
+				{
+					reader.push();
+					readPattern(); //ignored
+					
+					if(lastToken().is(VDMToken.MAPLET))
+					{
+						reader.pop();
+						
+						if(Settings.release == Release.VDM_10)
+						{
+							pattern = AstFactory.newAMapPattern(token.location, readMapletPatternList());
+						}
+						else
+						{
+							throwMessage(2298, "Map patterns not available in VDM classic");
+						}
+					}
+					else
+					{
+						reader.pop();
+						pattern = AstFactory.newASetPattern(token.location, readPatternList());
+					}
 					checkFor(VDMToken.SET_CLOSE, 2181, "Mismatched braces in pattern");
 					rdtok = false;
 				}
@@ -215,6 +264,27 @@ public class PatternReader extends SyntaxReader
 		if (rdtok)
 			nextToken();
 		return pattern;
+	}
+
+	private List<AMapletPatternMaplet> readMapletPatternList() throws LexException, ParserException 
+	{
+		List<AMapletPatternMaplet> list = new Vector<AMapletPatternMaplet>();
+		list.add(readMaplet());
+		
+		while(ignore(VDMToken.COMMA))
+		{
+			list.add(readMaplet());
+		}
+		
+		return list;
+	}
+
+	private AMapletPatternMaplet readMaplet() throws ParserException, LexException {
+		PPattern key = readPattern();
+		checkFor(VDMToken.MAPLET, 2297, "Expecting '|->' in map pattern");
+		PPattern value = readPattern();
+		
+		return AstFactory.newAMapletPatternMaplet(key, value);
 	}
 
 	public List<PPattern> readPatternList() throws ParserException,

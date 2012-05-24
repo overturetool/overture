@@ -1599,7 +1599,7 @@ public class TypeCheckerExpVisitor extends
 		for (ATypeBind tb : node.getBindList())
 		{
 			mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb));
-			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
+			paramDefinitions.addAll(PPatternAssistantTC.getAllDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(PTypeAssistantTC.typeResolve(tb.getType(), null, rootVisitor, question));
 		}
@@ -2203,7 +2203,7 @@ public class TypeCheckerExpVisitor extends
 //		node.getSetBind().setSet(setBindSet.clone());
 //		node.getSetBind().setPattern(setBindPattern.clone());
 
-		if (PPatternAssistantTC.getVariableNames(node.getSetBind().getPattern()).size() != 1 || !PTypeAssistantTC.isNumeric(PDefinitionAssistantTC.getType(def)))
+		if (PPatternAssistantTC.getAllVariableNames(node.getSetBind().getPattern()).size() != 1 || !PTypeAssistantTC.isNumeric(PDefinitionAssistantTC.getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable", node.getLocation(), node);
 		}

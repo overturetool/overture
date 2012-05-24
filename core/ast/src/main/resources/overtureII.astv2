@@ -288,8 +288,14 @@ pattern {-> package='org.overture.ast.patterns'}
     |   {set} [plist]:pattern*
     |   {string} [value]:LexStringToken
     |   {tuple} [plist]:pattern*
-    |   {union} [left]:pattern [right]:pattern
+    |   {union} [left]:pattern [right]:pattern   
+    |   {map} [maplets]:maplet.mapletPattern*
+    |   {mapUnion} [left]:pattern [right]:pattern
     ;
+    
+maplet {-> package='org.overture.ast.patterns'}
+    =   {mapletPattern} [from]:pattern [to]:pattern [resolved]:java_Boolean
+    ;    
     
 pair {-> package='org.overture.ast.patterns'}
     = {patternType} [pattern]:pattern (type):type

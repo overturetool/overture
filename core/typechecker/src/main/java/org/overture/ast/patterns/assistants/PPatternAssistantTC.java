@@ -1,6 +1,8 @@
 package org.overture.ast.patterns.assistants;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -13,6 +15,8 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.AMapPattern;
+import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
@@ -31,13 +35,31 @@ import org.overturetool.vdmj.typechecker.NameScope;
 public class PPatternAssistantTC extends PPatternAssistant
 {
 
-	public static List<PDefinition> getDefinitions(PPattern rp, PType ptype,
+	/**
+	 * Get a set of definitions for the pattern's variables. Note that if the
+	 * pattern includes duplicate variable names, these are collapse into one.
+	 */
+	public List<PDefinition> getDefinitions(PPattern rp, PType ptype,
+			NameScope scope)
+	{
+		Set<PDefinition> set = new HashSet<PDefinition>();
+		set.addAll(getAllDefinitions(rp,ptype, scope));
+		List<PDefinition> result = new Vector<PDefinition>(set);
+		return result;
+	}
+
+	
+	
+	/**
+	 * Get a complete list of all definitions, including duplicates.
+	 */
+	public static List<PDefinition> getAllDefinitions(PPattern rp, PType ptype,
 			NameScope scope)
 	{
 		switch (rp.kindPPattern())
 		{
 			case IDENTIFIER:
-				return AIdentifierPatternAssistantTC.getDefinitions((AIdentifierPattern) rp,ptype,scope);
+				return AIdentifierPatternAssistantTC.getAllDefinitions((AIdentifierPattern) rp,ptype,scope);
 			case BOOLEAN:
 			case CHARACTER:
 			case EXPRESSION:
@@ -49,17 +71,21 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case STRING:
 				return new Vector<PDefinition>();
 			case CONCATENATION:
-				return AConcatenationPatternAssistantTC.getDefinitions((AConcatenationPattern) rp, ptype, scope);
+				return AConcatenationPatternAssistantTC.getAllDefinitions((AConcatenationPattern) rp, ptype, scope);
 			case RECORD:
-				return ARecordPatternAssistantTC.getDefinitions((ARecordPattern) rp, ptype, scope);
+				return ARecordPatternAssistantTC.getAllDefinitions((ARecordPattern) rp, ptype, scope);
 			case SEQ:
-				return ASeqPatternAssistantTC.getDefinitions((ASeqPattern) rp, ptype, scope);
+				return ASeqPatternAssistantTC.getAllDefinitions((ASeqPattern) rp, ptype, scope);
 			case SET:
-				return ASetPatternAssistantTC.getDefinitions((ASetPattern) rp, ptype, scope);
+				return ASetPatternAssistantTC.getAllDefinitions((ASetPattern) rp, ptype, scope);
 			case TUPLE:
-				return ATuplePatternAssistantTC.getDefinitions((ATuplePattern) rp, ptype, scope);
+				return ATuplePatternAssistantTC.getAllDefinitions((ATuplePattern) rp, ptype, scope);
 			case UNION:
-				return AUnionPatternAssistantTC.getDefinitions((AUnionPattern) rp, ptype, scope);
+				return AUnionPatternAssistantTC.getAllDefinitions((AUnionPattern) rp, ptype, scope);
+			case MAPUNION:
+				return AMapUnionPatternAssistantTC.getAllDefinitions((AMapUnionPattern)rp,ptype,scope);
+			case MAP:
+				return AMapPatternAssistantTC.getAllDefinitions((AMapPattern)rp,ptype,scope);
 			default:
 				assert false : "PPatternAssistant.getDefinitions - should not hit this case";
 				return null;
@@ -94,6 +120,12 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case UNION:
 				AUnionPatternAssistantTC.typeResolve((AUnionPattern) pattern, rootVisitor, question);
 				break;
+			case MAP:
+				AMapPatternAssistantTC.typeResolve((AMapPattern)pattern,rootVisitor, question);
+				break;
+			case MAPUNION:
+				AMapUnionPatternAssistantTC.typeResolve((AMapUnionPattern) pattern,rootVisitor, question);
+				break;
 			default:
 				pattern.setResolved(true);
 				break;
@@ -122,6 +154,11 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case UNION:
 				AUnionPatternAssistantTC.unResolve((AUnionPattern) pattern);
 				break;
+			case MAPUNION:
+				AMapUnionPatternAssistantTC.unResolve((AMapUnionPattern) pattern);
+				break;
+			case MAP:
+				AMapPatternAssistantTC.unResolve((AMapPattern) pattern);
 			default:
 				pattern.setResolved(false);
 				break;
