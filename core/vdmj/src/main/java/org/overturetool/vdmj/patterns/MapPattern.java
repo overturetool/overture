@@ -83,7 +83,7 @@ public class MapPattern extends Pattern
 		{
 			for (MapletPattern mp: maplets)
 			{
-				mp.unResolve();
+				mp.typeResolve(env);
 			}
 		}
 		catch (TypeCheckException e)
