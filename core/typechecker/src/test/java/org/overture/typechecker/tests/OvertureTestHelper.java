@@ -7,19 +7,23 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
+import org.overturetool.ast.factory.AstFactoryPS;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
+import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 
 public class OvertureTestHelper
@@ -57,11 +61,23 @@ public class OvertureTestHelper
 		{
 			List<SClassDefinition> classes = new Vector<SClassDefinition>();
 			classes.addAll(parserResult.result);
+			try {
+				classes.add(AstFactoryPS.newACpuClassDefinition());
+				classes.add(AstFactoryPS.newABusClassDefinition());
+				ClassTypeChecker mtc = new ClassTypeChecker(classes);
+				mtc.typeCheck();
+				return collectTypeResults(mtc);
+			} catch (ParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (LexException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			//			classes.add(new ACpuClassDefinition(location_, name_, nameScope_, used_, access_, type_, supernames_, hasContructors_, settingHierarchy_, gettingInheritable_, gettingInvDefs_, isAbstract_, isUndefined_))
 //			classes.add(new ASystemClassDefinition(location_, name_, nameScope_, used_, access_, type_, supernames_, hasContructors_, settingHierarchy_, gettingInheritable_, gettingInvDefs_, isAbstract_, isUndefined_))
-			ClassTypeChecker mtc = new ClassTypeChecker(classes);
-			mtc.typeCheck();
-			return collectTypeResults(mtc);
+			
 		}
 		return parserResult;
 	}

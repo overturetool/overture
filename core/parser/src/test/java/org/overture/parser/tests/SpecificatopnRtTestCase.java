@@ -52,7 +52,7 @@ public class SpecificatopnRtTestCase extends BaseParserTestCase<ClassReader>
 	@Override
 	protected String getReaderTypeName()
 	{
-		return "Specificatopn RT";
+		return "Specification RT";
 	}
 
 	@Override

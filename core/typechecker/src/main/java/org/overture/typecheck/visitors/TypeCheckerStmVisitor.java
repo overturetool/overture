@@ -319,7 +319,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		Environment classenv = null;
 		
 
-		if (self == classdef || PDefinitionAssistantTC.hasSupertype(self, classdef.getType()))
+		if (self == classdef || PDefinitionAssistantTC.hasSupertype(self, PDefinitionAssistantTC.getType(classdef)))
 		{
 			// All fields visible. Note that protected fields are inherited
 			// into "locals" so they are effectively private

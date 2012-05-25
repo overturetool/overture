@@ -352,8 +352,14 @@ public class AstFactory {
 			List<PDefinition> members) {
 		 
 		AClassClassDefinition result = new AClassClassDefinition();
-		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
+		initClassDefinition(result,className,superclasses,members);
+		
+		
+		return result;
+	}
 
+	protected static void initClassDefinition(SClassDefinition result, LexNameToken className, LexNameList superclasses, List<PDefinition> members) {
+		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
 		result.setUsed(true);
 		result.setIsTypeChecked(false);
@@ -375,30 +381,12 @@ public class AstFactory {
 		//others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
 		
-		return result;
 	}
 
 	public static ASystemClassDefinition newASystemClassDefinition(
 			LexNameToken className, List<PDefinition> members) {
 		ASystemClassDefinition result = new ASystemClassDefinition();
-		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
-		
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
-		result.setUsed(true);
-		result.setSuperDefs(new ArrayList<SClassDefinition>());
-		result.setSupertypes(new ArrayList<PType>());
-		result.setSuperInheritedDefinitions(new ArrayList<PDefinition>());
-		result.setLocalInheritedDefinitions(new ArrayList<PDefinition>());
-		result.setAllInheritedDefinitions(new ArrayList<PDefinition>());
-
-		//this.delegate = new Delegate(name.name, definitions);
-		result.setDefinitions(members);
-		
-		// Classes are all effectively public types
-		PDefinitionAssistant.setClassDefinition(result,result);
-
-		//others
-		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
+		initClassDefinition(result, className, new LexNameList(), members);
 		
 		return result;
 	}
@@ -2720,7 +2708,7 @@ public class AstFactory {
 		initType(result, location);
 		
 		result.setClassdef(classdef);
-		result.setName(classdef.getName());
+		result.setName(classdef.getName().clone());
 		
 		return result;
 	}
@@ -3042,5 +3030,9 @@ public class AstFactory {
 		result.setRight(right);
 		return result;
 	}
+
+	
+	
+	
 	
 }

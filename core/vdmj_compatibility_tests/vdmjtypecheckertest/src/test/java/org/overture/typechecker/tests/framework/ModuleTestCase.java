@@ -75,39 +75,17 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		File resultFile = new File(file.getAbsolutePath() + ".result");
 		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(resultFile);
 		
-		xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(moduleTC,file,"vdmj type checker"));
+		xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(file,"vdmj type checker"));
 		try {
 			xmlResult.saveInXml();			
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
-		
-//		if (reader != null && reader.getErrorCount() > 0) {
-//			xmlResult.setResult("parser", VdmjCompatibilityUtils.convertToResult(reader,file,"vdmj type checker"));
-//		}
-//		else
-//		{
-//			if(reader instanceof ModuleReader)
-//			{
-//				ModuleTypeChecker moduleTC = new ModuleTypeChecker((ModuleList) result);
-//				moduleTC.typeCheck();
-//				xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(moduleTC,file,"vdmj type checker"));					
-//			}
-//		}
-//		try {
-//			xmlResult.saveInXml();
-//			
-//			xmlResult.loadFromXml();
-//		} catch (Exception e)
-//		{
-//			//e.printStackTrace();
-//		} 
+	
 		
 
 	}
