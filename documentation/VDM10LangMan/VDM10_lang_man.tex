@@ -8050,9 +8050,13 @@ expression a user would like to evaluate in relation to a VDM model is
 called a debug thread. This thread has a special role in the sense
 that when it is finished the entire execution is completed (and thus
 all other threads ready to be scheduled in or running will be thrown
-away and aborted). Thus if one would like to ensure a specific number
+away and aborted). If a session where a series of expressions are
+being evaluated this is not true (in this case the other threads will
+be continued when the next expression is executed,
+see~\cite{Larsen&10d} for more details about ``sessions'').
+Thus if one would like to ensure a specific number
 of such other threads to be completed before stopping the execution
-ons needs to block the debug thread using a synchonisation as
+one needs to block the debug thread using a synchonisation as
 explained in Chapter~\ref{ch:sync}.
 
 \begin{description}
