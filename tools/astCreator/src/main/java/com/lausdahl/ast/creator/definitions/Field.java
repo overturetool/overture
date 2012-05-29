@@ -187,6 +187,10 @@ public class Field
 			}
 
 		}
+//		if(type instanceof GenericArgumentedIInterfceDefinition)
+//		{
+//			return type.getName()+type.getGenericsString();
+//		}
 
 		return internaalType;
 	}

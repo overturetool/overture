@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.EnumDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
@@ -393,9 +392,11 @@ public class Generator
 		Field queue = new Field(source);
 		queue.name = "queue";
 		queue.accessspecifier = AccessSpecifier.Protected;
-		queue.type = new GenericArgumentedIInterfceDefinition(BaseEnvironment.queueDef, source.iNode.getName().getName());
-		queue.setCustomInitializer("new java.util.LinkedList<"+source.iNode.getName().getName()+">()");
+		queue.type = new GenericArgumentedIInterfceDefinition(BaseEnvironment.setDef, source.iNode.getName().getName());
+		//TODO queue.setCustomInitializer("new java.util.LinkedList<"+source.iNode.getName().getName()+">()");
+		queue.setCustomInitializer("new java.util.HashSet<"+source.iNode.getName().getName()+">()");
 		adaptor.addField(queue);
+		((InterfaceDefinition)adaptor).imports.add(queue.type);
 		adaptor.addMethod(new SetMethod(adaptor,queue,source));
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))

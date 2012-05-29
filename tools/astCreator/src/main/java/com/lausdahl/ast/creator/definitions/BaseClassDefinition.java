@@ -189,7 +189,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		}
 
 		StringBuilder equalsString = new StringBuilder();
-		StringBuilder hashCodeString = new StringBuilder();
+		//StringBuilder hashCodeString = new StringBuilder();
 
 		// setup equals method using toString
 		// essentially: this.toString().equals(o.toString())

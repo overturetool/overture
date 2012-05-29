@@ -18,6 +18,7 @@ public class BaseEnvironment
 	public static final IInterfaceDefinition listDef = new PredefinedClassDefinition("java.util", "List", true);
 	
 	public static final IInterfaceDefinition queueDef = new PredefinedClassDefinition("java.util", "Queue", true);
+	public static final IInterfaceDefinition setDef = new PredefinedClassDefinition("java.util", "Set", true);
 	
 	public static final IInterfaceDefinition vectorDef = new PredefinedClassDefinition("java.util", "Vector", true);
 	public static final IInterfaceDefinition linkedListDef = new PredefinedClassDefinition("java.util", "LinkedList", true);

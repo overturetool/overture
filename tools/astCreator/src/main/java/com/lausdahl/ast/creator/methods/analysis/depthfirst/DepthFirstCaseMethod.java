@@ -51,7 +51,12 @@ public class DepthFirstCaseMethod extends Method
 		bodySb.append("\t\t{ //already visiting this node from other path\n");
 		bodySb.append("\t\t\treturn;\n");
 		bodySb.append("\t\t}\n");
+		
+		//bodySb.append("\t\tif(node instanceof "+env.iNode.getName()+")\n");
+		//bodySb.append("\t\t{\n");
 		bodySb.append("\t\t_queue.add(node);\n");
+		//bodySb.append("\t\t}\n");
+		
 		
 		bodySb.append("\t\tin"+thisNodeMethodName+"(node);\n\n");
 		List<Field> allFields = new Vector<Field>();
