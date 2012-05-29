@@ -238,6 +238,7 @@ Month   & Year & Version & Version of Overture.exe \\ \hline
 April   & 2010 &         & 0.2   \\ \hline
 May     & 2010 & 1       & 0.2   \\ \hline
 February& 2011 & 2       & 1.0.0 \\ \hline
+July    & 2012 & 3       & 1.2.2 \\ \hline
 \end{tabular}
 
 %\addtocounter{page}{2}
@@ -8042,9 +8043,21 @@ each other.
 \chapter{Threads (VDM++ and VDM-RT)}\label{ch:thread}
 
 Objects instantiated from a class with a {\em thread} part are called
-{\em active} objects.  The scope of the instance variables and 
+{\em active} objects.  The scope of the instance variables and
 operations of the current class is considered to extend to the thread
-specification.
+specification. Note that from a tool perspective the thread for the
+expression a user would like to evaluate in relation to a VDM model is
+called a debug thread. This thread has a special role in the sense
+that when it is finished the entire execution is completed (and thus
+all other threads ready to be scheduled in or running will be thrown
+away and aborted). If a session where a series of expressions are
+being evaluated this is not true (in this case the other threads will
+be continued when the next expression is executed,
+see~\cite{Larsen&10d} for more details about ``sessions'').
+Thus if one would like to ensure a specific number
+of such other threads to be completed before stopping the execution
+one needs to block the debug thread using a synchonisation as
+explained in Chapter~\ref{ch:sync}.
 
 \begin{description}
 \item[Syntax:]  \Ruledef{thread definitions}{ \Lop{thread},
@@ -8068,6 +8081,15 @@ of describing the activities in a thread.
   \Ruledef{periodic thread definition}{
     \Ruleref{periodic obligation}
   }
+
+For VDM++ where time is not explicit it looks like:
+  
+\Ruledef{periodic obligation}{
+  \Lop{periodic},\Lit{(}, \Ruleref{numeral}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+}
+
+For VDM-RT where time is explicit it looks like:
+
   \Ruledef{periodic obligation}{
     \Lop{periodic},\Lit{(}, \Ruleref{numeral},
     \Ruleref{numeral}, \Ruleref{numeral}, \lfeed \Ruleref{numeral}, 
@@ -10038,7 +10060,15 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 
 \Ruledef{periodic thread definition}{
     \Ruleref{periodic obligation} }
+
+For VDM++ where time is not explicit it looks like:
   
+\Ruledef{periodic obligation}{
+  \Lop{periodic},\Lit{(}, \Ruleref{numeral}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+}
+
+For VDM-RT where time is explicit it looks like:
+
 \Ruledef{periodic obligation}{
   \Lop{periodic},\Lit{(}, \Ruleref{numeral},
   \Ruleref{numeral}, \Ruleref{numeral}, \lfeed \Ruleref{numeral}, 
