@@ -34,6 +34,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
@@ -224,6 +225,8 @@ public abstract class CoverageEditor
 		SourceLocationConverter converter = new SourceLocationConverter(content);
 
 		BufferedReader br;
+		if(selectedFile!=null)
+		{
 		try
 		{
 			br = new BufferedReader(new BufferedReader(new InputStreamReader(selectedFile.getContents())));
@@ -299,6 +302,9 @@ public abstract class CoverageEditor
 			{
 				e.printStackTrace();
 			}
+		}
+		}else{
+			MessageDialog.openError(getEditorSourceViewer().getTextWidget().getShell(), "Error opening coverage editor", "No coverage table table info found.");
 		}
 
 		for (StyleRange styleRange : styleRanges)

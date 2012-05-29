@@ -8,9 +8,12 @@ import java.util.Map.Entry;
 
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ide.core.IVdmElement;
 import org.overturetool.vdmj.lex.LexLocation;
 
@@ -136,12 +139,12 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 				if (elementNodeCache.get(element) == null
 						|| elementNodeCache.get(element).isEmpty())
 				{
-//					elementNodeCache.put(element, new HashMap<LexLocation, INode>());
-//					seacher.indexing = true;
-//					for (INode node : nodes)
-//					{
-//						node.apply(seacher);
-//					}
+					// elementNodeCache.put(element, new HashMap<LexLocation, INode>());
+					// seacher.indexing = true;
+					// for (INode node : nodes)
+					// {
+					// node.apply(seacher);
+					// }
 					return null;
 				} else
 				{
@@ -161,7 +164,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		}
 
 	}
-	
+
 	public static void createIndex(List<INode> nodes, IVdmElement element)
 	{
 		seacher.init();
@@ -190,6 +193,24 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	public void defaultInPStm(PStm node)
 	{
 		check(node, node.getLocation());
+	}
+
+	@Override
+	public void caseAVariableExp(AVariableExp node)
+	{
+		check(node, node.getLocation());
+	}
+
+	@Override
+	public void caseAFunctionType(AFunctionType node)
+	{
+		// Skip
+	}
+
+	@Override
+	public void caseARecordInvariantType(ARecordInvariantType node)
+	{
+		// Skip
 	}
 
 	private void check(INode node, LexLocation location)

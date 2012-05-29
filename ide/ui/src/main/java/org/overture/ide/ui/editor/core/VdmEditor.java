@@ -23,10 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -65,6 +61,7 @@ import org.overture.ide.ui.utility.ast.AstLocationSearcher;
 
 public abstract class VdmEditor extends TextEditor
 {
+	final boolean TRACE_GET_ELEMENT_AT = false;
 	ISourceViewer viewer;
 
 	/**
@@ -98,23 +95,6 @@ public abstract class VdmEditor extends TextEditor
 	// protected SourceReferenceManager sourceReferenceManager = null;
 
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
-	
-	private Job indexEditorInputJob = new Job("Indexing Editor")
-	{
-		
-		@Override
-		protected IStatus run(IProgressMonitor arg0)
-		{
-			IVdmElement element = getInputVdmElement();
-			List<INode> nodes = null;
-			if (element instanceof IVdmSourceUnit)
-			{
-				nodes = ((IVdmSourceUnit) element).getParseList();
-			}
-			 AstLocationSearcher.createIndex(nodes, element);
-			 return Status.OK_STATUS;
-		}
-	};
 
 	public VdmEditor()
 	{
@@ -190,7 +170,7 @@ public abstract class VdmEditor extends TextEditor
 						{
 							INode node = (INode) elements.get(0);
 							int[] offsetLength = AstLocationSearcher.getNodeOffset(node);
-							selectAndReveal(offsetLength[0],offsetLength[1]);
+							selectAndReveal(offsetLength[0], offsetLength[1]);
 						}
 					}
 				}
@@ -284,7 +264,7 @@ public abstract class VdmEditor extends TextEditor
 		// doSetInput(getEditorInput());
 		// } catch (CoreException e)
 		// {
-		// // TODO Auto-generated catch block
+		// 
 		// e.printStackTrace();
 		// }
 		// fEditorSelectionChangedListener= new
@@ -387,7 +367,7 @@ public abstract class VdmEditor extends TextEditor
 
 		super.doSetInput(input);
 
-		IVdmElement inputElement = getInputVdmElement();
+		//TODO can we comment this: IVdmElement inputElement = getInputVdmElement();
 
 		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null)
 		{
@@ -411,9 +391,6 @@ public abstract class VdmEditor extends TextEditor
 
 		// if (isShowingOverrideIndicators())
 		// installOverrideIndicator(false);
-		
-		
-		//indexEditorInputJob.schedule();
 
 	}
 
@@ -738,7 +715,7 @@ public abstract class VdmEditor extends TextEditor
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret = offset + styledText.getCaretOffset();
 		}
-//System.out.println("Compute element at "+caret);
+		// System.out.println("Compute element at "+caret);
 		INode element = getElementAt(caret, false);
 
 		// if (!(element instanceof INode))
@@ -786,25 +763,24 @@ public abstract class VdmEditor extends TextEditor
 		if (element instanceof IVdmSourceUnit)
 		{
 			nodes = ((IVdmSourceUnit) element).getParseList();
-			
+
 			long startTime = System.currentTimeMillis();
-            node = AstLocationSearcher.search(nodes, 1324);
-            System.out.println("Search Time for offset 1324 in "+element + " is "+ (System.currentTimeMillis()-startTime)+" found: "+node);
-            
-            startTime = System.currentTimeMillis();
-            node = AstLocationSearcher.search(nodes, offset);
-            System.out.println("Search Time for offset "+offset+" in "+element + " is "+ (System.currentTimeMillis()-startTime)+" found: "+node);
-            
-             System.out.println("Node offset is: "+getSourceViewer().getTextWidget().getLineAtOffset(offset) );
+			node = AstLocationSearcher.search(nodes, offset);
+			if (TRACE_GET_ELEMENT_AT)
+			{
+				System.out.println("Search Time for offset " + offset + " in "
+						+ element + " is "
+						+ (System.currentTimeMillis() - startTime) + " found: "
+						+ node);
 
-			
+				System.out.println("Node offset is: "
+						+ getSourceViewer().getTextWidget().getLineAtOffset(offset));
+				System.out.println("This thread is: "
+						+ Thread.currentThread().getName());
+			}
+
 		}
-		//INode node = AstLocationSearcher.search(nodes, offset);
-
-		// System.out.println(getSourceViewer().getTextWidget().getText(offset, offset+1));
-		// System.out.println("Found element with offset: "+offset+" = "+(node!=null?node.getClass():"null")+" - offset:"+AstLocationSearcher.getNodeOffset(node)+
-		// "----"+node);
-
+		
 		// Get a definition to sync with outline, where only definitions are shown. If not a definition the search up
 		// the tree until one is found.
 		INode def = null;
@@ -815,9 +791,7 @@ public abstract class VdmEditor extends TextEditor
 		{
 			def = node.getAncestor(PDefinition.class);
 		}
-		// System.out.println("Using def = "+def);
 		return def;
-
 	}
 
 	@Override
@@ -859,7 +833,7 @@ public abstract class VdmEditor extends TextEditor
 	//
 	// @Override
 	// public Enumeration<String> getKeys() {
-	// // TODO Auto-generated method stub
+	// 
 	// return null;
 	// }
 	// };
