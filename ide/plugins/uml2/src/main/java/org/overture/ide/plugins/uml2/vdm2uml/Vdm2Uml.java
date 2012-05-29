@@ -12,18 +12,13 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -131,6 +126,7 @@ public class Vdm2Uml {
 		case BRACKET:
 		case CLASS:
 		case FUNCTION:
+			break;
 		case INVARIANT:
 			createNewUmlInvariantType((SInvariantType) type);
 			break;

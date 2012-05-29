@@ -1,13 +1,9 @@
 package org.overture.ide.plugins.uml2.vdm2uml;
 
 import java.util.LinkedList;
-import java.util.Map;
 
-import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.PrimitiveType;
-import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -21,7 +17,6 @@ import org.overture.ast.statements.EStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -31,7 +26,6 @@ import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
-import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistantTC;
