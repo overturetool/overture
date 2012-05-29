@@ -34,6 +34,8 @@ public class ConstructorMethod extends Method
 		sbDoc.append("* Creates a new {@code " + classDefinition.getName().getName()
 				+ "} node with the given nodes as children.\n");
 		sbDoc.append("\t");
+		sbDoc.append("* @deprecated This method should not be used, use AstFactory instead.\n");
+		sbDoc.append("\t");
 		sbDoc.append("* The basic child nodes are removed from their previous parents.\n");
 
 		StringBuilder sb = new StringBuilder();

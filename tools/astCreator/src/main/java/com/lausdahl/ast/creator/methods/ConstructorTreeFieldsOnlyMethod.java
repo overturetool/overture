@@ -56,6 +56,8 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		sbDoc.append("* Creates a new {@code " + classDefinition.getName()
 				+ "} node with the given nodes as children.\n");
 		sbDoc.append("\t");
+		sbDoc.append("* @deprecated This method should not be used, use AstFactory instead.");
+		sbDoc.append("\t");
 		sbDoc.append("* The basic child nodes are removed from their previous parents.\n");
 
 		StringBuilder sb = new StringBuilder();

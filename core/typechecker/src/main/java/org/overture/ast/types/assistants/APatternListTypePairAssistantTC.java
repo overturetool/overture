@@ -23,7 +23,7 @@ public class APatternListTypePairAssistantTC {
 
 		for (PPattern p: pltp.getPatterns())
 		{
-			list.addAll(PPatternAssistantTC.getDefinitions(p, pltp.getType(), scope));
+			list.addAll(PPatternAssistantTC.getAllDefinitions(p, pltp.getType(), scope));
 		}
 
 		return list;
@@ -34,7 +34,7 @@ public class APatternListTypePairAssistantTC {
 			TypeCheckInfo question) {
 		
 		PPatternListAssistantTC.typeResolve(pltp.getPatterns(), rootVisitor, question);
-		PType type = PTypeAssistant.typeResolve(pltp.getType(),null,rootVisitor,question);
+		PType type = PTypeAssistantTC.typeResolve(pltp.getType(),null,rootVisitor,question);
 		pltp.setType(type);
 		
 	}

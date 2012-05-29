@@ -47,7 +47,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
 
 
@@ -236,7 +236,7 @@ public class TypeComparator
 			throw new TypeCheckException("Unknown type: " + from, from.getLocation());
 		}
 
-		if (PTypeAssistant.equals(to, from))
+		if (PTypeAssistantTC.equals(to, from))
 		{
 			return Result.Yes; // Same object!
 		}
@@ -430,7 +430,7 @@ public class TypeComparator
 				ARecordInvariantType rf = (ARecordInvariantType) from;
 				ARecordInvariantType rt = (ARecordInvariantType) to;
 
-				return PTypeAssistant.equals(rf, rt) ? Result.Yes : Result.No;
+				return PTypeAssistantTC.equals(rf, rt) ? Result.Yes : Result.No;
 			} else if (to instanceof AClassType)
 			{
 				if (!(from instanceof AClassType))
@@ -444,8 +444,8 @@ public class TypeComparator
 				// VDMTools doesn't seem to worry about sub/super type
 				// assignments. This was "cfrom.equals(cto)".
 
-				if (PTypeAssistant.hasSupertype(cfrom, cto)
-						|| PTypeAssistant.hasSupertype(cto, cfrom))
+				if (PTypeAssistantTC.hasSupertype(cfrom, cto)
+						|| PTypeAssistantTC.hasSupertype(cto, cfrom))
 				{
 					return Result.Yes;
 				}
@@ -470,7 +470,7 @@ public class TypeComparator
 				}
 			} else
 			{
-				return PTypeAssistant.equals(to, from) ? Result.Yes : Result.No;
+				return PTypeAssistantTC.equals(to, from) ? Result.Yes : Result.No;
 			}
 		}
 
@@ -806,7 +806,7 @@ public class TypeComparator
 				ARecordInvariantType subr = (ARecordInvariantType) sub;
 				ARecordInvariantType supr = (ARecordInvariantType) sup;
 
-				return PTypeAssistant.equals(subr, supr) ? Result.Yes
+				return PTypeAssistantTC.equals(subr, supr) ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof AClassType)
 			{
@@ -818,13 +818,13 @@ public class TypeComparator
 				AClassType supc = (AClassType) sup;
 				AClassType subc = (AClassType) sub;
 
-				if (PTypeAssistant.hasSupertype(subc, supc))
+				if (PTypeAssistantTC.hasSupertype(subc, supc))
 				{
 					return Result.Yes;
 				}
 			} else
 			{
-				return PTypeAssistant.equals(sub, sup) ? Result.Yes : Result.No;
+				return PTypeAssistantTC.equals(sub, sup) ? Result.Yes : Result.No;
 			}
 		}
 

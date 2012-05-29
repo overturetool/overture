@@ -8,18 +8,14 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.util.Utils;
@@ -40,11 +36,11 @@ public class AOperationTypeAssistantTC {
 
 			for (PType type: ot.getParameters())
 			{
-				fixed.add(PTypeAssistant.typeResolve(type, root, rootVisitor, question));
+				fixed.add(PTypeAssistantTC.typeResolve(type, root, rootVisitor, question));
 			}
 
 			ot.setParameters(fixed);
-			ot.setResult(PTypeAssistant.typeResolve(ot.getResult(), root, rootVisitor, question));
+			ot.setResult(PTypeAssistantTC.typeResolve(ot.getResult(), root, rootVisitor, question));
 			return ot;
 		}
 		catch (TypeCheckException e)
@@ -60,10 +56,10 @@ public class AOperationTypeAssistantTC {
 
 		for (PType type: ot.getParameters())
 		{
-			PTypeAssistant.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 		}
 
-		PTypeAssistant.unResolve(ot.getResult());
+		PTypeAssistantTC.unResolve(ot.getResult());
 	}
 
 	public static AFunctionType getPreType(AOperationType type,
@@ -74,22 +70,23 @@ public class AOperationTypeAssistantTC {
 		{
 			PTypeList params = new PTypeList();
 			params.addAll((LinkedList<PType>) type.getParameters());
-			params.add(new AUnresolvedType(type.getLocation(),false, null, state.getName()));
-			return new AFunctionType(type.getLocation(), false, null, false, params, new ABooleanBasicType(type.getLocation(),false));
+			params.add(AstFactory.newAUnresolvedType(state.getName()));
+			return AstFactory.newAFunctionType(type.getLocation(), false,params, AstFactory.newABooleanBasicType(type.getLocation()));
 		}
 		else if (classname != null && !isStatic)
 		{
 			PTypeList params = new PTypeList();
 			params.addAll(type.getParameters());
-			params.add(new AUnresolvedType(type.getLocation(),false,null,classname.getName()));
-			return new AFunctionType(type.getLocation(), false,null, false, params, new ABooleanBasicType(type.getLocation(),false));
+			params.add(AstFactory.newAUnresolvedType(classname.getName()));
+			return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));
 		}
 		else
 		{
-			return new AFunctionType(type.getLocation(), false, null, false, (List<PType>) type.getParameters(), new ABooleanBasicType(type.getLocation(),false));
+			return AstFactory.newAFunctionType(type.getLocation(), false, (List<PType>) type.getParameters(), AstFactory.newABooleanBasicType(type.getLocation()));
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static AFunctionType getPostType(AOperationType type,
 			AStateDefinition state, SClassDefinition classname,
 			boolean isStatic) {
@@ -104,21 +101,21 @@ public class AOperationTypeAssistantTC {
 		
 		if (state != null)
 		{
-			params.add(new AUnresolvedType(state.getLocation(),false, null, state.getName()));
-			params.add(new AUnresolvedType(state.getLocation(),false, null, state.getName()));
+			params.add(AstFactory.newAUnresolvedType(state.getName()));
+			params.add(AstFactory.newAUnresolvedType(state.getName()));
 		}
 		else if (classname != null && !isStatic)
 		{
-			AMapMapType map = new AMapMapType(type.getLocation(), false, null,
-					new ASeqSeqType(type.getLocation(), false, null,
-							new ACharBasicType(type.getLocation(), false),
-							false),
-					new AUnknownType(type.getLocation(), false), false);
+			AMapMapType map = 
+					AstFactory.newAMapMapType(
+							type.getLocation(),
+							AstFactory.newASeqSeqType(type.getLocation(),AstFactory.newACharBasicType(type.getLocation())), 
+							AstFactory.newAUnknownType(type.getLocation()));
 			params.add(map);
-			params.add(new AUnresolvedType(classname.getLocation(),false,null, classname.getName()));
+			params.add(AstFactory.newAUnresolvedType(classname.getName()));
 		}
 
-		return new AFunctionType(type.getLocation(), false,null, false, params, new ABooleanBasicType(type.getLocation(),false));
+		return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));
 	}
 
 	public static String toDisplay(AOperationType exptype) {
@@ -129,7 +126,7 @@ public class AOperationTypeAssistantTC {
 	}
 
 	public static boolean equals(AOperationType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (!(other instanceof AOperationType))
 		{
@@ -137,8 +134,8 @@ public class AOperationTypeAssistantTC {
 		}
 
 		AOperationType oother = (AOperationType)other;
-		return (PTypeAssistant.equals(type.getResult(),oother.getResult()) &&
-				PTypeAssistant.equals(type.getParameters(), oother.getParameters()));
+		return (PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
+				PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
 	}
 
 	public static boolean narrowerThan(AOperationType type,
@@ -146,13 +143,13 @@ public class AOperationTypeAssistantTC {
 		
 		for (PType t: type.getParameters())
 		{
-			if (PTypeAssistant.narrowerThan(t, accessSpecifier))
+			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
 			{
 				return true;
 			}
 		}
 
-		return PTypeAssistant.narrowerThan(type.getResult(),accessSpecifier);
+		return PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
 	}
 
 	

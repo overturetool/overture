@@ -39,7 +39,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		{
 			sb.append(prefix);
 
-			if (PPatternAssistantTC.getVariableNames(alt.getPattern()).size() == 0)
+			if (PPatternAssistantTC.getAllVariableNames(alt.getPattern()).size() == 0)
 			{
 				sb.append(exp.getExpression());
 				sb.append(" = ");

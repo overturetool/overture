@@ -1,6 +1,3 @@
--- TCErrors: WARNING:5000:67,3 WARNING:5000:74,3 WARNING:5000:78,3 WARNING:5000:82,3
-
-
 --gateway.vdmsl
 
 -- A trusted gateway

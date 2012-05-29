@@ -8,12 +8,12 @@ public class ARecordPatternAssistant {
 
 	
 
-	public static LexNameList getVariableNames(ARecordPattern pattern) {
+	public static LexNameList getAllVariableNames(ARecordPattern pattern) {
 		LexNameList list = new LexNameList();
 
 		for (PPattern p: pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getVariableNames(p));
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
 		}
 
 		return list;

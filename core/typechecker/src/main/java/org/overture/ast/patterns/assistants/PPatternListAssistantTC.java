@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.TypeCheckInfo;
@@ -39,7 +39,7 @@ public class PPatternListAssistantTC {
 		switch (plist.size())
 		{
 			case 0:
-				return new AUnknownType(location,false);
+				return AstFactory.newAUnknownType(location);
 
 			case 1:
 				return PPatternAssistantTC.getPossibleType(plist.get(0));

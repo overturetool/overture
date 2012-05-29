@@ -21,7 +21,7 @@ public class ANamedInvariantTypeAssistantTC {
 
 	public static void unResolve(ANamedInvariantType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		PTypeAssistant.unResolve(type.getType());
+		PTypeAssistantTC.unResolve(type.getType());
 	}
 
 	public static PType typeResolve(ANamedInvariantType type, ATypeDefinition root, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
@@ -29,7 +29,7 @@ public class ANamedInvariantTypeAssistantTC {
 
 		try
 		{
-			type.setType( PTypeAssistant.typeResolve(type.getType(),root, rootVisitor, question));
+			type.setType( PTypeAssistantTC.typeResolve(type.getType(),root, rootVisitor, question));
 			return type;
 		}
 		catch (TypeCheckException e)
@@ -45,36 +45,36 @@ public class ANamedInvariantTypeAssistantTC {
 
 	public static boolean isProduct(ANamedInvariantType type, int size) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isProduct(type.getType(),size);
+		return PTypeAssistantTC.isProduct(type.getType(),size);
 	}
 
 	public static AProductType getProduct(ANamedInvariantType type, int size) {
-		return PTypeAssistant.getProduct(type.getType(),size);
+		return PTypeAssistantTC.getProduct(type.getType(),size);
 	}
 
 	public static boolean isProduct(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isProduct(type.getType());
+		return PTypeAssistantTC.isProduct(type.getType());
 	}
 
 	public static AProductType getProduct(ANamedInvariantType type) {
-		return PTypeAssistant.getProduct(type.getType());
+		return PTypeAssistantTC.getProduct(type.getType());
 	}
 
 	public static boolean isType(ANamedInvariantType b,
 			Class<? extends PType> typeclass) {
 		if (b.getOpaque()) return false;
-		return PTypeAssistant.isType(b.getType(), typeclass);
+		return PTypeAssistantTC.isType(b.getType(), typeclass);
 		
 	}
 
 	public static PType isType(ANamedInvariantType exptype, String typename) {
 		if (exptype.getOpaque()) return null;
-		return PTypeAssistant.isType(exptype.getType(), typename);
+		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
 	public static boolean equals(ANamedInvariantType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof ANamedInvariantType)
 		{
@@ -87,83 +87,83 @@ public class ANamedInvariantTypeAssistantTC {
 
 	public static boolean isUnion(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isUnion(type.getType());
+		return PTypeAssistantTC.isUnion(type.getType());
 	}
 	
 	public static AUnionType getUnion(ANamedInvariantType type) {		
-		return PTypeAssistant.getUnion(type.getType());
+		return PTypeAssistantTC.getUnion(type.getType());
 	}
 
 	public static boolean isFunction(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isFunction(type.getType());
+		return PTypeAssistantTC.isFunction(type.getType());
 	}
 
 	public static AFunctionType getFunction(ANamedInvariantType type) {		
-		return PTypeAssistant.getFunction(type.getType());
+		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
 	public static boolean isOperation(ANamedInvariantType type) {
 		if(type.getOpaque()) return false;
-		return PTypeAssistant.isOperation(type.getType());
+		return PTypeAssistantTC.isOperation(type.getType());
 	}
 	
 	public static AOperationType getOperation(ANamedInvariantType type) {		
-		return PTypeAssistant.getOperation(type.getType());
+		return PTypeAssistantTC.getOperation(type.getType());
 	}
 
 	public static boolean isSeq(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isSeq(type.getType());
+		return PTypeAssistantTC.isSeq(type.getType());
 	}
 	
 	public static SSeqType getSeq(ANamedInvariantType type) {		
-		return PTypeAssistant.getSeq(type.getType());
+		return PTypeAssistantTC.getSeq(type.getType());
 	}
 
 	public static boolean isNumeric(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isNumeric(type.getType());
+		return PTypeAssistantTC.isNumeric(type.getType());
 	}
 	
 	public static SNumericBasicType getNumeric(ANamedInvariantType type) {
-		return PTypeAssistant.getNumeric(type.getType());
+		return PTypeAssistantTC.getNumeric(type.getType());
 	}
 
 	public static boolean isMap(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isMap(type.getType());
+		return PTypeAssistantTC.isMap(type.getType());
 	}
 	
 	public static SMapType getMap(ANamedInvariantType type) {
-		return PTypeAssistant.getMap(type.getType());
+		return PTypeAssistantTC.getMap(type.getType());
 	}
 
 	public static boolean isSet(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isSet(type.getType());
+		return PTypeAssistantTC.isSet(type.getType());
 	}
 	
 	public static ASetType getSet(ANamedInvariantType type) {
-		return PTypeAssistant.getSet(type.getType());
+		return PTypeAssistantTC.getSet(type.getType());
 	}
 
 	public static boolean isRecord(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isRecord(type.getType());
+		return PTypeAssistantTC.isRecord(type.getType());
 	}
 	
 	public static ARecordInvariantType getRecord(ANamedInvariantType type) {
-		return PTypeAssistant.getRecord(type.getType());
+		return PTypeAssistantTC.getRecord(type.getType());
 	}
 
 	public static boolean isClass(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
-		return PTypeAssistant.isClass(type.getType());
+		return PTypeAssistantTC.isClass(type.getType());
 	}
 	
 	public static AClassType getClassType(ANamedInvariantType type) {
-		return PTypeAssistant.getClassType(type.getType());
+		return PTypeAssistantTC.getClassType(type.getType());
 	}
 	
 

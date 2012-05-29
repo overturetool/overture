@@ -6,10 +6,9 @@ import java.util.Vector;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AVoidType;
-import org.overture.ast.types.assistants.PTypeList;
 import org.overture.typecheck.Environment;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -39,20 +38,12 @@ public class AThreadDefinitionAssistantTC {
 	}
 
 	private static AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d) {
-		PTypeList parameters = new PTypeList();
-		AVoidType result = new AVoidType(d.getLocation(),false);
-		AOperationType type = new AOperationType(d.getLocation(),false,null, parameters,result);	// () ==> ()
 
-		AExplicitOperationDefinition def = new AExplicitOperationDefinition(
-				d.getLocation(),
-				d.getOperationName(), 
-				NameScope.GLOBAL,
-				false,
-				null, PAccessSpecifierAssistant.getDefault(),
-				new Vector<PPattern>(),
-				d.getStatement().clone(),
-				null, null, type,
-				null, null, null, null, null, false);
+		AOperationType type = AstFactory.newAOperationType(d.getLocation());	// () ==> ()
+
+		AExplicitOperationDefinition def = 
+				AstFactory.newAExplicitOperationDefinition(
+						d.getOperationName(), type, new Vector<PPattern>(), null,null, d.getStatement().clone());
 
 		def.setAccess(d.getAccess());
 		def.setClassDefinition(d.getClassDefinition());

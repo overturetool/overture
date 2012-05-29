@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.statements.ACallObjectStm;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.typecheck.TypeCheckInfo;
@@ -53,6 +53,6 @@ public class ACallObjectStatementAssistantTC {
 
 	public static PTypeSet exitCheck(ACallObjectStm statement) {
 		// TODO We don't know what an operation call will raise
-		return new PTypeSet(new AUnknownType(statement.getLocation(),false));
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()));
 	}
 }

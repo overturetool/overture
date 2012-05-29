@@ -5,27 +5,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.APublicAccess;
-import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AFunctionExport;
 import org.overture.ast.modules.AOperationExport;
 import org.overture.ast.modules.ATypeExport;
 import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
-import org.overture.ast.node.tokens.TStatic;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -57,7 +52,7 @@ public class PExportAssistantTC
 						PType act = PDefinitionAssistantTC.getType(def);
 						PType type = ((AFunctionExport)exp).getExportType();
 
-						if (act != null && !PTypeAssistant.equals(act, type))
+						if (act != null && !PTypeAssistantTC.equals(act, type))
 						{
 							TypeCheckerErrors.report(3184, "Exported " + name + " function type incorrect",name.location,exp);
 							TypeCheckerErrors.detail2("Exported", type, "Actual", act);
@@ -87,7 +82,7 @@ public class PExportAssistantTC
 							PType act = def.getType();
 							PType type = ((AOperationExport)exp).getExportType();
 
-							if (act != null && !PTypeAssistant.equals(act, type))
+							if (act != null && !PTypeAssistantTC.equals(act, type))
 							{
 								TypeCheckerErrors.report(3186, "Exported operation type does not match actual type",name.location,exp);
 								TypeCheckerErrors.detail2("Exported", type, "Actual", act);
@@ -122,18 +117,26 @@ public class PExportAssistantTC
 							if (type instanceof ANamedInvariantType)
 							{
 								ANamedInvariantType ntype = (ANamedInvariantType)type;
-								SInvariantType copy = new ANamedInvariantType(ntype.getName().getLocation(),false,list, false, null, ntype.getName().clone(), ntype.getType());
+								SInvariantType copy = 
+										AstFactory.newANamedInvariantType(ntype.getName().clone(), ntype.getType());
+										//new ANamedInvariantType(ntype.getName().getLocation(),false,list, false, null, ntype.getName().clone(), ntype.getType());
 								copy.setOpaque(true);
 								copy.setInvDef(ntype.getInvDef());
-								list.add(new ATypeDefinition(def.getName().location, NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy, null,null,null,false,def.getName()));
+								list.add(AstFactory.newATypeDefinition(def.getName(), copy, null, null));
+								//list.add(new ATypeDefinition(def.getName().location, NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy, null,null,null,false,def.getName()));
 							}
 							else if (type instanceof ARecordInvariantType)
 							{
 								ARecordInvariantType rtype = (ARecordInvariantType)type;
-								SInvariantType copy = new ARecordInvariantType(rtype.getName().location,false, rtype.getName().clone(), (List<? extends AFieldField>) rtype.getFields().clone());
+								@SuppressWarnings("unchecked")
+								SInvariantType copy =
+										AstFactory.newARecordInvariantType(rtype.getName().clone(), (List<AFieldField>) rtype.getFields().clone());
+										//new ARecordInvariantType(rtype.getName().location,false, rtype.getName().clone(), (List<? extends AFieldField>) rtype.getFields().clone());
 								copy.setOpaque(true);
 								copy.setInvDef(rtype.getInvDef());
-								list.add(new ATypeDefinition(def.getName().location, NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy,null,null,null,false,def.getName()));
+								list.add(
+										AstFactory.newATypeDefinition(def.getName(), copy, null, null));
+										//new ATypeDefinition(def.getName().location, NameScope.TYPENAME,false,null,PAccessSpecifierAssistant.getDefault(),null, copy,null,null,null,false,def.getName()));
 							}
 							else
 							{
@@ -160,7 +163,9 @@ public class PExportAssistantTC
 					else if (def instanceof AUntypedDefinition)
 					{
 						AUntypedDefinition untyped = (AUntypedDefinition)def;
-						list.add(new ALocalDefinition(untyped.getLocation(), NameScope.GLOBAL, false,null,PAccessSpecifierAssistant.getDefault(),type, false,untyped.getName()));
+						list.add(
+								AstFactory.newALocalDefinition(untyped.getLocation(), untyped.getName(), NameScope.GLOBAL, type));
+								//new ALocalDefinition(untyped.getLocation(), NameScope.GLOBAL, false,null,PAccessSpecifierAssistant.getDefault(),type, false,untyped.getName()));
 					}
 					else
 					{
@@ -198,9 +203,11 @@ public class PExportAssistantTC
 				//AAccessSpecifierAccessSpecifier
 				for (LexNameToken name: ((AFunctionExport)exp).getNameList())
 				{
-					list.add(new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-							new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-							((AFunctionExport)exp).getExportType(),false,name.clone()));
+					list.add(
+							AstFactory.newALocalDefinition(name.location, name.clone(), NameScope.GLOBAL, ((AFunctionExport)exp).getExportType()));
+//							new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+//							new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+//							((AFunctionExport)exp).getExportType(),false,name.clone()));
 				}
 
 				return list;
@@ -212,9 +219,11 @@ public class PExportAssistantTC
 
 					for (LexNameToken name: ((AOperationExport)exp).getNameList())
 					{
-						list.add(new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-								new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-								((AOperationExport)exp).getExportType(),false,name.clone()));
+						list.add(
+								AstFactory.newALocalDefinition(name.location, name.clone(), NameScope.GLOBAL, ((AOperationExport)exp).getExportType()));
+//								new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+//								new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+//								((AOperationExport)exp).getExportType(),false,name.clone()));
 					}
 
 					return list;
@@ -229,9 +238,11 @@ public class PExportAssistantTC
 				
 				for (LexNameToken name: ((AValueExport)exp).getNameList())
 				{
-					list.add(new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-							new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-							((AValueExport)exp).getExportType(),true,name.clone()));
+					list.add(
+							AstFactory.newALocalDefinition(name.location, name.clone(), NameScope.GLOBAL, ((AValueExport)exp).getExportType()));
+//							new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+//							new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+//							((AValueExport)exp).getExportType(),true,name.clone()));
 				}
 
 				return list;

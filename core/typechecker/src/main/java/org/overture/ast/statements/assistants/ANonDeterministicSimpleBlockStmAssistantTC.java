@@ -1,5 +1,6 @@
 package org.overture.ast.statements.assistants;
 
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
@@ -11,7 +12,7 @@ public class ANonDeterministicSimpleBlockStmAssistantTC
 	{
 		if (add instanceof AVoidReturnType)
 		{
-			rtypes.add(new AVoidType(add.getLocation(),false));
+			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
 			return true;
 		}
 		else if (!(add instanceof AVoidType))

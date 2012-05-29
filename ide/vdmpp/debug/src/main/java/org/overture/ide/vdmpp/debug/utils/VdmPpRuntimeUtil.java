@@ -3,6 +3,7 @@ package org.overture.ide.vdmpp.debug.utils;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.PublicClassEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
@@ -42,7 +43,11 @@ public class VdmPpRuntimeUtil
 		if (defaultModuleName == null || (classes.isEmpty()))
 		{
 			LexNameToken name =new LexNameToken("CLASS", "DEFAULT", new LexLocation());
-			defaultModule = new AClassClassDefinition(name.getLocation(),name,NameScope.CLASSNAME,true,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+			defaultModule = AstFactory.newAClassClassDefinition(name, null, null);
+			defaultModule.setUsed(true);
+				
+					
+				//	new AClassClassDefinition(name.getLocation(),name,NameScope.CLASSNAME,true,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null);
 //			classes.add(defaultModule);
 		} 
 //		else

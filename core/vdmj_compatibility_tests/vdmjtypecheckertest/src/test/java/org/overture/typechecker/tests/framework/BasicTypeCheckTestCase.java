@@ -44,7 +44,7 @@ public abstract class BasicTypeCheckTestCase extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
 
@@ -67,28 +67,7 @@ public abstract class BasicTypeCheckTestCase extends TestCase {
 		try {
 			reader = getReader(type, ltr);
 			result = read(type, reader);
-			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
-			if (reader != null && reader.getErrorCount() > 0) {
-				xmlResult.setResult("parser", VdmjCompatibilityUtils.convertToResult(reader,file,"vdmj type checker"));
-			}
-			else
-			{
-				if(reader instanceof ModuleReader)
-				{
-					ModuleTypeChecker moduleTC = new ModuleTypeChecker((ModuleList) result);
-					moduleTC.typeCheck();
-					xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(moduleTC,file,"vdmj type checker"));					
-				}
-			}
-			try {
-				xmlResult.saveInXml();
-				
-				xmlResult.loadFromXml();
-			} catch (Exception e)
-			{
-				//e.printStackTrace();
-			} 
-			
+
 			return result;	
 		} finally {
 			// if (!hasRunBefore())

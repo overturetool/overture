@@ -34,7 +34,7 @@ public class AUnresolvedTypeAssistantTC {
 		
 		if (!(deref instanceof AClassType))
 		{
-			deref = PTypeAssistant.typeResolve(deref, root, rootVisitor, question);
+			deref = PTypeAssistantTC.typeResolve(deref, root, rootVisitor, question);
 		}
 
 		//TODO: return deref.clone()
@@ -114,7 +114,7 @@ public class AUnresolvedTypeAssistantTC {
 	}
 
 	public static boolean equals(AUnresolvedType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AUnresolvedType)
 		{

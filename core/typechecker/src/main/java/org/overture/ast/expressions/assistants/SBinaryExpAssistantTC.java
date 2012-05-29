@@ -5,7 +5,7 @@ import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -21,12 +21,12 @@ public class SBinaryExpAssistantTC {
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
 
-		if (!PTypeAssistant.isType(node.getLeft().getType(),expected.getClass()))
+		if (!PTypeAssistantTC.isType(node.getLeft().getType(),expected.getClass()))
 		{
 			TypeCheckerErrors.report(3065, "Left hand of " + node.getOp() + " is not " + expected,node.getLocation(),node);
 		}
 
-		if (!PTypeAssistant.isType(node.getRight().getType(),expected.getClass()))
+		if (!PTypeAssistantTC.isType(node.getRight().getType(),expected.getClass()))
 		{
 			TypeCheckerErrors.report(3066, "Right hand of " + node.getOp() + " is not " + expected,node.getLocation(),node);
 		}

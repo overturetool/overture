@@ -1,14 +1,14 @@
 package org.overture.typecheck.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.assistants.PMultipleBindAssistantTC;
 import org.overture.ast.patterns.assistants.PPatternListAssistantTC;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
@@ -35,16 +35,16 @@ public class TypeCheckerPatternVisitor extends
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
 		question.qualifiers = null;
 		PType type = node.getSet().apply(rootVisitor, question);
-		PType result = new AUnknownType(node.getLocation(),false);
+		PType result = AstFactory.newAUnknownType(node.getLocation());
 
-		if (!PTypeAssistant.isSet(type))
+		if (!PTypeAssistantTC.isSet(type))
 		{
 			TypeCheckerErrors.report(3197, "Expression matching set bind is not a set",node.getSet().getLocation(),node.getSet());
 			TypeCheckerErrors.detail("Actual type", type);
 		}
 		else
 		{
-			ASetType st = PTypeAssistant.getSet(type);
+			ASetType st = PTypeAssistantTC.getSet(type);
 
 			if (!st.getEmpty())
 			{
@@ -71,7 +71,7 @@ public class TypeCheckerPatternVisitor extends
 			TypeCheckInfo question) {
 		
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
-		PType type = PTypeAssistant.typeResolve(node.getType(),null,rootVisitor,question);
+		PType type = PTypeAssistantTC.typeResolve(node.getType(),null,rootVisitor,question);
 		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(), node.getLocation());
 
 		if (!TypeComparator.compatible(ptype, type))

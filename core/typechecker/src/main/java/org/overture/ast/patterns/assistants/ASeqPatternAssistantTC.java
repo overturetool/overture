@@ -5,14 +5,12 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -56,22 +54,22 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 //		return list;
 //	}
 
-	public static List<PDefinition> getDefinitions(ASeqPattern rp, PType type,
+	public static List<PDefinition> getAllDefinitions(ASeqPattern rp, PType type,
 			NameScope scope) {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistant.isSeq(type))
+		if (!PTypeAssistantTC.isSeq(type))
 		{
 			TypeCheckerErrors.report(3203, "Sequence pattern is matched against " + type,rp.getLocation(),rp);
 		}
 		else
 		{
-			PType elem = PTypeAssistant.getSeq(type).getSeqof();
+			PType elem = PTypeAssistantTC.getSeq(type).getSeqof();
 
     		for (PPattern p: rp.getPlist())
     		{
-    			defs.addAll(PPatternAssistantTC.getDefinitions(p, elem, scope));
+    			defs.addAll(PPatternAssistantTC.getAllDefinitions(p, elem, scope));
     		}
 		}
 
@@ -79,13 +77,11 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 	}
 
 	public static PType getPossibleTypes(ASeqPattern pattern) {
-		ASeqSeqType t = new ASeqSeqType(pattern.getLocation(), false, false);
-		t.setSeqof( new AUnknownType(pattern.getLocation(), false));
-		return t;
+		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
 
 	public static PExp getMatchingExpression(ASeqPattern seqp) {
-		return new ASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
+		return AstFactory.newASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
 	}
 
 }

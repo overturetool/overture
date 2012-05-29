@@ -11,33 +11,31 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.AClassTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
 import org.overture.typecheck.FlatEnvironment;
-import org.overture.typecheck.Pass;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.vdmj.util.HelpLexNameToken;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.ClassDefinitionSettings;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.Pass;
+import org.overturetool.vdmj.util.HelpLexNameToken;
 
 
 public class SClassDefinitionAssistantTC {
@@ -118,7 +116,7 @@ public class SClassDefinitionAssistantTC {
 	public static boolean hasSupertype(SClassDefinition classDefinition,
 			PType other) {
 		
-		if (PTypeAssistant.equals(getType(classDefinition),other))
+		if (PTypeAssistantTC.equals(getType(classDefinition),other))
 		{
 			return true;
 		}
@@ -153,7 +151,7 @@ public class SClassDefinitionAssistantTC {
 			AClassType selftype =  (AClassType) getType(self);
 			AClassType targtype = (AClassType) getType(target);
 
-			if (!PTypeAssistant.equals(selftype, targtype))
+			if (!PTypeAssistantTC.equals(selftype, targtype))
 			{
 				if (AClassTypeAssistantTC.hasSupertype(selftype,targtype))
 				{
@@ -313,9 +311,10 @@ public class SClassDefinitionAssistantTC {
 	public static PDefinition getSelfDefinition(
 			SClassDefinition classDefinition) {
 
-		PDefinition def = new ALocalDefinition(classDefinition.getLocation(),
-				NameScope.LOCAL,
-				false, null, null, PDefinitionAssistantTC.getType(classDefinition), false,classDefinition.getName().getSelfName());
+		PDefinition def = 
+				AstFactory.newALocalDefinition(classDefinition.getLocation(), 
+						classDefinition.getName().getSelfName(), 
+						NameScope.LOCAL, PDefinitionAssistantTC.getType(classDefinition));
 		PDefinitionAssistantTC.markUsed(def);
 		return def;
 	}
@@ -335,7 +334,7 @@ public class SClassDefinitionAssistantTC {
 		
 		if (invariant != null)
 		{
-			invariant.setClassDefinition(d);
+			PDefinitionAssistantTC.setClassDefinition(invariant, d);
 
 			// This listener is created for static invariants. This gets called
 			// when any statics get updated, but that could affect the validity
@@ -365,22 +364,16 @@ public class SClassDefinitionAssistantTC {
 		// Location of last local invariant
 		LexLocation invloc = invdefs.get(invdefs.size() - 1).getLocation();
 
-		AOperationType type = new AOperationType(
-			invloc, false,null, new Vector<PType>(), new ABooleanBasicType(invloc,false,null));
+		AOperationType type = AstFactory.newAOperationType(
+			invloc, new Vector<PType>(), AstFactory.newABooleanBasicType(invloc));
 
 		LexNameToken invname =
 			new LexNameToken(d.getName().name, "inv_" + d.getName().name, invloc);
 
-		PStm body = new AClassInvariantStm(d.getLocation(),null,invname, invdefs);
-
+		PStm body = AstFactory.newAClassInvariantStm(invname, invdefs);
 		
-//		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, null, false, null, null, null, null, body, null, null, type, null, null, null, null, null, false);
-		AExplicitOperationDefinition res = new AExplicitOperationDefinition(invloc, invname, NameScope.GLOBAL, false, d, PAccessSpecifierAssistantTC.getDefault(), null, body, null, null, type, null,null, invdefs, null, null, false);
-		res.setParameterPatterns(new Vector<PPattern>());
-		
-		return res;
-		
-		
+		return AstFactory.newAExplicitOperationDefinition(invname, type, new Vector<PPattern>(),
+						null, null, body);
 	}
 	
 	public static List<PDefinition> getInvDefs(SClassDefinition def)
@@ -434,7 +427,8 @@ public class SClassDefinitionAssistantTC {
 
 			if (PDefinitionListAssistantTC.findName(definition.getDefinitions(),localname, NameScope.NAMESANDSTATE) == null)
 			{
-				AInheritedDefinition local = new AInheritedDefinition(definition.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(), d.getAccess().clone(), null, d, localname.getOldName());
+				AInheritedDefinition local = 
+						AstFactory.newAInheritedDefinition(localname,d);
 				definition.getLocalInheritedDefinitions().add(local);
 			}
 		}
@@ -485,7 +479,8 @@ public class SClassDefinitionAssistantTC {
 
 				if (PDefinitionListAssistantTC.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
-					AInheritedDefinition local = new AInheritedDefinition(d.getLocation(),localname,d.getNameScope(),false,d.getClassDefinition(),d.getAccess().clone(),null,d, localname.getOldName());
+					AInheritedDefinition local = 
+							AstFactory.newAInheritedDefinition(localname, d);
 					defs.add(local);
 				}
 			}
@@ -551,7 +546,6 @@ public class SClassDefinitionAssistantTC {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
@@ -582,7 +576,7 @@ public class SClassDefinitionAssistantTC {
 	public static PType getType(SClassDefinition def) {
 		if (def.getClasstype() == null)
 		{
-			def.setClasstype(new AClassType(def.getLocation(), false, null,def.getName().clone(), def));
+			def.setClasstype(AstFactory.newAClassType(def.getLocation(), def)); 
 		}
 
 		return def.getClasstype();
@@ -772,13 +766,13 @@ public class SClassDefinitionAssistantTC {
 
 		for (PDefinition d: c.getDefinitions())
 		{
-			if (PDefinitionAssistantTC.getPass(d)== p)
+			if (d.getPass() == p)
 			{
 				d.apply(tc,new TypeCheckInfo(base, NameScope.NAMES));
 			}
 		}
 
-		if (c.getInvariant() != null && PDefinitionAssistantTC.getPass(c.getInvariant()) == p)
+		if (c.getInvariant() != null && c.getInvariant().getPass() == p)
 		{
 			c.getInvariant().apply(tc,new TypeCheckInfo(base, NameScope.NAMES));
 		}

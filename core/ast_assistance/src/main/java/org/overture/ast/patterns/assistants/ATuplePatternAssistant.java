@@ -7,12 +7,12 @@ import org.overturetool.vdmj.lex.LexNameList;
 public class ATuplePatternAssistant {
 
 	
-	public static LexNameList getVariableNames(ATuplePattern pattern) {
+	public static LexNameList getAllVariableNames(ATuplePattern pattern) {
 		LexNameList list = new LexNameList();
 
 		for (PPattern p: pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getVariableNames(p));
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
 		}
 
 		return list;

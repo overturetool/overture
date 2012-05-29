@@ -6,7 +6,7 @@ import org.overture.ast.types.PType;
 public class AVoidTypeAssistantTC {
 
 	public static boolean equals(AVoidType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		return (other instanceof AVoidType);
 	}

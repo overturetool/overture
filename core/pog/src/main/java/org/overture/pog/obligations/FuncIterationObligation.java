@@ -24,7 +24,7 @@
 package org.overture.pog.obligations;
 
 import org.overture.ast.expressions.AStarStarBinaryExp;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 
 public class FuncIterationObligation extends ProofObligation
 {
@@ -36,7 +36,7 @@ public class FuncIterationObligation extends ProofObligation
 
 		sb.append(exp.getRight());
 		sb.append(" > 1 => forall arg:");
-		sb.append(PTypeAssistant.getNumeric(exp.getRight().getType()));
+		sb.append(PTypeAssistantTC.getNumeric(exp.getRight().getType()));
 
 		if (prename != null)
 		{

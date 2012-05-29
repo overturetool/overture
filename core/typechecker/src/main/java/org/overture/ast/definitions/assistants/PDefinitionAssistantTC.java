@@ -28,36 +28,32 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.Environment;
-import org.overture.typecheck.Pass;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typecheck.TypeCheckerErrors;
-import org.overturetool.vdmj.util.HelpLexNameToken;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.util.HelpLexNameToken;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
 			PType other) {
 
-		if (PTypeAssistant.equals(
+		if (PTypeAssistantTC.equals(
 				PDefinitionAssistantTC.getType(aClassDefDefinition), other)) {
 			return true;
 		} else {
 			for (PType type : aClassDefDefinition.getSupertypes()) {
 				AClassType sclass = (AClassType) type;
 
-				if (PTypeAssistant.hasSupertype(sclass, other)) {
+				if (PTypeAssistantTC.hasSupertype(sclass, other)) {
 					return true;
 				}
 			}
@@ -588,7 +584,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		case CLASS:
 			return SClassDefinitionAssistantTC.getType((SClassDefinition) def);
 		case CLASSINVARIANT:
-			return new ABooleanBasicType(def.getLocation(), false);
+			return AstFactory.newABooleanBasicType(def.getLocation());
 		case EQUALS:
 			return AEqualsDefinitionAssistantTC.getType((AEqualsDefinition) def);
 		case EXPLICITFUNCTION:
@@ -610,27 +606,26 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		case INSTANCEVARIABLE:
 			return def.getType();
 		case LOCAL:
-			return def.getType() == null ? new AUnknownType(def.getLocation(),
-					false) : def.getType();
+			return def.getType() == null ? AstFactory.newAUnknownType(def.getLocation()) : def.getType();
 		case MULTIBINDLIST:
 			return AMultiBindListDefinitionAssistantTC
 					.getType((AMultiBindListDefinition) def);
 		case MUTEXSYNC:
-			return new AUnknownType(def.getLocation(), false);
+			return AstFactory.newAUnknownType(def.getLocation());
 		case NAMEDTRACE:
-			return new AOperationType(def.getLocation(), false, null, new Vector<PType>(), new AVoidType(def.getLocation(),false));
+			return AstFactory.newAOperationType(def.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(def.getLocation()));
 		case PERSYNC:
-			return new ABooleanBasicType(def.getLocation(), false);
+			return AstFactory.newABooleanBasicType(def.getLocation());
 		case RENAMED:
 			return getType(((ARenamedDefinition) def).getDef());
 		case STATE:
 			return ((AStateDefinition) def).getRecordType();
 		case THREAD:
-			return new AUnknownType(def.getLocation(), false);
+			return AstFactory.newAUnknownType(def.getLocation());
 		case TYPE:
 			return ((ATypeDefinition) def).getInvType();
 		case UNTYPED:
-			return new AUnknownType(def.getLocation(), false);
+			return  AstFactory.newAUnknownType(def.getLocation());
 		case VALUE:
 			return AValueDefinitionAssistantTC.getType((AValueDefinition) def);
 		default:
@@ -662,42 +657,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 			return false;
 		}
 	}
-
-	public static Pass getPass(PDefinition d) {
-		switch (d.kindPDefinition()) {
-		case ASSIGNMENT:
-		case INSTANCEVARIABLE:
-		case VALUE:
-			return Pass.VALUES;
-		case CLASS:
-		case CLASSINVARIANT:
-		case EQUALS:
-		case EXPLICITFUNCTION:
-		case EXPLICITOPERATION:
-		case IMPLICITFUNCTION:
-		case IMPLICITOPERATION:
-		case EXTERNAL:
-		case IMPORTED:
-		case LOCAL:
-		case MULTIBINDLIST:
-		case MUTEXSYNC:
-		case NAMEDTRACE:
-		case PERSYNC:
-		case THREAD:
-		case UNTYPED:
-			return Pass.DEFS;
-		case INHERITED:
-			return getPass(((AInheritedDefinition) d).getSuperdef());
-		case RENAMED:
-			return getPass(((ARenamedDefinition) d).getDef());
-		case STATE:
-		case TYPE:
-			return Pass.TYPES;
-		default:
-			assert false : "should never happen";
-			return null;
-		}
-	}
+	
 
 	public static String kind(PDefinition d) {
 		switch (d.kindPDefinition()) {

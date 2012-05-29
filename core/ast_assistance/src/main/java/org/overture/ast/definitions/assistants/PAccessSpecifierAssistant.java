@@ -1,6 +1,7 @@
 package org.overture.ast.definitions.assistants;
 
 import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 
@@ -20,6 +21,15 @@ public class PAccessSpecifierAssistant {
 	public static boolean isPublic(AAccessSpecifierAccessSpecifier access) {
 		
 		return access != null && access.getAccess() instanceof APublicAccess;
+	}
+
+	public static AAccessSpecifierAccessSpecifier getPublic() {
+		return new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
+	}
+	
+
+	public static AAccessSpecifierAccessSpecifier getProtected() {
+		return new AAccessSpecifierAccessSpecifier(new AProtectedAccess(), null, null);
 	}
 	
 }

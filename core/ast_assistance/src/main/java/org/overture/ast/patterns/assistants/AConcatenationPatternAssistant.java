@@ -5,11 +5,11 @@ import org.overturetool.vdmj.lex.LexNameList;
 
 public class AConcatenationPatternAssistant {
 
-	public static LexNameList getVariableNames(AConcatenationPattern pattern) {
+	public static LexNameList getAllVariableNames(AConcatenationPattern pattern) {
 		LexNameList list = new LexNameList();
 
-		list.addAll(PPatternAssistant.getVariableNames(pattern.getLeft()));
-		list.addAll(PPatternAssistant.getVariableNames(pattern.getRight()));
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getLeft()));
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getRight()));
 
 		return list;
 	}

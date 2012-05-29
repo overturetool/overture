@@ -6,10 +6,10 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.assistants.PExpAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.assistants.PPatternAssistantTC;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -49,7 +49,7 @@ public class AValueDefinitionAssistantTC {
 	}
 
 	public static LexNameList getVariableNames(AValueDefinition d) {
-		return PPatternAssistantTC.getVariableNames(d.getPattern());
+		return PPatternAssistantTC.getAllVariableNames(d.getPattern());
 	}
 
 	public static void typeResolve(AValueDefinition d,
@@ -58,14 +58,14 @@ public class AValueDefinitionAssistantTC {
 		
 		 //d.setType(getType(d));
 		if(d.getType() != null)
-			d.setType(PTypeAssistant.typeResolve(d.getType(),null,rootVisitor,question));
+			d.setType(PTypeAssistantTC.typeResolve(d.getType(),null,rootVisitor,question));
 		
 		
 	}
 
 	public static PType getType(AValueDefinition def) {
 		return def.getType() != null ? def.getType() :
-			(def.getExpType() != null ? def.getExpType() : new AUnknownType(def.getLocation(),false));
+			(def.getExpType() != null ? def.getExpType() : AstFactory.newAUnknownType(def.getLocation()));
 	}
 
 	public static LexNameList getOldNames(AValueDefinition def) {

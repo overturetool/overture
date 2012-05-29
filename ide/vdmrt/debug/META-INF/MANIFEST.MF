@@ -8,9 +8,10 @@ Bundle-Name: org.overture.ide.vdmrt.debug
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.vdmrt.debug;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.overture.ide.vdmrt.core;bundle-version="0.3.0",
- org.overture.ide.debug;bundle-version="0.3.0",
- org.overture.ide.vdmpp.debug;bundle-version="0.3.0"
+Require-Bundle: org.overture.ide.vdmrt.core;bundle-version="2.2.0",
+ org.overture.ide.core;bundle-version="2.2.0",
+ org.overture.ide.debug;bundle-version="2.2.0",
+ org.overture.ide.vdmpp.debug;bundle-version="2.2.0"
 Export-Package: org.overture.ide.vdmrt.debug
 Bundle-Activator: org.overture.ide.vdmrt.debug.Activator
 Bundle-ClassPath: .,

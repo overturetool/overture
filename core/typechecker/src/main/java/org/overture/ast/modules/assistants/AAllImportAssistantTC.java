@@ -3,9 +3,9 @@ package org.overture.ast.modules.assistants;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -24,8 +24,12 @@ public class AAllImportAssistantTC {
 		List<PDefinition> imported = new Vector<PDefinition>() ;
 
 		for (PDefinition d: imp.getFrom().getExportdefs())
-		{
-			imported.add(new AImportedDefinition(imp.getLocation(), d.getNameScope(), true, null, PAccessSpecifierAssistant.getDefault(), null, d,d.getName()));
+ {
+			PDefinition id = AstFactory.newAImportedDefinition(
+					imp.getLocation(), d);
+			PDefinitionAssistantTC.markUsed(id); // So imports all is quiet
+			imported.add(id);
+
 		}
 
 		return imported;	// The lot!

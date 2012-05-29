@@ -31,11 +31,11 @@ public class ABracketTypeAssistantTC {
 		{
 			do
 			{
-				type.setType(PTypeAssistant.typeResolve(type.getType(), root, rootVisitor, question));
+				type.setType(PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question));
 			}
 			while (type.getType() instanceof ABracketType);
 
-			type.setType(PTypeAssistant.typeResolve(type.getType(), root, rootVisitor, question));
+			type.setType(PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question));
 			return type.getType();
 		}
 		catch (TypeCheckException e)
@@ -47,7 +47,7 @@ public class ABracketTypeAssistantTC {
 
 	public static void unResolve(ABracketType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		PTypeAssistant.unResolve(type);
+		PTypeAssistantTC.unResolve(type);
 		
 	}
 
@@ -56,100 +56,100 @@ public class ABracketTypeAssistantTC {
 	}
 
 	public static boolean isProduct(ABracketType type, int size) {
-		return PTypeAssistant.isProduct(type.getType(), size);
+		return PTypeAssistantTC.isProduct(type.getType(), size);
 	}
 
 	public static AProductType getProduct(ABracketType type, int size) {
-		return PTypeAssistant.getProduct(type.getType(), size);
+		return PTypeAssistantTC.getProduct(type.getType(), size);
 	}
 
 	public static boolean isProduct(ABracketType type) {
-		return PTypeAssistant.isProduct(type.getType());
+		return PTypeAssistantTC.isProduct(type.getType());
 	}
 
 	public static AProductType getProduct(ABracketType type) {
-		return PTypeAssistant.getProduct(type.getType());
+		return PTypeAssistantTC.getProduct(type.getType());
 	}
 
 	public static boolean isType(ABracketType b, Class<? extends PType> typeclass) {
-		return PTypeAssistant.isType(b.getType(), typeclass);
+		return PTypeAssistantTC.isType(b.getType(), typeclass);
 	}
 
 	public static PType isType(ABracketType exptype, String typename) {
-		return PTypeAssistant.isType(exptype.getType(), typename);
+		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
 	public static boolean equals(ABracketType type, PType other) {
-		return PTypeAssistant.equals(type.getType(),other);
+		return PTypeAssistantTC.equals(type.getType(),other);
 	}
 
 	public static boolean isUnion(ABracketType type) {
-		return PTypeAssistant.isUnion(type.getType());
+		return PTypeAssistantTC.isUnion(type.getType());
 	}
 
 	public static boolean isFunction(ABracketType type) {
-		return PTypeAssistant.isFunction(type.getType());
+		return PTypeAssistantTC.isFunction(type.getType());
 	}
 
 	public static AFunctionType getFunction(ABracketType type) {
-		return PTypeAssistant.getFunction(type.getType());
+		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
 	public static boolean isOperation(ABracketType type) {
-		return PTypeAssistant.isOperation(type.getType());
+		return PTypeAssistantTC.isOperation(type.getType());
 	}
 	
 	public static AOperationType getOperation(ABracketType type) {
-		return PTypeAssistant.getOperation(type.getType());
+		return PTypeAssistantTC.getOperation(type.getType());
 	}
 
 	public static boolean isSeq(ABracketType type) {
-		return PTypeAssistant.isSeq(type.getType());
+		return PTypeAssistantTC.isSeq(type.getType());
 	}
 	public static SSeqType getSeq(ABracketType type) {
-		return PTypeAssistant.getSeq(type.getType());
+		return PTypeAssistantTC.getSeq(type.getType());
 	}
 
 	public static boolean isNumeric(ABracketType type) {
-		return PTypeAssistant.isNumeric(type.getType());
+		return PTypeAssistantTC.isNumeric(type.getType());
 		
 	}
 
 	public static SNumericBasicType getNumeric(ABracketType type) {
-		return PTypeAssistant.getNumeric(type.getType());
+		return PTypeAssistantTC.getNumeric(type.getType());
 	}
 
 	public static boolean isMap(ABracketType type) {
-		return PTypeAssistant.isMap(type.getType());
+		return PTypeAssistantTC.isMap(type.getType());
 	}
 	
 	public static SMapType getMap(ABracketType type){
-		return PTypeAssistant.getMap(type.getType());
+		return PTypeAssistantTC.getMap(type.getType());
 	}
 
 	public static boolean isSet(ABracketType type) {
-		return PTypeAssistant.isSet(type.getType());
+		return PTypeAssistantTC.isSet(type.getType());
 	}
 	
 	public static ASetType getSet(ABracketType type) {
-		return PTypeAssistant.getSet(type.getType());
+		return PTypeAssistantTC.getSet(type.getType());
 	}
 
 	public static boolean isRecord(ABracketType type) {
-		return PTypeAssistant.isRecord(type.getType());
+		return PTypeAssistantTC.isRecord(type.getType());
 	}
 
 	public static ARecordInvariantType getRecord(ABracketType type) {
-		return PTypeAssistant.getRecord(type.getType());
+		return PTypeAssistantTC.getRecord(type.getType());
 	}
 
 	public static AUnionType getUnion(ABracketType type) {
-		return PTypeAssistant.getUnion(type.getType());
+		return PTypeAssistantTC.getUnion(type.getType());
 	}
 
 	public static boolean narrowerThan(ABracketType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistant.narrowerThan(type.getType(), accessSpecifier);
+		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
 	}
 	
 	

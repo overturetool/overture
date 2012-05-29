@@ -2,6 +2,7 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -16,6 +17,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class AOptionalTypeAssistantTC {
 
@@ -24,7 +26,7 @@ public class AOptionalTypeAssistantTC {
 			TypeCheckInfo question) {
 		
 		if (type.getResolved()) return type; else { type.setResolved(true); }
-		type.setType(PTypeAssistant.typeResolve(type.getType(), root, rootVisitor, question));
+		type.setType(PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question));
 		
 		if (root != null)  root.setInfinite(false);	// Could be nil
 		return type;
@@ -34,7 +36,7 @@ public class AOptionalTypeAssistantTC {
 	public static void unResolve(AOptionalType type)
 	{
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		PTypeAssistant.unResolve(type.getType());
+		PTypeAssistantTC.unResolve(type.getType());
 	}
 
 
@@ -44,22 +46,22 @@ public class AOptionalTypeAssistantTC {
 
 
 	public static boolean isProduct(AOptionalType type, int size) {
-		return PTypeAssistant.isProduct(type.getType(),size);
+		return PTypeAssistantTC.isProduct(type.getType(),size);
 	}
 
 
 	public static AProductType getProduct(AOptionalType type, int size) {
-		return PTypeAssistant.getProduct(type.getType(),size);
+		return PTypeAssistantTC.getProduct(type.getType(),size);
 	}
 
 
 	public static boolean isProduct(AOptionalType type) {
-		return PTypeAssistant.isProduct(type.getType());
+		return PTypeAssistantTC.isProduct(type.getType());
 	}
 
 
 	public static AProductType getProduct(AOptionalType type) {
-		return PTypeAssistant.getProduct(type.getType());
+		return PTypeAssistantTC.getProduct(type.getType());
 	}
 
 
@@ -71,12 +73,12 @@ public class AOptionalTypeAssistantTC {
 			return false; // Optionals are never void
 		}
 		
-		return PTypeAssistant.isType(b.getType(), typeclass);
+		return PTypeAssistantTC.isType(b.getType(), typeclass);
 	}
 
 
 	public static PType isType(AOptionalType exptype, String typename) {
-		return PTypeAssistant.isType(exptype.getType(), typename);
+		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
 
@@ -84,7 +86,7 @@ public class AOptionalTypeAssistantTC {
 		if (other instanceof AOptionalType)
 		{
 			AOptionalType oo = (AOptionalType)other;
-			return  PTypeAssistant.equals(type.getType(),oo.getType());
+			return  PTypeAssistantTC.equals(type.getType(),oo.getType());
 		}
 		
 		return false;
@@ -92,81 +94,87 @@ public class AOptionalTypeAssistantTC {
 
 
 	public static boolean isFunction(AOptionalType type) {
-		return PTypeAssistant.isFunction(type.getType());
+		return PTypeAssistantTC.isFunction(type.getType());
 	}
 
 
 	public static AFunctionType getFunction(AOptionalType type) {
-		return PTypeAssistant.getFunction(type.getType());
+		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
 
 	public static boolean isOperation(AOptionalType type) {
-		return PTypeAssistant.isOperation(type.getType());
+		return PTypeAssistantTC.isOperation(type.getType());
 	}
 	
 	public static AOperationType getOperation(AOptionalType type) {
-		return PTypeAssistant.getOperation(type.getType());
+		return PTypeAssistantTC.getOperation(type.getType());
 	}
 
 
 	public static boolean isSeq(AOptionalType type) {
-		return PTypeAssistant.isSeq(type.getType());
+		return PTypeAssistantTC.isSeq(type.getType());
 	}
 	
 	public static SSeqType getSeq(AOptionalType type) {
-		return PTypeAssistant.getSeq(type.getType());
+		return PTypeAssistantTC.getSeq(type.getType());
 	}
 
 
 	public static boolean isNumeric(AOptionalType type) {
-		return PTypeAssistant.isNumeric(type.getType());
+		return PTypeAssistantTC.isNumeric(type.getType());
 	}
 	
 	public static SNumericBasicType getNumeric(AOptionalType type) {
-		return PTypeAssistant.getNumeric(type.getType());
+		return PTypeAssistantTC.getNumeric(type.getType());
 	}
 
 
 	public static boolean isMap(AOptionalType type) {
-		return PTypeAssistant.isMap(type.getType());
+		return PTypeAssistantTC.isMap(type.getType());
 	}
 	
 	public static SMapType getMap(AOptionalType type) {
-		return PTypeAssistant.getMap(type.getType());
+		return PTypeAssistantTC.getMap(type.getType());
 	}
 
 
 	public static boolean isSet(AOptionalType type) {
-		return PTypeAssistant.isSet(type.getType());
+		return PTypeAssistantTC.isSet(type.getType());
 	}
 	
 	public static ASetType getSet(AOptionalType type) {
-		return PTypeAssistant.getSet(type.getType());
+		return PTypeAssistantTC.getSet(type.getType());
 	}
 
 
 	public static boolean isRecord(AOptionalType type) {
-		return PTypeAssistant.isRecord(type.getType());
+		return PTypeAssistantTC.isRecord(type.getType());
 	}
 
 	public static ARecordInvariantType getRecord(AOptionalType type) {
-		return PTypeAssistant.getRecord(type.getType());
+		return PTypeAssistantTC.getRecord(type.getType());
 	}
 
 
 	public static boolean isClass(AOptionalType type) {
-		return PTypeAssistant.isClass(type.getType());
+		return PTypeAssistantTC.isClass(type.getType());
 	}
 
 	public static AClassType getClassType(AOptionalType type) {
-		return PTypeAssistant.getClassType(type.getType());
+		return PTypeAssistantTC.getClassType(type.getType());
 	}
 
 
 	public static boolean narrowerThan(AOptionalType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistant.narrowerThan(type.getType(), accessSpecifier);
+		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
+	}
+
+
+	public static PType polymorph(AOptionalType type, LexNameToken pname,
+			PType actualType) {		
+		return AstFactory.newAOptionalType(type.getLocation(), PTypeAssistantTC.polymorph(type.getType(),pname, actualType));
 	}
 	
 }

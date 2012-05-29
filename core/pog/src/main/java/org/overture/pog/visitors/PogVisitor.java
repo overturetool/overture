@@ -1,7 +1,6 @@
 package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.PExp;
@@ -19,7 +18,6 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.PPatternBind;
-import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.PCase;
@@ -49,6 +47,10 @@ public class PogVisitor extends
 		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7733055823057810142L;
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
 	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(this);
@@ -109,14 +111,6 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPAccessSpecifier(PAccessSpecifier node,
-			POContextStack question)
-	{
-
-		return new ProofObligationList();
-	}
-
-	@Override
-	public ProofObligationList defaultPAccess(PAccess node,
 			POContextStack question)
 	{
 

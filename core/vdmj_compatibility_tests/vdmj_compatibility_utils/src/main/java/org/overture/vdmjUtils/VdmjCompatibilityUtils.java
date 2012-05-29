@@ -31,7 +31,7 @@ public class VdmjCompatibilityUtils {
 		
 	}
 
-	public static Result convertToResult(ModuleTypeChecker module, File file,
+	public static Result convertToResult( File file,
 			String name) {
 		Set<IMessage> warnings = new HashSet<IMessage>();
 		Set<IMessage> errors = new HashSet<IMessage>();

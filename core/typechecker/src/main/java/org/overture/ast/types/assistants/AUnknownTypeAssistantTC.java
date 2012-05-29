@@ -2,27 +2,22 @@ package org.overture.ast.types.assistants;
 
 import java.util.Vector;
 
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
 
 public class AUnknownTypeAssistantTC {
 
@@ -32,14 +27,14 @@ public class AUnknownTypeAssistantTC {
 
 		for (int i=0; i<n; i++)
 		{
-			tl.add(new AUnknownType(type.getLocation(),false));
+			tl.add(AstFactory.newAUnknownType(type.getLocation()));
 		}
 
-		return new AProductType(type.getLocation(),false,null, tl);
+		return AstFactory.newAProductType(type.getLocation(), tl);
 	}
 
 	public static AProductType getProduct(AUnknownType type) {
-		return new AProductType(type.getLocation(),false,null, new NodeList<PType>(null));
+		return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
 	}
 
 	public static boolean isType(AUnknownType b,
@@ -60,8 +55,7 @@ public class AUnknownTypeAssistantTC {
 	}
 
 	public static AFunctionType getFunction(AUnknownType type) {
-		return new AFunctionType(
-				type.getLocation(),false, null, true, new NodeList<PType>(null), new AUnknownType(type.getLocation(),false));
+		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
 	public static boolean isOperation(AUnknownType type) {
@@ -69,8 +63,7 @@ public class AUnknownTypeAssistantTC {
 	}
 	
 	public static AOperationType getOperation(AUnknownType type) {
-		return new AOperationType(
-			type.getLocation(),false, null, new PTypeList(), new AUnknownType(type.getLocation(),false));
+		return AstFactory.newAOperationType(type.getLocation(),new PTypeList(), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
 	public static boolean isSeq(AUnknownType type) {
@@ -79,9 +72,7 @@ public class AUnknownTypeAssistantTC {
 	
 	public static SSeqType getSeq(AUnknownType type)
 	{
-		ASeqSeqType res = new ASeqSeqType(type.getLocation(),false,  true);	// empty
-		res.setSeqof(new AUnknownType(type.getLocation(), false));
-		return res;
+		return AstFactory.newASeqSeqType(type.getLocation()); // empty
 	}
 
 	public static boolean isNumeric(AUnknownType type) {
@@ -89,7 +80,7 @@ public class AUnknownTypeAssistantTC {
 	}
 	
 	public static ARealNumericBasicType getNumeric(AUnknownType type) {
-		return new ARealNumericBasicType(type.getLocation(), false);
+		return AstFactory.newARealNumericBasicType(type.getLocation());
 	}
 
 	public static boolean isMap(AUnknownType type) {
@@ -97,10 +88,7 @@ public class AUnknownTypeAssistantTC {
 	}
 
 	public static SMapType getMap(AUnknownType type) {
-		AMapMapType res = new AMapMapType(type.getLocation(), false,  true);
-		res.setFrom(new AUnknownType(type.getLocation(), false));
-		res.setTo(new AUnknownType(type.getLocation(), false));
-		return res;
+		return AstFactory.newAMapMapType(type.getLocation()); // Unknown |-> Unknown
 	}
 
 	public static boolean isSet(AUnknownType type) {
@@ -108,7 +96,7 @@ public class AUnknownTypeAssistantTC {
 	}
 
 	public static ASetType getSet(AUnknownType type) {
-		return new ASetType(type.getLocation(), false, null,new AUnknownType(type.getLocation(), false), true, false);
+		return AstFactory.newASetType(type.getLocation()); // empty
 	}
 
 	public static boolean isClass(AUnknownType type) {
@@ -116,17 +104,7 @@ public class AUnknownTypeAssistantTC {
 	}
 	
 	public static AClassType getClassType(AUnknownType type){
-		LexNameToken name = new LexNameToken("CLASS", "DEFAULT", new LexLocation());
-		return new AClassType(type.getLocation(),false, null,name, 
-				new AClassClassDefinition(
-						new LexLocation(),
-						name,
-				null, 
-				false, 
-				null, 
-				null, 
-				null, 
-				null, new LexNameList(), new Vector<PDefinition>(), null, null, null, null, null, null, null, null, null, null, null, null, null));
+		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
 	}
 
 	public static boolean narrowerThan(AUnknownType type,
@@ -135,7 +113,7 @@ public class AUnknownTypeAssistantTC {
 	}
 
 	public static ARecordInvariantType getRecord(AUnknownType type) {
-		return new ARecordInvariantType(type.getLocation(), false,  new LexNameToken("?", "?", type.getLocation()), new Vector<AFieldField>()); 
+		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 
 	}
 	
 }

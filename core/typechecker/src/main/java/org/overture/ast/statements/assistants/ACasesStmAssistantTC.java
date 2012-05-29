@@ -12,8 +12,7 @@ public class ACasesStmAssistantTC {
 
 		for (ACaseAlternativeStm c: statement.getCases())
 		{
-			//TODO: MISSING CASE ALTERNATIVE
-			//types.addAll(ACaseAlternativeStmAssistant.exitCheck(c));
+			types.addAll(ACaseAlternativeStmAssistantTC.exitCheck(c));
 		}
 
 		return types;

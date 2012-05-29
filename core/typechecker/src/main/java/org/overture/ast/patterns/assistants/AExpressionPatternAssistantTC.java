@@ -2,8 +2,8 @@ package org.overture.ast.patterns.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AExpressionPattern;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
@@ -12,7 +12,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 public class AExpressionPatternAssistantTC {
 
 	public static PType getPossibleTypes(AExpressionPattern pattern) {
-		return new AUnknownType(pattern.getLocation(), false);
+		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
 
 	public static void typeResolve(AExpressionPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {

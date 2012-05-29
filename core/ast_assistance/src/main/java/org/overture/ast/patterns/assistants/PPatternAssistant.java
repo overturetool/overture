@@ -1,5 +1,8 @@
 package org.overture.ast.patterns.assistants;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -9,31 +12,46 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overturetool.vdmj.lex.LexNameList;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class PPatternAssistant {
 
+	
 	public static LexNameList getVariableNames(PPattern pattern) {
+		
+		return getVariableNamesBaseCase(pattern);
+	}
+	
+	private static LexNameList getVariableNamesBaseCase(PPattern pattern) {
+		Set<LexNameToken> set = new HashSet<LexNameToken>();
+		set.addAll(getAllVariableNames(pattern));
+		LexNameList list = new LexNameList();
+		list.addAll(set);
+		return list;
+	}
+
+	public static LexNameList getAllVariableNames(PPattern pattern) {
 		switch (pattern.kindPPattern()) {
 		case CONCATENATION:
-			return AConcatenationPatternAssistant.getVariableNames((AConcatenationPattern)pattern);
+			return AConcatenationPatternAssistant.getAllVariableNames((AConcatenationPattern)pattern);
 		case IDENTIFIER:
-			return AIdentifierPatternAssistant.getVariableNames((AIdentifierPattern)pattern);
+			return AIdentifierPatternAssistant.getAllVariableNames((AIdentifierPattern)pattern);
 		case RECORD:
-			return ARecordPatternAssistant.getVariableNames((ARecordPattern)pattern);
+			return ARecordPatternAssistant.getAllVariableNames((ARecordPattern)pattern);
 		case SEQ:
-			return ASeqPatternAssistant.getVariableNames((ASeqPattern)pattern);
+			return ASeqPatternAssistant.getAllVariableNames((ASeqPattern)pattern);
 		case SET:
-			return ASetPatternAssistant.getVariableNames((ASetPattern)pattern);
+			return ASetPatternAssistant.getAllVariableNames((ASetPattern)pattern);
 		case TUPLE:
-			return ATuplePatternAssistant.getVariableNames((ATuplePattern)pattern);
+			return ATuplePatternAssistant.getAllVariableNames((ATuplePattern)pattern);
 		case UNION:
-			return AUnionPatternAssistant.getVariableNames((AUnionPattern)pattern);
+			return AUnionPatternAssistant.getAllVariableNames((AUnionPattern)pattern);
 		default:
-			return getVariableNamesBaseCase(pattern);
+			return getAllVariableNamesBaseCase(pattern);
 		}
 	}
 	
-	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
+	public static LexNameList getAllVariableNamesBaseCase(PPattern pattern)
 	{
 		return new LexNameList();	
 	}

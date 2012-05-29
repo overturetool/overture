@@ -27,21 +27,41 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.*;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.ADefExp;
+import org.overture.ast.expressions.AElseIfExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfBaseClassExp;
+import org.overture.ast.expressions.AIsOfClassExp;
+import org.overture.ast.expressions.ALambdaExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.APreExp;
+import org.overture.ast.expressions.ARecordModifier;
+import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASameClassExp;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SMapExp;
+import org.overture.ast.expressions.SSeqExp;
+import org.overture.ast.expressions.SSetExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ACharBasicType;
-import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
-import org.overture.ast.types.ARationalNumericBasicType;
-import org.overture.ast.types.ARealNumericBasicType;
-import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overturetool.vdmj.Release;
@@ -106,9 +126,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.EQUIVALENT))
 		{
 			nextToken();
-			// exp = new ABinopExp(null, null, exp, new AEquivalentBinop(token.location), readConnectiveExpression());
-			exp = new AEquivalentBooleanBinaryExp(null, token.location, exp, token, readConnectiveExpression());
-			// exp = new AEquivalentBinop(exp, token, readConnectiveExpression());
+			exp = AstFactory.newAEquivalentBooleanBinaryExp(exp, token, readConnectiveExpression());
 		}
 
 		return exp;
@@ -122,8 +140,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.IMPLIES))
 		{
 			nextToken();
-			exp = new AImpliesBooleanBinaryExp(null, token.location, exp, token, readImpliesExpression());
-			// exp = new ImpliesExpression(exp, token, readImpliesExpression());
+			exp = AstFactory.newAImpliesBooleanBinaryExp(exp, token, readImpliesExpression());
 		}
 
 		return exp;
@@ -137,8 +154,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.OR))
 		{
 			nextToken();
-			exp = new AOrBooleanBinaryExp(null, token.location, exp, token, readOrExpression());
-			// exp = new OrExpression(exp, token, readOrExpression());
+			exp = AstFactory.newAOrBooleanBinaryExp(exp, token, readOrExpression());
 		}
 
 		return exp;
@@ -152,8 +168,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.AND))
 		{
 			nextToken();
-			exp = new AAndBooleanBinaryExp(null, token.location, exp, token, readAndExpression());
-			// exp = new AndExpression(exp, token, readAndExpression());
+			exp = AstFactory.newAAndBooleanBinaryExp(exp, token, readAndExpression());
 		}
 
 		return exp;
@@ -167,8 +182,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.NOT))
 		{
 			nextToken();
-			exp = new ANotUnaryExp(null, token.location, readNotExpression());
-			// exp = new NotExpression(token.location, readNotExpression());
+			exp =  AstFactory.newANotUnaryExp(token.location, readNotExpression());
 		} else
 		{
 			exp = readRelationalExpression();
@@ -189,8 +203,7 @@ public class ExpressionReader extends SyntaxReader
 
 		if (readToken().is(VDMToken.EQUALS))
 		{
-			return new AEqualsBinaryExp(null, token.location, exp, token, readEvaluatorP1Expression());
-			// return new EqualsExpression(exp, token, readEvaluatorP1Expression());
+			return AstFactory.newAEqualsBinaryExp(exp, token, readEvaluatorP1Expression());
 		}
 
 		throwMessage(2029, "Expecting <set bind> = <expression>");
@@ -242,63 +255,52 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case LT:
 				nextToken();
-
-				exp = new ALessNumericBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new LessExpression(exp, token, readNotExpression());
+				exp = AstFactory.newALessNumericBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case LE:
 				nextToken();
-				exp = new ALessEqualNumericBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new LessEqualExpression(exp, token, readNotExpression());
+				exp = AstFactory.newALessEqualNumericBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case GT:
 				nextToken();
-				exp = new AGreaterNumericBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new GreaterExpression(exp, token, readNotExpression());
+				exp = AstFactory.newAGreaterNumericBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case GE:
 				nextToken();
-				exp = new AGreaterEqualNumericBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new GreaterEqualExpression(exp, token, readNotExpression());
+				exp = AstFactory.newAGreaterEqualNumericBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case NE:
 				nextToken();
-				exp = new ANotEqualBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new NotEqualExpression(exp, token, readNotExpression());
+				exp = AstFactory.newANotEqualBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case EQUALS:
 				nextToken();
-				exp = new AEqualsBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new EqualsExpression(exp, token, readNotExpression());
+				exp = AstFactory.newAEqualsBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case SUBSET:
 				nextToken();
-				exp = new ASubsetBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new SubsetExpression(exp, token, readNotExpression());
+				exp = AstFactory.newASubsetBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case PSUBSET:
 				nextToken();
-				exp = new AProperSubsetBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new ProperSubsetExpression(exp, token, readNotExpression());
+				exp = AstFactory.newAProperSubsetBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case INSET:
 				nextToken();
-				exp = new AInSetBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new InSetExpression(exp, token, readNotExpression());
+				exp = AstFactory.newAInSetBinaryExp(exp, token, readNotExpression());
 				break;
 
 			case NOTINSET:
 				nextToken();
-				exp = new ANotInSetBinaryExp(null, token.location, exp, token, readNotExpression());
-				// exp = new NotInSetExpression(exp, token, readNotExpression());
+				exp = AstFactory.newANotInSetBinaryExp(exp, token, readNotExpression());
 				break;
 		}
 
@@ -321,44 +323,37 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case PLUS:
 					nextToken();
-					exp = new APlusNumericBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new PlusExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newAPlusNumericBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MINUS:
 					nextToken();
-					exp = new ASubstractNumericBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new SubtractExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newASubstractNumericBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case UNION:
 					nextToken();
-					exp = new ASetUnionBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new SetUnionExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newASetUnionBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case SETDIFF:
 					nextToken();
-					exp = new ASetDifferenceBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new SetDifferenceExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newASetDifferenceBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case MUNION:
 					nextToken();
-					exp = new AMapUnionBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new MapUnionExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newAMapUnionBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case PLUSPLUS:
 					nextToken();
-					exp = new APlusPlusBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new PlusPlusExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newAPlusPlusBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				case CONCATENATE:
 					nextToken();
-					exp = new ASeqConcatBinaryExp(null, token.location, exp, token, readEvaluatorP2Expression());
-					// exp = new SeqConcatExpression(exp, token, readEvaluatorP2Expression());
+					exp = AstFactory.newASeqConcatBinaryExp(exp, token, readEvaluatorP2Expression());
 					break;
 
 				default:
@@ -384,38 +379,32 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case TIMES:
 					nextToken();
-					exp = new ATimesNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
-					// exp = new TimesExpression(exp, token, readEvaluatorP3Expression());
+					exp = AstFactory.newATimesNumericBinaryExp(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIVIDE:
 					nextToken();
-					exp = new ADivideNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
-					// exp = new DivideExpression(exp, token, readEvaluatorP3Expression());
+					exp = AstFactory.newADivideNumericBinaryExp(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case REM:
 					nextToken();
-					exp = new ARemNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
-					// exp = new RemExpression(exp, token, readEvaluatorP3Expression());
+					exp = AstFactory.newARemNumericBinaryExp(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case MOD:
 					nextToken();
-					exp = new AModNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
-					// exp = new ModExpression(exp, token, readEvaluatorP3Expression());
+					exp = AstFactory.newAModNumericBinaryExp(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case DIV:
 					nextToken();
-					exp = new ADivNumericBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
-					// exp = new DivExpression(exp, token, readEvaluatorP3Expression());
+					exp = AstFactory.newADivNumericBinaryExp(exp, token, readEvaluatorP3Expression());
 					break;
 
 				case INTER:
 					nextToken();
-					exp = new ASetIntersectBinaryExp(null, token.location, exp, token, readEvaluatorP3Expression());
-					// exp = new SetIntersectExpression(exp, token, readEvaluatorP3Expression());
+					exp = AstFactory.newASetIntersectBinaryExp(exp, token, readEvaluatorP3Expression());
 					break;
 
 				default:
@@ -437,8 +426,7 @@ public class ExpressionReader extends SyntaxReader
 		{
 			nextToken();
 			// Unary, so recursion OK for left grouping
-			exp = new AMapInverseUnaryExp(token.location, readEvaluatorP3Expression());
-			// exp = new MapInverseExpression(token.location, readEvaluatorP3Expression());
+			exp = AstFactory.newAMapInverseUnaryExp(token.location, readEvaluatorP3Expression());
 		} else
 		{
 			exp = readEvaluatorP4Expression();
@@ -461,14 +449,12 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case DOMRESTO:
 					nextToken();
-					exp = new ADomainResToBinaryExp(null, token.location, exp, token, readEvaluatorP5Expression());
-					// exp = new DomainResToExpression(exp, token, readEvaluatorP5Expression());
+					exp = AstFactory.newADomainResToBinaryExp(exp, token, readEvaluatorP5Expression());
 					break;
 
 				case DOMRESBY:
 					nextToken();
-					exp = new ADomainResByBinaryExp(null, token.location, exp, token, readEvaluatorP5Expression());
-					// exp = new DomainResByExpression(exp, token, readEvaluatorP5Expression());
+					exp = AstFactory.newADomainResByBinaryExp(exp, token, readEvaluatorP5Expression());
 					break;
 
 				default:
@@ -494,14 +480,12 @@ public class ExpressionReader extends SyntaxReader
 			{
 				case RANGERESTO:
 					nextToken();
-					exp = new ARangeResToBinaryExp(null, token.location, exp, token, readEvaluatorP6Expression());
-					// exp = new RangeResToExpression(exp, token, readEvaluatorP6Expression());
+					exp = AstFactory.newARangeResToBinaryExp(exp, token, readEvaluatorP6Expression());
 					break;
 
 				case RANGERESBY:
 					nextToken();
-					exp = new ARangeResByBinaryExp(null, token.location, exp, token, readEvaluatorP6Expression());
-					// exp = new RangeResByExpression(exp, token, readEvaluatorP6Expression());
+					exp = AstFactory.newARangeResByBinaryExp(exp, token, readEvaluatorP6Expression());
 					break;
 
 				default:
@@ -525,80 +509,67 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case PLUS:
 				nextToken();
-				exp = new AUnaryPlusUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new UnaryPlusExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAUnaryPlusUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case MINUS:
 				nextToken();
-				exp = new AUnaryMinusUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new UnaryMinusExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAUnaryMinusUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case CARD:
 				nextToken();
-				exp = new ACardinalityUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new CardinalityExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newACardinalityUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DOM:
 				nextToken();
-				exp = new AMapDomainUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new MapDomainExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAMapDomainUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case LEN:
 				nextToken();
-				exp = new ALenUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new LenExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newALenUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case POWER:
 				nextToken();
-				exp = new APowerSetUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new PowerSetExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAPowerSetUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case RNG:
 				nextToken();
-				exp = new AMapRangeUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new MapRangeExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAMapRangeUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case ELEMS:
 				nextToken();
-				exp = new AElementsUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new ElementsExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAElementsUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case ABS:
 				nextToken();
-				exp = new AAbsoluteUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new AbsoluteExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAAbsoluteUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DINTER:
 				nextToken();
-				exp = new ADistIntersectUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistIntersectExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistIntersectUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case MERGE:
 				nextToken();
-				exp = new ADistMergeUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistMergeExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistMergeUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case HEAD:
 				nextToken();
-				exp = new AHeadUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new HeadExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAHeadUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case TAIL:
 				nextToken();
-				exp = new ATailUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new TailExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newATailUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case REVERSE:
@@ -608,32 +579,27 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				nextToken();
-				exp = new AReverseUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new ReverseExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAReverseUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case FLOOR:
 				nextToken();
-				exp = new AFloorUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new FloorExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAFloorUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DUNION:
 				nextToken();
-				exp = new ADistUnionUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistUnionExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistUnionUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case DISTCONC:
 				nextToken();
-				exp = new ADistConcatUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new DistConcatExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newADistConcatUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			case INDS:
 				nextToken();
-				exp = new AIndicesUnaryExp(null, location, readEvaluatorP6Expression());
-				// exp = new IndicesExpression(location, readEvaluatorP6Expression());
+				exp = AstFactory.newAIndicesUnaryExp(location, readEvaluatorP6Expression());
 				break;
 
 			default:
@@ -669,7 +635,6 @@ public class ExpressionReader extends SyntaxReader
 						{
 							AVariableExp ve = (AVariableExp) exp;
 							String name = ve.getName().name;
-							// String name = ve.getName().name;
 
 							if (name.startsWith("mk_"))
 							{
@@ -679,8 +644,7 @@ public class ExpressionReader extends SyntaxReader
 							}
 						}
 
-						exp = new AApplyExp(null, exp.getLocation(), exp, null, null, null);
-						// exp = new ApplyExpression(exp);
+						exp = AstFactory.newAApplyExp(exp);
 						nextToken();
 					} else
 					{
@@ -724,8 +688,7 @@ public class ExpressionReader extends SyntaxReader
 								PExp last = readExpression();
 								checkFor(VDMToken.KET, 2121, "Expecting ')' after subsequence");
 								reader.unpush();
-								exp = new ASubseqExp(exp.getLocation(), exp, first, last);
-								// exp = new SubseqExpression(exp, first, last);
+								exp = AstFactory.newASubseqExp(exp, first, last);
 								break;
 							}
 
@@ -743,8 +706,7 @@ public class ExpressionReader extends SyntaxReader
 						}
 
 						checkFor(VDMToken.KET, 2122, "Expecting ')' after function args");
-						exp = new AApplyExp(null, exp.getLocation(), exp, args, null, null);
-						// exp = new ApplyExpression(exp, args);
+						exp = AstFactory.newAApplyExp(exp,args);
 					}
 					break;
 
@@ -762,8 +724,7 @@ public class ExpressionReader extends SyntaxReader
 					}
 
 					checkFor(VDMToken.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
-					exp = new AFuncInstatiationExp(null, exp.getLocation(), exp, types, null, null);
-					// exp = new FuncInstantiationExpression(exp, types);
+					exp = AstFactory.newAFuncInstatiationExp(exp,types);
 					break;
 
 				case POINT:
@@ -773,9 +734,7 @@ public class ExpressionReader extends SyntaxReader
 						case NAME:
 							if (dialect != Dialect.VDM_SL)
 							{
-								LexNameToken field = lastNameToken();
-								exp = new AFieldExp(null, exp.getLocation(), exp, field, new LexIdentifierToken(field.name, field.old, field.location));
-								// exp = new FieldExpression(exp, lastNameToken());
+								exp = AstFactory.newAFieldExp(exp, lastNameToken());
 							} else
 							{
 								throwMessage(2030, "Expecting simple field identifier");
@@ -783,8 +742,7 @@ public class ExpressionReader extends SyntaxReader
 							break;
 
 						case IDENTIFIER:
-							exp = new AFieldExp(null, exp.getLocation(), exp, null, lastIdToken());
-							// exp = new FieldExpression(exp, lastIdToken());
+							exp = AstFactory.newAFieldExp(exp, lastIdToken());
 							break;
 
 						case HASH:
@@ -794,8 +752,7 @@ public class ExpressionReader extends SyntaxReader
 							}
 
 							LexIntegerToken num = (LexIntegerToken) lastToken();
-							exp = new AFieldNumberExp(null, exp.getLocation(), exp, num);
-							// exp = new FieldNumberExpression(exp, num);
+							exp = AstFactory.newAFieldNumberExp(exp, num);
 							break;
 
 						default:
@@ -820,7 +777,6 @@ public class ExpressionReader extends SyntaxReader
 		{
 			AVariableExp ve = (AVariableExp) exp;
 			ve.setName(ve.getName().getExplicit(true));
-			// ve.setExplicit(true);
 		}
 
 		// Combinator Family. Right grouping.
@@ -829,15 +785,13 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.COMP))
 		{
 			nextToken();
-			return new ACompBinaryExp(null, token.location, exp, token, readApplicatorExpression());
-			// return new CompExpression(exp, token, readApplicatorExpression());
+			return AstFactory.newACompBinaryExp(exp, token, readApplicatorExpression());
 		}
 
 		if (token.is(VDMToken.STARSTAR))
 		{
 			nextToken();
-			return new AStarStarBinaryExp(null, token.location, exp, token, readEvaluatorP6Expression());
-			// return new StarStarExpression(exp, token, readEvaluatorP6Expression());
+			return AstFactory.newAStarStarBinaryExp(exp, token, readEvaluatorP6Expression());
 		}
 
 		return exp;
@@ -851,20 +805,17 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case NUMBER:
 				nextToken();
-				return new AIntLiteralExp(null, token.location, (LexIntegerToken) token);
-				// return new IntegerLiteralExpression((LexIntegerToken)token);
+				return AstFactory.newAIntLiteralExp((LexIntegerToken)token);
 
 			case REALNUMBER:
 				nextToken();
-				return new ARealLiteralExp(null, token.location, (LexRealToken) token);
-				// return new RealLiteralExpression((LexRealToken)token);
+				return AstFactory.newARealLiteralExp((LexRealToken)token);
 
 			case NAME:
 				// Includes mk_ constructors
 				LexNameToken name = lastNameToken();
 				nextToken();
-				return new AVariableExp(name.location, name, name.getName());
-				// return new VariableExpression(name);
+				return AstFactory.newAVariableExp(name);
 
 			case IDENTIFIER:
 				// Includes mk_ constructors
@@ -872,44 +823,37 @@ public class ExpressionReader extends SyntaxReader
 				// use old~ names.
 				LexNameToken id = new LexNameToken(reader.currentModule, (LexIdentifierToken) token);
 				nextToken();
-				return new AVariableExp(id.location, id, id.getName());
-				// return new VariableExpression(id);
+				return AstFactory.newAVariableExp(id);
 
 			case STRING:
 				nextToken();
-				return new AStringLiteralExp(null, token.location, (LexStringToken) token);
-				// return new StringLiteralExpression((LexStringToken)token);
+				return AstFactory.newAStringLiteralExp((LexStringToken)token);
 
 			case CHARACTER:
 				nextToken();
-				return new ACharLiteralExp(null, token.location, (LexCharacterToken) token);
-				// return new CharLiteralExpression((LexCharacterToken)token);
+				return AstFactory.newACharLiteralExp((LexCharacterToken)token);
 
 			case QUOTE:
 				nextToken();
-				return new AQuoteLiteralExp(null, token.location, (LexQuoteToken) token);
-				// return new QuoteLiteralExpression((LexQuoteToken)token);
+				return AstFactory.newAQuoteLiteralExp((LexQuoteToken)token);
 
 			case TRUE:
 			case FALSE:
 				nextToken();
-				return new ABooleanConstExp(null, token.location, (LexBooleanToken) token);
-				// return new BooleanLiteralExpression((LexBooleanToken)token);
+				return AstFactory.newABooleanConstExp((LexBooleanToken)token);
 
 			case UNDEFINED:
 				nextToken();
-				return new AUndefinedExp(null, token.location);
+				return AstFactory.newAUndefinedExp(token.location);
 				// return new UndefinedExpression(token.location);
 
 			case NIL:
 				nextToken();
-				return new ANilExp(null, token.location);
-				// return new NilExpression(token.location);
+				return AstFactory.newANilExp(token.location);
 
 			case THREADID:
 				nextToken();
-				return new AThreadIdExp(null, token.location);
-				// return new ThreadIdExpression(token.location);
+				return AstFactory.newAThreadIdExp(token.location);
 
 			case BRA:
 				nextToken();
@@ -967,8 +911,7 @@ public class ExpressionReader extends SyntaxReader
 
 			case SELF:
 				nextToken();
-				return new ASelfExp(null, token.location, new LexNameToken(token.location.module, "self", token.location));
-				// return new SelfExpression(token.location);
+				return AstFactory.newASelfExp(token.location);
 
 			case IS:
 				switch (nextToken().type)
@@ -977,14 +920,12 @@ public class ExpressionReader extends SyntaxReader
 						nextToken();
 						checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
 						checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
-						return new ANotYetSpecifiedExp(null, token.location);
-						// return new NotYetSpecifiedExpression(token.location);
+						return AstFactory.newANotYetSpecifiedExp(token.location);
 
 					case SUBCLASS:
 						nextToken();
 						checkFor(VDMToken.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
-						return new ASubclassResponsibilityExp(null, token.location);
-						// return new SubclassResponsibilityExpression(token.location);
+						return AstFactory.newASubclassResponsibilityExp(token.location);
 				}
 
 				throwMessage(2033, "Expected 'is not specified' or 'is subclass responsibility'");
@@ -1025,8 +966,7 @@ public class ExpressionReader extends SyntaxReader
 	private PExp readTimeExpression(LexLocation location) throws LexException
 	{
 		nextToken();
-		return new ATimeExp(null, location);
-		// return new TimeExpression(location);
+		return AstFactory.newATimeExp(location);
 	}
 
 	private AMuExp readMuExpression(AVariableExp ve) throws ParserException,
@@ -1040,12 +980,11 @@ public class ExpressionReader extends SyntaxReader
 			checkFor(VDMToken.COMMA, 2128, "Expecting comma separated record modifiers");
 			LexIdentifierToken id = readIdToken("Expecting <identifier> |-> <expression>");
 			checkFor(VDMToken.MAPLET, 2129, "Expecting <identifier> |-> <expression>");
-			args.add(new ARecordModifier(id, readExpression()));
+			args.add(AstFactory.newARecordModifier(id, readExpression()));
 		} while (lastToken().is(VDMToken.COMMA));
 
 		checkFor(VDMToken.KET, 2130, "Expecting ')' after mu maplets");
-		return new AMuExp(ve.getLocation(), record, args);
-		// return new MuExpression(ve.location, record, args);
+		return AstFactory.newAMuExp(ve.getLocation(), record, args);
 	}
 
 	private PExp readMkExpression(AVariableExp ve) throws ParserException,
@@ -1073,8 +1012,7 @@ public class ExpressionReader extends SyntaxReader
 				throwMessage(2035, "Tuple must have >1 argument");
 			}
 
-			exp = new ATupleExp(ve.getLocation(), args);
-			// exp = new TupleExpression(ve.location, args);
+			exp = AstFactory.newATupleExp(ve.getLocation(), args);
 		} else
 		{
 			LexNameToken typename = getMkTypeName(ve.getName());
@@ -1082,49 +1020,45 @@ public class ExpressionReader extends SyntaxReader
 
 			if (type != null)
 			{
+				if(args.size() != 1)
+				{
+					throwMessage(2300, "mk_<type> must have a single argument");
+				}
+				
 				PExp value = args.get(0);
 
 				switch (type)
-				// TODO is this right? Type information is lost? If so lose the switch
 				{
 					case BOOL:
-						exp = new AMkBasicExp(new ABooleanBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new BooleanType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newABooleanBasicType(ve.getLocation()),value);
 						break;
 
 					case NAT:
-						exp = new AMkBasicExp(new ANatNumericBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new NaturalType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newANatNumericBasicType(ve.getLocation()), value);
 						break;
 
 					case NAT1:
-						exp = new AMkBasicExp(new ANatOneNumericBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new NaturalOneType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newANatOneNumericBasicType(ve.getLocation()), value);
 						break;
 
 					case INT:
-						exp = new AMkBasicExp(new AIntNumericBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new IntegerType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newAIntNumericBasicType(ve.getLocation()), value);
 						break;
 
 					case RAT:
-						exp = new AMkBasicExp(new ARationalNumericBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new RationalType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newARationalNumericBasicType(ve.getLocation()), value);
 						break;
 
 					case REAL:
-						exp = new AMkBasicExp(new ARealNumericBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new RealType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newARealNumericBasicType(ve.getLocation()), value);
 						break;
 
 					case CHAR:
-						exp = new AMkBasicExp(new ACharBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new CharacterType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newACharBasicType(ve.getLocation()), value);
 						break;
 
 					case TOKEN:
-						exp = new AMkBasicExp(new ATokenBasicType(ve.getLocation(), false, null), ve.getLocation(), value);
-						// exp = new MkBasicExpression(new TokenType(ve.location), value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newATokenBasicType(ve.getLocation()), value);
 						break;
 
 					default:
@@ -1132,8 +1066,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 			} else
 			{
-				exp = new AMkTypeExp(ve.getLocation(), typename, args);
-				// exp = new MkTypeExpression(typename, args);
+				exp = AstFactory.newAMkTypeExp(typename, args);
 			}
 		}
 
@@ -1177,12 +1110,10 @@ public class ExpressionReader extends SyntaxReader
 			if (type instanceof AUnresolvedType)
 			{
 				AUnresolvedType nt = (AUnresolvedType) type;
-				exp = new AIsExp(null, nt.getLocation(), nt.getName(), null, test, null);
-				// exp = new IsExpression(ve.location, nt.typename, test);
+				exp = AstFactory.newAIsExp(ve.getLocation(), nt.getName(), test);
 			} else
 			{
-				exp = new AIsExp(null, ve.getLocation(), null, type, test, null);
-				// exp = new IsExpression(ve.location, type, test);
+				exp = AstFactory.newAIsExp(ve.getLocation(), type, test); 
 			}
 		} else
 		{
@@ -1194,43 +1125,35 @@ public class ExpressionReader extends SyntaxReader
 				switch (type)
 				{
 					case BOOL:
-						exp = new AIsExp(null, ve.getLocation(), null, new ABooleanBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new BooleanType(ve.location), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newABooleanBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case NAT:
-						exp = new AIsExp(null, ve.getLocation(), null, new ANatNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new NaturalType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case NAT1:
-						exp = new AIsExp(null, ve.getLocation(), null, new ANatOneNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new NaturalOneType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatOneNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case INT:
-						exp = new AIsExp(null, ve.getLocation(), null, new AIntNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new IntegerType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newAIntNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case RAT:
-						exp = new AIsExp(null, ve.getLocation(), null, new ARationalNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new RationalType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARationalNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case REAL:
-						exp = new AIsExp(null, ve.getLocation(), null, new ARealNumericBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new RealType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARealNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case CHAR:
-						exp = new AIsExp(null, ve.getLocation(), null, new ACharBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new CharacterType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newACharBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case TOKEN:
-						exp = new AIsExp(null, ve.getLocation(), null, new ATokenBasicType(ve.getLocation(), false, null), readExpression(), null);
-						// exp = new IsExpression(ve.location, new TokenType(ve.location), readExpression());
+						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newATokenBasicType(ve.getLocation()), readExpression());
 						break;
 
 					default:
@@ -1238,8 +1161,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 			} else
 			{
-				exp = new AIsExp(null, ve.getLocation(), typename, null, readExpression(), null);
-				// exp = new IsExpression(ve.location, typename, readExpression());
+				exp = AstFactory.newAIsExp(ve.getLocation(), typename, readExpression());
 			}
 		}
 
@@ -1260,8 +1182,7 @@ public class ExpressionReader extends SyntaxReader
 
 		checkFor(VDMToken.KET, 2134, "Expecting pre_(function [,args])");
 
-		return new APreExp(null, ve.getLocation(), function, args);
-		// return new PreExpression(ve.location, function, args);
+		return AstFactory.newAPreExp(ve.getLocation(), function, args);
 	}
 
 	private PExp readSetOrMapExpression(LexLocation start)
@@ -1272,14 +1193,12 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.SET_CLOSE))
 		{
 			nextToken();
-			return new ASetEnumSetExp(start, null); // TODO
-			// return new SetEnumExpression(start); // empty set
+			return AstFactory.newASetEnumSetExp(start); // empty set
 		} else if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
 			checkFor(VDMToken.SET_CLOSE, 2135, "Expecting '}' in empty map");
-			return new AMapEnumMapExp(null, start, null, null, null);
-			// return new MapEnumExpression(start); // empty map
+			return AstFactory.newAMapEnumMapExp(start); // empty map
 		}
 
 		PExp first = readExpression();
@@ -1288,8 +1207,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.MAPLET))
 		{
 			nextToken();
-			AMapletExp maplet = new AMapletExp(null, token.location, first, readExpression());
-			// MapletExpression maplet = new MapletExpression(first, token, readExpression());
+			AMapletExp maplet = AstFactory.newAMapletExp(first, token, readExpression());
 			return readMapExpression(start, maplet);
 		} else
 		{
@@ -1297,12 +1215,10 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	// private SetExpression readSetExpression(LexLocation start, PExp first)
 	private SSetExp readSetExpression(LexLocation start, PExp first)
 			throws ParserException, LexException
 	{
 		SSetExp result = null;
-		// SetExpression result = null;
 
 		if (lastToken().is(VDMToken.PIPE))
 		{
@@ -1318,8 +1234,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2136, "Expecting '}' after set comprehension");
-			result = new ASetCompSetExp(start, first, bindings, exp);
-			// result = new SetCompExpression(start, first, bindings, exp);
+			result = AstFactory.newASetCompSetExp(start, first, bindings, exp);
 		} else
 		{
 			if (lastToken().is(VDMToken.COMMA))
@@ -1333,8 +1248,7 @@ public class ExpressionReader extends SyntaxReader
 					PExp end = readExpression();
 					checkFor(VDMToken.SET_CLOSE, 2138, "Expecting '}' after set range");
 					reader.unpush();
-					return new ASetRangeSetExp(start, first, end); // TODO inheritance issue?
-					// return new SetRangeExpression(start, first, end);
+					return AstFactory.newASetRangeSetExp(start, first, end); 
 				}
 
 				reader.pop(); // Not a set range then...
@@ -1349,14 +1263,12 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
-			result = new ASetEnumSetExp(start, members);
-			// result = new SetEnumExpression(start, members);
+			result = AstFactory.newASetEnumSetExp(start,members);
 		}
 
 		return result;
 	}
 
-	// private MapExpression readMapExpression(LexLocation start, MapletExpression first)
 	private SMapExp readMapExpression(LexLocation start, AMapletExp first)
 			throws ParserException, LexException
 	{
@@ -1376,12 +1288,10 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2140, "Expecting '}' after map comprehension");
-			result = new AMapCompMapExp(null, start, first, bindings, exp); // TODO bindings should be list
-			// result = new MapCompExpression(start, first, bindings, exp);
+			result = AstFactory.newAMapCompMapExp(start, first, bindings, exp); 
 		} else
 		{
 			List<AMapletExp> members = new Vector<AMapletExp>();
-			// List<MapletExpression> members = new Vector<MapletExpression>();
 			members.add(first);
 
 			while (ignore(VDMToken.COMMA))
@@ -1392,8 +1302,7 @@ public class ExpressionReader extends SyntaxReader
 				if (token.is(VDMToken.MAPLET))
 				{
 					nextToken();
-					AMapletExp maplet = new AMapletExp(null, token.location, member, readExpression());
-					// MapletExpression maplet = new MapletExpression(member, token, readExpression());
+					AMapletExp maplet = AstFactory.newAMapletExp( member,token, readExpression());
 					members.add(maplet);
 				} else
 				{
@@ -1402,26 +1311,22 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2141, "Expecting '}' after map enumeration");
-			result = new AMapEnumMapExp(null, start, members, null, null);
-			// result = new MapEnumExpression(start, members);
+			result = AstFactory.newAMapEnumMapExp(start, members);
 		}
 
 		return result;
 	}
 
-	// private SeqExpression readSeqExpression(LexLocation start)
 	private SSeqExp readSeqExpression(LexLocation start)
 			throws ParserException, LexException
 	{
 		if (lastToken().is(VDMToken.SEQ_CLOSE))
 		{
 			nextToken();
-			return new ASeqEnumSeqExp(start, null);
-			// return new SeqEnumExpression(start); // empty list
+			return AstFactory.newASeqEnumSeqExp(start);
 		}
 
 		SSeqExp result = null;
-		// SeqExpression result = null;
 		PExp first = readExpression();
 
 		if (lastToken().is(VDMToken.PIPE))
@@ -1429,7 +1334,6 @@ public class ExpressionReader extends SyntaxReader
 			nextToken();
 			BindReader br = getBindReader();
 			ASetBind setbind = br.readSetBind();
-			// PSet setbind = br.readSetBind();
 			PExp exp = null;
 
 			if (lastToken().is(VDMToken.AMPERSAND))
@@ -1439,8 +1343,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SEQ_CLOSE, 2142, "Expecting ']' after list comprehension");
-			result = new ASeqCompSeqExp(null, start, first, setbind, exp);
-			// result = new SeqCompExpression(start, first, setbind, exp);
+			result = AstFactory.newASeqCompSeqExp(start, first, setbind, exp);
 		} else
 		{
 			List<PExp> members = new NodeList<PExp>(null);
@@ -1452,8 +1355,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SEQ_CLOSE, 2143, "Expecting ']' after list enumeration");
-			result = new ASeqEnumSeqExp(start, members);
-			// result = new SeqEnumExpression(start, members);
+			result = AstFactory.newASeqEnumSeqExp(start, members);
 		}
 
 		return result;
@@ -1466,7 +1368,6 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.THEN, 2144, "Missing 'then'");
 		PExp thenExp = readExpression();
 		List<AElseIfExp> elseList = new Vector<AElseIfExp>();
-		// List<ElseIfExpression> elseList = new Vector<ElseIfExpression>();
 
 		while (lastToken().is(VDMToken.ELSEIF))
 		{
@@ -1485,8 +1386,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2040, "Expecting 'else' in 'if' expression");
 		}
 
-		return new AIfExp(null, start, exp, thenExp, elseList, elseExp);
-		// return new IfExpression(start, exp, thenExp, elseList, elseExp);
+		return AstFactory.newAIfExp(start, exp, thenExp, elseList, elseExp);
 	}
 
 	private AElseIfExp readElseIfExpression(LexLocation start)
@@ -1495,8 +1395,7 @@ public class ExpressionReader extends SyntaxReader
 		PExp exp = readExpression();
 		checkFor(VDMToken.THEN, 2145, "Missing 'then' after 'elseif'");
 		PExp thenExp = readExpression();
-		return new AElseIfExp(null, exp.getLocation(), exp, thenExp);
-		// return new ElseIfExpression(start, exp, thenExp);
+		return AstFactory.newAElseIfExp(start, exp, thenExp);
 	}
 
 	private ACasesExp readCasesExpression(LexLocation start)
@@ -1506,7 +1405,6 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.COLON, 2146, "Expecting ':' after cases expression");
 
 		List<ACaseAlternative> cases = new Vector<ACaseAlternative>();
-		// List<CaseAlternative> cases = new Vector<CaseAlternative>();
 		PExp others = null;
 		cases.addAll(readCaseAlternatives(exp));
 
@@ -1528,8 +1426,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.END, 2148, "Expecting 'end' after cases");
-		return new ACasesExp(null, start, exp, cases, others);
-		// return new CasesExpression(start, exp, cases, others);
+		return AstFactory.newACasesExp(start, exp, cases, others);
 	}
 
 	private List<ACaseAlternative> readCaseAlternatives(PExp exp)
@@ -1537,14 +1434,12 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<ACaseAlternative> alts = new Vector<ACaseAlternative>();
 		List<PPattern> plist = getPatternReader().readPatternList();
-		// PatternList plist = getPatternReader().readPatternList();
 		checkFor(VDMToken.ARROW, 2149, "Expecting '->' after case pattern list");
 		PExp then = readExpression();
 
 		for (PPattern p : plist)
 		{
-			alts.add(new ACaseAlternative(null, exp.clone(), p.clone(), then.clone(), null));
-			// alts.add(new CaseAlternative(exp, p, then));
+			alts.add(AstFactory.newACaseAlternative(exp.clone(), p.clone(), then.clone()));
 		}
 
 		return alts;
@@ -1559,7 +1454,6 @@ public class ExpressionReader extends SyntaxReader
 		{
 			reader.push();
 			ALetDefExp exp = readLetDefExpression(start);
-			// LetDefExpression exp = readLetDefExpression(start);
 			reader.unpush();
 			return exp;
 		} catch (ParserException e)
@@ -1573,7 +1467,6 @@ public class ExpressionReader extends SyntaxReader
 		{
 			reader.push();
 			ALetBeStExp exp = readLetBeStExpression(start);
-			// LetBeStExpression exp = readLetBeStExpression(start);
 			reader.unpush();
 			return exp;
 		} catch (ParserException e)
@@ -1601,8 +1494,7 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2150, "Expecting 'in' after local definitions");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new ALetDefExp(null, start, localDefs, readConnectiveExpression());
-		// return new LetDefExpression(start, localDefs, readConnectiveExpression());
+		return AstFactory.newALetDefExp(start, localDefs, readConnectiveExpression());
 	}
 
 	private ALetBeStExp readLetBeStExpression(LexLocation start)
@@ -1621,8 +1513,7 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2152, "Expecting 'in' after bind in let expression");
 		// Note we read a Connective expression for the body, so that |->
 		// terminates the parse.
-		return new ALetBeStExp(null, start, bind, stexp, readConnectiveExpression(), null);
-		// return new LetBeStExpression(start, bind, stexp, readConnectiveExpression());
+		return AstFactory.newALetBeStExp(start, bind, stexp, readConnectiveExpression());
 	}
 
 	private AForAllExp readForAllExpression(LexLocation start)
@@ -1630,8 +1521,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<PMultipleBind> bindList = getBindReader().readBindList();
 		checkFor(VDMToken.AMPERSAND, 2153, "Expecting '&' after bind list in forall");
-		return new AForAllExp(null, start, bindList, readExpression());
-		// return new ForAllExpression(start, bindList, readExpression());
+		return AstFactory.newAForAllExp(start, bindList, readExpression());
 	}
 
 	private AExistsExp readExistsExpression(LexLocation start)
@@ -1639,28 +1529,23 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<PMultipleBind> bindList = getBindReader().readBindList();
 		checkFor(VDMToken.AMPERSAND, 2154, "Expecting '&' after bind list in exists");
-		return new AExistsExp(null, start, bindList, readExpression());
-		// return new ExistsExpression(start, bindList, readExpression());
+		return AstFactory.newAExistsExp(start, bindList, readExpression());
 	}
 
 	private AExists1Exp readExists1Expression(LexLocation start)
 			throws ParserException, LexException
 	{
 		PBind bind = getBindReader().readBind();
-		// Bind bind = getBindReader().readBind();
 		checkFor(VDMToken.AMPERSAND, 2155, "Expecting '&' after single bind in exists1");
-		return new AExists1Exp(null, start, bind, readExpression(), null);
-		// return new Exists1Expression(start, bind, readExpression());
+		return AstFactory.newAExists1Exp(start, bind, readExpression());
 	}
 
 	private AIotaExp readIotaExpression(LexLocation start)
 			throws ParserException, LexException
 	{
 		PBind bind = getBindReader().readBind();
-		// Bind bind = getBindReader().readBind();
 		checkFor(VDMToken.AMPERSAND, 2156, "Expecting '&' after single bind in iota");
-		return new AIotaExp(null, start, bind, readExpression());
-		// return new IotaExpression(start, bind, readExpression());
+		return AstFactory.newAIotaExp(start, bind, readExpression());
 	}
 
 	private ALambdaExp readLambdaExpression(LexLocation start)
@@ -1668,8 +1553,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		List<ATypeBind> bindList = getBindReader().readTypeBindList();
 		checkFor(VDMToken.AMPERSAND, 2157, "Expecting '&' after bind list in lambda");
-		return new ALambdaExp(null, start, bindList, readExpression(), null, null, null);
-		// return new LambdaExpression(start, bindList, readExpression());
+		return AstFactory.newALambdaExp(start, bindList, readExpression());
 	}
 
 	private ADefExp readDefExpression(LexLocation start)
@@ -1685,8 +1569,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2158, "Expecting 'in' after equals definitions");
-		return new ADefExp(null, start, equalsDefs, readExpression());
-		// return new DefExpression(start, equalsDefs, readExpression());
+		return AstFactory.newADefExp(start, equalsDefs, readExpression());
 	}
 
 	private ANewExp readNewExpression(LexLocation start)
@@ -1709,8 +1592,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
-		return new ANewExp(start, name, args);
-		// return new NewExpression(start, name, args);
+		return AstFactory.newANewExp(start, name, args);
 	}
 
 	private AIsOfBaseClassExp readIsOfBaseExpression(LexLocation start)
@@ -1737,8 +1619,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfBaseClassExp(null, start, classname.getExplicit(false), args.get(1));
-		// return new IsOfBaseClassExpression(start, classname, args.get(1));
+		return AstFactory.newAIsOfBaseClassExp(start, classname, args.get(1));
 	}
 
 	private AIsOfClassExp readIsOfClassExpression(LexLocation start)
@@ -1765,8 +1646,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2295, "Can't use old name here", classname);
 		}
 
-		return new AIsOfClassExp(null, start, classname.getExplicit(false), null, args.get(1));
-		// return new IsOfClassExpression(start, classname, args.get(1));
+		return AstFactory.newAIsOfClassExp(start, classname, args.get(1));
 	}
 
 	private ASameBaseClassExp readSameBaseExpression(LexLocation start)
@@ -1781,8 +1661,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2045, "Expecting two expressions in 'samebaseclass'");
 		}
 
-		return new ASameBaseClassExp(null, start, args.get(0), args.get(1));
-		// return new SameBaseClassExpression(start, args);
+		return AstFactory.newASameBaseClassExp(start, args);
 	}
 
 	private ASameClassExp readSameClassExpression(LexLocation start)
@@ -1797,8 +1676,7 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2046, "Expecting two expressions in 'sameclass'");
 		}
 
-		return new ASameClassExp(null, start, args.get(0), args.get(1));
-		// return new SameClassExpression(start, args);
+		return AstFactory.newASameClassExp(start, args);
 	}
 
 	private boolean inPerExpression = false;
@@ -1843,8 +1721,7 @@ public class ExpressionReader extends SyntaxReader
 				}
 
 				checkFor(VDMToken.KET, 2169, "Expecting " + s + "(name(s))");
-				return new AHistoryExp(null, location, op, opnames);
-				// return new HistoryExpression(location, op.type, opnames);
+				return AstFactory.newAHistoryExp(location, op, opnames);
 
 			default:
 				throwMessage(2048, "Expecting #act, #active, #fin, #req or #waiting");

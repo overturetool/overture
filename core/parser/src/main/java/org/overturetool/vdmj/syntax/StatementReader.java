@@ -28,51 +28,24 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.AUndefinedExp;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
-import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
-import org.overture.ast.statements.ACallObjectStm;
-import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.ACyclesStm;
 import org.overture.ast.statements.ADefLetDefStm;
-import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AErrorStm;
-import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AFieldObjectDesignator;
-import org.overture.ast.statements.AFieldStateDesignator;
-import org.overture.ast.statements.AForAllStm;
-import org.overture.ast.statements.AForIndexStm;
-import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
-import org.overture.ast.statements.AIdentifierStateDesignator;
-import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
-import org.overture.ast.statements.AMapSeqStateDesignator;
-import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
-import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.ast.statements.AReturnStm;
-import org.overture.ast.statements.ASelfObjectDesignator;
-import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
-import org.overture.ast.statements.AStartStm;
-import org.overture.ast.statements.ASubclassResponsibilityStm;
-import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
-import org.overture.ast.statements.ATrapStm;
-import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
@@ -178,12 +151,12 @@ public class StatementReader extends SyntaxReader
 				break;
 
 			case ERROR:
-				stmt = new AErrorStm(location);
+				stmt = AstFactory.newAErrorStm(location);
 				nextToken();
 				break;
 
 			case SKIP:
-				stmt = new ASkipStm(location);
+				stmt = AstFactory.newASkipStm(location);
 				nextToken();
 				break;
 
@@ -194,13 +167,13 @@ public class StatementReader extends SyntaxReader
 						nextToken();
 						checkFor(VDMToken.YET, 2187, "Expecting 'is not yet specified");
 						checkFor(VDMToken.SPECIFIED, 2188, "Expecting 'is not yet specified");
-						stmt = new ANotYetSpecifiedStm(location, null, null);
+						stmt = AstFactory.newANotYetSpecifiedStm(location);
 						break;
 
 					case SUBCLASS:
 						nextToken();
 						checkFor(VDMToken.RESPONSIBILITY, 2189, "Expecting 'is subclass responsibility'");
-						stmt = new ASubclassResponsibilityStm(location);
+						stmt = AstFactory.newASubclassResponsibilityStm(location);
 						break;
 
 					default:
@@ -241,13 +214,13 @@ public class StatementReader extends SyntaxReader
 			reader.push();
 			PExp exp = getExpressionReader().readExpression();
 			reader.unpush();
-			return new AExitStm(token, exp);
+			return AstFactory.newAExitStm(token, exp);
 		} catch (ParserException e)
 		{
 			reader.pop();
 		}
 
-		return new AExitStm(token, null);
+		return AstFactory.newAExitStm(token);
 	}
 
 	private PStm readTixeStatement(LexLocation token) throws ParserException,
@@ -264,7 +237,7 @@ public class StatementReader extends SyntaxReader
 			ADefPatternBind patternBind = br.readPatternOrBind();
 			checkFor(VDMToken.MAPLET, 2193, "Expecting '|->' after pattern bind");
 			PStm result = readStatement();
-			traps.add(new ATixeStmtAlternative(patternBind, result));
+			traps.add(AstFactory.newATixeStmtAlternative(patternBind, result));
 			ignore(VDMToken.COMMA);
 		}
 
@@ -272,7 +245,7 @@ public class StatementReader extends SyntaxReader
 		checkFor(VDMToken.IN, 2194, "Expecting 'in' after tixe traps");
 		PStm body = getStatementReader().readStatement();
 
-		return new ATixeStm(token, traps, body);
+		return  AstFactory.newATixeStm(token, traps, body);
 	}
 
 	private PStm readTrapStatement(LexLocation token) throws ParserException,
@@ -284,7 +257,7 @@ public class StatementReader extends SyntaxReader
 		PStm with = getStatementReader().readStatement();
 		checkFor(VDMToken.IN, 2197, "Expecting 'in' in trap statement");
 		PStm body = getStatementReader().readStatement();
-		return new ATrapStm(token, patternBind, with, body);
+		return AstFactory.newATrapStm(token, patternBind, with, body);
 	}
 
 	private PStm readAlwaysStatement(LexLocation token) throws ParserException,
@@ -294,7 +267,7 @@ public class StatementReader extends SyntaxReader
 		PStm always = getStatementReader().readStatement();
 		checkFor(VDMToken.IN, 2199, "Expecting 'in' after 'always' statement");
 		PStm body = getStatementReader().readStatement();
-		return new AAlwaysStm(token, always, body);
+		return AstFactory.newAAlwaysStm(token, always, body);
 	}
 
 	private PStm readNonDetStatement(LexLocation token) throws ParserException,
@@ -302,7 +275,7 @@ public class StatementReader extends SyntaxReader
 	{
 		checkFor(VDMToken.PIPEPIPE, 2200, "Expecting '||'");
 		checkFor(VDMToken.BRA, 2201, "Expecting '(' after '||'");
-		ANonDeterministicSimpleBlockStm block = new ANonDeterministicSimpleBlockStm(token, new Vector<PStm>());
+		ANonDeterministicSimpleBlockStm block = AstFactory.newANonDeterministicSimpleBlockStm(token);
 		block.getStatements().add(readStatement()); // Must be one
 
 		while (ignore(VDMToken.COMMA))
@@ -364,7 +337,7 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.KET, 2205, "Expecting ')' after atomic assignments");
-		return new AAtomicStm(token, assignments);
+		return AstFactory.newAAtomicStm(token, assignments);
 	}
 
 	private PStm readCallStatement() throws ParserException, LexException
@@ -398,7 +371,7 @@ public class StatementReader extends SyntaxReader
 
 		checkFor(VDMToken.KET, 2124, "Expecting ')' after args");
 
-		return new ACallStm(name.location, name, args);
+		return AstFactory.newACallStm(name, args);
 	}
 
 	private PStm readObjectCallStatement() throws ParserException, LexException
@@ -423,15 +396,15 @@ public class StatementReader extends SyntaxReader
 
 			if (ofd.getClassName() != null)
 			{
-				return new ACallObjectStm(ofd.getObject().getLocation(), ofd.getObject(), ofd.getClassName(), null, null, args, ofd.getClassName().explicit);
+				return AstFactory.newACallObjectStm(ofd.getObject(), ofd.getClassName(),args);
 			} else
 			{
-				return new ACallObjectStm(ofd.getObject().getLocation(), ofd.getObject(), null, (LexIdentifierToken) ofd.getFieldName().clone(), null, args, false);
+				return AstFactory.newACallObjectStm(ofd.getObject(), (LexIdentifierToken) ofd.getFieldName().clone(), args);
 			}
 		} else if (oad.getObject() instanceof AIdentifierObjectDesignator)
 		{
 			AIdentifierObjectDesignator oid = (AIdentifierObjectDesignator) oad.getObject();
-			return new ACallStm(oid.getName().location, oid.getName(), args);
+			return AstFactory.newACallStm(oid.getName(), args);
 		} else
 		{
 			throwMessage(2065, "Expecting <object>.name(args) or name(args)");
@@ -459,11 +432,11 @@ public class StatementReader extends SyntaxReader
 					switch (field.type)
 					{
 						case IDENTIFIER:
-							des = new AFieldObjectDesignator(des.getLocation(), des, null, (LexIdentifierToken) field);
+							des = AstFactory.newAFieldObjectDesignator(des, (LexIdentifierToken) field);
 							break;
 
 						case NAME:
-							des = new AFieldObjectDesignator(des.getLocation(), des, (LexNameToken) field, null);
+							des = AstFactory.newAFieldObjectDesignator(des, (LexNameToken) field);
 							break;
 
 						default:
@@ -489,7 +462,7 @@ public class StatementReader extends SyntaxReader
 					}
 
 					checkFor(VDMToken.KET, 2124, "Expecting ')' after args");
-					des = new AApplyObjectDesignator(des.getLocation(), des, args);
+					des = AstFactory.newAApplyObjectDesignator(des, args);
 					break;
 
 				default:
@@ -509,17 +482,15 @@ public class StatementReader extends SyntaxReader
 		switch (token.type)
 		{
 			case SELF:
-				return new ASelfObjectDesignator(token.location, new LexNameToken(token.location.module, "self", token.location));
+				return AstFactory.newASelfObjectDesignator(token.location);
 
 			case IDENTIFIER:
 			{
-				LexNameToken tok = idToName((LexIdentifierToken) token).getExplicit(true);
-				return new AIdentifierObjectDesignator(token.location, idToName((LexIdentifierToken) token), new AVariableExp(token.location, tok, tok.getName()));
+				return AstFactory.newAIdentifierObjectDesignator(idToName((LexIdentifierToken) token));
 			}
 			case NAME:
 			{
-				LexNameToken tok = ((LexNameToken) token).getExplicit(true);
-				return new AIdentifierObjectDesignator(token.location, (LexNameToken) token, new AVariableExp(token.location, tok, tok.getName()));
+				return AstFactory.newAIdentifierObjectDesignator((LexNameToken) token);
 			}
 			case NEW:
 				LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
@@ -540,7 +511,7 @@ public class StatementReader extends SyntaxReader
 
 				checkFor(VDMToken.KET, 2124, "Expecting ')' after constructor args");
 
-				return new ANewObjectDesignator(name.location, new ANewExp(name.location, name, args));
+				return AstFactory.newANewObjectDesignator(name,args);
 
 			default:
 				throwMessage(2067, "Expecting 'self', 'new' or name in object designator");
@@ -557,7 +528,7 @@ public class StatementReader extends SyntaxReader
 		PExp exp = getExpressionReader().readExpression();
 		checkFor(VDMToken.DO, 2209, "Expecting 'do' after while expression");
 		PStm body = getStatementReader().readStatement();
-		return new AWhileStm(token, exp, body);
+		return AstFactory.newAWhileStm(token, exp, body);
 	}
 
 	private PStm readForStatement(LexLocation token) throws ParserException,
@@ -575,7 +546,7 @@ public class StatementReader extends SyntaxReader
 			PExp set = getExpressionReader().readExpression();
 			checkFor(VDMToken.DO, 2213, "Expecting 'do' after for all expression");
 			PStm body = getStatementReader().readStatement();
-			return new AForAllStm(token, p, set, body);
+			return AstFactory.newAForAllStm(token, p, set, body);
 		} else
 		{
 			ParserException forIndexError = null;
@@ -623,14 +594,14 @@ public class StatementReader extends SyntaxReader
 			PExp exp = getExpressionReader().readExpression();
 			checkFor(VDMToken.DO, 2215, "Expecting 'do' before loop statement");
 			PStm body = getStatementReader().readStatement();
-			return new AForPatternBindStm(token, pb, false, exp, body);
+			return AstFactory.newAForPatternBindStm(token, pb, false, exp, body);
 		} else
 		{
 			boolean reverse = ignore(VDMToken.REVERSE);
 			PExp exp = getExpressionReader().readExpression();
 			checkFor(VDMToken.DO, 2215, "Expecting 'do' before loop statement");
 			PStm body = getStatementReader().readStatement();
-			return new AForPatternBindStm(token, pb, reverse, exp, body);
+			return AstFactory.newAForPatternBindStm(token, pb, reverse, exp, body);
 		}
 	}
 
@@ -652,7 +623,7 @@ public class StatementReader extends SyntaxReader
 
 		checkFor(VDMToken.DO, 2218, "Expecting 'do' before loop statement");
 		PStm body = getStatementReader().readStatement();
-		return new AForIndexStm(token, idToName(var), from, to, by, body);
+		return AstFactory.newAForIndexStm(token, idToName(var), from, to, by, body);
 	}
 
 	private PStm readConditionalStatement(LexLocation token)
@@ -678,7 +649,7 @@ public class StatementReader extends SyntaxReader
 			elseStmt = readStatement();
 		}
 
-		return new AIfStm(token, exp, thenStmt, elseIfList, elseStmt);
+		return AstFactory.newAIfStm(token, exp, thenStmt, elseIfList, elseStmt);
 	}
 
 	private AElseIfStm readElseIfStatement(LexLocation token)
@@ -687,7 +658,7 @@ public class StatementReader extends SyntaxReader
 		PExp exp = getExpressionReader().readExpression();
 		checkFor(VDMToken.THEN, 2220, "Missing 'then' after 'elseif' expression");
 		PStm thenStmt = readStatement();
-		return new AElseIfStm(token, exp, thenStmt);
+		return AstFactory.newAElseIfStm(token, exp, thenStmt);
 	}
 
 	private AAssignmentStm readAssignmentStatement(LexLocation token)
@@ -695,7 +666,7 @@ public class StatementReader extends SyntaxReader
 	{
 		PStateDesignator sd = readStateDesignator();
 		checkFor(VDMToken.ASSIGN, 2222, "Expecting ':=' in state assignment statement");
-		return new AAssignmentStm(token, sd, getExpressionReader().readExpression());
+		return AstFactory.newAAssignmentStm(token, sd, getExpressionReader().readExpression());
 	}
 
 	private PStateDesignator readStateDesignator() throws ParserException,
@@ -703,7 +674,7 @@ public class StatementReader extends SyntaxReader
 	{
 		LexNameToken name = readNameToken("Expecting name in assignment statement");
 
-		PStateDesignator sd = new AIdentifierStateDesignator(name.location, null, name);
+		PStateDesignator sd = AstFactory.newAIdentifierStateDesignator(name);
 
 		while (lastToken().is(VDMToken.POINT) || lastToken().is(VDMToken.BRA))
 		{
@@ -714,14 +685,14 @@ public class StatementReader extends SyntaxReader
 					throwMessage(2068, "Expecting field identifier");
 				}
 
-				sd = new AFieldStateDesignator(sd.getLocation(), sd, lastIdToken());
+				sd = AstFactory.newAFieldStateDesignator(sd, lastIdToken());
 				nextToken();
 			} else
 			{
 				nextToken();
 				PExp exp = getExpressionReader().readExpression();
 				checkFor(VDMToken.KET, 2223, "Expecting ')' after map/seq reference");
-				sd = new AMapSeqStateDesignator(sd.getLocation(), sd, exp);
+				sd = AstFactory.newAMapSeqStateDesignator(sd, exp);
 			}
 		}
 
@@ -733,7 +704,7 @@ public class StatementReader extends SyntaxReader
 	{
 		LexToken start = lastToken();
 		checkFor(VDMToken.BRA, 2224, "Expecting statement block");
-		ABlockSimpleBlockStm block = new ABlockSimpleBlockStm(token, null, readDclStatements());
+		ABlockSimpleBlockStm block = AstFactory.newABlockSimpleBlockStm(token, readDclStatements());
 		boolean problems = false;
 		
 		while (true) // Loop for continue in exceptions
@@ -816,13 +787,10 @@ public class StatementReader extends SyntaxReader
 			throwMessage(2069, "Expecting <identifier>:<type> := <expression>");
 		} else
 		{
-			exp = new AUndefinedExp(type, name.location);
+			exp = AstFactory.newAUndefinedExp(name.location);
 		}
 
-		AAssignmentDefinition assignmentDefinition = new AAssignmentDefinition(name.location, idToName(name), NameScope.STATE, false, null, null, type, exp, null);
-		assignmentDefinition.getLocation().executable(false);
-
-		return assignmentDefinition;
+		return AstFactory.newAAssignmentDefinition(idToName(name), type, exp);
 	}
 
 	private PStm readReturnStatement(LexLocation token) throws ParserException,
@@ -835,7 +803,7 @@ public class StatementReader extends SyntaxReader
 			reader.push();
 			PExp exp = getExpressionReader().readExpression();
 			reader.unpush();
-			return new AReturnStm(token, exp);
+			return AstFactory.newAReturnStm(token, exp);
 		} catch (ParserException e)
 		{
 			int count = reader.getTokensRead();
@@ -849,7 +817,7 @@ public class StatementReader extends SyntaxReader
 			} else
 			{
 				// Probably just a simple return
-				return new AReturnStm(token, null);
+				return AstFactory.newAReturnStm(token);
 			}
 		}
 	}
@@ -900,7 +868,7 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2231, "Expecting 'in' after local definitions");
-		return new ADefLetDefStm(token, localDefs, readStatement());
+		return AstFactory.newADefLetDefStm(token, localDefs, readStatement());
 	}
 
 	private ALetBeStStm readLetBeStStatement(LexLocation token)
@@ -917,7 +885,7 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.IN, 2233, "Expecting 'in' after bind in let statement");
-		return new ALetBeStStm(token, bind, stexp, readStatement());
+		return AstFactory.newALetBeStStm(token, bind, stexp, readStatement());
 	}
 
 	private ACasesStm readCasesStatement(LexLocation token)
@@ -949,7 +917,7 @@ public class StatementReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.END, 2238, "Expecting 'end' after cases");
-		return new ACasesStm(token, exp, cases, others);
+		return AstFactory.newACasesStm(token, exp, cases, others);
 	}
 
 	private List<ACaseAlternativeStm> readCaseAlternatives()
@@ -962,7 +930,7 @@ public class StatementReader extends SyntaxReader
 
 		for (PPattern p : plist)
 		{
-			alts.add(new ACaseAlternativeStm(p.getLocation(), null, p.clone(), result.clone()));
+			alts.add(AstFactory.newACaseAlternativeStm(p.clone(), result.clone()));
 		}
 
 		return alts;
@@ -983,8 +951,7 @@ public class StatementReader extends SyntaxReader
 
 		checkFor(VDMToken.IN, 2240, "Expecting 'in' after equals definitions");
 
-		return new ADefLetDefStm(token, equalsDefs, readStatement());
-		// return new DefStatement(token, equalsDefs, readStatement());
+		return AstFactory.newADefLetDefStm(token, equalsDefs, readStatement());
 	}
 
 	private ASpecificationStm readSpecStatement(LexLocation token)
@@ -1004,7 +971,7 @@ public class StatementReader extends SyntaxReader
 		checkFor(VDMToken.BRA, 2244, "Expecting 'start('");
 		PExp obj = getExpressionReader().readExpression();
 		checkFor(VDMToken.KET, 2245, "Expecting ')' after start object");
-		return new AStartStm(location, obj);
+		return AstFactory.newAStartStm(location, obj);
 	}
 
 	private PStm readStartlistStatement(LexLocation location)
@@ -1014,7 +981,7 @@ public class StatementReader extends SyntaxReader
 		checkFor(VDMToken.BRA, 2247, "Expecting 'startlist('");
 		PExp set = getExpressionReader().readExpression();
 		checkFor(VDMToken.KET, 2248, "Expecting ')' after startlist objects");
-		return new AStartStm(location, set);
+		return AstFactory.newAStartStm(location, set);
 	}
 
 	private PStm readDurationStatement(LexLocation location)
@@ -1025,7 +992,7 @@ public class StatementReader extends SyntaxReader
 		PExp duration = getExpressionReader().readExpression();
 		checkFor(VDMToken.KET, 2273, "Expecting ')' after duration");
 		PStm stmt = readStatement();
-		return new ADurationStm(location, duration, stmt);
+		return AstFactory.newADurationStm(location, duration, stmt);
 	}
 
 	private PStm readCyclesStatement(LexLocation location) throws LexException,
@@ -1036,6 +1003,6 @@ public class StatementReader extends SyntaxReader
 		PExp duration = getExpressionReader().readExpression();
 		checkFor(VDMToken.KET, 2276, "Expecting ')' after cycles");
 		PStm stmt = readStatement();
-		return new ACyclesStm(location, duration, stmt);
+		return AstFactory.newACyclesStm(location, duration, stmt);
 	}
 }

@@ -7,7 +7,7 @@ Tokens
 /* This section declared tokens as internal types or external classes
  * internal definitions:
  *  plus='+';
- * 
+ *  
  * external
  *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
  */
@@ -25,6 +25,7 @@ Tokens
   ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
   location = 'java:org.overturetool.vdmj.lex.LexLocation';
   nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
+  Pass = 'java:enum:org.overturetool.vdmj.typechecker.Pass'; 
   
   //Java
   java_Boolean = 'java:java.lang.Boolean';
@@ -239,7 +240,7 @@ type {-> package='org.overture.ast.types'}
     ;
 #invariant {-> package='org.overture.ast.types'}
     =   {named} (name):LexNameToken (type):type //[invdef]:explicitFunction //super = invariant type
-    |   {record} [name]:LexNameToken [fields]:field.field* (infinite):java_Boolean //[invdef]:explicitFunction //super = invariant type
+    |   {record} [name]:LexNameToken (fields):field.field* (infinite):java_Boolean //[invdef]:explicitFunction //super = invariant type
     ;
 
 #basic {-> package='org.overture.ast.types'}
@@ -270,6 +271,7 @@ access  {-> package='org.overture.ast.definitions'}
     |   {private}
     ;
 
+
 pattern {-> package='org.overture.ast.patterns'}
     =   {boolean} [value]:LexBooleanToken
     |   {character} [value]:LexCharacterToken
@@ -286,8 +288,14 @@ pattern {-> package='org.overture.ast.patterns'}
     |   {set} [plist]:pattern*
     |   {string} [value]:LexStringToken
     |   {tuple} [plist]:pattern*
-    |   {union} [left]:pattern [right]:pattern
+    |   {union} [left]:pattern [right]:pattern   
+    |   {map} [maplets]:maplet.mapletPattern*
+    |   {mapUnion} [left]:pattern [right]:pattern
     ;
+    
+maplet {-> package='org.overture.ast.patterns'}
+    =   {mapletPattern} [from]:pattern [to]:pattern [resolved]:java_Boolean
+    ;    
     
 pair {-> package='org.overture.ast.patterns'}
     = {patternType} [pattern]:pattern (type):type
@@ -438,7 +446,7 @@ traceCoreDefinition {-> package='org.overture.ast.definitions.traces'}
 //trace end....
 
 #class {-> package='org.overture.ast.definitions'}
-    = {bus}
+    = {bus} (instance):definition.#class.bus
     | {cpu}
     | {system}
     | {class}//Hmm we cant instanciate SClassDefinition...
@@ -610,7 +618,7 @@ Aspect Declaration
         (classDefinition):definition.#class 
         [access]:accessSpecifier.accessSpecifier
         (type):type 
-        // [pass]:pass
+        [pass]:Pass
     ;
 
 %definition->#class

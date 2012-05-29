@@ -30,6 +30,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
 import org.overture.typecheck.visitors.TypeCheckVisitor;
+import org.overturetool.vdmj.typechecker.Pass;
 
 /**
  * A class to coordinate all class type checking processing.

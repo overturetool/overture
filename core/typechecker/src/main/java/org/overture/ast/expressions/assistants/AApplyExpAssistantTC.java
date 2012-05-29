@@ -8,7 +8,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.TypeCheckerErrors;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameList;
@@ -87,7 +87,7 @@ public class AApplyExpAssistantTC {
 		{
 			TypeCheckerErrors.concern(isSimple, 3055, "Sequence selector must have one argument",node.getLocation(),node);
 		}
-		else if (!PTypeAssistant.isNumeric(node.getArgtypes().get(0)))
+		else if (!PTypeAssistantTC.isNumeric(node.getArgtypes().get(0)))
 		{
 			TypeCheckerErrors.concern(isSimple, 3056, "Sequence application argument must be numeric",node.getLocation(),node);
 		}

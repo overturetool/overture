@@ -65,7 +65,7 @@ public class AClassTypeAssistantTC {
 					}
 				}
 				question = new TypeCheckInfo(self,question.scope,question.qualifiers);				
-				PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(d), root, rootVisitor, question);
+				PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), root, rootVisitor, question);
 			}
 
 			return type;
@@ -85,7 +85,7 @@ public class AClassTypeAssistantTC {
 
     		for (PDefinition d: type.getClassdef().getDefinitions())
     		{
-    			PTypeAssistant.unResolve(d.getType());
+    			PTypeAssistantTC.unResolve(PDefinitionAssistantTC.getType(d));
     		}
 		}
 		
@@ -96,7 +96,7 @@ public class AClassTypeAssistantTC {
 	}
 
 	public static boolean equals(AClassType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AClassType)
 		{

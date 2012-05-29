@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.vdmjUtils.VdmjCompatibilityUtils;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
@@ -85,7 +86,7 @@ public class OvertureTestHelper
 		{
 			reader = new ClassReader(ltr);
 			result = reader.readClasses();
-			collectParserErrorsAndWarnings(reader, errors, warnings);
+			VdmjCompatibilityUtils.collectParserErrorsAndWarnings(reader, errors, warnings);
 		} catch (Exception e)
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
@@ -108,7 +109,7 @@ public class OvertureTestHelper
 		{
 			reader = new ModuleReader(ltr);
 			result = reader.readModules();
-			collectParserErrorsAndWarnings(reader, errors, warnings);
+			VdmjCompatibilityUtils.collectParserErrorsAndWarnings(reader, errors, warnings);
 		} catch (Exception e)
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
@@ -141,23 +142,5 @@ public class OvertureTestHelper
 		return new Result("some result", warnings, errors);
 	}
 
-	protected void collectParserErrorsAndWarnings(SyntaxReader reader,
-			Set<IMessage> errors, Set<IMessage> warnings)
-	{
-		if (reader != null && reader.getErrorCount() > 0)
-		{
-			for (VDMError msg : reader.getErrors())
-			{
-				errors.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.endPos, msg.message));
-			}
-		}
-
-		if (reader != null && reader.getWarningCount() > 0)
-		{
-			for (VDMWarning msg : reader.getWarnings())
-			{
-				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.endPos, msg.message));
-			}
-		}
-	}
+	
 }

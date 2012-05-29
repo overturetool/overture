@@ -10,7 +10,7 @@ public class AQuoteTypeAssistantTC {
 	}
 
 	public static boolean equals(AQuoteType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AQuoteType)
 		{

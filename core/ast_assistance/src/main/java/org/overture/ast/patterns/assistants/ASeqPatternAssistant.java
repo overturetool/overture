@@ -8,12 +8,12 @@ import org.overturetool.vdmj.lex.LexNameList;
 public class ASeqPatternAssistant {
 
 	
-	public static LexNameList getVariableNames(ASeqPattern pattern) {
+	public static LexNameList getAllVariableNames(ASeqPattern pattern) {
 		LexNameList list = new LexNameList();
 
 		for (PPattern p: pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getVariableNames(p));
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
 		}
 
 		return list;

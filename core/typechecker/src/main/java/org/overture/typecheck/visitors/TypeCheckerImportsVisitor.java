@@ -4,21 +4,19 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.AOperationValueImport;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.SValueImport;
-import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
 import org.overture.typecheck.FlatCheckedEnvironment;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;
@@ -52,12 +50,12 @@ public class TypeCheckerImportsVisitor extends
 			PDefinition def = node.getDef();
 			LexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
-			def.setType((SInvariantType)PTypeAssistant.typeResolve(PDefinitionAssistantTC.getType(def),null,rootVisitor,question));
+			def.setType((SInvariantType)PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(def),null,rootVisitor,question));
 			PDefinition expdef = PDefinitionListAssistantTC.findType(from.getExportdefs(),name, null);
 
 			if (expdef != null)
 			{
-				PType exptype = PTypeAssistant.typeResolve(expdef.getType(),null,rootVisitor,question);
+				PType exptype = PTypeAssistantTC.typeResolve(expdef.getType(),null,rootVisitor,question);
 
 				if (!TypeComparator.compatible(def.getType(), exptype))
 				{
@@ -78,12 +76,12 @@ public class TypeCheckerImportsVisitor extends
 		
 		if (type != null && from != null)
 		{
-			type = PTypeAssistant.typeResolve(type, null, rootVisitor, question);
+			type = PTypeAssistantTC.typeResolve(type, null, rootVisitor, question);
 			PDefinition expdef = PDefinitionListAssistantTC.findName(from.getExportdefs(), name, NameScope.NAMES);
 
 			if (expdef != null)
 			{
-    			PType exptype = PTypeAssistant.typeResolve(expdef.getType(), null, rootVisitor, question);
+    			PType exptype = PTypeAssistantTC.typeResolve(expdef.getType(), null, rootVisitor, question);
 
     			if (!TypeComparator.compatible(type, exptype))
     			{
@@ -111,8 +109,8 @@ public class TypeCheckerImportsVisitor extends
 
     		for (LexNameToken pname: node.getTypeParams())
     		{
-    			PDefinition p = new ALocalDefinition(
-    				pname.location, NameScope.NAMES, false, null, PAccessSpecifierAssistantTC.getDefault(), new AParameterType(pname.getLocation(),false,pname.clone()), false,pname.clone());
+    			PDefinition p = 
+    					AstFactory.newALocalDefinition(pname.location, pname, NameScope.NAMES, AstFactory.newAParameterType(pname));
 
     			PDefinitionAssistantTC.markUsed(p);
     			defs.add(p);

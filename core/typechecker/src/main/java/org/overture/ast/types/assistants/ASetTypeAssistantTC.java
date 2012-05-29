@@ -2,11 +2,13 @@ package org.overture.ast.types.assistants;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class ASetTypeAssistantTC {
 
@@ -18,7 +20,7 @@ public class ASetTypeAssistantTC {
 
 		try
 		{
-			type.setSetof(PTypeAssistant.typeResolve(type.getSetof(), root, rootVisitor, question));
+			type.setSetof(PTypeAssistantTC.typeResolve(type.getSetof(), root, rootVisitor, question));
 			if (root != null) root.setInfinite(false);	// Could be empty
 			return type;
 		}
@@ -31,7 +33,7 @@ public class ASetTypeAssistantTC {
 
 	public static void unResolve(ASetType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		PTypeAssistant.unResolve(type.getSetof()) ;
+		PTypeAssistantTC.unResolve(type.getSetof()) ;
 		
 	}
 
@@ -40,13 +42,13 @@ public class ASetTypeAssistantTC {
 	}
 
 	public static boolean equals(ASetType type, PType other) {
-		other = PTypeAssistant.deBracket(other);
+		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof ASetType)
 		{
 			ASetType os = (ASetType)other;
 			// NB empty set same type as any set
-			return type.getEmpty() || os.getEmpty() || PTypeAssistant.equals(type.getSetof(), os.getSetof());
+			return type.getEmpty() || os.getEmpty() || PTypeAssistantTC.equals(type.getSetof(), os.getSetof());
 		}
 
 		return false;
@@ -62,7 +64,12 @@ public class ASetTypeAssistantTC {
 
 	public static boolean narrowerThan(ASetType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistant.narrowerThan(type.getSetof(),accessSpecifier);
+		return PTypeAssistantTC.narrowerThan(type.getSetof(),accessSpecifier);
+	}
+
+	public static PType polymorph(ASetType type, LexNameToken pname,
+			PType actualType) {
+		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), pname, actualType));
 	}
 
 }

@@ -3,12 +3,12 @@ package org.overture.ast.types.assistants;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.Vector;
 
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
@@ -49,8 +49,7 @@ public class PTypeSet extends TreeSet<PType>
 			// we ignore the Seq1Type.
 
 			ASeq1SeqType s1t = (ASeq1SeqType) t;
-			ASeqSeqType st = new ASeqSeqType(s1t.getLocation(), false, false);
-			st.setSeqof(s1t.getSeqof() );	
+			ASeqSeqType st = AstFactory.newASeqSeqType(s1t.getLocation(),s1t.getSeqof());
 			if (contains(st))
 			{
 				return false; // Was already there
@@ -61,8 +60,7 @@ public class PTypeSet extends TreeSet<PType>
 			// we replace the Seq1Type.
 
 			ASeqSeqType st = (ASeqSeqType) t;
-			ASeq1SeqType s1t = new ASeq1SeqType(st.getLocation(), false, null);
-			s1t.setSeqof(st.getSeqof());
+			ASeq1SeqType s1t = AstFactory.newASeq1SeqType(st.getLocation(),st.getSeqof());
 
 			if (contains(s1t))
 			{
@@ -74,7 +72,7 @@ public class PTypeSet extends TreeSet<PType>
 			{
 				if (x instanceof SNumericBasicType)
 				{
-					if (SNumericBasicTypeAssistantTC.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistantTC.getWeight(PTypeAssistant.getNumeric(t)))
+					if (SNumericBasicTypeAssistantTC.getWeight(PTypeAssistantTC.getNumeric(x)) < SNumericBasicTypeAssistantTC.getWeight(PTypeAssistantTC.getNumeric(t)))
 					{
 						remove(x);
 						break;
@@ -129,22 +127,17 @@ public class PTypeSet extends TreeSet<PType>
 		} else
 		{
 
-			Vector<PType> types = new Vector<PType>();
+			PTypeList types = new PTypeList();
 
 			for (PType pType : this)
 			{
 				types.add(pType);// .clone()
 			}
-			// TODO
-			// AUnionType uType = new AUnionType(location, false, types,false, false);
-			AUnionType uType = new AUnionType(location, false, false, false);
-			uType.setTypes(types);
-			uType.setProdCard(-1);
-			AUnionTypeAssistantTC.expand(uType);
-			result = uType;
+			
+			result = AstFactory.newAUnionType(location, types);
 		}
 
-		return (optional ? new AOptionalType(location, false, null, result)
+		return (optional ? AstFactory.newAOptionalType(location, result)
 				: result);
 	}
 
