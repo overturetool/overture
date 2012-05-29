@@ -371,7 +371,7 @@ public class AstFactory {
 		result.setSuperInheritedDefinitions(new ArrayList<PDefinition>());
 		result.setLocalInheritedDefinitions(new ArrayList<PDefinition>());
 		result.setAllInheritedDefinitions(new ArrayList<PDefinition>());
-
+		result.setIsAbstract(false);
 		//this.delegate = new Delegate(name.name, definitions);
 		result.setDefinitions(members);
 		
@@ -2667,7 +2667,7 @@ public class AstFactory {
 		result.setSuperdef(d);
 		result.setOldname(localname.getOldName());
 		
-		result.setClassDefinition(d.getClassDefinition());
+		PDefinitionAssistant.setClassDefinition(result, d.getClassDefinition());
 		result.setAccess(d.getAccess().clone());
 		
 		return result;

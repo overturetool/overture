@@ -53,7 +53,7 @@ public class PDefinitionAssistant {
 	public static void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition) {
 		for (PDefinition d : defs) {
-			d.setClassDefinition(classDefinition);
+			setClassDefinition(d,classDefinition);
 		}
 
 	}

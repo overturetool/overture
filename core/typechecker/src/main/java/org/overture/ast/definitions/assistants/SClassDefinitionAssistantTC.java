@@ -334,7 +334,7 @@ public class SClassDefinitionAssistantTC {
 		
 		if (invariant != null)
 		{
-			invariant.setClassDefinition(d);
+			PDefinitionAssistantTC.setClassDefinition(invariant, d);
 
 			// This listener is created for static invariants. This gets called
 			// when any statics get updated, but that could affect the validity
