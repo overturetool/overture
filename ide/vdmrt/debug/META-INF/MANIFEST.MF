@@ -13,4 +13,10 @@ Require-Bundle: org.overture.ide.vdmrt.core;bundle-version="0.3.0",
  org.overture.ide.vdmpp.debug;bundle-version="0.3.0"
 Export-Package: org.overture.ide.vdmrt.debug
 Bundle-Activator: org.overture.ide.vdmrt.debug.Activator
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.2.0.jar,
+ ast_assistance-2.2.0.jar,
+ interpreter-2.2.0.jar,
+ parser-2.2.0.jar,
+ testframework-2.2.0.jar,
+ typechecker-2.2.0.jar
