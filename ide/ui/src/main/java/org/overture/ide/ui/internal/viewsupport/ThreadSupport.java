@@ -26,13 +26,12 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AOperationType;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.typechecker.Pass;
 
 public class ThreadSupport extends AExplicitOperationDefinition {
 
 	public ThreadSupport(AExplicitOperationDefinition eod) {
 		
-		super(eod.getLocation(),eod.getName(),eod.getNameScope(),eod.getUsed(),eod.getClassDefinition(),eod.getAccess().clone(),Pass.DEFS, eod.getParameterPatterns(),eod.getBody().clone(),eod.getPrecondition(),eod.getPostcondition(),eod.getType(),null,null,null,null,eod.getActualResult(),false);
+		super(eod.getLocation(),eod.getName(),eod.getNameScope(),eod.getUsed(),eod.getClassDefinition(),eod.getAccess().clone(),null, eod.getParameterPatterns(),eod.getBody().clone(),eod.getPrecondition(),eod.getPostcondition(),eod.getType(),null,null,null,null,eod.getActualResult(),false);
 		System.out.println(eod.getLocation());
 	}
 	
@@ -40,7 +39,7 @@ public class ThreadSupport extends AExplicitOperationDefinition {
 			List<PPattern> parameters, PExp precondition,
 			PExp postcondition, PStm body) {
 //		super(name, type, parameters, precondition, postcondition, body);
-		super(null,name,null,false,null,null,Pass.DEFS, parameters,body,precondition,postcondition,type,null,null,null,null,null,false);
+		super(null,name,null,false,null,null,null, parameters,body,precondition,postcondition,type,null,null,null,null,null,false);
 
 	}
 
