@@ -34,6 +34,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -229,6 +230,10 @@ public abstract class CoverageEditor
 		{
 		try
 		{
+			if(!selectedFile.isSynchronized(IResource.DEPTH_ZERO))
+			{
+				selectedFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+			}
 			br = new BufferedReader(new BufferedReader(new InputStreamReader(selectedFile.getContents())));
 			String line = br.readLine();
 
@@ -358,6 +363,10 @@ public abstract class CoverageEditor
 
 	public static String readFile(IFile file) throws IOException, CoreException
 	{
+		if(!file.isSynchronized(IResource.DEPTH_ZERO))
+		{
+			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+		}
 		BufferedReader inputStream = new BufferedReader(new InputStreamReader(file.getContents()));
 		StringBuilder sb = new StringBuilder();
 

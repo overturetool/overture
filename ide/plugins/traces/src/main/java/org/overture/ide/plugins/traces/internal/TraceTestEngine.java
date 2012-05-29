@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -56,7 +60,7 @@ public class TraceTestEngine
 						public void initialize(String module)
 						{
 							// System.out.println("CT init recieved");
-							out.println("Initialized: "+module);
+							out.println("Initialized: " + module);
 							monitor.subTask(module);
 						}
 
@@ -148,30 +152,30 @@ public class TraceTestEngine
 						}
 					}).start();
 
-//					new Thread(new Runnable()
-//					{
-//
-//						public void run()
-//						{
-//							while (true)
-//							{
-//								try
-//								{
-//									Thread.sleep(1000);
-//									if (finalP.exitValue() != 0)
-//									{
-//										System.err.println("Client exited with errors: "
-//												+ finalP.exitValue());
-//									}
-//									threadFinished();
-//									return;
-//								} catch (Exception e)
-//								{
-//								}
-//
-//							}
-//						}
-//					}).start();
+					// new Thread(new Runnable()
+					// {
+					//
+					// public void run()
+					// {
+					// while (true)
+					// {
+					// try
+					// {
+					// Thread.sleep(1000);
+					// if (finalP.exitValue() != 0)
+					// {
+					// System.err.println("Client exited with errors: "
+					// + finalP.exitValue());
+					// }
+					// threadFinished();
+					// return;
+					// } catch (Exception e)
+					// {
+					// }
+					//
+					// }
+					// }
+					// }).start();
 				}
 
 				while (!monitor.isCanceled() && isRunning)
@@ -180,22 +184,33 @@ public class TraceTestEngine
 				}
 				// System.out.println("CT eval runtime finished");
 
-				try
+				if (isRunning)
 				{
-					p.exitValue();
-				} catch (Exception e)
-				{
-					if (p != null)
+					try
 					{
-						p.destroy();
-					}
-				} finally
-				{
-					if (conn != null)
+						p.exitValue();
+					} catch (Exception e)
 					{
-						conn.die();
+						if (p != null)
+						{
+							p.destroy();
+						}
 					}
 				}
+
+				if (conn != null)
+				{
+					conn.die();
+				}
+
+				try
+				{
+					((IProject) texe.project.getAdapter(IProject.class)).refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+				} catch (CoreException e)
+				{
+
+				}
+
 				monitor.done();
 				return Status.OK_STATUS;
 			}

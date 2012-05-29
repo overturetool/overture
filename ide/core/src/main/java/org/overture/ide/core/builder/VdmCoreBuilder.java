@@ -46,7 +46,7 @@ public abstract class VdmCoreBuilder extends IncrementalProjectBuilder
 		{
 			IResource resource = delta.getResource();
 			
-			if (resource instanceof IFile && resource.exists() && ((IFile) resource).getContentDescription()!=null)
+			if (resource instanceof IFile && resource.exists() && resource.isSynchronized(IResource.DEPTH_ZERO) && ((IFile) resource).getContentDescription()!=null)
 			{
 
 				if (getVdmProject().isModelFile((IFile) resource))
