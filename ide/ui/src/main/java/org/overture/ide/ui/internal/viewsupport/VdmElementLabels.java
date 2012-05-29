@@ -334,8 +334,11 @@ public class VdmElementLabels {
 			SClassDefinition classDef = element.getClassDefinition();
 			definitions = classDef.getDefinitions();
 		} else {
-			if (activeModule != null)
+			if (activeModule != null && activeModule.containsKey(element.getName().getModule()))
+			{
 				definitions = activeModule.get(element.getName().getModule()).getDefs();
+			}
+				
 		}
 		if (definitions != null) {
 			for (PDefinition def : definitions) {

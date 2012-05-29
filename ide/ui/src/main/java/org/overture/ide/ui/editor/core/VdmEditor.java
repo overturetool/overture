@@ -413,7 +413,7 @@ public abstract class VdmEditor extends TextEditor
 		// installOverrideIndicator(false);
 		
 		
-		indexEditorInputJob.schedule();
+		//indexEditorInputJob.schedule();
 
 	}
 
@@ -782,11 +782,24 @@ public abstract class VdmEditor extends TextEditor
 	{
 		IVdmElement element = getInputVdmElement();
 		List<INode> nodes = null;
+		INode node = null;
 		if (element instanceof IVdmSourceUnit)
 		{
 			nodes = ((IVdmSourceUnit) element).getParseList();
+			
+			long startTime = System.currentTimeMillis();
+            node = AstLocationSearcher.search(nodes, 1324);
+            System.out.println("Search Time for offset 1324 in "+element + " is "+ (System.currentTimeMillis()-startTime)+" found: "+node);
+            
+            startTime = System.currentTimeMillis();
+            node = AstLocationSearcher.search(nodes, offset);
+            System.out.println("Search Time for offset "+offset+" in "+element + " is "+ (System.currentTimeMillis()-startTime)+" found: "+node);
+            
+             System.out.println("Node offset is: "+getSourceViewer().getTextWidget().getLineAtOffset(offset) );
+
+			
 		}
-		INode node = AstLocationSearcher.searchCache(nodes, offset,element);
+		//INode node = AstLocationSearcher.search(nodes, offset);
 
 		// System.out.println(getSourceViewer().getTextWidget().getText(offset, offset+1));
 		// System.out.println("Found element with offset: "+offset+" = "+(node!=null?node.getClass():"null")+" - offset:"+AstLocationSearcher.getNodeOffset(node)+
