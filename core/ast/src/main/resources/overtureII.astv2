@@ -529,7 +529,7 @@ stm {-> package='org.overture.ast.statements'}
     |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm (def):definition.multiBindList
     |   #LetDef
-    |   {notYetSpecified} [opname]:LexNameToken [args]:exp*
+    |   {notYetSpecified} [opname]:LexNameToken [args]:exp* /* FIXME -- these params are probably useless */
     |   {return} [expression]:exp
     |   #SimpleBlock
     |   {skip}
@@ -543,6 +543,8 @@ stm {-> package='org.overture.ast.statements'}
     |   {periodic} [opname]:LexNameToken [args]:exp* (period):java_Long (jitter):java_Long (delay):java_Long (offset):java_Long
     ; 
     
+
+/* FIXME (future) -- why does #LetDef have a subclass? */
 #LetDef {-> package='org.overture.ast.statements'}
     =   {def}
     ;
@@ -566,6 +568,7 @@ objectDesignator {-> package='org.overture.ast.statements'}
     |   {self} [self]:LexNameToken
     ;
 
+/* jwc - why is cexp in this, anyway? (FIXME?) cexp is the expression in the parent cases statement */
 alternativeStm {-> package='org.overture.ast.statements'}
     = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm (defs):definition* (ctype):type 
     ;
