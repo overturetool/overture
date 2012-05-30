@@ -17,6 +17,7 @@ import com.lausdahl.ast.creator.methods.CloneWithMapMethod;
 import com.lausdahl.ast.creator.methods.ConstructorMethod;
 import com.lausdahl.ast.creator.methods.ConstructorTreeFieldsOnlyMethod;
 import com.lausdahl.ast.creator.methods.DefaultConstructorMethod;
+import com.lausdahl.ast.creator.methods.EqualsMethod;
 import com.lausdahl.ast.creator.methods.GetChildrenMethod;
 import com.lausdahl.ast.creator.methods.KindMethod;
 import com.lausdahl.ast.creator.methods.KindNodeMethod;
@@ -93,6 +94,8 @@ public class ClassFactory
 
 		methods.add(new CloneMethod(classDef, type, env));
 		methods.add(new CloneWithMapMethod(classDef, type, env));
+		
+		methods.add(new EqualsMethod(classDef,env));
 
 		switch (type)
 		{

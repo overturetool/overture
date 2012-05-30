@@ -25,10 +25,10 @@ public class AnswerAcceptMethod extends Method
 		StringBuilder sb = new StringBuilder();
 		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IAnswer);
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case" + AnalysisUtil.getClass(env, c).getName().getName() + "("
-				+ AnalysisUtil.getClass(env, c).getName().getName() + ")} of the {@link "+argDef.getName().getName()+"} {@code caller}.\n");
+		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "("
+				+ AnalysisUtil.getCaseClass(env, c).getName().getName() + ")} of the {@link "+argDef.getName().getName()+"} {@code caller}.\n");
 		sb.append("\t* @param caller the {@link "+argDef.getName().getName()+"} to which this {@link "
-				+ AnalysisUtil.getClass(env, c).getName().getName() + "} node is applied\n");
+				+ AnalysisUtil.getCaseClass(env, c).getName().getName() + "} node is applied\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
 		name = "apply";

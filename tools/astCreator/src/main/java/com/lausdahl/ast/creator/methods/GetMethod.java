@@ -24,7 +24,7 @@ public class GetMethod extends Method
 
 		javaDoc = "\t/**\n";
 		//javaDoc += "\t * Returns the {@link "+f.getType()+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node.\n";
-		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType())+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
+		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType(true))+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
 		javaDoc += "\t*/";
 
 		this.name = "get"
@@ -48,6 +48,7 @@ public class GetMethod extends Method
 	{
 		Set<String> list = new HashSet<String>();
 		list.addAll(super.getRequiredImports());
+		//list.add(NameUtil.stripGenerics(f.i.getType()));
 		
 		if(f.isList && !f.isDoubleList)
 		{
@@ -61,6 +62,15 @@ public class GetMethod extends Method
 //			imports.add(Environment.collectionDef.getImportName());
 //			imports.add(Environment.linkedListDef.getImportName());
 		}
+		return list;
+	}
+	
+	@Override
+	public Set<String> getRequiredImportsSignature()
+	{
+		Set<String> list = new HashSet<String>();
+		list.addAll(super.getRequiredImportsSignature());
+		//list.add(NameUtil.stripGenerics(f.getType()));
 		return list;
 	}
 }

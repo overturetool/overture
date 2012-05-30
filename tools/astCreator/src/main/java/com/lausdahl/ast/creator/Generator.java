@@ -398,6 +398,7 @@ public class Generator
 		adaptor.addField(queue);
 		((InterfaceDefinition)adaptor).imports.add(queue.type);
 		adaptor.addMethod(new SetMethod(adaptor,queue,source));
+		adaptor.setAnnotation("@SuppressWarnings({\"rawtypes\",\"unchecked\"})");
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(), source))
 		{

@@ -25,7 +25,7 @@ public class QuestionAcceptMethod extends Method
 		StringBuilder sb = new StringBuilder();
 		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IQuestion);
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case" + AnalysisUtil.getClass(env, c).getName().getName() + "("
+		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case" +  AnalysisUtil.getCaseClass(env, c).getName().getName()  + "("
 				+ c.getName().getName()
 				+ ", Object)} of the {@link "+argDef.getName().getName()+"} {@code caller}.\n");
 		sb.append("\t* @param caller the {@link "+argDef.getName().getName()+"} to which this {@link "

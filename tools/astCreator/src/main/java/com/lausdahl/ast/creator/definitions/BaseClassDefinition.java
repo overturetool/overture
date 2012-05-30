@@ -188,28 +188,6 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			}
 		}
 
-		StringBuilder equalsString = new StringBuilder();
-		//StringBuilder hashCodeString = new StringBuilder();
-
-		// setup equals method using toString
-		// essentially: this.toString().equals(o.toString())
-		equalsString.append("\n\t/**\n\t * Essentially this.toString().equals(o.toString()).\n\t**/");
-		equalsString.append("\n\t@Override");
-		equalsString.append("\n\tpublic boolean equals(Object o) {");
-		equalsString.append("\n\tif (o != null && o instanceof "
-				+ name.getName() + ")");
-		equalsString.append("\n\t return toString().equals(o.toString());\n\t");
-		equalsString.append("return false; }\n\t");
-		sb.append("\n" + equalsString + "\n");
-
-		// setup hashCode method using toString
-		// essentially: this.toString().hashCode()
-		//hashCodeString.append("\n\t/**\n\t * Essentially this.toString().hashCode()\n\t**/");
-//		hashCodeString.append("\n\t@Override");
-//		hashCodeString.append("\n\tpublic int hashCode() {");
-//		hashCodeString.append("\n\t return this.toString().hashCode();\n\t}");
-//		sb.append("\n" + hashCodeString + "\n");
-
 		sb.append(noneCtorMethods);
 		sb.append("\n}\n");
 		return sb.toString();
@@ -336,11 +314,11 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 							+ field.getType() + "\" is not a subclass of \""
 							+ superField.getType() + "\"";
 					throw new AstCreatorException(msg, null, true);
-				} else
+				} else if(field.type!=superField.type)
 				{
 					String msg = "Field \"" + field.getName() + "\" in class "
 							+ getName().getName() + " with type \""
-							+ field.getType() + "\" specializes of \""
+							+ field.getType() + "\" specializes \""
 							+ superField.getType() + "\"";
 					System.out.println("WARNING: " + msg);
 				}

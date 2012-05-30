@@ -25,7 +25,7 @@ public class AnalysisAcceptMethod extends Method
 		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IAnalysis);
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
-		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case" + AnalysisUtil.getClass(env, c).getName().getName() + "("
+		sb.append("\t* Calls the {@link "+argDef.getName().getName()+"#case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "("
 				+ c.getName().getName()
 				+ ")} of the {@link "+argDef.getName().getName()+"} {@code analysis}.\n");
 		sb.append("\t* @param analysis the {@link "+argDef.getName().getName()+"} to which this {@link "

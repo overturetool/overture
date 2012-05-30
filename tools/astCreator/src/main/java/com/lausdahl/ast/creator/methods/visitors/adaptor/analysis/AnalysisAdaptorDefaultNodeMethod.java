@@ -1,5 +1,7 @@
 package com.lausdahl.ast.creator.methods.visitors.adaptor.analysis;
 
+import java.util.Set;
+
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.utils.NameUtil;
@@ -15,6 +17,24 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 	{
 		super(null,env);
 		
+	}
+	
+	@Override
+	public Set<String> getRequiredImports()
+	{
+		Set<String> temp = super.getRequiredImports();
+		temp.add(classDefinition.getName().getCanonicalName());
+		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
+		return temp;
+	}
+	
+	@Override
+	public Set<String> getRequiredImportsSignature()
+	{
+		Set<String> temp =super.getRequiredImportsSignature();
+		temp.add(classDefinition.getName().getCanonicalName());
+		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
+		return temp;
 	}
 
 	@Override

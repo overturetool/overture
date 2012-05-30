@@ -1,5 +1,7 @@
 package com.lausdahl.ast.creator.methods.visitors.adaptor.analysis;
 
+import java.util.Set;
+
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
@@ -20,6 +22,24 @@ public class AnalysisAdaptorCaseMethod extends AnalysisMethodTemplate
 	{
 		super(c, env);
 
+	}
+	
+	@Override
+	public Set<String> getRequiredImports()
+	{
+		Set<String> temp = super.getRequiredImports();
+		temp.add(AnalysisUtil.getClass(env, classDefinition).getName().getCanonicalName());
+		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
+		return temp;
+	}
+	
+	@Override
+	public Set<String> getRequiredImportsSignature()
+	{
+		Set<String> temp =super.getRequiredImportsSignature();
+		temp.add(AnalysisUtil.getClass(env, classDefinition).getName().getCanonicalName());
+		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
+		return temp;
 	}
 
 	@Override

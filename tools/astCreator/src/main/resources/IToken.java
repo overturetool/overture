@@ -68,13 +68,13 @@ public interface %IToken% extends %INode% {
 	 */
 	public void removeChild(%INode% child);
 
-	/**
-	 * Implements the {@link Node#replaceChild(Node,Node)} method. Since tokens have no
-	 * children, it always throws a {@link RuntimeException}.
-	 * @param oldChild the child node to be replaced
-	 * @param newChild the new child node of this {@link Token} node
-	 * @throws RuntimeException if {@code oldChild} is not a child of this {@link Token} node
-	 */
+//	/**
+//	 * Implements the {@link Node#replaceChild(Node,Node)} method. Since tokens have no
+//	 * children, it always throws a {@link RuntimeException}.
+//	 * @param oldChild the child node to be replaced
+//	 * @param newChild the new child node of this {@link Token} node
+//	 * @throws RuntimeException if {@code oldChild} is not a child of this {@link Token} node
+//	 */
 //	@Override void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild) {
 //		throw new RuntimeException("Not a child.");
 //	}
