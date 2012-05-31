@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="type_checker">
+<message column="3" line="107" message="Definition 'RequestStatement' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
+<message column="3" line="78" message="Definition 'ReturnCard' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
+<message column="3" line="125" message="Definition 'AddAccount' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
+<message column="1" line="148" message="Definition 'TestCash' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
+<message column="3" line="84" message="Definition 'GetBalance' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
+<message column="3" line="89" message="Definition 'MakeWithdrawal' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
+<message column="37" line="113" message="Operation 'IsLegalCard' cannot be called from a function" messageType="error" number="3300" resource="cashdispenserSL.result"/>
+<message column="37" line="87" message="Operation 'IsLegalCard' cannot be called from a function" messageType="error" number="3300" resource="cashdispenserSL.result"/>
+<message column="37" line="105" message="Operation 'IsLegalCard' cannot be called from a function" messageType="error" number="3300" resource="cashdispenserSL.result"/>
+</testResult>

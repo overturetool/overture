@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="type_checker">
+<message column="3" line="304" message="Instance variable 'msgChannel' is not initialized" messageType="warning" number="5001" resource="POP3PP.result"/>
+<message column="3" line="305" message="Instance variable 'id' is not initialized" messageType="warning" number="5001" resource="POP3PP.result"/>
+<message column="3" line="298" message="Instance variable 'ss' is not initialized" messageType="warning" number="5001" resource="POP3PP.result"/>
+<message column="3" line="300" message="Instance variable 'user' is not initialized" messageType="warning" number="5001" resource="POP3PP.result"/>
+<message column="3" line="299" message="Instance variable 'parent' is not initialized" messageType="warning" number="5001" resource="POP3PP.result"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP.result"/>
+<message column="12" line="161" message="Class name IO not in scope" messageType="error" number="3133" resource="POP3PP.result"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP.result"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP.result"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP.result"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="POP3PP.result"/>
+<message column="16" line="173" message="Unknown type: (unresolved POP3Types`ClientCommand)" messageType="error" number="3428" resource="POP3PP.result"/>
+<message column="6" line="161" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="POP3PP.result"/>
+</testResult>

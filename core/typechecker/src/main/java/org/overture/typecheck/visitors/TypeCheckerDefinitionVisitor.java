@@ -1318,7 +1318,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		node.setDefs(newdefs);
 		List<PDefinition> defs = node.getDefs();
-		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess());
+		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess().clone());
 		PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
 		question.qualifiers = null;
 		PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, question);

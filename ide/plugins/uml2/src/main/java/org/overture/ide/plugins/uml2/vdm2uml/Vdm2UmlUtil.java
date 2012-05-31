@@ -1,9 +1,11 @@
 package org.overture.ide.plugins.uml2.vdm2uml;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -19,16 +21,20 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistantTC;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class Vdm2UmlUtil {
 	
@@ -180,39 +186,91 @@ public class Vdm2UmlUtil {
 //		return null;
 //	}
 //
-//	private static IUmlType convertBasicType(SBasicType type) throws CGException {
-//		switch (type.kindSBasicType()) {
-//		case BOOLEAN:
-//			PrimitiveType primitiveType = model.createOwnedPrimitiveType(name);
-//		case CHAR:
-//			return new UmlCharType();
-//		case NUMERIC:
-//			return convertNumericType((SNumericBasicType) type);
-//		case TOKEN:
-//			return new UmlIntegerType();
-//		default:
-//			assert false : "Should not happen";
-//			break;
-//		}
-//		return null;
-//	}
-//
-//	private static IUmlType convertNumericType(SNumericBasicType type) throws CGException {
-//		switch (type.kindSNumericBasicType()) {
-//		case INT:
-//		case NAT:
-//		case NATONE:
-//		case RATIONAL:
-//			return new UmlIntegerType();
-//		case REAL:
-//			//TODO: Unlimited natural?!? seems weird
-//			return new UmlUnlimitedNatural();
-//		default:
-//			assert false : "Should not happen";
-//			break;
-//		}
-//		return null;
-//	}
+	
+	public static void convertBasicType(SBasicType type,
+			Model modelWorkingCopy, Map<String, Type> types, LexNameToken name) {
+
+		Type t = convertBasicType(type, modelWorkingCopy, types);
+		types.put(name.name, t);
+		
+	}
+	public static Type convertBasicType(SBasicType type, Model modelWorkingCopy, Map<String, Type> types)  {
+		
+		
+		switch (type.kindSBasicType()) {
+		case BOOLEAN:			
+			if(!types.containsKey("bool"))
+			{
+				types.put("bool",modelWorkingCopy.createOwnedPrimitiveType("bool"));
+				
+			}
+			return types.get("bool");			
+		case CHAR:
+			if(!types.containsKey("char"))
+			{
+				types.put("char",modelWorkingCopy.createOwnedPrimitiveType("char"));
+				
+			}
+			return types.get("char");	
+		case NUMERIC:
+			return convertNumericType((SNumericBasicType) type,modelWorkingCopy,types);
+		case TOKEN:
+			if(!types.containsKey("token"))
+			{
+				types.put("token",modelWorkingCopy.createOwnedPrimitiveType("token"));
+				
+			}
+			return types.get("token");	
+		default:
+			assert false : "Should not happen";
+			break;
+		}
+		return null;
+	}
+
+	private static Type convertNumericType(SNumericBasicType type, Model modelWorkingCopy, Map<String, Type> types)  {
+		switch (type.kindSNumericBasicType()) {
+		case INT:
+			if(!types.containsKey("int"))
+			{
+				types.put("int",modelWorkingCopy.createOwnedPrimitiveType("int"));
+				
+			}
+			return types.get("int");	
+		case NAT:
+			if(!types.containsKey("nat"))
+			{
+				types.put("nat",modelWorkingCopy.createOwnedPrimitiveType("nat"));
+				
+			}
+			return types.get("nat");	
+		case NATONE:
+			if(!types.containsKey("nat1"))
+			{
+				types.put("nat1",modelWorkingCopy.createOwnedPrimitiveType("nat1"));
+				
+			}
+			return types.get("nat1");	
+		case RATIONAL:
+			if(!types.containsKey("rat"))
+			{
+				types.put("rat",modelWorkingCopy.createOwnedPrimitiveType("rat"));
+				
+			}
+			return types.get("rat");	
+		case REAL:
+			if(!types.containsKey("real"))
+			{
+				types.put("real",modelWorkingCopy.createOwnedPrimitiveType("real"));
+				
+			}
+			return types.get("real");	
+		default:
+			assert false : "Should not happen";
+			break;
+		}
+		return null;
+	}
 //
 //	public static Vector<IUmlClassNameType> getSuperClasses(SClassDefinition sClass) throws CGException {
 //		Vector<IUmlClassNameType> result = new Vector<IUmlClassNameType>();
@@ -522,6 +580,19 @@ public class Vdm2UmlUtil {
 		}
 		
 	}
+
+	public static boolean isUnionOfQuotes(AUnionType type) {
+		for (PType t : type.getTypes()) {
+			if(!PTypeAssistantTC.isType(t, AQuoteType.class))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	
 
 	
 	
