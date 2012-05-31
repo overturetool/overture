@@ -76,8 +76,8 @@ public abstract class ResultTestCase extends BaseTestCase
 		
 		File file = getResultFile(filename);
 
-		assertNotNull("Result file " + filename + " was not found", file);
-		assertTrue("Result file " + filename + " does not exist", file.exists());
+		assertNotNull("Result file " + file.getName() + " was not found", file);
+		assertTrue("Result file " + file.getName() + " does not exist", file.exists());
 		
 		//MessageReaderWritter mrw = new MessageReaderWritter(file);
 		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
