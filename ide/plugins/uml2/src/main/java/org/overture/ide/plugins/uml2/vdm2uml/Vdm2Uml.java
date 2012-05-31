@@ -11,26 +11,39 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.assistants.AValueDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.assistants.PTypeAssistantTC;
+import org.overturetool.vdmj.lex.LexNameToken;
 
 public class Vdm2Uml {
 
 	private Vector<String> filteredClassNames = new Vector<String>();
 	private Model modelWorkingCopy = null; 
 	private Map<String,Class> classes = new HashMap<String, Class>();
-	private Map<String,Type> types = new HashMap<String, Type>();
+	private Map<String,Type> types = new HashMap<String, Type>();	
 	
 	public Vdm2Uml() {
 		
@@ -69,14 +82,14 @@ public class Vdm2Uml {
 			}			
 		}
 		
-		addPrimitiveTypes();
+	//	addPrimitiveTypes();
 		for (SClassDefinition sClass : classes) {
 			
 			String className = sClass.getName().name;
 			if(!filteredClassNames.contains(className))
 			{								
 				Class class_ = this.classes.get(className);
-				addRestOfTypes(class_,sClass);
+				addTypes(class_,sClass);
 			}			
 		}
 		
@@ -93,7 +106,7 @@ public class Vdm2Uml {
 		
 	}
 
-	private void addRestOfTypes(Class class_, SClassDefinition sClass) {		
+	private void addTypes(Class class_, SClassDefinition sClass) {		
 		
 		for (PDefinition def : sClass.getDefinitions()) {
 
@@ -115,21 +128,26 @@ public class Vdm2Uml {
 		}
 		PType type = PDefinitionAssistantTC.getType(def);
 		
-		createNewUmlType(type);
+		createNewUmlType(def.getName(),type);
 		
 	}
 
 
-	private void createNewUmlType(PType type) {
+	private void createNewUmlType(LexNameToken name, PType type) {
+		
+		
 		switch (type.kindPType()) {		
-		case BASIC:
-		case BRACKET:
-		case CLASS:
-		case FUNCTION:
+		case UNION:
+			createNewUmlUnionType(name,(AUnionType) type);
 			break;
 		case INVARIANT:
-			createNewUmlInvariantType((SInvariantType) type);
+			createNewUmlInvariantType(name,(SInvariantType) type);
 			break;
+		case BASIC:
+			Vdm2UmlUtil.convertBasicType((SBasicType) type, modelWorkingCopy, types,name);
+		case BRACKET:
+		case CLASS:
+		case FUNCTION:			
 		case MAP:
 		case OPERATION:
 		case OPTIONAL:
@@ -139,7 +157,6 @@ public class Vdm2Uml {
 		case SEQ:
 		case SET:
 		case UNDEFINED:
-		case UNION:
 		case UNKNOWN:
 		case UNRESOLVED:
 		case VOID:
@@ -152,11 +169,37 @@ public class Vdm2Uml {
 	}
 
 
-	private void createNewUmlInvariantType(SInvariantType type) {
+	private void createNewUmlUnionType(LexNameToken name, AUnionType type) {
+		
+		if(Vdm2UmlUtil.isUnionOfQuotes(type))
+		{
+			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(name.name);
+			for (PType t : type.getTypes()) {
+				if(t instanceof AQuoteType)
+				{
+					enumeration.createOwnedLiteral(((AQuoteType) t).getValue().value);
+				}
+			}
+			
+			types.put(name.name, enumeration);
+		}
+		else
+		{
+			//do the constraint XOR
+			
+		}
+		
+		
+		
+	}
+
+	
+	
+	private void createNewUmlInvariantType(LexNameToken name, SInvariantType type) {
 		switch (type.kindSInvariantType()) {
 		case NAMED:
 			PType ptype = ((ANamedInvariantType)type).getType();
-			createNewUmlType(ptype);
+			createNewUmlType(name,ptype);
 			break;
 		case RECORD:
 			break;
@@ -174,11 +217,55 @@ public class Vdm2Uml {
 			case INSTANCEVARIABLE:
 				addInstanceVariableToClass(class_,(AInstanceVariableDefinition)def);
 				break;
+			case EXPLICITOPERATION:
+				addExplicitOperationToClass(class_,(AExplicitOperationDefinition) def);
+				break;
+			case VALUE:
+				addValueToClass(class_,(AValueDefinition)def);
 			default:
-				System.out.println(def);
 				break;			
 			}
 		}
+		
+	}
+
+
+	private void addValueToClass(Class class_, AValueDefinition def) {
+		
+		
+		PType type = PDefinitionAssistantTC.getType(def);
+		Type umlType = getUmlType(type);
+		
+		
+		Property s = class_.createOwnedAttribute(getDefName(def), umlType);
+		
+		System.out.println(s);
+		
+		
+	}
+
+
+	private String getDefName(PDefinition def) {
+		switch (def.kindPDefinition()) {
+		case VALUE:
+			AValueDefinition valueDef = (AValueDefinition) def;
+			PPattern expression = valueDef.getPattern();
+			if(expression instanceof AIdentifierPattern)
+			{
+				return ((AIdentifierPattern) expression).getName().name;
+			}
+			break;
+		default:
+			return def.getName().name;
+		}
+		return "null";
+	}
+
+
+	private void addExplicitOperationToClass(Class class_,
+			AExplicitOperationDefinition def) {
+		
+		class_.createOwnedOperation(def.getName().name, null, null, null);
 		
 	}
 
@@ -197,10 +284,12 @@ public class Vdm2Uml {
 		}
 		else
 		{
-			//might be a class or other thing?!
-			Class referencedClass = getClassName(defType);
 			
-			class_.createAssociation(true, AggregationKind.COMPOSITE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, true, AggregationKind.COMPOSITE_LITERAL, "dont know", 1, 1);
+			if(defType instanceof AClassType)
+			{
+				Class referencedClass = getClassName(defType);
+				class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+			}
 		}
 		
 		
@@ -260,6 +349,7 @@ public class Vdm2Uml {
 		
 		switch (type.kindPType()) {
 		case BASIC:
+			result = Vdm2UmlUtil.convertBasicType((SBasicType) type,modelWorkingCopy,types);
 			break;
 		case BRACKET:
 			break;
