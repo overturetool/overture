@@ -1,20 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="1" line="405" message="Instance variable 'eventid' is not initialized" messageType="warning" number="5001" resource="CMRT.result"/>
-<message column="4" line="919" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-<message column="4" line="957" message="Member showResult() is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-<message column="4" line="953" message="Member isFinished() is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-<message column="11" line="916" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="CMRT.result"/>
-<message column="4" line="918" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-<message column="6" line="75" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMRT.result"/>
-<message column="4" line="920" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-<message column="13" line="40" message="Class name IO not in scope" messageType="error" number="3133" resource="CMRT.result"/>
-<message column="6" line="75" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CMRT.result"/>
-<message column="37" line="92" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="CMRT.result"/>
-<message column="5" line="731" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="CMRT.result"/>
-<message column="13" line="839" message="Class name IO not in scope" messageType="error" number="3133" resource="CMRT.result"/>
-<message column="4" line="917" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-<message column="6" line="75" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="CMRT.result"/>
-<message column="12" line="75" message="Class name IO not in scope" messageType="error" number="3133" resource="CMRT.result"/>
-<message column="3" line="457" message="Member handleEvent(EventId, FlareType, Angle, Time, Time) is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
-</testResult>
+<testResult type="parser"/>
