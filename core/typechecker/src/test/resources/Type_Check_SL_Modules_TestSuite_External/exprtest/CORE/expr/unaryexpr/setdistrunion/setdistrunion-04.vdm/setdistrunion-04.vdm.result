@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="17" line="19" message="dunion argument is not a set of sets" messageType="error" number="3078" resource="setdistrunion-04.vdm.result"/>
+<message column="11" line="19" message="dunion argument is not a set of sets" messageType="error" number="3078" resource="setdistrunion-04.vdm.result"/>
 </testResult>

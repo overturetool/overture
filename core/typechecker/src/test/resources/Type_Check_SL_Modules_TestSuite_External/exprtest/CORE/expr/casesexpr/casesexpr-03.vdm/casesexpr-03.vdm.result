@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="21" line="32" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm.result"/>
-<message column="12" line="32" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm.result"/>
-<message column="11" line="31" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm.result"/>
+<message column="19" line="32" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm.result"/>
+<message column="10" line="32" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm.result"/>
+<message column="10" line="31" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm.result"/>
 </testResult>

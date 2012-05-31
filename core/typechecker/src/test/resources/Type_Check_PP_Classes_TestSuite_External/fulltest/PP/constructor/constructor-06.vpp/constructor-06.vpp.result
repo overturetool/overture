@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="9" line="18" message="Operation returns unexpected type" messageType="error" number="3027" resource="constructor-06.vpp.result"/>
+<message column="8" line="18" message="Operation returns unexpected type" messageType="error" number="3027" resource="constructor-06.vpp.result"/>
 </testResult>

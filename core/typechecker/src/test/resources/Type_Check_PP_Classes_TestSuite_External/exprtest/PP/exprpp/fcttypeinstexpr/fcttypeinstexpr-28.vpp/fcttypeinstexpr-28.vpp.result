@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="6" line="17" message="Member g() is not in scope" messageType="error" number="3209" resource="fcttypeinstexpr-28.vpp.result"/>
-<message column="11" line="9" message="Name 'g()' is not in scope" messageType="error" number="3182" resource="fcttypeinstexpr-28.vpp.result"/>
-<message column="4" line="13" message="Operation g() is not in scope" messageType="error" number="3213" resource="fcttypeinstexpr-28.vpp.result"/>
-<message column="19" line="21" message="Unknown member g() of class A" messageType="error" number="3091" resource="fcttypeinstexpr-28.vpp.result"/>
+<message column="10" line="9" message="Name 'g()' is not in scope" messageType="error" number="3182" resource="fcttypeinstexpr-28.vpp.result"/>
+<message column="2" line="17" message="Member g() is not in scope" messageType="error" number="3209" resource="fcttypeinstexpr-28.vpp.result"/>
+<message column="18" line="21" message="Unknown member g() of class A" messageType="error" number="3091" resource="fcttypeinstexpr-28.vpp.result"/>
+<message column="3" line="13" message="Operation g() is not in scope" messageType="error" number="3213" resource="fcttypeinstexpr-28.vpp.result"/>
 </testResult>

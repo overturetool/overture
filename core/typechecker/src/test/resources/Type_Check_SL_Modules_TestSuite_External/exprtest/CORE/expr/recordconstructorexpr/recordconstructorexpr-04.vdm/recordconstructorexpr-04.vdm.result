@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="15" line="18" message="Record and constructor do not have same number of fields" messageType="error" number="3128" resource="recordconstructorexpr-04.vdm.result"/>
+<message column="11" line="18" message="Record and constructor do not have same number of fields" messageType="error" number="3128" resource="recordconstructorexpr-04.vdm.result"/>
 </testResult>

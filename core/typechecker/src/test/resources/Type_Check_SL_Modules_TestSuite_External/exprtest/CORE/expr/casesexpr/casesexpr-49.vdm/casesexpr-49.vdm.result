@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="0" line="52" message="Name 'CasesExprTest`func' is not in scope" messageType="error" number="3182" resource="casesexpr-49.vdm.result"/>
+<message column="11" line="52" message="Name 'CasesExprTest`func' is not in scope" messageType="error" number="3182" resource="casesexpr-49.vdm.result"/>
 </testResult>

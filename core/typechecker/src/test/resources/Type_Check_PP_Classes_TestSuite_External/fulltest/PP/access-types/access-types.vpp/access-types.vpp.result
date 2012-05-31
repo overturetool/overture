@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="21" line="97" message="Definition 'r' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
-<message column="12" line="201" message="Inaccessible member f() of class A" messageType="warning" number="3092" resource="access-types.vpp.result"/>
-<message column="15" line="61" message="Definition 'a' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
-<message column="16" line="101" message="Definition 'r' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
-<message column="17" line="61" message="Definition 'b' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
-<message column="36" line="208" message="Unknown type 'B`recB' in constructor" messageType="error" number="3126" resource="access-types.vpp.result"/>
-<message column="20" line="206" message="Unknown type: (unresolved AccTest17`unAB)" messageType="error" number="3428" resource="access-types.vpp.result"/>
-<message column="30" line="29" message="Unable to resolve type name 'B`tb'" messageType="error" number="3427" resource="access-types.vpp.result"/>
-<message column="12" line="124" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
-<message column="12" line="64" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
-<message column="12" line="110" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="access-types.vpp.result"/>
-<message column="12" line="49" message="Operation parameter visibility less than operation definition" messageType="error" number="3028" resource="access-types.vpp.result"/>
-<message column="12" line="122" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
-<message column="18" line="173" message="Name 'pre_f(nat1)' is not in scope" messageType="error" number="3182" resource="access-types.vpp.result"/>
-<message column="12" line="119" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
-<message column="14" line="144" message="Inaccessible member f1(nat1) of class AccTest10" messageType="error" number="3092" resource="access-types.vpp.result"/>
-<message column="12" line="61" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
-<message column="12" line="101" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
-<message column="20" line="206" message="Unable to resolve type name 'unAB'" messageType="error" number="3427" resource="access-types.vpp.result"/>
-<message column="42" line="207" message="Unknown type 'recA' in constructor" messageType="error" number="3126" resource="access-types.vpp.result"/>
-<message column="12" line="52" message="Operation parameter visibility less than operation definition" messageType="error" number="3028" resource="access-types.vpp.result"/>
-<message column="23" line="179" message="Name 'inv_priv_t(nat1)' is not in scope" messageType="error" number="3182" resource="access-types.vpp.result"/>
-<message column="12" line="97" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
-<message column="12" line="116" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
-<message column="13" line="113" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="access-types.vpp.result"/>
-<message column="12" line="135" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="access-types.vpp.result"/>
+<message column="16" line="61" message="Definition 'b' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
+<message column="15" line="101" message="Definition 'r' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
+<message column="11" line="201" message="Inaccessible member f() of class A" messageType="warning" number="3092" resource="access-types.vpp.result"/>
+<message column="20" line="97" message="Definition 'r' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
+<message column="14" line="61" message="Definition 'a' not used" messageType="warning" number="5000" resource="access-types.vpp.result"/>
+<message column="10" line="110" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="access-types.vpp.result"/>
+<message column="10" line="124" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
+<message column="35" line="207" message="Unknown type 'recA' in constructor" messageType="error" number="3126" resource="access-types.vpp.result"/>
+<message column="26" line="29" message="Unable to resolve type name 'B`tb'" messageType="error" number="3427" resource="access-types.vpp.result"/>
+<message column="16" line="206" message="Unknown type: (unresolved AccTest17`unAB)" messageType="error" number="3428" resource="access-types.vpp.result"/>
+<message column="12" line="144" message="Inaccessible member f1(nat1) of class AccTest10" messageType="error" number="3092" resource="access-types.vpp.result"/>
+<message column="10" line="116" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
+<message column="10" line="119" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
+<message column="10" line="113" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="access-types.vpp.result"/>
+<message column="10" line="135" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="access-types.vpp.result"/>
+<message column="10" line="61" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
+<message column="13" line="179" message="Name 'inv_priv_t(nat1)' is not in scope" messageType="error" number="3182" resource="access-types.vpp.result"/>
+<message column="10" line="49" message="Operation parameter visibility less than operation definition" messageType="error" number="3028" resource="access-types.vpp.result"/>
+<message column="10" line="52" message="Operation parameter visibility less than operation definition" messageType="error" number="3028" resource="access-types.vpp.result"/>
+<message column="27" line="208" message="Unknown type 'B`recB' in constructor" messageType="error" number="3126" resource="access-types.vpp.result"/>
+<message column="10" line="97" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
+<message column="10" line="101" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
+<message column="10" line="122" message="Function parameter visibility less than function definition" messageType="error" number="3030" resource="access-types.vpp.result"/>
+<message column="16" line="206" message="Unable to resolve type name 'unAB'" messageType="error" number="3427" resource="access-types.vpp.result"/>
+<message column="13" line="173" message="Name 'pre_f(nat1)' is not in scope" messageType="error" number="3182" resource="access-types.vpp.result"/>
+<message column="10" line="64" message="Operation parameter visibility less than operation definition" messageType="error" number="3036" resource="access-types.vpp.result"/>
 </testResult>

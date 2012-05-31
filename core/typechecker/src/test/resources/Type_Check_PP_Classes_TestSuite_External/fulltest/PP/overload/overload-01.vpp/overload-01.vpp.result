@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="3" line="8" message="Overloaded members indistinguishable: op" messageType="error" number="3008" resource="overload-01.vpp.result"/>
+<message column="1" line="8" message="Overloaded members indistinguishable: op" messageType="error" number="3008" resource="overload-01.vpp.result"/>
 </testResult>

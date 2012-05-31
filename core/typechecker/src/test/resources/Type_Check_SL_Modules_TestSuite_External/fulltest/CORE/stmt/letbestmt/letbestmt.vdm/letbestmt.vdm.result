@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="19" line="19" message="Empty set used in bind" messageType="warning" number="3264" resource="letbestmt.vdm.result"/>
-<message column="22" line="32" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="letbestmt.vdm.result"/>
-<message column="16" line="32" message="Definition 'arg1' not used" messageType="warning" number="5000" resource="letbestmt.vdm.result"/>
+<message column="18" line="19" message="Empty set used in bind" messageType="warning" number="3264" resource="letbestmt.vdm.result"/>
+<message column="18" line="32" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="letbestmt.vdm.result"/>
+<message column="12" line="32" message="Definition 'arg1' not used" messageType="warning" number="5000" resource="letbestmt.vdm.result"/>
 </testResult>

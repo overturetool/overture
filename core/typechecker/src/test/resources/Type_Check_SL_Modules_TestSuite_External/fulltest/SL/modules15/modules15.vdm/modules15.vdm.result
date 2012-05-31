@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="9" line="29" message="Definition 'v' not used" messageType="warning" number="5000" resource="modules15.vdm.result"/>
+<message column="8" line="29" message="Definition 'v' not used" messageType="warning" number="5000" resource="modules15.vdm.result"/>
 </testResult>

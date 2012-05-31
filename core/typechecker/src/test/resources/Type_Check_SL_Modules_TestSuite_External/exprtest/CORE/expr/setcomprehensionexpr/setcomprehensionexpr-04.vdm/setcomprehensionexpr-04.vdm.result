@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="24" line="12" message="Empty set used in bind" messageType="warning" number="3264" resource="setcomprehensionexpr-04.vdm.result"/>
+<message column="23" line="12" message="Empty set used in bind" messageType="warning" number="3264" resource="setcomprehensionexpr-04.vdm.result"/>
 </testResult>

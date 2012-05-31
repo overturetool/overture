@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="20" line="24" message="Left and right of intersect are different types" messageType="error" number="3165" resource="setintersect-01.vdm.result"/>
+<message column="15" line="24" message="Left and right of intersect are different types" messageType="error" number="3165" resource="setintersect-01.vdm.result"/>
 </testResult>

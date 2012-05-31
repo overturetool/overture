@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="14" line="13" message="Left hand of '^' is not a sequence" messageType="error" number="3157" resource="seqconc-03.vdm.result"/>
+<message column="13" line="13" message="Left hand of '^' is not a sequence" messageType="error" number="3157" resource="seqconc-03.vdm.result"/>
 </testResult>

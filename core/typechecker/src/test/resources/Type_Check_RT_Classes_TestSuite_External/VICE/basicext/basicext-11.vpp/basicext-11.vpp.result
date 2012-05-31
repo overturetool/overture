@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="0" line="1" message="Class BUS duplicates BUS" messageType="error" number="3426" resource="basicext-11.vpp.result"/>
 <message column="0" line="0" message="Class BUS duplicates BUS" messageType="error" number="3426" resource="basicext-11.vpp.result"/>
+<message column="7" line="1" message="Class BUS duplicates BUS" messageType="error" number="3426" resource="basicext-11.vpp.result"/>
 </testResult>

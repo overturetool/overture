@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="22" line="47" message="s at 33:7 hidden by s" messageType="warning" number="5008" resource="casesexpr-41.vdm.result"/>
-<message column="22" line="47" message="Definition 's' not used" messageType="warning" number="5000" resource="casesexpr-41.vdm.result"/>
-<message column="17" line="47" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="casesexpr-41.vdm.result"/>
-<message column="16" line="34" message="Expression does not match declared type" messageType="error" number="3051" resource="casesexpr-41.vdm.result"/>
-<message column="20" line="47" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-41.vdm.result"/>
+<message column="21" line="47" message="s at 33:7 hidden by s" messageType="warning" number="5008" resource="casesexpr-41.vdm.result"/>
+<message column="21" line="47" message="Definition 's' not used" messageType="warning" number="5000" resource="casesexpr-41.vdm.result"/>
+<message column="16" line="47" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="casesexpr-41.vdm.result"/>
+<message column="15" line="34" message="Expression does not match declared type" messageType="error" number="3051" resource="casesexpr-41.vdm.result"/>
+<message column="19" line="47" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-41.vdm.result"/>
 </testResult>

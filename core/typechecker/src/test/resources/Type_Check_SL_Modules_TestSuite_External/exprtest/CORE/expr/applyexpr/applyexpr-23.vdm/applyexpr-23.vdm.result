@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="4" line="34" message="Recursive function has no measure" messageType="warning" number="5012" resource="applyexpr-23.vdm.result"/>
-<message column="8" line="11" message="Definition 'n' not used" messageType="warning" number="5000" resource="applyexpr-23.vdm.result"/>
-<message column="16" line="47" message="Expression does not match declared type" messageType="error" number="3051" resource="applyexpr-23.vdm.result"/>
+<message column="7" line="11" message="Definition 'n' not used" messageType="warning" number="5000" resource="applyexpr-23.vdm.result"/>
+<message column="3" line="34" message="Recursive function has no measure" messageType="warning" number="5012" resource="applyexpr-23.vdm.result"/>
+<message column="15" line="47" message="Expression does not match declared type" messageType="error" number="3051" resource="applyexpr-23.vdm.result"/>
 </testResult>

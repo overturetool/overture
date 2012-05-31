@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="16" line="12" message="Argument of 'elems' is not a sequence" messageType="error" number="3085" resource="seqelems-04.vdm.result"/>
+<message column="11" line="12" message="Argument of 'elems' is not a sequence" messageType="error" number="3085" resource="seqelems-04.vdm.result"/>
 </testResult>

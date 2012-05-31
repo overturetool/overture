@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="14" line="12" message="Arguments to duration must be integer &gt;= 0" messageType="error" number="3281" resource="duration-08.vpp.result"/>
+<message column="13" line="12" message="Arguments to duration must be integer &gt;= 0" messageType="error" number="3281" resource="duration-08.vpp.result"/>
 </testResult>

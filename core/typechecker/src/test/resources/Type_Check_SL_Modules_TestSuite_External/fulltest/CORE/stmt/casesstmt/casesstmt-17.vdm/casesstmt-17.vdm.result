@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="5" line="12" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt-17.vdm.result"/>
-<message column="40" line="18" message="Operation ErrorAction is not in scope" messageType="error" number="3213" resource="casesstmt-17.vdm.result"/>
+<message column="29" line="18" message="Operation ErrorAction is not in scope" messageType="error" number="3213" resource="casesstmt-17.vdm.result"/>
+<message column="1" line="12" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt-17.vdm.result"/>
 </testResult>

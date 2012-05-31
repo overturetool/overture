@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="12" line="9" message="Object designator is not an object type" messageType="error" number="3207" resource="class2.vpp.result"/>
+<message column="11" line="9" message="Object designator is not an object type" messageType="error" number="3207" resource="class2.vpp.result"/>
 </testResult>

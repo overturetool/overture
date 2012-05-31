@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="22" line="16" message="Left of ':-&gt;' is not a map" messageType="error" number="3148" resource="maprngrestby-03.vdm.result"/>
+<message column="19" line="16" message="Left of ':-&gt;' is not a map" messageType="error" number="3148" resource="maprngrestby-03.vdm.result"/>
 </testResult>

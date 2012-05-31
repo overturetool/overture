@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="16" line="12" message="Merge argument is not a set of maps" messageType="error" number="3077" resource="mapdistrmerge-02.vdm.result"/>
+<message column="11" line="12" message="Merge argument is not a set of maps" messageType="error" number="3077" resource="mapdistrmerge-02.vdm.result"/>
 </testResult>

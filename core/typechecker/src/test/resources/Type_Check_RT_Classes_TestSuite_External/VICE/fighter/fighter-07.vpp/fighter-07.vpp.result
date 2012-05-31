@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="21" line="117" message="Definition 'controller' not used" messageType="warning" number="5000" resource="fighter-07.vpp.result"/>
-<message column="21" line="432" message="Definition 'fname' not used" messageType="warning" number="5000" resource="fighter-07.vpp.result"/>
-<message column="23" line="57" message="Definition 'env' not used" messageType="warning" number="5000" resource="fighter-07.vpp.result"/>
-<message column="19" line="367" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="fighter-07.vpp.result"/>
-<message column="25" line="56" message="System class can only define a default constructor" messageType="error" number="3285" resource="fighter-07.vpp.result"/>
+<message column="16" line="432" message="Definition 'fname' not used" messageType="warning" number="5000" resource="fighter-07.vpp.result"/>
+<message column="20" line="57" message="Definition 'env' not used" messageType="warning" number="5000" resource="fighter-07.vpp.result"/>
+<message column="11" line="117" message="Definition 'controller' not used" messageType="warning" number="5000" resource="fighter-07.vpp.result"/>
+<message column="9" line="367" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="fighter-07.vpp.result"/>
+<message column="10" line="56" message="System class can only define a default constructor" messageType="error" number="3285" resource="fighter-07.vpp.result"/>
 </testResult>

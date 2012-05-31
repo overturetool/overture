@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="17" line="4" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="13" line="42" message="Definition 'c' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="8" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="8" line="9" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="17" line="12" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="17" line="18" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="9" line="8" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="17" line="40" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="17" line="41" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="11" line="45" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt.vpp.result"/>
-<message column="17" line="103" message="a at 101:9 hidden by a" messageType="warning" number="5008" resource="casesstmt.vpp.result"/>
-<message column="15" line="64" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="32" line="30" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="18" line="62" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="8" line="20" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="23" line="47" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt.vpp.result"/>
-<message column="18" line="21" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="9" line="21" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="14" line="44" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt.vpp.result"/>
-<message column="14" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
-<message column="6" line="55" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="6" line="66" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="10" line="37" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt.vpp.result"/>
-<message column="30" line="27" message="Name 'CasesStmtTest`a' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
-<message column="10" line="99" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt.vpp.result"/>
-<message column="15" line="26" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="17" line="93" message="Operation Cases10(nat1) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
-<message column="10" line="27" message="Matching expression is not a product of cardinality 3" messageType="error" number="3205" resource="casesstmt.vpp.result"/>
-<message column="33" line="26" message="Right hand of / is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
-<message column="12" line="85" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="28" line="104" message="Incompatible types in assignment" messageType="error" number="3239" resource="casesstmt.vpp.result"/>
-<message column="22" line="96" message="Operation Cases13(seq1 of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
-<message column="6" line="70" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="13" line="66" message="For all statement does not contain a set type" messageType="error" number="3219" resource="casesstmt.vpp.result"/>
-<message column="9" line="4" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt.vpp.result"/>
-<message column="9" line="18" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt.vpp.result"/>
-<message column="12" line="92" message="Name 'CasesStmtTest`n' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
-<message column="34" line="7" message="Right hand of and is not bool" messageType="error" number="3066" resource="casesstmt.vpp.result"/>
-<message column="6" line="68" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="11" line="33" message="Right hand of - is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
-<message column="6" line="54" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="0" line="27" message="Name 'CasesStmtTest`b' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
-<message column="10" line="27" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="22" line="63" message="Not expression is not a boolean" messageType="error" number="3137" resource="casesstmt.vpp.result"/>
-<message column="6" line="40" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="33" line="26" message="Left hand of / is not numeric" messageType="error" number="3139" resource="casesstmt.vpp.result"/>
-<message column="6" line="64" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="9" line="24" message="Void operation returns non-void value" messageType="error" number="3312" resource="casesstmt.vpp.result"/>
-<message column="10" line="7" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="casesstmt.vpp.result"/>
-<message column="17" line="95" message="Operation Cases12(set of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
-<message column="15" line="26" message="Matching expression is not a set type" messageType="error" number="3206" resource="casesstmt.vpp.result"/>
-<message column="10" line="7" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
-<message column="11" line="33" message="Right hand of - is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
+<message column="14" line="64" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="7" line="20" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="7" line="9" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="12" line="42" message="Definition 'c' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="27" line="30" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="8" line="45" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt.vpp.result"/>
+<message column="17" line="47" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt.vpp.result"/>
+<message column="12" line="12" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="16" line="103" message="a at 101:9 hidden by a" messageType="warning" number="5008" resource="casesstmt.vpp.result"/>
+<message column="7" line="8" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="16" line="21" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="12" line="18" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="12" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="7" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="17" line="62" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="8" line="44" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt.vpp.result"/>
+<message column="16" line="40" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="12" line="4" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="16" line="41" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="7" line="21" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="5" line="54" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="19" line="63" message="Not expression is not a boolean" messageType="error" number="3137" resource="casesstmt.vpp.result"/>
+<message column="5" line="68" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="3" line="37" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt.vpp.result"/>
+<message column="31" line="7" message="Right hand of and is not bool" messageType="error" number="3066" resource="casesstmt.vpp.result"/>
+<message column="10" line="66" message="For all statement does not contain a set type" messageType="error" number="3219" resource="casesstmt.vpp.result"/>
+<message column="5" line="70" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="10" line="93" message="Operation Cases10(nat1) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
+<message column="5" line="55" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="3" line="18" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt.vpp.result"/>
+<message column="29" line="27" message="Name 'CasesStmtTest`a' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
+<message column="5" line="66" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="3" line="4" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt.vpp.result"/>
+<message column="32" line="26" message="Left hand of / is not numeric" messageType="error" number="3139" resource="casesstmt.vpp.result"/>
+<message column="7" line="27" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="3" line="99" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt.vpp.result"/>
+<message column="3" line="24" message="Void operation returns non-void value" messageType="error" number="3312" resource="casesstmt.vpp.result"/>
+<message column="10" line="33" message="Right hand of - is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
+<message column="33" line="27" message="Name 'CasesStmtTest`b' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
+<message column="8" line="85" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="15" line="96" message="Operation Cases13(seq1 of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
+<message column="7" line="27" message="Matching expression is not a product of cardinality 3" messageType="error" number="3205" resource="casesstmt.vpp.result"/>
+<message column="7" line="7" message="Matching expression is not a product of cardinality 2" messageType="error" number="3205" resource="casesstmt.vpp.result"/>
+<message column="11" line="92" message="Name 'CasesStmtTest`n' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
+<message column="5" line="64" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="7" line="7" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="10" line="26" message="Matching expression is not a set type" messageType="error" number="3206" resource="casesstmt.vpp.result"/>
+<message column="10" line="33" message="Right hand of - is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
+<message column="32" line="26" message="Right hand of / is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
+<message column="10" line="95" message="Operation Cases12(set of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
+<message column="27" line="104" message="Incompatible types in assignment" messageType="error" number="3239" resource="casesstmt.vpp.result"/>
+<message column="10" line="26" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
+<message column="5" line="40" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
 </testResult>

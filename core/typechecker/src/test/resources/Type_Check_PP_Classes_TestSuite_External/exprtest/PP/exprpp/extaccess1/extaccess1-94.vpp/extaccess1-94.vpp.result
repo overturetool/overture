@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="13" line="73" message="Value type visibility less than value definition" messageType="error" number="3052" resource="extaccess1-94.vpp.result"/>
-<message column="21" line="43" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="extaccess1-94.vpp.result"/>
-<message column="16" line="86" message="Name 'def_f(nat1)' is not in scope" messageType="error" number="3182" resource="extaccess1-94.vpp.result"/>
+<message column="5" line="43" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="extaccess1-94.vpp.result"/>
+<message column="11" line="86" message="Name 'def_f(nat1)' is not in scope" messageType="error" number="3182" resource="extaccess1-94.vpp.result"/>
+<message column="10" line="73" message="Value type visibility less than value definition" messageType="error" number="3052" resource="extaccess1-94.vpp.result"/>
 </testResult>

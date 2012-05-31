@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="20" line="10" message="Undefined class type: B" messageType="error" number="3115" resource="isofclassexpr-03.vpp.result"/>
-<message column="24" line="10" message="Argument is not an object" messageType="error" number="3266" resource="isofclassexpr-03.vpp.result"/>
+<message column="23" line="10" message="Argument is not an object" messageType="error" number="3266" resource="isofclassexpr-03.vpp.result"/>
+<message column="11" line="10" message="Undefined class type: B" messageType="error" number="3115" resource="isofclassexpr-03.vpp.result"/>
 </testResult>

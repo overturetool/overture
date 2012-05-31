@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="17" line="14" message="Set range type must be an number" messageType="error" number="3166" resource="setrangeexpr-06.vdm.result"/>
+<message column="12" line="14" message="Set range type must be an number" messageType="error" number="3166" resource="setrangeexpr-06.vdm.result"/>
 </testResult>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="7" line="66" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="basic-65.vdm.result"/>
+<message column="5" line="66" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="basic-65.vdm.result"/>
 </testResult>

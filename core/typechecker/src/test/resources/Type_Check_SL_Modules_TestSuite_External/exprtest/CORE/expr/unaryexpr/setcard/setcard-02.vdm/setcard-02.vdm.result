@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="22" line="13" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="setcard-02.vdm.result"/>
+<message column="21" line="13" message="Left and right of '=' are incompatible types" messageType="error" number="3087" resource="setcard-02.vdm.result"/>
 </testResult>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="6" line="18" message="Definition 'implf' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
-<message column="7" line="29" message="Definition 'implop' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
-<message column="6" line="24" message="Definition 'expop' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
-<message column="5" line="15" message="Definition 'expf' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
-<message column="61" line="30" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm.result"/>
-<message column="27" line="30" message="Cannot assign to 'ext rd' state S1" messageType="error" number="3248" resource="extexplopdef2.vdm.result"/>
-<message column="22" line="32" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm.result"/>
-<message column="23" line="33" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm.result"/>
+<message column="1" line="24" message="Definition 'expop' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
+<message column="1" line="29" message="Definition 'implop' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
+<message column="1" line="15" message="Definition 'expf' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
+<message column="1" line="18" message="Definition 'implf' not used" messageType="warning" number="5000" resource="extexplopdef2.vdm.result"/>
+<message column="20" line="32" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm.result"/>
+<message column="59" line="30" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm.result"/>
+<message column="25" line="30" message="Cannot assign to 'ext rd' state S1" messageType="error" number="3248" resource="extexplopdef2.vdm.result"/>
+<message column="21" line="33" message="State variable 'A`S2' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef2.vdm.result"/>
 </testResult>

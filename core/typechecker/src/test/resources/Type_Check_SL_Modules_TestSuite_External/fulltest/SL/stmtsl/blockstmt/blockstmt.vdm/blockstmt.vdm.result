@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="12" line="20" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
-<message column="13" line="12" message="Definition 'BlockStmt1' not used" messageType="warning" number="5000" resource="blockstmt.vdm.result"/>
-<message column="7" line="21" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
+<message column="6" line="21" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
+<message column="3" line="12" message="Definition 'BlockStmt1' not used" messageType="warning" number="5000" resource="blockstmt.vdm.result"/>
+<message column="6" line="20" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
 </testResult>
