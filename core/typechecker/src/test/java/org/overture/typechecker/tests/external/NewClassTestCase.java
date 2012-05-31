@@ -42,7 +42,7 @@ public class NewClassTestCase extends TestResourcesResultTestCase
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_RT;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}

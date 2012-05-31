@@ -17,7 +17,7 @@ public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		Properties.recordTestResults = false;
-		String name = "Type_Check_PP_Classes_TestSuite_External";
+		String name = "Type_Check_Rt_Classes_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("rttest/tc");
 		TestSuite test = null;
 		if (root != null && root.exists())

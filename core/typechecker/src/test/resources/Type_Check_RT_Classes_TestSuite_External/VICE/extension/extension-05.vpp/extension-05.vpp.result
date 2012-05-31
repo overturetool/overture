@@ -2,9 +2,4 @@
 <testResult type="">
 <message column="14" line="50" message="Definition 'argc' not used" messageType="warning" number="5000" resource="extension-05.vpp.result"/>
 <message column="17" line="50" message="Definition 'b' not used" messageType="warning" number="5000" resource="extension-05.vpp.result"/>
-<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-05.vpp.result"/>
-<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="extension-05.vpp.result"/>
-<message column="0" line="16" message="Constructor operation must have return type Simple" messageType="error" number="3026" resource="extension-05.vpp.result"/>
-<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-05.vpp.result"/>
-<message column="20" line="6" message="Class name CPU not in scope" messageType="error" number="3133" resource="extension-05.vpp.result"/>
 </testResult>

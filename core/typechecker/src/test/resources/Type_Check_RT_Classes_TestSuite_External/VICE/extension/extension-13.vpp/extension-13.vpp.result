@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
 <message column="16" line="302" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="extension-13.vpp.result"/>
-<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="extension-13.vpp.result"/>
-<message column="28" line="92" message="Member HandleEvent(nat) is not in scope" messageType="error" number="3209" resource="extension-13.vpp.result"/>
-<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-13.vpp.result"/>
+<message column="42" line="55" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-13.vpp.result"/>
 <message column="28" line="93" message="Member HandleEvent(nat) is not in scope" messageType="error" number="3209" resource="extension-13.vpp.result"/>
-<message column="28" line="91" message="Member HandleEvent(nat) is not in scope" messageType="error" number="3209" resource="extension-13.vpp.result"/>
-<message column="16" line="47" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="extension-13.vpp.result"/>
-<message column="23" line="47" message="Class name CPU not in scope" messageType="error" number="3133" resource="extension-13.vpp.result"/>
-<message column="0" line="23" message="Constructor operation must have return type RadNavSys" messageType="error" number="3026" resource="extension-13.vpp.result"/>
-<message column="0" line="41" message="Only one system class permitted" messageType="error" number="3294" resource="extension-13.vpp.result"/>
-<message column="16" line="47" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-13.vpp.result"/>
-<message column="20" line="7" message="Class name CPU not in scope" messageType="error" number="3133" resource="extension-13.vpp.result"/>
-<message column="0" line="61" message="Constructor operation must have return type RadNavSysEnv" messageType="error" number="3026" resource="extension-13.vpp.result"/>
-<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-13.vpp.result"/>
-<message column="16" line="47" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-13.vpp.result"/>
+<message column="28" line="92" message="Member HandleEvent(nat) is not in scope" messageType="error" number="3209" resource="extension-13.vpp.result"/>
 <message column="39" line="45" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-13.vpp.result"/>
+<message column="39" line="32" message="Name 'Radio`DecodeTMC' is not in scope" messageType="error" number="3182" resource="extension-13.vpp.result"/>
+<message column="40" line="50" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-13.vpp.result"/>
+<message column="28" line="91" message="Member HandleEvent(nat) is not in scope" messageType="error" number="3209" resource="extension-13.vpp.result"/>
+<message column="39" line="32" message="Argument to setPriority must be an operation" messageType="error" number="3290" resource="extension-13.vpp.result"/>
+<message column="0" line="41" message="Only one system class permitted" messageType="error" number="3294" resource="extension-13.vpp.result"/>
 </testResult>

@@ -35,14 +35,14 @@ public class NewClassRtTestCase extends TestResourcesResultTestCase
 	public void test() throws Exception
 	{
 		assertNotNull("File not set", file);
-		compareResults(new OvertureTestHelper().typeCheckPp(file), file.getName() + ".result");
+		compareResults(new OvertureTestHelper().typeCheckRt(file), file.getName() + ".result");
 
 	}
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_RT;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}
