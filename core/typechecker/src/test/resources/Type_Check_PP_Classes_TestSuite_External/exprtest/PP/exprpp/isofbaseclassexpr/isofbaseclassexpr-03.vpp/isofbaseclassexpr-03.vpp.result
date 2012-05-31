@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="28" line="17" message="Argument is not an object" messageType="error" number="3266" resource="isofbaseclassexpr-03.vpp.result"/>
+</testResult>

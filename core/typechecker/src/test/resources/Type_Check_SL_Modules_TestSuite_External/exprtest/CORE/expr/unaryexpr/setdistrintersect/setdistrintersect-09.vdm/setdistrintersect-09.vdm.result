@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="17" line="18" message="Argument of 'dinter' is not a set of sets" messageType="error" number="3076" resource="setdistrintersect-09.vdm.result"/>
+</testResult>

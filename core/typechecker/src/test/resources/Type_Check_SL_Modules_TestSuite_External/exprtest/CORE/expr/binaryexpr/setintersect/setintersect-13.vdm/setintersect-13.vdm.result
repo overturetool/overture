@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="21" line="24" message="Left and right of intersect are different types" messageType="error" number="3165" resource="setintersect-13.vdm.result"/>
+<message column="5" line="22" message="Operation returns unexpected type" messageType="error" number="3027" resource="setintersect-13.vdm.result"/>
+</testResult>

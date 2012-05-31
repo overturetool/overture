@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="34" line="12" message="Empty set used in bind" messageType="warning" number="3264" resource="quantexpr-02.vdm.result"/>
+</testResult>

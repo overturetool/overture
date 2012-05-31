@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="15" line="23" message="First arg of '**' must be a map, function or number" messageType="error" number="3173" resource="numexp-11.vdm.result"/>
+</testResult>

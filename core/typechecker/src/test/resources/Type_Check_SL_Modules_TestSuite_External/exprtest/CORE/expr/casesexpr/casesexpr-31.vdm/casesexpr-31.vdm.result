@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="22" line="45" message="Definition 's' not used" messageType="warning" number="5000" resource="casesexpr-31.vdm.result"/>
+<message column="16" line="32" message="Expression does not match declared type" messageType="error" number="3051" resource="casesexpr-31.vdm.result"/>
+<message column="17" line="45" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="casesexpr-31.vdm.result"/>
+<message column="20" line="45" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-31.vdm.result"/>
+</testResult>

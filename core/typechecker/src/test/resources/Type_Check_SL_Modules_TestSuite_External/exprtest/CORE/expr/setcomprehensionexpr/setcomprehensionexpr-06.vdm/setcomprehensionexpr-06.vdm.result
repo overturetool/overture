@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="26" line="12" message="Predicate is not boolean" messageType="error" number="3159" resource="setcomprehensionexpr-06.vdm.result"/>
+</testResult>

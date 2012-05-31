@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="0" line="45" message="Name 'IfExprTest`func' is not in scope" messageType="error" number="3182" resource="ifexpr-69.vdm.result"/>
+</testResult>

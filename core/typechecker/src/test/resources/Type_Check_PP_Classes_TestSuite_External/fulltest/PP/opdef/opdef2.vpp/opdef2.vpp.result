@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="13" line="7" message="S1 at 3:7 hidden by S1" messageType="warning" number="5008" resource="opdef2.vpp.result"/>
+<message column="7" line="8" message="Variable 'S1' in scope is not updatable" messageType="error" number="3301" resource="opdef2.vpp.result"/>
+</testResult>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="27" line="15" message="Left of '&lt;-:' is not a set" messageType="error" number="3079" resource="mapdomrestby-02.vdm.result"/>
+</testResult>

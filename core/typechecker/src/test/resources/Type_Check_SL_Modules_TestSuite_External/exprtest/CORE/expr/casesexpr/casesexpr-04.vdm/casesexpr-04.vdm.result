@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="18" line="31" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-04.vdm.result"/>
+<message column="0" line="32" message="Name 'CasesExprTest`b' is not in scope" messageType="error" number="3182" resource="casesexpr-04.vdm.result"/>
+<message column="18" line="31" message="Matching expression is not a set type" messageType="error" number="3206" resource="casesexpr-04.vdm.result"/>
+<message column="13" line="32" message="Matching expression is not a product of cardinality 3" messageType="error" number="3205" resource="casesexpr-04.vdm.result"/>
+<message column="25" line="32" message="Name 'CasesExprTest`a' is not in scope" messageType="error" number="3182" resource="casesexpr-04.vdm.result"/>
+<message column="29" line="31" message="Right hand of / is not numeric" messageType="error" number="3140" resource="casesexpr-04.vdm.result"/>
+<message column="29" line="31" message="Left hand of / is not numeric" messageType="error" number="3139" resource="casesexpr-04.vdm.result"/>
+<message column="13" line="32" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-04.vdm.result"/>
+</testResult>

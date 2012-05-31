@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="14" line="13" message="If expression is not a boolean" messageType="error" number="3108" resource="setenumerationexpr-03.vdm.result"/>
+</testResult>

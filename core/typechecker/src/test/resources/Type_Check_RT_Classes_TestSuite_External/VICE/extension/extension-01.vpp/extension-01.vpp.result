@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-01.vpp.result"/>
+<message column="43" line="265" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-01.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-01.vpp.result"/>
+<message column="46" line="272" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-01.vpp.result"/>
+<message column="44" line="273" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-01.vpp.result"/>
+<message column="44" line="266" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="extension-01.vpp.result"/>
+<message column="0" line="23" message="Constructor operation must have return type RadNavSys" messageType="error" number="3026" resource="extension-01.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="extension-01.vpp.result"/>
+<message column="20" line="7" message="Class name CPU not in scope" messageType="error" number="3133" resource="extension-01.vpp.result"/>
+</testResult>

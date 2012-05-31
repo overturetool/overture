@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="0" line="16" message="Constructor operation must have return type Simple" messageType="error" number="3026" resource="staticext-03.vpp.result"/>
+<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="staticext-03.vpp.result"/>
+<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="staticext-03.vpp.result"/>
+<message column="13" line="31" message="State variable 'Simple`c' cannot be accessed from this context" messageType="error" number="3302" resource="staticext-03.vpp.result"/>
+<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="staticext-03.vpp.result"/>
+<message column="13" line="31" message="Operation '(Simple`c.TestC)' cannot be called from a function" messageType="error" number="3300" resource="staticext-03.vpp.result"/>
+<message column="20" line="6" message="Class name CPU not in scope" messageType="error" number="3133" resource="staticext-03.vpp.result"/>
+</testResult>

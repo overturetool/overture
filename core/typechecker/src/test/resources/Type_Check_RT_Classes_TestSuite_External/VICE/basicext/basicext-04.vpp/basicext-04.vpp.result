@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="19" line="50" message="Definition 'argc' not used" messageType="warning" number="5000" resource="basicext-04.vpp.result"/>
+<message column="11" line="62" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-04.vpp.result"/>
+<message column="10" line="51" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-04.vpp.result"/>
+<message column="14" line="50" message="Definition 'mapv' not used" messageType="warning" number="5000" resource="basicext-04.vpp.result"/>
+<message column="20" line="7" message="Class name CPU not in scope" messageType="error" number="3133" resource="basicext-04.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="basicext-04.vpp.result"/>
+<message column="0" line="17" message="Constructor operation must have return type Simple" messageType="error" number="3026" resource="basicext-04.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="basicext-04.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="basicext-04.vpp.result"/>
+</testResult>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="20" line="8" message="Definition 're' not used" messageType="warning" number="5000" resource="constructor-09.vpp.result"/>
+</testResult>

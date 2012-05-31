@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="37" line="63" message="Unknown member x(nat1) of class A" messageType="warning" number="3091" resource="fcttypeinstexpr-26.vpp.result"/>
+<message column="3" line="50" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="fcttypeinstexpr-26.vpp.result"/>
+</testResult>

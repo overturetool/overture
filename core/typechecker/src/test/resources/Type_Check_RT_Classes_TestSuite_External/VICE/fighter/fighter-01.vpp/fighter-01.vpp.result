@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="21" line="117" message="Definition 'controller' not used" messageType="warning" number="5000" resource="fighter-01.vpp.result"/>
+<message column="21" line="432" message="Definition 'fname' not used" messageType="warning" number="5000" resource="fighter-01.vpp.result"/>
+<message column="13" line="5" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="fighter-01.vpp.result"/>
+<message column="20" line="5" message="Class name CPU not in scope" messageType="error" number="3133" resource="fighter-01.vpp.result"/>
+<message column="25" line="56" message="System class can only define a default constructor" messageType="error" number="3285" resource="fighter-01.vpp.result"/>
+<message column="13" line="12" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="fighter-01.vpp.result"/>
+<message column="0" line="56" message="Constructor operation must have return type FighterAircraft" messageType="error" number="3026" resource="fighter-01.vpp.result"/>
+<message column="13" line="5" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="fighter-01.vpp.result"/>
+<message column="19" line="367" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="fighter-01.vpp.result"/>
+</testResult>

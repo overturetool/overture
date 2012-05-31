@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="13" line="25" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="constructor-01.vpp.result"/>
+</testResult>

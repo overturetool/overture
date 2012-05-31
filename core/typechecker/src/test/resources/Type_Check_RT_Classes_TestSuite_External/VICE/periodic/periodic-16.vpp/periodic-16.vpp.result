@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="4" line="44" message="Instance variable 's' is not initialized" messageType="warning" number="5001" resource="periodic-16.vpp.result"/>
+</testResult>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="17" line="34" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesexpr-01.vdm.result"/>
+<message column="15" line="33" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-01.vdm.result"/>
+<message column="11" line="35" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-01.vdm.result"/>
+<message column="17" line="33" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesexpr-01.vdm.result"/>
+<message column="12" line="34" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesexpr-01.vdm.result"/>
+<message column="30" line="33" message="Right hand of and is not bool" messageType="error" number="3066" resource="casesexpr-01.vdm.result"/>
+</testResult>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="19" line="17" message="Definition 'i' not used" messageType="warning" number="5000" resource="setcomprehensionexpr-09.vdm.result"/>
+<message column="16" line="13" message="Expression does not match declared type" messageType="error" number="3051" resource="setcomprehensionexpr-09.vdm.result"/>
+</testResult>

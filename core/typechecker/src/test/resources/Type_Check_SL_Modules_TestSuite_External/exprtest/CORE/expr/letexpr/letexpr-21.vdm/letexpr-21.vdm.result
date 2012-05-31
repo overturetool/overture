@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="18" line="26" message="a at 20:15 hidden by a" messageType="warning" number="5008" resource="letexpr-21.vdm.result"/>
+<message column="18" line="26" message="Definition 'a' not used" messageType="warning" number="5000" resource="letexpr-21.vdm.result"/>
+<message column="18" line="22" message="a at 20:15 hidden by a" messageType="warning" number="5008" resource="letexpr-21.vdm.result"/>
+<message column="23" line="23" message="a at 20:15 hidden by a" messageType="warning" number="5008" resource="letexpr-21.vdm.result"/>
+<message column="20" line="20" message="Name 'LetExprTest`b' is not in scope" messageType="error" number="3182" resource="letexpr-21.vdm.result"/>
+<message column="15" line="11" message="Left hand of &lt; is not numeric" messageType="error" number="3139" resource="letexpr-21.vdm.result"/>
+</testResult>

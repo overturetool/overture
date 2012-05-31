@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="11" line="25" message="Definition 'err' not used" messageType="warning" number="5000" resource="casesstmt-18.vdm.result"/>
+</testResult>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="0" line="14" message="Left and right of '\' are different types" messageType="error" number="3162" resource="setminus-06.vdm.result"/>
+</testResult>

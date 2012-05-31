@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="11" line="64" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-03.vpp.result"/>
+<message column="20" line="7" message="Class name CPU not in scope" messageType="error" number="3133" resource="basicext-03.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="basicext-03.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="basicext-03.vpp.result"/>
+<message column="13" line="7" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="basicext-03.vpp.result"/>
+<message column="0" line="17" message="Constructor operation must have return type Simple" messageType="error" number="3026" resource="basicext-03.vpp.result"/>
+</testResult>

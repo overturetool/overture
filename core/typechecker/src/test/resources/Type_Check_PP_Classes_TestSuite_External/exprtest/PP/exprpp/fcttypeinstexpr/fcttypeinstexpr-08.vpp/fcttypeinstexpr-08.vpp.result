@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="3" line="50" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="fcttypeinstexpr-08.vpp.result"/>
+<message column="41" line="63" message="Function instantiation does not yield a function" messageType="error" number="3103" resource="fcttypeinstexpr-08.vpp.result"/>
+</testResult>

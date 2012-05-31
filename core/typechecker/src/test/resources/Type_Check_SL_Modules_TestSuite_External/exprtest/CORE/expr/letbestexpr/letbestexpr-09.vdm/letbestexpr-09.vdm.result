@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="22" line="17" message="Definition 'b' not used" messageType="warning" number="5000" resource="letbestexpr-09.vdm.result"/>
+</testResult>

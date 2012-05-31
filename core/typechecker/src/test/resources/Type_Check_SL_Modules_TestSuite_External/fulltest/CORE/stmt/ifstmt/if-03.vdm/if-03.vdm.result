@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="39" line="12" message="Right hand of and is not bool" messageType="error" number="3066" resource="if-03.vdm.result"/>
+<message column="10" line="10" message="If expression is not boolean" messageType="error" number="3224" resource="if-03.vdm.result"/>
+</testResult>

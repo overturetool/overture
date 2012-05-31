@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="5" line="24" message="Name 'fn(nat, nat)' is not in scope" messageType="error" number="3182" resource="overload-08.vpp.result"/>
+</testResult>

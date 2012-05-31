@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="10" line="112" message="Instance variable 'sensorRef' is not initialized" messageType="warning" number="5001" resource="periodic-18.vpp.result"/>
+<message column="11" line="165" message="Instance variable 'dataSize' is not initialized" messageType="warning" number="5001" resource="periodic-18.vpp.result"/>
+<message column="9" line="113" message="Instance variable 'timerRef' is not initialized" messageType="warning" number="5001" resource="periodic-18.vpp.result"/>
+<message column="16" line="114" message="Instance variable 'flareControlRef' is not initialized" messageType="warning" number="5001" resource="periodic-18.vpp.result"/>
+<message column="11" line="160" message="Instance variable 'timerRef' is not initialized" messageType="warning" number="5001" resource="periodic-18.vpp.result"/>
+<message column="9" line="116" message="Instance variable 'dataSize' is not initialized" messageType="warning" number="5001" resource="periodic-18.vpp.result"/>
+</testResult>

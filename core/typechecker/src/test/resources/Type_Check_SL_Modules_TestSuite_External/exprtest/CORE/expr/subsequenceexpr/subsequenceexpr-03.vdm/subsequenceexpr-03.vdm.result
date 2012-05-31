@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="12" line="13" message="Subsequence is not of a sequence type" messageType="error" number="3174" resource="subsequenceexpr-03.vdm.result"/>
+</testResult>

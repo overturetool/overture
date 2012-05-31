@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="36" line="18" message="Definition 'b' not used" messageType="warning" number="5000" resource="lambdaexpr-01.vdm.result"/>
+</testResult>

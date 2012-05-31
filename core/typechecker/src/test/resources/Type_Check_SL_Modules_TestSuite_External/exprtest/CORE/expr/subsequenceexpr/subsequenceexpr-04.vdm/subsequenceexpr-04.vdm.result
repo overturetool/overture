@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="12" line="13" message="Subsequence range end is not a number" messageType="error" number="3176" resource="subsequenceexpr-04.vdm.result"/>
+</testResult>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="4" line="43" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="invokestmt.vpp.result"/>
+<message column="29" line="98" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="23" line="94" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="5" line="46" message="Instance variable 'c2' is not initialized" messageType="warning" number="5001" resource="invokestmt.vpp.result"/>
+<message column="11" line="52" message="Definition 'c' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="4" line="45" message="Instance variable 'c' is not initialized" messageType="warning" number="5001" resource="invokestmt.vpp.result"/>
+<message column="4" line="44" message="Instance variable 'b' is not initialized" messageType="warning" number="5001" resource="invokestmt.vpp.result"/>
+<message column="32" line="60" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="22" line="70" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="22" line="86" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="23" line="90" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="22" line="74" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="28" line="56" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="11" line="52" message="c at 45:3 hidden by c" messageType="warning" number="5008" resource="invokestmt.vpp.result"/>
+<message column="22" line="82" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="22" line="66" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="31" line="32" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="23" line="5" message="Definition 'c' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="18" line="32" message="Definition 'arg' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="22" line="19" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="34" line="5" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="18" line="98" message="Definition 'b2' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="6" line="28" message="Instance variable 'mya' is not initialized" messageType="warning" number="5001" resource="invokestmt.vpp.result"/>
+<message column="22" line="78" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="22" line="51" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
+<message column="6" line="91" message="Member InvokeStmt9() is not in scope" messageType="error" number="3209" resource="invokestmt.vpp.result"/>
+<message column="16" line="71" message="Operation InvokeStmt2(nat1, nat1) is not in scope" messageType="error" number="3213" resource="invokestmt.vpp.result"/>
+<message column="16" line="75" message="Operation InvokeStmt2(bool) is not in scope" messageType="error" number="3213" resource="invokestmt.vpp.result"/>
+<message column="6" line="91" message="Name 'InvokeStmtTest`d' is not in scope" messageType="error" number="3182" resource="invokestmt.vpp.result"/>
+</testResult>

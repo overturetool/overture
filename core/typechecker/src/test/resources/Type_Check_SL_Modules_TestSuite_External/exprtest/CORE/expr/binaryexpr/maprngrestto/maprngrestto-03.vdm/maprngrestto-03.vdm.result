@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="21" line="15" message="Left of ':&gt;' is not a map" messageType="error" number="3151" resource="maprngrestto-03.vdm.result"/>
+</testResult>

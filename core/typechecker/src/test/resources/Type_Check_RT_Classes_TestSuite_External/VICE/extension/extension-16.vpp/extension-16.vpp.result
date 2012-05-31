@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="10" line="76" message="Permission guard of overloaded operation" messageType="warning" number="5003" resource="extension-16.vpp.result"/>
+<message column="18" line="59" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="extension-16.vpp.result"/>
+<message column="16" line="30" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-16.vpp.result"/>
+<message column="0" line="38" message="Constructor operation must have return type SimpleEnv" messageType="error" number="3026" resource="extension-16.vpp.result"/>
+<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="extension-16.vpp.result"/>
+<message column="16" line="30" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-16.vpp.result"/>
+<message column="16" line="30" message="Unable to resolve type name 'CPU'" messageType="error" number="3427" resource="extension-16.vpp.result"/>
+<message column="0" line="16" message="Constructor operation must have return type Simple" messageType="error" number="3026" resource="extension-16.vpp.result"/>
+<message column="23" line="30" message="Class name CPU not in scope" messageType="error" number="3133" resource="extension-16.vpp.result"/>
+<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-16.vpp.result"/>
+<message column="13" line="6" message="Unable to resolve type name 'CPU'" messageType="error" number="3428" resource="extension-16.vpp.result"/>
+<message column="0" line="25" message="Only one system class permitted" messageType="error" number="3294" resource="extension-16.vpp.result"/>
+<message column="20" line="6" message="Class name CPU not in scope" messageType="error" number="3133" resource="extension-16.vpp.result"/>
+</testResult>

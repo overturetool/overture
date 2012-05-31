@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="13" line="18" message="Function has no type parameters" messageType="error" number="3100" resource="fcttypeinstexpr-02.vdm.result"/>
+</testResult>

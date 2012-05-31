@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="15" line="18" message="Unknown type 'B' in constructor" messageType="error" number="3126" resource="recordconstructorexpr-02.vdm.result"/>
+</testResult>

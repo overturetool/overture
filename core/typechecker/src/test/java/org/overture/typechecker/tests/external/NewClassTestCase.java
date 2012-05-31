@@ -35,7 +35,7 @@ public class NewClassTestCase extends TestResourcesResultTestCase
 	public void test() throws Exception
 	{
 		assertNotNull("File not set", file);
-		compareResults(new OvertureTestHelper().typeCheckPp(file), "typechecker.result");
+		compareResults(new OvertureTestHelper().typeCheckPp(file), file.getName() + ".result");
 
 	}
 	

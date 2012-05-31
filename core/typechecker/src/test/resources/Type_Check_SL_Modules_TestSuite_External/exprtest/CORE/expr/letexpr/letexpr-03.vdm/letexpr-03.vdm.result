@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="15" line="11" message="Left hand of &lt; is not numeric" messageType="error" number="3139" resource="letexpr-03.vdm.result"/>
+<message column="31" line="20" message="Constructor field 2 is of wrong type" messageType="error" number="3129" resource="letexpr-03.vdm.result"/>
+</testResult>

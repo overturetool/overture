@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="21" line="18" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt-13.vdm.result"/>
+<message column="17" line="12" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt-13.vdm.result"/>
+<message column="13" line="13" message="Definition 'c' not used" messageType="warning" number="5000" resource="casesstmt-13.vdm.result"/>
+<message column="17" line="11" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-13.vdm.result"/>
+<message column="18" line="24" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-13.vdm.result"/>
+<message column="14" line="15" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt-13.vdm.result"/>
+<message column="11" line="16" message="Statement will not be reached" messageType="warning" number="5006" resource="casesstmt-13.vdm.result"/>
+<message column="15" line="26" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-13.vdm.result"/>
+<message column="17" line="57" message="Unexpected type for argument 1" messageType="error" number="3217" resource="casesstmt-13.vdm.result"/>
+<message column="10" line="52" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt-13.vdm.result"/>
+<message column="6" line="28" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-13.vdm.result"/>
+<message column="12" line="47" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-13.vdm.result"/>
+<message column="22" line="58" message="Expecting 0 arguments" messageType="error" number="3216" resource="casesstmt-13.vdm.result"/>
+<message column="6" line="30" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-13.vdm.result"/>
+<message column="6" line="11" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-13.vdm.result"/>
+<message column="13" line="28" message="For all statement does not contain a set type" messageType="error" number="3219" resource="casesstmt-13.vdm.result"/>
+<message column="17" line="55" message="Expecting 0 arguments" messageType="error" number="3216" resource="casesstmt-13.vdm.result"/>
+<message column="6" line="32" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-13.vdm.result"/>
+<message column="6" line="26" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-13.vdm.result"/>
+<message column="10" line="8" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt-13.vdm.result"/>
+<message column="22" line="25" message="Not expression is not a boolean" messageType="error" number="3137" resource="casesstmt-13.vdm.result"/>
+<message column="12" line="54" message="Name 'CasesStmtTest`n' is not in scope" messageType="error" number="3182" resource="casesstmt-13.vdm.result"/>
+</testResult>

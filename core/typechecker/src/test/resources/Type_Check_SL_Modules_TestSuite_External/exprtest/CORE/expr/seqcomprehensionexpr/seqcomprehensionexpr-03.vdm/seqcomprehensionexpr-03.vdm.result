@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="12" line="12" message="List comprehension must define one numeric bind variable" messageType="error" number="3155" resource="seqcomprehensionexpr-03.vdm.result"/>
+</testResult>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="13" line="73" message="Value type visibility less than value definition" messageType="error" number="3052" resource="extaccess1-28.vpp.result"/>
+<message column="21" line="43" message="Function parameter visibility less than function definition" messageType="error" number="3019" resource="extaccess1-28.vpp.result"/>
+</testResult>

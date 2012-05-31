@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="0" line="30" message="Constructor operation must have return type C" messageType="error" number="3026" resource="constructor-08.vpp.result"/>
+<message column="14" line="38" message="Constructor operation must have return type C" messageType="error" number="3026" resource="constructor-08.vpp.result"/>
+<message column="0" line="34" message="Constructor operation must have return type C" messageType="error" number="3026" resource="constructor-08.vpp.result"/>
+<message column="2" line="26" message="Operation returns unexpected type" messageType="error" number="3027" resource="constructor-08.vpp.result"/>
+<message column="2" line="18" message="Operation returns unexpected type" messageType="error" number="3027" resource="constructor-08.vpp.result"/>
+</testResult>

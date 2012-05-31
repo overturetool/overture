@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="10" line="36" message="Definition 'n' not used" messageType="warning" number="5000" resource="apply-02.vpp.result"/>
+</testResult>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="22" line="42" message="Definition 's' not used" messageType="warning" number="5000" resource="ifexpr-91.vdm.result"/>
+<message column="20" line="42" message="Pattern cannot match" messageType="error" number="3311" resource="ifexpr-91.vdm.result"/>
+<message column="17" line="42" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="ifexpr-91.vdm.result"/>
+</testResult>

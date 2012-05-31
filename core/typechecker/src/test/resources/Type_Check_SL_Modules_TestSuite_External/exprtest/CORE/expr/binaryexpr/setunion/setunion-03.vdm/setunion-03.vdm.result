@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="18" line="13" message="Left hand of union is not a set" messageType="error" number="3168" resource="setunion-03.vdm.result"/>
+</testResult>

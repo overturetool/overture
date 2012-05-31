@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="21" line="13" message="Right hand of psubset is not a set" messageType="error" number="3147" resource="propersubset-05.vdm.result"/>
+</testResult>

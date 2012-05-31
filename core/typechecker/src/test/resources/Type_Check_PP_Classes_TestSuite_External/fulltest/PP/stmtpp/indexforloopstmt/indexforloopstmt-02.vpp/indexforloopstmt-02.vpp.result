@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="10" line="11" message="Definition 'i' not used" messageType="warning" number="5000" resource="indexforloopstmt-02.vpp.result"/>
+<message column="10" line="11" message="i at 5:3 hidden by i" messageType="warning" number="5008" resource="indexforloopstmt-02.vpp.result"/>
+</testResult>
