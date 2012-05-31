@@ -18,11 +18,11 @@ public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
 	{
 		Properties.recordTestResults = true;
 		String name = "Type_Check_RT_Classes_TestSuite_External";
-		String root = ExternalTestSettings.basePath + "rttest/tc";
+		File root = ExternalTestSettings.getBasePath("rttest/tc");
 		TestSuite test = null;
-		if (new File(root).exists())
+		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root, NewClassRtTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassRtTestCase.class);
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

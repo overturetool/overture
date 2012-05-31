@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.ModuleTypeChecker;

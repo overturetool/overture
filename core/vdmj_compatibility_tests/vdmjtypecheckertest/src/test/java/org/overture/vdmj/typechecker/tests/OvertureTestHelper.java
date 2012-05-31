@@ -10,8 +10,11 @@ import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
+import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
@@ -19,6 +22,7 @@ import org.overturetool.vdmj.modules.Module;
 import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
+import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
@@ -63,9 +67,21 @@ public class OvertureTestHelper
 			classes.addAll(parserResult.result);
 			//			classes.add(new ACpuClassDefinition(location_, name_, nameScope_, used_, access_, type_, supernames_, hasContructors_, settingHierarchy_, gettingInheritable_, gettingInvDefs_, isAbstract_, isUndefined_))
 //			classes.add(new ASystemClassDefinition(location_, name_, nameScope_, used_, access_, type_, supernames_, hasContructors_, settingHierarchy_, gettingInheritable_, gettingInvDefs_, isAbstract_, isUndefined_))
-			ClassTypeChecker mtc = new ClassTypeChecker(classes);
-			mtc.typeCheck();
-			return collectTypeResults(mtc);
+			try {
+				classes.add(new CPUClassDefinition());
+				classes.add(new BUSClassDefinition());
+				ClassTypeChecker mtc = new ClassTypeChecker(classes);
+				
+				mtc.typeCheck();
+				return collectTypeResults(mtc);
+			} catch (ParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (LexException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		return parserResult;
 	}
