@@ -57,7 +57,7 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 				+ "} node with the given nodes as children.\n");
 		sbDoc.append("\t");
 		sbDoc.append("* @deprecated This method should not be used, use AstFactory instead.");
-		sbDoc.append("\t");
+		sbDoc.append("\n\t");
 		sbDoc.append("* The basic child nodes are removed from their previous parents.\n");
 
 		StringBuilder sb = new StringBuilder();
