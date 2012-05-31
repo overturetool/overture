@@ -18,11 +18,11 @@ public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 	{
 		Properties.recordTestResults = false;
 		String name = "Type_Check_SL_Modules_TestSuite_External";
-		String root = ExternalTestSettings.basePath+"sltest/tc";
+		File root = ExternalTestSettings.getBasePath("sltest/tc");
 		TestSuite test = null;
-		if (new File(root).exists())
+		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root, NewModuleTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), NewModuleTestCase.class);
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");
