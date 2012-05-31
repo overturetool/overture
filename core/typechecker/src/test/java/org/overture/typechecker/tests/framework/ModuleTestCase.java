@@ -1,22 +1,16 @@
 package org.overture.typechecker.tests.framework;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Vector;
 
-import junit.framework.TestCase;
-
 import org.overture.ast.modules.AModuleModules;
-import org.overture.typecheck.ModuleTypeChecker;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
-import org.overture.typechecker.tests.framework.TCStruct.Type;
 import org.overturetool.test.framework.ResultTestCase;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
@@ -40,8 +34,6 @@ public class ModuleTestCase extends ResultTestCase
 	String content;
 	String expectedType;
 	ParserType parserType;
-	private TCStructList tcHeaderList = null;
-	private boolean isParseOk = true;
 	List<VDMError> errors = new Vector<VDMError>();
 	List<VDMWarning> warnings = new Vector<VDMWarning>();
 
@@ -57,7 +49,6 @@ public class ModuleTestCase extends ResultTestCase
 		this.parserType = ParserType.Module;
 		this.file = file;
 		this.content = file.getName();
-		this.tcHeaderList = new TCStructList();
 	}
 
 	@Override
@@ -87,6 +78,7 @@ public class ModuleTestCase extends ResultTestCase
 			IOException
 	{
 
+		@SuppressWarnings("rawtypes")
 		Result result = new OvertureTestHelper().typeCheckSl(file);
 		
 		compareResults(result, file.getAbsolutePath());

@@ -208,21 +208,7 @@ public class SClassDefinitionAssistantTC {
 		set.addAll(PDefinitionListAssistantTC.findMatches(classdef.getAllInheritedDefinitions(),sought));
 		return set;
 	}
-//
-//	public static void unusedCheck(SClassDefinition classdef) {
-//		if (!classdef.getUsed())
-//		{
-//			TypeCheckerErrors.warning(5000, "Definition '" + classdef.getName() + "' not used",classdef.getLocation(),classdef);
-//			//System.out.println("Definition '" + classdef.getName() + "' not used");
-//			markUsed(classdef);		// To avoid multiple warnings
-//		}
-//		
-//	}
 
-	private static void markUsed(SClassDefinition classdef) {
-		classdef.setUsed(true);
-		
-	}
 	
 	public static PDefinition findName(List<SClassDefinition> classes,
 			LexNameToken name, NameScope scope) {
