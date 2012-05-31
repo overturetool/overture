@@ -23,7 +23,7 @@ ThreadDone // Non Blocking
 
 values
 
-public stepLength : nat = 1;
+public stepLength : nat = 5;
 
 instance variables
 

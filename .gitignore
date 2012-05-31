@@ -46,9 +46,15 @@ Thumbs.db
 ############################
 target/
 
+# Eclipse stuff #
+#################
 .classpath
 .settings/
 .project
 
-m2-repo/
+# VDM-related generated files #
+###############################
+*.vdmppcov
+*.covtbl
+generated
 
