@@ -2,7 +2,7 @@ package org.overturetool.test.framework;
 
 import java.io.File;
 
-public abstract class TestResourcesResultTestCase extends ResultTestCase
+public abstract class TestResourcesResultTestCase<R> extends ResultTestCase<R>
 {
 	protected final File testSuiteRoot;
 	protected final String suiteName;

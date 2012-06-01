@@ -6,8 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overture.typechecker.tests.framework.BaseTestSuite;
 import org.overture.typechecker.tests.framework.ClassRtTestCase;
+import org.overturetool.test.framework.BaseTestSuite;
 
 public class ClassesRtTypeCheckTest extends BaseTestSuite
 {

@@ -25,7 +25,6 @@ import org.overturetool.vdmj.syntax.SyntaxReader;
 
 public class OvertureTestHelper
 {
-	@SuppressWarnings({ "rawtypes" })
 	public Result typeCheckSl(File file)
 	{
 		Result<List<AModuleModules>> parserResult = parseCheckSl(file);
@@ -37,7 +36,6 @@ public class OvertureTestHelper
 		}
 		return parserResult;
 	}
-	@SuppressWarnings({ "rawtypes" })
 	public Result typeCheckPp(File file)
 	{
 		Result<List<SClassDefinition>> parserResult = parseCheckPp(file);
@@ -50,7 +48,6 @@ public class OvertureTestHelper
 		return parserResult;
 	}
 	
-	@SuppressWarnings({ "rawtypes" })
 	public Result typeCheckRt(File file)
 	{
 		Result<List<SClassDefinition>> parserResult = parseCheckPp(file);
@@ -100,7 +97,7 @@ public class OvertureTestHelper
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
 		}
-		return new Result<List<SClassDefinition>>(result, warnings, errors,null);
+		return new Result<List<SClassDefinition>>(result, warnings, errors);
 	}
 	
 	
@@ -123,12 +120,11 @@ public class OvertureTestHelper
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
 		}
-		return new Result<List<AModuleModules>>(result, warnings, errors,null);
+		return new Result<List<AModuleModules>>(result, warnings, errors);
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Result collectTypeResults(TypeChecker mtc)
+	protected Result<Boolean> collectTypeResults(TypeChecker mtc)
 	{
 		List<IMessage> errors = new Vector<IMessage>();
 		List<IMessage> warnings = new Vector<IMessage>();
@@ -148,7 +144,7 @@ public class OvertureTestHelper
 				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
-		return new Result("some result", warnings, errors,null);
+		return new Result<Boolean>(true, warnings, errors);
 	}
 
 	private static void collectParserErrorsAndWarnings(SyntaxReader reader,
@@ -170,4 +166,5 @@ public class OvertureTestHelper
 			}
 		}
 	}
+	
 }

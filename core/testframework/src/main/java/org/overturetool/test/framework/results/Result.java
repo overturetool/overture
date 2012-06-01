@@ -16,14 +16,12 @@ public class Result<R>
 	public R result;
 	public final List<IMessage> warnings;
 	public final List<IMessage> errors;
-	public final List<IMessage> proofObligations;
 
-	public Result(R result, List<IMessage> warnings, List<IMessage> errors,List<IMessage> proofObligations)
+	public Result(R result, List<IMessage> warnings, List<IMessage> errors)
 	{
 		this.result = result;
 		this.warnings = warnings;
 		this.errors = errors;
-		this.proofObligations = proofObligations;
 	}
 
 	@Override

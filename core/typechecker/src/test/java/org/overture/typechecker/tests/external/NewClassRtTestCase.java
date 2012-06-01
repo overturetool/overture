@@ -4,12 +4,11 @@ import java.io.File;
 
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overturetool.test.framework.TestResourcesResultTestCase;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 
-public class NewClassRtTestCase extends TestResourcesResultTestCase
+public class NewClassRtTestCase extends NewExternalTypeCheckTestCase
 {
 	public NewClassRtTestCase()
 	{

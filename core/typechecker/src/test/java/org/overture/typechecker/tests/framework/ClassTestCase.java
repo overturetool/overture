@@ -7,8 +7,6 @@ import java.util.Vector;
 
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
-import org.overturetool.test.framework.ResultTestCase;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
@@ -18,7 +16,7 @@ import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class ClassTestCase extends ResultTestCase
+public class ClassTestCase extends TypeCheckTestCase
 {
 public final static boolean DEBUG = false;
 	public static final String tcHeader = "-- TCErrors:";
@@ -28,7 +26,6 @@ public final static boolean DEBUG = false;
 	String name;
 	String content;
 	String expectedType;
-	ParserType parserType;	
 	List<VDMError> errors = new Vector<VDMError>();
 	List<VDMWarning> warnings = new Vector<VDMWarning>();
 
@@ -41,7 +38,6 @@ public final static boolean DEBUG = false;
 	public ClassTestCase(File file)
 	{
 		super(file);
-		this.parserType = ParserType.Module;
 		this.file = file;
 		this.content = file.getName();
 		
@@ -80,16 +76,7 @@ public final static boolean DEBUG = false;
 
 	}
 
-	@Override
-	protected File createResultFile(String filename) {
-		return new File(filename + ".result");
-	}
-
-	@Override
-	protected File getResultFile(String filename) {
-		return new File(filename + ".result");
-	}
-
+	
 	
 
 	

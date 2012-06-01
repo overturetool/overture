@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 
+import org.overturetool.test.framework.BaseTestSuite;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overture.parser.tests.framework.BaseTestSuite;
 
 public class ExpressionTestSuite extends BaseTestSuite
 {

@@ -24,18 +24,25 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-public class XmlResultReaderWritter {
+public class XmlResultReaderWritter<R> {
+public interface IResultStore<T>
+{
+	void encondeResult(T result, Document doc, Element resultElement);
 
+	T decodeResult(Node node);
+}
 	private File file;
-	private Result result = null;
+	private Result<R> result = null;
 	private String type;
+	private IResultStore<R> resultStore;
 
 	public XmlResultReaderWritter() {	
 	}
 	
-	public XmlResultReaderWritter(File file)
+	public XmlResultReaderWritter(File file, IResultStore<R> store)
 	{
 		this.file = file;
+		this.resultStore = store;
 	}
 	
 //	public XmlResultReaderWritter(String path)
@@ -43,10 +50,11 @@ public class XmlResultReaderWritter {
 //		this(new File(path));
 //	}
 	
-	public void setResult(String type, Result result)
+	public void setResult(String type, Result<R> result, IResultStore<R> store)
 	{
 		this.type = type;
 		this.result = result;				
+		this.resultStore = store;
 	}
 	
 	
@@ -84,7 +92,6 @@ public class XmlResultReaderWritter {
 		
 		List<IMessage> warnings = getResult().warnings;
 		List<IMessage> errors =  getResult().errors;
-		List<IMessage> obligations = getResult().proofObligations;
 
 		if (warnings != null) {
 			for (IMessage warning : warnings) {
@@ -118,27 +125,34 @@ public class XmlResultReaderWritter {
 			}
 		}
 		
-		if (obligations != null) {
-			for (IMessage po : obligations) {
-				Element message = doc.createElement("message");
-				message.setAttribute("messageType", "error");
-				message.setAttribute("resource", file.getName());
-				message.setAttribute("number",
-						new Integer(po.getNumber()).toString());
-				message.setAttribute("message", po.getMessage());
-				message.setAttribute("column",
-						new Integer(po.getCol()).toString());
-				message.setAttribute("line",
-						new Integer(po.getLine()).toString());
-				rootElement.appendChild(message);
-			}
-		}
+		Element resultElement = doc.createElement("result");
+		resultStore.encondeResult(result.result,doc,resultElement);
+		rootElement.appendChild(resultElement);
+//		
+//		if (obligations != null) {
+//			for (IMessage po : obligations) {
+//				Element message = doc.createElement("message");
+//				message.setAttribute("messageType", "po");
+//				message.setAttribute("resource", file.getName());
+//				message.setAttribute("number",
+//						new Integer(po.getNumber()).toString());
+//				message.setAttribute("message", po.getMessage());
+//				message.setAttribute("column",
+//						new Integer(po.getCol()).toString());
+//				message.setAttribute("line",
+//						new Integer(po.getLine()).toString());
+//				rootElement.appendChild(message);
+//			}
+//		}
 	}	
 	
+	
+
 	public boolean loadFromXml(){
 		//File resultFile = new File(file.getAbsoluteFile()+ ".result");
 		List<IMessage> warnings = new Vector<IMessage>();
 		List<IMessage> errors = new Vector<IMessage>();
+		R readResult = null;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -150,14 +164,18 @@ public class XmlResultReaderWritter {
 			NodeList nodeLst = doc.getElementsByTagName("message");
 			for (int i = 0; i < nodeLst.getLength(); i++) {
 				Node node = nodeLst.item(i);
-				if (node.getAttributes().getNamedItem("messageType")
-						.getNodeValue().equals("error")) {
+				String nodeType = node.getAttributes().getNamedItem("messageType").getNodeValue();
+				if (nodeType.equals("error")) {
 					convertNodeToMessage(errors, node);
-				} else {
+				} else if(nodeType.equals("warning")){
 					convertNodeToMessage(warnings, node);
+				} else if(nodeType.equals("result"))
+				{
+					//convertNodeToMessage(pos, node);
+					readResult =resultStore.decodeResult(node);
 				}
 			}
-			setResult(new Result<String>(file.getName(), warnings, errors,null));
+			setResult(new Result<R>(readResult, warnings, errors));
 		} catch (Exception e) {
 			return false;
 		}
@@ -177,11 +195,11 @@ public class XmlResultReaderWritter {
 		set.add(m);
 	}
 
-	public Result<String> getResult() {
+	public Result<R> getResult() {
 		return result;
 	}
 
-	public void setResult(Result result) {
+	public void setResult(Result<R> result) {
 		this.result = result;
 	}
 

@@ -11,6 +11,9 @@ import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.DefinitionReader;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 {
@@ -65,6 +68,22 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 	protected boolean hasRunBefore()
 	{
 		return hasRunBefore;
+	}
+
+	public void encondeResult(Object result, Document doc, Element resultElement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object decodeResult(Node node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean compareResult(Object expected, Object actual) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	

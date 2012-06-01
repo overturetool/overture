@@ -19,7 +19,6 @@
 package org.overturetool.test.framework;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -30,10 +29,10 @@ import javax.xml.transform.TransformerException;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.IResultCombiner;
 import org.overturetool.test.framework.results.Result;
-import org.overturetool.test.util.MessageReaderWritter;
 import org.overturetool.test.util.XmlResultReaderWritter;
+import org.overturetool.test.util.XmlResultReaderWritter.IResultStore;
 
-public abstract class ResultTestCase extends BaseTestCase
+public abstract class ResultTestCase<R> extends BaseTestCase implements IResultStore<R>
 {
 	public ResultTestCase()
 	{
@@ -53,15 +52,15 @@ public abstract class ResultTestCase extends BaseTestCase
 	
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void compareResults(Result result, String filename)
+	
+	protected void compareResults(Result<R> result, String filename)
 	{
 		if(Properties.recordTestResults)
 		{
 			//MessageReaderWritter mrw = new MessageReaderWritter(createResultFile(filename));
 			//mrw.set(result);
 			//mrw.save();
-			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(createResultFile(filename));
+			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(createResultFile(filename),this);
 			xmlResult.setResult(result);
 			try {
 				xmlResult.saveInXml();
@@ -82,7 +81,7 @@ public abstract class ResultTestCase extends BaseTestCase
 		assertTrue("Result file " + file.getAbsolutePath() + " does not exist", file.exists());
 		
 		//MessageReaderWritter mrw = new MessageReaderWritter(file);
-		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
+		XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(file,this);
 		boolean parsed = xmlResult.loadFromXml();
 
 		assertTrue("Could not read result file: " + file.getName(), parsed);
@@ -96,10 +95,13 @@ public abstract class ResultTestCase extends BaseTestCase
 			
 			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings);
 			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors) || errorsFound;
-			
+			errorsFound = compareResult( xmlResult.getResult().result, result.result) || errorsFound;
 			assertFalse("Errors found in file \"" + filename + "\"", errorsFound);
 		}
 	}
+	
+	protected abstract boolean compareResult(R expected,
+			R actual);
 
 	protected abstract File createResultFile(String filename);
 
@@ -148,8 +150,8 @@ public abstract class ResultTestCase extends BaseTestCase
 		return false;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected <T> Result mergeResults(Set<? extends Result<T>> parse,
+	
+	protected <T> Result<T> mergeResults(Set<? extends Result<T>> parse,
 			IResultCombiner<T> c)
 	{
 		List<IMessage> warnings = new Vector<IMessage>();
@@ -162,7 +164,7 @@ public abstract class ResultTestCase extends BaseTestCase
 			errors.addAll(r.errors);
 			result = c.combine(result, r.result);
 		}
-		return new Result(result, warnings, errors,null);
+		return new Result<T>(result, warnings, errors);
 	}
 
 }
