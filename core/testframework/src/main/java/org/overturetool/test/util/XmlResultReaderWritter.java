@@ -1,6 +1,7 @@
 package org.overturetool.test.util;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -23,64 +24,64 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
-public class XmlResultReaderWritter<R> {
-public interface IResultStore<T>
+public class XmlResultReaderWritter<R>
 {
-	void encondeResult(T result, Document doc, Element resultElement);
+	public interface IResultStore<T>
+	{
+		void encondeResult(T result, Document doc, Element resultElement);
 
-	T decodeResult(Node node);
-}
+		T decodeResult(Node node);
+	}
+
 	private File file;
 	private Result<R> result = null;
 	private String type;
 	private IResultStore<R> resultStore;
 
-	public XmlResultReaderWritter() {	
+	public XmlResultReaderWritter()
+	{
 	}
-	
+
 	public XmlResultReaderWritter(File file, IResultStore<R> store)
 	{
 		this.file = file;
 		this.resultStore = store;
 	}
-	
-//	public XmlResultReaderWritter(String path)
-//	{
-//		this(new File(path));
-//	}
-	
+
+	// public XmlResultReaderWritter(String path)
+	// {
+	// this(new File(path));
+	// }
+
 	public void setResult(String type, Result<R> result, IResultStore<R> store)
 	{
 		this.type = type;
-		this.result = result;				
+		this.result = result;
 		this.resultStore = store;
 	}
-	
-	
-	public void saveInXml() throws ParserConfigurationException, TransformerException
+
+	public void saveInXml() throws ParserConfigurationException,
+			TransformerException
 	{
-		
-		
+
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
- 
+
 		// root elements
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement("testResult");
 		doc.appendChild(rootElement);
 		rootElement.setAttribute("type", type);
-		
-		createWarningsAndErrors(doc,rootElement);
-		       
+
+		createWarningsAndErrors(doc, rootElement);
+
 		// write the content into xml file
-		TransformerFactory transformerFactory = TransformerFactory
-				.newInstance();
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(file);
-		//transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		// transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		// Output to console for testing
 		// StreamResult result = new StreamResult(System.out);
 
@@ -88,65 +89,47 @@ public interface IResultStore<T>
 
 	}
 
-	private void createWarningsAndErrors(Document doc, Element rootElement) {
-		
-		List<IMessage> warnings = getResult().warnings;
-		List<IMessage> errors =  getResult().errors;
+	private void createWarningsAndErrors(Document doc, Element rootElement)
+	{
 
-		if (warnings != null) {
-			for (IMessage warning : warnings) {
+		List<IMessage> warnings = getResult().warnings;
+		List<IMessage> errors = getResult().errors;
+
+		if (warnings != null)
+		{
+			for (IMessage warning : warnings)
+			{
 				Element message = doc.createElement("message");
 				message.setAttribute("messageType", "warning");
 				message.setAttribute("resource", file.getName());
-				message.setAttribute("number",
-						new Integer(warning.getNumber()).toString());
+				message.setAttribute("number", new Integer(warning.getNumber()).toString());
 				message.setAttribute("message", warning.getMessage());
-				message.setAttribute("column",
-						new Integer(warning.getCol()).toString());
-				message.setAttribute("line",
-						new Integer(warning.getLine()).toString());
+				message.setAttribute("column", new Integer(warning.getCol()).toString());
+				message.setAttribute("line", new Integer(warning.getLine()).toString());
 				rootElement.appendChild(message);
 			}
 		}
-		
-		if (errors != null) {
-			for (IMessage warning : errors) {
+
+		if (errors != null)
+		{
+			for (IMessage warning : errors)
+			{
 				Element message = doc.createElement("message");
 				message.setAttribute("messageType", "error");
 				message.setAttribute("resource", file.getName());
-				message.setAttribute("number",
-						new Integer(warning.getNumber()).toString());
+				message.setAttribute("number", new Integer(warning.getNumber()).toString());
 				message.setAttribute("message", warning.getMessage());
-				message.setAttribute("column",
-						new Integer(warning.getCol()).toString());
-				message.setAttribute("line",
-						new Integer(warning.getLine()).toString());
+				message.setAttribute("column", new Integer(warning.getCol()).toString());
+				message.setAttribute("line", new Integer(warning.getLine()).toString());
 				rootElement.appendChild(message);
 			}
 		}
-		
+
 		Element resultElement = doc.createElement("result");
-		resultStore.encondeResult(result.result,doc,resultElement);
+		resultStore.encondeResult(result.result, doc, resultElement);
 		rootElement.appendChild(resultElement);
-//		
-//		if (obligations != null) {
-//			for (IMessage po : obligations) {
-//				Element message = doc.createElement("message");
-//				message.setAttribute("messageType", "po");
-//				message.setAttribute("resource", file.getName());
-//				message.setAttribute("number",
-//						new Integer(po.getNumber()).toString());
-//				message.setAttribute("message", po.getMessage());
-//				message.setAttribute("column",
-//						new Integer(po.getCol()).toString());
-//				message.setAttribute("line",
-//						new Integer(po.getLine()).toString());
-//				rootElement.appendChild(message);
-//			}
-//		}
-	}	
-	
-	
+
+	}
 
 	public boolean loadFromXml(){
 		//File resultFile = new File(file.getAbsoluteFile()+ ".result");
@@ -169,57 +152,66 @@ public interface IResultStore<T>
 					convertNodeToMessage(errors, node);
 				} else if(nodeType.equals("warning")){
 					convertNodeToMessage(warnings, node);
-				} else if(nodeType.equals("result"))
+				} 
+			}
+			
+			for (int i = 0; i < doc.getDocumentElement().getChildNodes().getLength(); i++) {
+				Node node = doc.getDocumentElement().getChildNodes().item(i);
+				if(node.getNodeName()!=null && node.getNodeName().equals("result"))
 				{
-					//convertNodeToMessage(pos, node);
+					node.normalize();
 					readResult =resultStore.decodeResult(node);
 				}
+//				System.out.println(node);
 			}
-			setResult(new Result<R>(readResult, warnings, errors));
+//			doc.getDocumentElement().getChildNodes().getElementsByTagName("result")
+			
+			String type = doc.getDocumentElement().getAttributes().getNamedItem("type").getNodeValue();
+			setResult(type,new Result<R>(readResult, warnings, errors));
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
 
-	private void convertNodeToMessage(List<IMessage> set, Node node) {
+	private void convertNodeToMessage(List<IMessage> set, Node node)
+	{
 
 		NamedNodeMap nnm = node.getAttributes();
 		String resource = nnm.getNamedItem("resource").getNodeValue();
-		IMessage m = new Message(resource,
-				Integer.parseInt(nnm.getNamedItem("number").getNodeValue()),
-				Integer.parseInt(nnm.getNamedItem("line").getNodeValue()),
-				Integer.parseInt(nnm.getNamedItem("column").getNodeValue()),
-				nnm.getNamedItem("message").getNodeValue()
-				);
+		IMessage m = new Message(resource, Integer.parseInt(nnm.getNamedItem("number").getNodeValue()), Integer.parseInt(nnm.getNamedItem("line").getNodeValue()), Integer.parseInt(nnm.getNamedItem("column").getNodeValue()), nnm.getNamedItem("message").getNodeValue());
 		set.add(m);
 	}
 
-	public Result<R> getResult() {
+	public Result<R> getResult()
+	{
 		return result;
 	}
 
-	public void setResult(Result<R> result) {
+	public void setResult(String type, Result<R> result)
+	{
 		this.result = result;
+		this.type = type;
 	}
 
-	public List<IMessage> getWarnings() {
-		if(result != null)
+	public List<IMessage> getWarnings()
+	{
+		if (result != null)
 		{
 			return result.warnings;
 		}
-		
+
 		return null;
 	}
 
-	public List<IMessage> getErrors() {
-		if(result != null)
+	public List<IMessage> getErrors()
+	{
+		if (result != null)
 		{
 			return result.errors;
 		}
-		
+
 		return null;
 	}
 
-	
 }

@@ -30,7 +30,7 @@ public abstract class TypeCheckTestCase extends ResultTestCase<Object> {
 	}
 
 	@Override
-	protected boolean compareResult(Object expected, Object actual) {
+	protected boolean assertEqualResults(Object expected, Object actual) {
 		return true;
 	}
 

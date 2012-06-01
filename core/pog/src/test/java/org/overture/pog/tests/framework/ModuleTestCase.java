@@ -23,6 +23,7 @@ import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
+import org.overturetool.vdmj.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -123,12 +124,12 @@ public class ModuleTestCase extends ResultTestCase<ProofObligationList>
 		
 	}
 	
-	 /** Read the object from Base64 string. */
-    private static Object fromString( String s ) throws IOException ,
-                                                        ClassNotFoundException {
+	 /** Read the object from Base64 string. 
+	 * @throws Exception */
+    private static Object fromString( String s ) throws Exception {
        
         ObjectInputStream ois = new ObjectInputStream( 
-                                        new ByteArrayInputStream(  s.getBytes() ) );
+                                        new ByteArrayInputStream(Base64.decode(s) ) );
         Object o  = ois.readObject();
         ois.close();
         return o;
@@ -140,18 +141,35 @@ public class ModuleTestCase extends ResultTestCase<ProofObligationList>
         ObjectOutputStream oos = new ObjectOutputStream( baos );
         oos.writeObject( o );
         oos.close();
-        return new String(  baos.toByteArray()  );
+        
+        return   Base64.encode( baos.toByteArray() ).toString();
     }
 
 	public ProofObligationList decodeResult(Node node) {
-		// TODO Auto-generated method stub
-		return null;
+		ProofObligationList list = new ProofObligationList();
+		
+		for (int i = 0; i < node.getChildNodes().getLength(); i++)
+		{
+			Node cn = node.getChildNodes().item(i);
+			if(cn.getNodeType()==Node.ELEMENT_NODE && cn.getNodeName().equals("po"))
+			{
+				String nodeType = cn.getAttributes().getNamedItem("object").getNodeValue();
+				try
+				{
+					list.add((ProofObligation) fromString(nodeType));
+				} catch (Exception e)
+				{
+					fail("Not able to decode stored result");
+				}
+			}
+		}
+		return list;
 	}
 
 	@Override
-	protected boolean compareResult(ProofObligationList expected,
+	protected boolean assertEqualResults(ProofObligationList expected,
 			ProofObligationList actual) {
-		// TODO Auto-generated method stub
-		return false;
+		//FIXME: check is not sufficient
+		return expected.size()==actual.size();
 	}
 }

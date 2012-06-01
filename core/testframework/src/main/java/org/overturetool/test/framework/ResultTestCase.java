@@ -61,7 +61,7 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 			//mrw.set(result);
 			//mrw.save();
 			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(createResultFile(filename),this);
-			xmlResult.setResult(result);
+			xmlResult.setResult(this.getClass().getName(),result);
 			try {
 				xmlResult.saveInXml();
 			} catch (ParserConfigurationException e) {
@@ -95,12 +95,18 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 			
 			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings);
 			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors) || errorsFound;
-			errorsFound = compareResult( xmlResult.getResult().result, result.result) || errorsFound;
+			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result) || errorsFound;
 			assertFalse("Errors found in file \"" + filename + "\"", errorsFound);
 		}
 	}
 	
-	protected abstract boolean compareResult(R expected,
+	/**
+	 * Checks if the results are equal.
+	 * @param expected The expected result
+	 * @param actual The actual result
+	 * @return If equal true or check has to be ignored true is returned else false
+	 */
+	protected abstract boolean assertEqualResults(R expected,
 			R actual);
 
 	protected abstract File createResultFile(String filename);

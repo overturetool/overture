@@ -81,7 +81,7 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader>
 	}
 
 	@Override
-	protected boolean compareResult(Object expected, Object actual) {
+	protected boolean assertEqualResults(Object expected, Object actual) {
 		// TODO Auto-generated method stub
 		return false;
 	}

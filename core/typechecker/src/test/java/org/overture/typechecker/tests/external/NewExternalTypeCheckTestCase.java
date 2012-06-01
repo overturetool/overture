@@ -39,7 +39,7 @@ public abstract class NewExternalTypeCheckTestCase extends
 	}
 
 	@Override
-	protected boolean compareResult(Boolean expected, Boolean actual) {
+	protected boolean assertEqualResults(Boolean expected, Boolean actual) {
 		return true;
 	}
 	
