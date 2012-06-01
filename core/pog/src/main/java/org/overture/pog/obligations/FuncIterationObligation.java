@@ -28,6 +28,11 @@ import org.overture.ast.types.assistants.PTypeAssistantTC;
 
 public class FuncIterationObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6041213040266345023L;
+
 	public FuncIterationObligation(
 		AStarStarBinaryExp exp, String prename, POContextStack ctxt)
 	{

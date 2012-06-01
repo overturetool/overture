@@ -29,6 +29,11 @@ import org.overture.ast.types.ASetType;
 
 public class FiniteSetObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4471304924561635823L;
+
 	public FiniteSetObligation(
 		ASetCompSetExp exp, ASetType settype, POContextStack ctxt)
 	{

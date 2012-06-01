@@ -37,6 +37,11 @@ import org.overturetool.vdmj.util.Utils;
 
 public class FuncPostConditionObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8970037457131290857L;
+
 	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
 			POContextStack ctxt)
 	{

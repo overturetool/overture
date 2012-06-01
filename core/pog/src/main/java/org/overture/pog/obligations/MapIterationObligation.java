@@ -28,6 +28,11 @@ import org.overture.ast.expressions.AStarStarBinaryExp;
 
 public class MapIterationObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9122478081832322687L;
+
 	public MapIterationObligation(AStarStarBinaryExp exp, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.MAP_ITERATION, ctxt);

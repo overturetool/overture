@@ -28,6 +28,11 @@ import org.overture.ast.expressions.APlusPlusBinaryExp;
 
 public class SeqModificationObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2541416807923302230L;
+
 	public SeqModificationObligation(APlusPlusBinaryExp arg, POContextStack ctxt)
 	{
 		super(arg.getLocation(), POType.SEQ_MODIFICATION, ctxt);

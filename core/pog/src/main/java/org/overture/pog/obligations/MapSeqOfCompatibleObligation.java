@@ -29,6 +29,11 @@ import org.overture.ast.expressions.AMapletExp;
 
 public class MapSeqOfCompatibleObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2042036674338877124L;
+
 	public MapSeqOfCompatibleObligation(AMapEnumMapExp exp, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.MAP_SEQ_OF_COMPATIBLE, ctxt);

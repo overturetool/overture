@@ -28,6 +28,11 @@ import org.overture.ast.types.AProductType;
 
 public class TupleSelectObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7776291065628025047L;
+
 	public TupleSelectObligation(
 		AFieldNumberExp exp, AProductType type, POContextStack ctxt)
 	{

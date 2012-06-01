@@ -30,6 +30,11 @@ import org.overture.ast.types.PType;
 
 public class FiniteMapObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2891663568497319141L;
+
 	public FiniteMapObligation(
 		AMapCompMapExp exp, PType maptype, POContextStack ctxt)
 	{

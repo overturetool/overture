@@ -27,6 +27,11 @@ import org.overture.ast.expressions.ACompBinaryExp;
 
 public class MapComposeObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3501039332724576068L;
+
 	public MapComposeObligation(ACompBinaryExp exp, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.MAP_COMPOSE, ctxt);

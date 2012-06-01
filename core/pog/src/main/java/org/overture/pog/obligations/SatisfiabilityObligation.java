@@ -38,6 +38,10 @@ import org.overturetool.util.Utils;
 
 public class SatisfiabilityObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8922392508326253099L;
 	private String separator = "";
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,

@@ -30,6 +30,11 @@ import org.overture.ast.types.SInvariantType;
 
 public class InvariantObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5763771885830801635L;
+
 	public InvariantObligation(PExp arg, SInvariantType inv, POContextStack ctxt)
 	{
 		super(arg.getLocation(), POType.INVARIANT, ctxt);

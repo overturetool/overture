@@ -30,6 +30,11 @@ import org.overture.ast.statements.PStateDesignator;
 
 public class MapApplyObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1385749421110721860L;
+
 	public MapApplyObligation(PExp root, PExp arg, POContextStack ctxt)
 	{
 		super(root.getLocation(), POType.MAP_APPLY, ctxt);

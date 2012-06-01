@@ -29,6 +29,11 @@ import org.overturetool.vdmj.util.Utils;
 
 public class MapSetOfCompatibleObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6082219504509442557L;
+
 	public MapSetOfCompatibleObligation(PExp exp, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.MAP_SET_OF_COMPATIBLE, ctxt);

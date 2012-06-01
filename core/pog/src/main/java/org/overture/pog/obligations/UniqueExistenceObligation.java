@@ -28,6 +28,11 @@ import org.overture.ast.expressions.AIotaExp;
 
 public class UniqueExistenceObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6089416321651268903L;
+
 	public UniqueExistenceObligation(AIotaExp iota, POContextStack ctxt)
 	{
 		super(iota.getLocation(), POType.UNIQUE_EXISTENCE, ctxt);

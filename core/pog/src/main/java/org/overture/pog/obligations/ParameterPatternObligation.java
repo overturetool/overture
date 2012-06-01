@@ -44,6 +44,10 @@ import org.overture.ast.types.PType;
 
 public class ParameterPatternObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6831031423902894299L;
 	private final PDefinition predef;
 
 	public ParameterPatternObligation(

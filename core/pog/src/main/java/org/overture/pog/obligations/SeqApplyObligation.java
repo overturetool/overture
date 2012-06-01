@@ -29,6 +29,11 @@ import org.overture.ast.statements.PStateDesignator;
 
 public class SeqApplyObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4022111928534078511L;
+
 	public SeqApplyObligation(PExp root, PExp arg, POContextStack ctxt)
 	{
 		super(root.getLocation(), POType.SEQ_APPLY, ctxt);

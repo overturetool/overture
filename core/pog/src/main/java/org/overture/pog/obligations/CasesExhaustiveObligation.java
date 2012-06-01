@@ -29,6 +29,11 @@ import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2266396606434510800L;
+
 	public CasesExhaustiveObligation(ACasesExp exp, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.CASES_EXHAUSTIVE, ctxt);

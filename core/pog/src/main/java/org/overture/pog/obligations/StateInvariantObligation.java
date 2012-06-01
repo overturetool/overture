@@ -36,6 +36,11 @@ import org.overture.ast.statements.AAssignmentStm;
 
 public class StateInvariantObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5828298910806421399L;
+
 	public StateInvariantObligation(AAssignmentStm ass, POContextStack ctxt)
 	{
 		super(ass.getLocation(), POType.STATE_INVARIANT, ctxt);

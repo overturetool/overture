@@ -29,6 +29,11 @@ import org.overture.ast.statements.ALetBeStStm;
 
 public class LetBeExistsObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4190499967249305830L;
+
 	public LetBeExistsObligation(ALetBeStExp exp, POContextStack ctxt)
 	{
 		super(exp.getBind().getLocation(), POType.LET_BE_EXISTS, ctxt);

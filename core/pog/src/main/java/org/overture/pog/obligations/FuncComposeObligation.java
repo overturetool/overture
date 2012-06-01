@@ -29,6 +29,11 @@ import org.overture.ast.types.assistants.PTypeAssistantTC;
 
 public class FuncComposeObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8813166638915813635L;
+
 	public FuncComposeObligation(
 		ACompBinaryExp exp, String pref1, String pref2, POContextStack ctxt)
 	{

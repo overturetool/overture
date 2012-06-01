@@ -32,6 +32,11 @@ import org.overture.ast.types.PType;
 
 public class ValueBindingObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7549866948129324892L;
+
 	public ValueBindingObligation(AValueDefinition def, POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.VALUE_BINDING, ctxt);

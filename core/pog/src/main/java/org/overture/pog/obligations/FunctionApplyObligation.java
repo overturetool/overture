@@ -30,6 +30,11 @@ import org.overturetool.vdmj.util.Utils;
 
 public class FunctionApplyObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7146271970744572457L;
+
 	public FunctionApplyObligation(PExp root, List<PExp> args, String prename, POContextStack ctxt)
 	{
 		super(root.getLocation(), POType.FUNC_APPLY, ctxt);

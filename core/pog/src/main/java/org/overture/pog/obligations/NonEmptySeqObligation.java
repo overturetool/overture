@@ -27,6 +27,11 @@ import org.overture.ast.expressions.PExp;
 
 public class NonEmptySeqObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8245417295117901422L;
+
 	public NonEmptySeqObligation(PExp exp, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.NON_EMPTY_SEQ, ctxt);

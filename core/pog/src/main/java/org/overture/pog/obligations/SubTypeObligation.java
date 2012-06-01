@@ -75,6 +75,11 @@ import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 
 public class SubTypeObligation extends ProofObligation {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1108478780469068741L;
+
 	public SubTypeObligation(PExp exp, PType etype, PType atype,
 			POContextStack ctxt) {
 		super(exp.getLocation(), POType.SUB_TYPE, ctxt);

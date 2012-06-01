@@ -31,6 +31,11 @@ import org.overturetool.util.Utils;
 
 public class RecursiveObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6975984943449362262L;
+
 	public RecursiveObligation(
 		AExplicitFunctionDefinition def, AApplyExp apply, POContextStack ctxt)
 	{

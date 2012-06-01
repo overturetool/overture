@@ -27,6 +27,11 @@ import org.overture.ast.expressions.PExp;
 
 public class MapCompatibleObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7453383884893058267L;
+
 	public MapCompatibleObligation(
 		PExp left, PExp right, POContextStack ctxt)
 	{

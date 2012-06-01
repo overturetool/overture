@@ -32,6 +32,11 @@ import org.overture.ast.statements.AErrorCase;
 
 public class OperationPostConditionObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7717481924562707647L;
+
 	public OperationPostConditionObligation(AExplicitOperationDefinition op,
 			POContextStack ctxt)
 	{

@@ -28,6 +28,11 @@ import org.overturetool.vdmj.lex.LexLocation;
 
 public class NonZeroObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5773921447005368923L;
+
 	public NonZeroObligation(
 		LexLocation location, PExp exp, POContextStack ctxt)
 	{

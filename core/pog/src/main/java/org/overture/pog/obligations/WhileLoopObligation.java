@@ -27,6 +27,11 @@ import org.overture.ast.statements.AWhileStm;
 
 public class WhileLoopObligation extends ProofObligation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3771203462569628826L;
+
 	public WhileLoopObligation(AWhileStm stmt, POContextStack ctxt)
 	{
 		super(stmt.getLocation(), POType.WHILE_LOOP, ctxt);
