@@ -10,7 +10,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ExpressionReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader>
+public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader,List<PExp>>
 {
 	static boolean hasRunBefore = false;
 
@@ -23,9 +23,9 @@ public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader>
 	{
 	}
 
-	public ExpressionTestCase(String name, String content)
+	public ExpressionTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 	}
 
 	@Override

@@ -69,8 +69,7 @@ public final static boolean DEBUG = false;
 	private void moduleTc(String class_) throws ParserException, LexException,
 			IOException
 	{
-		@SuppressWarnings("rawtypes")
-		Result result = new OvertureTestHelper().typeCheckPp(file);
+		Result<Boolean> result = new OvertureTestHelper().typeCheckPp(file);
 		
 		compareResults(result, file.getAbsolutePath());
 

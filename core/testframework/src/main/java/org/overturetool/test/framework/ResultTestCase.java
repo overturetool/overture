@@ -45,9 +45,9 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 		super(file);
 	}
 
-	public ResultTestCase(String name, String content)
+	public ResultTestCase(File rootSource, String name, String content)
 	{
-		super(name,content);
+		super(rootSource,name,content);
 	}
 	
 	
@@ -60,7 +60,9 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 			//MessageReaderWritter mrw = new MessageReaderWritter(createResultFile(filename));
 			//mrw.set(result);
 			//mrw.save();
-			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(createResultFile(filename),this);
+			File resultFile = createResultFile(filename);
+			resultFile.getParentFile().mkdirs();
+			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(resultFile,this);
 			xmlResult.setResult(this.getClass().getName(),result);
 			try {
 				xmlResult.saveInXml();

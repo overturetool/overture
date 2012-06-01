@@ -21,56 +21,29 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class BaseParserTestCase<T extends SyntaxReader> extends
-		ResultTestCase
+public abstract class BaseParserTestCase<T extends SyntaxReader,R> extends
+		ResultTestCase<R>
 {
 
 public final static boolean DEBUG = true;
-	File file;
-	String name;
-	String content;
 	
 
 	public BaseParserTestCase()
 	{
-		//super("skip");
 		super();
 	}
 	
 
 	public BaseParserTestCase(File file)
 	{
-		//super("test");
 		super(file);
-		this.file = file;
-		this.content = file.getName();
 	}
 
-	public BaseParserTestCase(String name, String content)
+	public BaseParserTestCase(File rootSource,String name, String content)
 	{
-		//super("test");
-		super();
-		this.content = content;
-		this.name = name;
+		super(rootSource,name,content); 
 	}
 
-	@Override
-	public String getName()
-	{
-		if (name != null)
-		{
-			return name;
-		} else if (file != null)
-		{
-			String name = file.getName();
-			if (name.contains("."))
-			{
-				return name.substring(0, name.indexOf("."));
-			}
-			return file.getName();
-		}
-		return "Generic Base Test";
-	}
 
 	public void test() throws ParserException, LexException
 	{
@@ -85,7 +58,7 @@ public final static boolean DEBUG = true;
 
 	protected abstract T getReader(LexTokenReader ltr);
 
-	protected abstract Object read(T reader) throws ParserException,
+	protected abstract R read(T reader) throws ParserException,
 			LexException;
 
 	protected abstract String getReaderTypeName();
@@ -101,8 +74,7 @@ public final static boolean DEBUG = true;
 			LexException
 	{
 		T reader = null;
-		Object result = null;
-		String errorMessages = "";
+		R result = null;
 		try
 		{
 			reader = getReader(ltr);
@@ -114,17 +86,9 @@ public final static boolean DEBUG = true;
 			List<IMessage> errors = new Vector<IMessage>();
 			
 			collectParserErrorsAndWarnings(reader, errors, warnings);
-			Result<Object> resultFinal = new Result<Object>(result, warnings, errors);
+			Result<R> resultFinal = new Result<R>(result, warnings, errors);
 			
 			compareResults(resultFinal, file.getAbsolutePath());
-			//compareResults(result, file.getAbsolutePath());
-			
-				//Result<String> resultFile = xmlreaderWritter.loadFromXml();
-				
-				
-			
-			
-
 			
 		} finally
 		{
@@ -136,7 +100,6 @@ public final static boolean DEBUG = true;
 				
 				System.out.println("|");
 				System.out.println("|\t\t"+getReaderTypeName()+"s");
-//				System.out.println("|");
 				System.out.println("|___________________________________________________________________________________________________________");
 				
 			
@@ -188,11 +151,23 @@ public final static boolean DEBUG = true;
 	
 	@Override
 	protected File createResultFile(String filename) {
+		if(mode==ContentModed.String)
+		{
+			String tmp = getName().substring(name.indexOf('_')+1);
+			tmp =File.separatorChar+ ""+tmp.substring(0,tmp.indexOf('_'));
+			return new File(filename+"_results"+tmp + ".result");
+		}
 		return new File(filename + ".result");
 	}
 
 	@Override
 	protected File getResultFile(String filename) {
+		if(mode==ContentModed.String)
+		{
+			String tmp = getName().substring(name.indexOf('_')+1);
+			tmp =File.separatorChar+ ""+tmp.substring(0,tmp.indexOf('_'));
+			return new File(filename+"_results"+tmp + ".result");
+		}
 		return new File(filename + ".result");
 	}
 	
@@ -218,20 +193,17 @@ public final static boolean DEBUG = true;
 
 
 	public void encondeResult(Object result, Document doc, Element resultElement) {
-		// TODO Auto-generated method stub
 		
 	}
 
 
-	public Object decodeResult(Node node) {
-		// TODO Auto-generated method stub
+	public R decodeResult(Node node) {
 		return null;
 	}
 
 
 	@Override
-	protected boolean assertEqualResults(Object expected, Object actual) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean assertEqualResults(R expected, R actual) {
+		return true;
 	}
 }

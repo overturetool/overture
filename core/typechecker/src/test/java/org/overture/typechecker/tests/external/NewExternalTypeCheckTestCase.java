@@ -19,9 +19,9 @@ public abstract class NewExternalTypeCheckTestCase extends
 		super(file);
 	}
 
-	public NewExternalTypeCheckTestCase(String name, String content)
+	public NewExternalTypeCheckTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 	}
 
 	public NewExternalTypeCheckTestCase(File file, String suiteName, File testSuiteRoot)

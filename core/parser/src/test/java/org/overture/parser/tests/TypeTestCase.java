@@ -9,7 +9,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.TypeReader;
 
-public class TypeTestCase extends BaseParserTestCase<TypeReader>
+public class TypeTestCase extends BaseParserTestCase<TypeReader,INode>
 {
 	static boolean hasRunBefore = false;
 
@@ -23,9 +23,9 @@ public class TypeTestCase extends BaseParserTestCase<TypeReader>
 
 	}
 
-	public TypeTestCase(String name, String content)
+	public TypeTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 	}
 
 	@Override

@@ -21,9 +21,9 @@ public abstract class TestResourcesResultTestCase<R> extends ResultTestCase<R>
 		suiteName = null;
 	}
 
-	public TestResourcesResultTestCase(String name, String content)
+	public TestResourcesResultTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 		testSuiteRoot = null;
 		suiteName = null;
 	}

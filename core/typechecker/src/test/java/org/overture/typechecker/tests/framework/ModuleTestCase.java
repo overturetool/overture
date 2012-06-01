@@ -7,7 +7,6 @@ import java.util.Vector;
 
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overturetool.test.framework.ResultTestCase;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
@@ -70,8 +69,7 @@ public class ModuleTestCase extends TypeCheckTestCase
 			IOException
 	{
 
-		@SuppressWarnings("rawtypes")
-		Result result = new OvertureTestHelper().typeCheckSl(file);
+		Result<Boolean> result = new OvertureTestHelper().typeCheckSl(file);
 		
 		compareResults(result, file.getAbsolutePath());
 

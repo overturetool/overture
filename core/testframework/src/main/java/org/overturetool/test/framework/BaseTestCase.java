@@ -47,11 +47,12 @@ public abstract class BaseTestCase extends
 		mode = ContentModed.File;
 	}
 
-	public BaseTestCase(String name, String content)
+	public BaseTestCase(File rootSource,String name, String content)
 	{
 		super("test");
 		this.content = content;
 		this.name = name;
+		this.file = rootSource;
 		mode = ContentModed.String;
 	}
 

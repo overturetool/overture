@@ -12,7 +12,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class SpecificatopnSlTestCase extends BaseParserTestCase<ModuleReader>
+public class SpecificatopnSlTestCase extends BaseParserTestCase<ModuleReader,List<AModuleModules>>
 {
 	static boolean hasRunBefore = false;
 	public SpecificatopnSlTestCase(File file)
@@ -32,9 +32,9 @@ public class SpecificatopnSlTestCase extends BaseParserTestCase<ModuleReader>
 		Settings.dialect = Dialect.VDM_SL;
 	}
 
-	public SpecificatopnSlTestCase(String name, String content)
+	public SpecificatopnSlTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 	}
 
 	@Override

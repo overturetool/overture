@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class TypeCheckTestCase extends ResultTestCase<Object> {
+public abstract class TypeCheckTestCase extends ResultTestCase<Boolean> {
 
 	public TypeCheckTestCase()
 	{
@@ -21,16 +21,16 @@ public abstract class TypeCheckTestCase extends ResultTestCase<Object> {
 	}
 	
 	
-	public void encondeResult(Object result, Document doc, Element resultElement) {
+	public void encondeResult(Boolean result, Document doc, Element resultElement) {
 		
 	}
 
-	public Object decodeResult(Node node) {
+	public Boolean decodeResult(Node node) {
 		return null;
 	}
 
 	@Override
-	protected boolean assertEqualResults(Object expected, Object actual) {
+	protected boolean assertEqualResults(Boolean expected, Boolean actual) {
 		return true;
 	}
 

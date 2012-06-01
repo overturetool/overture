@@ -24,9 +24,9 @@ public class NewClassTestCase extends TestResourcesResultTestCase<Boolean>
 		super(file);
 	}
 
-	public NewClassTestCase(String name, String content)
+	public NewClassTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 	}
 
 	public NewClassTestCase(File file, String suiteName, File testSuiteRoot)

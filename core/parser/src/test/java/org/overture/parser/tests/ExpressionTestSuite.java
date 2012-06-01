@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 
-import org.overturetool.test.framework.BaseTestSuite;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.overturetool.test.framework.BaseTestSuite;
 
 
 public class ExpressionTestSuite extends BaseTestSuite
@@ -15,6 +15,7 @@ public class ExpressionTestSuite extends BaseTestSuite
 
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
+		
 		String name = "Parser Expression TestSuite";
 		String root = "src\\test\\resources\\expressions";
 		TestSuite test = createTestCompleteFile(name,root+"\\complete",ExpressionTestCase.class);

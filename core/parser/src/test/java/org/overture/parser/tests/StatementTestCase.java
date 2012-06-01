@@ -11,7 +11,7 @@ import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.StatementReader;
 
-public class StatementTestCase extends BaseParserTestCase<StatementReader>
+public class StatementTestCase extends BaseParserTestCase<StatementReader,PStm>
 {
 	static boolean hasRunBefore = false;
 	public StatementTestCase(File file)
@@ -24,9 +24,9 @@ public class StatementTestCase extends BaseParserTestCase<StatementReader>
 	
 	}
 
-	public StatementTestCase(String name, String content)
+	public StatementTestCase(File rootSource,String name, String content)
 	{
-		super(name, content);
+		super(rootSource,name, content);
 	}
 	
 	@Override

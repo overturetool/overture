@@ -162,7 +162,7 @@ public class BaseTestSuite extends TestSuite
 			SecurityException, NoSuchMethodException, IOException
 	{
 		File testRoot = getFile(testRootPath);
-		Constructor ctor = testCase.getConstructor(new Class[] { String.class,
+		Constructor ctor = testCase.getConstructor(new Class[] {File.class, String.class,
 				String.class });
 		TestSuite suite = new BaseTestSuite(name);
 
@@ -170,7 +170,7 @@ public class BaseTestSuite extends TestSuite
 		{
 			for (File file : testRoot.listFiles())
 			{
-				if (file.getName().startsWith("."))
+				if (file.getName().startsWith(".")||file.getName().endsWith("_results"))
 				{
 					continue;
 				}
@@ -179,8 +179,8 @@ public class BaseTestSuite extends TestSuite
 				{
 					for (int i = 0; i < lines.size(); i++)
 					{
-						Object instance = ctor.newInstance(new Object[] {
-								file.getName() + " " + i + " - " + lines.get(i),
+						Object instance = ctor.newInstance(new Object[] {file,
+								file.getName() + "_L" + i + "_" + lines.get(i),
 								lines.get(i) });
 						suite.addTest((Test) instance);
 					}
