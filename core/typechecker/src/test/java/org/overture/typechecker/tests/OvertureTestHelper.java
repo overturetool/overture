@@ -1,9 +1,7 @@
 package org.overture.typechecker.tests;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
