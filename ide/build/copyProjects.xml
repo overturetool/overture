@@ -11,6 +11,7 @@
 	</fileset>
 	<fileset dir="../plugins/">
 		<include name="**" />
+		<exclude name="**/uml2/" />
 		<exclude name="**/idedebughelper/" />
 		<exclude name="**/proofsupport/" />
 	</fileset>
