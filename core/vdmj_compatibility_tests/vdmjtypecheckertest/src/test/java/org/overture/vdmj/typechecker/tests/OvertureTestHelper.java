@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overture.vdmjUtils.VdmjCompatibilityUtils;
 import org.overturetool.test.framework.results.IMessage;
@@ -95,8 +96,8 @@ public class OvertureTestHelper
 		ClassReader reader = null;
 		List<ClassDefinition> result = null;
 
-		Set<IMessage> errors = new HashSet<IMessage>();
-		Set<IMessage> warnings = new HashSet<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
 
 		try
 		{
@@ -118,8 +119,8 @@ public class OvertureTestHelper
 		ModuleReader reader = null;
 		List<Module> result = null;
 
-		Set<IMessage> errors = new HashSet<IMessage>();
-		Set<IMessage> warnings = new HashSet<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
 
 		try
 		{
@@ -137,8 +138,8 @@ public class OvertureTestHelper
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Result collectTypeResults(TypeChecker mtc)
 	{
-		Set<IMessage> errors = new HashSet<IMessage>();
-		Set<IMessage> warnings = new HashSet<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
 		if (mtc != null && TypeChecker.getErrorCount() > 0)
 		{
 

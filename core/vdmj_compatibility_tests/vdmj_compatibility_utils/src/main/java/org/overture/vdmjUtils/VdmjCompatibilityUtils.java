@@ -1,7 +1,9 @@
 package org.overture.vdmjUtils;
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
@@ -17,8 +19,8 @@ public class VdmjCompatibilityUtils {
 
 	@SuppressWarnings({"rawtypes" })
 	public static Result convertToResult(SyntaxReader reader,File file, String name) {
-		Set<IMessage> warnings = new HashSet<IMessage>();
-		Set<IMessage> errors = new HashSet<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
 		
 		for (VDMWarning warning : reader.getWarnings()) {
 			warnings.add(new Message(file.getName(), warning.number, warning.location.startLine, warning.location.startPos, warning.message));
@@ -33,8 +35,8 @@ public class VdmjCompatibilityUtils {
 
 	public static Result convertToResult( File file,
 			String name) {
-		Set<IMessage> warnings = new HashSet<IMessage>();
-		Set<IMessage> errors = new HashSet<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
 		
 		for (VDMWarning warning : TypeChecker.getWarnings()) {
 			warnings.add(new Message(file.getName(), warning.number, warning.location.startLine, warning.location.startPos, warning.message));
@@ -47,7 +49,7 @@ public class VdmjCompatibilityUtils {
 	}
 	
 	public static void collectParserErrorsAndWarnings(SyntaxReader reader,
-			Set<IMessage> errors, Set<IMessage> warnings)
+			List<IMessage> errors, List<IMessage> warnings)
 	{
 		if (reader != null && reader.getErrorCount() > 0)
 		{

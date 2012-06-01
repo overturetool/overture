@@ -1,19 +1,14 @@
 package org.overture.typechecker.tests.framework;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-import org.overture.vdmjUtils.VdmjCompatibilityUtils;
-import org.overturetool.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.BindReader;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ExpressionReader;
@@ -23,8 +18,6 @@ import org.overturetool.vdmj.syntax.PatternReader;
 import org.overturetool.vdmj.syntax.StatementReader;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.syntax.TypeReader;
-import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
-import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.Type;
 
