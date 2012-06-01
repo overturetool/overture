@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="16" line="13" message="State variable 'TYPE`ast' cannot be accessed from this context" messageType="error" number="3302" resource="type.vdm.result"/>
+</testResult>

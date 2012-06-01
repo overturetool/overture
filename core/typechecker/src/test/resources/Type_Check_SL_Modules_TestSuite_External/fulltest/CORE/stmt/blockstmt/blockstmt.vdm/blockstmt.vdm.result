@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="16" line="23" message="a at 20:10 hidden by a" messageType="warning" number="5008" resource="blockstmt.vdm.result"/>
+<message column="22" line="28" message="Definition 'b1' not used" messageType="warning" number="5000" resource="blockstmt.vdm.result"/>
+<message column="16" line="45" message="Definition 'a' not used" messageType="warning" number="5000" resource="blockstmt.vdm.result"/>
+<message column="6" line="64" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
+<message column="6" line="65" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
+<message column="5" line="86" message="Statement will not be reached" messageType="warning" number="5006" resource="blockstmt.vdm.result"/>
+<message column="10" line="42" message="Expression does not match declared type" messageType="error" number="3000" resource="blockstmt.vdm.result"/>
+<message column="3" line="67" message="Operation returns void value" messageType="error" number="3313" resource="blockstmt.vdm.result"/>
+<message column="3" line="83" message="Operation returns unexpected type" messageType="error" number="3027" resource="blockstmt.vdm.result"/>
+<message column="24" line="100" message="Unable to resolve type name 'Unknown'" messageType="error" number="3431" resource="blockstmt.vdm.result"/>
+</testResult>

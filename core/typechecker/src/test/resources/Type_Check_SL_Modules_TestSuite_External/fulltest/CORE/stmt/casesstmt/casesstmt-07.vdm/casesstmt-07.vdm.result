@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="1" line="8" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt-07.vdm.result"/>
+</testResult>

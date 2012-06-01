@@ -4,12 +4,11 @@ import java.io.File;
 
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overturetool.test.framework.TestResourcesResultTestCase;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 
-public class NewClassTestCase extends TestResourcesResultTestCase
+public class NewClassTestCase extends NewExternalTypeCheckTestCase
 {
 	public NewClassTestCase()
 	{
@@ -35,14 +34,14 @@ public class NewClassTestCase extends TestResourcesResultTestCase
 	public void test() throws Exception
 	{
 		assertNotNull("File not set", file);
-		compareResults(new OvertureTestHelper().typeCheckPp(file), "typechecker.result");
+		compareResults(new OvertureTestHelper().typeCheckPp(file), file.getName() + ".result");
 
 	}
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_RT;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}

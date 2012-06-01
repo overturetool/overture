@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="11" line="53" message="Too many arguments" messageType="error" number="3059" resource="casesexpr-98.vdm.result"/>
+</testResult>

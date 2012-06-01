@@ -1,20 +1,14 @@
 package org.overturetool.test.util;
 
-import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -28,21 +22,27 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 
-public class XmlResultReaderWritter {
+public class XmlResultReaderWritter<R> {
+public interface IResultStore<T>
+{
+	void encondeResult(T result, Document doc, Element resultElement);
 
+	T decodeResult(Node node);
+}
 	private File file;
-	private Result result = null;
+	private Result<R> result = null;
 	private String type;
+	private IResultStore<R> resultStore;
 
 	public XmlResultReaderWritter() {	
 	}
 	
-	public XmlResultReaderWritter(File file)
+	public XmlResultReaderWritter(File file, IResultStore<R> store)
 	{
 		this.file = file;
+		this.resultStore = store;
 	}
 	
 //	public XmlResultReaderWritter(String path)
@@ -50,10 +50,11 @@ public class XmlResultReaderWritter {
 //		this(new File(path));
 //	}
 	
-	public void setResult(String type, Result result)
+	public void setResult(String type, Result<R> result, IResultStore<R> store)
 	{
 		this.type = type;
 		this.result = result;				
+		this.resultStore = store;
 	}
 	
 	
@@ -89,36 +90,69 @@ public class XmlResultReaderWritter {
 
 	private void createWarningsAndErrors(Document doc, Element rootElement) {
 		
-		Set<IMessage> warnings = (Set<IMessage>) getResult().warnings;
-		Set<IMessage> errors = (Set<IMessage>) getResult().errors;
-		
-		for (IMessage warning : warnings) {
-			Element message = doc.createElement("message");
-			message.setAttribute("messageType", "warning");
-			message.setAttribute("resource", file.getName());
-			message.setAttribute("number", new Integer(warning.getNumber()).toString());
-			message.setAttribute("message", warning.getMessage());
-			message.setAttribute("column",  new Integer(warning.getCol()).toString());
-			message.setAttribute("line",  new Integer(warning.getLine()).toString());
-			rootElement.appendChild(message);
+		List<IMessage> warnings = getResult().warnings;
+		List<IMessage> errors =  getResult().errors;
+
+		if (warnings != null) {
+			for (IMessage warning : warnings) {
+				Element message = doc.createElement("message");
+				message.setAttribute("messageType", "warning");
+				message.setAttribute("resource", file.getName());
+				message.setAttribute("number",
+						new Integer(warning.getNumber()).toString());
+				message.setAttribute("message", warning.getMessage());
+				message.setAttribute("column",
+						new Integer(warning.getCol()).toString());
+				message.setAttribute("line",
+						new Integer(warning.getLine()).toString());
+				rootElement.appendChild(message);
+			}
 		}
 		
-		for (IMessage warning : errors) {
-			Element message = doc.createElement("message");
-			message.setAttribute("messageType", "error");
-			message.setAttribute("resource", file.getName());
-			message.setAttribute("number", new Integer(warning.getNumber()).toString());
-			message.setAttribute("message", warning.getMessage());
-			message.setAttribute("column",  new Integer(warning.getCol()).toString());
-			message.setAttribute("line",  new Integer(warning.getLine()).toString());
-			rootElement.appendChild(message);
+		if (errors != null) {
+			for (IMessage warning : errors) {
+				Element message = doc.createElement("message");
+				message.setAttribute("messageType", "error");
+				message.setAttribute("resource", file.getName());
+				message.setAttribute("number",
+						new Integer(warning.getNumber()).toString());
+				message.setAttribute("message", warning.getMessage());
+				message.setAttribute("column",
+						new Integer(warning.getCol()).toString());
+				message.setAttribute("line",
+						new Integer(warning.getLine()).toString());
+				rootElement.appendChild(message);
+			}
 		}
+		
+		Element resultElement = doc.createElement("result");
+		resultStore.encondeResult(result.result,doc,resultElement);
+		rootElement.appendChild(resultElement);
+//		
+//		if (obligations != null) {
+//			for (IMessage po : obligations) {
+//				Element message = doc.createElement("message");
+//				message.setAttribute("messageType", "po");
+//				message.setAttribute("resource", file.getName());
+//				message.setAttribute("number",
+//						new Integer(po.getNumber()).toString());
+//				message.setAttribute("message", po.getMessage());
+//				message.setAttribute("column",
+//						new Integer(po.getCol()).toString());
+//				message.setAttribute("line",
+//						new Integer(po.getLine()).toString());
+//				rootElement.appendChild(message);
+//			}
+//		}
 	}	
 	
+	
+
 	public boolean loadFromXml(){
 		//File resultFile = new File(file.getAbsoluteFile()+ ".result");
-		Set<IMessage> warnings = new HashSet<IMessage>();
-		Set<IMessage> errors = new HashSet<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		R readResult = null;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -130,21 +164,25 @@ public class XmlResultReaderWritter {
 			NodeList nodeLst = doc.getElementsByTagName("message");
 			for (int i = 0; i < nodeLst.getLength(); i++) {
 				Node node = nodeLst.item(i);
-				if (node.getAttributes().getNamedItem("messageType")
-						.getNodeValue().equals("error")) {
+				String nodeType = node.getAttributes().getNamedItem("messageType").getNodeValue();
+				if (nodeType.equals("error")) {
 					convertNodeToMessage(errors, node);
-				} else {
+				} else if(nodeType.equals("warning")){
 					convertNodeToMessage(warnings, node);
+				} else if(nodeType.equals("result"))
+				{
+					//convertNodeToMessage(pos, node);
+					readResult =resultStore.decodeResult(node);
 				}
 			}
-			setResult(new Result<String>(file.getName(), warnings, errors));
+			setResult(new Result<R>(readResult, warnings, errors));
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
 
-	private void convertNodeToMessage(Set<IMessage> set, Node node) {
+	private void convertNodeToMessage(List<IMessage> set, Node node) {
 
 		NamedNodeMap nnm = node.getAttributes();
 		String resource = nnm.getNamedItem("resource").getNodeValue();
@@ -157,15 +195,15 @@ public class XmlResultReaderWritter {
 		set.add(m);
 	}
 
-	public Result<String> getResult() {
+	public Result<R> getResult() {
 		return result;
 	}
 
-	public void setResult(Result result) {
+	public void setResult(Result<R> result) {
 		this.result = result;
 	}
 
-	public Set<IMessage> getWarnings() {
+	public List<IMessage> getWarnings() {
 		if(result != null)
 		{
 			return result.warnings;
@@ -174,7 +212,7 @@ public class XmlResultReaderWritter {
 		return null;
 	}
 
-	public Set<IMessage> getErrors() {
+	public List<IMessage> getErrors() {
 		if(result != null)
 		{
 			return result.errors;

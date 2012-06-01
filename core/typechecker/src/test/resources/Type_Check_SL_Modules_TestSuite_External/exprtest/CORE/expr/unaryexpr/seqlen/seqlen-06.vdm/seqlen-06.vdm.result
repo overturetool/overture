@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="11" line="13" message="Argument to 'len' is not a sequence" messageType="error" number="3116" resource="seqlen-06.vdm.result"/>
+</testResult>

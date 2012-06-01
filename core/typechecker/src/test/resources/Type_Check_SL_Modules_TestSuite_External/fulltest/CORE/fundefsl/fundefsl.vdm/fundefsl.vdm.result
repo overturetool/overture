@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="13" line="26" message="Duplicate definition: n" messageType="warning" number="5007" resource="fundefsl.vdm.result"/>
+<message column="18" line="26" message="Duplicate definition: n" messageType="warning" number="5007" resource="fundefsl.vdm.result"/>
+<message column="18" line="26" message="Definition 'n' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="3" line="33" message="Recursive function has no measure" messageType="warning" number="5012" resource="fundefsl.vdm.result"/>
+<message column="14" line="57" message="Definition 'n' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="12" line="77" message="Definition 'x' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="14" line="76" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="27" line="109" message="Definition 'n3' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="3" line="114" message="Recursive function has no measure" messageType="warning" number="5012" resource="fundefsl.vdm.result"/>
+<message column="14" line="115" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="23" line="115" message="Definition 'c' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="21" line="115" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="12" line="152" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
+<message column="3" line="65" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm.result"/>
+<message column="5" line="73" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="5" line="73" message="Type int cannot be applied" messageType="error" number="3054" resource="fundefsl.vdm.result"/>
+<message column="3" line="79" message="Precondition returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm.result"/>
+<message column="3" line="84" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm.result"/>
+<message column="5" line="86" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="5" line="86" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="3" line="84" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm.result"/>
+<message column="3" line="88" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm.result"/>
+<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="11" line="90" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="7" line="90" message="Left hand of &lt;=&gt; is not bool" messageType="error" number="3065" resource="fundefsl.vdm.result"/>
+<message column="3" line="88" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm.result"/>
+<message column="6" line="112" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
+<message column="3" line="124" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm.result"/>
+<message column="3" line="142" message="Function returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm.result"/>
+</testResult>

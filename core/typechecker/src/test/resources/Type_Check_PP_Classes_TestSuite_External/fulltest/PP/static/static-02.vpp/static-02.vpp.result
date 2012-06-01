@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="1" line="5" message="Instance variable 'x' is not initialized" messageType="warning" number="5001" resource="static-02.vpp.result"/>
+<message column="9" line="14" message="Cannot access B`x from a static context" messageType="error" number="3181" resource="static-02.vpp.result"/>
+<message column="2" line="22" message="Cannot call op() from static context" messageType="error" number="3214" resource="static-02.vpp.result"/>
+</testResult>

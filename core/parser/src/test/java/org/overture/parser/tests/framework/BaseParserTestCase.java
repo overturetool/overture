@@ -1,22 +1,13 @@
 package org.overture.parser.tests.framework;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import junit.framework.TestCase;
+import java.util.Vector;
 
 import org.overturetool.test.framework.ResultTestCase;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
-import org.overturetool.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -26,7 +17,9 @@ import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
-import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 		ResultTestCase
@@ -117,8 +110,8 @@ public final static boolean DEBUG = true;
 
 			System.out.println();
 			
-			Set<IMessage> warnings = new HashSet<IMessage>();
-			Set<IMessage> errors = new HashSet<IMessage>();
+			List<IMessage> warnings = new Vector<IMessage>();
+			List<IMessage> errors = new Vector<IMessage>();
 			
 			collectParserErrorsAndWarnings(reader, errors, warnings);
 			Result<Object> resultFinal = new Result<Object>(result, warnings, errors);
@@ -204,7 +197,7 @@ public final static boolean DEBUG = true;
 	}
 	
 	private static void collectParserErrorsAndWarnings(SyntaxReader reader,
-			Set<IMessage> errors, Set<IMessage> warnings)
+			List<IMessage> errors, List<IMessage> warnings)
 	{
 		if (reader != null && reader.getErrorCount() > 0)
 		{
@@ -221,5 +214,24 @@ public final static boolean DEBUG = true;
 				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
+	}
+
+
+	public void encondeResult(Object result, Document doc, Element resultElement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public Object decodeResult(Node node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	protected boolean compareResult(Object expected, Object actual) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

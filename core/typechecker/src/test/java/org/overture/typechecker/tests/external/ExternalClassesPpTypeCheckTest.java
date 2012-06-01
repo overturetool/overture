@@ -18,11 +18,11 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 	{
 		Properties.recordTestResults = false;
 		String name = "Type_Check_PP_Classes_TestSuite_External";
-		String root = ExternalTestSettings.basePath+"pptest/tc";
+		File root = ExternalTestSettings.getBasePath("pptest/tc");
 		TestSuite test = null;
-		if (new File(root).exists())
+		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root, NewClassTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassTestCase.class);
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

@@ -148,7 +148,7 @@ import org.overturetool.util.ToStringUtil;
                 "end "  [name]$.getName()$ + "\n"
 %definition->#class->cpu = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
                 "end "  [name]$.getName()$ + "\n"
-%definition->#class->system = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+%definition->#class->system = "system " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
                 "end "  [name]$.getName()$ + "\n"
 %definition->#class->class = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
                 "end "  [name]$.getName()$ + "\n"

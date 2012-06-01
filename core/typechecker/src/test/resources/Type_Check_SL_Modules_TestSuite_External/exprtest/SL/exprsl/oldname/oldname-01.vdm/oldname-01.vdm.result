@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="1" line="5" message="Definition 'a' not used" messageType="warning" number="5000" resource="oldname-01.vdm.result"/>
+<message column="1" line="12" message="Definition 'Test' not used" messageType="warning" number="5000" resource="oldname-01.vdm.result"/>
+<message column="11" line="14" message="State variable 'OldNameTest`a~' cannot be accessed from this context" messageType="error" number="3302" resource="oldname-01.vdm.result"/>
+</testResult>

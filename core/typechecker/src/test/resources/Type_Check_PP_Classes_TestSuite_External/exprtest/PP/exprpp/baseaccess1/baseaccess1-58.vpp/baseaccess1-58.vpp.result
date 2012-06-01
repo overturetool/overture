@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="15" line="75" message="Definition 'a' not used" messageType="warning" number="5000" resource="baseaccess1-58.vpp.result"/>
+</testResult>

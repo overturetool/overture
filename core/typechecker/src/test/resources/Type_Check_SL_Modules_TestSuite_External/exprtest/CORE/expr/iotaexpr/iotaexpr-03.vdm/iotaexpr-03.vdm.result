@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="19" line="12" message="Definition 'b' not used" messageType="warning" number="5000" resource="iotaexpr-03.vdm.result"/>
+</testResult>

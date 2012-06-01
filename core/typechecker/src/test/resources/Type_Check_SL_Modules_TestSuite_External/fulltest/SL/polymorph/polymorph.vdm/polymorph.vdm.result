@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="14" line="16" message="Definition 'r' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="8" line="16" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="9" line="19" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="7" line="22" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="6" line="23" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="6" line="23" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="8" line="25" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="7" line="26" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="7" line="26" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="14" line="47" message="Definition 'r' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="8" line="47" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="9" line="50" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="7" line="53" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="6" line="54" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="6" line="54" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="8" line="56" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="7" line="57" message="Duplicate definition: a" messageType="warning" number="5007" resource="polymorph.vdm.result"/>
+<message column="7" line="57" message="Definition 'a' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="68" message="Definition 'ff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="69" message="Definition 'fff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="70" message="Definition 'ffff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="71" message="Definition 'h' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="74" message="Definition 'f' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="75" message="Definition 'ff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="76" message="Definition 'fff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="77" message="Definition 'ffff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="78" message="Definition 'h' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="134" message="Definition 'ff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="135" message="Definition 'fff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="136" message="Definition 'ffff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="137" message="Definition 'fffff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="140" message="Definition 'f' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="141" message="Definition 'ff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="142" message="Definition 'fff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="143" message="Definition 'ffff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="144" message="Definition 'fffff' not used" messageType="warning" number="5000" resource="polymorph.vdm.result"/>
+<message column="3" line="120" message="Name 'POLY2`r' is not in scope" messageType="error" number="3182" resource="polymorph.vdm.result"/>
+<message column="16" line="133" message="Parameter type @q not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="11" line="134" message="Parameter type @r not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="12" line="135" message="Parameter type @w not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="10" line="137" message="Parameter type @a not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="16" line="137" message="Parameter type @c not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="16" line="140" message="Parameter type @q not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="11" line="141" message="Parameter type @r not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="12" line="142" message="Parameter type @w not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="10" line="144" message="Parameter type @a not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+<message column="16" line="144" message="Parameter type @c not defined" messageType="error" number="3433" resource="polymorph.vdm.result"/>
+</testResult>

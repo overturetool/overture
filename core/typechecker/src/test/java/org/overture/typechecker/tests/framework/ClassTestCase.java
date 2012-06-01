@@ -1,35 +1,22 @@
 package org.overture.typechecker.tests.framework;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Vector;
 
-import junit.framework.TestCase;
-
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
-import org.overture.typechecker.tests.framework.TCStruct.Type;
-import org.overturetool.test.framework.ResultTestCase;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class ClassTestCase extends ResultTestCase
+public class ClassTestCase extends TypeCheckTestCase
 {
 public final static boolean DEBUG = false;
 	public static final String tcHeader = "-- TCErrors:";
@@ -39,8 +26,6 @@ public final static boolean DEBUG = false;
 	String name;
 	String content;
 	String expectedType;
-	ParserType parserType;	
-	private boolean isParseOk = true;
 	List<VDMError> errors = new Vector<VDMError>();
 	List<VDMWarning> warnings = new Vector<VDMWarning>();
 
@@ -53,7 +38,6 @@ public final static boolean DEBUG = false;
 	public ClassTestCase(File file)
 	{
 		super(file);
-		this.parserType = ParserType.Module;
 		this.file = file;
 		this.content = file.getName();
 		
@@ -85,22 +69,14 @@ public final static boolean DEBUG = false;
 	private void moduleTc(String class_) throws ParserException, LexException,
 			IOException
 	{
+		@SuppressWarnings("rawtypes")
 		Result result = new OvertureTestHelper().typeCheckPp(file);
 		
 		compareResults(result, file.getAbsolutePath());
 
 	}
 
-	@Override
-	protected File createResultFile(String filename) {
-		return new File(filename + ".result");
-	}
-
-	@Override
-	protected File getResultFile(String filename) {
-		return new File(filename + ".result");
-	}
-
+	
 	
 
 	

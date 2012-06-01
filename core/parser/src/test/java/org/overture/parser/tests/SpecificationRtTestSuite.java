@@ -3,9 +3,10 @@ package org.overture.parser.tests;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import org.overturetool.test.framework.BaseTestSuite;
+
 import junit.framework.Test;
 
-import org.overture.parser.tests.framework.BaseTestSuite;
 
 public class SpecificationRtTestSuite extends BaseTestSuite
 {

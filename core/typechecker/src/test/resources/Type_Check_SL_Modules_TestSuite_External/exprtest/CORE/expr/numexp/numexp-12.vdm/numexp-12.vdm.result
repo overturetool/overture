@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="16" line="22" message="'**' expects number as right hand arg" messageType="error" number="3172" resource="numexp-12.vdm.result"/>
+</testResult>

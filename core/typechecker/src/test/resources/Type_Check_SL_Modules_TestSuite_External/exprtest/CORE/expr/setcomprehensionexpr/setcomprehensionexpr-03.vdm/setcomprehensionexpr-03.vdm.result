@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="33" line="12" message="At least one bind cannot match set" messageType="error" number="3264" resource="setcomprehensionexpr-03.vdm.result"/>
+</testResult>

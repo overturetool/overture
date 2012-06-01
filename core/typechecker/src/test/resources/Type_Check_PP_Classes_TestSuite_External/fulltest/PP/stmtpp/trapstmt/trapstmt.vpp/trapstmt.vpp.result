@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="8" line="15" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="trapstmt.vpp.result"/>
+<message column="19" line="15" message="a at 15:8 hidden by a" messageType="warning" number="5008" resource="trapstmt.vpp.result"/>
+<message column="8" line="20" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="trapstmt.vpp.result"/>
+<message column="12" line="26" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="trapstmt.vpp.result"/>
+<message column="15" line="44" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="trapstmt.vpp.result"/>
+<message column="10" line="55" message="b at 54:11 hidden by b" messageType="warning" number="5008" resource="trapstmt.vpp.result"/>
+<message column="13" line="54" message="Definition 'l' not used" messageType="warning" number="5000" resource="trapstmt.vpp.result"/>
+<message column="9" line="54" message="Definition 'n' not used" messageType="warning" number="5000" resource="trapstmt.vpp.result"/>
+<message column="3" line="3" message="Instance variable 'a' is not initialized" messageType="warning" number="5001" resource="trapstmt.vpp.result"/>
+<message column="3" line="4" message="Instance variable 'stid' is not initialized" messageType="warning" number="5001" resource="trapstmt.vpp.result"/>
+<message column="3" line="26" message="Body of trap statement does not throw exceptions" messageType="error" number="3241" resource="trapstmt.vpp.result"/>
+<message column="26" line="27" message="Constructor field 2 is of wrong type" messageType="error" number="3129" resource="trapstmt.vpp.result"/>
+<message column="3" line="24" message="Operation returns void value" messageType="error" number="3313" resource="trapstmt.vpp.result"/>
+<message column="8" line="45" message="Matching expression is not a compatible record type" messageType="error" number="3201" resource="trapstmt.vpp.result"/>
+</testResult>

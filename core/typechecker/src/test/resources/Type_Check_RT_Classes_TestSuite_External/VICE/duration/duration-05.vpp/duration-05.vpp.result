@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="2" line="16" message="Statement will not be reached" messageType="warning" number="5006" resource="duration-05.vpp.result"/>
+</testResult>

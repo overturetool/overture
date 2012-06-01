@@ -16,8 +16,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
@@ -35,8 +35,8 @@ public class MessageReaderWritter
 	public static String ERROR_LABEL = "ERROR";
 	public static String RESULT_LABEL = "RESULT";
 
-	final Set<IMessage> errors = new HashSet<IMessage>();
-	final Set<IMessage> warnings = new HashSet<IMessage>();
+	final List<IMessage> errors = new Vector<IMessage>();
+	final List<IMessage> warnings = new Vector<IMessage>();
 	String result = "";
 	final File file;
 
@@ -50,8 +50,8 @@ public class MessageReaderWritter
 		this(new File(path));
 	}
 
-	public void setWarningsAndErrors(Set<IMessage> errors,
-			Set<IMessage> warnings)
+	public void setWarningsAndErrors(List<IMessage> errors,
+			List<IMessage> warnings)
 	{
 		this.errors.clear();
 		this.warnings.clear();
@@ -66,12 +66,12 @@ public class MessageReaderWritter
 		this.result = result.getStringResult();
 	}
 
-	public Set<IMessage> getErrors()
+	public List<IMessage> getErrors()
 	{
 		return errors;
 	}
 
-	public Set<IMessage> getWarnings()
+	public List<IMessage> getWarnings()
 	{
 		return warnings;
 	}
@@ -204,7 +204,7 @@ public class MessageReaderWritter
 	}
 
 	public void writeMessageSet(BufferedWriter out, String label,
-			Set<IMessage> list) throws IOException
+			List<IMessage> list) throws IOException
 	{
 		for (IMessage m : list)
 		{

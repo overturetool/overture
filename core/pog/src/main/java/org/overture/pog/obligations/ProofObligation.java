@@ -23,10 +23,16 @@
 
 package org.overture.pog.obligations;
 
+import java.io.Serializable;
+
 import org.overturetool.vdmj.lex.LexLocation;
 
-abstract public class ProofObligation implements Comparable<ProofObligation>
+abstract public class ProofObligation implements Comparable<ProofObligation>,Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public final LexLocation location;
 	public final POType kind;
 	public final String name;

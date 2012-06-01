@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="1" line="9" message="Operation returns unexpected type" messageType="error" number="3027" resource="tokenconstructorexpr-02.vdm.result"/>
+</testResult>

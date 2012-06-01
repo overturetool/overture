@@ -1,13 +1,10 @@
 package org.overture.typechecker.tests;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typecheck.ClassTypeChecker;
 import org.overture.typecheck.ModuleTypeChecker;
@@ -28,7 +25,6 @@ import org.overturetool.vdmj.syntax.SyntaxReader;
 
 public class OvertureTestHelper
 {
-	@SuppressWarnings({ "rawtypes" })
 	public Result typeCheckSl(File file)
 	{
 		Result<List<AModuleModules>> parserResult = parseCheckSl(file);
@@ -40,7 +36,6 @@ public class OvertureTestHelper
 		}
 		return parserResult;
 	}
-	@SuppressWarnings({ "rawtypes" })
 	public Result typeCheckPp(File file)
 	{
 		Result<List<SClassDefinition>> parserResult = parseCheckPp(file);
@@ -53,7 +48,6 @@ public class OvertureTestHelper
 		return parserResult;
 	}
 	
-	@SuppressWarnings({ "rawtypes" })
 	public Result typeCheckRt(File file)
 	{
 		Result<List<SClassDefinition>> parserResult = parseCheckPp(file);
@@ -91,8 +85,8 @@ public class OvertureTestHelper
 		ClassReader reader = null;
 		List<SClassDefinition> result = null;
 
-		Set<IMessage> errors = new HashSet<IMessage>();
-		Set<IMessage> warnings = new HashSet<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
 
 		try
 		{
@@ -114,8 +108,8 @@ public class OvertureTestHelper
 		ModuleReader reader = null;
 		List<AModuleModules> result = null;
 
-		Set<IMessage> errors = new HashSet<IMessage>();
-		Set<IMessage> warnings = new HashSet<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
 
 		try
 		{
@@ -130,11 +124,10 @@ public class OvertureTestHelper
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Result collectTypeResults(TypeChecker mtc)
+	protected Result<Boolean> collectTypeResults(TypeChecker mtc)
 	{
-		Set<IMessage> errors = new HashSet<IMessage>();
-		Set<IMessage> warnings = new HashSet<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
 		if (mtc != null && TypeChecker.getErrorCount() > 0)
 		{
 
@@ -151,11 +144,11 @@ public class OvertureTestHelper
 				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
-		return new Result("some result", warnings, errors);
+		return new Result<Boolean>(true, warnings, errors);
 	}
 
 	private static void collectParserErrorsAndWarnings(SyntaxReader reader,
-			Set<IMessage> errors, Set<IMessage> warnings)
+			List<IMessage> errors, List<IMessage> warnings)
 	{
 		if (reader != null && reader.getErrorCount() > 0)
 		{
@@ -173,4 +166,5 @@ public class OvertureTestHelper
 			}
 		}
 	}
+	
 }

@@ -4,12 +4,11 @@ import java.io.File;
 
 import org.overture.typecheck.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overturetool.test.framework.TestResourcesResultTestCase;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 
-public class NewModuleTestCase extends TestResourcesResultTestCase
+public class NewModuleTestCase extends NewExternalTypeCheckTestCase
 {
 	public NewModuleTestCase()
 	{
@@ -35,7 +34,7 @@ public class NewModuleTestCase extends TestResourcesResultTestCase
 	public void test() throws Exception
 	{
 		assertNotNull("File not set", file);
-		compareResults(new OvertureTestHelper().typeCheckSl(file), "typechecker.result");
+		compareResults(new OvertureTestHelper().typeCheckSl(file), file.getName() + ".result");
 	}
 	
 	@Override

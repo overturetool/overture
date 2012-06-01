@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="">
+<message column="17" line="12" message="Left hand of 'munion' is not a map" messageType="error" number="3123" resource="mapmerge-03.vdm.result"/>
+</testResult>

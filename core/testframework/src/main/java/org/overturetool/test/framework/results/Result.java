@@ -9,15 +9,15 @@
  *******************************************************************************/
 package org.overturetool.test.framework.results;
 
-import java.util.Set;
+import java.util.List;
 
 public class Result<R>
 {
 	public R result;
-	public final Set<IMessage> warnings;
-	public final Set<IMessage> errors;
+	public final List<IMessage> warnings;
+	public final List<IMessage> errors;
 
-	public Result(R result, Set<IMessage> warnings, Set<IMessage> errors)
+	public Result(R result, List<IMessage> warnings, List<IMessage> errors)
 	{
 		this.result = result;
 		this.warnings = warnings;
