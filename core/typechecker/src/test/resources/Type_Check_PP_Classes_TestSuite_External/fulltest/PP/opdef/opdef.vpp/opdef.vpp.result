@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="7" line="49" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
+<message column="9" line="25" message="Definition 'r' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
 <message column="7" line="49" message="Duplicate definition: a" messageType="warning" number="5007" resource="opdef.vpp.result"/>
-<message column="12" line="94" message="Definition 'a' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
+<message column="7" line="49" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
 <message column="7" line="4" message="Duplicate definition: a" messageType="warning" number="5007" resource="opdef.vpp.result"/>
-<message column="8" line="107" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
+<message column="8" line="83" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
 <message column="14" line="94" message="b at 5:7 hidden by b" messageType="warning" number="5008" resource="opdef.vpp.result"/>
 <message column="12" line="94" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
-<message column="8" line="83" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
-<message column="17" line="107" message="Definition 'r' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
+<message column="12" line="94" message="Definition 'a' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
 <message column="8" line="99" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
-<message column="9" line="25" message="Definition 'r' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
-<message column="4" line="108" message="Variable 'r' in scope is not updatable" messageType="error" number="3301" resource="opdef.vpp.result"/>
-<message column="3" line="82" message="Operation returns unexpected type" messageType="error" number="3027" resource="opdef.vpp.result"/>
-<message column="15" line="52" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp.result"/>
-<message column="9" line="51" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp.result"/>
-<message column="18" line="46" message="Name 'OpDefTest`b~' is not in scope" messageType="error" number="3182" resource="opdef.vpp.result"/>
+<message column="8" line="107" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
+<message column="17" line="107" message="Definition 'r' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
 <message column="8" line="34" message="Name 'OpDefTest`a~' is not in scope" messageType="error" number="3182" resource="opdef.vpp.result"/>
-<message column="9" line="109" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp.result"/>
-<message column="3" line="62" message="State variable a is not this type" messageType="error" number="3032" resource="opdef.vpp.result"/>
-<message column="15" line="110" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp.result"/>
-<message column="14" line="68" message="Errs clause is not bool -&gt; bool" messageType="error" number="3307" resource="opdef.vpp.result"/>
+<message column="18" line="46" message="Name 'OpDefTest`b~' is not in scope" messageType="error" number="3182" resource="opdef.vpp.result"/>
+<message column="9" line="51" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp.result"/>
+<message column="15" line="52" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp.result"/>
 <message column="3" line="58" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="opdef.vpp.result"/>
+<message column="3" line="62" message="State variable a is not this type" messageType="error" number="3032" resource="opdef.vpp.result"/>
+<message column="14" line="68" message="Errs clause is not bool -&gt; bool" messageType="error" number="3307" resource="opdef.vpp.result"/>
+<message column="3" line="82" message="Operation returns unexpected type" messageType="error" number="3027" resource="opdef.vpp.result"/>
+<message column="4" line="108" message="Variable 'r' in scope is not updatable" messageType="error" number="3301" resource="opdef.vpp.result"/>
 <message column="3" line="107" message="Operation returns unexpected type" messageType="error" number="3035" resource="opdef.vpp.result"/>
+<message column="9" line="109" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp.result"/>
+<message column="15" line="110" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp.result"/>
 </testResult>

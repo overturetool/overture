@@ -8,6 +8,6 @@
 <message column="1" line="7" message="Duplicate definition: a" messageType="warning" number="5007" resource="value.vdm.result"/>
 <message column="1" line="6" message="Duplicate definition: a" messageType="warning" number="5007" resource="value.vdm.result"/>
 <message column="1" line="7" message="Duplicate definition: a" messageType="warning" number="5007" resource="value.vdm.result"/>
-<message column="1" line="7" message="Duplicate definition: a" messageType="warning" number="5007" resource="value.vdm.result"/>
 <message column="1" line="6" message="Duplicate definition: a" messageType="warning" number="5007" resource="value.vdm.result"/>
+<message column="1" line="7" message="Duplicate definition: a" messageType="warning" number="5007" resource="value.vdm.result"/>
 </testResult>

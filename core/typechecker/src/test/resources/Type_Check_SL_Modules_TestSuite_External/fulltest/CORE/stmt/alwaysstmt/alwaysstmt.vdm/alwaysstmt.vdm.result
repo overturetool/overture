@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
 <message column="17" line="43" message="Definition 'arg2' not used" messageType="warning" number="5000" resource="alwaysstmt.vdm.result"/>
-<message column="3" line="24" message="Operation returns unexpected type" messageType="error" number="3027" resource="alwaysstmt.vdm.result"/>
 <message column="26" line="26" message="Constructor field 2 is of wrong type" messageType="error" number="3129" resource="alwaysstmt.vdm.result"/>
+<message column="3" line="24" message="Operation returns unexpected type" messageType="error" number="3027" resource="alwaysstmt.vdm.result"/>
 </testResult>

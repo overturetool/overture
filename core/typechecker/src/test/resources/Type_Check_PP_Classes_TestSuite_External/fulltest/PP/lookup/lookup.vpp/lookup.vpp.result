@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="10" line="204" message="Inaccessible member Different`mDifferent() of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
-<message column="1" line="181" message="Operation returns unexpected type" messageType="error" number="3027" resource="lookup.vpp.result"/>
-<message column="3" line="246" message="Inaccessible member 'Different`instDifferent' of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
-<message column="7" line="145" message="Ambiguous definitions inherited by G" messageType="error" number="3276" resource="lookup.vpp.result"/>
-<message column="10" line="201" message="Inaccessible member Different`instDifferent of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
-<message column="3" line="191" message="Operation mF() is not in scope" messageType="error" number="3213" resource="lookup.vpp.result"/>
-<message column="7" line="145" message="Ambiguous definitions inherited by G" messageType="error" number="3276" resource="lookup.vpp.result"/>
 <message column="22" line="135" message="Unable to resolve type name 'TF1'" messageType="error" number="3427" resource="lookup.vpp.result"/>
+<message column="7" line="145" message="Ambiguous definitions inherited by G" messageType="error" number="3276" resource="lookup.vpp.result"/>
+<message column="7" line="145" message="Ambiguous definitions inherited by G" messageType="error" number="3276" resource="lookup.vpp.result"/>
 <message column="10" line="179" message="Name 'G`vFromPars' is not in scope" messageType="error" number="3182" resource="lookup.vpp.result"/>
+<message column="1" line="181" message="Operation returns unexpected type" messageType="error" number="3027" resource="lookup.vpp.result"/>
+<message column="3" line="191" message="Operation mF() is not in scope" messageType="error" number="3213" resource="lookup.vpp.result"/>
+<message column="10" line="201" message="Inaccessible member Different`instDifferent of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
+<message column="10" line="204" message="Inaccessible member Different`mDifferent() of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
+<message column="3" line="246" message="Inaccessible member 'Different`instDifferent' of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
 </testResult>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="">
-<message column="13" line="32" message="Definition 'init_i' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
 <message column="27" line="24" message="Definition 'c' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
+<message column="13" line="32" message="Definition 'init_i' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
 <message column="13" line="28" message="Definition 'post_h' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
 <message column="13" line="24" message="Definition 'pre_g' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
 <message column="15" line="20" message="Definition 'inv_f' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
