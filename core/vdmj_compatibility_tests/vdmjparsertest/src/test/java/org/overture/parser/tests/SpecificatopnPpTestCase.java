@@ -15,6 +15,8 @@ import org.overturetool.vdmj.syntax.ParserException;
 public class SpecificatopnPpTestCase extends BaseParserTestCase<ClassReader>
 {
 	static boolean hasRunBefore = false;
+	
+	
 	public SpecificatopnPpTestCase(File file)
 	{
 		super(file);

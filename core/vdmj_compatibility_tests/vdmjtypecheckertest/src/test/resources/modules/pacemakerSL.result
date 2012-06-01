@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
 <message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="4" line="438" message="Definition 'RecoveryTime' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="163" message="Definition 'ARP' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="4" line="437" message="Definition 'ReactionTime' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="4" line="771" message="Definition 'ResponseFactor' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="73" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
 <message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="1" line="659" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="13" line="785" message="t at 782:13 hidden by t" messageType="warning" number="5008" resource="pacemakerSL.result"/>
-<message column="1" line="509" message="Definition 'LRL' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="1" line="190" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="4" line="435" message="Definition 'MSR' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
 <message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="1" line="780" message="Definition 'Simulate' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
+<message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
+<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
 <message column="1" line="534" message="Recursive function has no measure" messageType="warning" number="5012" resource="pacemakerSL.result"/>
-<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="1" line="174" message="Definition 'Time' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="487" message="Definition 'MED' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="327" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="16" line="659" message="Definition 'inp' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="13" line="785" message="t at 782:13 hidden by t" messageType="warning" number="5008" resource="pacemakerSL.result"/>
+<message column="1" line="73" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="163" message="Definition 'ARP' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="174" message="Definition 'Time' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="190" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="327" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="4" line="432" message="Definition 'LRL' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="490" message="Definition 'sensedData' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="4" line="435" message="Definition 'MSR' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="4" line="437" message="Definition 'ReactionTime' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="4" line="438" message="Definition 'RecoveryTime' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="1" line="486" message="Definition 'LOW' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
-<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
+<message column="1" line="487" message="Definition 'MED' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="490" message="Definition 'sensedData' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="509" message="Definition 'LRL' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="1" line="530" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
-<message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
+<message column="1" line="659" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="4" line="771" message="Definition 'ResponseFactor' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="1" line="780" message="Definition 'Simulate' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<result/>
 </testResult>

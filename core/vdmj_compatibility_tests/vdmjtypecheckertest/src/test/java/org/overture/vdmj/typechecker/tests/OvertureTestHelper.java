@@ -1,9 +1,7 @@
 package org.overture.vdmj.typechecker.tests;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.vdmjUtils.VdmjCompatibilityUtils;
@@ -24,15 +22,13 @@ import org.overturetool.vdmj.modules.ModuleList;
 import org.overturetool.vdmj.syntax.ClassReader;
 import org.overturetool.vdmj.syntax.ModuleReader;
 import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 public class OvertureTestHelper
 {
-	@SuppressWarnings({ "rawtypes" })
-	public Result typeCheckSl(File file)
+	public Result<Boolean> typeCheckSl(File file)
 	{
 		Result<List<Module>> parserResult = parseCheckSl(file);
 		if (parserResult.errors.isEmpty())
@@ -41,10 +37,10 @@ public class OvertureTestHelper
 			mtc.typeCheck();
 			return collectTypeResults(mtc);
 		}
-		return parserResult;
+		return new Result<Boolean>(false, parserResult.warnings,parserResult.errors);
 	}
-	@SuppressWarnings({ "rawtypes" })
-	public Result typeCheckPp(File file)
+
+	public Result<Boolean> typeCheckPp(File file)
 	{
 		Result<List<ClassDefinition>> parserResult = parseCheckPp(file);
 		if (parserResult.errors.isEmpty())
@@ -55,11 +51,11 @@ public class OvertureTestHelper
 			mtc.typeCheck();
 			return collectTypeResults(mtc);
 		}
-		return parserResult;
+		return new Result<Boolean>(false, parserResult.warnings,parserResult.errors);
 	}
 	
-	@SuppressWarnings({ "rawtypes" })
-	public Result typeCheckRt(File file)
+	
+	public Result<Boolean> typeCheckRt(File file)
 	{
 		Result<List<ClassDefinition>> parserResult = parseCheckPp(file);
 		if (parserResult.errors.isEmpty())
@@ -84,7 +80,7 @@ public class OvertureTestHelper
 			}
 			
 		}
-		return parserResult;
+		return new Result<Boolean>(false, parserResult.warnings,parserResult.errors);
 	}
 
 
@@ -108,7 +104,7 @@ public class OvertureTestHelper
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
 		}
-		return new Result<List<ClassDefinition>>(result, warnings, errors,null);
+		return new Result<List<ClassDefinition>>(result, warnings, errors);
 	}
 	
 	
@@ -131,12 +127,11 @@ public class OvertureTestHelper
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
 		}
-		return new Result<List<Module>>(result, warnings, errors,null);
+		return new Result<List<Module>>(result, warnings, errors);
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Result collectTypeResults(TypeChecker mtc)
+	protected Result<Boolean> collectTypeResults(TypeChecker mtc)
 	{
 		List<IMessage> errors = new Vector<IMessage>();
 		List<IMessage> warnings = new Vector<IMessage>();
@@ -156,7 +151,7 @@ public class OvertureTestHelper
 				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
-		return new Result("some result", warnings, errors,null);
+		return new Result<Boolean>(true, warnings, errors);
 	}
 
 	

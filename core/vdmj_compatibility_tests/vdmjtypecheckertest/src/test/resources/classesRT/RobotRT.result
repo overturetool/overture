@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
-<message column="11" line="779" message="Instance variable 'workingGrid' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
-<message column="2" line="1086" message="Instance variable 'counter' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
+<message column="17" line="1137" message="dest at 1082:9 hidden by dest" messageType="warning" number="5008" resource="RobotRT.result"/>
+<message column="10" line="41" message="Instance variable 'currentRobotPosition' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
+<message column="1" line="488" message="Instance variable 'obs' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
 <message column="10" line="693" message="Instance variable 'name' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
 <message column="10" line="778" message="Instance variable 'dest' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
-<message column="17" line="1137" message="dest at 1082:9 hidden by dest" messageType="warning" number="5008" resource="RobotRT.result"/>
-<message column="9" line="1205" message="Instance variable 'completeGrid' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
+<message column="11" line="779" message="Instance variable 'workingGrid' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
 <message column="9" line="1082" message="Instance variable 'dest' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
-<message column="1" line="488" message="Instance variable 'obs' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
-<message column="10" line="41" message="Instance variable 'currentRobotPosition' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
-<message column="7" line="903" message="Operation 'GetBatUsage' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
-<message column="6" line="636" message="Operation '((World`env.completeGrid).IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="2" line="1086" message="Instance variable 'counter' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
+<message column="9" line="1205" message="Instance variable 'completeGrid' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
 <message column="6" line="131" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
-<message column="40" line="991" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
-<message column="34" line="840" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
-<message column="15" line="833" message="Operation 'GetPos' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
-<message column="7" line="141" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
-<message column="6" line="935" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
 <message column="39" line="131" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="7" line="141" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
 <message column="36" line="146" message="Operation 'IsValidGridPoint' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="6" line="636" message="Operation '((World`env.completeGrid).IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="15" line="833" message="Operation 'GetPos' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="34" line="840" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="7" line="903" message="Operation 'GetBatUsage' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="6" line="935" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<message column="40" line="991" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<result/>
 </testResult>

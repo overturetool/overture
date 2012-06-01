@@ -1,12 +1,7 @@
 package org.overture.typechecker.tests.framework;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -18,8 +13,6 @@ import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.ClassTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
@@ -71,7 +64,7 @@ public class ClassTestCase extends BasicTypeCheckTestCase {
 		moduleTC.typeCheck();
 
 		File resultFile = new File(file.getAbsolutePath() + ".result");
-		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(resultFile);
+		XmlResultReaderWritter<Boolean> xmlResult = new XmlResultReaderWritter<Boolean>(resultFile,this);
 		
 		xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(file,"vdmj type checker"));
 		try {
@@ -90,7 +83,7 @@ public class ClassTestCase extends BasicTypeCheckTestCase {
 	@Override
 	public String getName() {
 		
-		return file.getName();
+		return file==null?"no name":file.getName();
 	}
 
 }

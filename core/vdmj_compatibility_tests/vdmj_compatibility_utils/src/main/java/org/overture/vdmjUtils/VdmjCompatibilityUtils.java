@@ -8,16 +8,13 @@ import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.pog.ProofObligation;
-import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 
 public class VdmjCompatibilityUtils {
 
-	@SuppressWarnings({"rawtypes" })
-	public static Result convertToResult(SyntaxReader reader,File file, String name) {
+	public static Result<String> convertToResult(SyntaxReader reader,File file, String name) {
 		List<IMessage> warnings = new Vector<IMessage>();
 		List<IMessage> errors = new Vector<IMessage>();
 		
@@ -28,11 +25,11 @@ public class VdmjCompatibilityUtils {
 			errors.add(new Message(file.getName(), error.number, error.location.startLine, error.location.startPos, error.message));
 		}
 		
-		return  new Result<String>(name, warnings, errors, null);
+		return  new Result<String>(name, warnings, errors);
 		
 	}
 
-	public static Result convertToResult( File file,
+	public static Result<Boolean> convertToResult( File file,
 			String name) {
 		List<IMessage> warnings = new Vector<IMessage>();
 		List<IMessage> errors = new Vector<IMessage>();
@@ -44,7 +41,7 @@ public class VdmjCompatibilityUtils {
 			errors.add(new Message(file.getName(), error.number, error.location.startLine, error.location.startPos, error.message));
 		}
 		
-		return  new Result<String>(name, warnings, errors,null);
+		return  new Result<Boolean>(true, warnings, errors);
 	}
 	
 	public static void collectParserErrorsAndWarnings(SyntaxReader reader,
@@ -67,16 +64,16 @@ public class VdmjCompatibilityUtils {
 		}
 	}
 
-	public static Result convertPOsToResult(ProofObligationList pos, File file,
-			String name) {
-		
-		List<IMessage> messageList = new Vector<IMessage>();
-		
-		for (ProofObligation proofObligation : pos) {
-			Message m = new Message(file.getName(), proofObligation.number, proofObligation.location.startLine, proofObligation.location.startPos, proofObligation.toString());
-			messageList.add(m);
-		}
-		
-		return new Result<String>(name, null, null, messageList);
-	}
+//	public static Result<> convertPOsToResult(ProofObligationList pos, File file,
+//			String name) {
+//		
+//		List<IMessage> messageList = new Vector<IMessage>();
+//		
+//		for (ProofObligation proofObligation : pos) {
+//			Message m = new Message(file.getName(), proofObligation.number, proofObligation.location.startLine, proofObligation.location.startPos, proofObligation.toString());
+//			messageList.add(m);
+//		}
+//		
+//		return new Result<String>(name, null, null, messageList);
+//	}
 }

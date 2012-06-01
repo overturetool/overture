@@ -4,6 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.overturetool.test.util.XmlResultReaderWritter.IResultStore;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
@@ -20,15 +21,18 @@ import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.syntax.TypeReader;
 import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.Type;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-public abstract class BasicTypeCheckTestCase extends TestCase {
+public abstract class BasicTypeCheckTestCase extends TestCase implements IResultStore<Boolean>{
 	public final static boolean DEBUG = false;
 
 	public enum ParserType {
 		Expression, Expressions, Module, Class, Pattern, Type, Statement, Bind
 	}
 
-	private File file;
+//	private File file;
 
 	public BasicTypeCheckTestCase(String string) {
 		super(string);
@@ -43,7 +47,7 @@ public abstract class BasicTypeCheckTestCase extends TestCase {
 
 	public <T> T parse(ParserType type, File file) throws ParserException,
 			LexException {
-		this.file = file;
+//		this.file = file;
 		return internal(type, new LexTokenReader(file, Settings.dialect));
 	}
 
@@ -56,7 +60,7 @@ public abstract class BasicTypeCheckTestCase extends TestCase {
 			throws ParserException, LexException {
 		SyntaxReader reader = null;
 		T result = null;
-		String errorMessages = "";
+//		String errorMessages = "";
 		try {
 			reader = getReader(type, ltr);
 			result = read(type, reader);
@@ -144,5 +148,18 @@ public abstract class BasicTypeCheckTestCase extends TestCase {
 			return removeBrackets(((BracketType) type).type);
 		}
 		return type;
+	}
+
+	public void encondeResult(Boolean result, Document doc,
+			Element resultElement)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Boolean decodeResult(Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

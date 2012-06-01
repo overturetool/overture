@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
 <message column="3" line="39" message="Definition 'foo' not used" messageType="warning" number="5000" resource="simpleExportImportTypes.result"/>
+<result/>
 </testResult>

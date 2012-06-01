@@ -8,8 +8,11 @@ import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-public class NewClassTestCase extends TestResourcesResultTestCase
+public class NewClassTestCase extends TestResourcesResultTestCase<Boolean>
 {
 	public NewClassTestCase()
 	{
@@ -46,6 +49,26 @@ public class NewClassTestCase extends TestResourcesResultTestCase
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
+	}
+
+	public void encondeResult(Boolean result, Document doc,
+			Element resultElement)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Boolean decodeResult(Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean assertEqualResults(Boolean expected, Boolean actual)
+	{
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

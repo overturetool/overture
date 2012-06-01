@@ -63,7 +63,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 		moduleTC.typeCheck();
 
 		File resultFile = new File(file.getAbsolutePath() + ".result");
-		XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(resultFile);
+		XmlResultReaderWritter<Boolean> xmlResult = new XmlResultReaderWritter<Boolean>(resultFile,this);
 		
 		xmlResult.setResult("type_checker", VdmjCompatibilityUtils.convertToResult(file,"vdmj type checker"));
 		try {
@@ -86,7 +86,7 @@ public class ModuleTestCase extends BasicTypeCheckTestCase {
 	@Override
 	public String getName() {
 		
-		return file.getName();
+		return file==null?"no name":file.getName();
 	}
 
 }

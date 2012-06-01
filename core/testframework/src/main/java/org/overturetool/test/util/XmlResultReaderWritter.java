@@ -1,7 +1,6 @@
 package org.overturetool.test.util;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 

@@ -3,33 +3,25 @@ package org.overture.parser.tests.framework;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import junit.framework.TestCase;
 
 import org.overture.vdmjUtils.VdmjCompatibilityUtils;
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Message;
-import org.overturetool.test.framework.results.Result;
 import org.overturetool.test.util.XmlResultReaderWritter;
+import org.overturetool.test.util.XmlResultReaderWritter.IResultStore;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.VDMJ;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.syntax.SyntaxReader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public abstract class BaseParserTestCase<T extends SyntaxReader> extends
-		TestCase
+		TestCase implements IResultStore<String>
 {
 	File file;
 	String name;
@@ -102,19 +94,19 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 			LexException
 	{
 		T reader = null;
-		Object result = null;
-		String errorMessages = "";
+//		Object result = null;
+//		String errorMessages = "";
 		try
 		{
 			reader = getReader(ltr);
-			result = read(reader);
+		/*	result =*/ read(reader);
 
 			if (reader != null && reader.getErrorCount() > 0)
 			{
 				// perrs += reader.getErrorCount();
 				StringWriter s = new StringWriter();					
 				reader.printErrors(new PrintWriter(s));//new PrintWriter(System.out));
-				errorMessages ="\n"+s.toString()+"\n";
+//				errorMessages ="\n"+s.toString()+"\n";
 				System.out.println(s.toString());
 			}
 			//assertEquals(errorMessages,reader.getErrorCount(), 0);
@@ -125,7 +117,7 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 //				reader.printWarnings(new PrintWriter(System.out));
 			}
 			
-			XmlResultReaderWritter xmlResult = new XmlResultReaderWritter(file);
+			XmlResultReaderWritter<String> xmlResult = new XmlResultReaderWritter<String>(file,this);
 			
 			xmlResult.setResult("parser", VdmjCompatibilityUtils.convertToResult(reader,file,name));
 			try {
@@ -163,25 +155,24 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 
 	protected abstract boolean hasRunBefore();
 
-	@SuppressWarnings("rawtypes")
-	private String getReturnName(Object result)
-	{
-		if(result == null)
-		{
-			return "null";
-		}
-		String name = result.getClass().getSimpleName();
-		if(result instanceof List)
-		{
-			try
-			{
-				name+="<"+((List)result).get(0).getClass().getSimpleName()+">";
-			} catch (Exception e)
-			{
-			}
-		}
-		return name;
-	}
+//	private String getReturnName(Object result)
+//	{
+//		if(result == null)
+//		{
+//			return "null";
+//		}
+//		String name = result.getClass().getSimpleName();
+//		if(result instanceof List)
+//		{
+//			try
+//			{
+//				name+="<"+((List)result).get(0).getClass().getSimpleName()+">";
+//			} catch (Exception e)
+//			{
+//			}
+//		}
+//		return name;
+//	}
 
 	public static String pad(String text, int length)
 	{
@@ -194,5 +185,17 @@ public abstract class BaseParserTestCase<T extends SyntaxReader> extends
 			text += " ";
 		}
 		return text;
+	}
+	
+	public void encondeResult(String result, Document doc, Element resultElement)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String decodeResult(Node node)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

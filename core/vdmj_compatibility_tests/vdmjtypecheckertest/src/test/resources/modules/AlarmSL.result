@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
-<message column="1" line="112" message="Definition 'Run' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
 <message column="25" line="7" message="alarms at 106:3 hidden by alarms" messageType="warning" number="5008" resource="AlarmSL.result"/>
-<message column="3" line="43" message="Definition 'ExpertToPage' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
-<message column="3" line="117" message="Definition 'Test1' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
-<message column="28" line="62" message="alarms at 106:3 hidden by alarms" messageType="warning" number="5008" resource="AlarmSL.result"/>
-<message column="19" line="50" message="exs at 94:3 hidden by exs" messageType="warning" number="5008" resource="AlarmSL.result"/>
 <message column="11" line="14" message="exs at 94:3 hidden by exs" messageType="warning" number="5008" resource="AlarmSL.result"/>
-<message column="3" line="127" message="Definition 'Test2' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
+<message column="19" line="50" message="exs at 94:3 hidden by exs" messageType="warning" number="5008" resource="AlarmSL.result"/>
+<message column="28" line="62" message="alarms at 106:3 hidden by alarms" messageType="warning" number="5008" resource="AlarmSL.result"/>
+<message column="3" line="43" message="Definition 'ExpertToPage' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
 <message column="1" line="61" message="Definition 'ChangeExpert' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
+<message column="1" line="112" message="Definition 'Run' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
+<message column="3" line="117" message="Definition 'Test1' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
+<message column="3" line="127" message="Definition 'Test2' not used" messageType="warning" number="5000" resource="AlarmSL.result"/>
+<result/>
 </testResult>

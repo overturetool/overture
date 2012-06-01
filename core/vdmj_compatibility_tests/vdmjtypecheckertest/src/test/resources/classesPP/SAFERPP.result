@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="type_checker">
-<message column="3" line="238" message="Instance variable 'x' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="242" message="Instance variable 'aahbutton' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="749" message="Instance variable 'intcmd' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="241" message="Instance variable 'roll_z' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="23" message="Instance variable 'gripcmd' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="240" message="Instance variable 'yaw_y' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="243" message="Instance variable 'modeswitch' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="748" message="Instance variable 'vda' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
 <message column="3" line="19" message="Instance variable 'hcu' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="479" message="Instance variable 'hcu' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
 <message column="3" line="20" message="Instance variable 'clock' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
-<message column="3" line="296" message="Instance variable 'aah' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="23" message="Instance variable 'gripcmd' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="238" message="Instance variable 'x' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
 <message column="3" line="239" message="Instance variable 'pitch' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="240" message="Instance variable 'yaw_y' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="241" message="Instance variable 'roll_z' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="242" message="Instance variable 'aahbutton' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="243" message="Instance variable 'modeswitch' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="296" message="Instance variable 'aah' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="479" message="Instance variable 'hcu' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="748" message="Instance variable 'vda' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
+<message column="3" line="749" message="Instance variable 'intcmd' is not initialized" messageType="warning" number="5001" resource="SAFERPP.result"/>
 <message column="29" line="968" message="Operation 'ThrusterConsistency' cannot be called from a function" messageType="error" number="3300" resource="SAFERPP.result"/>
+<result/>
 </testResult>

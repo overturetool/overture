@@ -21,7 +21,7 @@ import org.overturetool.vdmj.syntax.TypeReader;
 import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.Type;
 
-public abstract class BasicPogTestCase extends TestCase {
+public abstract  class BasicPogTestCase extends TestCase {
 	public final static boolean DEBUG = false;
 
 	public enum ParserType {
@@ -145,4 +145,8 @@ public abstract class BasicPogTestCase extends TestCase {
 		}
 		return type;
 	}
+
+
+
+	
 }
