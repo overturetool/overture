@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -89,8 +91,8 @@ public class XmlResultReaderWritter {
 
 	private void createWarningsAndErrors(Document doc, Element rootElement) {
 		
-		Set<IMessage> warnings = (Set<IMessage>) getResult().warnings;
-		Set<IMessage> errors = (Set<IMessage>) getResult().errors;
+		List<IMessage> warnings = (List<IMessage>) getResult().warnings;
+		List<IMessage> errors = (List<IMessage>) getResult().errors;
 		
 		for (IMessage warning : warnings) {
 			Element message = doc.createElement("message");
@@ -117,8 +119,8 @@ public class XmlResultReaderWritter {
 	
 	public boolean loadFromXml(){
 		//File resultFile = new File(file.getAbsoluteFile()+ ".result");
-		Set<IMessage> warnings = new HashSet<IMessage>();
-		Set<IMessage> errors = new HashSet<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -144,7 +146,7 @@ public class XmlResultReaderWritter {
 		return true;
 	}
 
-	private void convertNodeToMessage(Set<IMessage> set, Node node) {
+	private void convertNodeToMessage(List<IMessage> set, Node node) {
 
 		NamedNodeMap nnm = node.getAttributes();
 		String resource = nnm.getNamedItem("resource").getNodeValue();
@@ -165,7 +167,7 @@ public class XmlResultReaderWritter {
 		this.result = result;
 	}
 
-	public Set<IMessage> getWarnings() {
+	public List<IMessage> getWarnings() {
 		if(result != null)
 		{
 			return result.warnings;
@@ -174,7 +176,7 @@ public class XmlResultReaderWritter {
 		return null;
 	}
 
-	public Set<IMessage> getErrors() {
+	public List<IMessage> getErrors() {
 		if(result != null)
 		{
 			return result.errors;

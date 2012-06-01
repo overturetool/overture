@@ -20,7 +20,9 @@ package org.overturetool.test.framework;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -104,8 +106,8 @@ public abstract class ResultTestCase extends BaseTestCase
 
 	protected abstract File getResultFile(String filename);
 
-	public boolean checkMessages(String typeName, Set<IMessage> expectedList,
-			Set<IMessage> list)
+	public boolean checkMessages(String typeName, List<IMessage> expectedList,
+			List<IMessage> list)
 	{
 		String TypeName = typeName.toUpperCase().toCharArray()[0]
 				+ typeName.substring(1);
@@ -134,7 +136,7 @@ public abstract class ResultTestCase extends BaseTestCase
 		return errorFound;
 	}
 
-	private static boolean containedIn(Set<IMessage> list, IMessage m)
+	private static boolean containedIn(List<IMessage> list, IMessage m)
 	{
 		for (IMessage m1 : list)
 		{
@@ -150,8 +152,8 @@ public abstract class ResultTestCase extends BaseTestCase
 	protected <T> Result mergeResults(Set<? extends Result<T>> parse,
 			IResultCombiner<T> c)
 	{
-		Set<IMessage> warnings = new HashSet<IMessage>();
-		Set<IMessage> errors = new HashSet<IMessage>();
+		List<IMessage> warnings = new Vector<IMessage>();
+		List<IMessage> errors = new Vector<IMessage>();
 		T result = null;
 
 		for (Result<T> r : parse)

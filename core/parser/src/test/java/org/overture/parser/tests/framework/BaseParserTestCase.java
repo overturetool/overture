@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -117,8 +118,8 @@ public final static boolean DEBUG = true;
 
 			System.out.println();
 			
-			Set<IMessage> warnings = new HashSet<IMessage>();
-			Set<IMessage> errors = new HashSet<IMessage>();
+			List<IMessage> warnings = new Vector<IMessage>();
+			List<IMessage> errors = new Vector<IMessage>();
 			
 			collectParserErrorsAndWarnings(reader, errors, warnings);
 			Result<Object> resultFinal = new Result<Object>(result, warnings, errors);
@@ -204,7 +205,7 @@ public final static boolean DEBUG = true;
 	}
 	
 	private static void collectParserErrorsAndWarnings(SyntaxReader reader,
-			Set<IMessage> errors, Set<IMessage> warnings)
+			List<IMessage> errors, List<IMessage> warnings)
 	{
 		if (reader != null && reader.getErrorCount() > 0)
 		{
