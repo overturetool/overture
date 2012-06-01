@@ -144,7 +144,7 @@ public class OvertureTestHelper
 
 			for (VDMError msg : TypeChecker.getErrors())
 			{
-				errors.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.endPos, msg.message));
+				errors.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
 
@@ -152,7 +152,7 @@ public class OvertureTestHelper
 		{
 			for (VDMWarning msg : TypeChecker.getWarnings())
 			{
-				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.endPos, msg.message));
+				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
 		return new Result("some result", warnings, errors);

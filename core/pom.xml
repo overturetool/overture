@@ -32,7 +32,7 @@
         <!--module>umlMapper</module>	
 	<module>umltrans</module-->        
 	<!--module>vdm2java</module-->		
-	<!--module>vdmexamples</module-->
+	<module>vdmexamples</module>
 	<!--module>vdmj</module-->
 	<module>vdmj_compatibility_tests</module>
 	<!--module>vdmjc</module-->
