@@ -100,7 +100,7 @@ public class OvertureTestHelper
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
 		}
-		return new Result<List<SClassDefinition>>(result, warnings, errors);
+		return new Result<List<SClassDefinition>>(result, warnings, errors,null);
 	}
 	
 	
@@ -123,7 +123,7 @@ public class OvertureTestHelper
 		{
 			errors.add(new Message("Internal Parser", -1, -1, -1, e.getMessage()));
 		}
-		return new Result<List<AModuleModules>>(result, warnings, errors);
+		return new Result<List<AModuleModules>>(result, warnings, errors,null);
 	}
 	
 	
@@ -148,7 +148,7 @@ public class OvertureTestHelper
 				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
-		return new Result("some result", warnings, errors);
+		return new Result("some result", warnings, errors,null);
 	}
 
 	private static void collectParserErrorsAndWarnings(SyntaxReader reader,

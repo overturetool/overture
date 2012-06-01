@@ -1,8 +1,6 @@
 package org.overture.vdmjUtils;
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overturetool.test.framework.results.IMessage;
@@ -10,8 +8,9 @@ import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
+import org.overturetool.vdmj.pog.ProofObligation;
+import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.syntax.SyntaxReader;
-import org.overturetool.vdmj.typechecker.ModuleTypeChecker;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 
 
@@ -29,7 +28,7 @@ public class VdmjCompatibilityUtils {
 			errors.add(new Message(file.getName(), error.number, error.location.startLine, error.location.startPos, error.message));
 		}
 		
-		return  new Result<String>(name, warnings, errors);
+		return  new Result<String>(name, warnings, errors, null);
 		
 	}
 
@@ -45,7 +44,7 @@ public class VdmjCompatibilityUtils {
 			errors.add(new Message(file.getName(), error.number, error.location.startLine, error.location.startPos, error.message));
 		}
 		
-		return  new Result<String>(name, warnings, errors);
+		return  new Result<String>(name, warnings, errors,null);
 	}
 	
 	public static void collectParserErrorsAndWarnings(SyntaxReader reader,
@@ -66,5 +65,18 @@ public class VdmjCompatibilityUtils {
 				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
 			}
 		}
+	}
+
+	public static Result convertPOsToResult(ProofObligationList pos, File file,
+			String name) {
+		
+		List<IMessage> messageList = new Vector<IMessage>();
+		
+		for (ProofObligation proofObligation : pos) {
+			Message m = new Message(file.getName(), proofObligation.number, proofObligation.location.startLine, proofObligation.location.startPos, proofObligation.toString());
+			messageList.add(m);
+		}
+		
+		return new Result<String>(name, null, null, messageList);
 	}
 }

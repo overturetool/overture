@@ -122,7 +122,7 @@ public final static boolean DEBUG = true;
 			List<IMessage> errors = new Vector<IMessage>();
 			
 			collectParserErrorsAndWarnings(reader, errors, warnings);
-			Result<Object> resultFinal = new Result<Object>(result, warnings, errors);
+			Result<Object> resultFinal = new Result<Object>(result, warnings, errors,null);
 			
 			compareResults(resultFinal, file.getAbsolutePath());
 			//compareResults(result, file.getAbsolutePath());

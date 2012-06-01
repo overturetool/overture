@@ -162,7 +162,7 @@ public abstract class ResultTestCase extends BaseTestCase
 			errors.addAll(r.errors);
 			result = c.combine(result, r.result);
 		}
-		return new Result(result, warnings, errors);
+		return new Result(result, warnings, errors,null);
 	}
 
 }

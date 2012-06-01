@@ -35,20 +35,22 @@
 
 
 	<dependencies>
-		
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>vdmj</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-		
-		
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>vdmjtypecheckertest</artifactId>
-			<version>2.2.0</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.overturetool.core</groupId>
+            <artifactId>testframework</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>
+                org.overturetool.core.vdmj_compatibility_tests
+            </groupId>
+            <artifactId>vdmj_compatibility_utils</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.overturetool.core</groupId>
+            <artifactId>vdmj</artifactId>
+            <version>2.1.1</version>
+        </dependency>
 	</dependencies>
 </project>

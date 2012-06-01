@@ -1,14 +1,7 @@
 package org.overturetool.test.util;
 
-import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,7 +9,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -30,7 +22,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 
 public class XmlResultReaderWritter {
@@ -91,29 +82,56 @@ public class XmlResultReaderWritter {
 
 	private void createWarningsAndErrors(Document doc, Element rootElement) {
 		
-		List<IMessage> warnings = (List<IMessage>) getResult().warnings;
-		List<IMessage> errors = (List<IMessage>) getResult().errors;
-		
-		for (IMessage warning : warnings) {
-			Element message = doc.createElement("message");
-			message.setAttribute("messageType", "warning");
-			message.setAttribute("resource", file.getName());
-			message.setAttribute("number", new Integer(warning.getNumber()).toString());
-			message.setAttribute("message", warning.getMessage());
-			message.setAttribute("column",  new Integer(warning.getCol()).toString());
-			message.setAttribute("line",  new Integer(warning.getLine()).toString());
-			rootElement.appendChild(message);
+		List<IMessage> warnings = getResult().warnings;
+		List<IMessage> errors =  getResult().errors;
+		List<IMessage> obligations = getResult().proofObligations;
+
+		if (warnings != null) {
+			for (IMessage warning : warnings) {
+				Element message = doc.createElement("message");
+				message.setAttribute("messageType", "warning");
+				message.setAttribute("resource", file.getName());
+				message.setAttribute("number",
+						new Integer(warning.getNumber()).toString());
+				message.setAttribute("message", warning.getMessage());
+				message.setAttribute("column",
+						new Integer(warning.getCol()).toString());
+				message.setAttribute("line",
+						new Integer(warning.getLine()).toString());
+				rootElement.appendChild(message);
+			}
 		}
 		
-		for (IMessage warning : errors) {
-			Element message = doc.createElement("message");
-			message.setAttribute("messageType", "error");
-			message.setAttribute("resource", file.getName());
-			message.setAttribute("number", new Integer(warning.getNumber()).toString());
-			message.setAttribute("message", warning.getMessage());
-			message.setAttribute("column",  new Integer(warning.getCol()).toString());
-			message.setAttribute("line",  new Integer(warning.getLine()).toString());
-			rootElement.appendChild(message);
+		if (errors != null) {
+			for (IMessage warning : errors) {
+				Element message = doc.createElement("message");
+				message.setAttribute("messageType", "error");
+				message.setAttribute("resource", file.getName());
+				message.setAttribute("number",
+						new Integer(warning.getNumber()).toString());
+				message.setAttribute("message", warning.getMessage());
+				message.setAttribute("column",
+						new Integer(warning.getCol()).toString());
+				message.setAttribute("line",
+						new Integer(warning.getLine()).toString());
+				rootElement.appendChild(message);
+			}
+		}
+		
+		if (obligations != null) {
+			for (IMessage po : obligations) {
+				Element message = doc.createElement("message");
+				message.setAttribute("messageType", "error");
+				message.setAttribute("resource", file.getName());
+				message.setAttribute("number",
+						new Integer(po.getNumber()).toString());
+				message.setAttribute("message", po.getMessage());
+				message.setAttribute("column",
+						new Integer(po.getCol()).toString());
+				message.setAttribute("line",
+						new Integer(po.getLine()).toString());
+				rootElement.appendChild(message);
+			}
 		}
 	}	
 	
@@ -139,7 +157,7 @@ public class XmlResultReaderWritter {
 					convertNodeToMessage(warnings, node);
 				}
 			}
-			setResult(new Result<String>(file.getName(), warnings, errors));
+			setResult(new Result<String>(file.getName(), warnings, errors,null));
 		} catch (Exception e) {
 			return false;
 		}
