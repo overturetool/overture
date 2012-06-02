@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="proof_obligation">
+<result>
+<po column="5" line="70" message="execute_script(File): subtype obligation in 'Webserver' (src\test\resources\classesPP\webserverPP) at line 70:5&#10;(forall f:File &amp;&#10;  is_(execute_script(f), File))&#10;" number="0" object="" resource="webserverPP" toString="execute_script(File): subtype obligation in 'Webserver' (src\test\resources\classesPP\webserverPP) at line 70:5&#10;(forall f:File &amp;&#10;  is_(execute_script(f), File))&#10;"/>
+<po column="25" line="80" message="ExecuteCGI(URL), CGI_script: map apply obligation in 'Webserver' (src\test\resources\classesPP\webserverPP) at line 80:25&#10;url in set dom site_map&#10;" number="0" object="" resource="webserverPP" toString="ExecuteCGI(URL), CGI_script: map apply obligation in 'Webserver' (src\test\resources\classesPP\webserverPP) at line 80:25&#10;url in set dom site_map&#10;"/>
+<po column="16" line="86" message="RetrieveURL(URL): map apply obligation in 'Webserver' (src\test\resources\classesPP\webserverPP) at line 86:16&#10;url in set dom site_map&#10;" number="0" object="" resource="webserverPP" toString="RetrieveURL(URL): map apply obligation in 'Webserver' (src\test\resources\classesPP\webserverPP) at line 86:16&#10;url in set dom site_map&#10;"/>
+</result>
+</testResult>

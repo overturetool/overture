@@ -32,6 +32,7 @@ import junit.framework.TestSuite;
 
 public class BaseTestSuite extends TestSuite
 {
+
 	public BaseTestSuite(String name)
 	{
 		super(name);

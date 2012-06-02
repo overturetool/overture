@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="proof_obligation">
+<result>
+<po column="5" line="18" message="Pop(): operation post condition obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 18:5&#10;(stack~ = ([RESULT] ^ stack))&#10;" number="0" object="" resource="stackPP" toString="Pop(): operation post condition obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 18:5&#10;(stack~ = ([RESULT] ^ stack))&#10;"/>
+<po column="20" line="20" message="Pop(), res: non-empty sequence obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 20:20&#10;stack &lt;&gt; []&#10;" number="0" object="" resource="stackPP" toString="Pop(), res: non-empty sequence obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 20:20&#10;stack &lt;&gt; []&#10;"/>
+<po column="22" line="21" message="Pop(): non-empty sequence obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 21:22&#10;stack &lt;&gt; []&#10;" number="0" object="" resource="stackPP" toString="Pop(): non-empty sequence obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 21:22&#10;stack &lt;&gt; []&#10;"/>
+<po column="18" line="33" message="Top(): non-empty sequence obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 33:18&#10;stack &lt;&gt; []&#10;" number="0" object="" resource="stackPP" toString="Top(): non-empty sequence obligation in 'Stack' (src\test\resources\classesPP\stackPP) at line 33:18&#10;stack &lt;&gt; []&#10;"/>
+</result>
+</testResult>

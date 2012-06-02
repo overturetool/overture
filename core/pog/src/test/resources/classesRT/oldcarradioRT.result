@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="type_checker">
+<message column="14" line="106" message="Definition 'e' not used" messageType="warning" number="5000" resource="oldcarradioRT.result"/>
+<message column="15" line="461" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="oldcarradioRT.result"/>
+<message column="21" line="461" message="Class name IO not in scope" messageType="error" number="3133" resource="oldcarradioRT.result"/>
+<message column="15" line="461" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="oldcarradioRT.result"/>
+<message column="9" line="250" message="Operation '(pat.getName)' cannot be called from a function" messageType="error" number="3300" resource="oldcarradioRT.result"/>
+<message column="9" line="283" message="Operation printNetworkEvent(seq of (char), seq of (char), nat) is not in scope" messageType="error" number="3213" resource="oldcarradioRT.result"/>
+<message column="9" line="294" message="Operation printInterruptEvent(seq of (char), seq of (char), nat) is not in scope" messageType="error" number="3213" resource="oldcarradioRT.result"/>
+<message column="15" line="461" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="oldcarradioRT.result"/>
+<result/>
+</testResult>

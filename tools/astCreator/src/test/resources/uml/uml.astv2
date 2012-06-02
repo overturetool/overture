@@ -1,0 +1,69 @@
+Packages
+base org.overture.uml.ast.node;
+analysis org.overture.uml.ast.analysis;
+Tokens
+   //Java
+  java_Boolean = 'java:java.lang.Boolean';
+  java_Integer = 'java:java.lang.Integer';
+  java_String = 'java:java.lang.String';
+  java_Long = 'java:java.lang.Long';
+ 
+ 
+Abstract Syntax Tree
+uml {-> package='org.overture.uml.ast'}
+    =   {model} [name]:java_String [definitions]:ModelElement*
+    |	{parameter} [name]:java_String
+    				[type]:Type
+    				[default]:java_String
+    			//	[direction]:
+    |	{multiplicityElement}
+    				
+    ;
+    
+    
+ModelElement {-> package='org.overture.uml.ast'}
+    =   {class} [name]:java_String 
+    			[classBody]:Definition*
+    			[isAbstract]:java_Boolean
+    			[superClass]:ClassNameType
+    			[visibility]:VisibilityKind
+    			[isStatic]:java_Boolean
+    			[isActive]:java_Boolean
+    			
+    |	{Association} [ownedEnds]:Property*
+    				  [ownedNavigableEnds]:Property*
+    				  [name]:java_String
+    				  [id]:java_String
+    ;
+    
+ Definition {-> package='org.overture.uml.ast'}
+ 	=	{operation} [name]:java_String
+ 					[visibility]:VisibilityKind
+ 					[multiplicity]:MultiplicityElement
+ 					[isQuery]:java_Boolean
+ 					[type]:Type
+ 					[isStatic]:java_Boolean
+ 					[ownedParameters]:Parameter*
+ 	;
+ 	
+
+    
+VisibilityKind {-> package='org.overture.uml.ast'}
+	=	{public}
+	|	{private}
+	|	{protected}
+	;
+	
+//Types
+Type {-> package='org.overture.uml.ast'}
+	=	{className} [name]:java_String
+	|	{boolean}
+	|	{integer}
+	|	{string}
+	|	{unlimitedNatural}
+	|	{void}
+	|	{char}
+	;	
+
+Aspect Declaration
+//%model=[name]:java_String;

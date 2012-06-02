@@ -64,6 +64,7 @@ public class TypeCheckerUtil
 	{
 		if (parserResult.errors.isEmpty())
 		{
+			TypeChecker.clearErrors();
 			tc.typeCheck();
 			return new TypeCheckResult<P>(parserResult, parserResult.result, TypeChecker.getWarnings(), TypeChecker.getErrors());
 		}
