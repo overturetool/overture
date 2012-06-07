@@ -1,10 +1,8 @@
 package org.overture.pog.tests.framework;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
@@ -125,20 +123,6 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 			}
 		}
 		return errorFound;
-	}
-
-	/**
-	 * Read the object from Base64 string.
-	 * 
-	 * @throws Exception
-	 */
-	private static Object fromString(String s) throws Exception
-	{
-
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(Base64.decode(s)));
-		Object o = ois.readObject();
-		ois.close();
-		return o;
 	}
 
 	/** Write the object to a Base64 string. */
