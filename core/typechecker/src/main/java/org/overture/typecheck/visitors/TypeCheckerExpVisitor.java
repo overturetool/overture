@@ -104,6 +104,7 @@ public class TypeCheckerExpVisitor extends
 
 		for (PExp a : node.getArgs())
 		{
+			question.qualifiers = null;
 			node.getArgtypes().add(a.apply(rootVisitor, question));
 		}
 
@@ -1082,8 +1083,8 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAFieldExp(AFieldExp node, TypeCheckInfo question)
 	{
-
-		PType root = node.getObject().apply(rootVisitor, question);
+		
+		PType root = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope));
 
 		if (PTypeAssistantTC.isUnknown(root))
 		{
@@ -2436,7 +2437,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseATimeExp(ATimeExp node, TypeCheckInfo question)
 	{
-		node.setType(AstFactory.newANatOneNumericBasicType(node.getLocation()));
+		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
 
