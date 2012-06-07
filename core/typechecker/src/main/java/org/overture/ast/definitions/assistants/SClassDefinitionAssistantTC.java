@@ -311,6 +311,25 @@ public class SClassDefinitionAssistantTC {
 
 	public static void implicitDefinitions(SClassDefinition d, Environment publicClasses) {
 		
+		switch (d.kindSClassDefinition())
+		{
+			case SYSTEM:
+				ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition)d,publicClasses);
+				break;
+
+			default:
+				implicitDefinitionsBase(d,publicClasses);
+				break;
+		}
+		
+		
+	}
+
+	
+	
+	public static void implicitDefinitionsBase(SClassDefinition d,
+			Environment publicClasses)
+	{
 		setInherited(d,publicClasses);
 		setInheritedDefinitions(d);
 

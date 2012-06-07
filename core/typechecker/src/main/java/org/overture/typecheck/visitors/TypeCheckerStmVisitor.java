@@ -678,7 +678,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 			if (i.getValue().value < 0)
 			{
-				TypeCheckerErrors.report(3281, "Argument to duration must be integer >= 0", node.getDuration().getLocation(), node.getDuration());
+				TypeCheckerErrors.report(3281, "Arguments to duration must be integer >= 0", node.getDuration().getLocation(), node.getDuration());
 			}
 
 			durationValue = i.getValue().value;
@@ -697,7 +697,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		}
 		else
 		{
-			TypeCheckerErrors.report(3281, "Argument to duration must be integer >= 0", node.getLocation(), node);;
+			TypeCheckerErrors.report(3281, "Arguments to duration must be integer >= 0", node.getDuration().getLocation(), node.getDuration());
 		}
 
 		node.setStep(durationValue);//sets the input value [ns] to internal
