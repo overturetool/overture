@@ -106,7 +106,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 		{
 			return getProjectJavaSrcDirectory();
 		}
-		return new File(getProjectOutputDirectory(), "generate-sources");
+		return new File(getProjectOutputDirectory(), "generated-sources");
 	}
 
 	public void generateSingleAst(File treeName, File toStringAstFile,
