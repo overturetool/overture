@@ -89,12 +89,14 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 			{
 				String nodeType = cn.getAttributes().getNamedItem("toString").getNodeValue();
 				if(nodeType!=null && !nodeType.isEmpty())
-				try
 				{
-					list.add(nodeType);
-				} catch (Exception e)
-				{
-					fail("Not able to decode stored result");
+					try
+					{
+						list.add(nodeType);
+					} catch (Exception e)
+					{
+						fail("Not able to decode toString stored result");
+					}
 				}
 			}
 		}

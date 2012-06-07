@@ -89,7 +89,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 					list.add((ProofObligation) fromString(nodeType));
 				} catch (Exception e)
 				{
-					fail("Not able to decode stored result");
+					fail("Not able to decode object stored result");
 				}
 			}
 		}
