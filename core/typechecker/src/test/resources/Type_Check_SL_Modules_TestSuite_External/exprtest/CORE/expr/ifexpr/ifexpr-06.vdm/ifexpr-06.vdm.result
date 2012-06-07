@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
 <message column="36" line="31" message="Else clause is not a boolean" messageType="error" number="3086" resource="ifexpr-06.vdm.result"/>
+<result/>
 </testResult>

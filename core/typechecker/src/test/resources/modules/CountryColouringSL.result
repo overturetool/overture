@@ -2,4 +2,5 @@
 <testResult type="type_checker">
 <message column="3" line="49" message="Definition 'colMap' not used" messageType="warning" number="5000" resource="CountryColouringSL.result"/>
 <message column="3" line="87" message="Definition 'colMapExpl' not used" messageType="warning" number="5000" resource="CountryColouringSL.result"/>
+<result/>
 </testResult>

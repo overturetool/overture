@@ -19,4 +19,5 @@
 <message column="35" line="539" message="i at 503:8 hidden by i" messageType="warning" number="5008" resource="STVSL.result"/>
 <message column="1" line="11" message="Definition 'Votes' not used" messageType="warning" number="5000" resource="STVSL.result"/>
 <message column="1" line="615" message="Definition 'CONDUCT_ELECTION' not used" messageType="warning" number="5000" resource="STVSL.result"/>
+<result/>
 </testResult>

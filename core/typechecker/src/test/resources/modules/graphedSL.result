@@ -5,4 +5,5 @@
 <message column="13" line="685" message="Operation 'move_simple_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL.result"/>
 <message column="13" line="760" message="Operation 'copy_compound_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL.result"/>
 <message column="13" line="763" message="Operation 'copy_simple_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL.result"/>
+<result/>
 </testResult>

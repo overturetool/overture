@@ -12,4 +12,5 @@
 <message column="5" line="260" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT.result"/>
 <message column="5" line="274" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT.result"/>
 <message column="51" line="274" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT.result"/>
+<result/>
 </testResult>

@@ -17,4 +17,5 @@
 <message column="4" line="920" message="Member addSensor(Sensor) is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
 <message column="4" line="953" message="Member isFinished() is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
 <message column="4" line="957" message="Member showResult() is not in scope" messageType="error" number="3209" resource="CMRT.result"/>
+<result/>
 </testResult>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
 <message column="13" line="13" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
 <message column="11" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
 <message column="9" line="33" message="Definition 'i' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
@@ -15,4 +15,5 @@
 <message column="5" line="59" message="State variable 'FunDefTest`inst' cannot be accessed from this context" messageType="error" number="3302" resource="fundefpp.vpp.result"/>
 <message column="5" line="59" message="Cannot access FunDefTest`inst from a static context" messageType="error" number="3181" resource="fundefpp.vpp.result"/>
 <message column="31" line="68" message="Right hand of and is not bool" messageType="error" number="3066" resource="fundefpp.vpp.result"/>
+<result/>
 </testResult>

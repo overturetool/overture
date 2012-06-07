@@ -13,4 +13,5 @@
 <message column="1" line="465" message="Definition 'COMPLETE' not used" messageType="warning" number="5000" resource="librarySL.result"/>
 <message column="1" line="479" message="Definition 'SEARCH' not used" messageType="warning" number="5000" resource="librarySL.result"/>
 <message column="1" line="492" message="Definition 'GET' not used" messageType="warning" number="5000" resource="librarySL.result"/>
+<result/>
 </testResult>

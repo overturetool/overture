@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
 <message column="11" line="21" message="Modifier tag unknown not found in record" messageType="error" number="3131" resource="recordmodifierexpr-03.vdm.result"/>
+<result/>
 </testResult>

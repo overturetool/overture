@@ -18,4 +18,5 @@
 <message column="3" line="446" message="Definition 'CreateContext' not used" messageType="warning" number="5000" resource="looseSL.result"/>
 <message column="50" line="277" message="Operation 'FnInfo' cannot be called from a function" messageType="error" number="3300" resource="looseSL.result"/>
 <message column="3" line="928" message="Operation returns void value" messageType="error" number="3313" resource="looseSL.result"/>
+<result/>
 </testResult>

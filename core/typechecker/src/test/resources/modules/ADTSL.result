@@ -29,4 +29,5 @@
 <message column="1" line="1565" message="Operation returns void value" messageType="error" number="3313" resource="ADTSL.result"/>
 <message column="1" line="1683" message="Operation returns void value" messageType="error" number="3313" resource="ADTSL.result"/>
 <message column="1" line="1712" message="Operation returns void value" messageType="error" number="3313" resource="ADTSL.result"/>
+<result/>
 </testResult>

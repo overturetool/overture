@@ -14,4 +14,5 @@
 <message column="1" line="126" message="Definition 'lupslOp3Laski' not used" messageType="warning" number="5000" resource="LUPSLSL.result"/>
 <message column="1" line="153" message="Definition 'lupsmOp3Gries' not used" messageType="warning" number="5000" resource="LUPSLSL.result"/>
 <message column="1" line="186" message="Definition 'lupslOp4Laski' not used" messageType="warning" number="5000" resource="LUPSLSL.result"/>
+<result/>
 </testResult>

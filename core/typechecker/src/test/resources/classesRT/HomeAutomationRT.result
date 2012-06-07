@@ -6,4 +6,5 @@
 <message column="13" line="702" message="Instance variable 'ID' is not initialized" messageType="warning" number="5001" resource="HomeAutomationRT.result"/>
 <message column="13" line="703" message="Instance variable 'Type' is not initialized" messageType="warning" number="5001" resource="HomeAutomationRT.result"/>
 <message column="13" line="704" message="Instance variable 'Value' is not initialized" messageType="warning" number="5001" resource="HomeAutomationRT.result"/>
+<result/>
 </testResult>

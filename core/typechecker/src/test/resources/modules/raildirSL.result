@@ -25,4 +25,5 @@
 <message column="30" line="1347" message="Definition 'Point_state' not used" messageType="warning" number="5000" resource="raildirSL.result"/>
 <message column="30" line="1349" message="Definition 'Operation' not used" messageType="warning" number="5000" resource="raildirSL.result"/>
 <message column="30" line="1354" message="Definition 'Signal_state' not used" messageType="warning" number="5000" resource="raildirSL.result"/>
+<result/>
 </testResult>

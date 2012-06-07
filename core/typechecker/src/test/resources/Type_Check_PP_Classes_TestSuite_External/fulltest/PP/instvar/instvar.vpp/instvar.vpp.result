@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
 <message column="5" line="7" message="Instance variable 'ba' is not initialized" messageType="warning" number="5001" resource="instvar.vpp.result"/>
 <message column="5" line="8" message="Instance variable 'bb' is not initialized" messageType="warning" number="5001" resource="instvar.vpp.result"/>
 <message column="5" line="17" message="Instance variable 'c' is not initialized" messageType="warning" number="5001" resource="instvar.vpp.result"/>
@@ -15,4 +15,5 @@
 <message column="11" line="31" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="instvar.vpp.result"/>
 <message column="35" line="41" message="Right hand of and is not bool" messageType="error" number="3066" resource="instvar.vpp.result"/>
 <message column="11" line="42" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="instvar.vpp.result"/>
+<result/>
 </testResult>

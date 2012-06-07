@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassRtTestCase">
 <message column="11" line="119" message="Definition 'sensor' not used" messageType="warning" number="5000" resource="fighter-06.vpp.result"/>
 <message column="16" line="227" message="Definition 'fname' not used" messageType="warning" number="5000" resource="fighter-06.vpp.result"/>
 <message column="7" line="305" message="Operation 'canObserve' cannot be called from a function" messageType="error" number="3300" resource="fighter-06.vpp.result"/>
+<result/>
 </testResult>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
 <message column="22" line="135" message="Unable to resolve type name 'TF1'" messageType="error" number="3427" resource="lookup.vpp.result"/>
 <message column="7" line="145" message="Ambiguous definitions inherited by G" messageType="error" number="3276" resource="lookup.vpp.result"/>
 <message column="7" line="145" message="Ambiguous definitions inherited by G" messageType="error" number="3276" resource="lookup.vpp.result"/>
@@ -9,4 +9,5 @@
 <message column="10" line="201" message="Inaccessible member Different`instDifferent of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
 <message column="10" line="204" message="Inaccessible member Different`mDifferent() of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
 <message column="3" line="246" message="Inaccessible member 'Different`instDifferent' of class Different" messageType="error" number="3180" resource="lookup.vpp.result"/>
+<result/>
 </testResult>

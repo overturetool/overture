@@ -4,4 +4,5 @@
 <message column="3" line="71" message="Definition 'AnyHighClass' not used" messageType="warning" number="5000" resource="gatewaySL.result"/>
 <message column="3" line="75" message="Definition 'Censor' not used" messageType="warning" number="5000" resource="gatewaySL.result"/>
 <message column="3" line="79" message="Definition 'FlattenMessages' not used" messageType="warning" number="5000" resource="gatewaySL.result"/>
+<result/>
 </testResult>

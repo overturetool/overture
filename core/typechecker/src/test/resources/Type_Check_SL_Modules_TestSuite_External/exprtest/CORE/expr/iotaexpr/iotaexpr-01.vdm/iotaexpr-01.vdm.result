@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
 <message column="25" line="12" message="Empty set used in bind" messageType="warning" number="3264" resource="iotaexpr-01.vdm.result"/>
 <message column="16" line="12" message="Definition 'x' not used" messageType="warning" number="5000" resource="iotaexpr-01.vdm.result"/>
+<result/>
 </testResult>

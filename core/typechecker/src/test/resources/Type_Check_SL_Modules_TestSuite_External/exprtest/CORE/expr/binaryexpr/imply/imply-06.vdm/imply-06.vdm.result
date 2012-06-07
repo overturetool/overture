@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
 <message column="10" line="15" message="Left hand of =&gt; is not bool" messageType="error" number="3065" resource="imply-06.vdm.result"/>
 <message column="10" line="15" message="Right hand of =&gt; is not bool" messageType="error" number="3066" resource="imply-06.vdm.result"/>
+<result/>
 </testResult>

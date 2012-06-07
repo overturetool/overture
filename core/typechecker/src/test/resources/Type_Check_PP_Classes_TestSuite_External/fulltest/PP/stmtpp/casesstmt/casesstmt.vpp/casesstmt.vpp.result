@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
 <message column="12" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
 <message column="7" line="8" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
 <message column="7" line="9" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
@@ -53,4 +53,5 @@
 <message column="15" line="96" message="Operation Cases13(seq1 of (nat1)) is not in scope" messageType="error" number="3213" resource="casesstmt.vpp.result"/>
 <message column="27" line="104" message="Incompatible types in assignment" messageType="error" number="3239" resource="casesstmt.vpp.result"/>
 <message column="3" line="99" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt.vpp.result"/>
+<result/>
 </testResult>

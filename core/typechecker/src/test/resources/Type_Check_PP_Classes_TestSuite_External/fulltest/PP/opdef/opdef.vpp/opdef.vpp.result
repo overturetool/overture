@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
 <message column="9" line="25" message="Definition 'r' not used" messageType="warning" number="5000" resource="opdef.vpp.result"/>
 <message column="7" line="49" message="Duplicate definition: a" messageType="warning" number="5007" resource="opdef.vpp.result"/>
 <message column="7" line="49" message="a at 4:7 hidden by a" messageType="warning" number="5008" resource="opdef.vpp.result"/>
@@ -23,4 +23,5 @@
 <message column="3" line="107" message="Operation returns unexpected type" messageType="error" number="3035" resource="opdef.vpp.result"/>
 <message column="9" line="109" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vpp.result"/>
 <message column="15" line="110" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vpp.result"/>
+<result/>
 </testResult>
