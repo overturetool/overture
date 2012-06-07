@@ -45,7 +45,7 @@ public class SMapTypeAssistantTC {
 		}
 	}
 
-	public static boolean equals(SMapType type, PType other) {
+	public static boolean equals(SMapType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof SMapType)

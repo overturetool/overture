@@ -95,7 +95,7 @@ public class AClassTypeAssistantTC {
 		return exptype.getClassdef().getName().name;
 	}
 
-	public static boolean equals(AClassType type, PType other) {
+	public static boolean equals(AClassType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AClassType)

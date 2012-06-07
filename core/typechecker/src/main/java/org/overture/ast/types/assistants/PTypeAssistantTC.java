@@ -39,7 +39,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameToken;
 
-public class PTypeAssistantTC
+public class PTypeAssistantTC extends PTypeAssistant
 {
 
 	public static boolean hasSupertype(AClassType cto, PType other)
@@ -449,77 +449,9 @@ public class PTypeAssistantTC
 
 	}
 
-	public static boolean isNumeric(PType type)
-	{
-		switch (type.kindPType())
-		{
-			case BASIC:
-				SBasicType bType = (SBasicType) type;
-				if (bType.kindSBasicType() == EBasicType.NUMERIC)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
-			case BRACKET:
-				return ABracketTypeAssistantTC.isNumeric((ABracketType) type);
-			case INVARIANT:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isNumeric((ANamedInvariantType) type);
-				}
-				break;
-			case OPTIONAL:
-				return AOptionalTypeAssistantTC.isNumeric((AOptionalType) type);
-			case PARAMETER:
-				return AParameterTypeAssistantTC.isNumeric((AParameterType) type);
-			case UNION:
-				return AUnionTypeAssistantTC.isNumeric((AUnionType) type);
-			case UNKNOWN:
-				return AUnknownTypeAssistantTC.isNumeric((AUnknownType) type);
-			default:
-				break;
-		}
-		return false;
-	}
+	
 
-	public static SNumericBasicType getNumeric(PType type)
-	{
-		switch (type.kindPType())
-		{
-			case BASIC:
-				SBasicType bType = (SBasicType) type;
-				if (bType.kindSBasicType() == EBasicType.NUMERIC)
-				{
-					if (type instanceof SNumericBasicType)
-					{
-						return (SNumericBasicType) type;
-					}
-				}
-				break;
-			case BRACKET:
-				return ABracketTypeAssistantTC.getNumeric((ABracketType) type);
-			case INVARIANT:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getNumeric((ANamedInvariantType) type);
-				}
-				break;
-			case OPTIONAL:
-				return AOptionalTypeAssistantTC.getNumeric((AOptionalType) type);
-			case PARAMETER:
-				return AParameterTypeAssistantTC.getNumeric((AParameterType) type);
-			case UNION:
-				return AUnionTypeAssistantTC.getNumeric((AUnionType) type);
-			case UNKNOWN:
-				return AUnknownTypeAssistantTC.getNumeric((AUnknownType) type);
-			default:
-				break;
-		}
-		assert false : "Can't getNumeric of a non-numeric";
-		return null;
-	}
+	
 
 	public static boolean isMap(PType type)
 	{
@@ -857,7 +789,7 @@ public class PTypeAssistantTC
 		}
 	}
 
-	public static boolean equals(PType type, PType other)
+	public static boolean equals(PType type, Object other)
 	{
 		switch (type.kindPType())
 		{
@@ -1146,6 +1078,15 @@ public class PTypeAssistantTC
 			return false;
 		}
 
+	}
+
+	public static Object deBracket(Object other) {
+		while (other instanceof ABracketType)
+		{
+			other = ((ABracketType)other).getType();
+		}
+
+		return other;
 	}
 
 }

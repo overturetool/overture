@@ -36,7 +36,7 @@ public class SSeqTypeAssistantTC {
 		}
 	}
 
-	public static boolean equals(SSeqType type, PType other) {
+	public static boolean equals(SSeqType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof SSeqType)

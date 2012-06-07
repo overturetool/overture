@@ -10,7 +10,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.utils.PTypeSet;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overture.typecheck.TypeCheckerErrors;

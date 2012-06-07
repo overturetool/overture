@@ -46,7 +46,7 @@ public class AUnknownTypeAssistantTC {
 		return null;	// Isn't any particular type?
 	}
 
-	public static boolean equals(AUnknownType type, PType other) {
+	public static boolean equals(AUnknownType type, Object other) {
 		return true;
 	}
 
@@ -75,13 +75,7 @@ public class AUnknownTypeAssistantTC {
 		return AstFactory.newASeqSeqType(type.getLocation()); // empty
 	}
 
-	public static boolean isNumeric(AUnknownType type) {
-		return true;
-	}
 	
-	public static ARealNumericBasicType getNumeric(AUnknownType type) {
-		return AstFactory.newARealNumericBasicType(type.getLocation());
-	}
 
 	public static boolean isMap(AUnknownType type) {
 		return true;

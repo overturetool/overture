@@ -117,7 +117,7 @@ public class AFunctionTypeAssistantTC {
 		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
 	}
 
-	public static boolean equals(AFunctionType type, PType other) {
+	public static boolean equals(AFunctionType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (!(other instanceof AFunctionType))

@@ -12,13 +12,12 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
 
-public class ABracketTypeAssistantTC {
+public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 
 	public static PType typeResolve(ABracketType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -79,7 +78,7 @@ public class ABracketTypeAssistantTC {
 		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
-	public static boolean equals(ABracketType type, PType other) {
+	public static boolean equals(ABracketType type, Object other) {
 		return PTypeAssistantTC.equals(type.getType(),other);
 	}
 
@@ -110,14 +109,8 @@ public class ABracketTypeAssistantTC {
 		return PTypeAssistantTC.getSeq(type.getType());
 	}
 
-	public static boolean isNumeric(ABracketType type) {
-		return PTypeAssistantTC.isNumeric(type.getType());
-		
-	}
-
-	public static SNumericBasicType getNumeric(ABracketType type) {
-		return PTypeAssistantTC.getNumeric(type.getType());
-	}
+	
+	
 
 	public static boolean isMap(ABracketType type) {
 		return PTypeAssistantTC.isMap(type.getType());

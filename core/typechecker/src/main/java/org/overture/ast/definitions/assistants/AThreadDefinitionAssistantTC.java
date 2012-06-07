@@ -50,4 +50,14 @@ public class AThreadDefinitionAssistantTC {
 		return def;
 	}
 
+	public static boolean equals(AThreadDefinition def, Object other) {
+		if (other instanceof AThreadDefinition)
+		{
+			AThreadDefinition tho = (AThreadDefinition)other;
+			return tho.getOperationName().equals(def.getOperationName());
+		}
+		
+		return false;
+	}
+
 }

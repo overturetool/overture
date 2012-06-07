@@ -4,7 +4,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.utils.PTypeSet;
 
 public class ANonDeterministicSimpleBlockStmAssistantTC
 {

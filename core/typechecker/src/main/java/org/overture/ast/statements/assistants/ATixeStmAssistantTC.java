@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.utils.PTypeSet;
 
 public class ATixeStmAssistantTC {
 

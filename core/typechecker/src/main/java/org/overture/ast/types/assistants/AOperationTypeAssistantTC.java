@@ -125,7 +125,7 @@ public class AOperationTypeAssistantTC {
 		return "(" + params + " ==> " + exptype.getResult() + ")";
 	}
 
-	public static boolean equals(AOperationType type, PType other) {
+	public static boolean equals(AOperationType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (!(other instanceof AOperationType))

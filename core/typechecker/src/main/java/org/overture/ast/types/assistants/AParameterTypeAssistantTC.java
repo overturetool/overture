@@ -13,7 +13,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PAccessSpecifier;
@@ -26,7 +25,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.typechecker.NameScope;
 
 
-public class AParameterTypeAssistantTC {
+public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
 
 	public static PType typeResolve(AParameterType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -74,7 +73,7 @@ public class AParameterTypeAssistantTC {
 		return AstFactory.newAUnknownType(exptype.getLocation());
 	}
 
-	public static boolean equals(AParameterType type, PType other) {
+	public static boolean equals(AParameterType type, Object other) {
 		return true;	// Runtime dependent - assume OK
 	}
 
@@ -92,14 +91,6 @@ public class AParameterTypeAssistantTC {
 
 	public static SSeqType getSeq(AParameterType type) {
 		return AstFactory.newASeqSeqType(type.getLocation()); //empty
-	}
-
-	public static boolean isNumeric(AParameterType type) {
-		return true;
-	}
-
-	public static ARealNumericBasicType getNumeric(AParameterType type) {
-		return AstFactory.newARealNumericBasicType(type.getLocation());
 	}
 
 	public static boolean isMap(AParameterType type) {

@@ -113,7 +113,7 @@ public class AUnresolvedTypeAssistantTC {
 		return exptype.getName().getName().equals(typename) ? exptype : null;
 	}
 
-	public static boolean equals(AUnresolvedType type, PType other) {
+	public static boolean equals(AUnresolvedType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AUnresolvedType)
