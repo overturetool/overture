@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class ClassPpPoTestCase extends BasicPogTestCase implements IResultStore<ProofObligationList> {
+public class VdmjClassPpPoTestCase extends BasicPogTestCase implements IResultStore<ProofObligationList> {
 
 	public static final String tcHeader = "-- TCErrors:";
 
@@ -38,11 +38,11 @@ public class ClassPpPoTestCase extends BasicPogTestCase implements IResultStore<
 	String expectedType;
 	ParserType parserType;
 
-	public ClassPpPoTestCase() {
+	public VdmjClassPpPoTestCase() {
 		super("test");
 	}
 
-	public ClassPpPoTestCase(File file) {
+	public VdmjClassPpPoTestCase(File file) {
 		super("test");
 		this.parserType = ParserType.Module;
 		this.file = file;

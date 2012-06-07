@@ -11,13 +11,13 @@ import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.syntax.ParserException;
 
 
-public class ClassRtPoTestCase extends ClassPpPoTestCase
+public class VdmjClassRtPoTestCase extends VdmjClassPpPoTestCase
 {
-	public ClassRtPoTestCase() {
+	public VdmjClassRtPoTestCase() {
 		super();
 	}
 
-	public ClassRtPoTestCase(File file) {
+	public VdmjClassRtPoTestCase(File file) {
 		super(file);
 	}
 	
