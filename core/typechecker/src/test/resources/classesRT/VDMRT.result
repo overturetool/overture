@@ -47,4 +47,5 @@
 <message column="3" line="3136" message="Member run() is not in scope" messageType="error" number="3209" resource="VDMRT.result"/>
 <message column="3" line="3137" message="Member isFinished() is not in scope" messageType="error" number="3209" resource="VDMRT.result"/>
 <message column="3" line="3139" message="Member report() is not in scope" messageType="error" number="3209" resource="VDMRT.result"/>
+<result/>
 </testResult>

@@ -8,4 +8,5 @@
 <message column="1" line="92" message="Definition 'IssueCard' not used" messageType="warning" number="5000" resource="hotelSL.result"/>
 <message column="1" line="100" message="Definition 'AddRoom' not used" messageType="warning" number="5000" resource="hotelSL.result"/>
 <message column="1" line="107" message="Definition 'AddGuest' not used" messageType="warning" number="5000" resource="hotelSL.result"/>
+<result/>
 </testResult>

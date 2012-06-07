@@ -69,8 +69,8 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.types.assistants.PTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeSet;
 import org.overture.ast.types.assistants.SNumericBasicTypeAssistantTC;
+import org.overture.ast.utils.PTypeSet;
 import org.overture.typecheck.TypeComparator;
 import org.overturetool.vdmj.lex.LexNameToken;
 

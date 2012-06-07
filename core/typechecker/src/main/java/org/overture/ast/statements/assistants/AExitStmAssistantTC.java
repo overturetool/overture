@@ -2,7 +2,7 @@ package org.overture.ast.statements.assistants;
 
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.statements.AExitStm;
-import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.utils.PTypeSet;
 
 public class AExitStmAssistantTC {
 

@@ -41,7 +41,7 @@ public class ASetTypeAssistantTC {
 		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
 	}
 
-	public static boolean equals(ASetType type, PType other) {
+	public static boolean equals(ASetType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof ASetType)

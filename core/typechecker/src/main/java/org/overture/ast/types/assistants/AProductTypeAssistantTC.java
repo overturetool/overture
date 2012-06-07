@@ -62,7 +62,7 @@ public class AProductTypeAssistantTC {
 		return n == 0 || type.getTypes().size() == n ? type : null;
 	}
 
-	public static boolean equals(AProductType type, PType other) {
+	public static boolean equals(AProductType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof AProductType)

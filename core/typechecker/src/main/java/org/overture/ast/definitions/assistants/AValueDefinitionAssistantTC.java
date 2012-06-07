@@ -1,5 +1,6 @@
 package org.overture.ast.definitions.assistants;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -70,6 +71,30 @@ public class AValueDefinitionAssistantTC {
 
 	public static LexNameList getOldNames(AValueDefinition def) {
 		return PExpAssistantTC.getOldNames(def.getExpression());
+	}
+
+	public static boolean equals(AValueDefinition def, Object other) {
+		if (other instanceof AValueDefinition)
+		{
+			AValueDefinition vdo = (AValueDefinition)other;
+
+			if (def.getDefs().size() == vdo.getDefs().size())
+			{
+				Iterator<PDefinition> diter = vdo.getDefs().iterator();
+
+				for (PDefinition d: def.getDefs())
+				{
+					if (!PDefinitionAssistantTC.equals(diter.next(),d))
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	

@@ -24,7 +24,7 @@ public class AIdentifierPatternAssistantTC {
 	}
 
 	public static PExp getMatchingExpression(AIdentifierPattern idp) {
-		return AstFactory.newAVariableExp(idp.getName());
+		return AstFactory.newAVariableExp(idp.getName().clone());
 	}
 
 }

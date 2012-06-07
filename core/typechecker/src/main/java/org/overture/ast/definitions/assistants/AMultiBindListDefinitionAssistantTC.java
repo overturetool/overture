@@ -62,4 +62,13 @@ public class AMultiBindListDefinitionAssistantTC {
 		return result;
 	}
 
+	public static boolean equals(AMultiBindListDefinition def, Object other) {
+		if (other instanceof AMultiBindListDefinition)
+		{
+			return def.toString().equals(other.toString());
+		}
+
+		return false;
+	}
+
 }

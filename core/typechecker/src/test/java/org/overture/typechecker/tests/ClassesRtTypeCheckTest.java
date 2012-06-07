@@ -8,11 +8,13 @@ import junit.framework.TestSuite;
 
 import org.overture.typechecker.tests.framework.ClassRtTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public class ClassesRtTypeCheckTest extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
+		LexLocation.absoluteToStringLocation = false;
 		String name = "Type Check Classes TestSuite";
 		String root = "src\\test\\resources\\classesRT";
 		//String root = "src\\test\\resources\\test";

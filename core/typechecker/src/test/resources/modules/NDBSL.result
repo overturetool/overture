@@ -9,4 +9,5 @@
 <message column="5" line="102" message="Definition 'ADDTUP' not used" messageType="warning" number="5000" resource="NDBSL.result"/>
 <message column="5" line="112" message="Definition 'DELTUP' not used" messageType="warning" number="5000" resource="NDBSL.result"/>
 <message column="23" line="108" message="State variable 'DEFAULT`em' cannot be accessed from this context" messageType="error" number="3302" resource="NDBSL.result"/>
+<result/>
 </testResult>

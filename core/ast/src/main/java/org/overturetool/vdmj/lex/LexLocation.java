@@ -53,6 +53,9 @@ public class LexLocation implements Serializable , ExternalNode
 	{
 		return new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
 	}
+	
+	public static boolean absoluteToStringLocation = true;
+	
 	private static final long serialVersionUID = 1L;
 
 	/** A collection of all LexLocation objects. */
@@ -128,11 +131,11 @@ public class LexLocation implements Serializable , ExternalNode
 		}
 		else if (module == null || module.equals(""))
 		{
-			return "in '" + file + "' at line " + startLine + ":" + startPos;
+			return "in '" + (absoluteToStringLocation ? file : file.getName()) + "' at line " + startLine + ":" + startPos;
 		}
 		else
 		{
-			return "in '" + module + "' (" + file + ") at line " + startLine + ":" + startPos;
+			return "in '" + module + "' (" +  (absoluteToStringLocation ? file : file.getName()) + ") at line " + startLine + ":" + startPos;
 		}
 	}
 

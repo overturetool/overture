@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="proof_obligation">
 <result>
-<po column="28" line="20" message="Eat(): subtype obligation in 'Philosopher' (src\test\resources\classesPP\DiningPP) at line 20:28&#10;(turns - 1) &gt;= 0&#10;" number="0" object="" resource="DiningPP" toString="Eat(): subtype obligation in 'Philosopher' (src\test\resources\classesPP\DiningPP) at line 20:28&#10;(turns - 1) &gt;= 0&#10;"/>
-<po column="5" line="49" message="Table(nat1): while loop termination obligation in 'Table' (src\test\resources\classesPP\DiningPP) at line 49:5&#10;while (forks &lt; noGuests) do ...&#10;" number="0" object="" resource="DiningPP" toString="Table(nat1): while loop termination obligation in 'Table' (src\test\resources\classesPP\DiningPP) at line 49:5&#10;while (forks &lt; noGuests) do ...&#10;"/>
-<po column="33" line="56" message="takeFork(): subtype obligation in 'Table' (src\test\resources\classesPP\DiningPP) at line 56:33&#10;(forks - 1) &gt;= 0&#10;" number="0" object="" resource="DiningPP" toString="takeFork(): subtype obligation in 'Table' (src\test\resources\classesPP\DiningPP) at line 56:33&#10;(forks - 1) &gt;= 0&#10;"/>
+<po column="28" line="20" message="Eat(): subtype obligation in 'Philosopher' (DiningPP) at line 20:28&#10;(turns - 1) &gt;= 0&#10;" number="0" object="" resource="DiningPP" toString="Eat(): subtype obligation in 'Philosopher' (DiningPP) at line 20:28&#10;(turns - 1) &gt;= 0&#10;"/>
+<po column="5" line="49" message="Table(nat1): while loop termination obligation in 'Table' (DiningPP) at line 49:5&#10;while (forks &lt; noGuests) do ...&#10;" number="0" object="" resource="DiningPP" toString="Table(nat1): while loop termination obligation in 'Table' (DiningPP) at line 49:5&#10;while (forks &lt; noGuests) do ...&#10;"/>
+<po column="33" line="56" message="takeFork(): subtype obligation in 'Table' (DiningPP) at line 56:33&#10;(forks - 1) &gt;= 0&#10;" number="0" object="" resource="DiningPP" toString="takeFork(): subtype obligation in 'Table' (DiningPP) at line 56:33&#10;(forks - 1) &gt;= 0&#10;"/>
 </result>
 </testResult>

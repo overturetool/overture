@@ -2,7 +2,7 @@ package org.overture.ast.statements.assistants;
 
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
-import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.utils.PTypeSet;
 
 public class AIfStmAssistantTC {
 

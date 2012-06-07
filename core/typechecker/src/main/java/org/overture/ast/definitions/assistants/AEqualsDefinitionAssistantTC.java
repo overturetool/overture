@@ -67,4 +67,15 @@ public class AEqualsDefinitionAssistantTC {
 		return list;
 	}
 
+	public static boolean equals(AEqualsDefinition def, Object other) {
+		
+		if (other instanceof AEqualsDefinition)
+		{
+			return def.toString().equals(other.toString());
+		}
+		
+		return false;
+		
+	}
+
 }

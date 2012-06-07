@@ -39,4 +39,5 @@
 <message column="1" line="307" message="Definition 'LSLLIBRARY' not used" messageType="warning" number="5000" resource="simulatorSL.result"/>
 <message column="17" line="904" message="Operation 'get_enabled_simevent' cannot be called from a function" messageType="error" number="3300" resource="simulatorSL.result"/>
 <message column="22" line="923" message="Operation 'get_enabled_simevent_synch' cannot be called from a function" messageType="error" number="3300" resource="simulatorSL.result"/>
+<result/>
 </testResult>

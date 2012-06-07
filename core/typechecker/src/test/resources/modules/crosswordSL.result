@@ -7,4 +7,5 @@
 <message column="1" line="417" message="Definition 'DELETE_BLACK' not used" messageType="warning" number="5000" resource="crosswordSL.result"/>
 <message column="1" line="434" message="Definition 'STRONG_DELETE' not used" messageType="warning" number="5000" resource="crosswordSL.result"/>
 <message column="1" line="456" message="Definition 'SOFT_DELETE' not used" messageType="warning" number="5000" resource="crosswordSL.result"/>
+<result/>
 </testResult>

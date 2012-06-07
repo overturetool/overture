@@ -14,4 +14,5 @@
 <message column="3" line="70" message="Definition 'ToGreen' not used" messageType="warning" number="5000" resource="trafficSL.result"/>
 <message column="3" line="80" message="Definition 'ToRed' not used" messageType="warning" number="5000" resource="trafficSL.result"/>
 <message column="3" line="87" message="Definition 'ToAmber' not used" messageType="warning" number="5000" resource="trafficSL.result"/>
+<result/>
 </testResult>

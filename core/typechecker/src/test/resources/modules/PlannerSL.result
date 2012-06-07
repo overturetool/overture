@@ -6,4 +6,5 @@
 <message column="1" line="121" message="Definition 'INIT' not used" messageType="warning" number="5000" resource="PlannerSL.result"/>
 <message column="1" line="137" message="Definition 'ACHIEVE_1' not used" messageType="warning" number="5000" resource="PlannerSL.result"/>
 <message column="1" line="149" message="Definition 'ACHIEVE_2' not used" messageType="warning" number="5000" resource="PlannerSL.result"/>
+<result/>
 </testResult>

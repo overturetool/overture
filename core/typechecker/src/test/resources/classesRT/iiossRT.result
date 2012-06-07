@@ -30,4 +30,5 @@
 <message column="17" line="838" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT.result"/>
 <message column="15" line="898" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="iiossRT.result"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<result/>
 </testResult>

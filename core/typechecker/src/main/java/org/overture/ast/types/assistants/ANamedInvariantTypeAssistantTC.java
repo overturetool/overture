@@ -12,12 +12,11 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 
-public class ANamedInvariantTypeAssistantTC {
+public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant{
 
 	public static void unResolve(ANamedInvariantType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
@@ -73,7 +72,7 @@ public class ANamedInvariantTypeAssistantTC {
 		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
-	public static boolean equals(ANamedInvariantType type, PType other) {
+	public static boolean equals(ANamedInvariantType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof ANamedInvariantType)
@@ -121,14 +120,9 @@ public class ANamedInvariantTypeAssistantTC {
 		return PTypeAssistantTC.getSeq(type.getType());
 	}
 
-	public static boolean isNumeric(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isNumeric(type.getType());
-	}
 	
-	public static SNumericBasicType getNumeric(ANamedInvariantType type) {
-		return PTypeAssistantTC.getNumeric(type.getType());
-	}
+	
+	
 
 	public static boolean isMap(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;

@@ -16,4 +16,5 @@
 <message column="1" line="1754" message="Definition 'DFDSigConsistent' not used" messageType="warning" number="5000" resource="DFDexampleSL.result"/>
 <message column="1" line="1801" message="Definition 'LowerLevelUsed' not used" messageType="warning" number="5000" resource="DFDexampleSL.result"/>
 <message column="1" line="1867" message="Definition 'Document' not used" messageType="warning" number="5000" resource="DFDexampleSL.result"/>
+<result/>
 </testResult>

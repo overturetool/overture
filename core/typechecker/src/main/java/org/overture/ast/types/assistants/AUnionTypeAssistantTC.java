@@ -8,7 +8,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.assistants.AUnionTypeAssistant;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
 import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.definitions.assistants.SClassDefinitionAssistantTC;
@@ -27,6 +26,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.utils.PTypeSet;
 import org.overture.typecheck.TypeCheckException;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexLocation;
@@ -285,7 +285,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return null;
 	}
 
-	public static boolean equals(AUnionType type, PType other)
+	public static boolean equals(AUnionType type, Object other)
 	{
 		other = PTypeAssistantTC.deBracket(other);
 		PTypeSet types = new PTypeSet(type.getTypes());
@@ -442,10 +442,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return getSeq(type) != null;
 	}
 
-	public static boolean isNumeric(AUnionType type)
-	{
-		return getNumeric(type) != null;
-	}
 	
 	public static boolean isUnknown(AUnionType type)
 	{
@@ -460,35 +456,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return false;
 	}
 		
-	public static SNumericBasicType getNumeric(AUnionType type)
-	{
-		if (!type.getNumDone())
-		{
-			type.setNumDone(true);
-			type.setNumType(AstFactory.newANatNumericBasicType(type.getLocation())); // lightest default
-			boolean found = false;
-
-			for (PType t : type.getTypes())
-			{
-				if (PTypeAssistantTC.isNumeric(t))
-				{
-					SNumericBasicType nt = PTypeAssistantTC.getNumeric(t);
-
-					if (SNumericBasicTypeAssistantTC.getWeight(nt) > SNumericBasicTypeAssistantTC.getWeight(type.getNumType()))
-					{
-						type.setNumType(nt);
-					}
-
-					found = true;
-				}
-			}
-
-			if (!found)
-				type.setNumType(null);
-		}
-
-		return type.getNumType();
-	}
+	
 
 	public static boolean isMap(AUnionType type)
 	{

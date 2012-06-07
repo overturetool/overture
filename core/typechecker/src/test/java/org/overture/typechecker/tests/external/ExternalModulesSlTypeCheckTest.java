@@ -9,6 +9,7 @@ import junit.framework.TestSuite;
 
 import org.overturetool.test.framework.BaseTestSuite;
 import org.overturetool.test.framework.Properties;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 {
@@ -16,6 +17,7 @@ public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
+		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = false;
 		String name = "Type_Check_SL_Modules_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("sltest/tc");

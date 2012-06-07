@@ -43,6 +43,40 @@ import org.overturetool.vdmj.util.HelpLexNameToken;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
+	
+	public static boolean equals(PDefinition def, Object other)		// Used for sets of definitions.
+	{
+		switch (def.kindPDefinition()) {		
+		case EQUALS:
+			return AEqualsDefinitionAssistantTC.equals((AEqualsDefinition)def, other);		
+		case MULTIBINDLIST:
+			return AMultiBindListDefinitionAssistantTC.equals((AMultiBindListDefinition)def,other);
+		case MUTEXSYNC:
+			return AMutexSyncDefinitionAssistantTC.equals((AMutexSyncDefinition)def,other);		
+		case THREAD:
+			return AThreadDefinitionAssistantTC.equals((AThreadDefinition)def,other);
+		case VALUE:
+			return AValueDefinitionAssistantTC.equals((AValueDefinition)def,other);
+		default:
+			equalsBaseCase(def, other);
+			break;
+		}
+		
+		
+
+		return false;
+	}
+	
+	private static boolean equalsBaseCase(PDefinition def, Object other)		// Used for sets of definitions.
+	{
+		if (other instanceof PDefinition)
+		{
+			PDefinition odef = (PDefinition)other;
+			return def.getName() != null && odef.getName() != null && def.getName().equals(odef.getName());
+		}
+		return false;
+	}
+	
 	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
 			PType other) {
 

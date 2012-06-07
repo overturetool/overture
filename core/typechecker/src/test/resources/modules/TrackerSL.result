@@ -5,4 +5,5 @@
 <message column="3" line="80" message="Definition 'Introduce' not used" messageType="warning" number="5000" resource="TrackerSL.result"/>
 <message column="1" line="110" message="Definition 'Move' not used" messageType="warning" number="5000" resource="TrackerSL.result"/>
 <message column="1" line="126" message="Definition 'Delete' not used" messageType="warning" number="5000" resource="TrackerSL.result"/>
+<result/>
 </testResult>

@@ -89,7 +89,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 					list.add((ProofObligation) fromString(nodeType));
 				} catch (Exception e)
 				{
-					fail("Not able to decode stored result");
+					fail("Not able to decode object stored result");
 				}
 			}
 		}
@@ -101,6 +101,10 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 			ProofObligationList actual)
 	{
 		// FIXME: check is not sufficient
+		if(expected == null)
+		{
+			assert false : "No result file";
+		}
 		return expected.size() == actual.size();
 	}
 

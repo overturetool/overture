@@ -15,4 +15,5 @@
 <message column="6" line="1158" message="Member addAccelerometer(Accelerometer) is not in scope" messageType="error" number="3209" resource="PacemakerRT.result"/>
 <message column="4" line="1185" message="Member isFinished() is not in scope" messageType="error" number="3209" resource="PacemakerRT.result"/>
 <message column="4" line="1187" message="Member showResult() is not in scope" messageType="error" number="3209" resource="PacemakerRT.result"/>
+<result/>
 </testResult>

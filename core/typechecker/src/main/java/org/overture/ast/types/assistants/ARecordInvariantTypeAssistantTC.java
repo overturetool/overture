@@ -81,7 +81,7 @@ public class ARecordInvariantTypeAssistantTC {
 		}
 	}
 
-	public static boolean equals(ARecordInvariantType type, PType other) {
+	public static boolean equals(ARecordInvariantType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		if (other instanceof ARecordInvariantType)

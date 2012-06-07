@@ -37,26 +37,26 @@ public class PogUtil
 	}
 	
 	
-	public static PogResult<List<AModuleModules>> pogSl(File file)
+	public static PogResult<List<AModuleModules>> pogSl(File file) throws Exception
 	{
 		TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(file);
 		return pog(result);
 	}
 	
-	public static PogResult<List<SClassDefinition>> pogPp(File file)
+	public static PogResult<List<SClassDefinition>> pogPp(File file) throws Exception
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
 		return pog(result);
-	}
+	} 
 	
-	public static PogResult<List<SClassDefinition>> pogRt(File file) throws ParserException, LexException
+	public static PogResult<List<SClassDefinition>> pogRt(File file) throws Exception
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckRt(file);
 		return pog(result);
 	}
 	
 	public static <P extends List<? extends INode>> PogResult<P> pog(
-			TypeCheckResult<P> typeCheckResult)
+			TypeCheckResult<P> typeCheckResult) throws Exception
 	{
 		if (typeCheckResult.errors.isEmpty())
 		{
@@ -66,7 +66,8 @@ public class PogUtil
 			}
 			return new PogResult<P>(typeCheckResult, proofObligations, new Vector<VDMWarning>(), new Vector<VDMError>());
 		}
-		return new PogResult<P>(typeCheckResult, null, new Vector<VDMWarning>(), new Vector<VDMError>());
+		throw new Exception("Failed to type check");
+		//return new PogResult<P>(typeCheckResult, null, new Vector<VDMWarning>(), new Vector<VDMError>());
 	}
 	
 	

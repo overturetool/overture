@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
 <message column="13" line="14" message="Left hand of and is not bool" messageType="error" number="3065" resource="and-02.vdm.result"/>
+<result/>
 </testResult>

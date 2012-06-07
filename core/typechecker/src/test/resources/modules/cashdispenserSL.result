@@ -9,4 +9,5 @@
 <message column="37" line="87" message="Operation 'IsLegalCard' cannot be called from a function" messageType="error" number="3300" resource="cashdispenserSL.result"/>
 <message column="37" line="105" message="Operation 'IsLegalCard' cannot be called from a function" messageType="error" number="3300" resource="cashdispenserSL.result"/>
 <message column="37" line="113" message="Operation 'IsLegalCard' cannot be called from a function" messageType="error" number="3300" resource="cashdispenserSL.result"/>
+<result/>
 </testResult>

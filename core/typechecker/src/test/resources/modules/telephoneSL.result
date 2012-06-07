@@ -9,4 +9,5 @@
 <message column="3" line="119" message="Definition 'ClearSpeak' not used" messageType="warning" number="5000" resource="telephoneSL.result"/>
 <message column="3" line="133" message="Definition 'Suspend' not used" messageType="warning" number="5000" resource="telephoneSL.result"/>
 <message column="3" line="143" message="Definition 'ClearUn' not used" messageType="warning" number="5000" resource="telephoneSL.result"/>
+<result/>
 </testResult>

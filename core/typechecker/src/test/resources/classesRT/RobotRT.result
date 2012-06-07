@@ -19,4 +19,5 @@
 <message column="7" line="903" message="Operation 'GetBatUsage' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
 <message column="6" line="935" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
 <message column="40" line="991" message="Operation '(workingGrid.IsValidGridPoint)' cannot be called from a function" messageType="error" number="3300" resource="RobotRT.result"/>
+<result/>
 </testResult>

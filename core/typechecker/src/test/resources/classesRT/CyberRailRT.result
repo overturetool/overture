@@ -37,4 +37,5 @@
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
+<result/>
 </testResult>

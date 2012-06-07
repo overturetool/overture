@@ -30,7 +30,7 @@ import org.overture.ast.patterns.assistants.PPatternAssistantTC;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.assistants.PTypeAssistantTC;
-import org.overture.ast.types.assistants.PTypeSet;
+import org.overture.ast.utils.PTypeSet;
 import org.overture.pog.obligations.FuncPostConditionObligation;
 import org.overture.pog.obligations.OperationPostConditionObligation;
 import org.overture.pog.obligations.POContextStack;

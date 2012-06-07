@@ -202,4 +202,5 @@
 <message column="1" line="2966" message="Recursive function has no measure" messageType="warning" number="5012" resource="newspeakSL.result"/>
 <message column="1" line="2975" message="Recursive function has no measure" messageType="warning" number="5012" resource="newspeakSL.result"/>
 <message column="1" line="1363" message="Definition 'eval_Program' not used" messageType="warning" number="5000" resource="newspeakSL.result"/>
+<result/>
 </testResult>

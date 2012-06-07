@@ -16,4 +16,5 @@
 <message column="1" line="739" message="Definition 'Line_Add_Condition' not used" messageType="warning" number="5000" resource="ATCSL.result"/>
 <message column="1" line="746" message="Definition 'Line_Del_Condition' not used" messageType="warning" number="5000" resource="ATCSL.result"/>
 <message column="1" line="760" message="Definition 'Is_wf_Line_DB' not used" messageType="warning" number="5000" resource="ATCSL.result"/>
+<result/>
 </testResult>

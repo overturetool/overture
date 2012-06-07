@@ -16,4 +16,5 @@
 <message column="1" line="61" message="Definition 'Delete' not used" messageType="warning" number="5000" resource="BOMSL.result"/>
 <message column="1" line="66" message="Definition 'Add' not used" messageType="warning" number="5000" resource="BOMSL.result"/>
 <message column="1" line="72" message="Definition 'Erase' not used" messageType="warning" number="5000" resource="BOMSL.result"/>
+<result/>
 </testResult>

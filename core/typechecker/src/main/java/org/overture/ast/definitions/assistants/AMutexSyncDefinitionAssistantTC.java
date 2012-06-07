@@ -25,4 +25,14 @@ public class AMutexSyncDefinitionAssistantTC {
 		return new LexNameList();
 	}
 
+	public static boolean equals(AMutexSyncDefinition def, Object other) {
+		
+		if (other instanceof AMutexSyncDefinition)
+		{
+			return def.toString().equals(other.toString());
+		}
+		
+		return false;
+	}
+
 }

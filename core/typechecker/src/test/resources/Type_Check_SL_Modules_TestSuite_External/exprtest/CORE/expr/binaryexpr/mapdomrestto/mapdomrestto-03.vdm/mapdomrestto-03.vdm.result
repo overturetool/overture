@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
 <message column="19" line="11" message="Right of '&lt;:' is not a map" messageType="error" number="3083" resource="mapdomrestto-03.vdm.result"/>
+<result/>
 </testResult>

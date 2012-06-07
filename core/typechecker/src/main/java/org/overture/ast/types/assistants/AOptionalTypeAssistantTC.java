@@ -14,12 +14,11 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typecheck.TypeCheckInfo;
 import org.overturetool.vdmj.lex.LexNameToken;
 
-public class AOptionalTypeAssistantTC {
+public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 
 	public static PType typeResolve(AOptionalType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
@@ -82,7 +81,7 @@ public class AOptionalTypeAssistantTC {
 	}
 
 
-	public static boolean equals(AOptionalType type, PType other) {
+	public static boolean equals(AOptionalType type, Object other) {
 		if (other instanceof AOptionalType)
 		{
 			AOptionalType oo = (AOptionalType)other;
@@ -118,15 +117,6 @@ public class AOptionalTypeAssistantTC {
 	
 	public static SSeqType getSeq(AOptionalType type) {
 		return PTypeAssistantTC.getSeq(type.getType());
-	}
-
-
-	public static boolean isNumeric(AOptionalType type) {
-		return PTypeAssistantTC.isNumeric(type.getType());
-	}
-	
-	public static SNumericBasicType getNumeric(AOptionalType type) {
-		return PTypeAssistantTC.getNumeric(type.getType());
 	}
 
 

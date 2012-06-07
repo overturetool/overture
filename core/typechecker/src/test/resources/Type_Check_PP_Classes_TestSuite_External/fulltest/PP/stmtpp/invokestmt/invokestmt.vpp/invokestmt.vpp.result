@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="">
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
 <message column="22" line="5" message="Definition 'c' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
 <message column="29" line="5" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
 <message column="17" line="19" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="invokestmt.vpp.result"/>
@@ -29,4 +29,5 @@
 <message column="5" line="75" message="Operation InvokeStmt2(bool) is not in scope" messageType="error" number="3213" resource="invokestmt.vpp.result"/>
 <message column="5" line="91" message="Name 'InvokeStmtTest`d' is not in scope" messageType="error" number="3182" resource="invokestmt.vpp.result"/>
 <message column="5" line="91" message="Member InvokeStmt9() is not in scope" messageType="error" number="3209" resource="invokestmt.vpp.result"/>
+<result/>
 </testResult>

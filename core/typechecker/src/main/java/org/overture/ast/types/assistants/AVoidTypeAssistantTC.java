@@ -1,11 +1,10 @@
 package org.overture.ast.types.assistants;
 
 import org.overture.ast.types.AVoidType;
-import org.overture.ast.types.PType;
 
 public class AVoidTypeAssistantTC {
 
-	public static boolean equals(AVoidType type, PType other) {
+	public static boolean equals(AVoidType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
 		return (other instanceof AVoidType);
