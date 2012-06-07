@@ -45,21 +45,36 @@ public class GenerateTree extends AstCreatorBaseMojo
 			}
 		}
 
-		if (folderToDeletePreGenerate != null)
+		if (deletePackageOnGenerate != null)
 		{
-			getLog().info("Deleteting folder: " + folderToDeletePreGenerate);
-			deleteDir(new File(getProjectJavaSrcDirectory(), folderToDeletePreGenerate.replace('/', File.separatorChar)));
+
+			for (String relatevePath : deletePackageOnGenerate)
+			{
+				relatevePath = relatevePath.replace('.', File.separatorChar);
+				getLog().info("Deleteting folder: " + relatevePath);
+				File f = new File(getGeneratedFolder(), relatevePath.replace('/', File.separatorChar));
+				if (f.exists())
+				{
+					deleteDir(f);
+				} else
+				{
+					getLog().warn("Folder not found and delete skipped: "
+							+ relatevePath);
+				}
+			}
+
 		}
 
 		if (treeName.exists())
 		{
-			File generated = getProjectJavaSrcDirectory();
+			File generated = getGeneratedFolder();
+
 			getLog().info("Generator starting with input: " + treeName);
 			Environment env1 = null;
 			if (extendedast == null)
 			{
 				generateSingleAst(treeName, toStringAstFile, generated, env1);
-			} else 
+			} else
 			{
 				File extendedAstFile = new File(getResourcesDir(), extendedast);
 				if (!extendedAstFile.exists())
@@ -70,18 +85,28 @@ public class GenerateTree extends AstCreatorBaseMojo
 				}
 				try
 				{
-					Main.create(treeName, extendedAstFile, generated, "Interpreter");
+					Main.create(treeName, extendedAstFile, generated, "Interpreter", generateVdm);
 				} catch (Exception e)
 				{
 					getLog().error(e);
 				}
 			}
-		}else
+		} else
 		{
-			getLog().error("Cannot find input file: "+treeName.getAbsolutePath());
-			
+			getLog().error("Cannot find input file: "
+					+ treeName.getAbsolutePath());
+
 		}
 
+	}
+
+	public File getGeneratedFolder()
+	{
+		if (useSrcOutput)
+		{
+			return getProjectJavaSrcDirectory();
+		}
+		return new File(getProjectOutputDirectory(), "generate-sources");
 	}
 
 	public void generateSingleAst(File treeName, File toStringAstFile,
@@ -89,7 +114,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 	{
 		try
 		{
-			env1 = Main.create(treeName.getAbsolutePath(), generated, true);
+			env1 = Main.create(treeName.getAbsolutePath(), generated, true, generateVdm);
 			setCrc(treeName);
 			setCrc(toStringAstFile);
 		} catch (Exception e)

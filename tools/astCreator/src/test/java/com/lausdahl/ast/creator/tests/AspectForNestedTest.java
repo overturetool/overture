@@ -16,6 +16,6 @@ public class AspectForNestedTest extends TestCase
 		System.out.println(new File(".").getAbsolutePath());
 		File output = new File(FilePathUtil.getPlatformPath("target/testData/aspectForNested"));
 		String inputFile= TESTDATA_BASE+"aspectForNested.astv2";
-		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true);
+		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true,false);
 	}
 }

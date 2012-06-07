@@ -44,6 +44,8 @@ public class Main
 	private static File generated = null;
 
 	public final static RunType run = RunType.OvertureII;
+	
+	public final static boolean GENERATE_VDM = false;
 
 	/**
 	 * @param args
@@ -118,7 +120,7 @@ public class Main
 					System.out.println("Generator starting with input: "
 							+ input1);
 
-					Environment env1 = create(input1, generated, true);
+					Environment env1 = create(input1, generated, true,GENERATE_VDM);
 					System.out.println("\n\nGenerator completed with "
 							+ env1.getAllDefinitions().size()
 							+ " generated files.\n\n");
@@ -130,14 +132,14 @@ public class Main
 				{
 					System.out.println("Generator starting with input: "
 							+ input1);
-					Main.create(new File(input1), new File(input2), generated, "Interpreter");
+					Main.create(new File(input1), new File(input2), generated, "Interpreter",GENERATE_VDM);
 					System.out.println("Done.");
 				}
 					break;
 				case Test:
 				{
 					System.out.println("TESTING...");
-					Environment env1 = create(input1, generated, true);
+					Environment env1 = create(input1, generated, true,GENERATE_VDM);
 					System.out.println(env1);
 					// Main.create(new File(INPUT_FILENAME), new File(INPUT_FILENAME2), generated, "Interpreter");
 					// System.out.println("Generator starting with input: "
@@ -179,7 +181,7 @@ public class Main
 	}
 
 	public static Environment create(String inputFile, File outputBase,
-			boolean write) throws IOException, InstantiationException,
+			boolean write,boolean generateVdm) throws IOException, InstantiationException,
 			IllegalAccessException, AstCreatorException
 	{
 		Generator generator = new Generator();
@@ -188,18 +190,18 @@ public class Main
 
 		if (write)
 		{
-			SourceFileWriter.write(outputBase, env);
+			SourceFileWriter.write(outputBase, env,generateVdm);
 		}
 		return env;
 	}
 
 	public static void create(File ast1, File ast2, File generated,
-			String extendName) throws Exception
+			String extendName,boolean generateVdm) throws Exception
 	{
 		System.out.println("TESTING...");
 		test = false;
 		System.out.println("Generator starting with input: " + ast1);
-		Environment env1 = create(ast1.getAbsolutePath(), generated, false);
+		Environment env1 = create(ast1.getAbsolutePath(), generated, false,generateVdm);
 		
 //		System.out.println("Source");
 		
@@ -226,11 +228,11 @@ public class Main
 
 		if (test)
 		{
-			Environment envOrigin = create(ast1.getAbsolutePath(), generated, false);
+			Environment envOrigin = create(ast1.getAbsolutePath(), generated, false,generateVdm);
 			ExtensionGenerator.extendWith(env2,ExtendMode.Extend, envOrigin);
 		}
 
-		SourceFileWriter.write(generated, env2);
+		SourceFileWriter.write(generated, env2,generateVdm);
 
 		createCopyAdaptor(env1, env2, extendName, generated);
 

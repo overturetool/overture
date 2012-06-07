@@ -5,6 +5,7 @@ import java.io.IOException;
 
 public class CmdMain
 {
+	public final static boolean GENERATE_VDM = false;
 
 	/**
 	 * @param args
@@ -26,7 +27,7 @@ public class CmdMain
 			grammarFilePath= grammarFilePath.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 			String outputPath = args[1];
 			outputPath=outputPath.replace('/', File.separatorChar).replace('\\', File.separatorChar);
-			Main.create(grammarFilePath, new File(outputPath), true);
+			Main.create(grammarFilePath, new File(outputPath), true,GENERATE_VDM);
 		}
 	
 		

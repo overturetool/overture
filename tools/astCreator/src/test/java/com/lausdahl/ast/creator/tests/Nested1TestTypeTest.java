@@ -16,6 +16,6 @@ public class Nested1TestTypeTest extends TestCase
 		System.out.println(new File(".").getAbsolutePath());
 		File output = new File(FilePathUtil.getPlatformPath("target/testData/nested1"));
 		String inputFile= TESTDATA_BASE+"nested1.astv2";
-		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true);
+		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true,false);
 	}
 }

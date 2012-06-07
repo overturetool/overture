@@ -24,11 +24,15 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class SourceFileWriter
 {
-	public static void write(File outputFolder, Environment env)
+	public static void write(File outputFolder, Environment env,
+			boolean generateVdm)
 	{
-		File generatedVdm = new File(new File(new File(outputFolder, "vdm"), "generated"), "node");
+		if (generateVdm)
+		{
+			File generatedVdm = new File(new File(new File(outputFolder, "vdm"), "generated"), "node");
+			generatedVdm.mkdirs();
+		}
 		outputFolder.mkdirs();
-		generatedVdm.mkdirs();
 
 		System.out.println("Copying base classes to destination...");
 		copyBaseClasses(outputFolder, env.getDefaultPackage(), env.getAnalysisPackage(), env);

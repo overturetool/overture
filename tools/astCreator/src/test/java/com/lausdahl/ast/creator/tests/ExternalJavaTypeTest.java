@@ -18,7 +18,7 @@ public class ExternalJavaTypeTest extends TestCase
 		Main.test = true;
 		try
 		{
-			Main.create(new File(new File(".").getParentFile(), FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true);
+			Main.create(new File(new File(".").getParentFile(), FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true,false);
 		} catch (Exception e)
 		{
 			fail(e.getMessage());
