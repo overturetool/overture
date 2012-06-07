@@ -8,11 +8,13 @@ import junit.framework.TestSuite;
 
 import org.overture.pog.tests.framework.ClassPpPoTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public class ClassPpPogTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
+		LexLocation.absoluteToStringLocation = false;
 //		Properties.recordTestResults = true;
 		String name = "POG Classes PP TestSuite";
 		String root = "src\\test\\resources\\classesPP";

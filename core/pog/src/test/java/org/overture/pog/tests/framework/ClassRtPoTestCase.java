@@ -2,8 +2,8 @@ package org.overture.pog.tests.framework;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-import org.overture.pog.obligations.ProofObligationList;
 import org.overture.pog.util.PogUtil;
 import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
@@ -12,7 +12,7 @@ import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.syntax.ParserException;
 
-public class ClassRtPoTestCase extends PogTestCase
+public class ClassRtPoTestCase extends PogToStringTestCase
 {
 
 	public ClassRtPoTestCase()
@@ -36,7 +36,7 @@ public class ClassRtPoTestCase extends PogTestCase
 
 	public void test() throws ParserException, LexException, IOException
 	{
-		Result<ProofObligationList> result;
+		Result<List<String>> result;
 		try
 		{
 			result = convert(PogUtil.pogRt(file));
