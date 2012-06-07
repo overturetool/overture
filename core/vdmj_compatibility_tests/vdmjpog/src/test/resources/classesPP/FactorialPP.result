@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="proof_obligation">
 <result>
-<po column="26" line="45" message="doit(): subtype obligation in 'Multiplier' (src\test\resources\classesPP\FactorialPP) at line 45:26&#10;((i + j) div 2) &gt; 0&#10;" number="0" object="" resource="FactorialPP" toString="doit(): subtype obligation in 'Multiplier' (src\test\resources\classesPP\FactorialPP) at line 45:26&#10;((i + j) div 2) &gt; 0&#10;"/>
+<po column="26" line="45" message="doit(): subtype obligation in 'Multiplier' (FactorialPP) at line 45:26&#10;((i + j) div 2) &gt; 0&#10;" number="0" object="" resource="FactorialPP" toString="doit(): subtype obligation in 'Multiplier' (FactorialPP) at line 45:26&#10;((i + j) div 2) &gt; 0&#10;"/>
 </result>
 </testResult>
