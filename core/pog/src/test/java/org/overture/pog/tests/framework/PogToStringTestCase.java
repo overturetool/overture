@@ -23,15 +23,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
+public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 {
-	public PogTestCase()
+	public PogToStringTestCase()
 	{
 		super();
 
 	}
 
-	public PogTestCase(File file)
+	public PogToStringTestCase(File file)
 	{
 		super(file);
 	}
@@ -48,6 +48,11 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 		return new File(filename + ".result");
 	}
 
+	public void encondeResult(List<String> result, Document doc,
+			Element resultElement) {
+		// TODO Auto-generated method stub
+		
+	}
 	public void encondeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
@@ -72,9 +77,9 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 
 	}
 
-	public ProofObligationList decodeResult(Node node)
+	public List<String> decodeResult(Node node)
 	{
-		ProofObligationList list = new ProofObligationList();
+		List<String> list = new Vector<String>();
 
 		for (int i = 0; i < node.getChildNodes().getLength(); i++)
 		{
@@ -82,11 +87,11 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 			if (cn.getNodeType() == Node.ELEMENT_NODE
 					&& cn.getNodeName().equals("po"))
 			{
-				String nodeType = cn.getAttributes().getNamedItem("object").getNodeValue();
+				String nodeType = cn.getAttributes().getNamedItem("toString").getNodeValue();
 				if(nodeType!=null && !nodeType.isEmpty())
 				try
 				{
-					list.add((ProofObligation) fromString(nodeType));
+					list.add(nodeType);
 				} catch (Exception e)
 				{
 					fail("Not able to decode stored result");
@@ -97,15 +102,27 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 	}
 
 	@Override
-	protected boolean assertEqualResults(ProofObligationList expected,
-			ProofObligationList actual)
+	protected boolean assertEqualResults(List<String> expected,
+			List<String> actual)
 	{
-		// FIXME: check is not sufficient
-		if(expected == null)
-		{
-			assert false : "No result file";
+		
+		boolean errorFound = true;
+		for (String string : actual) {
+			if(!expected.contains(string))
+			{
+				System.out.println("PO found but not expected: " + string);
+				errorFound = false;
+			}
 		}
-		return expected.size() == actual.size();
+		
+		for (String string : expected) {
+			if(!actual.contains(string))
+			{
+				System.out.println("PO expected but not found: " + string);
+				errorFound = false;
+			}
+		}
+		return errorFound;
 	}
 
 	/**
@@ -135,15 +152,24 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 	
 	
 	@SuppressWarnings("unchecked")
-	protected static Result<ProofObligationList> convert(@SuppressWarnings("rawtypes") PogResult result)
+	protected static Result<List<String>> convert(@SuppressWarnings("rawtypes") PogResult result)
 	{
 		if(result.result==null)
 		{
-			return new Result<ProofObligationList>(result.result, convert(result.typeCheckResult.warnings), convert(result.typeCheckResult.errors));
+			return new Result<List<String>>(convertToStringList(result), convert(result.typeCheckResult.warnings), convert(result.typeCheckResult.errors));
 		}
-		return new Result<ProofObligationList>(result.result, convert(result.warnings), convert(result.errors));
+		return new Result<List<String>>(convertToStringList(result), convert(result.warnings), convert(result.errors));
 	}
 	
+	private static List<String> convertToStringList(@SuppressWarnings("rawtypes") PogResult result) {
+		List<String> list = new Vector<String>();
+		for (ProofObligation po : result.result) {
+			list.add(po.toString());
+		}
+		
+		return list;
+	}
+
 	public static List<IMessage> convert(List<? extends VDMMessage> messages)
 	{
 		List<IMessage> testMessages = new Vector<IMessage>();
