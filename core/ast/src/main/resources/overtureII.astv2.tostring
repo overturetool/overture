@@ -117,7 +117,7 @@ import org.overturetool.util.ToStringUtil;
 %type->undefined = "(undefined)"
 %type->union = ""+$($[types]$.size() == 1?$ [types]$.iterator().next().toString() : Utils.setToString($[types]$, " | "))$
 %type->unknown = "?"
-%type->unresolved = "(unresolved " + [name] + ")"
+%type->unresolved = "(unresolved " + $$[name]$.getExplicit(true)$ + ")"
 %type->voidReturn = "(return)"
 %type->void = "()"       
 
