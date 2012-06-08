@@ -106,6 +106,11 @@ public class GenerateTree extends AstCreatorBaseMojo
 	{
 		return generateVdm!=null && generateVdm;
 	}
+	
+	public boolean generateVdm()
+	{
+		return generateVdm!=null && generateVdm;
+	}
 
 	public File getGeneratedFolder()
 	{
