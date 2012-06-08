@@ -141,20 +141,27 @@
   </build>
 
   <distributionManagement> 
-    <repository> 
-      <id>sourceforge.net</id> 
-      <name>Overture Repo af SF.Net</name> 
-      <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url> 
-    </repository> 
-    <snapshotRepository>
-      <id>sourceforge.net</id> 
-      <name>Overture Snapshot Repo af SF.Net</name> 
-      <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url> 
-    </snapshotRepository> 
-    <site> 
-      <id>sourceforge.net</id>
-      <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url>
-    </site> 
+    <repository>
+      <id>build.overture.org</id>
+      <name>Overture Repo af SF.Net</name>
+      <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-m2repo</url>
+    </repository>
+    <downloadUrl>http://build.overturetool.org/builds/overture-m2repo/</downloadUrl>
+    <!-- <repository>  -->
+    <!--   <id>sourceforge.net</id>  -->
+    <!--   <name>Overture Repo af SF.Net</name>  -->
+    <!--   <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>  -->
+    <!-- </repository>  -->
+    <!-- <snapshotRepository> -->
+    <!--   <id>sourceforge.net</id>  -->
+    <!--   <name>Overture Snapshot Repo af SF.Net</name>  -->
+    <!--   <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>  -->
+    <!-- </snapshotRepository>  -->
+    <!-- <site>  -->
+    <!--   <id>sourceforge.net</id> -->
+    <!--   <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url> -->
+    <!-- </site>  -->
+    <!-- <downloadUrl>http://overture.sourceforge.net/maven/repo/</downloadUrl> -->
   </distributionManagement> 
 
    <!-- <scm> -->
