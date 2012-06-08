@@ -89,7 +89,7 @@ public class VDMMessage
 		if (other instanceof VDMMessage)
 		{
 			VDMMessage omsg = (VDMMessage)other;
-			return omsg.number == number && omsg.message == message && omsg.location == location;
+			return omsg.number == number && omsg.message.equals(message) && omsg.location.equals(location);
 		}
 
 		return false;
