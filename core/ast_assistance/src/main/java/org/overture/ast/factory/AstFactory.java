@@ -552,7 +552,7 @@ public class AstFactory {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (LexNameToken var : PPatternAssistant.getAllVariableNames(p))
+		for (LexNameToken var : PPatternAssistant.getVariableNames(p))
 		{
 			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 		}

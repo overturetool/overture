@@ -48,7 +48,7 @@ public class PONotCaseContext extends POContext
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.getAllVariableNames(pattern).size() == 0)
+		if (PPatternAssistantTC.getVariableNames(pattern).size() == 0)
 		{
 			sb.append("not ");
     		sb.append(pattern);

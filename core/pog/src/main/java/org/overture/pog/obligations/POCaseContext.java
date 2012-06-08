@@ -40,14 +40,14 @@ public class POCaseContext extends POContext
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
-	}
+	} 
 
 	@Override
 	public String getContext()
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.getAllVariableNames(pattern).size() == 0)
+		if (PPatternAssistantTC.getVariableNames(pattern).size() == 0)
 		{
     		sb.append(pattern);
     		sb.append(" = ");

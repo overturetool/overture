@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="type_checker">
+<message column="1" line="3" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="12" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="3" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="12" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="3" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="12" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="3" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="12" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="3" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="12" message="Duplicate definition: op" messageType="warning" number="5007" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="6" message="Definition 'optest' not used" messageType="warning" number="5000" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<message column="1" line="12" message="Definition 'op' not used" messageType="warning" number="5000" resource="DuplicateNameFuncOp.vdmsl.result"/>
+<result/>
+</testResult>
