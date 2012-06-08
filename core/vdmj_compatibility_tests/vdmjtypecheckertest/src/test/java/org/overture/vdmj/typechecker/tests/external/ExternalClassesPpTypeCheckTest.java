@@ -9,6 +9,7 @@ import junit.framework.TestSuite;
 
 import org.overturetool.test.framework.BaseTestSuite;
 import org.overturetool.test.framework.Properties;
+import org.overturetool.vdmj.lex.LexLocation;
 
 public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 {
@@ -16,6 +17,7 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 			SecurityException, InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
+		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = true;
 		String name = "Type_Check_PP_Classes_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("pptest/tc");
