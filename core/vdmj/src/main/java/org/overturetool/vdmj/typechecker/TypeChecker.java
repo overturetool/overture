@@ -55,21 +55,33 @@ abstract public class TypeChecker
 	public static void report(int number, String problem, LexLocation location)
 	{
 		VDMError error = new VDMError(number, problem, location);
-		errors.add(error);
-		lastMessage = error;
 
-		if (errors.size() >= MAX-1)
+		if (!errors.contains(error))
 		{
-			errors.add(new VDMError(10, "Too many type checking errors", location));
-			throw new InternalException(10, "Too many type checking errors");
+			errors.add(error);
+			lastMessage = error;
+
+    		if (errors.size() >= MAX-1)
+    		{
+    			errors.add(new VDMError(10, "Too many type checking errors", location));
+    			throw new InternalException(10, "Too many type checking errors");
+    		}
+		}
+		else
+		{
+			lastMessage = null;
 		}
 	}
 
 	public static void warning(int number, String problem, LexLocation location)
 	{
 		VDMWarning warning = new VDMWarning(number, problem, location);
-		warnings.add(warning);
-		lastMessage = warning;
+
+		if (!warnings.contains(warning))
+		{
+			warnings.add(warning);
+			lastMessage = warning;
+		}
 	}
 
 	public static void detail(String tag, Object obj)

@@ -88,8 +88,8 @@ public class VDMMessage
 	{
 		if (other instanceof VDMMessage)
 		{
-			// Just compare numbers
-			return ((VDMMessage)other).number == number;
+			VDMMessage omsg = (VDMMessage)other;
+			return omsg.number == number && omsg.message == message && omsg.location == location;
 		}
 
 		return false;
