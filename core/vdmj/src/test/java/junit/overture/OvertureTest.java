@@ -330,17 +330,24 @@ abstract public class OvertureTest extends TestCase
 
 			assertTrue("Expecting error list", assertions instanceof SeqValue);
 
-			List<VDMMessage> expected = new Vector<VDMMessage>();
+			List<Long> expected = new Vector<Long>();
 
 			for (Value ex: assertions.seqValue(null))
 			{
-				int n = (int)ex.intValue(null);
-				expected.add(new VDMMessage(n));
+				long n = ex.intValue(null);
+				expected.add(n);
 			}
 
-			if (!actual.equals(expected))
+			List<Long> actNums = new Vector<Long>();
+
+			for (VDMMessage m: actual)
 			{
-				Console.out.println("Expected errors: " + listErrs(expected));
+				actNums.add((long)m.number);
+			}
+
+			if (!actNums.equals(expected))
+			{
+				Console.out.println("Expected errors: " + listErrNos(expected));
 				Console.out.println("Actual errors: " + listErrs(actual));
 				Console.out.println(Utils.listToString(actual, "\n"));
 				fail("Actual errors not as expected");
@@ -425,6 +432,22 @@ abstract public class OvertureTest extends TestCase
 		{
 			sb.append(sep);
 			sb.append(m.number);
+			sep = ", ";
+		}
+
+		sb.append("]");
+		return sb.toString();
+	}
+
+	private String listErrNos(List<Long> list)
+	{
+		StringBuilder sb = new StringBuilder("[");
+		String sep = "";
+
+		for (Long m: list)
+		{
+			sb.append(sep);
+			sb.append(m);
 			sep = ", ";
 		}
 

@@ -45,6 +45,7 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.ModuleEnvironment;
+import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.util.Delegate;
 import org.overturetool.vdmj.values.Value;
 
@@ -415,6 +416,34 @@ public class Module implements Serializable,IAstNode
 		return delegate.invokeDelegate(delegateObject, ctxt);
 	}
 
+	public void checkOver()
+	{
+		List<String> done = new Vector<String>();
+
+		DefinitionList singles = defs.singleDefinitions();
+
+		for (Definition def1: singles)
+		{
+			for (Definition def2: singles)
+			{
+				if (def1 != def2 &&
+					def1.name != null && def2.name != null &&
+					def1.name.name.equals(def2.name.name) &&
+					!done.contains(def1.name.name))
+				{
+					if ((def1.isFunction() && !def2.isFunction()) ||
+						(def1.isOperation() && !def2.isOperation()))
+					{
+						def1.report(3017, "Duplicate definitions for " + def1.name.name);
+						TypeChecker.detail2(def1.name.name, def1.location, def2.name.name, def2.location);
+						done.add(def1.name.name);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
 	public LexLocation getLocation()
 	{
 		if (name != null)
@@ -425,6 +454,7 @@ public class Module implements Serializable,IAstNode
 		return null;
 	}
 
+	@Override
 	public String getName()
 	{
 		if (name != null)

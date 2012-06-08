@@ -164,6 +164,14 @@ public class ModuleTypeChecker extends TypeChecker
 			}
 		}
 
+		for (Module m: modules)
+		{
+			if (!m.typechecked)
+			{
+				m.checkOver();
+			}
+		}
+
 		// Attempt type resolution of unchecked definitions from all modules.
 
 		Environment env =
