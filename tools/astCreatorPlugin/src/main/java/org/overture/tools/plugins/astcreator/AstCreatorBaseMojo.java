@@ -10,7 +10,7 @@ import org.apache.maven.plugin.MojoFailureException;
 /**
  * Says "Hi" to the user.
  * 
- * @phase process-resources
+ * @phase generate-sources
  * @requiresDependencyResolution compile
  */
 public abstract class AstCreatorBaseMojo extends AbstractMojo
@@ -43,6 +43,13 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 */
 	protected Boolean useSrcOutput;
 	
+	/**
+	 * Name of the directory into which the astCreatorPlugin should dump the ast files.
+	 * 
+	 * @parameter expression="${project.build.directory}/generated-sources/astCreator"
+	 */
+	protected File outputDirectory;
+
 	/**
 	 * Enables generation of vDM source code corresponding to the Java generated tree.
 	 * 
