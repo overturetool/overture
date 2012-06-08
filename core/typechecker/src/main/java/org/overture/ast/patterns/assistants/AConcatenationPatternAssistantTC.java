@@ -44,8 +44,8 @@ public class AConcatenationPatternAssistantTC extends AConcatenationPatternAssis
 
 	public static List<PDefinition> getAllDefinitions(AConcatenationPattern rp, PType ptype,
 			NameScope scope) {
-		List<PDefinition> list = PPatternAssistantTC.getAllDefinitions(rp.getLeft(),ptype, scope);
-		list.addAll(PPatternAssistantTC.getAllDefinitions(rp.getRight(),ptype, scope));
+		List<PDefinition> list = PPatternAssistantTC.getDefinitions(rp.getLeft(),ptype, scope);
+		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),ptype, scope));
 		return list;
 		
 	}

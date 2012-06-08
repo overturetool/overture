@@ -1600,7 +1600,7 @@ public class TypeCheckerExpVisitor extends
 		for (ATypeBind tb : node.getBindList())
 		{
 			mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb));
-			paramDefinitions.addAll(PPatternAssistantTC.getAllDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
+			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(PTypeAssistantTC.typeResolve(tb.getType(), null, rootVisitor, question));
 		}

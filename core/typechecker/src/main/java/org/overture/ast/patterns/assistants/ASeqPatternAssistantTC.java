@@ -69,7 +69,7 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 
     		for (PPattern p: rp.getPlist())
     		{
-    			defs.addAll(PPatternAssistantTC.getAllDefinitions(p, elem, scope));
+    			defs.addAll(PPatternAssistantTC.getDefinitions(p, elem, scope));
     		}
 		}
 
