@@ -199,7 +199,7 @@ public class TypeCheckerDefinitionVisitor extends
 		if (pattern != null)
 		{
 			PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(pattern, node.getExpType(), question.scope));
+			node.setDefs(PPatternAssistantTC.getAllDefinitions(pattern, node.getExpType(), question.scope));
 			node.setDefType(node.getExpType());
 		} else if (node.getTypebind() != null)
 		{
@@ -212,7 +212,7 @@ public class TypeCheckerDefinitionVisitor extends
 			}
 
 			node.setDefType(typebind.getType()); // Effectively a cast
-			node.setDefs(PPatternAssistantTC.getDefinitions(typebind.getPattern(), node.getDefType(), question.scope));
+			node.setDefs(PPatternAssistantTC.getAllDefinitions(typebind.getPattern(), node.getDefType(), question.scope));
 		} else
 		{
 			question.qualifiers = null;
@@ -235,7 +235,7 @@ public class TypeCheckerDefinitionVisitor extends
 			}
 
 			PPatternAssistantTC.typeResolve(node.getSetbind().getPattern(), rootVisitor, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
+			node.setDefs(PPatternAssistantTC.getAllDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
 		}
 
 		PDefinitionListAssistantTC.typeCheck(node.getDefs(), rootVisitor, question);
@@ -305,7 +305,7 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
 			PPattern rp = AstFactory.newAIdentifierPattern(result);
-			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp, expectedResult, NameScope.NAMES);
+			List<PDefinition> rdefs = PPatternAssistantTC.getAllDefinitions(rp, expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post = new FlatCheckedEnvironment(rdefs, local, NameScope.NAMES);
 
 			// building the new scope for subtypechecks
@@ -674,7 +674,7 @@ public class TypeCheckerDefinitionVisitor extends
 		{
 			LexNameToken result = new LexNameToken(node.getName().module, "RESULT", node.getLocation());
 			PPattern rp = AstFactory.newAIdentifierPattern(result);
-			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp, node.getType().getResult(), NameScope.NAMESANDANYSTATE);
+			List<PDefinition> rdefs = PPatternAssistantTC.getAllDefinitions(rp, node.getType().getResult(), NameScope.NAMESANDANYSTATE);
 			FlatEnvironment post = new FlatEnvironment(rdefs, local);
 			post.setEnclosingDefinition(node.getPostdef());
 			PType b = node.getPostdef().getBody().apply(rootVisitor, new TypeCheckInfo(post, NameScope.NAMESANDANYSTATE));
@@ -761,7 +761,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		if (node.getResult() != null)
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(node.getResult().getPattern(), node.getType().getResult(), NameScope.LOCAL));
+			defs.addAll(PPatternAssistantTC.getAllDefinitions(node.getResult().getPattern(), node.getType().getResult(), NameScope.LOCAL));
 		}
 
 		// Now we build local definitions for each of the externals, so
@@ -1290,7 +1290,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		PPattern pattern = node.getPattern();
 		PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, question.scope);
+		List<PDefinition> newdefs = PPatternAssistantTC.getAllDefinitions(pattern, type, question.scope);
 
 		// The untyped definitions may have had "used" markers, so we copy
 		// those into the new typed definitions, lest we get warnings. We

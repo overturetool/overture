@@ -72,7 +72,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 			{
         		for (PPattern p: rp.getPlist())
         		{
-        			defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
+        			defs.addAll(PPatternAssistantTC.getAllDefinitions(p, set.getSetof(), scope));
         		}
 			}
 		}

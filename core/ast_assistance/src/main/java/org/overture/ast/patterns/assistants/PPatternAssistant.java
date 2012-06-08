@@ -30,12 +30,6 @@ public class PPatternAssistant {
 		return list;
 	}
 
-	/**
-	 * This method should only be called by subclasses of PPattern. For other classes
-	 * call {@link PPatternAssistant#getVariableNames(PPattern)}.
-	 * @param pattern
-	 * @return
-	 */
 	public static LexNameList getAllVariableNames(PPattern pattern) {
 		switch (pattern.kindPPattern()) {
 		case CONCATENATION:
@@ -57,7 +51,7 @@ public class PPatternAssistant {
 		}
 	}
 	
-	private static LexNameList getAllVariableNamesBaseCase(PPattern pattern)
+	public static LexNameList getAllVariableNamesBaseCase(PPattern pattern)
 	{
 		return new LexNameList();	
 	}

@@ -73,7 +73,7 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 
 		for (PPattern p: rp.getPlist())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p,ti.next(), scope));
+			defs.addAll(PPatternAssistantTC.getAllDefinitions(p,ti.next(), scope));
 		}
 
 		return defs;

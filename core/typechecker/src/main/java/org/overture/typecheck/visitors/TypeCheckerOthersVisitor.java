@@ -123,7 +123,7 @@ public class TypeCheckerOthersVisitor extends
 					"Can't typecheck a pattern without a type";
 
 			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			node.setDefs(PPatternAssistantTC.getAllDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		
 		return null;

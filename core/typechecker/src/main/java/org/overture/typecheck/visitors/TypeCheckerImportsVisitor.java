@@ -109,9 +109,8 @@ public class TypeCheckerImportsVisitor extends
 
     		for (LexNameToken pname: node.getTypeParams())
     		{
-    			LexNameToken pnameClone = pname.clone();
     			PDefinition p = 
-    					AstFactory.newALocalDefinition(pname.location, pnameClone, NameScope.NAMES, AstFactory.newAParameterType(pnameClone));
+    					AstFactory.newALocalDefinition(pname.location, pname, NameScope.NAMES, AstFactory.newAParameterType(pname));
 
     			PDefinitionAssistantTC.markUsed(p);
     			defs.add(p);

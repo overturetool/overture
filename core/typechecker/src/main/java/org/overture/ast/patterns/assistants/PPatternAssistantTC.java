@@ -39,7 +39,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	 * Get a set of definitions for the pattern's variables. Note that if the
 	 * pattern includes duplicate variable names, these are collapse into one.
 	 */
-	public static List<PDefinition> getDefinitions(PPattern rp, PType ptype,
+	public List<PDefinition> getDefinitions(PPattern rp, PType ptype,
 			NameScope scope)
 	{
 		Set<PDefinition> set = new HashSet<PDefinition>();
@@ -51,10 +51,9 @@ public class PPatternAssistantTC extends PPatternAssistant
 	
 	
 	/**
-	 * Get a complete list of all definitions, including duplicates. This method should only be used 
-	 * only by PP
+	 * Get a complete list of all definitions, including duplicates.
 	 */
-	private static List<PDefinition> getAllDefinitions(PPattern rp, PType ptype,
+	public static List<PDefinition> getAllDefinitions(PPattern rp, PType ptype,
 			NameScope scope)
 	{
 		switch (rp.kindPPattern())

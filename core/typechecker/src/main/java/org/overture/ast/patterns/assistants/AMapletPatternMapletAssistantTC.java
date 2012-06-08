@@ -41,8 +41,8 @@ public class AMapletPatternMapletAssistantTC {
 			AMapletPatternMaplet p, SMapType map, NameScope scope) {
 		
 		List<PDefinition> list = new Vector<PDefinition>();
-		list.addAll(PPatternAssistantTC.getDefinitions(p.getFrom(), map.getFrom(), scope));
-		list.addAll(PPatternAssistantTC.getDefinitions(p.getTo(), map.getTo(), scope));
+		list.addAll(PPatternAssistantTC.getAllDefinitions(p.getFrom(), map.getFrom(), scope));
+		list.addAll(PPatternAssistantTC.getAllDefinitions(p.getTo(), map.getTo(), scope));
 		return list;
 	}
 

@@ -96,7 +96,7 @@ public class ARecordPatternAssistantTC {
     		{
     			AFieldField pf = patfi.next();
     			// defs.addAll(p.getDefinitions(usingrec.findField(pf.tag).type, scope));
-    			defs.addAll(PPatternAssistantTC.getDefinitions(p,pf.getType(), scope));
+    			defs.addAll(PPatternAssistantTC.getAllDefinitions(p,pf.getType(), scope));
     		}
 		}
 

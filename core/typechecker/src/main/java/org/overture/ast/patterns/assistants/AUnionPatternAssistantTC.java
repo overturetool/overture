@@ -57,8 +57,8 @@ public class AUnionPatternAssistantTC {
 			TypeCheckerErrors.report(3206, "Matching expression is not a set type",rp.getLocation(),rp);
 		}
 
-		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getLeft(),type, scope));
-		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(),type, scope));
+		defs.addAll(PPatternAssistantTC.getAllDefinitions(rp.getLeft(),type, scope));
+		defs.addAll(PPatternAssistantTC.getAllDefinitions(rp.getRight(),type, scope));
 
 		return defs;
 	}
