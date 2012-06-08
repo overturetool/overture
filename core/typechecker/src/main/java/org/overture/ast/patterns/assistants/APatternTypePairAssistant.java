@@ -15,7 +15,7 @@ public class APatternTypePairAssistant {
 
 	public static List<PDefinition> getDefinitions(APatternTypePair result) {
 		
-		return PPatternAssistantTC.getAllDefinitions(result.getPattern(), result.getType(),NameScope.LOCAL);
+		return PPatternAssistantTC.getDefinitions(result.getPattern(), result.getType(),NameScope.LOCAL);
 	}
 
 	public static void typeResolve(APatternTypePair result,

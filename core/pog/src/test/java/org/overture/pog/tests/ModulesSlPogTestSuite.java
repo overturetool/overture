@@ -16,7 +16,7 @@ public class ModulesSlPogTestSuite extends BaseTestSuite
 	{
 		LexLocation.absoluteToStringLocation = false;
 		String name = "POG Modules TestSuite";
-		String root = "src\\test\\resources\\test";
+		String root = "src\\test\\resources\\modules";
 		TestSuite test =  createTestCompleteFile(name, root, ModuleSlPoTestCase.class);
 		return test;
 	}

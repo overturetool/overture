@@ -531,7 +531,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
 			
 			ACasesStm stm = (ACasesStm) node.parent();		
-			node.getDefs().addAll(PPatternAssistantTC.getAllDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
+			node.getDefs().addAll(PPatternAssistantTC.getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
 		}
 		
 		PDefinitionListAssistantTC.typeCheck(node.getDefs(), rootVisitor, question);
@@ -750,7 +750,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 		if (PTypeAssistantTC.isSet(node.getType()))
 		{
 			ASetType st = PTypeAssistantTC.getSet(node.getType());
-			List<PDefinition> defs = PPatternAssistantTC.getAllDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
+			List<PDefinition> defs = PPatternAssistantTC.getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
 
 			Environment local = new FlatCheckedEnvironment(defs, question.env, question.scope);
 			PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(local, question.scope));
@@ -1284,7 +1284,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 					"Can't typecheck a pattern without a type";
 
 			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
-			node.setDefs(PPatternAssistantTC.getAllDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		return null;
 	}

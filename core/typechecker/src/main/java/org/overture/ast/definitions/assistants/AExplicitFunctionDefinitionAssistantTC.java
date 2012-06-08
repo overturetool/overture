@@ -102,7 +102,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 
 				for (PPattern p: plist)
 				{
-					defs.addAll(PPatternAssistantTC.getAllDefinitions(p,unknown,NameScope.LOCAL));
+					defs.addAll(PPatternAssistantTC.getDefinitions(p,unknown,NameScope.LOCAL));
 
 				}
 			}
@@ -110,7 +110,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 			{
     			for (PPattern p: plist)
     			{
-    				defs.addAll(PPatternAssistantTC.getAllDefinitions(p,titer.next(),NameScope.LOCAL));					
+    				defs.addAll(PPatternAssistantTC.getDefinitions(p,titer.next(),NameScope.LOCAL));					
     			}
 			}
 			

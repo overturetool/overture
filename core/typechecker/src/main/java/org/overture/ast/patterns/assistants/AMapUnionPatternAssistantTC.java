@@ -51,8 +51,8 @@ public class AMapUnionPatternAssistantTC {
 			TypeCheckerErrors.report(3315, "Matching expression is not a map type",rp.getLocation(),rp);
 		}
 		
-		defs.addAll(PPatternAssistantTC.getAllDefinitions(rp.getLeft(), ptype, scope));
-		defs.addAll(PPatternAssistantTC.getAllDefinitions(rp.getRight(), ptype, scope));
+		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope));
+		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
 		
 		return defs;
 	}

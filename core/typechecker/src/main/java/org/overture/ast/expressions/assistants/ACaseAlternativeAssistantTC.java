@@ -33,7 +33,7 @@ public class ACaseAlternativeAssistantTC {
 			}
 
 			PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.env));
-			c.getDefs().addAll(PPatternAssistantTC.getAllDefinitions(c.getPattern(),expType, NameScope.LOCAL));
+			c.getDefs().addAll(PPatternAssistantTC.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
 		}
 
 		PDefinitionListAssistantTC.typeCheck(c.getDefs(),rootVisitor,new TypeCheckInfo(question.env, question.scope));
