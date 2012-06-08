@@ -13,8 +13,8 @@ import com.lausdahl.ast.creator.env.Environment;
 /**
  * Generate Tree
  * 
- * @goal astcreate
- * @phase process-resources
+ * @goal generate
+ * @phase generate-sources
  * @requiresDependencyResolution compile
  */
 public class GenerateTree extends AstCreatorBaseMojo
@@ -23,6 +23,9 @@ public class GenerateTree extends AstCreatorBaseMojo
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		// Let's make sure that maven knows to look in the output directory
+		project.addCompileSourceRoot(outputDirectory.getPath());
+
 		File treeName = null;
 
 		treeName = new File(getResourcesDir(), ast);
@@ -85,7 +88,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 				}
 				try
 				{
-					Main.create(treeName, extendedAstFile, generated, "Interpreter", generateVdm());
+					Main.create(treeName, extendedAstFile, generated, "Interpreter", generateVdm);
 				} catch (Exception e)
 				{
 					getLog().error(e);
@@ -97,21 +100,16 @@ public class GenerateTree extends AstCreatorBaseMojo
 					+ treeName.getAbsolutePath());
 
 		}
-
-	}
-	
-	public boolean generateVdm()
-	{
-		return generateVdm!=null && generateVdm;
 	}
 
 	public File getGeneratedFolder()
 	{
-		if (useSrcOutput!=null && useSrcOutput)
-		{
-			return getProjectJavaSrcDirectory();
-		}
-		return new File(getProjectOutputDirectory(), "generate-sources");
+		// if (useSrcOutput)
+		// {
+		// 	return getProjectJavaSrcDirectory();
+		// }
+		//return new File(getProjectOutputDirectory(), "generated-sources/astCreator".replace('/', File.separatorChar));
+		return outputDirectory;
 	}
 
 	public void generateSingleAst(File treeName, File toStringAstFile,
@@ -119,7 +117,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 	{
 		try
 		{
-			env1 = Main.create(treeName.getAbsolutePath(), generated, true, generateVdm());
+			env1 = Main.create(treeName.getAbsolutePath(), generated, true, generateVdm);
 			setCrc(treeName);
 			setCrc(toStringAstFile);
 		} catch (Exception e)
