@@ -443,7 +443,6 @@ public class Module implements Serializable,IAstNode
 		}
 	}
 
-	@Override
 	public LexLocation getLocation()
 	{
 		if (name != null)
@@ -454,7 +453,6 @@ public class Module implements Serializable,IAstNode
 		return null;
 	}
 
-	@Override
 	public String getName()
 	{
 		if (name != null)
