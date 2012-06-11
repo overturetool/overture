@@ -51,6 +51,23 @@
           <url>http://overture.sourceforge.net/maven/repo</url>
           <layout>default</layout>
         </repository>
+		
+		 <repository>
+          <id>IHA</id>
+          <name>Build server Snapshots</name>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+          <url>http://build.overturetool.org/builds/overture-m2repo</url>
+          <layout>default</layout>
+        </repository>
   </repositories>
 
   <build>
