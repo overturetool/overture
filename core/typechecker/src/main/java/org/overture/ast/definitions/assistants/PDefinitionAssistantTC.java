@@ -58,13 +58,8 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		case VALUE:
 			return AValueDefinitionAssistantTC.equals((AValueDefinition)def,other);
 		default:
-			equalsBaseCase(def, other);
-			break;
+			return equalsBaseCase(def, other);
 		}
-		
-		
-
-		return false;
 	}
 	
 	private static boolean equalsBaseCase(PDefinition def, Object other)		// Used for sets of definitions.

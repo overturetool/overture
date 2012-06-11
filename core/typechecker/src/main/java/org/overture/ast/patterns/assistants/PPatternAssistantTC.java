@@ -1,12 +1,11 @@
 package org.overture.ast.patterns.assistants;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.assistants.PDefinitionSet;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
@@ -42,7 +41,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	public static List<PDefinition> getDefinitions(PPattern rp, PType ptype,
 			NameScope scope)
 	{
-		Set<PDefinition> set = new HashSet<PDefinition>();
+		PDefinitionSet set = new PDefinitionSet();
 		set.addAll(getAllDefinitions(rp,ptype, scope));
 		List<PDefinition> result = new Vector<PDefinition>(set);
 		return result;
