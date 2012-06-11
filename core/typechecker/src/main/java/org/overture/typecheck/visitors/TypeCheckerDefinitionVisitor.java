@@ -1258,7 +1258,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(rootVisitor, question);
 		node.setExpType(expType);
-		PType type = PDefinitionAssistantTC.getType(node);//node.getType();// PDefinitionAssistant.getType(node);
+		PType type = node.getType(); // PDefinitionAssistant.getType(node);
 		if (expType instanceof AVoidType)
 		{
 			TypeCheckerErrors.report(3048, "Expression does not return a value", node.getExpression().getLocation(), node.getExpression());
