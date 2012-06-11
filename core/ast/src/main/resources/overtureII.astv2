@@ -656,7 +656,7 @@ Aspect Declaration
     ;
  
 %import
-    =   [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:modules.module
+    =   [location]:location [name]:LexNameToken [renamed]:LexNameToken (from):modules.module
     ;  
     
 %import->#value 
