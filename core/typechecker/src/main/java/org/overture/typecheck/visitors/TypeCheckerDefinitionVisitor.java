@@ -700,14 +700,14 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 		else if (!node.getIsConstructor() && !PTypeAssistantTC.isUnknown(actualResult))
 		{
-			if (PTypeAssistantTC.isType(node.getType().getResult(),AVoidType.class) && 
-					!PTypeAssistantTC.isType(actualResult,AVoidType.class))
+			if (PTypeAssistantTC.isVoid(node.getType().getResult()) && 
+					!PTypeAssistantTC.isVoid(actualResult))
     		{
 				TypeCheckerErrors.report(3312, "Void operation returns non-void value", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", actualResult, "Expected", node.getType().getResult());
     		}
-    		else if (!PTypeAssistantTC.isType(node.getType().getResult(),AVoidType.class) && 
-    				PTypeAssistantTC.isType(actualResult,AVoidType.class))
+    		else if (!PTypeAssistantTC.isVoid(node.getType().getResult()) && 
+    				PTypeAssistantTC.hasVoid(actualResult))
     		{
     			TypeCheckerErrors.report(3313, "Operation returns void value",node.getLocation(),node);
     			TypeCheckerErrors.detail2("Actual", actualResult, "Expected", node.getType().getResult());
