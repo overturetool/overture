@@ -185,7 +185,6 @@ public class ModuleTypeChecker extends TypeChecker
 			}
 			catch (TypeCheckException te)
 			{
-				System.out.println(d.toString());
 				report(3430, te.getMessage(), te.location);
 			}
 		}
