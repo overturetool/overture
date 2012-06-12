@@ -25,9 +25,10 @@ package org.overture.interpreter.commands;
 
 import java.util.List;
 
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ModuleInterpreter;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+
 
 
 /**
@@ -55,17 +56,17 @@ public class ModuleCommandReader extends CommandReader
 	protected boolean doModules(String line)
 	{
 		String def = minterpreter.getDefaultName();
-		List<Module> modules = minterpreter.getModules();
+		List<AModuleModules> modules = minterpreter.getModules();
 
-		for (Module m: modules)
+		for (AModuleModules m: modules)
 		{
-			if (m.name.name.equals(def))
+			if (m.getName().name.equals(def))
 			{
-				println(m.name.name + " (default)");
+				println(m.getName().name + " (default)");
 			}
 			else
 			{
-				println(m.name.name);
+				println(m.getName().name);
 			}
 		}
 

@@ -79,7 +79,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 			
 			for (ConjectureDefinition conj : conjectures) {
 				
-				conj.process(operationValue.name.name,operationValue.classdef.getName(),type, SystemClock.getWallTime(),ct.getId(),operationValue.getSelf().objectReference);
+				conj.process(operationValue.name.name,operationValue.classdef.getName().name,type, SystemClock.getWallTime(),ct.getId(),operationValue.getSelf().objectReference);
 			}
 		}	
 		
@@ -88,7 +88,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 	public void bindSystemVariables(ASystemClassDefinition systemDefinition) {
 	 
 		
-		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.name.name,variables);
+		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.getName().name,variables);
 		Context ctxt = systemDefinition.getStatics();
 		
 		
@@ -184,7 +184,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 		{
 			
 			for (ConjectureDefinition conj : conjectures) {
-				conj.process(op.name.name,op.classdef.getName(),MessageType.Request, SystemClock.getWallTime(),t.getId(),t.getObject().objectReference);
+				conj.process(op.name.name,op.classdef.getName().name,MessageType.Request, SystemClock.getWallTime(),t.getId(),t.getObject().objectReference);
 			}
 		}
 		

@@ -47,13 +47,15 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.*;
 import org.overture.config.Settings;
-import org.overture.interpreter.runtime.Breakpoint;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.Interpreter;
-import org.overture.interpreter.values.CPUValue;
-import org.overture.interpreter.values.Value;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.*;
+import org.overture.interpreter.util.*;
+import org.overture.interpreter.values.*;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.syntax.ParserException;
 import org.overture.util.Base64;
 
 

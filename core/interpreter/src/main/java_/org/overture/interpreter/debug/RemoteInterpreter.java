@@ -30,16 +30,17 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import org.overturetool.vdmj.debug.RemoteInterpreter.Call.CallType;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.ModuleInterpreter;
-import org.overturetool.vdmj.runtime.SourceFile;
-import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueFactory;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.interpreter.debug.RemoteInterpreter.Call.CallType;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueFactory;
+
 
 public class RemoteInterpreter
 {
@@ -159,9 +160,9 @@ public class RemoteInterpreter
 		}
 		else
 		{
-			for (Module m: ((ModuleInterpreter)interpreter).getModules())
+			for (AModuleModules m: ((ModuleInterpreter)interpreter).getModules())
 			{
-				names.add(m.name.name);
+				names.add(m.getName().name);
 			}
 		}
 
@@ -174,9 +175,9 @@ public class RemoteInterpreter
 
 		if (interpreter instanceof ClassInterpreter)
 		{
-			for (ClassDefinition def: ((ClassInterpreter)interpreter).getClasses())
+			for (SClassDefinition def: ((ClassInterpreter)interpreter).getClasses())
 			{
-				names.add(def.name.name);
+				names.add(def.getName().name);
 			}
 		}
 		else

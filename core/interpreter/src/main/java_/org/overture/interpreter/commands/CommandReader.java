@@ -38,36 +38,33 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.overturetool.vdmj.ExitStatus;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.VDMJ;
-import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexToken;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.messages.VDMErrorsException;
-import org.overturetool.vdmj.pog.ProofObligation;
-import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.runtime.Breakpoint;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.DebuggerException;
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.LatexSourceFile;
-import org.overturetool.vdmj.runtime.SourceFile;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.traces.TraceReductionType;
-import org.overturetool.vdmj.values.BooleanValue;
-import org.overturetool.vdmj.values.FunctionValue;
-import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.statements.PStm;
+import org.overture.config.Settings;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.VDMErrorsException;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.Breakpoint;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.DebuggerException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.LatexSourceFile;
+import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.util.ExitStatus;
+import org.overture.interpreter.values.FunctionValue;
+import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.Value;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ParserException;
+
 
 
 /**
@@ -1423,13 +1420,13 @@ abstract public class CommandReader
 
 		Value v = null;
 
-		if (token.is(Token.IDENTIFIER))
+		if (token.is(VDMToken.IDENTIFIER))
 		{
 			LexIdentifierToken id = (LexIdentifierToken)token;
 			LexNameToken lnt = new LexNameToken(interpreter.getDefaultName(), id);
 			v = interpreter.findGlobal(lnt);
 		}
-		else if (token.is(Token.NAME))
+		else if (token.is(VDMToken.NAME))
 		{
 			v = interpreter.findGlobal((LexNameToken)token);
 		}
@@ -1437,7 +1434,7 @@ abstract public class CommandReader
 		if (v instanceof FunctionValue)
 		{
 			FunctionValue fv = (FunctionValue)v;
-			Expression exp = fv.body;
+			PExp exp = fv.body;
 			interpreter.clearBreakpoint(exp.breakpoint.number);
 			Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 			println("Created " + bp);
@@ -1446,7 +1443,7 @@ abstract public class CommandReader
 		else if (v instanceof OperationValue)
 		{
 			OperationValue ov = (OperationValue)v;
-			Statement stmt = ov.body;
+			PStm stmt = ov.body;
 			interpreter.clearBreakpoint(stmt.breakpoint.number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
 			println("Created " + bp);
@@ -1527,13 +1524,13 @@ abstract public class CommandReader
 
 		Value v = null;
 
-		if (token.is(Token.IDENTIFIER))
+		if (token.is(VDMToken.IDENTIFIER))
 		{
 			LexIdentifierToken id = (LexIdentifierToken)token;
 			LexNameToken lnt = new LexNameToken(interpreter.getDefaultName(), id);
 			v = interpreter.findGlobal(lnt);
 		}
-		else if (token.is(Token.NAME))
+		else if (token.is(VDMToken.NAME))
 		{
 			v = interpreter.findGlobal((LexNameToken)token);
 		}
@@ -1541,7 +1538,7 @@ abstract public class CommandReader
 		if (v instanceof FunctionValue)
 		{
 			FunctionValue fv = (FunctionValue)v;
-			Expression exp = fv.body;
+			PExp exp = fv.body;
 			interpreter.clearBreakpoint(exp.breakpoint.number);
 			Breakpoint bp = interpreter.setTracepoint(exp, trace);
 			println("Created " + bp);
@@ -1550,7 +1547,7 @@ abstract public class CommandReader
 		else if (v instanceof OperationValue)
 		{
 			OperationValue ov = (OperationValue)v;
-			Statement stmt = ov.body;
+			PStm stmt = ov.body;
 			interpreter.clearBreakpoint(stmt.breakpoint.number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
 			println("Created " + bp);

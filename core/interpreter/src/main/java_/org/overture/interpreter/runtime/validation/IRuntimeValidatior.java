@@ -23,16 +23,16 @@
 
 package org.overture.interpreter.runtime.validation;
 
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.scheduler.AsyncThread;
 import org.overture.interpreter.values.OperationValue;
 
 
 public interface IRuntimeValidatior {
 
-	void init(AClassClassDefinition classInterpreter);
+	void init(ClassInterpreter classInterpreter);
 
 	void validate(OperationValue operationValue, MessageType type);
 

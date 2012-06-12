@@ -27,19 +27,20 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.ExitStatus;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.runtime.Breakpoint;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.DebuggerException;
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.ModuleInterpreter;
-import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.messages.InternalException;
+import org.overture.config.Settings;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.runtime.Breakpoint;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.DebuggerException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.util.ExitStatus;
+import org.overture.parser.syntax.ParserException;
+
 
 /**
  * A class to read and perform breakpoint commands from standard input.
