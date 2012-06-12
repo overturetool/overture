@@ -21,13 +21,13 @@ package org.overture.interpreter.scheduler;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.vdmj.expressions.VariableExpression;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.statements.AssignmentStatement;
-import org.overturetool.vdmj.statements.StateDesignator;
-import org.overturetool.vdmj.values.UpdatableValue;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.PStateDesignator;
+import org.overture.interpreter.values.UpdatableValue;
+import org.overture.interpreter.values.Value;
 
 /**
  * Special DESTECS contribution to allow experimental optimizations to be tried out.
@@ -48,14 +48,14 @@ public class SharedStateListner
 		 * This method checks if a change made in an assignment statement must be synchronized with the continuous time simulator.
 		 * Example is a := b, where a must be updated in the CT side as soon as the change is visible internally to VDM.
 		 */
-		boolean reuiresCheck(StateDesignator target);
+		boolean reuiresCheck(PStateDesignator target);
 	}
 
 	private static final Set<LexLocation> values = new HashSet<LexLocation>();
 	private static Boolean autoIncrementTime = true;
 	private static IdentityChecker checker = null;
 
-	public static void beforeVariableReadDuration(VariableExpression var)
+	public static void beforeVariableReadDuration(AVariableExp var)
 	{
 		if (checker != null && checker.reuiresCheck(var.name))
 		{
@@ -66,7 +66,7 @@ public class SharedStateListner
 		}
 	}
 
-	public static void beforeAssignmentSet(AssignmentStatement assignStmt,
+	public static void beforeAssignmentSet(AAssignmentStm assignStmt,
 			Value oldval, Value newval)
 	{
 		if (checker != null && checker.reuiresCheck(assignStmt.target))

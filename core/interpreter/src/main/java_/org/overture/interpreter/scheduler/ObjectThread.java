@@ -24,13 +24,19 @@
 package org.overture.interpreter.scheduler;
 
 import org.overture.ast.lex.LexLocation;
+import org.overture.config.Settings;
+import org.overture.interpreter.commands.DebuggerReader;
+import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.debug.DBGPReason;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.TransactionValue;
+import org.overture.interpreter.values.ValueList;
 
 
 /**

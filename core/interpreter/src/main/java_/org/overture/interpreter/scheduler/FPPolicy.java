@@ -26,7 +26,8 @@ package org.overture.interpreter.scheduler;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overturetool.vdmj.config.Properties;
+import org.overture.parser.config.Properties;
+
 
 public class FPPolicy extends FCFSPolicy
 {

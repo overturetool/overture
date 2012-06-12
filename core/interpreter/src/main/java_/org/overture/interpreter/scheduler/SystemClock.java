@@ -23,11 +23,11 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Settings;
+import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.parser.config.Properties;
 
 public class SystemClock
 {

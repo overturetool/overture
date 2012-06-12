@@ -23,12 +23,13 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.values.BUSValue;
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.ValueList;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.values.BUSValue;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.ValueList;
+
 
 public class MessageRequest extends MessagePacket
 {

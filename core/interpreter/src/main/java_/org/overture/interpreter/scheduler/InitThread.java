@@ -23,10 +23,11 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.util.NotSupportedError;
-import org.overturetool.vdmj.values.ObjectValue;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.util.NotSupportedError;
+
 
 /**
  * This class is used as a wrapper class for the main Java thread which initializes VDM, it should now be used in the

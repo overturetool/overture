@@ -23,12 +23,17 @@
 
 package org.overture.interpreter.scheduler;
 
+import org.overture.ast.expressions.PExp;
+import org.overture.config.Settings;
+import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ThreadState;
+import org.overture.interpreter.values.TransactionValue;
+import org.overture.interpreter.values.UndefinedValue;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
-import org.overturetool.vdmj.runtime.ThreadState;
 
 
 /**
@@ -39,12 +44,12 @@ public class MainThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
 	public final Context ctxt;
-	public final Expression expression;
+	public final PExp expression;
 
 	private Value result = new UndefinedValue();
 	private Exception exception = null;
 
-	public MainThread(Expression expr, Context ctxt)
+	public MainThread(PExp expr, Context ctxt)
 	{
 		super(CPUResource.vCPU, null, 0, false, 0);
 

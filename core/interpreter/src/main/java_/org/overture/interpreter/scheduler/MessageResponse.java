@@ -23,8 +23,8 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.values.Value;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.Value;
 
 public class MessageResponse extends MessagePacket
 {

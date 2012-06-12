@@ -35,9 +35,11 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
+import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
+import org.overture.parser.config.Properties;
 
 
 public abstract class SchedulablePoolThread implements Serializable,Runnable, ISchedulableThread

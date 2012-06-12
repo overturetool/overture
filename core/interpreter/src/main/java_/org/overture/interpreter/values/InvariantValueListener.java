@@ -25,6 +25,12 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
+import org.overture.ast.lex.LexLocation;
+import org.overture.config.Settings;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ValueException;
+
 
 public class InvariantValueListener implements ValueListener, Serializable
 {

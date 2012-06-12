@@ -26,6 +26,14 @@ package org.overture.interpreter.scheduler;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.lex.LexLocation;
+import org.overture.config.Settings;
+import org.overture.interpreter.commands.DebuggerReader;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.traces.CallSequence;
+import org.overture.interpreter.traces.Verdict;
+
 
 /**
  * A class representing the main VDM thread.

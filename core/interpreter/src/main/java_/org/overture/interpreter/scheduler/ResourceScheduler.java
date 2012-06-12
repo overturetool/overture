@@ -26,7 +26,8 @@ package org.overture.interpreter.scheduler;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import org.overturetool.vdmj.messages.Console;
+
+import org.overture.interpreter.messages.Console;
 
 public class ResourceScheduler implements Serializable
 {

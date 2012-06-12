@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
@@ -41,6 +42,7 @@ import org.overture.ast.util.Utils;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.scheduler.Lock;
 
 
 public class ObjectValue extends Value
@@ -130,9 +132,9 @@ public class ObjectValue extends Value
 		return this;
 	}
 
-	public TypeList getBaseTypes()
+	public PTypeList getBaseTypes()
 	{
-		TypeList basetypes = new TypeList();
+		PTypeList basetypes = new PTypeList();
 
 		if (superobjects.isEmpty())
 		{

@@ -27,8 +27,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.values.TransactionValue;
+import org.overture.interpreter.values.TransactionValue;
+import org.overture.parser.config.Properties;
+
 
 public class FCFSPolicy extends SchedulingPolicy
 {

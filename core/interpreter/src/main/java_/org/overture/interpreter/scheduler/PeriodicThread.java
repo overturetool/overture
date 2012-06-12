@@ -26,15 +26,21 @@ package org.overture.interpreter.scheduler;
 import java.util.Random;
 
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.debug.DBGPReason;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.TransactionValue;
+import org.overture.interpreter.values.ValueList;
+import org.overture.parser.config.Properties;
 
 
 public class PeriodicThread extends SchedulablePoolThread

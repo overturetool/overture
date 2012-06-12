@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
@@ -32,10 +33,10 @@ import org.overture.interpreter.runtime.ValueException;
 public class InvariantValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
-	public final NamedType type;
+	public final ANamedInvariantType type;
 	private FunctionValue invariant;
 
-	public InvariantValue(NamedType type, Value value, Context ctxt)
+	public InvariantValue(ANamedInvariantType type, Value value, Context ctxt)
 		throws ValueException
 	{
 		super(value);
@@ -60,13 +61,13 @@ public class InvariantValue extends ReferenceValue
 
 			if (!inv)
 			{
-				abort(4060, "Type invariant violated for " + type.typename, ctxt);
+				abort(4060, "Type invariant violated for " + type.getName(), ctxt);
 			}
 		}
 	}
 
 	// For clone only
-	private InvariantValue(NamedType type, Value value, FunctionValue invariant)
+	private InvariantValue(ANamedInvariantType type, Value value, FunctionValue invariant)
 	{
 		super(value);
 		this.type = type;

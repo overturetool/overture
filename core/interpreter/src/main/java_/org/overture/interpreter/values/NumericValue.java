@@ -26,6 +26,8 @@ package org.overture.interpreter.values;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.ARationalNumericBasicType;
+import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
@@ -98,7 +100,7 @@ public abstract class NumericValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to instanceof RealType)
+		if (to instanceof ARealNumericBasicType)
 		{
 			try
 			{
@@ -109,7 +111,7 @@ public abstract class NumericValue extends Value
 				throw new ValueException(4134, e.getMessage(), ctxt);
 			}
 		}
-		else if (to instanceof RationalType)
+		else if (to instanceof ARationalNumericBasicType)
 		{
 			try
 			{

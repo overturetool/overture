@@ -27,9 +27,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.runtime.Context;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.messages.InternalException;
+import org.overture.interpreter.runtime.Context;
+
 
 public class Lock implements Serializable
 {

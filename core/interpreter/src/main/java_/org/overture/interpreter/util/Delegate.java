@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.util;
+package org.overture.interpreter.util;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,23 +32,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.patterns.IdentifierPattern;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.ExitException;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.messages.InternalException;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.PPattern;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ExitException;
+import org.overture.interpreter.values.Value;
 
 public class Delegate implements Serializable
 {
@@ -122,20 +119,20 @@ public class Delegate implements Serializable
 			PatternList plist = null;
 			String mname = title.substring(0, title.indexOf('('));
 
-			for (Definition d: definitions)
+			for (PDefinition d: definitions)
 			{
 				if (d.name.name.equals(mname))
 				{
     	 			if (d.isOperation())
     	 			{
-    	 				if (d instanceof ExplicitOperationDefinition)
+    	 				if (d instanceof AExplicitOperationDefinition)
     	 				{
-    	 					ExplicitOperationDefinition e = (ExplicitOperationDefinition)d;
+    	 					AExplicitOperationDefinition e = (AExplicitOperationDefinition)d;
     	 					plist = e.parameterPatterns;
     	 				}
-    	 				else if (d instanceof ImplicitOperationDefinition)
+    	 				else if (d instanceof AImplicitOperationDefinition)
     	 				{
-    	 					ImplicitOperationDefinition e = (ImplicitOperationDefinition)d;
+    	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
     	 					plist = e.getParamPatternList();
     	 				}
 
@@ -143,14 +140,14 @@ public class Delegate implements Serializable
     	 			}
     	 			else if (d.isFunction())
     	 			{
-    	 				if (d instanceof ExplicitFunctionDefinition)
+    	 				if (d instanceof AExplicitOperationDefinition)
     	 				{
-    	 					ExplicitFunctionDefinition e = (ExplicitFunctionDefinition)d;
+    	 					AExplicitOperationDefinition e = (AExplicitOperationDefinition)d;
     	 					plist = e.paramPatternList.get(0);
     	 				}
-    	 				else if (d instanceof ImplicitFunctionDefinition)
+    	 				else if (d instanceof AImplicitOperationDefinition)
     	 				{
-    	 					ImplicitFunctionDefinition e = (ImplicitFunctionDefinition)d;
+    	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
     	 					plist = e.getParamPatternList().get(0);
     	 				}
 
@@ -164,11 +161,11 @@ public class Delegate implements Serializable
 
 			if (plist != null)
 			{
-				for (Pattern p: plist)
+				for (PPattern p: plist)
 				{
-					if (p instanceof IdentifierPattern)
+					if (p instanceof AIdentifierPattern)
 					{
-						IdentifierPattern ip = (IdentifierPattern)p;
+						AIdentifierPattern ip = (AIdentifierPattern)p;
 						anames.add(ip.name);
 						ptypes.add(Value.class);
 					}

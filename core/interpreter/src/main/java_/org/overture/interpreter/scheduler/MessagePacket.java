@@ -25,10 +25,11 @@ package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
 
-import org.overturetool.vdmj.values.BUSValue;
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.OperationValue;
+import org.overture.interpreter.values.BUSValue;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+
 
 public abstract class MessagePacket implements Serializable
 {

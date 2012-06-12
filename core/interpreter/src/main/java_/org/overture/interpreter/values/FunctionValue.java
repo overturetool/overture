@@ -33,14 +33,29 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.PType;
+import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.PatternMatchException;
+import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 
 
@@ -51,7 +66,7 @@ public class FunctionValue extends Value
 	public final String name;
 	public NameValuePairList typeValues;
 	public AFunctionType type;
-	public final List<PatternList> paramPatternList;
+	public final List<PatternListTC> paramPatternList;
 	public final PExp body;
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
@@ -72,10 +87,10 @@ public class FunctionValue extends Value
 	public ObjectValue self = null;
 	public boolean isStatic = false;
 	public boolean uninstantiated = false;
-	private ClassDefinition classdef = null;
+	private SClassDefinition classdef = null;
 
 	public FunctionValue(LexLocation location, String name, AFunctionType type,
-		List<PatternList> paramPatternList, PExp body,
+		List<PatternListTC> paramPatternList, PExp body,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables, boolean checkInvariants)
 	{
@@ -92,13 +107,13 @@ public class FunctionValue extends Value
 	}
 
 	public FunctionValue(LexLocation location, String name, AFunctionType type,
-		PatternList paramPatterns, PExp body, Context freeVariables)
+		PatternListTC paramPatterns, PExp body, Context freeVariables)
 	{
 		this.location = location;
 		this.name = name;
 		this.typeValues = null;
 		this.type = type;
-		this.paramPatternList = new Vector<PatternList>();
+		this.paramPatternList = new Vector<PatternListTC>();
 		this.body = body;
 		this.precondition = null;
 		this.postcondition = null;
@@ -138,10 +153,10 @@ public class FunctionValue extends Value
 		this.location = def.location;
 		this.name = def.name.name;
 		this.typeValues = null;
-		this.type = (FunctionType)def.getType();
+		this.type = (AFunctionType)def.getType();
 
-		this.paramPatternList = new Vector<PatternList>();
-		PatternList plist = new PatternList();
+		this.paramPatternList = new Vector<PatternListTC>();
+		PatternListTC plist = new PatternListTC();
 
 		for (PatternListTypePair ptp: def.parameterPatterns)
 		{
@@ -172,28 +187,28 @@ public class FunctionValue extends Value
 		this.typeValues = new NameValuePairList();
 		this.type = fdef.getType(actualTypes);
 
-		Iterator<Type> ti = actualTypes.iterator();
+		Iterator<PType> ti = actualTypes.iterator();
 
 		for (LexNameToken pname: fdef.typeParams)
 		{
-			Type ptype = ti.next();
+			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
 		}
 	}
 
-	public FunctionValue(ExplicitFunctionDefinition fdef,
-		TypeList actualTypes, FunctionValue precondition,
+	public FunctionValue(AExplicitFunctionDefinition fdef,
+		PTypeList actualTypes, FunctionValue precondition,
 		FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
 		this.type = fdef.getType(actualTypes);
 
-		Iterator<Type> ti = actualTypes.iterator();
+		Iterator<PType> ti = actualTypes.iterator();
 
 		for (LexNameToken pname: fdef.typeParams)
 		{
-			Type ptype = ti.next();
+			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
 		}
 	}
@@ -201,7 +216,7 @@ public class FunctionValue extends Value
 	// This constructor is used by IterFunctionValue and CompFunctionValue
 	// The methods which matter are overridden in those classes.
 
-	public FunctionValue(LexLocation location, FunctionType type, String name)
+	public FunctionValue(LexLocation location, AFunctionType type, String name)
 	{
 		this.location = location;
 		this.name = name;
@@ -247,7 +262,7 @@ public class FunctionValue extends Value
 		}
 	}
 
-	public void setClass(ClassDefinition classdef)
+	public void setClass(SClassDefinition classdef)
 	{
 		this.classdef = classdef;
 	}
@@ -280,10 +295,10 @@ public class FunctionValue extends Value
 		}
 
 		Iterator<Value> valIter = argValues.iterator();
-		Iterator<Type> typeIter = type.parameters.iterator();
+		Iterator<PType> typeIter = type.parameters.iterator();
 		NameValuePairMap args = new NameValuePairMap();
 
-		for (Pattern p: paramPatterns)
+		for (PPattern p: paramPatterns)
 		{
 			Value pv = valIter.next();
 
@@ -363,7 +378,7 @@ public class FunctionValue extends Value
 					{
 						measure = (FunctionValue)measure.clone();
 						measure.uninstantiated = false;
-						measure.type = new FunctionType(
+						measure.type = AstFactory.newAFunctionType(
 							measure.location, measure.type.partial, type.parameters, measure.type.result);
 						measure.typeValues = typeValues;
 					}
@@ -449,7 +464,7 @@ public class FunctionValue extends Value
 		}
 		else	// This is a curried function
 		{
-			if (type.result instanceof FunctionType)
+			if (type.result instanceof AFunctionType)
 			{
 				// If a curried function has a pre/postcondition, then the
 				// result of a partial application has a pre/post condition
@@ -476,7 +491,7 @@ public class FunctionValue extends Value
 				}
 
     			FunctionValue rv = new FunctionValue(location, "curried",
-    				(FunctionType)type.result,
+    				(AFunctionType)type.getResult(),
     				paramPatternList.subList(1, paramPatternList.size()),
     				body, newpre, newpost, evalContext, false);
 
@@ -554,9 +569,9 @@ public class FunctionValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to.isType(FunctionType.class))
+		if (to.isType(AFunctionType.class))
 		{
 			return this;
 		}
@@ -571,7 +586,7 @@ public class FunctionValue extends Value
 		// Remove first set of parameters, and set the free variables instead.
 		// And adjust the return type to be the result type (a function).
 
-		return new FunctionValue(location, name, (FunctionType)type.result,
+		return new FunctionValue(location, name, (AFunctionType)type.getResult(),
 			paramPatternList.subList(1, paramPatternList.size()),
 			body, precondition, postcondition, newFreeVariables, false);
 	}
@@ -589,7 +604,7 @@ public class FunctionValue extends Value
 
 	public String toTitle()
 	{
-		PatternList paramPatterns = paramPatternList.get(0);
+		PatternListTC paramPatterns = paramPatternList.get(0);
 		return name + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }
