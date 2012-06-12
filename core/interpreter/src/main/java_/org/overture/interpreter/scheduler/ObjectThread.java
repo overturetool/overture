@@ -93,7 +93,7 @@ public class ObjectThread extends SchedulablePoolThread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-			operation.eval(ctxt.location, new ValueList(), ctxt);
+			operation.eval(ctxt.location, new ValueList(), ctxt);//FIXME: use visitor here
 		}
 		catch (ValueException e)
 		{
@@ -134,7 +134,7 @@ public class ObjectThread extends SchedulablePoolThread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-			operation.eval(ctxt.location, new ValueList(), ctxt);
+			operation.eval(ctxt.location, new ValueList(), ctxt);//FIXME: use visitor here
 
 			reader.complete(DBGPReason.OK, null);
 		}

@@ -70,7 +70,7 @@ public class Stoppoint extends Breakpoint
 				RootContext rootContext = ctxt.threadState.nextctxt;
 				LexLocation stepline = ctxt.threadState.stepline;
 				ctxt.threadState.init();
-				shouldBreak = parsed.eval(ctxt).boolValue(ctxt);
+				shouldBreak = parsed.eval(ctxt).boolValue(ctxt);//FIXME: use visitor here
 				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
 			}
 
