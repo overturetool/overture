@@ -30,8 +30,6 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
-import org.overturetool.vdmj.scheduler.SystemClock;
-import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;

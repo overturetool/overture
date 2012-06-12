@@ -23,7 +23,6 @@
 
 package org.overturetool.vdmj.expressions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.overturetool.vdmj.Settings;
@@ -113,7 +112,7 @@ public class NotYetSpecifiedExpression extends Expression
 					// We can't link with the IO class directly because it's in the default
 					// package, so we reflect our way over to it.
 					
-					Class io = Class.forName("IO");
+					Class<?> io = Class.forName("IO");
 					Method m = io.getMethod("freadval", new Class[] {Value.class, Context.class});
 					return (Value)m.invoke(io.newInstance(), new Object[] {fval, ctxt});
 				}

@@ -23,9 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
@@ -36,8 +34,6 @@ import org.overturetool.vdmj.runtime.RootContext;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.ObjectThread;
 import org.overturetool.vdmj.scheduler.PeriodicThread;
-import org.overturetool.vdmj.scheduler.SystemClock;
-import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.ClassType;
