@@ -44,5 +44,4 @@ target/
 # Java files created by ASTgen &c #
 ###################################
 /core/parser/bin
-/core/ast/src/main/java/org/overture/ast
 /core/ast/out.svg
