@@ -31,6 +31,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
@@ -39,8 +41,6 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.util.modules.ModuleList;
 
 public class VdmModel implements IVdmModel
 {

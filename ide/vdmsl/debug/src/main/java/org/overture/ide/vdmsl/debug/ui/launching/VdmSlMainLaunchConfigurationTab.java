@@ -21,6 +21,9 @@ package org.overture.ide.vdmsl.debug.ui.launching;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
@@ -29,11 +32,8 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmsl.debug.Activator;
 import org.overture.ide.vdmsl.debug.utils.VdmSlRuntimeUtil;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
-import org.overturetool.util.modules.ModuleList;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.VDMErrorsException;
+import org.overture.parser.messages.Console;
+import org.overture.parser.messages.VDMErrorsException;
 
 public class VdmSlMainLaunchConfigurationTab extends
 		AbstractVdmMainLaunchConfigurationTab

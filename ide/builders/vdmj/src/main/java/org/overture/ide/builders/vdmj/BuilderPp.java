@@ -2,15 +2,15 @@ package org.overture.ide.builders.vdmj;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.messages.InternalException;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
-import org.overture.typecheck.ClassTypeChecker;
-import org.overture.typecheck.TypeCheckException;
-import org.overture.typecheck.TypeChecker;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.InternalException;
+import org.overture.typechecker.ClassTypeChecker;
+import org.overture.typechecker.TypeCheckException;
+import org.overture.typechecker.TypeChecker;
 
 /***
  * VDM PP builder

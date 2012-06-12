@@ -7,9 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.overture.ast.lex.LexLocation;
 import org.overturetool.test.framework.BaseTestSuite;
 import org.overturetool.test.framework.Properties;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 {

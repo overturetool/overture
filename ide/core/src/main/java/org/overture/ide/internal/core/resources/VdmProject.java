@@ -48,6 +48,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.jobs.Job;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
@@ -62,8 +64,6 @@ import org.overture.ide.core.utility.LanguageManager;
 
 import org.overture.ide.internal.core.ResourceManager;
 import org.overture.ide.internal.core.ast.VdmModelManager;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.lex.Dialect;
 
 public class VdmProject implements IVdmProject
 {

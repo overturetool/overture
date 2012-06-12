@@ -25,12 +25,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public class VdmSourceUnit implements IVdmSourceUnit
 {

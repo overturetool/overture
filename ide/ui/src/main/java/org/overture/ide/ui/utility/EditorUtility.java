@@ -26,7 +26,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overture.ast.lex.LexLocation;
 
 public class EditorUtility
 {

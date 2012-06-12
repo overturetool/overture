@@ -28,10 +28,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.utility.PluginFolderInclude;
-import org.overturetool.vdmj.lex.Dialect;
 
 public class LibraryUtil
 {

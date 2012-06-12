@@ -21,7 +21,8 @@ package org.overture.ide.core.utility;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.Dialect;
+import org.overture.ast.lex.Dialect;
+
 
 public class Language implements ILanguage
 {

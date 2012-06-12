@@ -24,12 +24,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.LanguageManager;
 import org.overture.ide.ui.wizard.pages.LibraryIncludePage;
 import org.overture.ide.ui.wizard.pages.LibraryUtil;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.lex.Dialect;
 
 /*
  * Abstract wizard for creating a VDM project

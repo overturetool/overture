@@ -46,7 +46,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -61,14 +65,10 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
 import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.util.modules.ModuleList;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexTokenReader;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ClassReader;
+import org.overture.parser.syntax.ModuleReader;
 import org.overturetool.vdmj.runtime.LatexSourceFile;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
 
 @SuppressWarnings("restriction")
 public class LatexCoverageAction implements IObjectActionDelegate

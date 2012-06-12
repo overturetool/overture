@@ -26,11 +26,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.wizard.pages.LibraryIncludePage;
 import org.overture.ide.ui.wizard.pages.LibraryUtil;
-import org.overturetool.vdmj.lex.Dialect;
 
 public class VdmAddLibraryWizard extends Wizard implements IWorkbenchWizard
 {

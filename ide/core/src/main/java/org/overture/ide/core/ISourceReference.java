@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.core;
 
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overture.ast.lex.LexLocation;
+
 
 public interface ISourceReference extends IVdmElement
 {

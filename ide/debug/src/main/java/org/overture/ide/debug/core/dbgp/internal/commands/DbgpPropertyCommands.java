@@ -26,7 +26,7 @@ import org.overture.ide.debug.core.dbgp.commands.IDbgpPropertyCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlEntityParser;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
-import org.overturetool.vdmj.util.Base64;
+import org.overture.util.Base64;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

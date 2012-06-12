@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public interface IVdmSourceUnit extends IVdmElement{
 

@@ -23,18 +23,18 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.messages.InternalException;
 import org.overture.ast.node.INode;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.config.Settings;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.syntax.ClassReader;
+import org.overture.parser.config.Properties;
+import org.overture.parser.lex.BacktrackInputReader.ReaderType;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ClassReader;
 
 public class SourceParserVdmPp extends AbstractParserParticipant
 {

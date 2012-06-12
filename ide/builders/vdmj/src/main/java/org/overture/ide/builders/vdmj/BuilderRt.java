@@ -2,9 +2,9 @@ package org.overture.ide.builders.vdmj;
 
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.messages.InternalException;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.messages.InternalException;
+import org.overture.config.Settings;
 
 /***
  * VDM RT builder

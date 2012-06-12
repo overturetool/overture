@@ -28,16 +28,17 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
-import org.overturetool.vdmj.lex.BacktrackInputReader.ReaderType;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
+import org.overture.parser.lex.BacktrackInputReader.ReaderType;
+import org.overture.parser.messages.VDMError;
+import org.overture.parser.messages.VDMWarning;
+
 
 public abstract class AbstractParserParticipant implements ISourceParser
 {

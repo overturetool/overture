@@ -25,11 +25,11 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.overture.ast.node.INode;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.ast.VdmModelWorkingCopy;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.util.modules.ModuleList;
 
 public interface IVdmModel extends IVdmElement
 {

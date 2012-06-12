@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.syntax.ParserException;
 import org.overture.pog.util.PogUtil;
 import org.overturetool.test.framework.results.Result;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.syntax.ParserException;
 
 public class ClassPpPoTestCase extends PogToStringTestCase
 {

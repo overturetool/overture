@@ -1,7 +1,7 @@
 package org.overture.typechecker.tests.framework;
 
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
+import org.overture.parser.messages.VDMError;
+import org.overture.parser.messages.VDMWarning;
 
 public class TCStruct {
 

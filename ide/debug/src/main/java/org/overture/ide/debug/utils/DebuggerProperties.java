@@ -4,7 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overturetool.vdmj.config.Properties;
+import org.overture.parser.config.Properties;
+
 
 public class DebuggerProperties
 {

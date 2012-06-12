@@ -20,7 +20,8 @@ package org.overture.ide.core.utility;
 
 import java.util.List;
 
-import org.overturetool.vdmj.lex.LexLocation;
+import org.overture.ast.lex.LexLocation;
+
 
 public class SourceLocationConverter
 {

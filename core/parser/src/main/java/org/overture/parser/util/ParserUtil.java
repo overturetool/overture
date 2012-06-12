@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
+import org.overture.config.Settings;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.VDMError;
+import org.overture.parser.messages.VDMWarning;
+import org.overture.parser.syntax.ClassReader;
+import org.overture.parser.syntax.ModuleReader;
 
 public class ParserUtil
 {

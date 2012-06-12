@@ -3,14 +3,14 @@ package org.overture.parser.tests;
 import java.io.File;
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.config.Settings;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ModuleReader;
+import org.overture.parser.syntax.ParserException;
 import org.overture.parser.tests.framework.BaseParserTestCase;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
-import org.overturetool.vdmj.syntax.ParserException;
 
 public class SpecificatopnSlTestCase extends BaseParserTestCase<ModuleReader,List<AModuleModules>>
 {

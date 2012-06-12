@@ -2,9 +2,9 @@ package org.overture.typechecker.tests.framework;
 
 import java.util.Vector;
 
+import org.overture.parser.messages.VDMError;
+import org.overture.parser.messages.VDMWarning;
 import org.overture.typechecker.tests.framework.TCStruct.Type;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
 
 @SuppressWarnings("serial")
 public class TCStructList extends Vector<TCStruct> {

@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.ICoreConstants;
-import org.overturetool.vdmj.lex.Dialect;
+import org.overture.ast.lex.Dialect;
 
 public class LanguageManager
 {

@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.typecheck.TypeChecker;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.messages.VDMError;
+import org.overture.parser.messages.VDMWarning;
+import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
 import org.overturetool.test.framework.results.Result;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ParserException;
 
 public class ModuleTestCase extends TypeCheckTestCase
 {

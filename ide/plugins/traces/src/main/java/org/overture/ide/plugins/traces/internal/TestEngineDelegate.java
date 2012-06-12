@@ -16,7 +16,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.ClasspathUtils;
 import org.overture.ide.plugins.traces.ITracesConstants;
-import org.overturetool.vdmj.util.Base64;
+import org.overture.util.Base64;
 
 public class TestEngineDelegate
 {

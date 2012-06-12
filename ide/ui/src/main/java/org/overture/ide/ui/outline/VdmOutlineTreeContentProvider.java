@@ -29,7 +29,6 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PDefinitionListAssistantTC;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
@@ -38,6 +37,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.internal.viewsupport.ImportsContainer;
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 {

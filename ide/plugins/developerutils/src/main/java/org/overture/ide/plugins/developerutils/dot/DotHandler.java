@@ -16,6 +16,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.preview.Main;
 import org.overture.ide.core.resources.IVdmProject;
 
 public class DotHandler extends AbstractHandler implements IHandler
@@ -47,7 +48,7 @@ public class DotHandler extends AbstractHandler implements IHandler
 					name += ".svg";
 					File generated = p.getModelBuildPath().getOutput().getLocation().toFile();
 					generated.mkdirs();
-					org.overture.internal.ast.preview.Main.makeImage(node, "svg", new File(generated, name));
+					Main.makeImage(node, "svg", new File(generated, name));
 				}
 
 			}

@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overturetool.vdmj.config.Properties; 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.parser.config.Properties;
 
 public class LatexSourceFile extends SourceFile
 {

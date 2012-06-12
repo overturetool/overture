@@ -49,19 +49,19 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
-import org.overturetool.util.definitions.ClassList;
-import org.overturetool.util.modules.ModuleList;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
+import org.overture.parser.config.Properties;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ClassReader;
+import org.overture.parser.syntax.ModuleReader;
 
 @SuppressWarnings("restriction")
 public abstract class CoverageEditor

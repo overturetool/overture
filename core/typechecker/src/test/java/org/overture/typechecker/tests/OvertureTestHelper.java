@@ -6,14 +6,14 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.typecheck.util.TypeCheckerUtil;
-import org.overture.typecheck.util.TypeCheckerUtil.TypeCheckResult;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.messages.VDMMessage;
+import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Message;
 import org.overturetool.test.framework.results.Result;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.messages.VDMMessage;
-import org.overturetool.vdmj.syntax.ParserException;
 
 public class OvertureTestHelper
 {

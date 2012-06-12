@@ -10,12 +10,12 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ide.core.IVdmElement;
-import org.overturetool.vdmj.lex.LexLocation;
 
 /**
  * Class used by an editor to search the editor text for source code node locations. Used to find nodes in the source

@@ -7,15 +7,13 @@ import java.util.Vector;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.pog.obligations.POContextStack;
-import org.overture.pog.obligations.ProofObligationList;
-import org.overture.pog.visitors.PogVisitor;
-import org.overture.typecheck.util.TypeCheckerUtil;
-import org.overture.typecheck.util.TypeCheckerUtil.TypeCheckResult;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.messages.VDMError;
-import org.overturetool.vdmj.messages.VDMWarning;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overture.parser.messages.VDMError;
+import org.overture.parser.messages.VDMWarning;
+import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.visitor.PogVisitor;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class PogUtil
 {

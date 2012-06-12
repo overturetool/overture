@@ -13,8 +13,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.EStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -33,8 +32,9 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.PTypeAssistantTC;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class Vdm2UmlUtil {
 	

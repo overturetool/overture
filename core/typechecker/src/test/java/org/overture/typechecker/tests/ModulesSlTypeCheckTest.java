@@ -6,9 +6,9 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.overture.ast.lex.LexLocation;
 import org.overture.typechecker.tests.framework.ModuleTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public class ModulesSlTypeCheckTest extends BaseTestSuite
 {

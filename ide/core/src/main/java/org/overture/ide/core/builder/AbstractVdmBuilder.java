@@ -23,12 +23,12 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IStatus;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
 
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.FileUtility;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public abstract class AbstractVdmBuilder
 {

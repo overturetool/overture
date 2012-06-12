@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.List;
 
 import org.overture.ast.expressions.PExp;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ExpressionReader;
+import org.overture.parser.syntax.ParserException;
 import org.overture.parser.tests.framework.BaseParserTestCase;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.ParserException;
 
 public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader,List<PExp>>
 {

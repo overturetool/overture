@@ -26,6 +26,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.resources.IVdmProject;
 
 import org.overture.ide.debug.core.IDebugConstants;
@@ -35,7 +36,6 @@ import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceInfo;
 import org.overture.ide.vdmpp.debug.IVdmPpDebugConstants;
 import org.overture.ide.vdmrt.debug.IVdmRtDebugConstants;
 import org.overture.ide.vdmsl.debug.IVdmSlDebugConstants;
-import org.overturetool.vdmj.lex.Dialect;
 
 public class TraceDebugLauncher
 {

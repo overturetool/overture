@@ -19,11 +19,6 @@
 			<version>2.2.0</version>
 		</dependency>
 	<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast_assistance</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-	<dependency>
 		<groupId>org.overturetool.core</groupId>
 		<artifactId>testframework</artifactId>
 		<version>2.2.0</version>

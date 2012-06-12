@@ -53,7 +53,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overturetool.vdmj.util.Base64;
+import org.overture.util.Base64;
 
 /**
  * @see http://www.eclipse.org/articles/Article-Debugger/how-to.html

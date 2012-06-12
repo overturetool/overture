@@ -1,21 +1,21 @@
 package org.overture.ide.vdmsl.debug.utils;
 
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.typecheck.Environment;
-import org.overture.typecheck.ModuleEnvironment;
-import org.overture.typecheck.TypeCheckInfo;
-import org.overture.typecheck.TypeChecker;
-import org.overture.typecheck.visitors.TypeCheckVisitor;
-import org.overturetool.util.modules.ModuleList;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.VDMErrorsException;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.typechecker.NameScope;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.Console;
+import org.overture.parser.messages.VDMErrorsException;
+import org.overture.parser.syntax.ExpressionReader;
+import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.ModuleEnvironment;
+import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class VdmSlRuntimeUtil
 {

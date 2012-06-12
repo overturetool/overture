@@ -60,8 +60,10 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.util.ClonableFile;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
@@ -71,13 +73,11 @@ import org.overture.ide.ui.outline.DisplayNameCreator;
 import org.overture.ide.ui.outline.ExecutableFilter;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overturetool.util.ClonableFile;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.Console;
+import org.overture.parser.syntax.ExpressionReader;
+import org.overture.parser.syntax.ParserException;
 
 /**
  * Main launch configuration tab for overture scripts

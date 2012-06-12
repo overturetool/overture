@@ -2,11 +2,11 @@ package org.overture.typechecker.tests.external;
 
 import java.io.File;
 
-import org.overture.typecheck.TypeChecker;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
 
 public class NewClassRtTestCase extends NewExternalTypeCheckTestCase
 {

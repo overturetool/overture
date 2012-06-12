@@ -25,7 +25,7 @@ import org.overture.ide.debug.core.dbgp.DbgpRequest;
 import org.overture.ide.debug.core.dbgp.IDbgpCommunicator;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpOvertureCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
-import org.overturetool.vdmj.util.Base64;
+import org.overture.util.Base64;
 
 public class DbgpOvertureCommands extends DbgpBaseCommands implements
 		IDbgpOvertureCommands {

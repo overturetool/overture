@@ -2,14 +2,14 @@ package org.overture.parser.tests;
 
 import java.io.File;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.statements.PStm;
+import org.overture.config.Settings;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ParserException;
+import org.overture.parser.syntax.StatementReader;
 import org.overture.parser.tests.framework.BaseParserTestCase;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.syntax.StatementReader;
 
 public class StatementTestCase extends BaseParserTestCase<StatementReader,PStm>
 {

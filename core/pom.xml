@@ -15,7 +15,6 @@
 	<modules>		
         <module>ast</module>
 	<!--module>astgen</module-->	
-        <module>ast_assistance</module>    
 	<module>interpreter</module>	
 	<!--<module>jmltrans</module> -->
         <module>parser</module>

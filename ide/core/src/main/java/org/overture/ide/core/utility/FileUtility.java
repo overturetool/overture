@@ -31,13 +31,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.internal.core.resources.VdmProject;
-import org.overturetool.vdmj.lex.DocStreamReader;
-import org.overturetool.vdmj.lex.DocxStreamReader;
-import org.overturetool.vdmj.lex.LexLocation;
-
-import org.overturetool.vdmj.lex.ODFStreamReader;
+import org.overture.parser.lex.DocStreamReader;
+import org.overture.parser.lex.DocxStreamReader;
+import org.overture.parser.lex.ODFStreamReader;
 
 public class FileUtility
 {

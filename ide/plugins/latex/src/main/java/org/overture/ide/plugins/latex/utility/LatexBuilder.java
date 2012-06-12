@@ -32,9 +32,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
+import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.latex.Activator;
-import org.overturetool.vdmj.lex.Dialect;
 
 @SuppressWarnings("restriction")
 public class LatexBuilder

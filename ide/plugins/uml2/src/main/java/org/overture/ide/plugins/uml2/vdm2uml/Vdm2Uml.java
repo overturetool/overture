@@ -23,9 +23,8 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.AValueDefinitionAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
@@ -35,8 +34,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.assistants.PTypeAssistantTC;
-import org.overturetool.vdmj.lex.LexNameToken;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class Vdm2Uml {
 

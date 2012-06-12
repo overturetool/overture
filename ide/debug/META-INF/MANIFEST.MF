@@ -24,8 +24,8 @@ Export-Package: org.overture.ide.debug.core,
  org.overture.ide.debug.core.launching,
  org.overture.ide.debug.ui.launchconfigurations,
  org.overture.ide.debug.ui.launching,
- org.overture.typecheck,
- org.overture.typecheck.visitors
+ org.overture.typechecker,
+ org.overture.typechecker.visitor
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,

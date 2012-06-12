@@ -6,9 +6,9 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.overture.ast.lex.LexLocation;
 import org.overture.pog.tests.framework.ClassRtPoTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.vdmj.lex.LexLocation;
 
 public class ClassRtPogTestSuite extends BaseTestSuite
 {

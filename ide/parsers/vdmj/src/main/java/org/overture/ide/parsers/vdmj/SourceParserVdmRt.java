@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.overture.ide.parsers.vdmj;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Settings;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
 
 public class SourceParserVdmRt extends SourceParserVdmPp
 {

@@ -9,23 +9,25 @@ Tokens
  *  plus='+';
  *  
  * external
- *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+ *  location = 'java:org.overture.ast.lex.LexLocation';
  */
-  LexToken = 'java:node:org.overturetool.vdmj.lex.LexToken';
-  LexNameToken = 'java:node:org.overturetool.vdmj.lex.LexNameToken';
-  LexIdentifierToken = 'java:node:org.overturetool.vdmj.lex.LexIdentifierToken';
-  LexBooleanToken = 'java:node:org.overturetool.vdmj.lex.LexBooleanToken';
-  LexCharacterToken = 'java:node:org.overturetool.vdmj.lex.LexCharacterToken';
-  LexIntegerToken = 'java:node:org.overturetool.vdmj.lex.LexIntegerToken';
-  LexQuoteToken = 'java:node:org.overturetool.vdmj.lex.LexQuoteToken';
-  LexRealToken = 'java:node:org.overturetool.vdmj.lex.LexRealToken';
-  LexStringToken = 'java:node:org.overturetool.vdmj.lex.LexStringToken';
-  clonableFile ='java:org.overturetool.util.ClonableFile';
-  clonableString ='java:org.overturetool.util.ClonableString';
-  ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
-  location = 'java:org.overturetool.vdmj.lex.LexLocation';
-  nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
-  Pass = 'java:enum:org.overturetool.vdmj.typechecker.Pass'; 
+  LexToken = 'java:node:org.overture.ast.lex.LexToken';
+  LexNameToken = 'java:node:org.overture.ast.lex.LexNameToken';
+  LexIdentifierToken = 'java:node:org.overture.ast.lex.LexIdentifierToken';
+  LexBooleanToken = 'java:node:org.overture.ast.lex.LexBooleanToken';
+  LexCharacterToken = 'java:node:org.overture.ast.lex.LexCharacterToken';
+  LexIntegerToken = 'java:node:org.overture.ast.lex.LexIntegerToken';
+  LexQuoteToken = 'java:node:org.overture.ast.lex.LexQuoteToken';
+  LexRealToken = 'java:node:org.overture.ast.lex.LexRealToken';
+  LexStringToken = 'java:node:org.overture.ast.lex.LexStringToken';
+  location = 'java:org.overture.ast.lex.LexLocation';
+  
+  clonableFile ='java:org.overture.ast.util.ClonableFile';
+  clonableString ='java:org.overture.ast.util.ClonableString';
+  
+  ClassDefinitionSettings = 'java:enum:org.overture.ast.typechecker.ClassDefinitionSettings';
+  nameScope = 'java:enum:org.overture.ast.typechecker.NameScope';
+  Pass = 'java:enum:org.overture.ast.typechecker.Pass'; 
   
   //Java
   java_Boolean = 'java:java.lang.Boolean';

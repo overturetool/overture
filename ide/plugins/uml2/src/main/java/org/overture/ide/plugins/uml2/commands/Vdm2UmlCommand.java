@@ -12,12 +12,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.overture.ast.util.definitions.ClassList;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.uml2.vdm2uml.Vdm2Uml;
-import org.overture.typecheck.ClassTypeChecker;
-import org.overturetool.util.definitions.ClassList;
+import org.overture.typechecker.ClassTypeChecker;
 
 public class Vdm2UmlCommand extends AbstractHandler {
 

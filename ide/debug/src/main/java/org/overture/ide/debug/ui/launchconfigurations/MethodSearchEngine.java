@@ -30,8 +30,8 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.assistants.PAccessSpecifierAssistant;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.assistants.PatternListTC;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 
 public class MethodSearchEngine

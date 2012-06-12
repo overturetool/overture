@@ -33,7 +33,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.pog.obligations.ProofObligation;
+import org.overture.pog.obligation.ProofObligation;
 
 public class PoTableView extends ViewPart implements ISelectionListener
 {
