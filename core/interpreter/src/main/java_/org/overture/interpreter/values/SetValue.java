@@ -21,14 +21,15 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.List;
 
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.SetType;
-import org.overturetool.vdmj.types.Type;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+
 
 
 public class SetValue extends Value
@@ -143,11 +144,11 @@ public class SetValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to instanceof SetType)
+		if (to instanceof ASetType)
 		{
-			SetType setto = (SetType)to;
+			ASetType setto = (ASetType)to;
 			ValueSet ns = new ValueSet();
 
 			for (Value v: values)

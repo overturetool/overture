@@ -21,12 +21,13 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.QuoteType;
-import org.overturetool.vdmj.types.Type;
+import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+
 
 public class QuoteValue extends Value
 {
@@ -80,11 +81,11 @@ public class QuoteValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to instanceof QuoteType)
+		if (to instanceof AQuoteType)
 		{
-			QuoteType qto = (QuoteType)to;
+			AQuoteType qto = (AQuoteType)to;
 
 			if (!qto.value.equals(value))
 			{

@@ -21,32 +21,29 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.StateDefinition;
-import org.overturetool.vdmj.expressions.EqualsExpression;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Field;
-import org.overturetool.vdmj.types.RecordType;
+import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.types.AFieldField;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+
 
 public class State implements ValueListener
 {
-	public final StateDefinition definition;
+	public final AStateDefinition definition;
 	public final UpdatableValue recordValue;
 	public final Context context;
 
 	public boolean doInvariantChecks = true;
 
-	public State(StateDefinition definition)
+	public State(AStateDefinition definition)
 	{
 		this.definition = definition;
 		NameValuePairList fieldvalues = new NameValuePairList();
 
-		for (Field f: definition.fields)
+		for (AFieldField f: definition.fields)
 		{
 			fieldvalues.add(new NameValuePair(f.tagname,
 				UpdatableValue.factory(new ValueListenerList(this))));
@@ -81,7 +78,7 @@ public class State implements ValueListener
 						4144, "State init expression cannot be executed", globals);
 				}
 
-				EqualsExpression ee = (EqualsExpression)definition.initExpression;
+				AEqualsBinaryExp ee = (AEqualsBinaryExp)definition.initExpression;
 				ee.location.hit();
 				ee.left.location.hit();
 				Value v = ee.right.eval(globals);
@@ -94,7 +91,7 @@ public class State implements ValueListener
 
 				RecordValue iv = (RecordValue)v;
 
-				for (Field f: definition.fields)
+				for (AFieldField f: definition.fields)
 				{
 					Value sv = context.get(f.tagname);
 					sv.set(ee.location, iv.fieldmap.get(f.tag), globals);

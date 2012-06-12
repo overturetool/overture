@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,18 +32,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.scheduler.Lock;
-import org.overturetool.vdmj.types.ClassType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.TypeList;
-import org.overturetool.vdmj.util.Utils;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.messages.InternalException;
+import org.overture.ast.types.AClassType;
+import org.overture.ast.types.PType;
+import org.overture.ast.util.Utils;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.ValueException;
 
 
 public class ObjectValue extends Value
@@ -53,7 +50,7 @@ public class ObjectValue extends Value
 	private static int nextObjectReference = 0;
 
 	public final int objectReference;
-	public final ClassType type;
+	public final AClassType type;
 	public final NameValuePairMap members;
 	public final List<ObjectValue> superobjects;
 
@@ -75,7 +72,7 @@ public class ObjectValue extends Value
 	 */
 	public ObjectValue creator;
 
-	public ObjectValue(ClassType type,
+	public ObjectValue(AClassType type,
 		NameValuePairMap members, List<ObjectValue> superobjects, CPUValue cpu, ObjectValue creator)
 	{
 		this.objectReference = getReference();
@@ -354,7 +351,7 @@ public class ObjectValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
 		Value conv = convertToHierarchy(to);
 
@@ -367,7 +364,7 @@ public class ObjectValue extends Value
 		return super.convertValueTo(to, ctxt);
 	}
 
-	private Value convertToHierarchy(Type to)
+	private Value convertToHierarchy(PType to)
 	{
 		if (to.equals(type))
 		{

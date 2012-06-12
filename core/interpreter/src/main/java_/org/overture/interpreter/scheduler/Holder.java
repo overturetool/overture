@@ -1,64 +1,63 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
  *	This file is part of VDMJ.
- *	
+ *
  *	VDMJ is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- *	
+ *
  *	VDMJ is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU General Public License for more details.
- *	
+ *
  *	You should have received a copy of the GNU General Public License
  *	along with VDMJ.  If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
 
-package org.overture.interpreter.values;
+package org.overturetool.vdmj.scheduler;
 
-import org.overture.ast.patterns.PPattern;
-import org.overture.interpreter.runtime.Context;
-import org.overturetool.vdmj.runtime.PatternMatchException;
+import java.io.Serializable;
 
+import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
 
-public class Quantifier
+public class Holder<T> implements Serializable
 {
-	public final PPattern pattern;
-	public final ValueList values;
-	private NameValuePairList[] nvlist;
+    private static final long serialVersionUID = 1L;
+	private ControlQueue cq = new ControlQueue();
+	private T contents = null;
 
-	public Quantifier(PPattern pattern, ValueList values)
+	public synchronized void set(T object)
 	{
-		this.pattern = pattern;
-		this.values = values;
-		this.nvlist = new NameValuePairList[values.size()];
+		contents = object;
+		cq.stim();
 	}
 
-	public int size()
+	public T get(Context ctxt, LexLocation location)
 	{
-		return nvlist.length;
-	}
+		cq.join(ctxt, location);
 
-	public NameValuePairList get(int index, Context ctxt)
-		throws PatternMatchException
-	{
-		if (index >= nvlist.length)		// no values
+		while (contents == null)
 		{
-			return new NameValuePairList();
+			cq.block(ctxt, location);
 		}
 
-		if (nvlist[index] == null)
+		T result = null;
+
+		synchronized (this)
 		{
-			nvlist[index] = pattern.getNamedValues(values.get(index), ctxt);
+			result = contents;
 		}
 
-		return nvlist[index];
+		cq.leave();
+
+		return result;
 	}
 }

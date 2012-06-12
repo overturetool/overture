@@ -21,69 +21,44 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.Iterator;
 import java.util.ListIterator;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
-import org.overturetool.vdmj.definitions.StateDefinition;
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.expressions.AndExpression;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexKeywordToken;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.Token;
-import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.messages.rtlog.RTOperationMessage;
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.patterns.Pattern;
-import org.overturetool.vdmj.patterns.PatternList;
-import org.overturetool.vdmj.runtime.ClassContext;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.PatternMatchException;
-import org.overturetool.vdmj.runtime.RootContext;
-import org.overturetool.vdmj.runtime.RuntimeValidator;
-import org.overturetool.vdmj.runtime.StateContext;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.scheduler.AsyncThread;
-import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.scheduler.CPUResource;
-import org.overturetool.vdmj.scheduler.Holder;
-import org.overturetool.vdmj.scheduler.ISchedulableThread;
-import org.overturetool.vdmj.scheduler.InitThread;
-import org.overturetool.vdmj.scheduler.MessageRequest;
-import org.overturetool.vdmj.scheduler.MessageResponse;
-import org.overturetool.vdmj.scheduler.ResourceScheduler;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.types.OperationType;
-import org.overturetool.vdmj.types.PatternListTypePair;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.util.Utils;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AOperationType;
+import org.overture.config.Settings;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.ValueException;
+
 
 
 public class OperationValue extends Value
 {
 	private static final long serialVersionUID = 1L;
-	public final ExplicitOperationDefinition expldef;
-	public final ImplicitOperationDefinition impldef;
+	public final AExplicitOperationDefinition expldef;
+	public final AImplicitOperationDefinition impldef;
 	public final LexNameToken name;
-	public final OperationType type;
+	public final AOperationType type;
 	public final PatternList paramPatterns;
-	public final Statement body;
+	public final PStm body;
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
-	public final StateDefinition state;
-	public final ClassDefinition classdef;
+	public final AStateDefinition state;
+	public final AClassClassDefinition classdef;
 
 	private LexNameToken stateName = null;
 	private Context stateContext = null;
@@ -93,7 +68,7 @@ public class OperationValue extends Value
 	public boolean isStatic = false;
 	public boolean isAsync = false;
 
-	private Expression guard = null;
+	private PExp guard = null;
 
 	public int hashAct = 0; // Number of activations
 	public int hashFin = 0; // Number of finishes
@@ -102,14 +77,14 @@ public class OperationValue extends Value
 	private long priority = 0;
 	private boolean traceRT = true;
 
-	public OperationValue(ExplicitOperationDefinition def,
+	public OperationValue(AExplicitOperationDefinition def,
 		FunctionValue precondition, FunctionValue postcondition,
-		StateDefinition state)
+		AStateDefinition state)
 	{
 		this.expldef = def;
 		this.impldef = null;
 		this.name = def.name;
-		this.type = (OperationType)def.getType();
+		this.type = (AOperationType)def.getType();
 		this.paramPatterns = def.parameterPatterns;
 		this.body = def.body;
 		this.precondition = precondition;
@@ -121,7 +96,7 @@ public class OperationValue extends Value
 		traceRT =
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
-			!(classdef instanceof SystemDefinition) &&
+			!(classdef instanceof ASystemClassDefinition) &&
 			!classdef.name.name.equals("CPU") &&
 			!classdef.name.name.equals("BUS") &&
 			!name.name.equals("thread") &&
@@ -135,7 +110,7 @@ public class OperationValue extends Value
 		this.impldef = def;
 		this.expldef = null;
 		this.name = def.name;
-		this.type = (OperationType)def.getType();
+		this.type = (AOperationType)def.getType();
 		this.paramPatterns = new PatternList();
 
 		for (PatternListTypePair ptp : def.parameterPatterns)
@@ -178,7 +153,7 @@ public class OperationValue extends Value
 		return self;
 	}
 
-	public void setGuard(Expression add, boolean isMutex)
+	public void setGuard(PExp add, boolean isMutex)
 	{
 		if (guard == null)
 		{
@@ -191,7 +166,7 @@ public class OperationValue extends Value
 			LexLocation where = isMutex ? guard.location : add.location;
 
 			guard = new AndExpression(guard,
-				new LexKeywordToken(Token.AND, where), add);
+				new LexKeywordToken(VDMToken.AND, where), add);
 		}
 	}
 

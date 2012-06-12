@@ -21,12 +21,12 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.PatternMatchException;
+import org.overture.interpreter.runtime.Context;
+
 
 
 @SuppressWarnings("serial")
