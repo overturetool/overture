@@ -29,12 +29,12 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.util.Utils;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 {

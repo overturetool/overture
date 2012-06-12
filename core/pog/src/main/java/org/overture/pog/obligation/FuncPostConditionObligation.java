@@ -31,9 +31,9 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.util.Utils;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.util.Utils;
 
 public class FuncPostConditionObligation extends ProofObligation
 {

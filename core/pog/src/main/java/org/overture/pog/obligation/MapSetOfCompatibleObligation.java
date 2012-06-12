@@ -25,7 +25,7 @@ package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.util.Utils;
+import org.overture.ast.util.Utils;
 
 public class MapSetOfCompatibleObligation extends ProofObligation
 {

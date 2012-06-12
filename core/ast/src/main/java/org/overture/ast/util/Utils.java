@@ -23,6 +23,7 @@
 
 package org.overture.ast.util;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class Utils
 		return sb.toString();
 	}
 
-	public static <T> String setToString(List<T> set, String separator)
+	public static <T> String setToString(Collection<T> set, String separator)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");

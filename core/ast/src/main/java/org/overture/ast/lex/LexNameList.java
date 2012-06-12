@@ -25,7 +25,8 @@ package org.overture.ast.lex;
 
 import java.util.Vector;
 
-import org.overture.util.Utils;
+import org.overture.ast.util.Utils;
+
 
 
 @SuppressWarnings("serial")

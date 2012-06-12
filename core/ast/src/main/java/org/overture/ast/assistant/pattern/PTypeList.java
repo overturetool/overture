@@ -5,7 +5,7 @@ import java.util.Vector;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
-import org.overture.util.Utils;
+import org.overture.ast.util.Utils;
 
 @SuppressWarnings("serial")
 public class PTypeList extends Vector<PType> {

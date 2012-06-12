@@ -13,9 +13,9 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
-import org.overture.util.Utils;
 
 
 public class AFunctionTypeAssistantTC {
