@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
@@ -31,15 +31,14 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.values.ObjectValue;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.messages.InternalException;
+import org.overture.config.Settings;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.values.ObjectValue;
+
 
 public abstract class SchedulablePoolThread implements Serializable,Runnable, ISchedulableThread
 {

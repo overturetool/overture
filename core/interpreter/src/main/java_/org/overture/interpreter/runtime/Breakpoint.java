@@ -35,6 +35,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.messages.Console;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
 
 

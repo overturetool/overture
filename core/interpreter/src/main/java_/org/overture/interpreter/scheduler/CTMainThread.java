@@ -21,20 +21,11 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.traces.CallSequence;
-import org.overturetool.vdmj.traces.TraceVariableStatement;
-import org.overturetool.vdmj.traces.Verdict;
 
 /**
  * A class representing the main VDM thread.

@@ -16,7 +16,7 @@
  * 	
  * The DESTECS web-site: http://destecs.org/
  *******************************************************************************/
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import java.util.HashSet;
 import java.util.Set;

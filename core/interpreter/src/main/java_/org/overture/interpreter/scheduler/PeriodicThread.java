@@ -21,27 +21,21 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import java.util.Random;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.debug.DBGPReason;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.RootContext;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.TransactionValue;
-import org.overturetool.vdmj.values.ValueList;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Settings;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+
 
 public class PeriodicThread extends SchedulablePoolThread
 {

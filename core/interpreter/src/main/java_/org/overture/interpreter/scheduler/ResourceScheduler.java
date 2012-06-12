@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
 import java.util.LinkedList;

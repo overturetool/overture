@@ -21,46 +21,9 @@
  *
  ******************************************************************************/
 
-package org.overture.interpreter.messages;
+package org.overture.interpreter.util;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.interpreter.runtime.ContextException;
-
-
-/**
- * A VDM error message.
- */
-
-public class VDMError extends VDMMessage
+public enum ExitStatus
 {
-	public VDMError(int number, String message, LexLocation location)
-	{
-		super(number, message, location);
-	}
-
-	public VDMError(LocatedException ne)
-	{
-		super(ne.number, ne.getMessage(), ne.location);
-	}
-
-	public VDMError(ContextException ce)
-	{
-		super(ce.number, ce.getMessage(), ce.location);
-	}
-
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("Error ");
-		sb.append(super.toString());
-
-		for (String d: details)
-		{
-			sb.append("\n");
-			sb.append(d);
-		}
-
-		return sb.toString();
-	}
+	RELOAD, EXIT_OK, EXIT_ERRORS
 }

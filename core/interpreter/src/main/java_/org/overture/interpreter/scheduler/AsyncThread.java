@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;

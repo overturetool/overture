@@ -1,10 +1,11 @@
 package org.overture.interpreter.messages.rtlog;
 
-import org.overturetool.vdmj.scheduler.CPUResource;
-import org.overturetool.vdmj.scheduler.ISchedulableThread;
-import org.overturetool.vdmj.scheduler.InitThread;
-import org.overturetool.vdmj.scheduler.MainThread;
-import org.overturetool.vdmj.values.ObjectValue;
+import org.overture.interpreter.scheduler.CPUResource;
+import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.MainThread;
+import org.overture.interpreter.values.ObjectValue;
+
 
 public abstract class RTThreadMessage extends RTMessage
 {

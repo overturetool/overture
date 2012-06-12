@@ -21,19 +21,15 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.values.Value;
+import org.overture.parser.lex.LexTokenReader;
 import org.overturetool.vdmj.runtime.ThreadState;
-import org.overturetool.vdmj.values.TransactionValue;
-import org.overturetool.vdmj.values.UndefinedValue;
-import org.overturetool.vdmj.values.Value;
+
 
 /**
  * A class representing the main VDM thread.

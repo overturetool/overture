@@ -21,22 +21,17 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.debug.DBGPReason;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.ObjectContext;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.TransactionValue;
-import org.overturetool.vdmj.values.ValueList;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.debug.DBGPReason;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+
 
 /**
  * A class representing a VDM thread running in an object.

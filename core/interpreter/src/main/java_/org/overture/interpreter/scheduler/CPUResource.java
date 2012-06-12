@@ -21,16 +21,13 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.messages.rtlog.RTDeployObjectMessage;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.messages.rtlog.RTThreadCreateMessage;
-import org.overturetool.vdmj.messages.rtlog.RTThreadKillMessage;
-import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage;
-import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage.SwapType;
-import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
-import org.overturetool.vdmj.values.ObjectValue;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
+import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
+import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
+
 
 public class CPUResource extends Resource
 {

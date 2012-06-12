@@ -47,7 +47,14 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Settings;
+import org.overture.interpreter.runtime.Breakpoint;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.Value;
+import org.overture.util.Base64;
 
 
 public class DBGPReader

@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.values.BUSValue;

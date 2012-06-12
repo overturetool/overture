@@ -21,11 +21,10 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.scheduler;
+package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
 
-import org.overturetool.vdmj.scheduler.SchedulingPolicy;
 
 abstract public class SchedulingPolicy implements Serializable
 {
