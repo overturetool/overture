@@ -1,7 +1,8 @@
 package org.overture.interpreter.messages.rtlog;
 
-import org.overturetool.vdmj.scheduler.CPUResource;
-import org.overturetool.vdmj.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.CPUResource;
+import org.overture.interpreter.scheduler.ISchedulableThread;
+
 
 public class RTThreadKillMessage extends RTThreadMessage
 {

@@ -1,6 +1,7 @@
 package org.overture.interpreter.messages.rtlog;
 
-import org.overturetool.vdmj.scheduler.CPUResource;
+import org.overture.interpreter.scheduler.CPUResource;
+
 
 public class RTDeployStaticMessage extends RTArchitectureMessage
 {

@@ -21,27 +21,29 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.scheduler.AsyncThread;
-import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.scheduler.ISchedulableThread;
-import org.overturetool.vdmj.scheduler.SystemClock;
-import org.overturetool.vdmj.values.NameValuePairMap;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.OperationValue;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.scheduler.AsyncThread;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.SystemClock;
+import org.overture.interpreter.values.NameValuePairMap;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.Value;
+
 
 public class BasicRuntimeValidator implements IRuntimeValidatior {
 
@@ -60,7 +62,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 			}
 		}
 		for (ConjectureDefinition cd : conjectures) {
-			org.overturetool.vdmj.messages.Console.out.println(cd.toString());
+			Console.out.println(cd.toString());
 		}
 		
 	}
@@ -83,7 +85,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 		
 	}
 
-	public void bindSystemVariables(SystemDefinition systemDefinition) {
+	public void bindSystemVariables(ASystemClassDefinition systemDefinition) {
 	 
 		
 		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.name.name,variables);

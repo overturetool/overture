@@ -1,6 +1,7 @@
 package org.overture.interpreter.messages.rtlog;
 
-import org.overturetool.vdmj.scheduler.MessagePacket;
+import org.overture.interpreter.scheduler.MessagePacket;
+
 
 public abstract class RTBusMessage extends RTMessage
 {

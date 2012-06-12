@@ -23,7 +23,7 @@
 
 // Based on source from http://www.merriampark.com/perm.htm
 
-package org.overturetool.vdmj.traces;
+package org.overture.interpreter.traces;
 
 import java.util.Arrays;
 

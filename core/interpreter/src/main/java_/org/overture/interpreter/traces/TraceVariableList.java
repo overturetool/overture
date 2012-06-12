@@ -21,18 +21,12 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.traces;
+package org.overture.interpreter.traces;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
-import org.overturetool.vdmj.typechecker.NameScope;
-import org.overturetool.vdmj.values.Value;
+import org.overture.interpreter.runtime.Context;
+
 
 public class TraceVariableList extends Vector<TraceVariable>
 {

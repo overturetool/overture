@@ -23,8 +23,9 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.runtime.Context;
+
 
 public class BusThread extends SchedulablePoolThread
 {

@@ -21,21 +21,22 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.scheduler.AsyncThread;
-import org.overturetool.vdmj.values.OperationValue;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.scheduler.AsyncThread;
+import org.overture.interpreter.values.OperationValue;
+
 
 public interface IRuntimeValidatior {
 
-	void init(ClassInterpreter classInterpreter);
+	void init(AClassClassDefinition classInterpreter);
 
 	void validate(OperationValue operationValue, MessageType type);
 
-	void bindSystemVariables(SystemDefinition systemDefinition);
+	void bindSystemVariables(ASystemClassDefinition systemDefinition);
 
 	void validateAsync(OperationValue operationValue, AsyncThread t);
 

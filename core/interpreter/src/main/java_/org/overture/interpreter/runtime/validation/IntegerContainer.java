@@ -21,7 +21,7 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
 public class IntegerContainer implements IValidationExpression {
 

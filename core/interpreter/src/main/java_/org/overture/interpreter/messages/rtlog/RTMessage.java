@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overturetool.vdmj.scheduler.CPUResource;
-import org.overturetool.vdmj.scheduler.SystemClock;
+import org.overture.interpreter.scheduler.CPUResource;
+import org.overture.interpreter.scheduler.SystemClock;
+
 
 public abstract class RTMessage
 {

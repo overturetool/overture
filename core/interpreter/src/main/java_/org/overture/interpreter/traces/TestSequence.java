@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.traces;
+package org.overture.interpreter.traces;
 
 import java.util.HashMap;
 import java.util.List;

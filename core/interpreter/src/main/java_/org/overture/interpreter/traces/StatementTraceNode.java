@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.traces;
+package org.overture.interpreter.traces;
 
 import org.overturetool.vdmj.statements.Statement;
 

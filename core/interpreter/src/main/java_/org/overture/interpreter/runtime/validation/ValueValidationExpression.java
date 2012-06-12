@@ -21,14 +21,15 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.overturetool.vdmj.values.UpdatableValue;
-import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueListenerList;
+import org.overture.interpreter.values.UpdatableValue;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueListenerList;
+
 
 public class ValueValidationExpression implements IValidationExpression {
 

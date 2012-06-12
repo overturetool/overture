@@ -21,14 +21,15 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.scheduler.SystemClock;
-import org.overturetool.vdmj.values.Value;
+import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.scheduler.SystemClock;
+import org.overture.interpreter.values.Value;
+
 
 public abstract class ConjectureDefinition{
 

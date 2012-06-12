@@ -21,9 +21,10 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+
 
 public class OperationValidationExpression implements IValidationExpression {
 

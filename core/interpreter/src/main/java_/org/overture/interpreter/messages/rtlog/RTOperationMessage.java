@@ -1,7 +1,8 @@
 package org.overture.interpreter.messages.rtlog;
 
-import org.overturetool.vdmj.scheduler.CPUResource;
-import org.overturetool.vdmj.values.OperationValue;
+import org.overture.interpreter.scheduler.CPUResource;
+import org.overture.interpreter.values.OperationValue;
+
 
 public class RTOperationMessage extends RTMessage
 {

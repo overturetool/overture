@@ -26,13 +26,14 @@ package org.overture.interpreter.scheduler;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overturetool.vdmj.messages.rtlog.RTBusActivateMessage;
-import org.overturetool.vdmj.messages.rtlog.RTBusCompletedMessage;
-import org.overturetool.vdmj.messages.rtlog.RTBusReplyRequestMessage;
-import org.overturetool.vdmj.messages.rtlog.RTBusRequestMessage;
-import org.overturetool.vdmj.messages.rtlog.RTDeclareBUSMessage;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.scheduler.SystemClock.TimeUnit;
+import org.overture.interpreter.messages.rtlog.RTBusActivateMessage;
+import org.overture.interpreter.messages.rtlog.RTBusCompletedMessage;
+import org.overture.interpreter.messages.rtlog.RTBusReplyRequestMessage;
+import org.overture.interpreter.messages.rtlog.RTBusRequestMessage;
+import org.overture.interpreter.messages.rtlog.RTDeclareBUSMessage;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.scheduler.SystemClock.TimeUnit;
+
 
 public class BUSResource extends Resource
 {

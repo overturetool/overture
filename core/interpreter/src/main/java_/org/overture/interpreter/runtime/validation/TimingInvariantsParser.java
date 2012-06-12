@@ -21,7 +21,7 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,8 +31,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.runtime.validation.ValueValidationExpression.BinaryOps;
+import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.runtime.validation.ValueValidationExpression.BinaryOps;
+
 
 
 public class TimingInvariantsParser

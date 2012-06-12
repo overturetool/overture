@@ -27,10 +27,11 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
+import org.overture.ast.lex.LexLocation;
+import org.overture.config.Settings;
+import org.overture.interpreter.commands.DebuggerReader;
+import org.overture.interpreter.runtime.Context;
+
 
 public class BasicSchedulableThread implements Serializable
 {

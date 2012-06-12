@@ -21,9 +21,10 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
-import org.overturetool.vdmj.messages.Console;
+import org.overture.interpreter.messages.Console;
+
 
 
 public class ConjectureValue {

@@ -21,13 +21,14 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime.validation;
+package org.overture.interpreter.runtime.validation;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.ValueListener;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueListener;
+
 
 public class ValueObserver implements ValueListener {
 

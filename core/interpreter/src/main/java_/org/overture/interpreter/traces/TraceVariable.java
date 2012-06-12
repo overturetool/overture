@@ -21,19 +21,20 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.traces;
+package org.overture.interpreter.traces;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.values.Value;
+
 
 public class TraceVariable
 {
 	public final LexLocation location;
 	public final LexNameToken name;
 	public final Value value;
-	public final Type type;
+	public final PType type;
 
 	public TraceVariable(LexLocation location, LexNameToken name, Value value, Type type)
 	{
