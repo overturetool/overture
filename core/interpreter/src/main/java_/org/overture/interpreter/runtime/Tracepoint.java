@@ -64,7 +64,7 @@ public class Tracepoint extends Breakpoint
 		}
 		else
 		{
-			String s = trace + " = " + parsed.eval(ctxt) + " at [" + number + "]";
+			String s = trace + " = " + parsed.eval(ctxt) + " at [" + number + "]";//FIXME: use visitor here
 
 			if (Settings.usingDBGP)
 			{

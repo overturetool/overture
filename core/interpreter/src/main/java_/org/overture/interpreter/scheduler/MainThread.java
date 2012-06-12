@@ -83,7 +83,7 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.eval(ctxt);
+			result = expression.eval(ctxt);//FIXME: use visitor here
 		}
 		catch (ContextException e)
 		{
@@ -106,7 +106,7 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.eval(ctxt);
+			result = expression.eval(ctxt);//FIXME: use visitor here
 		}
 		catch (ContextException e)
 		{

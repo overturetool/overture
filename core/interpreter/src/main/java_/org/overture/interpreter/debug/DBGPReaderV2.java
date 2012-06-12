@@ -1361,7 +1361,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
             					if (sub instanceof HistoryExpression)
             					{
             						HistoryExpression hexp = (HistoryExpression)sub;
-            						Value v = hexp.eval(octxt);
+            						Value v = hexp.eval(octxt);//FIXME: use visitor here
             						LexNameToken name =
             							new LexNameToken(octxt.self.type.name.module,
             								hexp.toString(),hexp.location);
@@ -1384,7 +1384,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
                 				{
                 					LexNameList ops = new LexNameList(op);
                 					Expression hexp = new HistoryExpression(mdef.location, Token.ACTIVE, ops);
-            						Value v = hexp.eval(octxt);
+            						Value v = hexp.eval(octxt);//FIXME: use visitor here
             						LexNameToken name =
             							new LexNameToken(octxt.self.type.name.module,
             								hexp.toString(), mdef.location);

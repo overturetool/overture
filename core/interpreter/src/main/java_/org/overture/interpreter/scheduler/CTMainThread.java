@@ -73,11 +73,11 @@ public class CTMainThread extends MainThread
 				if (statement instanceof TraceVariableStatement)
 				{
 					// Just update the context...
-					statement.eval(ctxt);
+					statement.eval(ctxt);//FIXME: use visitor here
 				}
 				else
 				{
- 					result.add(statement.eval(ctxt));
+ 					result.add(statement.eval(ctxt));//FIXME: use visitor here
 				}
 			}
 
