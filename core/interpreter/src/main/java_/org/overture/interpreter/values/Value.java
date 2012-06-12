@@ -28,10 +28,17 @@ import java.util.Formattable;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
 
 
 /**
@@ -187,9 +194,9 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 				}
 			}
 		}
-		else if (to instanceof ParameterType)
+		else if (to instanceof AParameterType)
 		{
-			ParameterType pt = (ParameterType)to;
+			AParameterType pt = (AParameterType)to;
 
 			// Parameter types are ParameterValues of the given name in
 			// the context. They exist in the context, if the function has
@@ -209,23 +216,23 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 
 			abort(4086, "Value of type parameter is not a type", ctxt);
 		}
-		else if (to instanceof OptionalType)
+		else if (to instanceof AOptionalType)
 		{
-			OptionalType ot = (OptionalType)to;
+			AOptionalType ot = (AOptionalType)to;
 			return convertValueTo(ot.type, ctxt);
 		}
-		else if (to instanceof BracketType)
+		else if (to instanceof ABracketType)
 		{
-			BracketType bt = (BracketType)to;
+			ABracketType bt = (ABracketType)to;
 			return convertValueTo(bt.type, ctxt);
 		}
-		else if (to instanceof NamedType)
+		else if (to instanceof ANamedInvariantType)
 		{
-			NamedType ntype = (NamedType)to;
+			ANamedInvariantType ntype = (ANamedInvariantType)to;
 			Value converted = convertValueTo(ntype.type, ctxt);
 			return new InvariantValue(ntype, converted, ctxt);
 		}
-		else if (to instanceof UnknownType)
+		else if (to instanceof AUnknownType)
 		{
 			return this;	// Suppressing DTC for "?" types
 		}

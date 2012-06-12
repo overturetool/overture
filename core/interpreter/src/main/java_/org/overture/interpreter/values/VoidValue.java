@@ -21,12 +21,13 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.types.VoidType;
+import org.overture.ast.types.AVoidType;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+
 
 public class VoidValue extends Value
 {
@@ -69,9 +70,9 @@ public class VoidValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to.isType(VoidType.class))
+		if (to.isType(AVoidType.class))
 		{
 			return new VoidValue();
 		}

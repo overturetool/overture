@@ -21,10 +21,11 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.runtime.Context;
+
 
 public interface ValueListener
 {

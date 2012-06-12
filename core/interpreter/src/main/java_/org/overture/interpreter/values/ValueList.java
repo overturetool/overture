@@ -21,10 +21,11 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.Vector;
-import org.overturetool.vdmj.util.Utils;
+
+import org.overture.ast.util.Utils;
 
 /**
  * A sequential list of values.

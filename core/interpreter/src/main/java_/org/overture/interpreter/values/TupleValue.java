@@ -21,15 +21,16 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.Iterator;
 
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.types.ProductType;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.util.Utils;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.PType;
+import org.overture.ast.util.Utils;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
+
 
 
 public class TupleValue extends Value
@@ -143,11 +144,11 @@ public class TupleValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(Type to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to instanceof ProductType)
+		if (to instanceof AProductType)
 		{
-			ProductType pto = (ProductType)to;
+			AProductType pto = (AProductType)to;
 
 			if (pto.types.size() != values.size())
 			{
@@ -157,7 +158,7 @@ public class TupleValue extends Value
 			ValueList nl = new ValueList();
 			Iterator<Value> vi = values.iterator();
 
-			for (Type pt: pto.types)
+			for (PType pt: pto.types)
 			{
 				nl.add(vi.next().convertValueTo(pt, ctxt));
 			}

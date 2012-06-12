@@ -21,12 +21,13 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.runtime.Context;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.runtime.Context;
+
 
 public class ValueListenerList extends Vector<ValueListener>
 {

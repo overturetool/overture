@@ -21,15 +21,16 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.types.RecordType;
-import org.overturetool.vdmj.types.Type;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.runtime.Interpreter;
+
 
 public class ValueFactory
 {
@@ -165,10 +166,10 @@ public class ValueFactory
 	
 	public RecordValue createRecord(String recordName, Value... fields) throws ValueFactoryException
 	{
-		Type type = interpreter.findType(recordName);
-		if(type instanceof RecordType)
+		PType type = interpreter.findType(recordName);
+		if(type instanceof ARecordInvariantType)
 		{
-			RecordType rType = (RecordType) type;
+			ARecordInvariantType rType = (ARecordInvariantType) type;
 			if(fields.length!=rType.fields.size())
 			{
 				throw new ValueFactoryException("Fileds count do not match record field count");

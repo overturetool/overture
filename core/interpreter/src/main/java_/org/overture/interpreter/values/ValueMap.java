@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.values;
+package org.overture.interpreter.values;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -30,7 +30,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
-import org.overturetool.vdmj.traces.PermuteArray;
 
 /**
  * A map of value/values.
