@@ -1,7 +1,7 @@
 Before you download and try to use the code provided in this
 open-source repository, please read the development FAQ first!
 
-http://www.overturetool.org/twiki/bin/view/Main/OvertureDevelopment
+http://wiki.overturetool.org/index.php/Developer_Documentation
 
 This directory contains two subdirectories:
 
