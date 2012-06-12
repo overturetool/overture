@@ -16,9 +16,9 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
-import org.overture.util.Utils;
 
 
 public class AOperationTypeAssistantTC {

@@ -193,7 +193,7 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.ClonableFile;
 import org.overture.ast.util.ClonableString;
-import org.overture.util.Utils;
+import org.overture.ast.util.Utils;
 
 
 public class AstFactory {

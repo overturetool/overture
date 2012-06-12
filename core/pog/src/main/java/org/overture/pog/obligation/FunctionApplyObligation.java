@@ -26,7 +26,7 @@ package org.overture.pog.obligation;
 import java.util.List;
 
 import org.overture.ast.expressions.PExp;
-import org.overture.util.Utils;
+import org.overture.ast.util.Utils;
 
 public class FunctionApplyObligation extends ProofObligation
 {

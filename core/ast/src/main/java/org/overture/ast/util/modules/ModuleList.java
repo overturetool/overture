@@ -17,9 +17,9 @@ import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.util.Utils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.util.Utils;
 
 @SuppressWarnings("serial")
 public class ModuleList extends Vector<AModuleModules>

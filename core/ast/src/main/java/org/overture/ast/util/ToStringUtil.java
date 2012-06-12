@@ -31,7 +31,6 @@ import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.util.Utils;
 
 public class ToStringUtil
 {

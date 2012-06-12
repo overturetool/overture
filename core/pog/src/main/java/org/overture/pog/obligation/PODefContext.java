@@ -24,7 +24,7 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.ADefExp;
-import org.overture.util.Utils;
+import org.overture.ast.util.Utils;
 
 public class PODefContext extends POContext {
 	public final ADefExp exp;

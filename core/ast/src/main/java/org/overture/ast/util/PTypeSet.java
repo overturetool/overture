@@ -15,7 +15,6 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
-import org.overture.util.Utils;
 
 @SuppressWarnings("serial")
 public class PTypeSet extends TreeSet<PType>
