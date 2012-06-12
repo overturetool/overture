@@ -1,4 +1,4 @@
-package org.overturetool.vdmj.messages.rtlog;
+package org.overture.interpreter.messages.rtlog;
 
 public class RTExtendedTextMessage extends RTExtendedMessage
 {

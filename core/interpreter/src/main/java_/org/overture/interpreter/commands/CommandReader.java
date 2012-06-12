@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.commands;
+package org.overture.interpreter.commands;
 
 import java.io.BufferedReader;
 import java.io.File;

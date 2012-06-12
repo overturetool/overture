@@ -29,6 +29,13 @@ import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.config.Settings;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.ClassInterpreter;
+
 
 
 /**
@@ -73,15 +80,15 @@ public class ClassCommandReader extends CommandReader
 		String def = cinterpreter.getDefaultName();
 		ClassList classes = cinterpreter.getClasses();
 
-		for (ClassDefinition c: classes)
+		for (SClassDefinition c: classes)
 		{
-			if (c.name.name.equals(def))
+			if (c.getName().name.equals(def))
 			{
-				println(c.name.name + " (default)");
+				println(c.getName().name + " (default)");
 			}
 			else
 			{
-				println(c.name.name);
+				println(c.getName().name);
 			}
 		}
 

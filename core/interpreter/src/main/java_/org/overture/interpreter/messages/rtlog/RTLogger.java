@@ -21,16 +21,17 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.messages.rtlog;
+package org.overture.interpreter.messages.rtlog;
 
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.rtlog.RTThreadSwapMessage.SwapType;
-import org.overturetool.vdmj.values.CPUValue;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
+import org.overture.interpreter.values.CPUValue;
+
 
 public class RTLogger
 {

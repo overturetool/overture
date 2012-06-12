@@ -1,4 +1,4 @@
-package org.overturetool.vdmj.messages.rtlog;
+package org.overture.interpreter.messages.rtlog;
 
 import org.overturetool.vdmj.scheduler.CPUResource;
 import org.overturetool.vdmj.values.OperationValue;
