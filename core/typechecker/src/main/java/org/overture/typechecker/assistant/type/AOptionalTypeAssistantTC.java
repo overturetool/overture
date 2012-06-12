@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
@@ -16,7 +17,6 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.AOptionalTypeAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 
 public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {

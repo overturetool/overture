@@ -1,4 +1,4 @@
-package org.overture.ast.patterns.assistants;
+package org.overture.ast.assistant.pattern;
 
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AUnionPattern;

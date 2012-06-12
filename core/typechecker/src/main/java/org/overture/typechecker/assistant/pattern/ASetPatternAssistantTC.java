@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.pattern.ASetPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.patterns.assistants.ASetPatternAssistant;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;

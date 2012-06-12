@@ -1,4 +1,4 @@
-package org.overture.ast.definitions.assistants;
+package org.overture.ast.assistant.definition;
 
 import java.util.List;
 

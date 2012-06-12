@@ -1,4 +1,4 @@
-package org.overture.ast.types.assistants;
+package org.overture.ast.assistant.type;
 
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.ARealNumericBasicType;

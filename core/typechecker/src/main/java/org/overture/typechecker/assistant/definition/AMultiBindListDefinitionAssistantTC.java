@@ -3,12 +3,12 @@ package org.overture.typechecker.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;

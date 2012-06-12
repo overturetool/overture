@@ -1,4 +1,4 @@
-package org.overture.ast.types.assistants;
+package org.overture.ast.assistant.type;
 
 import java.util.List;
 import java.util.Vector;

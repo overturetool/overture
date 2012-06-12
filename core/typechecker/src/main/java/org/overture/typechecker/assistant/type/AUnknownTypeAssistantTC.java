@@ -2,9 +2,9 @@ package org.overture.typechecker.assistant.type;
 
 import java.util.Vector;
 
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;

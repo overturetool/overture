@@ -1,11 +1,11 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.expressions.SNumericBinaryExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 

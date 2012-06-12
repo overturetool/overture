@@ -1,14 +1,13 @@
-package org.overture.ast.patterns.assistants;
+package org.overture.ast.assistant.pattern;
 
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.patterns.ASetPattern;
+import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 
-public class ASetPatternAssistant {
+public class ATuplePatternAssistant {
 
-
-
-	public static LexNameList getAllVariableNames(ASetPattern pattern) {
+	
+	public static LexNameList getAllVariableNames(ATuplePattern pattern) {
 		LexNameList list = new LexNameList();
 
 		for (PPattern p: pattern.getPlist())
@@ -19,6 +18,5 @@ public class ASetPatternAssistant {
 		return list;
 	}
 
-
-
+	
 }

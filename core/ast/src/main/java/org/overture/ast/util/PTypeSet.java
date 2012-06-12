@@ -4,17 +4,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.assistant.type.PTypeAssistant;
+import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
-import org.overture.ast.patterns.assistants.PTypeList;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
-import org.overture.ast.types.assistants.PTypeAssistant;
-import org.overture.ast.types.assistants.SNumericBasicTypeAssistant;
 import org.overture.util.Utils;
 
 @SuppressWarnings("serial")

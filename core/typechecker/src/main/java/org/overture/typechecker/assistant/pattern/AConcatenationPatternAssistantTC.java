@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.pattern.AConcatenationPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -10,7 +11,6 @@ import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.patterns.assistants.AConcatenationPatternAssistant;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;

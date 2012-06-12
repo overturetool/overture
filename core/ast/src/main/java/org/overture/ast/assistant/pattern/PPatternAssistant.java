@@ -1,4 +1,4 @@
-package org.overture.ast.patterns.assistants;
+package org.overture.ast.assistant.pattern;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package org.overture.ast.definitions.assistants;
+package org.overture.ast.assistant.definition;
 
 import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
