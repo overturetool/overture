@@ -21,10 +21,11 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overture.interpreter.runtime;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.values.ObjectValue;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.values.ObjectValue;
+
 
 /**
  * A Context class, specialized to represent points in a context chain where

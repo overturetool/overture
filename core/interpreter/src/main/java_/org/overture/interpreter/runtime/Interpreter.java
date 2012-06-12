@@ -35,6 +35,15 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.ResourceScheduler;
+import org.overture.interpreter.values.Value;
+
 
 /**
  * An abstract VDM interpreter.
@@ -468,13 +477,13 @@ abstract public class Interpreter
 	/**
 	 * @param classname Unused.
 	 */
-	public ClassDefinition findClass(String classname)
+	public SClassDefinition findClass(String classname)
 	{
 		assert false : "findClass cannot be called for modules";
 		return null;
 	}
 	
-	public abstract Type findType(String typename);
+	public abstract PType findType(String typename);
 
 	/**
 	 * @param module Unused.

@@ -21,10 +21,11 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overture.interpreter.runtime;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.LocatedException;
+import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.messages.LocatedException;
+
 
 @SuppressWarnings("serial")
 public class PatternMatchException extends LocatedException

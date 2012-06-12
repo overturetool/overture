@@ -21,13 +21,14 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.values.Value;
+
 
 /**
  * A root context for non-object method invocations.

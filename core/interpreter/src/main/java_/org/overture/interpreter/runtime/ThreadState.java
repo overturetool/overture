@@ -27,6 +27,10 @@ import java.io.Serializable;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.values.CPUValue;
 
 
 /**

@@ -28,32 +28,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.overturetool.vdmj.debug.DBGPReader;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.NamedTraceDefinition;
-import org.overturetool.vdmj.definitions.TypeDefinition;
-import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexIdentifierToken;
-import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.VDMErrorsException;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.modules.ModuleList;
-import org.overturetool.vdmj.pog.ProofObligationList;
-import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.scheduler.CTMainThread;
-import org.overturetool.vdmj.scheduler.InitThread;
-import org.overturetool.vdmj.scheduler.MainThread;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.traces.CallSequence;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.ModuleEnvironment;
-import org.overturetool.vdmj.types.Type;
-import org.overturetool.vdmj.values.CPUValue;
-import org.overturetool.vdmj.values.Value;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.syntax.ExpressionReader;
+
 
 /**
  * The VDM-SL module interpreter.

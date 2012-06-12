@@ -21,15 +21,16 @@
  *
  ******************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overture.interpreter.runtime;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.commands.DebuggerReader;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
-import org.overturetool.vdmj.scheduler.ISchedulableThread;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overture.ast.lex.LexLocation;
+import org.overture.config.Settings;
+import org.overture.interpreter.commands.DebuggerReader;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.syntax.ParserException;
+
 
 /**
  * A breakpoint where execution must stop.

@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 
 

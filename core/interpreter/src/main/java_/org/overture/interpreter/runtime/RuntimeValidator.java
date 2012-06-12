@@ -21,18 +21,16 @@
  *
  **************************************************************************/
 
-package org.overturetool.vdmj.runtime;
+package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.SystemDefinition;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.rtlog.RTMessage.MessageType;
-import org.overturetool.vdmj.runtime.validation.BasicRuntimeValidator;
-import org.overturetool.vdmj.runtime.validation.IRuntimeValidatior;
-import org.overturetool.vdmj.scheduler.AsyncThread;
-import org.overturetool.vdmj.values.OperationValue;
+import org.overture.config.Settings;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.scheduler.AsyncThread;
+import org.overture.interpreter.values.OperationValue;
+
 
 public class RuntimeValidator
 {

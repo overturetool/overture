@@ -28,6 +28,12 @@ import java.util.HashMap;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
 
 

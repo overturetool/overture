@@ -28,6 +28,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.PType;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
+import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
+import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
+import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.SystemClock;
+import org.overture.interpreter.values.BUSValue;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.NameValuePairMap;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.Value;
+import org.overture.util.Utils;
+
 
 /**
  * The VDM++ interpreter.
@@ -36,7 +60,7 @@ import java.util.Vector;
 public class ClassInterpreter extends Interpreter
 {
 	private final ClassList classes;
-	private ClassDefinition defaultClass;
+	private SClassDefinition defaultClass;
 	private NameValuePairMap createdValues;
 	private DefinitionSet createdDefinitions;
 
@@ -66,9 +90,9 @@ public class ClassInterpreter extends Interpreter
 		}
 		else
 		{
-    		for (ClassDefinition c: classes)
+    		for (SClassDefinition c: classes)
     		{
-    			if (c.name.name.equals(cname))
+    			if (c.getName().name.equals(cname))
     			{
     				defaultClass = c;
     				return;
@@ -82,13 +106,13 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public String getDefaultName()
 	{
-		return defaultClass.name.name;
+		return defaultClass.getName().name;
 	}
 
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultClass.name.location.file;
+		return defaultClass.getName().location.file;
 	}
 
 	@Override
@@ -243,16 +267,16 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public ClassDefinition findClass(String classname)
+	public SClassDefinition findClass(String classname)
 	{
 		LexNameToken name = new LexNameToken("CLASS", classname, null);
-		return (ClassDefinition)classes.findType(name);
+		return (SClassDefinition)classes.findType(name);
 	}
 
 	@Override
 	protected NamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
-		Definition d = classes.findName(name, NameScope.NAMESANDSTATE);
+		PDefinition d = classes.findName(name, NameScope.NAMESANDSTATE);
 
 		if (d == null || !(d instanceof NamedTraceDefinition))
 		{
@@ -325,11 +349,11 @@ public class ClassInterpreter extends Interpreter
 		Environment created = new FlatCheckedEnvironment(
 			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
-		Type type = typeCheck(expr, created);
+		PType type = typeCheck(expr, created);
 		Value v = execute(exp, null);
 
-		LexLocation location = defaultClass.location;
-		LexNameToken n = new LexNameToken(defaultClass.name.name, var, location);
+		LexLocation location = defaultClass.getLocation();
+		LexNameToken n = new LexNameToken(defaultClass.getName().name, var, location);
 
 		createdValues.put(n, v);
 		createdDefinitions.add(new LocalDefinition(location, n, NameScope.LOCAL, type));
