@@ -47,15 +47,38 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.overture.ast.definitions.AMutexSyncDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AHistoryExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.*;
+import org.overture.ast.messages.InternalException;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.interpreter.VDMJ;
+import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.VDMRT;
+import org.overture.interpreter.VDMSL;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.*;
+import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.util.*;
 import org.overture.interpreter.values.*;
+import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ParserException;
+import org.overture.pog.obligation.ProofObligation;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.util.Base64;
 
 
@@ -1620,11 +1643,11 @@ public class DBGPReader
 		}
 
 		Breakpoint bp = null;
-		Statement stmt = interpreter.findStatement(filename, lineno);
+		PStm stmt = interpreter.findStatement(filename, lineno);
 
 		if (stmt == null)
 		{
-			Expression exp = interpreter.findExpression(filename, lineno);
+			PExp exp = interpreter.findExpression(filename, lineno);
 
 			if (exp == null)
 			{
@@ -1910,46 +1933,46 @@ public class DBGPReader
 					String opname = breakContext.guardOp == null ?
 						"" : breakContext.guardOp.name.name;
 
-					for (Definition d: octxt.self.type.classdef.definitions)
+					for (PDefinition d: octxt.self.type.getClassdef().getDefinitions())
 					{
-						if (d instanceof PerSyncDefinition)
+						if (d instanceof APerSyncDefinition)
 						{
-							PerSyncDefinition pdef = (PerSyncDefinition)d;
+							APerSyncDefinition pdef = (APerSyncDefinition)d;
 
-							if (pdef.opname.name.equals(opname) ||
-								pdef.location.startLine == line ||
-								pdef.guard.findExpression(line) != null)
+							if (pdef.getOpname().name.equals(opname) ||
+								pdef.getLocation().startLine == line ||
+								PExpAssistantInterpreter.findExpression(pdef.getGuard(),line) != null)
 							{
-	            				for (Expression sub: pdef.guard.getSubExpressions())
+	            				for (PExp sub: PExpAssistantInterpreter.getSubExpressions(pdef.getGuard()))
 	            				{
-	            					if (sub instanceof HistoryExpression)
+	            					if (sub instanceof AHistoryExp)
 	            					{
-	            						HistoryExpression hexp = (HistoryExpression)sub;
+	            						AHistoryExp hexp = (AHistoryExp)sub;
 	            						Value v = hexp.eval(octxt);//FIXME: use visitor here
 	            						LexNameToken name =
-	            							new LexNameToken(octxt.self.type.name.module,
-	            								hexp.toString(),hexp.location);
+	            							new LexNameToken(octxt.self.type.getName().module,
+	            								hexp.toString(),hexp.getLocation());
 	            						vars.put(name, v);
 	            					}
 	            				}
 							}
 						}
-						else if (d instanceof MutexSyncDefinition)
+						else if (d instanceof AMutexSyncDefinition)
 						{
-							MutexSyncDefinition mdef = (MutexSyncDefinition)d;
+							AMutexSyncDefinition mdef = (AMutexSyncDefinition)d;
 
-            				for (LexNameToken mop: mdef.operations)
+            				for (LexNameToken mop: mdef.getOperations())
             				{
             					if (mop.name.equals(opname))
             					{
-                    				for (LexNameToken op: mdef.operations)
+                    				for (LexNameToken op: mdef.getOperations())
                     				{
-                    					LexNameList ops = new LexNameList(op);
-                    					Expression hexp = new HistoryExpression(mdef.location, Token.ACTIVE, ops);
+                    					LexNameList ops = new LexNameList(op);//TODO: this needs to be checked when testing
+                    					PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(new LexLocation(), VDMToken.ACTIVE) , ops);
                 						Value v = hexp.eval(octxt);//FIXME: use visitor here
                 						LexNameToken name =
-                							new LexNameToken(octxt.self.type.name.module,
-                								hexp.toString(), mdef.location);
+                							new LexNameToken(octxt.self.type.getName().module,
+                								hexp.toString(), mdef.getLocation());
                 						vars.put(name, v);
                     				}
 
@@ -1972,7 +1995,7 @@ public class DBGPReader
 				else if (root instanceof ClassContext)
 				{
 					ClassContext cctxt = (ClassContext)root;
-					vars.putAll(cctxt.classdef.getStatics());
+					vars.putAll(SClassDefinitionAssistantInterpreter.getStatics(cctxt.classdef));
 				}
 				else if (root instanceof StateContext)
 				{
@@ -2405,11 +2428,11 @@ public class DBGPReader
     		OutputStream out = new ByteArrayOutputStream();
     		PrintWriter pw = new PrintWriter(out);
 
-    		Statement stmt = interpreter.findStatement(file, line);
+    		PStm stmt = interpreter.findStatement(file, line);
 
     		if (stmt == null)
     		{
-    			Expression exp = interpreter.findExpression(file, line);
+    			PExp exp = interpreter.findExpression(file, line);
 
     			if (exp == null)
     			{
@@ -2487,15 +2510,15 @@ public class DBGPReader
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (ClassDefinition cls: classes)
+		for (SClassDefinition cls: classes)
 		{
-			if (cls.name.name.equals(def))
+			if (cls.getName().name.equals(def))
 			{
-				pw.println(cls.name.name + " (default)");
+				pw.println(cls.getName().name + " (default)");
 			}
 			else
 			{
-				pw.println(cls.name.name);
+				pw.println(cls.getName().name);
 			}
 		}
 
@@ -2513,19 +2536,19 @@ public class DBGPReader
 
 		ModuleInterpreter minterpreter = (ModuleInterpreter)interpreter;
 		String def = minterpreter.getDefaultName();
-		List<Module> modules = minterpreter.getModules();
+		List<AModuleModules> modules = minterpreter.getModules();
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (Module m: modules)
+		for (AModuleModules m: modules)
 		{
-			if (m.name.name.equals(def))
+			if (m.getName().name.equals(def))
 			{
-				pw.println(m.name.name + " (default)");
+				pw.println(m.getName().name + " (default)");
 			}
 			else
 			{
-				pw.println(m.name.name);
+				pw.println(m.getName().name);
 			}
 		}
 

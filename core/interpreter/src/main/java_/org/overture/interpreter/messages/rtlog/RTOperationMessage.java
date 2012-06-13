@@ -32,7 +32,7 @@ public class RTOperationMessage extends RTMessage
 			return "Op"+messageType+" -> id: " + threadId +
 			" opname: \"" + operationVal.name + "\"" +
 			" objref: " + operationVal.getSelf().objectReference +
-			" clnm: \"" + operationVal.getSelf().type.name.name + "\"" +
+			" clnm: \"" + operationVal.getSelf().type.getName().name + "\"" +
 			" cpunm: " +  from.getNumber() +
 			" async: " + operationVal.isAsync;
 		}else
@@ -41,7 +41,7 @@ public class RTOperationMessage extends RTMessage
 			" opname: \"" + operationVal.name + "\"" +
 			//" objref: nil" +
 			" objref: "+ objref +
-			" clnm: \"" + operationVal.classdef.name.name + "\"" +
+			" clnm: \"" + operationVal.classdef.getName().name + "\"" +
 			" cpunm: " +  from.getNumber() +
 			" async: " + operationVal.isAsync;
 		}
@@ -51,7 +51,7 @@ public class RTOperationMessage extends RTMessage
 	public void generateStaticDeploys()
 	{try{
 		if (operationVal.isStatic){
-			objref = getStaticId(operationVal.classdef.name.name,from);
+			objref = getStaticId(operationVal.classdef.getName().name,from);
 		}else
 		{
 			objref = Long.valueOf(operationVal.getSelf().objectReference);

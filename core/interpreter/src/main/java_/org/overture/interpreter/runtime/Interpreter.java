@@ -35,14 +35,37 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.config.Settings;
 import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ResourceScheduler;
+import org.overture.interpreter.traces.CallSequence;
+import org.overture.interpreter.traces.TestSequence;
+import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.values.Value;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.VDMErrorsException;
+import org.overture.parser.syntax.ParserException;
+import org.overture.pog.obligation.ProofObligationList;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.expression.PExpAssistantTC;
+import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 
 /**
@@ -297,7 +320,7 @@ abstract public class Interpreter
 	 * @return A Statement object if found, else null.
 	 */
 
-	abstract public Statement findStatement(File file, int lineno);
+	abstract public PStm findStatement(File file, int lineno);
 
 	/**
 	 * Find an expression by file name and line number.
@@ -307,7 +330,7 @@ abstract public class Interpreter
 	 * @return An Expression object if found, else null.
 	 */
 
-	abstract public Expression findExpression(File file, int lineno);
+	abstract public PExp findExpression(File file, int lineno);
 
 	/**
 	 * Find a global environment value by name.
@@ -332,7 +355,7 @@ abstract public class Interpreter
 	 * @throws Exception Expression is not valid.
 	 */
 
-	public Breakpoint setTracepoint(Statement stmt, String trace) throws Exception
+	public Breakpoint setTracepoint(PStm stmt, String trace) throws Exception
 	{
 		stmt.breakpoint = new Tracepoint(stmt.location, ++nextbreakpoint, trace);
 		breakpoints.put(nextbreakpoint, stmt.breakpoint);
@@ -351,10 +374,10 @@ abstract public class Interpreter
 	 * @throws ParserException
 	 */
 
-	public Breakpoint setTracepoint(Expression exp, String trace)
+	public Breakpoint setTracepoint(PExp exp, String trace)
 		throws ParserException, LexException
 	{
-		exp.breakpoint = new Tracepoint(exp.location, ++nextbreakpoint, trace);
+		exp.breakpoint = new Tracepoint(exp.getLocation(), ++nextbreakpoint, trace);
 		breakpoints.put(nextbreakpoint, exp.breakpoint);
 		return exp.breakpoint;
 	}
@@ -371,10 +394,10 @@ abstract public class Interpreter
 	 * @throws ParserException
 	 */
 
-	public Breakpoint setBreakpoint(Statement stmt, String condition)
+	public Breakpoint setBreakpoint(PStm stmt, String condition)
 		throws ParserException, LexException
 	{
-		stmt.breakpoint = new Stoppoint(stmt.location, ++nextbreakpoint, condition);
+		stmt.breakpoint = new Stoppoint(stmt.getLocation(), ++nextbreakpoint, condition);
 		breakpoints.put(nextbreakpoint, stmt.breakpoint);
 		return stmt.breakpoint;
 	}
@@ -391,10 +414,10 @@ abstract public class Interpreter
 	 *
 	 */
 
-	public Breakpoint setBreakpoint(Expression exp, String condition)
+	public Breakpoint setBreakpoint(PExp exp, String condition)
 		throws ParserException, LexException
 	{
-		exp.breakpoint = new Stoppoint(exp.location, ++nextbreakpoint, condition);
+		exp.breakpoint = new Stoppoint(exp.getLocation(), ++nextbreakpoint, condition);
 		breakpoints.put(nextbreakpoint, exp.breakpoint);
 		return exp.breakpoint;
 	}
@@ -412,17 +435,17 @@ abstract public class Interpreter
 
 		if (old != null)
 		{
-			Statement stmt = findStatement(old.location.file, old.location.startLine);
+			PStm stmt = findStatement(old.location.file, old.location.startLine);
 
 			if (stmt != null)
 			{
-				stmt.breakpoint = new Breakpoint(stmt.location);
+				stmt.breakpoint = new Breakpoint(stmt.getLocation());
 			}
 			else
 			{
-				Expression exp = findExpression(old.location.file, old.location.startLine);
+				PExp exp = findExpression(old.location.file, old.location.startLine);
 				assert (exp != null) : "Cannot locate old breakpoint?";
-				exp.breakpoint = new Breakpoint(exp.location);
+				exp.breakpoint = new Breakpoint(exp.getLocation());
 			}
 		}
 
@@ -437,14 +460,14 @@ abstract public class Interpreter
 		}
 	}
 
-	abstract protected Expression parseExpression(String line, String module)
+	abstract protected PExp parseExpression(String line, String module)
 		throws Exception;
 
-	public Type typeCheck(Expression expr, Environment env)
+	public PType typeCheck(PExp expr, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
-		Type type = expr.typeCheck(env, null, NameScope.NAMESANDSTATE);
+		PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
 
 		if (TypeChecker.getErrorCount() > 0)
 		{
@@ -454,11 +477,11 @@ abstract public class Interpreter
 		return type;
 	}
 
-	public Type typeCheck(Statement stmt, Environment env)
+	public PType typeCheck(PStm stmt, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
-		Type type = stmt.typeCheck(env, NameScope.NAMESANDSTATE);
+		PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
 
 		if (TypeChecker.getErrorCount() > 0)
 		{
@@ -468,9 +491,9 @@ abstract public class Interpreter
 		return type;
 	}
 
-	public Type typeCheck(String line) throws Exception
+	public PType typeCheck(String line) throws Exception
 	{
-		Expression expr = parseExpression(line, getDefaultName());
+		PExp expr = parseExpression(line, getDefaultName());
 		return typeCheck(expr, getGlobalEnvironment());
 	}
 
@@ -488,7 +511,7 @@ abstract public class Interpreter
 	/**
 	 * @param module Unused.
 	 */
-	public Module findModule(String module)
+	public AModuleModules findModule(String module)
 	{
 		assert false : "findModule cannot be called for classes";
 		return null;
@@ -501,7 +524,7 @@ abstract public class Interpreter
 		writer = pw;
 	}
 
-	abstract protected NamedTraceDefinition findTraceDefinition(LexNameToken name);
+	abstract protected ANamedTraceDefinition findTraceDefinition(LexNameToken name);
 
 	public void runtrace(String name, int testNo, boolean debug)
 		throws Exception
@@ -539,7 +562,7 @@ abstract public class Interpreter
 				throw new Exception("Expecting trace name");
 		}
 
-		NamedTraceDefinition tracedef = findTraceDefinition(lexname);
+		ANamedTraceDefinition tracedef = findTraceDefinition(lexname);
 
 		if (tracedef == null)
 		{
@@ -613,8 +636,8 @@ abstract public class Interpreter
 	}
 
 	abstract public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test, boolean debug);
+			ANamedTraceDefinition tracedef, CallSequence test, boolean debug);
 
 
-	abstract public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug) throws ValueException;
+	abstract public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException;
 }

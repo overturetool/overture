@@ -72,6 +72,12 @@ public class LexNameToken extends LexToken implements Serializable
 				+ name + (old ? "~" : ""); // NB. No qualifier
 	}
 	
+	public LexNameToken getNewName()
+	{
+		return new LexNameToken(module,
+			new LexIdentifierToken(name, false, location));
+	}
+	
 	public String getSimpleName()
 	{
 		return name;

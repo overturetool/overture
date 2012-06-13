@@ -27,6 +27,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class BooleanValue extends Value
@@ -83,7 +84,7 @@ public class BooleanValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to.isType(ABooleanBasicType.class))
+		if (PTypeAssistantTC.isType(to,ABooleanBasicType.class))
 		{
 			return this;
 		}

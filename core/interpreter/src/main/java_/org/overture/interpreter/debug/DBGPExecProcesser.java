@@ -13,12 +13,13 @@ import java.util.Vector;
 
 import org.overture.interpreter.commands.ClassCommandReader;
 import org.overture.interpreter.commands.ModuleCommandReader;
-import org.overture.interpreter.messages.VDMErrorsException;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.DebuggerException;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.util.ExitStatus;
+import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ParserException;
 
 

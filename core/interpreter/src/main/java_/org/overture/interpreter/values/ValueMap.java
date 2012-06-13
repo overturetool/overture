@@ -30,6 +30,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.interpreter.traces.PermuteArray;
+
 
 /**
  * A map of value/values.

@@ -23,9 +23,11 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class TokenValue extends Value
@@ -78,7 +80,7 @@ public class TokenValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to.isType(TokenType.class))
+		if (PTypeAssistantTC.isType(to,ATokenBasicType.class))
 		{
 			return this;
 		}

@@ -153,7 +153,7 @@ public class SetValue extends Value
 
 			for (Value v: values)
 			{
-				ns.add(v.convertValueTo(setto.setof, ctxt));
+				ns.add(v.convertValueTo(setto.getSetof(), ctxt));
 			}
 
 			return new SetValue(ns);

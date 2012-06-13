@@ -23,8 +23,10 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
 
 
 
@@ -38,8 +40,8 @@ public class CompFunctionValue extends FunctionValue
 	public CompFunctionValue(FunctionValue f1, FunctionValue f2)
 	{
 		super(f1.location,
-			new FunctionType(f1.location,
-				f1.type.partial || f2.type.partial, f2.type.parameters, f1.type.result), "comp");
+			AstFactory.newAFunctionType(f1.location,
+				f1.type.getPartial() || f2.type.getPartial(), f2.type.getParameters(), f1.type.getResult()), "comp");
 		this.ff1 = f1;
 		this.ff2 = f2;
 	}
@@ -47,7 +49,7 @@ public class CompFunctionValue extends FunctionValue
 	@Override
 	public String toString()
 	{
-		return ff2.type.parameters + " -> " + ff1.type.result;
+		return ff2.type.getParameters() + " -> " + ff1.type.getResult();
 	}
 
 	@Override

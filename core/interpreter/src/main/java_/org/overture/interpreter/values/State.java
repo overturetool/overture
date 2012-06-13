@@ -25,8 +25,12 @@ package org.overture.interpreter.values;
 
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 
 
@@ -43,18 +47,18 @@ public class State implements ValueListener
 		this.definition = definition;
 		NameValuePairList fieldvalues = new NameValuePairList();
 
-		for (AFieldField f: definition.fields)
+		for (AFieldField f: definition.getFields())
 		{
-			fieldvalues.add(new NameValuePair(f.tagname,
+			fieldvalues.add(new NameValuePair(f.getTagname(),
 				UpdatableValue.factory(new ValueListenerList(this))));
 		}
 
-		RecordType rt = (RecordType)definition.getType();
+		ARecordInvariantType rt = (ARecordInvariantType)definition.getType();
 		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues),
 			new ValueListenerList(this));
 
-		this.context = new Context(definition.location, "module state", null);
-		this.context.put(definition.name, recordValue);
+		this.context = new Context(definition.getLocation(), "module state", null);
+		this.context.put(definition.getName(), recordValue);
 		this.context.putList(fieldvalues);
 	}
 
@@ -65,23 +69,23 @@ public class State implements ValueListener
 			// We can't check the invariant while we're initializing fields
 			doInvariantChecks = false;
 
-			if (definition.initPattern != null)
+			if (definition.getInitPattern() != null)
 			{
 				// Note that we don't call the initfunc FunctionValue. This is
 				// so that calls to init_sigma can test their arguments without
 				// changing state. See StateInitExpression.
 
-				if (!definition.canBeExecuted ||
-					!(definition.initExpression instanceof EqualsExpression))
+				if (!definition.getCanBeExecuted() ||
+					!(definition.getInitExpression() instanceof AEqualsBinaryExp))
 				{
 					throw new ValueException(
 						4144, "State init expression cannot be executed", globals);
 				}
 
-				AEqualsBinaryExp ee = (AEqualsBinaryExp)definition.initExpression;
-				ee.location.hit();
-				ee.left.location.hit();
-				Value v = ee.right.eval(globals);
+				AEqualsBinaryExp ee = (AEqualsBinaryExp)definition.getInitExpression();
+				ee.getLocation().hit();
+				ee.getLeft().getLocation().hit();
+				Value v = ee.getRight().eval(globals);
 
 				if (!(v instanceof RecordValue))
 				{
@@ -91,10 +95,10 @@ public class State implements ValueListener
 
 				RecordValue iv = (RecordValue)v;
 
-				for (AFieldField f: definition.fields)
+				for (AFieldField f: definition.getFields())
 				{
-					Value sv = context.get(f.tagname);
-					sv.set(ee.location, iv.fieldmap.get(f.tag), globals);
+					Value sv = context.get(f.getTagname());
+					sv.set(ee.getLocation(), iv.fieldmap.get(f.getTag()), globals);
 				}
 			}
 
@@ -103,7 +107,7 @@ public class State implements ValueListener
 		}
 		catch (ValueException e)
 		{
-			throw new ContextException(e, definition.location);
+			throw new ContextException(e, definition.getLocation());
 		}
 		finally
 		{

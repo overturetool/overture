@@ -182,7 +182,7 @@ public class SeqValue extends Value
 
 			for (Value v: values)
 			{
-				nl.add(v.convertValueTo(seqto.seqof, ctxt));
+				nl.add(v.convertValueTo(seqto.getSeqof(), ctxt));
 			}
 
 			return new SeqValue(nl);

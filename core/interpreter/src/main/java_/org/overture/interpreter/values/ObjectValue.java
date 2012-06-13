@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
@@ -164,7 +165,7 @@ public class ObjectValue extends Value
 
 	public OperationValue getThreadOperation(Context ctxt) throws ValueException
 	{
-		return get(type.classdef.name.getThreadName(), false).operationValue(ctxt);
+		return get(type.getClassdef().getName().getThreadName(), false).operationValue(ctxt);
 	}
 
 	public synchronized int incPeriodicCount()
@@ -186,7 +187,7 @@ public class ObjectValue extends Value
 	public synchronized Value get(LexNameToken field, boolean explicit)
 	{
 		LexNameToken localname =
-			explicit ? field : field.getModifiedName(type.name.name);
+			explicit ? field : field.getModifiedName(type.getName().name);
 
 		// This is another case where we have to iterate with equals()
 		// rather than using the map's hash, because the hash doesn't
@@ -468,7 +469,7 @@ public class ObjectValue extends Value
 	public MapValue getOldValues(LexNameList oldnames)
 	{
 		ValueMap values = new ValueMap();
-		ObjectContext ctxt = new ObjectContext(type.location, "Old Object Creation", null, this);
+		ObjectContext ctxt = new ObjectContext(type.getLocation(), "Old Object Creation", null, this);
 
 		for (LexNameToken name: oldnames)
 		{
@@ -516,11 +517,11 @@ public class ObjectValue extends Value
 
 	public boolean hasDelegate()
 	{
-		if (type.classdef.hasDelegate())
+		if (type.getClassdef().hasDelegate())
 		{
 			if (delegateObject == null)
 			{
-				delegateObject = type.classdef.newInstance();
+				delegateObject = type.getClassdef().newInstance();
 			}
 
 			return true;
@@ -531,7 +532,7 @@ public class ObjectValue extends Value
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		return type.classdef.invokeDelegate(delegateObject, ctxt);
+		return type.getClassdef().invokeDelegate(delegateObject, ctxt);
 	}
 
 	public static void init()
@@ -555,7 +556,7 @@ public class ObjectValue extends Value
 		//Do not set the creator if created by the system class. The System contains
 		// fields with references to Thread instances which are not Serializable and
 		// will fail a deep copy with a NotSerializableExpection for Thread
-		if(newCreator!= null && newCreator.type.classdef instanceof SystemDefinition)
+		if(newCreator!= null && newCreator.type.getClassdef() instanceof ASystemClassDefinition)
 		{
 			return;
 		}

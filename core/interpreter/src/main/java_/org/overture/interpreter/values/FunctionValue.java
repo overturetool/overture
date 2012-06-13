@@ -42,20 +42,28 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 
@@ -66,7 +74,7 @@ public class FunctionValue extends Value
 	public final String name;
 	public NameValuePairList typeValues;
 	public AFunctionType type;
-	public final List<PatternListTC> paramPatternList;
+	public final List<List<PPattern>> paramPatternList;
 	public final PExp body;
 	public final FunctionValue precondition;
 	public final FunctionValue postcondition;
@@ -90,7 +98,7 @@ public class FunctionValue extends Value
 	private SClassDefinition classdef = null;
 
 	public FunctionValue(LexLocation location, String name, AFunctionType type,
-		List<PatternListTC> paramPatternList, PExp body,
+			List<List<PPattern>> paramPatternList, PExp body,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables, boolean checkInvariants)
 	{
@@ -113,7 +121,7 @@ public class FunctionValue extends Value
 		this.name = name;
 		this.typeValues = null;
 		this.type = type;
-		this.paramPatternList = new Vector<PatternListTC>();
+		this.paramPatternList = new Vector<List<PPattern>>();
 		this.body = body;
 		this.precondition = null;
 		this.postcondition = null;
@@ -127,21 +135,21 @@ public class FunctionValue extends Value
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables)
 	{
-		this.location = def.location;
-		this.name = def.name.name;
+		this.location = def.getLocation();
+		this.name = def.getName().name;
 		this.typeValues = null;
-		this.type = (FunctionType)def.getType();
-		this.paramPatternList = def.paramPatternList;
-		this.body = def.body;
+		this.type = (AFunctionType)def.getType();
+		this.paramPatternList = def.getParamPatternList();
+		this.body = def.getBody();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
-		this.checkInvariants = !def.isTypeInvariant;
-		this.classdef = def.classDefinition;
+		this.checkInvariants = !def.getIsTypeInvariant();
+		this.classdef = def.getClassDefinition();
 
-		if (Settings.measureChecks && def.measuredef != null)
+		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
-			measureName = def.measuredef.name;
+			measureName = def.getMeasureDef().getName();
 			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
 		}
 	}
@@ -150,46 +158,46 @@ public class FunctionValue extends Value
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables)
 	{
-		this.location = def.location;
-		this.name = def.name.name;
+		this.location = def.getLocation();
+		this.name = def.getName().name;
 		this.typeValues = null;
 		this.type = (AFunctionType)def.getType();
 
-		this.paramPatternList = new Vector<PatternListTC>();
+		this.paramPatternList = new Vector<List<PPattern>>();
 		PatternListTC plist = new PatternListTC();
 
-		for (PatternListTypePair ptp: def.parameterPatterns)
+		for (APatternListTypePair ptp: def.getParamPatterns())
 		{
-			plist.addAll(ptp.patterns);
+			plist.addAll(ptp.getPatterns());
 		}
 
 		this.paramPatternList.add(plist);
 
-		this.body = def.body;
+		this.body = def.getBody();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
 		this.checkInvariants = true;
-		this.classdef = def.classDefinition;
+		this.classdef = def.getClassDefinition();
 
-		if (Settings.measureChecks && def.measuredef != null)
+		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
-			measureName = def.measuredef.name;
+			measureName = def.getMeasureDef().getName();
 			measureValues = Collections.synchronizedMap(new HashMap<Long, Stack<Value>>());
 		}
 	}
 
 	public FunctionValue(AImplicitFunctionDefinition fdef,
-		TypeList actualTypes, FunctionValue precondition,
+		PTypeList actualTypes, FunctionValue precondition,
 		FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = fdef.getType(actualTypes);
+		this.type =  AImplicitFunctionDefinitionAssistantTC.getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
-		for (LexNameToken pname: fdef.typeParams)
+		for (LexNameToken pname: fdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
@@ -202,11 +210,11 @@ public class FunctionValue extends Value
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = fdef.getType(actualTypes);
+		this.type = AExplicitFunctionDefinitionAssistantTC.getType(fdef,actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
-		for (LexNameToken pname: fdef.typeParams)
+		for (LexNameToken pname: fdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
@@ -280,7 +288,7 @@ public class FunctionValue extends Value
 			abort(3033, "Polymorphic function has not been instantiated: " + name, ctxt);
 		}
 
-		PatternList paramPatterns = paramPatternList.get(0);
+		List<PPattern> paramPatterns = paramPatternList.get(0);
 		RootContext evalContext = newContext(from, toTitle(), ctxt, sctxt);
 
 		if (typeValues != null)
@@ -291,11 +299,11 @@ public class FunctionValue extends Value
 
 		if (argValues.size() != paramPatterns.size())
 		{
-			type.abort(4052, "Wrong number of arguments passed to " + name, ctxt);
+			RuntimeError.abort(type.getLocation(),4052, "Wrong number of arguments passed to " + name, ctxt);
 		}
 
 		Iterator<Value> valIter = argValues.iterator();
-		Iterator<PType> typeIter = type.parameters.iterator();
+		Iterator<PType> typeIter = type.getParameters().iterator();
 		NameValuePairMap args = new NameValuePairMap();
 
 		for (PPattern p: paramPatterns)
@@ -309,7 +317,7 @@ public class FunctionValue extends Value
 
 			try
 			{
-				for (NameValuePair nvp: p.getNamedValues(pv, ctxt))
+				for (NameValuePair nvp: PPatternAssistantInterpreter.getNamedValues(p,pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
@@ -379,7 +387,7 @@ public class FunctionValue extends Value
 						measure = (FunctionValue)measure.clone();
 						measure.uninstantiated = false;
 						measure.type = AstFactory.newAFunctionType(
-							measure.location, measure.type.partial, type.parameters, measure.type.result);
+							measure.location, measure.type.getPartial(), type.getParameters(), measure.type.getResult());
 						measure.typeValues = typeValues;
 					}
 
@@ -419,7 +427,7 @@ public class FunctionValue extends Value
 				stack.push(mv);
 			}
 
-    		Value rv = body.eval(evalContext).convertTo(type.result, evalContext);
+    		Value rv = body.eval(evalContext).convertTo(type.getResult(), evalContext);
 
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
     		{
@@ -464,7 +472,7 @@ public class FunctionValue extends Value
 		}
 		else	// This is a curried function
 		{
-			if (type.result instanceof AFunctionType)
+			if (type.getResult() instanceof AFunctionType)
 			{
 				// If a curried function has a pre/postcondition, then the
 				// result of a partial application has a pre/post condition
@@ -500,7 +508,7 @@ public class FunctionValue extends Value
         		return rv;
 			}
 
-			type.abort(4057, "Curried function return type is not a function", ctxt);
+			RuntimeError.abort(type.getLocation(),4057, "Curried function return type is not a function", ctxt);
 			return null;
 		}
 	}
@@ -571,7 +579,7 @@ public class FunctionValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to.isType(AFunctionType.class))
+		if (PTypeAssistantTC.isType(to,AFunctionType.class))
 		{
 			return this;
 		}
@@ -604,7 +612,7 @@ public class FunctionValue extends Value
 
 	public String toTitle()
 	{
-		PatternListTC paramPatterns = paramPatternList.get(0);
+		List<PPattern> paramPatterns = paramPatternList.get(0);
 		return name + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }

@@ -150,7 +150,7 @@ public class TupleValue extends Value
 		{
 			AProductType pto = (AProductType)to;
 
-			if (pto.types.size() != values.size())
+			if (pto.getTypes().size() != values.size())
 			{
 				abort(4085, "Cannot convert tuple to " + to, ctxt);
 			}
@@ -158,7 +158,7 @@ public class TupleValue extends Value
 			ValueList nl = new ValueList();
 			Iterator<Value> vi = values.iterator();
 
-			for (PType pt: pto.types)
+			for (PType pt: pto.getTypes())
 			{
 				nl.add(vi.next().convertValueTo(pt, ctxt));
 			}

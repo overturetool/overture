@@ -26,26 +26,29 @@ package org.overture.interpreter.runtime;
 import java.io.PrintWriter;
 
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 
 @SuppressWarnings("serial")
 public class ClassContext extends RootContext
 {
-	public final AClassClassDefinition classdef;
+	public final SClassDefinition classdef;
 
 	public ClassContext(LexLocation location,
 		String title, Context freeVariables, Context outer,
-		AClassClassDefinition classdef)
+		SClassDefinition classdef)
 	{
 		super(location, title, freeVariables, outer);
 		this.classdef = classdef;
 	}
 
 	public ClassContext(LexLocation location,
-		String title, Context outer, AClassClassDefinition classdef)
+		String title, Context outer, SClassDefinition classdef)
 	{
 		this(location, title, null, outer, classdef);
 	}
@@ -82,7 +85,7 @@ public class ClassContext extends RootContext
 			}
 		}
 
-		v = classdef.getStatic(name);
+		v = SClassDefinitionAssistantInterpreter.getStatic(classdef,name);
 
 		if (v != null)
 		{

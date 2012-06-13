@@ -28,14 +28,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
@@ -44,13 +52,26 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.MainThread;
 import org.overture.interpreter.scheduler.SystemClock;
+import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
-import org.overture.util.Utils;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.VDMErrorsException;
+import org.overture.parser.syntax.ExpressionReader;
+import org.overture.pog.obligation.ProofObligationList;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatCheckedEnvironment;
+import org.overture.typechecker.PrivateClassEnvironment;
+import org.overture.typechecker.PublicClassEnvironment;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionSet;
 
 
 /**
@@ -59,16 +80,16 @@ import org.overture.util.Utils;
 
 public class ClassInterpreter extends Interpreter
 {
-	private final ClassList classes;
+	private final ClassListInterpreter classes;
 	private SClassDefinition defaultClass;
 	private NameValuePairMap createdValues;
-	private DefinitionSet createdDefinitions;
+	private PDefinitionSet createdDefinitions;
 
 	public ClassInterpreter(ClassList classes) throws Exception
 	{
-		this.classes = classes;
+		this.classes = new ClassListInterpreter(classes);
 		this.createdValues = new NameValuePairMap();
-		this.createdDefinitions = new DefinitionSet();
+		this.createdDefinitions = new PDefinitionSet();
 
 		if (classes.isEmpty())
 		{
@@ -76,7 +97,7 @@ public class ClassInterpreter extends Interpreter
 		}
 		else
 		{
-			setDefaultName(classes.get(0).name.name);
+			setDefaultName(classes.get(0).getName().name);
 		}
 	}
 
@@ -85,7 +106,7 @@ public class ClassInterpreter extends Interpreter
 	{
 		if (cname == null)
 		{
-			defaultClass = new ClassDefinition();
+			defaultClass = AstFactory.newAClassClassDefinition();
 			classes.add(defaultClass);
 		}
 		else
@@ -163,7 +184,7 @@ public class ClassInterpreter extends Interpreter
 		logSwapOut();
 
 		createdValues = new NameValuePairMap();
-		createdDefinitions = new DefinitionSet();
+		createdDefinitions = new PDefinitionSet();
 
 		scheduler.reset();	// Required before a run, as well as init above
 		BUSValue.start();	// Start any BUS threads first...
@@ -178,11 +199,11 @@ public class ClassInterpreter extends Interpreter
 		SystemClock.init();
 		initialContext = classes.initialize(dbgp);
 		createdValues = new NameValuePairMap();
-		createdDefinitions = new DefinitionSet();
+		createdDefinitions = new PDefinitionSet();
 	}
 
 	@Override
-	protected Expression parseExpression(String line, String module)
+	protected PExp parseExpression(String line, String module)
 		throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect, Console.charset);
@@ -191,10 +212,10 @@ public class ClassInterpreter extends Interpreter
 		return reader.readExpression();
 	}
 
-	private Value execute(Expression expr, DBGPReader dbgp) throws Exception
+	private Value execute(PExp expr, DBGPReader dbgp) throws Exception
 	{
 		Context mainContext = new StateContext(
-			defaultClass.name.location, "global static scope");
+			defaultClass.getName().location, "global static scope");
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
@@ -227,7 +248,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Value execute(String line, DBGPReader dbgp) throws Exception
 	{
-		Expression expr = parseExpression(line, getDefaultName());
+		PExp expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
 		Environment created = new FlatCheckedEnvironment(
 			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
@@ -249,7 +270,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
-		Expression expr = parseExpression(line, getDefaultName());
+		PExp expr = parseExpression(line, getDefaultName());
 		PublicClassEnvironment globals = new PublicClassEnvironment(classes);
 		Environment env = new PrivateClassEnvironment(defaultClass, globals);
 
@@ -274,16 +295,16 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	protected NamedTraceDefinition findTraceDefinition(LexNameToken name)
+	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
 		PDefinition d = classes.findName(name, NameScope.NAMESANDSTATE);
 
-		if (d == null || !(d instanceof NamedTraceDefinition))
+		if (d == null || !(d instanceof ANamedTraceDefinition))
 		{
 			return null;
 		}
 
-		return (NamedTraceDefinition)d;
+		return (ANamedTraceDefinition)d;
 	}
 
 	@Override
@@ -292,13 +313,13 @@ public class ClassInterpreter extends Interpreter
 		// The name will not be type-qualified, so we can't use the usual
 		// findName methods
 
-		for (ClassDefinition c: classes)
+		for (SClassDefinition c: classes)
 		{
-			for (Definition d: c.definitions)
+			for (PDefinition d: c.getDefinitions())
 			{
-				if (d.isFunctionOrOperation())
+				if (PDefinitionAssistantTC.isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = d.getNamedValues(initialContext);
+					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 
 					for (NameValuePair n: nvpl)
 					{
@@ -310,11 +331,11 @@ public class ClassInterpreter extends Interpreter
 				}
 			}
 
-			for (Definition d: c.allInheritedDefinitions)
+			for (PDefinition d: c.getAllInheritedDefinitions())
 			{
-				if (d.isFunctionOrOperation())
+				if (PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = d.getNamedValues(initialContext);
+					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 
 					for (NameValuePair n: nvpl)
 					{
@@ -331,20 +352,20 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public Statement findStatement(File file, int lineno)
+	public PStm findStatement(File file, int lineno)
 	{
 		return classes.findStatement(file, lineno);
 	}
 
 	@Override
-	public Expression findExpression(File file, int lineno)
+	public PExp findExpression(File file, int lineno)
 	{
 		return classes.findExpression(file, lineno);
 	}
 
 	public void create(String var, String exp) throws Exception
 	{
-		Expression expr = parseExpression(exp, getDefaultName());
+		PExp expr = parseExpression(exp, getDefaultName());
 		Environment env = getGlobalEnvironment();
 		Environment created = new FlatCheckedEnvironment(
 			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
@@ -356,7 +377,7 @@ public class ClassInterpreter extends Interpreter
 		LexNameToken n = new LexNameToken(defaultClass.getName().name, var, location);
 
 		createdValues.put(n, v);
-		createdDefinitions.add(new LocalDefinition(location, n, NameScope.LOCAL, type));
+		createdDefinitions.add(AstFactory.newALocalDefinition(location, n, NameScope.LOCAL, type));
 	}
 
 	@Override

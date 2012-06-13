@@ -34,7 +34,9 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
@@ -46,14 +48,18 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class Delegate implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private final String name;
-	private DefinitionList definitions;
+	private List<PDefinition> definitions;
 
-	public Delegate(String name, DefinitionList definitions)
+	public Delegate(String name, List<PDefinition> definitions)
 	{
 		this.name = name;
 		this.definitions = definitions;
@@ -76,7 +82,7 @@ public class Delegate implements Serializable
 				delegateClass = this.getClass().getClassLoader().loadClass(classname);
 				delegateMethods = new HashMap<String, Method>();
 				delegateArgs = new HashMap<String, LexNameList>();
-				definitions = definitions.singleDefinitions();
+				definitions = PDefinitionListAssistantTC.singleDefinitions(definitions);
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -116,39 +122,39 @@ public class Delegate implements Serializable
 
 		if (m == null)
 		{
-			PatternList plist = null;
+			List<PPattern> plist = null;
 			String mname = title.substring(0, title.indexOf('('));
 
 			for (PDefinition d: definitions)
 			{
-				if (d.name.name.equals(mname))
+				if (d.getName().name.equals(mname))
 				{
-    	 			if (d.isOperation())
+    	 			if (PDefinitionAssistantTC.isOperation(d))
     	 			{
     	 				if (d instanceof AExplicitOperationDefinition)
     	 				{
     	 					AExplicitOperationDefinition e = (AExplicitOperationDefinition)d;
-    	 					plist = e.parameterPatterns;
+    	 					plist = e.getParameterPatterns();
     	 				}
     	 				else if (d instanceof AImplicitOperationDefinition)
     	 				{
     	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
-    	 					plist = e.getParamPatternList();
+    	 					plist = AImplicitOperationDefinitionAssistantTC.getParamPatternList(e);
     	 				}
 
     	 				break;
     	 			}
-    	 			else if (d.isFunction())
+    	 			else if (PDefinitionAssistantTC.isFunction(d))
     	 			{
-    	 				if (d instanceof AExplicitOperationDefinition)
+    	 				if (d instanceof AExplicitFunctionDefinition)
     	 				{
-    	 					AExplicitOperationDefinition e = (AExplicitOperationDefinition)d;
-    	 					plist = e.paramPatternList.get(0);
-    	 				}
-    	 				else if (d instanceof AImplicitOperationDefinition)
-    	 				{
-    	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
+    	 					AExplicitFunctionDefinition e = (AExplicitFunctionDefinition)d;
     	 					plist = e.getParamPatternList().get(0);
+    	 				}
+    	 				else if (d instanceof AImplicitFunctionDefinition)
+    	 				{
+    	 					AImplicitFunctionDefinition e = (AImplicitFunctionDefinition)d;
+    	 					plist = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(e).get(0);
     	 				}
 
     	 				break;
@@ -166,7 +172,7 @@ public class Delegate implements Serializable
 					if (p instanceof AIdentifierPattern)
 					{
 						AIdentifierPattern ip = (AIdentifierPattern)p;
-						anames.add(ip.name);
+						anames.add(ip.getName());
 						ptypes.add(Value.class);
 					}
 					else

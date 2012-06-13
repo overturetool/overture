@@ -182,7 +182,7 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 		{
 			AUnionType uto = (AUnionType)to;
 
-			for (PType ut: uto.types)
+			for (PType ut: uto.getTypes())
 			{
 				try
 				{
@@ -202,11 +202,11 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			// the context. They exist in the context, if the function has
 			// been instantiated with type parameters (see FunctionValue).
 
-			Value v = ctxt.check(pt.name);
+			Value v = ctxt.check(pt.getName());
 
 			if (v == null)
 			{
-				abort(4147, "Polymorphic function missing @" + pt.name, ctxt);
+				abort(4147, "Polymorphic function missing @" + pt.getName(), ctxt);
 			}
 			else if (v instanceof ParameterValue)
 			{
@@ -219,17 +219,17 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 		else if (to instanceof AOptionalType)
 		{
 			AOptionalType ot = (AOptionalType)to;
-			return convertValueTo(ot.type, ctxt);
+			return convertValueTo(ot.getType(), ctxt);
 		}
 		else if (to instanceof ABracketType)
 		{
 			ABracketType bt = (ABracketType)to;
-			return convertValueTo(bt.type, ctxt);
+			return convertValueTo(bt.getType(), ctxt);
 		}
 		else if (to instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType ntype = (ANamedInvariantType)to;
-			Value converted = convertValueTo(ntype.type, ctxt);
+			Value converted = convertValueTo(ntype.getType(), ctxt);
 			return new InvariantValue(ntype, converted, ctxt);
 		}
 		else if (to instanceof AUnknownType)

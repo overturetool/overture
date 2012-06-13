@@ -29,6 +29,8 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
+import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
@@ -47,19 +49,19 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
-		this.invariant = type.getInvariant(ctxt);
+		this.invariant = SInvariantTypeAssistantInterpreter.getInvariant(type,ctxt);
 
-		if (values.size() != type.fields.size())
+		if (values.size() != type.getFields().size())
 		{
-			abort(4078, "Wrong number of fields for " + type.name, ctxt);
+			abort(4078, "Wrong number of fields for " + type.getName(), ctxt);
 		}
 
-		Iterator<AFieldField> fi = type.fields.iterator();
+		Iterator<AFieldField> fi = type.getFields().iterator();
 
 		for (Value v: values)
 		{
 			AFieldField f = fi.next();
-			fieldmap.add(f.tag, v.convertTo(f.type, ctxt), !f.equalityAbstration);
+			fieldmap.add(f.getTag(), v.convertTo(f.getType(), ctxt), !f.getEqualityAbstraction());
 		}
 
 		if (invariant != null && Settings.invchecks)
@@ -86,26 +88,26 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
-		this.invariant = type.getInvariant(ctxt);
+		this.invariant = SInvariantTypeAssistantInterpreter.getInvariant(type,ctxt);
 
-		if (mapvalues.size() != type.fields.size())
+		if (mapvalues.size() != type.getFields().size())
 		{
-			abort(4080, "Wrong number of fields for " + type.name, ctxt);
+			abort(4080, "Wrong number of fields for " + type.getName(), ctxt);
 		}
 
-		Iterator<AFieldField> fi = type.fields.iterator();
+		Iterator<AFieldField> fi = type.getFields().iterator();
 
 		while (fi.hasNext())
 		{
-			Field f = fi.next();
-			Value v = mapvalues.get(f.tag);
+			AFieldField f = fi.next();
+			Value v = mapvalues.get(f.getTag());
 
 			if (v == null)
 			{
-				abort(4081, "Field not defined: " + f.tag, ctxt);
+				abort(4081, "Field not defined: " + f.getTag(), ctxt);
 			}
 
-			fieldmap.add(f.tag, v.convertTo(f.type, ctxt), !f.equalityAbstration);
+			fieldmap.add(f.getTag(), v.convertTo(f.getType(), ctxt), !f.getEqualityAbstraction());
 		}
 
 		if (invariant != null &&
@@ -148,8 +150,8 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			AFieldField f = type.findField(nvp.name.name);
-			this.fieldmap.add(nvp.name.name, nvp.value, !f.equalityAbstration);
+			AFieldField f = PTypeAssistantInterpreter.findField(type,nvp.name.name);
+			this.fieldmap.add(nvp.name.name, nvp.value, !f.getEqualityAbstraction());
 		}
 	}
 
@@ -211,12 +213,12 @@ public class RecordValue extends Value
 
 			if (ot.type.equals(type))
 			{
-				for (AFieldField f: type.fields)
+				for (AFieldField f: type.getFields())
 				{
-					if (!f.equalityAbstration)
+					if (!f.getEqualityAbstraction())
 					{
-						Value fv = fieldmap.get(f.tag);
-						Value ofv = ot.fieldmap.get(f.tag);
+						Value fv = fieldmap.get(f.getTag());
+						Value ofv = ot.fieldmap.get(f.getTag());
 
 						if (fv == null || ofv == null)
 						{
@@ -243,18 +245,18 @@ public class RecordValue extends Value
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("mk_" + type.name + "(");
+		sb.append("mk_" + type.getName() + "(");
 
-		Iterator<AFieldField> fi = type.fields.iterator();
+		Iterator<AFieldField> fi = type.getFields().iterator();
 
 		if (fi.hasNext())
 		{
-    		String ftag = fi.next().tag;
+    		String ftag = fi.next().getTag();
     		sb.append(fieldmap.get(ftag));
 
     		while (fi.hasNext())
     		{
-    			ftag = fi.next().tag;
+    			ftag = fi.next().getTag();
     			sb.append(", " + fieldmap.get(ftag));
     		}
 		}
@@ -266,7 +268,7 @@ public class RecordValue extends Value
 	@Override
 	public int hashCode()
 	{
-		return type.name.hashCode() + fieldmap.hashCode();
+		return type.getName().hashCode() + fieldmap.hashCode();
 	}
 
 	@Override

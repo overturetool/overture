@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (C) 2008, 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,27 +21,35 @@
  *
  ******************************************************************************/
 
-package org.overture.interpreter.messages;
+package org.overture.interpreter;
 
-import java.util.List;
+import org.overture.ast.factory.AstFactoryParser;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.messages.InternalException;
+import org.overture.config.Settings;
+import org.overture.interpreter.util.ExitStatus;
 
-import org.overture.ast.util.Utils;
 
-
-@SuppressWarnings("serial")
-public class VDMErrorsException extends Exception
+public class VDMRT extends VDMPP
 {
-	public final List<VDMError> errors;
-
-	public VDMErrorsException(List<VDMError> errors)
+	public VDMRT()
 	{
-		super(Utils.listToString(errors, "\n"));
-		this.errors = errors;
+		Settings.dialect = Dialect.VDM_RT;
 	}
 
 	@Override
-	public String toString()
+	public ExitStatus typeCheck()
 	{
-		return getMessage();
+		try
+		{
+			classes.add(AstFactoryParser.newACpuClassDefinition());
+  			classes.add(AstFactoryParser.newABusClassDefinition());
+		}
+		catch (Exception e)
+		{
+			throw new InternalException(11, "CPU or BUS creation failure");
+		}
+
+		return super.typeCheck();
 	}
 }

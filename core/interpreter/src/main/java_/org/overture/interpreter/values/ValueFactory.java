@@ -170,14 +170,14 @@ public class ValueFactory
 		if(type instanceof ARecordInvariantType)
 		{
 			ARecordInvariantType rType = (ARecordInvariantType) type;
-			if(fields.length!=rType.fields.size())
+			if(fields.length!=rType.getFields().size())
 			{
 				throw new ValueFactoryException("Fileds count do not match record field count");
 			}
 			NameValuePairList list = new NameValuePairList();
-			for (int i = 0; i < rType.fields.size(); i++)
+			for (int i = 0; i < rType.getFields().size(); i++)
 			{
-				list.add(rType.fields.get(i).tagname, fields[i]);
+				list.add(rType.getFields().get(i).getTagname(), fields[i]);
 			}
 			return new RecordValue(rType,list);
 		}

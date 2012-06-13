@@ -38,6 +38,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.BacktrackInputReader;
 
+
 /**
  * A class to hold a source file for source debug output.
  */
@@ -52,10 +53,10 @@ public class SourceFile
 		"<p class=MsoNormal style='text-autospace:none'><span style='font-size:10.0pt; font-family:\"Courier New\"; color:black'>";
 	private final static String HTMLEND = "</span></p>";
 
-//	public SourceFile(File filename) throws IOException
-//	{
-//		this(filename,VDMJ.filecharset);
-//	}
+	public SourceFile(File filename) throws IOException
+	{
+		this(filename,VDMJ.filecharset);
+	}
 	
 	public SourceFile(File filename, String charset) throws IOException
 	{
@@ -163,7 +164,7 @@ public class SourceFile
 
 		out.println("<html>");
 		out.println("<head>");
-		out.println("<meta http-equiv=Content-Type content=\"text/html; charset=" + charset + "\">");
+		out.println("<meta http-equiv=Content-Type content=\"text/html; charset=" + VDMJ.filecharset + "\">");
 		out.println("<meta name=Generator content=\"Microsoft Word 11 (filtered)\">");
 		out.println("<title>" + filename.getName() + "</title>");
 		out.println("<style>");

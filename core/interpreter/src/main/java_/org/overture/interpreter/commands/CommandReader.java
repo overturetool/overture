@@ -59,11 +59,14 @@ import org.overture.interpreter.runtime.LatexSourceFile;
 import org.overture.interpreter.runtime.SourceFile;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.util.ExitStatus;
+import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ParserException;
+import org.overture.pog.obligation.ProofObligation;
+import org.overture.pog.obligation.ProofObligationList;
 
 
 
@@ -1375,11 +1378,11 @@ abstract public class CommandReader
 			file = interpreter.getDefaultFile();
 		}
 
-		Statement stmt = interpreter.findStatement(file, line);
+		PStm stmt = interpreter.findStatement(file, line);
 
 		if (stmt == null)
 		{
-			Expression exp = interpreter.findExpression(file, line);
+			PExp exp = interpreter.findExpression(file, line);
 
 			if (exp == null)
 			{
@@ -1478,11 +1481,11 @@ abstract public class CommandReader
 			file = interpreter.getDefaultFile();
 		}
 
-		Statement stmt = interpreter.findStatement(file, line);
+		PStm stmt = interpreter.findStatement(file, line);
 
 		if (stmt == null)
 		{
-			Expression exp = interpreter.findExpression(file, line);
+			PExp exp = interpreter.findExpression(file, line);
 
 			if (exp == null)
 			{

@@ -26,6 +26,7 @@ package org.overture.interpreter.values;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
 
 
 public class RationalValue extends RealValue
