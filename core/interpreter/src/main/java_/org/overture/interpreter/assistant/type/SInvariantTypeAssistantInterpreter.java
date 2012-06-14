@@ -1,9 +1,9 @@
 package org.overture.interpreter.assistant.type;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.Value;
@@ -23,7 +23,7 @@ public class SInvariantTypeAssistantInterpreter
 			}
 			catch (ValueException e)
 			{
-				abort(e);
+				RuntimeError.abort(type.getLocation(),e);
 			}
 		}
 

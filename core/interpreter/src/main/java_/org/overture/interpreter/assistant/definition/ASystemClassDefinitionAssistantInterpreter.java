@@ -73,7 +73,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 
 					// Run the constructor to do any deploys etc.
 
-					system = makeNewInstance(null, new ValueList(),
+					system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass,null, new ValueList(),
 							initialContext, new HashMap<LexNameToken, ObjectValue>());
 					
 					//Bind system instances to runtime validator

@@ -46,6 +46,7 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ClassReader;
@@ -61,7 +62,7 @@ import org.overture.typechecker.TypeChecker;
 
 public class VDMPP extends VDMJ
 {
-	protected ClassList classes = new ClassList();
+	protected ClassListInterpreter classes = new ClassListInterpreter();
 
 	public VDMPP()
 	{
@@ -93,12 +94,12 @@ public class VDMPP extends VDMJ
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
    	    	        ObjectInputStream ois = new ObjectInputStream(gis);
 
-   	    	        ClassList loaded = null;
+   	    	        ClassListInterpreter loaded = null;
    	    	        long begin = System.currentTimeMillis();
 
    	    	        try
    	    	        {
-   	    	        	loaded = (ClassList)ois.readObject();
+   	    	        	loaded = new ClassListInterpreter((ClassList)ois.readObject());
    	    	        }
        	 			catch (Exception e)
        				{

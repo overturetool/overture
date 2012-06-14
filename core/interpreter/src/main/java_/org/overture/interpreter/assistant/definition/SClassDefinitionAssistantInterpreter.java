@@ -1,7 +1,9 @@
 package org.overture.interpreter.assistant.definition;
 
 import java.util.Collection;
+import java.util.HashMap;
 
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.runtime.Context;
@@ -10,6 +12,7 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
@@ -95,6 +98,14 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 	public static Value invokeDelegate(SClassDefinition classdef,
 			Object delegateObject, Context ctxt)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Object makeNewInstance(ASystemClassDefinition systemClass,
+			Object object, ValueList valueList, RootContext initialContext,
+			HashMap<LexNameToken, ObjectValue> hashMap)
 	{
 		// TODO Auto-generated method stub
 		return null;

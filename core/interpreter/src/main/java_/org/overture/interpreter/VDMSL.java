@@ -45,6 +45,7 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.util.ExitStatus;
+import org.overture.interpreter.util.ModuleListInterpreter;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ModuleReader;
 import org.overture.pog.obligation.ProofObligationList;
@@ -59,7 +60,7 @@ import org.overture.typechecker.TypeChecker;
 
 public class VDMSL extends VDMJ
 {
-	private ModuleList modules = new ModuleList();
+	private ModuleListInterpreter modules = new ModuleListInterpreter();
 
 	public VDMSL()
 	{
@@ -91,12 +92,12 @@ public class VDMSL extends VDMJ
    	    	        GZIPInputStream gis = new GZIPInputStream(fis);
    	    	        ObjectInputStream ois = new ObjectInputStream(gis);
 
-   	    	        ModuleList loaded = null;
+   	    	        ModuleListInterpreter loaded = null;
    	    	        long begin = System.currentTimeMillis();
 
    	    	        try
    	    	        {
-   	    	        	loaded = (ModuleList)ois.readObject();
+   	    	        	loaded = new ModuleListInterpreter((ModuleList)ois.readObject());
    	    	        }
        	 			catch (Exception e)
        				{

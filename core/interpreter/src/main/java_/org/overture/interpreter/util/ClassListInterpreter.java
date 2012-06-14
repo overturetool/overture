@@ -16,10 +16,14 @@ import org.overture.interpreter.values.TransactionValue;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 
 public class ClassListInterpreter extends ClassList
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6070028869925906992L;
 
 	public ClassListInterpreter(ClassList classList)
 	{
@@ -27,6 +31,12 @@ public class ClassListInterpreter extends ClassList
 		addAll(classList);
 	}
 	
+
+	public ClassListInterpreter()
+	{
+		super();
+	}
+
 
 	public void systemInit(ResourceScheduler scheduler, DBGPReader dbgp, RootContext initialContext)
 	{
