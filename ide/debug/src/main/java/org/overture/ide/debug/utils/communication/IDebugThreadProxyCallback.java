@@ -19,7 +19,7 @@
 package org.overture.ide.debug.utils.communication;
 
 import org.overture.ide.debug.logging.LogItem;
-import org.overturetool.vdmj.scheduler.RunState;
+import org.overture.interpreter.scheduler.RunState;
 
 
 public interface IDebugThreadProxyCallback
