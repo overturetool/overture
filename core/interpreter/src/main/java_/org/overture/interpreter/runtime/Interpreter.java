@@ -357,7 +357,7 @@ abstract public class Interpreter
 
 	public Breakpoint setTracepoint(PStm stmt, String trace) throws Exception
 	{
-		stmt.breakpoint = new Tracepoint(stmt.location, ++nextbreakpoint, trace);
+		stmt.breakpoint = new Tracepoint(stmt.getLocation(), ++nextbreakpoint, trace);
 		breakpoints.put(nextbreakpoint, stmt.breakpoint);
 		return stmt.breakpoint;
 	}

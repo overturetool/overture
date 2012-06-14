@@ -38,6 +38,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.commands.CommandReader;
 import org.overture.interpreter.commands.ModuleCommandReader;
 import org.overture.interpreter.messages.Console;
@@ -243,7 +244,7 @@ public class VDMSL extends VDMJ
 
 		if (pog && terrs == 0)
 		{
-			ProofObligationList list = modules.getProofObligations();
+			ProofObligationList list = ModuleListAssistantInterpreter.getProofObligations(modules);
 
 			if (list.isEmpty())
 			{

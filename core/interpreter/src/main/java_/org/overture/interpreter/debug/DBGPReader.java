@@ -2111,7 +2111,7 @@ public class DBGPReader
 			ltr.close();
 		}
 
-		if (token.isNot(Token.NAME))
+		if (token.isNot(VDMToken.NAME))
 		{
 			throw new DBGPException(DBGPErrorCode.CANT_GET_PROPERTY, token.toString());
 		}

@@ -25,12 +25,12 @@ package org.overture.interpreter.traces;
 
 import java.util.Vector;
 
-import org.overturetool.vdmj.statements.CallObjectStatement;
-import org.overturetool.vdmj.statements.CallStatement;
-import org.overturetool.vdmj.statements.Statement;
+import org.overture.ast.statements.ACallObjectStm;
+import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.PStm;
 
 @SuppressWarnings("serial")
-public class CallSequence extends Vector<Statement>
+public class CallSequence extends Vector<PStm>
 {
 	private int filtered = 0;
 
@@ -40,7 +40,7 @@ public class CallSequence extends Vector<Statement>
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (Statement stmt: this)
+		for (PStm stmt: this)
 		{
     		if (!(stmt instanceof TraceVariableStatement))
     		{
@@ -58,7 +58,7 @@ public class CallSequence extends Vector<Statement>
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (Statement stmt: this)
+		for (PStm stmt: this)
 		{
     		if (stmt instanceof TraceVariableStatement)
     		{
@@ -82,18 +82,18 @@ public class CallSequence extends Vector<Statement>
        					break;
     			}
      		}
-    		else if (stmt instanceof CallStatement)
+    		else if (stmt instanceof ACallStm)
     		{
-    			CallStatement cs = (CallStatement)stmt;
+    			ACallStm cs = (ACallStm)stmt;
        			sb.append(sep);
-       			sb.append(cs.name.name);
+       			sb.append(cs.getName().name);
        			sep = "; ";
      		}
-    		else if (stmt instanceof CallObjectStatement)
+    		else if (stmt instanceof ACallObjectStm)
     		{
-    			CallObjectStatement cs = (CallObjectStatement)stmt;
+    			ACallObjectStm cs = (ACallObjectStm)stmt;
        			sb.append(sep);
-       			sb.append(cs.fieldname);
+       			sb.append(cs.getFieldname());
        			sep = "; ";
     		}
 		}

@@ -28,6 +28,7 @@ import java.util.Random;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
+import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.debug.DBGPReason;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -114,7 +115,7 @@ public class PeriodicThread extends SchedulablePoolThread
 	protected void body()
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
-		LexLocation from = object.type.classdef.location;
+		LexLocation from = object.type.getClassdef().getLocation();
 		Context ctxt = new ObjectContext(from, "async", global, object);
 
 		if (Settings.dialect == Dialect.VDM_PP)
@@ -156,7 +157,7 @@ public class PeriodicThread extends SchedulablePoolThread
     		try
     		{
     			int overlaps = object.incPeriodicCount();
-
+    			
     			if (Properties.rt_max_periodic_overlaps > 0 &&
     				overlaps >= Properties.rt_max_periodic_overlaps)
     			{

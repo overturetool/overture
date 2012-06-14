@@ -60,6 +60,9 @@ public class Properties extends ConfigBase
 	/** Enable InstVarChange RT log entries. */
 	public static boolean rt_log_instvarchanges = false;
 
+	/** Maximum period thread overlaps allowed per object */
+	public static int rt_max_periodic_overlaps = 20;
+	
 	/** Enable extra RT log diagnostics for guards etc. */
 	public static boolean diags_guards = false;
 

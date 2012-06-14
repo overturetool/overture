@@ -23,13 +23,14 @@
 
 package org.overture.interpreter.traces;
 
-import org.overturetool.vdmj.statements.Statement;
+import org.overture.ast.statements.PStm;
+
 
 public class StatementTraceNode extends TraceNode
 {
-	public final Statement statement;
+	public final PStm statement;
 
-	public StatementTraceNode(Statement newStatement)
+	public StatementTraceNode(PStm newStatement)
 	{
 		this.statement = newStatement;
 	}

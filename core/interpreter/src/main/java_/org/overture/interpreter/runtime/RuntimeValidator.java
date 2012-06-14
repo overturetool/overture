@@ -25,9 +25,12 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
+import org.overture.interpreter.runtime.validation.BasicRuntimeValidator;
+import org.overture.interpreter.runtime.validation.IRuntimeValidatior;
 import org.overture.interpreter.scheduler.AsyncThread;
 import org.overture.interpreter.values.OperationValue;
 
@@ -48,7 +51,7 @@ public class RuntimeValidator
 		}
 	}
 	
-	public static void bindSystemVariables(SystemDefinition systemDefinition)
+	public static void bindSystemVariables(ASystemClassDefinition systemDefinition)
 	{
 		if(Settings.timingInvChecks)
 		{

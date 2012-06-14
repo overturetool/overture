@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -40,6 +41,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
@@ -50,10 +52,12 @@ import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.scheduler.MainThread;
 import org.overture.interpreter.scheduler.SystemClock;
+import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
@@ -408,28 +412,28 @@ public class ClassInterpreter extends Interpreter
 
 
 	@Override
-	public Context getInitialTraceContext(NamedTraceDefinition tracedef,boolean debug) throws ValueException
+	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,boolean debug) throws ValueException
 	{
 		ObjectValue object = null;
 
-		ClassDefinition classdef=tracedef.classDefinition;
+		SClassDefinition classdef=tracedef.getClassDefinition();
 
 		// Create a new test object
-		object = classdef.newInstance(null, null, initialContext);
+		object = SClassDefinitionAssistantInterpreter.newInstance(classdef,null, null, initialContext);
 
 
 		Context ctxt = new ObjectContext(
-				classdef.name.location, classdef.name.name + "()",
+				classdef.getName().location, classdef.getName().name + "()",
 				initialContext, object);
 
-		ctxt.put(classdef.name.getSelfName(), object);
+		ctxt.put(classdef.getName().getSelfName(), object);
 
 		return ctxt;
 	}
 
 	@Override
 	public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test,boolean debug)
+			ANamedTraceDefinition tracedef, CallSequence test,boolean debug)
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
@@ -455,13 +459,13 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public Type findType(String typename)
+	public PType findType(String typename)
 	{
-		for (ClassDefinition cDef : classes)
+		for (SClassDefinition cDef : classes)
 		{
-			for (Definition def : cDef.getDefinitions())
+			for (PDefinition def : cDef.getDefinitions())
 			{
-				if(def instanceof TypeDefinition)
+				if(def instanceof ATypeDefinition)
 				{
 					if(def.getName().equals(typename))
 					{

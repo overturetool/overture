@@ -16,6 +16,7 @@ import org.overture.interpreter.values.TransactionValue;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
+import org.overturetool.vdmj.definitions.ClassDefinition;
 
 public class ClassListInterpreter extends ClassList
 {
@@ -64,7 +65,7 @@ public class ClassListInterpreter extends ClassList
 
 		for (SClassDefinition cdef: this)
 		{
-			cdef.staticInit(globalContext);
+			SClassDefinitionAssistantInterpreter.staticInit(cdef,globalContext);
 		}
 
 		// Values can forward reference each other, which means that we don't
@@ -82,7 +83,7 @@ public class ClassListInterpreter extends ClassList
     		{
     			try
     			{
-    				cdef.staticValuesInit(globalContext);
+    				SClassDefinitionAssistantInterpreter.staticValuesInit(cdef,globalContext);
     			}
     			catch (ContextException e)
     			{
@@ -121,5 +122,25 @@ public class ClassListInterpreter extends ClassList
 
 		obligations.trivialCheck();
 		return obligations;
+	}
+	
+	public void setLoaded()
+	{
+		for (SClassDefinition d: this)
+		{
+			d.typechecked = true;
+		}
+	}
+
+	public int notLoaded()
+	{
+		int count = 0;
+
+		for (SClassDefinition d: this)
+		{
+			if (!d.typechecked) count++;
+		}
+
+		return count;
 	}
 }

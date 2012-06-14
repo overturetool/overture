@@ -40,6 +40,7 @@ import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
@@ -517,11 +518,11 @@ public class ObjectValue extends Value
 
 	public boolean hasDelegate()
 	{
-		if (type.getClassdef().hasDelegate())
+		if (SClassDefinitionAssistantInterpreter.hasDelegate(type.getClassdef()))
 		{
 			if (delegateObject == null)
 			{
-				delegateObject = type.getClassdef().newInstance();
+				delegateObject = SClassDefinitionAssistantInterpreter.newInstance(type.getClassdef());
 			}
 
 			return true;
@@ -532,7 +533,7 @@ public class ObjectValue extends Value
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		return type.getClassdef().invokeDelegate(delegateObject, ctxt);
+		return SClassDefinitionAssistantInterpreter.invokeDelegate(type.getClassdef(),delegateObject, ctxt);
 	}
 
 	public static void init()

@@ -50,6 +50,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
@@ -74,6 +75,7 @@ import org.overture.interpreter.scheduler.MessageRequest;
 import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.parser.config.Properties;
+import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -254,7 +256,7 @@ public class OperationValue extends Value
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
-			stateContext = state.getStateContext();
+			stateContext = AStateDefinitionAssistantInterpreter.getStateContext(state);
 		}
 
 		RootContext argContext = newContext(from, toTitle(), ctxt);

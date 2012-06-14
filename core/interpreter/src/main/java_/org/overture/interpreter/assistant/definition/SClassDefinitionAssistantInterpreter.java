@@ -1,9 +1,18 @@
 package org.overture.interpreter.assistant.definition;
 
+import java.util.Collection;
+
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
+import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.obligation.ProofObligation;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssistantTC
@@ -37,10 +46,57 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		return v;
 	}
 
-	public static NameValuePairList getStatics(SClassDefinition classdef)
+	public static Context getStatics(SClassDefinition classDef)
+	{
+		Context ctxt = new Context(classDef.getLocation(), "Statics", null);
+		ctxt.putAll(publicStaticValues);
+		ctxt.putAll(privateStaticValues);
+		return ctxt;
+	}
+
+	public static ObjectValue newInstance(SClassDefinition classdef,
+			Object object, Object object2, RootContext initialContext)
 	{
 		// TODO Auto-generated method stub
-		assert false : "not implemented";
+		return null;
+	}
+
+	public static void staticInit(SClassDefinition cdef,
+			StateContext globalContext)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static ProofObligationList getProofObligations(
+			SClassDefinition c, POContextStack ctxt)
+	{
+		return PDefinitionListAssistantInterpreter.getProofObligations(c.getDefinitions(), ctxt);
+	}
+
+	public static void staticValuesInit(SClassDefinition cdef,
+			StateContext globalContext)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static boolean hasDelegate(SClassDefinition classdef)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public static Object newInstance(SClassDefinition classdef)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Value invokeDelegate(SClassDefinition classdef,
+			Object delegateObject, Context ctxt)
+	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 

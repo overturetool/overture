@@ -1,6 +1,8 @@
 package org.overture.typechecker.assistant.definition;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
 
@@ -39,4 +41,10 @@ public class PDefinitionSet extends HashSet<PDefinition>
 		return false;
 	}
 	
+	public List<PDefinition> asList()
+	{
+		List<PDefinition> list = new Vector<PDefinition>();
+		list.addAll(this);
+		return list;
+	}
 }

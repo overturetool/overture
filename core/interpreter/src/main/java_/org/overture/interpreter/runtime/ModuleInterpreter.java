@@ -28,14 +28,36 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
+import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
+import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
+import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.MainThread;
+import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ExpressionReader;
+import org.overture.pog.obligation.ProofObligationList;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.ModuleEnvironment;
+import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 
 
 /**
@@ -47,7 +69,7 @@ public class ModuleInterpreter extends Interpreter
 	/** A list of module definitions in the specification. */
 	public final ModuleList modules;
 	/** The module starting execution. */
-	public Module defaultModule;
+	public AModuleModules defaultModule;
 
 	/**
 	 * Create an Interpreter from the list of modules passed.
@@ -66,7 +88,7 @@ public class ModuleInterpreter extends Interpreter
 		}
 		else
 		{
-			setDefaultName(modules.get(0).name.name);
+			setDefaultName(modules.get(0).getName().name);
 		}
 	}
 
@@ -82,13 +104,13 @@ public class ModuleInterpreter extends Interpreter
 	{
 		if (mname == null)
 		{
-			defaultModule = new Module();
+			defaultModule = AstFactory.newAModuleModules();
 		}
 		else
 		{
-			for (Module m: modules)
+			for (AModuleModules m: modules)
 			{
-				if (m.name.name.equals(mname))
+				if (m.getName().name.equals(mname))
 				{
 					defaultModule = m;
 					return;
@@ -106,7 +128,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public String getDefaultName()
 	{
-		return defaultModule.name.name;
+		return defaultModule.getName().name;
 	}
 
 	/**
@@ -116,7 +138,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultModule.name.location.file;
+		return defaultModule.getName().location.file;
 	}
 
 	@Override
@@ -131,7 +153,7 @@ public class ModuleInterpreter extends Interpreter
 
 	public Context getStateContext()
 	{
-		return defaultModule.getStateContext();
+		return AModuleModulesAssistantInterpreter.getStateContext(defaultModule);
 	}
 
 	@Override
@@ -156,18 +178,18 @@ public class ModuleInterpreter extends Interpreter
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
 		CPUValue.init(scheduler);
-		initialContext = modules.initialize(dbgp);
+		initialContext = ModuleListAssistantInterpreter.initialize(modules,dbgp);
 	}
 
 	@Override
 	public void traceInit(DBGPReader dbgp)
 	{
 		scheduler.reset();
-		initialContext = modules.initialize(dbgp);
+		initialContext = ModuleListAssistantInterpreter.initialize(modules, dbgp);
 	}
 
 	@Override
-	protected Expression parseExpression(String line, String module) throws Exception
+	protected PExp parseExpression(String line, String module) throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(line, Dialect.VDM_SL, Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
@@ -187,12 +209,12 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Value execute(String line, DBGPReader dbgp) throws Exception
 	{
-		Expression expr = parseExpression(line, getDefaultName());
+		PExp expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
 		typeCheck(expr, env);
 
-		Context mainContext = new StateContext(defaultModule.name.location,
-				"module scope",	null, defaultModule.getStateContext());
+		Context mainContext = new StateContext(defaultModule.getName().location,
+				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(dbgp, null);
@@ -223,7 +245,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
-		Expression expr = parseExpression(line, getDefaultName());
+		PExp expr = parseExpression(line, getDefaultName());
 		Environment env = new ModuleEnvironment(defaultModule);
 
 		try
@@ -241,14 +263,14 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	public Module findModule(String module)
+	public AModuleModules findModule(String module)
 	{
 		LexIdentifierToken name = new LexIdentifierToken(module, false, null);
 		return modules.findModule(name);
 	}
 
 	@Override
-	protected NamedTraceDefinition findTraceDefinition(LexNameToken name)
+	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
 		return modules.findTraceDefinition(name);
 	}
@@ -263,7 +285,7 @@ public class ModuleInterpreter extends Interpreter
 	 */
 
 	@Override
-	public Statement findStatement(File file, int lineno)
+	public PStm findStatement(File file, int lineno)
 	{
 		return modules.findStatement(file, lineno);
 	}
@@ -278,7 +300,7 @@ public class ModuleInterpreter extends Interpreter
 	 */
 
 	@Override
-	public Expression findExpression(File file, int lineno)
+	public PExp findExpression(File file, int lineno)
 	{
 		return modules.findExpression(file, lineno);
 	}
@@ -286,11 +308,11 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public ProofObligationList getProofObligations()
 	{
-		return modules.getProofObligations();
+		return ModuleListAssistantInterpreter.getProofObligations(modules);
 	}
 
 	@Override
-	public Context getInitialTraceContext(NamedTraceDefinition tracedef, boolean debug) throws ValueException
+	public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException
 	{
 		return initialContext;
 	}
@@ -299,7 +321,7 @@ public class ModuleInterpreter extends Interpreter
 
 	@Override
 	public List<Object> runOneTrace(
-			NamedTraceDefinition tracedef, CallSequence test, boolean debug)
+			ANamedTraceDefinition tracedef, CallSequence test, boolean debug)
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
@@ -326,13 +348,13 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	public Type findType(String typename)
+	public PType findType(String typename)
 	{
-		for (Module module : modules)
+		for (AModuleModules module : modules)
 		{
-			for (Definition def : module.defs)
+			for (PDefinition def : module.getDefs())
 			{
-				if(def instanceof TypeDefinition)
+				if(def instanceof ATypeDefinition)
 				{
 					if(def.getName().equals(typename))
 					{

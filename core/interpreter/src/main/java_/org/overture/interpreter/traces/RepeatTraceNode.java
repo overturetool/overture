@@ -23,8 +23,9 @@
 
 package org.overture.interpreter.traces;
 
-import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.statements.SkipStatement;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.LexLocation;
+
 
 public class RepeatTraceNode extends TraceNode
 {
@@ -60,7 +61,7 @@ public class RepeatTraceNode extends TraceNode
 			if (r == 0)
 			{
 				CallSequence seq = getVariables();
-   				seq.add(new SkipStatement(new LexLocation()));
+   				seq.add(AstFactory.newASkipStm(new LexLocation()));
     			tests.add(seq);
 				continue;
 			}

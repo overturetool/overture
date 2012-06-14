@@ -31,16 +31,18 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.DefinitionList;
-import org.overturetool.vdmj.messages.InternalException;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.typechecker.Environment;
-import org.overturetool.vdmj.typechecker.FlatEnvironment;
-import org.overturetool.vdmj.typechecker.PrivateClassEnvironment;
-import org.overturetool.vdmj.util.Utils;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.messages.InternalException;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.util.Utils;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatEnvironment;
+import org.overture.typechecker.PrivateClassEnvironment;
+
 
 @SuppressWarnings("serial")
 public class TestSequence extends Vector<CallSequence>
@@ -76,7 +78,7 @@ public class TestSequence extends Vector<CallSequence>
 		}
 	}
 
-	public void typeCheck(ClassDefinition classdef) throws Exception
+	public void typeCheck(SClassDefinition classdef) throws Exception
 	{
 		Interpreter interpreter = Interpreter.getInstance();
 
@@ -87,17 +89,17 @@ public class TestSequence extends Vector<CallSequence>
 			if (interpreter instanceof ClassInterpreter)
 			{
 				env = new FlatEnvironment(
-					classdef.getSelfDefinition(),
+					SClassDefinitionAssistantInterpreter.getSelfDefinition(classdef),
 					new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
 			}
 			else
 			{
 				env = new FlatEnvironment(
-					new DefinitionList(),
+					new Vector<PDefinition>(),
 					interpreter.getGlobalEnvironment());
 			}
 
-    		for (Statement statement: test)
+    		for (PStm statement: test)
     		{
 				interpreter.typeCheck(statement, env);
     		}

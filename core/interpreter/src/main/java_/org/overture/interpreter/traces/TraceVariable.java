@@ -36,7 +36,7 @@ public class TraceVariable
 	public final Value value;
 	public final PType type;
 
-	public TraceVariable(LexLocation location, LexNameToken name, Value value, Type type)
+	public TraceVariable(LexLocation location, LexNameToken name, Value value, PType type)
 	{
 		this.location = location;
 		this.name = name;

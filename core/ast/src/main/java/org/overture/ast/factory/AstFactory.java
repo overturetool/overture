@@ -3031,6 +3031,11 @@ public class AstFactory {
 		return result;
 	}
 
+	public static AModuleModules newAModuleModules()
+	{
+		return newAModuleModules(null, new Vector<PDefinition>());
+	}
+
 	
 	
 	

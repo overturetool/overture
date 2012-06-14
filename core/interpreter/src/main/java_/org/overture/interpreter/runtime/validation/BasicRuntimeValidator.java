@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -89,7 +90,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 	 
 		
 		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.getName().name,variables);
-		Context ctxt = systemDefinition.getStatics();
+		Context ctxt = SClassDefinitionAssistantInterpreter.getStatics(systemDefinition);
 		
 		
 		for (String[] strings : variablesTemp) {

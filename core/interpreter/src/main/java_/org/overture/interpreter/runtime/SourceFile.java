@@ -35,6 +35,7 @@ import java.util.Vector;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.interpreter.VDMJ;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.BacktrackInputReader;
 

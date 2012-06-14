@@ -57,7 +57,7 @@ public class SharedStateListner
 
 	public static void beforeVariableReadDuration(AVariableExp var)
 	{
-		if (checker != null && checker.reuiresCheck(var.name))
+		if (checker != null && checker.reuiresCheck(var.getName()))
 		{
 			synchronized (values)
 			{
@@ -69,11 +69,11 @@ public class SharedStateListner
 	public static void beforeAssignmentSet(AAssignmentStm assignStmt,
 			Value oldval, Value newval)
 	{
-		if (checker != null && checker.reuiresCheck(assignStmt.target))
+		if (checker != null && checker.reuiresCheck(assignStmt.getTarget()))
 		{
 			synchronized (values)
 			{
-				values.add(assignStmt.target.location);
+				values.add(assignStmt.getTarget().getLocation());
 			}
 		}
 	}

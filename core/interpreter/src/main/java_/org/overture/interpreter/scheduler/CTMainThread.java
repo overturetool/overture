@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.statements.PStm;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.runtime.Context;
@@ -68,7 +69,7 @@ public class CTMainThread extends MainThread
 	{
 		try
 		{
-			for (Statement statement: test)
+			for (PStm statement: test)
 			{
 				if (statement instanceof TraceVariableStatement)
 				{
