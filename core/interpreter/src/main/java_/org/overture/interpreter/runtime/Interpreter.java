@@ -48,6 +48,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
@@ -357,9 +358,9 @@ abstract public class Interpreter
 
 	public Breakpoint setTracepoint(PStm stmt, String trace) throws Exception
 	{
-		stmt.breakpoint = new Tracepoint(stmt.getLocation(), ++nextbreakpoint, trace);
-		breakpoints.put(nextbreakpoint, stmt.breakpoint);
-		return stmt.breakpoint;
+		BreakpointManager.setBreakpoint(stmt, new Tracepoint(stmt.getLocation(), ++nextbreakpoint, trace));
+		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(stmt));
+		return BreakpointManager.getBreakpoint(stmt);
 	}
 
 	/**
@@ -377,9 +378,9 @@ abstract public class Interpreter
 	public Breakpoint setTracepoint(PExp exp, String trace)
 		throws ParserException, LexException
 	{
-		exp.breakpoint = new Tracepoint(exp.getLocation(), ++nextbreakpoint, trace);
-		breakpoints.put(nextbreakpoint, exp.breakpoint);
-		return exp.breakpoint;
+		BreakpointManager.setBreakpoint(exp, new Tracepoint(exp.getLocation(), ++nextbreakpoint, trace));
+		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(exp));
+		return BreakpointManager.getBreakpoint(exp);
 	}
 
 	/**
@@ -397,9 +398,9 @@ abstract public class Interpreter
 	public Breakpoint setBreakpoint(PStm stmt, String condition)
 		throws ParserException, LexException
 	{
-		stmt.breakpoint = new Stoppoint(stmt.getLocation(), ++nextbreakpoint, condition);
-		breakpoints.put(nextbreakpoint, stmt.breakpoint);
-		return stmt.breakpoint;
+		BreakpointManager.setBreakpoint(stmt, new Stoppoint(stmt.getLocation(), ++nextbreakpoint, condition));
+		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(stmt));
+		return BreakpointManager.getBreakpoint(stmt);
 	}
 
 	/**
@@ -417,9 +418,9 @@ abstract public class Interpreter
 	public Breakpoint setBreakpoint(PExp exp, String condition)
 		throws ParserException, LexException
 	{
-		exp.breakpoint = new Stoppoint(exp.getLocation(), ++nextbreakpoint, condition);
-		breakpoints.put(nextbreakpoint, exp.breakpoint);
-		return exp.breakpoint;
+		BreakpointManager.setBreakpoint(exp, new Stoppoint(exp.getLocation(), ++nextbreakpoint, condition));
+		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(exp));
+		return BreakpointManager.getBreakpoint(exp);
 	}
 
 	/**
@@ -439,13 +440,13 @@ abstract public class Interpreter
 
 			if (stmt != null)
 			{
-				stmt.breakpoint = new Breakpoint(stmt.getLocation());
+				BreakpointManager.setBreakpoint(stmt, new Breakpoint(stmt.getLocation()));
 			}
 			else
 			{
 				PExp exp = findExpression(old.location.file, old.location.startLine);
 				assert (exp != null) : "Cannot locate old breakpoint?";
-				exp.breakpoint = new Breakpoint(exp.getLocation());
+				BreakpointManager.setBreakpoint(exp, new Breakpoint(exp.getLocation()));
 			}
 		}
 

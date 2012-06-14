@@ -48,6 +48,7 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.statements.PStm;
 import org.overture.config.Settings;
 import org.overture.interpreter.VDMJ;
+import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -1391,7 +1392,7 @@ abstract public class CommandReader
 			}
 			else
 			{
-				interpreter.clearBreakpoint(exp.breakpoint.number);
+				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 				Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 				println("Created " + bp);
 				println(interpreter.getSourceLine(bp.location));
@@ -1399,7 +1400,7 @@ abstract public class CommandReader
 		}
 		else
 		{
-			interpreter.clearBreakpoint(stmt.breakpoint.number);
+			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
@@ -1439,7 +1440,7 @@ abstract public class CommandReader
 		{
 			FunctionValue fv = (FunctionValue)v;
 			PExp exp = fv.body;
-			interpreter.clearBreakpoint(exp.breakpoint.number);
+			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 			Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
@@ -1448,7 +1449,7 @@ abstract public class CommandReader
 		{
 			OperationValue ov = (OperationValue)v;
 			PStm stmt = ov.body;
-			interpreter.clearBreakpoint(stmt.breakpoint.number);
+			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
@@ -1494,7 +1495,7 @@ abstract public class CommandReader
 			}
 			else
 			{
-				interpreter.clearBreakpoint(exp.breakpoint.number);
+				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 				Breakpoint bp = interpreter.setTracepoint(exp, trace);
 				println("Created " + bp);
 				println(interpreter.getSourceLine(bp.location));
@@ -1502,7 +1503,7 @@ abstract public class CommandReader
 		}
 		else
 		{
-			interpreter.clearBreakpoint(stmt.breakpoint.number);
+			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
@@ -1543,7 +1544,7 @@ abstract public class CommandReader
 		{
 			FunctionValue fv = (FunctionValue)v;
 			PExp exp = fv.body;
-			interpreter.clearBreakpoint(exp.breakpoint.number);
+			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 			Breakpoint bp = interpreter.setTracepoint(exp, trace);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
@@ -1552,7 +1553,7 @@ abstract public class CommandReader
 		{
 			OperationValue ov = (OperationValue)v;
 			PStm stmt = ov.body;
-			interpreter.clearBreakpoint(stmt.breakpoint.number);
+			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));

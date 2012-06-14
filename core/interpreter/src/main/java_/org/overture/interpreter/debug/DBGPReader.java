@@ -1657,10 +1657,10 @@ public class DBGPReader
 			{
 				try
 				{
-					if (exp.breakpoint.number != 0)
+					if (BreakpointManager.getBreakpoint(exp).number != 0)
 					{
 						// Multiple threads set BPs multiple times, so...
-						bp = exp.breakpoint;	// Re-use the existing one
+						bp = BreakpointManager.getBreakpoint(exp);	// Re-use the existing one
 					}
 					else
 					{
@@ -1683,10 +1683,10 @@ public class DBGPReader
 		{
 			try
 			{
-				if (stmt.breakpoint.number != 0)
+				if (BreakpointManager.getBreakpoint(stmt).number != 0)
 				{
 					// Multiple threads set BPs multiple times, so...
-					bp = stmt.breakpoint;	// Re-use the existing one
+					bp = BreakpointManager.getBreakpoint(stmt);	// Re-use the existing one
 				}
 				else
 				{
@@ -2441,7 +2441,7 @@ public class DBGPReader
     			}
     			else
     			{
-    				interpreter.clearBreakpoint(exp.breakpoint.number);
+    				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
     				Breakpoint bp = interpreter.setTracepoint(exp, trace);
     				pw.println("Created " + bp);
     				pw.println(interpreter.getSourceLine(bp.location));
@@ -2449,7 +2449,7 @@ public class DBGPReader
     		}
     		else
     		{
-    			interpreter.clearBreakpoint(stmt.breakpoint.number);
+    			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
     			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
     			pw.println("Created " + bp);
     			pw.println(interpreter.getSourceLine(bp.location));
