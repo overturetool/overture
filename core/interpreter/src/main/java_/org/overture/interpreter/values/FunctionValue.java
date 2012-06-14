@@ -34,7 +34,6 @@ import java.util.Stack;
 import java.util.Vector;
 
 import org.overture.ast.assistant.pattern.PTypeList;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -61,8 +60,6 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 

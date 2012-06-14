@@ -25,13 +25,11 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 
 @SuppressWarnings("serial")

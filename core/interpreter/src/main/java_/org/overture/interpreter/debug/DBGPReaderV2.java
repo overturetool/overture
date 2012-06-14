@@ -1384,11 +1384,19 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
             					if (sub instanceof AHistoryExp)
             					{
             						AHistoryExp hexp = (AHistoryExp)sub;
-            						Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
-            						LexNameToken name =
+            						
+									try
+									{
+										Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
+										LexNameToken name =
             							new LexNameToken(octxt.self.type.getName().module,
             								hexp.toString(),hexp.getLocation());
             						vars.put(name, v);
+									} catch (Throwable e)
+									{
+										//Ignore
+									}
+            						
             					}
             				}
             				
@@ -1407,11 +1415,19 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
                 				{
                 					LexNameList ops = new LexNameList(op);
                 					PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(null, VDMToken.ACTIVE), ops);
-            						Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
-            						LexNameToken name =
+            						
+									try
+									{
+										Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
+										LexNameToken name =
             							new LexNameToken(octxt.self.type.getName().module,
             								hexp.toString(), mdef.getLocation());
             						vars.put(name, v);
+									} catch (Throwable e)
+									{
+										//Ignore
+									}
+            						
                 				}
                 				
                 				break;

@@ -25,6 +25,7 @@ package org.overture.interpreter.runtime;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
+import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -64,7 +65,7 @@ public class Tracepoint extends Breakpoint
 		}
 		else
 		{
-			String s = trace + " = " + parsed.eval(ctxt) + " at [" + number + "]";//FIXME: use visitor here
+			String s = trace + " = " +BreakpointManager.evalBreakpointCondition( parsed,ctxt) + " at [" + number + "]";//FIXME: use visitor here
 
 			if (Settings.usingDBGP)
 			{

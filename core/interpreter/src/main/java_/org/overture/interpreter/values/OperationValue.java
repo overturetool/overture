@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -76,7 +74,6 @@ import org.overture.interpreter.scheduler.MessageRequest;
 import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.parser.config.Properties;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;

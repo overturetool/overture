@@ -468,28 +468,53 @@ abstract public class Interpreter
 		throws Exception
 	{
 		TypeChecker.clearErrors();
-		PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
-
-		if (TypeChecker.getErrorCount() > 0)
+		
+		try
 		{
-			throw new VDMErrorsException(TypeChecker.getErrors());
+			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+			
+			if (TypeChecker.getErrorCount() > 0)
+			{
+				throw new VDMErrorsException(TypeChecker.getErrors());
+			}
+			
+			return type;
+		} catch (Exception e)
+		{
+			throw e;
+		}catch(Throwable e)
+		{
+			e.printStackTrace();
 		}
 
-		return type;
+		return null;
+
+		
 	}
 
 	public PType typeCheck(PStm stmt, Environment env)
 		throws Exception
 	{
 		TypeChecker.clearErrors();
-		PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
-
-		if (TypeChecker.getErrorCount() > 0)
+		try
 		{
-			throw new VDMErrorsException(TypeChecker.getErrors());
+			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+
+			if (TypeChecker.getErrorCount() > 0)
+			{
+				throw new VDMErrorsException(TypeChecker.getErrors());
+			}
+
+			return type;
+		}catch(Exception e)
+		{
+			throw e;
+		}catch (Throwable e)
+		{
+			e.printStackTrace();
 		}
 
-		return type;
+		return null;
 	}
 
 	public PType typeCheck(String line) throws Exception

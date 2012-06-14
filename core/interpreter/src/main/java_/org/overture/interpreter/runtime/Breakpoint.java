@@ -32,6 +32,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.config.Settings;
+import org.overture.interpreter.ast.expressions.BreakpointExpression;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.parser.lex.LexException;

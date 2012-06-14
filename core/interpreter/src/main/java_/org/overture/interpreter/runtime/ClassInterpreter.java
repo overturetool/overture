@@ -288,7 +288,19 @@ public class ClassInterpreter extends Interpreter
 		}
 
 		ctxt.threadState.init();
-		return expr.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		try
+		{
+			return expr.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		}catch(Exception e)
+		{
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	@Override

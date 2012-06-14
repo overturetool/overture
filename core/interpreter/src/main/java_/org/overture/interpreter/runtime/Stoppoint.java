@@ -26,6 +26,7 @@ package org.overture.interpreter.runtime;
 import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
+import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.parser.lex.LexException;
@@ -70,7 +71,7 @@ public class Stoppoint extends Breakpoint
 				RootContext rootContext = ctxt.threadState.nextctxt;
 				LexLocation stepline = ctxt.threadState.stepline;
 				ctxt.threadState.init();
-				shouldBreak = parsed.eval(ctxt).boolValue(ctxt);//FIXME: use visitor here
+				shouldBreak = BreakpointManager.shouldStop(parsed,ctxt);
 				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
 			}
 

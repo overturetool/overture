@@ -29,7 +29,6 @@ import org.overture.config.Settings;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 
 
 public class InvariantValue extends ReferenceValue

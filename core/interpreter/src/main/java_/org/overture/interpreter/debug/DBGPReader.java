@@ -1948,11 +1948,19 @@ public class DBGPReader
 	            					if (sub instanceof AHistoryExp)
 	            					{
 	            						AHistoryExp hexp = (AHistoryExp)sub;
-	            						Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
-	            						LexNameToken name =
+	            						
+										try
+										{
+											Value v= hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
+											LexNameToken name =
 	            							new LexNameToken(octxt.self.type.getName().module,
 	            								hexp.toString(),hexp.getLocation());
 	            						vars.put(name, v);
+										} catch (Throwable e)
+										{
+											//Ignore
+										}
+	            						
 	            					}
 	            				}
 							}
@@ -1969,11 +1977,19 @@ public class DBGPReader
                     				{
                     					LexNameList ops = new LexNameList(op);//TODO: this needs to be checked when testing
                     					PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(new LexLocation(), VDMToken.ACTIVE) , ops);
-                						Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
-                						LexNameToken name =
+                						
+										try
+										{
+											Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
+											LexNameToken name =
                 							new LexNameToken(octxt.self.type.getName().module,
                 								hexp.toString(), mdef.getLocation());
                 						vars.put(name, v);
+										} catch (Throwable e)
+										{
+											//Ignore
+										}
+                						
                     				}
 
                     				break;
