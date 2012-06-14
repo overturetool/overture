@@ -18,8 +18,9 @@
  *******************************************************************************/
 package org.overture.ide.debug.utils.communication;
 
-import org.overturetool.vdmj.debug.DBGPErrorCode;
-import org.overturetool.vdmj.debug.DBGPException;
+import org.overture.interpreter.debug.DBGPErrorCode;
+import org.overture.interpreter.debug.DBGPException;
+
 
 public enum DBGPErrorType
 {

@@ -19,7 +19,7 @@
 package org.overture.ide.debug.core.dbgp.exceptions;
 
 import org.overture.ide.debug.utils.communication.DBGPErrorType;
-import org.overturetool.vdmj.debug.DBGPException;
+import org.overture.interpreter.debug.DBGPException;
 
 public class DbgpDebuggingEngineException extends DbgpException
 {
