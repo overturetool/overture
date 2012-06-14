@@ -33,9 +33,6 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.overturetool.vdmj.config.Properties;
-//import org.overturetool.vdmj.debug.DBGPErrorCode;
-//import org.overturetool.vdmj.debug.DBGPReason;
-//import org.overturetool.vdmj.debug.DBGPStatus;
 import org.overturetool.vdmj.debug.RemoteControl;
 import org.overturetool.vdmj.debug.RemoteInterpreter;
 import org.overturetool.vdmj.lex.Dialect;
