@@ -208,7 +208,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 
 	public static void typeResolve(AExplicitFunctionDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		
 		

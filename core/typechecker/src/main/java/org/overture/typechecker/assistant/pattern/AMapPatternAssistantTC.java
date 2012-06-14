@@ -26,7 +26,7 @@ public class AMapPatternAssistantTC {
 		pattern.setResolved(false);
 	}
 
-	public static void typeResolve(AMapPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+	public static void typeResolve(AMapPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
 		
 		if(pattern.getResolved())return; else { pattern.setResolved(true);}
 		

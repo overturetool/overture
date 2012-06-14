@@ -183,7 +183,7 @@ public class Base64
 		int num = data.length / 3;
 		StringBuffer result = new StringBuffer();
 		int p=0;
-		int c=0;
+		//int c=0;
 
 		for (int i=0; i<num; i++)
 		{
@@ -198,7 +198,7 @@ public class Base64
 			result.append(b64encode(b4));
 
 			p += 3;
-			c += 4;
+			//c += 4;
 		}
 
 		switch (rem)

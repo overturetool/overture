@@ -29,7 +29,7 @@ public class TypeCheckerPatternVisitor extends
 	
 	@Override
 	public PType caseASetMultipleBind(ASetMultipleBind node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
@@ -68,7 +68,7 @@ public class TypeCheckerPatternVisitor extends
 	
 	@Override
 	public PType caseATypeMultipleBind(ATypeMultipleBind node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
 		PType type = PTypeAssistantTC.typeResolve(node.getType(),null,rootVisitor,question);

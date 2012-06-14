@@ -22,7 +22,7 @@ public class ASetPatternAssistantTC extends ASetPatternAssistant {
 
 	public static void typeResolve(ASetPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

@@ -553,7 +553,7 @@ public class SClassDefinitionAssistantTC {
 
 	public static void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		Environment cenv = new FlatEnvironment(d.getDefinitions(),  question.env);
 		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(),rootVisitor,new TypeCheckInfo(cenv));
@@ -766,7 +766,7 @@ public class SClassDefinitionAssistantTC {
 	}
 
 	public static void typeCheckPass(SClassDefinition c, Pass p,
-			Environment base, TypeCheckVisitor tc) {
+			Environment base, TypeCheckVisitor tc) throws Throwable {
 		if (c.getIsTypeChecked()) return;
 
 		for (PDefinition d: c.getDefinitions())

@@ -60,7 +60,13 @@ public class PogUtil
 		{
 			ProofObligationList proofObligations = new ProofObligationList();
 			for (INode aModule : typeCheckResult.result) {
-				proofObligations.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
+				try
+				{
+					proofObligations.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
+				} catch (Throwable e)
+				{
+					throw new Exception("Internal error",e);
+				}
 			}
 			return new PogResult<P>(typeCheckResult, proofObligations, new Vector<VDMWarning>(), new Vector<VDMError>());
 		}

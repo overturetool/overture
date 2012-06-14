@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AAllImport;
@@ -163,7 +164,8 @@ public class ModuleList extends Vector<AModuleModules>
 
 					// def = new AModuleModules(def.getName(), new AModuleImports(def.getName(), imports), null,
 					// def.getDefs(), def.getFiles(), null, null, false, false, false);
-					def.setImports(new AModuleImports(def.getName(), imports));
+					
+					def.setImports(AstFactory.newAModuleImports(def.getName(), imports));
 				}
 			}
 
@@ -252,8 +254,8 @@ public class ModuleList extends Vector<AModuleModules>
 		List<List<PImport>> types = new Vector<List<PImport>>();
 		LexNameToken all = new LexNameToken(from.getName(), "all", from.location);
 		List<PImport> impAll = new Vector<PImport>();
-		impAll.add(new AAllImport(all.location, all, all, null));
+		impAll.add(new AAllImport(all.location, all, all, null));//FIXME: ASTFactory cant handle this one
 		types.add(impAll);
-		return new AFromModuleImports(from, types);
+		return AstFactory.newAFromModuleImports(from, types);
 	}
 }

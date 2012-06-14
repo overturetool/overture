@@ -22,7 +22,7 @@ public class AMapletPatternMapletAssistantTC {
 		
 	}
 
-	public static void typeResolve(AMapletPatternMaplet mp, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+	public static void typeResolve(AMapletPatternMaplet mp, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
 		if (mp.getResolved()) return; else { mp.setResolved(true); }
 
 		try

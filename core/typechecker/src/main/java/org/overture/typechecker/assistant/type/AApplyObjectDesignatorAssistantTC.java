@@ -20,7 +20,7 @@ import org.overture.typechecker.TypeComparator;
 public class AApplyObjectDesignatorAssistantTC {
 
 	public static PType mapApply(AApplyObjectDesignator node, SMapType map, Environment env,
-			NameScope scope, boolean unique, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) {
+			NameScope scope, boolean unique, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
 
 		if (node.getArgs().size() != 1) {
 			TypeCheckerErrors.concern(unique, 3250, "Map application must have one argument",node.getLocation(),node);
@@ -40,7 +40,7 @@ public class AApplyObjectDesignatorAssistantTC {
 
 	public static PType seqApply(AApplyObjectDesignator node, SSeqType seq, Environment env,
 			NameScope scope, boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
 		
 		if (node.getArgs().size() != 1)
 		{
@@ -62,7 +62,7 @@ public class AApplyObjectDesignatorAssistantTC {
 	public static PType functionApply(AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
 			boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
 		
 		LinkedList<PType> ptypes =  ftype.getParameters();
 
@@ -99,7 +99,7 @@ public class AApplyObjectDesignatorAssistantTC {
 	public static PType operationApply(AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
 			boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
 		LinkedList<PType> ptypes = optype.getParameters();
 
 		if (node.getArgs().size() > ptypes.size())

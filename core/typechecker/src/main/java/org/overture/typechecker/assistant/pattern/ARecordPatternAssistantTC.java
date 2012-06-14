@@ -25,7 +25,7 @@ public class ARecordPatternAssistantTC {
 
 	public static void typeResolve(ARecordPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 
 		try

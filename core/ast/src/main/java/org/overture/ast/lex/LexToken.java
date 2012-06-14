@@ -111,22 +111,22 @@ import org.overture.ast.node.NodeEnum;
 	}
 
 	@Override
-	public void apply(IAnalysis analysis) {
+	public void apply(IAnalysis analysis) throws Throwable {
 		analysis.caseLexToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) {
+	public <A> A apply(IAnswer<A> caller) throws Throwable {
 		return caller.caseLexToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) {
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable {
 		caller.caseLexToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable {
 		return caller.caseLexToken(this, question);
 	}
 

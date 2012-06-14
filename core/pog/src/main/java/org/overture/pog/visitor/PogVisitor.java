@@ -58,14 +58,14 @@ public class PogVisitor extends
 	@Override
 	// See [1] pg. 167 for the definition
 	public ProofObligationList caseAModuleModules(AModuleModules node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return PDefinitionAssistantPOG.getProofObligations(node.getDefs(), pogDefinitionVisitor, question);
 
 	}
 
 	@Override
-	public ProofObligationList defaultPExp(PExp node, POContextStack question)
+	public ProofObligationList defaultPExp(PExp node, POContextStack question) throws Throwable
 	{
 
 		return node.apply(pogExpVisitor, question);
@@ -81,7 +81,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList caseACaseAlternative(ACaseAlternative node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -140,7 +140,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList caseASetBind(ASetBind node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getSet().apply(this.pogExpVisitor, question);
@@ -148,7 +148,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList caseASetMultipleBind(ASetMultipleBind node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getSet().apply(this.pogExpVisitor, question);
@@ -172,7 +172,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPDefinition(PDefinition node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.apply(pogDefinitionVisitor, question);
@@ -211,7 +211,7 @@ public class PogVisitor extends
 	}
 
 	@Override
-	public ProofObligationList defaultPStm(PStm node, POContextStack question)
+	public ProofObligationList defaultPStm(PStm node, POContextStack question) throws Throwable
 	{
 
 		return node.apply(pogStmVisitor, question);
@@ -252,7 +252,7 @@ public class PogVisitor extends
 	
 	@Override
 	public ProofObligationList caseATixeStmtAlternative(
-			ATixeStmtAlternative node, POContextStack question)
+			ATixeStmtAlternative node, POContextStack question) throws Throwable
 	{
 
 		ProofObligationList list = new ProofObligationList();

@@ -89,7 +89,7 @@ public class AStateDefinitionAssistantTC {
 
 	public static void typeResolve(AStateDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		for (AFieldField f: d.getFields())
 		{

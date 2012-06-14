@@ -64,7 +64,7 @@ public class TypeCheckerOthersVisitor extends
 	
 	@Override
 	public PType caseADefPatternBind(ADefPatternBind node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		node.setDefs(null);
 		
 		PType type = null;
@@ -131,7 +131,7 @@ public class TypeCheckerOthersVisitor extends
 	
 	@Override
 	public PType caseAFieldStateDesignator(AFieldStateDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		PType type = node.getObject().apply(rootVisitor,question);
 		PTypeSet result = new PTypeSet();
@@ -267,7 +267,7 @@ public class TypeCheckerOthersVisitor extends
 
 	@Override
 	public PType caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		PType etype = node.getExp().apply(rootVisitor, new TypeCheckInfo(question.env,NameScope.NAMESANDSTATE));
 		PType rtype = node.getMapseq().apply(rootVisitor, new TypeCheckInfo(question.env));
 		PTypeSet result = new PTypeSet();
@@ -329,7 +329,7 @@ public class TypeCheckerOthersVisitor extends
 	
 	@Override
 	public PType caseAApplyObjectDesignator(AApplyObjectDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		LinkedList<PType> argtypes = new LinkedList<PType>();
 
 		for (PExp a: node.getArgs())
@@ -379,19 +379,19 @@ public class TypeCheckerOthersVisitor extends
 	
 	@Override
 	public PType caseANewObjectDesignator(ANewObjectDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		return node.getExpression().apply(rootVisitor, new TypeCheckInfo(question.env,  NameScope.NAMESANDSTATE, question.qualifiers));
 	}
 	
 	@Override
 	public PType caseAIdentifierObjectDesignator(
-			AIdentifierObjectDesignator node, TypeCheckInfo question) {
+			AIdentifierObjectDesignator node, TypeCheckInfo question) throws Throwable {
 		return node.getExpression().apply(rootVisitor, new TypeCheckInfo(question.env,  NameScope.NAMESANDSTATE, question.qualifiers));
 	}
 	
 	@Override
 	public PType caseAFieldObjectDesignator(AFieldObjectDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, null, question.qualifiers));
 		PTypeSet result = new PTypeSet();

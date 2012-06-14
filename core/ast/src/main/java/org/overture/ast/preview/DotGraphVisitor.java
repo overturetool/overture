@@ -155,7 +155,7 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 	}
 
 	@Override
-	public void defaultINode(INode node, DotPair question)
+	public void defaultINode(INode node, DotPair question) throws Throwable
 	{
 		if(!(node instanceof LexNameToken )&&visitedNodes.contains(node)|| node == null)
 		{

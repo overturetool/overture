@@ -83,7 +83,7 @@ public class ATypeDefinitionAssistantTC {
 
 	public static void typeResolve(ATypeDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		try
 		{
 			d.setInfinite(false);

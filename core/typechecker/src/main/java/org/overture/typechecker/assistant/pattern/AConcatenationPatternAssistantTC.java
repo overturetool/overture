@@ -19,7 +19,7 @@ import org.overture.typechecker.TypeCheckInfo;
 
 public class AConcatenationPatternAssistantTC extends AConcatenationPatternAssistant{
 
-	public static void typeResolve(AConcatenationPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+	public static void typeResolve(AConcatenationPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

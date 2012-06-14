@@ -93,7 +93,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 
 	public static void typeResolve(AExplicitOperationDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 
 		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 

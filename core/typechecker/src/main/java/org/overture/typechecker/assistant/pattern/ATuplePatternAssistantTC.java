@@ -24,7 +24,7 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 
 	public static void typeResolve(ATuplePattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

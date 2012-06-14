@@ -15,7 +15,7 @@ public class ACaseAlternativeAssistantPOG {
 
 	public static ProofObligationList getProofObligations(ACaseAlternative node,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor,
-			POContextStack question, PType type) {
+			POContextStack question, PType type) throws Throwable {
 
 		PPattern pattern = node.getPattern();
 		PExp cexp = node.getCexp();

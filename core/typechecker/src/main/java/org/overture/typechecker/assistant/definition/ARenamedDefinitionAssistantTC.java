@@ -75,7 +75,7 @@ public class ARenamedDefinitionAssistantTC {
 
 	public static void typeResolve(ARenamedDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);		
 	}
 

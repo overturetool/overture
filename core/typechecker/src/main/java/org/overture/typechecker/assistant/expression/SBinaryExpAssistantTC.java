@@ -16,7 +16,7 @@ public class SBinaryExpAssistantTC {
 	public static ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
 			ABooleanBasicType expected,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);

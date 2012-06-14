@@ -17,7 +17,7 @@ public class PPatternListAssistantTC {
 
 	public static void typeResolve(List<PPattern> pp,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		for (PPattern pattern : pp) {
 			PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);

@@ -555,7 +555,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	public static void typeResolve(PDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		switch (d.kindPDefinition()) {
 		case CLASS:
 			SClassDefinitionAssistantTC.typeResolve((SClassDefinition) d,

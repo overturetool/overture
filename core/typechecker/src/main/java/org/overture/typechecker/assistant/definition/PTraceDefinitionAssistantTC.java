@@ -11,7 +11,7 @@ public class PTraceDefinitionAssistantTC {
 
 	public static void typeCheck(List<PTraceDefinition> term,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		for (PTraceDefinition def: term)
 		{

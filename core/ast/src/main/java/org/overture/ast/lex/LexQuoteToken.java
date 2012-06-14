@@ -51,22 +51,22 @@ public class LexQuoteToken extends LexToken {
 	}
 	
 	@Override
-	public void apply(IAnalysis analysis) {
+	public void apply(IAnalysis analysis) throws Throwable {
 		analysis.caseLexQuoteToken(this); 
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) {
+	public <A> A apply(IAnswer<A> caller) throws Throwable {
 		return caller.caseLexQuoteToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) {
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable {
 		caller.caseLexQuoteToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable {
 		return caller.caseLexQuoteToken(this, question);
 	}
 	/**

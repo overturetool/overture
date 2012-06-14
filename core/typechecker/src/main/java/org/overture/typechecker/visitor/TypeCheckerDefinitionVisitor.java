@@ -106,7 +106,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAAssignmentDefinition(AAssignmentDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		question.qualifiers = null;
@@ -129,7 +129,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAInstanceVariableDefinition(
-			AInstanceVariableDefinition node, TypeCheckInfo question)
+			AInstanceVariableDefinition node, TypeCheckInfo question) throws Throwable
 	{
 
 		if (node.getExpression() instanceof AUndefinedExp)
@@ -170,7 +170,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAClassInvariantDefinition(AClassInvariantDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		question.qualifiers = null;
@@ -188,7 +188,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAEqualsDefinition(AEqualsDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		question.qualifiers = null;
@@ -244,7 +244,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node, TypeCheckInfo question)
+			AExplicitFunctionDefinition node, TypeCheckInfo question) throws Throwable
 	{
 
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
@@ -424,7 +424,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAImplicitFunctionDefinition(
-			AImplicitFunctionDefinition node, TypeCheckInfo question)
+			AImplicitFunctionDefinition node, TypeCheckInfo question) throws Throwable
 	{
 
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -588,7 +588,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node, TypeCheckInfo question)
+			AExplicitOperationDefinition node, TypeCheckInfo question) throws Throwable
 	{
 
 		List<PType> ptypes = node.getType().getParameters();
@@ -737,7 +737,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAImplicitOperationDefinition(
-			AImplicitOperationDefinition node, TypeCheckInfo question)
+			AImplicitOperationDefinition node, TypeCheckInfo question) throws Throwable
 	{
 
 		question = new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE, question.qualifiers);
@@ -976,7 +976,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAImportedDefinition(AImportedDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 		node.setType(node.getDef().apply(rootVisitor, question));
 
@@ -985,7 +985,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAInheritedDefinition(AInheritedDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 		node.setType(node.getSuperdef().apply(rootVisitor, question));
 		return node.getType();
@@ -1005,7 +1005,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAMultiBindListDefinition(AMultiBindListDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -1087,7 +1087,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseANamedTraceDefinition(ANamedTraceDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		if (question.env.isVDMPP())
@@ -1105,7 +1105,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAPerSyncDefinition(APerSyncDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		Environment base = question.env;
@@ -1175,7 +1175,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseARenamedDefinition(ARenamedDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		node.setType(node.getDef().apply(rootVisitor, question));
@@ -1184,7 +1184,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAStateDefinition(AStateDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		Environment base = question.env;
@@ -1212,7 +1212,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAThreadDefinition(AThreadDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 		question.scope = NameScope.NAMESANDSTATE;
 
@@ -1229,7 +1229,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseATypeDefinition(ATypeDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		if (node.getInvdef() != null)
@@ -1252,7 +1252,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 	@Override
 	public PType caseAValueDefinition(AValueDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 
 		question.qualifiers = null;
@@ -1326,7 +1326,7 @@ public class TypeCheckerDefinitionVisitor extends
 	}
 
 	@Override
-	public PType caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
+	public PType caseALetBeStBindingTraceDefinition(ALetBeStBindingTraceDefinition node, TypeCheckInfo question) throws Throwable
 	{
 		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PMultipleBindAssistantTC.getMultipleBindList(node.getBind())));
 		node.getDef().apply(rootVisitor,question);
@@ -1348,7 +1348,7 @@ public class TypeCheckerDefinitionVisitor extends
 	}
 	
 	@Override
-	public PType caseARepeatTraceDefinition(ARepeatTraceDefinition node, TypeCheckInfo question)
+	public PType caseARepeatTraceDefinition(ARepeatTraceDefinition node, TypeCheckInfo question) throws Throwable
 	{
 		//Environment local = question.env;
 		node.getCore().apply(rootVisitor,question);
@@ -1364,7 +1364,7 @@ public class TypeCheckerDefinitionVisitor extends
 	@Override
 	public PType caseABracketedExpressionTraceCoreDefinition(
 			ABracketedExpressionTraceCoreDefinition node, 
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 		for (List<PTraceDefinition> term : node.getTerms())
 		{
@@ -1378,7 +1378,7 @@ public class TypeCheckerDefinitionVisitor extends
 	}
 
 	@Override
-	public PType caseAApplyExpressionTraceCoreDefinition(AApplyExpressionTraceCoreDefinition node, TypeCheckInfo question)
+	public PType caseAApplyExpressionTraceCoreDefinition(AApplyExpressionTraceCoreDefinition node, TypeCheckInfo question) throws Throwable
 	{
 		node.getCallStatement().apply(rootVisitor, question);
 		return null;

@@ -24,7 +24,7 @@ public class AMapUnionPatternAssistantTC {
 
 	public static void typeResolve(AMapUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

@@ -66,7 +66,7 @@ public class AModuleModulesAssistantTC
    		return null;
 	}
 
-	public static void typeCheckImports(AModuleModules m) {
+	public static void typeCheckImports(AModuleModules m) throws Throwable {
 		if (m.getImports() != null)
 		{
 			AModuleImportsAssistantTC.typeCheck(m.getImports(),new ModuleEnvironment(m));	

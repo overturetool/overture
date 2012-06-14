@@ -98,7 +98,7 @@ public class PDefinitionListAssistantTC {
 
 	public static void typeCheck(List<PDefinition> defs,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		for (PDefinition d : defs) {
 			d.apply(rootVisitor, question);
 		}
@@ -125,7 +125,7 @@ public class PDefinitionListAssistantTC {
 
 	
 
-	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
 		for (PDefinition definition : definitions) {
 			PDefinitionAssistantTC.typeResolve(definition, rootVisitor, question);
 		}

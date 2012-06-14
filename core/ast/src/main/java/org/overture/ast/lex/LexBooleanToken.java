@@ -56,22 +56,22 @@ public class LexBooleanToken extends LexToken {
 	}
 	
 	@Override
-	public void apply(IAnalysis analysis) {
+	public void apply(IAnalysis analysis) throws Throwable {
 	 	analysis.caseLexBooleanToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) {
+	public <A> A apply(IAnswer<A> caller) throws Throwable {
 		return caller.caseLexBooleanToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) {
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable {
 		caller.caseLexBooleanToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable {
 		return caller.caseLexBooleanToken(this, question);
 	}
 	

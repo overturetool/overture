@@ -55,10 +55,11 @@ public class ClassTypeChecker extends TypeChecker
 
 	/**
 	 * Perform type checking across all classes in the list.
+	 * @throws Throwable 
 	 */
 
 	@Override
-	public void typeCheck()
+	public void typeCheck() 
 	{
 		boolean nothing = true;
 		boolean hasSystem = false;
@@ -116,6 +117,10 @@ public class ClassTypeChecker extends TypeChecker
     			{
     				report(3427, te.getMessage(), te.location);
     			}
+    			catch (Throwable te)
+				{
+					report(3431, te.getMessage(), null);//FIXME: internal error
+				}
 			}
 		}
 
@@ -142,6 +147,10 @@ public class ClassTypeChecker extends TypeChecker
     				{
     					report(3428, te.getMessage(), te.location);
     				}
+    				catch (Throwable te)
+					{
+						report(3431, te.getMessage(), null);//FIXME: internal error
+					}
     			}
     		}
 		}

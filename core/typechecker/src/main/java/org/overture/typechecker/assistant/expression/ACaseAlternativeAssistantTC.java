@@ -18,7 +18,7 @@ public class ACaseAlternativeAssistantTC {
 
 	public static PType typeCheck(ACaseAlternative c,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question, PType expType) {
+			TypeCheckInfo question, PType expType) throws Throwable {
 
 		if (c.getDefs().size() == 0)
 		{

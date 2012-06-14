@@ -31,7 +31,7 @@ public class APatternListTypePairAssistantTC {
 
 	public static void typeResolve(APatternListTypePair pltp,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		PPatternListAssistantTC.typeResolve(pltp.getPatterns(), rootVisitor, question);
 		PType type = PTypeAssistantTC.typeResolve(pltp.getType(),null,rootVisitor,question);

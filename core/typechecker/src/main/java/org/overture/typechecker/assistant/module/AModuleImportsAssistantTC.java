@@ -40,7 +40,7 @@ public class AModuleImportsAssistantTC {
 	}
 
 	public static void typeCheck(AModuleImports imports,
-			ModuleEnvironment env) {
+			ModuleEnvironment env) throws Throwable {
 		
 		for (AFromModuleImports ifm: imports.getImports())
 		{

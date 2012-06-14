@@ -186,6 +186,9 @@ public class ModuleTypeChecker extends TypeChecker
 			catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);
+			}catch (Throwable te)
+			{
+				report(3431, te.getMessage(), null);//FIXME: internal error
 			}
 		}
 
@@ -215,6 +218,10 @@ public class ModuleTypeChecker extends TypeChecker
     						{
     							report(3431, te.getMessage(), te.location);
     						}
+    						catch (Throwable te)
+    						{
+    							report(3431, te.getMessage(), null);//FIXME: internal error
+    						}
     					}
 //    					System.out.println("Number of Defs: " + m.getDefs().size());
     				}
@@ -242,6 +249,10 @@ public class ModuleTypeChecker extends TypeChecker
     			{
     				report(3432, te.getMessage(), te.location);
     			}
+    			catch (Throwable te)
+				{
+					report(3431, te.getMessage(), null);//FIXME: internal error
+				}
 			}
 		}
 

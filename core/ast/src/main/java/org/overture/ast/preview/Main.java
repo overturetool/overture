@@ -14,10 +14,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import org.overture.ast.expressions.AAndBooleanBinaryExp;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
@@ -57,8 +55,7 @@ public class Main {
 //		PExp exp = new ABinaryExp(new ABoolSingleExp(true), new AOrBinop(), un);
 		
 		LexLocation location = new LexLocation(new File("fileA"), "A", 1, 1, 2, 2, 1, 2);
-		
-		PExp exp = new AAndBooleanBinaryExp(location, new AVariableExp(null,new LexNameToken("A", "kk",null),"kk"),new LexToken(null, VDMToken.AND), new ABooleanConstExp(null, new LexBooleanToken(true, null)));
+		PExp exp =AstFactory.newAAndBooleanBinaryExp( AstFactory.newAVariableExp(new LexNameToken("A", "kk",location)),new LexToken(location, VDMToken.AND),AstFactory.newABooleanConstExp( new LexBooleanToken(true, location)));
 		
 		show(exp, true);
 	}
@@ -66,14 +63,26 @@ public class Main {
 	public static void makeImage(INode node, String type,File output)
 	{
 		DotGraphVisitor visitor = new DotGraphVisitor();
-		node.apply(visitor, null);
+		try
+		{
+			node.apply(visitor, null);
+		} catch (Throwable e)
+		{
+			//Ignore
+		}
 		GraphViz gv = new GraphViz();
 		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
 	}
 	
 	public static void show(INode node,final boolean exitOnClose){
 		DotGraphVisitor visitor = new DotGraphVisitor();
-		node.apply(visitor, null);
+		try
+		{
+			node.apply(visitor, null);
+		} catch (Throwable e)
+		{
+			//Ignore
+		}
 		GraphViz gv = new GraphViz();
 		String type = "png";
 		final File out = new File("out." + type); // out.gif in this example

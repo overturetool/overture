@@ -41,50 +41,50 @@ public class TypeCheckVisitor extends
 	public TypeCheckerErrors tcErrors = new TypeCheckerErrors();
 	
 	@Override
-	public PType defaultPPatternBind(PPatternBind node, TypeCheckInfo question) {
+	public PType defaultPPatternBind(PPatternBind node, TypeCheckInfo question) throws Throwable {
 		return node.apply(tcOthers, question);
 	}
 
 	@Override
 	public PType defaultPStateDesignator(PStateDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		return node.apply(tcOthers, question);
 	}
 
 	@Override
 	public PType defaultPObjectDesignator(PObjectDesignator node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		return node.apply(tcOthers, question);
 	}
 
 	@Override
-	public PType defaultPImport(PImport node, TypeCheckInfo question) {
+	public PType defaultPImport(PImport node, TypeCheckInfo question) throws Throwable {
 		return node.apply(tcImports, question);
 	}
 
 	@Override
-	public PType defaultPStm(PStm node, TypeCheckInfo question) {
+	public PType defaultPStm(PStm node, TypeCheckInfo question) throws Throwable {
 		return node.apply(tcStm, question);
 	}
 
 	@Override
 	public PType defaultPAlternativeStm(PAlternativeStm node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		return node.apply(tcStm, question);
 	}
 
 	@Override
-	public PType defaultPExp(PExp node, TypeCheckInfo question) {
+	public PType defaultPExp(PExp node, TypeCheckInfo question) throws Throwable {
 		return node.apply(tcExp, question);
 	}
 
 	@Override
-	public PType defaultPDefinition(PDefinition node, TypeCheckInfo question) {
+	public PType defaultPDefinition(PDefinition node, TypeCheckInfo question) throws Throwable {
 		return node.apply(tcDefinition, question);
 	}
 
 	@Override
-	public PType caseAModuleModules(AModuleModules node, TypeCheckInfo question) {
+	public PType caseAModuleModules(AModuleModules node, TypeCheckInfo question) throws Throwable {
 		for (PDefinition def : node.getDefs()) {
 			def.apply(this, question);
 		}
@@ -93,22 +93,22 @@ public class TypeCheckVisitor extends
 	}
 
 	@Override
-	public PType defaultPMultipleBind(PMultipleBind node, TypeCheckInfo question) {
+	public PType defaultPMultipleBind(PMultipleBind node, TypeCheckInfo question) throws Throwable {
 		return node.apply(patternDefinition, question);
 	}
 
 	@Override
 	public PType defaultPStmtAlternative(PStmtAlternative node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		return node.apply(tcStm, question);
 	}
 	
-	public PType defaultPTraceDefinition(PTraceDefinition node, TypeCheckInfo question)
+	public PType defaultPTraceDefinition(PTraceDefinition node, TypeCheckInfo question) throws Throwable
 	{
 		return node.apply(tcDefinition,question);
 	}
 	
-	public PType defaultPTraceCoreDefinition(PTraceCoreDefinition node, TypeCheckInfo question)
+	public PType defaultPTraceCoreDefinition(PTraceCoreDefinition node, TypeCheckInfo question) throws Throwable
 	{
 		return node.apply(tcDefinition,question);
 	}

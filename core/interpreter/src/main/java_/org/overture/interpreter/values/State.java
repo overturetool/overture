@@ -63,7 +63,7 @@ public class State implements ValueListener
 		this.context.putList(fieldvalues);
 	}
 
-	public void initialize(Context globals)
+	public void initialize(Context globals) throws Throwable
 	{
 		try
 		{

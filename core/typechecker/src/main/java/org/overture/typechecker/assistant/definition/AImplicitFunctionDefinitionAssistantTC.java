@@ -110,7 +110,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 
 	public static void typeResolve(AImplicitFunctionDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		if (d.getTypeParams().size() > 0)
 		{

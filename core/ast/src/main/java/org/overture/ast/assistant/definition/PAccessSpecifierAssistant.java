@@ -3,6 +3,7 @@ package org.overture.ast.assistant.definition;
 import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 
 public class PAccessSpecifierAssistant {
@@ -10,7 +11,7 @@ public class PAccessSpecifierAssistant {
 	
 	public static AAccessSpecifierAccessSpecifier getDefault()
 	{
-		return new AAccessSpecifierAccessSpecifier(new APrivateAccess(), null, null);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
 	}
 	
 	public static boolean isStatic(AAccessSpecifierAccessSpecifier access) {
@@ -24,12 +25,12 @@ public class PAccessSpecifierAssistant {
 	}
 
 	public static AAccessSpecifierAccessSpecifier getPublic() {
-		return new AAccessSpecifierAccessSpecifier(new APublicAccess(), null, null);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APublicAccess(), false, false);
 	}
 	
 
 	public static AAccessSpecifierAccessSpecifier getProtected() {
-		return new AAccessSpecifierAccessSpecifier(new AProtectedAccess(), null, null);
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new AProtectedAccess(), false, false);
 	}
 	
 }

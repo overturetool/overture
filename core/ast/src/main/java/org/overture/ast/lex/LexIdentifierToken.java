@@ -69,22 +69,22 @@ public class LexIdentifierToken extends LexToken {
 	}
 	
 	@Override
-	public void apply(IAnalysis analysis) {
+	public void apply(IAnalysis analysis) throws Throwable {
 		analysis.caseLexIdentifierToken(this); 
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) {
+	public <A> A apply(IAnswer<A> caller) throws Throwable {
 		return caller.caseLexIdentifierToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) {
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable {
 		caller.caseLexIdentifierToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable {
 		return caller.caseLexIdentifierToken(this, question);
 	}
 	

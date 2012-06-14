@@ -23,7 +23,7 @@ public class AUnionPatternAssistantTC {
 
 	public static void typeResolve(AUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

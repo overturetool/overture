@@ -29,7 +29,7 @@ public class AFromModuleImportsAssistantTC {
 		return defs;
 	}
 
-	public static void typeCheck(AFromModuleImports ifm, ModuleEnvironment env) {
+	public static void typeCheck(AFromModuleImports ifm, ModuleEnvironment env) throws Throwable {
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		TypeCheckInfo question = new TypeCheckInfo(env, null, null);
 		

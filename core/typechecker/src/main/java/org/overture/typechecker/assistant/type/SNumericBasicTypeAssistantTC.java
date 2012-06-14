@@ -14,7 +14,7 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant {
 
 	public static void checkNumeric(
 			SNumericBinaryExp node, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
 

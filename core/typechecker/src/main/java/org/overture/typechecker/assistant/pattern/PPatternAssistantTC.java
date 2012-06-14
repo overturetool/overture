@@ -96,7 +96,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static void typeResolve(PPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws Throwable
 	{
 		switch (pattern.kindPPattern())
 		{

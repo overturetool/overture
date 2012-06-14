@@ -75,7 +75,7 @@ public class AImplicitOperationDefinitionAssistantTC {
 
 	public static void typeResolve(AImplicitOperationDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 		
 		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 

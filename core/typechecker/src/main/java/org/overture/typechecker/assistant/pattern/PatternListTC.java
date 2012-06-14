@@ -18,7 +18,7 @@ public class PatternListTC extends Vector<PPattern>{
 
 	public void typeResolve(
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws Throwable {
 
 		for (PPattern pPattern : this) {
 			PPatternAssistantTC.typeResolve(pPattern, rootVisitor, question);

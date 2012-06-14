@@ -16,7 +16,7 @@ import org.overture.typechecker.TypeComparator;
 public class ACallStmAssistantTC {
 	
 	
-	public static List<PType> getArgTypes(LinkedList<PExp> args,QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question)
+	public static List<PType> getArgTypes(LinkedList<PExp> args,QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable
 	{
 		List<PType> types = new LinkedList<PType>();
 

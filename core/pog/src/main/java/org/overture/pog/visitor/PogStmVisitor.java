@@ -69,7 +69,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAAlwaysStm(AAlwaysStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getAlways().apply(this, question);
@@ -79,7 +79,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAAssignmentStm(AAssignmentStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -104,7 +104,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAAtomicStm(AAtomicStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -119,7 +119,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseACallObjectStm(ACallObjectStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -134,7 +134,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseACallStm(ACallStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -149,7 +149,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseACasesStm(ACasesStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -176,7 +176,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseACaseAlternativeStm(
-			ACaseAlternativeStm node, POContextStack question)
+			ACaseAlternativeStm node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(node.getResult().apply(this, question));
@@ -185,7 +185,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAElseIfStm(AElseIfStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getElseIf().apply(rootVisitor, question);
@@ -195,7 +195,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAExitStm(AExitStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -210,7 +210,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAForAllStm(AForAllStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getSet().apply(rootVisitor, question);
@@ -220,7 +220,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAForIndexStm(AForIndexStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getFrom().apply(rootVisitor, question);
@@ -240,7 +240,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAForPatternBindStm(AForPatternBindStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList list = node.getExp().apply(rootVisitor, question);
@@ -263,7 +263,7 @@ public class PogStmVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseAIfStm(AIfStm node, POContextStack question)
+	public ProofObligationList caseAIfStm(AIfStm node, POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getIfExp().apply(rootVisitor, question);
@@ -285,7 +285,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseALetBeStStm(ALetBeStStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -306,7 +306,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList defaultSLetDefStm(SLetDefStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -323,7 +323,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAReturnStm(AReturnStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -352,7 +352,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseASpecificationStm(ASpecificationStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -382,7 +382,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAStartStm(AStartStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getObj().apply(rootVisitor, question);
@@ -390,7 +390,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseATixeStm(ATixeStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -407,7 +407,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseATrapStm(ATrapStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList list = new ProofObligationList();
@@ -432,7 +432,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseAWhileStm(AWhileStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -445,7 +445,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseADefLetDefStm(ADefLetDefStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -466,7 +466,7 @@ public class PogStmVisitor extends
 	}
 
 	public ProofObligationList defaultSSimpleBlockStm(SSimpleBlockStm node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -480,7 +480,7 @@ public class PogStmVisitor extends
 
 	@Override
 	public ProofObligationList caseABlockSimpleBlockStm(
-			ABlockSimpleBlockStm node, POContextStack question)
+			ABlockSimpleBlockStm node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = PDefinitionAssistantPOG.getProofObligations(node.getAssignmentDefs(), rootVisitor, question);
 

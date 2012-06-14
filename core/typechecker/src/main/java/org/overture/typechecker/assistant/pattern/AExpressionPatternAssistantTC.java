@@ -15,7 +15,7 @@ public class AExpressionPatternAssistantTC {
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
 
-	public static void typeResolve(AExpressionPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+	public static void typeResolve(AExpressionPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 
 		try

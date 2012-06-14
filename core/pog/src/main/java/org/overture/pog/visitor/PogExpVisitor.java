@@ -78,7 +78,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg. 57: 6.12 Apply Expressions
 	public ProofObligationList caseAApplyExp(AApplyExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -162,7 +162,7 @@ public class PogExpVisitor extends
 	@Override
 	// see [1] pg. 179 unary expressions
 	public ProofObligationList caseAHeadUnaryExp(AHeadUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = defaultSUnaryExp(node,question);
@@ -189,7 +189,7 @@ public class PogExpVisitor extends
 	@Override
 	// [1] pg. 46
 	public ProofObligationList caseACasesExp(ACasesExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -226,7 +226,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAMapCompMapExp(AMapCompMapExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -262,7 +262,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg. 179 A.5.4 Unary Expressions
 	public ProofObligationList defaultSUnaryExp(SUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -271,7 +271,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL
 	public ProofObligationList defaultSBinaryExp(SBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.addAll(node.getLeft().apply(this, question));
@@ -296,7 +296,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAElseIfExp(AElseIfExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -309,7 +309,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAExists1Exp(AExists1Exp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		question.push(new POForAllContext(node));
@@ -320,7 +320,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAExistsExp(AExistsExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -338,14 +338,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAFieldExp(AFieldExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getObject().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAFieldNumberExp(AFieldNumberExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getTuple().apply(this, question);
@@ -373,7 +373,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAForAllExp(AForAllExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -391,7 +391,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAFuncInstatiationExp(
-			AFuncInstatiationExp node, POContextStack question)
+			AFuncInstatiationExp node, POContextStack question) throws Throwable
 	{
 		return node.getFunction().apply(this, question);
 	}
@@ -407,7 +407,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question)
+	public ProofObligationList caseAIfExp(AIfExp node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = node.getTest().apply(this, question);
 
@@ -445,7 +445,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAIotaExp(AIotaExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = node.getBind().apply(rootVisitor, question);
 		obligations.add(new UniqueExistenceObligation(node, question));
@@ -457,7 +457,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseAIsExp(AIsExp node, POContextStack question)
+	public ProofObligationList caseAIsExp(AIsExp node, POContextStack question) throws Throwable
 	{
 		PDefinition typeDef = node.getTypedef();
 		PType basicType = node.getBasicType();
@@ -474,7 +474,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg. 64-65
 	public ProofObligationList caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
@@ -482,7 +482,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg. 64-65
 	public ProofObligationList caseAIsOfClassExp(AIsOfClassExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		question.noteType(node.getExp(), node.getClassType());
@@ -493,7 +493,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg. 62
 	public ProofObligationList caseALambdaExp(ALambdaExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -513,7 +513,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL See [1] pg.95
 	public ProofObligationList caseALetBeStExp(ALetBeStExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		obligations.add(new LetBeExistsObligation(node, question));
@@ -537,7 +537,7 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg.
 	public ProofObligationList caseALetDefExp(ALetDefExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -556,7 +556,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseADefExp(ADefExp node, POContextStack question)
+	public ProofObligationList caseADefExp(ADefExp node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = PDefinitionAssistantPOG.getProofObligations(node.getLocalDefs(), rootVisitor, question);
 
@@ -578,7 +578,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAMapletExp(AMapletExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = node.getLeft().apply(this, question);
@@ -588,14 +588,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAMkBasicExp(AMkBasicExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getArg().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMkTypeExp(AMkTypeExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -638,7 +638,7 @@ public class PogExpVisitor extends
 
 	@Override
 	// RWL See [1] pg. 56
-	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question)
+	public ProofObligationList caseAMuExp(AMuExp node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = node.getRecord().apply(rootVisitor, question);
 		Queue<ARecordModifier> modifiers = node.getModifiers();
@@ -661,7 +661,7 @@ public class PogExpVisitor extends
 	}
 
 	@Override
-	public ProofObligationList caseANewExp(ANewExp node, POContextStack question)
+	public ProofObligationList caseANewExp(ANewExp node, POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -721,7 +721,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASameBaseClassExp(ASameBaseClassExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -733,7 +733,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASameClassExp(ASameClassExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList list = node.getLeft().apply(this, question);
 		list.addAll(node.getRight().apply(this, question));
@@ -784,7 +784,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASubseqExp(ASubseqExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList list = node.getSeq().apply(this, question);
 		list.addAll(node.getFrom().apply(this, question));
@@ -808,7 +808,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseATupleExp(ATupleExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		for (PExp exp : node.getArgs())
@@ -825,7 +825,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -833,7 +833,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseACardinalityUnaryExp(
-			ACardinalityUnaryExp node, POContextStack question)
+			ACardinalityUnaryExp node, POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -841,14 +841,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseADistConcatUnaryExp(
-			ADistConcatUnaryExp node, POContextStack question)
+			ADistConcatUnaryExp node, POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseADistIntersectUnaryExp(
-			ADistIntersectUnaryExp node, POContextStack question)
+			ADistIntersectUnaryExp node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = node.getExp().apply(this, question);
 		obligations.add(new org.overture.pog.obligation.NonEmptySetObligation(node.getExp(), question));
@@ -866,14 +866,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseADistUnionUnaryExp(ADistUnionUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAElementsUnaryExp(AElementsUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -881,7 +881,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAFloorUnaryExp(AFloorUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -889,14 +889,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAIndicesUnaryExp(AIndicesUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseALenUnaryExp(ALenUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -904,14 +904,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapInverseUnaryExp(
-			AMapInverseUnaryExp node, POContextStack question)
+			AMapInverseUnaryExp node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = node.getExp().apply(this, question);
 		if (!node.getMapType().getEmpty())
@@ -923,35 +923,35 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseANotUnaryExp(ANotUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPowerSetUnaryExp(APowerSetUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseAReverseUnaryExp(AReverseUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
 
 	@Override
 	public ProofObligationList caseATailUnaryExp(ATailUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = node.getExp().apply(this, question);
 		obligations.add(new NonEmptySeqObligation(node.getExp(), question));
@@ -961,7 +961,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAUnaryMinusUnaryExp(
-			AUnaryMinusUnaryExp node, POContextStack question)
+			AUnaryMinusUnaryExp node, POContextStack question) throws Throwable
 	{
 
 		return node.getExp().apply(this, question);
@@ -969,7 +969,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return node.getExp().apply(this, question);
 	}
@@ -1046,7 +1046,7 @@ public class PogExpVisitor extends
 	}
 
 	private <T> ProofObligationList handleBinaryExpression(T node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		if (node == null)
@@ -1064,28 +1064,28 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseADomainResByBinaryExp(
-			ADomainResByBinaryExp node, POContextStack question)
+			ADomainResByBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseADomainResToBinaryExp(
-			ADomainResToBinaryExp node, POContextStack question)
+			ADomainResToBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAInSetBinaryExp(AInSetBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = handleBinaryExpression(node, question);
 		obligations.add(new MapCompatibleObligation(node.getLeft(), node.getRight(), question));
@@ -1094,21 +1094,21 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseANotInSetBinaryExp(ANotInSetBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList defaultSNumericBinaryExp(SNumericBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1135,7 +1135,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = handleBinaryExpression(node, question);
@@ -1151,14 +1151,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAProperSubsetBinaryExp(
-			AProperSubsetBinaryExp node, POContextStack question)
+			AProperSubsetBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARangeResByBinaryExp(
-			ARangeResByBinaryExp node, POContextStack question)
+			ARangeResByBinaryExp node, POContextStack question) throws Throwable
 	{
 
 		return handleBinaryExpression(node, question);
@@ -1166,35 +1166,35 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseARangeResToBinaryExp(
-			ARangeResToBinaryExp node, POContextStack question)
+			ARangeResToBinaryExp node, POContextStack question) throws Throwable
 	{
 		return super.caseARangeResToBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASeqConcatBinaryExp(
-			ASeqConcatBinaryExp node, POContextStack question)
+			ASeqConcatBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetDifferenceBinaryExp(
-			ASetDifferenceBinaryExp node, POContextStack question)
+			ASetDifferenceBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetIntersectBinaryExp(
-			ASetIntersectBinaryExp node, POContextStack question)
+			ASetIntersectBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASetUnionBinaryExp(ASetUnionBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
@@ -1227,14 +1227,14 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASubsetBinaryExp(ASubsetBinaryExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		return handleBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAAndBooleanBinaryExp(
-			AAndBooleanBinaryExp node, POContextStack question)
+			AAndBooleanBinaryExp node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1266,7 +1266,7 @@ public class PogExpVisitor extends
 	}
 
 	private <T> ProofObligationList handleBinaryBooleanExp(T node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1294,21 +1294,21 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAEquivalentBooleanBinaryExp(
-			AEquivalentBooleanBinaryExp node, POContextStack question)
+			AEquivalentBooleanBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryBooleanExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAImpliesBooleanBinaryExp(
-			AImpliesBooleanBinaryExp node, POContextStack question)
+			AImpliesBooleanBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleBinaryBooleanExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAOrBooleanBinaryExp(
-			AOrBooleanBinaryExp node, POContextStack question)
+			AOrBooleanBinaryExp node, POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -1339,7 +1339,7 @@ public class PogExpVisitor extends
 	}
 
 	private <T extends PExp> ProofObligationList handleDivideNumericBinaryExp(
-			T node, POContextStack question)
+			T node, POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		PExp[] leftRight = getLeftRight(node);
@@ -1359,20 +1359,20 @@ public class PogExpVisitor extends
 	@Override
 	// RWL see [1] pg.
 	public ProofObligationList caseADivNumericBinaryExp(
-			ADivNumericBinaryExp node, POContextStack question)
+			ADivNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleDivideNumericBinaryExp(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseADivideNumericBinaryExp(
-			ADivideNumericBinaryExp node, POContextStack question)
+			ADivideNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleDivideNumericBinaryExp(node, question);
 	}
 
 	private <T> ProofObligationList handleNumericBinaryExpression(T node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1403,70 +1403,70 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, POContextStack question)
+			AGreaterEqualNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAGreaterNumericBinaryExp(
-			AGreaterNumericBinaryExp node, POContextStack question)
+			AGreaterNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, POContextStack question)
+			ALessEqualNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseALessNumericBinaryExp(
-			ALessNumericBinaryExp node, POContextStack question)
+			ALessNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAModNumericBinaryExp(
-			AModNumericBinaryExp node, POContextStack question)
+			AModNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAPlusNumericBinaryExp(
-			APlusNumericBinaryExp node, POContextStack question)
+			APlusNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseARemNumericBinaryExp(
-			ARemNumericBinaryExp node, POContextStack question)
+			ARemNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseASubstractNumericBinaryExp(
-			ASubstractNumericBinaryExp node, POContextStack question)
+			ASubstractNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseATimesNumericBinaryExp(
-			ATimesNumericBinaryExp node, POContextStack question)
+			ATimesNumericBinaryExp node, POContextStack question) throws Throwable
 	{
 		return handleNumericBinaryExpression(node, question);
 	}
 
 	@Override
 	public ProofObligationList caseAMapEnumMapExp(AMapEnumMapExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -1486,7 +1486,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASeqCompSeqExp(ASeqCompSeqExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1510,7 +1510,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASeqEnumSeqExp(ASeqEnumSeqExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -1523,7 +1523,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASetCompSetExp(ASetCompSetExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 
 	{
 		PExp first = node.getFirst();
@@ -1564,7 +1564,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASetEnumSetExp(ASetEnumSetExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
@@ -1577,7 +1577,7 @@ public class PogExpVisitor extends
 
 	@Override
 	public ProofObligationList caseASetRangeSetExp(ASetRangeSetExp node,
-			POContextStack question)
+			POContextStack question) throws Throwable
 	{
 		PExp last = node.getLast();
 		PExp first = node.getFirst();
