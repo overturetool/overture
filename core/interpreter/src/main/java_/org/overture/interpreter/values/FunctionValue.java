@@ -58,6 +58,7 @@ import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -425,9 +426,8 @@ public class FunctionValue extends Value
 				}
 
 				stack.push(mv);
-			}
-
-    		Value rv = body.eval(evalContext).convertTo(type.getResult(), evalContext);
+			}			
+    		Value rv = body.apply(VdmRuntime.getExpressionEvaluator(),evalContext).convertTo(type.getResult(), evalContext);
 
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
     		{

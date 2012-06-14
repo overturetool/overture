@@ -32,6 +32,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.Verdict;
 
@@ -74,11 +75,11 @@ public class CTMainThread extends MainThread
 				if (statement instanceof TraceVariableStatement)
 				{
 					// Just update the context...
-					statement.eval(ctxt);//FIXME: use visitor here
+					statement.apply(VdmRuntime.getStatementEvaluator(),ctxt);					
 				}
 				else
 				{
- 					result.add(statement.eval(ctxt));//FIXME: use visitor here
+ 					result.add(statement.apply(VdmRuntime.getStatementEvaluator(),ctxt));
 				}
 			}
 

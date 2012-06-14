@@ -65,6 +65,7 @@ import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.RuntimeValidator;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.scheduler.AsyncThread;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.CPUResource;
@@ -369,8 +370,8 @@ public class OperationValue extends Value
     			ctxt.setPrepost(0, null);
 				ctxt.threadState.setAtomic(false);
     		}
-
-    		rv = body.eval(argContext);
+    		
+    		rv = body.apply(VdmRuntime.getStatementEvaluator(),argContext);
 
     		if (isConstructor)
     		{
@@ -460,7 +461,7 @@ public class OperationValue extends Value
 
 				debug("guard TEST");
 				ctxt.threadState.setAtomic(true);
-    			boolean ok = guard.eval(ctxt).boolValue(ctxt);
+    			boolean ok = guard.apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
     			ctxt.threadState.setAtomic(false);
 
     			if (ok)

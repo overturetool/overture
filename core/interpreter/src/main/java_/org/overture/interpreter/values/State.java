@@ -32,6 +32,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntime;
 
 
 public class State implements ValueListener
@@ -85,7 +86,7 @@ public class State implements ValueListener
 				AEqualsBinaryExp ee = (AEqualsBinaryExp)definition.getInitExpression();
 				ee.getLocation().hit();
 				ee.getLeft().getLocation().hit();
-				Value v = ee.getRight().eval(globals);
+				Value v = ee.getRight().apply(VdmRuntime.getExpressionEvaluator(),globals);
 
 				if (!(v instanceof RecordValue))
 				{

@@ -259,7 +259,7 @@ public class ModuleInterpreter extends Interpreter
 
 		ctxt.threadState.init();
 
-		return expr.eval(ctxt);//FIXME: use visitor here
+		return expr.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
 	}
 
 	@Override

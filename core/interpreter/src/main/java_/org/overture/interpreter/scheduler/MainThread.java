@@ -30,6 +30,7 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ThreadState;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.UndefinedValue;
 import org.overture.interpreter.values.Value;
@@ -83,7 +84,7 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.eval(ctxt);//FIXME: use visitor here
+			result = expression.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
 		}
 		catch (ContextException e)
 		{
@@ -106,7 +107,7 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.eval(ctxt);//FIXME: use visitor here
+			result = expression.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
 		}
 		catch (ContextException e)
 		{
