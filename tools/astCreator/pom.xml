@@ -8,7 +8,7 @@
   <groupId>org.overturetool.tools</groupId>
   <artifactId>astCreator</artifactId>
  
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <name>AST Creator</name>
  <dependencies>
         <dependency>

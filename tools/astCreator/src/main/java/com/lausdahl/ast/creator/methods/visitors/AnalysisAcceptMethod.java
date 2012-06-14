@@ -36,6 +36,7 @@ public class AnalysisAcceptMethod extends Method
 		annotation = "@Override";
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "analysis"));
 		body = "\t\tanalysis.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this);";
+		throwsDefinitions.add("Throwable");
 	}
 	
 	@Override

@@ -39,6 +39,7 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 	@Override
 	protected void prepare()
 	{
+		super.prepare();
 		intf = env.iToken;
 		IInterfaceDefinition c = intf;
 		StringBuilder sb = new StringBuilder();

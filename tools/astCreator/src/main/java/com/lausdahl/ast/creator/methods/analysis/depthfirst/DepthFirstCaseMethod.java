@@ -27,6 +27,7 @@ public class DepthFirstCaseMethod extends Method
 	@Override
 	protected void prepare()
 	{
+		throwsDefinitions.add("Throwable");
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");

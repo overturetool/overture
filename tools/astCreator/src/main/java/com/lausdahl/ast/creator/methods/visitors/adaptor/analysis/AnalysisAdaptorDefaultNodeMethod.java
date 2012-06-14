@@ -40,6 +40,7 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 	@Override
 	protected void prepare()
 	{
+		super.prepare();
 		setClassDefinition(env.iNode);
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();

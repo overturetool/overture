@@ -2,6 +2,7 @@ package com.lausdahl.ast.creator.methods;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -45,6 +46,7 @@ public abstract class Method
 	public String annotation;
 	public IClassDefinition classDefinition;
 	protected Set<String> requiredImports = new HashSet<String>();
+	protected Set<String> throwsDefinitions = new HashSet<String>();
 	// private boolean isStructureFinal = false;
 	protected boolean skip = false;
 	protected boolean optionalVdmArgument = true;
@@ -74,6 +76,7 @@ public abstract class Method
 		// return;
 		// }
 		requiredImports.clear();
+		throwsDefinitions.clear();
 		arguments.clear();
 		prepare();
 	}
@@ -245,6 +248,20 @@ public abstract class Method
 			tmp = tmp.substring(0, tmp.length() - 2);
 		}
 		tmp += ")";
+		
+		if(!throwsDefinitions.isEmpty())
+		{
+			tmp +=" throws ";
+			for (Iterator<String> t = throwsDefinitions.iterator(); t.hasNext();)
+			{
+				tmp+= t.next();
+				if(t.hasNext())
+				{
+					tmp+=", ";
+				}
+				
+			}
+		}
 		return tmp;
 	}
 

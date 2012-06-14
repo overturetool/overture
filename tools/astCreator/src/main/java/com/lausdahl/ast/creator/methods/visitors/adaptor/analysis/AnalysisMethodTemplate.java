@@ -24,6 +24,13 @@ public abstract class AnalysisMethodTemplate extends Method
 		super.setClassDefinition(c);
 		intf = c;
 	}
+	
+	@Override
+	protected void prepare()
+	{
+		super.prepare();
+		throwsDefinitions.add("Throwable");
+	}
 
 	protected String getAdditionalBodyCallArguments()
 	{

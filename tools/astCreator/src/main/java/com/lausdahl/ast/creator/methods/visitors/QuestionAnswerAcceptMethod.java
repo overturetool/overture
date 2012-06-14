@@ -40,6 +40,7 @@ public class QuestionAnswerAcceptMethod extends Method
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "caller"));
 		arguments.add(new Argument("Q", "question"));
 		body = "\t\treturn caller.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this, question);";
+		throwsDefinitions.add("Throwable");
 	}
 	
 	@Override

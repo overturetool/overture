@@ -39,6 +39,7 @@ public class AnalysisAdaptorDefaultMethod extends AnalysisMethodTemplate
 	@Override
 	protected void prepare()
 	{
+		super.prepare();
 		IClassDefinition c = classDefinition;
 		// CommonTreeClassDefinition cd = (CommonTreeClassDefinition) c;
 		StringBuilder sb = new StringBuilder();
