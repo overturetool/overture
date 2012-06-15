@@ -33,6 +33,10 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.EStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.PStmBase;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.VoidValue;
 
 
 public class TraceVariableStatement extends PStmBase
@@ -61,6 +65,20 @@ public class TraceVariableStatement extends PStmBase
 //		ctxt.put(var.name, val);
 //		return new VoidValue();
 //	}
+	
+	public static Value eval(TraceVariableStatement stmt,Context ctxt)
+	{
+		stmt.getLocation().hit();
+		Value val = stmt.var.value;
+
+		if (val.isType(ObjectValue.class))
+		{
+			val = (Value)stmt.var.value.clone();		// To allow updates to objects
+		}
+
+		ctxt.put(stmt.var.name, val);
+		return new VoidValue();
+	}
 //
 //	@Override
 //	public String kind()

@@ -76,8 +76,7 @@ public class CTMainThread extends MainThread
 				if (statement instanceof TraceVariableStatement)
 				{
 					// Just update the context...
-					//statement.apply(VdmRuntime.getStatementEvaluator(),ctxt);
-					//FIXME: do direct eval here
+					TraceVariableStatement.eval((TraceVariableStatement)statement, ctxt);
 				}
 				else
 				{
