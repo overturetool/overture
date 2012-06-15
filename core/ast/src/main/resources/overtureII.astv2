@@ -641,7 +641,7 @@ Aspect Declaration
         [isAbstract]:java_Boolean
         [isUndefined]:java_Boolean
         (classtype):type
-        (isTypeChecked):java_Boolean
+        (typeChecked):java_Boolean
         (invariant):definition.explicitOperation
     ;
     

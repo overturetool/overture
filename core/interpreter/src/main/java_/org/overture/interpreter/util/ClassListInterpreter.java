@@ -15,7 +15,6 @@ import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.TransactionValue;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
-import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 
 public class ClassListInterpreter extends ClassList
 {
@@ -138,7 +137,7 @@ public class ClassListInterpreter extends ClassList
 	{
 		for (SClassDefinition d: this)
 		{
-			d.typechecked = true;
+			d.setTypeChecked(true);
 		}
 	}
 
@@ -148,7 +147,7 @@ public class ClassListInterpreter extends ClassList
 
 		for (SClassDefinition d: this)
 		{
-			if (!d.typechecked) count++;
+			if (!d.getTypeChecked()) count++;
 		}
 
 		return count;

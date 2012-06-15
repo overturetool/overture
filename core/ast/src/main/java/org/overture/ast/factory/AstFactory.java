@@ -362,7 +362,7 @@ public class AstFactory {
 		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
 		result.setUsed(true);
-		result.setIsTypeChecked(false);
+		result.setTypeChecked(false);
 		result.setGettingInvDefs(false);
 		result.setGettingInheritable(false);
 		result.setSupernames(superclasses);

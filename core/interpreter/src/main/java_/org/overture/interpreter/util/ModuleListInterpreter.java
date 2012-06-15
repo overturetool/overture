@@ -1,7 +1,6 @@
 package org.overture.interpreter.util;
 
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
 
 public class ModuleListInterpreter extends ModuleList
@@ -27,7 +26,7 @@ public class ModuleListInterpreter extends ModuleList
 	{
 		for (AModuleModules m: this)
 		{
-			m.typechecked = true;
+			m.setTypeChecked(true);
 		}
 	}
 
@@ -37,7 +36,7 @@ public class ModuleListInterpreter extends ModuleList
 
 		for (AModuleModules m: this)
 		{
-			if (!m.typechecked) count++;
+			if (!m.getTypeChecked()) count++;
 		}
 
 		return count;
