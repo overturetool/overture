@@ -34,6 +34,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.traces.CallSequence;
+import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
 
 
@@ -75,7 +76,8 @@ public class CTMainThread extends MainThread
 				if (statement instanceof TraceVariableStatement)
 				{
 					// Just update the context...
-					statement.apply(VdmRuntime.getStatementEvaluator(),ctxt);					
+					//statement.apply(VdmRuntime.getStatementEvaluator(),ctxt);
+					//FIXME: do direct eval here
 				}
 				else
 				{
@@ -148,7 +150,7 @@ public class CTMainThread extends MainThread
     			}
 			}
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			result.add(e.getMessage());
 			result.add(Verdict.FAILED);

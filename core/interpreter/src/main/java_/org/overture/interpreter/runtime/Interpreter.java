@@ -48,6 +48,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -65,7 +66,6 @@ import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 
@@ -601,7 +601,7 @@ abstract public class Interpreter
 
 		ctxt = getInitialTraceContext(tracedef, debug);
 
-		tests = tracedef.getTests(ctxt, subset, type, seed);
+		tests =ANamedTraceDefinitionAssistantInterpreter.getTests(tracedef,ctxt, subset, type, seed);
 
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;
