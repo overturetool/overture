@@ -34,7 +34,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 		if (v == null)
 		{
-			v = publicStaticValues.get(local);
+			v = VdmRuntime.getNodeState(classdef).publicStaticValues.get(local);
 
 			if (v == null)
 			{
@@ -53,11 +53,11 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		return v;
 	}
 
-	public static Context getStatics(SClassDefinition classDef)
+	public static Context getStatics(SClassDefinition classdef)
 	{
-		Context ctxt = new Context(classDef.getLocation(), "Statics", null);
-		ctxt.putAll(publicStaticValues);
-		ctxt.putAll(privateStaticValues);
+		Context ctxt = new Context(classdef.getLocation(), "Statics", null);
+		ctxt.putAll(VdmRuntime.getNodeState(classdef).publicStaticValues);
+		ctxt.putAll(VdmRuntime.getNodeState(classdef).privateStaticValues);
 		return ctxt;
 	}
 
@@ -107,7 +107,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		return null;
 	}
 
-	public static Object makeNewInstance(ASystemClassDefinition systemClass,
+	public static ObjectValue makeNewInstance(ASystemClassDefinition systemClass,
 			Object object, ValueList valueList, RootContext initialContext,
 			HashMap<LexNameToken, ObjectValue> hashMap)
 	{
