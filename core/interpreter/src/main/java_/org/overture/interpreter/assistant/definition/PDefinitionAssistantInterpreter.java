@@ -23,7 +23,17 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	public static ProofObligationList getProofObligations(
 			PDefinition d, POContextStack ctxt)
 	{
-		return d.apply(new PogVisitor(), new POContextStack());
+		//FIXME: dont know if this should be passed up
+		try
+		{
+			return d.apply(new PogVisitor(), new POContextStack());
+		} catch (Throwable e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }

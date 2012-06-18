@@ -8,7 +8,9 @@ public class ABusClassDefinitionAssitantInterpreter
 
 	public static BUSValue makeVirtualBUS(ValueSet cpus)
 	{
-		return new BUSValue((AClassType)instance.getType(), cpus);
+		//FIXME: this needs to be fixed for VDMRT
+		//return new BUSValue((AClassType)instance.getType(), cpus);
+		return null;
 	}
 
 }
