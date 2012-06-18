@@ -29,7 +29,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
+import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
@@ -150,7 +150,7 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			AFieldField f = PTypeAssistantInterpreter.findField(type,nvp.name.name);
+			AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(type,nvp.name.name);
 			this.fieldmap.add(nvp.name.name, nvp.value, !f.getEqualityAbstraction());
 		}
 	}

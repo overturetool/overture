@@ -56,6 +56,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
@@ -65,6 +66,7 @@ import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
@@ -971,7 +973,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     		for (ARecordModifier rm: node.getModifiers())
     		{
-    			AFieldField f = PTypeAssistantInterpreter.findField(r.type, rm.getTag().name);
+    			AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(r.type, rm.getTag().name);
 
     			if (f == null)
     			{
