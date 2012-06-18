@@ -2,8 +2,8 @@ package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -16,15 +16,15 @@ public class AValueDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(AValueDefinition d,
-			RootContext ctxt) throws Throwable
+			Context initialContext) throws Throwable
 	{
 		Value v = null;
 
 		try
 		{
 			// UpdatableValues are constantized as they cannot be updated.
-			v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).convertTo(d.getType(), ctxt).getConstant();
-			return PPatternAssistantInterpreter.getNamedValues(d.getPattern(), v, ctxt);
+			v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext).convertTo(d.getType(), initialContext).getConstant();
+			return PPatternAssistantInterpreter.getNamedValues(d.getPattern(), v, initialContext);
      	}
 	    catch (ValueException e)
      	{
@@ -32,7 +32,7 @@ public class AValueDefinitionAssistantInterpreter extends
      	}
 		catch (PatternMatchException e)
 		{
-			RuntimeError.abort(e, ctxt);
+			RuntimeError.abort(e, initialContext);
 		}
 
 		return null;

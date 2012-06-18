@@ -1,7 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -15,15 +15,15 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(
-			AInstanceVariableDefinition d, RootContext ctxt) throws Throwable
+			AInstanceVariableDefinition d, Context initialContext) throws Throwable
 	{
 		 try
 	        {
-		        Value v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		        Value v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
 
 		        if (!v.isUndefined())
 		        {
-		        	v = v.convertTo(d.getType(), ctxt);
+		        	v = v.convertTo(d.getType(), initialContext);
 		        }
 
 				return new NameValuePairList(new NameValuePair(d.getName(), v.getUpdatable(null)));

@@ -1,7 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -12,13 +12,13 @@ public class ATypeDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(ATypeDefinition d,
-			RootContext ctxt)
+			Context initialContext)
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
 		if (d.getInvdef() != null)
 		{
-			FunctionValue invfunc =	new FunctionValue(d.getInvdef(), null, null, ctxt);
+			FunctionValue invfunc =	new FunctionValue(d.getInvdef(), null, null, initialContext);
 			nvl.add(new NameValuePair(d.getInvdef().getName(), invfunc));
 		}
 

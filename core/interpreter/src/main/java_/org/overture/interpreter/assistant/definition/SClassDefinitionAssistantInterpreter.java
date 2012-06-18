@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.definition;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -10,12 +9,10 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.VdmRuntime;
-import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
-import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
@@ -62,7 +59,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	}
 
 	public static ObjectValue newInstance(SClassDefinition classdef,
-			Object object, Object object2, RootContext initialContext)
+			Object object, Object object2, Context ctxt)
 	{
 		// TODO Auto-generated method stub
 		return null;

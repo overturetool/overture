@@ -4,7 +4,6 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -16,10 +15,10 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(
-			AImplicitFunctionDefinition d, RootContext ctxt)
+			AImplicitFunctionDefinition d, Context initialContext)
 	{
 		NameValuePairList nvl = new NameValuePairList();
-		Context free = ctxt.getVisibleVariables();
+		Context free = initialContext.getVisibleVariables();
 
 		FunctionValue prefunc =
 			(d.getPredef() == null) ? null : new FunctionValue(d.getPredef(), null, null, free);

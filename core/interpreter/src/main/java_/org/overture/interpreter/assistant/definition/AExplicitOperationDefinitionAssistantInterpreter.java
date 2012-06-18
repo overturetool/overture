@@ -1,7 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -13,7 +13,7 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends AExplicitO
 {
 
 	public static NameValuePairList getNamedValues(
-			AExplicitOperationDefinition d, RootContext initialContext)
+			AExplicitOperationDefinition d, Context initialContext)
 	{
 		NameValuePairList nvl = new NameValuePairList();
 

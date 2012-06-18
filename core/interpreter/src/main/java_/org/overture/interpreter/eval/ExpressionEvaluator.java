@@ -59,6 +59,10 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -196,14 +200,15 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 * @param val
 	 * @param ctxt
 	 * @return
+	 * @throws Throwable 
 	 */
-	public Value eval(ACaseAlternative node,Value val, Context ctxt)
+	public Value eval(ACaseAlternative node,Value val, Context ctxt) throws Throwable
 	{
 		Context evalContext = new Context(node.getLocation(), "case alternative", ctxt);
 
 		try
 		{
-			evalContext.putList(node.getPattern().getNamedValues(val, ctxt));
+			evalContext.putList( PPatternAssistantInterpreter.getNamedValues(node.getPattern(),val, ctxt));
 			return node.getResult().apply(VdmRuntime.getExpressionEvaluator(),evalContext);
 		}
 		catch (PatternMatchException e)
@@ -252,7 +257,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(node.getLocation(), "exists1", ctxt);
-				evalContext.putList(node.getBind().pattern.getNamedValues(val, ctxt));
+				evalContext.putList( PPatternAssistantInterpreter.getNamedValues(node.getBind().getPattern(),val, ctxt));
 
 				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(),evalContext).boolValue(ctxt))
 				{
@@ -642,7 +647,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(node.getLocation(), "iota", ctxt);
-				evalContext.putList(node.getBind().pattern.getNamedValues(val, ctxt));
+				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getBind().getPattern(),val, ctxt));
 
 				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(),evalContext).boolValue(ctxt))
 				{
@@ -765,7 +770,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		for (PDefinition d: node.getLocalDefs())
 		{
-			NameValuePairList values = d.getNamedValues(evalContext);
+			NameValuePairList values = PDefinitionAssistantInterpreter.getNamedValues(d,evalContext);
 
 			if (self != null && d instanceof AExplicitFunctionDefinition)
 			{
@@ -961,7 +966,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     		for (ARecordModifier rm: node.getModifiers())
     		{
-    			Field f = r.type.findField(rm.getTag().name);
+    			AFieldField f = PTypeAssistantInterpreter.findField(r.type, rm.getTag().name);
 
     			if (f == null)
     			{
@@ -969,7 +974,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     			}
     			else
     			{
-    				fields.add(rm.getTag().name, rm.getValue().apply(VdmRuntime.getExpressionEvaluator(),ctxt), !f.equalityAbstration);
+    				fields.add(rm.getTag().name, rm.getValue().apply(VdmRuntime.getExpressionEvaluator(),ctxt), !f.getEqualityAbstraction());
     			}
      		}
 
@@ -997,7 +1002,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     		}
 
 			ObjectValue objval =
-				node.getClassdef().newInstance(node.getCtorDefinition(), argvals, ctxt);
+				SClassDefinitionAssistantInterpreter.newInstance(node.getClassdef(),node.getCtorDefinition(), argvals, ctxt);
 
     		if (objval.invlistener != null)
     		{
@@ -1175,7 +1180,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     					argvals.add(aiter.next().apply(VdmRuntime.getExpressionEvaluator(),ctxt));
     				}
 
-					return pref.apply(VdmRuntime.getExpressionEvaluator(),node.getLocation(), argvals, ctxt);
+					return pref.eval(node.getLocation(), argvals, ctxt);
 				}
 				catch (ValueException e)
 				{
@@ -1339,7 +1344,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(node.getLocation(), "seq comprehension", ctxt);
-				NameValuePairList nvpl = node.getSetBind().getPattern().getNamedValues(val, ctxt);
+				NameValuePairList nvpl = PPatternAssistantInterpreter.getNamedValues(node.getSetBind().getPattern(),val, ctxt);
 				Value sortOn = nvpl.get(0).value;
 
 				if (map.get(sortOn) == null)
@@ -1417,7 +1422,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			{
 				AIdentifierPattern argp = (AIdentifierPattern)node.getState().getInitPattern();
 				RecordValue rv = (RecordValue)ctxt.lookup(argp.getName());
-				return invariant.apply(VdmRuntime.getExpressionEvaluator(),node.getLocation(), rv, ctxt);
+				return invariant.eval(node.getLocation(), rv, ctxt);
 			}
 
 			return new BooleanValue(true);

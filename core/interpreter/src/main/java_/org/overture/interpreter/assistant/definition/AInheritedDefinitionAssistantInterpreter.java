@@ -2,7 +2,7 @@ package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
-import org.overture.interpreter.runtime.RootContext;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 
@@ -10,7 +10,7 @@ public class AInheritedDefinitionAssistantInterpreter
 {
 
 	public static NameValuePairList getNamedValues(AInheritedDefinition d,
-			RootContext ctxt)
+			Context initialContext)
 	{
 		NameValuePairList renamed = new NameValuePairList();
 
@@ -22,7 +22,7 @@ public class AInheritedDefinitionAssistantInterpreter
 			}
 		}
 
-		for (NameValuePair nv: PDefinitionAssistantInterpreter.getNamedValues(d.getSuperdef(), ctxt))
+		for (NameValuePair nv: PDefinitionAssistantInterpreter.getNamedValues(d.getSuperdef(), initialContext))
 		{
 			renamed.add(new NameValuePair(
 				nv.name.getModifiedName(d.getName().module), nv.value));

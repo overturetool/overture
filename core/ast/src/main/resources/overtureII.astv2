@@ -305,8 +305,8 @@ pair {-> package='org.overture.ast.patterns'}
     ; 
     
 bind {-> package='org.overture.ast.patterns'}
-    =   {set} [pattern]:pattern [set]:exp //binds
-    |   {type} [pattern]:pattern (type):type //binds
+    =   {set} [set]:exp //binds
+    |   {type} (type):type //binds
     ;
 
 //This is used in PExp and PDefinition
@@ -609,7 +609,7 @@ Aspect Declaration
 %pattern = [location]:location [definitions]:definition* [resolved]:java_Boolean
     ;
 
-%bind = [location]:location
+%bind = [location]:location [pattern]:pattern
     ;
 
 %multipleBind = [location]:location [plist]:pattern*
