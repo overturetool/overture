@@ -8,7 +8,7 @@ import org.overture.parser.messages.LocatedException;
 public class RuntimeError
 {
 
-	public static void abort(LexLocation location, int number, String msg, Context ctxt)
+	public static Value abort(LexLocation location, int number, String msg, Context ctxt)
 	{
 		throw new ContextException(number, msg, location, ctxt);
 	}
