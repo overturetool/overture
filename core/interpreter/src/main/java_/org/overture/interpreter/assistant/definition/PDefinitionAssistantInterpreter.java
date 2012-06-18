@@ -1,6 +1,8 @@
 package org.overture.interpreter.assistant.definition;
 
 
+import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.values.NameValuePairList;
@@ -15,9 +17,50 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	public static NameValuePairList getNamedValues(PDefinition d,
 			RootContext initialContext)
 	{
-		// TODO Auto-generated method stub
-		assert false : "not implemented";
-		return null;
+		switch (d.kindPDefinition())
+		{
+			case ASSIGNMENT:
+				try
+				{
+					return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) d, initialContext);
+				} catch (Throwable e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					return new NameValuePairList();
+				}
+			case EQUALS:
+				try
+				{
+					return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);
+				} catch (Throwable e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return new NameValuePairList();
+				}
+			case EXPLICITFUNCTION:
+			case EXPLICITOPERATION:
+			case EXTERNAL:
+			case IMPLICITFUNCTION:
+			case IMPLICITOPERATION:
+			case IMPORTED:
+			case INHERITED:
+			case INSTANCEVARIABLE:
+			case LOCAL:
+			case MULTIBINDLIST:
+			case MUTEXSYNC:
+			case NAMEDTRACE:
+			case PERSYNC:
+			case RENAMED:
+			case STATE:
+			case THREAD:
+			case TYPE:
+			case UNTYPED:
+			case VALUE:
+			default:
+				return new NameValuePairList();		// Overridden
+		}
 	}
 
 	public static ProofObligationList getProofObligations(

@@ -74,7 +74,7 @@ public class ClassTypeChecker extends TypeChecker
 				}
 			}
 
-			if (!c1.getIsTypeChecked()) nothing = false;
+			if (!c1.getTypeChecked()) nothing = false;
 
 			if (c1 instanceof ASystemClassDefinition)
 			{
@@ -98,7 +98,7 @@ public class ClassTypeChecker extends TypeChecker
 
 		for (SClassDefinition c: classes)
 		{
-			if (!c.getIsTypeChecked())
+			if (!c.getTypeChecked())
 			{
 				SClassDefinitionAssistantTC.implicitDefinitions(c, allClasses);
 			}
@@ -106,7 +106,7 @@ public class ClassTypeChecker extends TypeChecker
 
     	for (SClassDefinition c: classes)
 		{
-			if (!c.getIsTypeChecked())
+			if (!c.getTypeChecked())
 			{
     			try
     			{
@@ -126,7 +126,7 @@ public class ClassTypeChecker extends TypeChecker
 
 		for (SClassDefinition c: classes)
 		{
-			if (!c.getIsTypeChecked())
+			if (!c.getTypeChecked())
 			{
 				SClassDefinitionAssistantTC.checkOver(c);
 			}
@@ -136,7 +136,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
         	for (SClassDefinition c: classes)
     		{
-    			if (!c.getIsTypeChecked())
+    			if (!c.getTypeChecked())
     			{
     				try
     				{
@@ -157,7 +157,7 @@ public class ClassTypeChecker extends TypeChecker
 
     	for (SClassDefinition c: classes)
 		{
-			if (!c.getIsTypeChecked())
+			if (!c.getTypeChecked())
 			{
 				SClassDefinitionAssistantTC.initializedCheck(c);
 				PDefinitionAssistantTC.unusedCheck(c);

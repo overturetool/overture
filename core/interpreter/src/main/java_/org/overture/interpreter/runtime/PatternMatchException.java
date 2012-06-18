@@ -24,7 +24,7 @@
 package org.overture.interpreter.runtime;
 
 import org.overture.ast.lex.LexLocation;
-import org.overture.interpreter.messages.LocatedException;
+import org.overture.parser.messages.LocatedException;
 
 
 @SuppressWarnings("serial")

@@ -25,6 +25,7 @@ package org.overture.interpreter.messages;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.parser.messages.LocatedException;
 
 
 /**
