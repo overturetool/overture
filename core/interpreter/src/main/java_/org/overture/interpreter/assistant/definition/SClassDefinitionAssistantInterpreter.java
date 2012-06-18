@@ -9,6 +9,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
@@ -26,7 +27,10 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		LexNameToken local = (sought.explicit) ? sought
 				: sought.getModifiedName(classdef.getName().name);
 
-		Value v = privateStaticValues.get(local);
+		
+		
+		
+		Value v = VdmRuntime.getNodeState(classdef).privateStaticValues.get(local);
 
 		if (v == null)
 		{

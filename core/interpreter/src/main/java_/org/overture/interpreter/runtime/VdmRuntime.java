@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
+import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.Value;
 
@@ -52,6 +54,19 @@ public class VdmRuntime
 	public static StateDefinitionRuntimeState getNodeState(AStateDefinition node)
 	{
 		return (StateDefinitionRuntimeState) runtimeState.get(node);
+	}
+	
+	public static SClassDefinitionRuntime getNodeState(SClassDefinition node)
+	{
+		SClassDefinitionRuntime state = (SClassDefinitionRuntime) runtimeState.get(node);
+		
+		if(state == null)
+		{
+			state = new SClassDefinitionRuntime();
+			runtimeState.put(node, state );
+		}
+		
+		return state;
 	}
 	
 	
