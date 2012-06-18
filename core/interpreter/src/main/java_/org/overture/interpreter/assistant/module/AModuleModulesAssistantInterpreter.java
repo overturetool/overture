@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.module;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.definitions.AStateDefinition;
