@@ -6,35 +6,41 @@ import java.util.Map;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.node.INode;
+import org.overture.interpreter.eval.StatementEvaluator;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.Value;
 
 public class VdmRuntime
 {
-	private static IQuestionAnswer<Context, Value> runtime;
+	private static IQuestionAnswer<Context, Value> expressionRuntime;
+	private static IQuestionAnswer<Context, Value> statementRuntime;
 	
 	private static Map<INode,IRuntimeState> runtimeState = new HashMap<INode, IRuntimeState>();
 	
+	public static void initialize()
+	{
+		expressionRuntime = new StatementEvaluator(); 
+		statementRuntime = expressionRuntime; 
+	}
+	
 	public static IQuestionAnswer<Context, Value> getExpressionEvaluator()
 	{
-		if(runtime == null)
+		if(expressionRuntime == null)
 		{
-			//FIXME: create the runtime
-			runtime = null; 
+			initialize();
 		}
 		
-		return runtime;
+		return expressionRuntime;
 	}
 	
 	public static IQuestionAnswer<Context, Value> getStatementEvaluator()
 	{
-		if(runtime == null)
+		if(statementRuntime == null)
 		{
-			//FIXME: create the runtime
-			runtime = null; 
+			initialize();
 		}
 		
-		return runtime;
+		return statementRuntime;
 	}
 	
 	public static void setNodeState(INode node, IRuntimeState state)
