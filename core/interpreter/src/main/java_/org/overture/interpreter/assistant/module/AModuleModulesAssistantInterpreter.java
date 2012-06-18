@@ -3,7 +3,9 @@ package org.overture.interpreter.assistant.module;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -11,9 +13,6 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.RenamedDefinition;
-import org.overturetool.vdmj.definitions.StateDefinition;
 
 public class AModuleModulesAssistantInterpreter extends
 		AModuleModulesAssistantTC
@@ -70,11 +69,11 @@ public class AModuleModulesAssistantInterpreter extends
 //
 //		try
 //		{
-//			StateDefinition sdef = defs.findStateDefinition();
+//			AStateDefinition sdef = defs.findStateDefinition();
 //
 //			if (sdef != null)
 //			{
-//				sdef.initState(initialContext);
+//AStateDefinitionAssistantInterpreter.initState(sdef,initialContext);//				sdef.initState(initialContext);
 //			}
 //		}
 //		catch (ContextException e)
