@@ -33,5 +33,23 @@ public class RuntimeError
 	}
 		
 	
+	/**
+	 * Throw a PatternMatchException with the given message.
+	 * @throws PatternMatchException
+	 */
+	public static void patternFail( int number, String msg,LexLocation location) throws PatternMatchException
+	{
+		throw new PatternMatchException(number, msg, location);
+	}
+	
+	/**
+	 * Throw a PatternMatchException with a message from the ValueException.
+	 * @throws PatternMatchException
+	 */
+
+	public static Value patternFail(ValueException ve,LexLocation location) throws PatternMatchException
+	{
+		throw new PatternMatchException(ve.number, ve.getMessage(), location);
+	}
 	
 }

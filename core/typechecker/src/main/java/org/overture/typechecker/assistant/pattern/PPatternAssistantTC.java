@@ -255,45 +255,4 @@ public class PPatternAssistantTC extends PPatternAssistant
 		}
 	}
 	
-
-//
-//	private static Random r = new Random();
-//
-//	public static PExp getExpression(PPattern p)
-//	{
-//		// get class of p and lookup method to invoke
-//		Class<?> clz = p.getClass();
-//		Method m = map.get(clz);
-//
-//		// If m==null the getExpression(T p) method, for T being the type in the
-//		// error message that we cannot handle, is not implemented yet. Do the
-//		// following:
-//		// 1) Implement the missing getExpresion taking the pattern type as
-//		// argument
-//		// 2) Add this method to the map in the static initializer above, e.g.
-//		// addNewPatternClass(T.class);
-//		// 3) Run the test again
-//		if (m == null)
-//			throw new RuntimeException("FixMe: "
-//					+ PPatternAssistantTC.class.getSimpleName()
-//					+ " cannot handle: " + p.getClass().getSimpleName()
-//					+ " yet.");
-//
-//		// invoke the found method
-//		try
-//		{
-//			return (PExp) m.invoke(null, clz.cast(p));
-//		} catch (Exception e)
-//		{
-//			// ooops something went wrong, check that the getExpression method
-//			// is static...
-//			byte[] rnd = new byte[3];
-//			r.nextBytes(rnd);
-//			BigInteger b = new BigInteger(1, rnd).nextProbablePrime();
-//			System.err.println(b.toString(16));
-//			e.printStackTrace();
-//			throw new RuntimeException("FixMe: Method invocation failed unexpectedly: (see console for stacktrace near: \""
-//					+ b.toString(16) + "\")" + e, e);
-//		}
-//	}
 }

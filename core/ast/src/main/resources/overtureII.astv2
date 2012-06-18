@@ -279,7 +279,7 @@ pattern {-> package='org.overture.ast.patterns'}
     |   {character} [value]:LexCharacterToken
     |   {concatenation} [left]:pattern [right]:pattern
     |   {expression} [exp]:exp
-    |   {identifier} [name]:LexNameToken
+    |   {identifier} [name]:LexNameToken [constrained]:java_Boolean
     |   {ignore} 
     |   {integer} [value]:LexIntegerToken
     |   {nil}
