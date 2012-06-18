@@ -767,7 +767,7 @@ public class SClassDefinitionAssistantTC {
 
 	public static void typeCheckPass(SClassDefinition c, Pass p,
 			Environment base, TypeCheckVisitor tc) throws Throwable {
-		if (c.getIsTypeChecked()) return;
+		if (c.getTypeChecked()) return;
 
 		for (PDefinition d: c.getDefinitions())
 		{
