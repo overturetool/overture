@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -47,6 +48,17 @@ public class AMapPatternMapletAssistantInterpreter extends
 		}
 
 		return results;
+	}
+
+	public static List<AIdentifierPattern> findIdentifiers(
+			AMapletPatternMaplet p)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+
+		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getFrom()));
+		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getTo()));
+
+		return list;
 	}
 
 }

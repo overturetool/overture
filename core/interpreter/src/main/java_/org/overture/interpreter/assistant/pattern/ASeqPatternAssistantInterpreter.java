@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.runtime.Context;
@@ -118,6 +119,18 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 	public static int getLength(ASeqPattern pattern)
 	{
 		return pattern.getPlist().size();
+	}
+
+	public static List<AIdentifierPattern> findIdentifiers(ASeqPattern pattern)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+
+		for (PPattern p: pattern.getPlist())
+		{
+			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+		}
+
+		return list;
 	}
 
 }

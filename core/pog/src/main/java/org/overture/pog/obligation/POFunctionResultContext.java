@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternTypePair;
@@ -47,7 +48,13 @@ public class POFunctionResultContext extends POContext
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
-		this.result = new APatternTypePair(false, new AIdentifierPattern(definition.getLocation().clone(), null, false, new LexNameToken(definition.getName().module, "RESULT", definition.getLocation().clone())), definition.getType().getResult().clone());
+		this.result = 
+				AstFactory.newAPatternTypePair(
+						AstFactory.newAIdentifierPattern(
+						new LexNameToken(
+					definition.getName().module, "RESULT", definition.getLocation())),
+					definition.getType().getResult().clone());
+				
 
 	}
 

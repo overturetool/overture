@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
@@ -156,6 +157,18 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 	public static int getLength(ASetPattern pattern)
 	{
 		return pattern.getPlist().size();
+	}
+
+	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+
+		for (PPattern p: pattern.getPlist())
+		{
+			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+		}
+
+		return list;
 	}
 
 }

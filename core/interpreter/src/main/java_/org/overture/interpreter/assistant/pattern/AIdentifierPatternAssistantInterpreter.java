@@ -34,4 +34,12 @@ public class AIdentifierPatternAssistantInterpreter extends
 		return PPatternAssistantInterpreter.ANY;	// Special value meaning "any length"
 	}
 
+	public static List<AIdentifierPattern> findIdentifiers(
+			AIdentifierPattern pattern)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		list.add(pattern);
+		return list;
+	}
+
 }

@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -202,6 +203,14 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
 		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
 		return (llen == PPatternAssistantInterpreter.ANY || rlen == PPatternAssistantInterpreter.ANY) ? PPatternAssistantInterpreter.ANY : llen + rlen;
+	}
+
+	public static List<AIdentifierPattern> findIdentifiers(AUnionPattern pattern)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
+		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+		return list;
 	}
 
 }

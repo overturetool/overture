@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.runtime.Context;
@@ -148,6 +149,18 @@ public class AMapPatternAssistantInterpreter
 	public static int getLength(AMapPattern pattern)
 	{
 		return pattern.getMaplets().size();
+	}
+
+	public static List<AIdentifierPattern> findIdentifiers(AMapPattern pattern)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+
+		for (AMapletPatternMaplet p: pattern.getMaplets())
+		{
+			list.addAll(AMapPatternMapletAssistantInterpreter.findIdentifiers(p));
+		}
+
+		return list;
 	}
 
 }

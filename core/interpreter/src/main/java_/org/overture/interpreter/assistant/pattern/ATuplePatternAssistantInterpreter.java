@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.runtime.Context;
@@ -107,6 +108,19 @@ public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 		}
 
 		return false;
+	}
+
+	public static List<AIdentifierPattern> findIdentifiers(
+			ATuplePattern pattern)
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+
+		for (PPattern p: pattern.getPlist())
+		{
+			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+		}
+
+		return list;
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.pattern;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.ABooleanPattern;
@@ -63,10 +64,31 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	}
 
 
-	private static List<AIdentifierPattern> findIdentifiers(PPattern p)
+	public static List<AIdentifierPattern> findIdentifiers(PPattern pattern)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		switch (pattern.kindPPattern())
+		{
+			case CONCATENATION:
+				return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern)pattern);
+			case IDENTIFIER:
+				return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern)pattern);
+			case MAP:
+				return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern)pattern);
+			case MAPUNION:
+				return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern)pattern);
+			case RECORD:
+				return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
+			case SEQ:
+				return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
+			case SET:
+				return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
+			case TUPLE:
+				return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
+			case UNION:
+				return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
+			default:
+				return new Vector<AIdentifierPattern>();		// Most have none
+		}
 	}
 
 
