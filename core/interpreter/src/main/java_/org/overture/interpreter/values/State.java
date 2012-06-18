@@ -123,20 +123,20 @@ public class State implements ValueListener
 
 	public void changedValue(LexLocation location, Value changed, Context ctxt)
 	{
-		if (doInvariantChecks && definition.invfunc != null && Settings.invchecks)
+		if (doInvariantChecks && VdmRuntime.getNodeState( definition).invfunc != null && Settings.invchecks)
 		{
 			if (location == null)
 			{
-				location = definition.invfunc.body.location;
+				location = VdmRuntime.getNodeState(definition).invfunc.body.getLocation();
 			}
 
     		try
     		{
-    			if (!definition.invfunc.eval(
-    				definition.invfunc.location, recordValue, ctxt).boolValue(ctxt))
+    			if (!VdmRuntime.getNodeState(definition).invfunc.eval(
+    					VdmRuntime.getNodeState(definition).invfunc.location, recordValue, ctxt).boolValue(ctxt))
     			{
     				throw new ContextException(
-    					4131, "State invariant violated: " + definition.invfunc.name, location, ctxt);
+    					4131, "State invariant violated: " + VdmRuntime.getNodeState(definition).invfunc.name, location, ctxt);
     			}
     		}
     		catch (ValueException e)
