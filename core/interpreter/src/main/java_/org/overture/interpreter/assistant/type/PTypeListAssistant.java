@@ -1,8 +1,7 @@
 package org.overture.interpreter.assistant.type;
 
-import java.util.LinkedList;
+import java.util.List;
 
-import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
@@ -19,7 +18,7 @@ import org.overture.interpreter.values.ValueList;
 public class PTypeListAssistant  
 {
 
-	public static ValueList getAllValues(LinkedList<PType> linkedList, Context ctxt) throws ValueException
+	public static ValueList getAllValues(List<PType> linkedList, Context ctxt) throws ValueException
 	{
 		QuantifierList quantifiers = new QuantifierList();
 		int n = 0;

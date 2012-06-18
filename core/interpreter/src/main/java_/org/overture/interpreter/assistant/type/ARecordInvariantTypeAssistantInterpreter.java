@@ -1,8 +1,12 @@
 package org.overture.interpreter.assistant.type;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.RecordValue;
@@ -17,7 +21,7 @@ public class ARecordInvariantTypeAssistantInterpreter extends
 
 	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt) throws ValueException
 	{
-		PTypeList types = new PTypeList();
+		List<PType> types = new Vector<PType>();
 
 		for (AFieldField f: type.getFields())
 		{
