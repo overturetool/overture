@@ -50,8 +50,11 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.AErrorCase;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
@@ -89,6 +92,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
@@ -679,8 +683,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		Context free = ctxt.getVisibleVariables();
 
-		return new FunctionValue(node.getLocation(), "lambda",node.getType(),
-				node.getParamPatterns(), node.getExpression(), free);
+		PatternListTC list = new PatternListTC();
+		list.addAll(node.getParamPatterns());
+		 
+		return new FunctionValue(node.getLocation(), "lambda",node.getFunctionType(),
+				list, node.getExpression(), free);
 	}
 	
 	@Override
@@ -1036,26 +1043,26 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				try
 				{
-		    		if (state != null)
+		    		if (node.getState() != null)
 		    		{
-		    			RecordValue sigma = ctxt.lookup(state.name).recordValue(ctxt);
+		    			RecordValue sigma = ctxt.lookup(node.getState().getName()).recordValue(ctxt);
 
-		    			for (Field field: state.fields)
+		    			for (AFieldField field: node.getState().getFields())
 		    			{
-		    				ctxt.put(field.tagname, sigma.fieldmap.get(field.tag));
+		    				ctxt.put(field.getTagname(), sigma.fieldmap.get(field.getTag()));
 		    			}
 
-		    			RecordValue oldsigma = ctxt.lookup(state.name.getOldName()).recordValue(ctxt);
+		    			RecordValue oldsigma = ctxt.lookup(node.getState().getName().getOldName()).recordValue(ctxt);
 
-		    			for (Field field: state.fields)
+		    			for (AFieldField field: node.getState().getFields())
 		    			{
-		    				ctxt.put(field.tagname.getOldName(), oldsigma.fieldmap.get(field.tag));
+		    				ctxt.put(field.getTagname().getOldName(), oldsigma.fieldmap.get(field.getTag()));
 		    			}
 		    		}
 		    		else if (ctxt instanceof ObjectContext)
 		    		{
 		    			ObjectContext octxt = (ObjectContext)ctxt;
-		    			LexNameToken selfname = opname.getSelfName();
+		    			LexNameToken selfname = node.getOpname().getSelfName();
 		    			LexNameToken oldselfname = selfname.getOldName();
 
 		    			ObjectValue self = octxt.lookup(selfname).objectValue(ctxt);
@@ -1095,18 +1102,18 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		    			(node.getErrors() == null || node.getPreexpression() == null || node.getPreexpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt)) &&
 		    			node.getPostexpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
 
-		    		errorLocation = node.getLocation();
+		    		node.setErrorLocation( node.getLocation());//FIXME not good 
 
 		    		if (node.getErrors() != null)
 		    		{
-		    			for (ErrorCase err: node.getErrors())
+		    			for (AErrorCase err: node.getErrors())
 		    			{
-		    				boolean left  = err.left.apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
-		    				boolean right = err.right.apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
+		    				boolean left  = err.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
+		    				boolean right = err.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
 
 		    				if (left && !right)
 		    				{
-		    					errorLocation = err.left.location;
+		    					node.setErrorLocation( err.getLeft().getLocation());//FIXME not good 
 		    				}
 
 		    				result = result || (left && right);
@@ -1195,15 +1202,15 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     		// Sigma record and expand its contents to give additional
     		// values in ctxt for each field.
 
-    		if (state != null)
+    		if (node.getState() != null)
     		{
     			try
     			{
-    				RecordValue sigma = ctxt.lookup(state.name).recordValue(ctxt);
+    				RecordValue sigma = ctxt.lookup(node.getState().getName()).recordValue(ctxt);
 
-    				for (Field field: state.fields)
+    				for (AFieldField field: node.getState().getFields())
     				{
-    					ctxt.put(field.tagname, sigma.fieldmap.get(field.tag));
+    					ctxt.put(field.getTagname(), sigma.fieldmap.get(field.getTag()));
     				}
     			}
     			catch (ValueException e)
@@ -1229,11 +1236,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     		boolean result = node.getExpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
 
-    		if (errors != null)
+    		if (node.getErrors() != null)
     		{
-    			for (ErrorCase err: errors)
+    			for (AErrorCase err: node.getErrors())
     			{
-    				result = result || err.left.apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
+    				result = result || err.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
     			}
     		}
 
@@ -1400,7 +1407,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			FunctionValue invariant = state.invfunc;
+			FunctionValue invariant = VdmRuntime.getNodeState(node.getState()).invfunc;
 
 			// Note, the function just checks whether the argument passed would
 			// violate the state invariant (if any). It doesn't initialize the
@@ -1408,9 +1415,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (invariant != null)
 			{
-				IdentifierPattern argp = (IdentifierPattern)state.initPattern;
-				RecordValue rv = (RecordValue)ctxt.lookup(argp.name);
-				return invariant.apply(VdmRuntime.getExpressionEvaluator(),location, rv, ctxt);
+				AIdentifierPattern argp = (AIdentifierPattern)node.getState().getInitPattern();
+				RecordValue rv = (RecordValue)ctxt.lookup(argp.getName());
+				return invariant.apply(VdmRuntime.getExpressionEvaluator(),node.getLocation(), rv, ctxt);
 			}
 
 			return new BooleanValue(true);
@@ -1528,11 +1535,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws Throwable
 	{
 		//Experimental hood added for DESTECS
-				if(Settings.dialect == Dialect.VDM_RT)
-				{
-					SharedStateListner.beforeVariableReadDuration(this);
-				}
-				BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-				return ctxt.lookup(node.getName());
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			SharedStateListner.beforeVariableReadDuration(node);
+		}
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		return ctxt.lookup(node.getName());
 	}
 }
