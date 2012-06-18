@@ -1,6 +1,6 @@
 package org.overture.interpreter.eval;
 
-public class StatementEvaluator extends ExpressionEvaluator
+public class StatementEvaluator extends DelegateExpressionEvaluator
 {
 	/**
 	 * Serial version UID
