@@ -3,12 +3,32 @@ package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.visitor.PogVisitor;
+import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
@@ -40,24 +60,47 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return new NameValuePairList();
 				}
 			case EXPLICITFUNCTION:
+				return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition)d,initialContext);
 			case EXPLICITOPERATION:
-			case EXTERNAL:
+				return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues((AExplicitOperationDefinition)d,initialContext);
 			case IMPLICITFUNCTION:
+				return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AImplicitFunctionDefinition)d,initialContext);
 			case IMPLICITOPERATION:
+				return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues((AImplicitOperationDefinition)d,initialContext);
 			case IMPORTED:
+				return AImportedDefinitionAssistantInterpreter.getNamedValues((AImportedDefinition)d,initialContext);
 			case INHERITED:
+				return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition)d, initialContext);
 			case INSTANCEVARIABLE:
+				try
+				{
+					return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition)d,initialContext);
+				} catch (Throwable e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return new NameValuePairList();
+				}
 			case LOCAL:
-			case MULTIBINDLIST:
-			case MUTEXSYNC:
-			case NAMEDTRACE:
-			case PERSYNC:
+				return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition)d,initialContext);
 			case RENAMED:
-			case STATE:
+				return ARenamedDefinitionAssistantInterpreter.getNamedValues((ARenamedDefinition)d,initialContext);
 			case THREAD:
+				return AThreadDefinitionAssistantInterpreter.getNamedValues((AThreadDefinition)d,initialContext);
 			case TYPE:
+				return ATypeDefinitionAssistantInterpreter.getNamedValues((ATypeDefinition)d,initialContext);
 			case UNTYPED:
+				return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition)d,initialContext);
 			case VALUE:
+				try
+				{
+					return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition)d,initialContext);
+				} catch (Throwable e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return new NameValuePairList();
+				}
 			default:
 				return new NameValuePairList();		// Overridden
 		}
