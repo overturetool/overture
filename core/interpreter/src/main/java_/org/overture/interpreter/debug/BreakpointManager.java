@@ -20,6 +20,10 @@ public class BreakpointManager
 
 	public static Breakpoint getBreakpoint(PExp exp)
 	{
+		if(!expressionMap.containsKey(exp))
+		{
+			expressionMap.put(exp, new Breakpoint(exp.getLocation()));
+		}
 		return expressionMap.get(exp);
 	}
 
