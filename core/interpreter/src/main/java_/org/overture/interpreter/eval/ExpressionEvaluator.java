@@ -61,6 +61,9 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
+import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
+import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
@@ -96,6 +99,8 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
+import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 
@@ -245,8 +250,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		
 		try
 		{
-			allValues = node.getBind().getBindValues(ctxt);
-		}
+			allValues = PBindAssistantInterpreter.getBindValues(node.getBind(),ctxt);
+		} 
 		catch (ValueException e)
 		{
 			RuntimeError.abort(node.getLocation(),e);
@@ -294,7 +299,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb: node.getBindList())
 			{
-				ValueList bvals = mb.getBindValues(ctxt);
+				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb,ctxt);
 
 				for (PPattern p: mb.getPlist())
 				{
@@ -420,7 +425,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb: node.getBindList())
 			{
-				ValueList bvals = mb.getBindValues(ctxt);
+				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
 
 				for (PPattern p: mb.getPlist())
 				{
@@ -635,7 +640,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			allValues = node.getBind().getBindValues(ctxt);
+			allValues = PBindAssistantInterpreter.getBindValues(node.getBind(),ctxt);
 		}
 		catch (ValueException e)
 		{
@@ -707,7 +712,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb: node.getDef().getBindings())
 			{
-				ValueList bvals = mb.getBindValues(ctxt);
+				ValueList bvals =  PMultipleBindAssistantInterpreter.getBindValues(mb,ctxt);
 
 				for (PPattern p: mb.getPlist())
 				{
@@ -807,7 +812,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb: node.getBindings())
 			{
-				ValueList bvals = mb.getBindValues(ctxt);
+				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb,ctxt);
 
 				for (PPattern p: mb.getPlist())
 				{
@@ -1334,7 +1339,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		ValueList allValues = node.getSetBind().getBindValues(ctxt);
+		ValueList allValues = ASetBindAssistantInterpreter.getBindValues(node.getSetBind(),ctxt);
 
 		ValueSet seq = new ValueSet();	// Bind variable values
 		ValueMap map = new ValueMap();	// Map bind values to output values
