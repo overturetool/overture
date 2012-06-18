@@ -1,6 +1,9 @@
 package org.overture.interpreter.runtime.state;
 
+import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
@@ -13,5 +16,28 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	protected boolean staticInit = false;
 	/** True if the class' static values are initialized. */
 	protected boolean staticValuesInit = false;
+	
+	/** A delegate Java object for any native methods. */
+	private Delegate delegate = null;
+	
+	public boolean hasDelegate()
+	{
+		return delegate.hasDelegate();
+	}
+
+	public Object newInstance()
+	{
+		return delegate.newInstance();
+	}
+	
+	public Value invokeDelegate(Object delegateObject, Context ctxt)
+	{
+		return delegate.invokeDelegate(delegateObject, ctxt);
+	}
+	
+	public Value invokeDelegate(Context ctxt)
+	{
+		return delegate.invokeDelegate(null, ctxt);
+	}
 	
 }

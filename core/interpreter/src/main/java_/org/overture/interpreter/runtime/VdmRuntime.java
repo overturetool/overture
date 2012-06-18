@@ -7,8 +7,10 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.eval.StatementEvaluator;
+import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
 import org.overture.interpreter.runtime.state.ASystemClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
@@ -63,6 +65,11 @@ public class VdmRuntime
 		return (StateDefinitionRuntimeState) runtimeState.get(node);
 	}
 	
+	public static AModuleModulesRuntime getNodeState(AModuleModules node)
+	{
+		return (AModuleModulesRuntime) runtimeState.get(node);//FIXME remember to init all Delegates in all modules at startup
+	}
+	
 	public static SClassDefinitionRuntime getNodeState(SClassDefinition node)
 	{
 		SClassDefinitionRuntime state = (SClassDefinitionRuntime) runtimeState.get(node);
@@ -75,6 +82,8 @@ public class VdmRuntime
 		
 		return state;
 	}
+	
+	
 	
 	public static ASystemClassDefinitionRuntime getNodeState(ASystemClassDefinition node)
 	{
