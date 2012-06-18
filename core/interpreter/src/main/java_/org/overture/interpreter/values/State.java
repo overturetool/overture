@@ -63,7 +63,7 @@ public class State implements ValueListener
 		this.context.putList(fieldvalues);
 	}
 
-	public void initialize(Context globals) throws Throwable
+	public void initialize(Context globals) 
 	{
 		try
 		{
@@ -109,6 +109,10 @@ public class State implements ValueListener
 		catch (ValueException e)
 		{
 			throw new ContextException(e, definition.getLocation());
+		} catch (Throwable e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		finally
 		{

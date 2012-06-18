@@ -423,9 +423,20 @@ public class FunctionValue extends Value
 				}
 
 				stack.push(mv);
-			}			
-    		Value rv = body.apply(VdmRuntime.getExpressionEvaluator(),evalContext).convertTo(type.getResult(), evalContext);
-
+			}	
+			
+			Value rv = null;
+			try
+			{
+				rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
+			} catch (ValueException e)
+			{
+				throw e;
+			} catch (Throwable e)
+			{
+				e.printStackTrace();// TODO
+			}
+    		
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
     		{
     			if (!rv.boolValue(ctxt))
