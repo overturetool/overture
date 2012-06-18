@@ -8,6 +8,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.eval.StatementEvaluator;
+import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.Value;
 
@@ -52,7 +53,6 @@ public class VdmRuntime
 	
 	public static IRuntimeState getNodeState(INode node)
 	{
-		//TODO: probably needs something more
 		return runtimeState.get(node);
 	}
 	
