@@ -368,8 +368,17 @@ public class OperationValue extends Value
 				ctxt.threadState.setAtomic(false);
     		}
     		
-    		rv = body.apply(VdmRuntime.getStatementEvaluator(),argContext);
-
+			try
+			{
+				rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
+			} catch (ValueException e)
+			{
+				throw e;
+			} catch (Throwable e)
+			{
+				e.printStackTrace();// TODO
+			}
+    		
     		if (isConstructor)
     		{
     			rv = self;
@@ -458,7 +467,17 @@ public class OperationValue extends Value
 
 				debug("guard TEST");
 				ctxt.threadState.setAtomic(true);
-    			boolean ok = guard.apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
+    			boolean ok = false;
+				try
+				{
+					ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+				} catch (ValueException e)
+				{
+					throw e;
+				} catch (Throwable e)
+				{
+					e.printStackTrace();// TODO
+				}
     			ctxt.threadState.setAtomic(false);
 
     			if (ok)
