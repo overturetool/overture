@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.ExpressionTestCase">
+<result>
+<output object="rO0ABXNyACpvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlF1b3RlVmFsdWUAAAAAAAAAAQIAAUwABXZhbHVldAASTGphdmEvbGFuZy9TdHJpbmc7eHIAJW9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuVmFsdWUAAAAAAAAAAQIAAHhwdAAHYmF6aW5nYQ==" resource="exp" value="&lt;bazinga&gt;"/>
+</result>
+</testResult>
