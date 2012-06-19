@@ -48,6 +48,10 @@ import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
+import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
+import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
+import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -309,7 +313,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (ACaseAlternativeStm c: node.getCases())
 		{
-			Value rv = c.eval(val, ctxt);
+			Value rv = ACaseAlternativeStmAssistantInterpreter.eval(c,val, ctxt);
 			if (rv != null) return rv;
 		}
 
@@ -783,7 +787,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			evalContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d,evalContext));
 		}
 
-		return evalBlock(evalContext);
+		return SSimpleBlockStmAssistantInterpreter.evalBlock(node,evalContext);
 	}
 	
 	@Override
@@ -792,7 +796,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws Throwable
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return evalBlock(ctxt);
+		return SSimpleBlockStmAssistantInterpreter.evalBlock(node,ctxt);
 	}
 	
 	@Override
@@ -830,7 +834,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					ObjectValue target = v.objectValue(ctxt);
 					OperationValue op = target.getThreadOperation(ctxt);
 
-					start(target, op, ctxt);
+					AStartStmAssistantInterpreter.start(node,target, op, ctxt);
 				}
 			}
 			else
@@ -838,7 +842,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				ObjectValue target = value.objectValue(ctxt);
 				OperationValue op = target.getThreadOperation(ctxt);
 
-				start(target, op, ctxt);
+				AStartStmAssistantInterpreter.start(node,target, op, ctxt);
 			}
 
 			return new VoidValue();
@@ -879,7 +883,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
     			{
     				for (ATixeStmtAlternative tsa: node.getTraps())
     				{
-    					rv = tsa.eval(node.getLocation(), exval, ctxt);
+    					rv = ATixeStmtAlternativeAssistantInterpreter.eval(tsa,node.getLocation(), exval, ctxt);
 
     					if (rv != null)  // Statement was executed
     					{
