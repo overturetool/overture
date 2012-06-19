@@ -442,7 +442,7 @@ traceDefinition {-> package='org.overture.ast.definitions.traces'}
     
 traceCoreDefinition {-> package='org.overture.ast.definitions.traces'}
     =   {applyExpression} [callStatement]:stm [currentModule]:java_String
-    |   {bracketedExpression} [terms]:traceDefinition**
+    |   {bracketedExpression} [terms]:term.traceDefinition*
     |   {concurrentExpression} [defs]:traceDefinition*
     ;
 //trace end....
