@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
@@ -17,8 +18,25 @@ import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AIsOfBaseClassExp;
 import org.overture.ast.expressions.AIsOfClassExp;
+import org.overture.ast.expressions.ALambdaExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMkBasicExp;
+import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASelfExp;
+import org.overture.ast.expressions.ASubseqExp;
+import org.overture.ast.expressions.ATupleExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.expressions.SMapExp;
+import org.overture.ast.expressions.SSeqExp;
+import org.overture.ast.expressions.SSetExp;
+import org.overture.ast.expressions.SUnaryExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
@@ -35,8 +53,24 @@ import org.overture.typechecker.assistant.expression.AIotaExpAssistantTC;
 import org.overture.typechecker.assistant.expression.AIsExpAssistantTC;
 import org.overture.typechecker.assistant.expression.AIsOfBaseClassExpAssistantTC;
 import org.overture.typechecker.assistant.expression.AIsOfClassExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ALambdaExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ALetBeStExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ALetDefExpAssistantTC;
+import org.overture.typechecker.assistant.expression.AMkBasicExpAssistantTC;
+import org.overture.typechecker.assistant.expression.AMkTypeExpAssistantTC;
+import org.overture.typechecker.assistant.expression.AMuExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ANewExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ASameBaseClassExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ASameClassExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ASubseqExpAssistantTC;
+import org.overture.typechecker.assistant.expression.ATupleExpAssistantTC;
+import org.overture.typechecker.assistant.expression.AVariableExpAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
+import org.overture.typechecker.assistant.expression.SMapExpAssistantTC;
+import org.overture.typechecker.assistant.expression.SSeqExpAssistantTC;
+import org.overture.typechecker.assistant.expression.SSetExpAssistantTC;
+import org.overture.typechecker.assistant.expression.SUnaryExpAssistantTC;
 
 public class PExpAssistantInterpreter extends PExpAssistantTC
 {
@@ -60,6 +94,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 			case CASES:
 				return ACasesExpAssistantInterpreter.getValues((ACasesExp)exp,ctxt);
 			case DEF:
+				return ADefExpAssistantInterpreter.getValues((ADefExp)exp,ctxt);
 			case ELSEIF:
 				return AElseIfExpAssistantInterpreter.getValues((AElseIfExp)exp,ctxt);
 			case EXISTS:
@@ -85,37 +120,39 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 			case ISOFCLASS:
 				return AIsOfClassExpAssistantInterpreter.getValues((AIsOfClassExp)exp,ctxt);
 			case LAMBDA:
-				dsadsa
+				return ALambdaExpAssistantInterpreter.getValues((ALambdaExp)exp,ctxt);
 			case LETBEST:
+				return ALetBeStExpAssistantInterpreter.getValues((ALetBeStExp)exp,ctxt);
 			case LETDEF:
+				return ALetDefExpAssistantInterpreter.getValues((ALetDefExp)exp,ctxt);
 			case MAP:
+				return SMapExpAssistantInterpreter.getValues((SMapExp)exp,ctxt);
 			case MAPLET:
+				return AMapletExpAssistantInterpreter.getValues((AMapletExp)exp,ctxt);
 			case MKBASIC:
+				return AMkBasicExpAssistantInterpreter.getValues((AMkBasicExp)exp,ctxt);
 			case MKTYPE:
+				return AMkTypeExpAssistantInterpreter.getValues((AMkTypeExp)exp,ctxt);
 			case MU:
+				return AMuExpAssistantInterpreter.getValues((AMuExp)exp,ctxt);
 			case NEW:
-			case NIL:
-			case NOTYETSPECIFIED:
-			case POSTOP:
-			case PRE:
-			case PREOP:
-			case QUOTELITERAL:
-			case REALLITERAL:
+				return ANewExpAssistantInterpreter.getValues((ANewExp)exp,ctxt);
 			case SAMEBASECLASS:
+				return ASameBaseClassExpAssistantInterpreter.getValues((ASameBaseClassExp)exp,ctxt);
 			case SAMECLASS:
-			case SELF:
+				return ASameClassExpAssistantInterpreter.getValues((ASameBaseClassExp)exp,ctxt);
 			case SEQ:
+				return SSeqExpAssistantInterpreter.getValues((SSeqExp)exp,ctxt);
 			case SET:
-			case STATEINIT:
-			case STRINGLITERAL:
-			case SUBCLASSRESPONSIBILITY:
+				return SSetExpAssistantInterpreter.getValues((SSetExp)exp,ctxt);
 			case SUBSEQ:
-			case THREADID:
-			case TIME:
+				return ASubseqExpAssistantInterpreter.getValues((ASubseqExp)exp,ctxt);
 			case TUPLE:
+				return ATupleExpAssistantInterpreter.getValues((ATupleExp)exp,ctxt);
 			case UNARY:
-			case UNDEFINED:
+				return SUnaryExpAssistantInterpreter.getValues((SUnaryExp)exp,ctxt);
 			case VARIABLE:
+				return AVariableExpAssistantInterpreter.getVariable((AVariableExp)exp,ctxt);
 			default:
 				return new ValueList();  // Default, for expressions with no variables
 		}

@@ -1,6 +1,8 @@
 package org.overture.interpreter.assistant.definition;
 
 
+import java.util.Collection;
+
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -18,7 +20,9 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.Value;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.visitor.PogVisitor;
@@ -111,6 +115,13 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 			e.printStackTrace();
 		}
 		return new ProofObligationList();
+	}
+
+	public static Collection<? extends Value> getValues(PDefinition d,
+			ObjectContext ctxt)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -3,6 +3,8 @@ package org.overture.interpreter.assistant.definition;
 import java.util.LinkedList;
 
 import org.overture.ast.definitions.PDefinition;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.PONameContext;
 import org.overture.pog.obligation.ProofObligationList;
@@ -24,6 +26,19 @@ public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistan
 		}
 
 		return obligations;
+	}
+
+	public static ValueList getValues(LinkedList<PDefinition> defs,
+			ObjectContext ctxt)
+	{
+		ValueList list = new ValueList();
+
+		for (PDefinition d: defs)
+		{
+			list.addAll(PDefinitionAssistantInterpreter.getValues(d,ctxt));
+		}
+
+		return list;
 	}
 
 }

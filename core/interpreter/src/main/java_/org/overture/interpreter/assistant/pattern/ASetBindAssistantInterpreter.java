@@ -1,7 +1,10 @@
 package org.overture.interpreter.assistant.pattern;
 
+import java.util.Collection;
+
 import org.overture.ast.patterns.ASetBind;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -47,6 +50,13 @@ public class ASetBindAssistantInterpreter extends ASetBindAssistantTC
 		{
 			return null;
 		}
+	}
+
+	public static ValueList getValues(ASetBind setBind,
+			ObjectContext ctxt)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
