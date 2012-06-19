@@ -19,6 +19,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
@@ -119,6 +120,12 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static Collection<? extends Value> getValues(PDefinition d,
 			ObjectContext ctxt)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static PExp findExpression(PDefinition d, int lineno)
 	{
 		// TODO Auto-generated method stub
 		return null;

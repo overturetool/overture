@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.ACasesExpAssistantTC;
@@ -24,6 +25,24 @@ public class ACasesExpAssistantInterpreter extends ACasesExpAssistantTC
 		}
 
 		return list;
+	}
+
+	public static PExp findExpression(ACasesExp exp, int lineno)
+	{
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+		if (found != null) return found;
+
+		found = PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
+		if (found != null) return found;
+
+		for (ACaseAlternative c: exp.getCases())
+		{
+			found = PExpAssistantInterpreter.findExpression(c.getResult(),lineno);
+			if (found != null) break;
+		}
+
+		return found != null ? found :
+				exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(),lineno) : null;
 	}
 
 }

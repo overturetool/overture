@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SMapExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
@@ -20,6 +21,19 @@ public class SMapExpAssistantInterpreter extends SMapExpAssistantTC
 				return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp)exp,ctxt);
 			default:
 				return new ValueList();
+		}
+	}
+
+	public static PExp findExpression(SMapExp exp, int lineno)
+	{
+		switch (exp.kindSMapExp())
+		{
+			case MAPCOMP:
+				return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp)exp,lineno);
+			case MAPENUM:
+				return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp)exp,lineno);
+			default:
+				return null;
 		}
 	}
 

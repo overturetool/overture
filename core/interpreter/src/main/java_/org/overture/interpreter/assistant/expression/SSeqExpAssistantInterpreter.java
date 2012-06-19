@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
@@ -20,6 +21,19 @@ public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
 				return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp)exp,ctxt);
 			default:
 				return new ValueList();
+		}
+	}
+
+	public static PExp findExpression(SSeqExp exp, int lineno)
+	{
+		switch (exp.kindSSeqExp())
+		{
+			case SEQCOMP:
+				return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp)exp,lineno);
+			case SEQENUM:
+				return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp)exp,lineno);
+			default:
+				return null;
 		}
 	}
 

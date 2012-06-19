@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.expression;
 
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
@@ -13,6 +14,14 @@ public class SBinaryExpAssistantInterpreter extends SBinaryExpAssistantTC
 		ValueList list = PExpAssistantInterpreter.getValues(exp.getLeft(),ctxt);
 		list.addAll(PExpAssistantInterpreter.getValues(exp.getRight(),ctxt));
 		return list;
+	}
+
+	public static PExp findExpression(SBinaryExp exp, int lineno)
+	{
+		PExp found = PExpAssistantInterpreter.findExpression(exp.getLeft(),lineno);
+		if (found != null) return found;
+
+		return PExpAssistantInterpreter.findExpression(exp.getRight(),lineno);
 	}
 
 }

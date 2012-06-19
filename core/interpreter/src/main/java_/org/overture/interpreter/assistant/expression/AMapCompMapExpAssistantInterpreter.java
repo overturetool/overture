@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.AMapCompMapExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -26,6 +27,17 @@ public class AMapCompMapExpAssistantInterpreter extends
 		}
 
 		return list;
+	}
+
+	public static PExp findExpression(AMapCompMapExp exp, int lineno)
+	{
+		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		if (found != null) return found;
+
+		found = PExpAssistantInterpreter.findExpression(exp.getFirst(),lineno);
+		if (found != null) return found;
+
+		return exp.getPredicate() == null ? null : PExpAssistantInterpreter.findExpression(exp.getPredicate(),lineno);
 	}
 
 }

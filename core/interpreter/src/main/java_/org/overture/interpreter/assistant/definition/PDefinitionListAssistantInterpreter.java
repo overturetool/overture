@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import java.util.LinkedList;
 
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
@@ -39,6 +40,22 @@ public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistan
 		}
 
 		return list;
+	}
+
+	public static PExp findExpression(LinkedList<PDefinition> list,
+			int lineno)
+	{
+		for (PDefinition d: list)
+		{
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d,lineno);
+
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+   		return null;
 	}
 
 }

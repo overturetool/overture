@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
@@ -20,6 +21,20 @@ public class ALetBeStExpAssistantInterpreter extends ALetBeStExpAssistantTC
 
 		list.addAll(PExpAssistantInterpreter.getValues(exp.getValue(), ctxt));
 		return list;
+	}
+
+	public static PExp findExpression(ALetBeStExp exp, int lineno)
+	{
+		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		if (found != null) return found;
+
+		if (exp.getSuchThat() != null)
+		{
+			found = PExpAssistantInterpreter.findExpression(exp.getSuchThat(),lineno);
+			if (found != null) return found;
+		}
+
+		return PExpAssistantInterpreter.findExpression(exp.getValue(),lineno);
 	}
 	
 }

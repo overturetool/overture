@@ -26,7 +26,9 @@ import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASameClassExp;
 import org.overture.ast.expressions.ASubseqExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -38,7 +40,10 @@ import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
+import org.overture.typechecker.assistant.expression.AExistsExpAssistantTC;
+import org.overture.typechecker.assistant.expression.APostOpExpAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
+import org.overturetool.vdmj.expressions.Expression;
 
 public class PExpAssistantInterpreter extends PExpAssistantTC
 {
@@ -126,11 +131,92 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		}
 	}
 
-	public static Object findExpression(PExp guard, int line)
+	/**
+	 * Find an expression starting on the given line. Single expressions just
+	 * compare their location to lineno, but expressions with sub-expressions
+	 * iterate over their branches.
+	 *
+	 * @param lineno The line number to locate.
+	 * @return An expression starting on the line, or null.
+	 */
+	public static PExp findExpression(PExp exp, int lineno)
 	{
-		//TODO: not implemented
-		assert false : "not implemented";
-		return null;
+		switch (exp.kindPExp())
+		{
+			case APPLY:
+				return AApplyExpAssistantInterpreter.findExpression((AApplyExp)exp,lineno);
+			case BINARY:
+				return SBinaryExpAssistantInterpreter.findExpression((SBinaryExp)exp,lineno);
+			case CASES:
+				return ACasesExpAssistantInterpreter.findExpression((ACasesExp)exp,lineno);
+			case DEF:
+				return ADefExpAssistantInterpreter.findExpression((ADefExp)exp,lineno);
+			case ELSEIF:
+				return AElseIfExpAssistantInterpreter.findExpression((AElseIfExp)exp,lineno);
+			case EXISTS:
+				return AExistsExpAssistantInterpreter.findExpression((AExistsExp)exp,lineno);
+			case EXISTS1:
+				return AExists1ExpAssistantInterpreter.findExpression((AExists1Exp)exp,lineno);
+			case FIELD:
+				return AFieldExpAssistantInterpreter.findExpression((AFieldExp)exp,lineno);
+			case FIELDNUMBER:
+				return AFieldNumberExpAssistantInterpreter.findExpression((AFieldNumberExp)exp,lineno);
+			case FORALL:
+				return AForAllExpAssistantInterpreter.findExpression((AForAllExp)exp,lineno);
+			case FUNCINSTATIATION:
+				return AFuncInstatiationExpAssistantInterpreter.findExpression((AFuncInstatiationExp)exp,lineno);
+			case IF:
+				return AIfExpAssistantInterpreter.findExpression((AIfExp)exp,lineno);
+			case IOTA:
+				return AIotaExpAssistantInterpreter.findExpression((AIotaExp)exp,lineno);
+			case IS:
+				return AIsExpAssistantInterpreter.findExpression((AIsExp)exp,lineno);
+			case ISOFBASECLASS:
+				return AIsOfBaseClassExpAssistantInterpreter.findExpression((AIsOfBaseClassExp)exp,lineno);
+			case ISOFCLASS:
+				return AIsOfClassExpAssistantInterpreter.findExpression((AIsOfClassExp)exp,lineno);
+			case LAMBDA:
+				return ALambdaExpAssistantInterpreter.findExpression((ALambdaExp)exp,lineno);
+			case LETBEST:
+				return ALetBeStExpAssistantInterpreter.findExpression((ALetBeStExp)exp,lineno);
+			case LETDEF:
+				return ALetDefExpAssistantInterpreter.findExpression((ALetDefExp)exp,lineno);
+			case MAP:
+				return SMapExpAssistantInterpreter.findExpression((SMapExp)exp,lineno);
+			case MAPLET:
+				return AMapletExpAssistantInterpreter.findExpression((AMapletExp)exp, lineno);
+			case MKBASIC:
+				return AMkBasicExpAssistantInterpreter.findExpression((AMkBasicExp)exp,lineno);
+			case MKTYPE:
+				return AMkTypeExpAssistantInterpreter.findExpression((AMkTypeExp)exp,lineno);
+			case MU:
+				return AMuExpAssistantInterpreter.findExpression((AMuExp)exp,lineno);
+			case NEW:
+				return ANewExpAssistantInterpreter.findExpression((ANewExp)exp,lineno);
+			case POSTOP:
+				return APostOpExpAssistantInterpreter.findExpression((APostOpExp)exp,lineno);
+			case SAMEBASECLASS:
+				return ASameBaseClassExpAssistantInterpreter.findExpression((ASameBaseClassExp)exp,lineno);
+			case SAMECLASS:
+				return ASameClassExpAssistantInterpreter.findExpression((ASameClassExp)exp,lineno);
+			case SEQ:
+				return SSeqExpAssistantInterpreter.findExpression((SSeqExp)exp,lineno);
+			case SET:
+				return SSetExpAssistantInterpreter.findExpression((SSetExp)exp,lineno);
+			case SUBSEQ:
+				return ASubseqExpAssistantInterpreter.findExpression((ASubseqExp)exp,lineno);
+			case TUPLE:
+				return ATupleExpAssistantInterpreter.findExpression((ATupleExp)exp,lineno);
+			case UNARY:
+				return SUnaryExpAssistantInterpreter.findExpression((SUnaryExp)exp,lineno);
+			default:
+				return findExpressionBaseCase(exp, lineno);
+		}
+	}
+	
+	public static PExp findExpressionBaseCase(PExp exp, int lineno)
+	{
+		return (exp.getLocation().startLine == lineno) ? exp : null;
 	}
 
 	public static List<PExp> getSubExpressions(PExp guard)
@@ -150,6 +236,17 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		}
 
 		return list;
+	}
+
+	public static PExp findExpression(LinkedList<PExp> args, int lineno)
+	{
+		for (PExp exp: args)
+		{
+			PExp found = findExpression(exp,lineno);
+			if (found != null) return found;
+		}
+
+		return null;
 	}
 
 }
