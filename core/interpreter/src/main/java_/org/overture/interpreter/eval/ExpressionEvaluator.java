@@ -56,7 +56,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AParameterType;
-import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
@@ -70,7 +69,6 @@ import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -104,8 +102,6 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 

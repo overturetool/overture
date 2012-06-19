@@ -11,7 +11,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
-import org.overture.interpreter.eval.StatementEvaluator;
+import org.overture.interpreter.eval.DelegateStatementEvaluator;
 import org.overture.interpreter.runtime.state.AExplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AImplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
@@ -29,7 +29,7 @@ public class VdmRuntime
 	
 	public static void initialize()
 	{
-		expressionRuntime = new StatementEvaluator(); 
+		expressionRuntime = new DelegateStatementEvaluator(); 
 		statementRuntime = expressionRuntime; 
 	}
 	

@@ -68,6 +68,7 @@ timeunit  {-> package='org.destecs.script.ast.expressions'}
  
 stm {-> package='org.destecs.script.ast.statement'}
     =   {when} [test]:exp [then]:stm* [after]:revert* [for]:exp.#single.time
+    |	{once} [test]:exp [then]:stm* [after]:revert* [for]:exp.#single.time
     |	{assign} [domain]:domain [name]:java_String [value]:exp
  //   |   {block} [statements]:stm*
     |	{revert} [identifier]:identifier
