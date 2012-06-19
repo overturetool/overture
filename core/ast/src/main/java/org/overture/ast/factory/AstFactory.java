@@ -857,7 +857,7 @@ public class AstFactory {
 	}
 
 	public static ANamedTraceDefinition newANamedTraceDefinition(LexLocation location,
-			List<String> pathname, List<List<PTraceDefinition>> terms) {
+			List<String> pathname, List<ATraceDefinitionTerm> terms) {
 		ANamedTraceDefinition result = new ANamedTraceDefinition();
 		// Definition initialization
 		initDefinition(result, Pass.DEFS, location, new LexNameToken(
@@ -869,14 +869,14 @@ public class AstFactory {
 			namesClonable.add( new ClonableString(string));
 		}
 		
-		List<ATraceDefinitionTerm> tracesTerms = new Vector<ATraceDefinitionTerm>();
-		for (List<PTraceDefinition> list : terms)
-		{
-			tracesTerms.add( new ATraceDefinitionTerm(list));
-		}
+//		List<ATraceDefinitionTerm> tracesTerms = new Vector<ATraceDefinitionTerm>();
+//		for (ATraceDefinitionTerm list : terms)
+//		{
+//			tracesTerms.add( new ATraceDefinitionTerm(list));
+//		}
 		
 		result.setPathname(namesClonable);
-		result.setTerms(tracesTerms);
+		result.setTerms(terms);
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
 		
 		return result;
@@ -972,7 +972,7 @@ public class AstFactory {
 	}
 
 	public static ABracketedExpressionTraceCoreDefinition newABracketedExpressionTraceCoreDefinition(
-			LexLocation location, List<List<PTraceDefinition>> list) {
+			LexLocation location, List<ATraceDefinitionTerm> list) {
 		return new ABracketedExpressionTraceCoreDefinition(location, list);
 	}
 

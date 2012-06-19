@@ -39,6 +39,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -1304,7 +1305,7 @@ public class DefinitionReader extends SyntaxReader
 		LexLocation start = lastToken().location;
 		List<String> names = readTraceIdentifierList();
 		checkFor(VDMToken.COLON, 2264, "Expecting ':' after trace name(s)");
-		List<List<PTraceDefinition>> traces = readTraceDefinitionList();
+		List<ATraceDefinitionTerm> traces = readTraceDefinitionList();
 
 		return AstFactory.newANamedTraceDefinition(start, names, traces);
 	}
@@ -1324,10 +1325,10 @@ public class DefinitionReader extends SyntaxReader
 		return names;
 	}
 
-	private List<List<PTraceDefinition>> readTraceDefinitionList()
+	private List<ATraceDefinitionTerm> readTraceDefinitionList()
 			throws LexException, ParserException
 	{
-		List<List<PTraceDefinition>> list = new Vector<List<PTraceDefinition>>();
+		List<ATraceDefinitionTerm> list = new Vector<ATraceDefinitionTerm>();
 		list.add(readTraceDefinitionTerm());
 
 		while (lastToken().is(VDMToken.SEMICOLON))
@@ -1348,7 +1349,7 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private List<PTraceDefinition> readTraceDefinitionTerm()
+	private ATraceDefinitionTerm readTraceDefinitionTerm()
 			throws LexException, ParserException
 	{
 		List<PTraceDefinition> term = new Vector<PTraceDefinition>();
@@ -1360,7 +1361,7 @@ public class DefinitionReader extends SyntaxReader
 			term.add(readTraceDefinition());
 		}
 
-		return term;
+		return new ATraceDefinitionTerm(term);
 	}
 
 	private PTraceDefinition readTraceDefinition() throws LexException,
@@ -1549,7 +1550,7 @@ public class DefinitionReader extends SyntaxReader
 
 			case BRA:
 				nextToken();
-				List<List<PTraceDefinition>> list = readTraceDefinitionList();
+				List<ATraceDefinitionTerm> list = readTraceDefinitionList();
 				checkFor(VDMToken.KET, 2269, "Expecting '(trace definitions)'");
 				return AstFactory.newABracketedExpressionTraceCoreDefinition(token.location, list);
 

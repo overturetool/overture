@@ -1366,9 +1366,9 @@ public class TypeCheckerDefinitionVisitor extends
 			ABracketedExpressionTraceCoreDefinition node, 
 			TypeCheckInfo question) throws Throwable
 	{
-		for (List<PTraceDefinition> term : node.getTerms())
+		for (ATraceDefinitionTerm term : node.getTerms())
 		{
-			for(PTraceDefinition def : term )
+			for(PTraceDefinition def : term.getList() )
 			{
 				def.apply(rootVisitor,question);
 			}
