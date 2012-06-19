@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.eval.StatementEvaluator;
+import org.overture.interpreter.runtime.state.AExplicitFunctionDefinitionRuntimeState;
+import org.overture.interpreter.runtime.state.AImplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
 import org.overture.interpreter.runtime.state.ASystemClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
@@ -98,7 +102,31 @@ public class VdmRuntime
 		return state;
 	}
 	
+	public static AImplicitFunctionDefinitionRuntimeState getNodeState(AImplicitFunctionDefinition node)
+	{
+		AImplicitFunctionDefinitionRuntimeState state = (AImplicitFunctionDefinitionRuntimeState) runtimeState.get(node);
+		
+		if(state == null)
+		{
+			state = new AImplicitFunctionDefinitionRuntimeState();
+			runtimeState.put(node, state);
+		}
+		
+		return state;
+	}
 	
+	public static AExplicitFunctionDefinitionRuntimeState getNodeState(AExplicitFunctionDefinition node)
+	{
+		AExplicitFunctionDefinitionRuntimeState state = (AExplicitFunctionDefinitionRuntimeState) runtimeState.get(node);
+		
+		if(state == null)
+		{
+			state = new AExplicitFunctionDefinitionRuntimeState();
+			runtimeState.put(node, state);
+		}
+		
+		return state;
+	}
 	
 	
 }

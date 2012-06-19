@@ -1,9 +1,16 @@
 package org.overture.interpreter.assistant.definition;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -49,6 +56,58 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends AExplicitFu
 		}
 
 		return nvl;
+	}
+
+	public static FunctionValue getPolymorphicValue(
+			AExplicitFunctionDefinition expdef, PTypeList actualTypes)
+	{
+		Map<List<PType>, FunctionValue> polyfuncs = VdmRuntime.getNodeState(expdef).polyfuncs;
+		
+		if (polyfuncs == null)
+		{
+			polyfuncs = new HashMap<List<PType>, FunctionValue>();
+		}
+		else
+		{
+			// We always return the same function value for a polymorph
+			// with a given set of types. This is so that the one function
+			// value can record measure counts for recursive polymorphic
+			// functions.
+			
+			FunctionValue rv = polyfuncs.get(actualTypes);
+			
+			if (rv != null)
+			{
+				return rv;
+			}
+		}
+		
+		FunctionValue prefv = null;
+		FunctionValue postfv = null;
+
+		if (expdef.getPredef() != null)
+		{
+			prefv = getPolymorphicValue(expdef.getPredef(),actualTypes);
+		}
+		else
+		{
+			prefv = null;
+		}
+
+		if (expdef.getPostdef() != null)
+		{
+			postfv = getPolymorphicValue(expdef.getPostdef(),actualTypes);
+		}
+		else
+		{
+			postfv = null;
+		}
+
+		FunctionValue rv = new FunctionValue(
+				expdef, actualTypes, prefv, postfv, null);
+
+		polyfuncs.put(actualTypes, rv);
+		return rv;
 	}
 
 }

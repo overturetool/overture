@@ -60,6 +60,8 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
@@ -524,11 +526,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     		
     		if (node.getExpdef() == null)
 			{
-				rv = node.getImpdef().getPolymorphicValue(fixed);
+				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(node.getImpdef(),fixed);
 			}
 			else
 			{
-				rv = node.getExpdef().getPolymorphicValue(fixed);
+				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(node.getExpdef(),fixed);
 			}
 
     		rv.setSelf(fv.self);
