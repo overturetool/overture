@@ -16,7 +16,7 @@ public class ExpressionTestSuite extends BaseTestSuite
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		org.overturetool.test.framework.Properties.recordTestResults=false;
-		String name = "Parser Expression TestSuite";
+		String name = "Interpreter Expression TestSuite";
 		String root = "src\\test\\resources\\expressions";
 		TestSuite test = createTestCompleteFile(name,root+"\\complete",ExpressionTestCase.class);
 		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",ExpressionTestCase.class);
