@@ -62,6 +62,7 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.expression.APostOpExpAssistant;
 import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
@@ -1083,7 +1084,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		    			// If the opname was defined in a superclass of "self", we have
 		    			// to discover the subobject to populate its state variables.
 
-		    			ObjectValue subself = findObject(node.getOpname().module, self);
+		    			ObjectValue subself = APostOpExpAssistant.findObject(node,node.getOpname().module, self);
 
 		    			if (subself == null)
 		    			{
@@ -1103,7 +1104,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		        			ctxt = selfctxt;
 		    			}
 
-		    			populate(ctxt, subself.type.getName().name, oldvalues);		// To add old "~" values
+		    			APostOpExpAssistant.populate(node,ctxt, subself.type.getName().name, oldvalues);		// To add old "~" values
 		    		}
 
 
