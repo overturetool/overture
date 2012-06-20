@@ -1,6 +1,5 @@
 package org.overture.ide.ui.utility.ast;
 
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +100,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 				{
 					node.apply(seacher);
 				}
-			} catch (UndeclaredThrowableException e)
+			} catch (Throwable e)
 			{
 				// We found what we are looking for
 			}
@@ -154,7 +153,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 					}
 				}
 
-			} catch (UndeclaredThrowableException e)
+			} catch (Throwable e)
 			{
 				// We found what we are looking for
 			}
@@ -165,7 +164,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 	}
 
-	public static void createIndex(List<INode> nodes, IVdmElement element)
+	public static void createIndex(List<INode> nodes, IVdmElement element) throws Throwable
 	{
 		seacher.init();
 		seacher.currentElement = element;
@@ -178,25 +177,25 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void defaultInPDefinition(PDefinition node)
+	public void defaultInPDefinition(PDefinition node) throws Throwable
 	{
 		check(node, node.getLocation());
 	}
 
 	@Override
-	public void defaultInPExp(PExp node)
+	public void defaultInPExp(PExp node) throws Throwable
 	{
 		check(node, node.getLocation());
 	}
 
 	@Override
-	public void defaultInPStm(PStm node)
+	public void defaultInPStm(PStm node) throws Throwable
 	{
 		check(node, node.getLocation());
 	}
 
 	@Override
-	public void caseAVariableExp(AVariableExp node)
+	public void caseAVariableExp(AVariableExp node) throws Throwable
 	{
 		check(node, node.getLocation());
 	}
@@ -213,7 +212,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		// Skip
 	}
 
-	private void check(INode node, LexLocation location)
+	private void check(INode node, LexLocation location) throws Throwable
 	{
 		if (DEBUG_PRINT)
 		{
@@ -231,7 +230,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 			bestHit = node;
 			if (!indexing)
 			{
-				throw new UndeclaredThrowableException(null, "Hit found stop search");
+				throw new Exception( "Hit found stop search");
 			}
 		}
 
@@ -269,7 +268,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 			}
 			if (!indexing)
 			{
-				throw new UndeclaredThrowableException(null, "Hit found stop search");
+				throw new Exception("Hit found stop search");
 			}
 		}
 	}

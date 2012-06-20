@@ -21,7 +21,6 @@ package org.overture.ide.plugins.poviewer.actions;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ide.core.IVdmModel;
-import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
@@ -35,7 +34,7 @@ public class ViewPosActionPp extends ViewPosAction {
 	}
 
 	@Override
-	protected ProofObligationList getProofObligations(IVdmModel model) throws NotAllowedException {
+	protected ProofObligationList getProofObligations(IVdmModel model) throws Throwable {
 		if(!model.isTypeCorrect()){
 			return null;
 		}

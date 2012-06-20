@@ -1,6 +1,5 @@
 package org.overture.ide.vdmpp.debug.utils;
 
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -68,7 +67,13 @@ public class VdmPpRuntimeUtil
 
 		expr = parseExpression(expression, defaultModule.getName().name, defaultModule.getName().name,dialect);
 
-		expr.apply(tc, new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+		try
+		{
+			expr.apply(tc, new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+		} catch (Throwable e)
+		{
+			throw new VDMErrorsException(TypeChecker.getErrors());//FIXME: this might not has any errors if it goes wrong
+		}
 
 		if (TypeChecker.getErrorCount() > 0)
 		{

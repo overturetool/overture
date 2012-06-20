@@ -158,7 +158,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 					pos.renumber();
 					showPOs(project, pos);
 
-				} catch (Exception e)
+				} catch (Throwable e)
 				{
 					e.printStackTrace();
 					return new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error showing PO's Model state: Parse="+model.isParseCorrect()+" TC="+model.isTypeCorrect() , e);
@@ -194,7 +194,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 	}
 
 	protected abstract ProofObligationList getProofObligations(IVdmModel model)
-			throws NotAllowedException;
+			throws NotAllowedException, Throwable;
 
 	private void showPOs(final IVdmProject project, final ProofObligationList pos)
 	{

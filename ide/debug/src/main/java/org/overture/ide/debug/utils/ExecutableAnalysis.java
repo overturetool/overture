@@ -7,6 +7,10 @@ import org.overture.ast.statements.PStm;
 
 public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5353696074294132014L;
 	protected boolean executable = false;
 	private final int searchLine;
 
@@ -19,7 +23,15 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 	{
 		ExecutableAnalysis analysis = new ExecutableAnalysis(line);
 
-		node.apply(analysis);
+		try
+		{
+			node.apply(analysis);
+		} catch (Throwable e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 
 		return analysis.executable;
 	}

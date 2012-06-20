@@ -19,7 +19,6 @@
 package org.overture.ide.plugins.traces.views;
 
 import java.io.IOException;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -201,36 +200,35 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			try
 			{
 				node.apply(this);
-			} catch (UndeclaredThrowableException e)
+			}  catch (Throwable e)
 			{
-
 			}
 
 			return hasTrace;
 		}
 
 		@Override
-		public void defaultSClassDefinition(SClassDefinition node)
+		public void defaultSClassDefinition(SClassDefinition node) throws Throwable
 		{
 			for (PDefinition def : node.getDefinitions())
 			{
 				if (def instanceof ANamedTraceDefinition)
 				{
 					hasTrace = true;
-					throw new UndeclaredThrowableException(new Exception("stop search"));
+					throw new Exception("stop search");
 				}
 			}
 		}
 
 		@Override
-		public void caseAModuleModules(AModuleModules node)
+		public void caseAModuleModules(AModuleModules node) throws Throwable
 		{
 			for (PDefinition def : node.getDefs())
 			{
 				if (def instanceof ANamedTraceDefinition)
 				{
 					hasTrace = true;
-					throw new UndeclaredThrowableException(new Exception("stop search"));
+					throw new Exception("stop search");
 				}
 			}
 		}
@@ -258,7 +256,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			try
 			{
 				node.apply(this);
-			} catch (UndeclaredThrowableException e)
+			} catch (Throwable e)
 			{
 
 			}
@@ -267,27 +265,27 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		}
 
 		@Override
-		public void defaultSClassDefinition(SClassDefinition node)
+		public void defaultSClassDefinition(SClassDefinition node) throws Throwable
 		{
 			for (PDefinition def : node.getDefinitions())
 			{
 				if (def instanceof ANamedTraceDefinition)
 				{
 					containers.add(node);
-					throw new UndeclaredThrowableException(new Exception("stop search"));
+					throw new Exception("stop search");
 				}
 			}
 		}
 
 		@Override
-		public void caseAModuleModules(AModuleModules node)
+		public void caseAModuleModules(AModuleModules node) throws Throwable
 		{
 			for (PDefinition def : node.getDefs())
 			{
 				if (def instanceof ANamedTraceDefinition)
 				{
 					containers.add(node);
-					throw new UndeclaredThrowableException(new Exception("stop search"));
+					throw new Exception("stop search");
 				}
 			}
 		}
@@ -327,7 +325,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			try
 			{
 				node.apply(this);
-			} catch (UndeclaredThrowableException e)
+			} catch (Throwable e)
 			{
 
 			}

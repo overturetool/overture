@@ -60,7 +60,13 @@ public class VdmSlRuntimeUtil
 
 		expr = parseExpression(expression, defaultModule.getName().name, defaultModule.getName().name);
 
-		expr.apply(tc, new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+		try
+		{
+			expr.apply(tc, new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+		} catch (Throwable e)
+		{
+			throw new VDMErrorsException(TypeChecker.getErrors());//FIXME: this might not has any errors if it goes wrong
+		}
 
 		if (TypeChecker.getErrorCount() > 0)
 		{
