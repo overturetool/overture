@@ -1,0 +1,33 @@
+
+module A
+
+exports
+
+values
+  a : nat
+ 
+definitions
+ 
+values 
+
+  a : nat = 3;
+ 
+end A
+ 
+module B
+ 
+imports 
+
+from A
+ 
+values
+  a : nat
+  
+definitions
+  
+functions
+  
+  foo : () -> nat
+  foo() == A`a;
+  
+end B
