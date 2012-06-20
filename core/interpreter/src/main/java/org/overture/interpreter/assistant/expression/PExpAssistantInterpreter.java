@@ -40,10 +40,7 @@ import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.AExistsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.APostOpExpAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
-import org.overturetool.vdmj.expressions.Expression;
 
 public class PExpAssistantInterpreter extends PExpAssistantTC
 {
