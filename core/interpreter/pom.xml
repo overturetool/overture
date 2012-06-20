@@ -32,14 +32,14 @@
 
 	<build>
 
-<sourceDirectory>src/main/java_</sourceDirectory>
- <testSourceDirectory>src/test/java</testSourceDirectory>
-		<plugins>
-		<plugin>
-                <groupId>org.overturetool.tools</groupId>
-                <artifactId>astcreatorplugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
+	  <!-- <sourceDirectory>src/main/java_</sourceDirectory> -->
+	  <!-- <testSourceDirectory>src/test/java</testSourceDirectory> -->
+	  <plugins>
+	    <plugin>
+	      <groupId>org.overturetool.tools</groupId>
+	      <artifactId>astcreatorplugin</artifactId>
+	      <version>1.0.1</version>
+	      <executions>
                     <execution>
                         <id>java</id>
                         <!--phase>generate-sources</phase-->
