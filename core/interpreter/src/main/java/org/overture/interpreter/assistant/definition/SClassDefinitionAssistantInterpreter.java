@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.RootContext;
@@ -110,6 +111,11 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public static PExp findExpression(SClassDefinition d, int lineno)
+	{
+		return PDefinitionListAssistantInterpreter.findExpression(d.getDefinitions(), lineno);
 	}
 
 }

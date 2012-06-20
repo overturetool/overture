@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.FunctionValue;
@@ -114,6 +116,23 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		polyfuncs.put(actualTypes, rv);
 		return rv;
+	}
+
+	public static PExp findExpression(AImplicitFunctionDefinition d, int lineno)
+	{
+		if (d.getPredef() != null)
+		{
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(),lineno);
+			if (found != null) return found;
+		}
+
+		if (d.getPostdef() != null)
+		{
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(),lineno);
+			if (found != null) return found;
+		}
+
+		return d.getBody() == null ? null : PExpAssistantInterpreter.findExpression(d.getBody(),lineno);
 	}
 	
 }

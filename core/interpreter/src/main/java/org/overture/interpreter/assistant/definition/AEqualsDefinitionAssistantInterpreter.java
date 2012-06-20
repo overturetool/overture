@@ -1,14 +1,19 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
+import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
 
 public class AEqualsDefinitionAssistantInterpreter
@@ -71,6 +76,23 @@ public class AEqualsDefinitionAssistantInterpreter
 		}
 
 		return nvpl;
+	}
+
+	public static ValueList getValues(AEqualsDefinition d, ObjectContext ctxt)
+	{
+		ValueList list = PExpAssistantInterpreter.getValues(d.getTest(),ctxt);
+
+		if (d.getSetbind() != null)
+		{
+			list.addAll(ASetBindAssistantInterpreter.getValues(d.getSetbind(),ctxt));
+		}
+
+		return list;
+	}
+
+	public static PExp findExpression(AEqualsDefinition d, int lineno)
+	{
+		return PExpAssistantInterpreter.findExpression(d.getTest(),lineno);
 	}
 
 }

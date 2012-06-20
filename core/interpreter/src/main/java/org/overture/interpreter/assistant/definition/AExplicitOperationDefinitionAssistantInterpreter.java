@@ -1,6 +1,8 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -41,6 +43,23 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends AExplicitO
 		}
 
 		return nvl;
+	}
+
+	public static PExp findExpression(AExplicitOperationDefinition d, int lineno)
+	{
+		if (d.getPredef() != null)
+		{
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(),lineno);
+			if (found != null) return found;
+		}
+
+		if (d.getPostdef() != null)
+		{
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(),lineno);
+			if (found != null) return found;
+		}
+
+		return PStmAssistantInterpreter.findExpression(d.getBody(),lineno);
 	}
 
 }

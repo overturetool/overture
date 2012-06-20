@@ -1,5 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
+import java.util.List;
+
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
@@ -49,6 +51,25 @@ public class AIfExpAssistantInterpreter extends AIfExpAssistantTC
 		}
 
 		return found;
+	}
+
+	public static List<PExp> getSubExpressions(AIfExp exp)
+	{
+		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getTest());
+		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
+
+		for (AElseIfExp elif: exp.getElseList())
+		{
+			subs.addAll(AElseIfExpAssistantInterpreter.getSubExpressions(elif));
+		}
+
+		if (exp.getElse() != null)
+		{
+			subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getElse()));
+		}
+
+		subs.add(exp);
+		return subs;
 	}
 
 }

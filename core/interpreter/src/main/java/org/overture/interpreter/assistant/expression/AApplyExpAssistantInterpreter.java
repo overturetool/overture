@@ -1,5 +1,8 @@
 package org.overture.interpreter.assistant.expression;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -24,6 +27,14 @@ public class AApplyExpAssistantInterpreter
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getArgs(),lineno);
+	}
+
+	public static List<PExp> getSubExpressions(AApplyExp exp)
+	{
+		List<PExp> subs = new Vector<PExp>();
+		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRoot()));
+		subs.add(exp);
+		return subs;
 	}
 
 }

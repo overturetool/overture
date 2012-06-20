@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -23,6 +24,17 @@ public class ATypeDefinitionAssistantInterpreter extends
 		}
 
 		return nvl;
+	}
+
+	public static PExp findExpression(ATypeDefinition d, int lineno)
+	{
+		if (d.getInvdef() != null)
+		{
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getInvdef(),lineno);
+			if (found != null) return found;
+		}
+
+		return null;
 	}
 
 }

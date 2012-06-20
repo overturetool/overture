@@ -1,5 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
+import java.util.List;
+
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.PExp;
@@ -43,6 +45,24 @@ public class ACasesExpAssistantInterpreter extends ACasesExpAssistantTC
 
 		return found != null ? found :
 				exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(),lineno) : null;
+	}
+
+	public static List<PExp> getSubExpressions(ACasesExp exp)
+	{
+		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
+
+		for (ACaseAlternative c: exp.getCases())
+		{
+			subs.addAll(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
+		}
+
+		if (exp.getOthers() != null)
+		{
+			subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getOthers()));
+		}
+
+		subs.add(exp);
+		return subs;
 	}
 
 }

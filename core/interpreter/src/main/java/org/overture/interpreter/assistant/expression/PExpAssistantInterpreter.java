@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.expression;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACasesExp;
@@ -216,11 +217,26 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		return (exp.getLocation().startLine == lineno) ? exp : null;
 	}
 
-	public static List<PExp> getSubExpressions(PExp guard)
+	public static List<PExp> getSubExpressions(PExp exp)
 	{
-		//TODO: not implemented
-		assert false : "not implemented";
-		return null;
+		switch (exp.kindPExp())
+		{
+			case APPLY:
+				return AApplyExpAssistantInterpreter.getSubExpressions((AApplyExp)exp);
+			case BINARY:
+				return SBinaryExpAssistantInterpreter.getSubExpressions((SBinaryExp)exp);
+			case CASES:
+				return ACasesExpAssistantInterpreter.getSubExpressions((ACasesExp)exp);
+			case ELSEIF:
+				return AElseIfExpAssistantInterpreter.getSubExpressions((AElseIfExp)exp);			
+			case IF:
+				return AIfExpAssistantInterpreter.getSubExpressions((AIfExp)exp);
+			default:
+				List<PExp> subs = new Vector<PExp>();
+				subs.add(exp);
+				return subs;
+		}
+		
 	}
 
 	public static ValueList getValues(LinkedList<PExp> args, ObjectContext ctxt)

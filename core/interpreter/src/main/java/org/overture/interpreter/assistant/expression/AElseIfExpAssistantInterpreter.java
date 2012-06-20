@@ -1,5 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
+import java.util.List;
+
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -22,6 +24,14 @@ public class AElseIfExpAssistantInterpreter extends AElseIfExpAssistantTC
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getThen(),lineno);
+	}
+
+	public static List<PExp> getSubExpressions(AElseIfExp exp)
+	{
+		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getElseIf());
+		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
+		subs.add(exp);
+		return subs;
 	}
 
 }

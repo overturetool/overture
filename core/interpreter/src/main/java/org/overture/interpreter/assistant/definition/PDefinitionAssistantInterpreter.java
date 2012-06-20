@@ -1,7 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
 
-import java.util.Collection;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -13,17 +12,20 @@ import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
-import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.visitor.PogVisitor;
@@ -118,17 +120,63 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		return new ProofObligationList();
 	}
 
-	public static Collection<? extends Value> getValues(PDefinition d,
+	/**
+	 * Return a list of external values that are read by the definition.
+	 * @param ctxt The context in which to evaluate the expressions.
+	 * @return A list of values read.
+	 */
+	public static ValueList getValues(PDefinition d,
 			ObjectContext ctxt)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		switch (d.kindPDefinition())
+		{
+			case ASSIGNMENT:
+				return AAssignmentDefinitionAssistantInterpreter.getValues((AAssignmentDefinition)d,ctxt);
+			case EQUALS:
+				return AEqualsDefinitionAssistantInterpreter.getValues((AEqualsDefinition)d, ctxt);
+			case INSTANCEVARIABLE:
+				return AInstanceVariableDefinitionAssistantInterpreter.getValues((AInstanceVariableDefinition)d,ctxt);
+			case VALUE:
+				return AValueDefinitionAssistantInterpreter.getValues((AValueDefinition)d,ctxt);
+			default:
+				return new ValueList();
+		}
+		
 	}
 
 	public static PExp findExpression(PDefinition d, int lineno)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		switch (d.kindPDefinition())
+		{
+			case ASSIGNMENT:
+				return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition)d,lineno);
+			case CLASS:
+				return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition)d,lineno);
+			case EQUALS:
+				return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition)d,lineno);
+			case EXPLICITFUNCTION:
+				return AExplicitFunctionDefinitionAssistantInterpreter.findExpression((AExplicitFunctionDefinition)d,lineno);
+			case EXPLICITOPERATION:
+				return AExplicitOperationDefinitionAssistantInterpreter.findExpression((AExplicitOperationDefinition)d,lineno);
+			case IMPLICITFUNCTION:
+				return AImplicitFunctionDefinitionAssistantInterpreter.findExpression((AImplicitFunctionDefinition)d,lineno);
+			case IMPLICITOPERATION:
+				return AImplicitOperationDefinitionAssistantInterpreter.findExpression((AImplicitOperationDefinition)d,lineno);
+			case INSTANCEVARIABLE:
+				return AInstanceVariableDefinitionAssistantInterpreter.findExpression((AInstanceVariableDefinition)d,lineno);
+			case PERSYNC:
+				return APerSyncDefinitionAssistantInterpreter.findExpression((APerSyncDefinition)d,lineno);
+			case STATE:
+				return AStateDefinitionAssistantInterpreter.findExpression((AStateDefinition)d,lineno);
+			case THREAD:
+				return AThreadDefinitionAssistantInterpreter.findExpression((AThreadDefinition)d,lineno);
+			case TYPE:
+				return ATypeDefinitionAssistantInterpreter.findExpression((ATypeDefinition)d,lineno);
+			case VALUE:
+				return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition)d,lineno);
+			default:
+				return null;
+		}
 	}
 
 }
