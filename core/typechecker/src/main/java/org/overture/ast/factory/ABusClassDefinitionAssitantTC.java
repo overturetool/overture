@@ -9,7 +9,7 @@ import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 
-public class ABusClassDefinitionAssitantParser {
+public class ABusClassDefinitionAssitantTC {
 
 	private static String defs =
 			"operations " +

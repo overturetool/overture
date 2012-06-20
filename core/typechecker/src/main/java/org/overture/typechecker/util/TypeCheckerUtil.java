@@ -7,7 +7,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactoryParser;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -108,8 +108,8 @@ public class TypeCheckerUtil
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
-		classes.add(AstFactoryParser.newACpuClassDefinition());
-		classes.add(AstFactoryParser.newABusClassDefinition());
+		classes.add(AstFactoryTC.newACpuClassDefinition());
+		classes.add(AstFactoryTC.newABusClassDefinition());
 		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
 	}
 
@@ -125,8 +125,8 @@ public class TypeCheckerUtil
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
-		classes.add(AstFactoryParser.newACpuClassDefinition());
-		classes.add(AstFactoryParser.newABusClassDefinition());
+		classes.add(AstFactoryTC.newACpuClassDefinition());
+		classes.add(AstFactoryTC.newABusClassDefinition());
 		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
 	}
 

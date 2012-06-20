@@ -23,7 +23,7 @@
 
 package org.overture.interpreter;
 
-import org.overture.ast.factory.AstFactoryParser;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
@@ -42,8 +42,8 @@ public class VDMRT extends VDMPP
 	{
 		try
 		{
-			classes.add(AstFactoryParser.newACpuClassDefinition());
-  			classes.add(AstFactoryParser.newABusClassDefinition());
+			classes.add(AstFactoryTC.newACpuClassDefinition());
+  			classes.add(AstFactoryTC.newABusClassDefinition());
 		}
 		catch (Exception e)
 		{

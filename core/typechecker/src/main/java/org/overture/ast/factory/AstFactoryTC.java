@@ -10,13 +10,13 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
-public class AstFactoryParser extends AstFactory {
+public class AstFactoryTC extends AstFactory {
 
 	public static SClassDefinition newACpuClassDefinition() throws ParserException, LexException {
 		ACpuClassDefinition result = new ACpuClassDefinition();
 		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()),
 				new LexNameList(),
-				ACpuClassDefinitionAssitantParser.operationDefs());
+				ACpuClassDefinitionAssitantTC.operationDefs());
 		
 		return result;
 	}
@@ -25,7 +25,7 @@ public class AstFactoryParser extends AstFactory {
 		ABusClassDefinition result = new ABusClassDefinition();
 		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()),
 				new LexNameList(),
-				ABusClassDefinitionAssitantParser.operationDefs());
+				ABusClassDefinitionAssitantTC.operationDefs());
 		
 		result.setInstance(result);
 		
