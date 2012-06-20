@@ -16,7 +16,13 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
  org.overture.ide.core;bundle-version="0.3.0"
 Bundle-Activator: org.overture.ide.plugins.quickinterpreter.Activator
 Bundle-ClassPath: .,
+ org.overture.ide.core-2.2.0.jar,
+ org.overture.ide.vdmpp.core-2.2.0.jar,
+ org.overture.ide.vdmrt.core-2.2.0.jar,
+ org.overture.ide.vdmsl.core-2.2.0.jar,
  ast-2.2.0.jar,
- ast_assistance-2.2.0.jar,
+ interpreter-2.2.0.jar,
  parser-2.2.0.jar,
- vdmj-2.1.1.jar
+ pog-2.2.0.jar,
+ testframework-2.2.0.jar,
+ typechecker-2.2.0.jar
