@@ -1,8 +1,8 @@
 package org.overture.interpreter.assistant.pattern;
 
-import java.util.Collection;
 
 import org.overture.ast.patterns.ASetBind;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.RuntimeError;
@@ -55,8 +55,7 @@ public class ASetBindAssistantInterpreter extends ASetBindAssistantTC
 	public static ValueList getValues(ASetBind setBind,
 			ObjectContext ctxt)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return PExpAssistantInterpreter.getValues(setBind.getSet(),ctxt);
 	}
 
 }

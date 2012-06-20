@@ -29,7 +29,6 @@ public class AExpressionPatternAssistantInterpreter extends
 			}
 		} catch (Throwable e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

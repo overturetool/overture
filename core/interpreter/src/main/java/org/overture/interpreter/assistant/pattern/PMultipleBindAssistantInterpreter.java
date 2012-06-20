@@ -30,8 +30,15 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	public static ValueList getValues(PMultipleBind mb,
 			ObjectContext ctxt)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		switch (mb.kindPMultipleBind())
+		{
+			case SET:
+				return ASetMultipleBindAssistantInterpreter.getValues((ASetMultipleBind)mb,ctxt);
+			case TYPE:
+				return ATypeMultipleBindAssistantInterpreter.getValues((ATypeMultipleBind)mb, ctxt);
+			default:
+				return new ValueList();
+		}
 	}
 
 }

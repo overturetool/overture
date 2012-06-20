@@ -1,7 +1,9 @@
 package org.overture.interpreter.assistant.pattern;
 
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -48,6 +50,12 @@ public class ASetMultipleBindAssistantInterpreter extends
 		{
 			return null;
 		}
+	}
+
+	public static ValueList getValues(ASetMultipleBind mb, ObjectContext ctxt)
+	{
+		return PExpAssistantInterpreter.getValues(mb.getSet(), ctxt);
+		
 	}
 
 }

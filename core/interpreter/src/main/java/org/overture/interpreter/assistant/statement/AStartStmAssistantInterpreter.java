@@ -1,7 +1,9 @@
 package org.overture.interpreter.assistant.statement;
 
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -39,6 +41,11 @@ public class AStartStmAssistantInterpreter
 		{
 			new ObjectThread(node.getLocation(), target, ctxt).start();
 		}
+	}
+
+	public static PExp findExpression(AStartStm stm, int lineno)
+	{
+		return PExpAssistantInterpreter.findExpression(stm.getObj(),lineno);
 	}
 
 }

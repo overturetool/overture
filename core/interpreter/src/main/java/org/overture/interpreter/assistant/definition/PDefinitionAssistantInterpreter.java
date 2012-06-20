@@ -45,7 +45,6 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) d, initialContext);
 				} catch (Throwable e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					return new NameValuePairList();
 				}
@@ -55,7 +54,6 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);
 				} catch (Throwable e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return new NameValuePairList();
 				}
@@ -77,7 +75,6 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition)d,initialContext);
 				} catch (Throwable e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return new NameValuePairList();
 				}
@@ -97,7 +94,6 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition)d,initialContext);
 				} catch (Throwable e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return new NameValuePairList();
 				}
@@ -114,7 +110,6 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 			return d.apply(new PogVisitor(), new POContextStack());
 		} catch (Throwable e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new ProofObligationList();

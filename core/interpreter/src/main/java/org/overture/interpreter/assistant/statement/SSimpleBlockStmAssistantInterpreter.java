@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.statement;
 
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.interpreter.runtime.Context;
@@ -25,6 +26,19 @@ public class SSimpleBlockStmAssistantInterpreter
 		}
 
 		return new VoidValue();
+	}
+
+	public static PExp findExpression(SSimpleBlockStm stm, int lineno)
+	{
+		PExp found = null;
+
+		for (PStm stmt: stm.getStatements())
+		{
+			found = PStmAssistantInterpreter.findExpression(stmt,lineno);
+			if (found != null) break;
+		}
+
+		return found;
 	}
 
 }
