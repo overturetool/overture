@@ -5,8 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Vector;
 
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overturetool.test.framework.results.IMessage;
 import org.overturetool.test.framework.results.Result;
 
@@ -29,16 +35,26 @@ public class ExpressionTestCase extends InterpreterBaseTestCase
 	}
 
 	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
+	}
+
+	@Override
 	public void test() throws Exception
 	{
+		if(content==null && file == null)
+		{
+			return;
+		}
+		
 		Result<Value> result = null;
+		String input = null;
 		if (mode == ContentModed.String)
 		{
-			// TypeCheckResult<PExp> exp =TypeCheckerUtil.typeCheckExpression(content);
-
-			Value val = InterpreterUtil.interpret(content);
-			result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
-
+			input = content;
 		} else if (mode == ContentModed.File)
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -50,9 +66,17 @@ public class ExpressionTestCase extends InterpreterBaseTestCase
 			}
 			reader.close();
 
-			Value val = InterpreterUtil.interpret(data);
-			result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
+			input = data;
 		}
+
+		TypeCheckResult<PExp> tcResult = TypeCheckerUtil.typeCheckExpression(input);
+		if (!tcResult.parserResult.errors.isEmpty()
+				|| !tcResult.errors.isEmpty())
+		{
+			fail("Expression did not pass type check!.");
+		}
+		Value val = InterpreterUtil.interpret(input);
+		result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
 
 		compareResults(result, file.getAbsolutePath());
 	}

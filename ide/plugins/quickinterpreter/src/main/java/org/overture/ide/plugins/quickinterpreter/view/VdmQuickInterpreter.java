@@ -28,11 +28,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassList;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.syntax.ParserException;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.config.Settings;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.parser.syntax.ParserException;
 
 public class VdmQuickInterpreter extends ViewPart
 {
