@@ -36,19 +36,19 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends AExplicitFu
 
 		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
 		func.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
-		func.uninstantiated = (d.getTypeParams() != null);
+		func.uninstantiated = (!d.getTypeParams().isEmpty());
 		nvl.add(new NameValuePair(d.getName(), func));
 
 		if (d.getPredef() != null)
 		{
 			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
-			prefunc.uninstantiated = (d.getTypeParams() != null);
+			prefunc.uninstantiated = (!d.getTypeParams().isEmpty());
 		}
 
 		if (d.getPostdef() != null)
 		{
 			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
-			postfunc.uninstantiated = (d.getTypeParams() != null);
+			postfunc.uninstantiated = (!d.getTypeParams().isEmpty());
 		}
 
 		if (Settings.dialect == Dialect.VDM_SL)

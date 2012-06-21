@@ -76,11 +76,9 @@ public class TypeCheckerOthersVisitor extends
 		}else if((parent = node.getAncestor(ATrapStm.class))!=null)
 		{
 				type = ((ATrapStm)parent).getType();
-				//assert false:"not implemented";
 		}else if((parent = node.getAncestor(ATixeStmtAlternative.class))!=null)
 		{
 			type = ((ATixeStmtAlternative)parent).getExp();
-//			assert false:"not implemented";
 		}
 	
 		

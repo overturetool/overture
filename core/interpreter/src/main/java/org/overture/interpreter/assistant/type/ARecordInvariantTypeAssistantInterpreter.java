@@ -3,7 +3,6 @@ package org.overture.interpreter.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
