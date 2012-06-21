@@ -14,7 +14,7 @@ public class ModulesSlInterpreterTestSuite extends BaseTestSuite
 	{
 		org.overturetool.test.framework.Properties.recordTestResults = false;
 		String name = "Interpreter Modules TestSuite";
-		String root = "src\\test\\resources\\modules";
+		String root = "src\\test\\resources\\test";
 		TestSuite test =  createTestCompleteFile(name, root, InterpreterSlTestCase.class);
 		return test;
 	}

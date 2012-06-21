@@ -14,7 +14,6 @@ public class PTraceDefinitionAssistantInterpreter extends
 
 	public static TraceNode expand(PTraceDefinition term, Context ctxt)
 	{
-		// TODO Auto-generated method stub
 		switch (term.kindPTraceDefinition())
 		{
 			case INSTANCE:

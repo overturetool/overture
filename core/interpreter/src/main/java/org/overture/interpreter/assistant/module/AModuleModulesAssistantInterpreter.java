@@ -1,10 +1,14 @@
 package org.overture.interpreter.assistant.module;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -34,55 +38,52 @@ public class AModuleModulesAssistantInterpreter extends
 	public static Set<ContextException> initialize(AModuleModules m,
 			StateContext initialContext)
 	{
-		// TODO Auto-generated method stub
 		
+		Set<ContextException> trouble = new HashSet<ContextException>();
+
+		for (PDefinition d: m.getImportdefs())
+		{
+			if (d instanceof ARenamedDefinition)
+			{
+				try
+				{
+					initialContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d,initialContext));
+				}
+				catch (ContextException e)
+				{
+					trouble.add(e);		// Carry on...
+				}
+			}
+		}
+
+		for (PDefinition d: m.getDefs())
+		{
+			try
+			{
+				initialContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d,initialContext));
+			}
+			catch (ContextException e)
+			{
+				trouble.add(e);		// Carry on...
+			}
+		}
+
+		try
+		{
+			AStateDefinition sdef = PDefinitionListAssistantInterpreter.findStateDefinition(m.getDefs());
+
+			if (sdef != null)
+			{
+				AStateDefinitionAssistantInterpreter.initState(sdef,initialContext);
+			}
+		}
+		catch (ContextException e)
+		{
+			trouble.add(e);		// Carry on...
+		}
+
+		return trouble;
 		
-//		Set<ContextException> trouble = new HashSet<ContextException>();
-//
-//		for (Definition d: importdefs)
-//		{
-//			if (d instanceof RenamedDefinition)
-//			{
-//				try
-//				{
-//					initialContext.putList(d.getNamedValues(initialContext));
-//				}
-//				catch (ContextException e)
-//				{
-//					trouble.add(e);		// Carry on...
-//				}
-//			}
-//		}
-//
-//		for (Definition d: defs)
-//		{
-//			try
-//			{
-//				initialContext.putList(d.getNamedValues(initialContext));
-//			}
-//			catch (ContextException e)
-//			{
-//				trouble.add(e);		// Carry on...
-//			}
-//		}
-//
-//		try
-//		{
-//			AStateDefinition sdef = defs.findStateDefinition();
-//
-//			if (sdef != null)
-//			{
-//AStateDefinitionAssistantInterpreter.initState(sdef,initialContext);//				sdef.initState(initialContext);
-//			}
-//		}
-//		catch (ContextException e)
-//		{
-//			trouble.add(e);		// Carry on...
-//		}
-//
-//		return trouble;
-		
-		return null;
 	}
 
 	public static ProofObligationList getProofObligations(
