@@ -52,7 +52,7 @@ public abstract class InterpreterBaseTestCase extends TestResourcesResultTestCas
 			fail("Failed to serialize po");
 		}
 		message.setAttribute("resource", file.getName());
-		message.setAttribute("value", result.toString());
+		message.setAttribute("value", result + "");
 		
 		resultElement.appendChild(message);
 	}

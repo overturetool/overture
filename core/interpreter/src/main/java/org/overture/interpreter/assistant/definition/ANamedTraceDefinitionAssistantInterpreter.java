@@ -11,7 +11,7 @@ public class ANamedTraceDefinitionAssistantInterpreter
 {
 
 	public static TestSequence getTests(ANamedTraceDefinition tracedef,
-			Context ctxt) throws Exception
+			Context ctxt) throws Exception 
 	{
 		return getTests(tracedef, ctxt, 1.0F, TraceReductionType.NONE, System.currentTimeMillis());
 	}

@@ -31,4 +31,9 @@ public class AInheritedDefinitionAssistantInterpreter
 		return renamed;
 	}
 
+	public static boolean isTypeDefinition(AInheritedDefinition def)
+	{
+		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getSuperdef());
+	}
+
 }

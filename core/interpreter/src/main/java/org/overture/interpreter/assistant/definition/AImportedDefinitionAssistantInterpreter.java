@@ -26,4 +26,9 @@ public class AImportedDefinitionAssistantInterpreter extends
 		return renamed;
 	}
 
+	public static boolean isTypeDefinition(AImportedDefinition def)
+	{
+		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
+	}
+
 }

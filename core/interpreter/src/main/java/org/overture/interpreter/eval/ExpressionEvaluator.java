@@ -19,6 +19,7 @@ import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
@@ -41,6 +42,7 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.AStateInitExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubseqExp;
@@ -84,6 +86,7 @@ import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CompFunctionValue;
 import org.overture.interpreter.values.FieldMap;
 import org.overture.interpreter.values.FunctionValue;
+import org.overture.interpreter.values.IntegerValue;
 import org.overture.interpreter.values.IterFunctionValue;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -607,6 +610,47 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			return RuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
 		}
+	}
+	
+	@Override
+	public Value caseAIsExp(AIsExp node, Context ctxt) throws Throwable
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+
+		Value v = node.getTest().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+
+		try
+		{
+    		if (node.getTypeName() != null)
+    		{
+    			if (node.getTypedef() != null)
+    			{
+    				if (PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
+    				{
+    					// NB. we skip the DTC enabled check here
+    					v.convertValueTo(node.getTypedef().getType(), ctxt);
+    					return new BooleanValue(true);
+    				}
+    			}
+    			else if (v.isType(RecordValue.class))
+    			{
+    				RecordValue rv = v.recordValue(ctxt);
+    				return new BooleanValue(rv.type.getName().equals(node.getTypeName()));
+    			}
+    		}
+    		else
+    		{
+    			// NB. we skip the DTC enabled check here
+   				v.convertValueTo(node.getBasicType(), ctxt);
+   				return new BooleanValue(true);
+    		}
+		}
+		catch (ValueException ex)
+		{
+			// return false...
+		}
+
+		return new BooleanValue(false);
 	}
 	
 	@Override
@@ -1495,6 +1539,31 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 
 		return new SetValue(set);
+	}
+	
+	@Override
+	public Value caseASetRangeSetExp(ASetRangeSetExp node, Context ctxt)
+			throws Throwable
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+
+		try
+		{
+    		long from = node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+    		long to =  node.getLast().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+    		ValueSet set = new ValueSet();
+
+    		for (long i=from; i<= to; i++)
+    		{
+    			set.add(new IntegerValue(i));
+    		}
+
+    		return new SetValue(set);
+		}
+		catch (ValueException e)
+		{
+			return RuntimeError.abort(node.getLocation(),e);
+		}
 	}
 	
 	

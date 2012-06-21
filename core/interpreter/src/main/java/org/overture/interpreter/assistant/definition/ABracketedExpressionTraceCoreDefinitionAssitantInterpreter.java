@@ -11,7 +11,7 @@ public class ABracketedExpressionTraceCoreDefinitionAssitantInterpreter
 {
 
 	public static TraceNode expand(
-			ABracketedExpressionTraceCoreDefinition core, Context ctxt)
+			ABracketedExpressionTraceCoreDefinition core, Context ctxt) 
 	{
 		SequenceTraceNode node = new SequenceTraceNode();
 

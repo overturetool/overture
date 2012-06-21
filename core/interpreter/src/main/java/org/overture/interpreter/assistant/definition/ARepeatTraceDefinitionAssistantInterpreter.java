@@ -8,7 +8,7 @@ import org.overture.interpreter.traces.TraceNode;
 public class ARepeatTraceDefinitionAssistantInterpreter
 {
 
-	public static TraceNode expand(ARepeatTraceDefinition term, Context ctxt)
+	public static TraceNode expand(ARepeatTraceDefinition term, Context ctxt) 
 	{
 		TraceNode body = PTraceCoreDefinitionAssistantInterpreter.expand(term.getCore(),ctxt);
 

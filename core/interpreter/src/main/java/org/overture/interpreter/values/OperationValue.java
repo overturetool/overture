@@ -368,16 +368,13 @@ public class OperationValue extends Value
 				ctxt.threadState.setAtomic(false);
     		}
     		
-			try
-			{
-				rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
-			} catch (ValueException e)
-			{
-				throw e;
-			} catch (Throwable e)
-			{
-				e.printStackTrace();// TODO
-			}
+			
+			rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
+			
+//			catch (Throwable e)
+//			{
+//				e.printStackTrace();// TODO
+//			}
     		
     		if (isConstructor)
     		{
@@ -417,6 +414,10 @@ public class OperationValue extends Value
     			ctxt.setPrepost(0, null);
 				ctxt.threadState.setAtomic(false);
     		}
+		} catch (Throwable e)
+		{
+			// TODO Auto-generated catch block
+			
 		}
 		finally
 		{

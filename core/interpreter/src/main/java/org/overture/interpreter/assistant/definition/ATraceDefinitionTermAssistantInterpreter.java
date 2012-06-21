@@ -9,7 +9,7 @@ import org.overture.interpreter.traces.TraceNode;
 public class ATraceDefinitionTermAssistantInterpreter
 {
 
-	public static TraceNode expand(ATraceDefinitionTerm terms, Context ctxt)
+	public static TraceNode expand(ATraceDefinitionTerm terms, Context ctxt) 
 	{
 		AlternativeTraceNode node = new AlternativeTraceNode();
 

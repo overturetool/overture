@@ -10,7 +10,7 @@ public class ALetDefBindingTraceDefinitionAssistantInterpreter
 {
 
 	public static TraceNode expand(ALetDefBindingTraceDefinition term,
-			Context ctxt)
+			Context ctxt) 
 	{
 		Context evalContext = new Context(term.getLocation(), "TRACE", ctxt);
 

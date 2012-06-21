@@ -20,9 +20,17 @@ public class AEqualsDefinitionAssistantInterpreter
 {
 
 	public static NameValuePairList getNamedValues(AEqualsDefinition d,
-			Context initialContext) throws Throwable
+			Context initialContext) 
 	{
-		Value v = d.getTest().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
+		Value v = null;
+		try
+		{
+			v = d.getTest().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
+		} catch (Throwable e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		NameValuePairList nvpl = null;
 
 		if (d.getPattern() != null)
@@ -72,6 +80,10 @@ public class AEqualsDefinitionAssistantInterpreter
 			catch (ValueException e)
 			{
 				RuntimeError.abort(d.getLocation(),e);
+			} catch (Throwable e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 

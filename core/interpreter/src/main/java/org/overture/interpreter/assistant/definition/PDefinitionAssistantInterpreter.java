@@ -49,14 +49,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return new NameValuePairList();
 				}
 			case EQUALS:
-				try
-				{
-					return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);
-				} catch (Throwable e)
-				{
-					e.printStackTrace();
-					return new NameValuePairList();
-				}
+				return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);
 			case EXPLICITFUNCTION:
 				return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition)d,initialContext);
 			case EXPLICITOPERATION:
@@ -70,14 +63,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 			case INHERITED:
 				return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition)d, initialContext);
 			case INSTANCEVARIABLE:
-				try
-				{
 					return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition)d,initialContext);
-				} catch (Throwable e)
-				{
-					e.printStackTrace();
-					return new NameValuePairList();
-				}
 			case LOCAL:
 				return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition)d,initialContext);
 			case RENAMED:
@@ -89,14 +75,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 			case UNTYPED:
 				return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition)d,initialContext);
 			case VALUE:
-				try
-				{
-					return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition)d,initialContext);
-				} catch (Throwable e)
-				{
-					e.printStackTrace();
-					return new NameValuePairList();
-				}
+				return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition)d,initialContext);
 			default:
 				return new NameValuePairList();		// Overridden
 		}
@@ -171,6 +150,25 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 				return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition)d,lineno);
 			default:
 				return null;
+		}
+	}
+
+	public static boolean isTypeDefinition(PDefinition def)
+	{
+		switch (def.kindPDefinition())
+		{		
+			case CLASS:
+				return SClassDefinitionAssistantInterpreter.isTypeDefinition((SClassDefinition)def);
+			case IMPORTED:
+				return AImportedDefinitionAssistantInterpreter.isTypeDefinition((AImportedDefinition)def);
+			case INHERITED:
+				return AInheritedDefinitionAssistantInterpreter.isTypeDefinition((AInheritedDefinition)def);
+			case RENAMED:
+				return ARenamedDefinitionAssistantInterpreter.isTypeDefinition((ARenamedDefinition)def);			
+			case TYPE:
+				return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition)def);
+			default:
+				return false;
 		}
 	}
 

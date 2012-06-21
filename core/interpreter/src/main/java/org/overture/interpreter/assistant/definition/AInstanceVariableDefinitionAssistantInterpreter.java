@@ -19,7 +19,7 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(
-			AInstanceVariableDefinition d, Context initialContext) throws Throwable
+			AInstanceVariableDefinition d, Context initialContext) 
 	{
 		 try
 	        {
@@ -36,7 +36,12 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 	        {
 	        	RuntimeError.abort(d.getLocation(),e);
 	        	return null;
-	        }
+	        } catch (Throwable e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
 	}
 
 	public static ValueList getValues(AInstanceVariableDefinition d,

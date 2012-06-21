@@ -925,10 +925,11 @@ public class AstFactory {
 	public static AIdentifierPattern newAIdentifierPattern(LexNameToken token) {
 		AIdentifierPattern result = new AIdentifierPattern();
 		initPattern(result,token.location);
-		
-		
+				
 		result.setLocation(token.location);
 		result.setName(token);
+		result.setConstrained(false);
+		
 		return result;
 	}
 

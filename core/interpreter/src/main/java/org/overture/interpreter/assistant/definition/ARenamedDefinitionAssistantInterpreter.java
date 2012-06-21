@@ -30,4 +30,9 @@ public class ARenamedDefinitionAssistantInterpreter extends
 		return renamed;
 	}
 
+	public static boolean isTypeDefinition(ARenamedDefinition def)
+	{
+		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
+	}
+
 }

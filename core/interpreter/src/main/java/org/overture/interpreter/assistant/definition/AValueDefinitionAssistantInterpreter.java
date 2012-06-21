@@ -20,7 +20,7 @@ public class AValueDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(AValueDefinition d,
-			Context initialContext) throws Throwable
+			Context initialContext)
 	{
 		Value v = null;
 
@@ -37,6 +37,10 @@ public class AValueDefinitionAssistantInterpreter extends
 		catch (PatternMatchException e)
 		{
 			RuntimeError.abort(e, initialContext);
+		} catch (Throwable e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return null;

@@ -12,7 +12,7 @@ public class PTraceDefinitionAssistantInterpreter extends
 		PTraceDefinitionAssistantTC
 {
 
-	public static TraceNode expand(PTraceDefinition term, Context ctxt)
+	public static TraceNode expand(PTraceDefinition term, Context ctxt) 
 	{
 		switch (term.kindPTraceDefinition())
 		{

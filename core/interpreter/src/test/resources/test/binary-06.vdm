@@ -1,0 +1,137 @@
+-- This file has been automatically updated wrt. VDM++ Lang.Adjust, 1th iteration
+module A
+exports all
+definitions
+
+
+operations
+
+
+
+
+-- This file has been automatically updated wrt. VDM++ Lang.Adjust, 1th iteration
+Test : () ==> seq of (
+                        map nat to ( nat | real | bool ) |
+                        map (<NO>| map nat to nat | bool) to (seq of char | nat | <YES>) |
+                        map ( map nat to nat ) to nat |
+                        map bool to <YES> |
+                        map (<FALSE>|nat|seq of nat) to ( <TRUE> | real | seq of nat) |
+                        map seq of nat to ( nat | seq of nat ) |
+                        map char to ( nat | char ) |
+                        set of (
+                                map nat to nat |
+                                map char to nat 
+                                ) |
+                        map seq of char to seq of char                        
+                        ) 
+Test () ==
+
+return 
+[ 
+ -- mapmerge
+ emap munion emap,
+ { 3 |-> 4 } munion { 31 |-> 6 },
+ ( let a = if true 
+       then { {|->} |-> 5, false |-> <YES> }
+         else <YES> in
+       a ) munion ( if is_char('a')
+                    then { {3 |->4} |-> 4, <NO> |-> "hello world" }
+                    else let a in set {6,{3 |->4}} in a ),
+ { a |-> 3.6 | a in set { <FALSE>, 1 } } munion { [] |-> [2, 3] },
+ ( { 3 |-> 4} ++ { 3 |-> 6} ) munion { 4 |-> 6 },
+ f'_(4) munion {5 |-> 8, 8 |-> 9},
+ {5 |-> 8, 8 |-> 9} munion f'_(4),
+
+ -- mapdomrestto
+
+ (if 1=2 then {'a'} else {}) <: { 'a' |-> 3, 'b' |-> 4 },
+ { 'c' } <: { [] |-> 4 , 'a' |-> 2 },
+ { 'c' } <: { 'c' |-> 4},
+ { 'c' } <: { a |-> 'c' | a in set { 'a', 'b', 'c' } },
+   ( let a = 3
+     in
+         if is_int( a )
+          then { 3, 6} 
+          else let a in set {false, {3,6}} in a ) <: 
+                          if true
+                          then { 3 |-> false, 1.0 |-> true }
+                          else let a in set {{ 3, 7 }, {3|->3}} in a,
+  ( if is_char(let a : <FALSE> | char = <FALSE> in a)
+    then let a in set {{|->}, {365}} in a
+    else {3} ) <: { 6 |-> 6 },
+ let a = { 3 |-> 6, 4 |-> 6 }
+  in ( dom a ) <:a,
+  f'_(5) <: f'_(10),
+  
+
+  -- mapdomrestto
+  { a <-: b | a in set { {}, {'a', 'b' } },
+              b in set { {|->}, { c |-> d | c in set {'a', 'b', 'c'},
+                                            d in set {3} } } },
+  ( let a : char | real = 3,
+        b = {3,4}
+    in if is_char(a)
+       then let e in set {a , b} in e
+       else b ) <-: ( if true 
+                      then { 3 |-> 3, '4' |-> 4} 
+                      else let a in set {[], {3 |->36}} in a ),
+   ( if is_bool( let b : bool | char = 'c' in b )
+     then let a in set {{ 4 |-> 3}, {3,6}} in a
+     else { 1, 3, 4} ) <-: { 3 |-> 3},
+   ( inds [ 1,2,5]) <-: merge { {3 |-> 4, 6 |-> 3} },
+   let a = {3, 6}
+   in a <-: emap,
+  f'_(5) <-: f'_(10),
+  
+   --- maprngrestto
+ 
+  { a :> b | a in set { {3 |-> 4}, {6 |-> 4, 7|->23}, {|->} },
+             b in set { {}, {4} } },
+  ( let a = { false |-> true, [3] |-> [ 3.0] }
+    in a ) :> ( if true
+                then { [3.0] }
+                else let a in set {{ 3 |-> 4} , {3,6}} in a ),
+  ( if is_int(let b : int | char = 'c' in b)
+    then let a in set {[ 3 , 4], {35|->91}} in a
+    else { { |->} |-> 4, [] |-> 3.0} ) :> rng { a |-> 3.0 | 
+                                                a in set {3, false} },
+  let map1 = {3|->4, 23 |-> 2},
+      map2 = {3 |->1, 23 |-> 2 }
+  in map1 :> dom map2,
+  { 2 |-> {3 |-> 4} }(2) :> { 4 },
+  f'_(10) :> f'_(5),
+
+  ---  maprngrestby
+
+  { a :-> b | a in set { { 3 |-> 4, 6 |-> 6},{ |-> } },
+              b in set { {}, {6} } },
+  ( let a = { <FALSE> |-> <TRUE>, [3] |-> [3.0] }
+    in a ) :-> if true
+               then { [3.0] }
+               else let a in set {3.0, {3.0}} in a,
+  ( if dom { 3 |->4 } = let a : set of nat = {} in a
+    then let a in set {[3,6], {3|->4}} in a
+    else { 3 |-> 4 } ) :-> if false
+                           then let a in set {[3, 6], {[3]}} in a
+                           else { 3, [ 6 ], 4 },
+  { 3 |-> b | b in set {3, 6.6} & is_int(b ) } :-> { 3, 6.6 },
+  { 2 |-> {false |-> true, true |-> true } }(2) :-> { true },
+  let a = {3,6},
+      b = { 3 |-> 6, "hello world" |-> "Hej verden" }
+  in b :-> a,
+  f'_(10) :-> f'_(5)
+]
+
+functions
+f'_: nat -> nat | (set of nat) | (map nat to nat)
+f'_(n') ==
+  cases n':
+    0 -> n',
+    5 -> {1,...,5},
+    others -> {n' |-> n' + 3 | i in set {1,...,n'}}
+  end
+
+values 
+  emap : map nat to nat = {|->}
+-- This file has been automatically updated wrt. VDM++ Lang.Adjust, 1th iteration
+end A

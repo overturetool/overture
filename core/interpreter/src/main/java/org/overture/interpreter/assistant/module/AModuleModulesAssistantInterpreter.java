@@ -52,6 +52,10 @@ public class AModuleModulesAssistantInterpreter extends
 				catch (ContextException e)
 				{
 					trouble.add(e);		// Carry on...
+				} catch (Throwable e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -65,6 +69,10 @@ public class AModuleModulesAssistantInterpreter extends
 			catch (ContextException e)
 			{
 				trouble.add(e);		// Carry on...
+			} catch (Throwable e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 

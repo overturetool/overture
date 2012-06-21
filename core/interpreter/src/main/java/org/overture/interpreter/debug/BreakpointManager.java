@@ -29,6 +29,10 @@ public class BreakpointManager
 
 	public static Breakpoint getBreakpoint(PStm stmt)
 	{
+		if(!statementMap.containsKey(stmt))
+		{
+			statementMap.put(stmt, new Breakpoint(stmt.getLocation()));
+		}
 		return statementMap.get(stmt);
 	}
 

@@ -118,4 +118,9 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		return PDefinitionListAssistantInterpreter.findExpression(d.getDefinitions(), lineno);
 	}
 
+	public static boolean isTypeDefinition(SClassDefinition def)
+	{
+		return true;
+	}
+
 }

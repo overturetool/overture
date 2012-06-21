@@ -12,7 +12,7 @@ public class AThreadDefinitionAssistantInterpreter extends
 {
 
 	public static NameValuePairList getNamedValues(AThreadDefinition d,
-			Context initialContext)
+			Context initialContext) 
 	{
 		return PDefinitionAssistantInterpreter.getNamedValues(d.getOperationDef(), initialContext);
 	}

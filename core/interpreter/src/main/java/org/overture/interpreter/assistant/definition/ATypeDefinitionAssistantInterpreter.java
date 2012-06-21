@@ -37,4 +37,9 @@ public class ATypeDefinitionAssistantInterpreter extends
 		return null;
 	}
 
+	public static boolean isTypeDefinition(ATypeDefinition def)
+	{
+		return true;
+	}
+
 }
