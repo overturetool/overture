@@ -54,7 +54,7 @@ public class State implements ValueListener
 				UpdatableValue.factory(new ValueListenerList(this))));
 		}
 
-		ARecordInvariantType rt = (ARecordInvariantType)definition.getType();
+		ARecordInvariantType rt = (ARecordInvariantType)definition.getRecordType();
 		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues),
 			new ValueListenerList(this));
 
