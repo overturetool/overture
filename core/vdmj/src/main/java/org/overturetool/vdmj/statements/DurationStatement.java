@@ -24,14 +24,15 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
-import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
 
@@ -40,8 +41,6 @@ public class DurationStatement extends Statement
 	private static final long serialVersionUID = 1L;
 	public final Expression duration;
 	public final Statement statement;
-
-	private long step = 0;
 
 	public DurationStatement(
 		LexLocation location, Expression duration, Statement stmt)
@@ -66,38 +65,14 @@ public class DurationStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		long durationValue = 0;
+		Type argType = duration.typeCheck(env, null, scope);
 		
-		if (duration instanceof IntegerLiteralExpression)
+		if (!TypeComparator.compatible(new NaturalType(location), argType))
 		{
-			IntegerLiteralExpression i = (IntegerLiteralExpression)duration;
-
-			if (i.value.value < 0)
-			{
-				duration.report(3281, "Arguments to duration must be integer >= 0");
-			}
-
-			durationValue = i.value.value;
-		}
-		else if (duration instanceof RealLiteralExpression)
-		{
-			RealLiteralExpression i = (RealLiteralExpression)duration;
-
-			if (i.value.value < 0 ||
-				Math.floor(i.value.value) != i.value.value)
-			{
-				duration.report(3282, "Argument to duration must be integer >= 0");
-			}
-
-			durationValue = (long)i.value.value;
-		}
-		else
-		{
-			duration.report(3281, "Arguments to duration must be integer >= 0");
+			duration.report(3281, "Arguments to duration must be a nat");
+			detail("Actual", argType);
 		}
 
-		step = durationValue;//sets the input value [ns] to internal
-		
 		return statement.typeCheck(env, scope);
 	}
 
@@ -116,11 +91,24 @@ public class DurationStatement extends Statement
 		}
 		else
 		{
-			me.inOuterTimestep(true);
-			Value rv = statement.eval(ctxt);
-			me.inOuterTimestep(false);
-			me.duration(step, ctxt, location);
-			return rv;
+			try
+			{
+				// We disable the swapping and time (RT) as duration evaluation should be "free".
+				ctxt.threadState.setAtomic(true);
+				long step = duration.eval(ctxt).intValue(ctxt);
+				ctxt.threadState.setAtomic(false);
+
+				me.inOuterTimestep(true);
+				Value rv = statement.eval(ctxt);
+				me.inOuterTimestep(false);
+				me.duration(step, ctxt, location);
+				return rv;
+			}
+			catch (ValueException e)
+			{
+				abort(e);
+				return null;
+			}
 		}
 	}
 

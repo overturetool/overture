@@ -24,14 +24,15 @@
 package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.expressions.Expression;
-import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
-import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.NaturalType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.Value;
 
@@ -40,8 +41,6 @@ public class CyclesStatement extends Statement
 	private static final long serialVersionUID = 1L;
 	public final Expression cycles;
 	public final Statement statement;
-
-	private long value = 0;
 
 	public CyclesStatement(
 		LexLocation location, Expression cycles, Statement stmt)
@@ -66,32 +65,12 @@ public class CyclesStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		if (cycles instanceof IntegerLiteralExpression)
+		Type argType = cycles.typeCheck(env, null, scope);
+		
+		if (!TypeComparator.compatible(new NaturalType(location), argType))
 		{
-			IntegerLiteralExpression i = (IntegerLiteralExpression)cycles;
-
-			if (i.value.value < 0)
-			{
-				cycles.report(3282, "Argument to cycles must be integer >= 0");
-			}
-
-			value = i.value.value;
-		}
-		else if (cycles instanceof RealLiteralExpression)
-		{
-			RealLiteralExpression i = (RealLiteralExpression)cycles;
-
-			if (i.value.value < 0 ||
-				Math.floor(i.value.value) != i.value.value)
-			{
-				cycles.report(3282, "Argument to cycles must be integer >= 0");
-			}
-
-			value = (long)i.value.value;
-		}
-		else
-		{
-			cycles.report(3282, "Argument to cycles must be integer >= 0");
+			cycles.report(3281, "Arguments to cycles must be a nat");
+			detail("Actual", argType);
 		}
 
 		return statement.typeCheck(env, scope);
@@ -112,11 +91,23 @@ public class CyclesStatement extends Statement
 		}
 		else
 		{
-			me.inOuterTimestep(true);
-			Value rv = statement.eval(ctxt);
-			me.inOuterTimestep(false);
-			me.duration(ctxt.threadState.CPU.getDuration(value), ctxt, location);
-			return rv;
+			try {
+				// We disable the swapping and time (RT) as cycles evaluation should be "free".
+				ctxt.threadState.setAtomic(true);
+				long value = cycles.eval(ctxt).intValue(ctxt);
+				ctxt.threadState.setAtomic(false);
+
+				me.inOuterTimestep(true);
+				Value rv = statement.eval(ctxt);
+				me.inOuterTimestep(false);
+				me.duration(ctxt.threadState.CPU.getDuration(value), ctxt, location);
+				return rv;
+			}
+			catch (ValueException e)
+			{
+				abort(e);
+				return null;
+			}
 		}
 	}
 
