@@ -10,12 +10,12 @@ import java.io.Serializable;
 
 import org.overture.interpreter.values.Value;
 import org.overture.util.Base64;
-import org.overturetool.test.framework.ResultTestCase;
+import org.overturetool.test.framework.TestResourcesResultTestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class InterpreterBaseTestCase extends ResultTestCase<Value>
+public abstract class InterpreterBaseTestCase extends TestResourcesResultTestCase<Value>
 {
 
 	public InterpreterBaseTestCase()
@@ -33,12 +33,16 @@ public abstract class InterpreterBaseTestCase extends ResultTestCase<Value>
 	{
 		super(rootSource, name, content);
 	}
+	
+	public InterpreterBaseTestCase(File file, String suiteName, File testSuiteRoot)
+	{
+		super(file,suiteName,testSuiteRoot);
+	}
 
 	public void encondeResult(Value result, Document doc, Element resultElement)
 	{
 		Element message = doc.createElement("output");
-		message.setAttribute("resource", file.getName());
-		message.setAttribute("value", result.toString());
+		
 		try
 		{
 			message.setAttribute("object", toString(result));
@@ -47,6 +51,9 @@ public abstract class InterpreterBaseTestCase extends ResultTestCase<Value>
 			e.printStackTrace();
 			fail("Failed to serialize po");
 		}
+		message.setAttribute("resource", file.getName());
+		message.setAttribute("value", result.toString());
+		
 		resultElement.appendChild(message);
 	}
 
@@ -95,7 +102,7 @@ public abstract class InterpreterBaseTestCase extends ResultTestCase<Value>
 			tmp = File.separatorChar + "" + tmp.substring(0, tmp.indexOf('_'));
 			return new File(filename + "_results" + tmp + ".result");
 		}
-		return new File(filename + ".result");
+		return super.createResultFile(filename );
 	}
 
 	@Override
@@ -107,7 +114,7 @@ public abstract class InterpreterBaseTestCase extends ResultTestCase<Value>
 			tmp = File.separatorChar + "" + tmp.substring(0, tmp.indexOf('_'));
 			return new File(filename + "_results" + tmp + ".result");
 		}
-		return new File(filename + ".result");
+		return super.getResultFile(filename );
 	}
 
 	/**

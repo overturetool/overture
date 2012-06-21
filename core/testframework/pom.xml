@@ -9,6 +9,7 @@
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>testframework</artifactId>
 	<name>Test Framework for Overture</name>
+	<version>2.2.1</version>
 
 	<build>
 		<plugins>

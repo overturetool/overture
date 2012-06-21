@@ -9,7 +9,7 @@ public class ExternalTestSettings
 		String path = System.getProperty("externalTestsPath"); 
 		if(path != null)
 		{	
-			File f = new File(path + string);			
+			File f = new File(new File(path), string);			
 			return f;
 		}
 		else

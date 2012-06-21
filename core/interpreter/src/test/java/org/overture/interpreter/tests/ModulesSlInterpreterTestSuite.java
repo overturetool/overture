@@ -12,9 +12,9 @@ public class ModulesSlInterpreterTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		org.overturetool.test.framework.Properties.recordTestResults = false;
+		org.overturetool.test.framework.Properties.recordTestResults = true;
 		String name = "Interpreter Modules TestSuite";
-		String root = "src\\test\\resources\\test";
+		String root = "src\\test\\resources\\modules";
 		TestSuite test =  createTestCompleteFile(name, root, InterpreterSlTestCase.class);
 		return test;
 	}

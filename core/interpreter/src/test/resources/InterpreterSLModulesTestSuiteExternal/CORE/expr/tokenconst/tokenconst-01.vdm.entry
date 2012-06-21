@@ -1,0 +1,1 @@
+Test() = [ mk_token( 10 ),  mk_token( mk_token( 20 ) ),  mk_token( 23 ),  mk_token( mk_token( 2 ) ),  mk_token( true ),  mk_token( 3 ) ]

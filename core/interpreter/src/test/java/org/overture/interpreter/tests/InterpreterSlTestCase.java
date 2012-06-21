@@ -36,6 +36,12 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 	{
 		super(rootSource, name, content);
 	}
+	
+	public InterpreterSlTestCase(File file, String suiteName, File testSuiteRoot)
+	{
+		super(file,suiteName,testSuiteRoot);
+	}
+
 
 	@Override
 	protected void setUp() throws Exception
@@ -74,7 +80,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 			Value val = InterpreterUtil.interpret(Settings.dialect,entry, file);
 			System.out.println(file.getName() + " -> " + val);
 			result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
-			compareResults(result, file.getAbsolutePath());
+			compareResults(result, file.getName()+".result");
 		}
 
 	}
@@ -98,6 +104,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 
 			if (tmp != null && !tmp.isEmpty())
 			{
+				createResultFile(file.getName() + ".entry");
 				FileWriter fstream = new FileWriter(getEntryFile());
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(tmp);
@@ -111,7 +118,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 
 	}
 
-	private String search(File file, String name) throws IOException
+	protected String search(File file, String name) throws IOException
 	{
 		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
 		if (readme.exists())
@@ -133,7 +140,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 
 	private File getEntryFile()
 	{
-		return new File(file.getParentFile(), file.getName() + ".entry");
+		return getResultFile(file.getName() + ".entry");
 	}
 
 	private List<String> getEntries() throws IOException

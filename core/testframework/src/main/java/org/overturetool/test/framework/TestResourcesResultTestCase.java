@@ -54,17 +54,23 @@ public abstract class TestResourcesResultTestCase<R> extends ResultTestCase<R>
 		// first try choice 1
 		if (testSuiteRoot != null)
 		{
-			String tmp = ("src/test/resources/" + suiteName + "/" + file.getAbsolutePath().substring(testSuiteRoot.getAbsolutePath().length() + 1)).replace('\\', '/').replace('/', File.separatorChar).replaceAll(" ", "");
-			return tmp;
+			String base = file.getParentFile().getAbsolutePath();
+			String suiteBase = testSuiteRoot.getAbsolutePath();
+			if (base.startsWith(suiteBase)
+					&& base.length() != suiteBase.length())
+			{
+				String tmp = ("src/test/resources/" + suiteName + "/" + base.substring(suiteBase.length() + 1)).replace('\\', '/').replace('/', File.separatorChar).replaceAll(" ", "");
+				return tmp;
+			}
 		}
 
-		String tmp = file.getParentFile().getAbsolutePath();
+		String tmp = file.getParentFile().getPath();
 		tmp = tmp.replace('\\', '/');
 		if (tmp.startsWith("/") || tmp.contains(":"))
 		{
 			tmp = tmp.substring(tmp.indexOf('/') + 1);
 		}
-		return ("src/test/resources/" + tmp).replace('/', File.separatorChar).replaceAll(" ", "");
+		return ( tmp).replace('/', File.separatorChar).replaceAll(" ", "");
 	}
 
 }
