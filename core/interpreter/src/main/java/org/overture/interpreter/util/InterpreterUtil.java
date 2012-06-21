@@ -3,6 +3,8 @@ package org.overture.interpreter.util;
 import java.io.File;
 import java.util.List;
 
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Interpreter;
@@ -27,26 +29,64 @@ public class InterpreterUtil
 
 	public static Value interpret(String content) throws Exception
 	{
-		
+
 		Interpreter interpreter = getInterpreter(new ModuleListInterpreter());
 		interpreter.init(null);
 		Value val = interpreter.execute(content, null);
 		return val;
 	}
 
-	public static Value interpret(String entry, File file) throws Exception
+	public static Value interpret(Dialect dialect, String entry, File file)
+			throws Exception
 	{
-		TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(file);
-
-		if (result.errors.isEmpty())
+		switch (dialect)
 		{
-			ModuleListInterpreter list = new ModuleListInterpreter();
-			list.addAll(result.result);
-			Interpreter interpreter = getInterpreter(list);
-			interpreter.init(null);
-			interpreter.setDefaultName(list.get(0).getName().name);
-			Value val = interpreter.execute(entry, null);
-			return val;
+
+			case VDM_SL:
+			{
+				TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(file);
+
+				if (result.errors.isEmpty())
+				{
+					ModuleListInterpreter list = new ModuleListInterpreter();
+					list.addAll(result.result);
+					Interpreter interpreter = getInterpreter(list);
+					interpreter.init(null);
+					interpreter.setDefaultName(list.get(0).getName().name);
+					Value val = interpreter.execute(entry, null);
+					return val;
+				}
+			}
+			case VDM_PP:
+			{
+				TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
+
+				if (result.errors.isEmpty())
+				{
+					ClassListInterpreter list = new ClassListInterpreter();
+					list.addAll(result.result);
+					Interpreter interpreter = getInterpreter(list);
+					interpreter.init(null);
+					interpreter.setDefaultName(list.get(0).getName().name);
+					Value val = interpreter.execute(entry, null);
+					return val;
+				}
+			}
+			case VDM_RT:
+			{
+				TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckRt(file);
+
+				if (result.errors.isEmpty())
+				{
+					ClassListInterpreter list = new ClassListInterpreter();
+					list.addAll(result.result);
+					Interpreter interpreter = getInterpreter(list);
+					interpreter.init(null);
+					interpreter.setDefaultName(list.get(0).getName().name);
+					Value val = interpreter.execute(entry, null);
+					return val;
+				}
+			}
 		}
 		return null;
 	}

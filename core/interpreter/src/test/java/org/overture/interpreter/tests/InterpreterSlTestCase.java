@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
@@ -52,12 +51,13 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 		Result<Value> result = null;
 		if (mode == ContentModed.File)
 		{
-			TypeCheckResult<List<AModuleModules>> tcResult = TypeCheckerUtil.typeCheckSl(file);
+			@SuppressWarnings("rawtypes")
+			TypeCheckResult tcResult = typeCheck();
 			if (!tcResult.parserResult.errors.isEmpty()
 					|| !tcResult.errors.isEmpty())
 			{
-				return;
-//				fail("Model did not pass type check!."+ tcResult.errors);
+//				return;
+				fail("Model did not pass type check!."+ tcResult.errors);
 			}
 			String entry = "1+1";
 			if (getEntryFile() == null || !getEntryFile().exists())
@@ -71,19 +71,30 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 			{
 				entry = getEntries().get(0);
 			}
-			Value val = InterpreterUtil.interpret(entry, file);
+			Value val = InterpreterUtil.interpret(Settings.dialect,entry, file);
 			System.out.println(file.getName() + " -> " + val);
 			result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
 			compareResults(result, file.getAbsolutePath());
 		}
 
 	}
+	
+	@SuppressWarnings("rawtypes")
+	protected TypeCheckResult typeCheck()
+	{
+		return TypeCheckerUtil.typeCheckSl(file);
+	}
+	
+	protected String baseExamplePath()
+	{
+		return "C:\\overture\\overture_gitAST\\documentation\\examples\\VDMSL";
+	}
 
 	private String createEntryFile()
 	{
 		try
 		{
-			String tmp = search(new File("C:\\overture\\overture_gitAST\\documentation\\examples\\VDMSL"), file.getName());
+			String tmp = search(new File(baseExamplePath()), file.getName());
 
 			if (tmp != null && !tmp.isEmpty())
 			{
