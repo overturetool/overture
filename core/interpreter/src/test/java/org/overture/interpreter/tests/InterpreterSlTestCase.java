@@ -41,7 +41,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_SL;
-		Settings.release = Release.CLASSIC;
+		Settings.release = Release.VDM_10;
 	}
 
 	@Override
@@ -65,6 +65,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 				entry = getEntries().get(0);
 			}
 			Value val = InterpreterUtil.interpret(entry,file);
+			System.out.println(file.getName()+" -> "+val);
 			result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
 			compareResults(result, file.getAbsolutePath());
 		}
