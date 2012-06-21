@@ -39,6 +39,8 @@ import org.overture.ast.expressions.ASameBaseClassExp;
 import org.overture.ast.expressions.ASameClassExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.AStateInitExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubseqExp;
@@ -95,6 +97,7 @@ import org.overture.interpreter.values.Quantifier;
 import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.SeqValue;
+import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TokenValue;
 import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.UndefinedValue;
@@ -1409,6 +1412,91 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	/*
 	 * seq end
 	 */
+	
+	/*
+	 * (non-Javadoc) Set start
+	 * @see org.overture.ast.analysis.QuestionAnswerAdaptor#caseAStateInitExp(org.overture.ast.expressions.AStateInitExp, java.lang.Object)
+	 */
+	@Override
+	public Value caseASetEnumSetExp(ASetEnumSetExp node, Context ctxt)
+			throws Throwable
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+
+		ValueSet values = new ValueSet();
+
+		for (PExp e: node.getMembers())
+		{
+			values.add(e.apply(VdmRuntime.getExpressionEvaluator(),ctxt));
+		}
+
+		return new SetValue(values);
+	}
+	
+	@Override
+	public Value caseASetCompSetExp(ASetCompSetExp node, Context ctxt)
+			throws Throwable
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		ValueSet set = new ValueSet();
+
+		try
+		{
+			QuantifierList quantifiers = new QuantifierList();
+
+			for (PMultipleBind mb: node.getBindings())
+			{
+				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb,ctxt);
+
+				for (PPattern p: mb.getPlist())
+				{
+					Quantifier q = new Quantifier(p, bvals);
+					quantifiers.add(q);
+				}
+			}
+
+			quantifiers.init();
+
+			while (quantifiers.hasNext(ctxt))
+			{
+				Context evalContext = new Context(node.getLocation(), "set comprehension", ctxt);
+				NameValuePairList nvpl = quantifiers.next();
+				boolean matches = true;
+
+				for (NameValuePair nvp: nvpl)
+				{
+					Value v = evalContext.get(nvp.name);
+
+					if (v == null)
+					{
+						evalContext.put(nvp.name, nvp.value);
+					}
+					else
+					{
+						if (!v.equals(nvp.value))
+						{
+							matches = false;
+							break;	// This quantifier set does not match
+						}
+					}
+				}
+
+				if (matches &&
+					(node.getPredicate() == null ||
+							node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(),evalContext).boolValue(ctxt)))
+				{
+					set.add(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(),evalContext));
+				}
+			}
+		}
+		catch (ValueException e)
+		{
+			return  RuntimeError.abort(node.getLocation(),e);
+		}
+
+		return new SetValue(set);
+	}
+	
 	
 	@Override
 	public Value caseAStateInitExp(AStateInitExp node, Context ctxt)

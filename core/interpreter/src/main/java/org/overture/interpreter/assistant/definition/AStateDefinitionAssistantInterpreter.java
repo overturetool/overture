@@ -25,6 +25,7 @@ public class AStateDefinitionAssistantInterpreter extends
 			StateContext initialContext)
 	{
 		StateDefinitionRuntimeState state = new StateDefinitionRuntimeState();
+		VdmRuntime.setNodeState(sdef, state);
 		if (sdef.getInvdef() != null)
 		{
 			state.invfunc = new FunctionValue(sdef.getInvdef(), null, null, initialContext);
