@@ -1,1 +1,0 @@
-Test() =[{"MatchVal", "Others", "SetEnum", {"SeqEnum" |-> mk_(1, 6)}, {"SeqEnum" |-> mk_(1, 1)}, "SeqEnum", {"Tuple" |-> mk_(7, 8)}, {"Tuple" |-> mk_(9, 10)}, {"Record" |-> mk_(11, 12)}}, "Hello Easter", {6, 3}, {{1, 2}}, {3 |-> 4}, mk_(6, 3), 29, {33, 34, 35, mk_(37, 38), mk_(38, 37), mk_(39, 40), 23}]
