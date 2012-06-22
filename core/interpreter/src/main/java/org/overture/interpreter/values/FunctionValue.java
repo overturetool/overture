@@ -434,7 +434,7 @@ public class FunctionValue extends Value
 				throw e;
 			} catch (Throwable e)
 			{
-				e.printStackTrace();// TODO
+				return RuntimeError.abortRethrow(e);
 			}
     		
     		if (ctxt.prepost > 0)	// Note, caller's context is checked

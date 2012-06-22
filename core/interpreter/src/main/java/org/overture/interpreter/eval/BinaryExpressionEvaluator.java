@@ -319,25 +319,25 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			throws Throwable
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-				if (lv.isUndefined())
-				{
-					return lv;
-				}
+		if (lv.isUndefined())
+		{
+			return lv;
+		}
 
-				Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-				if (rv.isUndefined())
-				{
-					return rv;
-				}
+		if (rv.isUndefined())
+		{
+			return rv;
+		}
 
-				return new BooleanValue(lv.equals(rv));
+		return new BooleanValue(lv.equals(rv));
 	}
-	
+
 	@Override
 	public Value caseAInSetBinaryExp(AInSetBinaryExp node, Context ctxt)
 			throws Throwable

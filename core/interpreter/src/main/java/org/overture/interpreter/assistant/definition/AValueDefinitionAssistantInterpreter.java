@@ -39,8 +39,7 @@ public class AValueDefinitionAssistantInterpreter extends
 			RuntimeError.abort(e, initialContext);
 		} catch (Throwable e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RuntimeError.abortRethrow(e);
 		}
 
 		return null;

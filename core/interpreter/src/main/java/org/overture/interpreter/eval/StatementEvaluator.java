@@ -30,6 +30,8 @@ import org.overture.ast.statements.AExitStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierObjectDesignator;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
@@ -997,4 +999,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		return null;	// Never reached - see StartStatement.
 	}
 	
+	
+	
+	@Override
+	public Value caseAIdentifierStateDesignator(
+			AIdentifierStateDesignator node, Context ctxt) throws Throwable
+	{
+		// We lookup the name in a context comprising only state...
+				// return ctxt.getUpdateable().lookup(name.getExplicit(true));
+				return ctxt.lookup(node.getName().getExplicit(true));
+	}
 }

@@ -27,6 +27,7 @@ import java.util.FormattableFlags;
 import java.util.Formatter;
 
 import org.overture.ast.lex.LexStringToken;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.runtime.Context;
@@ -172,7 +173,7 @@ public class SeqValue extends Value
 
 		if (to instanceof SSeqType)
 		{
-			if (to instanceof SSeqType && values.isEmpty())
+			if (to instanceof ASeq1SeqType && values.isEmpty())
 			{
 				abort(4084, "Cannot convert empty sequence to seq1", ctxt);
 			}

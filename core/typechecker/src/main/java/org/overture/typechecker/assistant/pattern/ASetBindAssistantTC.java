@@ -17,9 +17,9 @@ public class ASetBindAssistantTC {
 	public static List<PMultipleBind> getMultipleBindList(ASetBind bind) {
 		
 		List<PPattern> plist = new ArrayList<PPattern>();
-		plist.add(bind.getPattern().clone());
+		plist.add(bind.getPattern());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet().clone()));
+		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet()));
 		return mblist;
 	}
 

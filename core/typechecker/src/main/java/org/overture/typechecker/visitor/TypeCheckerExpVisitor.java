@@ -1469,10 +1469,9 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question) throws Throwable
 	{
-
-		PBind temp = (PBind) node.getBind().clone();
+	
 		PDefinition def = 
-				AstFactory.newAMultiBindListDefinition(node.getLocation(), PBindAssistantTC.getMultipleBindList(temp));
+				AstFactory.newAMultiBindListDefinition(node.getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind()));
 
 		def.apply(rootVisitor, question);
 

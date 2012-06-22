@@ -9,6 +9,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
@@ -59,6 +60,7 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
@@ -204,6 +206,21 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 
 		return RuntimeError.abort(node.getLocation(),4004, "No cases apply for " + val, ctxt);
+	}
+	
+	@Override
+	public Value caseADefExp(ADefExp node, Context ctxt) throws Throwable
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+
+		Context evalContext = new Context(node.getLocation(), "def expression", ctxt);
+
+		for (PDefinition d: node.getLocalDefs())
+		{
+			evalContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d,evalContext));
+		}
+
+		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(),evalContext);
 	}
 	
 	/**
@@ -744,7 +761,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		PatternListTC list = new PatternListTC();
 		list.addAll(node.getParamPatterns());
 		 
-		return new FunctionValue(node.getLocation(), "lambda",node.getFunctionType(),
+		return new FunctionValue(node.getLocation(), "lambda",(AFunctionType) node.getType(),
 				list, node.getExpression(), free);
 	}
 	
