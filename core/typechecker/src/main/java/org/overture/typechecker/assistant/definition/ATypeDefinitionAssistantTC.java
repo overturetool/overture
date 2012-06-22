@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -83,7 +84,7 @@ public class ATypeDefinitionAssistantTC {
 
 	public static void typeResolve(ATypeDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		try
 		{
 			d.setInfinite(false);

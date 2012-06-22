@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -17,7 +18,7 @@ public class PPatternListAssistantTC {
 
 	public static void typeResolve(List<PPattern> pp,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		for (PPattern pattern : pp) {
 			PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);

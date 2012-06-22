@@ -1,6 +1,7 @@
 package org.overture.pog.assistant;
 
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.PExp;
@@ -15,7 +16,7 @@ public class ACaseAlternativeAssistantPOG {
 
 	public static ProofObligationList getProofObligations(ACaseAlternative node,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor,
-			POContextStack question, PType type) throws Throwable {
+			POContextStack question, PType type) throws AnalysisException {
 
 		PPattern pattern = node.getPattern();
 		PExp cexp = node.getCexp();

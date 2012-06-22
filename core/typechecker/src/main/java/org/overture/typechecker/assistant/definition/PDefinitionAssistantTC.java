@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -555,7 +556,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	public static void typeResolve(PDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		switch (d.kindPDefinition()) {
 		case CLASS:
 			SClassDefinitionAssistantTC.typeResolve((SClassDefinition) d,

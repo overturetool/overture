@@ -46,7 +46,7 @@ public abstract class Method
 	public String annotation;
 	public IClassDefinition classDefinition;
 	protected Set<String> requiredImports = new HashSet<String>();
-	protected Set<String> throwsDefinitions = new HashSet<String>();
+	protected Set<IInterfaceDefinition> throwsDefinitions = new HashSet<IInterfaceDefinition>();
 	// private boolean isStructureFinal = false;
 	protected boolean skip = false;
 	protected boolean optionalVdmArgument = true;
@@ -108,6 +108,14 @@ public abstract class Method
 		{
 			addImportForType(arg.type);
 		}
+		
+		if(!throwsDefinitions.isEmpty())
+		{
+			for (Iterator<IInterfaceDefinition> t = throwsDefinitions.iterator(); t.hasNext();)
+			{
+				requiredImports.add( t.next().getName().getCanonicalName());
+			}
+		}
 
 		return requiredImports;
 	}
@@ -160,6 +168,14 @@ public abstract class Method
 		for (Argument arg : arguments)
 		{
 			addImportForType(arg.type);
+		}
+		
+		if(!throwsDefinitions.isEmpty())
+		{
+			for (Iterator<IInterfaceDefinition> t = throwsDefinitions.iterator(); t.hasNext();)
+			{
+				requiredImports.add( t.next().getName().getCanonicalName());
+			}
 		}
 
 		return requiredImports;
@@ -252,9 +268,9 @@ public abstract class Method
 		if(!throwsDefinitions.isEmpty())
 		{
 			tmp +=" throws ";
-			for (Iterator<String> t = throwsDefinitions.iterator(); t.hasNext();)
+			for (Iterator<IInterfaceDefinition> t = throwsDefinitions.iterator(); t.hasNext();)
 			{
-				tmp+= t.next();
+				tmp+= t.next().getName().getName();
 				if(t.hasNext())
 				{
 					tmp+=", ";

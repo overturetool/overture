@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -31,7 +32,7 @@ public class APatternListTypePairAssistantTC {
 
 	public static void typeResolve(APatternListTypePair pltp,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		PPatternListAssistantTC.typeResolve(pltp.getPatterns(), rootVisitor, question);
 		PType type = PTypeAssistantTC.typeResolve(pltp.getType(),null,rootVisitor,question);

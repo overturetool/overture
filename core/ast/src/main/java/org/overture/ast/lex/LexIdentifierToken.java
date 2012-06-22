@@ -3,6 +3,7 @@ package org.overture.ast.lex;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
@@ -69,22 +70,22 @@ public class LexIdentifierToken extends LexToken {
 	}
 	
 	@Override
-	public void apply(IAnalysis analysis) throws Throwable {
+	public void apply(IAnalysis analysis) throws AnalysisException {
 		analysis.caseLexIdentifierToken(this); 
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws Throwable {
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
 		return caller.caseLexIdentifierToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable {
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
 		caller.caseLexIdentifierToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
 		return caller.caseLexIdentifierToken(this, question);
 	}
 	

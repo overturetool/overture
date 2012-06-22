@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -110,7 +111,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 
 	public static void typeResolve(AImplicitFunctionDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		if (d.getTypeParams().size() > 0)
 		{

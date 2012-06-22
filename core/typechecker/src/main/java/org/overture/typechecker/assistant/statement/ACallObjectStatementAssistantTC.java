@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -16,7 +17,7 @@ import org.overture.typechecker.TypeComparator;
 
 public class ACallObjectStatementAssistantTC {
 
-	public static List<PType> getArgTypes(LinkedList<PExp> args,QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable
+	public static List<PType> getArgTypes(LinkedList<PExp> args,QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws AnalysisException
 	{
 		List<PType> types = new LinkedList<PType>();
 

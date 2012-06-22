@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.module;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
@@ -40,7 +41,7 @@ public class AModuleImportsAssistantTC {
 	}
 
 	public static void typeCheck(AModuleImports imports,
-			ModuleEnvironment env) throws Throwable {
+			ModuleEnvironment env) throws AnalysisException {
 		
 		for (AFromModuleImports ifm: imports.getImports())
 		{

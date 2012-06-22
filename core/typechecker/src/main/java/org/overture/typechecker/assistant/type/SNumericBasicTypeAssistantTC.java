@@ -1,5 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.expressions.SNumericBinaryExp;
@@ -14,7 +15,7 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant {
 
 	public static void checkNumeric(
 			SNumericBinaryExp node, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
 

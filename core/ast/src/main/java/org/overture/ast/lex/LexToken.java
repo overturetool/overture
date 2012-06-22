@@ -30,6 +30,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
@@ -111,22 +112,22 @@ import org.overture.ast.node.NodeEnum;
 	}
 
 	@Override
-	public void apply(IAnalysis analysis) throws Throwable {
+	public void apply(IAnalysis analysis) throws AnalysisException {
 		analysis.caseLexToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws Throwable {
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
 		return caller.caseLexToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable {
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
 		caller.caseLexToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
 		return caller.caseLexToken(this, question);
 	}
 

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -115,7 +116,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAAlwaysStm(AAlwaysStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAAlwaysStm(AAlwaysStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		node.getAlways().apply(rootVisitor, question);
 		node.setType(node.getBody().apply(rootVisitor, question));
@@ -123,7 +124,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAAssignmentStm(AAssignmentStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAAssignmentStm(AAssignmentStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		node.setTargetType(node.getTarget().apply(rootVisitor, new TypeCheckInfo(question.env)));
@@ -172,7 +173,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAAtomicStm(AAtomicStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAAtomicStm(AAtomicStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		node.setStatedef(question.env.findStateDefinition());
@@ -187,7 +188,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	@Override
 	public PType caseAForPatternBindStm(AForPatternBindStm node,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		PType stype = node.getExp().apply(rootVisitor, new TypeCheckInfo(question.env,question.scope));
 		Environment local = question.env;
@@ -213,7 +214,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	@Override
 	public PType defaultSSimpleBlockStm(SSimpleBlockStm node,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		boolean notreached = false;
 		PTypeSet rtypes = new PTypeSet();
 		PType last = null;
@@ -277,7 +278,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	
 	@Override
-	public PType caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseABlockSimpleBlockStm(ABlockSimpleBlockStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		// Each dcl definition is in scope for later definitions...
 
@@ -301,7 +302,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseACallObjectStm(ACallObjectStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseACallObjectStm(ACallObjectStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		PType dtype = node.getDesignator().apply(rootVisitor,question);
 		
@@ -437,7 +438,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseACallStm(ACallStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseACallStm(ACallStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), rootVisitor, question);
 
@@ -513,7 +514,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	//TODO correct, possibly wrong typecheck implementation
 	@Override
-	public PType caseACaseAlternativeStm(ACaseAlternativeStm node,TypeCheckInfo question) throws Throwable 
+	public PType caseACaseAlternativeStm(ACaseAlternativeStm node,TypeCheckInfo question) throws AnalysisException 
 	{
 
 		if (node.getDefs().size() == 0)
@@ -551,7 +552,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	
 	@Override
-	public PType caseACasesStm(ACasesStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseACasesStm(ACasesStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		PType expType = node.getExp().apply(rootVisitor, question);
@@ -586,7 +587,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseACyclesStm(ACyclesStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseACyclesStm(ACyclesStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		if (node.getCycles() instanceof AIntLiteralExp)
@@ -625,7 +626,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	//TODO: Missing the other DefStatement
 	
 	@Override 
-	public PType caseADefLetDefStm(ADefLetDefStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseADefLetDefStm(ADefLetDefStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		// Each local definition is in scope for later local definitions...
@@ -668,7 +669,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseADurationStm(ADurationStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseADurationStm(ADurationStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		long durationValue = 0;
 		
@@ -706,7 +707,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAElseIfStm(AElseIfStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAElseIfStm(AElseIfStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		if (!PTypeAssistantTC.isType(node.getElseIf().apply(rootVisitor, question), ABooleanBasicType.class))
 		{
@@ -725,7 +726,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAExitStm(AExitStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAExitStm(AExitStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		if (node.getExpression() != null)
 		{
@@ -742,7 +743,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAForAllStm(AForAllStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAForAllStm(AForAllStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		node.setType(node.getSet().apply(rootVisitor, question));
 		PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
@@ -767,7 +768,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAForIndexStm(AForIndexStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAForIndexStm(AForIndexStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		PType ft = node.getFrom().apply(rootVisitor,question);
 		PType tt = node.getTo().apply(rootVisitor,question);
@@ -802,7 +803,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAIfStm(AIfStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAIfStm(AIfStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		PType test = node.getIfExp().apply(rootVisitor, question);
@@ -837,7 +838,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		 
 		node.setDef(
@@ -858,7 +859,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	@Override
 	public PType caseANonDeterministicSimpleBlockStm(
-			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question) throws Throwable 
+			ANonDeterministicSimpleBlockStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		//PType r = defaultSSimpleBlockStm(node,question);
 		
@@ -902,7 +903,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAReturnStm(AReturnStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAReturnStm(AReturnStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 
 		if (node.getExpression()== null)
@@ -926,7 +927,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseASpecificationStm(ASpecificationStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseASpecificationStm(ASpecificationStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 
 		List<PDefinition> defs = new LinkedList<PDefinition>();
@@ -995,7 +996,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseATrapStm(ATrapStm node, TypeCheckInfo question) throws Throwable {
+	public PType caseATrapStm(ATrapStm node, TypeCheckInfo question) throws AnalysisException {
 		PTypeSet rtypes = new PTypeSet();
 
 		PStm body = node.getBody();
@@ -1028,7 +1029,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseAWhileStm(AWhileStm node, TypeCheckInfo question) throws Throwable {
+	public PType caseAWhileStm(AWhileStm node, TypeCheckInfo question) throws AnalysisException {
 		question.qualifiers = null;
 		node.getExp().apply(rootVisitor, question);
 		node.setType(node.getStatement().apply(rootVisitor, question));		
@@ -1149,7 +1150,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 
 	
 	@Override
-	public PType caseAStartStm(AStartStm node, TypeCheckInfo question) throws Throwable 
+	public PType caseAStartStm(AStartStm node, TypeCheckInfo question) throws AnalysisException 
 	{
 		
 		PType type = node.getObj().apply(rootVisitor, question);
@@ -1200,7 +1201,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseATixeStm(ATixeStm node, TypeCheckInfo question) throws Throwable {
+	public PType caseATixeStm(ATixeStm node, TypeCheckInfo question) throws AnalysisException {
 		
 		PType rt = node.getBody().apply(rootVisitor, question);
 		PTypeSet extypes = PStmAssistantTC.exitCheck(node.getBody());
@@ -1220,7 +1221,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	}
 	
 	@Override
-	public PType caseATixeStmtAlternative(ATixeStmtAlternative node,TypeCheckInfo question) throws Throwable {
+	public PType caseATixeStmtAlternative(ATixeStmtAlternative node,TypeCheckInfo question) throws AnalysisException {
 		
 		//TODO fix 
 		//patternBind.typeCheck(base, scope, ext)
@@ -1238,7 +1239,7 @@ public class TypeCheckerStmVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, 
 	
 	@Override
 	public PType caseADefPatternBind(ADefPatternBind node,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		node.setDefs(null);
 

@@ -25,6 +25,7 @@ package org.overture.typechecker;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
@@ -55,7 +56,7 @@ public class ClassTypeChecker extends TypeChecker
 
 	/**
 	 * Perform type checking across all classes in the list.
-	 * @throws Throwable 
+	 * @throws AnalysisException 
 	 */
 
 	@Override
@@ -117,7 +118,7 @@ public class ClassTypeChecker extends TypeChecker
     			{
     				report(3427, te.getMessage(), te.location);
     			}
-    			catch (Throwable te)
+    			catch (AnalysisException te)
 				{
 					report(3431, te.getMessage(), null);//FIXME: internal error
 				}
@@ -147,7 +148,7 @@ public class ClassTypeChecker extends TypeChecker
     				{
     					report(3428, te.getMessage(), te.location);
     				}
-    				catch (Throwable te)
+    				catch (AnalysisException te)
 					{
 						report(3431, te.getMessage(), null);//FIXME: internal error
 					}

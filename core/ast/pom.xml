@@ -16,7 +16,7 @@
 			<plugin>
 				<groupId>org.overturetool.tools</groupId>
 				<artifactId>astcreatorplugin</artifactId>
-				<version>1.0.4</version>
+				<version>1.0.5</version>
 				<executions>
 					<execution>
 						<id>java</id>

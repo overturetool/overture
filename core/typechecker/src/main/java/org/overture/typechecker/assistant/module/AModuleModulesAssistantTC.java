@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.module;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.modules.AModuleModules;
@@ -66,7 +67,7 @@ public class AModuleModulesAssistantTC
    		return null;
 	}
 
-	public static void typeCheckImports(AModuleModules m) throws Throwable {
+	public static void typeCheckImports(AModuleModules m) throws AnalysisException {
 		if (m.getImports() != null)
 		{
 			AModuleImportsAssistantTC.typeCheck(m.getImports(),new ModuleEnvironment(m));	

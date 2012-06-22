@@ -27,7 +27,7 @@ public class DepthFirstCaseMethod extends Method
 	@Override
 	protected void prepare()
 	{
-		throwsDefinitions.add("Throwable");
+		throwsDefinitions.add(env.analysisException);
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t/**\n");
@@ -45,6 +45,7 @@ public class DepthFirstCaseMethod extends Method
 		this.arguments.add(new Argument(AnalysisUtil.getCaseClass(env, classDefinition).getName().getName(), "node"));
 		this.requiredImports.add("java.util.ArrayList");
 		this.requiredImports.add("java.util.List");
+		this.requiredImports.add(env.analysisException.getName().getCanonicalName());
 
 		StringBuffer bodySb = new StringBuffer();
 		

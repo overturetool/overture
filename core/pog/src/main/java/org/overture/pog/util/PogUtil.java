@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -63,7 +64,7 @@ public class PogUtil
 				try
 				{
 					proofObligations.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
-				} catch (Throwable e)
+				} catch (AnalysisException e)
 				{
 					throw new Exception("Internal error",e);
 				}

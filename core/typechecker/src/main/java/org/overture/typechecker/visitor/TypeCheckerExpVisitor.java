@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
@@ -98,7 +99,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAApplyExp(AApplyExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAApplyExp(AApplyExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		node.setArgtypes(new ArrayList<PType>());
 
@@ -216,14 +217,14 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.setType(SBinaryExpAssistantTC.binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), rootVisitor, question));
 		return node.getType();
 	}
 
 	@Override
-	public PType caseACompBinaryExp(ACompBinaryExp node, TypeCheckInfo question) throws Throwable
+	public PType caseACompBinaryExp(ACompBinaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -299,7 +300,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADomainResByBinaryExp(ADomainResByBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -328,7 +329,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADomainResToBinaryExp(ADomainResToBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -359,7 +360,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAEqualsBinaryExp(AEqualsBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -376,7 +377,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAInSetBinaryExp(AInSetBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -392,7 +393,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -429,7 +430,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -446,7 +447,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseANotInSetBinaryExp(ANotInSetBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
@@ -464,7 +465,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADivNumericBinaryExp(ADivNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -474,7 +475,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -484,7 +485,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, TypeCheckInfo question) throws Throwable
+			AGreaterEqualNumericBinaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -494,7 +495,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -504,7 +505,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAModNumericBinaryExp(AModNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -515,7 +516,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 
@@ -552,7 +553,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseARemNumericBinaryExp(ARemNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -563,7 +564,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASubstractNumericBinaryExp(
-			ASubstractNumericBinaryExp node, TypeCheckInfo question) throws Throwable
+			ASubstractNumericBinaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -582,7 +583,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -620,7 +621,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -688,7 +689,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -715,7 +716,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseARangeResByBinaryExp(ARangeResByBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -748,7 +749,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseARangeResToBinaryExp(ARangeResToBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -780,7 +781,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -820,7 +821,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -851,7 +852,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -884,7 +885,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASetUnionBinaryExp(ASetUnionBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -914,7 +915,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -956,7 +957,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASubsetBinaryExp(ASubsetBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.getLeft().apply(rootVisitor, question);
@@ -992,7 +993,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseACasesExp(ACasesExp node, TypeCheckInfo question) throws Throwable
+	public PType caseACasesExp(ACasesExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		question.qualifiers = null;
@@ -1025,7 +1026,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAElseIfExp(AElseIfExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAElseIfExp(AElseIfExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		if (!PTypeAssistantTC.isType(node.getElseIf().apply(this, question), ABooleanBasicType.class))
@@ -1038,7 +1039,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question) throws Throwable
+	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question) throws AnalysisException
 	{
 		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind())));
 		node.getDef().apply(rootVisitor, question);
@@ -1062,7 +1063,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAExistsExp(AExistsExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAExistsExp(AExistsExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList()); 				
@@ -1081,7 +1082,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAFieldExp(AFieldExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAFieldExp(AFieldExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		
 		PType root = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope));
@@ -1212,7 +1213,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAFieldNumberExp(AFieldNumberExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp tuple = node.getTuple();
@@ -1243,7 +1244,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAForAllExp(AForAllExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAForAllExp(AForAllExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PDefinition def = 
 				AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
@@ -1261,7 +1262,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAFuncInstatiationExp(AFuncInstatiationExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		// If there are no type qualifiers passed because the poly function
@@ -1424,7 +1425,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAIfExp(AIfExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAIfExp(AIfExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		question.qualifiers = null;
@@ -1467,7 +1468,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question) throws AnalysisException
 	{
 	
 		PDefinition def = 
@@ -1505,7 +1506,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAIsExp(AIsExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAIsExp(AIsExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		question.qualifiers = null;
@@ -1537,7 +1538,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		if (question.env.findType(node.getBaseClass(), null) == null)
@@ -1559,7 +1560,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAIsOfClassExp(AIsOfClassExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAIsOfClassExp(AIsOfClassExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		LexNameToken classname = node.getClassName();
@@ -1587,7 +1588,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseALambdaExp(ALambdaExp node, TypeCheckInfo question) throws Throwable
+	public PType caseALambdaExp(ALambdaExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
 		List<PType> ptypes = new Vector<PType>();
@@ -1622,7 +1623,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question) throws Throwable
+	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), PMultipleBindAssistantTC.getMultipleBindList((PMultipleBind) node.getBind())); 
 
@@ -1648,7 +1649,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseALetDefExp(ALetDefExp node, TypeCheckInfo question) throws Throwable
+	public PType caseALetDefExp(ALetDefExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		// Each local definition is in scope for later local definitions...
 
@@ -1690,7 +1691,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseADefExp(ADefExp node, TypeCheckInfo question) throws Throwable
+	public PType caseADefExp(ADefExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		// Each local definition is in scope for later local definitions...
 
@@ -1733,7 +1734,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAMapCompMapExp(AMapCompMapExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAMapCompMapExp(AMapCompMapExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PDefinition def = 
@@ -1757,7 +1758,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAMapEnumMapExp(AMapEnumMapExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAMapEnumMapExp(AMapEnumMapExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.setDomTypes(new Vector<PType>());
@@ -1794,7 +1795,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAMapletExp(AMapletExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAMapletExp(AMapletExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PType ltype = node.getLeft().apply(rootVisitor, question);
@@ -1804,7 +1805,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAMkBasicExp(AMkBasicExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAMkBasicExp(AMkBasicExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PType argtype = node.getArg().apply(rootVisitor, question);
 
@@ -1820,7 +1821,7 @@ public class TypeCheckerExpVisitor extends
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public PType caseAMkTypeExp(AMkTypeExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAMkTypeExp(AMkTypeExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PDefinition typeDef = question.env.findType(node.getTypeName(), node.getLocation().module);
@@ -1915,7 +1916,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAMuExp(AMuExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAMuExp(AMuExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PType rtype = node.getRecord().apply(rootVisitor, question);
@@ -1962,7 +1963,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseANewExp(ANewExp node, TypeCheckInfo question) throws Throwable
+	public PType caseANewExp(ANewExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PDefinition cdef = question.env.findType(node.getClassName().getClassName(), null);
@@ -2044,14 +2045,14 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAPostOpExp(APostOpExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAPostOpExp(APostOpExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		node.setType(node.getPostexpression().apply(this, question));
 		return node.getType();
 	}
 
 	@Override
-	public PType caseAPreExp(APreExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAPreExp(APreExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		question.qualifiers = null;
@@ -2068,7 +2069,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAPreOpExp(APreOpExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAPreOpExp(APreOpExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
 		node.setType(node.getExpression().apply(rootVisitor, question));
@@ -2114,7 +2115,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASameBaseClassExp(ASameBaseClassExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp left = node.getLeft();
@@ -2141,7 +2142,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASameClassExp(ASameClassExp node, TypeCheckInfo question) throws Throwable
+	public PType caseASameClassExp(ASameClassExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
@@ -2183,7 +2184,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question) throws Throwable
+	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		//TODO: check if this is still needed?!
 		//save these so we can clone them after they have been type checked
@@ -2228,7 +2229,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASeqEnumSeqExp(ASeqEnumSeqExp node, TypeCheckInfo question) throws Throwable
+	public PType caseASeqEnumSeqExp(ASeqEnumSeqExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PTypeSet ts = new PTypeSet();
@@ -2250,7 +2251,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASetCompSetExp(ASetCompSetExp node, TypeCheckInfo question) throws Throwable
+	public PType caseASetCompSetExp(ASetCompSetExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PDefinition def = 
 				AstFactory.newAMultiBindListDefinition(node.getFirst().getLocation(),  node.getBindings());				
@@ -2278,7 +2279,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASetEnumSetExp(ASetEnumSetExp node, TypeCheckInfo question) throws Throwable
+	public PType caseASetEnumSetExp(ASetEnumSetExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PTypeSet ts = new PTypeSet();
 		node.setTypes(new LinkedList<PType>());
@@ -2300,7 +2301,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseASetRangeSetExp(ASetRangeSetExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp first = node.getFirst();
@@ -2329,7 +2330,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAStateInitExp(AStateInitExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAStateInitExp(AStateInitExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PPattern pattern = node.getState().getInitPattern();
@@ -2397,7 +2398,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASubseqExp(ASubseqExp node, TypeCheckInfo question) throws Throwable
+	public PType caseASubseqExp(ASubseqExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
 		PType stype = node.getSeq().apply(rootVisitor, question);
@@ -2441,7 +2442,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseATupleExp(ATupleExp node, TypeCheckInfo question) throws Throwable
+	public PType caseATupleExp(ATupleExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		node.setTypes(new LinkedList<PType>());
@@ -2580,11 +2581,11 @@ public class TypeCheckerExpVisitor extends
 
 	/**
 	 * BINARY Expressions
-	 * @throws Throwable 
+	 * @throws AnalysisException 
 	 */
 	@Override
 	public PType caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, TypeCheckInfo question) throws Throwable
+			ALessEqualNumericBinaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
@@ -2594,7 +2595,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseALessNumericBinaryExp(ALessNumericBinaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
@@ -2603,11 +2604,11 @@ public class TypeCheckerExpVisitor extends
 
 	/**
 	 * UNARY Expressions
-	 * @throws Throwable 
+	 * @throws AnalysisException 
 	 */
 	@Override
 	public PType caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
 		PType t = node.getExp().apply(rootVisitor, question);
@@ -2626,7 +2627,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseACardinalityUnaryExp(ACardinalityUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2642,7 +2643,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADistConcatUnaryExp(ADistConcatUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2666,7 +2667,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2692,7 +2693,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADistMergeUnaryExp(ADistMergeUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2717,7 +2718,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseADistUnionUnaryExp(ADistUnionUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2742,7 +2743,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAFloorUnaryExp(AFloorUnaryExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAFloorUnaryExp(AFloorUnaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2758,7 +2759,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseAHeadUnaryExp(AHeadUnaryExp node, TypeCheckInfo question) throws Throwable
+	public PType caseAHeadUnaryExp(AHeadUnaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2778,7 +2779,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAIndicesUnaryExp(AIndicesUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2797,7 +2798,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseALenUnaryExp(ALenUnaryExp node, TypeCheckInfo question) throws Throwable
+	public PType caseALenUnaryExp(ALenUnaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2816,7 +2817,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2838,7 +2839,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2862,7 +2863,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2882,7 +2883,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseANotUnaryExp(ANotUnaryExp node, TypeCheckInfo question) throws Throwable
+	public PType caseANotUnaryExp(ANotUnaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2900,7 +2901,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAPowerSetUnaryExp(APowerSetUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2920,7 +2921,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAReverseUnaryExp(AReverseUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp exp = node.getExp();
@@ -2941,7 +2942,7 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseATailUnaryExp(ATailUnaryExp node, TypeCheckInfo question) throws Throwable
+	public PType caseATailUnaryExp(ATailUnaryExp node, TypeCheckInfo question) throws AnalysisException
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2960,7 +2961,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
 		PType t = node.getExp().apply(rootVisitor, question);
@@ -2977,7 +2978,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
 		node.setType(node.getExp().apply(rootVisitor, question));
@@ -2986,7 +2987,7 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAElementsUnaryExp(AElementsUnaryExp node,
-			TypeCheckInfo question) throws Throwable
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		PExp etype = node.getExp();

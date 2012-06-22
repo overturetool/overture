@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -67,7 +68,7 @@ public class TypeCheckerUtil
 			try
 			{
 				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
-			} catch (Throwable e)
+			} catch (AnalysisException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();

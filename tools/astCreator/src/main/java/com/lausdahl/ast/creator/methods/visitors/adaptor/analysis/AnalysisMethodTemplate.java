@@ -29,7 +29,7 @@ public abstract class AnalysisMethodTemplate extends Method
 	protected void prepare()
 	{
 		super.prepare();
-		throwsDefinitions.add("Throwable");
+		throwsDefinitions.add(env.analysisException);
 	}
 
 	protected String getAdditionalBodyCallArguments()

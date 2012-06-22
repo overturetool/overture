@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
@@ -253,25 +254,25 @@ public class LexNameToken extends LexToken implements Serializable
 	}
 
 	@Override
-	public void apply(IAnalysis analysis) throws Throwable
+	public void apply(IAnalysis analysis) throws AnalysisException
 	{
 		analysis.caseLexNameToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws Throwable
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException
 	{
 		return caller.caseLexNameToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException
 	{
 		caller.caseLexNameToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws Throwable
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException
 	{
 		return caller.caseLexNameToken(this, question);
 	}

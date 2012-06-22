@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.pattern.ATuplePatternAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
@@ -24,7 +25,7 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 
 	public static void typeResolve(ATuplePattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

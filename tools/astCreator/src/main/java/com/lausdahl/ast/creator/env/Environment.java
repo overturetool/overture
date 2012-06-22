@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.lausdahl.ast.creator.ToStringAddOn;
+import com.lausdahl.ast.creator.definitions.AnalysisExceptionDefinition;
+import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
@@ -24,6 +26,7 @@ public class Environment extends BaseEnvironment
 	public final String TAG_IAnswer = "IAnswer";
 	public final String TAG_IQuestion = "IQuestion";
 	public final String TAG_IQuestionAnswer = "IQuestionAnswer";
+	public  final BaseClassDefinition analysisException;
 
 	private final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
 
@@ -44,6 +47,9 @@ public class Environment extends BaseEnvironment
 		token.addInterface(iToken);
 		addCommonTreeInterface(node, iNode);
 		addCommonTreeInterface(token, iToken);
+		
+		analysisException= new AnalysisExceptionDefinition(analysisPackage, "AnalysisException");
+		addClass(analysisException);
 	}
 
 	public void setAnalysisPackages(String analysisPackage)

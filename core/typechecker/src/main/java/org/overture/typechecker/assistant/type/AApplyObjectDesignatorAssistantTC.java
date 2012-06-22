@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.type;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -20,7 +21,7 @@ import org.overture.typechecker.TypeComparator;
 public class AApplyObjectDesignatorAssistantTC {
 
 	public static PType mapApply(AApplyObjectDesignator node, SMapType map, Environment env,
-			NameScope scope, boolean unique, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
+			NameScope scope, boolean unique, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
 
 		if (node.getArgs().size() != 1) {
 			TypeCheckerErrors.concern(unique, 3250, "Map application must have one argument",node.getLocation(),node);
@@ -40,7 +41,7 @@ public class AApplyObjectDesignatorAssistantTC {
 
 	public static PType seqApply(AApplyObjectDesignator node, SSeqType seq, Environment env,
 			NameScope scope, boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
 		
 		if (node.getArgs().size() != 1)
 		{
@@ -62,7 +63,7 @@ public class AApplyObjectDesignatorAssistantTC {
 	public static PType functionApply(AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
 			boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
 		
 		LinkedList<PType> ptypes =  ftype.getParameters();
 
@@ -99,7 +100,7 @@ public class AApplyObjectDesignatorAssistantTC {
 	public static PType operationApply(AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
 			boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws Throwable {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
 		LinkedList<PType> ptypes = optype.getParameters();
 
 		if (node.getArgs().size() > ptypes.size())

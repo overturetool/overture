@@ -1,5 +1,6 @@
 package org.overture.typechecker.visitor;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -29,7 +30,7 @@ public class TypeCheckerPatternVisitor extends
 	
 	@Override
 	public PType caseASetMultipleBind(ASetMultipleBind node,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
@@ -68,7 +69,7 @@ public class TypeCheckerPatternVisitor extends
 	
 	@Override
 	public PType caseATypeMultipleBind(ATypeMultipleBind node,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
 		PType type = PTypeAssistantTC.typeResolve(node.getType(),null,rootVisitor,question);

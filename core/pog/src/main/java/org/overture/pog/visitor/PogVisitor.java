@@ -1,5 +1,6 @@
 package org.overture.pog.visitor;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -58,14 +59,14 @@ public class PogVisitor extends
 	@Override
 	// See [1] pg. 167 for the definition
 	public ProofObligationList caseAModuleModules(AModuleModules node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 		return PDefinitionAssistantPOG.getProofObligations(node.getDefs(), pogDefinitionVisitor, question);
 
 	}
 
 	@Override
-	public ProofObligationList defaultPExp(PExp node, POContextStack question) throws Throwable
+	public ProofObligationList defaultPExp(PExp node, POContextStack question) throws AnalysisException
 	{
 
 		return node.apply(pogExpVisitor, question);
@@ -81,7 +82,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList caseACaseAlternative(ACaseAlternative node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -140,7 +141,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList caseASetBind(ASetBind node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		return node.getSet().apply(this.pogExpVisitor, question);
@@ -148,7 +149,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList caseASetMultipleBind(ASetMultipleBind node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		return node.getSet().apply(this.pogExpVisitor, question);
@@ -172,7 +173,7 @@ public class PogVisitor extends
 
 	@Override
 	public ProofObligationList defaultPDefinition(PDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		return node.apply(pogDefinitionVisitor, question);
@@ -211,7 +212,7 @@ public class PogVisitor extends
 	}
 
 	@Override
-	public ProofObligationList defaultPStm(PStm node, POContextStack question) throws Throwable
+	public ProofObligationList defaultPStm(PStm node, POContextStack question) throws AnalysisException
 	{
 
 		return node.apply(pogStmVisitor, question);
@@ -252,7 +253,7 @@ public class PogVisitor extends
 	
 	@Override
 	public ProofObligationList caseATixeStmtAlternative(
-			ATixeStmtAlternative node, POContextStack question) throws Throwable
+			ATixeStmtAlternative node, POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList list = new ProofObligationList();

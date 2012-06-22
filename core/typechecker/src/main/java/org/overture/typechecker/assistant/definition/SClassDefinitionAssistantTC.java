@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -553,7 +554,7 @@ public class SClassDefinitionAssistantTC {
 
 	public static void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		Environment cenv = new FlatEnvironment(d.getDefinitions(),  question.env);
 		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(),rootVisitor,new TypeCheckInfo(cenv));
@@ -766,7 +767,7 @@ public class SClassDefinitionAssistantTC {
 	}
 
 	public static void typeCheckPass(SClassDefinition c, Pass p,
-			Environment base, TypeCheckVisitor tc) throws Throwable {
+			Environment base, TypeCheckVisitor tc) throws AnalysisException {
 		if (c.getTypeChecked()) return;
 
 		for (PDefinition d: c.getDefinitions())

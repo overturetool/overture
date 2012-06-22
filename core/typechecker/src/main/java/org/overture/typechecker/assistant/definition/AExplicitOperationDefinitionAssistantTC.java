@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -93,7 +94,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 
 	public static void typeResolve(AExplicitOperationDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 
 		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 

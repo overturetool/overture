@@ -1,5 +1,6 @@
 package org.overture.typechecker.assistant.expression;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SBooleanBinaryExp;
@@ -16,7 +17,7 @@ public class SBinaryExpAssistantTC {
 	public static ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
 			ABooleanBasicType expected,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);

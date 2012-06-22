@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.expression;
 
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.lex.LexNameList;
@@ -18,7 +19,7 @@ public class ACaseAlternativeAssistantTC {
 
 	public static PType typeCheck(ACaseAlternative c,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question, PType expType) throws Throwable {
+			TypeCheckInfo question, PType expType) throws AnalysisException {
 
 		if (c.getDefs().size() == 0)
 		{

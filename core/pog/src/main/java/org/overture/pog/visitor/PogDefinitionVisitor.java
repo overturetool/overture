@@ -2,6 +2,7 @@ package org.overture.pog.visitor;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -72,7 +73,7 @@ public class PogDefinitionVisitor extends
 	// [ �post�, expression ],
 	// [ �measure�, name ] ;
 	public ProofObligationList caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node, POContextStack question) throws Throwable
+			AExplicitFunctionDefinition node, POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -132,7 +133,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList defaultSClassDefinition(SClassDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList proofObligationList = new ProofObligationList();
@@ -162,7 +163,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAEqualsDefinition(AEqualsDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList list = new ProofObligationList();
@@ -215,7 +216,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAImplicitFunctionDefinition(
-			AImplicitFunctionDefinition node, POContextStack question) throws Throwable
+			AImplicitFunctionDefinition node, POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -281,7 +282,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node, POContextStack question) throws Throwable
+			AExplicitOperationDefinition node, POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -327,7 +328,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAImplicitOperationDefinition(
-			AImplicitOperationDefinition node, POContextStack question) throws Throwable
+			AImplicitOperationDefinition node, POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -388,7 +389,7 @@ public class PogDefinitionVisitor extends
 	
 	@Override
 	public ProofObligationList caseAAssignmentDefinition(AAssignmentDefinition node, 
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		
@@ -415,7 +416,7 @@ public class PogDefinitionVisitor extends
 		return new ProofObligationList();
 	}
 	
-	public ProofObligationList caseAInstanceVariableDefinition(AInstanceVariableDefinition node, POContextStack question) throws Throwable
+	public ProofObligationList caseAInstanceVariableDefinition(AInstanceVariableDefinition node, POContextStack question) throws AnalysisException
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		
@@ -436,7 +437,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAPerSyncDefinition(APerSyncDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		question.push(new PONameContext(new LexNameList(node.getOpname())));
@@ -447,7 +448,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAStateDefinition(AStateDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList list = new ProofObligationList();
@@ -462,7 +463,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseATypeDefinition(ATypeDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 		ProofObligationList list = new ProofObligationList();
 
@@ -478,7 +479,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAValueDefinition(AValueDefinition node,
-			POContextStack question) throws Throwable
+			POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList obligations = new ProofObligationList();
@@ -541,7 +542,7 @@ public class PogDefinitionVisitor extends
 
 	@Override
 	public ProofObligationList caseAClassClassDefinition(
-			AClassClassDefinition node, POContextStack question) throws Throwable
+			AClassClassDefinition node, POContextStack question) throws AnalysisException
 	{
 
 		ProofObligationList proofObligationList = new ProofObligationList();

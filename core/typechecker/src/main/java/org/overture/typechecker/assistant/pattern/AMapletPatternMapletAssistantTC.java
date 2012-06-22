@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.AMapletPatternMaplet;
@@ -22,7 +23,7 @@ public class AMapletPatternMapletAssistantTC {
 		
 	}
 
-	public static void typeResolve(AMapletPatternMaplet mp, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
+	public static void typeResolve(AMapletPatternMaplet mp, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws AnalysisException {
 		if (mp.getResolved()) return; else { mp.setResolved(true); }
 
 		try

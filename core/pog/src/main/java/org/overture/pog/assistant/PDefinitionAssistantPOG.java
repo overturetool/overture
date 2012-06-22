@@ -2,6 +2,7 @@ package org.overture.pog.assistant;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.pog.obligation.POContextStack;
@@ -14,7 +15,7 @@ public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
 	public static ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> pogVisitor,
-			POContextStack ctxt) throws Throwable {
+			POContextStack ctxt) throws AnalysisException {
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (PDefinition d : defs) {

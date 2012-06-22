@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -98,7 +99,7 @@ public class PDefinitionListAssistantTC {
 
 	public static void typeCheck(List<PDefinition> defs,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		for (PDefinition d : defs) {
 			d.apply(rootVisitor, question);
 		}
@@ -125,7 +126,7 @@ public class PDefinitionListAssistantTC {
 
 	
 
-	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
+	public static void typeResolve(List<PDefinition> definitions, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws AnalysisException {
 		for (PDefinition definition : definitions) {
 			PDefinitionAssistantTC.typeResolve(definition, rootVisitor, question);
 		}

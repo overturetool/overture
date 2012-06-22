@@ -26,6 +26,7 @@ package org.overture.typechecker;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
@@ -186,7 +187,7 @@ public class ModuleTypeChecker extends TypeChecker
 			catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);
-			}catch (Throwable te)
+			}catch (AnalysisException te)
 			{
 				report(3431, te.getMessage(), null);//FIXME: internal error
 			}
@@ -218,7 +219,7 @@ public class ModuleTypeChecker extends TypeChecker
     						{
     							report(3431, te.getMessage(), te.location);
     						}
-    						catch (Throwable te)
+    						catch (AnalysisException te)
     						{
     							report(3431, te.getMessage(), null);//FIXME: internal error
     						}
@@ -249,7 +250,7 @@ public class ModuleTypeChecker extends TypeChecker
     			{
     				report(3432, te.getMessage(), te.location);
     			}
-    			catch (Throwable te)
+    			catch (AnalysisException te)
 				{
 					report(3431, te.getMessage(), null);//FIXME: internal error
 				}

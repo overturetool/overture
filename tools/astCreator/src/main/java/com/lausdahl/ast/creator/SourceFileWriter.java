@@ -89,12 +89,14 @@ public class SourceFileWriter
 		replace.put("%org.overture.ast.analysis.IAnswer%", env.getTaggedDef(env.TAG_IAnswer).getName().getCanonicalName());
 		replace.put("%org.overture.ast.analysis.IQuestion%", env.getTaggedDef(env.TAG_IQuestion).getName().getCanonicalName());
 		replace.put("%org.overture.ast.analysis.IQuestionAnswer%", env.getTaggedDef(env.TAG_IQuestionAnswer).getName().getCanonicalName());
+		replace.put("%org.overture.ast.analysis.AnalysisException%", env.analysisException.getName().getCanonicalName());
 
 		replace.put("%IAnalysis%", env.getTaggedDef(env.TAG_IAnalysis).getName().getName());
 		replace.put("%IAnswer<A>%", NameUtil.getGenericName(env.getTaggedDef(env.TAG_IAnswer)));
 		replace.put("%IQuestion<Q>%", NameUtil.getGenericName(env.getTaggedDef(env.TAG_IQuestion)));
 		replace.put("%IQuestionAnswer<Q,A>%", NameUtil.getGenericName(env.getTaggedDef(env.TAG_IQuestionAnswer)));
 
+		replace.put("%AnalysisException%", env.analysisException.getName().getName());
 		replace.put("%IAnswer%", env.getTaggedDef(env.TAG_IAnswer).getName().getName());
 		replace.put("%IQuestion%", env.getTaggedDef(env.TAG_IQuestion).getName().getName());
 		replace.put("%IQuestionAnswer%", env.getTaggedDef(env.TAG_IQuestionAnswer).getName().getName());

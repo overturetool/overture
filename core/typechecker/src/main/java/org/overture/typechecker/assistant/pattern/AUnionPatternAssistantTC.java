@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -23,7 +24,7 @@ public class AUnionPatternAssistantTC {
 
 	public static void typeResolve(AUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws Throwable {
+			TypeCheckInfo question) throws AnalysisException {
 		
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 

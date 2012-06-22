@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.ExternalNode;
@@ -155,7 +156,7 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 	}
 
 	@Override
-	public void defaultINode(INode node, DotPair question) throws Throwable
+	public void defaultINode(INode node, DotPair question) throws AnalysisException
 	{
 		if(!(node instanceof LexNameToken )&&visitedNodes.contains(node)|| node == null)
 		{

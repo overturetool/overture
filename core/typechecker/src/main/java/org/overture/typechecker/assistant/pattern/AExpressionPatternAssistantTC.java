@@ -1,5 +1,6 @@
 package org.overture.typechecker.assistant.pattern;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -15,7 +16,7 @@ public class AExpressionPatternAssistantTC {
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
 
-	public static void typeResolve(AExpressionPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws Throwable {
+	public static void typeResolve(AExpressionPattern pattern, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) throws AnalysisException {
 		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
 
 		try

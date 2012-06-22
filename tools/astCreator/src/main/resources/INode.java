@@ -7,6 +7,7 @@ import %org.overture.ast.analysis.IAnalysis%;
 import %org.overture.ast.analysis.IAnswer%;
 import %org.overture.ast.analysis.IQuestion%;
 import %org.overture.ast.analysis.IQuestionAnswer%;
+import %org.overture.ast.analysis.AnalysisException%;
 
 public interface %INode%
 {
@@ -53,7 +54,7 @@ public interface %INode%
 	 * Applies this node to the {@link IAnalysis} visitor {@code analysis}.
 	 * @param analysis the {@link IAnalysis} to which this node is applied
 	 */
-	public abstract void apply(%IAnalysis% analysis) throws Throwable;
+	public abstract void apply(%IAnalysis% analysis) throws %AnalysisException%;
 
 	/**
 	 * Returns the answer for {@code caller} by applying this node to the
@@ -61,14 +62,14 @@ public interface %INode%
 	 * @param caller the {@link IAnswer} to which this node is applied
 	 * @return the answer as returned from {@code caller}
 	 */
-	public abstract <A> A apply(%IAnswer<A>% caller) throws Throwable;
+	public abstract <A> A apply(%IAnswer<A>% caller) throws %AnalysisException%;
 
 	/**
 	 * Applies this node to the {@link IQuestion} visitor {@code caller}.
 	 * @param caller the {@link IQuestion} to which this node is applied
 	 * @param question the question provided to {@code caller}
 	 */
-	public abstract <Q> void apply(%IQuestion<Q>% caller, Q question) throws Throwable;
+	public abstract <Q> void apply(%IQuestion<Q>% caller, Q question) throws %AnalysisException%;
 
 	/**
 	 * Returns the answer for {@code answer} by applying this node with the
@@ -77,7 +78,7 @@ public interface %INode%
 	 * @param question the question provided to {@code answer}
 	 * @return the answer as returned from {@code answer}
 	 */
-	public abstract <Q, A> A apply(%IQuestionAnswer<Q,A>% caller, Q question) throws Throwable;
+	public abstract <Q, A> A apply(%IQuestionAnswer<Q,A>% caller, Q question) throws %AnalysisException%;
 
 	
 	public abstract Map<String,Object> getChildren(Boolean includeInheritedFields);

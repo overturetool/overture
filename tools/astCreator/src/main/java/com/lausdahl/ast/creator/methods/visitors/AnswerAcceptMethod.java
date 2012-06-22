@@ -36,7 +36,7 @@ public class AnswerAcceptMethod extends Method
 		returnType = "<A> A";
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "caller"));
 		body = "\t\treturn caller.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this);";
-		throwsDefinitions.add("Throwable");
+		throwsDefinitions.add(env.analysisException);
 	}
 	
 	@Override
