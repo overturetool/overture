@@ -3,6 +3,7 @@ package org.overture.interpreter.eval;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -123,7 +124,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getLocation().hits--;	// This is counted below when root is evaluated
@@ -188,7 +189,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 */
 	@Override
 	public Value caseACasesExp(ACasesExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -209,7 +210,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseADefExp(ADefExp node, Context ctxt) throws Throwable
+	public Value caseADefExp(ADefExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -229,9 +230,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 * @param val
 	 * @param ctxt
 	 * @return
-	 * @throws Throwable 
+	 * @throws AnalysisException 
 	 */
-	public Value eval(ACaseAlternative node,Value val, Context ctxt) throws Throwable
+	public Value eval(ACaseAlternative node,Value val, Context ctxt) throws AnalysisException
 	{
 		Context evalContext = new Context(node.getLocation(), "case alternative", ctxt);
 
@@ -250,7 +251,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAElseIfExp(AElseIfExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -266,7 +267,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAExists1Exp(AExists1Exp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueList allValues = null;
@@ -313,7 +314,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAExistsExp(AExistsExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -374,7 +375,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAFieldExp(AFieldExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getField().location.hit();
@@ -414,7 +415,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAFieldNumberExp(AFieldNumberExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getField().location.hit();
@@ -439,7 +440,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAForAllExp(AForAllExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -500,7 +501,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAFuncInstatiationExp(AFuncInstatiationExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -565,7 +566,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAHistoryExp(AHistoryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		try
 		{
@@ -630,7 +631,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseAIsExp(AIsExp node, Context ctxt) throws Throwable
+	public Value caseAIsExp(AIsExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -671,7 +672,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseAIfExp(AIfExp node, Context ctxt) throws Throwable
+	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -697,7 +698,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseAIotaExp(AIotaExp node, Context ctxt) throws Throwable
+	public Value caseAIotaExp(AIotaExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueList allValues = null;
@@ -749,7 +750,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseALambdaExp(ALambdaExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -767,7 +768,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseALetBeStExp(ALetBeStExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -829,7 +830,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseALetDefExp(ALetDefExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -866,7 +867,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAMapCompMapExp(AMapCompMapExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueMap map = new ValueMap();
@@ -939,7 +940,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAMapEnumMapExp(AMapEnumMapExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -968,7 +969,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAMapletExp(AMapletExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		//Not used
 		return null;
@@ -976,7 +977,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAMkBasicExp(AMkBasicExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1003,7 +1004,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAMkTypeExp(AMkTypeExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1025,7 +1026,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseAMuExp(AMuExp node, Context ctxt) throws Throwable
+	public Value caseAMuExp(AMuExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1057,7 +1058,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseANewExp(ANewExp node, Context ctxt) throws Throwable
+	public Value caseANewExp(ANewExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getClassName().location.hit();
@@ -1090,7 +1091,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseANilExp(ANilExp node, Context ctxt) throws Throwable
+	public Value caseANilExp(ANilExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1099,7 +1100,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return RuntimeError.abort(node.getLocation(),4024, "'not yet specified' expression reached", ctxt);
@@ -1107,7 +1108,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAPostOpExp(APostOpExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		// No break check here, as we want to start in the expression
 
@@ -1204,7 +1205,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseAPreExp(APreExp node, Context ctxt) throws Throwable
+	public Value caseAPreExp(APreExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1266,7 +1267,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAPreOpExp(APreOpExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		try
     	{
@@ -1329,7 +1330,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASameBaseClassExp(ASameBaseClassExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1368,7 +1369,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASameClassExp(ASameClassExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1400,7 +1401,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASeqCompSeqExp(ASeqCompSeqExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1457,7 +1458,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASeqEnumSeqExp(ASeqEnumSeqExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1480,7 +1481,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 */
 	@Override
 	public Value caseASetEnumSetExp(ASetEnumSetExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1496,7 +1497,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASetCompSetExp(ASetCompSetExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		ValueSet set = new ValueSet();
@@ -1560,7 +1561,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASetRangeSetExp(ASetRangeSetExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1586,7 +1587,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAStateInitExp(AStateInitExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1615,7 +1616,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASubclassResponsibilityExp(
-			ASubclassResponsibilityExp node, Context ctxt) throws Throwable
+			ASubclassResponsibilityExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return RuntimeError.abort(node.getLocation(),4032, "'is subclass responsibility' expression reached", ctxt);
@@ -1623,7 +1624,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseASubseqExp(ASubseqExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1662,7 +1663,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAThreadIdExp(AThreadIdExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		try
 		{
@@ -1676,7 +1677,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseATimeExp(ATimeExp node, Context ctxt) throws Throwable
+	public Value caseATimeExp(ATimeExp node, Context ctxt) throws AnalysisException
 	{
 		node.getLocation().hit();
 
@@ -1692,7 +1693,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseATupleExp(ATupleExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1708,7 +1709,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAUndefinedExp(AUndefinedExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -1717,7 +1718,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	
 	@Override
 	public Value caseAVariableExp(AVariableExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		//Experimental hood added for DESTECS
 		if (Settings.dialect == Dialect.VDM_RT)

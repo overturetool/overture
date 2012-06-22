@@ -1,5 +1,6 @@
 package org.overture.interpreter.eval;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
@@ -27,7 +28,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 
 	@Override
 	public Value caseAIntLiteralExp(AIntLiteralExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -43,7 +44,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 	
 	@Override
 	public Value caseACharLiteralExp(ACharLiteralExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new CharacterValue(node.getValue().unicode);
@@ -51,7 +52,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 	
 	@Override
 	public Value caseABooleanConstExp(ABooleanConstExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new BooleanValue(node.getValue().value);
@@ -59,7 +60,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 	
 	@Override
 	public Value caseAQuoteLiteralExp(AQuoteLiteralExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new QuoteValue(node.getValue().value);
@@ -67,7 +68,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 	
 	@Override
 	public Value caseARealLiteralExp(ARealLiteralExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -83,7 +84,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 	
 	@Override
 	public Value caseAStringLiteralExp(AStringLiteralExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new SeqValue(node.getValue().value);

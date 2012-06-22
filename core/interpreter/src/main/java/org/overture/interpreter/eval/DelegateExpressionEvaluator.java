@@ -2,6 +2,7 @@ package org.overture.interpreter.eval;
 
 import java.lang.reflect.Method;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.lex.Dialect;
@@ -38,7 +39,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 
 	@Override
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		LexLocation location = node.getLocation();
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);

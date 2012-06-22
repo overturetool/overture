@@ -3,6 +3,7 @@ package org.overture.interpreter.eval;
 import java.util.Collections;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
@@ -51,7 +52,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -67,7 +68,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseACardinalityUnaryExp(ACardinalityUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -91,7 +92,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseADistConcatUnaryExp(ADistConcatUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -115,7 +116,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -152,7 +153,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseADistMergeUnaryExp(ADistMergeUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -176,7 +177,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseADistUnionUnaryExp(ADistUnionUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -200,7 +201,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAElementsUnaryExp(AElementsUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -219,7 +220,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAFloorUnaryExp(AFloorUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -235,7 +236,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAHeadUnaryExp(AHeadUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -258,7 +259,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAIndicesUnaryExp(AIndicesUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -286,7 +287,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseALenUnaryExp(ALenUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -310,7 +311,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -329,7 +330,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -359,7 +360,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAMapRangeUnaryExp(AMapRangeUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -378,7 +379,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseANotUnaryExp(ANotUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -395,7 +396,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAPowerSetUnaryExp(APowerSetUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -420,7 +421,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAReverseUnaryExp(AReverseUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -441,7 +442,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseATailUnaryExp(ATailUnaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -467,7 +468,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -484,7 +485,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 	
 	@Override
 	public Value caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
