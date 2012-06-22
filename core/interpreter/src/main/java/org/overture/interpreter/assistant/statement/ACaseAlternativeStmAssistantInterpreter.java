@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.statement;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -10,7 +11,7 @@ import org.overture.interpreter.values.Value;
 public class ACaseAlternativeStmAssistantInterpreter
 {
 
-	public static Value eval(ACaseAlternativeStm node, Value val, Context ctxt) throws Throwable
+	public static Value eval(ACaseAlternativeStm node, Value val, Context ctxt) throws AnalysisException
 	{
 		Context evalContext = new Context(node.getLocation(), "case alternative", ctxt);
 

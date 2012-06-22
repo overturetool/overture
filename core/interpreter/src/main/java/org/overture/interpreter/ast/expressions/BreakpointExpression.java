@@ -25,6 +25,7 @@ package org.overture.interpreter.ast.expressions;
 
 import java.util.Map;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
@@ -82,26 +83,26 @@ public class BreakpointExpression extends PExpBase
 	}
 
 	@Override
-	public void apply(IAnalysis analysis) throws Throwable
+	public void apply(IAnalysis analysis) throws AnalysisException
 	{
 		
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws Throwable
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws Throwable
+	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException
 	{
 		
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
-			throws Throwable
+			throws AnalysisException
 	{
 		return null;
 	}

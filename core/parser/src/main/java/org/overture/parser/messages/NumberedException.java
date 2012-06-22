@@ -23,8 +23,10 @@
 
 package org.overture.parser.messages;
 
+import org.overture.ast.analysis.AnalysisException;
+
 @SuppressWarnings("serial")
-abstract public class NumberedException extends Exception
+abstract public class NumberedException extends AnalysisException
 {
 	public final int number;
 

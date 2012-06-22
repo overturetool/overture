@@ -1,5 +1,6 @@
 package org.overture.interpreter.eval;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
@@ -28,7 +29,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
 	
 	@Override
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 

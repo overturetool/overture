@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.statement;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
@@ -11,7 +12,7 @@ import org.overture.interpreter.values.VoidValue;
 public class SSimpleBlockStmAssistantInterpreter
 {
 
-	public static Value evalBlock(SSimpleBlockStm node, Context ctxt) throws Throwable
+	public static Value evalBlock(SSimpleBlockStm node, Context ctxt) throws AnalysisException
 	{
 		// Note, no breakpoint check - designed to be called by eval
 

@@ -2,6 +2,7 @@ package org.overture.interpreter.eval;
 
 import java.util.Iterator;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
@@ -70,7 +71,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -107,7 +108,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAEquivalentBooleanBinaryExp(
-			AEquivalentBooleanBinaryExp node, Context ctxt) throws Throwable
+			AEquivalentBooleanBinaryExp node, Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -131,7 +132,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -161,7 +162,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -204,7 +205,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseACompBinaryExp(ACompBinaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -258,7 +259,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseADomainResByBinaryExp(ADomainResByBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -287,7 +288,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseADomainResToBinaryExp(ADomainResToBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -316,7 +317,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseAEqualsBinaryExp(AEqualsBinaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -340,7 +341,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAInSetBinaryExp(AInSetBinaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -360,7 +361,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -399,7 +400,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -412,7 +413,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseANotInSetBinaryExp(ANotInSetBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -436,7 +437,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseADivNumericBinaryExp(ADivNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -455,7 +456,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -474,7 +475,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, Context ctxt) throws Throwable
+			AGreaterEqualNumericBinaryExp node, Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -493,7 +494,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -512,7 +513,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, Context ctxt) throws Throwable
+			ALessEqualNumericBinaryExp node, Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -531,7 +532,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseALessNumericBinaryExp(ALessNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -550,7 +551,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAModNumericBinaryExp(AModNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -583,7 +584,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -602,7 +603,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseARemNumericBinaryExp(ARemNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -635,7 +636,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseASubstractNumericBinaryExp(
-			ASubstractNumericBinaryExp node, Context ctxt) throws Throwable
+			ASubstractNumericBinaryExp node, Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -654,7 +655,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -677,7 +678,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -728,7 +729,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -748,7 +749,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	}
 	@Override
 	public Value caseARangeResByBinaryExp(ARangeResByBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -781,7 +782,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseARangeResToBinaryExp(ARangeResToBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -814,7 +815,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -838,7 +839,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -866,7 +867,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -886,7 +887,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseASetUnionBinaryExp(ASetUnionBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -906,7 +907,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered
@@ -970,7 +971,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	
 	@Override
 	public Value caseASubsetBinaryExp(ASubsetBinaryExp node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 				node.getLocation().hit();		// Mark as covered

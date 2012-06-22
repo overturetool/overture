@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.statement;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -17,7 +18,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 {
 
 	public static Value eval( ATixeStmtAlternative node,
-			LexLocation location, Value exval, Context ctxt) throws Throwable
+			LexLocation location, Value exval, Context ctxt) throws AnalysisException
 	{
 		Context evalContext = null;
 

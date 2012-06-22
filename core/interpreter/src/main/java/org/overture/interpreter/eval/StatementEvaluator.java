@@ -2,6 +2,7 @@ package org.overture.interpreter.eval;
 
 import java.util.ListIterator;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -79,7 +80,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAAlwaysStm(AAlwaysStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -113,7 +114,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAAssignmentStm(AAssignmentStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -167,7 +168,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAAtomicStm(AAtomicStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -211,7 +212,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseACallObjectStm(ACallObjectStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		node.getField().location.hit();
@@ -266,7 +267,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseACallStm(ACallStm node, Context ctxt) throws Throwable
+	public Value caseACallStm(ACallStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -307,7 +308,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseACasesStm(ACasesStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -330,7 +331,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAClassInvariantStm(AClassInvariantStm node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		for (PDefinition d: node.getInvDefs())
 		{
@@ -354,7 +355,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseACyclesStm(ACyclesStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		node.getLocation().hit();
 		node.getCycles().getLocation().hit();
@@ -378,7 +379,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseADurationStm(ADurationStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		node.getLocation().hit();
 		node.getDuration().getLocation().hit();
@@ -402,7 +403,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAElseIfStm(AElseIfStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -418,14 +419,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAErrorStm(AErrorStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return RuntimeError.abort(node.getLocation(),4036, "ERROR statement reached", ctxt);
 	}
 	
 	@Override
-	public Value caseAExitStm(AExitStm node, Context ctxt) throws Throwable
+	public Value caseAExitStm(AExitStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		Value v = null;
@@ -444,7 +445,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAForAllStm(AForAllStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -481,7 +482,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAForIndexStm(AForIndexStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -521,7 +522,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAForPatternBindStm(AForPatternBindStm node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -627,7 +628,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseAIfStm(AIfStm node, Context ctxt) throws Throwable
+	public Value caseAIfStm(AIfStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -661,7 +662,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseALetBeStStm(ALetBeStStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		try
@@ -722,7 +723,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseADefLetDefStm(ADefLetDefStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		Context evalContext = new Context(node.getLocation(), "let statement", ctxt);
@@ -754,7 +755,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return RuntimeError.abort(node.getLocation(),4041, "'is not yet specified' statement reached", ctxt);
@@ -762,7 +763,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAReturnStm(AReturnStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -778,7 +779,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
-			Context ctxt) throws Throwable
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -795,14 +796,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	@Override
 	public Value caseANonDeterministicSimpleBlockStm(
 			ANonDeterministicSimpleBlockStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return SSimpleBlockStmAssistantInterpreter.evalBlock(node,ctxt);
 	}
 	
 	@Override
-	public Value caseASkipStm(ASkipStm node, Context ctxt) throws Throwable
+	public Value caseASkipStm(ASkipStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new VoidValue();
@@ -810,7 +811,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseASpecificationStm(ASpecificationStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return RuntimeError.abort(node.getLocation(),4047, "Cannot execute specification statement", ctxt);
@@ -819,7 +820,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAStartStm(AStartStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -857,14 +858,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseASubclassResponsibilityStm(
-			ASubclassResponsibilityStm node, Context ctxt) throws Throwable
+			ASubclassResponsibilityStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return RuntimeError.abort(node.getLocation(),4048, "'is subclass responsibility' statement reached", ctxt);
 	}
 	
 	@Override
-	public Value caseATixeStm(ATixeStm node, Context ctxt) throws Throwable
+	public Value caseATixeStm(ATixeStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		Value rv = null;
@@ -907,7 +908,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	}
 	
 	@Override
-	public Value caseATrapStm(ATrapStm node, Context ctxt) throws Throwable
+	public Value caseATrapStm(ATrapStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		Value rv = null;
@@ -968,7 +969,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAWhileStm(AWhileStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
@@ -994,7 +995,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAPeriodicStm(APeriodicStm node, Context ctxt)
-			throws Throwable
+			throws AnalysisException
 	{
 		return null;	// Never reached - see StartStatement.
 	}
@@ -1003,7 +1004,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	
 	@Override
 	public Value caseAIdentifierStateDesignator(
-			AIdentifierStateDesignator node, Context ctxt) throws Throwable
+			AIdentifierStateDesignator node, Context ctxt) throws AnalysisException
 	{
 		// We lookup the name in a context comprising only state...
 				// return ctxt.getUpdateable().lookup(name.getExplicit(true));
