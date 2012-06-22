@@ -266,27 +266,27 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		}
 
 		@Override
-		public void defaultSClassDefinition(SClassDefinition node) throws Throwable
+		public void defaultSClassDefinition(SClassDefinition node) throws AnalysisException
 		{
 			for (PDefinition def : node.getDefinitions())
 			{
 				if (def instanceof ANamedTraceDefinition)
 				{
 					containers.add(node);
-					throw new Exception("stop search");
+					throw new AnalysisException("stop search");
 				}
 			}
 		}
 
 		@Override
-		public void caseAModuleModules(AModuleModules node) throws Throwable
+		public void caseAModuleModules(AModuleModules node) throws AnalysisException
 		{
 			for (PDefinition def : node.getDefs())
 			{
 				if (def instanceof ANamedTraceDefinition)
 				{
 					containers.add(node);
-					throw new Exception("stop search");
+					throw new AnalysisException("stop search");
 				}
 			}
 		}
