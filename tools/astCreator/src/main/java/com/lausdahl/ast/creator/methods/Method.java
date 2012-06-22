@@ -253,7 +253,7 @@ public abstract class Method
 	{
 		internalPrepare();
 		String tmp = "\t"
-				+ ("public " + (isAbstract ? "abstract " : "") + returnType).trim()
+				+ ("public " + (isAbstract ? "abstract " : "") + (isConstructor?"":returnType)).trim()
 				+ " " + name + "(";
 		for (Argument a : arguments)
 		{

@@ -48,7 +48,7 @@ public class Environment extends BaseEnvironment
 		addCommonTreeInterface(node, iNode);
 		addCommonTreeInterface(token, iToken);
 		
-		analysisException= new AnalysisExceptionDefinition(analysisPackage, "AnalysisException");
+		analysisException= new AnalysisExceptionDefinition(analysisPackage, "AnalysisException",this);
 		addClass(analysisException);
 	}
 

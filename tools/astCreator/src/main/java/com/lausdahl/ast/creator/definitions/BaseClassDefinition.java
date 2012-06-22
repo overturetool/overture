@@ -193,6 +193,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return sb.toString();
 	}
 
+
 	public String getVdmSourceCode(StringBuilder sb)
 	{
 		return "";
