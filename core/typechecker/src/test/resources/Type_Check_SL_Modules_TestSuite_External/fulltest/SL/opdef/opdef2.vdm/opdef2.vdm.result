@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="11" line="15" message="S1 at 6:7 hidden by S1" messageType="warning" number="5008" resource="opdef2.vdm.result"/>
-<message column="7" line="8" message="Definition 'x' not used" messageType="warning" number="5000" resource="opdef2.vdm.result"/>
-<message column="5" line="16" message="Variable 'S1' in scope is not updatable" messageType="error" number="3301" resource="opdef2.vdm.result"/>
-<result/>
-</testResult>

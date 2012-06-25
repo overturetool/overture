@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="10" line="46" message="Too many arguments" messageType="error" number="3059" resource="ifexpr-88.vdm.result"/>
-<message column="15" line="32" message="Expression does not match declared type" messageType="error" number="3051" resource="ifexpr-88.vdm.result"/>
-<result/>
-</testResult>

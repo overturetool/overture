@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="7" line="21" message="Definition 's' not used" messageType="warning" number="5000" resource="type.vdm.result"/>
-<message column="7" line="18" message="Function returns unexpected type" messageType="error" number="3018" resource="type.vdm.result"/>
-<message column="15" line="21" message="Sequence pattern is matched against set of (nat)" messageType="error" number="3203" resource="type.vdm.result"/>
-<result/>
-</testResult>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="11" line="12" message="List comprehension must define one numeric bind variable" messageType="error" number="3155" resource="seqcomprehensionexpr-03.vdm.result"/>
-<result/>
-</testResult>

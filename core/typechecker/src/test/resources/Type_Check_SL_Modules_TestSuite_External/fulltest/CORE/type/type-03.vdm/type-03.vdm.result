@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="7" line="9" message="Definition 'A' not used" messageType="warning" number="5000" resource="type-03.vdm.result"/>
-<result/>
-</testResult>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="57" line="34" message="Sequence application argument must be numeric" messageType="warning" number="3056" resource="fieldselectexpr-08.vdm.result"/>
-<message column="76" line="34" message="Map application argument is incompatible type" messageType="warning" number="3058" resource="fieldselectexpr-08.vdm.result"/>
-<result/>
-</testResult>
