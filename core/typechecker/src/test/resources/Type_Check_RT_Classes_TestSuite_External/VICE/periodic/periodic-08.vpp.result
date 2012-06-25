@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassRtTestCase">
+<message column="7" line="45" message="Class inherits thread definition from multiple supertypes" messageType="error" number="3001" resource="periodic-08.vpp.result"/>
+<message column="7" line="45" message="Ambiguous definitions inherited by C" messageType="error" number="3276" resource="periodic-08.vpp.result"/>
+<result/>
+</testResult>

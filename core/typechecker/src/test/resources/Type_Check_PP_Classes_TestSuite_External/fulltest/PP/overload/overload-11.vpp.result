@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
+<message column="11" line="28" message="Inaccessible member fn(A) of class A" messageType="error" number="3092" resource="overload-11.vpp.result"/>
+<message column="3" line="38" message="Name 'fn(A)' is not in scope" messageType="error" number="3182" resource="overload-11.vpp.result"/>
+<result/>
+</testResult>

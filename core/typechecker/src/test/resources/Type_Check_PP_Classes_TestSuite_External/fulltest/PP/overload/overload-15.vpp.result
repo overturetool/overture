@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
+<message column="11" line="13" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="overload-15.vpp.result"/>
+<message column="9" line="21" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="overload-15.vpp.result"/>
+<message column="8" line="29" message="Duplicate definitions for v" messageType="error" number="3017" resource="overload-15.vpp.result"/>
+<message column="8" line="38" message="Duplicate definitions for v" messageType="error" number="3017" resource="overload-15.vpp.result"/>
+<result/>
+</testResult>

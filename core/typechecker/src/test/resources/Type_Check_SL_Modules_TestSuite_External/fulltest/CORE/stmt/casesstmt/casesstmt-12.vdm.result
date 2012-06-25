@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<message column="8" line="18" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-12.vdm.result"/>
+<result/>
+</testResult>

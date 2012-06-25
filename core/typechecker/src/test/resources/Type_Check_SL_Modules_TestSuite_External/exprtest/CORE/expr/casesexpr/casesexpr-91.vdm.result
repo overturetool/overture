@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<message column="21" line="45" message="Definition 's' not used" messageType="warning" number="5000" resource="casesexpr-91.vdm.result"/>
+<message column="16" line="45" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="casesexpr-91.vdm.result"/>
+<message column="19" line="45" message="Pattern cannot match" messageType="error" number="3311" resource="casesexpr-91.vdm.result"/>
+<result/>
+</testResult>

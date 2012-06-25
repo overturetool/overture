@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
+<message column="13" line="13" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
+<message column="11" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
+<message column="9" line="33" message="Definition 'i' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
+<message column="13" line="44" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
+<message column="11" line="44" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
+<message column="20" line="47" message="r at 47:12 hidden by r" messageType="warning" number="5008" resource="fundefpp.vpp.result"/>
+<message column="20" line="47" message="Definition 'r' not used" messageType="warning" number="5000" resource="fundefpp.vpp.result"/>
+<message column="3" line="4" message="Instance variable 'inst' is not initialized" messageType="warning" number="5001" resource="fundefpp.vpp.result"/>
+<message column="3" line="12" message="Too many parameter patterns" messageType="error" number="3020" resource="fundefpp.vpp.result"/>
+<message column="9" line="34" message="Left hand of &lt; is not numeric" messageType="error" number="3139" resource="fundefpp.vpp.result"/>
+<message column="3" line="44" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="fundefpp.vpp.result"/>
+<message column="3" line="50" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="fundefpp.vpp.result"/>
+<message column="5" line="59" message="State variable 'FunDefTest`inst' cannot be accessed from this context" messageType="error" number="3302" resource="fundefpp.vpp.result"/>
+<message column="5" line="59" message="Cannot access FunDefTest`inst from a static context" messageType="error" number="3181" resource="fundefpp.vpp.result"/>
+<message column="31" line="68" message="Right hand of and is not bool" messageType="error" number="3066" resource="fundefpp.vpp.result"/>
+<result/>
+</testResult>

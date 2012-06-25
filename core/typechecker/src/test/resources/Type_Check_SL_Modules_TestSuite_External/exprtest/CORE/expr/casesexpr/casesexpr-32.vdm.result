@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<message column="19" line="38" message="Name 'CasesExprTest`k' is not in scope" messageType="error" number="3182" resource="casesexpr-32.vdm.result"/>
+<message column="15" line="32" message="Expression does not match declared type" messageType="error" number="3051" resource="casesexpr-32.vdm.result"/>
+<result/>
+</testResult>
