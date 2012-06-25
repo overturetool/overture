@@ -646,7 +646,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     				if (PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
     				{
     					// NB. we skip the DTC enabled check here
-    					v.convertValueTo(node.getTypedef().getType(), ctxt);
+    					v.convertValueTo(PDefinitionAssistantInterpreter.getType(node.getTypedef()), ctxt);
     					return new BooleanValue(true);
     				}
     			}
@@ -1175,7 +1175,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		    		// we evaluate that as well as the postcondition.
 
 		    		boolean result =
-		    			(node.getErrors() == null || node.getPreexpression() == null || node.getPreexpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt)) &&
+		    			(node.getErrors().isEmpty() || node.getPreexpression() == null || node.getPreexpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt)) &&
 		    			node.getPostexpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt).boolValue(ctxt);
 
 		    		node.setErrorLocation( node.getLocation());//FIXME not good 
