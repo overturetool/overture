@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -415,10 +416,14 @@ public class OperationValue extends Value
     			ctxt.setPrepost(0, null);
 				ctxt.threadState.setAtomic(false);
     		}
-		} catch (Throwable e)
+		
+		} catch (AnalysisException e)
 		{
-			RuntimeError.abortRethrow(e);
-			
+			if(e instanceof ValueException)
+			{
+				throw (ValueException) e;
+			}
+			e.printStackTrace();
 		}
 		finally
 		{

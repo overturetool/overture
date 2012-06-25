@@ -48,6 +48,7 @@ public class ASetMultipleBindAssistantInterpreter extends
 			return null;
 		} catch (Throwable e)
 		{
+			RuntimeError.abortRethrow(e);
 			return null;
 		}
 	}

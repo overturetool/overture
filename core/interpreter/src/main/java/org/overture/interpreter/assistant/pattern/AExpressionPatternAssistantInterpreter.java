@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.pattern;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -21,16 +22,24 @@ public class AExpressionPatternAssistantInterpreter extends
 	{
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
-		try
-		{
-			if (!expval.equals(p.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt)))
-			{
-				RuntimeError.patternFail(4110, "Expression pattern match failed",p.getLocation());
-			}
-		} catch (Throwable e)
-		{
-			e.printStackTrace();
-		}
+		
+			
+				try
+				{
+					if (!expval.equals(p.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt)))
+					{
+						RuntimeError.patternFail(4110, "Expression pattern match failed",p.getLocation());
+					}
+				} catch (AnalysisException e)
+				{
+					if(e instanceof PatternMatchException)
+					{
+						throw (PatternMatchException)e;
+					}
+					e.printStackTrace();
+				}
+			
+		
 
 		result.add(new NameValuePairList());
 		return result;		// NB no values for a match, as there's no definition

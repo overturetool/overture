@@ -28,13 +28,14 @@ import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AExitStm;
+import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
-import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
@@ -1009,5 +1010,111 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		// We lookup the name in a context comprising only state...
 				// return ctxt.getUpdateable().lookup(name.getExplicit(true));
 				return ctxt.lookup(node.getName().getExplicit(true));
+	}
+	
+	@Override
+	public Value caseAFieldStateDesignator(AFieldStateDesignator node,
+			Context ctxt) throws AnalysisException
+	{
+		Value result = null;
+
+		try
+		{
+			result = node.getObject().apply(VdmRuntime.getStatementEvaluator(),ctxt).deref();
+
+			if (result instanceof ObjectValue && node.getObjectfield() != null)
+			{
+    			ObjectValue ov = result.objectValue(ctxt);
+    			Value rv = ov.get(node.getObjectfield(), false);
+
+    			if (rv == null)
+    			{
+    				RuntimeError.abort(node.getLocation(),4045, "Object does not contain value for field: " + node.getField(), ctxt);
+    			}
+
+    			return rv;
+			}
+			else if (result instanceof RecordValue)
+			{
+    			RecordValue rec = result.recordValue(ctxt);
+    			result = rec.fieldmap.get(node.getField().name);
+
+    			if (result == null)
+    			{
+    				RuntimeError.abort(node.getField().getLocation(),4037, "No such field: " + node.getField(), ctxt);
+    			}
+
+    			return result;
+			}
+		}
+		catch (ValueException e)
+		{
+			RuntimeError.abort(node.getLocation(),e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Value caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
+			Context ctxt) throws AnalysisException
+	{
+		Value result = null;
+
+		try
+		{
+			Value root = node.getMapseq().apply(VdmRuntime.getStatementEvaluator(),ctxt);
+			Value index = node.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+
+			if (root.isType(MapValue.class))
+			{
+				index = index.convertTo(node.getMapType().getFrom(), ctxt);
+				ValueMap map = root.mapValue(ctxt);
+				result = map.get(index);
+
+				if (result == null && root instanceof UpdatableValue)
+				{
+					// Assignment to a non-existent map key creates the value
+					// in order to have it updated.
+
+					UpdatableValue ur = (UpdatableValue)root;
+					result = UpdatableValue.factory(ur.listeners);
+					map.put(index, result);
+				}
+			}
+			else if (root.isType(SeqValue.class))
+			{
+				ValueList seq = root.seqValue(ctxt);
+				int i = (int)index.intValue(ctxt)-1;
+
+				if (!seq.inbounds(i))
+				{
+					if (i == seq.size())
+					{
+						// Assignment to an index one greater than the length
+						// creates the value in order to have it updated.
+
+						UpdatableValue ur = (UpdatableValue)root;
+						seq.add(UpdatableValue.factory(ur.listeners));
+					}
+					else
+					{
+						RuntimeError.abort(node.getExp().getLocation(),4019, "Sequence cannot extend to key: " + index, ctxt);
+					}
+				}
+
+				result = seq.get(i);
+			}
+			else
+			{
+				RuntimeError.abort(node.getLocation(),4020, "State value is neither a sequence nor a map", ctxt);
+			}
+		}
+		catch (ValueException e)
+		{
+			RuntimeError.abort(node.getLocation(),e);
+		}
+
+		return result;
 	}
 }
