@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4056: Postcondition failure: post_h in 'A' (functions-08.vdm) at line 30:6" resource="functions-08.vdm" value="Error 4056: Postcondition failure: post_h in 'A' (functions-08.vdm) at line 30:6"/>
+</result>
+</testResult>

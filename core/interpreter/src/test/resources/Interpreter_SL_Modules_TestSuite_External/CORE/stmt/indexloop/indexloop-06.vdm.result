@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4038: Loop, from 25 to 100 by 0 will never terminate in 'A' (indexloop-06.vdm) at line 16:3" resource="indexloop-06.vdm" value="Error 4038: Loop, from 25 to 100 by 0 will never terminate in 'A' (indexloop-06.vdm) at line 16:3"/>
+</result>
+</testResult>

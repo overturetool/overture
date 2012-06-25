@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4014: Iota does not select a result in 'A' (iota-07.vdm) at line 12:10" resource="iota-07.vdm" value="Error 4014: Iota does not select a result in 'A' (iota-07.vdm) at line 12:10"/>
+</result>
+</testResult>

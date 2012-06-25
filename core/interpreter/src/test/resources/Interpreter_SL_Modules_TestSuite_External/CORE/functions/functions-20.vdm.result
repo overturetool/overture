@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4055: Precondition failure: pre_h2 in 'A' (functions-20.vdm) at line 35:5" resource="functions-20.vdm" value="Error 4055: Precondition failure: pre_h2 in 'A' (functions-20.vdm) at line 35:5"/>
+</result>
+</testResult>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="" resource="assignstmt-21.vdm" value="null"/>
+</result>
+</testResult>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4023: Mu type conflict? No field tag i in 'A' (recmodify-12.vdm) at line 19:12" resource="recmodify-12.vdm" value="Error 4023: Mu type conflict? No field tag i in 'A' (recmodify-12.vdm) at line 19:12"/>
+</result>
+</testResult>

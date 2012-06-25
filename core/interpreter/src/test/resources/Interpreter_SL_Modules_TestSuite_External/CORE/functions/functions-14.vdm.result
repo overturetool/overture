@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4024: 'not yet specified' expression reached in 'A' (functions-14.vdm) at line 12:3" resource="functions-14.vdm" value="Error 4024: 'not yet specified' expression reached in 'A' (functions-14.vdm) at line 12:3"/>
+</result>
+</testResult>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4094: Can't get bool value of nat1 in 'A' (iota-04.vdm) at line 11:10" resource="iota-04.vdm" value="Error 4094: Can't get bool value of nat1 in 'A' (iota-04.vdm) at line 11:10"/>
+</result>
+</testResult>

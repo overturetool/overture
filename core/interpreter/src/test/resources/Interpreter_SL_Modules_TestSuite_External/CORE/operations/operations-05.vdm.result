@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4069: Parameter patterns do not match arguments in 'A' (operations-05.vdm) at line 11:6" resource="operations-05.vdm" value="Error 4069: Parameter patterns do not match arguments in 'A' (operations-05.vdm) at line 11:6"/>
+</result>
+</testResult>

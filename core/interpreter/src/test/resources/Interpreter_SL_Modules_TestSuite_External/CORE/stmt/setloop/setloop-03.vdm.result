@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4100: Can't get set value of nat in 'A' (setloop-03.vdm) at line 18:3" resource="setloop-03.vdm" value="Error 4100: Can't get set value of nat in 'A' (setloop-03.vdm) at line 18:3"/>
+</result>
+</testResult>

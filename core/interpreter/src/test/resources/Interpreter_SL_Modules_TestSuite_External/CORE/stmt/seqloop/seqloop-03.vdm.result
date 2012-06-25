@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4099: Can't get sequence value of nat in 'A' (seqloop-03.vdm) at line 18:3" resource="seqloop-03.vdm" value="Error 4099: Can't get sequence value of nat in 'A' (seqloop-03.vdm) at line 18:3"/>
+</result>
+</testResult>

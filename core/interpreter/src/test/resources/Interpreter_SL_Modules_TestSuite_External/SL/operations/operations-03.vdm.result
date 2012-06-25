@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4066: Cannot call implicit operation: g in 'A' (operations-03.vdm) at line 42:7" resource="operations-03.vdm" value="Error 4066: Cannot call implicit operation: g in 'A' (operations-03.vdm) at line 42:7"/>
+</result>
+</testResult>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4060: Type invariant violated for D2 in 'B' (types-01.vdm) at line 92:15" resource="types-01.vdm" value="Error 4060: Type invariant violated for D2 in 'B' (types-01.vdm) at line 92:15"/>
+</result>
+</testResult>

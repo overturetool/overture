@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4144: State init expression cannot be executed in 'A' (state-04.vdm) at line 12:7" resource="state-04.vdm" value="Error 4144: State init expression cannot be executed in 'A' (state-04.vdm) at line 12:7"/>
+</result>
+</testResult>

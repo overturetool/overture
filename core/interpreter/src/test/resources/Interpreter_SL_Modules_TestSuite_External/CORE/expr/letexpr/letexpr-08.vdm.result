@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4060: Type invariant violated for Even in 'A' (letexpr-08.vdm) at line 21:5" resource="letexpr-08.vdm" value="Error 4060: Type invariant violated for Even in 'A' (letexpr-08.vdm) at line 21:5"/>
+</result>
+</testResult>

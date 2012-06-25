@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.external.ExternalInterpreterSlTestCase">
-<result>
-<output object="rO0ABXNyAClvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLlZvaWRWYWx1ZQAAAAAAAAABAgAAeHIAJW9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuVmFsdWUAAAAAAAAAAQIAAHhw" resource="exception-10.vdm" value="()"/>
-</result>
-</testResult>

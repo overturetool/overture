@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4132: Using undefined value in 'A' (console) at line 1:1" resource="undefined-01.vdm" value="Error 4132: Using undefined value in 'A' (console) at line 1:1"/>
+</result>
+</testResult>

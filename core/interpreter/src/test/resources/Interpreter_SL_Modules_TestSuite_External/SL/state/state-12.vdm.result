@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4060: Type invariant violated for U in 'A' (state-12.vdm) at line 14:19" resource="state-12.vdm" value="Error 4060: Type invariant violated for U in 'A' (state-12.vdm) at line 14:19"/>
+</result>
+</testResult>

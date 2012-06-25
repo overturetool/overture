@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4079: Type invariant violated by mk_ arguments in 'A' (recordexpr-09.vdm) at line 15:8" resource="recordexpr-09.vdm" value="Error 4079: Type invariant violated by mk_ arguments in 'A' (recordexpr-09.vdm) at line 15:8"/>
+</result>
+</testResult>

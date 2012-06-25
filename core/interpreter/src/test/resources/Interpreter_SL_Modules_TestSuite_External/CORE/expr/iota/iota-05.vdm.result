@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4100: Can't get set value of nat1 in 'A' (iota-05.vdm) at line 11:15" resource="iota-05.vdm" value="Error 4100: Can't get set value of nat1 in 'A' (iota-05.vdm) at line 11:15"/>
+</result>
+</testResult>

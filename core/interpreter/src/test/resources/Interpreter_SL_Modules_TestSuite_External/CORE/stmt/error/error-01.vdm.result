@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4036: ERROR statement reached in 'A' (error-01.vdm) at line 9:1" resource="error-01.vdm" value="Error 4036: ERROR statement reached in 'A' (error-01.vdm) at line 9:1"/>
+</result>
+</testResult>

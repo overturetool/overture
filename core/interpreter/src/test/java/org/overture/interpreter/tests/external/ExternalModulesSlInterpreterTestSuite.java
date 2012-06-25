@@ -7,19 +7,21 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.overture.ast.lex.LexLocation;
 import org.overturetool.test.framework.BaseTestSuite;
 
 public class ExternalModulesSlInterpreterTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		org.overturetool.test.framework.Properties.recordTestResults = true;
+		LexLocation.absoluteToStringLocation = false;
+		org.overturetool.test.framework.Properties.recordTestResults = false;
 		String name = "Interpreter SL Modules TestSuite External";
 		File root = getBasePath("sltest/cgip");
 		TestSuite test = null;
 		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalInterpreterSlTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalStringInterpreterSlTestCase.class);
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

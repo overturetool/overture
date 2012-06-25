@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<result>
+<output object="Error 4025: Map key not within sequence index range: 6 in 'A' (seqoverride-03.vdm) at line 19:8" resource="seqoverride-03.vdm" value="Error 4025: Map key not within sequence index range: 6 in 'A' (seqoverride-03.vdm) at line 19:8"/>
+</result>
+</testResult>
