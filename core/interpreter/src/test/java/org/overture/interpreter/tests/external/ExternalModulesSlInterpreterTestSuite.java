@@ -16,7 +16,7 @@ public class ExternalModulesSlInterpreterTestSuite extends BaseTestSuite
 	{
 		LexLocation.absoluteToStringLocation = false;
 		org.overturetool.test.framework.Properties.recordTestResults = false;
-		String name = "Interpreter SL Modules TestSuite External";
+		String name = "Interpreter_SL_Modules_TestSuite_External";
 		File root = getBasePath("sltest/cgip");
 		TestSuite test = null;
 		if (root != null && root.exists())

@@ -1604,7 +1604,9 @@ public class TypeCheckerExpVisitor extends
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(PTypeAssistantTC.typeResolve(tb.getType(), null, rootVisitor, question));
 		}
-
+		
+		node.setParamPatterns(paramPatterns);
+		
 		PDefinitionListAssistantTC.implicitDefinitions(paramDefinitions, question.env);
 		PDefinitionListAssistantTC.typeCheck(paramDefinitions, rootVisitor, question);
 
