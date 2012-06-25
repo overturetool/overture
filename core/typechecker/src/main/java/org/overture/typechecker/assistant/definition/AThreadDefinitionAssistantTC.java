@@ -45,7 +45,7 @@ public class AThreadDefinitionAssistantTC {
 				AstFactory.newAExplicitOperationDefinition(
 						d.getOperationName(), type, new Vector<PPattern>(), null,null, d.getStatement().clone());
 
-		def.setAccess(d.getAccess());
+		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}

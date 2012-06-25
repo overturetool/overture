@@ -172,4 +172,58 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		}
 	}
 
+	public static boolean isRuntime(PDefinition idef)
+	{
+		switch(idef.kindPDefinition())
+		{
+			case IMPORTED:
+				return isRuntime(((AImportedDefinition)idef).getDef());
+			case INHERITED:
+				return isRuntime(((AInheritedDefinition)idef).getSuperdef());
+			case RENAMED:
+				return isRuntime(((ARenamedDefinition)idef).getDef());
+			case TYPE:
+				return false;
+			default:
+				return true;
+			
+		}
+	}
+
+	public static boolean isValueDefinition(PDefinition d)
+	{
+		switch(d.kindPDefinition())
+		{
+			case IMPORTED:
+				return isValueDefinition(((AImportedDefinition)d).getDef());
+			case INHERITED:
+				return isValueDefinition(((AInheritedDefinition)d).getSuperdef());
+			case RENAMED:
+				return isValueDefinition(((ARenamedDefinition)d).getDef());
+			case VALUE:
+				return true;
+			default:
+				return false;
+			
+		}
+	}
+
+	public static boolean isInstanceVariable(PDefinition d)
+	{
+		switch(d.kindPDefinition())
+		{
+			case IMPORTED:
+				return isValueDefinition(((AImportedDefinition)d).getDef());
+			case INHERITED:
+				return isValueDefinition(((AInheritedDefinition)d).getSuperdef());
+			case RENAMED:
+				return isValueDefinition(((ARenamedDefinition)d).getDef());
+			case INSTANCEVARIABLE:
+				return true;
+			default:
+				return false;
+			
+		}
+	}
+
 }

@@ -3,19 +3,24 @@ package org.overture.interpreter.runtime.state;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueListenerList;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
 
+	/** True if the class has a sync section with per or mutex defs. */
+	public boolean hasPermissions;
 	/** The private or protected static values in the class. */
-	public NameValuePairMap privateStaticValues = null;
+	public NameValuePairMap privateStaticValues = new NameValuePairMap();
 	/** The public visible static values in the class. */
-	public NameValuePairMap publicStaticValues = null;
+	public NameValuePairMap publicStaticValues = new NameValuePairMap();
 	/** True if the class' static members are initialized. */
-	protected boolean staticInit = false;
+	public boolean staticInit = false;
 	/** True if the class' static values are initialized. */
-	protected boolean staticValuesInit = false;
+	public boolean staticValuesInit = false;
+	/** A listener list. */
+	public ValueListenerList invlistenerlist = null;
 	
 	/** A delegate Java object for any native methods. */
 	private Delegate delegate = null;
