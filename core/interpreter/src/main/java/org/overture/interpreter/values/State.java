@@ -31,6 +31,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 
@@ -111,8 +112,7 @@ public class State implements ValueListener
 			throw new ContextException(e, definition.getLocation());
 		} catch (Throwable e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RuntimeError.abortRethrow(e);
 		}
 		finally
 		{

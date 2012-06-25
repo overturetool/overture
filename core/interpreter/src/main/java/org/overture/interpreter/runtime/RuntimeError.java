@@ -54,7 +54,15 @@ public class RuntimeError
 
 	public static Value abortRethrow(Throwable e)
 	{
-		throw (RuntimeException) e;
+		if(e instanceof RuntimeException)
+		{
+			throw (RuntimeException) e;
+		}
+		else
+		{
+			e.printStackTrace();
+			return null;
+		}
 		
 	}
 	
