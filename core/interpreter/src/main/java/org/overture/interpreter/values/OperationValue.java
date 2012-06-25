@@ -201,8 +201,8 @@ public class OperationValue extends Value
 
 			LexLocation where = isMutex ? guard.getLocation() : add.getLocation();
 
-			guard = AstFactory.newAAndBooleanBinaryExp(guard,
-				new LexKeywordToken(VDMToken.AND, where), add);
+			guard = AstFactory.newAAndBooleanBinaryExp(guard.clone(),
+				new LexKeywordToken(VDMToken.AND, where), add.clone());
 		}
 	}
 

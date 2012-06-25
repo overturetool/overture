@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -36,12 +37,12 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 	        {
 	        	RuntimeError.abort(d.getLocation(),e);
 	        	return null;
-	        } catch (Throwable e)
+	        } catch (AnalysisException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
-			}
+			} 
 	}
 
 	public static ValueList getValues(AInstanceVariableDefinition d,

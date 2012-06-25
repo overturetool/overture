@@ -45,6 +45,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.scheduler.Lock;
+import org.overture.typechecker.util.HelpLexNameToken;
 
 
 public class ObjectValue extends Value
@@ -196,13 +197,13 @@ public class ObjectValue extends Value
 		// qualified names. Not very efficient... so we try a raw get
 		// first.
 
-		Value rv = members.get(localname);
+		Value rv =null;//FIXME: I commented this because of equals members.get(localname);
 
 		if (rv == null)
 		{
     		for (LexNameToken var: members.keySet())
     		{
-    			if (var.equals(localname))
+    			if (HelpLexNameToken.isEqual( var,localname))
     			{
     				rv = members.get(var);
     				break;

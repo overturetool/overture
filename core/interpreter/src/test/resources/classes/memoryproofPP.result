@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="18" line="19" message="Definition 'access' not used" messageType="warning" number="5000" resource="memoryproofPP.result"/>
+<testResult type="org.overture.interpreter.tests.InterpreterPpTestCase">
+<result>
+<output object="rO0ABXNyACxvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLkJvb2xlYW5WYWx1ZQAAAAAAAAABAgABWgAFdmFsdWV4cgAlb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnZhbHVlcy5WYWx1ZQAAAAAAAAABAgAAeHAB" resource="memoryproofPP" value="true"/>
+</result>
 </testResult>

@@ -1123,6 +1123,7 @@ public class TypeCheckerExpVisitor extends
 			if (memberName == null)
 			{
 				memberName = AClassTypeAssistantTC.getMemberName(cls, node.getField());
+				node.setMemberName(memberName);
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
