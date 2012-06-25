@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.overturetool.core</groupId>
+	<artifactId>vdmj_compatibility_tests</artifactId>
+		<version>2.2.0</version>
+	</parent>
+	<groupId>org.overturetool.core.vdmj_compatibility_tests</groupId>
+	<artifactId>vdmjinterpreter</artifactId>
+<version>2.2.0</version>
+	<name>Test for the VDMJ interpreter</name>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Test?.java</include>
+						<include>**/*TestSuite.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+
+	<dependencies>
+		<dependency>
+            <groupId>org.overturetool.core</groupId>
+            <artifactId>testframework</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>vdmj</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>
+				org.overturetool.core.vdmj_compatibility_tests
+			</groupId>
+			<artifactId>vdmj_compatibility_utils</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+	</dependencies>
+</project>
