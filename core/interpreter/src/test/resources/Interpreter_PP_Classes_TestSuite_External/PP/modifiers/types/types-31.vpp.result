@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4087: Cannot convert mk_T(3) (T) to (unresolved A`T) in 'B' (types-31.vpp) at line 28:14" resource="types-31.vpp" value="Error 4087: Cannot convert mk_T(3) (T) to (unresolved A`T) in 'B' (types-31.vpp) at line 28:14"/>
+</result>
+</testResult>

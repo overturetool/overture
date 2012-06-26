@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4097: Can't get record value of undefined in 'B' (invoke-02.vpp) at line 28:10" resource="invoke-02.vpp" value="Error 4097: Can't get record value of undefined in 'B' (invoke-02.vpp) at line 28:10"/>
+</result>
+</testResult>

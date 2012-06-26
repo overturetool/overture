@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.overture.ast.patterns.ANilPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.Value;
@@ -22,7 +22,7 @@ public class ANilPatternAssistantInterpreter extends ANilPatternAssistantTC
 
 		if (!(expval.deref() instanceof NilValue))
 		{
-			RuntimeError.patternFail(4106, "Nil pattern match failed",p.getLocation());
+			VdmRuntimeError.patternFail(4106, "Nil pattern match failed",p.getLocation());
 		}
 
 		result.add(new NameValuePairList());

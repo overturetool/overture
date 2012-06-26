@@ -10,7 +10,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
@@ -38,7 +38,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -78,7 +78,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	

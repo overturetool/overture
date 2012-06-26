@@ -1,0 +1,26 @@
+-- This file has been automatically updated wrt. VDM++ Lang.Adjust, 1th iteration
+-- This file has been automatically updated wrt. VDM++ Lang.Adjust, 1th iteration
+
+class A
+
+end A
+
+class C
+
+functions
+
+public  f: () -> <C> 
+  f () ==
+    <C>
+
+end C
+
+class B is subclass of A,C
+
+operations 
+
+  public Test : () ==> <C>  
+  Test () ==
+    return f()
+
+end B

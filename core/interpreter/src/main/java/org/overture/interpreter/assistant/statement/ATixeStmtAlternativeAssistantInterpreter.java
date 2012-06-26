@@ -8,7 +8,7 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.Value;
@@ -41,7 +41,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 				}
 				else
 				{
-					RuntimeError.abort(setbind.getLocation(),4049, "Value " + exval + " is not in set bind", ctxt);
+					VdmRuntimeError.abort(setbind.getLocation(),4049, "Value " + exval + " is not in set bind", ctxt);
 				}
 			}
 			else

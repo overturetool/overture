@@ -8,7 +8,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.NameValuePairList;
@@ -41,7 +41,7 @@ public class AEqualsDefinitionAssistantInterpreter
 			}
 			catch (PatternMatchException e)
 			{
-				RuntimeError.abort(e, initialContext);
+				VdmRuntimeError.abort(e, initialContext);
 			}
 		}
 		else if (d.getTypebind() != null)
@@ -53,11 +53,11 @@ public class AEqualsDefinitionAssistantInterpreter
 			}
 			catch (PatternMatchException e)
 			{
-				RuntimeError.abort(e, initialContext);
+				VdmRuntimeError.abort(e, initialContext);
 			}
 			catch (ValueException e)
 			{
-				RuntimeError.abort(d.getLocation(),e);
+				VdmRuntimeError.abort(d.getLocation(),e);
 			}
 		}
 		else if (d.getSetbind() != null)
@@ -68,18 +68,18 @@ public class AEqualsDefinitionAssistantInterpreter
 
 				if (!set.contains(v))
 				{
-					RuntimeError.abort(d.getLocation(),4002, "Expression value is not in set bind", initialContext);
+					VdmRuntimeError.abort(d.getLocation(),4002, "Expression value is not in set bind", initialContext);
 				}
 
 				nvpl = PPatternAssistantInterpreter.getNamedValues(d.getSetbind().getPattern() ,v, initialContext);
 			}
 			catch (PatternMatchException e)
 			{
-				RuntimeError.abort(e, initialContext);
+				VdmRuntimeError.abort(e, initialContext);
 			}
 			catch (ValueException e)
 			{
-				RuntimeError.abort(d.getLocation(),e);
+				VdmRuntimeError.abort(d.getLocation(),e);
 			} catch (Throwable e)
 			{
 				// TODO Auto-generated catch block

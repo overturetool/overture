@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
@@ -25,12 +25,12 @@ public class ACharacterPatternAssistantInterpreter extends
 		{
 			if (expval.charValue(ctxt) != p.getValue().unicode)
 			{
-				RuntimeError.patternFail(4107, "Character pattern match failed",p.getLocation());
+				VdmRuntimeError.patternFail(4107, "Character pattern match failed",p.getLocation());
 			}
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,p.getLocation());
+			VdmRuntimeError.patternFail(e,p.getLocation());
 		}
 
 		result.add(new NameValuePairList());

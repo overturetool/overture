@@ -37,7 +37,7 @@ import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubstractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.BooleanValue;
@@ -102,7 +102,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(false);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(lv.boolValue(ctxt) == rv.boolValue(ctxt));
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -156,7 +156,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(true);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -195,7 +195,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			}
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 	
@@ -225,7 +225,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 					}
 					catch (ValueException e)
 					{
-						return RuntimeError.abort(node.getLocation(),e);
+						return VdmRuntimeError.abort(node.getLocation(),e);
 					}
 
 					ValueMap result = new ValueMap();
@@ -237,7 +237,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 						if (old != null && !old.equals(rng))
 						{
-							RuntimeError.abort(node.getLocation(),4005, "Duplicate map keys have different values", ctxt);
+							VdmRuntimeError.abort(node.getLocation(),4005, "Duplicate map keys have different values", ctxt);
 						}
 					}
 
@@ -253,7 +253,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	
@@ -282,7 +282,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		        }
 		        catch (ValueException e)
 		        {
-		        	return RuntimeError.abort(node.getLocation(), e);
+		        	return VdmRuntimeError.abort(node.getLocation(), e);
 		        }
 	}
 	
@@ -311,7 +311,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		        }
 		        catch (ValueException e)
 		        {
-		        	return RuntimeError.abort(node.getLocation(), e);
+		        	return VdmRuntimeError.abort(node.getLocation(), e);
 		        }
 	}
 	
@@ -355,7 +355,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		        }
 		        catch (ValueException e)
 		        {
-		        	return RuntimeError.abort(node.getLocation(), e);
+		        	return VdmRuntimeError.abort(node.getLocation(), e);
 		        }
 	}
 	
@@ -376,7 +376,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(), e);
+					return VdmRuntimeError.abort(node.getLocation(), e);
 				}
 
 				ValueMap result = new ValueMap();
@@ -391,7 +391,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 					if (old != null && !old.equals(rng))
 					{
-						RuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: " + k, ctxt);
+						VdmRuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: " + k, ctxt);
 					}
 				}
 
@@ -427,7 +427,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(), e);
+					return VdmRuntimeError.abort(node.getLocation(), e);
 				}
 	}
 
@@ -450,7 +450,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(div(lv, rv), ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -469,7 +469,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(lv / rv, ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -488,7 +488,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(lv.realValue(ctxt) >= rv.realValue(ctxt));
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -507,7 +507,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(lv.realValue(ctxt) > rv.realValue(ctxt));
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -526,7 +526,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(lv.realValue(ctxt) <= rv.realValue(ctxt));
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -545,7 +545,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return new BooleanValue(lv.realValue(ctxt) < rv.realValue(ctxt));
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -578,7 +578,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(lv - rv * (long) Math.floor(lv / rv), ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -597,7 +597,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(lv + rv, ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -630,7 +630,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(lv - rv * div(lv, rv), ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -649,7 +649,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(lv - rv, ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 
@@ -668,7 +668,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return NumericValue.valueOf(lv * rv, ctxt);
 		} catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
 	
@@ -712,7 +712,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 							if (iv < 1 || iv > seq.size())
 							{
-								RuntimeError.abort(node.getLocation(),4025, "Map key not within sequence index range: " + k, ctxt);
+								VdmRuntimeError.abort(node.getLocation(),4025, "Map key not within sequence index range: " + k, ctxt);
 							}
 
 							result.set(iv-1, map.get(k));
@@ -723,7 +723,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	
@@ -744,7 +744,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	@Override
@@ -764,7 +764,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 
 				ValueMap modified = new ValueMap(map);
@@ -797,7 +797,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 
 				ValueMap modified = new ValueMap(map);
@@ -833,7 +833,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	
@@ -854,7 +854,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 
 				for (Value r: togo)
@@ -881,7 +881,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	
@@ -901,7 +901,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	
@@ -934,14 +934,14 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 		    				if (r == null)
 		    				{
-								RuntimeError.abort(node.getLocation(), 4133, "Map range is not a subset of its domain: " + k, ctxt);
+								VdmRuntimeError.abort(node.getLocation(), 4133, "Map range is not a subset of its domain: " + k, ctxt);
 		    				}
 
 							Value old = result.put(k, r);
 
 							if (old != null && !old.equals(r))
 							{
-								RuntimeError.abort(node.getLocation(), 4030, "Duplicate map keys have different values: " + k, ctxt);
+								VdmRuntimeError.abort(node.getLocation(), 4030, "Duplicate map keys have different values: " + k, ctxt);
 							}
 						}
 
@@ -960,12 +960,12 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		    			return NumericValue.valueOf(Math.pow(ld, rd), ctxt);
 		    		}
 
-		    		return RuntimeError.abort(node.getLocation(), 4031,
+		    		return VdmRuntimeError.abort(node.getLocation(), 4031,
 		    			"First arg of '**' must be a map, function or number", ctxt);
 		 		}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(), e);
+					return VdmRuntimeError.abort(node.getLocation(), e);
 				}
 	}
 	
@@ -985,7 +985,7 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(), e);
+					return VdmRuntimeError.abort(node.getLocation(), e);
 				}
 	}
 

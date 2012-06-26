@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4000: Cannot instantiate abstract class E in 'E' (reperr-30.vpp) at line 29:7" resource="reperr-30.vpp" value="Error 4000: Cannot instantiate abstract class E in 'E' (reperr-30.vpp) at line 29:7"/>
+</result>
+</testResult>

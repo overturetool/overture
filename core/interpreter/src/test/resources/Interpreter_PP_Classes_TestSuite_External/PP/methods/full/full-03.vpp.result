@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4069: Parameter patterns do not match arguments in 'B' (full-03.vpp) at line 51:5" resource="full-03.vpp" value="Error 4069: Parameter patterns do not match arguments in 'B' (full-03.vpp) at line 51:5"/>
+</result>
+</testResult>

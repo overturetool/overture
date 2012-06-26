@@ -21,7 +21,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -85,7 +85,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		if (node.getIsAbstract())
 		{
-			RuntimeError.abort(node.getLocation(),4000, "Cannot instantiate abstract class " + node.getName(), ctxt);
+			VdmRuntimeError.abort(node.getLocation(),4000, "Cannot instantiate abstract class " + node.getName(), ctxt);
 		}
 
 		return makeNewInstance(node,
@@ -157,7 +157,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 				if (v == null)
 				{
-					RuntimeError.abort(node.getLocation(),6, "Constructor for " + node.getName().name +
+					VdmRuntimeError.abort(node.getLocation(),6, "Constructor for " + node.getName().name +
 											" can't find " + idef.getName(), ctxt);
 				}
 			}

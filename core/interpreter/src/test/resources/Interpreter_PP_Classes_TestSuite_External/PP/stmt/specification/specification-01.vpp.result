@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4047: Cannot execute specification statement in 'A' (specification-01.vpp) at line 14:5" resource="specification-01.vpp" value="Error 4047: Cannot execute specification statement in 'A' (specification-01.vpp) at line 14:5"/>
+</result>
+</testResult>

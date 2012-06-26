@@ -9,7 +9,7 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
@@ -33,12 +33,12 @@ public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getPlist().size())
 		{
-			RuntimeError.patternFail(4123, "Tuple expression does not match pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4123, "Tuple expression does not match pattern",pattern.getLocation());
 		}
 
 		ListIterator<Value> iter = values.listIterator();
@@ -78,7 +78,7 @@ public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 						{
 							if (!v.equals(nvp.value))
 							{
-								RuntimeError.patternFail(4124, "Values do not match tuple pattern",pattern.getLocation());
+								VdmRuntimeError.patternFail(4124, "Values do not match tuple pattern",pattern.getLocation());
 							}
 						}
 					}
@@ -94,7 +94,7 @@ public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4124, "Values do not match tuple pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4124, "Values do not match tuple pattern",pattern.getLocation());
 		}
 
 		return finalResults;

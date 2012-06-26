@@ -9,7 +9,7 @@ import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
@@ -33,12 +33,12 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getPlist().size())
 		{
-			RuntimeError.patternFail(4117, "Wrong number of elements for sequence pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4117, "Wrong number of elements for sequence pattern",pattern.getLocation());
 		}
 
 		ListIterator<Value> iter = values.listIterator();
@@ -84,7 +84,7 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 						{
 							if (!v.equals(nvp.value))
 							{
-								RuntimeError.patternFail(4118, "Values do not match sequence pattern",pattern.getLocation());
+								VdmRuntimeError.patternFail(4118, "Values do not match sequence pattern",pattern.getLocation());
 							}
 						}
 					}
@@ -100,7 +100,7 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4118, "Values do not match sequence pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4118, "Values do not match sequence pattern",pattern.getLocation());
 		}
 
 		return finalResults;

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4087: Cannot convert 'a' (char) to set of (real) in 'A' (type-01.vpp) at line 57:7" resource="type-01.vpp" value="Error 4087: Cannot convert 'a' (char) to set of (real) in 'A' (type-01.vpp) at line 57:7"/>
+</result>
+</testResult>

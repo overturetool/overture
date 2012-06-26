@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4036: ERROR statement reached in 'A' (depend-12.vpp) at line 40:10" resource="depend-12.vpp" value="Error 4036: ERROR statement reached in 'A' (depend-12.vpp) at line 40:10"/>
+</result>
+</testResult>

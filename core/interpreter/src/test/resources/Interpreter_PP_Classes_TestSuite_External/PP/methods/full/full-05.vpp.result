@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4071: Precondition failure: pre_m4 in 'B' (full-05.vpp) at line 50:15" resource="full-05.vpp" value="Error 4071: Precondition failure: pre_m4 in 'B' (full-05.vpp) at line 50:15"/>
+</result>
+</testResult>

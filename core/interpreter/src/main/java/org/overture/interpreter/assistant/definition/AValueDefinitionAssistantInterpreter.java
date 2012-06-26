@@ -7,7 +7,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.NameValuePairList;
@@ -32,14 +32,14 @@ public class AValueDefinitionAssistantInterpreter extends
      	}
 	    catch (ValueException e)
      	{
-     		RuntimeError.abort(d.getLocation(),e);
+     		VdmRuntimeError.abort(d.getLocation(),e);
      	}
 		catch (PatternMatchException e)
 		{
-			RuntimeError.abort(e, initialContext);
+			VdmRuntimeError.abort(e, initialContext);
 		} catch (Throwable e)
 		{
-			RuntimeError.abortRethrow(e);
+			VdmRuntimeError.abortRethrow(e);
 		}
 
 		return null;

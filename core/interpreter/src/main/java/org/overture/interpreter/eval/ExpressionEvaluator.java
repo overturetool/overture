@@ -22,6 +22,8 @@ import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfBaseClassExp;
+import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
@@ -40,6 +42,7 @@ import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.ASameBaseClassExp;
 import org.overture.ast.expressions.ASameClassExp;
+import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
@@ -70,6 +73,8 @@ import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinition
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
+import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistant;
 import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
@@ -80,9 +85,9 @@ import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.scheduler.SharedStateListner;
 import org.overture.interpreter.scheduler.SystemClock;
 import org.overture.interpreter.values.BooleanValue;
@@ -171,12 +176,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     		}
 			else
 			{
-    			return RuntimeError.abort(node.getLocation(),4003, "Value " + object + " cannot be applied", ctxt);
+    			return VdmRuntimeError.abort(node.getLocation(),4003, "Value " + object + " cannot be applied", ctxt);
 			}
     	}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -206,7 +211,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			return node.getOthers().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
 		}
 
-		return RuntimeError.abort(node.getLocation(),4004, "No cases apply for " + val, ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4004, "No cases apply for " + val, ctxt);
 	}
 	
 	@Override
@@ -261,7 +266,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -279,7 +284,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		} 
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		for (Value val: allValues)
@@ -301,7 +306,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	        }
 	        catch (ValueException e)
 	        {
-	        	RuntimeError.abort(node.getLocation(),e);
+	        	VdmRuntimeError.abort(node.getLocation(),e);
 	        }
 			catch (PatternMatchException e)
 			{
@@ -367,7 +372,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 	    catch (ValueException e)
 	    {
-	    	RuntimeError.abort(node.getLocation(),e);
+	    	VdmRuntimeError.abort(node.getLocation(),e);
 	    }
 
 		return new BooleanValue(false);
@@ -402,14 +407,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     		if (r == null)
     		{
-    			RuntimeError.abort(node.getLocation(),4006, "Type " + objtype + " has no field " + node.getField().name, ctxt);
+    			VdmRuntimeError.abort(node.getLocation(),4006, "Type " + objtype + " has no field " + node.getField().name, ctxt);
     		}
 
     		return r;
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -427,14 +432,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     		if (r == null)
     		{
-    			RuntimeError.abort(node.getLocation(),4007, "No such field in tuple: #" + node.getField(), ctxt);
+    			VdmRuntimeError.abort(node.getLocation(),4007, "No such field in tuple: #" + node.getField(), ctxt);
     		}
 
     		return r;
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -493,7 +498,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 	    catch (ValueException e)
 	    {
-	    	return RuntimeError.abort(node.getLocation(),e);
+	    	return VdmRuntimeError.abort(node.getLocation(),e);
 	    }
 
 		return new BooleanValue(true);
@@ -511,7 +516,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     		if (!fv.uninstantiated)
     		{
-    			RuntimeError.abort(node.getLocation(),3034, "Function is already instantiated: " + fv.name, ctxt);
+    			VdmRuntimeError.abort(node.getLocation(),3034, "Function is already instantiated: " + fv.name, ctxt);
     		}
 
     		PTypeList fixed = new PTypeList();
@@ -525,7 +530,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     				if (t == null)
     				{
-    					RuntimeError.abort(node.getLocation(),4008, "No such type parameter @" + pname + " in scope", ctxt);
+    					VdmRuntimeError.abort(node.getLocation(),4008, "No such type parameter @" + pname + " in scope", ctxt);
     				}
     				else if (t instanceof ParameterValue)
     				{
@@ -534,7 +539,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     				}
     				else
     				{
-    					RuntimeError.abort(node.getLocation(),4009, "Type parameter/local variable name clash, @" + pname, ctxt);
+    					VdmRuntimeError.abort(node.getLocation(),4009, "Type parameter/local variable name clash, @" + pname, ctxt);
     				}
     			}
     			else
@@ -560,7 +565,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -612,7 +617,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     					break;
 
     				default:
-    					RuntimeError.abort(node.getLocation(),4011, "Illegal history operator: " + node.getHop(), ctxt);
+    					VdmRuntimeError.abort(node.getLocation(),4011, "Illegal history operator: " + node.getHop(), ctxt);
 
     			}
     		}
@@ -622,11 +627,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 		catch (Exception e)
 		{
-			return RuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
+			return VdmRuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
 		}
 	}
 	
@@ -693,7 +698,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -710,7 +715,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		for (Value val: allValues)
@@ -724,7 +729,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				{
 					if (result != null && !result.equals(val))
 					{
-						RuntimeError.abort(node.getLocation(),4013, "Iota selects more than one result", ctxt);
+						VdmRuntimeError.abort(node.getLocation(),4013, "Iota selects more than one result", ctxt);
 					}
 
 					result = val;
@@ -732,7 +737,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 	        catch (ValueException e)
 	        {
-	        	RuntimeError.abort(node.getLocation(),e);
+	        	VdmRuntimeError.abort(node.getLocation(),e);
 	        }
 			catch (PatternMatchException e)
 			{
@@ -745,7 +750,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			return result;
 		}
 
-		return RuntimeError.abort(node.getLocation(),4014, "Iota does not select a result", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4014, "Iota does not select a result", ctxt);
 	}
 	
 	@Override
@@ -822,10 +827,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
         catch (ValueException e)
         {
-        	RuntimeError.abort(node.getLocation(),e);
+        	VdmRuntimeError.abort(node.getLocation(),e);
         }
 
-		return RuntimeError.abort(node.getLocation(),4015, "Let be st found no applicable bindings", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4015, "Let be st found no applicable bindings", ctxt);
 	}
 	
 	@Override
@@ -925,14 +930,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 					if (old != null && !old.equals(rng))
 					{
-						RuntimeError.abort(node.getLocation(),4016, "Duplicate map keys have different values: " + dom, ctxt);
+						VdmRuntimeError.abort(node.getLocation(),4016, "Duplicate map keys have different values: " + dom, ctxt);
 					}
 				}
 			}
 		}
 	    catch (ValueException e)
 	    {
-	    	return RuntimeError.abort(node.getLocation(),e);
+	    	return VdmRuntimeError.abort(node.getLocation(),e);
 	    }
 
 		return new MapValue(map);
@@ -955,7 +960,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (old != null && !old.equals(r))
 			{
-				RuntimeError.abort(node.getLocation(),4017, "Duplicate map keys have different values: " + l, ctxt);
+				VdmRuntimeError.abort(node.getLocation(),4017, "Duplicate map keys have different values: " + l, ctxt);
 			}
 		}
 
@@ -995,7 +1000,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 			catch (ValueException e)
 			{
-				RuntimeError.abort(node.getLocation(),4022, "mk_ type argument is not " + node.getType(), ctxt);
+				VdmRuntimeError.abort(node.getLocation(),4022, "mk_ type argument is not " + node.getType(), ctxt);
 			}
 		}
 
@@ -1021,7 +1026,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1041,7 +1046,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
     			if (f == null)
     			{
-        			RuntimeError.abort(node.getLocation(),4023, "Mu type conflict? No field tag " + rm.getTag().name, ctxt);
+        			VdmRuntimeError.abort(node.getLocation(),4023, "Mu type conflict? No field tag " + rm.getTag().name, ctxt);
     			}
     			else
     			{
@@ -1053,7 +1058,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1086,7 +1091,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1103,7 +1108,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return RuntimeError.abort(node.getLocation(),4024, "'not yet specified' expression reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4024, "'not yet specified' expression reached", ctxt);
 	}
 	
 	@Override
@@ -1151,7 +1156,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		    			if (subself == null)
 		    			{
-		    				RuntimeError.abort(node.getLocation(),4026, "Cannot create post_op environment", ctxt);
+		    				VdmRuntimeError.abort(node.getLocation(),4026, "Cannot create post_op environment", ctxt);
 		    			}
 
 		    			// Create an object context using the "self" passed in, rather
@@ -1200,7 +1205,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					return RuntimeError.abort(node.getLocation(),e);
+					return VdmRuntimeError.abort(node.getLocation(),e);
 				}
 	}
 	
@@ -1255,7 +1260,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 				catch (ValueException e)
 				{
-					RuntimeError.abort(node.getLocation(),e);
+					VdmRuntimeError.abort(node.getLocation(),e);
 				}
 			}
 
@@ -1291,7 +1296,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     			}
     			catch (ValueException e)
     			{
-    				RuntimeError.abort(node.getLocation(),e);
+    				VdmRuntimeError.abort(node.getLocation(),e);
     			}
     		}
     		else if (ctxt instanceof ObjectContext)
@@ -1324,7 +1329,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     	}
     	catch (ValueException e)
     	{
-    		return RuntimeError.abort(node.getLocation(),e);
+    		return VdmRuntimeError.abort(node.getLocation(),e);
     	}
 	}
 	
@@ -1363,7 +1368,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1391,7 +1396,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1422,7 +1427,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				{
     				if (nvpl.size() != 1 || !sortOn.isNumeric())
     				{
-    					RuntimeError.abort(node.getLocation(),4029, "Sequence comprehension bindings must be one numeric value", ctxt);
+    					VdmRuntimeError.abort(node.getLocation(),4029, "Sequence comprehension bindings must be one numeric value", ctxt);
     				}
 
     				evalContext.putList(nvpl);
@@ -1437,7 +1442,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 			catch (ValueException e)
 			{
-				RuntimeError.abort(node.getLocation(),e);
+				VdmRuntimeError.abort(node.getLocation(),e);
 			}
 			catch (PatternMatchException e)
 			{
@@ -1553,7 +1558,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return  RuntimeError.abort(node.getLocation(),e);
+			return  VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return new SetValue(set);
@@ -1580,7 +1585,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1610,7 +1615,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1619,7 +1624,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			ASubclassResponsibilityExp node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return RuntimeError.abort(node.getLocation(),4032, "'is subclass responsibility' expression reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4032, "'is subclass responsibility' expression reached", ctxt);
 	}
 	
 	@Override
@@ -1657,7 +1662,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -1672,7 +1677,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		catch (Exception e)
 		{
-			return RuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
+			return VdmRuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
 		}
 	}
 	
@@ -1687,7 +1692,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
         }
         catch (Exception e)
         {
-        	return RuntimeError.abort(node.getLocation(),4145, "Time: " + e.getMessage(), ctxt);
+        	return VdmRuntimeError.abort(node.getLocation(),4145, "Time: " + e.getMessage(), ctxt);
         }
 	}
 	
@@ -1727,5 +1732,63 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		}
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return ctxt.lookup(node.getName());
+	}
+	
+	@Override
+	public Value caseASelfExp(ASelfExp node, Context ctxt)
+			throws AnalysisException
+	{
+		node.getLocation().hit();
+		return ctxt.lookup(node.getName());
+	}
+	
+	@Override
+	public Value caseAIsOfBaseClassExp(AIsOfBaseClassExp node, Context ctxt)
+			throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		node.getBaseClass().location.hit();
+
+		try
+		{
+			Value v = node.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+
+			if (!(v instanceof ObjectValue))
+			{
+				return new BooleanValue(false);
+			}
+
+			ObjectValue ov = v.objectValue(ctxt);
+			return new BooleanValue(AIsOfBaseClassExpAssistantInterpreter.search(node,ov));
+		}
+		catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(),e);
+		}
+	}
+	
+	@Override
+	public Value caseAIsOfClassExp(AIsOfClassExp node, Context ctxt)
+			throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		node.getClassName().location.hit();
+
+		try
+		{
+			Value v = node.getExp().apply(VdmRuntime.getExpressionEvaluator(),ctxt).deref();
+
+			if (!(v instanceof ObjectValue))
+			{
+				return new BooleanValue(false);
+			}
+
+			ObjectValue ov = v.objectValue(ctxt);
+			return new BooleanValue(AIsOfClassExpAssistantInterpreter.isOfClass(ov, node.getClassName().name));
+		}
+		catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(),e);
+		}
 	}
 }

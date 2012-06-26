@@ -6,7 +6,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.NameValuePair;
@@ -35,7 +35,7 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 	        }
 	        catch (ValueException e)
 	        {
-	        	RuntimeError.abort(d.getLocation(),e);
+	        	VdmRuntimeError.abort(d.getLocation(),e);
 	        	return null;
 	        } catch (AnalysisException e)
 			{

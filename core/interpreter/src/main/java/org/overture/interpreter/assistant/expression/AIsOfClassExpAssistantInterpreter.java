@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.expression;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.AIsOfClassExpAssistantTC;
 
@@ -20,6 +21,26 @@ public class AIsOfClassExpAssistantInterpreter extends AIsOfClassExpAssistantTC
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getExp(),lineno);
+	}
+
+	public static boolean isOfClass(ObjectValue obj, String name)
+	{
+		if (obj.type.getName().name.equals(name))
+		{
+			return true;
+		}
+		else
+		{
+			for (ObjectValue objval: obj.superobjects)
+			{
+				if (isOfClass(objval, name))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 }

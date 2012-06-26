@@ -287,7 +287,7 @@ public class Context extends HashMap<LexNameToken, Value>
 
 		if (v == null)
 		{
-			RuntimeError.abort(name.getLocation(),4034, "Name '" + name + "' not in scope", this);
+			VdmRuntimeError.abort(name.getLocation(),4034, "Name '" + name + "' not in scope", this);
 		}
 
 		return v;

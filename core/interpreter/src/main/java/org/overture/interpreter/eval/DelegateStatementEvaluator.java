@@ -12,7 +12,7 @@ import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
 import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
@@ -90,6 +90,6 @@ public class DelegateStatementEvaluator extends StatementEvaluator
     		}
 		}
 
-		return RuntimeError.abort(node.getLocation(),4041, "'is not yet specified' statement reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4041, "'is not yet specified' statement reached", ctxt);
 	}
 }

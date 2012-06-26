@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4041: 'is not yet specified' statement reached in 'B' (prelim-03.vpp) at line 35:5" resource="prelim-03.vpp" value="Error 4041: 'is not yet specified' statement reached in 'B' (prelim-03.vpp) at line 35:5"/>
+</result>
+</testResult>

@@ -54,7 +54,7 @@ import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -297,7 +297,7 @@ public class FunctionValue extends Value
 
 		if (argValues.size() != paramPatterns.size())
 		{
-			RuntimeError.abort(type.getLocation(),4052, "Wrong number of arguments passed to " + name, ctxt);
+			VdmRuntimeError.abort(type.getLocation(),4052, "Wrong number of arguments passed to " + name, ctxt);
 		}
 
 		Iterator<Value> valIter = argValues.iterator();
@@ -434,7 +434,7 @@ public class FunctionValue extends Value
 				throw e;
 			} catch (Throwable e)
 			{
-				return RuntimeError.abortRethrow(e);
+				return VdmRuntimeError.abortRethrow(e);
 			}
     		
     		if (ctxt.prepost > 0)	// Note, caller's context is checked
@@ -516,7 +516,7 @@ public class FunctionValue extends Value
         		return rv;
 			}
 
-			RuntimeError.abort(type.getLocation(),4057, "Curried function return type is not a function", ctxt);
+			VdmRuntimeError.abort(type.getLocation(),4057, "Curried function return type is not a function", ctxt);
 			return null;
 		}
 	}

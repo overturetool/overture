@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 3091: Unknown member Test() of class A in 'A' (console) at line 1:9&#10;Error 3182: Name 'A`Run' is not in scope in 'A' (console) at line 1:18&#10;Error 3182: Name 'A`Time' is not in scope in 'A' (console) at line 1:22" resource="polyfun-15.vpp" value="Error 3091: Unknown member Test() of class A in 'A' (console) at line 1:9&#10;Error 3182: Name 'A`Run' is not in scope in 'A' (console) at line 1:18&#10;Error 3182: Name 'A`Time' is not in scope in 'A' (console) at line 1:22"/>
+</result>
+</testResult>

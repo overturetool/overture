@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4097: Can't get record value of int in 'B' (full-09.vpp) at line 55:22" resource="full-09.vpp" value="Error 4097: Can't get record value of int in 'B' (full-09.vpp) at line 55:22"/>
+</result>
+</testResult>

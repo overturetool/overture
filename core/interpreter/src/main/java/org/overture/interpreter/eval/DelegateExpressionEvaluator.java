@@ -18,7 +18,7 @@ import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.RootContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
@@ -127,7 +127,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
     		}
 		}
 
-		return RuntimeError.abort(node.getLocation(),4024, "'not yet specified' expression reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4024, "'not yet specified' expression reached", ctxt);
 	}
 	
 	

@@ -27,7 +27,7 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.BooleanValue;
@@ -62,7 +62,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
         catch (ContextException e)
         {
@@ -86,7 +86,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
 		catch (Exception e)
 		{
-			return RuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
+			return VdmRuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 
     		if (setset.isEmpty())
     		{
-    			return RuntimeError.abort(node.getLocation(),4151, "Cannot take dinter of empty set", ctxt);
+    			return VdmRuntimeError.abort(node.getLocation(),4151, "Cannot take dinter of empty set", ctxt);
     		}
 
     		ValueSet result = null;
@@ -147,7 +147,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
     	}
     	catch (ValueException e)
     	{
-    		return RuntimeError.abort(node.getLocation(),e);
+    		return VdmRuntimeError.abort(node.getLocation(),e);
     	}
 	}
 	
@@ -171,7 +171,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -195,7 +195,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -214,7 +214,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -230,7 +230,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -246,14 +246,14 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 
     		if (seq.isEmpty())
     		{
-    			return RuntimeError.abort(node.getLocation(),4010, "Cannot take head of empty sequence", ctxt);
+    			return VdmRuntimeError.abort(node.getLocation(),4010, "Cannot take head of empty sequence", ctxt);
     		}
 
     		return seq.get(0);
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -277,11 +277,11 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 		catch (Exception e)
 		{
-			return RuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
+			return VdmRuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
 		}
 	}
 	
@@ -297,7 +297,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
         catch (ContextException e)
         {
@@ -305,7 +305,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
         }
 		catch (Exception e)
 		{
-			return RuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
+			return VdmRuntimeError.abort(node.getLocation(),4065, e.getMessage(), ctxt);
 		}
 	}
 	
@@ -324,7 +324,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -340,7 +340,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 
     		if (!map.isInjective())
     		{
-    			RuntimeError.abort(node.getLocation(),4012, "Cannot invert non-injective map", ctxt);
+    			VdmRuntimeError.abort(node.getLocation(),4012, "Cannot invert non-injective map", ctxt);
     		}
 
     		ValueMap result = new ValueMap();
@@ -354,7 +354,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -373,7 +373,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -390,7 +390,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -415,7 +415,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -434,7 +434,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return new SeqValue(seq);
@@ -454,12 +454,12 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		if (seq.isEmpty())
 		{
-			RuntimeError.abort(node.getLocation(),4033, "Tail sequence is empty", ctxt);
+			VdmRuntimeError.abort(node.getLocation(),4033, "Tail sequence is empty", ctxt);
 		}
 
 		seq.remove(0);
@@ -479,7 +479,7 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	

@@ -24,7 +24,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
@@ -46,7 +46,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 					return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) d, initialContext);
 				} catch (Throwable e1)
 				{
-					RuntimeError.abortRethrow(e1);
+					VdmRuntimeError.abortRethrow(e1);
 				}
 			case EQUALS:
 				return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);

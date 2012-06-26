@@ -1,0 +1,1 @@
+new B().Test() = {|->}-- was { "tag1" |->   nil,  "tag2" |->   nil }

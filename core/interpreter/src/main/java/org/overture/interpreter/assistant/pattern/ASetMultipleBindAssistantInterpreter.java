@@ -4,7 +4,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.SetValue;
@@ -44,11 +44,11 @@ public class ASetMultipleBindAssistantInterpreter extends
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(mb.getLocation(),e);
+			VdmRuntimeError.abort(mb.getLocation(),e);
 			return null;
 		} catch (Throwable e)
 		{
-			RuntimeError.abortRethrow(e);
+			VdmRuntimeError.abortRethrow(e);
 			return null;
 		}
 	}

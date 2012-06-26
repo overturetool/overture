@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4035: Object has no field: M20XXX in 'B' (invoke-07.vpp) at line 41:9" resource="invoke-07.vpp" value="Error 4035: Object has no field: M20XXX in 'B' (invoke-07.vpp) at line 41:9"/>
+</result>
+</testResult>

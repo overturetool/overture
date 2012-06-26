@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4032: 'is subclass responsibility' expression reached in 'A' (rep-53.vpp) at line 13:6" resource="rep-53.vpp" value="Error 4032: 'is subclass responsibility' expression reached in 'A' (rep-53.vpp) at line 13:6"/>
+</result>
+</testResult>

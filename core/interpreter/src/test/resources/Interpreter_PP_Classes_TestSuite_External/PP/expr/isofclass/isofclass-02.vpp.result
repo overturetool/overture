@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4087: Cannot convert C{#16} (C) to (B | E) in 'A' (isofclass-02.vpp) at line 60:22" resource="isofclass-02.vpp" value="Error 4087: Cannot convert C{#16} (C) to (B | E) in 'A' (isofclass-02.vpp) at line 60:22"/>
+</result>
+</testResult>

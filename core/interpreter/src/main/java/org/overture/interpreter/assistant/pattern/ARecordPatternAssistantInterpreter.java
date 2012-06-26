@@ -9,7 +9,7 @@ import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.FieldMap;
@@ -38,18 +38,18 @@ public class ARecordPatternAssistantInterpreter extends ARecordPatternAssistantT
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		// if (!type.equals(exprec.type))
 		if (!TypeComparator.compatible(pattern.getType(), exprec.type))
 		{
-			RuntimeError.patternFail(4114, "Record type does not match pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4114, "Record type does not match pattern",pattern.getLocation());
 		}
 
 		if (fields.size() != pattern.getPlist().size())
 		{
-			RuntimeError.patternFail(4115, "Record expression does not match pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4115, "Record expression does not match pattern",pattern.getLocation());
 		}
 
 		Iterator<FieldValue> iter = fields.iterator();
@@ -95,7 +95,7 @@ public class ARecordPatternAssistantInterpreter extends ARecordPatternAssistantT
 						{
 							if (!v.equals(nvp.value))
 							{
-								RuntimeError.patternFail(4116, "Values do not match record pattern",pattern.getLocation());
+								VdmRuntimeError.patternFail(4116, "Values do not match record pattern",pattern.getLocation());
 							}
 						}
 					}
@@ -111,7 +111,7 @@ public class ARecordPatternAssistantInterpreter extends ARecordPatternAssistantT
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4116, "Values do not match record pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4116, "Values do not match record pattern",pattern.getLocation());
 		}
 
 		return finalResults;

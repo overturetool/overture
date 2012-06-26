@@ -5,7 +5,7 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.SetValue;
@@ -44,7 +44,7 @@ public class ASetBindAssistantInterpreter extends ASetBindAssistantTC
 		}
 		catch (ValueException ex)
 		{
-			RuntimeError.abort(bind.getLocation(),ex);
+			VdmRuntimeError.abort(bind.getLocation(),ex);
 			return null;
 		} catch (Throwable ex)
 		{

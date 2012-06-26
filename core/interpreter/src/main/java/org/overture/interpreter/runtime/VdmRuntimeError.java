@@ -5,7 +5,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.messages.LocatedException;
 
 
-public class RuntimeError
+public class VdmRuntimeError
 {
 
 	public static Value abort(LexLocation location, int number, String msg, Context ctxt)

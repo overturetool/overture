@@ -10,7 +10,7 @@ import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
@@ -33,12 +33,12 @@ public class AMapPatternAssistantInterpreter
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getMaplets().size())
 		{
-			RuntimeError.patternFail(4152, "Wrong number of elements for map pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4152, "Wrong number of elements for map pattern",pattern.getLocation());
 		}
 
 		// Since the member patterns may indicate specific map members, we
@@ -113,7 +113,7 @@ public class AMapPatternAssistantInterpreter
 							{
 								if (!v.equals(nvp.value))
 								{
-									RuntimeError.patternFail(4153, "Values do not match map pattern",pattern.getLocation());
+									VdmRuntimeError.patternFail(4153, "Values do not match map pattern",pattern.getLocation());
 								}
 							}
 						}
@@ -130,7 +130,7 @@ public class AMapPatternAssistantInterpreter
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4154, "Cannot match map pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4154, "Cannot match map pattern",pattern.getLocation());
 		}
 
 		return finalResults;

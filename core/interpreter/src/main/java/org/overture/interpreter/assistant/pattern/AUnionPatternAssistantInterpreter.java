@@ -8,7 +8,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
@@ -33,7 +33,7 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
@@ -44,7 +44,7 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 			(rlen == PPatternAssistantInterpreter.ANY && llen > size) ||
 			(rlen != PPatternAssistantInterpreter.ANY && llen != PPatternAssistantInterpreter.ANY && size != llen + rlen))
 		{
-			RuntimeError.patternFail(4125, "Set union pattern does not match expression",pattern.getLocation());
+			VdmRuntimeError.patternFail(4125, "Set union pattern does not match expression",pattern.getLocation());
 		}
 
 		// If the left and right sizes are zero (ie. flexible) then we have to
@@ -168,7 +168,7 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 								{
 									if (!v.equals(nvp.value))
 									{
-										RuntimeError.patternFail(4126, "Values do not match union pattern",pattern.getLocation());
+										VdmRuntimeError.patternFail(4126, "Values do not match union pattern",pattern.getLocation());
 									}
 								}
 							}
@@ -186,7 +186,7 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4127, "Cannot match set pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4127, "Cannot match set pattern",pattern.getLocation());
 		}
 
 		return finalResults;

@@ -14,6 +14,7 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAlwaysStm;
+import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -32,14 +33,17 @@ import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.AMapSeqStateDesignator;
+import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.AStartStm;
@@ -62,7 +66,7 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
@@ -134,7 +138,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		if (Settings.dialect == Dialect.VDM_RT &&
@@ -231,7 +235,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			if (v == null)
 			{
-    			RuntimeError.abort(node.getLocation(),4035, "Object has no field: " + node.getField().name, ctxt);
+    			VdmRuntimeError.abort(node.getLocation(),4035, "Object has no field: " + node.getField().name, ctxt);
 			}
 
 			v = v.deref();
@@ -263,7 +267,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -303,7 +307,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -347,7 +351,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			}
 			catch (ValueException e)
 			{
-				RuntimeError.abort(node.getLocation(),e);
+				VdmRuntimeError.abort(node.getLocation(),e);
 			}
 		}
 
@@ -414,7 +418,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -423,7 +427,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return RuntimeError.abort(node.getLocation(),4036, "ERROR statement reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4036, "ERROR statement reached", ctxt);
 	}
 	
 	@Override
@@ -475,7 +479,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return new VoidValue();
@@ -495,7 +499,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			if (bval == 0)
 			{
-				RuntimeError.abort(node.getLocation(),4038, "Loop, from " + fval + " to " + tval + " by " + bval +
+				VdmRuntimeError.abort(node.getLocation(),4038, "Loop, from " + fval + " to " + tval + " by " + bval +
 						" will never terminate", ctxt);
 			}
 
@@ -515,7 +519,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return new VoidValue();
@@ -576,7 +580,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					{
 						if (!set.contains(val))
 						{
-							RuntimeError.abort(node.getLocation(),4039, "Set bind does not contain value " + val, ctxt);
+							VdmRuntimeError.abort(node.getLocation(),4039, "Set bind does not contain value " + val, ctxt);
 						}
 
 						Context evalContext = new Context(node.getLocation(), "for set bind", ctxt);
@@ -622,7 +626,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return new VoidValue();
@@ -657,7 +661,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
         }
         catch (ValueException e)
         {
-        	return RuntimeError.abort(node.getLocation(),e);
+        	return VdmRuntimeError.abort(node.getLocation(),e);
         }
 	}
 	
@@ -716,10 +720,10 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
         catch (ValueException e)
         {
-        	RuntimeError.abort(node.getLocation(),e);
+        	VdmRuntimeError.abort(node.getLocation(),e);
         }
 
-		return RuntimeError.abort(node.getLocation(),4040, "Let be st found no applicable bindings", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4040, "Let be st found no applicable bindings", ctxt);
 	}
 	
 	@Override
@@ -759,7 +763,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return RuntimeError.abort(node.getLocation(),4041, "'is not yet specified' statement reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4041, "'is not yet specified' statement reached", ctxt);
 	}
 	
 	@Override
@@ -815,7 +819,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return RuntimeError.abort(node.getLocation(),4047, "Cannot execute specification statement", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4047, "Cannot execute specification statement", ctxt);
 	}
 	
 	
@@ -853,7 +857,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			return RuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
 	}
 	
@@ -862,7 +866,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			ASubclassResponsibilityStm node, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return RuntimeError.abort(node.getLocation(),4048, "'is subclass responsibility' statement reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(),4048, "'is subclass responsibility' statement reached", ctxt);
 	}
 	
 	@Override
@@ -943,7 +947,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
     				}
     				else
     				{
-    					RuntimeError.abort(node.getLocation(),4050, "Value " + exval + " is not in set bind", ctxt);
+    					VdmRuntimeError.abort(node.getLocation(),4050, "Value " + exval + " is not in set bind", ctxt);
     				}
     			}
     			else
@@ -957,7 +961,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			}
 			catch (ValueException ve)
 			{
-				RuntimeError.abort(node.getLocation(),ve);
+				VdmRuntimeError.abort(node.getLocation(),ve);
 			}
 			catch (PatternMatchException pe)
 			{
@@ -988,7 +992,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return new VoidValue();
@@ -1029,7 +1033,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
     			if (rv == null)
     			{
-    				RuntimeError.abort(node.getLocation(),4045, "Object does not contain value for field: " + node.getField(), ctxt);
+    				VdmRuntimeError.abort(node.getLocation(),4045, "Object does not contain value for field: " + node.getField(), ctxt);
     			}
 
     			return rv;
@@ -1041,7 +1045,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
     			if (result == null)
     			{
-    				RuntimeError.abort(node.getField().getLocation(),4037, "No such field: " + node.getField(), ctxt);
+    				VdmRuntimeError.abort(node.getField().getLocation(),4037, "No such field: " + node.getField(), ctxt);
     			}
 
     			return result;
@@ -1049,7 +1053,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return result;
@@ -1099,7 +1103,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					}
 					else
 					{
-						RuntimeError.abort(node.getExp().getLocation(),4019, "Sequence cannot extend to key: " + index, ctxt);
+						VdmRuntimeError.abort(node.getExp().getLocation(),4019, "Sequence cannot extend to key: " + index, ctxt);
 					}
 				}
 
@@ -1107,14 +1111,110 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			}
 			else
 			{
-				RuntimeError.abort(node.getLocation(),4020, "State value is neither a sequence nor a map", ctxt);
+				VdmRuntimeError.abort(node.getLocation(),4020, "State value is neither a sequence nor a map", ctxt);
 			}
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.abort(node.getLocation(),e);
+			VdmRuntimeError.abort(node.getLocation(),e);
 		}
 
 		return result;
+	}
+	
+	@Override
+	public Value caseAApplyObjectDesignator(AApplyObjectDesignator node,
+			Context ctxt) throws AnalysisException
+	{
+		try
+		{
+			Value uv = node.getObject().apply(VdmRuntime.getStatementEvaluator(), ctxt);
+			Value v = uv.deref();
+
+			if (v instanceof MapValue)
+			{
+				ValueMap mv = v.mapValue(ctxt);
+				Value a = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+				Value rv = mv.get(a);
+
+				if (rv == null && uv instanceof UpdatableValue)
+				{
+					// Not already in map - get listener from root object
+					UpdatableValue ur = (UpdatableValue)uv;
+					rv = UpdatableValue.factory(ur.listeners);
+					mv.put(a, rv);
+				}
+
+				return rv;
+			}
+			else if (v instanceof SeqValue)
+			{
+				ValueList seq = v.seqValue(ctxt);
+				Value a = node.getArgs().get(0).apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+				int i = (int)a.intValue(ctxt)-1;
+
+				if (!seq.inbounds(i))
+				{
+					VdmRuntimeError.abort(node.getLocation(),4042, "Sequence does not contain key: " + a, ctxt);
+				}
+
+				return seq.get(i);
+			}
+			else if (v instanceof FunctionValue)
+			{
+				ValueList argvals = new ValueList();
+
+				for (PExp arg: node.getArgs())
+				{
+					argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(),ctxt));
+				}
+
+				FunctionValue fv = v.functionValue(ctxt);
+				return fv.eval(node.getLocation(), argvals, ctxt);
+			}
+			else if (v instanceof OperationValue)
+			{
+				ValueList argvals = new ValueList();
+
+				for (PExp arg: node.getArgs())
+				{
+					argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(),ctxt));
+				}
+
+				OperationValue ov = v.operationValue(ctxt);
+				return ov.eval(node.getLocation(), argvals, ctxt);
+			}
+			else
+			{
+				return VdmRuntimeError.abort(node.getLocation(),4043,
+					"Object designator is not a map, sequence, operation or function", ctxt);
+			}
+		}
+		catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(),e);
+		}
+	}
+	
+	@Override
+	public Value caseAIdentifierObjectDesignator(
+			AIdentifierObjectDesignator node, Context ctxt)
+			throws AnalysisException
+	{
+		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+	}
+	
+	@Override
+	public Value caseANewObjectDesignator(ANewObjectDesignator node,
+			Context ctxt) throws AnalysisException
+	{
+		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+	}
+	
+	@Override
+	public Value caseASelfObjectDesignator(ASelfObjectDesignator node,
+			Context ctxt) throws AnalysisException
+	{
+		return  ctxt.lookup(node.getSelf());
 	}
 }

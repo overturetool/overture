@@ -7,7 +7,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
@@ -28,7 +28,7 @@ public class AExpressionPatternAssistantInterpreter extends
 				{
 					if (!expval.equals(p.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt)))
 					{
-						RuntimeError.patternFail(4110, "Expression pattern match failed",p.getLocation());
+						VdmRuntimeError.patternFail(4110, "Expression pattern match failed",p.getLocation());
 					}
 				} catch (AnalysisException e)
 				{

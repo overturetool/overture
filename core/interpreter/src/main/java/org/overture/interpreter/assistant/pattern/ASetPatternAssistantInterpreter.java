@@ -10,7 +10,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
@@ -35,12 +35,12 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getPlist().size())
 		{
-			RuntimeError.patternFail(4119, "Wrong number of elements for set pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4119, "Wrong number of elements for set pattern",pattern.getLocation());
 		}
 
 		// Since the member patterns may indicate specific set members, we
@@ -115,7 +115,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 							{
 								if (!v.equals(nvp.value))
 								{
-									RuntimeError.patternFail(4120, "Values do not match set pattern",pattern.getLocation());
+									VdmRuntimeError.patternFail(4120, "Values do not match set pattern",pattern.getLocation());
 								}
 							}
 						}
@@ -132,7 +132,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4121, "Cannot match set pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4121, "Cannot match set pattern",pattern.getLocation());
 		}
 
 		return finalResults;

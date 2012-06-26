@@ -9,7 +9,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.MapValue;
@@ -35,7 +35,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 		}
 		catch (ValueException e)
 		{
-			RuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e,pattern.getLocation());
 		}
 
 		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
@@ -46,7 +46,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 			(rlen == PPatternAssistantInterpreter.ANY && llen > size) ||
 			(rlen != PPatternAssistantInterpreter.ANY && llen != PPatternAssistantInterpreter.ANY && size != llen + rlen))
 		{
-			RuntimeError.patternFail(4155, "Map union pattern does not match expression",pattern.getLocation());
+			VdmRuntimeError.patternFail(4155, "Map union pattern does not match expression",pattern.getLocation());
 		}
 
 		// If the left and right sizes are zero (ie. flexible) then we have to
@@ -172,7 +172,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 								{
 									if (!v.equals(nvp.value))
 									{
-										RuntimeError.patternFail(4126, "Values do not match union pattern",pattern.getLocation());
+										VdmRuntimeError.patternFail(4126, "Values do not match union pattern",pattern.getLocation());
 									}
 								}
 							}
@@ -190,7 +190,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 
 		if (finalResults.isEmpty())
 		{
-			RuntimeError.patternFail(4156, "Cannot match map pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4156, "Cannot match map pattern",pattern.getLocation());
 		}
 
 		return finalResults;

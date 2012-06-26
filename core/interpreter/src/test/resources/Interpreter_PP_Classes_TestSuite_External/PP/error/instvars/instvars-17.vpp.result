@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.intepreter.tests.external.NewClassTestCase">
+<result>
+<output object="Error 4034: Name 'G`a' not in scope in 'G' (instvars-17.vpp) at line 30:5" resource="instvars-17.vpp" value="Error 4034: Name 'G`a' not in scope in 'G' (instvars-17.vpp) at line 30:5"/>
+</result>
+</testResult>

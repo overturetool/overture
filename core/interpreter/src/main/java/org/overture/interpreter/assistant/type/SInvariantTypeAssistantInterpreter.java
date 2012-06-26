@@ -5,7 +5,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.RuntimeError;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.Value;
@@ -26,7 +26,7 @@ public class SInvariantTypeAssistantInterpreter
 			}
 			catch (ValueException e)
 			{
-				RuntimeError.abort(type.getLocation(),e);
+				VdmRuntimeError.abort(type.getLocation(),e);
 			}
 		}
 
