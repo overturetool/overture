@@ -1,5 +1,6 @@
 package org.overture.interpreter.runtime.state;
 
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
@@ -24,6 +25,11 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	
 	/** A delegate Java object for any native methods. */
 	private Delegate delegate = null;
+
+	public SClassDefinitionRuntime(SClassDefinition def)
+	{
+		delegate = new Delegate(def.getName().name, def.getDefinitions());
+	}
 	
 	public boolean hasDelegate()
 	{

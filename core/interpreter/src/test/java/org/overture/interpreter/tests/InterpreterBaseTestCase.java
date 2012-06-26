@@ -87,7 +87,12 @@ public abstract class InterpreterBaseTestCase extends TestResourcesResultTestCas
 		// FIXME: check is not sufficient
 		if (expected == null)
 		{
-			assert false : "No result file";
+			if(actual==null)
+			{
+				fail("No result calculated. Actual: "+actual);
+			}
+			return true;
+//			assert false : "No result file";
 		}
 		// return expected.size() == actual.size();
 		return expected.equals(actual);

@@ -81,7 +81,7 @@ public class VdmRuntime
 		
 		if(state == null)
 		{
-			state = new SClassDefinitionRuntime();
+			state = new SClassDefinitionRuntime(node);
 			runtimeState.put(node, state );
 		}
 		
@@ -96,7 +96,7 @@ public class VdmRuntime
 		
 		if(state == null)
 		{
-			state = new ASystemClassDefinitionRuntime();
+			state = new ASystemClassDefinitionRuntime(node);
 			runtimeState.put(node, state );
 		}
 		
