@@ -438,7 +438,8 @@ public class SClassDefinitionAssistantTC {
 				definition.getLocalInheritedDefinitions().add(local);
 			}
 		}
-
+		
+		definition.setSuperInheritedDefinitions(superInheritedDefinitions);
 		definition.setAllInheritedDefinitions(new Vector<PDefinition>());
 		definition.getAllInheritedDefinitions().addAll(superInheritedDefinitions);
 		definition.getAllInheritedDefinitions().addAll(definition.getLocalInheritedDefinitions());

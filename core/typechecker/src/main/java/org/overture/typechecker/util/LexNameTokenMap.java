@@ -64,6 +64,12 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>
 		{
 			return this.token.hashCode();
 		}
+		
+		@Override
+		public String toString()
+		{
+			return token.toString();
+		}
 	}
 	
 	private final HashMap<LexNameTokenWrapper,V> map = new HashMap<LexNameTokenWrapper, V>();
