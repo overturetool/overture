@@ -197,7 +197,7 @@ public class ObjectValue extends Value
 		// qualified names. Not very efficient... so we try a raw get
 		// first.
 
-		Value rv =null;//FIXME: I commented this because of equals members.get(localname);
+		Value rv = members.get(localname);
 
 		if (rv == null)
 		{

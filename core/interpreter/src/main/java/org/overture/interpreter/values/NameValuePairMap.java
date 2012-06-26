@@ -23,15 +23,13 @@
 
 package org.overture.interpreter.values;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import org.overture.ast.lex.LexNameToken;
+import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.util.LexNameTokenMap;
 
 
 
-@SuppressWarnings("serial")
-public class NameValuePairMap extends HashMap<LexNameToken, Value>
+public class NameValuePairMap extends LexNameTokenMap<Value>
 {
 	public void put(NameValuePair nvp)
 	{
@@ -94,11 +92,31 @@ public class NameValuePairMap extends HashMap<LexNameToken, Value>
 	{
 		NameValuePairMap copy = new NameValuePairMap();
 
-		for (Entry<LexNameToken, Value> entry: entrySet())
+		for (Entry<LexNameToken, Value> entry: this.entrySet())
 		{
 			copy.put(entry.getKey(), (Value)entry.getValue().clone());
 		}
 
 		return copy;
+	}
+	
+	@Override
+	public Value get(Object name)
+	{
+		Value rv = super.get(name);
+
+		if (rv == null)
+		{
+    		for (LexNameToken var: keySet())
+    		{
+    			if (HelpLexNameToken.isEqual(var, name))
+    			{
+    				rv = super.get(var);
+    				break;
+    			}
+    		}
+		}
+
+		return rv;
 	}
 }

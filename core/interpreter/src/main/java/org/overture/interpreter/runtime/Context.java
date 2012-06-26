@@ -35,6 +35,8 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.util.LexNameTokenMap;
 
 
 
@@ -43,7 +45,7 @@ import org.overture.interpreter.values.Value;
  */
 
 @SuppressWarnings("serial")
-public class Context extends HashMap<LexNameToken, Value>
+public class Context extends LexNameTokenMap<Value>
 {
 	/** The location of the context. */
 	public final LexLocation location;
@@ -194,7 +196,7 @@ public class Context extends HashMap<LexNameToken, Value>
 		{
     		for (LexNameToken var: keySet())
     		{
-    			if (var.equals(name))
+    			if (HelpLexNameToken.isEqual(var, name))
     			{
     				rv = super.get(var);
     				break;

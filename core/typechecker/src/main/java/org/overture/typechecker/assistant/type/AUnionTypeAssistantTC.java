@@ -26,7 +26,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.ast.util.Utils;
@@ -35,6 +34,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.util.LexNameTokenMap;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 {
@@ -538,7 +538,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			// fields' types...
 
 			Map<LexNameToken, PTypeSet> common = new HashMap<LexNameToken, PTypeSet>();
-			Map<LexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameHashMap<AAccessSpecifierAccessSpecifier>();
+			Map<LexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
 			LexNameToken classname = null;
 
 			for (PType t : type.getTypes())

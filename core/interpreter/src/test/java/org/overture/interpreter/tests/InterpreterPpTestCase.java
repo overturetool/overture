@@ -30,7 +30,7 @@ public class InterpreterPpTestCase extends InterpreterSlTestCase
 	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_PP;
-		Settings.release = Release.CLASSIC;
+		Settings.release = Release.VDM_10;
 	}
 
 	@SuppressWarnings("rawtypes")

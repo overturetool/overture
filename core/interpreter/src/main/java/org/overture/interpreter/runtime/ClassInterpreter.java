@@ -172,7 +172,7 @@ public class ClassInterpreter extends Interpreter
 
 		//TODO: Must be removed
 		RuntimeValidator.init(this);
-		
+		VdmRuntime.initialize();
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 

@@ -25,12 +25,13 @@ public class VdmRuntime
 	private static IQuestionAnswer<Context, Value> expressionRuntime;
 	private static IQuestionAnswer<Context, Value> statementRuntime;
 	
-	private static Map<INode,IRuntimeState> runtimeState = new HashMap<INode, IRuntimeState>();
+	final private static Map<INode,IRuntimeState> runtimeState = new HashMap<INode, IRuntimeState>();
 	
 	public static void initialize()
 	{
 		expressionRuntime = new DelegateStatementEvaluator(); 
 		statementRuntime = expressionRuntime; 
+		runtimeState.clear();
 	}
 	
 	public static IQuestionAnswer<Context, Value> getExpressionEvaluator()
