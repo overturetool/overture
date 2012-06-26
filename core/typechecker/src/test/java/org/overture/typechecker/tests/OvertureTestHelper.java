@@ -1,11 +1,16 @@
 package org.overture.typechecker.tests;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import junit.framework.Assert;
+
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.parser.syntax.ParserException;
@@ -29,18 +34,27 @@ public class OvertureTestHelper
 	public Result<Boolean> typeCheckSl(File file)
 	{
 		TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(file);
+		
+		checkTypes(result.result);
+		
 		return convert(result);
 	}
 
 	public Result<Boolean> typeCheckPp(File file)
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
+		
+		checkTypes(result.result);
+		
 		return convert(result);
 	}
 
 	public Result<Boolean> typeCheckRt(File file) throws ParserException, LexException
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckRt(file);
+		
+		checkTypes(result.result);
+		
 		return convert(result);
 	}
 
@@ -56,4 +70,22 @@ public class OvertureTestHelper
 		return testMessages;
 	}
 
+	static boolean enableCompleteTypeFieldCheck = false;
+	public static void checkTypes(Collection<? extends INode> c)
+	{
+		if(!enableCompleteTypeFieldCheck)
+		{
+			return;
+		}
+		try
+		{
+			for (INode element : c)
+			{
+				element.apply(new TypeSetAnalysis());
+			}
+		} catch (AnalysisException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
 }

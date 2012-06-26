@@ -23,6 +23,7 @@
 
 package org.overture.ast.lex;
 
+import java.util.Collection;
 import java.util.Vector;
 
 import org.overture.ast.util.Utils;
@@ -41,6 +42,12 @@ public class LexNameList extends Vector<LexNameToken>
 	{
 		super();
 		add(name);
+	}
+	
+	public LexNameList(Collection<? extends LexNameToken> c)
+	{
+		super();
+		addAll(c);
 	}
 
 	@Override

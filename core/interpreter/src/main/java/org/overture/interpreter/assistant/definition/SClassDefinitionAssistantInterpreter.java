@@ -306,8 +306,8 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
     		else if (d instanceof AMutexSyncDefinition)
     		{
     			AMutexSyncDefinition sync = (AMutexSyncDefinition)d;
-
-    			for (LexNameToken opname: sync.getOperations())
+    			
+    			for (LexNameToken opname: new LexNameList(sync.getOperations()))
     			{
     				PExp exp =AMutexSyncDefinitionAssistantInterpreter.getExpression( sync,opname);
     				ValueList overloads = members.getOverloads(opname);

@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.config.Settings;
 import org.overture.interpreter.messages.Console;
 
 public class ResourceScheduler implements Serializable
@@ -124,7 +125,7 @@ public class ResourceScheduler implements Serializable
    					Console.err.println("DEADLOCK detected");
 					BasicSchedulableThread.signalAll(Signal.DEADLOCKED);
 
-					while (main.isAlive())
+					while (main.isAlive() && Settings.usingDBGP)
 					{
 						try
                         {
