@@ -3,6 +3,7 @@ package org.overture.typechecker.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +35,12 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>
 		public V setValue(V value)
 		{
 			return wrapped.setValue(value);
+		}
+		
+		@Override
+		public String toString()
+		{
+		return getKey()+"="+getValue();
 		}
 		
 	}
@@ -167,4 +174,20 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>
 		return this.map.values();
 	}
 	
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		for (Iterator<Entry<LexNameToken, V>> iterator = entrySet().iterator(); iterator.hasNext();)
+		{
+			sb.append( iterator.next());
+			if(iterator.hasNext())
+			{
+				sb.append("\n");
+			}
+			
+		}
+		return sb.toString();
+	}
 }
