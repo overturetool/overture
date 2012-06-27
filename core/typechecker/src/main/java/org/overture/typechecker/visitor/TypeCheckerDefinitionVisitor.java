@@ -1218,6 +1218,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question.scope = NameScope.NAMESANDSTATE;
 
 		PType rt = node.getStatement().apply(rootVisitor, question);
+		
 
 		if (!(rt instanceof AVoidType) && !(rt instanceof AUnknownType))
 		{
@@ -1225,6 +1226,7 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		node.setType(rt);
+		node.getOperationDef().setBody(node.getStatement().clone());//This operation is a wrapper for the thread
 		return rt;
 	}
 

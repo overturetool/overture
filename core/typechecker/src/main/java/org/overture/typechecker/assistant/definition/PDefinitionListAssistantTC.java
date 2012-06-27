@@ -119,7 +119,7 @@ public class PDefinitionListAssistantTC {
 	public static void setAccessibility(List<PDefinition> defs,
 			AAccessSpecifierAccessSpecifier access) {
 		for (PDefinition d : defs) {
-			d.setAccess(access);
+			d.setAccess(access.clone());
 		}
 
 	}
