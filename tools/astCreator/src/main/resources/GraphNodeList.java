@@ -29,7 +29,12 @@ public class %GraphNodeList%<E extends %INode%> extends %NodeList%<E> {
 	
 	@Override
 	protected void setParent(%INode% n) {
-		//Don't change the structure for Graph fields
+		//Don't change the structure for Graph fields unless the parent is null
+		%INode% p = n.parent();
+		if (p == null) {
+			n.parent(parent);
+		}
+		
 	}
 	
 	public %GraphNodeList%(%INode% parent) {

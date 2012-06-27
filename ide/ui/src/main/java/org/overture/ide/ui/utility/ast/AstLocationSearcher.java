@@ -67,7 +67,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 
 	private void init()
 	{
-		seacher._queue.clear();// We cheat with undeclared exception, this breaks the state of the adaptor, and we use
+		seacher._visitedNodes.clear();// We cheat with undeclared exception, this breaks the state of the adaptor, and we use
 								// static so we need to clear the cache.
 		seacher.bestHit = null;
 		seacher.bestAlternativeHit = null;

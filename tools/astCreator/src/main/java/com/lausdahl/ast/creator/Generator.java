@@ -390,7 +390,7 @@ public class Generator
 		// adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
 		adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
 		Field queue = new Field(source);
-		queue.name = "queue";
+		queue.name = "visitedNodes";
 		queue.accessspecifier = AccessSpecifier.Protected;
 		queue.type = new GenericArgumentedIInterfceDefinition(BaseEnvironment.setDef, source.iNode.getName().getName());
 		//TODO queue.setCustomInitializer("new java.util.LinkedList<"+source.iNode.getName().getName()+">()");
@@ -436,7 +436,7 @@ public class Generator
 				case Token:
 				{
 					// continue;
-					Method m = new DepthFirstCaseMethod(c, source);
+					Method m = new DepthFirstCaseMethod(c, source,queue);
 					m.setClassDefinition(c);
 					m.setEnvironment(source);
 					adaptor.addMethod(m);

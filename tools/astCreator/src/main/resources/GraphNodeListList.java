@@ -35,7 +35,15 @@ public class %GraphNodeListList%<E extends %INode%> extends %NodeListList%<E> {
 	}
 	
 	protected void setParent(List<? extends E> list) {
-		//Don't change the structure for Graph fields
+		//Don't change the structure for Graph fields unless the parent is null
+		for (E n : list)
+		{
+			%INode% p = n.parent();
+			if (p == null) {
+				n.parent(parent);
+			}
+			
+		}
 	}
 	
 	public %GraphNodeListList%(%INode% parent) {

@@ -40,12 +40,11 @@ public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 	protected void setParent(List<? extends E> list) {
 		for (E n : list)
 		{
-			
-		%INode% p = n.parent();
-		if (p != null) {
-			p.removeChild(n);
-		}
-		n.parent(parent);
+			%INode% p = n.parent();
+			if (p != null) {
+				p.removeChild(n);
+			}
+			n.parent(parent);
 		}
 	}
 	

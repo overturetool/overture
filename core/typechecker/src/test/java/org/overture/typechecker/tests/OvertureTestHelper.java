@@ -23,38 +23,41 @@ import org.overturetool.test.framework.results.Result;
 public class OvertureTestHelper
 {
 	@SuppressWarnings("unchecked")
-	private static Result<Boolean> convert(@SuppressWarnings("rawtypes") TypeCheckResult result)
+	private static Result<Boolean> convert(
+			@SuppressWarnings("rawtypes") TypeCheckResult result)
 	{
-		if(result.result==null)
+		if (result.result == null)
 		{
 			return new Result<Boolean>(false, convert(result.parserResult.warnings), convert(result.parserResult.errors));
 		}
 		return new Result<Boolean>(true, convert(result.warnings), convert(result.errors));
 	}
+
 	public Result<Boolean> typeCheckSl(File file)
 	{
 		TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(file);
-		
+
 		checkTypes(result.result);
-		
+
 		return convert(result);
 	}
 
 	public Result<Boolean> typeCheckPp(File file)
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
-		
+
 		checkTypes(result.result);
-		
+
 		return convert(result);
 	}
 
-	public Result<Boolean> typeCheckRt(File file) throws ParserException, LexException
+	public Result<Boolean> typeCheckRt(File file) throws ParserException,
+			LexException
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckRt(file);
-		
+
 		checkTypes(result.result);
-		
+
 		return convert(result);
 	}
 
@@ -71,17 +74,24 @@ public class OvertureTestHelper
 	}
 
 	static boolean enableCompleteTypeFieldCheck = false;
+
 	public static void checkTypes(Collection<? extends INode> c)
 	{
-		if(!enableCompleteTypeFieldCheck)
+		if (!enableCompleteTypeFieldCheck)
 		{
 			return;
 		}
 		try
 		{
-			for (INode element : c)
+			if (c != null)
 			{
-				element.apply(new TypeSetAnalysis());
+				for (INode element : c)
+				{
+					if (element != null)
+					{
+						element.apply(new TypeSetAnalysis());
+					}
+				}
 			}
 		} catch (AnalysisException e)
 		{

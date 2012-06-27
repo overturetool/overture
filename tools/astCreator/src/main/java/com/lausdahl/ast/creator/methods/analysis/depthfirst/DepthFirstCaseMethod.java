@@ -14,9 +14,12 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class DepthFirstCaseMethod extends Method
 {
-	public DepthFirstCaseMethod()
+	private Field visitedNodesField;
+
+	public DepthFirstCaseMethod(IClassDefinition c, Environment source, Field visitedNodesField)
 	{
 		super(null, null);
+		this.visitedNodesField = visitedNodesField;
 	}
 
 	public DepthFirstCaseMethod(IClassDefinition c, Environment env)
@@ -49,14 +52,14 @@ public class DepthFirstCaseMethod extends Method
 
 		StringBuffer bodySb = new StringBuffer();
 		
-		bodySb.append("\t\tif(_queue.contains(node))\n");
-		bodySb.append("\t\t{ //already visiting this node from other path\n");
-		bodySb.append("\t\t\treturn;\n");
-		bodySb.append("\t\t}\n");
+//		bodySb.append("\t\tif(_"+visitedNodesField.name+".contains(node))\n");
+//		bodySb.append("\t\t{ //already visiting this node from other path\n");
+//		bodySb.append("\t\t\treturn;\n");
+//		bodySb.append("\t\t}\n");
 		
 		//bodySb.append("\t\tif(node instanceof "+env.iNode.getName()+")\n");
 		//bodySb.append("\t\t{\n");
-		bodySb.append("\t\t_queue.add(node);\n");
+		bodySb.append("\t\t_visitedNodes.add(node);\n");
 		//bodySb.append("\t\t}\n");
 		
 		
@@ -77,7 +80,8 @@ public class DepthFirstCaseMethod extends Method
 
 			if (!f.isList)
 			{
-				bodySb.append("\t\tif(" + getter + " != null) {\n");
+				bodySb.append("\t\tif(" + getter + " != null && !_"+visitedNodesField.name+".contains("+getter+")) \n");
+				bodySb.append("\t\t{\n");
 				bodySb.append("\t\t\t" + getter + ".apply(this);\n");
 				bodySb.append("\t\t}\n");
 			} else if(f.isList && !f.isDoubleList)
@@ -87,8 +91,12 @@ public class DepthFirstCaseMethod extends Method
 						+ "> copy = new ArrayList<" + f.getInnerTypeForList()
 						+ ">(" + getter + ");\n");
 				bodySb.append("\t\t\tfor( " + f.getInnerTypeForList()
-						+ " e : copy) {\n");
-				bodySb.append("\t\t\t\te.apply(this);\n");
+						+ " e : copy) \n");
+				bodySb.append("\t\t\t{\n");
+				bodySb.append("\t\t\t\tif(!_"+visitedNodesField.name+".contains(e))\n");
+				bodySb.append("\t\t\t\t{\n");
+				bodySb.append("\t\t\t\t\te.apply(this);\n");
+				bodySb.append("\t\t\t\t}\n");
 				bodySb.append("\t\t\t}\n");
 
 				bodySb.append("\t\t}\n");
@@ -102,8 +110,12 @@ public class DepthFirstCaseMethod extends Method
 						+ "> list : copy) {\n");
 
 				bodySb.append("\t\t\t\tfor( " + f.getInnerTypeForList()
-						+ " e : list) {\n");
-				bodySb.append("\t\t\t\t\te.apply(this);\n");
+						+ " e : list) \n");
+				bodySb.append("\t\t\t{\n");
+				bodySb.append("\t\t\t\t\tif(!_"+visitedNodesField.name+".contains(e))\n");
+				bodySb.append("\t\t\t\t\t{\n");
+				bodySb.append("\t\t\t\t\t\te.apply(this);\n");
+				bodySb.append("\t\t\t\t\t}\n");
 				bodySb.append("\t\t\t\t}\n");
 				
 				bodySb.append("\t\t\t}\n");
@@ -120,7 +132,7 @@ public class DepthFirstCaseMethod extends Method
 		}
 		
 		bodySb.append("\n\t\tout"+thisNodeMethodName+"(node);\n");
-		bodySb.append("\t\t_queue.remove(node);\n");
+//		bodySb.append("\t\t_"+visitedNodesField.name+".remove(node);\n");
 
 		this.body = bodySb.toString();
 		// this.annotation="@override";
