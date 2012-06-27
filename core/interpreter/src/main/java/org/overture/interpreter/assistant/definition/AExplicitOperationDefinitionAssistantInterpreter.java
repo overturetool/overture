@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
@@ -60,6 +61,11 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends AExplicitO
 		}
 
 		return PStmAssistantInterpreter.findExpression(d.getBody(),lineno);
+	}
+
+	public static PStm findStatement(AExplicitOperationDefinition d, int lineno)
+	{
+		return PStmAssistantInterpreter.findStatement(d.getBody(),lineno);
 	}
 
 }

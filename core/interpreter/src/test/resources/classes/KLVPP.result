@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="23" line="484" message="Operation '(cabdisplay.getDisplay)' cannot be called from a function" messageType="error" number="3300" resource="KLVPP.result"/>
-<message column="5" line="485" message="Operation '(emergencybreak.getEmergencyBreak)' cannot be called from a function" messageType="error" number="3300" resource="KLVPP.result"/>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="Error 3133: Class name UseKLV not in scope in 'Beacon' (console) at line 1:1" resource="KLVPP" value="Error 3133: Class name UseKLV not in scope in 'Beacon' (console) at line 1:1"/>
+</result>
 </testResult>

@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker"/>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="Error 3182: Name 'Stack`n' is not in scope in 'Stack' (console) at line 1:1" resource="stackPP" value="Error 3182: Name 'Stack`n' is not in scope in 'Stack' (console) at line 1:1"/>
+</result>
+</testResult>

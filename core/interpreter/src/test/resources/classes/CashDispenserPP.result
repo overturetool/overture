@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="3" line="123" message="Recursive function has no measure" messageType="warning" number="5012" resource="CashDispenserPP.result"/>
-<message column="3" line="15" message="Instance variable 'cards' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="16" message="Instance variable 'balance' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="199" message="Instance variable 'name' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="200" message="Instance variable 'address' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="244" message="Instance variable 'letterbox' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="245" message="Instance variable 'clock' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="10" line="387" message="Instance variable 'name' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="10" line="388" message="Instance variable 'address' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="10" line="389" message="Instance variable 'date' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="10" line="390" message="Instance variable 'transactions' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="10" line="391" message="Instance variable 'balance' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="511" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="541" message="Instance variable 'mycard' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="570" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="571" message="Instance variable 'mycard' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="602" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="637" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="809" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="810" message="Instance variable 'code' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="838" message="Instance variable 'tillid' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="3" line="839" message="Instance variable 'amount' is not initialized" messageType="warning" number="5001" resource="CashDispenserPP.result"/>
-<message column="11" line="899" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
-<message column="7" line="930" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
-<message column="7" line="943" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
-<message column="7" line="961" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
-<message column="7" line="972" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
-<message column="7" line="977" message="Operation 'CardValidated' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
-<message column="7" line="987" message="Operation 'CardInside' cannot be called from a function" messageType="error" number="3300" resource="CashDispenserPP.result"/>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="Error 3133: Class name SimpleTest not in scope in 'Account' (console) at line 1:1" resource="CashDispenserPP" value="Error 3133: Class name SimpleTest not in scope in 'Account' (console) at line 1:1"/>
+</result>
 </testResult>

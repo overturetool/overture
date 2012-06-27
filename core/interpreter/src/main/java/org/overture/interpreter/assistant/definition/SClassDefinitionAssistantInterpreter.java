@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
@@ -25,6 +27,7 @@ import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
 import org.overture.interpreter.values.NameValuePairList;
@@ -524,5 +527,52 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		return true;
 	}
+
+	public static PStm findStatement(ClassListInterpreter classes, File file,
+			int lineno)
+	{
+		for (SClassDefinition c: classes)
+		{
+			if (c.getName().location.file.equals(file))
+			{
+    			PStm stmt = findStatement(c, lineno);
+
+    			if (stmt != null)
+    			{
+    				return stmt;
+    			}
+			}
+		}
+
+		return null;
+	}
+
+	public static PStm findStatement(SClassDefinition c, int lineno)
+	{
+		return PDefinitionAssistantInterpreter.findStatement(c.getDefinitions(),lineno);
+	}
+
+	public static PExp findExpression(ClassListInterpreter classes, File file,
+			int lineno)
+	{
+		for (SClassDefinition c: classes)
+		{
+			if (c.getName().location.file.equals(file))
+			{
+    			PExp exp = findExpression(c, lineno);
+
+    			if (exp != null)
+    			{
+    				return exp;
+    			}
+			}
+		}
+
+		return null;
+	}
+
+	
+
+	
 
 }

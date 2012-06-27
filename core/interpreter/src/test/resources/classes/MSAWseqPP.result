@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="5" line="211" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWseqPP.result"/>
-<message column="52" line="211" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWseqPP.result"/>
-<message column="5" line="244" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWseqPP.result"/>
-<message column="5" line="258" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWseqPP.result"/>
-<message column="51" line="258" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWseqPP.result"/>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="Cannot find native method: IO.freadval(org.overturetool.vdmj.values.Value)" resource="MSAWseqPP" value="Cannot find native method: IO.freadval(org.overturetool.vdmj.values.Value)"/>
+</result>
 </testResult>

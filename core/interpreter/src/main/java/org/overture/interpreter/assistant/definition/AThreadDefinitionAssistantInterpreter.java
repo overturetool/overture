@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePairList;
@@ -20,6 +21,11 @@ public class AThreadDefinitionAssistantInterpreter extends
 	public static PExp findExpression(AThreadDefinition d, int lineno)
 	{
 		return PStmAssistantInterpreter.findExpression(d.getStatement(),lineno);
+	}
+
+	public static PStm findStatement(AThreadDefinition d, int lineno)
+	{
+		return PStmAssistantInterpreter.findStatement(d.getStatement(),lineno);
 	}
 
 }

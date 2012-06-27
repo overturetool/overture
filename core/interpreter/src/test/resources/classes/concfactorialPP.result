@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="5" line="26" message="Instance variable 'i' is not initialized" messageType="warning" number="5001" resource="concfactorialPP.result"/>
-<message column="5" line="27" message="Instance variable 'j' is not initialized" messageType="warning" number="5001" resource="concfactorialPP.result"/>
-<message column="5" line="28" message="Instance variable 'k' is not initialized" messageType="warning" number="5001" resource="concfactorialPP.result"/>
-<message column="5" line="29" message="Instance variable 'result' is not initialized" messageType="warning" number="5001" resource="concfactorialPP.result"/>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="2432902008176640000" resource="concfactorialPP" value="2432902008176640000"/>
+</result>
 </testResult>

@@ -307,13 +307,13 @@ public class ClassInterpreter extends Interpreter
 	public SClassDefinition findClass(String classname)
 	{
 		LexNameToken name = new LexNameToken("CLASS", classname, null);
-		return (SClassDefinition)classes.findType(name);
+		return (SClassDefinition)SClassDefinitionAssistantInterpreter.findType(classes, name);
 	}
 
 	@Override
 	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
-		PDefinition d = classes.findName(name, NameScope.NAMESANDSTATE);
+		PDefinition d = SClassDefinitionAssistantInterpreter.findName(classes,name, NameScope.NAMESANDSTATE);
 
 		if (d == null || !(d instanceof ANamedTraceDefinition))
 		{
@@ -370,13 +370,13 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public PStm findStatement(File file, int lineno)
 	{
-		return classes.findStatement(file, lineno);
+		return SClassDefinitionAssistantInterpreter.findStatement(classes,file, lineno);
 	}
 
 	@Override
 	public PExp findExpression(File file, int lineno)
 	{
-		return classes.findExpression(file, lineno);
+		return SClassDefinitionAssistantInterpreter.findExpression(classes,file, lineno);
 	}
 
 	public void create(String var, String exp) throws Exception

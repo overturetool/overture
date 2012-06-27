@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AErrorCase;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
@@ -73,6 +74,11 @@ public class AImplicitOperationDefinitionAssistantInterpreter
 		}
 
 		return d.getBody() == null ? null : PStmAssistantInterpreter.findExpression(d.getBody(),lineno);
+	}
+
+	public static PStm findStatement(AImplicitOperationDefinition d, int lineno)
+	{
+		return d.getBody() == null ? null : PStmAssistantInterpreter.findStatement(d.getBody(),lineno);
 	}
 
 }

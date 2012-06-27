@@ -2,6 +2,8 @@ package org.overture.interpreter.assistant.definition;
 
 
 
+import java.util.LinkedList;
+
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -22,6 +24,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -223,6 +226,39 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 			default:
 				return false;
 			
+		}
+	}
+
+	public static PStm findStatement(LinkedList<PDefinition> definitions,
+			int lineno)
+	{
+		for (PDefinition d: definitions)
+		{
+			PStm found = findStatement(d,lineno);
+
+			if (found != null)
+			{
+				return found;
+			}
+		}
+
+   		return null;
+	}
+
+	private static PStm findStatement(PDefinition d, int lineno)
+	{
+		switch (d.kindPDefinition())
+		{			
+			case CLASS:
+				return SClassDefinitionAssistantInterpreter.findStatement((SClassDefinition)d, lineno);
+			case EXPLICITOPERATION:
+				return AExplicitOperationDefinitionAssistantInterpreter.findStatement((AExplicitOperationDefinition)d,lineno);
+			case IMPLICITOPERATION:
+				return AImplicitOperationDefinitionAssistantInterpreter.findStatement((AImplicitOperationDefinition)d,lineno);			
+			case THREAD:
+				return AThreadDefinitionAssistantInterpreter.findStatement((AThreadDefinition)d,lineno);
+			default:
+				return null;
 		}
 	}
 

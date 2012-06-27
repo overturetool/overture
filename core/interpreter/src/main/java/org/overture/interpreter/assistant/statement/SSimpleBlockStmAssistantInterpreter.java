@@ -42,4 +42,18 @@ public class SSimpleBlockStmAssistantInterpreter
 		return found;
 	}
 
+	public static PStm findStatement(SSimpleBlockStm stm, int lineno)
+	{
+		if (stm.getLocation().startLine == lineno) return stm;
+		PStm found = null;
+
+		for (PStm stmt: stm.getStatements())
+		{
+			found = PStmAssistantInterpreter.findStatement(stmt,lineno);
+			if (found != null) break;
+		}
+
+		return found;
+	}
+
 }

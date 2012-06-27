@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
-<message column="15" line="52" message="Recursive function has no measure" messageType="warning" number="5012" resource="diet2japanPP.result"/>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="25" resource="diet2japanPP" value="25"/>
+</result>
 </testResult>

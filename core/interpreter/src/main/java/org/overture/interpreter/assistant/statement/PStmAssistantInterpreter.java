@@ -82,4 +82,57 @@ public class PStmAssistantInterpreter
 		
 	}
 
+	/**
+	 * Find a statement starting on the given line. Single statements just
+	 * compare their location to lineno, but block statements and statements
+	 * with sub-statements iterate over their branches.
+	 *
+	 * @param lineno The line number to locate.
+	 * @return A statement starting on the line, or null.
+	 */
+	public static PStm findStatement(PStm stm, int lineno)
+	{
+		switch (stm.kindPStm())
+		{
+			case ALWAYS:
+				return AAlwaysStmAssistantInterpreter.findStatement((AAlwaysStm)stm,lineno);
+			case ATOMIC:
+				return AAtomicStmAssistantInterpreter.findStatement((AAtomicStm)stm,lineno);
+			case CASES:
+				return ACasesStmAssistantInterpreter.findStatement((ACasesStm)stm,lineno);
+			case CYCLES:
+				return ACyclesStmAssistantInterpreter.findStatement((ACyclesStm)stm,lineno);
+			case DURATION:
+				return ADurationStmAssistantInterpreter.findStatement((ADurationStm)stm,lineno);
+			case ELSEIF:
+				return AElseIfStmAssistantInterpreter.findStatement((AElseIfStm)stm,lineno);
+			case FORALL:
+				return AForAllStmAssistantInterpreter.findStatement((AForAllStm)stm,lineno);
+			case FORINDEX:
+				return AForIndexStmAssistantInterpreter.findStatement((AForIndexStm)stm,lineno);
+			case FORPATTERNBIND:
+				return AForPatternBindStmAssitantInterpreter.findStatement((AForPatternBindStm)stm,lineno);
+			case IF:
+				return AIfStmAssistantInterpreter.findStatement((AIfStm)stm,lineno);
+			case LETBEST:
+				return ALetBeStStmAssistantInterpreter.findStatement((ALetBeStStm)stm,lineno);
+			case LETDEF:
+				return SLetDefStmAssistantInterpreter.findStatement((SLetDefStm)stm,lineno);
+			case SIMPLEBLOCK:
+				return SSimpleBlockStmAssistantInterpreter.findStatement((SSimpleBlockStm)stm,lineno);
+			case TIXE:
+				return ATixeStmAssistantInterpreter.findStatement((ATixeStm)stm,lineno);
+			case TRAP:
+				return ATrapStmAssistantInterpreter.findStatement((ATrapStm)stm,lineno);
+			case WHILE:
+				return AWhileStmAssistantInterpreter.findStatement((AWhileStm)stm,lineno);
+			default:
+				return findStatementBaseCase(stm, lineno);
+		}
+	}
+	
+	public static PStm findStatementBaseCase(PStm stm, int lineno)
+	{
+		return (stm.getLocation().startLine == lineno) ? stm : null;
+	}
 }
