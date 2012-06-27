@@ -17,8 +17,8 @@ public class StatementTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Statement TestSuite";
 		String root = "src\\test\\resources\\statements";
-		TestSuite test = createTestCompleteFile(name,root+"\\complete",StatementTestCase.class);
-		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",StatementTestCase.class);
+		TestSuite test = createTestCompleteFile(name,root+"\\complete",StatementTestCase.class,"");
+		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",StatementTestCase.class,"");
 		@SuppressWarnings("unchecked")
 		Enumeration<Test> e = test2.tests();
 		while(e.hasMoreElements())

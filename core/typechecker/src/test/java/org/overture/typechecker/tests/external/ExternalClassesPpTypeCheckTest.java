@@ -24,7 +24,7 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 		TestSuite test = null;
 		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassTestCase.class,"vpp");
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

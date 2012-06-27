@@ -15,6 +15,6 @@ public class PatternTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Pattern TestSuite";
 		String root = "src\\test\\resources\\patterns";
-		return createTestSingleLineFile(name,root,PatternTestCase.class);
+		return createTestSingleLineFile(name,root,PatternTestCase.class,"");
 	}
 }

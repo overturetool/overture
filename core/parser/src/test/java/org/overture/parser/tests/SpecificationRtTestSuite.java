@@ -15,6 +15,6 @@ public class SpecificationRtTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Specification RT TestSuite";
 		String root = "src\\test\\resources\\specifications\\rt";
-		return createTestCompleteFile(name,root,SpecificatopnRtTestCase.class);
+		return createTestCompleteFile(name,root,SpecificatopnRtTestCase.class,"");
 	}
 }

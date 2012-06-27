@@ -18,7 +18,7 @@ public class ClassesRtTypeCheckTest extends BaseTestSuite
 		String name = "Type Check Classes TestSuite";
 		String root = "src\\test\\resources\\classesRT";
 		//String root = "src\\test\\resources\\test";
-		TestSuite test =  createTestCompleteFile(name, root, ClassRtTestCase.class);
+		TestSuite test =  createTestCompleteFile(name, root, ClassRtTestCase.class,"");
 		return test;
 	}
 }

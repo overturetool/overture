@@ -17,7 +17,7 @@ public class ModulesSlTypeCheckTest extends BaseTestSuite
 		LexLocation.absoluteToStringLocation = false;
 		String name = "Type Check Modules TestSuite";
 		String root = "src\\test\\resources\\modules";
-		TestSuite test =  createTestCompleteFile(name, root, ModuleTestCase.class);
+		TestSuite test =  createTestCompleteFile(name, root, ModuleTestCase.class,"");
 		return test;
 	}
 }

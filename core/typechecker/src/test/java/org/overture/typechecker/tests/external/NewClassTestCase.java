@@ -33,6 +33,10 @@ public class NewClassTestCase extends NewExternalTypeCheckTestCase
 	@Override
 	public void test() throws Exception
 	{
+		if(file==null)
+		{
+			return;
+		}
 		assertNotNull("File not set", file);
 		compareResults(new OvertureTestHelper().typeCheckPp(file), file.getName() + ".result");
 

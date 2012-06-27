@@ -18,8 +18,8 @@ public class ExpressionTestSuite extends BaseTestSuite
 		
 		String name = "Parser Expression TestSuite";
 		String root = "src\\test\\resources\\expressions";
-		TestSuite test = createTestCompleteFile(name,root+"\\complete",ExpressionTestCase.class);
-		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",ExpressionTestCase.class);
+		TestSuite test = createTestCompleteFile(name,root+"\\complete",ExpressionTestCase.class,"");
+		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",ExpressionTestCase.class,"");
 		@SuppressWarnings("unchecked")
 		Enumeration<Test> e = test2.tests();
 		while(e.hasMoreElements())

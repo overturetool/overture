@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -47,9 +48,29 @@ public class BaseTestSuite extends TestSuite
 	{
 	}
 
+	/**
+	 * Utility method to create a test suite from files
+	 * 
+	 * @param name
+	 *            the suite name
+	 * @param testRootPath
+	 *            the root folder to start the file search
+	 * @param testCase
+	 *            The test case class instantiated. It must have a constructor taking a {@link File}
+	 * @param extensions
+	 *            an array of accepted extensions. If none are given all files are accepted. Empty sequence for the
+	 *            empty extension.
+	 * @return a new test suite
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteDirectory(String name,
-			String testRootPath, Class testCase)
+			String testRootPath, Class testCase, String... extensions)
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException,
 			SecurityException, NoSuchMethodException
@@ -73,9 +94,30 @@ public class BaseTestSuite extends TestSuite
 
 	}
 
+	/**
+	 * Utility method to create a test suite from files
+	 * 
+	 * @param name
+	 *            the suite name
+	 * @param testRootPath
+	 *            the root folder to start the file search
+	 * @param testCase
+	 *            The test case class instantiated. It must have a constructor taking a {@link File} or a {@link File},
+	 *            {@link String} and {@link File}
+	 * @param extensions
+	 *            an array of accepted extensions. If none are given all files are accepted. Empty sequence for the
+	 *            empty extension.
+	 * @return a new test suite
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestCompleteFile(String name,
-			String testRootPath, Class testCase)
+			String testRootPath, Class testCase, String... extensions)
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException,
 			SecurityException, NoSuchMethodException
@@ -97,7 +139,7 @@ public class BaseTestSuite extends TestSuite
 
 			for (File file : testRoot.listFiles())
 			{
-				createCompleteFile(suite, file, ctor, ctorCustom, testRoot);
+				createCompleteFile(suite, file, ctor, ctorCustom, testRoot, extensions);
 			}
 		}
 		return suite;
@@ -106,11 +148,15 @@ public class BaseTestSuite extends TestSuite
 
 	private static void createCompleteFile(TestSuite suite, File file,
 			@SuppressWarnings("rawtypes") Constructor ctor,
-			@SuppressWarnings("rawtypes") Constructor ctorCustom, File testRoot)
+			@SuppressWarnings("rawtypes") Constructor ctorCustom,
+			File testRoot, String... extensions)
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException
 	{
-		if (file.getName().startsWith(".") || file.getName().endsWith(".assert")||file.getName().endsWith(".vdmj") || file.getName().endsWith(".result")|| file.getName().endsWith(".entry"))
+		if (file.getName().startsWith(".")
+				|| !isAcceptedFile(file, Arrays.asList(extensions)))// file.getName().endsWith(".assert")||file.getName().endsWith(".vdmj")
+																	// || file.getName().endsWith(".result")||
+																	// file.getName().endsWith(".entry"))
 		{
 			return;
 		}
@@ -118,11 +164,11 @@ public class BaseTestSuite extends TestSuite
 		{
 			for (File f : file.listFiles())
 			{
-				createCompleteFile(suite, f, ctor,ctorCustom,testRoot);
+				createCompleteFile(suite, f, ctor, ctorCustom, testRoot, extensions);
 			}
 		} else
 		{
-//			System.out.println("Creating test for:" + file);
+			// System.out.println("Creating test for:" + file);
 			Object instance = null;
 			if (ctorCustom == null)
 			{
@@ -136,42 +182,88 @@ public class BaseTestSuite extends TestSuite
 		}
 
 	}
-	
-	private static void createDirectory(TestSuite suite, File file,
-			@SuppressWarnings("rawtypes") Constructor ctor)
-			throws IllegalArgumentException, InstantiationException,
-			IllegalAccessException, InvocationTargetException
+
+	private static boolean isAcceptedFile(File file, List<String> extensions)
 	{
-		if (file.getName().startsWith("."))
+		if (extensions == null || extensions.isEmpty() || file.isDirectory())
+		{
+			return true;
+		}
+		for (String ext : extensions)
+		{
+			if (ext.isEmpty() && !file.getName().contains("."))
+			{
+				return true;
+			}
+			if (file.getName().endsWith("." + ext))
+			{
+				return true;
+			}
+			// System.out.println("Skipping: "+file.getName());
+		}
+		return false;
+	}
+
+	private static void createDirectory(TestSuite suite, File file,
+			@SuppressWarnings("rawtypes") Constructor ctor,
+			String... extensions) throws IllegalArgumentException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException
+	{
+		if (file.getName().startsWith(".")
+				|| !isAcceptedFile(file, Arrays.asList(extensions)))
 		{
 			return;
 		}
 		if (file.isDirectory())
 		{
-//			System.out.println("Creating test for:" + file);
+			// System.out.println("Creating test for:" + file);
 			Object instance = ctor.newInstance(new Object[] { file });
 			suite.addTest((Test) instance);
 		}
 
 	}
 
+	/**
+	 * Utility method to create a test suite from files
+	 * 
+	 * @param name
+	 *            the suite name
+	 * @param testRootPath
+	 *            the root folder to start the file search
+	 * @param testCase
+	 *            The test case class instantiated. It must have a constructor taking a {@link File}, {@link String} and
+	 *            {@link String}
+	 * @param extensions
+	 *            an array of accepted extensions. If none are given all files are accepted. Empty sequence for the
+	 *            empty extension.
+	 * @return a new test suite
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 * @throws IOException
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static TestSuite createTestSingleLineFile(String name,
-			String testRootPath, Class testCase)
+			String testRootPath, Class testCase, String... extensions)
 			throws IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException,
 			SecurityException, NoSuchMethodException, IOException
 	{
 		File testRoot = getFile(testRootPath);
-		Constructor ctor = testCase.getConstructor(new Class[] {File.class, String.class,
-				String.class });
+		Constructor ctor = testCase.getConstructor(new Class[] { File.class,
+				String.class, String.class });
 		TestSuite suite = new BaseTestSuite(name);
 
 		if (testRoot != null && testRoot.exists())
 		{
 			for (File file : testRoot.listFiles())
 			{
-				if (file.getName().startsWith(".")||file.getName().endsWith("_results"))
+				if (file.getName().startsWith(".")
+						|| !isAcceptedFile(file, Arrays.asList(extensions)))// ||file.getName().endsWith("_results"))
 				{
 					continue;
 				}
@@ -180,7 +272,7 @@ public class BaseTestSuite extends TestSuite
 				{
 					for (int i = 0; i < lines.size(); i++)
 					{
-						Object instance = ctor.newInstance(new Object[] {file,
+						Object instance = ctor.newInstance(new Object[] { file,
 								file.getName() + "_L" + i + "_" + lines.get(i),
 								lines.get(i) });
 						suite.addTest((Test) instance);

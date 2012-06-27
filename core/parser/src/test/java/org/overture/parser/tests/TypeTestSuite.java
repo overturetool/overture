@@ -15,6 +15,6 @@ public class TypeTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Type TestSuite";
 		String root = "src\\test\\resources\\type";
-		return createTestSingleLineFile(name,root,TypeTestCase.class);
+		return createTestSingleLineFile(name,root,TypeTestCase.class,"");
 	}
 }

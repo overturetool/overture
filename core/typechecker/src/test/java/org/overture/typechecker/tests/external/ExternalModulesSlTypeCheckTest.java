@@ -24,7 +24,7 @@ public class ExternalModulesSlTypeCheckTest extends BaseTestSuite
 		TestSuite test = null;
 		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), NewModuleTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), NewModuleTestCase.class,"vdm");
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

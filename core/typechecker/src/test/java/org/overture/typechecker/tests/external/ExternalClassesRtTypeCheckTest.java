@@ -24,7 +24,7 @@ public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
 		TestSuite test = null;
 		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassRtTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassRtTestCase.class,"vpp");
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

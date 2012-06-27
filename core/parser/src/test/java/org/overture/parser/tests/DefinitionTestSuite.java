@@ -17,8 +17,8 @@ public class DefinitionTestSuite extends BaseTestSuite
 	{
 		String name = "Parser Definition TestSuite";
 		String root = "src\\test\\resources\\definitions";
-		TestSuite test = createTestCompleteFile(name,root+"\\complete",DefinitionTestCase.class);
-		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",DefinitionTestCase.class);
+		TestSuite test = createTestCompleteFile(name,root+"\\complete",DefinitionTestCase.class,"");
+		TestSuite test2 = createTestSingleLineFile(name,root+"\\singleline",DefinitionTestCase.class,"");
 		@SuppressWarnings("unchecked")
 		Enumeration<Test> e = test2.tests();
 		while(e.hasMoreElements())

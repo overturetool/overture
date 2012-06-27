@@ -18,7 +18,7 @@ public class ClassPpPogTestSuite extends BaseTestSuite
 //		Properties.recordTestResults = true;
 		String name = "POG Classes PP TestSuite";
 		String root = "src\\test\\resources\\classesPP";
-		TestSuite test =  createTestCompleteFile(name, root, ClassPpPoTestCase.class);
+		TestSuite test =  createTestCompleteFile(name, root, ClassPpPoTestCase.class,"");
 		return test;
 	}
 }
