@@ -260,12 +260,12 @@ public class BaseTestSuite extends TestSuite
 
 		if (testRoot != null && testRoot.exists())
 		{
-			for (File file : testRoot.listFiles())
+			L : for (File file : testRoot.listFiles())
 			{
 				if (file.getName().startsWith(".")
 						|| !isAcceptedFile(file, Arrays.asList(extensions)))// ||file.getName().endsWith("_results"))
 				{
-					continue;
+					continue L;
 				}
 				List<String> lines = readFile(file);
 				if (lines != null)

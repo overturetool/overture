@@ -235,7 +235,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			if (v == null)
 			{
-    			VdmRuntimeError.abort(node.getLocation(),4035, "Object has no field: " + node.getField().name, ctxt);
+    			VdmRuntimeError.abort(node.getField().getLocation(),4035, "Object has no field: " + node.getField().name, ctxt);
 			}
 
 			v = v.deref();
