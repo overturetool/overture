@@ -154,7 +154,7 @@ public class BaseTestSuite extends TestSuite
 			IllegalAccessException, InvocationTargetException
 	{
 		if (file.getName().startsWith(".")
-				|| !isAcceptedFile(file, Arrays.asList(extensions)))// file.getName().endsWith(".assert")||file.getName().endsWith(".vdmj")
+				|| !isNotAcceptedFile(file, Arrays.asList(extensions)))// file.getName().endsWith(".assert")||file.getName().endsWith(".vdmj")
 																	// || file.getName().endsWith(".result")||
 																	// file.getName().endsWith(".entry"))
 		{
@@ -183,7 +183,7 @@ public class BaseTestSuite extends TestSuite
 
 	}
 
-	private static boolean isAcceptedFile(File file, List<String> extensions)
+	private static boolean isNotAcceptedFile(File file, List<String> extensions)
 	{
 		if (extensions == null || extensions.isEmpty() || file.isDirectory())
 		{
@@ -211,7 +211,7 @@ public class BaseTestSuite extends TestSuite
 			InvocationTargetException
 	{
 		if (file.getName().startsWith(".")
-				|| !isAcceptedFile(file, Arrays.asList(extensions)))
+				|| !isNotAcceptedFile(file, Arrays.asList(extensions)))
 		{
 			return;
 		}
@@ -260,12 +260,12 @@ public class BaseTestSuite extends TestSuite
 
 		if (testRoot != null && testRoot.exists())
 		{
-			L : for (File file : testRoot.listFiles())
+			for (File file : testRoot.listFiles())
 			{
 				if (file.getName().startsWith(".")
-						|| !isAcceptedFile(file, Arrays.asList(extensions)))// ||file.getName().endsWith("_results"))
+						|| isNotAcceptedFile(file, Arrays.asList(extensions)))// ||file.getName().endsWith("_results"))
 				{
-					continue L;
+					continue;
 				}
 				List<String> lines = readFile(file);
 				if (lines != null)
