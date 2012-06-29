@@ -144,12 +144,12 @@ public class PeriodicStatement extends Statement
 
 				if (values[i] < 0)
 				{
-					abort(4157, "Expecting +ive integer in periodic argument " + (i+1), ctxt);
+					abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
 				}
 			}
 			catch (ValueException e)
 			{
-				abort(4157, "Expecting +ive integer in periodic argument " + (i+1), ctxt);
+				abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
 			}
 
 			i++;
@@ -157,14 +157,14 @@ public class PeriodicStatement extends Statement
 
 		if (values[0] == 0)
 		{
-			abort(4158, "Period argument must be non-zero", ctxt);
+			abort(4158, "Period argument must be non-zero, was " + values[0], ctxt);
 		}
 
 		if (args.size() == 4)
 		{
 			if (values[2] >= values[0])
 			{
-				abort(4159, "Delay argument must be less than the period", ctxt);
+				abort(4159, "Delay argument (" + values[2] + ") must be less than the period (" + values[0] + ")", ctxt);
 			}
 		}
 		
