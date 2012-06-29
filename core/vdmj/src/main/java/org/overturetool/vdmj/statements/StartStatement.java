@@ -142,8 +142,13 @@ public class StartStatement extends Statement
 		{
     		RootContext global = ClassInterpreter.getInstance().initialContext;
     		Context pctxt = new ObjectContext(op.name.location, "async", global, target);
-
 			PeriodicStatement ps = (PeriodicStatement)op.body;
+			
+			// We disable the swapping and time (RT) as periodic evaluation should be "free".
+			pctxt.threadState.setAtomic(true);
+			ps.eval(pctxt);	// Ignore return value
+			pctxt.threadState.setAtomic(false);
+			
 			OperationValue pop = pctxt.lookup(ps.opname).operationValue(pctxt);
 
 			long period = ps.values[0];
