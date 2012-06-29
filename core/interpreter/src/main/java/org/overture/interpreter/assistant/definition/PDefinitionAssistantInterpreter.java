@@ -216,11 +216,11 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		switch(d.kindPDefinition())
 		{
 			case IMPORTED:
-				return isValueDefinition(((AImportedDefinition)d).getDef());
+				return isInstanceVariable(((AImportedDefinition)d).getDef());
 			case INHERITED:
-				return isValueDefinition(((AInheritedDefinition)d).getSuperdef());
+				return isInstanceVariable(((AInheritedDefinition)d).getSuperdef());
 			case RENAMED:
-				return isValueDefinition(((ARenamedDefinition)d).getDef());
+				return isInstanceVariable(((ARenamedDefinition)d).getDef());
 			case INSTANCEVARIABLE:
 				return true;
 			default:
