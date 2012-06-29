@@ -84,7 +84,7 @@ as the expected and actual values.
 2024, "Expecting external declarations after 'ext'"
 2025, "Expecting <name>: exp->exp in errs clause"
 2026, "Expecting 'rd' or 'wr' after 'ext'"
-2027, "Expecting +ive number in periodic statement"
+2027, -
 2028, "Expecting 'per' or 'mutex'"
 2029, "Expecting <set bind> = <expression>"
 2030, "Expecting simple field identifier"
@@ -636,8 +636,8 @@ as the expected and actual values.
 3285, "System class can only define a default constructor"
 3286, "Constructor cannot be 'async'"
 3287, "Periodic thread must have <n> argument(s)"
-3288, "Period argument must be non-zero"
-3289, "Delay argument must be less than the period"
+3288, -
+3289, -
 3290, "Argument to setPriority must be an operation"
 3291, "Argument to setPriority cannot be a constructor"
 3292, "Constructor is not accessible"
@@ -664,6 +664,7 @@ as the expected and actual values.
 3313, "Operation returns void value"
 3314, "Map pattern is not matched against map type"
 3315, "Matching expression is not a map type"
+3316, "Expecting number in periodic argument"
 
 
 4000, "Cannot instantiate abstract class <class>"
@@ -818,6 +819,9 @@ as the expected and actual values.
 4154, "Cannot match map pattern"
 4155, "Map union pattern does not match expression"
 4156, "Cannot match map pattern"
+4157, "Expecting +ive integer in periodic argument <n>"
+4158, "Period argument must be non-zero"
+4159, "Delay argument must be less than the period"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

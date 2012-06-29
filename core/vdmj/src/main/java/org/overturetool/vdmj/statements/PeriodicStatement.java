@@ -29,11 +29,10 @@ import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.expressions.IntegerLiteralExpression;
-import org.overturetool.vdmj.expressions.RealLiteralExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.OperationType;
@@ -70,43 +69,13 @@ public class PeriodicStatement extends Statement
 		}
 		else
 		{
-			int i = 0;
-
 			for (Expression arg: args)
 			{
-				arg.location.hit();
-				values[i] = -1;
-
-				if (arg instanceof IntegerLiteralExpression)
+				Type type = arg.typeCheck(env, null, scope);
+				
+				if (!type.isNumeric())
 				{
-					IntegerLiteralExpression e = (IntegerLiteralExpression)arg;
-					values[i] = e.value.value;
-				}
-				else if (arg instanceof RealLiteralExpression)
-				{
-					RealLiteralExpression r = (RealLiteralExpression)arg;
-					values[i] = Math.round(r.value.value);
-				}
-
-				if (values[i] < 0)
-				{
-					arg.report(2027, "Expecting +ive literal number in periodic statement");
-				}
-
-				i++;
-			}
-
-			if (values[0] == 0)
-			{
-				args.get(0).report(3288, "Period argument must be non-zero");
-			}
-
-			if (args.size() == 4)
-			{
-				if (values[2] >= values[0])
-				{
-					args.get(2).report(
-						3289, "Delay argument must be less than the period");
+					arg.report(3316, "Expecting number in periodic argument");
 				}
 			}
 		}
@@ -164,7 +133,42 @@ public class PeriodicStatement extends Statement
 	@Override
 	public Value eval(Context ctxt)
 	{
-		return null;	// Never reached - see StartStatement.
+		int i = 0;
+		
+		for (Expression arg: args)
+		{
+			try
+			{
+				arg.location.hit();
+				values[i] = arg.eval(ctxt).intValue(ctxt);
+
+				if (values[i] < 0)
+				{
+					abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
+				}
+			}
+			catch (ValueException e)
+			{
+				abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
+			}
+
+			i++;
+		}
+
+		if (values[0] == 0)
+		{
+			abort(4158, "Period argument must be non-zero, was " + values[0], ctxt);
+		}
+
+		if (args.size() == 4)
+		{
+			if (values[2] >= values[0])
+			{
+				abort(4159, "Delay argument (" + values[2] + ") must be less than the period (" + values[0] + ")", ctxt);
+			}
+		}
+		
+		return null;	// Not actually used - see StartStatement
 	}
 
 	@Override
