@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.PTypeAssistant;
@@ -29,7 +30,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
-import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
@@ -1090,4 +1090,5 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return other;
 	}
 
+	
 }

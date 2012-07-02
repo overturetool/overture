@@ -1,9 +1,0 @@
-module A
-definitions
-
-functions
-
-a : int -> int
-a(b) == 1/*b*/;
-
-end A

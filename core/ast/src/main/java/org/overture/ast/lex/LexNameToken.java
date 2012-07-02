@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
@@ -201,7 +202,7 @@ public class LexNameToken extends LexToken implements Serializable
 		if (hashcode == 0)
 		{
 			hashcode = module.hashCode() + name.hashCode() + (old ? 1 : 0)
-					+ (typeQualifier == null ? 0 : typeQualifier.hashCode());
+					+ (typeQualifier == null ? 0 : PTypeAssistant.hashCode(typeQualifier));
 		}
 
 		return hashcode;

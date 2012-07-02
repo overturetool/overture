@@ -90,11 +90,6 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 
 		if (parsed)
 		{
-			if(file.getAbsolutePath().contains("SAFER"))
-			{//FIXME: remote this filter when SAFER is fixed in the warning reporting
-				return;
-			}
-			
 			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings);
 			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors) || errorsFound;
 			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result) || errorsFound;

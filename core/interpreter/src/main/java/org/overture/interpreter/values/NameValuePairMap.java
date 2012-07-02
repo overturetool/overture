@@ -23,7 +23,6 @@
 
 package org.overture.interpreter.values;
 
-import java.util.Iterator;
 
 import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.util.HelpLexNameToken;

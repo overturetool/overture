@@ -162,6 +162,11 @@ public class AFunctionTypeAssistantTC {
 		return ftype;
 		
 	}
+ 
+	public static int hashCode(AFunctionType type)
+	{
+		return PTypeAssistantTC.hashCode(type.getParameters()) + PTypeAssistantTC.hashCode(type.getResult());
+	}
 
 	
 	

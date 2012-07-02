@@ -164,7 +164,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 		if (state != null)	// Two args, called Sigma~ and Sigma
 		{
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().getOldName()));
-			plist.add(AstFactory.newAIdentifierPattern(state.getName()));
+			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{

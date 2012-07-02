@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterSlTestCase">
+<testResult type="org.overture.interpreter.tests.framework.ModuleTestCase">
 <result>
-<output object="rO0ABXNyAC9vcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLk5hdHVyYWxPbmVWYWx1ZQAAAAAAAAABAgAAeHIALG9yZy5vdmVydHVyZS5pbnRlcnByZXRlci52YWx1ZXMuTmF0dXJhbFZhbHVlAAAAAAAAAAECAAB4cgAsb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnZhbHVlcy5JbnRlZ2VyVmFsdWUAAAAAAAAAAQIAAUoAB2xvbmdWYWx4cgAtb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnZhbHVlcy5SYXRpb25hbFZhbHVlAAAAAAAAAAECAAB4cgApb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnZhbHVlcy5SZWFsVmFsdWUAAAAAAAAAAQIAAHhyACxvcmcub3ZlcnR1cmUuaW50ZXJwcmV0ZXIudmFsdWVzLk51bWVyaWNWYWx1ZQAAAAAAAAABAgABRAAFdmFsdWV4cgAlb3JnLm92ZXJ0dXJlLmludGVycHJldGVyLnZhbHVlcy5WYWx1ZQAAAAAAAAABAgAAeHBAAAAAAAAAAAAAAAAAAAAC" resource="CMSL" value="2"/>
+<output object="{mk_token(&quot;Magazine 1&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 0), mk_(&lt;FlareTwoB&gt;, 100), mk_(&lt;FlareOneC&gt;, 300), mk_(&lt;DoNothingC&gt;, 700), mk_(&lt;FlareTwoC&gt;, 800), mk_(&lt;FlareOneC&gt;, 1200)], mk_token(&quot;Magazine 3&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 200), mk_(&lt;FlareTwoA&gt;, 1100), mk_(&lt;DoNothingA&gt;, 1600), mk_(&lt;FlareOneA&gt;, 1700)]}" resource="CMSL" value="{mk_token(&quot;Magazine 1&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 0), mk_(&lt;FlareTwoB&gt;, 100), mk_(&lt;FlareOneC&gt;, 300), mk_(&lt;DoNothingC&gt;, 700), mk_(&lt;FlareTwoC&gt;, 800), mk_(&lt;FlareOneC&gt;, 1200)], mk_token(&quot;Magazine 3&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 200), mk_(&lt;FlareTwoA&gt;, 1100), mk_(&lt;DoNothingA&gt;, 1600), mk_(&lt;FlareOneA&gt;, 1700)]}"/>
 </result>
 </testResult>

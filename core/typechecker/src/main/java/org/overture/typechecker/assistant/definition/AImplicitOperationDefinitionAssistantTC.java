@@ -198,7 +198,7 @@ public class AImplicitOperationDefinitionAssistantTC {
 		
 		if (state != null)
 		{
-			plist.add(AstFactory.newAIdentifierPattern(state.getName()));
+			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
 		}
 		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
