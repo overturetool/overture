@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.InterpreterStringRtTestCase">
+<result>
+<output object="Error 4041: 'is not yet specified' statement reached in 'CPU' (console) at line 1:75" resource="CarNaviRadioRT" value="Error 4041: 'is not yet specified' statement reached in 'CPU' (console) at line 1:75"/>
+</result>
+</testResult>

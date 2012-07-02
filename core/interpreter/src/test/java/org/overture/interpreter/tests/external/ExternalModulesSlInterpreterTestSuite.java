@@ -21,7 +21,7 @@ public class ExternalModulesSlInterpreterTestSuite extends BaseTestSuite
 		TestSuite test = null;
 		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalStringInterpreterSlTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalStringInterpreterSlTestCase.class,"vdm");
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

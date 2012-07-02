@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -37,9 +38,9 @@ public class AValueDefinitionAssistantInterpreter extends
 		catch (PatternMatchException e)
 		{
 			VdmRuntimeError.abort(e, initialContext);
-		} catch (Throwable e)
+		} catch (AnalysisException e)
 		{
-			VdmRuntimeError.abortRethrow(e);
+			
 		}
 
 		return null;

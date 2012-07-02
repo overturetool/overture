@@ -28,8 +28,7 @@ public class AEqualsDefinitionAssistantInterpreter
 			v = d.getTest().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
 		} catch (Throwable e1)
 		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			VdmRuntimeError.abortRethrow(e1);
 		}
 		NameValuePairList nvpl = null;
 

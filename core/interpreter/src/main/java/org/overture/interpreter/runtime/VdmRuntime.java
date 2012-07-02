@@ -72,7 +72,15 @@ public class VdmRuntime
 	
 	public static AModuleModulesRuntime getNodeState(AModuleModules node)
 	{
-		return (AModuleModulesRuntime) runtimeState.get(node);//FIXME remember to init all Delegates in all modules at startup
+		AModuleModulesRuntime state = (AModuleModulesRuntime) runtimeState.get(node);
+
+		if(state == null)
+		{
+			state = new AModuleModulesRuntime(node);
+			runtimeState.put(node, state);
+		}
+		
+		return state;
 	}
 	
 	public static SClassDefinitionRuntime getNodeState(SClassDefinition node)

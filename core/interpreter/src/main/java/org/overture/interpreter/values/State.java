@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.lex.LexLocation;
@@ -107,13 +108,18 @@ public class State implements ValueListener
 			doInvariantChecks = true;
 			changedValue(null, null, globals);
 		}
-		catch (ValueException e)
+//		catch (ValueException e)
+//		{
+//			throw new ContextException(e, definition.getLocation());
+//		}
+		catch (AnalysisException e)
 		{
-			throw new ContextException(e, definition.getLocation());
-		} catch (Throwable e)
-		{
-			VdmRuntimeError.abortRethrow(e);
-		}
+			if(e instanceof ValueException)
+			{
+				VdmRuntimeError.abort(definition.getLocation(), (ValueException) e );
+			}
+					
+		} 
 		finally
 		{
 			doInvariantChecks = true;

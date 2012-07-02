@@ -21,7 +21,7 @@ public class ExternalClassPpInterpreterTestSuite extends BaseTestSuite
 		TestSuite test = null;
 		if (root != null && root.exists())
 		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalStringInterpreterPpTestCase.class);
+			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalStringInterpreterPpTestCase.class,"vpp");
 		} else
 		{
 			test = new TestSuite("Empty Skipped Test Suite");

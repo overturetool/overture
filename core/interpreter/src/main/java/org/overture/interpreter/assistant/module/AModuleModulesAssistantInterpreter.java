@@ -23,7 +23,13 @@ public class AModuleModulesAssistantInterpreter extends
 
 	public static Context getStateContext(AModuleModules defaultModule)
 	{
-		// TODO Auto-generated method stub
+		AStateDefinition sdef = PDefinitionListAssistantInterpreter.findStateDefinition(defaultModule.getDefs());
+
+		if (sdef != null)
+		{
+			return AStateDefinitionAssistantInterpreter.getStateContext(sdef);
+		}
+
 		return null;
 	}
 
@@ -52,11 +58,7 @@ public class AModuleModulesAssistantInterpreter extends
 				catch (ContextException e)
 				{
 					trouble.add(e);		// Carry on...
-				} catch (Throwable e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} 
 			}
 		}
 
@@ -69,10 +71,6 @@ public class AModuleModulesAssistantInterpreter extends
 			catch (ContextException e)
 			{
 				trouble.add(e);		// Carry on...
-			} catch (Throwable e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 

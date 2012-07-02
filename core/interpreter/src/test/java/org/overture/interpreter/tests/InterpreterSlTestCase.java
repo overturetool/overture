@@ -13,6 +13,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -77,9 +78,15 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 			{
 				entry = getEntries().get(0);
 			}
-			Value val = InterpreterUtil.interpret(Settings.dialect,entry, file);
-			System.out.println(file.getName() + " -> " + val);
-			result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
+			try
+			{
+				Value val = InterpreterUtil.interpret(Settings.dialect,entry, file);
+				System.out.println(file.getName() + " -> " + val);
+				result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
+			}catch (Exception e) {
+				result = new Result<Value>(new SeqValue(e.getMessage()), new Vector<IMessage>(), new Vector<IMessage>());
+			}
+			
 			compareResults(result, file.getName()+".result");
 		}
 

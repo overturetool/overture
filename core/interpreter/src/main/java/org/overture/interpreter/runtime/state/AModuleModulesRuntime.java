@@ -1,5 +1,6 @@
 package org.overture.interpreter.runtime.state;
 
+import org.overture.ast.modules.AModuleModules;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.interpreter.util.Delegate;
@@ -14,6 +15,11 @@ public class AModuleModulesRuntime implements IRuntimeState
 	private Object delegateObject = null;
 
 	
+	public AModuleModulesRuntime(AModuleModules node)
+	{
+		delegate = new Delegate(node.getName().name, node.getDefs());
+	}
+
 	public boolean hasDelegate()
 	{
 		if (delegate.hasDelegate())

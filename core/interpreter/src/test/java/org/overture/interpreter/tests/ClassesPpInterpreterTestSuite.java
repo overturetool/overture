@@ -14,8 +14,8 @@ public class ClassesPpInterpreterTestSuite extends BaseTestSuite
 	{
 		org.overturetool.test.framework.Properties.recordTestResults = false;
 		String name = "Interpreter Class PP TestSuite";
-		String root = "src\\test\\resources\\test";
-		TestSuite test =  createTestCompleteFile(name, root, InterpreterStringPpTestCase.class);
+		String root = "src\\test\\resources\\classes";
+		TestSuite test =  createTestCompleteFile(name, root, InterpreterStringPpTestCase.class,"vpp","");
 		return test;
 	}
 }
