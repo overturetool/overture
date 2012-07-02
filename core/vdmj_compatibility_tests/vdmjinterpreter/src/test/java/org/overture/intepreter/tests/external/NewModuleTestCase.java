@@ -5,16 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.overture.interpreter.tests.OvertureTestHelper;
 import org.overture.interpreter.tests.framework.ModuleTestCase;
-import org.overturetool.test.framework.TestResourcesResultTestCase;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.typechecker.TypeChecker;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class NewModuleTestCase extends ModuleTestCase
 {
