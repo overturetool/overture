@@ -42,9 +42,9 @@ public class CPUValue extends ObjectValue
 	private final List<ObjectValue> deployed;
 	public static CPUValue vCPU;
 
-	public CPUValue(AClassType classtype, NameValuePairMap map, ValueList argvals)
+	public CPUValue(AClassType aClassType, NameValuePairMap map, ValueList argvals)
 	{
-		super(classtype, map, new Vector<ObjectValue>(), null, null);
+		super(aClassType, map, new Vector<ObjectValue>(), null, null);
 
 		QuoteValue parg = (QuoteValue)argvals.get(0);
 		SchedulingPolicy cpup = SchedulingPolicy.factory(parg.value.toUpperCase());

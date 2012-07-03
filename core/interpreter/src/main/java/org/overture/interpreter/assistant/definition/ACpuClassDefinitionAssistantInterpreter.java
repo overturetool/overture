@@ -4,26 +4,44 @@ import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.ast.types.AClassType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.NaturalValue;
 import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.RealValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.VoidValue;
+import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 
-public class ACpuClassDefinitionAssistantInterpreter
+public class ACpuClassDefinitionAssistantInterpreter extends ACpuClassDefinitionAssistantTC
 {
 
-	public static CPUValue newInstance(ACpuClassDefinition instance,
-			Object object, ValueList args, RootContext initialContext)
+	public static CPUValue newInstance(ACpuClassDefinition node,
+			Object object, ValueList argvals, Context ctxt)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		NameValuePairList nvpl = PDefinitionListAssistantInterpreter.getNamedValues(node.getDefinitions(),ctxt);
+		NameValuePairMap map = new NameValuePairMap();
+		map.putAll(nvpl);
+		
+		RealValue sarg = (RealValue)argvals.get(1);
+		if(sarg.value <= 0)
+		{
+			throw new ContextException(
+				4149, "CPU frequency to slow: "+ sarg.value+ " Hz", ctxt.location, ctxt);
+		}else if(sarg.value > CPU_MAX_FREQUENCY)
+		{
+			throw new ContextException(
+				4150, "CPU frequency to fast: "+ sarg.value+ " Hz", ctxt.location, ctxt);
+		}
+		
+		return new CPUValue((AClassType)node.getClasstype(), map, argvals);
 	}
 
 	public static Value deploy(ANotYetSpecifiedStm node, Context ctxt)

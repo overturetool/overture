@@ -1,4 +1,4 @@
-package org.overture.ast.factory;
+package org.overture.typechecker.assistant.definition;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 
-public class ABusClassDefinitionAssitantTC {
+public class ABusClassDefinitionAssistantTC {
 
 	private static String defs =
 			"operations " +

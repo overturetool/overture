@@ -9,6 +9,8 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 
 public class AstFactoryTC extends AstFactory {
 
@@ -16,7 +18,7 @@ public class AstFactoryTC extends AstFactory {
 		ACpuClassDefinition result = new ACpuClassDefinition();
 		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()),
 				new LexNameList(),
-				ACpuClassDefinitionAssitantTC.operationDefs());
+				ACpuClassDefinitionAssistantTC.operationDefs());
 		
 		return result;
 	}
@@ -25,7 +27,7 @@ public class AstFactoryTC extends AstFactory {
 		ABusClassDefinition result = new ABusClassDefinition();
 		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()),
 				new LexNameList(),
-				ABusClassDefinitionAssitantTC.operationDefs());
+				ABusClassDefinitionAssistantTC.operationDefs());
 		
 		result.setInstance(result);
 		

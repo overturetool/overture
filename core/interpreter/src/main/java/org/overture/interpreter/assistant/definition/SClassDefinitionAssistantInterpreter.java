@@ -9,6 +9,9 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
@@ -86,13 +89,19 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	public static ObjectValue newInstance(SClassDefinition node,PDefinition ctorDefinition , ValueList argvals,
 			Context ctxt) throws ValueException
 	{
-		if (node.getIsAbstract())
+		switch (node.kindSClassDefinition())
 		{
-			VdmRuntimeError.abort(node.getLocation(),4000, "Cannot instantiate abstract class " + node.getName(), ctxt);
+			case BUS:
+				return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition)node,ctorDefinition,argvals,ctxt);
+			case CLASS:
+				return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition)node,ctorDefinition ,argvals,ctxt);
+			case CPU:
+				return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition)node, ctorDefinition, argvals, ctxt);
+			case SYSTEM:
+				VdmRuntimeError.abort(node.getLocation(),4135, "Cannot instantiate system class " + node.getName(), ctxt);
 		}
-
-		return makeNewInstance(node,
-			ctorDefinition, argvals, ctxt, new HashMap<LexNameToken, ObjectValue>());
+		
+		return null;
 	}
 
 	protected static ObjectValue makeNewInstance(SClassDefinition node,PDefinition ctorDefinition , ValueList argvals,

@@ -4,7 +4,9 @@ import java.util.LinkedList;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.PONameContext;
@@ -56,6 +58,19 @@ public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistan
 		}
 
    		return null;
+	}
+
+	public static NameValuePairList getNamedValues(
+			LinkedList<PDefinition> definitions, Context ctxt)
+	{
+		NameValuePairList nvl = new NameValuePairList();
+
+		for (PDefinition d: definitions)
+		{
+			nvl.addAll(PDefinitionAssistantInterpreter.getNamedValues(d,ctxt));
+		}
+
+		return nvl;
 	}
 
 }
