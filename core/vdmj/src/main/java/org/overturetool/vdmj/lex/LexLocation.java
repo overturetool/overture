@@ -45,6 +45,9 @@ public class LexLocation implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Added this field to facilitate compatibility tests between VDMJ and ASTv2 */
+	public static boolean absoluteToStringLocation = true;
+	
 	/** A collection of all LexLocation objects. */
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
 	
@@ -111,11 +114,11 @@ public class LexLocation implements Serializable
 		}
 		else if (module == null || module.equals(""))
 		{
-			return "in '" + file + "' at line " + startLine + ":" + startPos;
+			return "in '" + (absoluteToStringLocation ? file : file.getName()) + "' at line " + startLine + ":" + startPos;
 		}
 		else
 		{
-			return "in '" + module + "' (" + file + ") at line " + startLine + ":" + startPos;
+			return "in '" + module + "' (" + (absoluteToStringLocation ? file : file.getName()) + ") at line " + startLine + ":" + startPos;
 		}
 	}
 
@@ -241,16 +244,10 @@ public class LexLocation implements Serializable
 			name.location.startPos,
 			upto.location.endLine,
 			upto.location.endPos);
-		
-		if (nameSpans.get(name) != null)
-		{
-			// Overloaded names use line numbers to distinguish them
-			name = new LexNameToken(name.module, name.name + ":" + name.location.startLine, name.location);
-		}
-		
+
 		nameSpans.put(name, span);
 	}
-	
+
 	public static LexNameList getSpanNames(File filename)
 	{
 		LexNameList list = new LexNameList();
