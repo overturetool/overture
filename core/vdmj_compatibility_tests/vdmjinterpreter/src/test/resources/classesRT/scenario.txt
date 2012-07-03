@@ -1,0 +1,1 @@
+[mk_(1, <MissileA>, 45, 1100), mk_(2, <MissileB>, 270, 1200), mk_(3, <MissileA>, 276, 1300), mk_(4, <MissileC>, 266, 1400)]

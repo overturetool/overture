@@ -7,20 +7,21 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overture.interpreter.tests.framework.ModuleTestCase;
+import org.overture.interpreter.tests.framework.ClassRtTestCase;
 import org.overturetool.test.framework.BaseTestSuite;
 import org.overturetool.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
-public class ModuleVdmSlTypeChecker extends BaseTestSuite {
+public class ClassVdmRtInterpreter extends BaseTestSuite {
 	
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = true;
-		String name = "Type Check Module TestSuite";
-		String root = "src\\test\\resources\\modules\\";
-		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class);
+		String name = "Interpreter Class TestSuite";
+		String root = "src\\test\\resources\\classesRT";
+		//String root = "src\\test\\resources\\test";
+		TestSuite test = createTestCompleteFile(name, root, ClassRtTestCase.class,"");
 		return test;
 	}
 }

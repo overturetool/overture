@@ -1,0 +1,1 @@
+new World("test1_10.txt").run()

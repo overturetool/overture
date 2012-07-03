@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
+<result>
+<output object="" resource="RobotRT" value="null"/>
+</result>
+</testResult>

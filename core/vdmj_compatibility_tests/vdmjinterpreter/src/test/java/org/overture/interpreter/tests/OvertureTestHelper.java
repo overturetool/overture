@@ -89,7 +89,12 @@ public class OvertureTestHelper
 						ClassTypeChecker mtc = new ClassTypeChecker(classes);
 						
 						mtc.typeCheck();
-
+						
+						if(TypeChecker.getErrorCount() > 0 )
+						{
+							return null;
+						}
+						
 						ClassInterpreter interpreter = new ClassInterpreter(parserResult.result);
 						interpreter.init(null);
 						interpreter.setDefaultName(parserResult.result.get(0).getName());
