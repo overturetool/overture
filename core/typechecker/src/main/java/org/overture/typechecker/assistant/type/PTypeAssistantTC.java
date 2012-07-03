@@ -1,7 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.PTypeAssistant;

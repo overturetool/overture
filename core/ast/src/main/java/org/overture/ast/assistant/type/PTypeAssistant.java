@@ -97,6 +97,7 @@ public class PTypeAssistant {
 		assert false : "Can't getNumeric of a non-numeric";
 		return null;
 	}
+	
 	public static int hashCode(PType type)
 	{
 		switch (type.kindPType())

@@ -30,6 +30,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
@@ -211,7 +212,7 @@ public class RecordValue extends Value
 		{
 			RecordValue ot = (RecordValue)val;
 
-			if (ot.type.equals(type))
+			if (PTypeAssistantInterpreter.equals(ot.type,type))
 			{
 				for (AFieldField f: type.getFields())
 				{
@@ -280,7 +281,7 @@ public class RecordValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (to.equals(type))
+		if (PTypeAssistantInterpreter.equals(to, type))
 		{
 			return this;
 		}

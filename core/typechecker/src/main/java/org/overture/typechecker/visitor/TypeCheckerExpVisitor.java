@@ -1863,7 +1863,7 @@ public class TypeCheckerExpVisitor extends
 			return rec;
 		}
 
-		node.setRecordType((ARecordInvariantType) rec.clone());
+		node.setRecordType((ARecordInvariantType) rec);
 
 		if (node.getRecordType().getOpaque())
 		{
@@ -1882,8 +1882,9 @@ public class TypeCheckerExpVisitor extends
 
 			AExplicitFunctionDefinition inv = recordType.getInvDef();
 
-			recordType = AstFactory.newARecordInvariantType(recordType.getName().getExplicit(true), (List<AFieldField>) recordType.getFields().clone());
+			recordType = AstFactory.newARecordInvariantType(recordType.getName().getExplicit(true), recordType.getFields());
 			recordType.setInvDef(inv);
+			node.setRecordType(recordType);
 		}
 
 		if (node.getRecordType().getFields().size() != node.getArgs().size())
