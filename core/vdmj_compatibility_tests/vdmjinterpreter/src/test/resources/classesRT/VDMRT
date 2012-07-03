@@ -590,7 +590,7 @@ end Environment
 
 --IO.vdmrt
 
-
+\begin{vdm_al}
 class IO
 
 -- 	Overture STANDARD LIBRARY: INPUT/OUTPUT
@@ -674,7 +674,7 @@ printf(format, args) ==
 
 end IO
 
-
+\end{vdm_al}
 --Position.vdmrt
 
 \section{Position Class}
@@ -847,7 +847,7 @@ end Printer
 
 
 --Test.vdmrt
-
+\begin{vdm_al}
 class Test
 
 operations
@@ -856,7 +856,7 @@ operations
 
 end Test
 
-
+\end{vdm_al}
 
 --TestCase.vdmrt
 
@@ -3154,6 +3154,10 @@ functions
 values
 
 end World
+
+
+
+
 
 
 \end{vdm_al}

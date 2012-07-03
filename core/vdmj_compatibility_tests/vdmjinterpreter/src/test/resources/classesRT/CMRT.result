@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
 <result>
-<output object="" resource="CMRT" value="null"/>
+<output object="Error 68: Periodic threads overlapping in 'FlareDispenser' (CMRT) at line 437:7" resource="CMRT" value="Error 68: Periodic threads overlapping in 'FlareDispenser' (CMRT) at line 437:7"/>
 </result>
 </testResult>

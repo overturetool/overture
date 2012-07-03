@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
 <result>
-<output object="" resource="oldcarradioRT" value="null"/>
+<output object="{&quot;InsertAddress&quot; |-&gt; mk_(7600, 7600, 7600), &quot;TransmitTMC&quot; |-&gt; mk_(7600, 7600, 7600)}" resource="oldcarradioRT" value="{&quot;InsertAddress&quot; |-&gt; mk_(7600, 7600, 7600), &quot;TransmitTMC&quot; |-&gt; mk_(7600, 7600, 7600)}"/>
 </result>
 </testResult>

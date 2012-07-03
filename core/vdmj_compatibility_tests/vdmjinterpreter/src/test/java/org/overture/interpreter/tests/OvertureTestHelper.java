@@ -92,6 +92,10 @@ public class OvertureTestHelper
 						
 						if(TypeChecker.getErrorCount() > 0 )
 						{
+							for (VDMError err : TypeChecker.getErrors())
+							{
+								System.out.println(err);
+							}
 							return null;
 						}
 						

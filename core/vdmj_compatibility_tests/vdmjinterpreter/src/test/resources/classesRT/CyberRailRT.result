@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
 <result>
-<output object="" resource="CyberRailRT" value="null"/>
+<output object="Error 4087: Cannot convert nil (nil) to seq of (inline) in 'Customer' (CyberRailRT) at line 435:9" resource="CyberRailRT" value="Error 4087: Cannot convert nil (nil) to seq of (inline) in 'Customer' (CyberRailRT) at line 435:9"/>
 </result>
 </testResult>

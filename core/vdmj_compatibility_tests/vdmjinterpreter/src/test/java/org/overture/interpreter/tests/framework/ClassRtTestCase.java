@@ -52,7 +52,7 @@ public class ClassRtTestCase extends InterpreterBaseTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		Settings.dialect = Dialect.VDM_RT;
-		Settings.release = Release.VDM_10;
+		Settings.release = Release.CLASSIC;
 		TypeChecker.clearErrors();
 	}
 
@@ -77,7 +77,7 @@ public class ClassRtTestCase extends InterpreterBaseTestCase {
 			{
 				Settings.baseDir = file.getParentFile();
 				val = new OvertureTestHelper().interpret(Settings.dialect,entry, file);
-				result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
+				result = new Result<String>(val+"", new Vector<IMessage>(), new Vector<IMessage>());
 				System.out.println(file.getName() + " -> " + val);
 				
 			} catch (Exception e)
