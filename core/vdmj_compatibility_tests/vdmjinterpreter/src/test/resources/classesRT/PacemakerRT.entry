@@ -1,1 +1,1 @@
-new World("tests/scenarioGoodHeart.arg",<DOO>).Run()
+new World("scenarioGoodHeart.arg",<DOO>).Run()

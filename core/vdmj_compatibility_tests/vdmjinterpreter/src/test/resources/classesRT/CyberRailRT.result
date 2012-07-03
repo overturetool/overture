@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
 <result>
-<output object="" resource="CyberRailRT" value="null"/>
+<output object="Error 68: Periodic threads overlapping in 'Customer' (CyberRailRT) at line 504:1" resource="CyberRailRT" value="Error 68: Periodic threads overlapping in 'Customer' (CyberRailRT) at line 504:1"/>
 </result>
 </testResult>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
 <result>
-<output object="" resource="CarNaviRadioRT" value="null"/>
+<output object="{&quot;TransmitTMC&quot; |-&gt; mk_(118187598, 118187598, 118187598), &quot;VolumeKnob&quot; |-&gt; mk_(36490730, 140915746, 6.2612283777777776E7)}" resource="CarNaviRadioRT" value="{&quot;TransmitTMC&quot; |-&gt; mk_(118187598, 118187598, 118187598), &quot;VolumeKnob&quot; |-&gt; mk_(36490730, 140915746, 6.2612283777777776E7)}"/>
 </result>
 </testResult>

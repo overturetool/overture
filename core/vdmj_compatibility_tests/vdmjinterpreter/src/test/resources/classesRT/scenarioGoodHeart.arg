@@ -1,0 +1,6 @@
+mk_(50000 ,[mk_(<PULSE>,<ATRIA> ,2 ,10000) ,mk_(<PULSE>,<VENTRICLE> ,2 ,11500),
+mk_(<PULSE>,<ATRIA> ,2 ,20000) ,mk_(<PULSE>,<VENTRICLE> ,2 ,21500) ,
+mk_(<PULSE>,<ATRIA> ,2 ,30000) ,mk_(<PULSE>,<VENTRICLE> ,2 ,31500) ,
+mk_(<PULSE>,<ATRIA> ,2 ,40000) ,mk_(<PULSE>,<VENTRICLE> ,2 ,41500) ] )
+
+

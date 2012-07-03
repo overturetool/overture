@@ -960,7 +960,7 @@ operations
  
 public World: () ==> World
 World() ==
- (env := new Environment("scenario.txt");
+ (env := new Environment("HAscenario.txt");
   HA`Host.AddNode(HA`TempNode.GetID(),HA`TempNode.GetType());
   HA`Host.AddNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
   HA`Host.AddNode(HA`ThermNode.GetID(),HA`ThermNode.GetType());
