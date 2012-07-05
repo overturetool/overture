@@ -14,7 +14,7 @@ public class ClassesRtInterpreterTestSuite extends BaseTestSuite
 	{
 		org.overturetool.test.framework.Properties.recordTestResults = false;
 		String name = "Interpreter Class RT TestSuite";
-		String root = "src\\test\\resources\\test";
+		String root = "src\\test\\resources\\classesRT";
 		TestSuite test =  createTestCompleteFile(name, root, InterpreterStringRtTestCase.class,"vpp","");
 		return test;
 	}
