@@ -114,7 +114,7 @@ operations
       RadNavSys`mmi.HandleKeyPress(2,num2) )
 
 thread
-  periodic (2000,100,1000,0) 
+  periodic (2000E6,100,1000,0) 
     (createSignal)
 
 end InsertAddress
@@ -285,7 +285,7 @@ operations
       RadNavSys`radio.HandleTMC(num2) )
 
 thread
-  periodic (4000,400,3910,0) 
+  periodic (4000E6,400,3910,0) 
     (createSignal)
 
 end TransmitTMC
@@ -314,7 +314,7 @@ operations
       RadNavSys`mmi.HandleKeyPress(1,num2) )
 
 thread
-  periodic (1000,50,500,0) 
+  periodic (1000E6,50,500,0) 
     (createSignal)
 
 end VolumeKnob
