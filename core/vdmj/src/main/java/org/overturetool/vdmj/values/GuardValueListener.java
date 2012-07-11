@@ -25,8 +25,14 @@ package org.overturetool.vdmj.values;
 
 import java.io.Serializable;
 
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.config.Properties;
+import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.rtlog.RTLogger;
+import org.overturetool.vdmj.messages.rtlog.RTExtendedTextMessage;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.scheduler.BasicSchedulableThread;
 
 public class GuardValueListener implements ValueListener, Serializable
 {
@@ -40,6 +46,20 @@ public class GuardValueListener implements ValueListener, Serializable
 
 	public void changedValue(LexLocation location, Value value, Context ctxt)
 	{
+		if (Properties.diags_guards)
+		{
+			if (Settings.dialect == Dialect.VDM_PP)
+			{
+				System.err.println(String.format("%s updated value %s",
+						BasicSchedulableThread.getThread(Thread.currentThread()), location));
+			}
+			else
+			{
+				RTLogger.log(new RTExtendedTextMessage(String.format("-- %s updated value %s",
+						BasicSchedulableThread.getThread(Thread.currentThread()), location)));
+			}
+		}
+
 		self.guardLock.signal();
 	}
 }
