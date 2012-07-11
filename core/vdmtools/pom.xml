@@ -16,6 +16,8 @@
 		<module>cglib</module>
 		<module>corba</module>
 		<module>vdmtstdlib</module>
-		<module>vdmtoolsapi</module>		
+		<module>vdmtoolsapi</module>
+
+		<module>stdlib</module>
 	</modules>
 </project>

@@ -1,2 +1,0 @@
-let A = new A() in
-	A.firsts() = [1, 2]

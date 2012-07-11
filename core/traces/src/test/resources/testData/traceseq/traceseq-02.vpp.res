@@ -1,1 +1,0 @@
-{"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  =1  in s.Push(x)", "s.Pop()"], "UseStack|PushBeforePop|2" |-> ["s.Reset()", "let x  =2  in s.Push(x)", "s.Pop()"]}

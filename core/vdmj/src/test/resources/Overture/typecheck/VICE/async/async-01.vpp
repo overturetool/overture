@@ -1,9 +1,0 @@
-class A
-
-operations
-
-async Op: () ==> ()
-Op() ==
-  skip
-
-end A

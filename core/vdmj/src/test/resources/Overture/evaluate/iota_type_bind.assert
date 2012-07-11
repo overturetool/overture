@@ -1,2 +1,0 @@
-let A = new A() in
-	A.iotaTest() and A.exists1Test()

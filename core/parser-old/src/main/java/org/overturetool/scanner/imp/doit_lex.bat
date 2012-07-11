@@ -1,1 +1,0 @@
-d:\dev\jflex-1.4.1\bin\jflex.bat -nobak -q scanner.l

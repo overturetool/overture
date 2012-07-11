@@ -1,6 +1,0 @@
-class A
-operations
-	op: () ==> [nat]
-	op() ==	if true then return 1 else return nil;	-- Should be no errors, TC says [nat1]
-	
-end A

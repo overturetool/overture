@@ -1,1 +1,0 @@
-{"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(mk_Stack`R(2).a)", "s.Pop()"]}

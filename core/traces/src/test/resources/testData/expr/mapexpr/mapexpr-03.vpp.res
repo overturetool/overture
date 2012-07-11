@@ -1,1 +1,0 @@
-{"UseStack|PushBeforePop|1" |-> ["s.Reset()", "s.Push(let x  ={7|->8, 9|->5} , y  =dom x union rng x union elems [3, 3] , z  ={e|->e**2|e  in set y}  in z)", "s.Pop()"]}

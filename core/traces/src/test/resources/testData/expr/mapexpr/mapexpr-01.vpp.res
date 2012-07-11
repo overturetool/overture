@@ -1,1 +1,0 @@
-{"UseStack|PushBeforePop|1" |-> ["s.Reset()", "let x  ={8|->7, 5|->9}  in s.Push(x)", "s.Pop()"]}
