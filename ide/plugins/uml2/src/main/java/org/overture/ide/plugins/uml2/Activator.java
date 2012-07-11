@@ -1,3 +1,4 @@
+package org.overture.ide.plugins.uml2;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
