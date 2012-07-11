@@ -23,8 +23,6 @@
 		<module>latex</module>
 		<module>vdmtools</module>
 		<module>showtrace</module>
-		
-		<module>umlMapper</module>
 	</modules>
 
 	<reporting>
