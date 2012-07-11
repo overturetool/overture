@@ -12,14 +12,10 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.assistants.PAccessSpecifierAssistantTC;
-import org.overture.ast.definitions.assistants.PDefinitionAssistantTC;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
@@ -37,13 +33,14 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.types.assistants.PTypeAssistant;
+import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overturetool.umltrans.uml.IUmlBoolType;
 import org.overturetool.umltrans.uml.IUmlCharType;
 import org.overturetool.umltrans.uml.IUmlClassNameType;
@@ -69,7 +66,6 @@ import org.overturetool.umltrans.uml.UmlUnlimitedNatural;
 import org.overturetool.umltrans.uml.UmlVisibilityKind;
 import org.overturetool.umltrans.uml.UmlVisibilityKindQuotes;
 import org.overturetool.umltrans.uml.UmlVoidType;
-import org.overturetool.vdmj.lex.LexNameToken;
 
 public class Vdm2UmlUtil {
 	
@@ -95,34 +91,34 @@ public class Vdm2UmlUtil {
 		Long lower = (long) 1;
 		Long upper = (long) 1;
 		
-		if(PTypeAssistant.isType(type, ASetType.class))
+		if(PTypeAssistantTC.isType(type, ASetType.class))
 		{
 			upper = null;
 			lower = (long) 0;
 			isOrdered = false;
 		}
-		else if(PTypeAssistant.isType(type, ASeqSeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeqSeqType.class))
 		{
 			lower = (long) 0;
 			upper = null;
 			isOrdered = true;
 			isUnique = false;
 		}
-		else if(PTypeAssistant.isType(type, ASeq1SeqType.class))
+		else if(PTypeAssistantTC.isType(type, ASeq1SeqType.class))
 		{
 			lower = (long) 1;
 			upper = null;
 			isOrdered = true;
 			isUnique = false;
 		}
-		else if(PTypeAssistant.isType(type, SMapType.class))
+		else if(PTypeAssistantTC.isType(type, SMapType.class))
 		{
 			isOrdered = true;
 			upper = null;
 			lower = (long) 0;
 			isUnique = false;
 		}
-		else if(PTypeAssistant.isType(type, AOptionalType.class))
+		else if(PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			upper = (long) 1;
 			lower = (long) 0;
@@ -136,7 +132,7 @@ public class Vdm2UmlUtil {
 		case BASIC:
 			return convertBasicType((SBasicType) type);
 		case BRACKET:
-			return convertType(PTypeAssistant.deBracket(type));
+			return convertType(PTypeAssistantTC.deBracket(type));
 		case MAP:
 			return convertType(((SMapType) type).getTo());
 		case OPTIONAL:
@@ -320,7 +316,7 @@ public class Vdm2UmlUtil {
 
 	public static IUmlType getQualifier(PType defType) throws CGException {
 		
-		if(PTypeAssistant.isType(defType, SMapType.class))
+		if(PTypeAssistantTC.isType(defType, SMapType.class))
 		{
 			return convertType(((SMapType) defType).getFrom());
 		}
@@ -469,13 +465,13 @@ public class Vdm2UmlUtil {
 		
 		
 		for (PType t : funcType.getParameters()) {
-			if(PTypeAssistant.isType(t, AParameterType.class))
+			if(PTypeAssistantTC.isType(t, AParameterType.class))
 			{
 				return true;
 			}			
 		}
 		
-		if(PTypeAssistant.isType(funcType.getResult(), AParameterType.class))
+		if(PTypeAssistantTC.isType(funcType.getResult(), AParameterType.class))
 		{
 			return true;
 		}
