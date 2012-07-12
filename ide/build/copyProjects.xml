@@ -217,8 +217,8 @@
 		<exclude name="**/target/" />
 	</fileset>
 </copy>
-<copy todir="${buildDirectory}/features/features.umltrans">
-	<fileset dir="../plugins/features/umltrans">
+<copy todir="${buildDirectory}/features/features.uml2">
+	<fileset dir="../plugins/features/uml2">
 		<exclude name="**/target/" />
 	</fileset>
 </copy>

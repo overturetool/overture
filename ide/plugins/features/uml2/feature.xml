@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.overture.ide.plugins.features.uml2"
+      label="UML2 Transformation"
+      version="1.0.0.qualifier">
+
+   <description>
+      %description
+   </description>
+
+   <copyright url="%copyURL">
+      %copyNotice
+   </copyright>
+
+   <license url="%licenseURL">
+      %agreement
+   </license>
+
+   <requires>
+      <import feature="org.overture.ide.features.core" version="1.0.1.qualifier"/>
+      <import plugin="org.eclipse.uml2.uml"/>
+   </requires>
+
+   <plugin
+         id="org.overture.ide.plugins.uml2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
