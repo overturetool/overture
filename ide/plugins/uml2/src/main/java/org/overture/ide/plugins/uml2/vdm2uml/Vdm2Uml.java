@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
@@ -23,25 +22,19 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AQuoteType;
-import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SBasicType;
-import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class Vdm2Uml
 {
-
+	UmlTypeCreator utc = new UmlTypeCreator();
 	private Vector<String> filteredClassNames = new Vector<String>();
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
-	private Map<String, Type> types = new HashMap<String, Type>();
+	
 
 	public Vdm2Uml()
 	{
@@ -51,6 +44,8 @@ public class Vdm2Uml
 	public Model init(List<SClassDefinition> classes)
 	{
 		modelWorkingCopy = UMLFactory.eINSTANCE.createModel();
+		
+		utc.setModelWorkingCopy(modelWorkingCopy);
 
 		buildUml(classes);
 
@@ -83,6 +78,7 @@ public class Vdm2Uml
 		//TODO: build inheritance relationship
 
 		// addPrimitiveTypes();
+		
 		
 		//Create types embedded in VDM classes
 		for (SClassDefinition sClass : classes)
@@ -126,89 +122,18 @@ public class Vdm2Uml
 
 	private void addTypeToModel(Class class_, PDefinition def)
 	{
-		if (types.containsKey(def.getName().name))
+		if (utc.types.containsKey(def.getName().name))
 		{
 			return;
 		}
 		PType type = PDefinitionAssistantTC.getType(def);
 
-		createNewUmlType(def.getName(), type);
+		utc.create(def.getName(), type);
 
 	}
 
-	private void createNewUmlType(LexNameToken name, PType type)
-	{
 
-		switch (type.kindPType())
-		{
-			case UNION:
-				createNewUmlUnionType(name, (AUnionType) type);
-				break;
-			case INVARIANT:
-				createNewUmlInvariantType(name, (SInvariantType) type);
-				break;
-			case BASIC:
-				Vdm2UmlUtil.convertBasicType((SBasicType) type, modelWorkingCopy, types, name);
-			case BRACKET:
-			case CLASS:
-			case FUNCTION:
-			case MAP:
-			case OPERATION:
-			case OPTIONAL:
-			case PARAMETER:
-			case PRODUCT:
-			case QUOTE:
-			case SEQ:
-			case SET:
-			case UNDEFINED:
-			case UNKNOWN:
-			case UNRESOLVED:
-			case VOID:
-			case VOIDRETURN:
-
-			default:
-				break;
-		}
-
-	}
-
-	private void createNewUmlUnionType(LexNameToken name, AUnionType type)
-	{
-
-		if (Vdm2UmlUtil.isUnionOfQuotes(type))
-		{
-			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(name.name);
-			for (PType t : type.getTypes())
-			{
-				if (t instanceof AQuoteType)
-				{
-					enumeration.createOwnedLiteral(((AQuoteType) t).getValue().value);
-				}
-			}
-
-			types.put(name.name, enumeration);
-		} else
-		{
-			// do the constraint XOR
-
-		}
-
-	}
-
-	private void createNewUmlInvariantType(LexNameToken name,
-			SInvariantType type)
-	{
-		switch (type.kindSInvariantType())
-		{
-			case NAMED:
-				PType ptype = ((ANamedInvariantType) type).getType();
-				createNewUmlType(name, ptype);
-				break;
-			case RECORD:
-				break;
-		}
-
-	}
+	
 
 	private void addAttributesToClass(Class class_, SClassDefinition sClass)
 	{
@@ -238,7 +163,7 @@ public class Vdm2Uml
 	{
 
 		PType type = PDefinitionAssistantTC.getType(def);
-		Type umlType = getUmlType(type);
+		Type umlType = utc.getUmlType(type);
 
 		Property s = class_.createOwnedAttribute(getDefName(def), umlType);
 
@@ -279,7 +204,7 @@ public class Vdm2Uml
 		String name = def.getName().name;
 		PType defType = PDefinitionAssistantTC.getType(def);
 
-		Type type = getUmlType(defType);
+		Type type = utc.getUmlType(defType);
 		if (type != null)
 		{
 			class_.createOwnedAttribute(name, type);
@@ -309,19 +234,7 @@ public class Vdm2Uml
 		return null;
 	}
 
-	private void addPrimitiveTypes()
-	{
-
-		types.put("int", modelWorkingCopy.createOwnedPrimitiveType("int"));
-		types.put("bool", modelWorkingCopy.createOwnedPrimitiveType("bool"));
-		types.put("nat", modelWorkingCopy.createOwnedPrimitiveType("nat"));
-		types.put("nat1", modelWorkingCopy.createOwnedPrimitiveType("nat1"));
-		types.put("real", modelWorkingCopy.createOwnedPrimitiveType("real"));
-		types.put("char", modelWorkingCopy.createOwnedPrimitiveType("char"));
-		types.put("token", modelWorkingCopy.createOwnedPrimitiveType("token"));
-		types.put("String", modelWorkingCopy.createOwnedPrimitiveType("String"));
-
-	}
+	
 
 	private Class buildClass(SClassDefinition sClass)
 	{
@@ -337,73 +250,25 @@ public class Vdm2Uml
 		return class_;
 	}
 
-	public Type getUmlType(PType type)
-	{
-		Type result = null;
+	
 
-		switch (type.kindPType())
-		{
-			case BASIC:
-				result = Vdm2UmlUtil.convertBasicType((SBasicType) type, modelWorkingCopy, types);
-				break;
-			case BRACKET:
-				break;
-			case FUNCTION:
-				break;
-			case INVARIANT:
-				result = convertTypeInvariant((SInvariantType) type);
-				break;
-			case MAP:
-				break;
-			case OPERATION:
-				break;
-			case OPTIONAL:
-				break;
-			case PARAMETER:
-				break;
-			case PRODUCT:
-				break;
-			case QUOTE:
-				break;
-			case SEQ:
-				// convertTypeSeq(model,(SSeqType) definitionType);
-				break;
-			case SET:
-				break;
-			case UNDEFINED:
-				break;
-			case UNION:
-				break;
-			case UNKNOWN:
-				break;
-			case UNRESOLVED:
-				break;
-			case VOID:
-				break;
-			case VOIDRETURN:
-				break;
-
-		}
-		return result;
-	}
-
-	private Type convertTypeInvariant(SInvariantType definitionType)
-	{
-		Type result = null;
-
-		switch (definitionType.kindSInvariantType())
-		{
-			case NAMED:
-				String name = ((ANamedInvariantType) definitionType).getName().name;
-				result = this.types.get(name);
-				break;
-			case RECORD:
-				break;
-
-		}
-		System.out.println();
-
-		return result;
-	}
+//	private Type convertTypeInvariant(SInvariantType definitionType)
+//	{
+//		Type result = null;
+//
+//		switch (definitionType.kindSInvariantType())
+//		{
+//			case NAMED:
+//				String name = ((ANamedInvariantType) definitionType).getName().name;
+//				result = types.get(name);
+//				break;
+//			case RECORD:
+//				break;
+//
+//		}
+//		System.out.println();
+//
+//		return result;
+//	}
 
 }
