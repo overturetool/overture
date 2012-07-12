@@ -128,7 +128,7 @@ public class Vdm2Uml
 		}
 		PType type = PDefinitionAssistantTC.getType(def);
 
-		utc.create(def.getName(), type);
+		utc.create(class_,def.getName(), type);
 
 	}
 

@@ -3,6 +3,7 @@ package org.overture.ide.plugins.uml2.vdm2uml;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Type;
@@ -16,10 +17,10 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SNumericBasicType;
 
-public class UmlTypeCreator
+public class UmlTypeCreator extends UmlTypeCreatorBase
 {
 	private Model modelWorkingCopy = null;
-	public final Map<String, Type> types = new HashMap<String, Type>();
+	
 	
 	public void setModelWorkingCopy(Model modelWorkingCopy)
 	{
@@ -40,18 +41,18 @@ public class UmlTypeCreator
 //
 //	}
 	
-	public void create(LexNameToken name, PType type)
+	public void create(Class class_, LexNameToken name, PType type)
 	{
 		switch (type.kindPType())
 		{
 			case UNION:
-				createNewUmlUnionType(name, (AUnionType) type);
+				createNewUmlUnionType(class_,name, (AUnionType) type);
 				break;
 			case INVARIANT:
-				createNewUmlInvariantType(name, (SInvariantType) type);
+				createNewUmlInvariantType(class_,name, (SInvariantType) type);
 				break;
 			case BASIC:
-				convertBasicType((SBasicType) type, modelWorkingCopy, types, name);
+				convertBasicType(class_,(SBasicType) type, modelWorkingCopy, types, name);
 			case BRACKET:
 			case CLASS:
 			case FUNCTION:
@@ -75,11 +76,12 @@ public class UmlTypeCreator
 	}
 
 	
-	private void createNewUmlUnionType(LexNameToken name, AUnionType type)
+	private void createNewUmlUnionType(Class class_, LexNameToken name, AUnionType type)
 	{
 
 		if (Vdm2UmlUtil.isUnionOfQuotes(type))
 		{
+			
 			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(name.name);
 			for (PType t : type.getTypes())
 			{
@@ -88,7 +90,7 @@ public class UmlTypeCreator
 					enumeration.createOwnedLiteral(((AQuoteType) t).getValue().value);
 				}
 			}
-
+			class_.createNestedClassifier(name.name, enumeration.eClass());
 			types.put(name.name, enumeration);
 		} else
 		{
@@ -98,14 +100,14 @@ public class UmlTypeCreator
 
 	}
 
-	private void createNewUmlInvariantType(LexNameToken name,
+	private void createNewUmlInvariantType(Class class_,LexNameToken name,
 			SInvariantType type)
 	{
 		switch (type.kindSInvariantType())
 		{
 			case NAMED:
 				PType ptype = ((ANamedInvariantType) type).getType();
-				create(name, ptype);
+				create(class_,name, ptype);
 				break;
 			case RECORD:
 				break;
@@ -190,7 +192,7 @@ public class UmlTypeCreator
 		types.put(name.name, t);
 		
 	}
-	public static Type convertBasicType(SBasicType type, Model modelWorkingCopy, Map<String, Type> types)  {
+	public static Type convertBasicType(Class class_, SBasicType type, Model modelWorkingCopy, Map<String, Type> types, LexNameToken name)  {
 		
 		
 		switch (type.kindSBasicType()) {
