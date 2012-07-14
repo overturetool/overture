@@ -4,47 +4,54 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class Vdm2Uml
 {
 	UmlTypeCreator utc = new UmlTypeCreator();
-	private Vector<String> filteredClassNames = new Vector<String>();
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
-	
 
 	public Vdm2Uml()
 	{
 
 	}
 
-	public Model init(List<SClassDefinition> classes)
+	public Model init(String name, List<SClassDefinition> classes)
 	{
 		modelWorkingCopy = UMLFactory.eINSTANCE.createModel();
-		
+		modelWorkingCopy.setName(name);
+
 		utc.setModelWorkingCopy(modelWorkingCopy);
 
 		buildUml(classes);
@@ -64,42 +71,41 @@ public class Vdm2Uml
 	private void buildUml(List<SClassDefinition> classes)
 	{
 
-		//Build class container
+		// Build class container
 		for (SClassDefinition sClass : classes)
 		{
 			String className = sClass.getName().name;
-			if (!filteredClassNames.contains(className))
+			Class class_ = buildClass(sClass);
+			this.classes.put(className, class_);
+		}
+
+		// TODO: build inheritance relationship
+		for (SClassDefinition sClass : classes)
+		{
+			Class thisClass = this.classes.get(sClass.getName().name);
+			for (LexNameToken superToken : sClass.getSupernames())
 			{
-				Class class_ = buildClass(sClass);
-				this.classes.put(className, class_);
+				Class superClass = this.classes.get(superToken.name);
+				thisClass.createGeneralization(superClass);
 			}
 		}
-		
-		//TODO: build inheritance relationship
 
 		// addPrimitiveTypes();
-		
-		
-		//Create types embedded in VDM classes
+
+		// Create types embedded in VDM classes
 		for (SClassDefinition sClass : classes)
 		{
 			String className = sClass.getName().name;
-			if (!filteredClassNames.contains(className))
-			{
-				Class class_ = this.classes.get(className);
-				addTypes(class_, sClass);
-			}
+			Class class_ = this.classes.get(className);
+			addTypes(class_, sClass);
 		}
 
-		//Build operations, functions, instance variables and values
+		// Build operations, functions, instance variables and values
 		for (SClassDefinition sClass : classes)
 		{
 			String className = sClass.getName().name;
-			if (!filteredClassNames.contains(className))
-			{
-				Class class_ = this.classes.get(className);
-				addAttributesToClass(class_, sClass);
-			}
+			Class class_ = this.classes.get(className);
+			addAttributesToClass(class_, sClass);
 		}
 
 	}
@@ -111,29 +117,17 @@ public class Vdm2Uml
 			switch (def.kindPDefinition())
 			{
 				case TYPE:
-					addTypeToModel(class_, def);
+				{
+					PType type = PDefinitionAssistantTC.getType(def);
+					utc.create(class_, def.getName(), type);
 					break;
+				}
 				default:
 					break;
 			}
 		}
 
 	}
-
-	private void addTypeToModel(Class class_, PDefinition def)
-	{
-		if (utc.types.containsKey(def.getName().name))
-		{
-			return;
-		}
-		PType type = PDefinitionAssistantTC.getType(def);
-
-		utc.create(class_,def.getName(), type);
-
-	}
-
-
-	
 
 	private void addAttributesToClass(Class class_, SClassDefinition sClass)
 	{
@@ -149,6 +143,9 @@ public class Vdm2Uml
 					break;
 				case EXPLICITOPERATION:
 					addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
+					break;
+				case EXPLICITFUNCTION:
+					addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
 					break;
 				case VALUE:
 					addValueToClass(class_, (AValueDefinition) def);
@@ -167,7 +164,10 @@ public class Vdm2Uml
 
 		Property s = class_.createOwnedAttribute(getDefName(def), umlType);
 
-		System.out.println(s);
+		if(def.getExpression()!=null)
+		{
+			s.setDefault(def.getExpression().toString());
+		}
 
 	}
 
@@ -189,12 +189,85 @@ public class Vdm2Uml
 		return "null";
 	}
 
+	private void addExplicitFunctionToClass(Class class_,
+			AExplicitFunctionDefinition def)
+	{
+		EList<String> names = new BasicEList<String>();
+		for (PPattern p : def.getParamPatternList().get(0))
+		{
+			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
+			if (!ids.isEmpty())
+			{
+				names.add(ids.get(0).toString());
+			}
+
+			if (ids.size() > 1)
+			{
+				System.err.println("Some argument is in multiple parts: " + ids);
+			}
+		}
+
+		EList<Type> types = new BasicEList<Type>();
+		for (PDefinition d : def.getParamDefinitionList())
+		{
+			if (d.getName().name.equals("self"))
+			{
+				continue;
+			}
+			PType type = PDefinitionAssistantTC.getType(d);
+			utc.create(class_, d.getName(), type);
+			types.add(utc.getUmlType(type));
+		}
+
+		PType returnType =((AFunctionType) PDefinitionAssistantTC.getType(def)).getResult();
+		utc.create(class_, def.getName(), returnType);
+		Type returnUmlType = utc.getUmlType(returnType);
+
+		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
+		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+
+		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+
+	}
+
 	private void addExplicitOperationToClass(Class class_,
 			AExplicitOperationDefinition def)
 	{
+		EList<String> names = new BasicEList<String>();
+		for (PPattern p : def.getParameterPatterns())
+		{
+			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
+			if (!ids.isEmpty())
+			{
+				names.add(ids.get(0).toString());
+			}
 
-		class_.createOwnedOperation(def.getName().name, null, null, null);
+			if (ids.size() > 1)
+			{
+				System.err.println("Some argument is in multiple parts: " + ids);
+			}
+		}
 
+		EList<Type> types = new BasicEList<Type>();
+		for (PDefinition d : def.getParamDefinitions())
+		{
+			if (d.getName().name.equals("self"))
+			{
+				continue;
+			}
+			PType type = PDefinitionAssistantTC.getType(d);
+			utc.create(class_, d.getName(), type);
+			types.add(utc.getUmlType(type));
+		}
+
+		PType returnType =  ((AOperationType)PDefinitionAssistantTC.getType(def)).getResult();
+		utc.create(class_, def.getName(),returnType);
+		Type returnUmlType = utc.getUmlType(returnType);
+
+		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
+		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+
+		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 	}
 
 	private void addInstanceVariableToClass(Class class_,
@@ -207,7 +280,11 @@ public class Vdm2Uml
 		Type type = utc.getUmlType(defType);
 		if (type != null)
 		{
-			class_.createOwnedAttribute(name, type);
+			Property attribute = class_.createOwnedAttribute(name, type);
+			if (def.getExpression() != null)
+			{
+				attribute.setDefault(def.getExpression().toString());
+			}
 
 		} else
 		{
@@ -234,8 +311,6 @@ public class Vdm2Uml
 		return null;
 	}
 
-	
-
 	private Class buildClass(SClassDefinition sClass)
 	{
 		String name = sClass.getName().name;
@@ -250,25 +325,23 @@ public class Vdm2Uml
 		return class_;
 	}
 
-	
-
-//	private Type convertTypeInvariant(SInvariantType definitionType)
-//	{
-//		Type result = null;
-//
-//		switch (definitionType.kindSInvariantType())
-//		{
-//			case NAMED:
-//				String name = ((ANamedInvariantType) definitionType).getName().name;
-//				result = types.get(name);
-//				break;
-//			case RECORD:
-//				break;
-//
-//		}
-//		System.out.println();
-//
-//		return result;
-//	}
+	// private Type convertTypeInvariant(SInvariantType definitionType)
+	// {
+	// Type result = null;
+	//
+	// switch (definitionType.kindSInvariantType())
+	// {
+	// case NAMED:
+	// String name = ((ANamedInvariantType) definitionType).getName().name;
+	// result = types.get(name);
+	// break;
+	// case RECORD:
+	// break;
+	//
+	// }
+	// System.out.println();
+	//
+	// return result;
+	// }
 
 }

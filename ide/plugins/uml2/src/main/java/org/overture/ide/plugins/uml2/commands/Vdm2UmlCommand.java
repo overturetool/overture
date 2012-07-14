@@ -66,7 +66,7 @@ public class Vdm2UmlCommand extends AbstractHandler
 						Vdm2Uml vdm2uml = new Vdm2Uml();
 						try
 						{
-							vdm2uml.init(model.getClassList());
+							vdm2uml.init(project.getName(),model.getClassList());
 						} catch (NotAllowedException e1)
 						{
 							// TODO Auto-generated catch block

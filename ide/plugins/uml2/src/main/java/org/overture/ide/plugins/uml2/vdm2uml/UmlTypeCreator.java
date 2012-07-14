@@ -10,7 +10,6 @@ import org.eclipse.uml2.uml.Type;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AQuoteType;
-import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -20,39 +19,47 @@ import org.overture.ast.types.SNumericBasicType;
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
 	private Model modelWorkingCopy = null;
-	
-	
+	private final Map<String, Type> types = new HashMap<String, Type>();
+
 	public void setModelWorkingCopy(Model modelWorkingCopy)
 	{
 		this.modelWorkingCopy = modelWorkingCopy;
 	}
-	
-//	private void addPrimitiveTypes()
-//	{
-//
-//		types.put("int", modelWorkingCopy.createOwnedPrimitiveType("int"));
-//		types.put("bool", modelWorkingCopy.createOwnedPrimitiveType("bool"));
-//		types.put("nat", modelWorkingCopy.createOwnedPrimitiveType("nat"));
-//		types.put("nat1", modelWorkingCopy.createOwnedPrimitiveType("nat1"));
-//		types.put("real", modelWorkingCopy.createOwnedPrimitiveType("real"));
-//		types.put("char", modelWorkingCopy.createOwnedPrimitiveType("char"));
-//		types.put("token", modelWorkingCopy.createOwnedPrimitiveType("token"));
-//		types.put("String", modelWorkingCopy.createOwnedPrimitiveType("String"));
-//
-//	}
-	
+
+	// private void addPrimitiveTypes()
+	// {
+	//
+	// types.put("int", modelWorkingCopy.createOwnedPrimitiveType("int"));
+	// types.put("bool", modelWorkingCopy.createOwnedPrimitiveType("bool"));
+	// types.put("nat", modelWorkingCopy.createOwnedPrimitiveType("nat"));
+	// types.put("nat1", modelWorkingCopy.createOwnedPrimitiveType("nat1"));
+	// types.put("real", modelWorkingCopy.createOwnedPrimitiveType("real"));
+	// types.put("char", modelWorkingCopy.createOwnedPrimitiveType("char"));
+	// types.put("token", modelWorkingCopy.createOwnedPrimitiveType("token"));
+	// types.put("String", modelWorkingCopy.createOwnedPrimitiveType("String"));
+	//
+	// }
+
 	public void create(Class class_, LexNameToken name, PType type)
 	{
+		System.out.println(type + " " + type.kindPType().toString() + " "
+				+ getName(type));
+		if (types.get(getName(type)) != null)
+		{
+			return;
+		}
+
 		switch (type.kindPType())
 		{
 			case UNION:
-				createNewUmlUnionType(class_,name, (AUnionType) type);
-				break;
+				createNewUmlUnionType(class_, name, (AUnionType) type);
+				return;
 			case INVARIANT:
-				createNewUmlInvariantType(class_,name, (SInvariantType) type);
-				break;
+				createNewUmlInvariantType(class_, name, (SInvariantType) type);
+				return;
 			case BASIC:
-				convertBasicType(class_,(SBasicType) type, modelWorkingCopy, types, name);
+				convertBasicType(class_, (SBasicType) type);
+				return;
 			case BRACKET:
 			case CLASS:
 			case FUNCTION:
@@ -73,15 +80,21 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			default:
 				break;
 		}
+		if (!types.containsKey(getName(type)))
+		{
+			Type unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
+			unknownType.addKeyword(getName(type));
+			types.put(getName(type), unknownType);
+		}
 	}
 
-	
-	private void createNewUmlUnionType(Class class_, LexNameToken name, AUnionType type)
+	private void createNewUmlUnionType(Class class_, LexNameToken name,
+			AUnionType type)
 	{
 
 		if (Vdm2UmlUtil.isUnionOfQuotes(type))
 		{
-			
+
 			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(name.name);
 			for (PType t : type.getTypes())
 			{
@@ -100,14 +113,14 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	}
 
-	private void createNewUmlInvariantType(Class class_,LexNameToken name,
+	private void createNewUmlInvariantType(Class class_, LexNameToken name,
 			SInvariantType type)
 	{
 		switch (type.kindSInvariantType())
 		{
 			case NAMED:
 				PType ptype = ((ANamedInvariantType) type).getType();
-				create(class_,name, ptype);
+				create(class_, name, ptype);
 				break;
 			case RECORD:
 				break;
@@ -115,158 +128,78 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	}
 
-
-	
 	public Type getUmlType(PType type)
 	{
-		Type result = null;
+		String name = getName(type);
 
-		switch (type.kindPType())
+		if (types.containsKey(name))
 		{
-			case BASIC:
-				result = convertBasicType((SBasicType) type, modelWorkingCopy,types);
-				break;
-			case BRACKET:
-				break;
-			case FUNCTION:
-				break;
-			case INVARIANT:
-				{
-					switch (((SInvariantType)type).kindSInvariantType())
-					{
-						case NAMED:
-						{
-							String name = ((ANamedInvariantType) type).getName().name;
-							result = types.get(name);
-							break;
-						}
-						case RECORD:
-						{
-							String name = ((ARecordInvariantType) type).getName().name;
-							result = types.get(name);
-							break;
-						}
-
-					}
-				}
-				break;
-			case MAP:
-				break;
-			case OPERATION:
-				break;
-			case OPTIONAL:
-				break;
-			case PARAMETER:
-				break;
-			case PRODUCT:
-				break;
-			case QUOTE:
-				break;
-			case SEQ:
-				// convertTypeSeq(model,(SSeqType) definitionType);
-				break;
-			case SET:
-				break;
-			case UNDEFINED:
-				break;
-			case UNION:
-				break;
-			case UNKNOWN:
-				break;
-			case UNRESOLVED:
-				break;
-			case VOID:
-				break;
-			case VOIDRETURN:
-				break;
-
+			return types.get(name);
 		}
-		return result;
-	}
-	
-	
-	public static void convertBasicType(SBasicType type,
-			Model modelWorkingCopy, Map<String, Type> types, LexNameToken name) {
-
-		Type t = convertBasicType(type, modelWorkingCopy, types);
-		types.put(name.name, t);
-		
-	}
-	public static Type convertBasicType(Class class_, SBasicType type, Model modelWorkingCopy, Map<String, Type> types, LexNameToken name)  {
-		
-		
-		switch (type.kindSBasicType()) {
-		case BOOLEAN:			
-			if(!types.containsKey("bool"))
-			{
-				types.put("bool",modelWorkingCopy.createOwnedPrimitiveType("bool"));
-				
-			}
-			return types.get("bool");			
-		case CHAR:
-			if(!types.containsKey("char"))
-			{
-				types.put("char",modelWorkingCopy.createOwnedPrimitiveType("char"));
-				
-			}
-			return types.get("char");	
-		case NUMERIC:
-			return convertNumericType((SNumericBasicType) type,modelWorkingCopy,types);
-		case TOKEN:
-			if(!types.containsKey("token"))
-			{
-				types.put("token",modelWorkingCopy.createOwnedPrimitiveType("token"));
-				
-			}
-			return types.get("token");	
-		default:
-			assert false : "Should not happen";
-			break;
-		}
+		// else
+		// {
+		// System.err.println("Trying to find unknown type: "+name);
 		return null;
+		// }
 	}
 
-	private static Type convertNumericType(SNumericBasicType type, Model modelWorkingCopy, Map<String, Type> types)  {
-		switch (type.kindSNumericBasicType()) {
-		case INT:
-			if(!types.containsKey("int"))
-			{
-				types.put("int",modelWorkingCopy.createOwnedPrimitiveType("int"));
-				
-			}
-			return types.get("int");	
-		case NAT:
-			if(!types.containsKey("nat"))
-			{
-				types.put("nat",modelWorkingCopy.createOwnedPrimitiveType("nat"));
-				
-			}
-			return types.get("nat");	
-		case NATONE:
-			if(!types.containsKey("nat1"))
-			{
-				types.put("nat1",modelWorkingCopy.createOwnedPrimitiveType("nat1"));
-				
-			}
-			return types.get("nat1");	
-		case RATIONAL:
-			if(!types.containsKey("rat"))
-			{
-				types.put("rat",modelWorkingCopy.createOwnedPrimitiveType("rat"));
-				
-			}
-			return types.get("rat");	
-		case REAL:
-			if(!types.containsKey("real"))
-			{
-				types.put("real",modelWorkingCopy.createOwnedPrimitiveType("real"));
-				
-			}
-			return types.get("real");	
-		default:
-			assert false : "Should not happen";
-			break;
+	private void convertBasicType(Class class_, SBasicType type)
+	{
+		String typeName = null;
+		switch (type.kindSBasicType())
+		{
+			case BOOLEAN:
+				typeName = "bool";
+				break;
+			case CHAR:
+				typeName = "char";
+				break;
+			case NUMERIC:
+				convertNumericType((SNumericBasicType) type);
+				return;
+			case TOKEN:
+				typeName = "token";
+				break;
+			default:
+				assert false : "Should not happen";
+				break;
 		}
-		return null;
+
+		if (!types.containsKey(getName(type)))
+		{
+			types.put(getName(type), modelWorkingCopy.createOwnedPrimitiveType(typeName));
+
+		}
+	}
+
+	private void convertNumericType(SNumericBasicType type)
+	{
+		String typeName = null;
+		switch (type.kindSNumericBasicType())
+		{
+			case INT:
+				typeName = "int";
+				break;
+			case NAT:
+				typeName = "nat";
+				break;
+			case NATONE:
+				typeName = "nat1";
+				break;
+			case RATIONAL:
+				typeName = "rat";
+				break;
+			case REAL:
+				typeName = "real";
+				break;
+			default:
+				assert false : "Should not happen";
+				return;
+		}
+		if (!types.containsKey(getName(type)))
+		{
+			types.put(getName(type), modelWorkingCopy.createOwnedPrimitiveType(typeName));
+
+		}
 	}
 }
