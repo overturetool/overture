@@ -47,7 +47,7 @@ public class %GraphNodeListList%<E extends %INode%> extends %NodeListList%<E> {
 	}
 	
 	public %GraphNodeListList%(%INode% parent) {
-		super(null);
+		super(parent);
 	}
 	
 	public %GraphNodeListList%(%INode% parent, Collection<List<E>> c) {

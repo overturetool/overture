@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.uml2.uml.Type;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -41,7 +44,7 @@ public class UmlTypeCreatorBase
 				switch (((SInvariantType) type).kindSInvariantType())
 				{
 					case NAMED:
-						return ((ANamedInvariantType) type).getName().name;
+						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name+"::"+ ((ANamedInvariantType) type).getName().name;
 					case RECORD:
 						break;
 				}
@@ -80,6 +83,11 @@ public class UmlTypeCreatorBase
 				break;
 			case UNION:
 			{
+				if(Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
+				{
+					LexNameToken name = ATypeDefinition.class.cast(type.getAncestor(ATypeDefinition.class)).getName();
+					return name.module+"::"+name.name;
+				}
 				String name = "Union<";
 				for (Iterator<PType> itr = ((AUnionType)type).getTypes().iterator(); itr.hasNext();)
 				{

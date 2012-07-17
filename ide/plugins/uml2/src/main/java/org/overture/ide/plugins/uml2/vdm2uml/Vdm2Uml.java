@@ -11,6 +11,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
+import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Operation;
@@ -163,8 +164,12 @@ public class Vdm2Uml
 		Type umlType = utc.getUmlType(type);
 
 		Property s = class_.createOwnedAttribute(getDefName(def), umlType);
+		//s.setIsStatic(true);
+		s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+		s.setIsReadOnly(true);
 
-		if(def.getExpression()!=null)
+		if (def.getExpression() != null)
 		{
 			s.setDefault(def.getExpression().toString());
 		}
@@ -219,7 +224,7 @@ public class Vdm2Uml
 			types.add(utc.getUmlType(type));
 		}
 
-		PType returnType =((AFunctionType) PDefinitionAssistantTC.getType(def)).getResult();
+		PType returnType = ((AFunctionType) PDefinitionAssistantTC.getType(def)).getResult();
 		utc.create(class_, def.getName(), returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
@@ -260,8 +265,8 @@ public class Vdm2Uml
 			types.add(utc.getUmlType(type));
 		}
 
-		PType returnType =  ((AOperationType)PDefinitionAssistantTC.getType(def)).getResult();
-		utc.create(class_, def.getName(),returnType);
+		PType returnType = ((AOperationType) PDefinitionAssistantTC.getType(def)).getResult();
+		utc.create(class_, def.getName(), returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
 		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
@@ -281,6 +286,8 @@ public class Vdm2Uml
 		if (type != null)
 		{
 			Property attribute = class_.createOwnedAttribute(name, type);
+			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+			attribute.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			if (def.getExpression() != null)
 			{
 				attribute.setDefault(def.getExpression().toString());
@@ -291,8 +298,10 @@ public class Vdm2Uml
 
 			if (defType instanceof AClassType)
 			{
+				// TODO static
 				Class referencedClass = getClassName(defType);
-				class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+				Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+				association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			}
 		}
 

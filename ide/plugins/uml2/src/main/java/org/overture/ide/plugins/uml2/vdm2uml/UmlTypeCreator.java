@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Type;
@@ -19,7 +20,7 @@ import org.overture.ast.types.SNumericBasicType;
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
 	private Model modelWorkingCopy = null;
-	private final Map<String, Type> types = new HashMap<String, Type>();
+	private final Map<String, Classifier> types = new HashMap<String, Classifier>();
 
 	public void setModelWorkingCopy(Model modelWorkingCopy)
 	{
@@ -82,7 +83,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		}
 		if (!types.containsKey(getName(type)))
 		{
-			Type unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
+			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
 			unknownType.addKeyword(getName(type));
 			types.put(getName(type), unknownType);
 		}
@@ -95,7 +96,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		if (Vdm2UmlUtil.isUnionOfQuotes(type))
 		{
 
-			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(name.name);
+			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(getName(type));
 			for (PType t : type.getTypes())
 			{
 				if (t instanceof AQuoteType)
@@ -103,8 +104,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 					enumeration.createOwnedLiteral(((AQuoteType) t).getValue().value);
 				}
 			}
-			class_.createNestedClassifier(name.name, enumeration.eClass());
-			types.put(name.name, enumeration);
+			// class_.createNestedClassifier(name.module+"::"+name.name, enumeration.eClass());
+			types.put(getName(type), enumeration);
 		} else
 		{
 			// do the constraint XOR
@@ -119,16 +120,28 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		switch (type.kindSInvariantType())
 		{
 			case NAMED:
+			{
 				PType ptype = ((ANamedInvariantType) type).getType();
 				create(class_, name, ptype);
+
+				if (!getName(ptype).equals(getName(type)))
+				{
+					Class recordClass = modelWorkingCopy.createOwnedClass(getName(type), false);
+
+					recordClass.createGeneralization(getUmlType(ptype));
+					types.put(getName(type), recordClass);
+				}
+
 				break;
+			}
+
 			case RECORD:
 				break;
 		}
 
 	}
 
-	public Type getUmlType(PType type)
+	public Classifier getUmlType(PType type)
 	{
 		String name = getName(type);
 

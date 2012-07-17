@@ -38,11 +38,11 @@ public class %GraphNodeList%<E extends %INode%> extends %NodeList%<E> {
 	}
 	
 	public %GraphNodeList%(%INode% parent) {
-		super(null);
+		super(parent);
 	}
 	
 	public %GraphNodeList%(%INode% parent, Collection<? extends E> c) {
-		this(null);
+		this(parent);
 		addAll(c);
 	}
 	
