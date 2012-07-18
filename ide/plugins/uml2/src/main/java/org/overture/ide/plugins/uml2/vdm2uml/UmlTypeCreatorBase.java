@@ -16,6 +16,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -29,7 +30,41 @@ public class UmlTypeCreatorBase
 	public final String templateSetName = "Set<T>";
 	public final String templateSeqName = "Seq<T>";
 	public final String templateMapName = "Map<D,R>";
-//	public final String templateUnionName = "Union<T>";
+
+	protected static String getTemplateUnionName(int templateNameCount)
+	{
+		return getTemplateBaseName("Union",templateNameCount);
+	}
+	
+	protected static String getTemplateProductName(int templateNameCount)
+	{
+		return getTemplateBaseName("Product",templateNameCount);
+	}
+	
+	private static String getTemplateBaseName(String name,int templateNameCount)
+	{
+		String[] templateNames = getTemplateNames(templateNameCount);
+		 name+= "<";
+		for (int i = 0; i < templateNames.length; i++)
+		{
+			name += templateNames[i];
+			if (i < templateNames.length - 1)
+			{
+				name += ",";
+			}
+		}
+		return name + ">";
+	}
+	
+	protected static String[] getTemplateNames(int templateNameCount)
+	{
+		String[] names = new String[templateNameCount];
+		for (int i = 0; i < templateNameCount; i++)
+		{
+			names[i]= Character.valueOf((char)('A'+i)).toString();
+		}
+		return names;
+	}
 
 	public String getName(PType type)
 	{
@@ -38,72 +73,78 @@ public class UmlTypeCreatorBase
 			case BASIC:
 				return type.toString();
 			case BRACKET:
-				return getName(((ABracketType)type).getType());
+				return getName(((ABracketType) type).getType());
 			case CLASS:
 				return ((AClassType) type).getName().name;
 			case FUNCTION:
-				return getName(((AFunctionType)type).getResult());
+				return getName(((AFunctionType) type).getResult());
 			case INVARIANT:
 			{
 				switch (((SInvariantType) type).kindSInvariantType())
 				{
 					case NAMED:
-						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name+"::"+ ((ANamedInvariantType) type).getName().name;
+						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
+								+ "::"
+								+ ((ANamedInvariantType) type).getName().name;
 					case RECORD:
-						break;
+						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
+								+ "::"
+								+ ((ARecordInvariantType) type).getName().name;
+						
 				}
 			}
 				break;
 			case MAP:
-				return "Map<"+getName(((SMapType)type).getFrom())+","+getName(((SMapType)type).getTo())+">";
+				return "Map<" + getName(((SMapType) type).getFrom()) + ","
+						+ getName(((SMapType) type).getTo()) + ">";
 			case OPERATION:
-				return getName(((AOperationType)type).getResult());
+				return getName(((AOperationType) type).getResult());
 			case OPTIONAL:
-				return getName(((AOptionalType)type).getType());
+				return getName(((AOptionalType) type).getType());
 			case PARAMETER:
 				break;
 			case PRODUCT:
 			{
 				String name = "Product<";
-				for (Iterator<PType> itr = ((AProductType)type).getTypes().iterator(); itr.hasNext();)
+				for (Iterator<PType> itr = ((AProductType) type).getTypes().iterator(); itr.hasNext();)
 				{
-					name+=getName( itr.next());
-					if(itr.hasNext())
+					name += getName(itr.next());
+					if (itr.hasNext())
 					{
-						name+=",";
+						name += ",";
 					}
-					
+
 				}
-				return name+">";
-				
+				return name + ">";
+
 			}
 			case QUOTE:
-				return ((AQuoteType)type).getValue().value;
+				return ((AQuoteType) type).getValue().value;
 			case SEQ:
-				return "Seq<"+getName(((SSeqType)type).getSeqof())+">";
+				return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
 			case SET:
-				return "Set<"+getName(((ASetType)type).getSetof())+">";
+				return "Set<" + getName(((ASetType) type).getSetof()) + ">";
 			case UNDEFINED:
 				break;
 			case UNION:
 			{
-				if(Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
+				if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
 				{
 					LexNameToken name = ATypeDefinition.class.cast(type.getAncestor(ATypeDefinition.class)).getName();
-					return name.module+"::"+name.name;
+					return name.module + "::" + name.name;
 				}
 				String name = "Union<";
-				for (Iterator<PType> itr = ((AUnionType)type).getTypes().iterator(); itr.hasNext();)
+				for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
 				{
-					name+=getName( itr.next());
-					if(itr.hasNext())
+					name += getName(itr.next());
+					if (itr.hasNext())
 					{
-						name+=",";
+						name += ",";
 					}
-					
+
 				}
-				return name+">";
-				
+				return name + ">";
+
 			}
 			case UNKNOWN:
 				break;

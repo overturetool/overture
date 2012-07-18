@@ -1,50 +1,36 @@
 package org.overture.ide.plugins.uml2.vdm2uml;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.DiagnosticChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EAnnotation;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.Comment;
-import org.eclipse.uml2.uml.DirectedRelationship;
-import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.RedefinableTemplateSignature;
-import org.eclipse.uml2.uml.Relationship;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.TemplateParameter;
-import org.eclipse.uml2.uml.TemplateSignature;
-import org.eclipse.uml2.uml.TemplateableElement;
-import org.eclipse.uml2.uml.Type;
-import org.eclipse.uml2.uml.internal.impl.TemplateSignatureImpl;
-import org.overture.ast.lex.LexNameToken;
+import org.eclipse.uml2.uml.TemplateParameterSubstitution;
+import org.eclipse.uml2.uml.UMLPackage;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
+import org.overture.ast.types.SSeqType;
 
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
-	
+
 	private Model modelWorkingCopy = null;
 	private final Map<String, Classifier> types = new HashMap<String, Classifier>();
 
@@ -67,7 +53,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	//
 	// }
 
-	public void create(Class class_, LexNameToken name, PType type)
+	public void create(Class class_, PType type)
 	{
 		System.out.println(type + " " + type.kindPType().toString() + " "
 				+ getName(type));
@@ -79,10 +65,10 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		switch (type.kindPType())
 		{
 			case UNION:
-				createNewUmlUnionType(class_, name, (AUnionType) type);
+				createNewUmlUnionType(class_, (AUnionType) type);
 				return;
 			case INVARIANT:
-				createNewUmlInvariantType(class_, name, (SInvariantType) type);
+				createNewUmlInvariantType(class_, (SInvariantType) type);
 				return;
 			case BASIC:
 				convertBasicType(class_, (SBasicType) type);
@@ -94,7 +80,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case FUNCTION:
 				break;
 			case MAP:
-				break;
+				createMapType(class_, (SMapType) type);
+				return;
 			case OPERATION:
 				break;
 			case OPTIONAL:
@@ -102,13 +89,15 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case PARAMETER:
 				break;
 			case PRODUCT:
-				break;
+				createProductType(class_, (AProductType) type);
+				return;
 			case QUOTE:
 				break;
 			case SEQ:
-				break;
+				createSeqType(class_, (SSeqType) type);
+				return;
 			case SET:
-				createSetType(class_,(ASetType)type);
+				createSetType(class_, (ASetType) type);
 				return;
 			case UNDEFINED:
 				break;
@@ -133,21 +122,139 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createSetType(Class class_, ASetType type)
 	{
-		if(!types.containsKey(templateSetName))
+		// if (!types.containsKey(templateSetName))
+		// {
+		// Class templateSetClass = modelWorkingCopy.createOwnedClass(templateSetName, false);
+		//
+		// RedefinableTemplateSignature templateT = (RedefinableTemplateSignature)
+		// templateSetClass.createOwnedTemplateSignature();
+		// templateT.setName("T");
+		//
+		// types.put(templateSetName, templateSetClass);
+		// }
+		//
+		// // check if binding class exists
+		// Classifier bindingClass = types.get(getName(type));
+		// if (bindingClass == null)
+		// {
+		// Classifier templateSetClass = types.get(templateSetName);
+		// bindingClass = modelWorkingCopy.createOwnedClass(getName(type), false);
+		// TemplateBinding binding = bindingClass.createTemplateBinding(templateSetClass.getOwnedTemplateSignature());
+		// TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
+		// if(getUmlType(type.getSetof())==null)
+		// {
+		// create(class_,type.getSetof());
+		// }
+		// substitution.setActual(getUmlType(type.getSetof()));
+		//
+		// types.put(getName(type), bindingClass);
+		// }
+		createTemplateType(class_, type, templateSetName, new String[] { "T" }, type.getSetof());
+	}
+
+	private void createSeqType(Class class_, SSeqType type)
+	{
+		createTemplateType(class_, type, templateSeqName, new String[] { "T" }, type.getSeqof());
+	}
+
+	private void createMapType(Class class_, SMapType type)
+	{
+		createTemplateType(class_, type, templateMapName, new String[] { "D",
+				"R" }, type.getFrom(), type.getTo());
+	}
+
+	private void createUnionType(Class class_, AUnionType type)
+	{
+		createTemplateType(class_, type, getTemplateUnionName(type.getTypes().size()), getTemplateNames(type.getTypes().size()), type.getTypes());
+	}
+
+	private void createProductType(Class class_, AProductType type)
+	{
+		createTemplateType(class_, type, getTemplateProductName(type.getTypes().size()), getTemplateNames(type.getTypes().size()), type.getTypes());
+	}
+
+	private void createTemplateType(Class class_, PType type,
+			String templateName, String[] templateSignatureNames,
+			Collection<? extends PType> innertypes)
+	{
+		createTemplateType(class_, type, templateName, templateSignatureNames, innertypes.toArray(new PType[] {}));
+	}
+
+	private void createTemplateType(Class class_, PType type,
+			String templateName, String[] templateSignatureNames,
+			PType... innertypes)
+	{
+		if (!types.containsKey(templateName))
 		{
-			Class templateSetClass = modelWorkingCopy.createOwnedClass(templateSetName, false);
+			Class templateSetClass = modelWorkingCopy.createOwnedClass(templateName, false);
 
 			RedefinableTemplateSignature templateT = (RedefinableTemplateSignature) templateSetClass.createOwnedTemplateSignature();
-			 templateT.setName("T");
-			
-//			templateSetClass.setTemplateParameter(t);
-			
-			types.put(templateSetName, templateSetClass);
+
+			String name = "";
+			int i = 0;
+			for (String signature : templateSignatureNames)
+			{
+
+				if (i > 0)
+				{
+					name += ",";
+				}
+				name += signature;
+				i++;
+				// FIXME: this is not correct
+				TemplateParameter p = templateT.createOwnedParameter();
+				p.createOwnedComment().setBody(signature);
+				//
+				// // UMLFactory.eINSTANCE.createClass();
+				// Class aa = UMLFactory.eINSTANCE.createClass();
+				// aa.setName(signature);
+				// // ParameterableElement ddddd = p.createOwnedParameteredElement(UMLPackage.Literals.CLASS);
+				//
+				// ClassifierTemplateParameter templateParameter =
+				// UMLFactory.eINSTANCE.createClassifierTemplateParameter();
+				// org.eclipse.uml2.uml.Class parameterableElement = (org.eclipse.uml2.uml.Class)
+				// templateParameter.createOwnedParameteredElement(UMLPackage.Literals.CLASS);
+				// // eModelElementToElementMap.put(eTypeParameter,
+				// // parameterableElement);
+				//
+				// // ParameterableElement pe =
+				// // p.createOwnedParameteredElement(UMLFactory.eINSTANCE.createClass().eClass());
+				// // aa.setTemplateParameter(p);
+				// // p.createOwnedParameteredElement(aa.eClass());
+				// TemplateParameter cc = aa.getTemplateParameter();
+				// System.out.println();
+				// // ((Class)pe).setName(signature);
+
+				// templateT.setName(signature);
+			}
+			templateT.setName(name);
+
+			types.put(templateName, templateSetClass);
+		}
+
+		// check if binding class exists
+		Classifier bindingClass = types.get(getName(type));
+		if (bindingClass == null)
+		{
+			Classifier templateSetClass = types.get(templateName);
+			bindingClass = modelWorkingCopy.createOwnedClass(getName(type), false);
+			TemplateBinding binding = bindingClass.createTemplateBinding(templateSetClass.getOwnedTemplateSignature());
+
+			for (PType innerType : innertypes)
+			{
+				TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
+				if (getUmlType(innerType) == null)
+				{
+					create(class_, innerType);
+				}
+				substitution.setActual(getUmlType(innerType));
+			}
+
+			types.put(getName(type), bindingClass);
 		}
 	}
 
-	private void createNewUmlUnionType(Class class_, LexNameToken name,
-			AUnionType type)
+	private void createNewUmlUnionType(Class class_, AUnionType type)
 	{
 
 		if (Vdm2UmlUtil.isUnionOfQuotes(type))
@@ -166,20 +273,19 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		} else
 		{
 			// do the constraint XOR
-
+			createUnionType(class_, type);
 		}
 
 	}
 
-	private void createNewUmlInvariantType(Class class_, LexNameToken name,
-			SInvariantType type)
+	private void createNewUmlInvariantType(Class class_, SInvariantType type)
 	{
 		switch (type.kindSInvariantType())
 		{
 			case NAMED:
 			{
 				PType ptype = ((ANamedInvariantType) type).getType();
-				create(class_, name, ptype);
+				create(class_, ptype);
 
 				if (!getName(ptype).equals(getName(type)))
 				{
@@ -193,6 +299,19 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			}
 
 			case RECORD:
+			{
+				Class recordClass = modelWorkingCopy.createOwnedClass(getName(type), false);
+				for(AFieldField field: ((ARecordInvariantType) type).getFields())
+				{
+					create(class_, field.getType()); 
+					recordClass.createOwnedAttribute(field.getTag(), getUmlType(field.getType()));
+				}
+				
+				Stereotype sterotype=	(Stereotype) recordClass.createNestedClassifier("steriotype", UMLPackage.Literals.STEREOTYPE);
+				sterotype.setName("record");
+				types.put(getName(type), recordClass);
+				
+			}
 				break;
 		}
 

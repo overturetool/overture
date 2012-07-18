@@ -120,7 +120,7 @@ public class Vdm2Uml
 				case TYPE:
 				{
 					PType type = PDefinitionAssistantTC.getType(def);
-					utc.create(class_, def.getName(), type);
+					utc.create(class_,  type);
 					break;
 				}
 				default:
@@ -220,12 +220,12 @@ public class Vdm2Uml
 				continue;
 			}
 			PType type = PDefinitionAssistantTC.getType(d);
-			utc.create(class_, d.getName(), type);
+			utc.create(class_, type);
 			types.add(utc.getUmlType(type));
 		}
 
 		PType returnType = ((AFunctionType) PDefinitionAssistantTC.getType(def)).getResult();
-		utc.create(class_, def.getName(), returnType);
+		utc.create(class_,  returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
 		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
@@ -261,12 +261,12 @@ public class Vdm2Uml
 				continue;
 			}
 			PType type = PDefinitionAssistantTC.getType(d);
-			utc.create(class_, d.getName(), type);
+			utc.create(class_,  type);
 			types.add(utc.getUmlType(type));
 		}
 
 		PType returnType = ((AOperationType) PDefinitionAssistantTC.getType(def)).getResult();
-		utc.create(class_, def.getName(), returnType);
+		utc.create(class_,  returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
 		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
