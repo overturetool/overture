@@ -23,6 +23,7 @@
 		<module>latex</module>
 		<module>vdmtools</module>
 		<module>showtrace</module>
+		<module>prettyprinting</module>
 	</modules>
 
 	<reporting>
