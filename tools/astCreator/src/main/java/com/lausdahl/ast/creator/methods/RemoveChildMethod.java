@@ -51,11 +51,23 @@ public class RemoveChildMethod extends Method
 			}
 			if (field.structureType == StructureType.Graph)
 			{
-				// We need to ignore this since the parent might have been set to this node as a lack of a better parent
-				sb.append("\t\tif (this." + field.getName() + " == child) {\n");
-				sb.append("\t\t\treturn;\n");
-				sb.append("\t\t}\n\n");
-				continue;
+				if (!field.isList)
+				{
+					// We need to ignore this since the parent might have been set to this node as a lack of a better
+					// parent
+					sb.append("\t\tif (this." + field.getName()
+							+ " == child) {\n");
+					sb.append("\t\t\treturn;\n");
+					sb.append("\t\t}\n\n");
+					continue;
+				} else
+				{
+					sb.append("\t\tif (this." + field.getName()
+							+ ".remove(child)) {\n");
+					sb.append("\t\t\treturn;\n");
+					sb.append("\t\t}\n\n");
+					continue;
+				}
 			}
 
 			if ((field.isTokenField && !(field.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition) field.type).extendsNode)))

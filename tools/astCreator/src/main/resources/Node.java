@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.overture.ast.node.INode;
 
 import %org.overture.ast.analysis.IAnalysis%;
 import %org.overture.ast.analysis.IAnswer%;
@@ -188,6 +191,8 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 		return clone;
 	}
 	
+	
+	protected Set _visitedNodes = new java.util.HashSet<INode>();
 	/**
 	 * Returns the nearest ancestor of this node (including itself)
 	 * which is a subclass of {@code classType}.
@@ -197,9 +202,15 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	public <T extends %INode%> T getAncestor(Class<T> classType) {
 		%INode% n = this;
 		while (!classType.isInstance(n)) {
+			_visitedNodes.add(n);
 			n = n.parent();
-			if (n == null) return null;
+			if (n == null || _visitedNodes.contains(n))
+			{
+				_visitedNodes.clear();
+				return null;
+			}
 		}
+		_visitedNodes.clear();
 		return classType.cast(n);
 	}
 	
