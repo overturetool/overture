@@ -39,7 +39,13 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class Vdm2Uml
 {
-	UmlTypeCreator utc = new UmlTypeCreator();
+	UmlTypeCreator utc = new UmlTypeCreator(new UmlTypeCreator.ClassTypeLookup()
+	{
+		public Class lookup(AClassType type)
+		{
+			return classes.get(type.getName().name);
+		}
+	});
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
 

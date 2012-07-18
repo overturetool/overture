@@ -3,7 +3,6 @@ package org.overture.ide.plugins.uml2.vdm2uml;
 import java.util.LinkedList;
 
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
-import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -22,12 +21,8 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.EBasicType;
-import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -144,43 +139,6 @@ public class Vdm2UmlUtil
 		return isUnique;
 	}
 
-	// public static Type convertType(PType type) {
-	// switch (type.kindPType()) {
-	// case BASIC:
-	// return convertBasicType((SBasicType) type);
-	// case BRACKET:
-	// return convertType(PTypeAssistantTC.deBracket(type));
-	// case MAP:
-	// return convertType(((SMapType) type).getTo());
-	// case OPTIONAL:
-	// return convertType(((AOptionalType) type).getType());
-	// case CLASS:
-	// return new UmlClassNameType(((AClassType)type).getName().name);
-	// case SEQ:
-	// return convertType(((SSeqType) type).getSeqof());
-	// case SET:
-	// return convertType(((ASetType) type).getSetof());
-	// case VOID:
-	// return new UmlVoidType();
-	// default:
-	// assert false : "Should not happen?! maybe it should";
-	// break;
-	// }
-	// return null;
-	// }
-	//
-
-	//
-	// public static Vector<IUmlClassNameType> getSuperClasses(SClassDefinition sClass) throws CGException {
-	// Vector<IUmlClassNameType> result = new Vector<IUmlClassNameType>();
-	// List<LexNameToken> superNames = sClass.getSupernames();
-	//
-	// for (LexNameToken superName : superNames) {
-	// result.add(new UmlClassNameType(superName.name));
-	// }
-	//
-	// return result;
-	// }
 
 	public static boolean isClassActive(SClassDefinition sClass)
 	{
@@ -258,17 +216,6 @@ public class Vdm2UmlUtil
 		return false;
 	}
 
-	private static void convertTypeSeq(Model model, SSeqType definitionType)
-	{
-		if (definitionType.getSeqof().kindPType() == EType.BASIC)
-		{
-			if (((SBasicType) definitionType.getSeqof()).kindSBasicType() == EBasicType.CHAR)
-			{
-				model.createOwnedPrimitiveType("String");
-			}
-		}
-
-	}
 
 	public static boolean isUnionOfQuotes(AUnionType type)
 	{

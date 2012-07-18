@@ -14,6 +14,7 @@ import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.TemplateParameter;
 import org.eclipse.uml2.uml.TemplateParameterSubstitution;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AProductType;
@@ -30,9 +31,20 @@ import org.overture.ast.types.SSeqType;
 
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
+	public interface ClassTypeLookup
+	{
+		Class lookup(AClassType type);
+	}
 
 	private Model modelWorkingCopy = null;
 	private final Map<String, Classifier> types = new HashMap<String, Classifier>();
+	
+	private final ClassTypeLookup classLookup;
+	
+	public UmlTypeCreator(ClassTypeLookup classLookup)
+	{
+		this.classLookup = classLookup;
+	}
 
 	public void setModelWorkingCopy(Model modelWorkingCopy)
 	{
@@ -112,6 +124,12 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			default:
 				break;
 		}
+		
+		if(type instanceof AClassType && classLookup.lookup((AClassType) type)!=null)
+		{
+			return;
+		}
+		
 		if (!types.containsKey(getName(type)))
 		{
 			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
@@ -324,6 +342,9 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		if (types.containsKey(name))
 		{
 			return types.get(name);
+		}else if(type instanceof AClassType && classLookup.lookup((AClassType) type)!=null)
+		{
+			return classLookup.lookup((AClassType) type);
 		}
 		// else
 		// {
