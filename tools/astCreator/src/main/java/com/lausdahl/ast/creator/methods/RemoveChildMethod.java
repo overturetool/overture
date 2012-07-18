@@ -63,7 +63,7 @@ public class RemoveChildMethod extends Method
 				} else
 				{
 					sb.append("\t\tif (this." + field.getName()
-							+ ".remove(child)) {\n");
+							+ ".contains(child)) {\n");
 					sb.append("\t\t\treturn;\n");
 					sb.append("\t\t}\n\n");
 					continue;
