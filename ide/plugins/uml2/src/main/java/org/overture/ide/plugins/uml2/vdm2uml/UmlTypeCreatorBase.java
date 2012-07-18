@@ -26,6 +26,10 @@ import org.overture.ast.types.SSeqType;
 public class UmlTypeCreatorBase
 {
 	public final Map<String, Type> types = new HashMap<String, Type>();
+	public final String templateSetName = "Set<T>";
+	public final String templateSeqName = "Seq<T>";
+	public final String templateMapName = "Map<D,R>";
+//	public final String templateUnionName = "Union<T>";
 
 	public String getName(PType type)
 	{

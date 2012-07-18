@@ -1,16 +1,41 @@
 package org.overture.ide.plugins.uml2.vdm2uml;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Comment;
+import org.eclipse.uml2.uml.DirectedRelationship;
+import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Package;
+import org.eclipse.uml2.uml.RedefinableTemplateSignature;
+import org.eclipse.uml2.uml.Relationship;
+import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.TemplateParameter;
+import org.eclipse.uml2.uml.TemplateSignature;
+import org.eclipse.uml2.uml.TemplateableElement;
 import org.eclipse.uml2.uml.Type;
+import org.eclipse.uml2.uml.internal.impl.TemplateSignatureImpl;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -19,6 +44,7 @@ import org.overture.ast.types.SNumericBasicType;
 
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
+	
 	private Model modelWorkingCopy = null;
 	private final Map<String, Classifier> types = new HashMap<String, Classifier>();
 
@@ -62,20 +88,36 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				convertBasicType(class_, (SBasicType) type);
 				return;
 			case BRACKET:
+				break;
 			case CLASS:
+				break;
 			case FUNCTION:
+				break;
 			case MAP:
+				break;
 			case OPERATION:
+				break;
 			case OPTIONAL:
+				break;
 			case PARAMETER:
+				break;
 			case PRODUCT:
+				break;
 			case QUOTE:
+				break;
 			case SEQ:
+				break;
 			case SET:
+				createSetType(class_,(ASetType)type);
+				return;
 			case UNDEFINED:
+				break;
 			case UNKNOWN:
+				break;
 			case UNRESOLVED:
+				break;
 			case VOID:
+				break;
 			case VOIDRETURN:
 
 			default:
@@ -86,6 +128,21 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
 			unknownType.addKeyword(getName(type));
 			types.put(getName(type), unknownType);
+		}
+	}
+
+	private void createSetType(Class class_, ASetType type)
+	{
+		if(!types.containsKey(templateSetName))
+		{
+			Class templateSetClass = modelWorkingCopy.createOwnedClass(templateSetName, false);
+
+			RedefinableTemplateSignature templateT = (RedefinableTemplateSignature) templateSetClass.createOwnedTemplateSignature();
+			 templateT.setName("T");
+			
+//			templateSetClass.setTemplateParameter(t);
+			
+			types.put(templateSetName, templateSetClass);
 		}
 	}
 
