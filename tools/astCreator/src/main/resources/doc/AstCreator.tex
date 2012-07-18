@@ -52,8 +52,65 @@ April   & 2010 &    \\ \hline
 \setcounter{page}{1}
 
 \chapter{Introduction}
+In order to achieve an ideal common AST three goals have been identified:
+\begin{enumerate}
+\item \textit{Development must be supported both at specification and implementation level, allowing the VDM language itself to be used for tool specification.}
+\item \textit{The AST must be extensible while extensions must be kept isolated within a plug-in.}
+\item \textit{Sufficient navigation machinery must exist for an editor so that features like e.g. completion and re-factoring can be implemented easily.}
+\end{enumerate}
+The following subsections will explain the essential principles for the new AST and what changes are required to a generator in order to produce an AST that complies with the identified goals.
+
+
+
+
+It is essential that a new AST is easy to maintain and easy to extend, thus it must only contain functionality essential for the tree structure. To achieve both easy maintenance and support for specification and implementation level development an abstract tree definition can be used like in the \texttt{ASTGen} tool. However, extendibility is another matter that need attention; This can be handled by allowing one tree to extend another, by adding new nodes and fields or even refining a type of an existing field.
+
+
+
+
 
 \include{syntax}
+
+
+
+\section{Analysis}
+
+The generator automatically generated a number of  visitors that can be applied to any node in the ast, those are:
+
+\begin{itemize}
+\item Analysis: Simple visitor.
+\item Answer: Simple visitor that allows a return value.
+\item Question: Simple visitor that allows an argument to be parsed along.
+\item QuestionAnswer: Simple visitor that allows an argument to be parsed along and a return value to be returned.
+\item DepthFirstAnalysis: Same as Analysis but does a depth first visit of the tree. All fields are visited for each node in the specified order from the syntax, base classes first.
+\end{itemize}
+
+All visitors define methods that can be overridden if needed. The methods are named based on the type of node:
+\begin{itemize}
+\item Simple alternatives: \texttt{caseA} followed by the name of the alternative.
+\item Sub roots (prefixed in the gramme with \# and \texttt{S} in the generated class): \texttt{defaultS} the name of the sub root
+\item Roots (prefixed \texttt{P} in the generated class): \texttt{defaultP} the name of the root
+\end{itemize} 
+
+The following listing illustrates how an overridden method for an unary interpreter van be implemented. It makes use of the numeration kind of the unary operator identifying the sub class of operator hold by the \texttt{node.getOperator()} field. This way all subclasses can be auto inserted in a switch statement by e.g. Eclipse.
+
+\lstset{language=Java,basicstyle=\footnotesize\ttfamily}
+\begin{lstlisting}
+@Override
+public Value caseAUnaryExp(AUnaryExp node)
+{
+	Value val = node.getExp().apply(this);
+	switch (node.getOperator().kindPUnop())
+	{
+		case ABS:
+			return new DoubleValue(val);
+		case MINUS:
+			return new DoubleValue(val);
+		}
+	return new BooleanValue(false);
+}
+\end{lstlisting}
+
 
 \section{Usage}
 The ast generator can be invokes like: 
@@ -61,6 +118,57 @@ The ast generator can be invokes like:
 \begin{astlst}
 java -cp astCreator.jar com.lausdahl.ast.creator.CmdMain ast.astV2 .
 \end{astlst}
+
+\subsection{Invoking AST Creator using Maven}
+
+The AST Creator is made available as a maven plug-in that enables an AST to be automatically build as part of the build process. The current plug-is in avaliable in the overture repo at: \url{http://build.overturetool.org/builds/mt4e-m2repo-eclipse3.7.2/}
+
+The plug-in is:
+
+\begin{tabular}{ |l|l| }\hline
+  groupId & org.overturetool.tools\\\hline
+artifactId &astcreatorplugin\\\hline
+version & 1.0.6\\\hline
+\end{tabular}
+
+The astcreatorplugin plug-in has the goal \textbf{generate} for AST generation and the following configuration properties:
+
+\begin{description}
+\item[deletePackageOnGenerate] A list of java packages that should be deleted before generation
+\item[ast] A path to the ast file starting from src/main/resources
+\item[outputDirectory] an option to define an alternative output location for the generated AST
+\end{description}
+
+The pom configuration is as shown below in listing~\ref{}.
+
+\begin{lstlisting}[language=XML,tabsize=2,basicstyle=\ttfamily\footnotesize]
+<build>
+		<plugins>
+			<plugin>
+				<groupId>org.overturetool.tools</groupId>
+				<artifactId>astcreatorplugin</artifactId>
+				<version>1.0.6</version>
+				<executions>
+					<execution>
+						<id>java</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<deletePackageOnGenerate>
+						<param>vdm.generated.node</param>
+						<param>org.overture.ast</param>
+					</deletePackageOnGenerate>
+					<ast>overtureII.astv2</ast>
+					<!--outputDirectory>${project.basedir}/src/main/java</outputDirectory -->
+				</configuration>
+			</plugin>
+		</plugins>
+\end{lstlisting}
+
 
 \section{Extensions}
 
@@ -121,46 +229,97 @@ The idea is to have two ast files one with the base tree and one with the additi
 \caption{Illustration of AST extensions in Overture as a UML diagram.\label{fig:ASTExtend}}
 \end{figure}
 
+\section{Guidelines and Cornercases}
 
-\newpage
-\section{Analysis}
-
-The generator automatically generated a number of automated visitors that can be applied to any node in the ast, those are:
-
+To make the use of the AST v2 Extensions more sensibly, some rules are defined:
 \begin{itemize}
-\item Analysis: Simple visitor.
-\item Answer: Simple visitor that allows a return value.
-\item Question: Simple visitor that allows an argument to be parsed along.
-\item QuestionAnswer: Simple visitor that allows an argument to be parsed along and a return value to be returned.
-\item DepthFirstAnalysis: Same as Analysis but does a depth first visit of the tree. All fields are visited for each node in the specified order from the syntax, base classes first.
+\item it is ONLY possible to use "base visitors" in the extended AST if there is no new nodes in the AST instance. So if "Base" tree is cloned to "Extended" tree and the visitor is applied immediately, then it should work. If any "Extended" node is added to the extended  tree, the same visitor will not work and throw a "RuntimeException" a an unknown node is hit.
+\item Calling the "base" kind method of an "extended" node will result in a "RuntimeException"
+\item The generated "Extended" visitor will contain the new cases for the added nodes, the cases of the nodes that already existed but were changed in the extension (added fields) and will not contain the ones that are unchanged.
+\item Setting the "Base" parent in the "Extended" tree will result in a "RuntimeException"
+\item When cloning a tree, extra care should be taken to preserve the graph fields connections. A solution might be to clone the tree first without graph fields and keep a map of "object $\rightarrow$ cloned object" and in the second pass fill the graph fields gap.
+\item If an extra field was added to a node existing in the base case the visitor case needs to overwritten in the extended visitor.
+\item It is not advised to mix nodes from base tree with the extended tree.
 \end{itemize}
 
-All visitors define methods that can be overridden if needed. The methods are named based on the type of node:
+\appendix
+
+\chapter{Class diagrams of the Extended AST}
+
+\section{Base}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/base_node}
+\caption{Base node package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/base_expressions}
+\caption{Base expression package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/base_analysis_interfaces}
+\caption{Base analysis interfaces package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\section{Extended}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/extended_node}
+\caption{Extended node package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/extended_expressions}
+\caption{Extended expressions package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/extended_analysis_interfaces}
+\caption{Extended analysis interfaces package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/extended_statements}
+\caption{Extended statements  package}
+%\label{fig:awesome_image}
+\end{figure}
+
+\section{Extended AST Test Class}
+
+\lstinputlisting[language=java,tabsize=2,basicstyle=\ttfamily\footnotesize,showspaces=false,showstringspaces=false,showtabs=false,keywordstyle=\color{blue},        commentstyle=\color{dkgreen}, stringstyle=\color{mauve}]{example/src/TestCase1.java}
+
+\chapter{Challanges}
+
 \begin{itemize}
-\item Simple alternatives: \texttt{caseA} followed by the name of the alternative.
-\item Sub roots (prefixed in the gramme with \# and \texttt{S} in the generated class): \texttt{defaultS} the name of the sub root
-\item Roots (prefixed \texttt{P} in the generated class): \texttt{defaultP} the name of the root
-\end{itemize} 
-
-The following listing illustrates how an overridden method for an unary interpreter van be implemented. It makes use of the numeration kind of the unary operator identifying the sub class of operator hold by the \texttt{node.getOperator()} field. This way all subclasses can be auto inserted in a switch statement by e.g. Eclipse.
-
-\lstset{language=Java,basicstyle=\footnotesize\ttfamily}
-\begin{lstlisting}
-@Override
-public Value caseAUnaryExp(AUnaryExp node)
-{
-	Value val = node.getExp().apply(this);
-	switch (node.getOperator().kindPUnop())
-	{
-		case ABS:
-			return new DoubleValue(val);
-		case MINUS:
-			return new DoubleValue(val);
-		}
-	return new BooleanValue(false);
-}
-\end{lstlisting}
-
+\item Tree consistency
+\item Tree automated analysis; visit in decent order
+\item Generating a tree to replace OO developed classed. Dificult because of functionality embedded in the classes where 1,2,4 super classes all might override some methods.
+\item Caching: converting a program which does OO caching/linking to use a generated tree. Not easy, solutions:
+	\begin{itemize}
+		\item Hashmap
+		\item Add custum graph fields to the tree. Nodes in a graph field would be different because they are not a child of the node when are attached to. In relation to tree fields which can only have one parent and thus needs to disconnect from their previously attached parent before moving to a new,
+	\end{itemize}
+\item Handling OO embeded functions outside a tree. Developing assistants to handle public/private functions from OO tree. The difficulty is to keep the hierarchy intact.
+\item Display: For debugging it is important to have a decent toString of a tree, two solutions:
+	\begin{itemize}
+		\item Generated toString including all fields of a node and it name.
+		\item Custom toString. Since a tree might represent (to some extend) the syntax of a language a toString representation close to the real syntax might be prefered. One solution would be to add a way to define the toString method of nodes based on their fields and strings plus possibly allowing external java methods to be called for more advanced display functions.
+	\end{itemize}
+\end{itemize}
 
 \end{document}
 
