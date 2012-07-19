@@ -58,7 +58,7 @@
              commandId="org.overture.ide.plugins.uml2.vdm2uml"
              contextId="org.eclipse.ui.contexts.window"
              schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-             sequence="Ctrl+X Ctrl+E">
+             sequence="Ctrl+Alt+E">
        </key>
     </extension>
 
