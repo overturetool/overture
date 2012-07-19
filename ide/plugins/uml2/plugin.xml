@@ -9,7 +9,7 @@
             name="Vdm 2 uml">
       </command>
    </extension>
-   <extension
+   <!--extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
@@ -24,6 +24,42 @@
             </command>
          </menu>
       </menuContribution>
+   </extension-->
+   
+   
+    <extension
+         point="org.eclipse.ui.menus">
+         <menuContribution
+           locationURI="popup:org.overture.ide.ui.VdmExplorer">
+        <menu
+              icon="icons/uml.png"
+              id="org.overture.ide.plugins.uml2"
+              label="UML Transformation">
+           <command
+                 commandId="org.overture.ide.plugins.uml2.vdm2uml"
+                 label="Convert to UML"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+                     
+                            <adapt type="org.overture.ide.core.resources.IVdmProject">
+                            </adapt>
+                       
+                 </iterate>
+              </visibleWhen>
+           </command>
+        </menu>
+     </menuContribution>
    </extension>
+    <extension
+          point="org.eclipse.ui.bindings">
+       <key
+             commandId="org.overture.ide.plugins.uml2.vdm2uml"
+             contextId="org.eclipse.ui.contexts.window"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="Ctrl+X Ctrl+E">
+       </key>
+    </extension>
 
 </plugin>
