@@ -1,7 +1,6 @@
 package org.overture.ide.builders.vdmj;
 
-import org.overture.ast.definitions.ABusClassDefinition;
-import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
@@ -32,8 +31,8 @@ public class BuilderRt extends BuilderPp {
 	{
 		try
 		{
-			classes.add(new ACpuClassDefinition());
-  			classes.add(new ABusClassDefinition());
+			classes.add(AstFactoryTC.newACpuClassDefinition());
+  			classes.add(AstFactoryTC.newABusClassDefinition());
 		}
 		catch (Exception e)
 		{
