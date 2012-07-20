@@ -33,8 +33,8 @@ import org.overture.ast.types.SSeqType;
 
 /**
  * For help see: http://www.eclipse.org/modeling/mdt/uml2/docs/articles/Getting_Started_with_UML2/article.html
+ * 
  * @author kel
- *
  */
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
@@ -45,12 +45,12 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private Model modelWorkingCopy = null;
 	private final Map<String, Classifier> types = new HashMap<String, Classifier>();
-	
+
 	private final ClassTypeLookup classLookup;
 	private Package bindingPackage;
 	private Package combositeTypePackage;
 	private Package basicTypePackage;
-	
+
 	public UmlTypeCreator(ClassTypeLookup classLookup)
 	{
 		this.classLookup = classLookup;
@@ -134,12 +134,13 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			default:
 				break;
 		}
-		
-		if(type instanceof AClassType && classLookup.lookup((AClassType) type)!=null)
+
+		if (type instanceof AClassType
+				&& classLookup.lookup((AClassType) type) != null)
 		{
 			return;
 		}
-		
+
 		if (!types.containsKey(getName(type)))
 		{
 			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
@@ -150,33 +151,6 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createSetType(Class class_, ASetType type)
 	{
-		// if (!types.containsKey(templateSetName))
-		// {
-		// Class templateSetClass = modelWorkingCopy.createOwnedClass(templateSetName, false);
-		//
-		// RedefinableTemplateSignature templateT = (RedefinableTemplateSignature)
-		// templateSetClass.createOwnedTemplateSignature();
-		// templateT.setName("T");
-		//
-		// types.put(templateSetName, templateSetClass);
-		// }
-		//
-		// // check if binding class exists
-		// Classifier bindingClass = types.get(getName(type));
-		// if (bindingClass == null)
-		// {
-		// Classifier templateSetClass = types.get(templateSetName);
-		// bindingClass = modelWorkingCopy.createOwnedClass(getName(type), false);
-		// TemplateBinding binding = bindingClass.createTemplateBinding(templateSetClass.getOwnedTemplateSignature());
-		// TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
-		// if(getUmlType(type.getSetof())==null)
-		// {
-		// create(class_,type.getSetof());
-		// }
-		// substitution.setActual(getUmlType(type.getSetof()));
-		//
-		// types.put(getName(type), bindingClass);
-		// }
 		createTemplateType(class_, type, templateSetName, new String[] { "T" }, type.getSetof());
 	}
 
@@ -214,7 +188,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	{
 		if (!types.containsKey(templateName))
 		{
-			if(combositeTypePackage == null)
+			if (combositeTypePackage == null)
 			{
 				combositeTypePackage = this.modelWorkingCopy.createNestedPackage("Composite VDM Types");
 			}
@@ -233,31 +207,10 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				}
 				name += signature;
 				i++;
-				// FIXME: this is not correct
-				TemplateParameter p = templateT.createOwnedParameter();
-				p.createOwnedComment().setBody(signature);
-				//
-				// // UMLFactory.eINSTANCE.createClass();
-				// Class aa = UMLFactory.eINSTANCE.createClass();
-				// aa.setName(signature);
-				// // ParameterableElement ddddd = p.createOwnedParameteredElement(UMLPackage.Literals.CLASS);
-				//
-				// ClassifierTemplateParameter templateParameter =
-				// UMLFactory.eINSTANCE.createClassifierTemplateParameter();
-				// org.eclipse.uml2.uml.Class parameterableElement = (org.eclipse.uml2.uml.Class)
-				// templateParameter.createOwnedParameteredElement(UMLPackage.Literals.CLASS);
-				// // eModelElementToElementMap.put(eTypeParameter,
-				// // parameterableElement);
-				//
-				// // ParameterableElement pe =
-				// // p.createOwnedParameteredElement(UMLFactory.eINSTANCE.createClass().eClass());
-				// // aa.setTemplateParameter(p);
-				// // p.createOwnedParameteredElement(aa.eClass());
-				// TemplateParameter cc = aa.getTemplateParameter();
-				// System.out.println();
-				// // ((Class)pe).setName(signature);
 
-				// templateT.setName(signature);
+				TemplateParameter p = templateT.createOwnedParameter(UMLPackage.Literals.CLASSIFIER_TEMPLATE_PARAMETER);
+				Class cc = (Class) p.createOwnedParameteredElement(UMLPackage.Literals.CLASS);
+				cc.setName(signature);
 			}
 			templateT.setName(name);
 
@@ -268,7 +221,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		Classifier bindingClass = types.get(getName(type));
 		if (bindingClass == null)
 		{
-			if(bindingPackage == null)
+			if (bindingPackage == null)
 			{
 				bindingPackage = this.modelWorkingCopy.createNestedPackage("Binding classes");
 			}
@@ -276,15 +229,29 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			bindingClass = bindingPackage.createOwnedClass(getName(type), false);
 			TemplateBinding binding = bindingClass.createTemplateBinding(templateSetClass.getOwnedTemplateSignature());
 
-			for (PType innerType : innertypes)
+			if(innertypes.length== templateSetClass.getOwnedTemplateSignature().getOwnedParameters().size())
 			{
-				TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
-				if (getUmlType(innerType) == null)
+				for (int i = 0; i < innertypes.length; i++)
 				{
-					create(class_, innerType);
+					TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
+					if (getUmlType(innertypes[i]) == null)
+					{
+						create(class_, innertypes[i]);
+					}
+					substitution.setActual(getUmlType(innertypes[i]));
+					substitution.setFormal(templateSetClass.getOwnedTemplateSignature().getOwnedParameters().get(i));
 				}
-				substitution.setActual(getUmlType(innerType));
 			}
+			
+//			for (PType innerType : innertypes)
+//			{
+//				TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
+//				if (getUmlType(innerType) == null)
+//				{
+//					create(class_, innerType);
+//				}
+//				substitution.setActual(getUmlType(innerType));
+//			}
 
 			types.put(getName(type), bindingClass);
 		}
@@ -295,21 +262,20 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 		if (Vdm2UmlUtil.isUnionOfQuotes(type))
 		{
-			
-			
-			String simpleName = getName(type);
-			simpleName = simpleName.substring(simpleName.lastIndexOf(':')+1);
-			Enumeration enumeration  =  (Enumeration) class_.createNestedClassifier(simpleName,  UMLPackage.Literals.ENUMERATION);
-			
 
-//			Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(getName(type));
+			String simpleName = getName(type);
+			simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
+			Enumeration enumeration = (Enumeration) class_.createNestedClassifier(simpleName, UMLPackage.Literals.ENUMERATION);
+
+			// Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(getName(type));
 			for (PType t : type.getTypes())
 			{
 				if (t instanceof AQuoteType)
 				{
-					String value ="<"+ ((AQuoteType) t).getValue().value+">";
+					String value = "<" + ((AQuoteType) t).getValue().value
+							+ ">";
 					enumeration.createOwnedLiteral(value);
-					
+
 					PrimitiveType quoteClass = getVdmBasicTypePackage().createOwnedPrimitiveType(value);
 					types.put(value, quoteClass);
 				}
@@ -336,8 +302,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				if (!getName(ptype).equals(getName(type)))
 				{
 					String simpleName = getName(type);
-					simpleName = simpleName.substring(simpleName.lastIndexOf(':')+1);
-					Classifier recordClass = class_.createNestedClassifier(simpleName,  UMLPackage.Literals.CLASS);
+					simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
+					Classifier recordClass = class_.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
 
 					recordClass.createGeneralization(getUmlType(ptype));
 					types.put(getName(type), recordClass);
@@ -349,18 +315,18 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case RECORD:
 			{
 				String simpleName = getName(type);
-				simpleName = simpleName.substring(simpleName.lastIndexOf(':')+1);
-				Class recordClass = (Class) class_.createNestedClassifier(simpleName,  UMLPackage.Literals.CLASS);
-				for(AFieldField field: ((ARecordInvariantType) type).getFields())
+				simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
+				Class recordClass = (Class) class_.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
+				for (AFieldField field : ((ARecordInvariantType) type).getFields())
 				{
-					create(class_, field.getType()); 
+					create(class_, field.getType());
 					recordClass.createOwnedAttribute(field.getTag(), getUmlType(field.getType()));
 				}
-				
-				Stereotype sterotype=	(Stereotype) recordClass.createNestedClassifier("steriotype", UMLPackage.Literals.STEREOTYPE);
+
+				Stereotype sterotype = (Stereotype) recordClass.createNestedClassifier("steriotype", UMLPackage.Literals.STEREOTYPE);
 				sterotype.setName("record");
 				types.put(getName(type), recordClass);
-				
+
 			}
 				break;
 		}
@@ -374,7 +340,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		if (types.containsKey(name))
 		{
 			return types.get(name);
-		}else if(type instanceof AClassType && classLookup.lookup((AClassType) type)!=null)
+		} else if (type instanceof AClassType
+				&& classLookup.lookup((AClassType) type) != null)
 		{
 			return classLookup.lookup((AClassType) type);
 		}
@@ -444,11 +411,10 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 		}
 	}
-	
-	
+
 	private Package getVdmBasicTypePackage()
 	{
-		if(basicTypePackage == null)
+		if (basicTypePackage == null)
 		{
 			basicTypePackage = this.modelWorkingCopy.createNestedPackage("Basic VDM Types");
 		}

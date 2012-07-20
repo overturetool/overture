@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -13,21 +14,34 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.CommunicationPath;
+import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Node;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -61,9 +75,71 @@ public class Vdm2Uml
 
 		utc.setModelWorkingCopy(modelWorkingCopy);
 
-		buildUml(classes);
+		List<SClassDefinition> onlyClasses = new Vector<SClassDefinition>();
+		onlyClasses.addAll(classes);
+		for (SClassDefinition sClassDefinition : classes)
+		{
+			if (sClassDefinition instanceof AClassClassDefinition)
+			{
+				continue;
+			}
+			onlyClasses.remove(sClassDefinition);
+		}
+		buildUml(onlyClasses);
+
+		buildDeployment(classes);
+		// UMLFactory.eINSTANCE.createNode().createo
+		// modelWorkingCopy.create
 
 		return modelWorkingCopy;
+	}
+
+	private void buildDeployment(List<SClassDefinition> classes2)
+	{
+		Map<String, Node> nodes = new HashMap<String, Node>();
+		for (SClassDefinition c : classes2)
+		{
+			if (c instanceof ASystemClassDefinition)
+			{
+				ASystemClassDefinition system = (ASystemClassDefinition) c;
+
+				for (PDefinition d : system.getDefinitions())
+				{
+					if (d instanceof AInstanceVariableDefinition)
+					{
+
+						AInstanceVariableDefinition ind = (AInstanceVariableDefinition) d;
+						if (ind.getType() instanceof AClassType)
+						{
+							PDefinition def = ((AClassType) ind.getType()).getClassdef();
+							if (def instanceof ACpuClassDefinition)
+							{
+								Node n = (Node) this.modelWorkingCopy.createPackagedElement(ind.getName().name, UMLPackage.Literals.NODE);
+								nodes.put(ind.getName().name, n);
+							} else if (def instanceof ABusClassDefinition)
+							{
+								CommunicationPath con = (CommunicationPath) this.modelWorkingCopy.createPackagedElement(ind.getName().module, UMLPackage.Literals.COMMUNICATION_PATH);
+								
+								ANewExp e =(ANewExp) ind.getExpression();
+								
+								if(e.getArgs().size() ==3 && e.getArgs().getLast() instanceof ASetEnumSetExp)
+								{
+									ASetEnumSetExp set = (ASetEnumSetExp) e.getArgs().getLast();
+									for (PExp m : set.getMembers())
+									{
+										if(nodes.containsKey(m.toString()))
+										{
+										con.createNavigableOwnedEnd("", nodes.get(m.toString()));
+										}
+									}
+								
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public void save(URI uri) throws IOException
@@ -126,7 +202,7 @@ public class Vdm2Uml
 				case TYPE:
 				{
 					PType type = PDefinitionAssistantTC.getType(def);
-					utc.create(class_,  type);
+					utc.create(class_, type);
 					break;
 				}
 				default:
@@ -170,7 +246,7 @@ public class Vdm2Uml
 		Type umlType = utc.getUmlType(type);
 
 		Property s = class_.createOwnedAttribute(getDefName(def), umlType);
-		//s.setIsStatic(true);
+		// s.setIsStatic(true);
 		s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 		s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 		s.setIsReadOnly(true);
@@ -231,7 +307,7 @@ public class Vdm2Uml
 		}
 
 		PType returnType = ((AFunctionType) PDefinitionAssistantTC.getType(def)).getResult();
-		utc.create(class_,  returnType);
+		utc.create(class_, returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
 		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
@@ -267,12 +343,12 @@ public class Vdm2Uml
 				continue;
 			}
 			PType type = PDefinitionAssistantTC.getType(d);
-			utc.create(class_,  type);
+			utc.create(class_, type);
 			types.add(utc.getUmlType(type));
 		}
 
 		PType returnType = ((AOperationType) PDefinitionAssistantTC.getType(def)).getResult();
-		utc.create(class_,  returnType);
+		utc.create(class_, returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
 		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
