@@ -128,7 +128,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case UNRESOLVED:
 				break;
 			case VOID:
-				break;
+				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType("void"));
+			return;
 			case VOIDRETURN:
 
 			default:

@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
@@ -61,7 +62,7 @@ public class Vdm2UmlCommand extends AbstractHandler
 						VdmTypeCheckerUi.typeCheck(HandlerUtil.getActiveShell(event), vdmProject);
 					}
 
-					if (model.isTypeCorrect())
+					if (model.isTypeCorrect() && (vdmProject.getDialect() ==Dialect.VDM_PP ||vdmProject.getDialect() ==Dialect.VDM_RT))
 					{
 						Vdm2Uml vdm2uml = new Vdm2Uml();
 						try
