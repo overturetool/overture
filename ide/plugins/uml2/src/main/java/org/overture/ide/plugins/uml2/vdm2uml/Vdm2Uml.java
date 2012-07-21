@@ -12,41 +12,25 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.AggregationKind;
-import org.eclipse.uml2.uml.Artifact;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.CommunicationPath;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.Node;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
-import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
-import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.ABlockSimpleBlockStm;
-import org.overture.ast.statements.ACallObjectStm;
-import org.overture.ast.statements.AIdentifierObjectDesignator;
-import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -67,11 +51,6 @@ public class Vdm2Uml
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
 
-	public Vdm2Uml()
-	{
-
-	}
-
 	public Model init(String name, List<SClassDefinition> classes)
 	{
 		modelWorkingCopy = UMLFactory.eINSTANCE.createModel();
@@ -91,131 +70,9 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		buildDeployment(classes);
-		// UMLFactory.eINSTANCE.createNode().createo
-		// modelWorkingCopy.create
+		new UmlDeploymentCreator(modelWorkingCopy).buildDeployment(classes);
 
 		return modelWorkingCopy;
-	}
-
-	private void buildDeployment(List<SClassDefinition> classes2)
-	{
-		Map<String, Node> nodes = new HashMap<String, Node>();
-		List<AInstanceVariableDefinition> systemInsts = new Vector<AInstanceVariableDefinition>();
-		ASystemClassDefinition system = null;
-		Package deploymentPackage = null;
-		for (SClassDefinition c : classes2)
-		{
-			if (c instanceof ASystemClassDefinition)
-			{
-				system = (ASystemClassDefinition) c;
-
-				for (PDefinition d : system.getDefinitions())
-				{
-					if (d instanceof AInstanceVariableDefinition)
-					{
-
-						AInstanceVariableDefinition ind = (AInstanceVariableDefinition) d;
-						if (ind.getType() instanceof AClassType)
-						{
-							systemInsts.add((AInstanceVariableDefinition) d);
-						}
-					}
-				}
-			}
-		}
-
-		if (system != null)
-		{
-			deploymentPackage = (Package) this.modelWorkingCopy.createNestedPackage("Deployment");
-		}
-
-		if (!systemInsts.isEmpty())
-		{
-			for (AInstanceVariableDefinition ind : systemInsts)
-			{
-				PDefinition def = ((AClassType) ind.getType()).getClassdef();
-				if (def instanceof ACpuClassDefinition)
-				{
-					Node n = (Node) deploymentPackage.createPackagedElement(ind.getName().name, UMLPackage.Literals.NODE);
-					nodes.put(ind.getName().name, n);
-				}
-			}
-
-			for (AInstanceVariableDefinition ind : systemInsts)
-			{
-				PDefinition def = ((AClassType) ind.getType()).getClassdef();
-				if (def instanceof ABusClassDefinition)
-				{
-					CommunicationPath con = (CommunicationPath) deploymentPackage.createPackagedElement(ind.getName().module, UMLPackage.Literals.COMMUNICATION_PATH);
-
-					ANewExp e = (ANewExp) ind.getExpression();
-
-					if (e.getArgs().size() == 3
-							&& e.getArgs().getLast() instanceof ASetEnumSetExp)
-					{
-						ASetEnumSetExp set = (ASetEnumSetExp) e.getArgs().getLast();
-						for (PExp m : set.getMembers())
-						{
-							if (nodes.containsKey(m.toString()))
-							{
-								con.createNavigableOwnedEnd("", nodes.get(m.toString()));
-							}
-						}
-
-					}
-				}
-			}
-		}
-
-		if (system != null)
-		{
-			for (PDefinition d : system.getDefinitions())
-			{
-				if (d instanceof AExplicitOperationDefinition)
-				{
-					AExplicitOperationDefinition op = (AExplicitOperationDefinition) d;
-					if (op.getIsConstructor())
-					{
-
-						if (op.getBody() instanceof ABlockSimpleBlockStm)
-						{
-							ABlockSimpleBlockStm block = (ABlockSimpleBlockStm) op.getBody();
-							for (PStm stm : block.getStatements())
-							{
-								System.out.println(stm);
-								if (stm instanceof ACallObjectStm)
-								{
-									ACallObjectStm call = (ACallObjectStm) stm;
-									if (call.getFieldname().toString().equals("deploy")
-											&& call.getDesignator() instanceof AIdentifierObjectDesignator)
-									{
-										String nodeName = ((AIdentifierObjectDesignator) call.getDesignator()).getName().name;
-										if (nodes.containsKey(nodeName))
-										{
-											String deployedName = call.getArgs().get(0).toString();
-											if (call.getArgs().size() > 1)
-											{
-												deployedName = call.getArgs().get(1).toString();
-											}
-											Artifact artifact = (Artifact) nodes.get(nodeName).createNestedClassifier(deployedName, UMLPackage.Literals.ARTIFACT);
-											if (call.getArgs().get(0) instanceof AVariableExp
-													&& ((AVariableExp) call.getArgs().get(0)).getType() instanceof AClassType)
-											{
-												AVariableExp var = (AVariableExp) call.getArgs().get(0);
-												// Class c = classes.get(((AClassType) var.getType()).getName().name);
-												artifact.setFileName(((AClassType) var.getType()).getName().location.file.getName());
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
 	}
 
 	public void save(URI uri) throws IOException
@@ -317,19 +174,29 @@ public class Vdm2Uml
 
 	private void addValueToClass(Class class_, AValueDefinition def)
 	{
+		String name = getDefName(def);
+		PType defType = PDefinitionAssistantTC.getType(def);
+		utc.create(class_, defType);
+		Type umlType = utc.getUmlType(defType);
 
-		PType type = PDefinitionAssistantTC.getType(def);
-		Type umlType = utc.getUmlType(type);
-
-		Property s = class_.createOwnedAttribute(getDefName(def), umlType);
-		// s.setIsStatic(true);
-		s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
-		s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
-		s.setIsReadOnly(true);
-
-		if (def.getExpression() != null)
+		if (defType instanceof AClassType)
 		{
-			s.setDefault(def.getExpression().toString());
+			// TODO static
+			Class referencedClass = getClassName(defType);
+			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+		} else
+		{
+			Property s = class_.createOwnedAttribute(name, umlType);
+			// s.setIsStatic(true);
+			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+			s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			s.setIsReadOnly(true);
+
+			if (def.getExpression() != null)
+			{
+				s.setDefault(def.getExpression().toString());
+			}
 		}
 
 	}
@@ -390,6 +257,7 @@ public class Vdm2Uml
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
 		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		operation.setIsQuery(true);
 
 	}
 
@@ -431,6 +299,7 @@ public class Vdm2Uml
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
 		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		operation.setIsQuery(false);
 	}
 
 	private void addInstanceVariableToClass(Class class_,
@@ -440,8 +309,16 @@ public class Vdm2Uml
 		String name = def.getName().name;
 		PType defType = PDefinitionAssistantTC.getType(def);
 
+		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
-		if (type != null)
+
+		if (defType instanceof AClassType)
+		{
+			// TODO static
+			Class referencedClass = getClassName(defType);
+			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+		} else
 		{
 			Property attribute = class_.createOwnedAttribute(name, type);
 			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
@@ -449,17 +326,6 @@ public class Vdm2Uml
 			if (def.getExpression() != null)
 			{
 				attribute.setDefault(def.getExpression().toString());
-			}
-
-		} else
-		{
-
-			if (defType instanceof AClassType)
-			{
-				// TODO static
-				Class referencedClass = getClassName(defType);
-				Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
-				association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			}
 		}
 

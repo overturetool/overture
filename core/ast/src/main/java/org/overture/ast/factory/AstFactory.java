@@ -211,7 +211,10 @@ public class AstFactory {
 	
 	private static void initStatement(PStm result, LexLocation token) {
 		result.setLocation(token);
-		token.executable(true);
+		if(token != null)
+		{
+			token.executable(true);
+		}
 	}
 	
 	private static void initStateDesignator(PStateDesignator result,
@@ -793,7 +796,10 @@ public class AstFactory {
 
 		result.setType(type);
 		result.setExpression(expression);
-		result.getLocation().executable(false);
+		if(result.getLocation()!=null)
+		{
+			result.getLocation().executable(false);
+		}
 		result.setOldname(name.getOldName());
 		result.setInitialized(!(expression instanceof AUndefinedExp));
 		
@@ -2118,7 +2124,10 @@ public class AstFactory {
 		ANotYetSpecifiedStm result = new ANotYetSpecifiedStm();
 		initStatement(result, location);
 		
-		location.executable(false); // ie. ignore coverage for these
+		if(location!=null)
+		{
+			location.executable(false); // ie. ignore coverage for these
+		}
 		return result;
 	}
 

@@ -6,7 +6,12 @@
       <command
             defaultHandler="org.overture.ide.plugins.uml2.commands.Vdm2UmlCommand"
             id="org.overture.ide.plugins.uml2.vdm2uml"
-            name="Vdm 2 uml">
+            name="VDM to UML">
+      </command>
+       <command
+            defaultHandler="org.overture.ide.plugins.uml2.commands.Uml2VdmCommand"
+            id="org.overture.ide.plugins.uml2.uml2vdm"
+            name="UML to VDM">
       </command>
    </extension>
    <!--extension
@@ -49,6 +54,25 @@
                  </iterate>
               </visibleWhen>
            </command>
+           
+            <command
+                 commandId="org.overture.ide.plugins.uml2.uml2vdm"
+                 label="Convert to VDM"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+                     
+                            <adapt type="org.eclipse.core.resources.IResource">
+                               <test
+                                     property="org.eclipse.core.resources.extension"
+                                     value="uml">
+                               </test>
+                            </adapt>
+                       
+                 </iterate>
+              </visibleWhen>
+           </command>
         </menu>
      </menuContribution>
    </extension>
@@ -59,6 +83,13 @@
              contextId="org.eclipse.ui.contexts.window"
              schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
              sequence="Ctrl+Alt+E">
+       </key>
+       
+        <key
+             commandId="org.overture.ide.plugins.uml2.uml2vdm"
+             contextId="org.eclipse.ui.contexts.window"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="Ctrl+Alt+I">
        </key>
     </extension>
 
