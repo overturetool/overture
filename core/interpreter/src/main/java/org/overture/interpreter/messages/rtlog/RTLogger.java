@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.values.CPUValue;
 
 
@@ -40,7 +41,8 @@ public class RTLogger
 	private static PrintWriter logfile = null;
 	private static RTMessage cached = null;
 	private static final List<RTMessage> deployEvents = new LinkedList<RTMessage>();
-
+	private static NextGenRTLogger nextGenLog = NextGenRTLogger.getInstance();
+	
 	public static synchronized void enable(boolean on)
 	{
 		if (!on)
@@ -54,6 +56,12 @@ public class RTLogger
 
 	
 	public static synchronized void log(RTMessage message)
+	{
+		oldLog(message);
+		nextGenLog.log(message);
+	}
+	
+	public static synchronized void oldLog(RTMessage message)
 	{
 		if (!enabled)
 		{

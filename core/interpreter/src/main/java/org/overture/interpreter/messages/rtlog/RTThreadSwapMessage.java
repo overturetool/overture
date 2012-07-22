@@ -11,9 +11,9 @@ public class RTThreadSwapMessage extends RTThreadMessage
 		In, DelayedIn, Out
 	}
 
-	private SwapType type;
-	private int overhead;
-	private long delay;
+	public SwapType type;
+	public int overhead;
+	public long delay;
 
 	public RTThreadSwapMessage(SwapType type, ISchedulableThread thread,
 			CPUResource cpuNumber, int overhead, long delay)

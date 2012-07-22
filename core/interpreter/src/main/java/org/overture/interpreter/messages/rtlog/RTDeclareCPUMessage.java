@@ -4,10 +4,10 @@ package org.overture.interpreter.messages.rtlog;
 public class RTDeclareCPUMessage extends RTArchitectureMessage
 {
 
-	private int cpuId;
-	private boolean expl;
-	private String sysName;
-	private String cpuName;
+	public int cpuId;
+	public boolean expl;
+	public String sysName;
+	public String cpuName;
 	
 	public RTDeclareCPUMessage(int cpuId, boolean expl, String sysName, String cpuName)
 	{

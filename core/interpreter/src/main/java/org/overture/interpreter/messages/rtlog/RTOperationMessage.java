@@ -8,12 +8,12 @@ public class RTOperationMessage extends RTMessage
 {
 	public static boolean inSystemConstruction = true; //set to false in SystemDefinition when systemInit finishes
 	
-	private MessageType messageType;
-	private OperationValue operationVal;
-	private CPUResource from;
-	private long threadId;
+	public MessageType messageType;
+	public OperationValue operationVal;
+	public CPUResource from;
+	public long threadId;
 	public final boolean madeDuringSystemConstruction;
-	private Long objref;
+	public Long objref;
 	
 	public RTOperationMessage(MessageType messageType, OperationValue operationVal, CPUResource from, long threadId)
 	{

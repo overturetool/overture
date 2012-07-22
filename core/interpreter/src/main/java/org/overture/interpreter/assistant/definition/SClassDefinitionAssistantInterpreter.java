@@ -580,6 +580,15 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		return null;
 	}
 
+	public static String getName(SClassDefinition classdef) {
+		if (classdef.getName() != null)
+		{
+			return classdef.getName().name;
+		}
+
+		return null;
+	}
+
 	
 
 	

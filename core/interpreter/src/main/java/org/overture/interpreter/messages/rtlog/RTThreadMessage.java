@@ -9,8 +9,8 @@ import org.overture.interpreter.values.ObjectValue;
 
 public abstract class RTThreadMessage extends RTMessage
 {
-	protected ISchedulableThread thread;
-	protected CPUResource cpuNumber;
+	public ISchedulableThread thread;
+	public CPUResource cpuNumber;
 	
 	String objRef;
 	String clnm ="nil";

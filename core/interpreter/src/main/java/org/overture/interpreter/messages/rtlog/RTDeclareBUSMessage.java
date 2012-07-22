@@ -3,9 +3,9 @@ package org.overture.interpreter.messages.rtlog;
 public class RTDeclareBUSMessage extends RTArchitectureMessage
 {
 
-	private int busNumber;
-	private String cpus;
-	private String name;
+	public int busNumber;
+	public String cpus;
+	public String name;
 
 	public RTDeclareBUSMessage(int busNumber, String cpusToSet, String name)
 	{
