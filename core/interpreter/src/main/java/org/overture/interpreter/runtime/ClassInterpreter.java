@@ -51,6 +51,7 @@ import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
@@ -234,6 +235,9 @@ public class ClassInterpreter extends Interpreter
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);
+		
+		NextGenRTLogger.getInstance().toFile("out.txt");
+		NextGenRTLogger.getInstance().persistToFile("out.bin");
 		
 		RuntimeValidator.stop();
 
