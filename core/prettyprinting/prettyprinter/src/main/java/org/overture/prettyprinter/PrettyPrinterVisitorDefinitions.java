@@ -1,6 +1,5 @@
 package org.overture.prettyprinter;
 
-import java.nio.file.WatchEvent.Kind;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;

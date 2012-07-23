@@ -14,7 +14,6 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ParserException;
-import org.overture.parser.tests.framework.BaseParserTestCase;
 import org.overture.prettyprinter.PrettyPrinterEnv;
 import org.overture.prettyprinter.PrettyPrinterVisitor;
 import org.overture.prettyprintertest.tests.framework.BasePrettyPrinterTestCase;
