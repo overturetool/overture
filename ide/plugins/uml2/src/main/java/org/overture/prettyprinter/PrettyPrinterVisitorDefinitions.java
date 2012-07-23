@@ -15,6 +15,8 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 
@@ -160,7 +162,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		sb.append(node.toString());
-		return sb.toString()+";";
+		return sb.toString() + ";";
 	}
 
 	@Override
@@ -169,7 +171,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		sb.append(node.toString());
-		return sb.toString()+";";
+		return sb.toString() + ";";
 	}
 
 	@Override
@@ -178,7 +180,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		sb.append(node.toString());
-		return sb.toString()+";";
+		return sb.toString() + ";";
 	}
 
 	@Override
@@ -188,18 +190,25 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		String type = ": ";
-		for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
-		{
-			type += iterator.next();
-			if (iterator.hasNext())
-			{
-				type += " * ";
-			}
 
+		if (d.getType().getParameters().isEmpty())
+		{
+			type += "() ";
+		} else
+		{
+			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
+			{
+				type += iterator.next();
+				if (iterator.hasNext())
+				{
+					type += " * ";
+				}
+
+			}
 		}
-		
-		type +=" ==> "+ d.getType().getResult();
-		
+
+		type += " ==> " + d.getType().getResult();
+
 		String tmp = d.getName()
 				+ " "
 				+ type
@@ -213,18 +222,61 @@ public class PrettyPrinterVisitorDefinitions extends
 						+ d.getPrecondition())
 				+ (d.getPostcondition() == null ? "" : "\n\tpost "
 						+ d.getPostcondition());
-		sb.append(tmp+";");
+		sb.append(tmp + ";");
 		return sb.toString();
 	}
 
 	@Override
 	public String caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node, PrettyPrinterEnv question)
+			AExplicitFunctionDefinition d, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append(node.toString());
-		return sb.toString();
+
+		StringBuilder params = new StringBuilder();
+
+		for (List<PPattern> plist : d.getParamPatternList())
+		{
+			params.append("(" + Utils.listToString(plist) + ")");
+		}
+
+		String accessStr = d.getAccess().toString();
+		if (d.getNameScope() == NameScope.LOCAL)
+			accessStr = "";
+
+		String type = ": ";
+		if (d.getType().getParameters().isEmpty())
+		{
+			type += "() ";
+		} else
+		{
+			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
+			{
+				type += iterator.next();
+				if (iterator.hasNext())
+				{
+					type += " * ";
+				}
+
+			}
+		}
+
+		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
+				+ d.getType().getResult();
+
+		String tmp = accessStr
+				+ d.getName().name
+				+ type
+				+ "\n\t"
+				+ d.getName().name
+				+ params
+				+ " ==\n"
+				+ d.getBody()
+				+ (d.getPrecondition() == null ? "" : "\n\tpre "
+						+ d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n\tpost "
+						+ d.getPostcondition());
+
+		return tmp;
 	}
 
 }
