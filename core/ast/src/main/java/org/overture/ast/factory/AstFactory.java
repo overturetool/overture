@@ -3001,7 +3001,7 @@ public class AstFactory {
 
 	
 
-	public static AUnionType newAUnionType(LexLocation location, PTypeList types) {
+	public static AUnionType newAUnionType(LexLocation location, List<? extends PType> types) {
 		AUnionType result = new AUnionType();
 		initType(result,location);
 		initUnionType(result);

@@ -15,16 +15,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Stereotype;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.PExp;
@@ -44,7 +47,7 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.prettyprinter.PrettyPrinterEnv;
-import org.overture.prettyprinter.PrettyPrinterVisitor;
+import org.overture.prettyprinter.PrettyPrinterVisitor; 
 
 public class Uml2Vdm
 {
@@ -118,6 +121,53 @@ public class Uml2Vdm
 	{
 		AClassClassDefinition c = AstFactory.newAClassClassDefinition();
 		c.setName(new LexNameToken(class_.getName(), class_.getName(), null));
+
+		for (Element elem : class_.getOwnedElements())
+		{
+			if (elem instanceof Class)
+			{
+				Class innerType = (Class) elem;
+				String innerTypeName = innerType.getName();
+				if (innerType.getGeneralizations().isEmpty())
+				{
+					boolean createdType = false;
+					for (EObject innerElem : innerType.getOwnedElements())
+					{
+						if (innerElem instanceof Stereotype)
+						{
+							Stereotype steriotype = (Stereotype) innerElem;
+							if (steriotype.getName().equals("record"))
+							{
+								ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
+								innerTypeDef.setType(tc.createRecord(innerType));
+								c.getDefinitions().add(innerTypeDef);
+								createdType = true;
+								break;
+							}
+						}
+					}
+					if (!createdType)
+					{
+						System.out.println("Found type= " + innerTypeName
+								+ " : " + "unknown type");
+					}
+				} else
+				{
+					String innerTypeTypeName = innerType.getGeneralizations().get(0).getGeneral().getName();
+					System.out.println("Found type= " + innerTypeName + " : "
+							+ innerTypeTypeName);
+					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
+					innerTypeDef.setType(tc.convert(innerTypeTypeName));
+					c.getDefinitions().add(innerTypeDef);
+				}
+			}else if (elem instanceof Enumeration)
+			{
+				String innerTypeName =((Enumeration) elem).getName();
+				ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
+				innerTypeDef.setType(tc.createEnumeration((Enumeration)elem));
+				c.getDefinitions().add(innerTypeDef);
+			}
+		}
 
 		for (Property att : class_.getOwnedAttributes())
 		{
@@ -213,9 +263,11 @@ public class Uml2Vdm
 			if (resExp.errors.isEmpty() && !failed)
 			{
 				defaultExp = resExp.result;
-			}else
+			} else
 			{
-				System.out.println("Faild to parse expression for attribute: "+att.getName()+ " in class "+ c.getName().name+ " default is: "+ att.getDefault());
+				System.out.println("Faild to parse expression for attribute: "
+						+ att.getName() + " in class " + c.getName().name
+						+ " default is: " + att.getDefault());
 			}
 		}
 		AInstanceVariableDefinition inst = AstFactory.newAInstanceVariableDefinition(new LexNameToken(c.getName().name, att.getName(), location), type, defaultExp);
@@ -225,8 +277,7 @@ public class Uml2Vdm
 	private void createValue(AClassClassDefinition c, Property att)
 	{
 		PType type = tc.convert(att.getType());
-		
-		
+
 		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
@@ -248,12 +299,14 @@ public class Uml2Vdm
 			if (resExp.errors.isEmpty() && !failed)
 			{
 				defaultExp = resExp.result;
-			}else
+			} else
 			{
-				System.out.println("Faild to parse expression for attribute: "+att.getName()+ " in class "+ c.getName().name+ " default is: "+ att.getDefault());
+				System.out.println("Faild to parse expression for attribute: "
+						+ att.getName() + " in class " + c.getName().name
+						+ " default is: " + att.getDefault());
 			}
 		}
-		
+
 		AValueDefinition inst = AstFactory.newAValueDefinition(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, att.getName(), location)), null, type, defaultExp);
 		c.getDefinitions().add(inst);
 	}

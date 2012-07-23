@@ -355,23 +355,5 @@ public class Vdm2Uml
 		return class_;
 	}
 
-	// private Type convertTypeInvariant(SInvariantType definitionType)
-	// {
-	// Type result = null;
-	//
-	// switch (definitionType.kindSInvariantType())
-	// {
-	// case NAMED:
-	// String name = ((ANamedInvariantType) definitionType).getName().name;
-	// result = types.get(name);
-	// break;
-	// case RECORD:
-	// break;
-	//
-	// }
-	// System.out.println();
-	//
-	// return result;
-	// }
 
 }

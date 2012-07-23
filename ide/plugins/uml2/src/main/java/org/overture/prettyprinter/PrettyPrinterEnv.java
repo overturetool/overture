@@ -4,17 +4,19 @@ public class PrettyPrinterEnv
 {
 	StringBuilder sb = new StringBuilder();
 	
-	public void increaseIdent()
+	public String increaseIdent()
 	{
 		sb.append("  ");
+		return getIdent();
 	}
 	
-	public void decreaseIdent()
+	public String decreaseIdent()
 	{
 		if(sb.length() > 0)
 		{
 			sb.setLength(sb.length() - 2);			
 		}
+		return getIdent();
 	}
 	
 	public String getIdent()

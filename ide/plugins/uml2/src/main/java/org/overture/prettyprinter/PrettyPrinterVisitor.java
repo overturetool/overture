@@ -4,7 +4,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 
-public class PrettyPrinterVisitor extends QuestionAnswerAdaptor<PrettyPrinterEnv,String>
+public class PrettyPrinterVisitor extends
+		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
 
 	/**
@@ -12,13 +13,14 @@ public class PrettyPrinterVisitor extends QuestionAnswerAdaptor<PrettyPrinterEnv
 	 */
 	private static final long serialVersionUID = -9082823353484822934L;
 
-	
-	private QuestionAnswerAdaptor<PrettyPrinterEnv,String> ppDefinition = new PrettyPrinterVisitorDefinitions(
-			this);
-	
-	
+	private QuestionAnswerAdaptor<PrettyPrinterEnv, String> ppDefinition = new PrettyPrinterVisitorDefinitions();
+
 	@Override
-	public String defaultPDefinition(PDefinition node, PrettyPrinterEnv question) throws AnalysisException {
+	public String defaultPDefinition(PDefinition node, PrettyPrinterEnv question)
+			throws AnalysisException
+	{
 		return node.apply(ppDefinition, question);
 	}
+	
+	
 }

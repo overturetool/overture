@@ -15,22 +15,19 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AUndefinedExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 
 public class PrettyPrinterVisitorDefinitions extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
-	// private PrettyPrinterVisitor main;
-
-	public PrettyPrinterVisitorDefinitions(
-			PrettyPrinterVisitor prettyPrinterVisitor)
-	{
-		// main = prettyPrinterVisitor;
-	}
-
 	/**
 	 * 
 	 */
@@ -136,7 +133,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			default:
 				break;
 		}
-
+		sb.append("\n");
 	}
 
 	private List<PDefinition> getDefinitions(
@@ -179,8 +176,39 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append(node.toString());
+
+		sb.append(node.getName()
+				+ (node.getType() instanceof ARecordInvariantType ? " :: "
+						: " = ") + node.getType().apply(this, question));
 		return sb.toString() + ";";
+	}
+
+	@Override
+	public String defaultPType(PType node, PrettyPrinterEnv question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+
+	@Override
+	public String caseARecordInvariantType(ARecordInvariantType node,
+			PrettyPrinterEnv question) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		question.increaseIdent();
+		sb.append("\n");
+		for (AFieldField f : node.getFields())
+		{
+			sb.append(question.getIdent() + f.getTag() + " : "
+					+ f.getType().apply(this, question) + "\n");
+		}
+		question.decreaseIdent();
+
+		if (node.getFields().size() > 0)
+		{
+			sb.delete(sb.length() - 1, sb.length());
+		}
+		return sb.toString();
 	}
 
 	@Override
@@ -209,20 +237,25 @@ public class PrettyPrinterVisitorDefinitions extends
 
 		type += " ==> " + d.getType().getResult();
 
-		String tmp = d.getName()
+		String tmp = d.getAccess()
+				+ " "
+				+ d.getName()
 				+ " "
 				+ type
-				+ "\n\t"
+				+ "\n"
+				+ question.getIdent()
 				+ d.getName()
 				+ "("
 				+ Utils.listToString(d.getParameterPatterns())
 				+ ")"
-				+ (d.getBody() == null ? "" : " ==\n" + d.getBody())
-				+ (d.getPrecondition() == null ? "" : "\n\tpre "
-						+ d.getPrecondition())
-				+ (d.getPostcondition() == null ? "" : "\n\tpost "
-						+ d.getPostcondition());
-		sb.append(tmp + ";");
+				+ (d.getBody() == null ? "" : " ==\n"
+						+ question.increaseIdent() + d.getBody()
+						+ question.decreaseIdent().trim())
+				+ (d.getPrecondition() == null ? "" : "\n"
+						+ question.getIdent() + "pre " + d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n"
+						+ question.getIdent() + "post " + d.getPostcondition());
+		sb.append(tmp + ";\n");
 		return sb.toString();
 	}
 
@@ -263,20 +296,46 @@ public class PrettyPrinterVisitorDefinitions extends
 		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
 				+ d.getType().getResult();
 
-		String tmp = accessStr
+		String tmp = question.getIdent()
+				+ accessStr
 				+ d.getName().name
 				+ type
-				+ "\n\t"
+				+ "\n"
+				+ question.getIdent()
 				+ d.getName().name
 				+ params
 				+ " ==\n"
-				+ d.getBody()
-				+ (d.getPrecondition() == null ? "" : "\n\tpre "
-						+ d.getPrecondition())
-				+ (d.getPostcondition() == null ? "" : "\n\tpost "
-						+ d.getPostcondition());
+				+ question.increaseIdent()
+				+ d.getBody().apply(this, question)
+				+ question.decreaseIdent().trim()
+				+ (d.getPrecondition() == null ? "" : "\n"
+						+ question.getIdent() + "pre " + d.getPrecondition())
+				+ (d.getPostcondition() == null ? "" : "\n"
+						+ question.getIdent() + "post " + d.getPostcondition());
 
-		return tmp;
+		return tmp + ";\n";
+	}
+
+	@Override
+	public String defaultPStm(PStm node, PrettyPrinterEnv question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+
+	@Override
+	public String defaultPExp(PExp node, PrettyPrinterEnv question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseAUndefinedExp(AUndefinedExp node,
+			PrettyPrinterEnv question) throws AnalysisException
+	{
+		return "undefined";
 	}
 
 }
