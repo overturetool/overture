@@ -22,18 +22,27 @@ import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Property;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.config.Settings;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.syntax.ParserException;
+import org.overture.parser.util.ParserUtil;
+import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.prettyprinter.PrettyPrinterEnv;
 import org.overture.prettyprinter.PrettyPrinterVisitor;
 
@@ -137,8 +146,27 @@ public class Uml2Vdm
 
 	private void createFunction(AClassClassDefinition c, Operation op)
 	{
-		// TODO Auto-generated method stub
-		createOperation(c, op);//TODO it is a pain to construct a function definition
+		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
+
+		List<List<PPattern>> paramPatternList = new Vector<List<PPattern>>();
+		List<PPattern> paramPatterns = new Vector<PPattern>();
+		paramPatternList.add(paramPatterns);
+		List<PType> parameterTypes = new Vector<PType>();
+
+		for (Parameter p : op.getOwnedParameters())
+		{
+			if (p.getName() == null)
+			{
+				continue;// this is the return type
+			}
+			parameterTypes.add(tc.convert(p.getType()));
+			paramPatterns.add(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, p.getName(), location)));
+		}
+
+		AFunctionType type = AstFactory.newAFunctionType(null, true, parameterTypes, tc.convert(op.getType()));
+
+		AExplicitFunctionDefinition operation = AstFactory.newAExplicitFunctionDefinition(name, null, null, type, paramPatternList, AstFactory.newAUndefinedExp(null), null, null, false, null);
+		c.getDefinitions().add(operation);
 	}
 
 	private void createOperation(AClassClassDefinition c, Operation op)
@@ -164,14 +192,69 @@ public class Uml2Vdm
 	private void createInstanceVar(AClassClassDefinition c, Property att)
 	{
 		PType type = tc.convert(att.getType());
-		AInstanceVariableDefinition inst = AstFactory.newAInstanceVariableDefinition(new LexNameToken(c.getName().name, att.getName(), location), type, NEW_A_INT_ZERRO_LITERAL_EXP.clone());
+		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
+		if (att.getDefault() != null && !att.getDefault().isEmpty())
+		{
+			Settings.dialect = Dialect.VDM_SL;
+			ParserResult<PExp> resExp = null;
+			boolean failed = false;
+			try
+			{
+				resExp = ParserUtil.parseExpression(att.getDefault());
+			} catch (ParserException e)
+			{
+				failed = true;
+				e.printStackTrace();
+			} catch (LexException e)
+			{
+				failed = true;
+				e.printStackTrace();
+			}
+			if (resExp.errors.isEmpty() && !failed)
+			{
+				defaultExp = resExp.result;
+			}else
+			{
+				System.out.println("Faild to parse expression for attribute: "+att.getName()+ " in class "+ c.getName().name+ " default is: "+ att.getDefault());
+			}
+		}
+		AInstanceVariableDefinition inst = AstFactory.newAInstanceVariableDefinition(new LexNameToken(c.getName().name, att.getName(), location), type, defaultExp);
 		c.getDefinitions().add(inst);
 	}
 
 	private void createValue(AClassClassDefinition c, Property att)
 	{
 		PType type = tc.convert(att.getType());
-		AValueDefinition inst = AstFactory.newAValueDefinition(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, att.getName(), location)), null, type, NEW_A_INT_ZERRO_LITERAL_EXP.clone());
+		
+		
+		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
+		if (att.getDefault() != null && !att.getDefault().isEmpty())
+		{
+			Settings.dialect = Dialect.VDM_SL;
+			ParserResult<PExp> resExp = null;
+			boolean failed = false;
+			try
+			{
+				resExp = ParserUtil.parseExpression(att.getDefault());
+			} catch (ParserException e)
+			{
+				failed = true;
+				e.printStackTrace();
+			} catch (LexException e)
+			{
+				failed = true;
+				e.printStackTrace();
+			}
+			if (resExp.errors.isEmpty() && !failed)
+			{
+				defaultExp = resExp.result;
+			}else
+			{
+				System.out.println("Faild to parse expression for attribute: "+att.getName()+ " in class "+ c.getName().name+ " default is: "+ att.getDefault());
+			}
+		}
+		
+		AValueDefinition inst = AstFactory.newAValueDefinition(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, att.getName(), location)), null, type, defaultExp);
 		c.getDefinitions().add(inst);
 	}
 }

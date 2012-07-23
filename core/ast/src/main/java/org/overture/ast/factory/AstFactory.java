@@ -248,7 +248,10 @@ public class AstFactory {
 	
 	private static void initExpression(PExp result, LexLocation location) {
 		result.setLocation(location);
-		location.executable(true);
+		if (location != null)
+		{
+			location.executable(true);
+		}
 	}
 	
 	private static void initExpression(PExp result, PExp expression) {
@@ -1380,7 +1383,10 @@ public class AstFactory {
 	public static ANotYetSpecifiedExp newANotYetSpecifiedExp(LexLocation location) {
 		ANotYetSpecifiedExp result = new ANotYetSpecifiedExp();
 		initExpression(result, location);
-		result.getLocation().executable(false); // ie. ignore coverage for these
+		if(result.getLocation() != null)
+		{
+			result.getLocation().executable(false); // ie. ignore coverage for these
+		}
 		return result;
 	}
 

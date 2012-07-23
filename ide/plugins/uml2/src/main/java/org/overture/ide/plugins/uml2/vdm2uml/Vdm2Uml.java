@@ -238,20 +238,17 @@ public class Vdm2Uml
 		}
 
 		EList<Type> types = new BasicEList<Type>();
-		for (PDefinition d : def.getParamDefinitionList())
-		{
-			if (d.getName().name.equals("self"))
-			{
-				continue;
-			}
-			PType type = PDefinitionAssistantTC.getType(d);
-			utc.create(class_, type);
-			types.add(utc.getUmlType(type));
-		}
 
-		PType returnType = ((AFunctionType) PDefinitionAssistantTC.getType(def)).getResult();
-		utc.create(class_, returnType);
-		Type returnUmlType = utc.getUmlType(returnType);
+		AFunctionType type = def.getType();
+		
+		for (PType t : type.getParameters())
+		{
+			utc.create(class_, t);
+			types.add(utc.getUmlType(t));
+		}
+		
+		utc.create(class_, type.getResult());
+		Type returnUmlType = utc.getUmlType(type.getResult());
 
 		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
