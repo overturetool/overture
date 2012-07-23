@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,8 @@ public class NextGenRTLogger {
 	private Map<Long, NextGenBusMessage> busMessage = new HashMap<Long, NextGenBusMessage>();
 	private Map<Long, NextGenThread> threadMap = new HashMap<Long, NextGenThread>();
 	private ArrayList<INextGenEvent> events = new ArrayList<INextGenEvent>();
-	private NextGenBus vBus;	
+	private NextGenBus vBus;
+	private String logFile = null;	
 	
 	
 	private NextGenRTLogger()
@@ -501,18 +503,22 @@ public class NextGenRTLogger {
 	
 	
 	//Writing to log
-	public void toFile(String s) throws IOException
+	public void toFile() throws IOException
 	{
-		FileWriter fstream = new FileWriter(s);
-        BufferedWriter out = new BufferedWriter(fstream);
-        
-        writeCPUdecls(out);
-        writeBUSdecls(out);
-        writeDeployObjs(out);
-        writeEvents(out);
-        
-        out.flush();
-        out.close();
+		if(logFile != null)
+		{
+			FileWriter fstream = new FileWriter(logFile + ".newgen.txt");
+	        BufferedWriter out = new BufferedWriter(fstream);
+	        
+	        writeCPUdecls(out);
+	        writeBUSdecls(out);
+	        writeDeployObjs(out);
+	        writeEvents(out);
+	        
+	        out.flush();
+	        out.close();
+		}
+		
 	}
 
 	
@@ -527,6 +533,7 @@ public class NextGenRTLogger {
 
 
 	private void writeDeployObjs(BufferedWriter out) throws IOException {
+		
 		for (NextGenObject o : this.objectMap.values()) 
 		{
 			out.append(o.toString());
@@ -563,22 +570,25 @@ public class NextGenRTLogger {
 		}		
 	}
 	
-	public void persistToFile(String filename) throws IOException
+	public void persistToFile() throws IOException
 	{
-		FileOutputStream fos = new FileOutputStream(filename);
-		ObjectOutputStream out = new ObjectOutputStream(fos);
-		
-		out.writeObject(cpuMap);
-		out.writeObject(busMap);
-		out.writeObject(objectMap);
-		out.writeObject(classDefMap);
-		out.writeObject(operationMap);
-		out.writeObject(busMessage);
-		out.writeObject(threadMap);
-		out.writeObject(events);
-		
-		out.flush();
-		out.close();		
+		if(logFile != null)
+		{
+			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
+			ObjectOutputStream out = new ObjectOutputStream(fos);
+			
+			out.writeObject(cpuMap);
+			out.writeObject(busMap);
+			out.writeObject(objectMap);
+			out.writeObject(classDefMap);
+			out.writeObject(operationMap);
+			out.writeObject(busMessage);
+			out.writeObject(threadMap);
+			out.writeObject(events);
+			
+			out.flush();
+			out.close();
+		}
 	}
 	
 	
@@ -605,6 +615,11 @@ public class NextGenRTLogger {
 		instance = new NextGenRTLogger();
 		instance.readFromFile(filename);
 		return instance;
+	}
+
+	public void setLogfile(String logfile)
+	{
+		this.logFile = logfile;
 	}
 	
 }

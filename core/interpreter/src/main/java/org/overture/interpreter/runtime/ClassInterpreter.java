@@ -236,8 +236,9 @@ public class ClassInterpreter extends Interpreter
 		main.start();
 		scheduler.start(main);
 		
-		NextGenRTLogger.getInstance().toFile("out.txt");
-		NextGenRTLogger.getInstance().persistToFile("out.bin");
+		NextGenRTLogger.getInstance().setLogfile("nextGenLog");
+		NextGenRTLogger.getInstance().toFile();
+		NextGenRTLogger.getInstance().persistToFile();
 		
 		RuntimeValidator.stop();
 

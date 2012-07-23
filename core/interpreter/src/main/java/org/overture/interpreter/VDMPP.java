@@ -44,6 +44,7 @@ import org.overture.interpreter.commands.ClassCommandReader;
 import org.overture.interpreter.commands.CommandReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.util.ClassListInterpreter;
@@ -286,6 +287,7 @@ public class VDMPP extends VDMJ
     		{
     			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
     			RTLogger.setLogfile(p);
+    			NextGenRTLogger.getInstance().setLogfile(logfile);
     			println("RT events now logged to " + logfile);
     		}
     		catch (FileNotFoundException e)
