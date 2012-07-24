@@ -1,0 +1,11 @@
+Eclipse base dependencies
+
+fetch from: http://download.eclipse.org/eclipse/downloads/drops/R-3.7.2-201202080800/
+* Eclipse SDK
+* DeltaPack
+
+EMF 2.7 http://www.eclipse.org/downloads/download.php?file=/modeling/emf/emf/downloads/drops/2.7.x/M201201231045/emf-xsd-SDK-M201201231045.zip
+
+MDT-UML2 3.2.1 http://www.eclipse.org/downloads/download.php?file=/modeling/mdt/uml2/downloads/drops/3.2.1/R201109132310/mdt-uml2-runtime-3.2.1.zip
+
+GEF-draw2d 3.8.0 http://www.eclipse.org/downloads/download.php?file=/tools/gef/downloads/drops/3.8.0/R201206112118/GEF-draw2d-3.8.0.zip
