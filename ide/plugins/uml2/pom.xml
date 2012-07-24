@@ -36,6 +36,11 @@
     <artifactId>ecore</artifactId>
     <version>2.2.3</version>
   </dependency>
+    <dependency>
+      <groupId>org.eclipse.core</groupId>
+      <artifactId>org.eclipse.core.resources</artifactId>
+      <version>3.7.101</version>
+    </dependency>
   </dependencies>
    
  <build>

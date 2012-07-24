@@ -12,6 +12,7 @@ import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
@@ -125,13 +126,13 @@ public class VdmTypeCreator
 	 * @param name
 	 * @return
 	 */
-	private List<PType> convertGeneric(String name)
+	private PTypeList convertGeneric(String name)
 	{
 		String nameNoLessOrGreater = name.substring(1, name.length() - 1);
 
 		String[] typeStrings = nameNoLessOrGreater.split(",");
 
-		List<PType> types = new Vector<PType>();
+		PTypeList types = new PTypeList();
 		for (String t : typeStrings)
 		{
 			types.add(convert(t));
@@ -157,7 +158,7 @@ public class VdmTypeCreator
 
 	public PType createEnumeration(Enumeration elem)
 	{
-		List<PType> types = new Vector<PType>();
+		PTypeList types = new PTypeList();
 		for (EnumerationLiteral lit : elem.getOwnedLiterals())
 		{
 			if(lit.getName().startsWith("<") && lit.getName().endsWith(">"))
