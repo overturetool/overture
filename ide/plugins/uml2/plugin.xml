@@ -46,7 +46,8 @@
                  style="push">
               <visibleWhen
                     checkEnabled="false">
-                 <iterate>
+                 <iterate
+                       ifEmpty="false">
                      
                             <adapt type="org.overture.ide.core.resources.IVdmProject">
                             </adapt>
@@ -61,7 +62,8 @@
                  style="push">
               <visibleWhen
                     checkEnabled="false">
-                 <iterate>
+                 <iterate
+                       ifEmpty="false">
                      
                             <adapt type="org.eclipse.core.resources.IResource">
                                <test

@@ -22,6 +22,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.preview.GraphViz.GraphVizException;
 
 public class Main {
 
@@ -48,8 +49,9 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws GraphVizException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws GraphVizException {
 //		AUnaryExp un = new AUnaryExp(new ACeilUnop(), new AIdentifierSingleExp(
 //				new ACtDomain(), new ARealType(), "somename"));
 //		PExp exp = new ABinaryExp(new ABoolSingleExp(true), new AOrBinop(), un);
@@ -60,7 +62,7 @@ public class Main {
 		show(exp, true);
 	}
 	
-	public static void makeImage(INode node, String type,File output)
+	public static void makeImage(INode node, String type,File output) throws GraphVizException
 	{
 		DotGraphVisitor visitor = new DotGraphVisitor();
 		try
@@ -74,7 +76,7 @@ public class Main {
 		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
 	}
 	
-	public static void show(INode node,final boolean exitOnClose){
+	public static void show(INode node,final boolean exitOnClose) throws GraphVizException{
 		DotGraphVisitor visitor = new DotGraphVisitor();
 		try
 		{
