@@ -42,16 +42,27 @@
 			<artifactId>org.eclipse.uml2.uml</artifactId>
 			<version>3.2.100</version>
 		</dependency>
-		<dependency>
+		<dependency> 
 			<groupId>org.eclipse.emf</groupId>
-			<artifactId>ecore</artifactId>
-			<version>2.2.3</version>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>2.7.0</version>
 		</dependency>
 		<dependency>
+        <groupId>org.eclipse.emf.mapping</groupId>
+        <artifactId>org.eclipse.emf.mapping.ecore2xml</artifactId>
+        <version>2.7.0</version>
+        </dependency> 
+		<dependency>
 			<groupId>org.eclipse.emf</groupId>
-            <artifactId>common</artifactId>
-            <version>2.2.3</version>
+            <artifactId>org.eclipse.emf.common</artifactId>
+            <version>2.7.0</version>
 		</dependency>
+		  <dependency>
+    <groupId>org.eclipse.emf.ecore</groupId>
+    <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+    <version>2.7.0</version>
+    </dependency>
+		
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
 			<artifactId>org.eclipse.core.resources</artifactId>
@@ -67,11 +78,7 @@
       <artifactId>org.eclipse.jface.text</artifactId>
       <version>3.7.2</version>
     </dependency>
-    <dependency>
-    <groupId>org.eclipse.emf</groupId>
-<artifactId>ecore-xmi</artifactId>
-<version>2.2.3</version>
- </dependency>
+  
 	</dependencies>
 
 	<build>
