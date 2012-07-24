@@ -11,7 +11,7 @@
 	</fileset>
 	<fileset dir="../plugins/">
 		<include name="**" />
-		<exclude name="**/uml2/" />
+		<!--exclude name="**/uml2/" /-->
 		<exclude name="**/idedebughelper/" />
 		<exclude name="**/proofsupport/" />
 	</fileset>
@@ -147,29 +147,7 @@
 	</fileset>
 </copy>
 
-<!-- copy todir="${buildDirectory}/plugins/generated.showtrace">
-	<fileset dir="../generated/showtrace">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
 
-<copy todir="${buildDirectory}/plugins/generated.traces">
-	<fileset dir="../generated/traces">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/generated.umltrans">
-	<fileset dir="../generated/umltrans">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/generated.vdmj">
-	<fileset dir="../generated/vdmj">
-		<exclude name="**/target/" />
-	</fileset>
-</copy-->
 
 <copy todir="${buildDirectory}">
 	<fileset dir="../">
