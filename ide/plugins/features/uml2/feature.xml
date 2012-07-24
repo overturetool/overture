@@ -16,13 +16,69 @@
       %agreement
    </license>
 
+   <includes
+         id="org.eclipse.emf"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.overture.ide.features.core" version="1.0.1.qualifier"/>
-      <import plugin="org.eclipse.uml2.uml"/>
+      <import plugin="org.overture.ide.ui" version="0.3.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.7.101" match="greaterOrEqual"/>
+      <import plugin="org.overture.ide.core" version="2.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.console" version="3.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="org.overture.ide.plugins.uml2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.ecore.xmi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.mapping"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.uml2.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.uml2.uml"
          download-size="0"
          install-size="0"
          version="0.0.0"

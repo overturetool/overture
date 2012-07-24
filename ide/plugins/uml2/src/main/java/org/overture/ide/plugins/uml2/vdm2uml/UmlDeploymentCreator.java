@@ -27,14 +27,17 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
+import org.overture.ide.plugins.uml2.UmlConsole;
 
 public class UmlDeploymentCreator
 {
 	private Model modelWorkingCopy;
+	private UmlConsole console;
 	
-	public UmlDeploymentCreator(Model model)
+	public UmlDeploymentCreator(Model model, UmlConsole console)
 	{
 		this.modelWorkingCopy = model;
+		this.console = console;
 	}
 
 	public void buildDeployment(List<SClassDefinition> classes2)
@@ -66,6 +69,7 @@ public class UmlDeploymentCreator
 
 		if (system != null)
 		{
+			console.out.println("Creating deployment package");
 			deploymentPackage = (Package) this.modelWorkingCopy.createNestedPackage("Deployment");
 		}
 
@@ -76,6 +80,7 @@ public class UmlDeploymentCreator
 				PDefinition def = ((AClassType) ind.getType()).getClassdef();
 				if (def instanceof ACpuClassDefinition)
 				{
+					console.out.println("Adding node: "+ ind.getName().name);
 					Node n = (Node) deploymentPackage.createPackagedElement(ind.getName().name, UMLPackage.Literals.NODE);
 					nodes.put(ind.getName().name, n);
 				}
@@ -86,6 +91,7 @@ public class UmlDeploymentCreator
 				PDefinition def = ((AClassType) ind.getType()).getClassdef();
 				if (def instanceof ABusClassDefinition)
 				{
+					console.out.print("Adding comminication path between: ");
 					CommunicationPath con = (CommunicationPath) deploymentPackage.createPackagedElement(ind.getName().module, UMLPackage.Literals.COMMUNICATION_PATH);
 
 					ANewExp e = (ANewExp) ind.getExpression();
@@ -98,11 +104,13 @@ public class UmlDeploymentCreator
 						{
 							if (nodes.containsKey(m.toString()))
 							{
+								console.out.print(" "+m.toString());
 								con.createNavigableOwnedEnd("", nodes.get(m.toString()));
 							}
 						}
 
 					}
+					console.out.print("\n");
 				}
 			}
 		}
@@ -141,9 +149,11 @@ public class UmlDeploymentCreator
 											if (call.getArgs().get(0) instanceof AVariableExp
 													&& ((AVariableExp) call.getArgs().get(0)).getType() instanceof AClassType)
 											{
+												
 												AVariableExp var = (AVariableExp) call.getArgs().get(0);
 												// Class c = classes.get(((AClassType) var.getType()).getName().name);
 												artifact.setFileName(((AClassType) var.getType()).getName().location.file.getName());
+												console.out.println("Adding artifact: "+ artifact.getName());
 											}
 										}
 									}

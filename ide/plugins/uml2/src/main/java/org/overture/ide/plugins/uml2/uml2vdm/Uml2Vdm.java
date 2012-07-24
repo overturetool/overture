@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
@@ -42,6 +43,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
@@ -56,6 +58,7 @@ public class Uml2Vdm
 	Model model;
 	private String extension = "vdmpp";
 	private VdmTypeCreator tc = new VdmTypeCreator();
+	private UmlConsole console;
 
 	public Uml2Vdm(URI uri)
 	{
@@ -68,6 +71,10 @@ public class Uml2Vdm
 				model = (Model) c;
 			}
 		}
+		
+		console = new UmlConsole();
+		
+		
 
 	}
 
@@ -75,13 +82,22 @@ public class Uml2Vdm
 	{
 		if (model != null)
 		{
+			try
+			{
+				console.show();
+			} catch (PartInitException e2)
+			{
+			}
+			console.out.println("#\n# Starting translation of model: "+ model.getName()+"\n#");
+			console.out.println("# Into: "+outputDir+"\n#");
+			console.out.println("-------------------------------------------------------------------------");
 			Map<String, String> classes = new HashMap<String, String>();
 			for (Element e : model.getOwnedElements())
 			{
 				if (e instanceof Class)
 				{
 					Class class_ = (Class) e;
-					System.out.println("Converting: " + class_.getName());
+					console.out.println("Converting: " + class_.getName());
 					try
 					{
 						classes.put(class_.getName(), createClass(class_).apply(new PrettyPrinterVisitor(), new PrettyPrinterEnv()));
@@ -93,10 +109,12 @@ public class Uml2Vdm
 				}
 			}
 
+			console.out.println("Writing source files");
 			for (Entry<String, String> c : classes.entrySet())
 			{
 				writeClassFile(outputDir, c);
 			}
+			console.out.println("Conversion completed.");
 		}
 	}
 
@@ -138,6 +156,7 @@ public class Uml2Vdm
 							Stereotype steriotype = (Stereotype) innerElem;
 							if (steriotype.getName().equals("record"))
 							{
+								console.out.println("\tConverting inner record type= " + innerTypeName);
 								ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 								innerTypeDef.setType(tc.createRecord(innerType));
 								c.getDefinitions().add(innerTypeDef);
@@ -148,13 +167,13 @@ public class Uml2Vdm
 					}
 					if (!createdType)
 					{
-						System.out.println("Found type= " + innerTypeName
+						console.err.println("\tFound type= " + innerTypeName
 								+ " : " + "unknown type");
 					}
 				} else
 				{
 					String innerTypeTypeName = innerType.getGeneralizations().get(0).getGeneral().getName();
-					System.out.println("Found type= " + innerTypeName + " : "
+					console.out.println("\tConverting inner type= " + innerTypeName + " : "
 							+ innerTypeTypeName);
 					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 					innerTypeDef.setType(tc.convert(innerTypeTypeName));
@@ -163,6 +182,7 @@ public class Uml2Vdm
 			}else if (elem instanceof Enumeration)
 			{
 				String innerTypeName =((Enumeration) elem).getName();
+				console.out.println("\tConverting inner enumeration type= " + innerTypeName);
 				ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 				innerTypeDef.setType(tc.createEnumeration((Enumeration)elem));
 				c.getDefinitions().add(innerTypeDef);
@@ -196,6 +216,7 @@ public class Uml2Vdm
 
 	private void createFunction(AClassClassDefinition c, Operation op)
 	{
+		console.out.println("\tConverting function: "+op.getName());
 		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
 
 		List<List<PPattern>> paramPatternList = new Vector<List<PPattern>>();
@@ -221,6 +242,7 @@ public class Uml2Vdm
 
 	private void createOperation(AClassClassDefinition c, Operation op)
 	{
+		console.out.println("\tConverting operation: "+op.getName());
 		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
 		List<PType> parameterTypes = new Vector<PType>();
 		List<PPattern> parameters = new Vector<PPattern>();
@@ -241,6 +263,7 @@ public class Uml2Vdm
 
 	private void createInstanceVar(AClassClassDefinition c, Property att)
 	{
+		console.out.println("\tConverting instanve variable: "+att.getName());
 		PType type = tc.convert(att.getType());
 		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
@@ -265,7 +288,7 @@ public class Uml2Vdm
 				defaultExp = resExp.result;
 			} else
 			{
-				System.out.println("Faild to parse expression for attribute: "
+				console.err.println("\tFaild to parse expression for attribute: "
 						+ att.getName() + " in class " + c.getName().name
 						+ " default is: " + att.getDefault());
 			}
@@ -276,6 +299,7 @@ public class Uml2Vdm
 
 	private void createValue(AClassClassDefinition c, Property att)
 	{
+		console.out.println("\tConverting value: "+att.getName());
 		PType type = tc.convert(att.getType());
 
 		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
@@ -301,7 +325,7 @@ public class Uml2Vdm
 				defaultExp = resExp.result;
 			} else
 			{
-				System.out.println("Faild to parse expression for attribute: "
+				console.err.println("\tFaild to parse expression for attribute: "
 						+ att.getName() + " in class " + c.getName().name
 						+ " default is: " + att.getDefault());
 			}
