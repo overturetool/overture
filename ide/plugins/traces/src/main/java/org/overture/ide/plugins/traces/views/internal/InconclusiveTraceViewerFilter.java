@@ -3,7 +3,7 @@ package org.overture.ide.plugins.traces.views.internal;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
-import org.overturetool.ct.utils.Verdict;
+import org.overture.interpreter.traces.Verdict;
 
 public class InconclusiveTraceViewerFilter extends ViewerFilter
 {

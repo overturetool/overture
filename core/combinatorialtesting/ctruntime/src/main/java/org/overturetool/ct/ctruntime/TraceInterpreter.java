@@ -4,29 +4,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.config.Settings;
+import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.traces.CallSequence;
+import org.overture.interpreter.traces.TestSequence;
+import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.Verdict;
 import org.overturetool.ct.utils.TraceXmlWrapper;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.definitions.ClassDefinition;
-import org.overturetool.vdmj.definitions.Definition;
-import org.overturetool.vdmj.definitions.NamedTraceDefinition;
-import org.overturetool.vdmj.modules.Module;
-import org.overturetool.vdmj.runtime.ClassInterpreter;
-import org.overturetool.vdmj.runtime.Context;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.ModuleInterpreter;
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.traces.CallSequence;
-import org.overturetool.vdmj.traces.TestSequence;
-import org.overturetool.vdmj.traces.TraceReductionType;
-import org.overturetool.vdmj.traces.Verdict;
 
 public class TraceInterpreter
 {
 	protected long beginClass = 0;
 	protected long beginTrace = 0;
 	protected String activeClass = "";
-	protected String activeTrace;
+	protected String activeTrace; 
 
 	Interpreter interpreter;
 	protected File coverage;
@@ -58,24 +59,24 @@ public class TraceInterpreter
 	{
 		this.interpreter = interpreter;
 
-		List<Definition> definitions = null;
+		List<PDefinition> definitions = null;
 
 		if (interpreter instanceof ModuleInterpreter)
 		{
-			for (Module module : ((ModuleInterpreter) interpreter).modules)
+			for (AModuleModules module : ((ModuleInterpreter) interpreter).modules)
 			{
 				if (module.getName().equals(moduleName))
 				{
-					definitions = module.defs;
+					definitions = module.getDefs();
 				}
 			}
 		} else
 		{
-			for (ClassDefinition classDefinition : ((ClassInterpreter) interpreter).getClasses())
+			for (SClassDefinition classDefinition : ((ClassInterpreter) interpreter).getClasses())
 			{
 				if (classDefinition.getName().equals(moduleName))
 				{
-					definitions = classDefinition.definitions;
+					definitions = classDefinition.getDefinitions();
 				}
 			}
 		}
@@ -83,7 +84,7 @@ public class TraceInterpreter
 		processTraces(definitions, moduleName, traceName, store);
 	}
 
-	private void processTraces(List<Definition> definitions, String className,
+	private void processTraces(List<PDefinition> definitions, String className,
 			String traceName, TraceXmlWrapper storage) throws IOException
 	{
 		try
@@ -101,7 +102,7 @@ public class TraceInterpreter
 
 			for (Object string : definitions)
 			{
-				if (string instanceof NamedTraceDefinition)
+				if (string instanceof ANamedTraceDefinition)
 				{
 					numberOfTraces++;
 				}
@@ -111,13 +112,13 @@ public class TraceInterpreter
 
 			for (Object definition : definitions)
 			{
-				if (definition instanceof NamedTraceDefinition)
+				if (definition instanceof ANamedTraceDefinition)
 				{
 					if (traceName == null
-							|| ((NamedTraceDefinition) definition).name.name.equals(traceName))
+							|| ((ANamedTraceDefinition) definition).getName().name.equals(traceName))
 					{
 						interpreter.init(null);
-						Context ctxt = interpreter.getInitialTraceContext((NamedTraceDefinition) definition, false);
+						Context ctxt = interpreter.getInitialTraceContext((ANamedTraceDefinition) definition, false);
 
 						evaluateTests(className, storage, definition, ctxt);
 					}
@@ -151,7 +152,7 @@ public class TraceInterpreter
 	private void evaluateTests(String className, TraceXmlWrapper storage,
 			Object traceDefinition, Context ctxt) throws Exception
 	{
-		NamedTraceDefinition mtd = (NamedTraceDefinition) traceDefinition;
+		ANamedTraceDefinition mtd = (ANamedTraceDefinition) traceDefinition;
 		TestSequence tests = null;
 		if (!reduce)
 		{
@@ -160,12 +161,12 @@ public class TraceInterpreter
 			seed = 999;
 		}
 
-		tests = mtd.getTests(ctxt, subset, traceReductionType, seed);
+		tests = ANamedTraceDefinitionAssistantInterpreter.getTests(mtd,ctxt, subset, traceReductionType, seed);
 
-		processingTrace(className, mtd.name.name, tests.size());
+		processingTrace(className, mtd.getName().name, tests.size());
 		if (storage != null)
 		{
-			storage.StartTrace(mtd.name.name, mtd.location.file.getName(), mtd.location.startLine, mtd.location.startPos, tests.size(), new Float(subset), org.overturetool.ct.utils.TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+			storage.StartTrace(mtd.getName().name, mtd.getLocation().file.getName(), mtd.getLocation().startLine, mtd.getLocation().startPos, tests.size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
 		int n = 1;
@@ -176,7 +177,7 @@ public class TraceInterpreter
 
 		for (CallSequence test : tests)
 		{
-			processingTest(className, mtd.name.name, n, tests.size());
+			processingTest(className, mtd.getName().name, n, tests.size());
 			// Bodge until we figure out how to not have explicit op
 			// names.
 			String clean = test.toString().replaceAll("\\.\\w+`", ".");
@@ -218,7 +219,7 @@ public class TraceInterpreter
 				{
 					if (result.get(i) instanceof Verdict)
 					{
-						result.set(i, org.overturetool.ct.utils.Verdict.valueOf(result.get(i).toString()));
+						result.set(i, Verdict.valueOf(result.get(i).toString()));
 					}
 
 				}
@@ -244,11 +245,11 @@ public class TraceInterpreter
 				worstVerdict = Verdict.INCONCLUSIVE;
 			}
 
-			storage.AddTraceStatus(org.overturetool.ct.utils.Verdict.valueOf(worstVerdict.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
+			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
 			storage.StopElement();
 		}
 
-		processingTraceFinished(className, mtd.name.name, tests.size(), faildCount, inconclusiveCount, skippedCount);
+		processingTraceFinished(className, mtd.getName().name, tests.size(), faildCount, inconclusiveCount, skippedCount);
 	}
 
 	protected void processingTraceFinished(String className, String name,

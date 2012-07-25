@@ -29,7 +29,7 @@ import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTreeNode;
-import org.overturetool.ct.utils.Verdict;
+import org.overture.interpreter.traces.Verdict;
 
 public class ViewLabelProvider extends LabelProvider
 {

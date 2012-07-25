@@ -22,8 +22,6 @@
  ******************************************************************************/
 package org.overture.config;
 
-import org.overture.config.Release;
-
 public enum Release
 {
 	CLASSIC("classic"),		// VDM, before Overture changes

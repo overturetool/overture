@@ -21,8 +21,8 @@ package org.overture.ide.plugins.traces.views.treeView;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.overture.interpreter.traces.Verdict;
 import org.overturetool.ct.utils.TraceTestResult;
-import org.overturetool.ct.utils.Verdict;
 
 public class TraceTestTreeNode implements IAdaptable, ITreeNode
 {

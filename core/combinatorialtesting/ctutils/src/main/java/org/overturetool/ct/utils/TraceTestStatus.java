@@ -1,5 +1,7 @@
 package org.overturetool.ct.utils;
 
+import org.overture.interpreter.traces.Verdict;
+
 public class TraceTestStatus
 {
 	private Integer number = -1;
