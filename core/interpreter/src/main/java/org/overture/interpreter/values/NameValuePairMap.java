@@ -24,14 +24,21 @@
 package org.overture.interpreter.values;
 
 
+import java.io.Serializable;
+
 import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 
 
-public class NameValuePairMap extends LexNameTokenMap<Value>
+public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3333481593678892977L;
+
 	public void put(NameValuePair nvp)
 	{
 		put(nvp.name, nvp.value);

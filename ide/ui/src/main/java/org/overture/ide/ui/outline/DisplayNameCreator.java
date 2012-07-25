@@ -51,8 +51,7 @@ public class DisplayNameCreator {
 					
 					AExplicitOperationDefinition def = (AExplicitOperationDefinition) element;
 					
-					sb.append(def.getName());
-
+					sb.append(def.getName().name);
 					if (def.getType() instanceof AOperationType) {
 						AOperationType type = (AOperationType) def.getType();
 						if (type.getParameters().size() == 0) {

@@ -30,14 +30,18 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.EStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.PStmBase;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.VoidValue;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatEnvironment;
 
 
 public class TraceVariableStatement extends PStmBase
@@ -52,6 +56,13 @@ public class TraceVariableStatement extends PStmBase
 		this.var = var;
 	}
 
+	public void typeCheck(Environment env, NameScope scope)
+	{
+		FlatEnvironment flat = (FlatEnvironment)env;
+		flat.add(AstFactoryTC.newALocalDefinition(var.name.location, var.name, scope, var.type));
+		//return var.type;
+	}
+	
 //	@Override
 //	public Value eval(Context ctxt)
 //	{

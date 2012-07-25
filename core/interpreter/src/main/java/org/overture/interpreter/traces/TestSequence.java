@@ -35,6 +35,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.Utils;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -101,7 +102,15 @@ public class TestSequence extends Vector<CallSequence>
 
     		for (PStm statement: test)
     		{
-				interpreter.typeCheck(statement, env);
+    			if(statement instanceof TraceVariableStatement)
+    			{
+    				((TraceVariableStatement)statement).typeCheck(env, NameScope.NAMESANDSTATE);
+    			}
+    			else
+    			{
+    				interpreter.typeCheck(statement, env);	
+    			}
+				
     		}
 		}
 	}

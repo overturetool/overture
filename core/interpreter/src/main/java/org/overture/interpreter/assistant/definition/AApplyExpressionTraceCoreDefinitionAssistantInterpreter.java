@@ -6,6 +6,8 @@ import java.util.Vector;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
@@ -55,7 +57,7 @@ public class AApplyExpressionTraceCoreDefinitionAssistantInterpreter
 
 			if (v instanceof ObjectValue)
 			{
-				newargs.add(arg);
+				newargs.add(arg.clone());
 			}
 			else
 			{
@@ -73,11 +75,11 @@ public class AApplyExpressionTraceCoreDefinitionAssistantInterpreter
     			}
     			catch (ParserException e)
     			{
-    				newargs.add(arg);		// Give up!
+    				newargs.add(arg.clone());		// Give up!
     			}
     			catch (LexException e)
     			{
-    				newargs.add(arg);		// Give up!
+    				newargs.add(arg.clone());		// Give up!
     			}
 			}
 		}
@@ -96,12 +98,12 @@ public class AApplyExpressionTraceCoreDefinitionAssistantInterpreter
 			if (stmt.getClassname() != null)
 			{
 				newStatement = AstFactory.newACallObjectStm(
-					stmt.getDesignator().clone(), stmt.getClassname(), newargs);
+					stmt.getDesignator().clone(), stmt.getClassname().clone(), newargs);
 			}
 			else
 			{
 				newStatement = AstFactory.newACallObjectStm(
-					stmt.getDesignator(), stmt.getFieldname(), newargs);
+					stmt.getDesignator().clone(), (LexIdentifierToken) stmt.getFieldname().clone(), newargs);
 			}
 		}
 
