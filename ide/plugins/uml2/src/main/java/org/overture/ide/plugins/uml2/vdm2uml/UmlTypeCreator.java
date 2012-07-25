@@ -30,6 +30,7 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ide.plugins.uml2.UmlConsole;
 
 /**
  * For help see: http://www.eclipse.org/modeling/mdt/uml2/docs/articles/Getting_Started_with_UML2/article.html
@@ -50,30 +51,18 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private Package bindingPackage;
 	private Package combositeTypePackage;
 	private Package basicTypePackage;
+	private UmlConsole console=null;
 
-	public UmlTypeCreator(ClassTypeLookup classLookup)
+	public UmlTypeCreator(ClassTypeLookup classLookup, UmlConsole console)
 	{
 		this.classLookup = classLookup;
+		this.console = console;
 	}
 
 	public void setModelWorkingCopy(Model modelWorkingCopy)
 	{
 		this.modelWorkingCopy = modelWorkingCopy;
 	}
-
-	// private void addPrimitiveTypes()
-	// {
-	//
-	// types.put("int", modelWorkingCopy.createOwnedPrimitiveType("int"));
-	// types.put("bool", modelWorkingCopy.createOwnedPrimitiveType("bool"));
-	// types.put("nat", modelWorkingCopy.createOwnedPrimitiveType("nat"));
-	// types.put("nat1", modelWorkingCopy.createOwnedPrimitiveType("nat1"));
-	// types.put("real", modelWorkingCopy.createOwnedPrimitiveType("real"));
-	// types.put("char", modelWorkingCopy.createOwnedPrimitiveType("char"));
-	// types.put("token", modelWorkingCopy.createOwnedPrimitiveType("token"));
-	// types.put("String", modelWorkingCopy.createOwnedPrimitiveType("String"));
-	//
-	// }
 
 	public void create(Class class_, PType type)
 	{
@@ -144,6 +133,10 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 		if (!types.containsKey(getName(type)))
 		{
+			if(console!=null)
+			{
+				console.err.println("Unable to convert type: "+type +" - Inserting \"Unknown\" type as a replacement and continues");
+			}
 			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
 			unknownType.addKeyword(getName(type));
 			types.put(getName(type), unknownType);

@@ -12,7 +12,7 @@
 	<fileset dir="../plugins/">
 		<include name="**" />
 		<!--exclude name="**/uml2/" /-->
-		<exclude name="**/idedebughelper/" />
+		<!-- exclude name="**/idedebughelper/" /-->
 		<exclude name="**/proofsupport/" />
 	</fileset>
 </copy>
@@ -180,6 +180,13 @@
 		<exclude name="**/target/" />
 	</fileset>
 </copy>
+
+<copy todir="${buildDirectory}/features/features.developerutils">
+	<fileset dir="../plugins/features/developerutils">
+		<exclude name="**/target/" />
+	</fileset>
+</copy>
+
 <copy todir="${buildDirectory}/features/features.poviewer">
 	<fileset dir="../plugins/features/poviewer">
 		<exclude name="**/target/" />

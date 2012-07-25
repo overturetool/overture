@@ -30,7 +30,8 @@
                  style="push">
               <visibleWhen
                     checkEnabled="false">
-                 <iterate>
+                 <iterate
+                       ifEmpty="false">
                      
                             <adapt type="org.overture.ide.core.resources.IVdmProject">
                             </adapt>
@@ -40,6 +41,15 @@
            </command>
         </menu>
      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.overture.ide.ui.vdm"
+            class="org.overture.ide.plugins.developerutils.preferences.WorkbenchPreferencePageDot"
+            id="org.overture.ide.plugins.developerutils.page1"
+            name="Dot">
+      </page>
    </extension>
 
 </plugin>

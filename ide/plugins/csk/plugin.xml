@@ -24,7 +24,8 @@
                   style="push">
                <visibleWhen
                      checkEnabled="false">
-                      <iterate>
+                      <iterate
+                            ifEmpty="false">
                      	<adapt type="org.overture.ide.core.resources.IVdmProject"></adapt>
                      </iterate>
                </visibleWhen>

@@ -450,7 +450,8 @@
                  style="push">
               <visibleWhen
                     checkEnabled="false">
-                 <iterate>
+                 <iterate
+                       ifEmpty="false">
 	                 <and>
 	                 	<or>
 	               			<adapt type="org.overture.ide.core.resources.IVdmProject">
@@ -473,7 +474,8 @@
                  style="push">
               <visibleWhen
                     checkEnabled="false">
-                 <iterate>
+                 <iterate
+                       ifEmpty="false">
 	                 <and>
 	                 	<or>
 	               			<adapt type="org.overture.ide.core.resources.IVdmProject">

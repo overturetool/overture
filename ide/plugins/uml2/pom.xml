@@ -27,58 +27,63 @@
 			<version>2.2.0</version>
 		</dependency>
 		<dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.ui</artifactId>
-      <version>2.2.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.swt</groupId>
-      <artifactId>org.eclipse.swt</artifactId>
-      <version>3.7.2</version>
-    </dependency>
+			<groupId>org.overture.ide</groupId>
+			<artifactId>org.overture.ide.ui</artifactId>
+			<version>2.2.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.ui</groupId>
+			<artifactId>org.eclipse.ui.console</artifactId>
+			<version>3.5.100</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt</artifactId>
+			<version>3.7.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.uml2</groupId>
 			<artifactId>org.eclipse.uml2.uml</artifactId>
 			<version>3.2.100</version>
 		</dependency>
-		<dependency> 
+		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.ecore</artifactId>
 			<version>2.7.0</version>
 		</dependency>
 		<dependency>
-        <groupId>org.eclipse.emf.mapping</groupId>
-        <artifactId>org.eclipse.emf.mapping.ecore2xml</artifactId>
-        <version>2.7.0</version>
-        </dependency> 
+			<groupId>org.eclipse.emf.mapping</groupId>
+			<artifactId>org.eclipse.emf.mapping.ecore2xml</artifactId>
+			<version>2.7.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
-            <artifactId>org.eclipse.emf.common</artifactId>
-            <version>2.7.0</version>
+			<artifactId>org.eclipse.emf.common</artifactId>
+			<version>2.7.0</version>
 		</dependency>
-		  <dependency>
-    <groupId>org.eclipse.emf.ecore</groupId>
-    <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
-    <version>2.7.0</version>
-    </dependency>
-		
+		<dependency>
+			<groupId>org.eclipse.emf.ecore</groupId>
+			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
 			<artifactId>org.eclipse.core.resources</artifactId>
 			<version>3.7.101</version>
 		</dependency>
-		 <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui</artifactId>
-      <version>3.7.0</version>
-    </dependency> 
-    <dependency>
-      <groupId>org.eclipse.jface</groupId>
-      <artifactId>org.eclipse.jface.text</artifactId>
-      <version>3.7.2</version>
-    </dependency>
-  
+		<dependency>
+			<groupId>org.eclipse.ui</groupId>
+			<artifactId>org.eclipse.ui</artifactId>
+			<version>3.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jface</groupId>
+			<artifactId>org.eclipse.jface.text</artifactId>
+			<version>3.7.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
