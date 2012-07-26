@@ -19,6 +19,7 @@ import org.eclipse.uml2.uml.UMLPackage;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -96,7 +97,9 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case OPERATION:
 				break;
 			case OPTIONAL:
-				break;
+				createOptionalType(class_,(AOptionalType) type);			
+				return;
+				//break;
 			case PARAMETER:
 				break;
 			case PRODUCT:
@@ -141,6 +144,11 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			unknownType.addKeyword(getName(type));
 			types.put(getName(type), unknownType);
 		}
+	}
+
+	private void createOptionalType(Class class_, AOptionalType type)
+	{
+		create(class_, type.getType());
 	}
 
 	private void createSetType(Class class_, ASetType type)
@@ -329,6 +337,13 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	public Classifier getUmlType(PType type)
 	{
+		
+		while(Vdm2UmlUtil.isOptional(type))
+		{
+			type = ((AOptionalType) type).getType();
+		}
+		
+		
 		String name = getName(type);
 
 		if (types.containsKey(name))
