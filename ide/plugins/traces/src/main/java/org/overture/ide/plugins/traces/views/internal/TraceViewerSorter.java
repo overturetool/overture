@@ -2,7 +2,7 @@ package org.overture.ide.plugins.traces.views.internal;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
-import org.overturetool.ct.utils.Verdict;
+import org.overture.interpreter.traces.Verdict;
 
 public class TraceViewerSorter extends ViewerSorter
 {

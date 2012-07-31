@@ -51,8 +51,8 @@ import org.overture.ide.plugins.traces.ITracesConstants;
 import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.traces.views.treeView.TraceTestTreeNode;
+import org.overture.interpreter.traces.Verdict;
 import org.overturetool.ct.utils.TraceTestResult;
-import org.overturetool.ct.utils.Verdict;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view

@@ -29,7 +29,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
 import org.overture.ide.plugins.traces.views.TraceAstUtility;
-import org.overturetool.ct.utils.TraceReductionType;
+import org.overture.interpreter.traces.TraceReductionType;
 
 public class VdmjTracesHelper 
 {

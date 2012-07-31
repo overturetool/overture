@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
 
+import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.Verdict;
+
 public class TraceXmlWrapper
 {
 	XmlFileWriter xml;

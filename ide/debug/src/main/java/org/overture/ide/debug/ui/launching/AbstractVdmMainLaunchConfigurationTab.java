@@ -60,6 +60,7 @@ import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -108,10 +109,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					definitions.addAll(((AModuleModules) m).getDefs());
 				}
 
-				List<ClonableFile> files = new Vector<ClonableFile>();
-				files.add(new ClonableFile("mergedFile"));
+//				List<ClonableFile> files = new Vector<ClonableFile>();
+//				files.add(new ClonableFile("mergedFile"));
 				
-				AModuleModules module = new AModuleModules(null,null,null,definitions,files,null,false);
+				AModuleModules module = AstFactoryTC.newAModuleModules(new ClonableFile("mergedFile"),definitions);
 				return new Object[] { module };
 
 			}

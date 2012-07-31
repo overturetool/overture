@@ -230,4 +230,10 @@ public class Vdm2UmlUtil
 		return true;
 	}
 
+	public static boolean isOptional(PType defType)
+	{
+		return (defType instanceof AOptionalType);
+		
+	}
+
 }

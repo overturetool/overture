@@ -35,9 +35,11 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.PType;
 import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
@@ -338,17 +340,29 @@ public class Vdm2Uml
 		String name = def.getName().name;
 		PType defType = PDefinitionAssistantTC.getType(def);
 
+		
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if (defType instanceof AClassType)
+		if (PTypeAssistantInterpreter.isClass(defType))
 		{
 			console.out.println("\tAdding association for instance variable: "
 					+ def.getName().name);
 			// TODO static
 			Class referencedClass = getClassName(defType);
-			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+			int lower = 1;
+			if(Vdm2UmlUtil.isOptional(defType))
+			{
+				lower = 0;
+			}
+			else
+			{
+				lower = Vdm2UmlUtil.extractLower(defType);
+			}
+			
+			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, lower, Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
 			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			
 		} else
 		{
 			console.out.println("\tAdding property for instance variable: "
@@ -356,6 +370,12 @@ public class Vdm2Uml
 			Property attribute = class_.createOwnedAttribute(name, type);
 			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 			attribute.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			
+			if(Vdm2UmlUtil.isOptional(defType))
+			{
+				attribute.setLower(0);
+			}
+			
 			if (def.getExpression() != null)
 			{
 				attribute.setDefault(def.getExpression().toString());
@@ -370,6 +390,8 @@ public class Vdm2Uml
 		{
 			case CLASS:
 				return classes.get(((AClassType) defType).getName().name);
+			case OPTIONAL:
+				return getClassName(((AOptionalType)defType).getType());
 			default:
 				break;
 		}

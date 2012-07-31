@@ -17,24 +17,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.interpreter.VDMJ;
+import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.VDMRT;
+import org.overture.interpreter.VDMSL;
+import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.util.ExitStatus;
+import org.overture.parser.config.Properties;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.util.Base64;
 import org.overturetool.ct.utils.TraceXmlWrapper;
-import org.overturetool.vdmj.ExitStatus;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.VDMJ;
-import org.overturetool.vdmj.VDMPP;
-import org.overturetool.vdmj.VDMRT;
-import org.overturetool.vdmj.VDMSL;
-import org.overturetool.vdmj.config.Properties;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.messages.Console;
-import org.overturetool.vdmj.messages.rtlog.RTLogger;
-import org.overturetool.vdmj.runtime.ContextException;
-import org.overturetool.vdmj.runtime.Interpreter;
-import org.overturetool.vdmj.runtime.SourceFile;
-import org.overturetool.vdmj.traces.TraceReductionType;
-import org.overturetool.vdmj.util.Base64;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
@@ -186,14 +186,14 @@ public class TraceRunnerMain implements IProgressMonitor
 			} else if (arg.equals("-r"))
 			{
 				if (i.hasNext())
-				{
+				{  
 					Settings.release = Release.lookup(i.next());
 
 					if (Settings.release == null)
 					{
 						usage("-r option must be " + Release.list());
 					}
-				} else
+				} else 
 				{
 					usage("-r option requires a VDM release");
 				}
@@ -617,7 +617,7 @@ public class TraceRunnerMain implements IProgressMonitor
 				+ "-" + traceName + ".xml"));
 
 		new TraceInterpreter(this,subset,reductionType,seed).run(moduleName, traceName, interpreter, storage);
-
+ 
 		while (!completed)
 		{
 			try

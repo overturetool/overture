@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overturetool.ct.utils.TraceReductionType;
+import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.Verdict;
 import org.overturetool.ct.utils.TraceTestResult;
 import org.overturetool.ct.utils.TraceXmlWrapper;
-import org.overturetool.ct.utils.Verdict;
 import org.overturetool.ct.utils.XmlFileWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -115,7 +115,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 			this.seed = seed;
 		}
 		public Long getSeed()
-		{
+		{ 
 			return seed;
 		}
 		public void setTraceReductionType(TraceReductionType traceReductionType)
