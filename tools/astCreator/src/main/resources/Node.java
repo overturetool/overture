@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.ast.node.INode;
-
 import %org.overture.ast.analysis.IAnalysis%;
 import %org.overture.ast.analysis.IAnswer%;
 import %org.overture.ast.analysis.IQuestion%;
