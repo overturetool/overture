@@ -63,8 +63,8 @@
 		<replacetokens>
 			<token key="version" value="${platformReleaseVersion}${RCVersion}" />
 			<token key="builddate" value="${TODAY}" />
-			<token key="svnrevision" value="${svn.info.rev}" />
-			<token key="svnurl" value="${svn.info.url}" />
+			<token key="gitrevision" value="${repository.version}" />
+			<!-- token key="svnurl" value="${svn.info.url}" /-->
 		</replacetokens>
 	</filterchain>
 </copy>

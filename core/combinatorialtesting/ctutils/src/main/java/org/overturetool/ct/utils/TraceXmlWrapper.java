@@ -78,14 +78,21 @@ public class TraceXmlWrapper
 		for (Object object : results)
 		{
 			if (object instanceof Verdict)
+			{
 				verdict = object.toString();
-			else if (object == null)
-				result += "null" + " ; ";
-			// else if (object instanceof Value)
-			// result += object.toString() + " ; ";
+			}
 			else
-				result += object.toString();
-
+			{
+				if (object == null)
+				{
+					result += "null";
+				}
+				else
+				{
+					result += object.toString();
+				}
+				result += " ; ";
+			}
 		}
 
 		if (result.length() > 3)

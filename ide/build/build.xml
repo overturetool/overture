@@ -65,6 +65,25 @@
 		<echo message="${svn.info.rev}" />
 	</target>
 
+	<!-- Git info -->
+	<!--available file=".git" type="dir" property="git.present"/-->
+
+	    <target name="git.revision" description="Store git revision in ${repository.version}">
+	        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+	            <arg value="describe"/>
+	            <arg value="--tags"/>
+	            <arg value="--always"/>
+	            <arg value="HEAD"/>
+	        </exec>
+	        <condition property="repository.version" value="${git.revision}" else="unknown">
+	            <and>
+	                <isset property="git.revision"/>
+	                <length string="${git.revision}" trim="yes" length="0" when="greater"/>
+	            </and>
+	        </condition>
+	        <echo message="Repository version: ${repository.version}" />
+	    </target>
+	
 	<!--
         PDE Build expects that the build directory contains a "plugins" 
         directory and a "features" directory. These directories should contain
@@ -77,7 +96,7 @@
         This tutorial simply copies the projects directly from your workspace
         into the appropriate build directory folders.
     -->
-	<target name="init" ><!--depends="svn-info" -->
+	<target name="init"  depends="git.revision">
 		<mkdir dir="${buildDirectory}" />
 		<mkdir dir="${buildDirectory}/plugins" />
 		<mkdir dir="${buildDirectory}/features" />

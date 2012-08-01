@@ -74,10 +74,11 @@ public class TraceInterpreter
 		{
 			for (SClassDefinition classDefinition : ((ClassInterpreter) interpreter).getClasses())
 			{
-				if (classDefinition.getName().equals(moduleName))
+				if (classDefinition.getName().name.equals(moduleName))
 				{
 					definitions = classDefinition.getDefinitions();
-				}
+					
+				}				
 			}
 		}
 
