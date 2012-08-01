@@ -1,5 +1,6 @@
 package org.overture.typechecker.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,9 +10,15 @@ import java.util.Set;
 
 import org.overture.ast.lex.LexNameToken;
 
-public class LexNameTokenMap<V> implements Map<LexNameToken, V>
+public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1122692848887584905L;
+
+
 	static class LexNameTokenEntry<V> implements Map.Entry<LexNameToken, V>
 	{
 
@@ -45,9 +52,13 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>
 		
 	}
 	
-	static class LexNameTokenWrapper
+	static class LexNameTokenWrapper implements Serializable
 	{
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5420007432629328108L;
 		public LexNameToken token;
 
 		public LexNameTokenWrapper(LexNameToken token)

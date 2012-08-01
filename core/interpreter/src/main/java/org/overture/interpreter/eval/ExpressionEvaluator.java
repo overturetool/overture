@@ -404,7 +404,6 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     			FieldMap fields = rv.fieldmap;
          		r = fields.get(node.getField().name);
     		}
-
     		if (r == null)
     		{
     			VdmRuntimeError.abort(node.getLocation(),4006, "Type " + objtype + " has no field " + node.getField().name, ctxt);

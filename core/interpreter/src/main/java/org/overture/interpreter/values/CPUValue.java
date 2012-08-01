@@ -27,8 +27,11 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.ACpuClassDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.AClassType;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.FCFSPolicy;
 import org.overture.interpreter.scheduler.ResourceScheduler;
@@ -134,8 +137,8 @@ public class CPUValue extends ObjectValue
 		try
 		{
 			CPUResource.init();
-			ACpuClassDefinition def = new ACpuClassDefinition();
-			vCPU = new CPUValue((AClassType)def.getType());
+			SClassDefinition def =  AstFactoryTC.newACpuClassDefinition();
+			vCPU = new CPUValue((AClassType)SClassDefinitionAssistantInterpreter.getType(def));
 			vCPU.setup(scheduler, "vCPU");
 		}
 		catch (Exception e)
