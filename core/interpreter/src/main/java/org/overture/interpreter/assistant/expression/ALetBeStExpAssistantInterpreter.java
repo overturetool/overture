@@ -25,7 +25,7 @@ public class ALetBeStExpAssistantInterpreter extends ALetBeStExpAssistantTC
 
 	public static PExp findExpression(ALetBeStExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		if (exp.getSuchThat() != null)

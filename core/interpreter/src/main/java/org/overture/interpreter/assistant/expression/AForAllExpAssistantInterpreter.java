@@ -26,7 +26,7 @@ public class AForAllExpAssistantInterpreter extends AForAllExpAssistantTC
 
 	public static PExp findExpression(AForAllExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getPredicate(),lineno);

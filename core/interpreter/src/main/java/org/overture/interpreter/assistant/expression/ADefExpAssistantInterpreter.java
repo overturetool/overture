@@ -18,7 +18,7 @@ public class ADefExpAssistantInterpreter
 
 	public static PExp findExpression(ADefExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		found = PDefinitionListAssistantInterpreter.findExpression(exp.getLocalDefs(),lineno);

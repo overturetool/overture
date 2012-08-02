@@ -16,7 +16,7 @@ public class AMkBasicExpAssistantInterpreter extends AMkBasicExpAssistantTC
 
 	public static PExp findExpression(AMkBasicExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getArg(),lineno);

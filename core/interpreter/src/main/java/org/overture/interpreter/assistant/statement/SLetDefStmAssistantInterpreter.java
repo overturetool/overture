@@ -20,7 +20,7 @@ public class SLetDefStmAssistantInterpreter extends SLetDefStmAssistantTC
 
 	public static PStm findStatement(SLetDefStm stm, int lineno)
 	{
-		PStm found = PStmAssistantInterpreter.findStatement(stm,lineno);
+		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm,lineno);
 		if (found != null) return found;
 
 		found = PDefinitionAssistantInterpreter.findStatement(stm.getLocalDefs(),lineno);

@@ -17,7 +17,7 @@ public class AIsOfClassExpAssistantInterpreter extends AIsOfClassExpAssistantTC
 
 	public static PExp findExpression(AIsOfClassExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getExp(),lineno);

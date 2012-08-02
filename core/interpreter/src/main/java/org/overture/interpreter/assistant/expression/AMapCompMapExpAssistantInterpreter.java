@@ -31,7 +31,7 @@ public class AMapCompMapExpAssistantInterpreter extends
 
 	public static PExp findExpression(AMapCompMapExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		found = PExpAssistantInterpreter.findExpression(exp.getFirst(),lineno);

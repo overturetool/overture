@@ -19,7 +19,7 @@ public class AExists1ExpAssistantInterpreter extends AExists1ExpAssistantTC
 
 	public static PExp findExpression(AExists1Exp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp,lineno);
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
 		if (found != null) return found;
 
 		return PExpAssistantInterpreter.findExpression(exp.getPredicate(),lineno);
