@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Stack;
 
 import org.overture.config.Settings;
@@ -53,6 +54,7 @@ public class LatexStreamReader extends InputStreamReader
 		String line = br.readLine();
 
 		boolean supress = false;
+		boolean begin = false;
 		int pos = 0;
 
 		while (line != null)
@@ -62,14 +64,15 @@ public class LatexStreamReader extends InputStreamReader
 			if (trimmed.startsWith("%"))
  			{
  				supress = true;
- 				line = "";
+ 				//line = "";
  			}
 			else if (trimmed.startsWith("\\"))
 			{
     			if (trimmed.startsWith("\\begin{vdm_al}"))
     			{
     				supress = false;
-    				line = "";
+    				begin = true;
+    				//line = "";
     			}
     			else if (trimmed.startsWith("\\end{vdm_al}") ||
     					 trimmed.startsWith("\\section") ||
@@ -77,7 +80,7 @@ public class LatexStreamReader extends InputStreamReader
     					 trimmed.startsWith("\\document"))
     			{
     				supress = true;
-    				line = "";
+//    				line = "";
     			}
 			}
 			else if (trimmed.startsWith("#"))
@@ -92,34 +95,51 @@ public class LatexStreamReader extends InputStreamReader
     					supress = true;
     				}
 
-    				line = "";
+//    				line = "";
     			}
     			else if (trimmed.startsWith("#else"))
     			{
     				if (!ifstack.peek())
     				{
     					supress = !supress;
-    					line = "";
+//    					line = "";
     				}
     			}
     			else if (trimmed.startsWith("#endif"))
     			{
     				supress = ifstack.pop();
-    				line = "";
+//    				line = "";
     			}
 			}
 
-			if (!supress)
+			if (!supress && !begin)
 			{
 				line.getChars(0, line.length(), array, pos);
 				pos += line.length();
 			}
-
-			array[pos++] = '\n';
+			else
+			{
+				for(int i = 0; i < line.length(); i++)
+				{
+					array[pos++] = ' ';
+				}		
+				
+			}
+			
+			begin = false;
+			if(pos < array.length)
+			{
+				array[pos++] = '\n';
+//				//array[pos++] = ' ';
+//				if(pos < array.length)
+//				{
+//					
+//				}
+			}
 			line = br.readLine();
-		}
-
+		}		
 		br.close();
+		
 		return pos;
 	}
 }

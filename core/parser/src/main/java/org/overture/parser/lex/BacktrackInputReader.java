@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Stack;
 
 import org.overture.ast.messages.InternalException;
@@ -68,6 +69,7 @@ public class BacktrackInputReader extends Reader
 			InputStreamReader isr = readerFactory(file, charset);
 			data = new char[readerLength(file, isr)];
 			max = isr.read(data);
+			data = Arrays.copyOf(data, max);
 			pos = 0;
 			isr.close();
 		}
@@ -128,6 +130,11 @@ public class BacktrackInputReader extends Reader
 	{
     	try
         {
+    		if(expression.contains("\r\n"))
+ 	        {
+ 	        	expression = expression.replace("\r\n", " \n");
+ 	        }
+    		
 	        ByteArrayInputStream is =
 	        	new ByteArrayInputStream(expression.getBytes(charset));
 
@@ -149,6 +156,11 @@ public class BacktrackInputReader extends Reader
 					isr = new LatexStreamReader(is, charset);
 					break;
 			}
+	        
+	        if(!expression.contains("\r\n"))
+	        {
+	        	expression = expression.replace("\n", " \n");
+	        }
 	        
     		data = new char[expression.length() + 1];
 	        max = isr.read(data);
