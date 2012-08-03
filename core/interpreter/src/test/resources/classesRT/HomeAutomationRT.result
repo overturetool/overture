@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.interpreter.tests.framework.ClassRtTestCase">
 <result>
-<output object="Cannot find native method: IO.freadval(org.overturetool.vdmj.values.Value)" resource="HomeAutomationRT" value="Cannot find native method: IO.freadval(org.overturetool.vdmj.values.Value)"/>
+<output object="Cannot find native method: IO.freadval(org.overture.interpreter.values.Value)" resource="HomeAutomationRT" value="Cannot find native method: IO.freadval(org.overturetool.vdmj.values.Value)"/>
 </result>
 </testResult>
