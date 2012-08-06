@@ -126,13 +126,13 @@ public class UnknownType extends Type
 	@Override
 	public SeqType getSeq()
 	{
-		return new SeqType(location);	// empty
+		return new SeqType(location, new UnknownType(location));	// seq of ?
 	}
 
 	@Override
 	public SetType getSet()
 	{
-		return new SetType(location);	// empty
+		return new SetType(location, new UnknownType(location));	// set of ?
 	}
 
 	@Override

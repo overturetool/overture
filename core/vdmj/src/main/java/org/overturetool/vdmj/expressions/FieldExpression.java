@@ -44,6 +44,7 @@ import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.FieldMap;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.RecordValue;
+import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
 
@@ -213,35 +214,40 @@ public class FieldExpression extends Expression
 
 		try
 		{
-    		Value v = object.eval(ctxt);
-    		Type objtype = null;
-    		Value r = null;
-
-    		if (v.isType(ObjectValue.class))
-    		{
-    			ObjectValue ov = v.objectValue(ctxt);
-    	   		objtype = ov.type;
-    	   		r = ov.get(memberName, memberName.explicit);
-    		}
-    		else
-    		{
-    			RecordValue rv = v.recordValue(ctxt);
-    	   		objtype = rv.type;
-    			FieldMap fields = rv.fieldmap;
-         		r = fields.get(field.name);
-    		}
-
-    		if (r == null)
-    		{
-    			field.abort(4006, "Type " + objtype + " has no field " + field.name, ctxt);
-    		}
-
-    		return r;
+    		return evaluate(ctxt);
         }
         catch (ValueException e)
         {
         	return abort(e);
         }
+	}
+	
+	private Value evaluate(Context ctxt) throws ValueException
+	{
+		Value v = object.eval(ctxt);
+		Type objtype = null;
+		Value r = null;
+
+		if (v.isType(ObjectValue.class))
+		{
+			ObjectValue ov = v.objectValue(ctxt);
+	   		objtype = ov.type;
+	   		r = ov.get(memberName, memberName.explicit);
+		}
+		else
+		{
+			RecordValue rv = v.recordValue(ctxt);
+	   		objtype = rv.type;
+			FieldMap fields = rv.fieldmap;
+     		r = fields.get(field.name);
+		}
+
+		if (r == null)
+		{
+			field.abort(4006, "Type " + objtype + " has no field " + field.name, ctxt);
+		}
+
+		return r;
 	}
 
 	@Override
@@ -268,7 +274,29 @@ public class FieldExpression extends Expression
 	@Override
 	public ValueList getValues(Context ctxt)
 	{
-		return object.getValues(ctxt);
+		ValueList values = object.getValues(ctxt);
+		
+		try
+		{
+			// This evaluation should not affect scheduling as we are trying to
+			// discover the sync variables to listen to only.
+			
+			ctxt.threadState.setAtomic(true);
+			Value r = evaluate(ctxt);
+			ctxt.threadState.setAtomic(false);
+
+			if (r instanceof UpdatableValue)
+			{
+				values.add(r);
+			}
+			
+			return values;
+		}
+		catch (ValueException e)
+		{
+			abort(e);
+			return null;
+		}
 	}
 
 	@Override
