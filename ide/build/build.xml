@@ -17,9 +17,7 @@
     
     Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
 -->
-<!DOCTYPE project [
-       <!ENTITY copyProjects SYSTEM "copyProjects.xml">
-]>
+
 <project name="org.overture.ide" default="build">
   <tstamp />
   <property file="build.properties" />
@@ -73,11 +71,14 @@
       into the appropriate build directory folders.
   -->
   <target name="init"> <!-- depends="svn-info" -->
+  	 <echo message="Creating build folders" />
     <mkdir dir="${buildDirectory}" />
     <mkdir dir="${buildDirectory}/plugins" />
     <mkdir dir="${buildDirectory}/features" />
-    &copyProjects;
+   	<ant antfile="copyProjects.xml" target="copy-remote-build-documentation"/>
   </target>
+  
+  
 
   <!--
       This target actually executes the PDE Build process by launching the 

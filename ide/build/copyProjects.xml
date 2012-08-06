@@ -1,240 +1,240 @@
-<copy todir="${buildDirectory}/plugins">
-	<fileset dir="../">
-		<include name="ui/**" />
-		<include name="core/**" />
-		<include name="debug/**" />
-		<include name="help/**" />
-		<include name="platform/**" />
-		<include name="ui/**" />
-		<!--exclude name="**/target/" /-->
-	</fileset>
-	<fileset dir="../plugins/">
-		<include name="**" />
-		<exclude name="**/idedebughelper/" />
-		<exclude name="**/proofsupport/" />
-	</fileset>
-</copy>
-	<!--
-		Help documents, The language manual and user guide pdf must be copied
-	-->
-<if> 
-	<equals arg1="${documentssource}" arg2="git"/>
-	<then>
-		<echo message="Copying documenttation from git"/>
+<project name="org.overture.ide.copy" default="copy-projects">
+
+	<target name="copy-projects" description="Copies all projects into place">
+		<echo message="Copying sources into build folders" />
+
+		<copy todir="${buildDirectory}/plugins">
+			<fileset dir="../">
+				<include name="ui/**" />
+				<include name="core/**" />
+				<include name="debug/**" />
+				<include name="help/**" />
+				<include name="platform/**" />
+				<include name="ui/**" />
+				<!--exclude name="**/target/" / -->
+			</fileset>
+			<fileset dir="../plugins/">
+				<include name="**" />
+				<exclude name="**/idedebughelper/" />
+				<exclude name="**/proofsupport/" />
+			</fileset>
+		</copy>
+
+
+
+		<!-- Platform plugin, manage version number -->
+		<copy todir="${buildDirectory}/plugins" filtering="true">
+			<fileset dir="../">
+				<include name="platform/**" />
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+		<echo
+			message="Patching platform plugin.properties with build version: ${platformReleaseVersion}${RCVersion}" />
+		<copy file="../platform/plugin.properties" toFile="${buildDirectory}/plugins/platform/plugin.properties"
+			overwrite="true" filtering="true">
+			<filterchain>
+				<replacetokens>
+					<token key="version" value="${platformReleaseVersion}${RCVersion}" />
+					<token key="builddate" value="${TODAY}" />
+					<token key="svnrevision" value="${svn.info.rev}" />
+					<token key="svnurl" value="${svn.info.url}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<echo
+			message="Patching platform MANIFEST.MF with build version: ${platformReleaseVersion}" />
+		<copy file="../platform/META-INF/MANIFEST.MF"
+			toFile="${buildDirectory}/plugins/platform/META-INF/MANIFEST.MF"
+			overwrite="true" filtering="true">
+			<filterchain>
+				<tokenfilter>
+					<replaceregex pattern="2.1.2" replace="${platformReleaseVersion}"
+						flags="gi" />
+				</tokenfilter>
+			</filterchain>
+		</copy>
+
+		<!-- IDE -->
+
+		<copy todir="${buildDirectory}/plugins/builders.vdmj">
+			<fileset dir="../builders/vdmj">
+				<exclude name="**/target/" />
+			</fileset>
+
+		</copy>
+		<copy todir="${buildDirectory}/plugins/parsers.vdmj">
+			<fileset dir="../parsers/vdmj">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/vdmpp.core">
+			<fileset dir="../vdmpp/core">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/vdmpp.ui">
+			<fileset dir="../vdmpp/ui">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/plugins/vdmpp.debug">
+			<fileset dir="../vdmpp/debug">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/vdmsl.core">
+			<fileset dir="../vdmsl/core">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/vdmsl.ui">
+			<fileset dir="../vdmsl/ui">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/plugins/vdmsl.debug">
+			<fileset dir="../vdmsl/debug">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+
+		<copy todir="${buildDirectory}/plugins/vdmrt.core">
+			<fileset dir="../vdmrt/core">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+		<copy todir="${buildDirectory}/plugins/vdmrt.ui">
+			<fileset dir="../vdmrt/ui">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/plugins/vdmrt.debug">
+			<fileset dir="../vdmrt/debug">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+		<copy todir="${buildDirectory}">
+			<fileset dir="../">
+				<include name="features/core/**" />
+				<include name="features/rcp/**" />
+				<exclude name="**/target/" />
+			</fileset>
+
+		</copy>
+		<!-- Copying features and renaming the directories to a flat structure -->
+		<copy todir="${buildDirectory}/features/features.coverageeditor">
+			<fileset dir="../plugins/features/coverageeditor">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.csk">
+			<fileset dir="../plugins/features/csk">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.ct">
+			<fileset dir="../plugins/features/ct">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.latex">
+			<fileset dir="../plugins/features/latex">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.poviewer">
+			<fileset dir="../plugins/features/poviewer">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.quickinterpreter">
+			<fileset dir="../plugins/features/quickinterpreter">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.realtimelogviewer">
+			<fileset dir="../plugins/features/realtimelogviewer">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+		<copy todir="${buildDirectory}/features/features.umltrans">
+			<fileset dir="../plugins/features/umltrans">
+				<exclude name="**/target/" />
+			</fileset>
+		</copy>
+
+	</target>
+
+
+	<target name="copy-remote-build-documentation" depends="copy-projects">
+		<!-- Help documents, The language manual and user guide pdf must be copied -->
+
+
+		<condition property="copy-documentation-from-web">
+			<equals arg1="${documentssource}" arg2="web" />
+		</condition>
+
+		<antcall target="copy-remote-build-documentation-git" />
+		<antcall target="copy-remote-build-documentation-web" />
+
+
+
+		<!-- Download examples from SF to embed in help -->
+		<echo message="Copying VDM examples from web into RCP help" />
+		<get src="${includeFileExamplesSL}"
+			dest="${buildDirectory}/plugins/help/html/Example_package_vdmsl.zip" />
+
+		<get src="${includeFileExamplesPP}"
+			dest="${buildDirectory}/plugins/help/html/Example_package_vdmpp.zip" />
+
+		<get src="${includeFileExamplesRT}"
+			dest="${buildDirectory}/plugins/help/html/Example_package_vdmrt.zip" />
+
+
+	</target>
+
+	<target name="copy-remote-build-documentation-git" unless="copy-documentation-from-web">
+
+		<echo message="Copying documenttation from git" />
 		<copy file="${includeFileLangMan}"
 			toFile="${buildDirectory}/plugins/help/html/VDM10_lang_man.pdf"
 			overwrite="true" filtering="true">
 		</copy>
 
-		<copy
-			file="${includeFileUserGuide}"
+		<copy file="${includeFileUserGuide}"
 			toFile="${buildDirectory}/plugins/help/html/OvertureIDEUserGuide.pdf"
 			overwrite="true" filtering="true">
 		</copy>
 
-		<copy
-			file="${includeFileQuickOverviewOperator}"
+		<copy file="${includeFileQuickOverviewOperator}"
 			toFile="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf"
 			overwrite="true" filtering="true">
 		</copy>
 
-	</then>
-	<else>
-		<get 	src="${includeFileLangMan}"
-				dest="${buildDirectory}/plugins/help/html/VDM10_lang_man.pdf" />
+	</target>
 
-		<get 	src="${includeFileUserGuide}"
-				dest="${buildDirectory}/plugins/help/html/OvertureIDEUserGuide.pdf" />
+	<target name="copy-remote-build-documentation-web" if="copy-documentation-from-web">
 
-		<get 	src="${includeFileQuickOverviewOperator}"
-				dest="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf" />				
-				
-	</else>
-</if>
+		<echo message="Copying documenttation from web" />
+		<get src="${includeFileLangMan}" dest="${buildDirectory}/plugins/help/html/VDM10_lang_man.pdf" />
 
-	<!-- Download examples from SF to embed in help -->
-<get
-	src="${includeFileExamplesSL}"
-	dest="${buildDirectory}/plugins/help/html/Example_package_vdmsl.zip" />
-	
-<get
-	src="${includeFileExamplesPP}"
-	dest="${buildDirectory}/plugins/help/html/Example_package_vdmpp.zip" />
-	
-<get
-	src="${includeFileExamplesRT}"
-	dest="${buildDirectory}/plugins/help/html/Example_package_vdmrt.zip" />
+		<get src="${includeFileUserGuide}"
+			dest="${buildDirectory}/plugins/help/html/OvertureIDEUserGuide.pdf" />
 
+		<get src="${includeFileQuickOverviewOperator}"
+			dest="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf" />
+	</target>
 
-	<!-- Platform plugin, manage version number -->
-<copy todir="${buildDirectory}/plugins" filtering="true">
-	<fileset dir="../">
-		<include name="platform/**" />
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy file="../platform/plugin.properties" toFile="${buildDirectory}/plugins/platform/plugin.properties"
-	overwrite="true" filtering="true">
-	<filterchain>
-		<replacetokens>
-			<token key="version" value="${platformReleaseVersion}${RCVersion}" />
-			<token key="builddate" value="${TODAY}" />
-			<token key="svnrevision" value="${svn.info.rev}" />
-			<token key="svnurl" value="${svn.info.url}" />
-		</replacetokens>
-	</filterchain>
-</copy>
-<copy file="../platform/META-INF/MANIFEST.MF"
-	toFile="${buildDirectory}/plugins/platform/META-INF/MANIFEST.MF"
-	overwrite="true" filtering="true">
-	<filterchain>
-		<tokenfilter>
-			<replaceregex pattern="0.0.0" replace="${platformReleaseVersion}"
-				flags="gi" />
-		</tokenfilter>
-	</filterchain>
-</copy>
-
-	<!-- IDE -->
-
-<copy todir="${buildDirectory}/plugins/builders.vdmj">
-	<fileset dir="../builders/vdmj">
-		<exclude name="**/target/" />
-	</fileset>
-
-</copy>
-<copy todir="${buildDirectory}/plugins/parsers.vdmj">
-	<fileset dir="../parsers/vdmj">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-
-<copy todir="${buildDirectory}/plugins/vdmpp.core">
-	<fileset dir="../vdmpp/core">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/vdmpp.ui">
-	<fileset dir="../vdmpp/ui">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/plugins/vdmpp.debug">
-	<fileset dir="../vdmpp/debug">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-
-<copy todir="${buildDirectory}/plugins/vdmsl.core">
-	<fileset dir="../vdmsl/core">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/vdmsl.ui">
-	<fileset dir="../vdmsl/ui">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/plugins/vdmsl.debug">
-	<fileset dir="../vdmsl/debug">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-
-<copy todir="${buildDirectory}/plugins/vdmrt.core">
-	<fileset dir="../vdmrt/core">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/vdmrt.ui">
-	<fileset dir="../vdmrt/ui">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/plugins/vdmrt.debug">
-	<fileset dir="../vdmrt/debug">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<!-- copy todir="${buildDirectory}/plugins/generated.showtrace">
-	<fileset dir="../generated/showtrace">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/generated.traces">
-	<fileset dir="../generated/traces">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/generated.umltrans">
-	<fileset dir="../generated/umltrans">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-
-<copy todir="${buildDirectory}/plugins/generated.vdmj">
-	<fileset dir="../generated/vdmj">
-		<exclude name="**/target/" />
-	</fileset>
-</copy-->
-
-<copy todir="${buildDirectory}">
-	<fileset dir="../">
-		<include name="features/core/**" />
-		<include name="features/rcp/**" />
-		<exclude name="**/target/" />
-	</fileset>
-
-</copy>
-	<!--
-		Copying features and renaming the directories to a flat structure
-	-->
-<copy todir="${buildDirectory}/features/features.coverageeditor">
-	<fileset dir="../plugins/features/coverageeditor">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.csk">
-	<fileset dir="../plugins/features/csk">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.ct">
-	<fileset dir="../plugins/features/ct">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.latex">
-	<fileset dir="../plugins/features/latex">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.poviewer">
-	<fileset dir="../plugins/features/poviewer">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.quickinterpreter">
-	<fileset dir="../plugins/features/quickinterpreter">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.realtimelogviewer">
-	<fileset dir="../plugins/features/realtimelogviewer">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
-<copy todir="${buildDirectory}/features/features.umltrans">
-	<fileset dir="../plugins/features/umltrans">
-		<exclude name="**/target/" />
-	</fileset>
-</copy>
+</project>
