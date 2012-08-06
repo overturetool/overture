@@ -18,6 +18,9 @@
 		<user.rcp.build.includeFileExamplesSL>${includeFileExamplesBase}examplesSL.zip</user.rcp.build.includeFileExamplesSL>
 		<user.rcp.build.includeFileExamplesPP>${includeFileExamplesBase}examplesPP.zip</user.rcp.build.includeFileExamplesPP>
 		<user.rcp.build.includeFileExamplesRT>${includeFileExamplesBase}examplesRT.zip</user.rcp.build.includeFileExamplesRT>
+		<!-- user.rcp.build.documentssource can be git or web-->
+		<user.rcp.build.documentssource>git
+		</user.rcp.build.documentssource>
 	</properties>
 
 	<build>
@@ -53,7 +56,7 @@
 								<!-- Custom configuration for build server -->
 
 
-
+								<property name="documentssource" value="${user.rcp.build.documentssource}"/>
 								<property name="includeFileLangMan" value="${user.rcp.build.includeFileLangMan}" />
 								<property name="includeFileUserGuide" value="${user.rcp.build.includeFileUserGuide}" />
 								<property name="includeFileQuickOverviewOperator"

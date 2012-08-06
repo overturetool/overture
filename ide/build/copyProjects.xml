@@ -17,22 +17,40 @@
 	<!--
 		Help documents, The language manual and user guide pdf must be copied
 	-->
-<copy file="${includeFileLangMan}"
-	toFile="${buildDirectory}/plugins/help/html/VDM10_lang_man.pdf"
-	overwrite="true" filtering="true">
-</copy>
+<if> 
+	<equals arg1="${documentssource}" arg2="git"/>
+	<then>
+		<echo message="Copying documenttation from git"/>
+		<copy file="${includeFileLangMan}"
+			toFile="${buildDirectory}/plugins/help/html/VDM10_lang_man.pdf"
+			overwrite="true" filtering="true">
+		</copy>
 
-<copy
-	file="${includeFileUserGuide}"
-	toFile="${buildDirectory}/plugins/help/html/OvertureIDEUserGuide.pdf"
-	overwrite="true" filtering="true">
-</copy>
+		<copy
+			file="${includeFileUserGuide}"
+			toFile="${buildDirectory}/plugins/help/html/OvertureIDEUserGuide.pdf"
+			overwrite="true" filtering="true">
+		</copy>
 
-<copy
-    file="${includeFileQuickOverviewOperator}"
-    toFile="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf"
-    overwrite="true" filtering="true">
-</copy>
+		<copy
+			file="${includeFileQuickOverviewOperator}"
+			toFile="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf"
+			overwrite="true" filtering="true">
+		</copy>
+
+	</then>
+	<else>
+		<get 	src="${includeFileLangMan}"
+				dest="${buildDirectory}/plugins/help/html/VDM10_lang_man.pdf" />
+
+		<get 	src="${includeFileUserGuide}"
+				dest="${buildDirectory}/plugins/help/html/OvertureIDEUserGuide.pdf" />
+
+		<get 	src="${includeFileQuickOverviewOperator}"
+				dest="${buildDirectory}/plugins/help/html/QuickOverviewofVDMOperators.pdf" />				
+				
+	</else>
+</if>
 
 	<!-- Download examples from SF to embed in help -->
 <get
