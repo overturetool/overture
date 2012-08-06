@@ -8,7 +8,7 @@ This class models an account. A number of cards held by individual cardholders
 are associated with an account. An account has a balance and records transactions.
 
 \begin{vdm_al}
-class Account
+class Account 
 
 instance variables
   cards : map Card`CardId to Cardholder;
@@ -574,9 +574,9 @@ end Clock
 
 
 --concur.vdmpp
-
+\begin{vdm_al}
 class Main
-
+ 
 instance variables
 
   ltills : map TillId to LocalTill := {|->};
