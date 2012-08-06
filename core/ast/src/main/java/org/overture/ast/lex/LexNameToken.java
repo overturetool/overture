@@ -1,6 +1,8 @@
 package org.overture.ast.lex;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,6 +178,18 @@ public class LexNameToken extends LexToken implements Serializable
 
 		if (typeQualifier != null && lother.getTypeQualifier() != null)
 		{
+			ClassLoader cls = ClassLoader.getSystemClassLoader(); 
+			try
+			{			
+				Class helpLexNameTokenClass = cls.loadClass("org.overture.typechecker.util.HelpLexNameToken");			
+				Object helpLexNameTokenObject = helpLexNameTokenClass.newInstance();
+				Method isEqualMethod = helpLexNameTokenClass.getMethod("isEqual", LexNameToken.class, Object.class);
+				Object result = isEqualMethod.invoke(helpLexNameTokenObject, this,other);
+				return (Boolean) result;
+			} catch (Exception e)
+			{				
+				e.printStackTrace();
+			}
 			throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
 			// if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
 			// {
