@@ -29,6 +29,7 @@ import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AExitStm;
+import org.overture.ast.statements.AFieldObjectDesignator;
 import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
@@ -1057,6 +1058,50 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 
 		return result;
+	}
+	
+	@Override
+	public Value caseAFieldObjectDesignator(AFieldObjectDesignator node,
+			Context ctxt) throws AnalysisException
+	{
+		try
+		{
+			Value val = node.getObject().apply(VdmRuntime.getStatementEvaluator(),ctxt).deref();
+
+			if (val instanceof ObjectValue && node.getField() != null)
+			{
+    			ObjectValue ov = val.objectValue(ctxt);
+    			Value rv = ov.get(node.getField(), (node.getClassName() != null));
+
+    			if (rv == null)
+    			{
+    				VdmRuntimeError.abort(node.getLocation(),4045, "Object does not contain value for field: " + node.getField(), ctxt);
+    			}
+
+    			return rv;
+			}
+			else if (val instanceof RecordValue)
+			{
+				RecordValue rec = val.recordValue(ctxt);
+				Value result = rec.fieldmap.get(node.getFieldName().name);
+
+				if (result == null)
+				{
+					VdmRuntimeError.abort(node.getLocation(),4046, "No such field: " + node.getFieldName(), ctxt);
+				}
+
+				return result;
+			}
+			else
+			{
+				return VdmRuntimeError.abort(node.getLocation(),4020,
+					"State value is neither a record nor an object", ctxt);
+			}
+		}
+		catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(),e);
+		}
 	}
 	
 	@Override
