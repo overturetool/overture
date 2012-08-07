@@ -478,12 +478,13 @@ public class OperationValue extends Value
 				try
 				{
 					ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-				} catch (ValueException e)
+				} catch (AnalysisException e)
 				{
-					throw e;
-				} catch (Throwable e)
-				{
-					e.printStackTrace();// TODO
+					if(e instanceof ValueException)
+					{
+						throw (ValueException) e;
+					}
+					e.printStackTrace();
 				}
     			ctxt.threadState.setAtomic(false);
 

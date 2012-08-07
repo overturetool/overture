@@ -33,6 +33,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.omg.PortableInterceptor.INACTIVE;
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -429,12 +431,13 @@ public class FunctionValue extends Value
 			try
 			{
 				rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
-			} catch (ValueException e)
+			} catch (AnalysisException e)
 			{
-				throw e;
-			} catch (Throwable e)
-			{
-				return VdmRuntimeError.abortRethrow(e);
+				if(e instanceof ValueException)
+				{
+					throw (ValueException) e;
+				}
+				e.printStackTrace();
 			}
     		
     		if (ctxt.prepost > 0)	// Note, caller's context is checked

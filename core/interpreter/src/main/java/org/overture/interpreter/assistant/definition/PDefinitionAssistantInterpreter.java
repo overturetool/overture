@@ -4,6 +4,7 @@ package org.overture.interpreter.assistant.definition;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -44,13 +45,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		switch (d.kindPDefinition())
 		{
 			case ASSIGNMENT:
-				try
-				{
-					return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) d, initialContext);
-				} catch (Throwable e1)
-				{
-					VdmRuntimeError.abortRethrow(e1);
-				}
+				return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) d, initialContext);
 			case EQUALS:
 				return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);
 			case EXPLICITFUNCTION:
@@ -90,7 +85,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		try
 		{
 			return d.apply(new PogVisitor(), new POContextStack());
-		} catch (Throwable e)
+		} catch (AnalysisException e)
 		{
 			e.printStackTrace();
 		}

@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -17,7 +18,7 @@ public class AAssignmentDefinitionAssistantInterpreter
 {
 
 	public static NameValuePairList getNamedValues(AAssignmentDefinition d,
-			Context initialContext) throws Throwable
+			Context initialContext) 
 	{
 		 try
 	        {
@@ -29,12 +30,14 @@ public class AAssignmentDefinitionAssistantInterpreter
 		        }
 
 				return new NameValuePairList(new NameValuePair(d.getName(), v.getUpdatable(null)));
-	        }
-	        catch (ValueException e)
-	        {
-	        	VdmRuntimeError.abort(d.getLocation(),e);
+	        } catch (AnalysisException e)
+			{
+	        	if(e instanceof ValueException)
+				{
+	        		VdmRuntimeError.abort(d.getLocation(),(ValueException) e);
+				}
 	        	return null;
-	        }
+			}
 	}
 
 	public static ValueList getValues(AAssignmentDefinition d,

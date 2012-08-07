@@ -52,18 +52,18 @@ public class VdmRuntimeError
 		throw new PatternMatchException(ve.number, ve.getMessage(), location);
 	}
 
-	public static Value abortRethrow(Throwable e)
-	{
-		if(e instanceof RuntimeException)
-		{
-			throw (RuntimeException) e;
-		}
-		else
-		{
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
+//	public static Value abortRethrow(Throwable e)
+//	{
+//		if(e instanceof RuntimeException)
+//		{
+//			throw (RuntimeException) e;
+//		}
+//		else
+//		{
+//			e.printStackTrace();
+//			return null;
+//		}
+//		
+//	}
 	
 }

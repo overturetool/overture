@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.pattern;
 
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -41,15 +42,16 @@ public class ASetBindAssistantInterpreter extends ASetBindAssistantTC
 			}
 
 			return results;
-		}
-		catch (ValueException ex)
+		}		
+		catch (AnalysisException e)
 		{
-			VdmRuntimeError.abort(bind.getLocation(),ex);
+			if(e instanceof ValueException)
+			{
+				VdmRuntimeError.abort(bind.getLocation(),(ValueException) e);
+				
+			}
 			return null;
-		} catch (Throwable ex)
-		{
-			return null;
-		}
+		} 
 	}
 
 	public static ValueList getValues(ASetBind setBind,

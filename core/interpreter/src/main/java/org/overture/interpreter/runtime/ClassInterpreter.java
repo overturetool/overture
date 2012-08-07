@@ -300,12 +300,6 @@ public class ClassInterpreter extends Interpreter
 		{
 			throw e;
 		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-		}
-		
-		return null;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PMultipleBind;
@@ -9,6 +10,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.traces.AlternativeTraceNode;
 import org.overture.interpreter.traces.StatementTraceNode;
 import org.overture.interpreter.traces.TraceNode;
@@ -85,13 +87,12 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 				}
 			}
 		}
-        catch (ValueException e)
+        catch (AnalysisException e)
         {
-        	throw new ContextException(e, term.getLocation());
-        } catch (Throwable e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+        	if(e instanceof ValueException)
+			{
+        		throw new ContextException((ValueException) e, term.getLocation());
+			}        	
 		}
 
 		return node;

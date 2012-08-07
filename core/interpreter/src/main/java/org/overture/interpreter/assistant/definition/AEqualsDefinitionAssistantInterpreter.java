@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -22,14 +23,19 @@ public class AEqualsDefinitionAssistantInterpreter
 	public static NameValuePairList getNamedValues(AEqualsDefinition d,
 			Context initialContext) 
 	{
-		Value v = null;
+		Value v;
 		try
 		{
 			v = d.getTest().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
-		} catch (Throwable e1)
+		} catch (AnalysisException e1)
 		{
-			VdmRuntimeError.abortRethrow(e1);
+        	if(e1 instanceof ValueException)
+			{
+        		VdmRuntimeError.abort(d.getLocation(),(ValueException) e1);
+			}
+        	return null;
 		}
+		
 		NameValuePairList nvpl = null;
 
 		if (d.getPattern() != null)
@@ -72,17 +78,17 @@ public class AEqualsDefinitionAssistantInterpreter
 
 				nvpl = PPatternAssistantInterpreter.getNamedValues(d.getSetbind().getPattern() ,v, initialContext);
 			}
-			catch (PatternMatchException e)
+			catch (AnalysisException e)
 			{
-				VdmRuntimeError.abort(e, initialContext);
-			}
-			catch (ValueException e)
-			{
-				VdmRuntimeError.abort(d.getLocation(),e);
-			} catch (Throwable e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(e instanceof PatternMatchException)
+				{
+					VdmRuntimeError.abort((PatternMatchException) e, initialContext);
+				}
+				
+				if(e instanceof ValueException)
+				{
+					VdmRuntimeError.abort(d.getLocation(),(ValueException) e);
+				}
 			}
 		}
 

@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -13,6 +14,7 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.traces.StatementTraceNode;
 import org.overture.interpreter.traces.TraceNode;
@@ -49,9 +51,8 @@ public class AApplyExpressionTraceCoreDefinitionAssistantInterpreter
 			try
 			{
 				v = arg.apply(VdmRuntime.getExpressionEvaluator(),ctxt).deref();
-			} catch (Throwable e1)
-			{
-				
+			} catch (AnalysisException e1)
+			{				
 				e1.printStackTrace();
 			}
 

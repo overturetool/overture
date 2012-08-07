@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -42,15 +43,15 @@ public class ASetMultipleBindAssistantInterpreter extends
 
 			return vl;
 		}
-		catch (ValueException e)
+		catch (AnalysisException e)
 		{
-			VdmRuntimeError.abort(mb.getLocation(),e);
+			if(e instanceof ValueException)
+			{
+				VdmRuntimeError.abort(mb.getLocation(),(ValueException) e);
+			}
 			return null;
-		} catch (Throwable e)
-		{
-			VdmRuntimeError.abortRethrow(e);
-			return null;
-		}
+
+		} 
 	}
 
 	public static ValueList getValues(ASetMultipleBind mb, ObjectContext ctxt)
