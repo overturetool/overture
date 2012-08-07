@@ -144,12 +144,12 @@ public class PeriodicStatement extends Statement
 
 				if (values[i] < 0)
 				{
-					abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
+					abort(4157, "Expecting positive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
 				}
 			}
 			catch (ValueException e)
 			{
-				abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
+				abort(4157, "Expecting positive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
 			}
 
 			i++;
