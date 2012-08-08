@@ -53,6 +53,11 @@
   </build>
 
   <dependencies>
+  <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>showtrace</artifactId>
+      <version>2.1.2</version>
+    </dependency>
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>interpreter</artifactId>
