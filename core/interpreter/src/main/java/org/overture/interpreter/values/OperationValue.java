@@ -61,7 +61,6 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.RuntimeValidator;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
@@ -373,10 +372,6 @@ public class OperationValue extends Value
 			
 			rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
 			
-//			catch (Throwable e)
-//			{
-//				e.printStackTrace();// TODO
-//			}
     		
     		if (isConstructor)
     		{

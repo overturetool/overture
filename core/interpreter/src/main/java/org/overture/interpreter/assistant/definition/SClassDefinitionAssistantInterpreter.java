@@ -321,7 +321,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
     			
     			for (LexNameToken opname: new LexNameList(sync.getOperations()))
     			{
-    				PExp exp =AMutexSyncDefinitionAssistantInterpreter.getExpression( sync,opname);
+    				PExp exp =AMutexSyncDefinitionAssistantInterpreter.getExpression( sync.clone(),opname);
     				ValueList overloads = members.getOverloads(opname);
 
     				for (Value op: overloads)
