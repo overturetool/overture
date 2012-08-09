@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.1.2
+Bundle-Version: 2.1.3
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.vdmsl.debug
@@ -13,4 +13,7 @@ Require-Bundle: org.overture.ide.debug,
 Export-Package: org.overture.ide.vdmsl.debug,
  org.overture.ide.vdmsl.debug.ui.launchconfigurations
 Bundle-Activator: org.overture.ide.vdmsl.debug.Activator
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.1.3.jar,
+ vdmj-2.1.3.jar,
+ cglib-2.1.3.jar

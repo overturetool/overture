@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.1.2
+Bundle-Version: 2.1.3
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: Combinatorial Testing
@@ -20,19 +20,19 @@ Require-Bundle: org.eclipse.ui.console;bundle-version="3.3.1",
  org.overture.ide.vdmsl.debug;bundle-version="1.1.1"
 Bundle-Activator: org.overture.ide.plugins.traces.OvertureTracesPlugin
 Bundle-ClassPath: .,
- org.overture.ide.core-2.1.2.jar,
- org.overture.ide.debug-2.1.2.jar,
- org.overture.ide.ui-2.1.2.jar,
- org.overture.ide.vdmpp.core-2.1.2.jar,
- org.overture.ide.vdmpp.debug-2.1.2.jar,
- org.overture.ide.vdmrt.core-2.1.2.jar,
- org.overture.ide.vdmrt.debug-2.1.2.jar,
- org.overture.ide.vdmsl.core-2.1.2.jar,
- org.overture.ide.vdmsl.debug-2.1.2.jar,
- ast-2.1.2.jar,
- parser-2.1.2.jar,
- traces-2.1.2.jar,
- vdmj-2.1.2.jar,
- cglib-2.1.2.jar,
- corba-2.1.2.jar,
- vdmtoolsapi-2.1.2.jar
+ org.overture.ide.core-2.1.3.jar,
+ org.overture.ide.debug-2.1.3.jar,
+ org.overture.ide.ui-2.1.3.jar,
+ org.overture.ide.vdmpp.core-2.1.3.jar,
+ org.overture.ide.vdmpp.debug-2.1.3.jar,
+ org.overture.ide.vdmrt.core-2.1.3.jar,
+ org.overture.ide.vdmrt.debug-2.1.3.jar,
+ org.overture.ide.vdmsl.core-2.1.3.jar,
+ org.overture.ide.vdmsl.debug-2.1.3.jar,
+ ast-2.1.3.jar,
+ parser-2.1.3.jar,
+ traces-2.1.3.jar,
+ vdmj-2.1.3.jar,
+ cglib-2.1.3.jar,
+ corba-2.1.3.jar,
+ vdmtoolsapi-2.1.3.jar
