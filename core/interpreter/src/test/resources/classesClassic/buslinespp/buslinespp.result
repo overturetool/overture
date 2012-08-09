@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
+<result>
+<output object="Error 4041: 'is not yet specified' statement reached in 'gui_Graphics' (buslinespp) at line 801:19" resource="buslinespp" value="Error 4041: 'is not yet specified' statement reached in 'gui_Graphics' (buslinespp) at line 801:19"/>
+</result>
+</testResult>
