@@ -260,7 +260,7 @@ try{
 			ITreeSelection selection = (ITreeSelection) selectedItem;
 			if (selection.getPaths().length > 0)
 			{
-				Object project = selection.getPaths()[0].getFirstSegment();
+				Object project = selection.getPaths()[0].getLastSegment();
 				if (project instanceof IProject)
 					selectedProject = (IProject) project;
 				else if (project instanceof IVdmProject)
