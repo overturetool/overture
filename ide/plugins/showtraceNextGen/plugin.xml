@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <!--extension
+         point="org.eclipse.ui.views">
+      
+      <view
+            name="VDM-RT Runtime log viewer"
+            icon="icons/overture.gif"
+            category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.showtrace.viewer.TracefileViewer"
+            id="org.overture.ide.plugins.showtrace.viewer.TracefileViewer">
+      </view>
+   </extension-->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.overture.ide.plugins.showtraceNextGen.viewer.VdmRtLogEditor"
+            contributorClass="org.overture.ide.plugins.showtraceNextGen.viewer.VdmRtEditorActionBarContributor"
+            default="true"
+            icon="icons/overture.gif"
+            id="org.overture.ide.plugins.showtraceNextGen.editor"
+            name="VDM-RT Realtime Log Viewer">
+             <contentTypeBinding contentTypeId="org.overture.ide.plugins.showtraceNextGen.content-type"/>
+      </editor>
+   </extension>
+   
+   
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="logbin"
+            id="org.overture.ide.plugins.showtraceNextGen.content-type"
+            name="VDM-RT Log Content type"
+            priority="high">
+      </content-type>
+         
+         
+   </extension>
+  <!--extension point="org.eclipse.ui.editorActions"> 
+<editorContribution 
+      id="org.eclipse.ui.articles.action.contribution.editor" 
+   targetID="org.overture.ide.plugins.showtrace.editor">
+   <action
+         id="org.eclipse.ui.articles.action.contribution.editor.action1" 
+         label="Export Image"
+         tooltip="Export image"
+      toolbarPath="Normal/additions"
+         class="org.overture.ide.plugins.showtrace.viewer.ExportImageDelegate"> 
+      </action> 
+   <action
+         class="org.overture.ide.plugins.showtrace.viewer.GoToTimeDelegate"
+         helpContextId="org.eclipse.ui.articles.action.contribution.editor.action2"
+         id="org.eclipse.ui.articles.action.contribution.editor.action2"
+         label="Go to time"
+         toolbarPath="Normal/save.ext"
+         tooltip="Tooltip for Editor Action 2">
+      </action> 
+   </editorContribution> 
+</extension-->
+
+
+
+ <!--extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Overture"
+            id="org.overturetool.tracefile.viewer">
+      </category>
+      <view
+            name="Tracefile viewer"
+            icon="icons/overture.gif"
+            category="org.overturetool.tracefile.viewer"
+            class="org.overturetool.tracefile.viewer.TracefileViewer"
+            id="org.overturetool.tracefile.viewer.TracefileViewer">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.overturetool.tracefile.viewer.TracefileViewer">
+         </view>
+      </perspectiveExtension>
+   </extension-->
+   
+</plugin>

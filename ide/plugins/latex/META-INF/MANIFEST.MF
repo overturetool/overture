@@ -15,9 +15,14 @@ Require-Bundle: org.overture.ide.vdmpp.core;bundle-version="0.3.0",
  org.overture.ide.ui;bundle-version="0.3.0"
 Bundle-Activator: org.overture.ide.plugins.latex.Activator
 Bundle-ClassPath: .,
+ org.overture.ide.core-2.2.0.jar,
+ org.overture.ide.ui-2.2.0.jar,
+ org.overture.ide.vdmpp.core-2.2.0.jar,
+ org.overture.ide.vdmrt.core-2.2.0.jar,
+ org.overture.ide.vdmsl.core-2.2.0.jar,
  ast-2.2.0.jar,
  interpreter-2.2.0.jar,
  parser-2.2.0.jar,
  pog-2.2.0.jar,
- testframework-2.2.0.jar,
+ testframework-2.2.1.jar,
  typechecker-2.2.0.jar
