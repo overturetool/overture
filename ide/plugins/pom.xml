@@ -22,6 +22,7 @@
     <module>poviewer</module>
     <!--module>umltrans</module-->
     <module>showtrace</module>
+	<module>showtraceNextGen</module>
     <module>traces</module>
     <module>ctruntime</module>
     <module>developerutils</module>
