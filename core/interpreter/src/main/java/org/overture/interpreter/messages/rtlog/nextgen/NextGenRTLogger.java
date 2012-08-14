@@ -84,7 +84,48 @@ public class NextGenRTLogger {
 	{
 		return this.events;
 	}
+	
 			
+	public Map<Integer, NextGenCpu> getCpuMap()
+	{
+		return cpuMap;
+	}
+
+	public Map<Integer, NextGenBus> getBusMap()
+	{
+		return busMap;
+	}
+
+	public Map<Integer, NextGenObject> getObjectMap()
+	{
+		return objectMap;
+	}
+
+	public Map<Integer, NextGenClassDefinition> getClassDefMap()
+	{
+		return classDefMap;
+	}
+
+	public Map<String, NextGenOperation> getOperationMap()
+	{
+		return operationMap;
+	}
+
+	public Map<Long, NextGenBusMessage> getBusMessage()
+	{
+		return busMessage;
+	}
+
+	public Map<Long, NextGenThread> getThreadMap()
+	{
+		return threadMap;
+	}
+
+	public NextGenBus getvBus()
+	{
+		return vBus;
+	}
+
 	public void log(RTMessage message) 
 	{
 		/**
@@ -434,6 +475,7 @@ public class NextGenRTLogger {
 	
 	public void printDataStructure() throws IOException
 	{
+		System.out.println("MVQ: printDataStructure() was invoked again");
 		FileWriter fstream = new FileWriter("datastruct.txt");
         BufferedWriter out = new BufferedWriter(fstream);
         
