@@ -274,7 +274,7 @@ public class TracefileViewer extends ViewPart implements IViewCallback
                 showMessage(cge);
             }
     }
-
+ 
     private void parseFile(String fname)
     {
         TraceParser theParser = new TracefileParser(fname, "UTF8", theMarkers);

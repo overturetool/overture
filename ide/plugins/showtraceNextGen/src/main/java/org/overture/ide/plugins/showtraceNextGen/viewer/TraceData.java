@@ -125,7 +125,7 @@ public class TraceData
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	return new Long(cpus.size());
     }
-
+ 
     public tdBUS createBUS(Long pid, String pname, Boolean pvirt)
         throws CGException
     {

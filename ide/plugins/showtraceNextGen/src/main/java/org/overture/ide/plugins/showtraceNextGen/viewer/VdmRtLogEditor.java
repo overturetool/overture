@@ -365,7 +365,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}
 	}
 
-
+ 
 	@SuppressWarnings("unchecked")
 	private void createTabPages()
 	{

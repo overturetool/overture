@@ -69,7 +69,7 @@ public class tdCPU extends tdResource
     {
         return id;
     }
-
+ 
     public String getName()
         throws CGException
     {

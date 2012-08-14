@@ -236,7 +236,7 @@ public class TracefileVisitor
 
         return res;
     }
-
+ 
     public void drawArchitecture(GenericTabItem pgti)
         throws CGException
     {
