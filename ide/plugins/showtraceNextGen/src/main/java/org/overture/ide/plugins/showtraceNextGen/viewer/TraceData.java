@@ -24,10 +24,15 @@
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
+
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
@@ -36,12 +41,23 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 //            tdHistory, tdCPU, tdBUS, tdThread, 
 //            tdMessage, tdObject
 @SuppressWarnings({"unchecked","rawtypes"})
-public class TraceData extends tdHistory
+public class TraceData
 {
-
+	private NextGenRTLogger rtLogger;
+	private Vector hist_utimes = new Vector();
+    private HashMap hist_uevents = new HashMap();
+    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
+    private HashMap cpus;
+    private Vector cpu_uorder;
+    private HashMap buses;
+    private Vector bus_uorder;
+    private HashMap threads;
+    private HashMap messages;
+    private HashMap objects;
+    
     public TraceData()
-        throws CGException
     {
+    	rtLogger = NextGenRTLogger.getInstance();
         cpus = new HashMap();
         cpu_uorder = null;
         buses = new HashMap();
@@ -66,86 +82,48 @@ public class TraceData extends tdHistory
         }
     }
 
-    public tdCPU createCPU(Long pid, String pname, Boolean pvirt)
-        throws CGException
-    {
-        if(!pre_createCPU(pid, pname, pvirt).booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in createCPU");
-        tdCPU cpu = new tdCPU(this, pid, pname, pvirt);
-        HashMap rhs_8 = new HashMap();
-        HashMap var2_10 = new HashMap();
-        var2_10 = new HashMap();
-        var2_10.put(pid, cpu);
-        HashMap m1_17 = (HashMap)cpus.clone();
-        HashMap m2_18 = var2_10;
-        HashSet com_13 = new HashSet();
-        com_13.addAll(m1_17.keySet());
-        com_13.retainAll((Collection)m2_18.keySet());
-        boolean all_applies_14 = true;
-        Object d_15;
-        for(Iterator bb_16 = com_13.iterator(); bb_16.hasNext() && all_applies_14; all_applies_14 = m1_17.get(d_15).equals(m2_18.get(d_15)))
-            d_15 = bb_16.next();
-
-        if(!all_applies_14)
-            UTIL.RunTime("Run-Time Error:Map Merge: Incompatible maps");
-        m1_17.putAll(m2_18);
-        rhs_8 = m1_17;
-        cpus = (HashMap)UTIL.clone(rhs_8);
-        cpu_uorder = (Vector)UTIL.ConvertToList(UTIL.clone(insert(pid, cpu_uorder)));
-        return cpu;
-    }
-
-    public Boolean pre_createCPU(Long pid, String pname, Boolean pvirt)
-        throws CGException
-    {
-        Boolean varRes_4 = null;
-        HashSet var2_6 = new HashSet();
-        var2_6.clear();
-        var2_6.addAll((Collection)cpus.keySet());
-        varRes_4 = new Boolean(!var2_6.contains(pid));
-        return varRes_4;
-    }
-
     public tdCPU getCPU(Long pid)
         throws CGException
     {
-        if(!pre_getCPU(pid).booleanValue())
+        if(!rtLogger.getCpuMap().containsKey((int)(long)pid))
             UTIL.RunTime("Run-Time Error:Precondition failure in getCPU");
-        return (tdCPU)cpus.get(pid);
-    }
-
-    public Boolean pre_getCPU(Long pid)
-        throws CGException
-    {
-        Boolean varRes_2 = null;
-        varRes_2 = new Boolean(cpus.containsKey(pid));
-        return varRes_2;
+        
+        return new tdCPU((int)(long)pid);
     }
 
     public HashSet getCPUs()
-        throws CGException
     {
-        HashSet rexpr_1 = new HashSet();
-        rexpr_1.clear();
-        rexpr_1.addAll((Collection)cpus.keySet());
-        return rexpr_1;
+        HashSet tdCpus = new HashSet();
+        Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
+        for(Integer key : cpus.keySet())
+        {
+        	tdCpus.add(new tdCPU(key));
+        }
+
+        return tdCpus;
     }
 
-    public Vector getOrderedCpus()
+    public Vector<Long> getOrderedCpus()
         throws CGException
     {
-        return cpu_uorder;
+        Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
+        Vector<Long> tdCpuIds = new Vector(); 
+        
+        for(Integer key : cpus.keySet())
+        {
+        	tdCpuIds.add(new Long(key));
+        }
+        
+        
+        Collections.sort(tdCpuIds);
+        
+        return tdCpuIds;
     }
 
     public Long getNoCpus()
-        throws CGException
     {
-        Long rexpr_1 = null;
-        HashSet unArg_2 = new HashSet();
-        unArg_2.clear();
-        unArg_2.addAll((Collection)cpus.keySet());
-        rexpr_1 = new Long(unArg_2.size());
-        return rexpr_1;
+    	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
+    	return new Long(cpus.size());
     }
 
     public tdBUS createBUS(Long pid, String pname, Boolean pvirt)
@@ -173,7 +151,7 @@ public class TraceData extends tdHistory
         m1_17.putAll(m2_18);
         rhs_8 = m1_17;
         buses = (HashMap)UTIL.clone(rhs_8);
-        bus_uorder = (Vector)UTIL.ConvertToList(UTIL.clone(insert(pid, bus_uorder)));
+        //bus_uorder = (Vector)UTIL.ConvertToList(UTIL.clone(insert(pid, bus_uorder)));
         return bus;
     }
 
@@ -405,58 +383,21 @@ public class TraceData extends tdHistory
         return hasObject(pobjid);
     }
 
-    @Override
-	public void reset()
-        throws CGException
+    public Vector getTimes()
     {
-        HashSet iset_1 = new HashSet();
-        iset_1.clear();
-        iset_1.addAll((Collection)cpus.keySet());
-        Long cpuid = null;
-        tdCPU obj_8;
-        for(Iterator enm_11 = iset_1.iterator(); enm_11.hasNext(); obj_8.reset())
-        {
-            Long elem_2 = UTIL.NumberToLong(enm_11.next());
-            cpuid = elem_2;
-            obj_8 = null;
-            obj_8 = (tdCPU)cpus.get(cpuid);
-        }
+        return hist_utimes;
+    }
+    
+	public Vector getHistory(Long ptime)
+    {
 
-        HashSet iset_12 = new HashSet();
-        iset_12.clear();
-        iset_12.addAll((Collection)buses.keySet());
-        Long busid = null;
-        tdBUS obj_19;
-        for(Iterator enm_22 = iset_12.iterator(); enm_22.hasNext(); obj_19.reset())
-        {
-            Long elem_13 = UTIL.NumberToLong(enm_22.next());
-            busid = elem_13;
-            obj_19 = null;
-            obj_19 = (tdBUS)buses.get(busid);
-        }
-
-        HashSet iset_23 = new HashSet();
-        iset_23.clear();
-        iset_23.addAll((Collection)objects.keySet());
-        Long objid = null;
-        tdObject obj_30;
-        for(Iterator enm_33 = iset_23.iterator(); enm_33.hasNext(); obj_30.reset())
-        {
-            Long elem_24 = UTIL.NumberToLong(enm_33.next());
-            objid = elem_24;
-            obj_30 = null;
-            obj_30 = (tdObject)objects.get(objid);
-        }
-
+        return (Vector)UTIL.ConvertToList(hist_uevents.get(ptime));
     }
 
-    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    private HashMap cpus;
-    private Vector cpu_uorder;
-    private HashMap buses;
-    private Vector bus_uorder;
-    private HashMap threads;
-    private HashMap messages;
-    private HashMap objects;
+	public void reset()
+    {
+        //TODO MAA: Reset data
+    }
+
 
 }

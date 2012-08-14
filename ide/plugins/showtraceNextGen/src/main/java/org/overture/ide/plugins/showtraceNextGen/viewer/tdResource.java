@@ -32,7 +32,6 @@ public class tdResource extends tdHistory
 {
 
     public tdResource()
-        throws CGException
     {
         xpos = null;
         ypos = null;

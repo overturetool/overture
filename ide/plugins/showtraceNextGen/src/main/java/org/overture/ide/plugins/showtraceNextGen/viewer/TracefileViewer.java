@@ -291,8 +291,8 @@ public class TracefileViewer extends ViewPart implements IViewCallback
                 } else
                 {
                     showMessage((new StringBuilder(String.valueOf(theAst.getTrace().size()))).append(" lines read from file \"").append(fname).append("\"").toString());
-                    theVisitor = new TracefileVisitor();
-                    theVisitor.visitNode(theAst);
+//                    theVisitor = new TracefileVisitor();
+//                    theVisitor.visitNode(theAst);
                     createTabPages();
                 }
             } else

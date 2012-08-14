@@ -19,6 +19,7 @@
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,6 +53,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
 import org.overturetool.traceviewer.parser.TraceParser;
 
@@ -303,17 +305,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException
 				{
-
-					try
-					{
-						showMessage("MVQ: VdmRtLogEditor->parseFile: calling doParse");
-						doParse(fname, monitor);
-					} catch (CGException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
+					showMessage("MVQ: VdmRtLogEditor->parseFile: calling doParse");
+					doParse(fname, monitor);
 				}
 
 			};
@@ -330,11 +323,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	@SuppressWarnings("deprecation")
 	private void doParse(final String fname, IProgressMonitor monitor)
-			throws CGException
 	{
 		showMessage("MVQ: VdmRtLogEditor->doParse: Starting TracePsrser");
-		TracePsrser t = new TracePsrser(fname);
-
+		NextGenTraceParser t = new NextGenTraceParser(fname);
 		t.start();
 
 		while (!t.isFinished())
@@ -353,95 +344,27 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 		if (t.error != null)
 		{
-			showMessage(t.error);
-		}
-
-		if (t.theParser.errorCount() == 0)
+			showMessage(t.error.getMessage());
+		}		
+		else if (t.rtLogger != null)
 		{
-			// TracefileChecker theChecker = new TracefileChecker(theMarkers);
-			// theChecker.visitNode(t.theAst);
-			if (t.theChecker.hasErrors().booleanValue())
+			//TODO MAA: Add showmessage status
+			theVisitor = new TracefileVisitor();
+			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{
-				showMessage((new StringBuilder()).append(theMarkers.errorCount()).append(" errors encoutered in file \"").append(fname).append("\"").toString());
-			} else
-			{
-				showMessage((new StringBuilder(String.valueOf(t.theAst.getTrace().size()))).append(" lines read from file \"").append(fname).append("\"").toString());
-				theVisitor = new TracefileVisitor();
-				try
+				public void run()
 				{
-					theVisitor.visitNode(t.theAst);
-				} catch (VDMRunTimeException e)
-				{
-					e.printStackTrace();
-					// showMessage(e);
-					IFile file = ((FileEditorInput) getEditorInput()).getFile();
-					FileUtility.addMarker(file, e.getMessage(), 0, 0, 0, 0, IMarker.SEVERITY_ERROR, org.overture.ide.plugins.showtraceNextGen.viewer.TracefileViewerPlugin.PLUGIN_ID);
-
+					createTabPages();
 				}
-				getSite().getShell().getDisplay().asyncExec(new Runnable()
-				{
 
-					public void run()
-					{
-						createTabPages();
-					}
-
-				});
-
-			}
+			});
+			
 		} else
 		{
-			showMessage((new StringBuilder(String.valueOf(t.theParser.errorCount()))).append(" errors encoutered in file \"").append(fname).append("\"").toString());
-		}
-
-	}
-
-	private class TracePsrser extends Thread
-	{
-		private String fileName = null;
-		public TraceParser theParser = null;
-		public IOmlTraceFile theAst = null;
-		private boolean isFinished = false;
-		private Object lock = new Object();
-		public CGException error;
-		public TracefileChecker theChecker;
-
-		public TracePsrser(String file)
-		{
-			this.fileName = file;
-		}
-
-		@Override
-		public void run()
-		{
-			showMessage("MVQ: TracePsrser->run: Starting TracefileParser");
-			theParser = new TracefileParser(fileName, "UTF8", theMarkers);
-			try
-			{
-				theAst = theParser.parse();
-				if (theParser.errorCount() == 0)
-				{
-					theChecker = new TracefileChecker(theMarkers);
-					theChecker.visitNode(theAst);
-				}
-
-			} catch (CGException cge)
-			{
-				error = cge;
-				// showMessage(cge);
-			}
-			synchronized (lock)
-			{
-				isFinished = true;
-			}
-
-		}
-
-		public boolean isFinished()
-		{
-			return isFinished;
+			showMessage("Unable to display log data. RT Logger is unset");
 		}
 	}
+
 
 	@SuppressWarnings("unchecked")
 	private void createTabPages()

@@ -39,6 +39,7 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overturetool.traceviewer.ast.itf.IOmlBUSdecl;
 import org.overturetool.traceviewer.ast.itf.IOmlCPUdecl;
 import org.overturetool.traceviewer.ast.itf.IOmlDelayedThreadSwapIn;
@@ -63,7 +64,7 @@ import org.overturetool.traceviewer.visitor.OmlVisitor;
 //            RectangleLabelFigure, tdBUS, Line, tdThread, 
 //            tdObject, RotatedLabel, tdResource, tdMessage
 @SuppressWarnings({"unchecked","rawtypes"})
-public class TracefileVisitor extends OmlVisitor
+public class TracefileVisitor
 {
     private static class ConjectureLimit
         implements Record
@@ -80,13 +81,13 @@ public class TracefileVisitor extends OmlVisitor
             return new ConjectureLimit(obstime, thrid, name);
         }
 
-        @Override
+    
 		public String toString()
         {
             return (new StringBuilder("mk_TracefileVisitor`ConjectureLimit(")).append(UTIL.toString(obstime)).append(",").append(UTIL.toString(thrid)).append(",").append(UTIL.toString(name)).append(")").toString();
         }
 
-        @Override
+    
 		public boolean equals(Object obj)
         {
             if(!(obj instanceof ConjectureLimit))
@@ -95,7 +96,7 @@ public class TracefileVisitor extends OmlVisitor
             return UTIL.equals(obstime, temp.obstime) && UTIL.equals(thrid, temp.thrid) && UTIL.equals(name, temp.name);
         }
 
-        @Override
+    
 		public int hashCode()
         {
             return (obstime != null ? obstime.hashCode() : 0) + (thrid != null ? thrid.hashCode() : 0) + (name != null ? name.hashCode() : 0);
@@ -117,10 +118,51 @@ public class TracefileVisitor extends OmlVisitor
             name = p3;
         }
     }
+    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
+    @SuppressWarnings("unused")
+	private GenericTabItem theTabItem;
+    @SuppressWarnings("unused")
+	private tdCPU theCpu;
+    private TraceData data;
+    private Long ov_uxpos;
+    private Long ov_uypos;
+    private Long ov_ustarttime;
+    private Long ov_ucurrenttime;
+    private Vector ov_utimepos;
+    private Vector failedLower;
+    private HashMap lastLower;
+    private Vector failedUpper;
+    private HashMap lastUpper;
+    private static final Long CPU_uXPOS = new Long(150L);
+    private static final Long CPU_uYPOS;
+    private static final Long CPU_uHEIGHT;
+    private static final Long CPU_uHALFWIDTH = new Long(65L);
+    private static final Long CPU_uHINTERVAL = new Long(40L);
+    private static final Long BUS_uXPOS = new Long(25L);
+    private static final Long BUS_uYPOS;
+    private static final Long BUS_uVINTERVAL = new Long(30L);
+    private static final Long RESOURCE_uVINTERVAL = new Long(50L);
+    private static final Long ELEMENT_uSIZE = new Long(18L);
 
-
+    static 
+    {
+        CPU_uYPOS = new Long(25L);
+        CPU_uHEIGHT = new Long(40L);
+        Long BUS_uYPOStemp = null;
+        try
+        {
+            Long tmpVal_1 = null;
+            tmpVal_1 = new Long((new Long(CPU_uYPOS.longValue() * (new Long(2L)).longValue())).longValue() + CPU_uHEIGHT.longValue());
+            BUS_uYPOStemp = tmpVal_1;
+        }
+        catch(Throwable e)
+        {
+            System.out.println(e.getMessage());
+        }
+        BUS_uYPOS = BUS_uYPOStemp;
+    }
+    
     public TracefileVisitor()
-        throws CGException
     {
         theTabItem = null;
         theCpu = null;
@@ -134,24 +176,18 @@ public class TracefileVisitor extends OmlVisitor
         lastLower = new HashMap();
         failedUpper = null;
         lastUpper = new HashMap();
-        try
-        {
-            data = new TraceData();
-            ov_uxpos = CPU_uXPOS;
-            ov_uypos = new Long(0L);
-            ov_ustarttime = new Long(0L);
-            ov_ucurrenttime = new Long(0L);
-            ov_utimepos = new Vector();
-            failedLower = new Vector();
-            lastLower = new HashMap();
-            failedUpper = new Vector();
-            lastUpper = new HashMap();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace(System.out);
-            System.out.println(e.getMessage());
-        }
+
+        data = new TraceData();
+        ov_uxpos = CPU_uXPOS;
+        ov_uypos = new Long(0L);
+        ov_ustarttime = new Long(0L);
+        ov_ucurrenttime = new Long(0L);
+        ov_utimepos = new Vector();
+        failedLower = new Vector();
+        lastLower = new HashMap();
+        failedUpper = new Vector();
+        lastUpper = new HashMap();
+       
     }
 
     private String nat2str(Long num)
@@ -1224,55 +1260,6 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    @Override
-	public void visitTraceFile(IOmlTraceFile pitf)
-        throws CGException
-    {
-        tdCPU cpu = null;
-        cpu = data.createCPU(new Long(0L), new String("vCPU0"), new Boolean(false));
-        tdBUS bus = null;
-        bus = data.createBUS(new Long(0L), new String("vBUS"), new Boolean(false));
-        tdObject obj = null;
-        obj = data.createObject(new Long(0L), new String("VdmTools"));
-        cpu.connect(new Long(0L));
-        bus.connect(new Long(0L));
-        obj.deploy(new Long(0L), new Long(0L));
-        Vector lines = null;
-        lines = pitf.getTrace();
-        IOmlTraceEvent line = null;
-        for(Iterator enm_26 = lines.iterator(); enm_26.hasNext(); visitTraceEvent(line))
-        {
-            IOmlTraceEvent elem_20 = (IOmlTraceEvent)enm_26.next();
-            line = elem_20;
-        }
-
-    }
-
-    @Override
-	public void visitThreadCreate(IOmlThreadCreate pitc)
-        throws CGException
-    {
-        Long cpunm = null;
-        cpunm = pitc.getCpunm();
-        Long thrid = null;
-        thrid = pitc.getId();
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
-        tdThread thr = null;
-        thr = cpu.createThread(thrid);
-        Long par_13 = null;
-        par_13 = pitc.getObstime();
-        data.addHistory(pitc, par_13);
-        Long par_16 = null;
-        par_16 = pitc.getObstime();
-        cpu.addHistory(pitc, par_16);
-        Long par_19 = null;
-        par_19 = pitc.getObstime();
-        thr.addHistory(pitc, par_19);
-    }
-
     private void drawOvThreadCreate(GenericTabItem pgti, IOmlThreadCreate pitc)
         throws CGException
     {
@@ -1343,29 +1330,6 @@ public class TracefileVisitor extends OmlVisitor
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
         }
-    }
-
-    @Override
-	public void visitThreadSwapIn(IOmlThreadSwapIn pitsw)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pitsw.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pitsw.getObstime();
-        data.addHistory(pitsw, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pitsw.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pitsw.getObstime();
-        obj_11.addHistory(pitsw, par_14);
-        Long par_17 = null;
-        par_17 = pitsw.getObstime();
-        thr.addHistory(pitsw, par_17);
     }
 
     private void drawOvThreadSwapIn(GenericTabItem pgti, IOmlThreadSwapIn pitsw)
@@ -1480,29 +1444,6 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    @Override
-	public void visitDelayedThreadSwapIn(IOmlDelayedThreadSwapIn pitsw)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pitsw.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pitsw.getObstime();
-        data.addHistory(pitsw, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pitsw.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pitsw.getObstime();
-        obj_11.addHistory(pitsw, par_14);
-        Long par_17 = null;
-        par_17 = pitsw.getObstime();
-        thr.addHistory(pitsw, par_17);
-    }
-
     private void drawOvDelayedThreadSwapIn(GenericTabItem pgti, IOmlDelayedThreadSwapIn pitsw)
         throws CGException
     {
@@ -1589,29 +1530,6 @@ public class TracefileVisitor extends OmlVisitor
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
         }
-    }
-
-    @Override
-	public void visitThreadSwapOut(IOmlThreadSwapOut pitsw)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pitsw.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pitsw.getObstime();
-        data.addHistory(pitsw, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pitsw.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pitsw.getObstime();
-        obj_11.addHistory(pitsw, par_14);
-        Long par_17 = null;
-        par_17 = pitsw.getObstime();
-        thr.addHistory(pitsw, par_17);
     }
 
     private void drawOvThreadSwapOut(GenericTabItem pgti, IOmlThreadSwapOut pitsw)
@@ -1734,29 +1652,6 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    @Override
-	public void visitThreadKill(IOmlThreadKill pitk)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pitk.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pitk.getObstime();
-        data.addHistory(pitk, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pitk.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pitk.getObstime();
-        obj_11.addHistory(pitk, par_14);
-        Long par_17 = null;
-        par_17 = pitk.getObstime();
-        thr.addHistory(pitk, par_17);
-    }
-
     private void drawOvThreadKill(GenericTabItem pgti, IOmlThreadKill pitsw)
         throws CGException
     {
@@ -1810,29 +1705,6 @@ public class TracefileVisitor extends OmlVisitor
             obj.setY(y2);
         }
         thr.popCurrentObject();
-    }
-
-    @Override
-	public void visitOpRequest(IOmlOpRequest pior)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pior.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pior.getObstime();
-        data.addHistory(pior, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pior.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pior.getObstime();
-        obj_11.addHistory(pior, par_14);
-        Long par_17 = null;
-        par_17 = pior.getObstime();
-        thr.addHistory(pior, par_17);
     }
 
     public void drawOvOpRequest(GenericTabItem pgti, IOmlOpRequest pior)
@@ -1956,29 +1828,6 @@ public class TracefileVisitor extends OmlVisitor
                 obj.setY(y2);
             }
         }
-    }
-
-    @Override
-	public void visitOpActivate(IOmlOpActivate pioa)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pioa.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pioa.getObstime();
-        data.addHistory(pioa, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pioa.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pioa.getObstime();
-        obj_11.addHistory(pioa, par_14);
-        Long par_17 = null;
-        par_17 = pioa.getObstime();
-        thr.addHistory(pioa, par_17);
     }
 
     public void drawOvOpActivate(GenericTabItem pgti, IOmlOpActivate pioa)
@@ -2127,29 +1976,6 @@ public class TracefileVisitor extends OmlVisitor
         pdest.setY(ov_uypos);
     }
 
-    @Override
-	public void visitOpCompleted(IOmlOpCompleted pioc)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pioc.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long par_9 = null;
-        par_9 = pioc.getObstime();
-        data.addHistory(pioc, par_9);
-        tdCPU obj_11 = null;
-        Long par_12 = null;
-        par_12 = pioc.getCpunm();
-        obj_11 = data.getCPU(par_12);
-        Long par_14 = null;
-        par_14 = pioc.getObstime();
-        obj_11.addHistory(pioc, par_14);
-        Long par_17 = null;
-        par_17 = pioc.getObstime();
-        thr.addHistory(pioc, par_17);
-    }
-
     public void drawOvOpCompleted(GenericTabItem pgti, IOmlOpCompleted pioc)
         throws CGException
     {
@@ -2263,46 +2089,6 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    @Override
-	public void visitMessageRequest(IOmlMessageRequest pimr)
-        throws CGException
-    {
-        Long busid = null;
-        busid = pimr.getBusid();
-        tdBUS bus = null;
-        bus = data.getBUS(busid);
-        Long msgid = null;
-        msgid = pimr.getMsgid();
-        Long fromcpu = null;
-        fromcpu = pimr.getFromcpu();
-        Long fromthr = null;
-        fromthr = pimr.getCallthr();
-        Long tocpu = null;
-        tocpu = pimr.getTocpu();
-        Long toobj = null;
-        toobj = pimr.getObjref();
-        String tmpVal_12 = null;
-        tmpVal_12 = pimr.getOpname();
-        String str = null;
-        str = tmpVal_12;
-        tdMessage msg = null;
-        msg = bus.createMessage(msgid, fromcpu, fromthr, tocpu, null, toobj, str);
-        Long par_24 = null;
-        par_24 = pimr.getObstime();
-        data.addHistory(pimr, par_24);
-        Long par_27 = null;
-        par_27 = pimr.getObstime();
-        bus.addHistory(pimr, par_27);
-        Long par_30 = null;
-        par_30 = pimr.getObstime();
-        msg.addHistory(pimr, par_30);
-        tdCPU obj_32 = null;
-        obj_32 = data.getCPU(fromcpu);
-        Long par_35 = null;
-        par_35 = pimr.getObstime();
-        obj_32.addHistory(pimr, par_35);
-    }
-
     private void drawOvMessageRequest(GenericTabItem pgti, IOmlMessageRequest pitmr)
         throws CGException
     {
@@ -2409,50 +2195,6 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    @Override
-	public void visitReplyRequest(IOmlReplyRequest pirr)
-        throws CGException
-    {
-        Long busid = null;
-        busid = pirr.getBusid();
-        tdBUS bus = null;
-        bus = data.getBUS(busid);
-        Long msgid = null;
-        msgid = pirr.getMsgid();
-        Long fromcpu = null;
-        fromcpu = pirr.getFromcpu();
-        Long fromthr = null;
-        fromthr = pirr.getCalleethr();
-        Long tocpu = null;
-        tocpu = pirr.getTocpu();
-        Long tothr = null;
-        tothr = pirr.getCallthr();
-        String tmpVal_12 = null;
-        tdMessage obj_13 = null;
-        Long par_14 = null;
-        par_14 = pirr.getOrigmsgid();
-        obj_13 = data.getMessage(par_14);
-        tmpVal_12 = obj_13.getDescr();
-        String str = null;
-        str = tmpVal_12;
-        tdMessage msg = null;
-        msg = bus.createMessage(msgid, fromcpu, fromthr, tocpu, tothr, null, str);
-        Long par_26 = null;
-        par_26 = pirr.getObstime();
-        data.addHistory(pirr, par_26);
-        Long par_29 = null;
-        par_29 = pirr.getObstime();
-        bus.addHistory(pirr, par_29);
-        Long par_32 = null;
-        par_32 = pirr.getObstime();
-        msg.addHistory(pirr, par_32);
-        tdCPU obj_34 = null;
-        obj_34 = data.getCPU(fromcpu);
-        Long par_37 = null;
-        par_37 = pirr.getObstime();
-        obj_34.addHistory(pirr, par_37);
-    }
-
     private void drawOvReplyRequest(GenericTabItem pgti, IOmlReplyRequest pitrr)
         throws CGException
     {
@@ -2549,29 +2291,6 @@ public class TracefileVisitor extends OmlVisitor
         }
     }
 
-    @Override
-	public void visitMessageActivate(IOmlMessageActivate pima)
-        throws CGException
-    {
-        tdMessage msg = null;
-        Long par_4 = null;
-        par_4 = pima.getMsgid();
-        msg = data.getMessage(par_4);
-        tdBUS bus = null;
-        Long par_7 = null;
-        par_7 = msg.getBusId();
-        bus = data.getBUS(par_7);
-        Long par_10 = null;
-        par_10 = pima.getObstime();
-        data.addHistory(pima, par_10);
-        Long par_13 = null;
-        par_13 = pima.getObstime();
-        bus.addHistory(pima, par_13);
-        Long par_16 = null;
-        par_16 = pima.getObstime();
-        msg.addHistory(pima, par_16);
-    }
-
     private void drawOvMessageActivate(GenericTabItem pgti, IOmlMessageActivate pitma)
         throws CGException
     {
@@ -2606,36 +2325,6 @@ public class TracefileVisitor extends OmlVisitor
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
         }
-    }
-
-    @Override
-	public void visitMessageCompleted(IOmlMessageCompleted pimc)
-        throws CGException
-    {
-        tdMessage msg = null;
-        Long par_4 = null;
-        par_4 = pimc.getMsgid();
-        msg = data.getMessage(par_4);
-        tdBUS bus = null;
-        Long par_7 = null;
-        par_7 = msg.getBusId();
-        bus = data.getBUS(par_7);
-        Long par_10 = null;
-        par_10 = pimc.getObstime();
-        data.addHistory(pimc, par_10);
-        Long par_13 = null;
-        par_13 = pimc.getObstime();
-        bus.addHistory(pimc, par_13);
-        Long par_16 = null;
-        par_16 = pimc.getObstime();
-        msg.addHistory(pimc, par_16);
-        tdCPU obj_18 = null;
-        Long par_19 = null;
-        par_19 = msg.getToCpu();
-        obj_18 = data.getCPU(par_19);
-        Long par_21 = null;
-        par_21 = pimc.getObstime();
-        obj_18.addHistory(pimc, par_21);
     }
 
     private void drawOvMessageCompleted(GenericTabItem pgti, IOmlMessageCompleted pitmc)
@@ -2778,73 +2467,6 @@ public class TracefileVisitor extends OmlVisitor
             ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(y2.longValue() + (new Long(10L)).longValue())));
             bus.setY(y2);
         }
-    }
-
-    @Override
-	public void visitCPUdecl(IOmlCPUdecl picd)
-        throws CGException
-    {
-        Long id = null;
-        id = picd.getId();
-        String name = null;
-        name = picd.getName();
-        Boolean expl = null;
-        expl = picd.getExpl();
-        tdCPU cpu = null;
-        cpu = data.createCPU(id, name, expl);
-        tdBUS bus = null;
-        bus = data.getBUS(new Long(0L));
-        bus.connect(id);
-        Long par_13 = null;
-        par_13 = bus.getId();
-        cpu.connect(par_13);
-    }
-
-    @Override
-	public void visitBUSdecl(IOmlBUSdecl pibd)
-        throws CGException
-    {
-        Long id = null;
-        id = pibd.getId();
-        String name = null;
-        name = pibd.getName();
-        HashSet topo = new HashSet();
-        topo = pibd.getTopo();
-        tdBUS bus = null;
-        bus = data.createBUS(id, name, new Boolean(true));
-        Long cpuid = null;
-        tdCPU cpu;
-        for(Iterator enm_18 = topo.iterator(); enm_18.hasNext(); cpu.connect(id))
-        {
-            Long elem_10 = UTIL.NumberToLong(enm_18.next());
-            cpuid = elem_10;
-            cpu = null;
-            cpu = data.getCPU(cpuid);
-            bus.connect(cpuid);
-        }
-
-    }
-
-    @Override
-	public void visitDeployObj(IOmlDeployObj pido)
-        throws CGException
-    {
-        Long objref = null;
-        objref = pido.getObjref();
-        Long cpunm = null;
-        cpunm = pido.getCpunm();
-        String clnm = null;
-        clnm = pido.getClnm();
-        Long etime = null;
-        etime = pido.getObstime();
-        tdObject obj = null;
-        Boolean cond_8 = null;
-        cond_8 = data.hasObject(objref);
-        if(cond_8.booleanValue())
-            obj = data.getObject(objref);
-        else
-            obj = data.createObject(objref, clnm);
-        obj.deploy(cpunm, etime);
     }
 
     public void resetLastDrawn()
@@ -3163,47 +2785,5 @@ public class TracefileVisitor extends OmlVisitor
         pgti.addFigure(nlb);
     }
 
-    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    @SuppressWarnings("unused")
-	private GenericTabItem theTabItem;
-    @SuppressWarnings("unused")
-	private tdCPU theCpu;
-    private TraceData data;
-    private Long ov_uxpos;
-    private Long ov_uypos;
-    private Long ov_ustarttime;
-    private Long ov_ucurrenttime;
-    private Vector ov_utimepos;
-    private Vector failedLower;
-    private HashMap lastLower;
-    private Vector failedUpper;
-    private HashMap lastUpper;
-    private static final Long CPU_uXPOS = new Long(150L);
-    private static final Long CPU_uYPOS;
-    private static final Long CPU_uHEIGHT;
-    private static final Long CPU_uHALFWIDTH = new Long(65L);
-    private static final Long CPU_uHINTERVAL = new Long(40L);
-    private static final Long BUS_uXPOS = new Long(25L);
-    private static final Long BUS_uYPOS;
-    private static final Long BUS_uVINTERVAL = new Long(30L);
-    private static final Long RESOURCE_uVINTERVAL = new Long(50L);
-    private static final Long ELEMENT_uSIZE = new Long(18L);
 
-    static 
-    {
-        CPU_uYPOS = new Long(25L);
-        CPU_uHEIGHT = new Long(40L);
-        Long BUS_uYPOStemp = null;
-        try
-        {
-            Long tmpVal_1 = null;
-            tmpVal_1 = new Long((new Long(CPU_uYPOS.longValue() * (new Long(2L)).longValue())).longValue() + CPU_uHEIGHT.longValue());
-            BUS_uYPOStemp = tmpVal_1;
-        }
-        catch(Throwable e)
-        {
-            System.out.println(e.getMessage());
-        }
-        BUS_uYPOS = BUS_uYPOStemp;
-    }
 }

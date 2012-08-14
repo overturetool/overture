@@ -37,7 +37,6 @@ public abstract class tdHistory
 {
 
     public tdHistory()
-        throws CGException
     {
         hist_uevents = new HashMap();
         hist_utimes = null;
