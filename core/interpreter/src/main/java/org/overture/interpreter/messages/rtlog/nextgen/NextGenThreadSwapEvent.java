@@ -1,7 +1,9 @@
 package org.overture.interpreter.messages.rtlog.nextgen;
 
+import java.io.Serializable;
 
-public class NextGenThreadSwapEvent extends NextGenThreadEvent implements INextGenEvent {
+
+public class NextGenThreadSwapEvent extends NextGenThreadEvent implements Serializable, INextGenEvent {
 	
 	
 	/**
