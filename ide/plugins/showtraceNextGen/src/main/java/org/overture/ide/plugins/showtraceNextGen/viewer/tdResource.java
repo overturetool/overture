@@ -23,6 +23,9 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
+
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, TraceData
@@ -30,10 +33,12 @@ public class tdResource extends tdHistory
 {
     protected Long xpos;
     protected Long ypos;
+    protected Boolean idle;
     public tdResource()
     {
         xpos = new Long(0L);
         ypos = new Long(0L);
+        idle = new Boolean(true);
     }
 
     public void setX(Long px)
@@ -45,6 +50,11 @@ public class tdResource extends tdHistory
     {
         ypos = py;
     }
+    
+    public void setIdle(Boolean pidle)
+    {
+        idle = pidle;
+    }
 
     public Long getX()
     {
@@ -55,5 +65,11 @@ public class tdResource extends tdHistory
     {
         return ypos;
     }
+    
+    public Boolean isIdle()
+    {
+        return idle;
+    }
+
 
 }
