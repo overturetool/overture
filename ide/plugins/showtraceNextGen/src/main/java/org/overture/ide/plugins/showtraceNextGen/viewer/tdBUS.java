@@ -74,22 +74,4 @@ public class tdBUS extends tdResource
         return expl;
     }
 
-
-    public tdMessage getMessage(Long pmsgid)
-    {
-        
-        NextGenBusMessage message = rtLogger.getBusMessage().get(pmsgid);
-        
-        if(message != null)
-        {
-        	return new tdMessage(pmsgid.intValue());
-        }
-        else
-        {
-        	//TODO Peter
-        	return null;
-        }
-        
-    }
-
 }
