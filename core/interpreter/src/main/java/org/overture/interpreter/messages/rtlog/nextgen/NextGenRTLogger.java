@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +80,19 @@ public class NextGenRTLogger {
 		this.addBus(0, new ArrayList<Integer>(), "vBus");
 		vBus = this.busMap.get(0);
 		this.addCpu(0, false, "vCpu", "system"); //Add the implicit virtual CPU - assuming expl means explicit
+	}	
+	
+	public class EventComparator implements Comparator<INextGenEvent>
+	{
+	    public int compare(INextGenEvent event1, INextGenEvent event2)
+	    {
+	        return Long.compare(event1.getTime(), event2.getTime());
+	    }
+	}
+	
+	public void sortEvents()
+	{
+		Collections.sort(this.events, new EventComparator());
 	}
 	
 	public List<INextGenEvent> getEvents()
@@ -540,6 +555,17 @@ public class NextGenRTLogger {
         	out.append(busMsgKey.toString());
         	out.append(" -> ");
         	out.append(this.busMessage.get(busMsgKey).toString());
+        	out.newLine();
+		}
+        
+        out.newLine();
+        out.append("### Events ######################\n");
+        out.newLine();
+        for (INextGenEvent event : this.events) 
+        {
+        	out.append(Long.toString(event.getTime()));
+        	out.append(" -> ");
+        	out.append(event.toString());
         	out.newLine();
 		}
         
