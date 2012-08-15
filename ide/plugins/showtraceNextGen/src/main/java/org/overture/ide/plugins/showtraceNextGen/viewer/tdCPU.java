@@ -26,8 +26,10 @@ package org.overture.ide.plugins.showtraceNextGen.viewer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
@@ -85,14 +87,25 @@ public class tdCPU extends tdResource
     public HashSet connects()
         throws CGException
     {
-        return new HashSet(); //TODO
-    }
-
-    public void connect(Long pbid)
-        throws CGException
-    {
-        //bus_uconnect.add(pbid); //TODO
+    	HashSet res = new HashSet();
     	
+    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
+    	
+    	for(Integer key : buses.keySet())
+    	{
+    		NextGenBus currentBus = buses.get(key);
+    		List<NextGenCpu> currentBusCpus = currentBus.cpus;
+    		
+    		for (NextGenCpu currentCpu : currentBusCpus) {
+				
+    			if(id.intValue() == currentCpu.id)
+    				res.add(new Long(currentBus.id));
+			}  		
+    	}
+    	
+    	
+    	
+        return res; //TODO
     }
 
     public tdThread getThread(Long pthrid)
