@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
@@ -97,7 +98,7 @@ public class TraceData
         Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
         for(Integer key : cpus.keySet())
         {
-        	tdCpus.add(new tdCPU(key));
+        	tdCpus.add(new Long(key));
         }
 
         return tdCpus;
@@ -125,87 +126,47 @@ public class TraceData
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	return new Long(cpus.size());
     }
- 
-    public tdBUS createBUS(Long pid, String pname, Boolean pvirt)
-        throws CGException
-    {
-        if(!pre_createBUS(pid, pname, pvirt).booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in createBUS");
-        tdBUS bus = new tdBUS(this, pid, pname, pvirt);
-        HashMap rhs_8 = new HashMap();
-        HashMap var2_10 = new HashMap();
-        var2_10 = new HashMap();
-        var2_10.put(pid, bus);
-        HashMap m1_17 = (HashMap)buses.clone();
-        HashMap m2_18 = var2_10;
-        HashSet com_13 = new HashSet();
-        com_13.addAll((Collection)m1_17.keySet());
-        com_13.retainAll((Collection)m2_18.keySet());
-        boolean all_applies_14 = true;
-        Object d_15;
-        for(Iterator bb_16 = com_13.iterator(); bb_16.hasNext() && all_applies_14; all_applies_14 = m1_17.get(d_15).equals(m2_18.get(d_15)))
-            d_15 = bb_16.next();
-
-        if(!all_applies_14)
-            UTIL.RunTime("Run-Time Error:Map Merge: Incompatible maps");
-        m1_17.putAll(m2_18);
-        rhs_8 = m1_17;
-        buses = (HashMap)UTIL.clone(rhs_8);
-        //bus_uorder = (Vector)UTIL.ConvertToList(UTIL.clone(insert(pid, bus_uorder)));
-        return bus;
-    }
-
-    public Boolean pre_createBUS(Long pid, String pname, Boolean pvirt)
-        throws CGException
-    {
-        Boolean varRes_4 = null;
-        HashSet var2_6 = new HashSet();
-        var2_6.clear();
-        var2_6.addAll((Collection)buses.keySet());
-        varRes_4 = new Boolean(!var2_6.contains(pid));
-        return varRes_4;
-    }
 
     public tdBUS getBUS(Long pid)
         throws CGException
-    {
-        if(!pre_getBUS(pid).booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in getBUS");
-        return (tdBUS)buses.get(pid);
-    }
-
-    public Boolean pre_getBUS(Long pid)
-        throws CGException
-    {
-        Boolean varRes_2 = null;
-        varRes_2 = new Boolean(buses.containsKey(pid));
-        return varRes_2;
+    {   
+        if(!rtLogger.getBusMap().containsKey(pid.intValue()))
+        	 UTIL.RunTime("Run-Time Error:Precondition failure in getBUS");
+        
+        return new tdBUS(pid.intValue());
     }
 
     public HashSet getBUSes()
         throws CGException
-    {
-        HashSet rexpr_1 = new HashSet();
-        rexpr_1.clear();
-        rexpr_1.addAll((Collection)buses.keySet());
-        return rexpr_1;
+    {      
+        HashSet tdBuses = new HashSet();
+        Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
+        for(Integer key : buses.keySet())
+        {
+        	tdBuses.add(new Long(key));
+        }
+        
+        return tdBuses;
     }
 
     public Vector getOrderedBuses()
-        throws CGException
-    {
-        return bus_uorder;
+    {    	
+    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
+    	Vector<Long> tdBusIds = new Vector();
+    	
+    	for(Integer key : buses.keySet())
+    	{
+    		tdBusIds.add(new Long(key));
+    	}
+    	
+    	Collections.sort(tdBusIds);
+    	
+    	return tdBusIds;
     }
 
     public Long getNoBuses()
-        throws CGException
     {
-        Long rexpr_1 = null;
-        HashSet unArg_2 = new HashSet();
-        unArg_2.clear();
-        unArg_2.addAll((Collection)buses.keySet());
-        rexpr_1 = new Long(unArg_2.size());
-        return rexpr_1;
+        return new Long(rtLogger.getBusMap().size());
     }
 
     public void addThread(tdThread pthr)
