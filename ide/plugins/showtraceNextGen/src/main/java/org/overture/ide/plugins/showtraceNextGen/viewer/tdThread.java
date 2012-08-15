@@ -23,116 +23,94 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import java.util.Vector;
+import java.util.Map;
+import java.util.Stack;
+
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenObject;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, TraceData, tdObject
-@SuppressWarnings({"unchecked","rawtypes"})
+@SuppressWarnings({"unchecked"})
 public class tdThread extends tdHistory
 {
+	
+    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
+//    private tdCPU theCpu;
+    private Long id;
+    private Stack<Long> curobj;
+    private Boolean blocked;
 
     public tdThread()
-        throws CGException
     {
-        theCpu = null;
-        id = null;
-        curobj = null;
-        blocked = null;
-        try
-        {
-            curobj = new Vector();
-            blocked = new Boolean(false);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace(System.out);
-            System.out.println(e.getMessage());
-        }
+        curobj = new Stack<Long>();
+        blocked = new Boolean(false);
     }
 
-    public tdThread(tdCPU cpu, Long pthrid)
-        throws CGException
+    public tdThread(Long pthrid)
     {
         this();
-        theCpu = (tdCPU)UTIL.clone(cpu);
-        id = UTIL.NumberToLong(UTIL.clone(pthrid));
+//        theCpu = cpu;
+        id = pthrid;
     }
 
     public Long getId()
-        throws CGException
     {
         return id;
     }
 
     public void setStatus(Boolean pblocked)
-        throws CGException
     {
-        blocked = (Boolean)UTIL.clone(pblocked);
+        blocked = pblocked;
     }
 
     public Boolean getStatus()
-        throws CGException
     {
         return blocked;
     }
 
     public void pushCurrentObject(Long pobjid)
-        throws CGException
     {
-        Vector rhs_2 = null;
-        Vector var1_3 = null;
-        var1_3 = new Vector();
-        var1_3.add(pobjid);
-        rhs_2 = (Vector)var1_3.clone();
-        rhs_2.addAll(curobj);
-        curobj = (Vector)UTIL.ConvertToList(UTIL.clone(rhs_2));
+    	curobj.push(pobjid);
     }
 
     public void popCurrentObject()
-        throws CGException
     {
-        curobj = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector(curobj.subList(1, curobj.size()))));
+    	curobj.pop();
     }
 
     public Boolean hasCurrentObject()
-        throws CGException
     {
-        return new Boolean((new Long(curobj.size())).longValue() > (new Long(0L)).longValue());
+        return !curobj.isEmpty();
     }
 
     public tdObject getCurrentObject()
-        throws CGException
     {
-        if(!pre_getCurrentObject().booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in getCurrentObject");
-        tdObject rexpr_1 = null;
-        TraceData obj_2 = null;
-        obj_2 = theCpu.getTraceData();
-        rexpr_1 = obj_2.getObject(UTIL.NumberToLong(curobj.get(0)));
-        return rexpr_1;
+    	tdObject result = null;
+    	
+        if(hasCurrentObject())
+        {
+        	Integer currentObjectId = curobj.peek().intValue();
+        	
+        	Map<Integer, NextGenObject> objMap = NextGenRTLogger.getInstance().getObjectMap();
+        	
+            for (Integer objectKey : objMap.keySet()) 
+            {
+            	if(objMap.get(objectKey).id == currentObjectId);
+            	{
+            		result = null; //TODO MVQ: Get tdboject from tdCPU
+            	}
+    		}
+        }
+
+        return result;
     }
 
-    public Boolean pre_getCurrentObject()
-        throws CGException
-    {
-        return hasCurrentObject();
-    }
-
-    @Override
-	public void reset()
-        throws CGException
-    {
-        curobj = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector()));
-        blocked = (Boolean)UTIL.clone(new Boolean(false));
-    }
-
-    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    private tdCPU theCpu;
-    private Long id;
-    private Vector curobj;
-    private Boolean blocked;
-
+	@Override
+	public void reset() throws CGException {
+		// TODO MVQ: Edit tdHistory to remove this
+		
+	}
 }

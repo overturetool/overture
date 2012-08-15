@@ -381,15 +381,17 @@ public class TracefileVisitor
     private Boolean pre_drawOverview(GenericTabItem pgti, Long starttime)
         throws CGException
     {
-        Boolean varRes_3 = null;
-        HashSet var2_5 = new HashSet();
-        Vector unArg_6 = null;
-        unArg_6 = data.getTimes();
-        HashSet set_7 = new HashSet();
-        for(Enumeration enm_8 = unArg_6.elements(); enm_8.hasMoreElements(); set_7.add(enm_8.nextElement()));
-        var2_5 = set_7;
-        varRes_3 = new Boolean(var2_5.contains(starttime));
-        return varRes_3;
+//        Boolean varRes_3 = null;
+//        HashSet var2_5 = new HashSet();
+//        Vector unArg_6 = null;
+//        unArg_6 = data.getTimes();
+//        HashSet set_7 = new HashSet();
+//        for(Enumeration enm_8 = unArg_6.elements(); enm_8.hasMoreElements(); set_7.add(enm_8.nextElement()));
+//        var2_5 = set_7;
+//        varRes_3 = new Boolean(var2_5.contains(starttime));
+//        return varRes_3;
+    	
+    	return true; //TODO Peter: relaxed this check completely
     }
 
     public void drawCpu(GenericTabItem pgti, Long starttime)

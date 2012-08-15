@@ -26,8 +26,10 @@ package org.overture.ide.plugins.showtraceNextGen.viewer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
@@ -44,12 +46,14 @@ public class tdCPU extends tdResource
 	private NextGenRTLogger rtLogger;
     private String name;
     private Boolean expl;
+    private HashMap<Long, tdObject> objects;
     
     public tdCPU(int cpuID)
     {
     	rtLogger = NextGenRTLogger.getInstance();
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	NextGenCpu cpu = cpus.get(cpuID);
+    	objects = new HashMap<Long, tdObject>();
     	
     	if(cpu != null)
     	{
@@ -85,9 +89,26 @@ public class tdCPU extends tdResource
     public HashSet connects()
         throws CGException
     {
-        return new HashSet(); //TODO
+    	HashSet res = new HashSet();
+    	
+    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
+    	
+    	for(Integer key : buses.keySet())
+    	{
+    		NextGenBus currentBus = buses.get(key);
+    		List<NextGenCpu> currentBusCpus = currentBus.cpus;
+    		
+    		for (NextGenCpu currentCpu : currentBusCpus) {
+				
+    			if(id.intValue() == currentCpu.id)
+    				res.add(new Long(currentBus.id));
+			}  		
+    	}
+    	
+    	
+    	
+        return res; //TODO
     }
-
 
     public tdThread getThread(Long pthrid)
         throws CGException
@@ -118,31 +139,52 @@ public class tdCPU extends tdResource
     public void addObject(tdObject pobj)
         throws CGException
     {
-       //Ignore
+     	if(hasObject(pobj.getId()))
+		{
+    		//TODO MVQ: Handle if map already contains object
+     		throw new UnsupportedOperationException("tdCPU.getObject(): Object already exists");
+		}
+    	else
+    	{
+    		objects.put(pobj.getId(), pobj);
+    	}
     }
 
     public Boolean hasObject(Long pobjid)
         throws CGException
     {
-        rtLogger.getObjectMap();
-    	return false; //TODO
+        return objects.containsKey(pobjid);
     }
 
     public Boolean hasObjectAt(Long objectId, Long time)
+    		throws CGException
     {
-    	return false; //TODO
+    	//FIXME: For now we ignore the object <-> time relation
+    	return hasObject(objectId);
     }
     
     public tdObject getObject(Long pobjid)
         throws CGException
     {
-        return new tdObject(); //TODO
+     	if(!hasObject(pobjid))
+		{
+     		//TODO MVQ: Handle this situation
+    		throw new UnsupportedOperationException("tdCPU.getObject(): Object not found");
+		}
+
+     	return objects.get(pobjid);
     }
 
-    public HashSet getObjects()
+    public HashSet<Long> getObjects()
         throws CGException
     {
-        return new HashSet(); //TODO
+    	HashSet<Long> result = new HashSet<Long>();
+    	for(tdObject obj : objects.values())
+    	{
+    		result.add(obj.getId());
+    	}
+    	
+        return result;
     }
 
     @Override

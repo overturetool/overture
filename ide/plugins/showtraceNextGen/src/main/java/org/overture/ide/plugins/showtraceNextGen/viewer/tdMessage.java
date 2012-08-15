@@ -31,8 +31,17 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 public class tdMessage extends tdHistory
 {
 
-    public tdMessage()
-        throws CGException
+    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
+    private tdBUS theBus;
+    private Long id;
+    private Long from_ucpu;
+    private Long from_uthr;
+    private Long to_ucpu;
+    private Long to_uthr;
+    private Long to_uobj;
+    private String descr;
+	
+    public tdMessage(int messageId)
     {
         theBus = null;
         id = null;
@@ -42,21 +51,6 @@ public class tdMessage extends tdHistory
         to_uthr = null;
         to_uobj = null;
         descr = null;
-    }
-
-    public tdMessage(tdBUS bus, Long pmsgid, Long pfrom, Long pfromthr, Long pto, Long ptothr, Long ptoobj, 
-            String pdescr)
-        throws CGException
-    {
-        this();
-        theBus = (tdBUS)UTIL.clone(bus);
-        id = UTIL.NumberToLong(UTIL.clone(pmsgid));
-        from_ucpu = UTIL.NumberToLong(UTIL.clone(pfrom));
-        from_uthr = UTIL.NumberToLong(UTIL.clone(pfromthr));
-        to_ucpu = UTIL.NumberToLong(UTIL.clone(pto));
-        to_uthr = UTIL.NumberToLong(UTIL.clone(ptothr));
-        to_uobj = UTIL.NumberToLong(UTIL.clone(ptoobj));
-        descr = UTIL.ConvertToString(UTIL.clone(pdescr));
     }
 
     public Long getMsgId()
@@ -142,15 +136,5 @@ public class tdMessage extends tdHistory
         throws CGException
     {
     }
-
-    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    private tdBUS theBus;
-    private Long id;
-    private Long from_ucpu;
-    private Long from_uthr;
-    private Long to_ucpu;
-    private Long to_uthr;
-    private Long to_uobj;
-    private String descr;
 
 }
