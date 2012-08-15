@@ -107,7 +107,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 		selectedFile = path.toFile();
 		fileName = selectedFile.getAbsolutePath();
-		showMessage("MVQ: VdmRtLogEditor->init is running");
 	}
 
 	@Override
@@ -156,7 +155,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 		try
 		{
-			showMessage("MVQ: VdmRtLogEditor->createPartControl: calling parseFile");
 			parseFile(selectedFile.getAbsolutePath());
 		} catch (Exception e)
 		{
@@ -305,7 +303,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException
 				{
-					showMessage("MVQ: VdmRtLogEditor->parseFile: calling doParse");
 					doParse(fname, monitor);
 				}
 
@@ -324,7 +321,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	@SuppressWarnings("deprecation")
 	private void doParse(final String fname, IProgressMonitor monitor)
 	{
-		showMessage("MVQ: VdmRtLogEditor->doParse: Starting TracePsrser");
 		NextGenTraceParser t = new NextGenTraceParser(fname);
 		t.start();
 
