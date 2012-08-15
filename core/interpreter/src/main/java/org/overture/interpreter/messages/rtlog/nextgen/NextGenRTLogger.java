@@ -128,6 +128,7 @@ public class NextGenRTLogger {
 
 	public void log(RTMessage message) 
 	{
+		System.out.println("NextGenRTLogger:log");
 		/**
 		 * Declarations: CPUs and Busses
 		 */		
@@ -423,8 +424,12 @@ public class NextGenRTLogger {
 		long threadId = thread.getId();
 		
 		//Creates thread object
-		NextGenObject object = getObjectFromThread(thread);				
-		NextGenThread t = new NextGenThread(threadId, object, object==null ? false : thread.isPeriodic());
+		NextGenObject object = getObjectFromThread(thread);	
+		System.out.println("CPU Number:" + cpuNumber.getNumber());
+		System.out.println("CPU Map Size: " + cpuMap.size());
+		NextGenCpu cpu = cpuMap.get(cpuNumber.getNumber());
+		System.out.println("CPU != null: " + (cpu != null));
+		NextGenThread t = new NextGenThread(threadId, cpu, object, object==null ? false : thread.isPeriodic());
 					
 		//Creates thread create event
 		NextGenThreadEvent e = new NextGenThreadEvent(t,time,NextGenThreadEvent.ThreadEventType.CREATE);
