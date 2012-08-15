@@ -1010,89 +1010,92 @@ public class TracefileVisitor
         }*/
     }
 
-    private void updateOvCpu(GenericTabItem pgti, INextGenEvent event)
+    private void updateOvCpu(GenericTabItem pgti, tdCPU ptdr)//INextGenEvent event)
     {
-    	Long cpuId = null;
-    	tdCPU ptdr = null;
-    	boolean cpuWasIdle = false;
-    	boolean threadWasBlocked = false;
- 
-    	/* Find cpuId */
-    	if(event instanceof NextGenThreadEvent)
-    	{
-    		cpuId = new Long(((NextGenThreadEvent)event).thread.object.cpu.id);
-    	}
-    	else if(event instanceof NextGenBusMessageEvent)
-    	{
-    		cpuId = new Long(((NextGenBusMessageEvent)event).message.object.cpu.id);
-    	}
-    	else if(event instanceof NextGenOperationEvent)
-    	{
-    		cpuId = new Long(((NextGenOperationEvent)event).thread.object.cpu.id);
-    	}
-    	else
-    	{
-    		//FIXME: MVQ: Handle this
-    		throw new UnsupportedOperationException("TracefileVisitor->updateOvCpu: Illegal Argument");
-    	}
-    	
-    	ptdr = data.getCPU(cpuId);
-    	
-		/* Modify cpuWasIdle, if a thread is swapped in, the cpu must have been idle until now */
-        if(event instanceof NextGenThreadSwapEvent)
-        {
-        	if(((NextGenThreadSwapEvent)event).swapType == ThreadEventSwapType.SWAP_IN ||
-        	   ((NextGenThreadSwapEvent)event).swapType == ThreadEventSwapType.DELAYED_IN)
-        	{
-        		cpuWasIdle = true;
-        	}
-        }
-        
-		
-		/* Modify threadWasBlocked, if the this cpu is receiving a message the thread on the cpu must have been blocked until now
-		 * FIXME MVQ: This is wrong, how to deduce if thread has been blocked until now from nextgen datastructure */
-    	if(((NextGenBusMessageEvent)event).type == NextGenBusMessageEventType.COMPLETED &&
-    	   ((NextGenBusMessageEvent)event).message.toCpu.id == cpuId.intValue() )
-    	{
-    		threadWasBlocked = true;
-    	}
-    	
-    	//Generated code:
-        Long tmpVal_4 = null;
-        tmpVal_4 = ptdr.getX();
-        Long xpos = null;
-        xpos = tmpVal_4;
-        Long tmpVal_5 = null;
-        tmpVal_5 = ptdr.getY();
-        Long ypos = null;
-        ypos = tmpVal_5;
-        if((new Boolean(ov_uxpos.longValue() > xpos.longValue())).booleanValue())
-        {
-            Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
-
-            if(cpuWasIdle)
-            {
-                line.setForegroundColor(ColorConstants.lightGray);
-                line.setDot();
-            } else
-            {
-                if(threadWasBlocked)
-                    line.setDot();
-                line.setLineWidth(new Long(3L));
-            }
-            pgti.addFigure(line);
-            ptdr.setX(ov_uxpos);
-            Boolean cond_33 = null;
-            cond_33 = ptdr.hasCurrentThread();
-            if(cond_33.booleanValue())
-            {
-                tdThread thr = null;
-                thr = ptdr.getCurrentThread();
-                Long thrid = null;
-                thrid = thr.getId();
-                checkConjectureLimits(pgti, new Long(ov_uxpos.longValue() - ELEMENT_uSIZE.longValue()), ypos, ov_ucurrenttime, thrid);
-            }
-        }
+//    	Long cpuId = null;
+//    	tdCPU ptdr = null;
+//    	boolean cpuWasIdle = false;
+//    	boolean threadWasBlocked = false;
+// 
+//    	/* Find cpuId */
+//    	if(event instanceof NextGenThreadEvent)
+//    	{
+//    		cpuId = new Long(((NextGenThreadEvent)event).thread.object.cpu.id);
+//    	}
+//    	else if(event instanceof NextGenBusMessageEvent)
+//    	{
+//    		cpuId = new Long(((NextGenBusMessageEvent)event).message.object.cpu.id);
+//    	}
+//    	else if(event instanceof NextGenOperationEvent)
+//    	{
+//    		cpuId = new Long(((NextGenOperationEvent)event).thread.object.cpu.id);
+//    	}
+//    	else
+//    	{
+//    		//FIXME: MVQ: Handle this
+//    		throw new UnsupportedOperationException("TracefileVisitor->updateOvCpu: Illegal Argument");
+//    	}
+//    	
+//    	ptdr = data.getCPU(cpuId);
+//    	
+//		/* Modify cpuWasIdle, if a thread is swapped in, the cpu must have been idle until now */
+//        if(event instanceof NextGenThreadSwapEvent)
+//        {
+//        	if(((NextGenThreadSwapEvent)event).swapType == ThreadEventSwapType.SWAP_IN ||
+//        	   ((NextGenThreadSwapEvent)event).swapType == ThreadEventSwapType.DELAYED_IN)
+//        	{
+//        		cpuWasIdle = true;
+//        	}
+//        }
+//        
+//		
+//		/* Modify threadWasBlocked, if the this cpu is receiving a message the thread on the cpu must have been blocked until now
+//		 * FIXME MVQ: This is wrong, how to deduce if thread has been blocked until now from nextgen datastructure */
+//    	if(((NextGenBusMessageEvent)event).type == NextGenBusMessageEventType.COMPLETED &&
+//    	   ((NextGenBusMessageEvent)event).message.toCpu.id == cpuId.intValue() )
+//    	{
+//    		threadWasBlocked = true;
+//    	}
+//    	
+//    	//Generated code:
+//        Long tmpVal_4 = null;
+//        tmpVal_4 = ptdr.getX();
+//        Long xpos = null;
+//        xpos = tmpVal_4;
+//        Long tmpVal_5 = null;
+//        tmpVal_5 = ptdr.getY();
+//        Long ypos = null;
+//        ypos = tmpVal_5;
+//        if((new Boolean(ov_uxpos.longValue() > xpos.longValue())).booleanValue())
+//        {
+//            Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
+//
+//            /*TODO MVQ: Use tdCPU.isIdle Instead*/
+//            if(cpuWasIdle)
+//            {
+//                line.setForegroundColor(ColorConstants.lightGray);
+//                line.setDot();
+//            } else
+//            {
+//            	//TODO MVQ: Use tdThread.getStatus instead
+//                if(threadWasBlocked)
+//                    line.setDot();
+//                line.setLineWidth(new Long(3L));
+//            }
+//            
+//            pgti.addFigure(line);
+//            ptdr.setX(ov_uxpos);
+//            Boolean cond_33 = null;
+//            cond_33 = ptdr.hasCurrentThread();
+//            if(cond_33.booleanValue())
+//            {
+//                tdThread thr = null;
+//                thr = ptdr.getCurrentThread();
+//                Long thrid = null;
+//                thrid = thr.getId();
+//                checkConjectureLimits(pgti, new Long(ov_uxpos.longValue() - ELEMENT_uSIZE.longValue()), ypos, ov_ucurrenttime, thrid);
+//            }
+//        }
     }
 
     private void updateCpuObject(GenericTabItem pgti, tdCPU pcpu, tdObject pobj)
@@ -1625,6 +1628,7 @@ public class TracefileVisitor
 ////                par_30 = opEvent.time;            		
 ////                unArg_28 = cpu.hasObjectAt(objref, par_30);
 ////                cond_27 = new Boolean(!unArg_28.booleanValue());
+/* TODO MVQ: Set thread status to Blocked */
 ////                if(cond_27.booleanValue())
 ////                {
 ////                    tdThread obj_32 = null;
@@ -2106,8 +2110,6 @@ public class TracefileVisitor
     	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitmc;
     	
         Long msgid = busMessageEvent.message.id;
-        //msgid = pitmc.getMsgid();
-        msgid = ((NextGenBusMessageEvent)pitmc).message.id;
         
         tdMessage msg = null;
         msg = data.getMessage(msgid);
@@ -2156,6 +2158,11 @@ public class TracefileVisitor
             updateOvCpu(pgti, cpu);
             bus.setX(x2);
         }
+        
+        /* Update blocked status on receiving thread */
+        //TODO MVQ: Update status on receiving thread to not blocked
+        
+        
 //        Boolean cond_60 = null;
 //        cond_60 = msg.hasToThread();
 //        if(cond_60.booleanValue())
