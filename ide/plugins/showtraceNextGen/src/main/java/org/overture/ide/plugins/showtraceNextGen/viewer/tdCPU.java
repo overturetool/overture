@@ -47,6 +47,7 @@ public class tdCPU extends tdResource
     private String name;
     private Boolean expl;
     private HashMap<Long, tdObject> objects;
+    private HashMap<Long, tdThread> threads;
     
     public tdCPU(int cpuID)
     {
@@ -54,6 +55,7 @@ public class tdCPU extends tdResource
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	NextGenCpu cpu = cpus.get(cpuID);
     	objects = new HashMap<Long, tdObject>();
+    	threads = new HashMap<Long, tdThread>();
     	
     	if(cpu != null)
     	{

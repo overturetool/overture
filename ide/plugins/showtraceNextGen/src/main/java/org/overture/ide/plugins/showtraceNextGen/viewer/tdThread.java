@@ -23,11 +23,7 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import java.util.Map;
 import java.util.Stack;
-
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenObject;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
@@ -38,7 +34,7 @@ public class tdThread extends tdHistory
 {
 	
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-//    private tdCPU theCpu;
+    private tdCPU theCpu;
     private Long id;
     private Stack<Long> curobj;
     private Boolean blocked;
@@ -49,10 +45,10 @@ public class tdThread extends tdHistory
         blocked = new Boolean(false);
     }
 
-    public tdThread(Long pthrid)
+    public tdThread(tdCPU cpu, Long pthrid)
     {
         this();
-//        theCpu = cpu;
+        theCpu = cpu;
         id = pthrid;
     }
 
@@ -87,22 +83,13 @@ public class tdThread extends tdHistory
     }
 
     public tdObject getCurrentObject()
+    	throws CGException
     {
     	tdObject result = null;
     	
         if(hasCurrentObject())
         {
-        	Integer currentObjectId = curobj.peek().intValue();
-        	
-        	Map<Integer, NextGenObject> objMap = NextGenRTLogger.getInstance().getObjectMap();
-        	
-            for (Integer objectKey : objMap.keySet()) 
-            {
-            	if(objMap.get(objectKey).id == currentObjectId);
-            	{
-            		result = null; //TODO MVQ: Get tdboject from tdCPU
-            	}
-    		}
+        	result = theCpu.getObject(curobj.peek());
         }
 
         return result;
