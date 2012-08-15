@@ -2464,7 +2464,6 @@ public class TracefileVisitor
     private void drawOvThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
     throws CGException
         {
-    	
             Long cpunm = null;
             //cpunm = pitsw.getCpunm();
             cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
