@@ -25,6 +25,9 @@ package org.overture.ide.plugins.showtraceNextGen.viewer;
 
 import java.util.Stack;
 
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread;
+
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
@@ -34,22 +37,25 @@ public class tdThread extends tdHistory
 {
 	
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    private tdCPU theCpu;
     private Long id;
-    private Stack<Long> curobj;
-    private Boolean blocked;
 
-    public tdThread()
-    {
-        curobj = new Stack<Long>();
-        blocked = new Boolean(false);
-    }
 
-    public tdThread(tdCPU cpu, Long pthrid)
+    private NextGenRTLogger rtLogger;
+    
+    public tdThread(int threadId)
     {
-        this();
-        theCpu = cpu;
-        id = pthrid;
+    	rtLogger = NextGenRTLogger.getInstance();
+    	NextGenThread thread = rtLogger.getThreadMap().get(threadId);
+    	
+    	if(thread != null)
+    	{
+    		id = thread.id;
+    		
+    	}else
+    	{
+    		//TODO Peter
+    	}
+    	
     }
 
     public Long getId()
@@ -57,47 +63,5 @@ public class tdThread extends tdHistory
         return id;
     }
 
-    public void setStatus(Boolean pblocked)
-    {
-        blocked = pblocked;
-    }
 
-    public Boolean getStatus()
-    {
-        return blocked;
-    }
-
-    public void pushCurrentObject(Long pobjid)
-    {
-    	curobj.push(pobjid);
-    }
-
-    public void popCurrentObject()
-    {
-    	curobj.pop();
-    }
-
-    public Boolean hasCurrentObject()
-    {
-        return !curobj.isEmpty();
-    }
-
-    public tdObject getCurrentObject()
-    	throws CGException
-    {
-    	tdObject result = null;
-    	
-        if(hasCurrentObject())
-        {
-        	result = theCpu.getObject(curobj.peek());
-        }
-
-        return result;
-    }
-
-	@Override
-	public void reset() throws CGException {
-		// TODO MVQ: Edit tdHistory to remove this
-		
-	}
 }

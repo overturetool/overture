@@ -28,9 +28,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenObject;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
@@ -67,19 +69,16 @@ public class tdCPU extends tdResource
     }
 
     public Long getId()
-        throws CGException
     {
         return id;
     }
  
     public String getName()
-        throws CGException
     {
         return name;
     }
 
     public Boolean isExplicit()
-        throws CGException
     {
         return expl;
     }
@@ -108,65 +107,27 @@ public class tdCPU extends tdResource
         return res; //TODO
     }
 
-    public tdThread getThread(Long pthrid)
-        throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
-    public void setCurrentThread(Long pthr)
-        throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
-    public Boolean hasCurrentThread()
-        throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
-    public tdThread getCurrentThread()
-        throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
-    public void addObject(tdObject pobj)
-        throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
     public Boolean hasObject(Long pobjid)
-        throws CGException
     {
-    	throw new UnsupportedOperationException("Do not use this function.");
+    	return rtLogger.getObjectMap().get(pobjid.intValue()) != null;
     }
 
-    public Boolean hasObjectAt(Long objectId, Long time)
-    		throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
     
-    public tdObject getObject(Long pobjid)
-        throws CGException
-    {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
     public HashSet<Long> getObjects()
         throws CGException
     {
-    	throw new UnsupportedOperationException("Do not use this function.");
-    }
-
-    @Override
-	public void reset()
-        throws CGException
-    {
-       //TODO
+    	HashSet<Long> objectIds = new HashSet<Long>();
+    	
+    	Map<Integer, NextGenObject> objects = rtLogger.getObjectMap();
+    	
+        for(Integer key : objects.keySet())
+        {
+        	NextGenObject currentObject = objects.get(key);
+        	if(currentObject.cpu.id.intValue() == id)
+        		objectIds.add(new Long(currentObject.id));
+        }
+        
+    	return objectIds;
     }
 
 }
