@@ -46,16 +46,12 @@ public class tdCPU extends tdResource
 	private NextGenRTLogger rtLogger;
     private String name;
     private Boolean expl;
-    private HashMap<Long, tdObject> objects;
-    private HashMap<Long, tdThread> threads;
     
     public tdCPU(int cpuID)
     {
     	rtLogger = NextGenRTLogger.getInstance();
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	NextGenCpu cpu = cpus.get(cpuID);
-    	objects = new HashMap<Long, tdObject>();
-    	threads = new HashMap<Long, tdThread>();
     	
     	if(cpu != null)
     	{
@@ -115,78 +111,55 @@ public class tdCPU extends tdResource
     public tdThread getThread(Long pthrid)
         throws CGException
     {
-
-        //return (tdThread)threads.get(pthrid);
-        return new tdThread(); //TODO
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public void setCurrentThread(Long pthr)
         throws CGException
     {
-        //TODO
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public Boolean hasCurrentThread()
         throws CGException
     {
-        return false; //TODO
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public tdThread getCurrentThread()
         throws CGException
     {
-        return new tdThread(); //TODO
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public void addObject(tdObject pobj)
         throws CGException
     {
-     	if(hasObject(pobj.getId()))
-		{
-    		//TODO MVQ: Handle if map already contains object
-     		throw new UnsupportedOperationException("tdCPU.getObject(): Object already exists");
-		}
-    	else
-    	{
-    		objects.put(pobj.getId(), pobj);
-    	}
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public Boolean hasObject(Long pobjid)
         throws CGException
     {
-        return objects.containsKey(pobjid);
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public Boolean hasObjectAt(Long objectId, Long time)
     		throws CGException
     {
-    	//FIXME: For now we ignore the object <-> time relation
-    	return hasObject(objectId);
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
     
     public tdObject getObject(Long pobjid)
         throws CGException
     {
-     	if(!hasObject(pobjid))
-		{
-     		//TODO MVQ: Handle this situation
-    		throw new UnsupportedOperationException("tdCPU.getObject(): Object not found");
-		}
-
-     	return objects.get(pobjid);
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     public HashSet<Long> getObjects()
         throws CGException
     {
-    	HashSet<Long> result = new HashSet<Long>();
-    	for(tdObject obj : objects.values())
-    	{
-    		result.add(obj.getId());
-    	}
-    	
-        return result;
+    	throw new UnsupportedOperationException("Do not use this function.");
     }
 
     @Override
