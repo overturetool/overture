@@ -327,7 +327,7 @@ public class TraceData
     {
         if(!pre_createObject(pobjid, pclnm).booleanValue())
             UTIL.RunTime("Run-Time Error:Precondition failure in createObject");
-        tdObject obj = new tdObject(this, pobjid, pclnm);
+        tdObject obj = new tdObject(pobjid, pclnm);
         HashMap rhs_6 = new HashMap();
         HashMap var2_8 = new HashMap();
         var2_8 = new HashMap();

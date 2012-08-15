@@ -44,12 +44,14 @@ public class tdCPU extends tdResource
 	private NextGenRTLogger rtLogger;
     private String name;
     private Boolean expl;
+    private HashMap<Long, tdObject> objects;
     
     public tdCPU(int cpuID)
     {
     	rtLogger = NextGenRTLogger.getInstance();
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	NextGenCpu cpu = cpus.get(cpuID);
+    	objects = new HashMap<Long, tdObject>();
     	
     	if(cpu != null)
     	{
@@ -124,30 +126,52 @@ public class tdCPU extends tdResource
     public void addObject(tdObject pobj)
         throws CGException
     {
-       //TODO
+     	if(hasObject(pobj.getId()))
+		{
+    		//TODO MVQ: Handle if map already contains object
+     		throw new UnsupportedOperationException("tdCPU.getObject(): Object already exists");
+		}
+    	else
+    	{
+    		objects.put(pobj.getId(), pobj);
+    	}
     }
 
     public Boolean hasObject(Long pobjid)
         throws CGException
     {
-        return false; //TODO
+        return objects.containsKey(pobjid);
     }
 
     public Boolean hasObjectAt(Long objectId, Long time)
+    		throws CGException
     {
-    	return false; //TODO
+    	//FIXME: For now we ignore the object <-> time relation
+    	return hasObject(objectId);
     }
     
     public tdObject getObject(Long pobjid)
         throws CGException
     {
-        return new tdObject(); //TODO
+     	if(!hasObject(pobjid))
+		{
+     		//TODO MVQ: Handle this situation
+    		throw new UnsupportedOperationException("tdCPU.getObject(): Object not found");
+		}
+
+     	return objects.get(pobjid);
     }
 
-    public HashSet getObjects()
+    public HashSet<Long> getObjects()
         throws CGException
     {
-        return new HashSet(); //TODO
+    	HashSet<Long> result = new HashSet<Long>();
+    	for(tdObject obj : objects.values())
+    	{
+    		result.add(obj.getId());
+    	}
+    	
+        return result;
     }
 
     @Override
