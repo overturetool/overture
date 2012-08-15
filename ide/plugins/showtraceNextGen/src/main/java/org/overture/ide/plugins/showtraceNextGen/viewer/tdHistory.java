@@ -146,6 +146,8 @@ public abstract class tdHistory
     public Vector getHistory(Long ptime)
         throws CGException
     {
+    	//TODO MAA: This function is invoked by TraceFileVisitor to get all INextGenEvent associated with derived td class!
+    	
         if(!pre_getHistory(ptime).booleanValue())
             UTIL.RunTime("Run-Time Error:Precondition failure in getHistory");
         return (Vector)UTIL.ConvertToList(hist_uevents.get(ptime));

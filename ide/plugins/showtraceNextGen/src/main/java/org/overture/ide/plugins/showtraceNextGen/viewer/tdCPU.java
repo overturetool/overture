@@ -88,12 +88,6 @@ public class tdCPU extends tdResource
         return new HashSet(); //TODO
     }
 
-    public void connect(Long pbid)
-        throws CGException
-    {
-        //bus_uconnect.add(pbid); //TODO
-    	
-    }
 
     public tdThread getThread(Long pthrid)
         throws CGException
@@ -124,13 +118,14 @@ public class tdCPU extends tdResource
     public void addObject(tdObject pobj)
         throws CGException
     {
-       //TODO
+       //Ignore
     }
 
     public Boolean hasObject(Long pobjid)
         throws CGException
     {
-        return false; //TODO
+        rtLogger.getObjectMap();
+    	return false; //TODO
     }
 
     public Boolean hasObjectAt(Long objectId, Long time)

@@ -39,25 +39,7 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
-import org.overturetool.traceviewer.ast.itf.IOmlBUSdecl;
-import org.overturetool.traceviewer.ast.itf.IOmlCPUdecl;
-import org.overturetool.traceviewer.ast.itf.IOmlDelayedThreadSwapIn;
-import org.overturetool.traceviewer.ast.itf.IOmlDeployObj;
-import org.overturetool.traceviewer.ast.itf.IOmlMessageActivate;
-import org.overturetool.traceviewer.ast.itf.IOmlMessageCompleted;
-import org.overturetool.traceviewer.ast.itf.IOmlMessageRequest;
-import org.overturetool.traceviewer.ast.itf.IOmlOpActivate;
-import org.overturetool.traceviewer.ast.itf.IOmlOpCompleted;
-import org.overturetool.traceviewer.ast.itf.IOmlOpRequest;
-import org.overturetool.traceviewer.ast.itf.IOmlReplyRequest;
-import org.overturetool.traceviewer.ast.itf.IOmlThreadCreate;
-import org.overturetool.traceviewer.ast.itf.IOmlThreadKill;
-import org.overturetool.traceviewer.ast.itf.IOmlThreadSwapIn;
-import org.overturetool.traceviewer.ast.itf.IOmlThreadSwapOut;
-import org.overturetool.traceviewer.ast.itf.IOmlTraceEvent;
-import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
-import org.overturetool.traceviewer.visitor.OmlVisitor;
+import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            TraceData, tdCPU, GenericTabItem, NormalLabel, 
@@ -143,7 +125,6 @@ public class TracefileVisitor
     private static final Long BUS_uVINTERVAL = new Long(30L);
     private static final Long RESOURCE_uVINTERVAL = new Long(50L);
     private static final Long ELEMENT_uSIZE = new Long(18L);
-
     static 
     {
         CPU_uYPOS = new Long(25L);
@@ -190,26 +171,7 @@ public class TracefileVisitor
        
     }
 
-    private String nat2str(Long num)
-        throws CGException
-    {
-//        String varRes_2 = null;
-//        if((new Boolean(num.longValue() < (new Long(10L)).longValue())).booleanValue())
-//        {
-//            Character e_seq_15 = null;
-//            if(1 <= (new Long(num.longValue() + (new Long(1L)).longValue())).longValue() && (new Long(num.longValue() + (new Long(1L)).longValue())).longValue() <= (new String("0123456789")).length())
-//                e_seq_15 = new Character((new String("0123456789")).charAt((new Long(num.longValue() + (new Long(1L)).longValue())).longValue() - 1));
-//            else
-//                UTIL.RunTime("Run-Time Error:Illegal index");
-//            varRes_2 = new String();
-//            varRes_2 = (new StringBuilder(String.valueOf(varRes_2))).append(e_seq_15).toString();
-//        } else
-//        {
-//            varRes_2 = nat2str(new Long(num.longValue() / (new Long(10L)).longValue())).concat(nat2str(new Long((int)(num.doubleValue() - (new Long(10L)).doubleValue() * Math.floor(num.doubleValue() / (new Long(10L)).doubleValue())))));
-//        }
-        return num.toString();
-    }
-
+    //Getters
     public Vector getAllTimes()
         throws CGException
     {
@@ -237,6 +199,24 @@ public class TracefileVisitor
         return res;
     }
  
+    //Setters
+    public void addFailedUpper(Long ptime, Long pthr, String pname)
+            throws CGException
+    {
+        ConjectureLimit e_5 = null;
+        e_5 = new ConjectureLimit(ptime, pthr, pname);
+        failedUpper.add(e_5);
+    }
+    
+    public void addFailedLower(Long ptime, Long pthr, String pname)
+            throws CGException
+    {
+        ConjectureLimit e_5 = null;
+        e_5 = new ConjectureLimit(ptime, pthr, pname);
+        failedLower.add(e_5);
+    }
+
+    //Draw
     public void drawArchitecture(GenericTabItem pgti)
         throws CGException
     {
@@ -398,7 +378,7 @@ public class TracefileVisitor
         drawOverviewDetail(pgti);
     }
 
-    public Boolean pre_drawOverview(GenericTabItem pgti, Long starttime)
+    private Boolean pre_drawOverview(GenericTabItem pgti, Long starttime)
         throws CGException
     {
         Boolean varRes_3 = null;
@@ -481,7 +461,7 @@ public class TracefileVisitor
 
         drawCpuDetail(pgti, cpu);
     }
-
+  
     private void drawArchDetail(GenericTabItem pgti)
         throws CGException
     {
@@ -683,51 +663,95 @@ public class TracefileVisitor
                     drawOvTimeMarker(pgti, ov_uxpos, ov_uypos, event_utime);
                 Vector sq_18 = null;
                 sq_18 = data.getHistory(event_utime);
-                IOmlTraceEvent event = null;
+                INextGenEvent event = null;
                 for(Iterator enm_88 = sq_18.iterator(); enm_88.hasNext();)
                 {
-                    IOmlTraceEvent elem_19 = (IOmlTraceEvent)enm_88.next();
+                	INextGenEvent elem_19 = (INextGenEvent)enm_88.next();
                     event = elem_19;
                     Boolean cond_24 = null;
                     Long var2_26 = null;
                     var2_26 = pgti.getHorizontalSize();
                     cond_24 = new Boolean(ov_uxpos.longValue() < var2_26.longValue());
                     if(cond_24.booleanValue())
-                        if((new Boolean(event instanceof IOmlThreadCreate)).booleanValue())
-                            drawOvThreadCreate(pgti, (IOmlThreadCreate)event);
-                        else
-                        if((new Boolean(event instanceof IOmlThreadSwapIn)).booleanValue())
-                            drawOvThreadSwapIn(pgti, (IOmlThreadSwapIn)event);
-                        else
-                        if((new Boolean(event instanceof IOmlDelayedThreadSwapIn)).booleanValue())
-                            drawOvDelayedThreadSwapIn(pgti, (IOmlDelayedThreadSwapIn)event);
-                        else
-                        if((new Boolean(event instanceof IOmlThreadSwapOut)).booleanValue())
-                            drawOvThreadSwapOut(pgti, (IOmlThreadSwapOut)event);
-                        else
-                        if((new Boolean(event instanceof IOmlThreadKill)).booleanValue())
-                            drawOvThreadKill(pgti, (IOmlThreadKill)event);
-                        else
-                        if((new Boolean(event instanceof IOmlOpRequest)).booleanValue())
-                            drawOvOpRequest(pgti, (IOmlOpRequest)event);
-                        else
-                        if((new Boolean(event instanceof IOmlOpActivate)).booleanValue())
-                            drawOvOpActivate(pgti, (IOmlOpActivate)event);
-                        else
-                        if((new Boolean(event instanceof IOmlOpCompleted)).booleanValue())
-                            drawOvOpCompleted(pgti, (IOmlOpCompleted)event);
-                        else
-                        if((new Boolean(event instanceof IOmlMessageRequest)).booleanValue())
-                            drawOvMessageRequest(pgti, (IOmlMessageRequest)event);
-                        else
-                        if((new Boolean(event instanceof IOmlReplyRequest)).booleanValue())
-                            drawOvReplyRequest(pgti, (IOmlReplyRequest)event);
-                        else
-                        if((new Boolean(event instanceof IOmlMessageActivate)).booleanValue())
-                            drawOvMessageActivate(pgti, (IOmlMessageActivate)event);
-                        else
-                        if((new Boolean(event instanceof IOmlMessageCompleted)).booleanValue())
-                            drawOvMessageCompleted(pgti, (IOmlMessageCompleted)event);
+                        if(event instanceof NextGenThreadSwapEvent)
+                    	{
+                        	switch(((NextGenThreadSwapEvent)event).swapType)
+                        	{
+                        	case SWAP_IN: 
+                        		drawOvThreadSwapIn(pgti, event); 
+                        		break;
+                        	case DELAYED_IN: 	
+                        		drawOvDelayedThreadSwapIn(pgti, event); 
+                        		break;
+                        	case SWAP_OUT: 		
+                        		drawOvThreadSwapOut(pgti, event); 
+                        		break;
+                        	default: //TODO MAA 
+                        		break; 
+                        	}               		
+                    	}  
+                        else if(event instanceof NextGenThreadEvent)
+                        {
+                           	switch(((NextGenThreadEvent)event).type)
+                        	{
+                        	case CREATE: 	drawOvThreadCreate(pgti, (NextGenThreadEvent)event); break;
+                        	case SWAP: 
+                        		//TODO MAA: Exception? 
+                        		break;
+                        	case KILL: 		drawOvThreadKill(pgti, (NextGenThreadEvent)event); break;
+                        	default: 
+                        		//TODO MAA 
+                        		break; 
+                        	}
+                        }
+                        else if(event instanceof NextGenOperationEvent)
+                        {
+                        	switch(((NextGenOperationEvent)event).type)
+                        	{
+                        	case REQUEST: 
+                        		drawOvOpRequest(pgti, (NextGenOperationEvent)event);
+                        		break;
+                        	case ACTIVATE: 
+                        		drawOvOpActivate(pgti, (NextGenOperationEvent)event);
+                        		break;
+                        	case COMPLETE: 
+                        		drawOvOpCompleted(pgti, (NextGenOperationEvent)event);
+                        		break;
+                        	default: 
+                        		//TODO MAA
+                        		break;
+                        	}
+                        }
+                        else if(event instanceof NextGenBusMessageReplyRequestEvent)
+                        {
+                        	drawOvReplyRequest(pgti,event);
+                        }
+                        else if(event instanceof NextGenBusMessageEvent)
+                        {
+                        	switch(((NextGenBusMessageEvent)event).type)
+                        	{
+                        	case ACTIVATE: 
+                        		drawOvMessageActivate(pgti, event);
+                        		break;
+                        	case COMPLETED: 
+                        		drawOvMessageCompleted(pgti, event);
+                        		break;
+                        	case REPLY_REQUEST: 
+                        		break;
+                        	case REQUEST: 
+                        		drawOvMessageRequest(pgti, event);
+                        		break;
+                    		default: 
+                    			//TODO MAA
+                    			break;
+                        	}
+                        	
+                        }
+                        else 
+                        {
+                        	//TODO MAA: Should never occour? 
+                        }
+   
                 }
 
                 Boolean cond_89 = null;
@@ -802,48 +826,96 @@ public class TracefileVisitor
                     drawCpuTimeMarker(pgti, new Long(150L), ov_uypos, event_utime);//TODO size of the time label
                 Vector sq_19 = null;
                 sq_19 = cpu.getHistory(event_utime);
-                IOmlTraceEvent event = null;
+                INextGenEvent event = null;
                 for(Iterator enm_84 = sq_19.iterator(); enm_84.hasNext();)
                 {
-                    IOmlTraceEvent elem_20 = (IOmlTraceEvent)enm_84.next();
+                    INextGenEvent elem_20 = (INextGenEvent)enm_84.next();
                     event = elem_20;
                     Boolean cond_25 = null;
                     Long var2_27 = null;
                     var2_27 = pgti.getVerticalSize();
                     cond_25 = new Boolean(ov_uypos.longValue() < var2_27.longValue());
                     if(cond_25.booleanValue())
-                        if((new Boolean(event instanceof IOmlThreadCreate)).booleanValue())
-                            drawCpuThreadCreate(pgti, (IOmlThreadCreate)event);
-                        else
-                        if((new Boolean(event instanceof IOmlThreadSwapIn)).booleanValue())
-                            drawCpuThreadSwapIn(pgti, (IOmlThreadSwapIn)event);
-                        else
-                        if((new Boolean(event instanceof IOmlDelayedThreadSwapIn)).booleanValue())
-                            drawCpuDelayedThreadSwapIn(pgti, (IOmlDelayedThreadSwapIn)event);
-                        else
-                        if((new Boolean(event instanceof IOmlThreadSwapOut)).booleanValue())
-                            drawCpuThreadSwapOut(pgti, (IOmlThreadSwapOut)event);
-                        else
-                        if((new Boolean(event instanceof IOmlThreadKill)).booleanValue())
-                            drawCpuThreadKill(pgti, (IOmlThreadKill)event);
-                        else
-                        if((new Boolean(event instanceof IOmlOpRequest)).booleanValue())
-                            drawCpuOpRequest(pgti, (IOmlOpRequest)event);
-                        else
-                        if((new Boolean(event instanceof IOmlOpActivate)).booleanValue())
-                            drawCpuOpActivate(pgti, (IOmlOpActivate)event);
-                        else
-                        if((new Boolean(event instanceof IOmlOpCompleted)).booleanValue())
-                            drawCpuOpCompleted(pgti, (IOmlOpCompleted)event);
-                        else
-                        if((new Boolean(event instanceof IOmlMessageRequest)).booleanValue())
-                            drawCpuMessageRequest(pgti, (IOmlMessageRequest)event);
-                        else
-                        if((new Boolean(event instanceof IOmlReplyRequest)).booleanValue())
-                            drawCpuReplyRequest(pgti, (IOmlReplyRequest)event);
-                        else
-                        if((new Boolean(event instanceof IOmlMessageCompleted)).booleanValue())
-                            drawCpuMessageCompleted(pgti, (IOmlMessageCompleted)event);
+                    	if(event instanceof NextGenThreadSwapEvent)
+                    	{
+                        	switch(((NextGenThreadSwapEvent)event).swapType)
+                        	{
+                        	case SWAP_IN: 
+                        		drawCpuThreadSwapIn(pgti, event);
+                        		break;
+                        	case DELAYED_IN: 	
+                        		drawCpuDelayedThreadSwapIn(pgti, event); 
+                        		break;
+                        	case SWAP_OUT: 		
+                        		drawCpuThreadSwapOut(pgti, event); 
+                        		break;
+                        	default: //TODO MAA 
+                        		break; 
+                        	}               		
+                    	}  
+                        else if(event instanceof NextGenThreadEvent)
+                        {
+                           	switch(((NextGenThreadEvent)event).type)
+                        	{
+                        	case CREATE: 	
+                        		drawCpuThreadCreate(pgti, event); break;
+                        	case SWAP: 
+                        		//TODO MAA: Exception? 
+                        		break;
+                        	case KILL: 		
+                        		drawCpuThreadKill(pgti, event); break;
+                        	default: 
+                        		//TODO MAA 
+                        		break; 
+                        	}
+                        }
+                        else if(event instanceof NextGenOperationEvent)
+                        {
+                        	switch(((NextGenOperationEvent)event).type)
+                        	{
+                        	case REQUEST: 
+                        		drawCpuOpRequest(pgti, event);
+                        		break;
+                        	case ACTIVATE: 
+                        		drawCpuOpActivate(pgti, event);
+                        		break;
+                        	case COMPLETE: 
+                        		drawCpuOpCompleted(pgti, event);
+                        		break;
+                        	default: 
+                        		//TODO MAA
+                        		break;
+                        	}
+                        }
+                        else if(event instanceof NextGenBusMessageReplyRequestEvent)
+                        {
+                        	drawCpuReplyRequest(pgti,event);
+                        }
+                        else if(event instanceof NextGenBusMessageEvent)
+                        {
+                        	switch(((NextGenBusMessageEvent)event).type)
+                        	{
+                        	case ACTIVATE: 
+                        		//TODO MAA
+                        		break;
+                        	case COMPLETED: 
+                        		drawCpuMessageCompleted(pgti, event);
+                        		break;
+                        	case REPLY_REQUEST: 
+                        		break;
+                        	case REQUEST: 
+                        		drawCpuMessageRequest(pgti, event);
+                        		break;
+                    		default: 
+                    			//TODO MAA
+                    			break;
+                        	}
+                        	
+                        }
+                        else 
+                        {
+                        	//TODO MAA: Should never occour? 
+                        }
                 }
 
                 Boolean cond_85 = null;
@@ -1045,7 +1117,7 @@ public class TracefileVisitor
             ptdr.setY(ov_uypos);
         }
     }
-
+ 
     private void drawOvMarker(GenericTabItem pgti, Long x1, Long y1, Long x2, Long y2, Color clr)
         throws CGException
     {
@@ -1260,111 +1332,67 @@ public class TracefileVisitor
         }
     }
 
-    private void drawOvThreadCreate(GenericTabItem pgti, IOmlThreadCreate pitc)
-        throws CGException
-    {
-        Long cpunm = null;
-        cpunm = pitc.getCpunm();
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+    private void Object2ObjectArrow(GenericTabItem pgti, tdObject psrc, tdObject pdest, String pstr)
+            throws CGException
         {
-            updateOvCpu(pgti, cpu);
-            Long x1 = null;
-            x1 = cpu.getX();
-            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long tmpVal_19 = null;
-            tmpVal_19 = cpu.getY();
-            Long y1 = null;
-            y1 = tmpVal_19;
-            Long tmpVal_20 = null;
-            tmpVal_20 = y1;
-            Long y2 = null;
-            y2 = tmpVal_20;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
+            Long psx = null;
+            psx = psrc.getX();
+            Long psy = null;
+            psy = psrc.getY();
+            Long pdx = null;
+            pdx = pdest.getX();
+            Long pdy = null;
+            pdy = pdest.getY();
+            Line line = new Line(psx, psy, psx, new Long(psy.longValue() + (new Long(20L)).longValue()));
+            NormalLabel lbl = null;
+            org.eclipse.swt.graphics.Font arg_18 = null;
+            arg_18 = pgti.getCurrentFont();
+            lbl = new NormalLabel(pstr, arg_18);
+            line.setLineWidth(new Long(3L));
+            line.setForegroundColor(ColorConstants.blue);
+            pgti.addFigure(line);
+            line = (Line)UTIL.clone(new Line(pdx, new Long(pdy.longValue() + (new Long(20L)).longValue()), pdx, new Long(pdy.longValue() + (new Long(40L)).longValue())));
+            line.setLineWidth(new Long(3L));
+            line.setForegroundColor(ColorConstants.blue);
+            pgti.addFigure(line);
+            line = (Line)UTIL.clone(new Line(psx, new Long(psy.longValue() + (new Long(20L)).longValue()), pdx, new Long(psy.longValue() + (new Long(20L)).longValue())));
+            line.setForegroundColor(ColorConstants.blue);
+            pgti.addFigure(line);
+            if((new Boolean(psx.longValue() < pdx.longValue())).booleanValue())
+            {
+                Point pt = new Point((new Long(psx.longValue() + (new Long(20L)).longValue())).longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
+                lbl.setLocation(pt);
+                pgti.addFigure(lbl);
+                line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
+                line.setForegroundColor(ColorConstants.blue);
+                pgti.addFigure(line);
+                line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
+                line.setForegroundColor(ColorConstants.blue);
+                pgti.addFigure(line);
+            } else
+            {
+                Point pt = null;
+                Long arg_56 = null;
+                Long var2_61 = null;
+                Dimension tmpRec_62 = null;
+                tmpRec_62 = lbl.getSize();
+                var2_61 = new Long(tmpRec_62.width);
+                arg_56 = new Long((new Long(psx.longValue() - (new Long(20L)).longValue())).longValue() - var2_61.longValue());
+                pt = new Point(arg_56.longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
+                lbl.setLocation(pt);
+                pgti.addFigure(lbl);
+                line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue())));
+                line.setForegroundColor(ColorConstants.blue);
+                pgti.addFigure(line);
+                line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue())));
+                line.setForegroundColor(ColorConstants.blue);
+                pgti.addFigure(line);
+            }
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(40L)).longValue())));
+            psrc.setY(ov_uypos);
+            pdest.setY(ov_uypos);
         }
-    }
-
-    private void drawCpuThreadCreate(GenericTabItem pgti, IOmlThreadCreate pitc)
-        throws CGException
-    {
-        tdThread thr = null;
-        Long par_5 = null;
-        par_5 = pitc.getId();
-        thr = data.getThread(par_5);
-        Long objref = null;
-        Boolean cond_8 = null;
-        cond_8 = pitc.hasObjref();
-        if(cond_8.booleanValue())
-            objref = pitc.getObjref();
-        else
-            objref = new Long(0L);
-        Long cpunm = null;
-        cpunm = pitc.getCpunm();
-        tdCPU tmpVal_10 = null;
-        tmpVal_10 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_10;
-        tdObject obj = null;
-        obj = data.getObject(objref);
-        thr.pushCurrentObject(objref);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateCpuObject(pgti, cpu, obj);
-            Long x1 = null;
-            x1 = obj.getX();
-            Long x2 = x1;
-            Long tmpVal_26 = null;
-            tmpVal_26 = obj.getY();
-            Long y1 = null;
-            y1 = tmpVal_26;
-            Long tmpVal_27 = null;
-            tmpVal_27 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-            Long y2 = null;
-            y2 = tmpVal_27;
-            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-            obj.setY(y2);
-        }
-    }
-
-    private void drawOvThreadSwapIn(GenericTabItem pgti, IOmlThreadSwapIn pitsw)
-        throws CGException
-    {
-        Long cpunm = null;
-        cpunm = pitsw.getCpunm();
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvCpu(pgti, cpu);
-            Long x1 = null;
-            x1 = cpu.getX();
-            Long x2 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
-            Long tmpVal_21 = null;
-            tmpVal_21 = cpu.getY();
-            Long y1 = null;
-            y1 = tmpVal_21;
-            Long tmpVal_22 = null;
-            tmpVal_22 = y1;
-            Long y2 = null;
-            y2 = tmpVal_22;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-            drawOvSwapInImage(pgti, x1, y1);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-        }
-        Long par_38 = null;
-        par_38 = pitsw.getId();
-        cpu.setCurrentThread(par_38);
-    }
-
+    
     private void drawOvSwapInImage(GenericTabItem pgti, Long x, Long y)
         throws CGException
     {
@@ -1382,22 +1410,34 @@ public class TracefileVisitor
         }
     }
 
-    private void drawCpuThreadSwapIn(GenericTabItem pgti, IOmlThreadSwapIn pitsw)
+    private void drawCpuThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
         throws CGException
     {
+        
         Long objref = null;
         Boolean cond_6 = null;
-        cond_6 = pitsw.hasObjref();
+        //cond_6 = pitsw.hasObjref();
+        cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
+        
         if(cond_6.booleanValue())
-            objref = pitsw.getObjref();
+        {
+            //objref = pitsw.getObjref();
+        	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
+        }
         else
             objref = new Long(0L);
         Long thrid = null;
-        thrid = pitsw.getId();
+        
+        //thrid = pitsw.getId();
+        thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
+        
         tdThread thr = null;
         thr = data.getThread(thrid);
         Long cpunm = null;
-        cpunm = pitsw.getCpunm();
+        
+        //cpunm = pitsw.getCpunm();
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        
         tdObject obj = null;
         obj = data.getObject(objref);
         tdCPU tmpVal_13 = null;
@@ -1443,131 +1483,7 @@ public class TracefileVisitor
             pgti.addFigure(imagefig);
         }
     }
-
-    private void drawOvDelayedThreadSwapIn(GenericTabItem pgti, IOmlDelayedThreadSwapIn pitsw)
-        throws CGException
-    {
-        Long cpunm = null;
-        cpunm = pitsw.getCpunm();
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvCpu(pgti, cpu);
-            Long tmpVal_15 = null;
-            tmpVal_15 = cpu.getX();
-            Long x1 = null;
-            x1 = tmpVal_15;
-            Long tmpVal_16 = null;
-            tmpVal_16 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
-            Long x2 = null;
-            x2 = tmpVal_16;
-            Long tmpVal_21 = null;
-            tmpVal_21 = cpu.getY();
-            Long y1 = null;
-            y1 = tmpVal_21;
-            Long tmpVal_22 = null;
-            tmpVal_22 = y1;
-            Long y2 = null;
-            y2 = tmpVal_22;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.orange);
-            drawOvSwapInImage(pgti, x1, y1);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-        }
-        Long par_38 = null;
-        par_38 = pitsw.getId();
-        cpu.setCurrentThread(par_38);
-    }
-
-    private void drawCpuDelayedThreadSwapIn(GenericTabItem pgti, IOmlDelayedThreadSwapIn pitsw)
-        throws CGException
-    {
-        Long objref = null;
-        Boolean cond_6 = null;
-        cond_6 = pitsw.hasObjref();
-        if(cond_6.booleanValue())
-            objref = pitsw.getObjref();
-        else
-            objref = new Long(0L);
-        Long thrid = null;
-        thrid = pitsw.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long cpunm = null;
-        cpunm = pitsw.getCpunm();
-        tdObject obj = null;
-        obj = data.getObject(objref);
-        tdCPU tmpVal_13 = null;
-        tmpVal_13 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_13;
-        cpu.setCurrentThread(thrid);
-        thr.pushCurrentObject(objref);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateCpuObject(pgti, cpu, obj);
-            Long tmpVal_27 = null;
-            tmpVal_27 = obj.getX();
-            Long x1 = null;
-            x1 = tmpVal_27;
-            Long tmpVal_28 = null;
-            tmpVal_28 = x1;
-            Long x2 = null;
-            x2 = tmpVal_28;
-            Long tmpVal_29 = null;
-            tmpVal_29 = obj.getY();
-            Long y1 = null;
-            y1 = tmpVal_29;
-            Long tmpVal_30 = null;
-            tmpVal_30 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-            Long y2 = null;
-            y2 = tmpVal_30;
-            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-            drawCpuSwapInImage(pgti, x1, y1);
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-            obj.setY(y2);
-        }
-    }
-
-    private void drawOvThreadSwapOut(GenericTabItem pgti, IOmlThreadSwapOut pitsw)
-        throws CGException
-    {
-        Long cpunm = null;
-        cpunm = pitsw.getCpunm();
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvCpu(pgti, cpu);
-            Long tmpVal_15 = null;
-            tmpVal_15 = cpu.getX();
-            Long x1 = null;
-            x1 = tmpVal_15;
-            Long tmpVal_16 = null;
-            tmpVal_16 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long x2 = null;
-            x2 = tmpVal_16;
-            Long tmpVal_19 = null;
-            tmpVal_19 = cpu.getY();
-            Long y1 = null;
-            y1 = tmpVal_19;
-            Long tmpVal_20 = null;
-            tmpVal_20 = y1;
-            Long y2 = null;
-            y2 = tmpVal_20;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-            drawOvSwapOutImage(pgti, x1, y1);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-        }
-        cpu.setCurrentThread(null);
-    }
-
+    
     private void drawOvSwapOutImage(GenericTabItem pgti, Long x, Long y)
         throws CGException
     {
@@ -1583,56 +1499,6 @@ public class TracefileVisitor
             imagefig.setSize(16, 20);
             pgti.addFigure(imagefig);
         }
-    }
-
-    private void drawCpuThreadSwapOut(GenericTabItem pgti, IOmlThreadSwapOut pitsw)
-        throws CGException
-    {
-        Long objref = null;
-        Boolean cond_6 = null;
-        cond_6 = pitsw.hasObjref();
-        if(cond_6.booleanValue())
-            objref = pitsw.getObjref();
-        else
-            objref = new Long(0L);
-        Long thrid = null;
-        thrid = pitsw.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long cpunm = null;
-        cpunm = pitsw.getCpunm();
-        tdObject obj = null;
-        obj = data.getObject(objref);
-        tdCPU tmpVal_13 = null;
-        tmpVal_13 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_13;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateCpuObject(pgti, cpu, obj);
-            Long tmpVal_23 = null;
-            tmpVal_23 = obj.getX();
-            Long x1 = null;
-            x1 = tmpVal_23;
-            Long tmpVal_24 = null;
-            tmpVal_24 = x1;
-            Long x2 = null;
-            x2 = tmpVal_24;
-            Long tmpVal_25 = null;
-            tmpVal_25 = obj.getY();
-            Long y1 = null;
-            y1 = tmpVal_25;
-            Long tmpVal_26 = null;
-            tmpVal_26 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-            Long y2 = null;
-            y2 = tmpVal_26;
-            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-            drawCpuSwapOutImage(pgti, x1, y1);
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-            obj.setY(y2);
-        }
-        cpu.setCurrentThread(null);
-        thr.popCurrentObject();
     }
 
     private void drawCpuSwapOutImage(GenericTabItem pgti, Long x, Long y)
@@ -1652,68 +1518,15 @@ public class TracefileVisitor
         }
     }
 
-    private void drawOvThreadKill(GenericTabItem pgti, IOmlThreadKill pitsw)
-        throws CGException
-    {
-        Long cpunm = null;
-        cpunm = pitsw.getCpunm();
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvCpu(pgti, cpu);
-            Long x1 = null;
-            x1 = cpu.getX();
-            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long y1 = null;
-            y1 = cpu.getY();
-            Long y2 = y1;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-        }
-    }
-
-    private void drawCpuThreadKill(GenericTabItem pgti, IOmlThreadKill pitk)
-        throws CGException
-    {
-        Long thrid = null;
-        thrid = pitk.getId();
-        tdThread thr = null;
-        thr = data.getThread(thrid);
-        Long cpunm = null;
-        cpunm = pitk.getCpunm();
-        tdCPU tmpVal_8 = null;
-        tmpVal_8 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_8;
-        tdObject obj = null;
-        obj = thr.getCurrentObject();
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateCpuObject(pgti, cpu, obj);
-            Long x1 = null;
-            x1 = obj.getX();
-            Long x2 = x1;
-            Long y1 = null;
-            y1 = obj.getY();
-            Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-            obj.setY(y2);
-        }
-        thr.popCurrentObject();
-    }
-
-    public void drawOvOpRequest(GenericTabItem pgti, IOmlOpRequest pior)
+    //Operation Event
+    private void drawOvOpRequest(GenericTabItem pgti, INextGenEvent pior)
         throws CGException
     {
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
-            cpunm = pior.getCpunm();
+            //cpunm = pior.getCpunm();
+            cpunm = new Long(((NextGenOperationEvent)pior).thread.object.cpu.id);
             tdCPU tmpVal_9 = null;
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
@@ -1723,20 +1536,30 @@ public class TracefileVisitor
         }
         Boolean cond_17 = null;
         Boolean unArg_18 = null;
-        unArg_18 = pior.getAsynchronous();
+        
+        //unArg_18 = pior.getAsynchronous();
+        unArg_18 = ((NextGenOperationEvent)pior).operation.isAsync;
+        
         cond_17 = new Boolean(!unArg_18.booleanValue());
         if(cond_17.booleanValue())
         {
             Boolean cond_19 = null;
-            cond_19 = pior.hasObjref();
+            //cond_19 = pior.hasObjref();
+            cond_19 = true; //TODO MAA
+            
             if(cond_19.booleanValue())
             {
                 Long thrid = null;
-                thrid = pior.getId();
+                //thrid = pior.getId();
+                thrid = ((NextGenOperationEvent)pior).thread.id;
                 Long cpunm = null;
-                cpunm = pior.getCpunm();
+                //cpunm = pior.getCpunm();
+                cpunm = new Long(((NextGenOperationEvent)pior).thread.object.cpu.id);
+                
                 Long objref = null;
-                objref = pior.getObjref();
+                //objref = pior.getObjref();
+                objref = new Long(((NextGenOperationEvent)pior).object.id);
+                
                 tdCPU tmpVal_25 = null;
                 tmpVal_25 = data.getCPU(cpunm);
                 tdCPU cpu = null;
@@ -1744,7 +1567,8 @@ public class TracefileVisitor
                 Boolean cond_27 = null;
                 Boolean unArg_28 = null;
                 Long par_30 = null;
-                par_30 = pior.getObstime();
+                //par_30 = pior.getObstime();
+                par_30 = ((NextGenOperationEvent)pior).time;
                 unArg_28 = cpu.hasObjectAt(objref, par_30);
                 cond_27 = new Boolean(!unArg_28.booleanValue());
                 if(cond_27.booleanValue())
@@ -1757,17 +1581,23 @@ public class TracefileVisitor
         }
     }
 
-    public void drawCpuOpRequest(GenericTabItem pgti, IOmlOpRequest pior)
+    private void drawCpuOpRequest(GenericTabItem pgti, INextGenEvent pior)
         throws CGException
     {
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long thrid = null;
-            thrid = pior.getId();
+            //thrid = pior.getId();
+            thrid = ((NextGenOperationEvent)pior).thread.id;
+            
             Long objid = null;
-            objid = pior.getObjref();
+            //objid = pior.getObjref();
+            objid = new Long(((NextGenOperationEvent)pior).object.id);
+            
             Long cpunm = null;
-            cpunm = pior.getCpunm();
+            //cpunm = pior.getCpunm();
+            cpunm = new Long(((NextGenOperationEvent)pior).object.cpu.id);
+            
             tdCPU tmpVal_10 = null;
             tmpVal_10 = data.getCPU(cpunm);
             tdCPU cpu = null;
@@ -1793,11 +1623,12 @@ public class TracefileVisitor
                 lbl = new NormalLabel(new String("R"), arg_29);
                 String str = null;
                 Boolean cond_31 = null;
-                cond_31 = pior.hasArgs();
+                //cond_31 = pior.hasArgs(); //TODO MAA: Should be implemented in NextGen data?
+                cond_31 = false;
                 if(cond_31.booleanValue())
                 {
                     String var2_33 = null;
-                    var2_33 = pior.getArgs();
+                    //var2_33 = pior.getArgs(); //TODO MAA
                     str = (new String(" with arguments ")).concat(var2_33);
                 } else
                 {
@@ -1810,7 +1641,8 @@ public class TracefileVisitor
                 String var1_38 = null;
                 String var1_39 = null;
                 String var2_41 = null;
-                var2_41 = pior.getOpname();
+                //var2_41 = pior.getOpname();
+                var2_41 = ((NextGenOperationEvent)pior).operation.name;
                 var1_39 = (new String(" Requested ")).concat(var2_41);
                 var1_38 = var1_39.concat(new String(" on object "));
                 var1_37 = var1_38.concat(nat2str(objid));
@@ -1830,13 +1662,14 @@ public class TracefileVisitor
         }
     }
 
-    public void drawOvOpActivate(GenericTabItem pgti, IOmlOpActivate pioa)
+    private void drawOvOpActivate(GenericTabItem pgti, INextGenEvent pioa)
         throws CGException
     {
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
-            cpunm = pioa.getCpunm();
+            //cpunm = pioa.getCpunm();
+            cpunm = new Long(((NextGenOperationEvent)pioa).object.cpu.id);
             tdCPU tmpVal_9 = null;
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
@@ -1846,29 +1679,36 @@ public class TracefileVisitor
         }
     }
 
-    public void drawCpuOpActivate(GenericTabItem pgti, IOmlOpActivate pioa)
+    private void drawCpuOpActivate(GenericTabItem pgti, INextGenEvent pioa)
         throws CGException
     {
         Long thrid = null;
-        thrid = pioa.getId();
+        //thrid = pioa.getId();
+        thrid = ((NextGenOperationEvent)pioa).thread.id;
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
         srcobj = thr.getCurrentObject();
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
-        unArg_10 = pioa.hasObjref();
+        //unArg_10 = pioa.hasObjref(); //TODO MAA
+        unArg_10 = true;
+        
         cond_9 = new Boolean(!unArg_10.booleanValue());
         if(!cond_9.booleanValue())
         {
             Long destobjref = null;
-            destobjref = pioa.getObjref();
+            //destobjref = pioa.getObjref();
+            destobjref = new Long(((NextGenOperationEvent)pioa).object.id);
+            
             tdObject destobj = null;
             destobj = data.getObject(destobjref);
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
                 Long cpunm = null;
-                cpunm = pioa.getCpunm();
+                //cpunm = pioa.getCpunm();
+                cpunm = new Long(((NextGenOperationEvent)pioa).object.cpu.id);
+                
                 tdCPU tmpVal_20 = null;
                 tmpVal_20 = data.getCPU(cpunm);
                 tdCPU cpu = null;
@@ -1891,7 +1731,9 @@ public class TracefileVisitor
                     NormalLabel lbl = null;
                     String arg_49 = null;
                     String var2_52 = null;
-                    var2_52 = pioa.getOpname();
+                    //var2_52 = pioa.getOpname();
+                    var2_52 = ((NextGenOperationEvent)pioa).operation.name;
+                    
                     arg_49 = (new String("A ")).concat(var2_52);
                     org.eclipse.swt.graphics.Font arg_50 = null;
                     arg_50 = pgti.getCurrentFont();
@@ -1907,82 +1749,24 @@ public class TracefileVisitor
                     updateCpuObject(pgti, cpu, srcobj);
                     updateCpuObject(pgti, cpu, destobj);
                     String tmpArg_v_37 = null;
-                    tmpArg_v_37 = pioa.getOpname();
+                    //tmpArg_v_37 = pioa.getOpname();
+                    tmpArg_v_37 = ((NextGenOperationEvent)pioa).operation.name;
+                    
                     Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
                 }
             }
             thr.pushCurrentObject(destobjref);
         }
-    }
+    } 
 
-    private void Object2ObjectArrow(GenericTabItem pgti, tdObject psrc, tdObject pdest, String pstr)
-        throws CGException
-    {
-        Long psx = null;
-        psx = psrc.getX();
-        Long psy = null;
-        psy = psrc.getY();
-        Long pdx = null;
-        pdx = pdest.getX();
-        Long pdy = null;
-        pdy = pdest.getY();
-        Line line = new Line(psx, psy, psx, new Long(psy.longValue() + (new Long(20L)).longValue()));
-        NormalLabel lbl = null;
-        org.eclipse.swt.graphics.Font arg_18 = null;
-        arg_18 = pgti.getCurrentFont();
-        lbl = new NormalLabel(pstr, arg_18);
-        line.setLineWidth(new Long(3L));
-        line.setForegroundColor(ColorConstants.blue);
-        pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(pdx, new Long(pdy.longValue() + (new Long(20L)).longValue()), pdx, new Long(pdy.longValue() + (new Long(40L)).longValue())));
-        line.setLineWidth(new Long(3L));
-        line.setForegroundColor(ColorConstants.blue);
-        pgti.addFigure(line);
-        line = (Line)UTIL.clone(new Line(psx, new Long(psy.longValue() + (new Long(20L)).longValue()), pdx, new Long(psy.longValue() + (new Long(20L)).longValue())));
-        line.setForegroundColor(ColorConstants.blue);
-        pgti.addFigure(line);
-        if((new Boolean(psx.longValue() < pdx.longValue())).booleanValue())
-        {
-            Point pt = new Point((new Long(psx.longValue() + (new Long(20L)).longValue())).longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
-            lbl.setLocation(pt);
-            pgti.addFigure(lbl);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
-            line.setForegroundColor(ColorConstants.blue);
-            pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
-            line.setForegroundColor(ColorConstants.blue);
-            pgti.addFigure(line);
-        } else
-        {
-            Point pt = null;
-            Long arg_56 = null;
-            Long var2_61 = null;
-            Dimension tmpRec_62 = null;
-            tmpRec_62 = lbl.getSize();
-            var2_61 = new Long(tmpRec_62.width);
-            arg_56 = new Long((new Long(psx.longValue() - (new Long(20L)).longValue())).longValue() - var2_61.longValue());
-            pt = new Point(arg_56.longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
-            lbl.setLocation(pt);
-            pgti.addFigure(lbl);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue())));
-            line.setForegroundColor(ColorConstants.blue);
-            pgti.addFigure(line);
-            line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue())));
-            line.setForegroundColor(ColorConstants.blue);
-            pgti.addFigure(line);
-        }
-        ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(40L)).longValue())));
-        psrc.setY(ov_uypos);
-        pdest.setY(ov_uypos);
-    }
-
-    public void drawOvOpCompleted(GenericTabItem pgti, IOmlOpCompleted pioc)
+    private void drawOvOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
         throws CGException
     {
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
-            cpunm = pioc.getCpunm();
+            //cpunm = pioc.getCpunm();
+            cpunm = new Long(((NextGenOperationEvent)pioc).object.cpu.id);
             tdCPU tmpVal_9 = null;
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
@@ -1992,18 +1776,22 @@ public class TracefileVisitor
         }
     }
 
-    public void drawCpuOpCompleted(GenericTabItem pgti, IOmlOpCompleted pioc)
+    private void drawCpuOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
         throws CGException
     {
         Long thrid = null;
-        thrid = pioc.getId();
+        //thrid = pioc.getId();
+        thrid = ((NextGenOperationEvent)pioc).thread.id;
+        
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
         srcobj = thr.getCurrentObject();
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
-        unArg_10 = pioc.hasObjref();
+        //unArg_10 = pioc.hasObjref(); //TODO MAA
+        unArg_10 = true;
+        
         cond_9 = new Boolean(!unArg_10.booleanValue());
         if(!cond_9.booleanValue())
         {
@@ -2013,7 +1801,8 @@ public class TracefileVisitor
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
                 Long cpunm = null;
-                cpunm = pioc.getCpunm();
+                //cpunm = pioc.getCpunm();
+                cpunm = new Long(((NextGenOperationEvent)pioc).object.cpu.id);
                 tdCPU tmpVal_19 = null;
                 tmpVal_19 = data.getCPU(cpunm);
                 tdCPU cpu = null;
@@ -2039,18 +1828,20 @@ public class TracefileVisitor
                     Long y2 = null;
                     y2 = tmpVal_45;
                     Long objid = null;
-                    objid = pioc.getObjref();
+                    //objid = pioc.getObjref();
+                    objid = new Long(((NextGenOperationEvent)pioc).object.id);
                     NormalLabel lbl = null;
                     org.eclipse.swt.graphics.Font arg_50 = null;
                     arg_50 = pgti.getCurrentFont();
                     lbl = new NormalLabel(new String("C"), arg_50);
                     String str = null;
                     Boolean cond_52 = null;
-                    cond_52 = pioc.hasRes();
+                    //cond_52 = pioc.hasRes(); //TODO MAA: Add return value to data structure?
+                    cond_52 = false;
                     if(cond_52.booleanValue())
                     {
                         String var2_54 = null;
-                        var2_54 = pioc.getRes();
+                        //var2_54 = pioc.getRes(); //TODO MAA
                         str = (new String(" returns ")).concat(var2_54);
                     } else
                     {
@@ -2063,7 +1854,8 @@ public class TracefileVisitor
                     String var1_59 = null;
                     String var1_60 = null;
                     String var2_62 = null;
-                    var2_62 = pioc.getOpname();
+                    //var2_62 = pioc.getOpname();
+                    var2_62 = ((NextGenOperationEvent)pioc).operation.name;
                     var1_60 = (new String(" Completed ")).concat(var2_62);
                     var1_59 = var1_60.concat(new String(" on object "));
                     var1_58 = var1_59.concat(nat2str(objid));
@@ -2088,14 +1880,19 @@ public class TracefileVisitor
             }
         }
     }
-
-    private void drawOvMessageRequest(GenericTabItem pgti, IOmlMessageRequest pitmr)
+   
+    //Message Event
+    private void drawOvMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
         throws CGException
     {
         Long busid = null;
-        busid = pitmr.getBusid();
+        //busid = pitmr.getBusid();
+        busid = new Long(((NextGenBusMessageEvent)pitmr).message.bus.id);
+        
         Long msgid = null;
-        msgid = pitmr.getMsgid();
+        //msgid = pitmr.getMsgid();
+        msgid = ((NextGenBusMessageEvent)pitmr).message.id;
+        
         tdBUS bus = null;
         bus = data.getBUS(busid);
         tdMessage msg = null;
@@ -2141,13 +1938,17 @@ public class TracefileVisitor
         }
     }
 
-    private void drawCpuMessageRequest(GenericTabItem pgti, IOmlMessageRequest pitmr)
+    private void drawCpuMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
         throws CGException
     {
         Long busid = null;
-        busid = pitmr.getBusid();
+        //busid = pitmr.getBusid();
+        busid = new Long(((NextGenBusMessageEvent)pitmr).message.bus.id);
+        
         Long msgid = null;
-        msgid = pitmr.getMsgid();
+        //msgid = pitmr.getMsgid();
+        msgid = ((NextGenBusMessageEvent)pitmr).message.id;
+        
         tdBUS bus = null;
         bus = data.getBUS(busid);
         tdMessage msg = null;
@@ -2195,107 +1996,13 @@ public class TracefileVisitor
         }
     }
 
-    private void drawOvReplyRequest(GenericTabItem pgti, IOmlReplyRequest pitrr)
-        throws CGException
-    {
-        Long busid = null;
-        busid = pitrr.getBusid();
-        Long msgid = null;
-        msgid = pitrr.getMsgid();
-        tdBUS bus = null;
-        bus = data.getBUS(busid);
-        tdMessage msg = null;
-        msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
-            Long x1 = null;
-            x1 = bus.getX();
-            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long tmpVal_25 = null;
-            tmpVal_25 = bus.getY();
-            Long y1 = null;
-            y1 = tmpVal_25;
-            Long tmpVal_26 = null;
-            tmpVal_26 = y1;
-            Long y2 = null;
-            y2 = tmpVal_26;
-            Long ycpu = null;
-            Long var1_29 = null;
-            tdCPU obj_30 = null;
-            Long par_31 = null;
-            par_31 = msg.getFromCpu();
-            obj_30 = data.getCPU(par_31);
-            var1_29 = obj_30.getY();
-            ycpu = new Long(var1_29.longValue() + (new Long(8L)).longValue());
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
-            String tmpArg_v_47 = null;
-            String var1_48 = null;
-            String var2_50 = null;
-            var2_50 = msg.getDescr();
-            var1_48 = (new String(" return from ")).concat(var2_50);
-            tmpArg_v_47 = var1_48.concat(new String(" "));
-            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
-            bus.setX(x2);
-        }
-    }
-
-    private void drawCpuReplyRequest(GenericTabItem pgti, IOmlReplyRequest pitrr)
-        throws CGException
-    {
-        Long busid = null;
-        busid = pitrr.getBusid();
-        Long msgid = null;
-        msgid = pitrr.getMsgid();
-        tdBUS bus = null;
-        bus = data.getBUS(busid);
-        tdMessage msg = null;
-        msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(10L)).longValue())));
-            updateCpuBus(pgti, bus);
-            Long x1 = null;
-            x1 = bus.getX();
-            Long x2 = x1;
-            Long tmpVal_23 = null;
-            tmpVal_23 = bus.getY();
-            Long y1 = null;
-            y1 = tmpVal_23;
-            Long tmpVal_24 = null;
-            tmpVal_24 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-            Long y2 = null;
-            y2 = tmpVal_24;
-            tdThread thr = null;
-            Long par_29 = null;
-            par_29 = msg.getFromThread();
-            thr = data.getThread(par_29);
-            tdObject obj = null;
-            obj = thr.getCurrentObject();
-            Long xobj = null;
-            Long var1_34 = null;
-            var1_34 = obj.getX();
-            xobj = new Long(var1_34.longValue() - (new Long(10L)).longValue());
-            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
-            String tmpArg_v_50 = null;
-            String var1_51 = null;
-            String var2_53 = null;
-            var2_53 = msg.getDescr();
-            var1_51 = (new String(" return from ")).concat(var2_53);
-            tmpArg_v_50 = var1_51.concat(new String(" "));
-            drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-            bus.setY(y2);
-        }
-    }
-
-    private void drawOvMessageActivate(GenericTabItem pgti, IOmlMessageActivate pitma)
+    private void drawOvMessageActivate(GenericTabItem pgti, INextGenEvent pitma)
         throws CGException
     {
         Long msgid = null;
-        msgid = pitma.getMsgid();
+        //msgid = pitma.getMsgid();
+        msgid = ((NextGenBusMessageEvent)pitma).message.id;
+        
         Long busid = null;
         tdMessage obj_7 = null;
         obj_7 = data.getMessage(msgid);
@@ -2327,11 +2034,13 @@ public class TracefileVisitor
         }
     }
 
-    private void drawOvMessageCompleted(GenericTabItem pgti, IOmlMessageCompleted pitmc)
+    private void drawOvMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
         throws CGException
     {
         Long msgid = null;
-        msgid = pitmc.getMsgid();
+        //msgid = pitmc.getMsgid();
+        msgid = ((NextGenBusMessageEvent)pitmc).message.id;
+        
         tdMessage msg = null;
         msg = data.getMessage(msgid);
         Long busid = null;
@@ -2391,11 +2100,13 @@ public class TracefileVisitor
         }
     }
 
-    private void drawCpuMessageCompleted(GenericTabItem pgti, IOmlMessageCompleted pitmc)
+    private void drawCpuMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
         throws CGException
     {
         Long msgid = null;
-        msgid = pitmc.getMsgid();
+        //msgid = pitmc.getMsgid();
+        msgid = ((NextGenBusMessageEvent)pitmc).message.id;
+        
         tdMessage msg = null;
         msg = data.getMessage(msgid);
         Long busid = null;
@@ -2469,14 +2180,517 @@ public class TracefileVisitor
         }
     }
 
-    public void resetLastDrawn()
+    //Thread Event
+    private void drawOvThreadCreate(GenericTabItem pgti, NextGenThreadEvent pitc)
         throws CGException
     {
-        lastLower = (HashMap)UTIL.clone(new HashMap());
-        lastUpper = (HashMap)UTIL.clone(new HashMap());
+        Long cpunm = null;
+       
+        cpunm = new Long(((NextGenThreadEvent)pitc).thread.object.cpu.id); 
+        tdCPU tmpVal_6 = null;
+        tmpVal_6 = data.getCPU(cpunm);
+        tdCPU cpu = null;
+        cpu = tmpVal_6;
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            updateOvCpu(pgti, cpu);
+            Long x1 = null;
+            x1 = cpu.getX();
+            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
+            Long tmpVal_19 = null;
+            tmpVal_19 = cpu.getY();
+            Long y1 = null;
+            y1 = tmpVal_19;
+            Long tmpVal_20 = null;
+            tmpVal_20 = y1;
+            Long y2 = null;
+            y2 = tmpVal_20;
+            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
+            cpu.setX(x2);
+        }
     }
 
-    public Long lastLowerTime(Long pthr)
+    private void drawCpuThreadCreate(GenericTabItem pgti, INextGenEvent pitc)
+        throws CGException
+    {
+        tdThread thr = null;
+        Long par_5 = null;
+        
+        //par_5 = pitc.getId();
+        par_5 = ((NextGenThreadEvent)pitc).thread.id;
+        
+        thr = data.getThread(par_5);
+        Long objref = null;
+        Boolean cond_8 = null;
+        
+        //cond_8 = pitc.hasObjref();
+        cond_8 = ((NextGenThreadEvent)pitc).thread.object != null;
+        
+        if(cond_8.booleanValue())
+        {
+            //objref = pitc.getObjref();
+        	objref = new Long(((NextGenThreadEvent)pitc).thread.object.id);
+        }
+        else
+            objref = new Long(0L);
+        
+        Long cpunm = null;
+        //cpunm = pitc.getCpunm();
+        cpunm = new Long(((NextGenThreadEvent)pitc).thread.object.cpu.id);
+        
+        tdCPU tmpVal_10 = null;
+        tmpVal_10 = data.getCPU(cpunm);
+        tdCPU cpu = null;
+        cpu = tmpVal_10;
+        tdObject obj = null;
+        obj = data.getObject(objref);
+        thr.pushCurrentObject(objref);
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            updateCpuObject(pgti, cpu, obj);
+            Long x1 = null;
+            x1 = obj.getX();
+            Long x2 = x1;
+            Long tmpVal_26 = null;
+            tmpVal_26 = obj.getY();
+            Long y1 = null;
+            y1 = tmpVal_26;
+            Long tmpVal_27 = null;
+            tmpVal_27 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+            Long y2 = null;
+            y2 = tmpVal_27;
+            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+            obj.setY(y2);
+        }
+    }
+
+    private void drawOvThreadKill(GenericTabItem pgti, INextGenEvent pitsw)
+        throws CGException
+    {
+        Long cpunm = null;
+        //cpunm = pitsw.getCpunm();
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        
+        tdCPU tmpVal_6 = null;
+        tmpVal_6 = data.getCPU(cpunm);
+        tdCPU cpu = null;
+        cpu = tmpVal_6;
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            updateOvCpu(pgti, cpu);
+            Long x1 = null;
+            x1 = cpu.getX();
+            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
+            Long y1 = null;
+            y1 = cpu.getY();
+            Long y2 = y1;
+            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
+            cpu.setX(x2);
+        }
+    }
+
+    private void drawCpuThreadKill(GenericTabItem pgti, INextGenEvent pitk)
+        throws CGException
+    {
+
+        
+        Long thrid = null;
+        //thrid = pitk.getId();
+        thrid = new Long(((NextGenThreadEvent)pitk).thread.id);
+        
+        tdThread thr = null;
+        thr = data.getThread(thrid);
+        Long cpunm = null;
+        //cpunm = pitsw.getCpunm();
+        cpunm = new Long(((NextGenThreadEvent)pitk).thread.object.cpu.id);
+        tdCPU tmpVal_8 = null;
+        tmpVal_8 = data.getCPU(cpunm);
+        tdCPU cpu = null;
+        cpu = tmpVal_8;
+        tdObject obj = null;
+        obj = thr.getCurrentObject();
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            updateCpuObject(pgti, cpu, obj);
+            Long x1 = null;
+            x1 = obj.getX();
+            Long x2 = x1;
+            Long y1 = null;
+            y1 = obj.getY();
+            Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+            obj.setY(y2);
+        }
+        thr.popCurrentObject();
+    }
+    
+    //Thread Swap Event
+    private void drawOvThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
+            throws CGException
+        {
+            Long cpunm = null;
+            
+            //cpunm = pitsw.getCpunm();
+            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+            
+            tdCPU tmpVal_6 = null;
+            tmpVal_6 = data.getCPU(cpunm);
+            tdCPU cpu = null;
+            cpu = tmpVal_6;
+            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+            {
+                updateOvCpu(pgti, cpu);
+                Long x1 = null;
+                x1 = cpu.getX();
+                Long x2 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
+                Long tmpVal_21 = null;
+                tmpVal_21 = cpu.getY();
+                Long y1 = null;
+                y1 = tmpVal_21;
+                Long tmpVal_22 = null;
+                tmpVal_22 = y1;
+                Long y2 = null;
+                y2 = tmpVal_22;
+                drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
+                drawOvSwapInImage(pgti, x1, y1);
+                ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
+                cpu.setX(x2);
+            }
+            Long par_38 = null;
+            
+            //TODO MAA: Is it needed??
+            //par_38 = pitsw.getId();
+            //cpu.setCurrentThread(par_38);
+        }
+    
+    private void drawCpuThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
+            throws CGException
+        {
+
+            Long objref = null;
+            Boolean cond_6 = null;
+            
+            //cond_6 = pitsw.hasObjref();
+            cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
+
+
+            if(cond_6.booleanValue())
+            {
+            	//objref = pitsw.getObjref();
+            	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
+            }
+            else
+                objref = new Long(0L);
+            Long thrid = null;
+            //thrid = pitsw.getId();
+            thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
+            
+            tdThread thr = null;
+            thr = data.getThread(thrid);
+            
+            Long cpunm = null;
+            //cpunm = pitsw.getCpunm();
+            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+            
+            tdObject obj = null;
+            obj = data.getObject(objref);
+            tdCPU tmpVal_13 = null;
+            tmpVal_13 = data.getCPU(cpunm);
+            tdCPU cpu = null;
+            cpu = tmpVal_13;
+            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+            {
+                updateCpuObject(pgti, cpu, obj);
+                Long tmpVal_23 = null;
+                tmpVal_23 = obj.getX();
+                Long x1 = null;
+                x1 = tmpVal_23;
+                Long tmpVal_24 = null;
+                tmpVal_24 = x1;
+                Long x2 = null;
+                x2 = tmpVal_24;
+                Long tmpVal_25 = null;
+                tmpVal_25 = obj.getY();
+                Long y1 = null;
+                y1 = tmpVal_25;
+                Long tmpVal_26 = null;
+                tmpVal_26 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+                Long y2 = null;
+                y2 = tmpVal_26;
+                drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
+                drawCpuSwapOutImage(pgti, x1, y1);
+                ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+                obj.setY(y2);
+            }
+            cpu.setCurrentThread(null);
+            thr.popCurrentObject();
+        }
+    
+    private void drawOvThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
+            throws CGException
+        {
+            Long cpunm = null;
+            //cpunm = pitsw.getCpunm();
+            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+            
+            tdCPU tmpVal_6 = null;
+            tmpVal_6 = data.getCPU(cpunm);
+            tdCPU cpu = null;
+            cpu = tmpVal_6;
+            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+            {
+                updateOvCpu(pgti, cpu);
+                Long tmpVal_15 = null;
+                tmpVal_15 = cpu.getX();
+                Long x1 = null;
+                x1 = tmpVal_15;
+                Long tmpVal_16 = null;
+                tmpVal_16 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
+                Long x2 = null;
+                x2 = tmpVal_16;
+                Long tmpVal_19 = null;
+                tmpVal_19 = cpu.getY();
+                Long y1 = null;
+                y1 = tmpVal_19;
+                Long tmpVal_20 = null;
+                tmpVal_20 = y1;
+                Long y2 = null;
+                y2 = tmpVal_20;
+                drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
+                drawOvSwapOutImage(pgti, x1, y1);
+                ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
+                cpu.setX(x2);
+            }
+            cpu.setCurrentThread(null);
+        }
+    
+    private void drawOvDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
+        throws CGException
+    {
+        Long cpunm = null;
+        //cpunm = pitsw.getCpunm();
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        
+        tdCPU tmpVal_6 = null;
+        tmpVal_6 = data.getCPU(cpunm);
+        tdCPU cpu = null;
+        cpu = tmpVal_6;
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            updateOvCpu(pgti, cpu);
+            Long tmpVal_15 = null;
+            tmpVal_15 = cpu.getX();
+            Long x1 = null;
+            x1 = tmpVal_15;
+            Long tmpVal_16 = null;
+            tmpVal_16 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
+            Long x2 = null;
+            x2 = tmpVal_16;
+            Long tmpVal_21 = null;
+            tmpVal_21 = cpu.getY();
+            Long y1 = null;
+            y1 = tmpVal_21;
+            Long tmpVal_22 = null;
+            tmpVal_22 = y1;
+            Long y2 = null;
+            y2 = tmpVal_22;
+            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.orange);
+            drawOvSwapInImage(pgti, x1, y1);
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
+            cpu.setX(x2);
+        }
+        Long par_38 = null;
+        //TODO MAA: Should it be used?
+        //par_38 = pitsw.getId();
+        //cpu.setCurrentThread(par_38);
+    }
+ 
+    private void drawCpuDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
+        throws CGException
+    {
+        Long objref = null;
+        Boolean cond_6 = null;
+        
+        //cond_6 = pitsw.hasObjref();
+        cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
+        
+        if(cond_6.booleanValue())
+        {
+            //objref = pitsw.getObjref();
+        	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
+        }
+        else
+            objref = new Long(0L);
+        Long thrid = null;
+        tdThread thr = null;
+       
+        //thrid = pitsw.getId();
+        thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
+        thr = data.getThread(thrid);
+        
+        Long cpunm = null;
+        
+        //cpunm = pitsw.getCpunm();
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        
+        tdObject obj = null;
+        obj = data.getObject(objref);
+        tdCPU tmpVal_13 = null;
+        tmpVal_13 = data.getCPU(cpunm);
+        tdCPU cpu = null;
+        cpu = tmpVal_13;
+        cpu.setCurrentThread(thrid);
+        thr.pushCurrentObject(objref);
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            updateCpuObject(pgti, cpu, obj);
+            Long tmpVal_27 = null;
+            tmpVal_27 = obj.getX();
+            Long x1 = null;
+            x1 = tmpVal_27;
+            Long tmpVal_28 = null;
+            tmpVal_28 = x1;
+            Long x2 = null;
+            x2 = tmpVal_28;
+            Long tmpVal_29 = null;
+            tmpVal_29 = obj.getY();
+            Long y1 = null;
+            y1 = tmpVal_29;
+            Long tmpVal_30 = null;
+            tmpVal_30 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+            Long y2 = null;
+            y2 = tmpVal_30;
+            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
+            drawCpuSwapInImage(pgti, x1, y1);
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+            obj.setY(y2);
+        }
+    }
+     
+    //Message Reply Request Event
+    private void drawOvReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
+        throws CGException
+    {
+        Long busid = null;
+        //busid = pitrr.getBusid();
+        busid = new Long(((NextGenBusMessageReplyRequestEvent)pitrr).message.bus.id);
+        
+        Long msgid = null;
+        //msgid = pitrr.getMsgid();
+        msgid = ((NextGenBusMessageReplyRequestEvent)pitrr).message.id;
+        
+        tdBUS bus = null;
+        bus = data.getBUS(busid);
+        tdMessage msg = null;
+        msg = data.getMessage(msgid);
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
+            updateOvBus(pgti, bus);
+            Long x1 = null;
+            x1 = bus.getX();
+            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
+            Long tmpVal_25 = null;
+            tmpVal_25 = bus.getY();
+            Long y1 = null;
+            y1 = tmpVal_25;
+            Long tmpVal_26 = null;
+            tmpVal_26 = y1;
+            Long y2 = null;
+            y2 = tmpVal_26;
+            Long ycpu = null;
+            Long var1_29 = null;
+            tdCPU obj_30 = null;
+            Long par_31 = null;
+            par_31 = msg.getFromCpu();
+            obj_30 = data.getCPU(par_31);
+            var1_29 = obj_30.getY();
+            ycpu = new Long(var1_29.longValue() + (new Long(8L)).longValue());
+            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
+            String tmpArg_v_47 = null;
+            String var1_48 = null;
+            String var2_50 = null;
+            var2_50 = msg.getDescr();
+            var1_48 = (new String(" return from ")).concat(var2_50);
+            tmpArg_v_47 = var1_48.concat(new String(" "));
+            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
+            ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
+            bus.setX(x2);
+        }
+    }
+
+    private void drawCpuReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
+        throws CGException
+    {
+        Long busid = null;
+        //busid = pitrr.getBusid();
+        busid = new Long(((NextGenBusMessageReplyRequestEvent)pitrr).message.bus.id);
+        
+        Long msgid = null;
+        //msgid = pitrr.getMsgid();
+        msgid = ((NextGenBusMessageReplyRequestEvent)pitrr).message.id;
+        
+        tdBUS bus = null;
+        bus = data.getBUS(busid);
+        tdMessage msg = null;
+        msg = data.getMessage(msgid);
+        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+        {
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(10L)).longValue())));
+            updateCpuBus(pgti, bus);
+            Long x1 = null;
+            x1 = bus.getX();
+            Long x2 = x1;
+            Long tmpVal_23 = null;
+            tmpVal_23 = bus.getY();
+            Long y1 = null;
+            y1 = tmpVal_23;
+            Long tmpVal_24 = null;
+            tmpVal_24 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+            Long y2 = null;
+            y2 = tmpVal_24;
+            tdThread thr = null;
+            Long par_29 = null;
+            par_29 = msg.getFromThread();
+            thr = data.getThread(par_29);
+            tdObject obj = null;
+            obj = thr.getCurrentObject();
+            Long xobj = null;
+            Long var1_34 = null;
+            var1_34 = obj.getX();
+            xobj = new Long(var1_34.longValue() - (new Long(10L)).longValue());
+            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
+            String tmpArg_v_50 = null;
+            String var1_51 = null;
+            String var2_53 = null;
+            var2_53 = msg.getDescr();
+            var1_51 = (new String(" return from ")).concat(var2_53);
+            tmpArg_v_50 = var1_51.concat(new String(" "));
+            drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+            bus.setY(y2);
+        }
+    }
+
+    // Helpers
+    private String nat2str(Long num)
+            throws CGException
+        {
+            return num.toString();
+        }
+    
+    private void resetLastDrawn()
+            throws CGException
+        {
+            lastLower = (HashMap)UTIL.clone(new HashMap());
+            lastUpper = (HashMap)UTIL.clone(new HashMap());
+        }
+
+    private Long lastLowerTime(Long pthr)
         throws CGException
     {
         Boolean cond_2 = null;
@@ -2487,15 +2701,7 @@ public class TracefileVisitor
             return new Long(0L);
     }
 
-    public void addFailedLower(Long ptime, Long pthr, String pname)
-        throws CGException
-    {
-        ConjectureLimit e_5 = null;
-        e_5 = new ConjectureLimit(ptime, pthr, pname);
-        failedLower.add(e_5);
-    }
-
-    public Boolean inFailedLower(Long ptime, Long pthr)
+    private Boolean inFailedLower(Long ptime, Long pthr)
         throws CGException
     {
         Boolean rexpr_3 = null;
@@ -2556,7 +2762,7 @@ public class TracefileVisitor
         return rexpr_3;
     }
 
-    public String getLowerLimitName(Long ptime, Long pthr)
+    private String getLowerLimitName(Long ptime, Long pthr)
         throws CGException
     {
         String res = UTIL.ConvertToString(new String());
@@ -2606,7 +2812,7 @@ public class TracefileVisitor
         return res;
     }
 
-    public Long lastUpperTime(Long pthr)
+    private Long lastUpperTime(Long pthr)
         throws CGException
     {
         Boolean cond_2 = null;
@@ -2617,15 +2823,7 @@ public class TracefileVisitor
             return new Long(0L);
     }
 
-    public void addFailedUpper(Long ptime, Long pthr, String pname)
-        throws CGException
-    {
-        ConjectureLimit e_5 = null;
-        e_5 = new ConjectureLimit(ptime, pthr, pname);
-        failedUpper.add(e_5);
-    }
-
-    public Boolean inFailedUpper(Long ptime, Long pthr)
+    private Boolean inFailedUpper(Long ptime, Long pthr)
         throws CGException
     {
         Boolean rexpr_3 = null;
@@ -2686,7 +2884,7 @@ public class TracefileVisitor
         return rexpr_3;
     }
 
-    public String getUpperLimitName(Long ptime, Long pthr)
+    private String getUpperLimitName(Long ptime, Long pthr)
         throws CGException
     {
         String res = UTIL.ConvertToString(new String());
@@ -2736,7 +2934,7 @@ public class TracefileVisitor
         return res;
     }
 
-    public void checkConjectureLimits(GenericTabItem pgti, Long xpos, Long ypos, Long ptime, Long pthr)
+    private void checkConjectureLimits(GenericTabItem pgti, Long xpos, Long ypos, Long ptime, Long pthr)
         throws CGException
     {
         if(inFailedLower(ptime, pthr).booleanValue())
@@ -2745,7 +2943,7 @@ public class TracefileVisitor
             drawFailedUpper(pgti, xpos, ypos, getUpperLimitName(ptime, pthr));
     }
 
-    public void drawFailedLower(GenericTabItem pgti, Long xpos, Long ypos, String pname)
+    private void drawFailedLower(GenericTabItem pgti, Long xpos, Long ypos, String pname)
         throws CGException
     {
         Ellipse ellipse = new Ellipse();
@@ -2765,7 +2963,7 @@ public class TracefileVisitor
         pgti.addFigure(nlb);
     }
 
-    public void drawFailedUpper(GenericTabItem pgti, Long xpos, Long ypos, String pname)
+    private void drawFailedUpper(GenericTabItem pgti, Long xpos, Long ypos, String pname)
         throws CGException
     {
         Ellipse ellipse = new Ellipse();
