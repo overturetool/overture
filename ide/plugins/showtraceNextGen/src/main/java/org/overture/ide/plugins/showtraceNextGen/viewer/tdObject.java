@@ -23,6 +23,11 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
+import java.util.Map;
+
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenObject;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
+
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdResource, TraceData
@@ -32,18 +37,14 @@ public class tdObject extends tdResource
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
     private Long id;
     private String name;
+    private NextGenRTLogger rtLogger;
     
-    public tdObject()
+    public tdObject(Long objectId)
     {
-        id = null;
-        name = null;
-    }
-
-    public tdObject(Long pobjid, String pname)
-    {
-        this();
-        id = pobjid;
-        name = pname;
+    	rtLogger = NextGenRTLogger.getInstance();
+        id = objectId;
+        Map<Integer, NextGenObject> objects = rtLogger.getObjectMap();
+        name = objects.get(objectId.intValue()).classDef.name; //TODO MAA: Check if this is the correct place to get the name?
     }
 
     public Long getId()

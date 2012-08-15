@@ -29,7 +29,6 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,9 +52,6 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
-import org.overturetool.traceviewer.ast.itf.IOmlTraceFile;
-import org.overturetool.traceviewer.parser.TraceParser;
 
 public class VdmRtLogEditor extends EditorPart implements IViewCallback
 {

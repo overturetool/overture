@@ -30,14 +30,17 @@ import jp.co.csk.vdm.toolbox.VDM.UTIL;
 //            tdHistory, TraceData
 public class tdResource extends tdHistory
 {
-
+    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
+    protected Long xpos;
+    protected Long ypos;
+    protected Long ctime;
+    protected Boolean idle;
     public tdResource()
     {
         xpos = null;
         ypos = null;
         ctime = null;
         idle = null;
-        data = null;
         try
         {
             xpos = new Long(0L);
@@ -100,27 +103,8 @@ public class tdResource extends tdHistory
         return idle;
     }
 
-    public TraceData getTraceData()
-        throws CGException
-    {
-        return data;
-    }
 
-    @Override
-	public void reset()
-        throws CGException
-    {
-        xpos = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
-        ypos = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
-        ctime = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
-        idle = (Boolean)UTIL.clone(new Boolean(true));
-    }
 
-    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    protected Long xpos;
-    protected Long ypos;
-    protected Long ctime;
-    protected Boolean idle;
-    protected TraceData data;
+
 
 }

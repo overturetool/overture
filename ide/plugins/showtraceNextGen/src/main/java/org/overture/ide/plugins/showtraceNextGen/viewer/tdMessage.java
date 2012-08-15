@@ -23,6 +23,9 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessage;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
+
 import jp.co.csk.vdm.toolbox.VDM.*;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
@@ -32,109 +35,58 @@ public class tdMessage extends tdHistory
 {
 
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
-    private tdBUS theBus;
+
     private Long id;
-    private Long from_ucpu;
-    private Long from_uthr;
-    private Long to_ucpu;
-    private Long to_uthr;
-    private Long to_uobj;
-    private String descr;
+    private Long busId;
+    private Long fromCpuId;
+    private Long toCpuId;
+    private Long callerThreadId;
+    private Long objectId;
+    private NextGenRTLogger rtLogger;
 	
     public tdMessage(int messageId)
     {
-        theBus = null;
-        id = null;
-        from_ucpu = null;
-        from_uthr = null;
-        to_ucpu = null;
-        to_uthr = null;
-        to_uobj = null;
-        descr = null;
+    	rtLogger = NextGenRTLogger.getInstance();
+    	NextGenBusMessage message = rtLogger.getBusMessage().get(id);
+    	
+    	id = new Long(messageId);
+    	busId = new Long(message.bus.id);
+    	fromCpuId = new Long(message.fromCpu.id);
+    	toCpuId = new Long(message.toCpu.id);
+    	callerThreadId = new Long(message.callerThread.id);
+    	objectId = new Long(message.object.id);
+    	
     }
 
     public Long getMsgId()
-        throws CGException
     {
         return id;
     }
 
     public Long getBusId()
-        throws CGException
     {
-        Long rexpr_1 = null;
-        rexpr_1 = theBus.getId();
-        return rexpr_1;
+    	return busId;
     }
 
     public Long getFromCpu()
-        throws CGException
     {
-        return from_ucpu;
+        return fromCpuId;
     }
 
     public Long getFromThread()
-        throws CGException
     {
-        return from_uthr;
+        return callerThreadId;
     }
 
     public Long getToCpu()
-        throws CGException
     {
-        return to_ucpu;
-    }
-
-    public Boolean hasToThread()
-        throws CGException
-    {
-        return new Boolean(!UTIL.equals(to_uthr, null));
-    }
-
-    public Long getToThread()
-        throws CGException
-    {
-        if(!pre_getToThread().booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in getToThread");
-        return to_uthr;
-    }
-
-    public Boolean pre_getToThread()
-        throws CGException
-    {
-        return hasToThread();
+        return toCpuId;
     }
 
     public Long getToObj()
-        throws CGException
     {
-        if(!pre_getToObj().booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in getToObj");
-        return to_uobj;
+        return objectId;
     }
 
-    public Boolean pre_getToObj()
-        throws CGException
-    {
-        return hasToObj();
-    }
-
-    public Boolean hasToObj()
-        throws CGException
-    {
-        return new Boolean(!UTIL.equals(to_uobj, null));
-    }
-
-    public String getDescr()
-        throws CGException
-    {
-        return descr;
-    }
-
-    @Override
-	public void reset()
-        throws CGException
-    {
-    }
 
 }

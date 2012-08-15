@@ -167,9 +167,6 @@ public abstract class tdHistory
         return hist_utimes;
     }
 
-    public abstract void reset()
-        throws CGException;
-
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
     private HashMap hist_uevents;
     private Vector hist_utimes;

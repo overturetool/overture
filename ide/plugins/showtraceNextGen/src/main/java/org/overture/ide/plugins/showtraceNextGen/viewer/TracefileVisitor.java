@@ -963,7 +963,8 @@ public class TracefileVisitor
                 Long elem_113 = UTIL.NumberToLong(enm_126.next());
                 objid = elem_113;
                 obj = null;
-                obj = cpu.getObject(objid);
+                //obj = cpu.getObject(objid);
+                obj = data.getObject(objid);
                 updateCpuObject(pgti, cpu, obj);
             }
 
