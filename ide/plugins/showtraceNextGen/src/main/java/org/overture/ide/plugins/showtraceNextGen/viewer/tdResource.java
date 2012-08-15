@@ -23,88 +23,37 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, TraceData
 public class tdResource extends tdHistory
 {
-    static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
     protected Long xpos;
     protected Long ypos;
-    protected Long ctime;
-    protected Boolean idle;
     public tdResource()
     {
-        xpos = null;
-        ypos = null;
-        ctime = null;
-        idle = null;
-        try
-        {
-            xpos = new Long(0L);
-            ypos = new Long(0L);
-            ctime = new Long(0L);
-            idle = new Boolean(true);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace(System.out);
-            System.out.println(e.getMessage());
-        }
+        xpos = new Long(0L);
+        ypos = new Long(0L);
     }
 
     public void setX(Long px)
-        throws CGException
     {
-        xpos = UTIL.NumberToLong(UTIL.clone(px));
+        xpos = px;
     }
 
     public void setY(Long py)
-        throws CGException
     {
-        ypos = UTIL.NumberToLong(UTIL.clone(py));
-    }
-
-    public void setTime(Long ptime)
-        throws CGException
-    {
-        ctime = UTIL.NumberToLong(UTIL.clone(ptime));
-    }
-
-    public void setIdle(Boolean pidle)
-        throws CGException
-    {
-        idle = (Boolean)UTIL.clone(pidle);
+        ypos = py;
     }
 
     public Long getX()
-        throws CGException
     {
         return xpos;
     }
 
     public Long getY()
-        throws CGException
     {
         return ypos;
     }
-
-    public Long getTime()
-        throws CGException
-    {
-        return ctime;
-    }
-
-    public Boolean isIdle()
-        throws CGException
-    {
-        return idle;
-    }
-
-
-
-
 
 }

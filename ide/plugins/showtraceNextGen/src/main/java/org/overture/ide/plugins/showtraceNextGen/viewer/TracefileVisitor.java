@@ -40,6 +40,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            TraceData, tdCPU, GenericTabItem, NormalLabel, 
@@ -394,12 +395,10 @@ public class TracefileVisitor
     	return true; //TODO Peter: relaxed this check completely
     }
 
-    public void drawCpu(GenericTabItem pgti, Long starttime)
+    public void drawCpu(GenericTabItem pgti, Long starttime, tdCPU cpu)
         throws CGException
     {
         Long curx = new Long(100L);
-        tdCPU cpu = null;
-        cpu = pgti.getCPU();
         data.reset();
         ov_ustarttime = UTIL.NumberToLong(UTIL.clone(starttime));
         ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
@@ -696,13 +695,17 @@ public class TracefileVisitor
                         {
                            	switch(((NextGenThreadEvent)event).type)
                         	{
-                        	case CREATE: 	drawOvThreadCreate(pgti, (NextGenThreadEvent)event); break;
-                        	case SWAP: 
-                        		//TODO MAA: Exception? 
+                        	case CREATE: 	
+                        		drawOvThreadCreate(pgti, event); 
                         		break;
-                        	case KILL: 		drawOvThreadKill(pgti, (NextGenThreadEvent)event); break;
+                        	case SWAP: 
+                        		//TODO MAA: Handled above so should no happen.. Exception? 
+                        		break;
+                        	case KILL: 		
+                        		drawOvThreadKill(pgti, event); 
+                        		break;
                         	default: 
-                        		//TODO MAA 
+                        		//TODO MAA: Exception?
                         		break; 
                         	}
                         }
@@ -711,13 +714,13 @@ public class TracefileVisitor
                         	switch(((NextGenOperationEvent)event).type)
                         	{
                         	case REQUEST: 
-                        		drawOvOpRequest(pgti, (NextGenOperationEvent)event);
+                        		drawOvOpRequest(pgti, event);
                         		break;
                         	case ACTIVATE: 
-                        		drawOvOpActivate(pgti, (NextGenOperationEvent)event);
+                        		drawOvOpActivate(pgti, event);
                         		break;
                         	case COMPLETE: 
-                        		drawOvOpCompleted(pgti, (NextGenOperationEvent)event);
+                        		drawOvOpCompleted(pgti, event);
                         		break;
                         	default: 
                         		//TODO MAA
@@ -751,7 +754,7 @@ public class TracefileVisitor
                         }
                         else 
                         {
-                        	//TODO MAA: Should never occour? 
+                        	//TODO MAA: Should never happen? 
                         }
    
                 }
@@ -971,9 +974,11 @@ public class TracefileVisitor
         }
     }
 
-    private void updateOvBus(GenericTabItem pgti, tdBUS ptdr)
-        throws CGException
+    private void updateOvBus(GenericTabItem pgti, tdBUS bus)
     {
+    	//TODO MAA
+    	/*
+    	tdBUS ptdr = data.getBUS(new Long(busEvent.message.bus.id));
         Long tmpVal_4 = null;
         tmpVal_4 = ptdr.getX();
         Long xpos = null;
@@ -986,7 +991,8 @@ public class TracefileVisitor
         {
             Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
             Boolean cond_17 = null;
-            cond_17 = ptdr.isIdle();
+            //cond_17 = ptdr.isIdle();
+            cond_17 = (busEvent.type != NextGenBusMessageEventType.ACTIVATE); 
             if(cond_17.booleanValue())
             {
                 line.setForegroundColor(ColorConstants.lightGray);
@@ -998,12 +1004,13 @@ public class TracefileVisitor
             }
             pgti.addFigure(line);
             ptdr.setX(ov_uxpos);
-        }
+        }*/
     }
 
-    private void updateOvCpu(GenericTabItem pgti, tdCPU ptdr)
-        throws CGException
+    private void updateOvCpu(GenericTabItem pgti, tdCPU ptdr) 
     {
+    	//TODO MAA
+    	/*
         Long tmpVal_4 = null;
         tmpVal_4 = ptdr.getX();
         Long xpos = null;
@@ -1044,7 +1051,7 @@ public class TracefileVisitor
                 thrid = thr.getId();
                 checkConjectureLimits(pgti, new Long(ov_uxpos.longValue() - ELEMENT_uSIZE.longValue()), ypos, ov_ucurrenttime, thrid);
             }
-        }
+        }*/
     }
 
     private void updateCpuObject(GenericTabItem pgti, tdCPU pcpu, tdObject pobj)
@@ -1080,7 +1087,7 @@ public class TracefileVisitor
             width = Long.valueOf(10*str.length());//TODO fix for CPU Box size
             RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);
             Point np = new Point(ov_uxpos.longValue(), CPU_uYPOS.longValue());
-            pcpu.addObject(pobj);
+            //pcpu.addObject(pobj);
             nrr.setLocation(np);
             nrr.setSize(width, CPU_uHEIGHT);
             pgti.addFigure(nrr);
@@ -1414,9 +1421,9 @@ public class TracefileVisitor
     }
 
     private void drawCpuThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
-        throws CGException
     {
-        
+        //TODO MAA
+    	/*
         Long objref = null;
         Boolean cond_6 = null;
         //cond_6 = pitsw.hasObjref();
@@ -1467,7 +1474,7 @@ public class TracefileVisitor
             drawCpuSwapInImage(pgti, x1, y1);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
-        }
+        }*/
     }
 
     private void drawCpuSwapInImage(GenericTabItem pgti, Long x, Long y)
@@ -1523,8 +1530,9 @@ public class TracefileVisitor
 
     //Operation Event
     private void drawOvOpRequest(GenericTabItem pgti, INextGenEvent pior)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             Long cpunm = null;
@@ -1581,7 +1589,7 @@ public class TracefileVisitor
                     obj_32.setStatus(new Boolean(true));
                 }
             }
-        }
+        }*/
     }
 
     private void drawCpuOpRequest(GenericTabItem pgti, INextGenEvent pior)
@@ -1608,11 +1616,13 @@ public class TracefileVisitor
             tdThread thr = null;
             thr = data.getThread(thrid);
             Boolean cond_14 = null;
-            cond_14 = thr.hasCurrentObject();
+            //cond_14 = thr.hasCurrentObject();
+            cond_14 = (((NextGenOperationEvent)pior).thread != null);
             if(cond_14.booleanValue())
             {
                 tdObject obj = null;
-                obj = thr.getCurrentObject();
+                //obj = thr.getCurrentObject();
+                obj = data.getObject(objid);
                 updateCpuObject(pgti, cpu, obj);
                 Long x1 = null;
                 x1 = obj.getX();
@@ -1691,7 +1701,8 @@ public class TracefileVisitor
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
-        srcobj = thr.getCurrentObject();
+        //srcobj = thr.getCurrentObject();
+        srcobj = data.getObject(new Long(((NextGenOperationEvent)pioa).object.id));
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         //unArg_10 = pioa.hasObjref(); //TODO MAA
@@ -1758,7 +1769,7 @@ public class TracefileVisitor
                     Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
                 }
             }
-            thr.pushCurrentObject(destobjref);
+            //thr.pushCurrentObject(destobjref);
         }
     } 
 
@@ -1780,8 +1791,9 @@ public class TracefileVisitor
     }
 
     private void drawCpuOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long thrid = null;
         //thrid = pioc.getId();
         thrid = ((NextGenOperationEvent)pioc).thread.id;
@@ -1789,7 +1801,9 @@ public class TracefileVisitor
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
-        srcobj = thr.getCurrentObject();
+        //srcobj = thr.getCurrentObject();
+        srcobj = data.getObject(new Long(((NextGenOperationEvent)pioa).object.id));
+        
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         //unArg_10 = pioc.hasObjref(); //TODO MAA
@@ -1881,13 +1895,14 @@ public class TracefileVisitor
                     Object2ObjectArrow(pgti, srcobj, destobj, new String(""));
                 }
             }
-        }
+        }*/
     }
    
     //Message Event
     private void drawOvMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long busid = null;
         //busid = pitmr.getBusid();
         busid = new Long(((NextGenBusMessageEvent)pitmr).message.bus.id);
@@ -1938,12 +1953,13 @@ public class TracefileVisitor
             drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
-        }
+        }*/
     }
 
     private void drawCpuMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long busid = null;
         //busid = pitmr.getBusid();
         busid = new Long(((NextGenBusMessageEvent)pitmr).message.bus.id);
@@ -1996,12 +2012,13 @@ public class TracefileVisitor
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             bus.setY(y2);
-        }
+        }*/
     }
 
     private void drawOvMessageActivate(GenericTabItem pgti, INextGenEvent pitma)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long msgid = null;
         //msgid = pitma.getMsgid();
         msgid = ((NextGenBusMessageEvent)pitma).message.id;
@@ -2034,12 +2051,13 @@ public class TracefileVisitor
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
-        }
+        }*/
     }
 
     private void drawOvMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long msgid = null;
         //msgid = pitmc.getMsgid();
         msgid = ((NextGenBusMessageEvent)pitmc).message.id;
@@ -2100,12 +2118,13 @@ public class TracefileVisitor
             par_63 = msg.getToThread();
             obj_62 = cpu.getThread(par_63);
             obj_62.setStatus(new Boolean(false));
-        }
+        }*/
     }
 
     private void drawCpuMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long msgid = null;
         //msgid = pitmc.getMsgid();
         msgid = ((NextGenBusMessageEvent)pitmc).message.id;
@@ -2180,11 +2199,11 @@ public class TracefileVisitor
             }
             ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(y2.longValue() + (new Long(10L)).longValue())));
             bus.setY(y2);
-        }
+        }*/
     }
 
     //Thread Event
-    private void drawOvThreadCreate(GenericTabItem pgti, NextGenThreadEvent pitc)
+    private void drawOvThreadCreate(GenericTabItem pgti, INextGenEvent pitc)
         throws CGException
     {
         Long cpunm = null;
@@ -2215,8 +2234,9 @@ public class TracefileVisitor
     }
 
     private void drawCpuThreadCreate(GenericTabItem pgti, INextGenEvent pitc)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         tdThread thr = null;
         Long par_5 = null;
         
@@ -2266,12 +2286,13 @@ public class TracefileVisitor
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
-        }
+        }*/
     }
 
     private void drawOvThreadKill(GenericTabItem pgti, INextGenEvent pitsw)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long cpunm = null;
         //cpunm = pitsw.getCpunm();
         cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
@@ -2292,14 +2313,13 @@ public class TracefileVisitor
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             cpu.setX(x2);
-        }
+        }*/
     }
 
     private void drawCpuThreadKill(GenericTabItem pgti, INextGenEvent pitk)
-        throws CGException
     {
-
-        
+    	//TODO MAA
+        /*
         Long thrid = null;
         //thrid = pitk.getId();
         thrid = new Long(((NextGenThreadEvent)pitk).thread.id);
@@ -2328,7 +2348,7 @@ public class TracefileVisitor
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
         }
-        thr.popCurrentObject();
+        thr.popCurrentObject();*/
     }
     
     //Thread Swap Event
@@ -2371,8 +2391,9 @@ public class TracefileVisitor
         }
     
     private void drawCpuThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
-            throws CGException
         {
+    	//TODO MAA
+    	/*
 
             Long objref = null;
             Boolean cond_6 = null;
@@ -2430,12 +2451,13 @@ public class TracefileVisitor
                 obj.setY(y2);
             }
             cpu.setCurrentThread(null);
-            thr.popCurrentObject();
+            thr.popCurrentObject();*/
         }
     
     private void drawOvThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
-            throws CGException
         {
+    	//TODO MAA
+    	/*
             Long cpunm = null;
             //cpunm = pitsw.getCpunm();
             cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
@@ -2468,7 +2490,7 @@ public class TracefileVisitor
                 ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
                 cpu.setX(x2);
             }
-            cpu.setCurrentThread(null);
+            cpu.setCurrentThread(null);*/
         }
     
     private void drawOvDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
@@ -2513,8 +2535,9 @@ public class TracefileVisitor
     }
  
     private void drawCpuDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long objref = null;
         Boolean cond_6 = null;
         
@@ -2571,13 +2594,14 @@ public class TracefileVisitor
             drawCpuSwapInImage(pgti, x1, y1);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
-        }
+        }*/
     }
      
     //Message Reply Request Event
     private void drawOvReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long busid = null;
         //busid = pitrr.getBusid();
         busid = new Long(((NextGenBusMessageReplyRequestEvent)pitrr).message.bus.id);
@@ -2623,12 +2647,13 @@ public class TracefileVisitor
             drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
-        }
+        }*/
     }
 
     private void drawCpuReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
-        throws CGException
     {
+    	//TODO MAA
+    	/*
         Long busid = null;
         //busid = pitrr.getBusid();
         busid = new Long(((NextGenBusMessageReplyRequestEvent)pitrr).message.bus.id);
@@ -2676,7 +2701,7 @@ public class TracefileVisitor
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             bus.setY(y2);
-        }
+        }*/
     }
 
     // Helpers

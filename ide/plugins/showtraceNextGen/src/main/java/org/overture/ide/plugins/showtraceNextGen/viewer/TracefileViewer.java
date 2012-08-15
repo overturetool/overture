@@ -69,8 +69,8 @@ public class TracefileViewer extends ViewPart implements IViewCallback
         form.setWeights(new int[] {
             85, 15
         });
-        theArch = new GenericTabItem("Architecture overview", folder, null);
-        theOverview = new GenericTabItem("Execution overview", folder, null);
+        theArch = new GenericTabItem("Architecture overview", folder);
+        theOverview = new GenericTabItem("Execution overview", folder);
         try
         {
             theMarkers = new TracefileMarker(null);
@@ -321,8 +321,8 @@ public class TracefileViewer extends ViewPart implements IViewCallback
             for(Iterator iter = theCpus.iterator(); iter.hasNext(); theDetails.add(theDetail))
             {
                 tdCPU theCpu = (tdCPU)iter.next();
-                theDetail = new GenericTabItem(theCpu.getName(), folder, theCpu);
-                theVisitor.drawCpu(theDetail, new Long(currentTime));
+                theDetail = new GenericTabItem(theCpu.getName(), folder);
+                theVisitor.drawCpu(theDetail, new Long(currentTime), theCpu);
             }
 
         }
@@ -334,22 +334,23 @@ public class TracefileViewer extends ViewPart implements IViewCallback
 
     public void updateOverviewPage()
     {
-        try
-        {
-            theOverview.disposeFigures();
-            theVisitor.drawOverview(theOverview, new Long(currentTime));
-            GenericTabItem theDetail;
-            for(Iterator iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(theDetail, new Long(currentTime)))
-            {
-                theDetail = (GenericTabItem)iter.next();
-                theDetail.disposeFigures();
-            }
-
-        }
-        catch(CGException cge)
-        {
-            showMessage(cge);
-        }
+    	//TODO MAA
+//        try
+//        {
+//            theOverview.disposeFigures();
+//            theVisitor.drawOverview(theOverview, new Long(currentTime));
+//            GenericTabItem theDetail;
+//            for(Iterator iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(theDetail, new Long(currentTime)))
+//            {
+//                theDetail = (GenericTabItem)iter.next();
+//                theDetail.disposeFigures();
+//            }
+//
+//        }
+//        catch(CGException cge)
+//        {
+//            showMessage(cge);
+//        }
     }
 
     private void deleteTabPages()

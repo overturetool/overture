@@ -118,8 +118,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		folder = new TabFolder(form, 128);
 		theConjectures = new ValidationTable(form, this);
 		form.setWeights(new int[] { 85, 15 });
-		theArch = new GenericTabItem("Architecture overview", folder, null);
-		theOverview = new GenericTabItem("Execution overview", folder, null);
+		theArch = new GenericTabItem("Architecture overview", folder);
+		theOverview = new GenericTabItem("Execution overview", folder);
 		cw.clear();
 		try
 		{
@@ -374,8 +374,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			for (Iterator<tdCPU> iter = theCpus.iterator(); iter.hasNext(); theDetails.add(theDetail))
 			{
 				tdCPU theCpu = iter.next();
-				theDetail = new GenericTabItem(theCpu.getName(), folder, theCpu);
-				theVisitor.drawCpu(theDetail, new Long(currentTime));
+				theDetail = new GenericTabItem(theCpu.getName(), folder);
+				theVisitor.drawCpu(theDetail, new Long(currentTime), theCpu);
 			}
 		} catch (VDMRunTimeException e)
 		{
@@ -400,12 +400,13 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		{
 			theOverview.disposeFigures();
 			theVisitor.drawOverview(theOverview, new Long(currentTime));
-			GenericTabItem theDetail;
-			for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(theDetail, new Long(currentTime)))
-			{
-				theDetail = iter.next();
-				theDetail.disposeFigures();
-			}
+			//TODO MAA: Get CPUs and include in drawCPU
+//			GenericTabItem theDetail;
+//			for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(theDetail, new Long(currentTime)))
+//			{
+//				theDetail = iter.next();
+//				theDetail.disposeFigures();
+//			}
 
 		} catch (CGException cge)
 		{

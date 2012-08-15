@@ -38,14 +38,13 @@ import org.eclipse.swt.widgets.TabItem;
 public class GenericTabItem
 {
 
-    public GenericTabItem(String theName, TabFolder theFolder, tdCPU cpu)
+    public GenericTabItem(String theName, TabFolder theFolder)
     {
         theTabItem = null;
         theCanvas = null;
         theFigure = null;
         xmax = 0;
         ymax = 0;
-        theCPU = null;
         theFont = null;
         if(!$assertionsDisabled && theName == null)
             throw new AssertionError();
@@ -64,7 +63,6 @@ public class GenericTabItem
             theFigure.setSize(3000, 3000);
             theCanvas.setBackground(ColorConstants.white);
             theCanvas.setScrollBarVisibility(FigureCanvas.ALWAYS);
-            theCPU = cpu;
             theFont = new Font(theTabItem.getDisplay(), "MS Gothic", 12, 0);
             return;
         }
@@ -75,10 +73,6 @@ public class GenericTabItem
         return theTabItem.getText();
     }
 
-    public tdCPU getCPU()
-    {
-        return theCPU;
-    }
 
     public Long getHorizontalSize()
     {
@@ -180,7 +174,6 @@ public class GenericTabItem
     private Figure theFigure;
     private int xmax;
     private int ymax;
-    private tdCPU theCPU;
     private Font theFont;
     static final boolean $assertionsDisabled = false;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
 

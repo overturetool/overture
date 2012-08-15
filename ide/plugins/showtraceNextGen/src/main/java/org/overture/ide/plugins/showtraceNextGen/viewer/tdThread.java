@@ -42,7 +42,7 @@ public class tdThread extends tdHistory
 
     private NextGenRTLogger rtLogger;
     
-    public tdThread(int threadId)
+    public tdThread(Long threadId)
     {
     	rtLogger = NextGenRTLogger.getInstance();
     	NextGenThread thread = rtLogger.getThreadMap().get(threadId);

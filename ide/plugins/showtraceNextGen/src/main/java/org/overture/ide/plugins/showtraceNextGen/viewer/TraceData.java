@@ -181,7 +181,7 @@ public class TraceData
 
     public tdObject getObject(Long pobjid) throws RuntimeErrorException
     {
-        if(!rtLogger.getObjectMap().containsKey(pobjid))
+        if(!rtLogger.getObjectMap().containsKey(pobjid.intValue()))
             throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getThread");
         
         if(!objects.containsKey(pobjid))
