@@ -32,6 +32,7 @@ import java.util.Vector;
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.Record;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
+import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
@@ -841,7 +842,8 @@ public class TracefileVisitor
             	else
             	{
             		//FIXME: If no events then create a dummy event to simulate "inactive" 
-            		NextGenBusMessage dummy = new NextGenBusMessage((Long)busId,null, null, null, null, null, 0, null);
+            		NextGenBus dummyBus = new NextGenBus(((Long)busId).intValue(), "", null);
+            		NextGenBusMessage dummy = new NextGenBusMessage((Long)busId,dummyBus, null, null, null, null, 0, null);
             		lastEvent = new NextGenBusMessageEvent(dummy, NextGenBusMessageEventType.COMPLETED, 0);
             	}
             	updateOvBus(pgti, lastEvent);
@@ -1022,7 +1024,8 @@ public class TracefileVisitor
 
     private void updateOvBus(GenericTabItem pgti, NextGenBusMessageEvent event)
     {
-    	tdBUS ptdr = data.getBUS(new Long(event.message.bus.id));
+    	Long busId = new Long(event.message.bus.id);
+    	tdBUS ptdr = data.getBUS(busId);
         Long tmpVal_4 = null;
         tmpVal_4 = ptdr.getX();
         Long xpos = null;
@@ -1574,7 +1577,6 @@ public class TracefileVisitor
 
     //Operation Event
     private void drawOvOpRequest(GenericTabItem pgti, INextGenEvent pior)
-    throws VDMRunTimeException
     {
     	
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pior;
@@ -1588,8 +1590,13 @@ public class TracefileVisitor
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
             cpu = tmpVal_9;
-            ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
-            updateOvCpu(pgti, cpu);
+            try {
+				ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
+			} catch (VDMRunTimeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            updateOvCpu(pgti, pior);
         }
         Boolean cond_17 = null;
         Boolean unArg_18 = null;
@@ -1966,7 +1973,7 @@ public class TracefileVisitor
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
+            updateOvBus(pgti, (NextGenBusMessageEvent)pitmr);
             Long tmpVal_21 = null;
             tmpVal_21 = bus.getX();
             Long x1 = null;
@@ -1994,7 +2001,7 @@ public class TracefileVisitor
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
             String tmpArg_v_47 = null;
             String var1_48 = null;
-            String var2_50 = null;
+            String var2_50 = "";
             //var2_50 = msg.getDescr(); //TODO
             var1_48 = (new String(" call ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
@@ -2079,7 +2086,7 @@ public class TracefileVisitor
         bus = data.getBUS(busid);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvBus(pgti, bus);
+            updateOvBus(pgti, (NextGenBusMessageEvent)pitma);
             Long tmpVal_18 = null;
             tmpVal_18 = bus.getX();
             Long x1 = null;
@@ -2126,7 +2133,7 @@ public class TracefileVisitor
         cpu = tmpVal_13;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvBus(pgti, bus);
+            updateOvBus(pgti, (NextGenBusMessageEvent)pitmc);
             Long tmpVal_22 = null;
             tmpVal_22 = bus.getX();
             Long x1 = null;
@@ -2150,13 +2157,13 @@ public class TracefileVisitor
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.darkGray);
             String tmpArg_v_46 = null;
             String var1_47 = null;
-            String var2_49 = null;
+            String var2_49 = "";
             //var2_49 = msg.getDescr(); //TODO: Message description?
             var1_47 = (new String(" ")).concat(var2_49);
             tmpArg_v_46 = var1_47.concat(new String(" "));
             drawVerticalArrow(pgti, x2, new Long(y1.longValue() - (new Long(8L)).longValue()), ycpu, tmpArg_v_46, ColorConstants.darkBlue);
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(x2.longValue() + (new Long(6L)).longValue())));
-            updateOvCpu(pgti, cpu);
+            updateOvCpu(pgti, (NextGenBusMessageEvent)pitmc);
             bus.setX(x2);
         }
 //        Boolean cond_60 = null;
@@ -2343,7 +2350,7 @@ public class TracefileVisitor
     }
 
     private void drawOvThreadKill(GenericTabItem pgti, INextGenEvent pitsw)
-    throws VDMRunTimeException, CGException
+    throws CGException
     {
     	    	
         Long cpunm = null;
@@ -2356,7 +2363,7 @@ public class TracefileVisitor
         cpu = tmpVal_6;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvCpu(pgti, cpu);
+            updateOvCpu(pgti, pitsw);
             Long x1 = null;
             x1 = cpu.getX();
             Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
@@ -2520,7 +2527,7 @@ public class TracefileVisitor
             cpu = tmpVal_6;
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
-                updateOvCpu(pgti, cpu);
+                updateOvCpu(pgti, (NextGenThreadEvent)pitsw);
                 Long tmpVal_15 = null;
                 tmpVal_15 = cpu.getX();
                 Long x1 = null;
@@ -2670,7 +2677,7 @@ public class TracefileVisitor
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
+            updateOvBus(pgti, (NextGenBusMessageEvent)pitrr);
             Long x1 = null;
             x1 = bus.getX();
             Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
@@ -2693,7 +2700,7 @@ public class TracefileVisitor
             drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
             String tmpArg_v_47 = null;
             String var1_48 = null;
-            String var2_50 = null;
+            String var2_50 = "";
             //var2_50 = msg.getDescr(); //TODO: msg description
             var1_48 = (new String(" return from ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));

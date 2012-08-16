@@ -80,13 +80,14 @@ public class NextGenRTLogger {
 		this.addBus(0, new ArrayList<Integer>(), "vBus");
 		vBus = this.busMap.get(0);
 		this.addCpu(0, false, "vCpu", "system"); //Add the implicit virtual CPU - assuming expl means explicit
+
 	}	
 	
 	public class EventComparator implements Comparator<INextGenEvent>
 	{
 	    public int compare(INextGenEvent event1, INextGenEvent event2)
 	    {
-	        return Long.compare(event1.getTime(), event2.getTime());
+	        return (int)(event1.getTime() - event2.getTime());
 	    }
 	}
 	
@@ -143,7 +144,7 @@ public class NextGenRTLogger {
 
 	public void log(RTMessage message) 
 	{
-		System.out.println("NextGenRTLogger:log");
+		
 		/**
 		 * Declarations: CPUs and Busses
 		 */		
@@ -205,10 +206,7 @@ public class NextGenRTLogger {
 		{
 			RTBusMessage m = (RTBusMessage) message;
 			this.treatBusMessage(m);
-		}
-		
-		
-		
+		}	
 	}
 	
 	
@@ -288,7 +286,6 @@ public class NextGenRTLogger {
 			return SClassDefinitionAssistantInterpreter.getName(operation.classdef);
 		}		
 	}
-
 
 
 	private NextGenThread getThread(long id)
@@ -439,11 +436,8 @@ public class NextGenRTLogger {
 		long threadId = thread.getId();
 		
 		//Creates thread object
-		NextGenObject object = getObjectFromThread(thread);	
-		System.out.println("CPU Number:" + cpuNumber.getNumber());
-		System.out.println("CPU Map Size: " + cpuMap.size());
-		NextGenCpu cpu = cpuMap.get(cpuNumber.getNumber());
-		System.out.println("CPU != null: " + (cpu != null));
+		NextGenObject object = getObjectFromThread(thread);				
+		NextGenCpu cpu = cpuMap.get(cpuNumber.getNumber());	
 		NextGenThread t = new NextGenThread(threadId, cpu, object, object==null ? false : thread.isPeriodic());
 					
 		//Creates thread create event
@@ -493,10 +487,10 @@ public class NextGenRTLogger {
 	}
 	
 	
-	public void printDataStructure() throws IOException
+	public void printDataStructure(String fileName) throws IOException
 	{
-		System.out.println("MVQ: printDataStructure() was invoked again");
-		FileWriter fstream = new FileWriter("datastruct.txt");
+
+		FileWriter fstream = new FileWriter(fileName);
         BufferedWriter out = new BufferedWriter(fstream);
         
         out.newLine();
@@ -569,6 +563,16 @@ public class NextGenRTLogger {
         	out.newLine();
 		}
         
+        out.newLine();
+        out.append("### Threads ######################\n");
+        out.newLine();
+        for (Long threadKey : this.threadMap.keySet()) 
+        {
+        	out.append(Long.toString(threadKey));
+        	out.append(" -> ");
+        	out.append(this.threadMap.get(threadKey).toString());
+        	out.newLine();
+		}
         
         out.flush();
         out.close();
@@ -647,6 +651,8 @@ public class NextGenRTLogger {
 	{
 		if(logFile != null)
 		{
+			printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
+			
 			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
 			ObjectOutputStream out = new ObjectOutputStream(fos);
 			
@@ -671,7 +677,7 @@ public class NextGenRTLogger {
 		ObjectInputStream in = new ObjectInputStream(fis);
 		
 		this.cpuMap = (Map<Integer, NextGenCpu>) in.readObject();
-		this.busMap = (Map<Integer, NextGenBus>) in.readObject();
+		this.busMap = (Map<Integer, NextGenBus>) in.readObject();				
 		this.objectMap = (Map<Integer, NextGenObject>) in.readObject();
 		this.classDefMap = (Map<Integer, NextGenClassDefinition>) in.readObject();
 		this.operationMap = (Map<String, NextGenOperation>) in.readObject();
@@ -679,8 +685,11 @@ public class NextGenRTLogger {
 		this.threadMap = (Map<Long, NextGenThread>) in.readObject();
 		this.events = (ArrayList<INextGenEvent>) in.readObject();
 		
+		
+
+		
 		in.close();
-		printDataStructure();
+		printDataStructure("c:\\readFromFile_structure.txt");
 	}
 	
 	

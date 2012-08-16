@@ -30,6 +30,12 @@ public class NextGenThread implements Serializable {
 		s.append("Thread -> ");
 		s.append("id: "); s.append(this.id);
 		s.append(" periodic: "); s.append(this.periodic);
+		s.append(" cpuid: "); 
+		
+		if(cpu == null)
+			s.append( "null");
+		else 
+			s.append(cpu.id);
 				
 		return s.toString();
 	}

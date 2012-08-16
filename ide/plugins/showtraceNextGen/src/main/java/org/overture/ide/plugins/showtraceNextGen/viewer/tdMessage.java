@@ -23,6 +23,8 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
+import java.util.Map;
+
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessage;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
@@ -44,17 +46,23 @@ public class tdMessage extends tdHistory
     private Long objectId;
     private NextGenRTLogger rtLogger;
 	
-    public tdMessage(int messageId)
+    public tdMessage(Long messageId)
     {
     	rtLogger = NextGenRTLogger.getInstance();
-    	NextGenBusMessage message = rtLogger.getBusMessage().get(id);
+    	Map<Long, NextGenBusMessage> messages = rtLogger.getBusMessage();
+    	NextGenBusMessage message = messages.get(messageId);
     	
-    	id = new Long(messageId);
+    	//TODO MAA: Check for message = null
+    	
+    	id = messageId;
     	busId = new Long(message.bus.id);
     	fromCpuId = new Long(message.fromCpu.id);
     	toCpuId = new Long(message.toCpu.id);
     	callerThreadId = new Long(message.callerThread.id);
-    	objectId = new Long(message.object.id);
+    	
+    	//TODO MAA: Check for null reference. Object is allowed to be null? 
+    	
+    	//objectId = new Long(message.object.id);
     	
     }
 
@@ -83,10 +91,10 @@ public class tdMessage extends tdHistory
         return toCpuId;
     }
 
-    public Long getToObj()
-    {
-        return objectId;
-    }
+//    public Long getToObj()
+//    {
+//        return objectId;
+//    }
 
 
 }

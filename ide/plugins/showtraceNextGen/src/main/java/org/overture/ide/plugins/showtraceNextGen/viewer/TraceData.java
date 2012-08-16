@@ -174,7 +174,7 @@ public class TraceData
         
         if(!messages.containsKey(pmsgid))
         {
-        	messages.put(pmsgid, new tdMessage(pmsgid.intValue()));
+        	messages.put(pmsgid, new tdMessage(pmsgid));
         }
         
         return messages.get(pmsgid);
