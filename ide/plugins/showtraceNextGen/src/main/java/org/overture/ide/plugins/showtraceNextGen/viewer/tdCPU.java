@@ -23,20 +23,20 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
+
+import org.overture.ide.plugins.showtrace.viewer.tdObject;
+import org.overture.ide.plugins.showtrace.viewer.tdThread;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenObject;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
-
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdResource, TraceData, tdThread, tdObject
@@ -48,12 +48,18 @@ public class tdCPU extends tdResource
 	private NextGenRTLogger rtLogger;
     private String name;
     private Boolean expl;
+    private Vector<Long> threads;
+    private Vector<Long> objects;
+    private Long current_thread;
     
     public tdCPU(int cpuID)
     {
     	rtLogger = NextGenRTLogger.getInstance();
     	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
     	NextGenCpu cpu = cpus.get(cpuID);
+    	threads = new Vector<Long>();
+    	objects = new Vector<Long>();
+    	current_thread = null;
     	
     	if(cpu != null)
     	{
@@ -106,28 +112,50 @@ public class tdCPU extends tdResource
     	
         return res; //TODO
     }
-
-    public Boolean hasObject(Long pobjid)
+    
+    public void setCurrentThread(Long curthrd)
     {
-    	return rtLogger.getObjectMap().get(pobjid.intValue()) != null;
+    	current_thread = curthrd;
     }
 
+    public Boolean hasCurrentThread()
+    {
+        return current_thread != null;
+    }
+
+    public Long getCurrentThread()
+    {
+    	return current_thread;
+    }
+    
+    public void addThreadId(Long thrid)
+    {
+    	threads.add(thrid);
+    }
+    
+    public Vector<Long> getThreadIds()
+    {
+    	return threads;
+    }
+    
+    public void addObject(Long obj)
+    {
+    	objects.add(obj);
+    }
+    
+    public Vector<Long> getObjectIds()
+    {
+    	return objects;
+    }
     
     public HashSet<Long> getObjects()
-        throws CGException
     {
-    	HashSet<Long> objectIds = new HashSet<Long>();
-    	
-    	Map<Integer, NextGenObject> objects = rtLogger.getObjectMap();
-    	
-        for(Integer key : objects.keySet())
-        {
-        	NextGenObject currentObject = objects.get(key);
-        	if(currentObject.cpu.id.intValue() == id)
-        		objectIds.add(new Long(currentObject.id));
-        }
-        
-    	return objectIds;
+    	return new HashSet(objects);
+    }
+    
+    public Boolean hasObject(Long pobjid)
+    {
+    	return objects.contains(pobjid);
     }
 
 }

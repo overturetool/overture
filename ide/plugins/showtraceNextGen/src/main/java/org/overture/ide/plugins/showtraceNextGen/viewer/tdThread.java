@@ -23,21 +23,19 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import java.util.Stack;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, TraceData, tdObject
-@SuppressWarnings({"unchecked"})
 public class tdThread extends tdHistory
 {
 	
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
     private Long id;
+    private Boolean blocked;
 
 
     private NextGenRTLogger rtLogger;
@@ -46,6 +44,7 @@ public class tdThread extends tdHistory
     {
     	rtLogger = NextGenRTLogger.getInstance();
     	NextGenThread thread = rtLogger.getThreadMap().get(threadId);
+    	blocked = new Boolean(false);
     	
     	if(thread != null)
     	{
@@ -62,6 +61,15 @@ public class tdThread extends tdHistory
     {
         return id;
     }
+    
+    public void setStatus(Boolean pblocked)
+    {
+        blocked = (Boolean)UTIL.clone(pblocked);
+    }
 
+    public Boolean getStatus()
+    {
+        return blocked;
+    }
 
 }
