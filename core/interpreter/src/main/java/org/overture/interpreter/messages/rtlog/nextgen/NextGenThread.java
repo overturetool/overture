@@ -11,11 +11,13 @@ public class NextGenThread implements Serializable {
 
 	public Long id;
 	public NextGenObject object;
+	public NextGenCpu cpu;
 	public boolean periodic;
 	
-	public NextGenThread(long id, NextGenObject object, boolean periodic) 
+	public NextGenThread(long id, NextGenCpu cpu, NextGenObject object, boolean periodic) 
 	{
 		this.id = id;
+		this.cpu = cpu;
 		this.object = object;
 		this.periodic = periodic;
 	}

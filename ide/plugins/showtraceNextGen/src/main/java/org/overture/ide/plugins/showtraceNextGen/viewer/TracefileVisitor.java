@@ -32,7 +32,6 @@ import java.util.Vector;
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.Record;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
-import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
@@ -644,6 +643,8 @@ public class TracefileVisitor
     private void drawOverviewDetail(GenericTabItem pgti)
         throws CGException
     {
+    	HashMap<Long, NextGenBusMessageEvent> lastBusEvents = new HashMap<Long, NextGenBusMessageEvent>();
+    	HashMap<Long, INextGenEvent> lastCpuEvents = new HashMap<Long, INextGenEvent>();
         Boolean cond_2 = null;
         Long var1_3 = null;
         Vector unArg_4 = null;
@@ -732,7 +733,7 @@ public class TracefileVisitor
                         }
                         else if(event instanceof NextGenBusMessageReplyRequestEvent)
                         {
-                        	drawOvReplyRequest(pgti,event);
+                        	drawOvReplyRequest(pgti,event);                     
                         }
                         else if(event instanceof NextGenBusMessageEvent)
                         {
@@ -752,13 +753,32 @@ public class TracefileVisitor
                     		default: 
                     			//TODO MAA
                     			break;
-                        	}
-                        	
+                        	}                       	
                         }
                         else 
                         {
                         	//TODO MAA: Should never happen? 
                         }
+                    
+                    //Fixme MAA: The next section saves the last event for CPU and busses. Consider a better alternative
+                    //for drawing the last section on the UI?
+                    /*
+                    if(event instanceof NextGenBusMessageEvent)
+                    {
+                    	NextGenBusMessageEvent saveEvent = (NextGenBusMessageEvent)event;
+                    	lastBusEvents.put(new Long(saveEvent.message.bus.id), saveEvent);                   	
+                    	lastCpuEvents.put(new Long(saveEvent.message.toCpu.id), saveEvent);
+                    }
+                    else if(event instanceof NextGenThreadEvent)
+                    {
+                    	NextGenThreadEvent saveEvent = (NextGenThreadEvent)event;                  	
+                    	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
+                    }
+                    else if(event instanceof NextGenOperationEvent)
+                    {
+                    	NextGenOperationEvent saveEvent = (NextGenOperationEvent)event;                  	
+                    	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
+                    }*/
    
                 }
 
@@ -781,29 +801,54 @@ public class TracefileVisitor
                 }
             }
 
-            HashSet iset_101 = new HashSet();
-            iset_101 = data.getCPUs();
-            Long cpuid = null;
-            tdCPU tmpArg_v_107;
-            for(Iterator enm_109 = iset_101.iterator(); enm_109.hasNext(); updateOvCpu(pgti, tmpArg_v_107))
+//            HashSet iset_101 = new HashSet();
+//            iset_101 = data.getCPUs();
+//            Long cpuid = null;
+//            tdCPU tmpArg_v_107;
+//            for(Iterator enm_109 = iset_101.iterator(); enm_109.hasNext(); updateOvCpu(pgti, tmpArg_v_107))
+//            {
+//                Long elem_102 = UTIL.NumberToLong(enm_109.next());
+//                cpuid = elem_102;
+//                tmpArg_v_107 = null;
+//                tmpArg_v_107 = data.getCPU(cpuid);
+//            }
+            for(Object cpuId : data.getCPUs())
             {
-                Long elem_102 = UTIL.NumberToLong(enm_109.next());
-                cpuid = elem_102;
-                tmpArg_v_107 = null;
-                tmpArg_v_107 = data.getCPU(cpuid);
+            	INextGenEvent event = null;
+            	if(lastCpuEvents.containsKey((Long)cpuId))
+            	{
+            		event = lastCpuEvents.get((Long)cpuId);
+            	}
+            	else
+            	{
+            		//TODO Create dummy event
+            	}
+            	updateOvCpu(pgti,event);
             }
 
-            HashSet iset_110 = new HashSet();
-            iset_110 = data.getBUSes();
-            Long busid = null;
-            tdBUS tmpArg_v_116;
-            for(Iterator enm_118 = iset_110.iterator(); enm_118.hasNext(); updateOvBus(pgti, tmpArg_v_116))
+//          for(Iterator enm_118 = iset_110.iterator(); enm_118.hasNext(); updateOvBus(pgti, tmpArg_v_116))
+//          {
+//              Long elem_111 = UTIL.NumberToLong(enm_118.next());
+//              busid = elem_111;
+//              tmpArg_v_116 = null;
+//              tmpArg_v_116 = data.getBUS(busid);
+//          }
+            for(Object busId : data.getBUSes())
             {
-                Long elem_111 = UTIL.NumberToLong(enm_118.next());
-                busid = elem_111;
-                tmpArg_v_116 = null;
-                tmpArg_v_116 = data.getBUS(busid);
+            	NextGenBusMessageEvent lastEvent = null;
+            	if(lastBusEvents.containsKey((Long)busId))
+            	{
+            		lastEvent = lastBusEvents.get((Long)busId);
+            	}
+            	else
+            	{
+            		//FIXME: If no events then create a dummy event to simulate "inactive" 
+            		NextGenBusMessage dummy = new NextGenBusMessage((Long)busId,null, null, null, null, null, 0, null);
+            		lastEvent = new NextGenBusMessageEvent(dummy, NextGenBusMessageEventType.COMPLETED, 0);
+            	}
+            	updateOvBus(pgti, lastEvent);
             }
+        
 
         }
     }
@@ -977,11 +1022,9 @@ public class TracefileVisitor
         }
     }
 
-    private void updateOvBus(GenericTabItem pgti, tdBUS bus)
+    private void updateOvBus(GenericTabItem pgti, NextGenBusMessageEvent event)
     {
-    	//TODO MAA
-    	/*
-    	tdBUS ptdr = data.getBUS(new Long(busEvent.message.bus.id));
+    	tdBUS ptdr = data.getBUS(new Long(event.message.bus.id));
         Long tmpVal_4 = null;
         tmpVal_4 = ptdr.getX();
         Long xpos = null;
@@ -995,7 +1038,7 @@ public class TracefileVisitor
             Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
             Boolean cond_17 = null;
             //cond_17 = ptdr.isIdle();
-            cond_17 = (busEvent.type != NextGenBusMessageEventType.ACTIVATE); 
+            cond_17 = (event.type != NextGenBusMessageEventType.ACTIVATE); 
             if(cond_17.booleanValue())
             {
                 line.setForegroundColor(ColorConstants.lightGray);
@@ -1007,7 +1050,7 @@ public class TracefileVisitor
             }
             pgti.addFigure(line);
             ptdr.setX(ov_uxpos);
-        }*/
+        }
     }
 
     private void updateOvCpu(GenericTabItem pgti, tdCPU ptdr)//INextGenEvent event)
@@ -1490,7 +1533,7 @@ public class TracefileVisitor
         Long cpunm = null;
         
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
         
         tdObject obj = null;
         obj = data.getObject(objref);
@@ -1583,7 +1626,7 @@ public class TracefileVisitor
         {
             Long cpunm = null;
             //cpunm = pior.getCpunm();
-            cpunm = new Long(opEvent.thread.object.cpu.id);
+            cpunm = new Long(((NextGenOperationEvent)pior).thread.cpu.id);
             tdCPU tmpVal_9 = null;
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
@@ -1654,7 +1697,7 @@ public class TracefileVisitor
             
             Long cpunm = null;
             //cpunm = pior.getCpunm();
-            cpunm = new Long(((NextGenOperationEvent)pior).object.cpu.id);
+            cpunm = new Long(((NextGenOperationEvent)pior).thread.cpu.id);
             
             tdCPU tmpVal_10 = null;
             tmpVal_10 = data.getCPU(cpunm);
@@ -1729,13 +1772,13 @@ public class TracefileVisitor
         {
             Long cpunm = null;
             //cpunm = pioa.getCpunm();
-            cpunm = new Long(((NextGenOperationEvent)pioa).object.cpu.id);
+            cpunm = new Long(((NextGenOperationEvent)pioa).thread.cpu.id);
             tdCPU tmpVal_9 = null;
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
             cpu = tmpVal_9;
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
-            updateOvCpu(pgti, cpu);
+            updateOvCpu(pgti, pioa);
         }
     }
 
@@ -1768,7 +1811,7 @@ public class TracefileVisitor
             {
                 Long cpunm = null;
                 //cpunm = pioa.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioa).object.cpu.id);
+                cpunm = new Long(((NextGenOperationEvent)pioa).thread.cpu.id);
                 
                 tdCPU tmpVal_20 = null;
                 tmpVal_20 = data.getCPU(cpunm);
@@ -1827,13 +1870,13 @@ public class TracefileVisitor
         {
             Long cpunm = null;
             //cpunm = pioc.getCpunm();
-            cpunm = new Long(((NextGenOperationEvent)pioc).object.cpu.id);
+            cpunm = new Long(((NextGenOperationEvent)pioc).thread.cpu.id);
             tdCPU tmpVal_9 = null;
             tmpVal_9 = data.getCPU(cpunm);
             tdCPU cpu = null;
             cpu = tmpVal_9;
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
-            updateOvCpu(pgti, cpu);
+            updateOvCpu(pgti, pioc);
         }
     }
 
@@ -1866,7 +1909,7 @@ public class TracefileVisitor
             {
                 Long cpunm = null;
                 //cpunm = pioc.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioc).object.cpu.id);
+                cpunm = new Long(((NextGenOperationEvent)pioc).cpu.id);
                 tdCPU tmpVal_19 = null;
                 tmpVal_19 = data.getCPU(cpunm);
                 tdCPU cpu = null;
@@ -2261,15 +2304,18 @@ public class TracefileVisitor
         throws CGException
     {
         Long cpunm = null;
-       
-        cpunm = new Long(((NextGenThreadEvent)pitc).thread.object.cpu.id); 
+        NextGenCpu ncpu = ((NextGenThreadEvent)pitc).thread.cpu;
+
+        
+        Integer cpuId = ncpu.id;
+        cpunm = new Long(cpuId); 
         tdCPU tmpVal_6 = null;
         tmpVal_6 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_6;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvCpu(pgti, cpu);
+            updateOvCpu(pgti, pitc);
             Long x1 = null;
             x1 = cpu.getX();
             Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
@@ -2314,7 +2360,7 @@ public class TracefileVisitor
         
         Long cpunm = null;
         //cpunm = pitc.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitc).thread.object.cpu.id);
+        cpunm = new Long(((NextGenThreadEvent)pitc).thread.cpu.id);
         
         tdCPU tmpVal_10 = null;
         tmpVal_10 = data.getCPU(cpunm);
@@ -2349,7 +2395,7 @@ public class TracefileVisitor
     	    	
         Long cpunm = null;
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
         
         tdCPU tmpVal_6 = null;
         tmpVal_6 = data.getCPU(cpunm);
@@ -2382,7 +2428,7 @@ public class TracefileVisitor
         thr = data.getThread(thrid);
         Long cpunm = null;
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitk).thread.object.cpu.id);
+        cpunm = new Long(((NextGenThreadEvent)pitk).thread.cpu.id);
         tdCPU tmpVal_8 = null;
         tmpVal_8 = data.getCPU(cpunm);
         tdCPU cpu = null;
@@ -2412,7 +2458,7 @@ public class TracefileVisitor
             Long cpunm = null;
             
             //cpunm = pitsw.getCpunm();
-            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
             
             tdCPU tmpVal_6 = null;
             tmpVal_6 = data.getCPU(cpunm);
@@ -2420,7 +2466,7 @@ public class TracefileVisitor
             cpu = tmpVal_6;
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
-                updateOvCpu(pgti, cpu);
+                updateOvCpu(pgti, pitsw);
                 Long x1 = null;
                 x1 = cpu.getX();
                 Long x2 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
@@ -2472,7 +2518,7 @@ public class TracefileVisitor
             
             Long cpunm = null;
             //cpunm = pitsw.getCpunm();
-            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
             
             tdObject obj = null;
             obj = data.getObject(objref);
@@ -2513,7 +2559,7 @@ public class TracefileVisitor
         {
             Long cpunm = null;
             //cpunm = pitsw.getCpunm();
-            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
             
             tdCPU tmpVal_6 = null;
             tmpVal_6 = data.getCPU(cpunm);
@@ -2551,7 +2597,7 @@ public class TracefileVisitor
     {
         Long cpunm = null;
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
         
         tdCPU tmpVal_6 = null;
         tmpVal_6 = data.getCPU(cpunm);
@@ -2559,7 +2605,7 @@ public class TracefileVisitor
         cpu = tmpVal_6;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvCpu(pgti, cpu);
+            updateOvCpu(pgti, pitsw);
             Long tmpVal_15 = null;
             tmpVal_15 = cpu.getX();
             Long x1 = null;
@@ -2614,7 +2660,7 @@ public class TracefileVisitor
         Long cpunm = null;
         
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.object.cpu.id);
+        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
         
         tdObject obj = null;
         obj = data.getObject(objref);

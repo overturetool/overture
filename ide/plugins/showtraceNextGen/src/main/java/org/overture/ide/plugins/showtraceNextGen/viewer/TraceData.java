@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -194,12 +195,21 @@ public class TraceData
 
     public Vector getTimes()
     {
-        return new Vector(); //TODO MAA: What is time?
+    	//FIXME MAA: MUST BE CHANGED TO SOMETHING MORE EFFECTIVE
+        List<INextGenEvent> events = rtLogger.getEvents();
+        Vector<Long> times = new Vector<Long>();
+        for(INextGenEvent event : events)
+        {
+        	times.add(new Long(event.getTime()));
+        }
+        return times;
     }
     
 	public Vector getHistory(Long ptime)
     {
-		return new Vector(); //TODO MAA: What is time?
+		//FIXME MAA: MUST BE CHANGED TO SOMETHING MORE EFFECTIVE
+        List<INextGenEvent> events = rtLogger.getEvents();
+        return new Vector(events);
     }
 
 	public void reset()
