@@ -46,7 +46,13 @@ public class tdObject extends tdResource
         Map<Integer, NextGenObject> objects = rtLogger.getObjectMap();
         name = objects.get(objectId.intValue()).classDef.name; //TODO MAA: Check if this is the correct place to get the name?
     }
-
+    
+    public tdObject(Long id, String name)
+    {
+    	this.id = id;
+    	this.name = name;
+    }
+    
     public Long getId()
     {
         return id;

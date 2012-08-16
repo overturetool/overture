@@ -46,6 +46,8 @@ public class TraceData
 	private HashMap<Long, tdBUS> buses; 
 	private HashMap<Long, tdThread> threads;
 	private HashMap<Long, tdMessage> messages;
+	private tdObject mainThreadObject;
+	private tdObject initThreadObject;
 	
     public TraceData()
     {
@@ -55,6 +57,9 @@ public class TraceData
     	buses = new HashMap<Long, tdBUS>();
     	threads = new HashMap<Long, tdThread>();
     	messages = new HashMap<Long, tdMessage>();
+    	
+    	mainThreadObject = new tdObject(0L,"MAIN");
+    	initThreadObject = new tdObject(0L, "INIT");
     }
 
     public tdCPU getCPU(Long pid) throws RuntimeErrorException
@@ -188,6 +193,16 @@ public class TraceData
         return objects.get(pobjid);
     }
 
+    public tdObject getInitThreadObject()
+    {
+    	return initThreadObject;
+    }
+    
+    public tdObject getMainThreadObject()
+    {
+    	return mainThreadObject;
+    }
+    
     public Vector getTimes()
     {
     	//FIXME MAA: MUST BE CHANGED TO SOMETHING MORE EFFECTIVE
@@ -199,14 +214,7 @@ public class TraceData
         }
         return times;
     }
-//    
-//	public Vector getHistory(Long ptime)
-//    {
-//		//FIXME MAA: MUST BE CHANGED TO SOMETHING MORE EFFECTIVE
-//        List<INextGenEvent> events = rtLogger.getEvents();
-//        return new Vector(events);
-//    }
-	
+
 	public List<INextGenEvent> getSortedEvents()
 	{
 		rtLogger.sortEvents();
@@ -222,5 +230,6 @@ public class TraceData
         messages.clear();
     }
 
-
+	
+	
 }
