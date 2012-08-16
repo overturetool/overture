@@ -95,7 +95,7 @@ public class tdThread
     
     public boolean hasCurrentObject(){
     	
-    	return objectIds.peek() != null;
+    	return objectIds.isEmpty();
     }
 
 }

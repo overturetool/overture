@@ -40,6 +40,7 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
+import org.overture.ide.plugins.showtrace.viewer.tdThread;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessage;
@@ -1983,7 +1984,7 @@ public class TracefileVisitor
             par_29 = msg.getFromThread();
             thr = data.getThread(par_29);
             tdObject obj = null;
-            //obj = thr.getCurrentObject();
+            obj = data.getObject(thr.getCurrentObjectId());
             obj = data.getObject(new Long(busMessageEvent.message.callerThread.object.id));
             Long xobj = null;
             Long var1_34 = null;
@@ -1994,7 +1995,7 @@ public class TracefileVisitor
             String var1_51 = null;
             String var2_53 = null;
             //var2_53 = msg.getDescr();
-            var2_53 = "dummyText";
+            var2_53 = "dummyText"; //TODO: Peter No description
             var1_51 = (new String(" call ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
@@ -2531,27 +2532,31 @@ public class TracefileVisitor
     private void drawCpuDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
     	throws CGException
     {
+    	NextGenThreadEvent threadEvent = (NextGenThreadEvent) pitsw;
+    	
     	
         Long objref = null;
         Boolean cond_6 = null;
         
         //cond_6 = pitsw.hasObjref();
-        cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
+        cond_6 = threadEvent.thread.object != null;
         
         if(cond_6.booleanValue())
         {
             //objref = pitsw.getObjref();
-        	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
+        	objref = new Long(threadEvent.thread.object.id);
         }
         else
             objref = new Long(0L);
         Long thrid = null;
         //thrid = pitsw.getId();
-        thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
+        thrid = new Long(threadEvent.thread.id);
+        tdThread thr = null;
+        thr = data.getThread(thrid);
         Long cpunm = null;
         
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
+        cpunm = new Long(threadEvent.thread.cpu.id);
         
         tdObject obj = null;
         obj = data.getObject(objref);
@@ -2560,7 +2565,7 @@ public class TracefileVisitor
         tdCPU cpu = null;
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
-        //thr.pushCurrentObject(objref);
+        thr.pushCurrentObjectId(objref);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
