@@ -26,6 +26,7 @@ package org.overture.ide.plugins.showtraceNextGen.viewer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
@@ -631,196 +632,160 @@ public class TracefileVisitor
     private void drawOverviewDetail(GenericTabItem pgti)
         throws CGException
     {
+    	Long lastMarkerTime = -1L;
     	HashMap<Long, NextGenBusMessageEvent> lastBusEvents = new HashMap<Long, NextGenBusMessageEvent>();
     	HashMap<Long, INextGenEvent> lastCpuEvents = new HashMap<Long, INextGenEvent>();
-        Boolean cond_2 = null;
-        Long var1_3 = null;
-        Vector unArg_4 = null;
-        unArg_4 = data.getTimes();
-        var1_3 = new Long(unArg_4.size());
-        cond_2 = new Boolean(var1_3.longValue() > (new Long(0L)).longValue());
-        if(cond_2.booleanValue())
+    	List<INextGenEvent> events = data.getSortedEvents();
+    	
+    	for( INextGenEvent event : events )
+    	{
+    		if(ov_uxpos >= pgti.getHorizontalSize())
+    		{
+    			break;
+    		}
+    		
+    		/* Draw time marker if we have arrived at a new time */
+        	if(lastMarkerTime != event.getTime())
+        	{
+        		drawOvTimeMarker(pgti, ov_uxpos, ov_uypos, event.getTime());
+        		lastMarkerTime = event.getTime();
+        	}
+        	
+        	/* Draw events */
+            if(event instanceof NextGenThreadSwapEvent)
+        	{
+            	switch(((NextGenThreadSwapEvent)event).swapType)
+            	{
+            	case SWAP_IN: 
+            		drawOvThreadSwapIn(pgti, event); 
+            		break;
+            	case DELAYED_IN: 	
+            		drawOvDelayedThreadSwapIn(pgti, event); 
+            		break;
+            	case SWAP_OUT: 		
+            		drawOvThreadSwapOut(pgti, event); 
+            		break;
+            	default: //TODO MAA 
+            		break; 
+            	}               		
+        	}  
+            else if(event instanceof NextGenThreadEvent)
+            {
+               	switch(((NextGenThreadEvent)event).type)
+            	{
+            	case CREATE: 	
+            		drawOvThreadCreate(pgti, event); 
+            		break;
+            	case SWAP: 
+            		//TODO MAA: Handled above so should no happen.. Exception? 
+            		break;
+            	case KILL: 		
+            		drawOvThreadKill(pgti, event); 
+            		break;
+            	default: 
+            		//TODO MAA: Exception?
+            		break; 
+            	}
+            }
+            else if(event instanceof NextGenOperationEvent)
+            {
+            	switch(((NextGenOperationEvent)event).type)
+            	{
+            	case REQUEST: 
+            		drawOvOpRequest(pgti, event);
+            		break;
+            	case ACTIVATE: 
+            		drawOvOpActivate(pgti, event);
+            		break;
+            	case COMPLETE: 
+            		drawOvOpCompleted(pgti, event);
+            		break;
+            	default: 
+            		//TODO MAA
+            		break;
+            	}
+            }
+            else if(event instanceof NextGenBusMessageReplyRequestEvent)
+            {
+            	drawOvReplyRequest(pgti,event);                     
+            }
+            else if(event instanceof NextGenBusMessageEvent)
+            {
+            	switch(((NextGenBusMessageEvent)event).type)
+            	{
+            	case ACTIVATE: 
+            		drawOvMessageActivate(pgti, event);
+            		break;
+            	case COMPLETED: 
+            		drawOvMessageCompleted(pgti, event);
+            		break;
+            	case REPLY_REQUEST: 
+            		break;
+            	case REQUEST: 
+            		drawOvMessageRequest(pgti, event);
+            		break;
+        		default: 
+        			//TODO MAA
+        			break;
+            	}                       	
+            }
+            else 
+            {
+            	//TODO MAA: Should never happen? 
+            }
+            
+            //Fixme MAA: The next section saves the last event for CPU and busses. Consider a better alternative
+            //for drawing the last section on the UI?
+            
+            if(event instanceof NextGenBusMessageEvent)
+            {
+            	NextGenBusMessageEvent saveEvent = (NextGenBusMessageEvent)event;
+            	lastBusEvents.put(new Long(saveEvent.message.bus.id), saveEvent);                   	
+            	lastCpuEvents.put(new Long(saveEvent.message.toCpu.id), saveEvent);
+            }
+            else if(event instanceof NextGenThreadEvent)
+            {
+            	NextGenThreadEvent saveEvent = (NextGenThreadEvent)event;                  	
+            	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
+            }
+            else if(event instanceof NextGenOperationEvent)
+            {
+            	NextGenOperationEvent saveEvent = (NextGenOperationEvent)event;                  	
+            	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
+            }
+            
+    	}
+    	
+    	/* Draw CPU's and busses to the end*/
+        for(Object cpuId : data.getCPUs())
         {
-            Long event_utime = null;
-            Vector unArg_6 = null;
-            unArg_6 = data.getTimes();
-            event_utime = UTIL.NumberToLong(unArg_6.get(0));
-            Vector rest_uhist = null;
-            Vector unArg_7 = null;
-            unArg_7 = data.getTimes();
-            rest_uhist = new Vector(unArg_7.subList(1, unArg_7.size()));
-            for(Boolean cont = new Boolean(true); cont.booleanValue();)
-            {
-                ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
-                if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-                    drawOvTimeMarker(pgti, ov_uxpos, ov_uypos, event_utime);
-                Vector sq_18 = null;
-                sq_18 = data.getHistory(event_utime);
-                INextGenEvent event = null;
-                for(Iterator enm_88 = sq_18.iterator(); enm_88.hasNext();)
-                {
-                	INextGenEvent elem_19 = (INextGenEvent)enm_88.next();
-                    event = elem_19;
-                    Boolean cond_24 = null;
-                    Long var2_26 = null;
-                    var2_26 = pgti.getHorizontalSize();
-                    cond_24 = new Boolean(ov_uxpos.longValue() < var2_26.longValue());
-                    if(cond_24.booleanValue())
-                        if(event instanceof NextGenThreadSwapEvent)
-                    	{
-                        	switch(((NextGenThreadSwapEvent)event).swapType)
-                        	{
-                        	case SWAP_IN: 
-                        		drawOvThreadSwapIn(pgti, event); 
-                        		break;
-                        	case DELAYED_IN: 	
-                        		drawOvDelayedThreadSwapIn(pgti, event); 
-                        		break;
-                        	case SWAP_OUT: 		
-                        		drawOvThreadSwapOut(pgti, event); 
-                        		break;
-                        	default: //TODO MAA 
-                        		break; 
-                        	}               		
-                    	}  
-                        else if(event instanceof NextGenThreadEvent)
-                        {
-                           	switch(((NextGenThreadEvent)event).type)
-                        	{
-                        	case CREATE: 	
-                        		drawOvThreadCreate(pgti, event); 
-                        		break;
-                        	case SWAP: 
-                        		//TODO MAA: Handled above so should no happen.. Exception? 
-                        		break;
-                        	case KILL: 		
-                        		drawOvThreadKill(pgti, event); 
-                        		break;
-                        	default: 
-                        		//TODO MAA: Exception?
-                        		break; 
-                        	}
-                        }
-                        else if(event instanceof NextGenOperationEvent)
-                        {
-                        	switch(((NextGenOperationEvent)event).type)
-                        	{
-                        	case REQUEST: 
-                        		drawOvOpRequest(pgti, event);
-                        		break;
-                        	case ACTIVATE: 
-                        		drawOvOpActivate(pgti, event);
-                        		break;
-                        	case COMPLETE: 
-                        		drawOvOpCompleted(pgti, event);
-                        		break;
-                        	default: 
-                        		//TODO MAA
-                        		break;
-                        	}
-                        }
-                        else if(event instanceof NextGenBusMessageReplyRequestEvent)
-                        {
-                        	drawOvReplyRequest(pgti,event);                     
-                        }
-                        else if(event instanceof NextGenBusMessageEvent)
-                        {
-                        	switch(((NextGenBusMessageEvent)event).type)
-                        	{
-                        	case ACTIVATE: 
-                        		drawOvMessageActivate(pgti, event);
-                        		break;
-                        	case COMPLETED: 
-                        		drawOvMessageCompleted(pgti, event);
-                        		break;
-                        	case REPLY_REQUEST: 
-                        		break;
-                        	case REQUEST: 
-                        		drawOvMessageRequest(pgti, event);
-                        		break;
-                    		default: 
-                    			//TODO MAA
-                    			break;
-                        	}                       	
-                        }
-                        else 
-                        {
-                        	//TODO MAA: Should never happen? 
-                        }
-                    
-                    //Fixme MAA: The next section saves the last event for CPU and busses. Consider a better alternative
-                    //for drawing the last section on the UI?
-                    
-                    if(event instanceof NextGenBusMessageEvent)
-                    {
-                    	NextGenBusMessageEvent saveEvent = (NextGenBusMessageEvent)event;
-                    	lastBusEvents.put(new Long(saveEvent.message.bus.id), saveEvent);                   	
-                    	lastCpuEvents.put(new Long(saveEvent.message.toCpu.id), saveEvent);
-                    }
-                    else if(event instanceof NextGenThreadEvent)
-                    {
-                    	NextGenThreadEvent saveEvent = (NextGenThreadEvent)event;                  	
-                    	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
-                    }
-                    else if(event instanceof NextGenOperationEvent)
-                    {
-                    	NextGenOperationEvent saveEvent = (NextGenOperationEvent)event;                  	
-                    	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
-                    }
-   
-                }
+        	INextGenEvent event = null;
+        	if(lastCpuEvents.containsKey((Long)cpuId))
+        	{
+        		event = lastCpuEvents.get((Long)cpuId);
+        	}
+        	else
+        	{
+        		//TODO Create dummy event
+        	}
+        	updateOvCpu(pgti,event);
+        }
 
-                Boolean cond_89 = null;
-                if(!(cond_89 = new Boolean(UTIL.equals(rest_uhist, new Vector()))).booleanValue())
-                {
-                    Boolean var2_93 = null;
-                    Long var2_95 = null;
-                    var2_95 = pgti.getHorizontalSize();
-                    var2_93 = new Boolean(ov_uxpos.longValue() >= var2_95.longValue());
-                    cond_89 = var2_93;
-                }
-                if(cond_89.booleanValue())
-                {
-                    cont = (Boolean)UTIL.clone(new Boolean(false));
-                } else
-                {
-                    event_utime = UTIL.NumberToLong(UTIL.clone(UTIL.NumberToLong(rest_uhist.get(0))));
-                    rest_uhist = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector(rest_uhist.subList(1, rest_uhist.size()))));
-                }
-            }
-
-            for(Object cpuId : data.getCPUs())
-            {
-            	INextGenEvent event = null;
-            	if(lastCpuEvents.containsKey((Long)cpuId))
-            	{
-            		event = lastCpuEvents.get((Long)cpuId);
-            	}
-            	else
-            	{
-            		//TODO Create dummy event
-            	}
-            	updateOvCpu(pgti,event);
-            }
-
-            for(Object busId : data.getBUSes())
-            {
-            	NextGenBusMessageEvent lastEvent = null;
-            	if(lastBusEvents.containsKey((Long)busId))
-            	{
-            		lastEvent = lastBusEvents.get((Long)busId);
-            	}
-            	else
-            	{
-            		//FIXME: If no events then create a dummy event to simulate "inactive" 
-            		NextGenBus dummyBus = new NextGenBus(((Long)busId).intValue(), "", null);
-            		NextGenBusMessage dummy = new NextGenBusMessage((Long)busId,dummyBus, null, null, null, null, 0, null);
-            		lastEvent = new NextGenBusMessageEvent(dummy, NextGenBusMessageEventType.COMPLETED, 0);
-            	}
-            	updateOvBus(pgti, lastEvent);
-            }
-        
-
+        for(Object busId : data.getBUSes())
+        {
+        	NextGenBusMessageEvent lastEvent = null;
+        	if(lastBusEvents.containsKey((Long)busId))
+        	{
+        		lastEvent = lastBusEvents.get((Long)busId);
+        	}
+        	else
+        	{
+        		//FIXME: If no events then create a dummy event to simulate "inactive" 
+        		NextGenBus dummyBus = new NextGenBus(((Long)busId).intValue(), "", null);
+        		NextGenBusMessage dummy = new NextGenBusMessage((Long)busId,dummyBus, null, null, null, null, 0, null);
+        		lastEvent = new NextGenBusMessageEvent(dummy, NextGenBusMessageEventType.COMPLETED, 0);
+        	}
+        	updateOvBus(pgti, lastEvent);
         }
     }
 
