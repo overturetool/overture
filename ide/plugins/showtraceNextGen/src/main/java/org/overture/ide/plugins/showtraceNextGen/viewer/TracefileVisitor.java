@@ -45,6 +45,7 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent;
 
@@ -1643,24 +1644,22 @@ public class TracefileVisitor
         }
     }
 
-    private void drawCpuOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
-    	throws CGException
+    private void drawCpuOpCompleted(GenericTabItem pgti, INextGenEvent pioc) throws CGException
     {
     	
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
     	
-        Long thrid = null;
-        //thrid = pioc.getId();
-        thrid = opEvent.thread.id;
+        Long thrid = opEvent.thread.id;
+        Long objId = null;
         
-        tdThread thr = null;
-        thr = data.getThread(thrid);
+        tdThread thr = data.getThread(thrid);
         tdObject srcobj = null;
+        
         //srcobj = thr.getCurrentObject();
-        srcobj = data.getObject(new Long(opEvent.object.id));
         
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
+        
         //unArg_10 = pioc.hasObjref(); //TODO MAA
         unArg_10 = opEvent.object != null;
         
@@ -2106,36 +2105,45 @@ public class TracefileVisitor
     }
 
     private void drawCpuThreadCreate(GenericTabItem pgti, INextGenEvent pitc)
+    throws CGException
     {
     	NextGenThreadEvent event = (NextGenThreadEvent)pitc;
     	
     	Long threadId = event.thread.id;
         tdThread thr = data.getThread(threadId);
-        Long objref = null;
+        tdObject obj = null;
         
-        if(event.thread.object != null)
+        Long cpunm = new Long(event.thread.cpu.id);    
+        tdCPU cpu = data.getCPU(cpunm);
+        
+        if(event.thread.object == null)
         {
-            //objref = pitc.getObjref();
-        	objref = new Long(event.thread.object.id);
+        	if(event.thread.type == ThreadType.INIT)
+	        {
+	        	//Init Thread has no object
+        		obj = data.getInitThreadObject();
+	        }
+	        else if(event.thread.type == ThreadType.MAIN)
+	        {
+	        	obj = data.getMainThreadObject();
+	        }
+	        else
+	        {
+	        	throw new RuntimeErrorException(null, "Invalid object state for RT Thread!"); //TODO MAA?
+	        }
         }
         else
         {
-            objref = new Long(0L);
+        	Long objref = new Long(event.thread.object.id);
+        	obj = data.getObject(objref);
         }
+          
         
-        Long cpunm = new Long(event.thread.cpu.id);
-        
-        tdCPU cpu = null;
-        cpu = data.getCPU(cpunm);
-
-        //TODO MVQ: This causes an exception? Because of INIT/MAIN thread issue?
-        tdObject obj = data.getObject(objref);
-        
-        //thr.pushCurrentObject(objref);
+        thr.pushCurrentObjectId(obj.getId());
         
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            //updateCpuObject(pgti, cpu, obj);
+            updateCpuObject(pgti, cpu, obj);
             Long x1 = null;
             x1 = obj.getX();
             Long x2 = x1;
@@ -2147,8 +2155,8 @@ public class TracefileVisitor
             tmpVal_27 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_27;
-            //drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
-            //ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
+            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
         }
     }

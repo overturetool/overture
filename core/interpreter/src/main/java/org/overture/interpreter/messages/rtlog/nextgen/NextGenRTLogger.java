@@ -33,9 +33,12 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent.OperationEventType;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent.ThreadEventSwapType;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.MainThread;
 import org.overture.interpreter.scheduler.MessagePacket;
 import org.overture.interpreter.scheduler.MessageRequest;
 import org.overture.interpreter.scheduler.MessageResponse;
@@ -438,7 +441,18 @@ public class NextGenRTLogger {
 		//Creates thread object
 		NextGenObject object = getObjectFromThread(thread);				
 		NextGenCpu cpu = cpuMap.get(cpuNumber.getNumber());	
-		NextGenThread t = new NextGenThread(threadId, cpu, object, object==null ? false : thread.isPeriodic());
+		
+		ThreadType tType = ThreadType.OBJECT;
+		if(object == null && thread instanceof InitThread)
+		{
+			tType = ThreadType.INIT;
+		}
+		else if(thread instanceof MainThread)
+		{
+			tType = ThreadType.MAIN;
+		}
+		
+		NextGenThread t = new NextGenThread(threadId, cpu, object, object==null ? false : thread.isPeriodic(),tType);
 					
 		//Creates thread create event
 		NextGenThreadEvent e = new NextGenThreadEvent(t,time,NextGenThreadEvent.ThreadEventType.CREATE);
