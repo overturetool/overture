@@ -29,6 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.Record;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
+import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.ImageFigure;
@@ -2123,6 +2128,7 @@ public class TracefileVisitor
         tdCPU cpu = null;
         cpu = data.getCPU(cpunm);
 
+        //TODO MVQ: This causes an exception? Because of INIT/MAIN thread issue?
         tdObject obj = data.getObject(objref);
         
         //thr.pushCurrentObject(objref);
