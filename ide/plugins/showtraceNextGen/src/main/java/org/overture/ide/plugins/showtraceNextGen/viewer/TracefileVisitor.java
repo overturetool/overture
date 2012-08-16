@@ -1594,13 +1594,11 @@ public class TracefileVisitor
             tdThread thr = null;
             thr = data.getThread(thrid);
             Boolean cond_14 = null;
-            //cond_14 = thr.hasCurrentObject();
-            cond_14 = (((NextGenOperationEvent)pior).thread != null);
+            //cond_14 = (((NextGenOperationEvent)pior).thread != null);
+            cond_14 = thr.hasCurrentObject();
             if(cond_14.booleanValue())
             {
-                tdObject obj = null;
-                //obj = thr.getCurrentObject();
-                obj = data.getObject(objid);
+                tdObject obj = data.getObject(thr.getCurrentObjectId());
                 updateCpuObject(pgti, cpu, obj);
                 Long x1 = null;
                 x1 = obj.getX();
@@ -1633,7 +1631,7 @@ public class TracefileVisitor
                 String var1_39 = null;
                 String var2_41 = null;
                 //var2_41 = pior.getOpname();
-                var2_41 = ((NextGenOperationEvent)pior).operation.name;
+                var2_41 = event.operation.name;
                 var1_39 = (new String(" Requested ")).concat(var2_41);
                 var1_38 = var1_39.concat(new String(" on object "));
                 var1_37 = var1_38.concat(nat2str(objid));
@@ -2646,8 +2644,6 @@ public class TracefileVisitor
 
     private void drawCpuReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
     {
-    	//TODO MAA
-    	/*
         Long busid = null;
         //busid = pitrr.getBusid();
         busid = new Long(((NextGenBusMessageReplyRequestEvent)pitrr).message.bus.id);
@@ -2680,7 +2676,7 @@ public class TracefileVisitor
             par_29 = msg.getFromThread();
             thr = data.getThread(par_29);
             tdObject obj = null;
-            obj = thr.getCurrentObject();
+            obj = data.getObject(thr.getCurrentObjectId());
             Long xobj = null;
             Long var1_34 = null;
             var1_34 = obj.getX();
@@ -2689,13 +2685,14 @@ public class TracefileVisitor
             String tmpArg_v_50 = null;
             String var1_51 = null;
             String var2_53 = null;
-            var2_53 = msg.getDescr(); TODO
+            //var2_53 = msg.getDescr();
+            var2_53 = "dummyText"; //TODO: Missing description
             var1_51 = (new String(" return from ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             bus.setY(y2);
-        }*/
+        }
     }
 
     // Helpers
