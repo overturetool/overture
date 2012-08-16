@@ -75,7 +75,7 @@ public class TraceData
         return cpus.get(pid);
     }
 
-    public HashSet getCPUs()
+    public HashSet<Long> getCPUs()
     {
         HashSet cpuIds = new HashSet();
         Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
@@ -122,7 +122,7 @@ public class TraceData
         return buses.get(pid);
     }
 
-    public HashSet getBUSes()
+    public HashSet<Long> getBUSes()
     {      
         HashSet tdBusIds = new HashSet();
         Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
