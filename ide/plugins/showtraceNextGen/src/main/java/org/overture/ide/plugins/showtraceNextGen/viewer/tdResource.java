@@ -23,8 +23,6 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 
 // Referenced classes of package org.overturetool.tracefile.viewer:

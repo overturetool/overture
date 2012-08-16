@@ -23,7 +23,6 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
@@ -31,7 +30,6 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, TraceData, tdObject
-@SuppressWarnings({"unchecked"})
 public class tdThread extends tdHistory
 {
 	
@@ -69,11 +67,9 @@ public class tdThread extends tdHistory
         blocked = (Boolean)UTIL.clone(pblocked);
     }
 
-        public Boolean getStatus()
-            throws CGException
-        {
-            return blocked;
-        }
-
+    public Boolean getStatus()
+    {
+        return blocked;
+    }
 
 }
