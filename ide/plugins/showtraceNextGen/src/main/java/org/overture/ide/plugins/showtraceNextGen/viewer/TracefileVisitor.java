@@ -1596,14 +1596,14 @@ public class TracefileVisitor
 			  ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
               updateOvCpu(pgti, pior);
         }
-        Boolean cond_17 = null;
-        Boolean unArg_18 = null;
+//        Boolean cond_17 = null;
+//        Boolean unArg_18 = null;
         
         //unArg_18 = pior.getAsynchronous();
-        unArg_18 = opEvent.operation.isAsync;
+//        unArg_18 = opEvent.operation.isAsync;
         
-        cond_17 = new Boolean(!unArg_18.booleanValue());
-        if(cond_17.booleanValue())
+//        cond_17 = new Boolean(!unArg_18.booleanValue());
+        if(!opEvent.operation.isAsync)
         {
 //            Boolean cond_19 = null;
 //            //cond_19 = pior.hasObjref();
