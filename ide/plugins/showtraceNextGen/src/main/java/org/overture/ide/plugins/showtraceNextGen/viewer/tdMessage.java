@@ -33,7 +33,7 @@ import jp.co.csk.vdm.toolbox.VDM.*;
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdBUS
 
-public class tdMessage extends tdHistory
+public class tdMessage
 {
 
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();

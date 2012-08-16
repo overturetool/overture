@@ -21,6 +21,7 @@ package org.overture.ide.plugins.showtraceNextGen.viewer;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
@@ -66,7 +67,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	private ValidationTable theConjectures;
 	private GenericTabItem theArch;
 	private GenericTabItem theOverview;
-	private HashSet<GenericTabItem> theDetails;
+	private HashMap<tdCPU, GenericTabItem> cpuTabs; //CPU Id, Tab
 	private String fileName;
 	private Vector<Long> theTimes;
 	private long currentTime;
@@ -83,7 +84,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theConjectures = null;
 		theArch = null;
 		theOverview = null;
-		theDetails = new HashSet<GenericTabItem>();
+		cpuTabs = new HashMap<tdCPU, GenericTabItem>();
 		fileName = null;
 		theTimes = null;
 		currentTime = 0L;
@@ -159,21 +160,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	}
 
-	// private void makeActions()
-	// {
-	// fileOpenAction = new Action()
-	// {
-	// @Override
-	// public void run()
-	// {
-	// openFileAction();
-	// }
-	// };
-	// fileOpenAction.setText("Open trace file");
-	// fileOpenAction.setToolTipText("Open trace file");
-	// fileOpenAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor("IMG_OBJ_FILE"));
-	// }
-
 	void openValidationConjectures()
 	{
 		FileDialog fDlg = new FileDialog(getSite().getShell());
@@ -181,37 +167,17 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theConjectures.parseValidationFile(valFileName);
 	}
 
-	// private void openFileAction()
-	// {
-	// if (fileName != null)
-	// deleteTabPages();
-	// if (!$assertionsDisabled && theVisitor != null)
-	// {
-	// throw new AssertionError();
-	// } else
-	// {
-	// FileDialog fDlg = new FileDialog(getSite().getShell());
-	// fileName = fDlg.open();
-	// parseFile(fileName);
-	// return;
-	// }
-	// }
 
 	void diagramExportAction()
 	{
-		// if(fileName != null)
-		// {
 		theArch.exportJPG((new StringBuilder(String.valueOf(fileName))).append(".arch").toString());
 		theOverview.exportJPG((new StringBuilder(String.valueOf(fileName))).append(".overview").toString());
-		GenericTabItem pgti;
-		for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.exportJPG((new StringBuilder(String.valueOf(fileName))).append(".").append(pgti.getName()).toString()))
-			pgti = iter.next();
-
-		// showMessage("Diagrams generated!");
-		// } else
-		// {
-		// showMessage("Please open a trace file first!");
-		// }
+		
+		for(GenericTabItem tab : cpuTabs.values())
+		{
+			String jpegFile = (new StringBuilder(String.valueOf(fileName))).append(".").append(tab.getName()).toString();
+			tab.exportJPG(jpegFile);
+		}
 	}
 
 	void moveHorizontal()
@@ -340,7 +306,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}		
 		else if (t.rtLogger != null)
 		{
-			//TODO MAA: Add showmessage status
 			theVisitor = new TracefileVisitor();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{
@@ -348,7 +313,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				{
 					createTabPages();
 				}
-
 			});
 			
 		} else
@@ -357,7 +321,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}
 	}
 
- 
 	@SuppressWarnings("unchecked")
 	private void createTabPages()
 	{
@@ -370,24 +333,27 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			canMoveHorizontal = true;
 			canOpenValidation = true;
 			Vector<tdCPU> theCpus = theVisitor.getCpus();
-			GenericTabItem theDetail;
-			for (Iterator<tdCPU> iter = theCpus.iterator(); iter.hasNext(); theDetails.add(theDetail))
+			
+			cpuTabs.clear();
+			
+			for(tdCPU cpu : theCpus)
 			{
-				tdCPU theCpu = iter.next();
-				theDetail = new GenericTabItem(theCpu.getName(), folder);
-				theVisitor.drawCpu(theDetail, new Long(currentTime), theCpu);
+				GenericTabItem theDetail = new GenericTabItem(cpu.getName(), folder);
+				theVisitor.drawCpu(theDetail, new Long(currentTime), cpu);
+				cpuTabs.put(cpu, theDetail);
 			}
-		} catch (VDMRunTimeException e)
+		} 
+		catch (VDMRunTimeException e)
 		{
 			e.printStackTrace();
 			showMessage(e);
 
-		} catch (CGException cge)
+		} 
+		catch (CGException cge)
 		{
 			cge.printStackTrace();
 			showMessage(cge);
 		}
-
 	}
 
 	/*
@@ -401,46 +367,17 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			theOverview.disposeFigures();
 			theVisitor.drawOverview(theOverview, new Long(currentTime));
 			//TODO MAA: Get CPUs and include in drawCPU
-//			GenericTabItem theDetail;
-//			for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); theVisitor.drawCpu(theDetail, new Long(currentTime)))
-//			{
-//				theDetail = iter.next();
-//				theDetail.disposeFigures();
-//			}
+			for(tdCPU cpu : cpuTabs.keySet())
+			{
+				GenericTabItem tab = cpuTabs.get(cpu);
+				theVisitor.drawCpu(tab, new Long(currentTime), cpu);
+			}
 
 		} catch (CGException cge)
 		{
 			showMessage(cge);
 		}
 	}
-
-	// private void deleteTabPages()
-	// {
-	// folder.setSelection(0);
-	// canExportJpg = false;
-	// canMoveHorizontal = false;
-	// canOpenValidation = false;
-	// GenericTabItem pgti;
-	// for (Iterator<GenericTabItem> iter = theDetails.iterator(); iter.hasNext(); pgti.dispose())
-	// pgti = iter.next();
-	//
-	// theDetails = new HashSet<GenericTabItem>();
-	// theArch.disposeFigures();
-	// theOverview.disposeFigures();
-	// fileName = null;
-	// theVisitor = null;
-	// theTimes = null;
-	// currentTime = 0L;
-	// try
-	// {
-	// theMarkers.dispose();
-	// IFile file = ((FileEditorInput) getEditorInput()).getFile();
-	// theMarkers = new TracefileMarker(file);
-	// } catch (CGException cge)
-	// {
-	// showMessage(cge);
-	// }
-	// }
 
 	/*
 	 * (non-Javadoc)

@@ -27,11 +27,12 @@ package org.overture.ide.plugins.showtraceNextGen.viewer;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, TraceData
-public class tdResource extends tdHistory
+public abstract class tdResource
 {
     protected Long xpos;
     protected Long ypos;
     protected Boolean idle;
+    
     public tdResource()
     {
         xpos = new Long(0L);

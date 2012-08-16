@@ -30,7 +30,7 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, TraceData, tdObject
-public class tdThread extends tdHistory
+public class tdThread 
 {
 	
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();

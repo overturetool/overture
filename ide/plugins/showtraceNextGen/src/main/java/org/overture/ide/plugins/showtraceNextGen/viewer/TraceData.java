@@ -23,21 +23,16 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.management.RuntimeErrorException;
-
 import org.overture.interpreter.messages.rtlog.nextgen.*;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            tdHistory, tdCPU, tdBUS, tdThread, 

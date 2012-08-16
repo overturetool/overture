@@ -37,6 +37,13 @@ import org.eclipse.swt.widgets.TabItem;
 
 public class GenericTabItem
 {
+    private TabItem theTabItem;
+    private FigureCanvas theCanvas;
+    private Figure theFigure;
+    private int xmax;
+    private int ymax;
+    private Font theFont;
+    static final boolean $assertionsDisabled = false;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
 
     public GenericTabItem(String theName, TabFolder theFolder)
     {
@@ -68,6 +75,7 @@ public class GenericTabItem
         }
     }
 
+    
     public String getName()
     {
         return theTabItem.getText();
@@ -166,15 +174,5 @@ public class GenericTabItem
         if(theFont != null)
             theFont.dispose();
     }
-
-//    private static final int XMAX = 3000;
-//    private static final int YMAX = 3000;
-    private TabItem theTabItem;
-    private FigureCanvas theCanvas;
-    private Figure theFigure;
-    private int xmax;
-    private int ymax;
-    private Font theFont;
-    static final boolean $assertionsDisabled = false;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
 
 }

@@ -307,8 +307,6 @@ public class TracefileVisitor
     public void drawOverview(GenericTabItem pgti, Long starttime)
         throws CGException
     {
-        if(!pre_drawOverview(pgti, starttime).booleanValue())
-            UTIL.RunTime("Run-Time Error:Precondition failure in drawOverview");
         Long cury = new Long(RESOURCE_uVINTERVAL.longValue() / (new Long(2L)).longValue());
         data.reset();
         resetLastDrawn();
@@ -380,22 +378,6 @@ public class TracefileVisitor
 
         ov_uypos = UTIL.NumberToLong(UTIL.clone(cury));
         drawOverviewDetail(pgti);
-    }
-
-    private Boolean pre_drawOverview(GenericTabItem pgti, Long starttime)
-        throws CGException
-    {
-//        Boolean varRes_3 = null;
-//        HashSet var2_5 = new HashSet();
-//        Vector unArg_6 = null;
-//        unArg_6 = data.getTimes();
-//        HashSet set_7 = new HashSet();
-//        for(Enumeration enm_8 = unArg_6.elements(); enm_8.hasMoreElements(); set_7.add(enm_8.nextElement()));
-//        var2_5 = set_7;
-//        varRes_3 = new Boolean(var2_5.contains(starttime));
-//        return varRes_3;
-    	
-    	return true; //TODO Peter: relaxed this check completely
     }
 
     public void drawCpu(GenericTabItem pgti, Long starttime, tdCPU cpu)
@@ -763,7 +745,7 @@ public class TracefileVisitor
                     
                     //Fixme MAA: The next section saves the last event for CPU and busses. Consider a better alternative
                     //for drawing the last section on the UI?
-                    /*
+                    
                     if(event instanceof NextGenBusMessageEvent)
                     {
                     	NextGenBusMessageEvent saveEvent = (NextGenBusMessageEvent)event;
@@ -779,7 +761,7 @@ public class TracefileVisitor
                     {
                     	NextGenOperationEvent saveEvent = (NextGenOperationEvent)event;                  	
                     	lastCpuEvents.put(new Long(saveEvent.thread.cpu.id), saveEvent);
-                    }*/
+                    }
    
                 }
 
@@ -802,17 +784,6 @@ public class TracefileVisitor
                 }
             }
 
-//            HashSet iset_101 = new HashSet();
-//            iset_101 = data.getCPUs();
-//            Long cpuid = null;
-//            tdCPU tmpArg_v_107;
-//            for(Iterator enm_109 = iset_101.iterator(); enm_109.hasNext(); updateOvCpu(pgti, tmpArg_v_107))
-//            {
-//                Long elem_102 = UTIL.NumberToLong(enm_109.next());
-//                cpuid = elem_102;
-//                tmpArg_v_107 = null;
-//                tmpArg_v_107 = data.getCPU(cpuid);
-//            }
             for(Object cpuId : data.getCPUs())
             {
             	INextGenEvent event = null;
@@ -827,13 +798,6 @@ public class TracefileVisitor
             	updateOvCpu(pgti,event);
             }
 
-//          for(Iterator enm_118 = iset_110.iterator(); enm_118.hasNext(); updateOvBus(pgti, tmpArg_v_116))
-//          {
-//              Long elem_111 = UTIL.NumberToLong(enm_118.next());
-//              busid = elem_111;
-//              tmpArg_v_116 = null;
-//              tmpArg_v_116 = data.getBUS(busid);
-//          }
             for(Object busId : data.getBUSes())
             {
             	NextGenBusMessageEvent lastEvent = null;
@@ -861,18 +825,25 @@ public class TracefileVisitor
         Boolean cond_3 = null;
         Long var1_4 = null;
         Vector unArg_5 = null;
-        unArg_5 = cpu.getTimes();
+        //unArg_5 = cpu.getTimes();
+        unArg_5 = new Vector(); //TODO MAA
+        
         var1_4 = new Long(unArg_5.size());
         cond_3 = new Boolean(var1_4.longValue() > (new Long(0L)).longValue());
         if(cond_3.booleanValue())
         {
             Long event_utime = null;
             Vector unArg_7 = null;
-            unArg_7 = cpu.getTimes();
+            //unArg_7 = cpu.getTimes();
+            unArg_7 = unArg_5; //TODO MAA
+            
             event_utime = UTIL.NumberToLong(unArg_7.get(0));
             Vector rest_uhist = null;
             Vector unArg_8 = null;
-            unArg_8 = cpu.getTimes();
+            
+            //unArg_8 = cpu.getTimes();
+            unArg_8 = unArg_5; //TODO MAA
+            
             rest_uhist = new Vector(unArg_8.subList(1, unArg_8.size()));
             for(Boolean cont = new Boolean(true); cont.booleanValue();)
             {
@@ -880,7 +851,9 @@ public class TracefileVisitor
                 if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
                     drawCpuTimeMarker(pgti, new Long(150L), ov_uypos, event_utime);//TODO size of the time label
                 Vector sq_19 = null;
-                sq_19 = cpu.getHistory(event_utime);
+                //sq_19 = cpu.getHistory(event_utime);
+                sq_19 = unArg_5; //TODO MAA
+                
                 INextGenEvent event = null;
                 for(Iterator enm_84 = sq_19.iterator(); enm_84.hasNext();)
                 {
