@@ -1676,20 +1676,18 @@ public class TracefileVisitor
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
     	
         Long thrid = null;
-        NextGenOperationEvent event = (NextGenOperationEvent)pioa;
         //thrid = pioa.getId();
         thrid = opEvent.thread.id;
         tdThread thr = null;
         thr = data.getThread(thrid);
-        tdObject srcobj = null;
-        
+        tdObject srcobj = null;    
         //srcobj = thr.getCurrentObject();
-        srcobj = data.getObject(new Long(opEvent.object.id));
+        srcobj = data.getObject(thr.getCurrentObjectId());
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         
         
-        //unArg_10 = pioa.hasObjref(); //TODO MAA
+        //unArg_10 = pioa.hasObjref();
         unArg_10 = opEvent.object != null;
         
         cond_9 = new Boolean(!unArg_10.booleanValue());
@@ -1753,7 +1751,7 @@ public class TracefileVisitor
                     Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
                 }
             }
-            //thr.pushCurrentObject(destobjref);
+            thr.pushCurrentObjectId(destobjref);
         }
     } 
 
@@ -1797,14 +1795,14 @@ public class TracefileVisitor
         cond_9 = new Boolean(!unArg_10.booleanValue());
         if(!cond_9.booleanValue())
         {
-            thr.popCurrentObject();
+            thr.popCurrentObjectId();
             tdObject destobj = null;
-            destobj = thr.getCurrentObject();
+            destobj = data.getObject(thr.getCurrentObjectId());
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
                 Long cpunm = null;
                 //cpunm = pioc.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioc).cpu.id);
+                cpunm = new Long(opEvent.thread.cpu.id);
                 tdCPU tmpVal_19 = null;
                 tmpVal_19 = data.getCPU(cpunm);
                 tdCPU cpu = null;
@@ -1831,7 +1829,7 @@ public class TracefileVisitor
                     y2 = tmpVal_45;
                     Long objid = null;
                     //objid = pioc.getObjref();
-                    objid = new Long(((NextGenOperationEvent)pioc).object.id);
+                    objid = new Long(opEvent.object.id);
                     NormalLabel lbl = null;
                     org.eclipse.swt.graphics.Font arg_50 = null;
                     arg_50 = pgti.getCurrentFont();
@@ -1857,7 +1855,7 @@ public class TracefileVisitor
                     String var1_60 = null;
                     String var2_62 = null;
                     //var2_62 = pioc.getOpname();
-                    var2_62 = ((NextGenOperationEvent)pioc).operation.name;
+                    var2_62 = opEvent.operation.name;
                     var1_60 = (new String(" Completed ")).concat(var2_62);
                     var1_59 = var1_60.concat(new String(" on object "));
                     var1_58 = var1_59.concat(nat2str(objid));
