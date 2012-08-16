@@ -31,8 +31,7 @@ import java.util.Vector;
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
-import org.overture.ide.plugins.showtrace.viewer.tdObject;
-import org.overture.ide.plugins.showtrace.viewer.tdThread;
+
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenObject;
