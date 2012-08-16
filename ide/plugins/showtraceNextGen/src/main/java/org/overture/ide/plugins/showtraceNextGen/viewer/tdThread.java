@@ -23,6 +23,8 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
+import java.util.Stack;
+
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
@@ -36,12 +38,14 @@ public class tdThread
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
     private Long id;
     private Boolean blocked;
+    private Stack<Long> objectIds;
 
 
     private NextGenRTLogger rtLogger;
     
     public tdThread(Long threadId)
     {
+    	objectIds = new Stack<Long>();
     	rtLogger = NextGenRTLogger.getInstance();
     	NextGenThread thread = rtLogger.getThreadMap().get(threadId);
     	blocked = new Boolean(false);
@@ -70,6 +74,28 @@ public class tdThread
     public Boolean getStatus()
     {
         return blocked;
+    }
+    
+    
+     
+    public void pushCurrentObjectId(Long currentObjectId)
+    {
+    	objectIds.push(currentObjectId);
+    }
+    
+    public void popCurrentObjectId()
+    {
+    	objectIds.pop();
+    }
+    
+    public Long getCurrentObjectId(){
+    	
+    	return objectIds.peek();
+    }
+    
+    public boolean hasCurrentObject(){
+    	
+    	return objectIds.isEmpty();
     }
 
 }
