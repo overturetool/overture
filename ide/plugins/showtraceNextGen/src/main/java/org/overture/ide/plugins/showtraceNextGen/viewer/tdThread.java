@@ -76,6 +76,7 @@ public class tdThread
         return blocked;
     }
     
+    
      
     public void pushCurrentObjectId(Long currentObjectId)
     {
