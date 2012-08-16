@@ -23,7 +23,6 @@
 
 package org.overture.ide.plugins.showtraceNextGen.viewer;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,10 +39,16 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
-import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessage;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent.OperationEventType;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent.ThreadEventSwapType;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent;
 
 // Referenced classes of package org.overturetool.tracefile.viewer:
 //            TraceData, tdCPU, GenericTabItem, NormalLabel, 
@@ -1013,8 +1018,7 @@ public class TracefileVisitor
         {
             Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
             Boolean cond_17 = null;
-            //cond_17 = ptdr.isIdle();
-            cond_17 = (event.type != NextGenBusMessageEventType.ACTIVATE); 
+            cond_17 = ptdr.isIdle();
             if(cond_17.booleanValue())
             {
                 line.setForegroundColor(ColorConstants.lightGray);
@@ -1030,91 +1034,74 @@ public class TracefileVisitor
     }
 
     private void updateOvCpu(GenericTabItem pgti, INextGenEvent event)
+    	throws CGException
     {
-//    	Long cpuId = null;
-//    	tdCPU ptdr = null;
-//    	boolean cpuWasIdle = false;
-//    	boolean threadWasBlocked = false;
-// 
-//    	/* Find cpuId */
-//    	if(event instanceof NextGenThreadEvent)
-//    	{
-//    		cpuId = new Long(((NextGenThreadEvent)event).thread.object.cpu.id);
-//    	}
-//    	else if(event instanceof NextGenBusMessageEvent)
-//    	{
-//    		cpuId = new Long(((NextGenBusMessageEvent)event).message.object.cpu.id);
-//    	}
-//    	else if(event instanceof NextGenOperationEvent)
-//    	{
-//    		cpuId = new Long(((NextGenOperationEvent)event).thread.object.cpu.id);
-//    	}
-//    	else
-//    	{
-//    		//FIXME: MVQ: Handle this
-//    		throw new UnsupportedOperationException("TracefileVisitor->updateOvCpu: Illegal Argument");
-//    	}
-//    	
-//    	ptdr = data.getCPU(cpuId);
-//    	
-//		/* Modify cpuWasIdle, if a thread is swapped in, the cpu must have been idle until now */
-//        if(event instanceof NextGenThreadSwapEvent)
-//        {
-//        	if(((NextGenThreadSwapEvent)event).swapType == ThreadEventSwapType.SWAP_IN ||
-//        	   ((NextGenThreadSwapEvent)event).swapType == ThreadEventSwapType.DELAYED_IN)
-//        	{
-//        		cpuWasIdle = true;
-//        	}
-//        }
-//        
-//		
-//		/* Modify threadWasBlocked, if the this cpu is receiving a message the thread on the cpu must have been blocked until now
-//		 * FIXME MVQ: This is wrong, how to deduce if thread has been blocked until now from nextgen datastructure */
-//    	if(((NextGenBusMessageEvent)event).type == NextGenBusMessageEventType.COMPLETED &&
-//    	   ((NextGenBusMessageEvent)event).message.toCpu.id == cpuId.intValue() )
-//    	{
-//    		threadWasBlocked = true;
-//    	}
-//    	
-//    	//Generated code:
-//        Long tmpVal_4 = null;
-//        tmpVal_4 = ptdr.getX();
-//        Long xpos = null;
-//        xpos = tmpVal_4;
-//        Long tmpVal_5 = null;
-//        tmpVal_5 = ptdr.getY();
-//        Long ypos = null;
-//        ypos = tmpVal_5;
-//        if((new Boolean(ov_uxpos.longValue() > xpos.longValue())).booleanValue())
-//        {
-//            Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
-//
-//            /*TODO MVQ: Use tdCPU.isIdle Instead*/
-//            if(cpuWasIdle)
-//            {
-//                line.setForegroundColor(ColorConstants.lightGray);
-//                line.setDot();
-//            } else
-//            {
-//            	//TODO MVQ: Use tdThread.getStatus instead
-//                if(threadWasBlocked)
-//                    line.setDot();
-//                line.setLineWidth(new Long(3L));
-//            }
-//            
-//            pgti.addFigure(line);
-//            ptdr.setX(ov_uxpos);
-//            Boolean cond_33 = null;
-//            cond_33 = ptdr.hasCurrentThread();
-//            if(cond_33.booleanValue())
-//            {
-//                tdThread thr = null;
-//                thr = ptdr.getCurrentThread();
-//                Long thrid = null;
-//                thrid = thr.getId();
-//                checkConjectureLimits(pgti, new Long(ov_uxpos.longValue() - ELEMENT_uSIZE.longValue()), ypos, ov_ucurrenttime, thrid);
-//            }
-//        }
+    	Long cpuId = null;
+    	tdCPU ptdr = null;
+ 
+    	/* Find cpuId */
+    	if(event instanceof NextGenThreadEvent)
+    	{
+    		cpuId = new Long(((NextGenThreadEvent)event).thread.cpu.id);
+    	}
+    	else if(event instanceof NextGenBusMessageEvent)
+    	{
+    		cpuId = new Long(((NextGenBusMessageEvent)event).message.fromCpu.id);
+    	}
+    	else if(event instanceof NextGenOperationEvent)
+    	{
+    		cpuId = new Long(((NextGenOperationEvent)event).thread.cpu.id);
+    	}
+    	else
+    	{
+    		//FIXME: MVQ: Handle this
+    		throw new UnsupportedOperationException("TracefileVisitor->updateOvCpu: Illegal Argument");
+    	}
+    	
+    	ptdr = data.getCPU(cpuId);
+    	
+    	//Generated code:
+        Long tmpVal_4 = null;
+        tmpVal_4 = ptdr.getX();
+        Long xpos = null;
+        xpos = tmpVal_4;
+        Long tmpVal_5 = null;
+        tmpVal_5 = ptdr.getY();
+        Long ypos = null;
+        ypos = tmpVal_5;
+        if((new Boolean(ov_uxpos.longValue() > xpos.longValue())).booleanValue())
+        {
+            Line line = new Line(new Long(xpos.longValue() + (new Long(1L)).longValue()), ypos, new Long(ov_uxpos.longValue() + (new Long(1L)).longValue()), ypos);
+            Boolean cond_17 = null;
+            cond_17 = ptdr.isIdle();
+            if(cond_17.booleanValue())
+            {
+                line.setForegroundColor(ColorConstants.lightGray);
+                line.setDot();
+            } else
+            {
+                tdThread thr = null;
+                thr = data.getThread(ptdr.getCurrentThread());
+                line.setForegroundColor(ColorConstants.blue);
+                Boolean cond_22 = null;
+                cond_22 = thr.getStatus();
+                if(cond_22.booleanValue())
+                    line.setDot();
+                line.setLineWidth(new Long(3L));
+            }
+            pgti.addFigure(line);
+            ptdr.setX(ov_uxpos);
+            Boolean cond_33 = null;
+            cond_33 = ptdr.hasCurrentThread();
+            if(cond_33.booleanValue())
+            {
+                tdThread thr = null;
+                thr = data.getThread(ptdr.getCurrentThread());
+                Long thrid = null;
+                thrid = thr.getId();
+                checkConjectureLimits(pgti, new Long(ov_uxpos.longValue() - ELEMENT_uSIZE.longValue()), ypos, ov_ucurrenttime, thrid);
+            }
+        }
     }
 
     private void updateCpuObject(GenericTabItem pgti, tdCPU pcpu, tdObject pobj)
@@ -1484,9 +1471,8 @@ public class TracefileVisitor
     }
 
     private void drawCpuThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
+    	throws CGException
     {
-        //TODO MAA
-    	/*
         Long objref = null;
         Boolean cond_6 = null;
         //cond_6 = pitsw.hasObjref();
@@ -1504,8 +1490,8 @@ public class TracefileVisitor
         //thrid = pitsw.getId();
         thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
         
-        tdThread thr = null;
-        thr = data.getThread(thrid);
+//        tdThread thr = null;
+//        thr = data.getThread(thrid);
         Long cpunm = null;
         
         //cpunm = pitsw.getCpunm();
@@ -1518,7 +1504,7 @@ public class TracefileVisitor
         tdCPU cpu = null;
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
-        thr.pushCurrentObject(objref);
+        //thr.pushCurrentObject(objref);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
@@ -1537,7 +1523,7 @@ public class TracefileVisitor
             drawCpuSwapInImage(pgti, x1, y1);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
-        }*/
+        }
     }
 
     private void drawCpuSwapInImage(GenericTabItem pgti, Long x, Long y)
@@ -1593,26 +1579,22 @@ public class TracefileVisitor
 
     //Operation Event
     private void drawOvOpRequest(GenericTabItem pgti, INextGenEvent pior)
+    	throws CGException
     {
     	
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pior;
     	
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            Long cpunm = null;
-            //cpunm = pior.getCpunm();
-            cpunm = new Long(((NextGenOperationEvent)pior).thread.cpu.id);
-            tdCPU tmpVal_9 = null;
-            tmpVal_9 = data.getCPU(cpunm);
-            tdCPU cpu = null;
-            cpu = tmpVal_9;
-            try {
-				ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
-			} catch (VDMRunTimeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            updateOvCpu(pgti, pior);
+//            Long cpunm = null;
+//			  cpunm = pior.getCpunm();
+//            cpunm = new Long(opEvent.thread.cpu.id);
+//            tdCPU tmpVal_9 = null;
+//            tmpVal_9 = data.getCPU(cpunm);
+//            tdCPU cpu = null;
+//            cpu = tmpVal_9;
+			  ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
+              updateOvCpu(pgti, pior);
         }
         Boolean cond_17 = null;
         Boolean unArg_18 = null;
@@ -1623,12 +1605,12 @@ public class TracefileVisitor
         cond_17 = new Boolean(!unArg_18.booleanValue());
         if(cond_17.booleanValue())
         {
-            Boolean cond_19 = null;
-            //cond_19 = pior.hasObjref();
-            cond_19 = true; //TODO MAA
+//            Boolean cond_19 = null;
+//            //cond_19 = pior.hasObjref();
+//            cond_19 = opEvent.object != null;
             
-//            if(cond_19.booleanValue())
-//            {
+            if(opEvent.object != null)
+            {
 //                Long thrid = null;
 //                //thrid = pior.getId();
 //                thrid = ((NextGenOperationEvent)pior).thread.id;
@@ -1639,7 +1621,7 @@ public class TracefileVisitor
 //                Long objref = null;
 //                //objref = pior.getObjref();
 //                objref = new Long(opEvent.object.id);
-//                
+                
 //                tdCPU tmpVal_25 = null;
 //                tmpVal_25 = data.getCPU(cpunm);
 //                tdCPU cpu = null;
@@ -1647,18 +1629,15 @@ public class TracefileVisitor
 //                Boolean cond_27 = null;
 //                Boolean unArg_28 = null;
 //                Long par_30 = null;
-//                //par_30 = pior.getObstime();
-////                par_30 = opEvent.time;            		
-////                unArg_28 = cpu.hasObjectAt(objref, par_30);
-////                cond_27 = new Boolean(!unArg_28.booleanValue());
-/* TODO MVQ: Set thread status to Blocked */
-////                if(cond_27.booleanValue())
-////                {
-////                    tdThread obj_32 = null;
-////                    obj_32 = cpu.getThread(thrid);
-////                    obj_32.setStatus(new Boolean(true));
-////                }
-//            }
+//                par_30 = pior.getObstime();
+//                par_30 = opEvent.time;            		
+                //unArg_28 = cpu.hasObjectAt(objref, par_30);
+                boolean cpuHasObject = opEvent.object.cpu.id == opEvent.thread.cpu.id;
+                if(!cpuHasObject)
+                {
+                	data.getThread(opEvent.thread.id).setStatus(true);
+                }
+            }
         }
     }
 
@@ -2184,6 +2163,7 @@ public class TracefileVisitor
         
         /* Update blocked status on receiving thread */
         //TODO MVQ: Update status on receiving thread to not blocked
+        //TODO MVQ: Identify toThread from nextgen info?!
         
         
 //        Boolean cond_60 = null;
@@ -2289,10 +2269,9 @@ public class TracefileVisitor
         
         Integer cpuId = ncpu.id;
         cpunm = new Long(cpuId); 
-        tdCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        tdCPU cpu = null;
-        cpu = tmpVal_6;
+        tdCPU cpu = data.getCPU(cpunm);
+        cpu.addThreadId(((NextGenThreadEvent)pitc).thread.id);
+        
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateOvCpu(pgti, pitc);
@@ -2464,75 +2443,74 @@ public class TracefileVisitor
                 cpu.setX(x2);
             }
             
-            //TODO MAA: Is it needed??
-            //Long par_38 = null;
-            //par_38 = pitsw.getId();
-            //cpu.setCurrentThread(par_38);
+            //TODO MAA: Is it needed?? MVQ: Yes, Martin you dumbass
+            Long par_38 = null;
+            par_38 = ((NextGenThreadEvent)pitsw).thread.id;
+            cpu.setCurrentThread(par_38);
         }
     
     private void drawCpuThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
-        {
-    	
-    	/*
+    	throws CGException
+    {
 
-            Long objref = null;
-            Boolean cond_6 = null;
-            
-            //cond_6 = pitsw.hasObjref();
-            cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
-
-
-            if(cond_6.booleanValue())
-            {
-            	//objref = pitsw.getObjref();
-            	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
-            }
-            else
-                objref = new Long(0L);
-            Long thrid = null;
-            //thrid = pitsw.getId();
-            thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
-            
-            tdThread thr = null;
-            thr = data.getThread(thrid);
-            
-            Long cpunm = null;
-            //cpunm = pitsw.getCpunm();
-            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
-            
-            tdObject obj = null;
-            obj = data.getObject(objref);
-            tdCPU tmpVal_13 = null;
-            tmpVal_13 = data.getCPU(cpunm);
-            tdCPU cpu = null;
-            cpu = tmpVal_13;
-            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-            {
-                updateCpuObject(pgti, cpu, obj);
-                Long tmpVal_23 = null;
-                tmpVal_23 = obj.getX();
-                Long x1 = null;
-                x1 = tmpVal_23;
-                Long tmpVal_24 = null;
-                tmpVal_24 = x1;
-                Long x2 = null;
-                x2 = tmpVal_24;
-                Long tmpVal_25 = null;
-                tmpVal_25 = obj.getY();
-                Long y1 = null;
-                y1 = tmpVal_25;
-                Long tmpVal_26 = null;
-                tmpVal_26 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-                Long y2 = null;
-                y2 = tmpVal_26;
-                drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-                drawCpuSwapOutImage(pgti, x1, y1);
-                ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-                obj.setY(y2);
-            }
-            cpu.setCurrentThread(null);
-            thr.popCurrentObject();*/
-        }
+		Long objref = null;
+		Boolean cond_6 = null;
+		
+		//cond_6 = pitsw.hasObjref();
+		cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
+		
+		
+		if(cond_6.booleanValue())
+		{
+			//objref = pitsw.getObjref();
+			objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
+		}
+		else
+		    objref = new Long(0L);
+//		Long thrid = null;
+		//thrid = pitsw.getId();
+//		thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
+		
+//		tdThread thr = null;
+//		thr = data.getThread(thrid);
+		
+		Long cpunm = null;
+		//cpunm = pitsw.getCpunm();
+		cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
+		
+		tdObject obj = null;
+		obj = data.getObject(objref);
+		tdCPU tmpVal_13 = null;
+		tmpVal_13 = data.getCPU(cpunm);
+		tdCPU cpu = null;
+		cpu = tmpVal_13;
+		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+		{
+		    updateCpuObject(pgti, cpu, obj);
+		    Long tmpVal_23 = null;
+		    tmpVal_23 = obj.getX();
+		    Long x1 = null;
+		    x1 = tmpVal_23;
+		    Long tmpVal_24 = null;
+		    tmpVal_24 = x1;
+		    Long x2 = null;
+		    x2 = tmpVal_24;
+		    Long tmpVal_25 = null;
+		    tmpVal_25 = obj.getY();
+		    Long y1 = null;
+		    y1 = tmpVal_25;
+		    Long tmpVal_26 = null;
+		    tmpVal_26 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+		    Long y2 = null;
+		    y2 = tmpVal_26;
+		    drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
+		    drawCpuSwapOutImage(pgti, x1, y1);
+		    ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+		    obj.setY(y2);
+		}
+		cpu.setCurrentThread(null);
+		//thr.popCurrentObject();
+    }
     
     private void drawOvThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
     throws CGException
@@ -2569,7 +2547,7 @@ public class TracefileVisitor
                 ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
                 cpu.setX(x2);
             }
-            //cpu.setCurrentThread(null);
+            cpu.setCurrentThread(null);
         }
     
     private void drawOvDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
@@ -2607,16 +2585,15 @@ public class TracefileVisitor
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(x2));
             cpu.setX(x2);
         }
-        //TODO MAA: Should it be used?
-        //Long par_38 = null;
-        //par_38 = pitsw.getId();
-        //cpu.setCurrentThread(par_38);
+        //TODO MAA: Should it be used? MVQ: Yes, Martin you dumbass
+        Long par_38 = null;
+        par_38 = ((NextGenThreadEvent)pitsw).thread.id;
+        cpu.setCurrentThread(par_38);
     }
  
     private void drawCpuDelayedThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
+    	throws CGException
     {
-    	//TODO MAA
-    	/*
         Long objref = null;
         Boolean cond_6 = null;
         
@@ -2649,7 +2626,7 @@ public class TracefileVisitor
         tdCPU cpu = null;
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
-        thr.pushCurrentObject(objref);
+        //thr.pushCurrentObject(objref);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
@@ -2673,7 +2650,7 @@ public class TracefileVisitor
             drawCpuSwapInImage(pgti, x1, y1);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
-        }*/
+        }
     }
      
     //Message Reply Request Event

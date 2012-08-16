@@ -115,6 +115,7 @@ public class tdCPU extends tdResource
     public void setCurrentThread(Long curthrd)
     {
     	current_thread = curthrd;
+    	this.setIdle(current_thread == null);
     }
 
     public Boolean hasCurrentThread()
