@@ -199,13 +199,19 @@ public class TraceData
         }
         return times;
     }
-    
-	public Vector getHistory(Long ptime)
-    {
-		//FIXME MAA: MUST BE CHANGED TO SOMETHING MORE EFFECTIVE
-        List<INextGenEvent> events = rtLogger.getEvents();
-        return new Vector(events);
-    }
+//    
+//	public Vector getHistory(Long ptime)
+//    {
+//		//FIXME MAA: MUST BE CHANGED TO SOMETHING MORE EFFECTIVE
+//        List<INextGenEvent> events = rtLogger.getEvents();
+//        return new Vector(events);
+//    }
+	
+	public List<INextGenEvent> getSortedEvents()
+	{
+		rtLogger.sortEvents();
+		return rtLogger.getEvents();
+	}
 
 	public void reset()
     {
