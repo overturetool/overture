@@ -40,12 +40,8 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
-import org.overture.ide.plugins.showtrace.viewer.tdThread;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBus;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessage;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenCpu;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
@@ -314,15 +310,17 @@ public class TracefileVisitor
     public void drawOverview(GenericTabItem pgti, Long starttime)
         throws CGException
     {
-        Long cury = new Long(RESOURCE_uVINTERVAL.longValue() / (new Long(2L)).longValue());
+        Long cury = RESOURCE_uVINTERVAL / 2L;
         data.reset();
         resetLastDrawn();
-        ov_uxpos = UTIL.NumberToLong(UTIL.clone(CPU_uXPOS));
-        ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
-        ov_ustarttime = UTIL.NumberToLong(UTIL.clone(starttime));
-        ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
-        Vector revcpus = null;
-        revcpus = data.getOrderedCpus();
+        
+        ov_uxpos = CPU_uXPOS;
+        ov_uypos = 0L;
+        ov_ustarttime = starttime;
+        ov_ucurrenttime = 0L;
+        
+        Vector revcpus = data.getOrderedCpus();
+        
         Long cpuid = null;
         for(int i_43 = revcpus.size(); i_43 > 0; i_43--)
         {
@@ -1649,6 +1647,7 @@ public class TracefileVisitor
     }
 
     private void drawCpuOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
+    	throws CGException
     {
     	
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
