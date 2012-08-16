@@ -29,11 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.Record;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
-import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.ImageFigure;
@@ -319,12 +314,11 @@ public class TracefileVisitor
         ov_ustarttime = starttime;
         ov_ucurrenttime = 0L;
         
-        Vector revcpus = data.getOrderedCpus();
-        
+        Vector<Long> revcpus = data.getOrderedCpus();
         Long cpuid = null;
         for(int i_43 = revcpus.size(); i_43 > 0; i_43--)
         {
-            Long elem_14 = UTIL.NumberToLong(revcpus.get(i_43 - 1));
+            Long elem_14 = revcpus.get(i_43 - 1);
             cpuid = elem_14;
             tdCPU tmpVal_18 = null;
             tmpVal_18 = data.getCPU(cpuid);
@@ -2518,6 +2512,7 @@ public class TracefileVisitor
     }
 
     private void drawCpuReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
+    	throws CGException
     {
         Long busid = null;
         //busid = pitrr.getBusid();
