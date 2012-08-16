@@ -651,7 +651,7 @@ public class NextGenRTLogger {
 	{
 		if(logFile != null)
 		{
-			printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
+			//printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
 			
 			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
 			ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -689,7 +689,7 @@ public class NextGenRTLogger {
 
 		
 		in.close();
-		printDataStructure("c:\\readFromFile_structure.txt");
+		//printDataStructure("c:\\readFromFile_structure.txt");
 	}
 	
 	
