@@ -792,178 +792,130 @@ public class TracefileVisitor
     private void drawCpuDetail(GenericTabItem pgti, tdCPU cpu)
         throws CGException
     {
-        Boolean cond_3 = null;
-        Long var1_4 = null;
-        Vector unArg_5 = null;
-        //unArg_5 = cpu.getTimes();
-        unArg_5 = new Vector(); //TODO MAA
-        
-        var1_4 = new Long(unArg_5.size());
-        cond_3 = new Boolean(var1_4.longValue() > (new Long(0L)).longValue());
-        if(cond_3.booleanValue())
+    	Long lastCpuMarkerTime = -1L;
+    	List<INextGenEvent> events = data.getSortedEvents();
+    	Long verticalTabSize =  pgti.getVerticalSize();
+    	
+    	for(INextGenEvent event : events)
+    	{
+    		if(ov_uypos >= verticalTabSize)
+    		{
+    			break;
+    		}
+    		
+    		if(lastCpuMarkerTime != event.getTime())
+    		{
+    			lastCpuMarkerTime = event.getTime();
+    			drawCpuTimeMarker(pgti, new Long(150L), ov_uypos, lastCpuMarkerTime);//TODO size of the time label
+    		}
+    		
+    		if(event instanceof NextGenThreadSwapEvent)
+        	{
+            	switch(((NextGenThreadSwapEvent)event).swapType)
+            	{
+            	case SWAP_IN: 
+            		drawCpuThreadSwapIn(pgti, event);
+            		break;
+            	case DELAYED_IN: 	
+            		drawCpuDelayedThreadSwapIn(pgti, event); 
+            		break;
+            	case SWAP_OUT: 		
+            		drawCpuThreadSwapOut(pgti, event); 
+            		break;
+            	default: //TODO MAA 
+            		break; 
+            	}               		
+        	}  
+            else if(event instanceof NextGenThreadEvent)
+            {
+               	switch(((NextGenThreadEvent)event).type)
+            	{
+            	case CREATE: 	
+            		drawCpuThreadCreate(pgti, event); break;
+            	case SWAP: 
+            		//TODO MAA: Exception? 
+            		break;
+            	case KILL: 		
+            		drawCpuThreadKill(pgti, event); break;
+            	default: 
+            		//TODO MAA 
+            		break; 
+            	}
+            }
+            else if(event instanceof NextGenOperationEvent)
+            {
+            	switch(((NextGenOperationEvent)event).type)
+            	{
+            	case REQUEST: 
+            		drawCpuOpRequest(pgti, event);
+            		break;
+            	case ACTIVATE: 
+            		drawCpuOpActivate(pgti, event);
+            		break;
+            	case COMPLETE: 
+            		drawCpuOpCompleted(pgti, event);
+            		break;
+            	default: 
+            		//TODO MAA
+            		break;
+            	}
+            }
+            else if(event instanceof NextGenBusMessageReplyRequestEvent)
+            {
+            	drawCpuReplyRequest(pgti,event);
+            }
+            else if(event instanceof NextGenBusMessageEvent)
+            {
+            	switch(((NextGenBusMessageEvent)event).type)
+            	{
+            	case ACTIVATE: 
+            		//TODO MAA
+            		break;
+            	case COMPLETED: 
+            		drawCpuMessageCompleted(pgti, event);
+            		break;
+            	case REPLY_REQUEST: 
+            		break;
+            	case REQUEST: 
+            		drawCpuMessageRequest(pgti, event);
+            		break;
+        		default: 
+        			//TODO MAA
+        			break;
+            	}
+            	
+            }
+            else 
+            {
+            	//TODO MAA: Should never occour? 
+            }
+    	}
+    	
+		HashSet iset_97 = new HashSet();
+        iset_97 = cpu.connects();
+        Long busid = null;
+        tdBUS bus;
+        for(Iterator enm_111 = iset_97.iterator(); enm_111.hasNext(); drawCpuTimeMarkerHelper(pgti, bus))
         {
-            Long event_utime = null;
-            Vector unArg_7 = null;
-            //unArg_7 = cpu.getTimes();
-            unArg_7 = unArg_5; //TODO MAA
-            
-            event_utime = UTIL.NumberToLong(unArg_7.get(0));
-            Vector rest_uhist = null;
-            Vector unArg_8 = null;
-            
-            //unArg_8 = cpu.getTimes();
-            unArg_8 = unArg_5; //TODO MAA
-            
-            rest_uhist = new Vector(unArg_8.subList(1, unArg_8.size()));
-            for(Boolean cont = new Boolean(true); cont.booleanValue();)
-            {
-                ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
-                if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-                    drawCpuTimeMarker(pgti, new Long(150L), ov_uypos, event_utime);//TODO size of the time label
-                Vector sq_19 = null;
-                //sq_19 = cpu.getHistory(event_utime);
-                sq_19 = unArg_5; //TODO MAA
-                
-                INextGenEvent event = null;
-                for(Iterator enm_84 = sq_19.iterator(); enm_84.hasNext();)
-                {
-                    INextGenEvent elem_20 = (INextGenEvent)enm_84.next();
-                    event = elem_20;
-                    Boolean cond_25 = null;
-                    Long var2_27 = null;
-                    var2_27 = pgti.getVerticalSize();
-                    cond_25 = new Boolean(ov_uypos.longValue() < var2_27.longValue());
-                    if(cond_25.booleanValue())
-                    	if(event instanceof NextGenThreadSwapEvent)
-                    	{
-                        	switch(((NextGenThreadSwapEvent)event).swapType)
-                        	{
-                        	case SWAP_IN: 
-                        		drawCpuThreadSwapIn(pgti, event);
-                        		break;
-                        	case DELAYED_IN: 	
-                        		drawCpuDelayedThreadSwapIn(pgti, event); 
-                        		break;
-                        	case SWAP_OUT: 		
-                        		drawCpuThreadSwapOut(pgti, event); 
-                        		break;
-                        	default: //TODO MAA 
-                        		break; 
-                        	}               		
-                    	}  
-                        else if(event instanceof NextGenThreadEvent)
-                        {
-                           	switch(((NextGenThreadEvent)event).type)
-                        	{
-                        	case CREATE: 	
-                        		drawCpuThreadCreate(pgti, event); break;
-                        	case SWAP: 
-                        		//TODO MAA: Exception? 
-                        		break;
-                        	case KILL: 		
-                        		drawCpuThreadKill(pgti, event); break;
-                        	default: 
-                        		//TODO MAA 
-                        		break; 
-                        	}
-                        }
-                        else if(event instanceof NextGenOperationEvent)
-                        {
-                        	switch(((NextGenOperationEvent)event).type)
-                        	{
-                        	case REQUEST: 
-                        		drawCpuOpRequest(pgti, event);
-                        		break;
-                        	case ACTIVATE: 
-                        		drawCpuOpActivate(pgti, event);
-                        		break;
-                        	case COMPLETE: 
-                        		drawCpuOpCompleted(pgti, event);
-                        		break;
-                        	default: 
-                        		//TODO MAA
-                        		break;
-                        	}
-                        }
-                        else if(event instanceof NextGenBusMessageReplyRequestEvent)
-                        {
-                        	drawCpuReplyRequest(pgti,event);
-                        }
-                        else if(event instanceof NextGenBusMessageEvent)
-                        {
-                        	switch(((NextGenBusMessageEvent)event).type)
-                        	{
-                        	case ACTIVATE: 
-                        		//TODO MAA
-                        		break;
-                        	case COMPLETED: 
-                        		drawCpuMessageCompleted(pgti, event);
-                        		break;
-                        	case REPLY_REQUEST: 
-                        		break;
-                        	case REQUEST: 
-                        		drawCpuMessageRequest(pgti, event);
-                        		break;
-                    		default: 
-                    			//TODO MAA
-                    			break;
-                        	}
-                        	
-                        }
-                        else 
-                        {
-                        	//TODO MAA: Should never occour? 
-                        }
-                }
+            Long elem_98 = UTIL.NumberToLong(enm_111.next());
+            busid = elem_98;
+            bus = null;
+            bus = data.getBUS(busid);
+            tdBUS tmpArg_v_106 = null;
+            tmpArg_v_106 = data.getBUS(busid);
+            updateCpuBus(pgti, tmpArg_v_106);
+        }
 
-                Boolean cond_85 = null;
-                if(!(cond_85 = new Boolean(UTIL.equals(rest_uhist, new Vector()))).booleanValue())
-                {
-                    Boolean var2_89 = null;
-                    Long var2_91 = null;
-                    var2_91 = pgti.getVerticalSize();
-                    var2_89 = new Boolean(ov_uypos.longValue() >= var2_91.longValue());
-                    cond_85 = var2_89;
-                }
-                if(cond_85.booleanValue())
-                {
-                    cont = (Boolean)UTIL.clone(new Boolean(false));
-                } else
-                {
-                    event_utime = UTIL.NumberToLong(UTIL.clone(UTIL.NumberToLong(rest_uhist.get(0))));
-                    rest_uhist = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector(rest_uhist.subList(1, rest_uhist.size()))));
-                }
-            }
-
-            HashSet iset_97 = new HashSet();
-            iset_97 = cpu.connects();
-            Long busid = null;
-            tdBUS bus;
-            for(Iterator enm_111 = iset_97.iterator(); enm_111.hasNext(); drawCpuTimeMarkerHelper(pgti, bus))
-            {
-                Long elem_98 = UTIL.NumberToLong(enm_111.next());
-                busid = elem_98;
-                bus = null;
-                bus = data.getBUS(busid);
-                tdBUS tmpArg_v_106 = null;
-                tmpArg_v_106 = data.getBUS(busid);
-                updateCpuBus(pgti, tmpArg_v_106);
-            }
-
-            HashSet iset_112 = new HashSet();
-            iset_112 = cpu.getObjects();
-            Long objid = null;
-            tdObject obj;
-            for(Iterator enm_126 = iset_112.iterator(); enm_126.hasNext(); drawCpuTimeMarkerHelper(pgti, obj))
-            {
-                Long elem_113 = UTIL.NumberToLong(enm_126.next());
-                objid = elem_113;
-                obj = null;
-                //obj = cpu.getObject(objid);
-                obj = data.getObject(objid);
-                updateCpuObject(pgti, cpu, obj);
-            }
-
+        HashSet iset_112 = new HashSet();
+        iset_112 = cpu.getObjects();
+        Long objid = null;
+        tdObject obj;
+        for(Iterator enm_126 = iset_112.iterator(); enm_126.hasNext(); drawCpuTimeMarkerHelper(pgti, obj))
+        {
+            Long elem_113 = UTIL.NumberToLong(enm_126.next());
+            objid = elem_113;
+            obj = data.getObject(objid);
+            updateCpuObject(pgti, cpu, obj);
         }
     }
 
@@ -1449,7 +1401,11 @@ public class TracefileVisitor
         	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
         }
         else
-            objref = new Long(0L);
+        {
+            //objref = new Long(0L);
+        	return; //FIXME MAA: What to do when object reference is null?
+        }
+        
         Long thrid = null;
         
         //thrid = pitsw.getId();
@@ -1611,17 +1567,24 @@ public class TracefileVisitor
     {
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
+        	NextGenOperationEvent event = (NextGenOperationEvent)pior;
             Long thrid = null;
             //thrid = pior.getId();
-            thrid = ((NextGenOperationEvent)pior).thread.id;
+            thrid = event.thread.id;
             
             Long objid = null;
-            //objid = pior.getObjref();
-            objid = new Long(((NextGenOperationEvent)pior).object.id);
+            
+            if(event.object == null)
+            {
+            	return; //FIXME MAA; What to do when object is null?
+            	//use event.thread.object instead?
+            }
+            
+            objid = new Long(event.object.id);
             
             Long cpunm = null;
             //cpunm = pior.getCpunm();
-            cpunm = new Long(((NextGenOperationEvent)pior).thread.cpu.id);
+            cpunm = new Long(event.thread.cpu.id);
             
             tdCPU tmpVal_10 = null;
             tmpVal_10 = data.getCPU(cpunm);
@@ -1712,11 +1675,13 @@ public class TracefileVisitor
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
     	
         Long thrid = null;
+        NextGenOperationEvent event = (NextGenOperationEvent)pioa;
         //thrid = pioa.getId();
         thrid = opEvent.thread.id;
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
+        
         //srcobj = thr.getCurrentObject();
         srcobj = data.getObject(new Long(opEvent.object.id));
         Boolean cond_9 = null;
@@ -2271,43 +2236,34 @@ public class TracefileVisitor
 
     private void drawCpuThreadCreate(GenericTabItem pgti, INextGenEvent pitc)
     {
-    	//TODO MAA
-    	/*
-        tdThread thr = null;
-        Long par_5 = null;
-        
-        //par_5 = pitc.getId();
-        par_5 = ((NextGenThreadEvent)pitc).thread.id;
-        
-        thr = data.getThread(par_5);
+    	NextGenThreadEvent event = (NextGenThreadEvent)pitc;
+    	
+    	Long threadId = event.thread.id;
+        tdThread thr = data.getThread(threadId);
         Long objref = null;
-        Boolean cond_8 = null;
         
-        //cond_8 = pitc.hasObjref();
-        cond_8 = ((NextGenThreadEvent)pitc).thread.object != null;
-        
-        if(cond_8.booleanValue())
+        if(event.thread.object != null)
         {
             //objref = pitc.getObjref();
-        	objref = new Long(((NextGenThreadEvent)pitc).thread.object.id);
+        	objref = new Long(event.thread.object.id);
         }
         else
+        {
             objref = new Long(0L);
+        }
         
-        Long cpunm = null;
-        //cpunm = pitc.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitc).thread.cpu.id);
+        Long cpunm = new Long(event.thread.cpu.id);
         
-        tdCPU tmpVal_10 = null;
-        tmpVal_10 = data.getCPU(cpunm);
         tdCPU cpu = null;
-        cpu = tmpVal_10;
-        tdObject obj = null;
-        obj = data.getObject(objref);
-        thr.pushCurrentObject(objref);
+        cpu = data.getCPU(cpunm);
+
+        tdObject obj = data.getObject(objref);
+        
+        //thr.pushCurrentObject(objref);
+        
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateCpuObject(pgti, cpu, obj);
+            //updateCpuObject(pgti, cpu, obj);
             Long x1 = null;
             x1 = obj.getX();
             Long x2 = x1;
@@ -2319,10 +2275,10 @@ public class TracefileVisitor
             tmpVal_27 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
             Long y2 = null;
             y2 = tmpVal_27;
-            drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
-            ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+            //drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
+            //ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
-        }*/
+        }
     }
 
     private void drawOvThreadKill(GenericTabItem pgti, INextGenEvent pitsw)
@@ -2443,7 +2399,11 @@ public class TracefileVisitor
 			objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
 		}
 		else
-		    objref = new Long(0L);
+		{
+		    //objref = new Long(0L);
+		    return; //FIXME MAA: What to do when object reference is null??
+		}
+		
 //		Long thrid = null;
 		//thrid = pitsw.getId();
 //		thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
