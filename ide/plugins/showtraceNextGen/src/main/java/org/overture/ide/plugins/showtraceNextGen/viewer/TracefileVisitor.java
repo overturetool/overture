@@ -32,6 +32,7 @@ import java.util.Vector;
 import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.Record;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
+import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
@@ -823,7 +824,7 @@ public class TracefileVisitor
             	{
             		//TODO Create dummy event
             	}
-            	updateOvCpu(pgti,event);
+            	//updateOvCpu(pgti,event);
             }
 
 //          for(Iterator enm_118 = iset_110.iterator(); enm_118.hasNext(); updateOvBus(pgti, tmpArg_v_116))
@@ -1778,7 +1779,7 @@ public class TracefileVisitor
             tdCPU cpu = null;
             cpu = tmpVal_9;
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
-            updateOvCpu(pgti, pioa);
+            //updateOvCpu(pgti, pioa);
         }
     }
 
@@ -1876,7 +1877,7 @@ public class TracefileVisitor
             tdCPU cpu = null;
             cpu = tmpVal_9;
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + ELEMENT_uSIZE.longValue())));
-            updateOvCpu(pgti, pioc);
+            //updateOvCpu(pgti, pioc);
         }
     }
 
@@ -2010,7 +2011,7 @@ public class TracefileVisitor
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
+            //updateOvBus(pgti, bus);
             Long tmpVal_21 = null;
             tmpVal_21 = bus.getX();
             Long x1 = null;
@@ -2123,7 +2124,7 @@ public class TracefileVisitor
         bus = data.getBUS(busid);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvBus(pgti, bus);
+            //updateOvBus(pgti, bus);
             Long tmpVal_18 = null;
             tmpVal_18 = bus.getX();
             Long x1 = null;
@@ -2168,7 +2169,7 @@ public class TracefileVisitor
         cpu = tmpVal_13;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvBus(pgti, bus);
+            //updateOvBus(pgti, bus);
             Long tmpVal_22 = null;
             tmpVal_22 = bus.getX();
             Long x1 = null;
@@ -2315,7 +2316,7 @@ public class TracefileVisitor
         cpu = tmpVal_6;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvCpu(pgti, pitc);
+            //updateOvCpu(pgti, pitc);
             Long x1 = null;
             x1 = cpu.getX();
             Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
@@ -2466,7 +2467,7 @@ public class TracefileVisitor
             cpu = tmpVal_6;
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
-                updateOvCpu(pgti, pitsw);
+                //updateOvCpu(pgti, pitsw);
                 Long x1 = null;
                 x1 = cpu.getX();
                 Long x2 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
@@ -2605,7 +2606,7 @@ public class TracefileVisitor
         cpu = tmpVal_6;
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
-            updateOvCpu(pgti, pitsw);
+            //updateOvCpu(pgti, pitsw);
             Long tmpVal_15 = null;
             tmpVal_15 = cpu.getX();
             Long x1 = null;
@@ -2717,7 +2718,7 @@ public class TracefileVisitor
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uxpos.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
+            //updateOvBus(pgti, bus);
             Long x1 = null;
             x1 = bus.getX();
             Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
