@@ -1744,25 +1744,29 @@ public class TracefileVisitor
     private void drawCpuOpActivate(GenericTabItem pgti, INextGenEvent pioa)
         throws CGException
     {
+    	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
+    	
         Long thrid = null;
         //thrid = pioa.getId();
-        thrid = ((NextGenOperationEvent)pioa).thread.id;
+        thrid = opEvent.thread.id;
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
         //srcobj = thr.getCurrentObject();
-        srcobj = data.getObject(new Long(((NextGenOperationEvent)pioa).object.id));
+        srcobj = data.getObject(new Long(opEvent.object.id));
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
+        
+        
         //unArg_10 = pioa.hasObjref(); //TODO MAA
-        unArg_10 = true;
+        unArg_10 = opEvent.object != null;
         
         cond_9 = new Boolean(!unArg_10.booleanValue());
         if(!cond_9.booleanValue())
         {
             Long destobjref = null;
             //destobjref = pioa.getObjref();
-            destobjref = new Long(((NextGenOperationEvent)pioa).object.id);
+            destobjref = new Long(opEvent.object.id);
             
             tdObject destobj = null;
             destobj = data.getObject(destobjref);
@@ -1770,7 +1774,7 @@ public class TracefileVisitor
             {
                 Long cpunm = null;
                 //cpunm = pioa.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioa).thread.cpu.id);
+                cpunm = new Long(opEvent.thread.cpu.id);
                 
                 tdCPU tmpVal_20 = null;
                 tmpVal_20 = data.getCPU(cpunm);
@@ -1795,7 +1799,7 @@ public class TracefileVisitor
                     String arg_49 = null;
                     String var2_52 = null;
                     //var2_52 = pioa.getOpname();
-                    var2_52 = ((NextGenOperationEvent)pioa).operation.name;
+                    var2_52 = opEvent.operation.name;
                     
                     arg_49 = (new String("A ")).concat(var2_52);
                     org.eclipse.swt.graphics.Font arg_50 = null;
@@ -1813,7 +1817,7 @@ public class TracefileVisitor
                     updateCpuObject(pgti, cpu, destobj);
                     String tmpArg_v_37 = null;
                     //tmpArg_v_37 = pioa.getOpname();
-                    tmpArg_v_37 = ((NextGenOperationEvent)pioa).operation.name;
+                    tmpArg_v_37 = opEvent.operation.name;
                     
                     Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
                 }
@@ -1841,22 +1845,23 @@ public class TracefileVisitor
 
     private void drawCpuOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
     {
-    	//TODO MAA
-    	/*
+    	
+    	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
+    	
         Long thrid = null;
         //thrid = pioc.getId();
-        thrid = ((NextGenOperationEvent)pioc).thread.id;
+        thrid = opEvent.thread.id;
         
         tdThread thr = null;
         thr = data.getThread(thrid);
         tdObject srcobj = null;
         //srcobj = thr.getCurrentObject();
-        srcobj = data.getObject(new Long(((NextGenOperationEvent)pioa).object.id));
+        srcobj = data.getObject(new Long(opEvent.object.id));
         
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         //unArg_10 = pioc.hasObjref(); //TODO MAA
-        unArg_10 = true;
+        unArg_10 = opEvent.object != null;
         
         cond_9 = new Boolean(!unArg_10.booleanValue());
         if(!cond_9.booleanValue())
@@ -1944,7 +1949,7 @@ public class TracefileVisitor
                     Object2ObjectArrow(pgti, srcobj, destobj, new String(""));
                 }
             }
-        }*/
+        }
     }
    
     //Message Event
@@ -2007,17 +2012,17 @@ public class TracefileVisitor
         }
     }
 
-    private void drawCpuMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
-    {
-    	//TODO MAA
-    	/*
+    private void drawCpuMessageRequest(GenericTabItem pgti, INextGenEvent pitmr) throws CGException
+    {	
+    	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitmr;
+    	
         Long busid = null;
         //busid = pitmr.getBusid();
-        busid = new Long(((NextGenBusMessageEvent)pitmr).message.bus.id);
+        busid = new Long(busMessageEvent.message.bus.id);
         
         Long msgid = null;
         //msgid = pitmr.getMsgid();
-        msgid = ((NextGenBusMessageEvent)pitmr).message.id;
+        msgid = busMessageEvent.message.id;
         
         tdBUS bus = null;
         bus = data.getBUS(busid);
@@ -2048,7 +2053,8 @@ public class TracefileVisitor
             par_29 = msg.getFromThread();
             thr = data.getThread(par_29);
             tdObject obj = null;
-            obj = thr.getCurrentObject();
+            //obj = thr.getCurrentObject();
+            obj = data.getObject(new Long(busMessageEvent.message.callerThread.object.id));
             Long xobj = null;
             Long var1_34 = null;
             var1_34 = obj.getX();
@@ -2057,13 +2063,14 @@ public class TracefileVisitor
             String tmpArg_v_50 = null;
             String var1_51 = null;
             String var2_53 = null;
-            var2_53 = msg.getDescr(); TODO
+            //var2_53 = msg.getDescr();
+            var2_53 = "dummyText";
             var1_51 = (new String(" call ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             bus.setY(y2);
-        }*/
+        }
     }
 
     private void drawOvMessageActivate(GenericTabItem pgti, INextGenEvent pitma)
@@ -2178,13 +2185,14 @@ public class TracefileVisitor
 //        }
     }
 
-    private void drawCpuMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
+    private void drawCpuMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc) throws CGException
     {
-    	//TODO MAA
-    	/*
+    	
         Long msgid = null;
         //msgid = pitmc.getMsgid();
-        msgid = ((NextGenBusMessageEvent)pitmc).message.id;
+        
+        NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitmc;
+        msgid = busMessageEvent.message.id;
         
         tdMessage msg = null;
         msg = data.getMessage(msgid);
@@ -2213,30 +2221,33 @@ public class TracefileVisitor
             y2 = tmpVal_22;
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.darkGray);
             Boolean cond_32 = null;
-            cond_32 = msg.hasToThread();
+            //cond_32 = msg.hasToThread();
+            cond_32 = false; //TODO: Peter hasToThread not implemented yet
             if(cond_32.booleanValue())
             {
-                tdThread thr = null;
-                Long par_60 = null;
-                par_60 = msg.getToThread();
-                thr = data.getThread(par_60);
-                tdObject obj = null;
-                obj = thr.getCurrentObject();
-                Long xobj = null;
-                Long var1_65 = null;
-                var1_65 = obj.getX();
-                xobj = new Long(var1_65.longValue() - (new Long(10L)).longValue());
-                String tmpArg_v_74 = null;
-                String var1_75 = null;
-                String var2_77 = null;
-                var2_77 = msg.getDescr(); TODO
-                var1_75 = (new String(" ")).concat(var2_77);
-                tmpArg_v_74 = var1_75.concat(new String(" "));
-                drawHorizontalArrow(pgti, xobj, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_74, ColorConstants.darkGreen);
+            	  //TODO: Not run at the moment. getToThread missing
+//                tdThread thr = null;
+//                Long par_60 = null;
+//                par_60 = msg.getToThread();
+//                thr = data.getThread(par_60);
+//                tdObject obj = null;
+//                obj = data.getObject(new Long(busMessageEvent.message.callerThread.object.id));
+//                Long xobj = null;
+//                Long var1_65 = null;
+//                var1_65 = obj.getX();
+//                xobj = new Long(var1_65.longValue() - (new Long(10L)).longValue());
+//                String tmpArg_v_74 = null;
+//                String var1_75 = null;
+//                String var2_77 = null;
+//                //var2_77 = msg.getDescr();
+//                var2_77 = "dummyText"; //TODO: Peter Missing description
+//                var1_75 = (new String(" ")).concat(var2_77);
+//                tmpArg_v_74 = var1_75.concat(new String(" "));
+//                drawHorizontalArrow(pgti, xobj, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_74, ColorConstants.darkGreen);
             } else
             {
                 Long objid = null;
-                objid = msg.getToObj();
+                objid = new Long(busMessageEvent.message.object.id);
                 Long cpuid = null;
                 cpuid = msg.getToCpu();
                 tdObject obj = null;
@@ -2250,13 +2261,14 @@ public class TracefileVisitor
                 Long var1_50 = null;
                 var1_50 = obj.getX();
                 tmpArg_v_49 = new Long(var1_50.longValue() - (new Long(10L)).longValue());
-                String tmpArg_v_56 = null;
-                tmpArg_v_56 = msg.getDescr(); TODO
+                String tmpArg_v_56 = "dummyText";
+                //tmpArg_v_56 = msg.getDescr();
+                tmpArg_v_56 = ""; //TODO Peter Missing description
                 drawHorizontalArrow(pgti, tmpArg_v_49, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_56, ColorConstants.darkGreen);
             }
             ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(y2.longValue() + (new Long(10L)).longValue())));
             bus.setY(y2);
-        }*/
+        }
     }
 
     //Thread Event
@@ -2608,12 +2620,8 @@ public class TracefileVisitor
         else
             objref = new Long(0L);
         Long thrid = null;
-        tdThread thr = null;
-       
         //thrid = pitsw.getId();
         thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
-        thr = data.getThread(thrid);
-        
         Long cpunm = null;
         
         //cpunm = pitsw.getCpunm();
