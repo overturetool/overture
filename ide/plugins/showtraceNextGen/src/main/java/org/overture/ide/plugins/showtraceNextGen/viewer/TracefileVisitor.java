@@ -1549,14 +1549,23 @@ public class TracefileVisitor
     {
     	NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
     	
-        Long thrid = null;
-        //thrid = pioa.getId();
-        thrid = opEvent.thread.id;
-        tdThread thr = null;
-        thr = data.getThread(thrid);
+        Long thrid = opEvent.thread.id;
+        tdThread thr = data.getThread(thrid);
         tdObject srcobj = null;    
-        //srcobj = thr.getCurrentObject();
-        srcobj = data.getObject(thr.getCurrentObjectId());
+        
+        if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.MAIN)
+        {
+    		srcobj = data.getMainThreadObject();
+        }
+    	else if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.INIT)
+    	{
+    		srcobj = data.getInitThreadObject();
+    	}
+        else
+        {
+        	srcobj = data.getObject(thr.getCurrentObjectId());
+        }
+        
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         
@@ -1682,7 +1691,8 @@ public class TracefileVisitor
                 cpu = tmpVal_19;
                 Boolean cond_21 = null;
                 Long var1_22 = null;
-                var1_22 = srcobj.getId();
+                //var1_22 = srcobj.getId();
+                var1_22 = new Long(opEvent.object.id);
                 Long var2_23 = null;
                 var2_23 = destobj.getId();
                 cond_21 = new Boolean(var1_22.longValue() == var2_23.longValue());
@@ -2049,7 +2059,15 @@ public class TracefileVisitor
             } else
             {
                 Long objid = null;
-                objid = new Long(busMessageEvent.message.object.id);
+                if(busMessageEvent.message.object != null)
+                {
+                	objid = new Long(busMessageEvent.message.object.id);
+                }
+                else
+                {
+                	//FIXME MAA: What to do?
+                	return;
+                }
                 Long cpuid = null;
                 cpuid = msg.getToCpu();
                 tdObject obj = null;
@@ -2138,11 +2156,9 @@ public class TracefileVisitor
         {
         	Long objref = new Long(event.thread.object.id);
         	obj = data.getObject(objref);
+        	thr.pushCurrentObjectId(obj.getId());
         }
-          
-        
-        thr.pushCurrentObjectId(obj.getId());
-        
+
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);

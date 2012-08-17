@@ -95,7 +95,7 @@ public class tdThread
     
     public boolean hasCurrentObject(){
     	
-    	return objectIds.isEmpty();
+    	return !objectIds.isEmpty();
     }
 
 }

@@ -298,11 +298,12 @@ public class NextGenRTLogger {
 	
 	private NextGenObject getObject(Long objref)
 	{
-		return this.objectMap.get(objref);
+		return this.objectMap.get(objref.intValue());
 	}
 	
 	private void treatOperationMessage(RTOperationMessage m) {
 		
+	
 		String opName = m.operationVal.name.toString();
 		String className = getClassName(m.operationVal);
 		
@@ -340,7 +341,7 @@ public class NextGenRTLogger {
 		{
 			obj = getObject(m.objref);
 		} 
-				
+
 		
 		NextGenOperationEvent opEvent = new NextGenOperationEvent(getThread(m.threadId),m.getLogTime(),op, obj ,eventType);
 				
@@ -392,8 +393,6 @@ public class NextGenRTLogger {
 		vBus.cpus.add(cpu);
 	}
 	
-	
-
 
 	private void addBus(int busNumber, List<Integer> cpus, String name) 
 	{
@@ -407,13 +406,11 @@ public class NextGenRTLogger {
 		this.busMap.put(bus.id, bus);		
 	}
 
-
 	private void deployObject(ObjectValue object, CPUResource cpuResource) 
 	{		
 		NextGenObject o = new NextGenObject(object.objectReference, getClassDefinition(object.type.getName().name) ,cpuMap.get(cpuResource.getNumber()));		
 		objectMap.put(object.objectReference, o);		
 	}
-
 
 	private NextGenClassDefinition getClassDefinition(String name)
 	{
@@ -429,10 +426,6 @@ public class NextGenRTLogger {
 		
 		return classDef;
 	}
-	
-	
-
-
 	
 	private void createThread(ISchedulableThread thread, CPUResource cpuNumber,long time) 
 	{		
@@ -463,7 +456,6 @@ public class NextGenRTLogger {
 		
 	}
 
-
 	private NextGenObject getObjectFromThread(ISchedulableThread thread) 
 	{	
 		ObjectValue obj = thread.getObject(); 
@@ -484,7 +476,6 @@ public class NextGenRTLogger {
 		}		
 	}
 
-
 	private List<Integer> parseCpuIds(String cpus){
 		List<Integer> res = new ArrayList<Integer>();
 		
@@ -499,8 +490,7 @@ public class NextGenRTLogger {
 		
 		return res;
 	}
-	
-	
+		
 	public void printDataStructure(String fileName) throws IOException
 	{
 
@@ -591,8 +581,7 @@ public class NextGenRTLogger {
         out.flush();
         out.close();
 	}
-	
-	
+		
 	//Writing to log
 	public void toFile() throws IOException
 	{
@@ -612,7 +601,6 @@ public class NextGenRTLogger {
 		
 	}
 
-	
 	private void writeEvents(BufferedWriter out) throws IOException {
 		for (INextGenEvent e : this.events) {
 			out.append(e.toString());
@@ -620,8 +608,6 @@ public class NextGenRTLogger {
 		}
 		
 	}
-
-
 
 	private void writeDeployObjs(BufferedWriter out) throws IOException {
 		
@@ -632,8 +618,6 @@ public class NextGenRTLogger {
 		}
 		
 	}
-
-
 
 	private void writeBUSdecls(BufferedWriter out) throws IOException {
 		for (NextGenBus bus : this.busMap.values()) 
@@ -647,9 +631,6 @@ public class NextGenRTLogger {
 		
 	}
 
-
-
-	
 	private void writeCPUdecls(BufferedWriter out) throws IOException {
 		for (NextGenCpu cpu : this.cpuMap.values()) 
 		{
@@ -665,7 +646,7 @@ public class NextGenRTLogger {
 	{
 		if(logFile != null)
 		{
-			//printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
+			printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
 			
 			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
 			ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -683,7 +664,6 @@ public class NextGenRTLogger {
 			out.close();
 		}
 	}
-	
 	
 	private void readFromFile(String filename) throws IOException, ClassNotFoundException
 	{
@@ -705,7 +685,6 @@ public class NextGenRTLogger {
 		in.close();
 		//printDataStructure("c:\\readFromFile_structure.txt");
 	}
-	
 	
 	public static NextGenRTLogger getInstanceFromFile(String filename) throws IOException, ClassNotFoundException{
 		instance = new NextGenRTLogger();
