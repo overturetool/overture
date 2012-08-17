@@ -1843,6 +1843,7 @@ public class TracefileVisitor
             String var1_48 = null;
             String var2_50 = "";
             //var2_50 = msg.getDescr(); //TODO
+            var2_50 = busMessageEvent.message.operation.name;
             var1_48 = (new String(" call ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
             drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
@@ -1999,6 +2000,7 @@ public class TracefileVisitor
             String var1_47 = null;
             String var2_49 = "";
             //var2_49 = msg.getDescr(); //TODO: Message description?
+            var2_49 = busMessageEvent.message.operation.name;
             var1_47 = (new String(" ")).concat(var2_49);
             tmpArg_v_46 = var1_47.concat(new String(" "));
             drawVerticalArrow(pgti, x2, new Long(y1.longValue() - (new Long(8L)).longValue()), ycpu, tmpArg_v_46, ColorConstants.darkBlue);
@@ -2507,11 +2509,11 @@ public class TracefileVisitor
     	
         Long busid = null;
         //busid = pitrr.getBusid();
-        busid = new Long(replyEvent.message.bus.id);
+        busid = new Long(replyEvent.replyMessage.bus.id);
         
         Long msgid = null;
         //msgid = pitrr.getMsgid();
-        msgid = replyEvent.message.id;
+        msgid = replyEvent.replyMessage.id;
         
         tdBUS bus = null;
         bus = data.getBUS(busid);
@@ -2545,6 +2547,7 @@ public class TracefileVisitor
             String var1_48 = null;
             String var2_50 = "";
             //var2_50 = msg.getDescr(); //TODO: msg description
+            var2_50 = replyEvent.message.operation.name;
             var1_48 = (new String(" return from ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
             drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
