@@ -785,8 +785,9 @@ public class TracefileVisitor
             	case SWAP_OUT: 		
             		drawCpuThreadSwapOut(pgti, event); 
             		break;
-            	default: //TODO MAA 
-            		break; 
+            	default:
+            		throw new UnexpectedInstanceException("ThreadEventSwapType instance not known!");
+            		//break; 
             	}               		
         	}  
             else if(event instanceof NextGenThreadEvent)
@@ -796,13 +797,13 @@ public class TracefileVisitor
             	case CREATE: 	
             		drawCpuThreadCreate(pgti, event); break;
             	case SWAP: 
-            		//TODO MAA: Exception? 
-            		break;
+            		throw new RuntimeException("SWAP ThreadEventType is invalid at this point!");
+            		//break;
             	case KILL: 		
             		drawCpuThreadKill(pgti, event); break;
             	default: 
-            		//TODO MAA 
-            		break; 
+            		throw new UnexpectedInstanceException("ThreadEventType instance not known!");
+            		//break; 
             	}
             }
             else if(event instanceof NextGenOperationEvent)
@@ -818,9 +819,9 @@ public class TracefileVisitor
             	case COMPLETE: 
             		drawCpuOpCompleted(pgti, event);
             		break;
-            	default: 
-            		//TODO MAA
-            		break;
+            	default:
+            		throw new UnexpectedInstanceException("OperationEventType instance is not known!");
+            		//break;
             	}
             }
             else if(event instanceof NextGenBusMessageReplyRequestEvent)
@@ -832,25 +833,26 @@ public class TracefileVisitor
             	switch(((NextGenBusMessageEvent)event).type)
             	{
             	case ACTIVATE: 
-            		//TODO MAA
-            		break;
+            		throw new RuntimeException("ACTIVE NextGenBusMessageEventType is invalid at this point!");
+            		//break;
             	case COMPLETED: 
             		drawCpuMessageCompleted(pgti, event);
             		break;
-            	case REPLY_REQUEST: 
-            		break;
+            	case REPLY_REQUEST:
+            		throw new RuntimeException("REPLY_REQUEST NextGenBusMessageEventType is invalid at this point");
+            		//break;
             	case REQUEST: 
             		drawCpuMessageRequest(pgti, event);
             		break;
         		default: 
-        			//TODO MAA
-        			break;
+        			throw new UnexpectedInstanceException("NextGenBusMessageEventType instance is not known!");
+        			//break;
             	}
             	
             }
             else 
             {
-            	//TODO MAA: Should never occour? 
+            	throw new UnknownEventTypeException("Unknown event type!");
             }
     	}
     	
