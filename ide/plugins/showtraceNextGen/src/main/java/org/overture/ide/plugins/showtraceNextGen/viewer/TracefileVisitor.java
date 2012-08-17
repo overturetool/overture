@@ -1991,11 +1991,10 @@ public class TracefileVisitor
         }
         
         //If this is a reply to an earlier request then unblock the thread which did the request
-        if(busMessageEvent instanceof NextGenBusMessageReplyRequestEvent)
+        if(busMessageEvent.message.receiverThread != null)
         {
-        	NextGenBusMessageReplyRequestEvent replyReqEvent = (NextGenBusMessageReplyRequestEvent)busMessageEvent;
-        	tdThread thr = data.getThread(replyReqEvent.replyMessage.callerThread.id);
-        	thr.setStatus(false);
+			tdThread thr = data.getThread(busMessageEvent.message.receiverThread.id);
+			thr.setStatus(false);
         }
     }
 
