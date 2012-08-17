@@ -88,29 +88,7 @@ public class tdCPU extends tdResource
         return expl;
     }
 
-    public HashSet connects()
-        throws CGException
-    {
-    	HashSet res = new HashSet();
-    	
-    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
-    	
-    	for(Integer key : buses.keySet())
-    	{
-    		NextGenBus currentBus = buses.get(key);
-    		List<NextGenCpu> currentBusCpus = currentBus.cpus;
-    		
-    		for (NextGenCpu currentCpu : currentBusCpus) {
-				
-    			if(id.intValue() == currentCpu.id)
-    				res.add(new Long(currentBus.id));
-			}  		
-    	}
-    	
-    	
-    	
-        return res; //TODO
-    }
+
     
     public void setCurrentThread(Long curthrd)
     {
@@ -148,10 +126,6 @@ public class tdCPU extends tdResource
     	return objects;
     }
     
-    public HashSet<Long> getObjects()
-    {
-    	return new HashSet(objects);
-    }
     
     public Boolean hasObject(Long pobjid)
     {

@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.management.RuntimeErrorException;
+
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+
 import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 
@@ -48,6 +51,7 @@ public class TraceData
 	private HashMap<Long, tdMessage> messages;
 	private tdObject mainThreadObject;
 	private tdObject initThreadObject;
+	
 	
     public TraceData()
     {
@@ -230,6 +234,78 @@ public class TraceData
         messages.clear();
     }
 
-	
-	
+    public Vector<Long> getBusIdsFromCpu(Long cpuId)
+    {
+    	Vector<Long> res = new Vector<Long>();
+    	
+    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap(); 	
+    	for(NextGenBus bus : buses.values())
+    	{	
+    		for (NextGenCpu cpu : bus.cpus) 
+    		{
+    			if(cpuId.intValue() == cpu.id)
+    				res.add(new Long(bus.id));
+			}  		
+    	}
+        return res; 
+    }
+    
+    public Vector<Long> getObjectIdsFromCpu(Long cpuId)
+    {
+    	Vector<Long> res = new Vector<Long>();
+    	
+    	Map<Integer, NextGenObject> objects = rtLogger.getObjectMap(); 	
+    	for(NextGenObject obj : objects.values())
+    	{	
+			if(cpuId.intValue() == obj.cpu.id)
+				res.add(new Long(obj.id));
+		  		
+    	}
+        return res; 
+    }
+    
+
+	public Vector<INextGenEvent> getSortedCpuEvents(Integer cpuId)
+	{
+
+		List<INextGenEvent> sortedEvents = getSortedEvents();
+		Vector<INextGenEvent> result = new Vector<INextGenEvent>();
+		
+		//FIXME MAA: Consider moving the iteration to constructor to only do it once?	
+		for(INextGenEvent event : sortedEvents)
+		{
+			if(event instanceof NextGenThreadEvent)
+            {
+    			int eventCpu = ((NextGenThreadEvent)event).thread.cpu.id;
+    			if(eventCpu == cpuId)
+    			{
+    				result.add(event);
+    			}
+            }
+            else if(event instanceof NextGenOperationEvent)
+            {
+    			int eventCpu = ((NextGenOperationEvent)event).thread.cpu.id;
+    			if(eventCpu == cpuId)
+    			{
+    				result.add(event);
+    			}
+    			
+            }
+            else if(event instanceof NextGenBusMessageEvent)
+            {
+    			int fromCpu = ((NextGenBusMessageEvent)event).message.fromCpu.id;
+    			int toCpu =  ((NextGenBusMessageEvent)event).message.toCpu.id;
+    			if(fromCpu == cpuId || toCpu == cpuId)
+    			{
+    				result.add(event);
+    			}
+            }
+            else 
+            {
+            	throw new UnknownEventTypeException("Unknown event type!");
+            }
+		}
+		
+		return result;
+	}
 }

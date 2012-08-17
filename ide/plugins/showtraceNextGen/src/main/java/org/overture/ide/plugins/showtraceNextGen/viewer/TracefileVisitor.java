@@ -247,8 +247,7 @@ public class TracefileVisitor
             Long width = null;
             Long var2_15 = null;
             Long var2_17 = null;
-            HashSet unArg_18 = new HashSet();
-            unArg_18 = cpu.connects();
+            Vector<Long> unArg_18 = data.getBusIdsFromCpu(cpuid);//cpu.connects();
             var2_17 = new Long(unArg_18.size());
             var2_15 = new Long((new Long(9L)).longValue() * var2_17.longValue());
             width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + var2_15.longValue());
@@ -397,59 +396,49 @@ public class TracefileVisitor
         ov_uxpos = UTIL.NumberToLong(UTIL.clone(new Long(0L)));
         ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long((new Long(CPU_uYPOS.longValue() + CPU_uHEIGHT.longValue())).longValue() + ELEMENT_uSIZE.longValue())));
         ov_utimepos = (Vector)UTIL.ConvertToList(UTIL.clone(new Vector()));
-        Vector sq_13 = null;
-        sq_13 = data.getOrderedBuses();
-        Long busid = null;
-        for(Iterator enm_60 = sq_13.iterator(); enm_60.hasNext();)
+//        
+//        Vector sq_13 = null;
+//        sq_13 = data.getOrderedBuses();
+//        Long busid = null;
+        
+        //Draw busses
+        for(Long busID : data.getBusIdsFromCpu(cpu.getId()))
         {
-            Long elem_14 = UTIL.NumberToLong(enm_60.next());
-            busid = elem_14;
-            Boolean cond_17 = null;
-            HashSet var2_19 = new HashSet();
-            var2_19 = cpu.connects();
-            cond_17 = new Boolean(var2_19.contains(busid));
-            if(cond_17.booleanValue())
+        	tdBUS bus = null;
+            bus = data.getBUS(busID);
+            Long width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(23L)).longValue());
+            NormalLabel nlb = null;
+            String arg_29 = null;
+            arg_29 = bus.getName();
+            org.eclipse.swt.graphics.Font arg_30 = null;
+            arg_30 = pgti.getCurrentFont();
+            nlb = new NormalLabel(arg_29, arg_30);
+            RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);
+            Point np = new Point(curx.longValue(), CPU_uYPOS.longValue());
+            Boolean cond_34 = null;
+            Boolean unArg_35 = null;
+            unArg_35 = bus.isExplicit();
+            cond_34 = new Boolean(!unArg_35.booleanValue());
+            if(cond_34.booleanValue())
             {
-                tdBUS bus = null;
-                bus = data.getBUS(busid);
-                Long width = new Long((new Long((new Long(2L)).longValue() * CPU_uHALFWIDTH.longValue())).longValue() + (new Long(23L)).longValue());
-                NormalLabel nlb = null;
-                String arg_29 = null;
-                arg_29 = bus.getName();
-                org.eclipse.swt.graphics.Font arg_30 = null;
-                arg_30 = pgti.getCurrentFont();
-                nlb = new NormalLabel(arg_29, arg_30);
-                RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);
-                Point np = new Point(curx.longValue(), CPU_uYPOS.longValue());
-                Boolean cond_34 = null;
-                Boolean unArg_35 = null;
-                unArg_35 = bus.isExplicit();
-                cond_34 = new Boolean(!unArg_35.booleanValue());
-                if(cond_34.booleanValue())
-                {
-                    nrr.setDash();
-                    nrr.setForegroundColor(ColorConstants.darkGray);
-                }
-                nrr.setLocation(np);
-                nrr.setSize(width, CPU_uHEIGHT);
-                pgti.addFigure(nrr);
-                bus.setX(new Long((new Long(curx.longValue() + CPU_uHALFWIDTH.longValue())).longValue() + (new Long(12L)).longValue()));
-                bus.setY(ov_uypos);
-                curx = UTIL.NumberToLong(UTIL.clone(new Long((new Long(curx.longValue() + width.longValue())).longValue() + CPU_uHINTERVAL.longValue())));
+                nrr.setDash();
+                nrr.setForegroundColor(ColorConstants.darkGray);
             }
+            nrr.setLocation(np);
+            nrr.setSize(width, CPU_uHEIGHT);
+            pgti.addFigure(nrr);
+            bus.setX(new Long((new Long(curx.longValue() + CPU_uHALFWIDTH.longValue())).longValue() + (new Long(12L)).longValue()));
+            bus.setY(ov_uypos);
+            curx = UTIL.NumberToLong(UTIL.clone(new Long((new Long(curx.longValue() + width.longValue())).longValue() + CPU_uHINTERVAL.longValue())));
         }
-
+        
         ov_uxpos = UTIL.NumberToLong(UTIL.clone(curx));
-        HashSet iset_62 = new HashSet();
-        iset_62 = cpu.getObjects();
-        Long objid = null;
-        tdObject obj;
-        for(Iterator enm_73 = iset_62.iterator(); enm_73.hasNext(); updateCpuObject(pgti, cpu, obj))
+        
+        //Draw ojects
+        for(Long objId : data.getObjectIdsFromCpu(cpu.getId()))
         {
-            Long elem_63 = UTIL.NumberToLong(enm_73.next());
-            objid = elem_63;
-            obj = null;
-            obj = data.getObject(objid);
+        	tdObject obj = data.getObject(objId);
+        	updateCpuObject(pgti, cpu, obj);
         }
 
         drawCpuDetail(pgti, cpu);
@@ -514,8 +503,8 @@ public class TracefileVisitor
             var1_49 = obj_50.getX();
             var1_48 = new Long(var1_49.longValue() + CPU_uHALFWIDTH.longValue());
             xbase = new Long(var1_48.longValue() + (new Long(5L)).longValue());
-            HashSet iset_54 = new HashSet();
-            iset_54 = cpu.connects();
+            Vector iset_54 = new Vector();
+            iset_54 = data.getBusIdsFromCpu(cpuid);
             Long busid = null;
             for(Iterator enm_128 = iset_54.iterator(); enm_128.hasNext();)
             {
@@ -756,7 +745,8 @@ public class TracefileVisitor
         throws CGException
     {
     	Long lastCpuMarkerTime = -1L;
-    	List<INextGenEvent> events = data.getSortedEvents();
+    	Integer cpuId = cpu.getId().intValue();
+    	List<INextGenEvent> events = data.getSortedCpuEvents(cpuId); //Only get event for this CPU
     	Long verticalTabSize =  pgti.getVerticalSize();
     	
     	for(INextGenEvent event : events)
@@ -773,7 +763,7 @@ public class TracefileVisitor
     		}
     		
     		if(event instanceof NextGenThreadSwapEvent)
-        	{
+        	{	
             	switch(((NextGenThreadSwapEvent)event).swapType)
             	{
             	case SWAP_IN: 
@@ -833,8 +823,9 @@ public class TracefileVisitor
             	switch(((NextGenBusMessageEvent)event).type)
             	{
             	case ACTIVATE: 
-            		throw new RuntimeException("ACTIVE NextGenBusMessageEventType is invalid at this point!");
-            		//break;
+            		//This is allowed but is not drawn so just ignore it
+            		//throw new RuntimeException("ACTIVE NextGenBusMessageEventType is invalid at this point!");
+            		break;
             	case COMPLETED: 
             		drawCpuMessageCompleted(pgti, event);
             		break;
@@ -856,8 +847,8 @@ public class TracefileVisitor
             }
     	}
     	
-		HashSet iset_97 = new HashSet();
-        iset_97 = cpu.connects();
+		Vector iset_97 = new Vector();
+        iset_97 = data.getBusIdsFromCpu(cpu.getId());
         Long busid = null;
         tdBUS bus;
         for(Iterator enm_111 = iset_97.iterator(); enm_111.hasNext(); drawCpuTimeMarkerHelper(pgti, bus))
@@ -871,17 +862,17 @@ public class TracefileVisitor
             updateCpuBus(pgti, tmpArg_v_106);
         }
 
-        HashSet iset_112 = new HashSet();
-        iset_112 = cpu.getObjects();
-        Long objid = null;
-        tdObject obj;
-        for(Iterator enm_126 = iset_112.iterator(); enm_126.hasNext(); drawCpuTimeMarkerHelper(pgti, obj))
-        {
-            Long elem_113 = UTIL.NumberToLong(enm_126.next());
-            objid = elem_113;
-            obj = data.getObject(objid);
-            updateCpuObject(pgti, cpu, obj);
-        }
+//        HashSet iset_112 = new HashSet();
+//        iset_112 = cpu.getObjects();
+//        Long objid = null;
+//        tdObject obj;
+//        for(Iterator enm_126 = iset_112.iterator(); enm_126.hasNext(); drawCpuTimeMarkerHelper(pgti, obj))
+//        {
+//            Long elem_113 = UTIL.NumberToLong(enm_126.next());
+//            objid = elem_113;
+//            obj = data.getObject(objid);
+//            updateCpuObject(pgti, cpu, obj);
+//        }
     }
 
     private void updateOvBus(GenericTabItem pgti, tdBUS bus)
@@ -2179,6 +2170,8 @@ public class TracefileVisitor
 	        {
 	        	throw new RuntimeErrorException(null, "Invalid object state for RT Thread!"); //TODO MAA?
 	        }
+        	
+        	thr.pushCurrentObject(obj);
         }
         else
         {
@@ -2565,8 +2558,9 @@ public class TracefileVisitor
     	throws CGException
     {
         Long busid = null;
+        NextGenBusMessageReplyRequestEvent rEvent = (NextGenBusMessageReplyRequestEvent)pitrr;
         //busid = pitrr.getBusid();
-        busid = new Long(((NextGenBusMessageReplyRequestEvent)pitrr).message.bus.id);
+        busid = new Long(rEvent.message.bus.id);
         
         Long msgid = null;
         //msgid = pitrr.getMsgid();
