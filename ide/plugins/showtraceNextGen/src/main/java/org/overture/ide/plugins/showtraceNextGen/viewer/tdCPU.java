@@ -50,6 +50,7 @@ public class tdCPU extends tdResource
     private Vector<Long> threads;
     private Vector<Long> objects;
     private Long current_thread;
+    private final int VIRTUAL_CPU_ID = 0;
     
     public tdCPU(int cpuID)
     {
@@ -130,6 +131,11 @@ public class tdCPU extends tdResource
     public Boolean hasObject(Long pobjid)
     {
     	return objects.contains(pobjid);
+    }
+    
+    public Boolean isVirtualCpu()
+    {
+    	return id == VIRTUAL_CPU_ID; //FIXME: Better way to check for virtual cpu? USed for drawing virtual objects
     }
 
 }

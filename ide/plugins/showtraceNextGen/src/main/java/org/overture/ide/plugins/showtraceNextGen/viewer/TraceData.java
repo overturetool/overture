@@ -252,15 +252,18 @@ public class TraceData
     
     public Vector<Long> getObjectIdsFromCpu(Long cpuId)
     {
-    	Vector<Long> res = new Vector<Long>();
+    	Vector<Long> res = new Vector<Long>();   	
+    	Map<Integer, NextGenObject> objects = rtLogger.getObjectMap(); 
+   		
     	
-    	Map<Integer, NextGenObject> objects = rtLogger.getObjectMap(); 	
     	for(NextGenObject obj : objects.values())
     	{	
 			if(cpuId.intValue() == obj.cpu.id)
 				res.add(new Long(obj.id));
 		  		
     	}
+    	
+    	
         return res; 
     }
     
