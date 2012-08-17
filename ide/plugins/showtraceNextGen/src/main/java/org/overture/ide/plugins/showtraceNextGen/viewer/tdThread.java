@@ -38,14 +38,14 @@ public class tdThread
     static jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare vdmComp = new jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare();
     private Long id;
     private Boolean blocked;
-    private Stack<Long> objectIds;
+    private Stack<tdObject> objectStack;
 
 
     private NextGenRTLogger rtLogger;
     
     public tdThread(Long threadId)
     {
-    	objectIds = new Stack<Long>();
+    	objectStack = new Stack<tdObject>();
     	rtLogger = NextGenRTLogger.getInstance();
     	NextGenThread thread = rtLogger.getThreadMap().get(threadId);
     	blocked = new Boolean(false);
@@ -75,27 +75,27 @@ public class tdThread
     {
         return blocked;
     }
-    
-    
-     
-    public void pushCurrentObjectId(Long currentObjectId)
+      
+    public void pushCurrentObject(tdObject currentObjectId)
     {
-    	objectIds.push(currentObjectId);
+    	objectStack.push(currentObjectId);
     }
     
-    public void popCurrentObjectId()
+    public void popCurrentObject()
     {
-    	objectIds.pop();
+    	objectStack.pop();
     }
     
-    public Long getCurrentObjectId(){
+    public tdObject getCurrentObject()
+    {
     	
-    	return objectIds.peek();
+    	return objectStack.peek();
     }
     
-    public boolean hasCurrentObject(){
+    public boolean hasCurrentObject()
+    {
     	
-    	return !objectIds.isEmpty();
+    	return !objectStack.isEmpty();
     }
 
 }

@@ -1306,41 +1306,65 @@ public class TracefileVisitor
     {
     	NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
     	
-    	Long thrid = null;
+    	Long thrid = new Long(tEvent.thread.id);
         Long objref = null;
-        Long cpunm = null;
-        Boolean cond_6 = null;
-        thrid = new Long(tEvent.thread.id);
+        Long cpunm = new Long(tEvent.thread.cpu.id);
+        tdThread thr = data.getThread(thrid);
+        tdObject obj = null;
         
-        //cond_6 = pitsw.hasObjref();
-        cond_6 = tEvent.thread.object != null;
-        
-        if(cond_6.booleanValue())
+        if(!thr.hasCurrentObject())
         {
-            //objref = pitsw.getObjref();
-        	objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
+        	if(tEvent.thread.object == null)
+        	{
+            	if(tEvent.thread.type == ThreadType.INIT)
+            	{
+            		obj = data.getInitThreadObject();
+            	}
+            	else if(tEvent.thread.type == ThreadType.MAIN)
+            	{
+            		obj = data.getMainThreadObject();
+            	}
+        	}
+        	else
+        	{
+            	objref = new Long(tEvent.thread.object.id);
+            	obj = data.getObject(objref);
+        	}
         }
         else
         {
-            //objref = new Long(0L);
-        	return; 
+        	obj = thr.getCurrentObject();
         }
-
-//        tdThread thr = null;
-//        thr = data.getThread(thrid);
         
+        /*
+        if(tEvent.thread.object != null)
+        {
+            //objref = pitsw.getObjref();
+        	objref = new Long(tEvent.thread.object.id);
+        	obj = data.getObject(objref);
+        }
+        else
+        {
+        	if(tEvent.thread.type == ThreadType.INIT)
+        	{
+        		obj = data.getInitThreadObject();
+        	}
+        	else if(tEvent.thread.type == ThreadType.MAIN)
+        	{
+        		obj = data.getMainThreadObject();
+        	}
+        	else
+        	{
+        		obj = thr.getCurrentObject();
+        	}
+        }*/    
         
-        //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
-        
-        tdObject obj = null;
-        obj = data.getObject(objref);
         tdCPU tmpVal_13 = null;
         tmpVal_13 = data.getCPU(cpunm);
         tdCPU cpu = null;
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
-        //thr.pushCurrentObject(objref);
+        thr.pushCurrentObject(obj);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
@@ -1476,7 +1500,7 @@ public class TracefileVisitor
             cond_14 = thr.hasCurrentObject();
             if(cond_14.booleanValue())
             {
-                tdObject obj = data.getObject(thr.getCurrentObjectId());
+                tdObject obj = thr.getCurrentObject();
                 updateCpuObject(pgti, cpu, obj);
                 Long x1 = null;
                 x1 = obj.getX();
@@ -1565,7 +1589,8 @@ public class TracefileVisitor
     	}
         else
         {
-        	srcobj = data.getObject(thr.getCurrentObjectId());
+        	//srcobj = data.getObject(thr.getCurrentObjectId());
+        	srcobj = thr.getCurrentObject();
         }
         
         Boolean cond_9 = null;
@@ -1636,7 +1661,7 @@ public class TracefileVisitor
                     Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
                 }
             }
-            thr.pushCurrentObjectId(destobjref);
+            thr.pushCurrentObject(destobj);
         }
     } 
 
@@ -1671,14 +1696,14 @@ public class TracefileVisitor
         if(opEvent.thread.object != null)
         {
         	objId = new Long(opEvent.thread.object.id);
+        	srcobj = data.getObject(objId);
         }
         else
         {
-        	objId = thr.getCurrentObjectId();
+        	srcobj = thr.getCurrentObject();
         }
-        srcobj = data.getObject(objId);
-        //srcobj = thr.getCurrentObject();
         
+
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         
@@ -1687,9 +1712,8 @@ public class TracefileVisitor
         cond_9 = new Boolean(!unArg_10.booleanValue());
         if(!cond_9.booleanValue())
         {
-            thr.popCurrentObjectId();
-            tdObject destobj = null;
-            destobj = data.getObject(thr.getCurrentObjectId());
+            thr.popCurrentObject();
+            tdObject destobj = thr.getCurrentObject();
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
                 Long cpunm = null;
@@ -1875,7 +1899,7 @@ public class TracefileVisitor
             par_29 = msg.getFromThread();
             thr = data.getThread(par_29);
             tdObject obj = null;
-            obj = data.getObject(thr.getCurrentObjectId());
+            //obj = data.getObject(thr.getCurrentObjectId());
             obj = data.getObject(new Long(busMessageEvent.message.callerThread.object.id));
             Long xobj = null;
             Long var1_34 = null;
@@ -2158,7 +2182,7 @@ public class TracefileVisitor
         {
         	Long objref = new Long(event.thread.object.id);
         	obj = data.getObject(objref);
-        	thr.pushCurrentObjectId(obj.getId());
+        	thr.pushCurrentObject(obj);
         }
 
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
@@ -2208,16 +2232,13 @@ public class TracefileVisitor
         }
     }
 
-    private void drawCpuThreadKill(GenericTabItem pgti, INextGenEvent pitk)
+    private void drawCpuThreadKill(GenericTabItem pgti, INextGenEvent pitk) throws CGException
     {
-    	//TODO MAA
-        /*
-        Long thrid = null;
-        //thrid = pitk.getId();
-        thrid = new Long(((NextGenThreadEvent)pitk).thread.id);
+    	NextGenThreadEvent tEvent = (NextGenThreadEvent)pitk;
+        Long thrid = new Long(tEvent.thread.id);
         
-        tdThread thr = null;
-        thr = data.getThread(thrid);
+        tdThread thr = data.getThread(thrid);
+        
         Long cpunm = null;
         //cpunm = pitsw.getCpunm();
         cpunm = new Long(((NextGenThreadEvent)pitk).thread.cpu.id);
@@ -2240,7 +2261,7 @@ public class TracefileVisitor
             ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
             obj.setY(y2);
         }
-        thr.popCurrentObject();*/
+        thr.popCurrentObject();
     }
     
     //Thread Swap Event
@@ -2285,42 +2306,35 @@ public class TracefileVisitor
     private void drawCpuThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
     	throws CGException
     {
-
+    	NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
 		Long objref = null;
-		Boolean cond_6 = null;
-		
-		//cond_6 = pitsw.hasObjref();
-		cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
-		
-		
-		if(cond_6.booleanValue())
-		{
-			//objref = pitsw.getObjref();
-			objref = new Long(((NextGenThreadEvent)pitsw).thread.object.id);
-		}
-		else
-		{
-		    //objref = new Long(0L);
-		    return; //FIXME MAA: What to do when object reference is null??
-		}
-		
-//		Long thrid = null;
-		//thrid = pitsw.getId();
-//		thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
-		
-//		tdThread thr = null;
-//		thr = data.getThread(thrid);
-		
-		Long cpunm = null;
-		//cpunm = pitsw.getCpunm();
-		cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
-		
 		tdObject obj = null;
-		obj = data.getObject(objref);
-		tdCPU tmpVal_13 = null;
-		tmpVal_13 = data.getCPU(cpunm);
-		tdCPU cpu = null;
-		cpu = tmpVal_13;
+		Long thrid = tEvent.thread.id;
+		tdThread thr = data.getThread(thrid);
+		Boolean cond_6 = null;
+		Long cpunm = new Long(tEvent.thread.cpu.id);
+		tdCPU cpu = data.getCPU(cpunm);
+        if(tEvent.thread.object != null)
+        {
+        	objref = new Long(tEvent.thread.object.id);
+        	obj = data.getObject(objref);
+        }
+        else
+        {
+        	if(tEvent.thread.type == ThreadType.INIT)
+        	{
+        		obj = data.getInitThreadObject();
+        	}
+        	else if(tEvent.thread.type == ThreadType.MAIN)
+        	{
+        		obj = data.getMainThreadObject();
+        	}
+        	else
+        	{
+        		obj = thr.getCurrentObject();
+        	}
+        }
+
 		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
 		{
 		    updateCpuObject(pgti, cpu, obj);
@@ -2346,7 +2360,7 @@ public class TracefileVisitor
 		    obj.setY(y2);
 		}
 		cpu.setCurrentThread(null);
-		//thr.popCurrentObject();
+		//thr.popCurrentObject(); //TODO MAA: Should this be used?
     }
     
     private void drawOvThreadSwapOut(GenericTabItem pgti, INextGenEvent pitsw)
@@ -2464,7 +2478,7 @@ public class TracefileVisitor
         tdCPU cpu = null;
         cpu = tmpVal_13;
         cpu.setCurrentThread(thrid);
-        thr.pushCurrentObjectId(objref);
+        thr.pushCurrentObject(obj);
         if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
         {
             updateCpuObject(pgti, cpu, obj);
@@ -2579,8 +2593,7 @@ public class TracefileVisitor
             Long par_29 = null;
             par_29 = msg.getFromThread();
             thr = data.getThread(par_29);
-            tdObject obj = null;
-            obj = data.getObject(thr.getCurrentObjectId());
+            tdObject obj = thr.getCurrentObject();
             Long xobj = null;
             Long var1_34 = null;
             var1_34 = obj.getX();
