@@ -257,14 +257,15 @@ public class NextGenRTLogger {
 		if(message instanceof RTBusReplyRequestMessage)
 		{			
 			busMessage = this.busMessage.get(((MessageResponse)message.message).originalId);
-			NextGenThread calleeThread = this.threadMap.get(((MessageResponse)message.message).thread.getId());
+			NextGenThread replyingThread = this.threadMap.get(((MessageResponse)message.message).thread.getId());
 			
 			NextGenBusMessage replyBusMessage = 
 				new NextGenBusMessage(mp.msgId, 
 					this.busMap.get(mp.bus.getNumber()), 
 					this.cpuMap.get(mp.from.getNumber()),
 					this.cpuMap.get(mp.to.getNumber()), 
-					calleeThread, 
+					replyingThread,
+					busMessage.callerThread,
 					null, 
 					((MessageResponse)mp).getSize(), 
 					null);
@@ -645,7 +646,7 @@ public class NextGenRTLogger {
 	{
 		if(logFile != null)
 		{
-			printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
+			//printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
 			
 			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
 			ObjectOutputStream out = new ObjectOutputStream(fos);
