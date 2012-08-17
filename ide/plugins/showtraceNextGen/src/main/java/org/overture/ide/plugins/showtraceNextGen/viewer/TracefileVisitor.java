@@ -1304,10 +1304,16 @@ public class TracefileVisitor
     private void drawCpuThreadSwapIn(GenericTabItem pgti, INextGenEvent pitsw)
     	throws CGException
     {
+    	NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
+    	
+    	Long thrid = null;
         Long objref = null;
+        Long cpunm = null;
         Boolean cond_6 = null;
+        thrid = new Long(tEvent.thread.id);
+        
         //cond_6 = pitsw.hasObjref();
-        cond_6 = ((NextGenThreadEvent)pitsw).thread.object != null;
+        cond_6 = tEvent.thread.object != null;
         
         if(cond_6.booleanValue())
         {
@@ -1317,17 +1323,12 @@ public class TracefileVisitor
         else
         {
             //objref = new Long(0L);
-        	return; //FIXME MAA: What to do when object reference is null?
+        	return; 
         }
-        
-        Long thrid = null;
-        
-        //thrid = pitsw.getId();
-        thrid = new Long(((NextGenThreadEvent)pitsw).thread.id);
-        
+
 //        tdThread thr = null;
 //        thr = data.getThread(thrid);
-        Long cpunm = null;
+        
         
         //cpunm = pitsw.getCpunm();
         cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
@@ -1663,16 +1664,24 @@ public class TracefileVisitor
     	
         Long thrid = opEvent.thread.id;
         Long objId = null;
-        
-        tdThread thr = data.getThread(thrid);
         tdObject srcobj = null;
         
+        tdThread thr = data.getThread(thrid);
+        
+        if(opEvent.thread.object != null)
+        {
+        	objId = new Long(opEvent.thread.object.id);
+        }
+        else
+        {
+        	objId = thr.getCurrentObjectId();
+        }
+        srcobj = data.getObject(objId);
         //srcobj = thr.getCurrentObject();
         
         Boolean cond_9 = null;
         Boolean unArg_10 = null;
         
-        //unArg_10 = pioc.hasObjref(); //TODO MAA
         unArg_10 = opEvent.object != null;
         
         cond_9 = new Boolean(!unArg_10.booleanValue());
