@@ -134,7 +134,7 @@ public class TraceData
         return tdBusIds;
     }
 
-    public Vector getOrderedBuses()
+    public Vector<Long> getOrderedBuses()
     {    	
     	Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
     	Vector<Long> tdBusIds = new Vector();

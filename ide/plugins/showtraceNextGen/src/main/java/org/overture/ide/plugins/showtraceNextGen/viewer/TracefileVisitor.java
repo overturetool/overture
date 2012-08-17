@@ -1425,9 +1425,10 @@ public class TracefileVisitor
               updateOvCpu(pgti, data.getCPU(new Long(opEvent.thread.cpu.id)));
         }
 
-        /* Update thread status */
+        //Check for remote synchronous calls and update thread status to blocked
         if(!opEvent.operation.isAsync)
         {
+        	//FIXME MVQ: opEvent doesn't ever seem to have a reference to an object?!
             if(opEvent.object != null)
             {
                 boolean cpuHasObject = opEvent.object.cpu.id == opEvent.thread.cpu.id;
@@ -1980,21 +1981,13 @@ public class TracefileVisitor
             bus.setX(x2);
         }
         
-        /* Update blocked status on receiving thread */
-        //TODO MVQ: Update status on receiving thread to not blocked
-        //TODO MVQ: Identify toThread from nextgen info?!
-        
-        
-//        Boolean cond_60 = null;
-//        cond_60 = msg.hasToThread();
-//        if(cond_60.booleanValue())
-//        {
-//            tdThread obj_62 = null;
-//            Long par_63 = null;
-//            par_63 = msg.getToThread();
-//            obj_62 = cpu.getThread(par_63);
-//            obj_62.setStatus(new Boolean(false));
-//        }
+        //If this is a reply to an earlier request then unblock the thread which did the request
+        if(busMessageEvent instanceof NextGenBusMessageReplyRequestEvent)
+        {
+        	NextGenBusMessageReplyRequestEvent replyReqEvent = (NextGenBusMessageReplyRequestEvent)busMessageEvent;
+        	tdThread thr = data.getThread(replyReqEvent.replyMessage.callerThread.id);
+        	thr.setStatus(false);
+        }
     }
 
     private void drawCpuMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc) throws CGException
