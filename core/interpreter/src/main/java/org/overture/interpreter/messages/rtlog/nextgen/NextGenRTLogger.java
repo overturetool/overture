@@ -266,9 +266,9 @@ public class NextGenRTLogger {
 					this.cpuMap.get(mp.to.getNumber()), 
 					replyingThread,
 					busMessage.callerThread,
-					null, 
+					busMessage.operation, 
 					((MessageResponse)mp).getSize(), 
-					null);
+					busMessage.object);
 			
 			this.busMessage.put(mp.msgId, replyBusMessage);
 			NextGenBusMessageEvent e = new NextGenBusMessageReplyRequestEvent(busMessage,replyBusMessage, message.getLogTime());

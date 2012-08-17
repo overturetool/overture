@@ -1841,6 +1841,7 @@ public class TracefileVisitor
             String var1_48 = null;
             String var2_50 = "";
             //var2_50 = msg.getDescr(); //TODO
+            var2_50 = busMessageEvent.message.operation.name;
             var1_48 = (new String(" call ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
             drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
@@ -1901,7 +1902,7 @@ public class TracefileVisitor
             String var1_51 = null;
             String var2_53 = null;
             //var2_53 = msg.getDescr();
-            var2_53 = "Message Request"; //TODO: Peter No description
+            var2_53 = busMessageEvent.message.operation.name;
             var1_51 = (new String(" call ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
@@ -1997,6 +1998,7 @@ public class TracefileVisitor
             String var1_47 = null;
             String var2_49 = "";
             //var2_49 = msg.getDescr(); //TODO: Message description?
+            var2_49 = busMessageEvent.message.operation.name;
             var1_47 = (new String(" ")).concat(var2_49);
             tmpArg_v_46 = var1_47.concat(new String(" "));
             drawVerticalArrow(pgti, x2, new Long(y1.longValue() - (new Long(8L)).longValue()), ycpu, tmpArg_v_46, ColorConstants.darkBlue);
@@ -2049,28 +2051,27 @@ public class TracefileVisitor
             drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.darkGray);
             Boolean cond_32 = null;
             //cond_32 = msg.hasToThread();
-            cond_32 = false; //TODO: Peter hasToThread not implemented yet
+            cond_32 = busMessageEvent.message.receiverThread != null;
             if(cond_32.booleanValue())
             {
-            	  //TODO: Not run at the moment. getToThread missing
-//                tdThread thr = null;
-//                Long par_60 = null;
-//                par_60 = msg.getToThread();
-//                thr = data.getThread(par_60);
-//                tdObject obj = null;
-//                obj = data.getObject(new Long(busMessageEvent.message.callerThread.object.id));
-//                Long xobj = null;
-//                Long var1_65 = null;
-//                var1_65 = obj.getX();
-//                xobj = new Long(var1_65.longValue() - (new Long(10L)).longValue());
-//                String tmpArg_v_74 = null;
-//                String var1_75 = null;
-//                String var2_77 = null;
-//                //var2_77 = msg.getDescr();
-//                var2_77 = "Message Completed"; //TODO: Peter Missing description
-//                var1_75 = (new String(" ")).concat(var2_77);
-//                tmpArg_v_74 = var1_75.concat(new String(" "));
-//                drawHorizontalArrow(pgti, xobj, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_74, ColorConstants.darkGreen);
+                tdThread thr = null;
+                Long par_60 = null;
+                par_60 = busMessageEvent.message.receiverThread.id;//msg.getToThread();
+                thr = data.getThread(par_60);
+                tdObject obj = null;
+                obj = data.getObject(new Long(busMessageEvent.message.callerThread.object.id));
+                Long xobj = null;
+                Long var1_65 = null;
+                var1_65 = obj.getX();
+                xobj = new Long(var1_65.longValue() - (new Long(10L)).longValue());
+                String tmpArg_v_74 = null;
+                String var1_75 = null;
+                String var2_77 = null;
+                //var2_77 = msg.getDescr();
+                var2_77 = busMessageEvent.message.operation.name;
+                var1_75 = (new String(" ")).concat(var2_77);
+                tmpArg_v_74 = var1_75.concat(new String(" "));
+                drawHorizontalArrow(pgti, xobj, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_74, ColorConstants.darkGreen);
             } else
             {
                 Long objid = null;
@@ -2097,7 +2098,7 @@ public class TracefileVisitor
                 tmpArg_v_49 = new Long(var1_50.longValue() - (new Long(10L)).longValue());
                 String tmpArg_v_56 = "Message Completed:";
                 //tmpArg_v_56 = msg.getDescr();
-                tmpArg_v_56 = ""; //TODO Peter Missing description
+                tmpArg_v_56 = busMessageEvent.message.operation.name;
                 drawHorizontalArrow(pgti, tmpArg_v_49, new Long(x1.longValue() + (new Long(10L)).longValue()), y2, tmpArg_v_56, ColorConstants.darkGreen);
             }
             ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(y2.longValue() + (new Long(10L)).longValue())));
@@ -2163,7 +2164,7 @@ public class TracefileVisitor
 	        }
 	        else
 	        {
-	        	throw new RuntimeErrorException(null, "Invalid object state for RT Thread!"); //TODO MAA?
+	        	throw new UnexpectedInstanceException("Invalid object state for RT Thread!");
 	        }
         	
         	thr.pushCurrentObject(obj);
@@ -2231,7 +2232,7 @@ public class TracefileVisitor
         
         Long cpunm = null;
         //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitk).thread.cpu.id);
+        cpunm = new Long(tEvent.thread.cpu.id);
         tdCPU tmpVal_8 = null;
         tmpVal_8 = data.getCPU(cpunm);
         tdCPU cpu = null;
@@ -2507,11 +2508,11 @@ public class TracefileVisitor
     	
         Long busid = null;
         //busid = pitrr.getBusid();
-        busid = new Long(replyEvent.message.bus.id);
+        busid = new Long(replyEvent.replyMessage.bus.id);
         
         Long msgid = null;
         //msgid = pitrr.getMsgid();
-        msgid = replyEvent.message.id;
+        msgid = replyEvent.replyMessage.id;
         
         tdBUS bus = null;
         bus = data.getBUS(busid);
@@ -2545,6 +2546,7 @@ public class TracefileVisitor
             String var1_48 = null;
             String var2_50 = "";
             //var2_50 = msg.getDescr(); //TODO: msg description
+            var2_50 = replyEvent.message.operation.name;
             var1_48 = (new String(" return from ")).concat(var2_50);
             tmpArg_v_47 = var1_48.concat(new String(" "));
             drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
@@ -2594,7 +2596,7 @@ public class TracefileVisitor
             String var1_51 = null;
             String var2_53 = null;
             //var2_53 = msg.getDescr();
-            var2_53 = "Reply Request"; //TODO: Missing description
+            var2_53 = rEvent.message.operation.name;
             var1_51 = (new String(" return from ")).concat(var2_53);
             tmpArg_v_50 = var1_51.concat(new String(" "));
             drawHorizontalArrow(pgti, new Long(x1.longValue() + (new Long(10L)).longValue()), xobj, y1, tmpArg_v_50, ColorConstants.darkGreen);
