@@ -83,7 +83,6 @@ public class NextGenRTLogger {
 		this.addBus(0, new ArrayList<Integer>(), "vBus");
 		vBus = this.busMap.get(0);
 		this.addCpu(0, false, "vCpu", "system"); //Add the implicit virtual CPU - assuming expl means explicit
-
 	}	
 	
 	public class EventComparator implements Comparator<INextGenEvent>
