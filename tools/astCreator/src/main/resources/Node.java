@@ -189,7 +189,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 		return clone;
 	}
 	
-	
+	@SuppressWarnings("rawtypes")
 	protected Set _visitedNodes = new java.util.HashSet<INode>();
 	/**
 	 * Returns the nearest ancestor of this node (including itself)
@@ -197,6 +197,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	 * @param classType the superclass used
 	 * @return the nearest ancestor of this node
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends %INode%> T getAncestor(Class<T> classType) {
 		%INode% n = this;
 		while (!classType.isInstance(n)) {
