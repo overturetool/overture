@@ -157,7 +157,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 	
-	public void drawOpRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawOpRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destinationObj, TraceOperation operation)
 	{
 		updateCpu(tab, cpu, thread);
 		
@@ -173,7 +173,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(tab.getXMax());
 	}
 	
-	public void drawOpActivate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawOpActivate(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destinationObj, TraceOperation operation)
 	{
 		updateCpu(tab, cpu, thread);
 		
@@ -189,7 +189,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(tab.getXMax());
 	}
 	
-	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destionationObject)
 	{
 		updateCpu(tab, cpu, thread);
 		

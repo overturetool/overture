@@ -17,35 +17,44 @@ public class OperationEventHandler extends EventHandler {
 		if(oEvent == null) return false; //Guard
 		
 		Long cpuId = new Long(oEvent.thread.cpu.id);
-		Long threadId = new Long(oEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);
+		
+		Long threadId = new Long(oEvent.thread.id);
 		TraceThread thread = data.getThread(threadId);
+
+		Long destObjId = new Long(oEvent.object.id);
+		TraceObject destObj = data.getObject(destObjId);
+		
+		String operationid = oEvent.operation.classDef.name + oEvent.operation.name;
+		TraceOperation operation = data.getOperation(operationid);
 		
 		switch(oEvent.type)
 		{
 			
 		case REQUEST: 
-			eventViewer.drawOpRequest(tab, cpu, thread);
+			eventViewer.drawOpRequest(tab, cpu, thread, destObj, operation);
 			
 			//Check for remote synchronous calls and update thread status to blocked
 			if(!oEvent.operation.isAsync)
 			{
-		        if(oEvent.object != null)
-		        {
+//		        if(oEvent.object != null)
+//		        {
 		            boolean cpuHasObject = oEvent.object.cpu.id == oEvent.thread.cpu.id;
 		            if(!cpuHasObject)
 		            {
-		            	data.getThread(oEvent.thread.id).setStatus(true);
+		            	thread.setStatus(true);
 		            }
-		        }				
+//		        }				
 			}
 			
 			break;
 		case ACTIVATE: 
-			eventViewer.drawOpActivate(tab,  cpu, thread);
+			eventViewer.drawOpActivate(tab,  cpu, thread, destObj, operation);
+			thread.pushCurrentObject(destObj);
 			break;
 		case COMPLETE: 
-			eventViewer.drawOpCompleted(tab,  cpu, thread);
+			thread.popCurrentObject();
+			eventViewer.drawOpCompleted(tab,  cpu, thread, destObj);
 			break;
 		default: return false;
 		}
