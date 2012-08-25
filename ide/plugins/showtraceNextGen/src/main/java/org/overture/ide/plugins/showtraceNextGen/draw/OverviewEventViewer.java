@@ -1,7 +1,9 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
+import java.util.Collections;
 import java.util.Vector;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
@@ -21,23 +23,11 @@ public class OverviewEventViewer extends TraceEventViewer {
 	{
         Long cury = RESOURCE_VINTERVAL / 2L;
         
-        Long ov_uxpos = CPU_X_START;
-        Long ov_uypos = 0L;
-        Long ov_ustarttime = 0L;
-        Long ov_ucurrenttime = 0L;
-        
-        //Vector<Long> revcpus = data.getOrderedCpus();
-        Long cpuid = null;
-//        for(int i_43 = cpus.size(); i_43 > 0; i_43--)
-//        {
+        //Draw CPU labels in reverse order
+        Collections.reverse(cpus);
+
         for(TraceCPU cpu : cpus)
-        {
-            //Long elem_14 = cpus.get(i_43 - 1);
-            //cpuid = elem_14;
-            //TraceCPU tmpVal_18 = null;
-            //tmpVal_18 = data.getCPU(cpuid);
-            //TraceCPU cpu = null;
-            //cpu = tmpVal_18;
+        {   //FIXME: Partly code generated
             NormalLabel nlb = null;
             String arg_20 = null;
             arg_20 = cpu.getName();
@@ -50,26 +40,24 @@ public class OverviewEventViewer extends TraceEventViewer {
             Dimension tmpRec_28 = null;
             tmpRec_28 = nlb.getSize();
             var2_27 = new Long(tmpRec_28.width);
-            arg_22 = new Long((new Long(BUS_X_POS.longValue() + (new Long(100L)).longValue())).longValue() - var2_27.longValue());
+            arg_22 = BUS_X_POS.longValue() - var2_27.longValue();
             np = new Point(arg_22.longValue(), cury.longValue());
             nlb.setLocation(np);
             tab.addFigure(nlb);
             cpu.setX(CPU_X_START);
             cpu.setY(new Long(cury.longValue() + (new Long(10L)).longValue()));
             cury = new Long(cury.longValue() + RESOURCE_VINTERVAL.longValue());
+            
+            //Draw CPU line
+            Line line = new Line( cpu.getX(), cpu.getY(), tab.getHorizontalSize(), cpu.getY());
+            line.setForegroundColor(ColorConstants.lightGray);
+            line.setDot();
+            tab.addFigure(line);
         }
 
-//        Vector sq_44 = null;
-//        sq_44 = data.getOrderedBuses();
-//        Long busid = null;
-//        for(Iterator enm_74 = sq_44.iterator(); enm_74.hasNext();)
-//        {
+        //Draw Bus labels
         for(TraceBus bus : buses)
-        {
-//            Long elem_45 = UTIL.NumberToLong(enm_74.next());
-//            busid = elem_45;
-//            TraceBus bus = null;
-//            bus = data.getBUS(busid);
+        {   //FIXME: Partly code generated
             NormalLabel nlb = null;
             String arg_51 = null;
             arg_51 = bus.getName();
@@ -82,13 +70,19 @@ public class OverviewEventViewer extends TraceEventViewer {
             Dimension tmpRec_59 = null;
             tmpRec_59 = nlb.getSize();
             var2_58 = new Long(tmpRec_59.width);
-            arg_53 = new Long((new Long(BUS_X_POS.longValue() + (new Long(100L)).longValue())).longValue() - var2_58.longValue());
+            arg_53 = BUS_X_POS.longValue() - var2_58.longValue();
             np = new Point(arg_53.longValue(), cury.longValue());
             nlb.setLocation(np);
             tab.addFigure(nlb);
             bus.setX(CPU_X_START);
             bus.setY(new Long(cury.longValue() + (new Long(10L)).longValue()));
             cury = new Long(cury.longValue() + RESOURCE_VINTERVAL.longValue());
+            
+            //Draw Bus line
+            Line line = new Line( bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
+            line.setForegroundColor(ColorConstants.lightGray);
+            line.setDot();
+            tab.addFigure(line);
         }
 	}
 	
@@ -99,7 +93,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 		//Draw the activity
 
 
-		/*
+		
 		Long cpunm = null;
 		//cpunm = pitsw.getCpunm();
 		//cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
@@ -110,12 +104,12 @@ public class OverviewEventViewer extends TraceEventViewer {
 		//         cpu = tmpVal_6;
 		//         if((new boolean(ov_ucurrenttime.longvalue() >= ov_ustarttime.longvalue())).booleanvalue())
 		//         {
-		try {
-			updateOvCpu(tab, cpu);
-		} catch (CGException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		try {
+//			updateOvCpu(tab, cpu);
+//		} catch (CGException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		Long tmpVal_15 = null;
 		tmpVal_15 = cpu.getX();
 		Long x1 = null;
@@ -132,17 +126,11 @@ public class OverviewEventViewer extends TraceEventViewer {
 		tmpVal_20 = y1;
 		Long y2 = null;
 		y2 = tmpVal_20;
-		try {
-			drawOvMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
-		} catch (CGException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		drawOvSwapOutImage(tab, x1, y1);
-		currentXPosition = x2;
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
+		drawSwapImage(tab, x1, y1, SWAP_DIRECTION.NORTH);
 		cpu.setX(x2);
-		//         }
-		cpu.setCurrentThread(null);*/
+
+		cpu.setCurrentThread(null);
 	}
 
 	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu)

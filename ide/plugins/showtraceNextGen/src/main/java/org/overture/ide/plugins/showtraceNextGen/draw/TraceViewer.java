@@ -4,6 +4,7 @@ import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
@@ -12,6 +13,7 @@ import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 
 public abstract class TraceViewer {
 
+	protected enum SWAP_DIRECTION	{ NORTH, SOUTH, EAST, WEST }
 	
 	protected final Long CPU_X_START = new Long(150L);
 	protected final Long CPU_X_OFFSET= new Long(40L);
@@ -22,6 +24,9 @@ public abstract class TraceViewer {
 	protected final Long BUS_X_POS = new Long(125L);
 	protected final Long BUS_Y_START = new Long(90L);
 	protected final Long BUS_Y_OFFSET = new Long(30L);
+	
+	protected final Long MARKER_START_END_HALFLENGTH = new Long(5L);
+	protected final Long MARKER_THICKNESS = new Long(3L);
 	
 	
 	protected void Object2ObjectArrow(GenericTabItem pgti, TraceObject psrc, TraceObject pdest, String pstr)
@@ -153,5 +158,58 @@ public abstract class TraceViewer {
 			line.setForegroundColor(clr);
 			pgti.addFigure(line);
 		}
-			}
+	}
+	
+    protected void drawMarker(GenericTabItem tab, Long x1, Long y1, Long x2, Long y2, Color clr)
+	{
+		//Draw main line (Bold and colored)
+	    Line line = new Line(x1, y1, x2, y2);
+	    line.setLineWidth(MARKER_THICKNESS);
+	    line.setForegroundColor(clr);
+	    tab.addFigure(line);
+	    
+	    //Highlight start and end of the main line with small black lines
+	    //First determine if line is vertical or horizontal
+	    if(y1 == y2)
+	    {
+	        line = new Line(x1, y1 - MARKER_START_END_HALFLENGTH, x1, y1 + MARKER_START_END_HALFLENGTH);
+	        tab.addFigure(line);
+	        line = new Line(x2, y1 - MARKER_START_END_HALFLENGTH, x2, y1 + MARKER_START_END_HALFLENGTH);
+	        tab.addFigure(line);
+	    }
+	    else if(x1 == x2)
+	    {
+	        line = new Line(x1 - MARKER_START_END_HALFLENGTH, y1, x1 + MARKER_START_END_HALFLENGTH, y1);
+	        tab.addFigure(line);
+	        line = new Line(x1 - MARKER_START_END_HALFLENGTH, y2, x1 + MARKER_START_END_HALFLENGTH, y2);
+	        tab.addFigure(line);
+	    }
+	
+	}
+    
+    protected void drawSwapImage(GenericTabItem tab, Long x, Long y, SWAP_DIRECTION dir)
+    {
+    	org.eclipse.swt.graphics.Image image = null;
+    	String imagePath = "";
+    	
+    	switch(dir)
+    	{
+	    	case NORTH: tab.composePath("icons", "vswapout.gif"); break;
+	    	case SOUTH: tab.composePath("icons", "vswapin.gif");  break;
+	    	case EAST:  tab.composePath("icons", "hswapout.gif"); break;
+	    	case WEST:  tab.composePath("icons", "hswapin.gif");  break;
+    	}
+    	
+        image = tab.getImage(imagePath);
+        
+        if(image != null)
+        {
+            ImageFigure imagefig = new ImageFigure(image);
+            Point point = new Point(x + 2L, y - 24L);
+            imagefig.setLocation(point);
+            imagefig.setSize(16, 20);
+            tab.addFigure(imagefig);
+        }
+    }
+    
 }

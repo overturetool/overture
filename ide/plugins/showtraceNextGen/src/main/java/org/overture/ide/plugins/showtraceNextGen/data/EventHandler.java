@@ -11,13 +11,13 @@ public abstract class EventHandler {
 	protected TraceData data;
 	protected TraceEventViewer eventViewer;
 	protected CpuEventViewer cpuViewer;
-	protected OverviewEventViewer overviewViwer;
+	protected OverviewEventViewer overviewViewer;
 
 	public EventHandler(TraceData data)
 	{
 		this.data = data;
 		this.cpuViewer = new CpuEventViewer();
-		this.overviewViwer = new OverviewEventViewer();
+		this.overviewViewer = new OverviewEventViewer();
 	}
 	
 	public boolean handleEvent(INextGenEvent event, EventViewType viewType, GenericTabItem tab)
@@ -25,7 +25,7 @@ public abstract class EventHandler {
 		//Set viewer used in handle
 		switch(viewType)
 		{
-			case OVERVIEW: eventViewer = overviewViwer;	break;
+			case OVERVIEW: eventViewer = overviewViewer;	break;
 			case CPU: eventViewer = cpuViewer; break;
 			default: return false;
 		}
