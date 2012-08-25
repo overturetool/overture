@@ -198,6 +198,7 @@ public abstract class TraceViewer {
     	Dimension dim = null;
     	Point point = null;
     	
+    	//FIXME: All these magic numbers?!
     	switch(dir)
     	{
 	    	case NORTH: imagePath = tab.composePath("icons", "vswapout.gif");
