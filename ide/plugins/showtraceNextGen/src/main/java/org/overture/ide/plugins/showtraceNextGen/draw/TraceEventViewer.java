@@ -10,7 +10,7 @@ public abstract class TraceEventViewer extends TraceViewer {
 	protected final Long RESOURCE_VINTERVAL = new Long(50L);
 	
 	//Threads
-	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu);
+	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object);
 	
 	public abstract void drawDelayedThreadSwapIn(GenericTabItem pgti,TraceCPU cpu);
 
@@ -18,7 +18,7 @@ public abstract class TraceEventViewer extends TraceViewer {
 	
 	public abstract void drawThreadKill(GenericTabItem pgti, TraceCPU cpu);
 
-	public abstract void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu);
+	public abstract void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread);
 
 	//Messages
 	public abstract void drawReplyRequest(GenericTabItem pgti,INextGenEvent pitrr);

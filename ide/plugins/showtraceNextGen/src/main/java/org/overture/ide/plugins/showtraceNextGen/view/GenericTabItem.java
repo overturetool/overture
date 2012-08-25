@@ -53,6 +53,7 @@ public class GenericTabItem
         xmax = 0;
         ymax = 0;
         theFont = null;
+        
         if(!$assertionsDisabled && theName == null)
             throw new AssertionError();
         if(!$assertionsDisabled && theFolder == null)
@@ -75,6 +76,15 @@ public class GenericTabItem
         }
     }
 
+    public Long getXMax()
+    {
+    	return new Long(xmax);
+    }
+    
+    public Long getYMax()
+    {
+    	return new Long(ymax);
+    }
     
     public String getName()
     {

@@ -27,7 +27,10 @@ public abstract class TraceViewer {
 	
 	protected final Long MARKER_START_END_HALFLENGTH = new Long(5L);
 	protected final Long MARKER_THICKNESS = new Long(3L);
+
+	protected final Long ELEMENT_SIZE = new Long(18L);
 	
+	protected final Long OBJECT_WIDTH_FACTOR = new Long(10L);
 	
 	protected void Object2ObjectArrow(GenericTabItem pgti, TraceObject psrc, TraceObject pdest, String pstr)
 			throws CGException

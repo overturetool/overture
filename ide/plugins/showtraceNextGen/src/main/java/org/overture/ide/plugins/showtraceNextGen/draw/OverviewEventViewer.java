@@ -86,7 +86,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         }
 	}
 	
-	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu)
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object)
 	{
 		//Update the resource
 
@@ -291,7 +291,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         }*/
 			}
 
-	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu)
+	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
         Long cpunm = null;
         //NextGenCpu ncpu = ((NextGenThreadEvent)pitc).thread.cpu;

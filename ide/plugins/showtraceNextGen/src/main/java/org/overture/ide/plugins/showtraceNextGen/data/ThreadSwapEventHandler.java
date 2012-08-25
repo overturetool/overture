@@ -19,6 +19,13 @@ public class ThreadSwapEventHandler extends EventHandler {
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);
+		TraceThread thread = data.getThread(threadId);
+		TraceObject object = null;
+		if(tEvent.thread.object != null)
+		{
+			Long objectId = new Long(tEvent.thread.object.id);
+			object = data.getObject(objectId);
+		}
 		
 		switch(tEvent.swapType)
 		{
@@ -33,7 +40,7 @@ public class ThreadSwapEventHandler extends EventHandler {
 				cpu.setIdle(false);
 				break;
 			case SWAP_OUT: 
-				eventViewer.drawThreadSwapOut(tab, cpu); 
+				eventViewer.drawThreadSwapOut(tab, cpu, object); 
 				cpu.setCurrentThread(null);
 				cpu.setIdle(true);
 				break;

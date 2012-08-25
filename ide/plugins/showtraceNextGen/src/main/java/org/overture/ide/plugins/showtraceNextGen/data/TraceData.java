@@ -252,7 +252,7 @@ public class TraceData
         
         if(!objects.containsKey(pobjid))
         {
-        	NextGenObject object = rtLogger.getObjectMap().get(pobjid);
+        	NextGenObject object = rtLogger.getObjectMap().get(pobjid.intValue());
         	
         	Long id = new Long(object.id);
         	String name = object.classDef.name;
@@ -293,6 +293,26 @@ public class TraceData
         
     }
 	
+	public Vector<TraceBus> getConnectedBuses(Long cpuId)
+	{
+    	Vector<TraceBus> res = new Vector<TraceBus>();
+    	
+    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap(); 	
+    	for(NextGenBus bus : buses.values())
+    	{	
+    		for (NextGenCpu cpu : bus.cpus) 
+    		{
+    			if(cpuId.intValue() == cpu.id)
+    			{
+    				res.add(getBUS(new Long(bus.id)));
+    			}
+			}  		
+    	}
+        return res; 
+	}
+	
+	
+	//TODO: Remove - is only used in TraceFileVisitor
     public Vector<Long> getBusIdsFromCpu(Long cpuId)
     {
     	Vector<Long> res = new Vector<Long>();

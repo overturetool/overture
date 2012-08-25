@@ -1,10 +1,56 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
-import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
+import java.util.HashSet;
+import java.util.Vector;
+
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
+
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.geometry.Point;
+import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
 public class CpuEventViewer  extends TraceEventViewer {
+
+	public void drawView(GenericTabItem tab, Vector<TraceBus> buses)
+	{
+		Long currentXPos = 100L; //TODO MAA: Make constant?
+		Long yPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
+
+		for(TraceBus bus : buses)
+		{
+			NormalLabel nlb = new NormalLabel(bus.getName(), tab.getCurrentFont());
+
+			RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);
+			Point np = new Point(currentXPos.intValue(), CPU_Y_POS.intValue());
+
+			if(bus.isVirtual())
+			{
+				nrr.setDash();
+				nrr.setForegroundColor(ColorConstants.darkGray);
+			}
+
+			nrr.setLocation(np);
+			nrr.setSize(CPU_WIDTH, CPU_HEIGHT);
+			tab.addFigure(nrr);
+			
+			
+			//Draw Object timeline
+            Long lineXPos = currentXPos + new Long(CPU_WIDTH/2);
+            Long lineYStartPos = yPos;
+            Long lineYEndPos = tab.getVerticalSize();
+			Line timeLine = new Line(lineXPos, lineYStartPos, lineXPos, lineYEndPos);
+            timeLine.setForegroundColor(ColorConstants.lightGray);
+            timeLine.setDot();
+            tab.addFigure(timeLine);
+			
+			bus.setX(currentXPos + new Long((CPU_WIDTH/2))); //+12
+			bus.setY(yPos);
+			currentXPos = currentXPos + CPU_WIDTH + CPU_X_OFFSET;         
+		}
+	}
 
 	public void drawReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
 	{
@@ -56,18 +102,19 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawThreadSwapOut(GenericTabItem pgti, TraceCPU cpu)
-	{/*
-		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object)
+	{
+		/*
+//		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
 		Long objref = null;
 		TraceObject obj = null;
-		Long thrid = tEvent.thread.id;
-		TraceThread thr = data.getThread(thrid);
+//		Long thrid = tEvent.thread.id;
+//		TraceThread thr = data.getThread(thrid);
 		Boolean cond_6 = null;
-		Long cpunm = new Long(tEvent.thread.cpu.id);
-		TraceCPU cpu = data.getCPU(cpunm);
+//		Long cpunm = new Long(tEvent.thread.cpu.id);
+//		TraceCPU cpu = data.getCPU(cpunm);
 
-		if(!thr.hasCurrentObject())
+		if(!thread.hasCurrentObject())
 		{
 			if(tEvent.thread.object == null)
 			{
@@ -117,7 +164,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}
 		cpu.setCurrentThread(null);
 		//thr.popCurrentObject(); //TODO MAA: Should this be used?
-		*/
+		 */
 	}
 
 	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu)
@@ -216,61 +263,63 @@ public class CpuEventViewer  extends TraceEventViewer {
 		thr.popCurrentObject();*/
 	}
 
-	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu)
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		/*
-		NextGenThreadEvent event = (NextGenThreadEvent)pitc;
 
-		Long threadId = event.thread.id;
-		TraceThread thr = data.getThread(threadId);
-		TraceObject obj = null;
+		//		NextGenThreadEvent event = (NextGenThreadEvent)pitc;
 
-		Long cpunm = new Long(event.thread.cpu.id);    
-		TraceCPU cpu = data.getCPU(cpunm);
+		//		long threadid = event.thread.id;
+		//		tracethread thr = data.getthread(threadid);
+		//		traceobject obj = null;
+		//
+		//		long cpunm = new long(event.thread.cpu.id);    
+		//		tracecpu cpu = data.getcpu(cpunm);
+		//
+		//		if(event.thread.object == null)
+		//		{
+		//			if(event.thread.type == threadtype.init)
+		//			{
+		//				//init thread has no object
+		//				obj = data.getinitthreadobject();
+		//			}
+		//			else if(event.thread.type == threadtype.main)
+		//			{
+		//				obj = data.getmainthreadobject();
+		//			}
+		//			else
+		//			{
+		//				throw new unexpectedinstanceexception("invalid object state for rt thread!");
+		//			}
+		//
+		//			thr.pushcurrentobject(obj);
+		//		}
+		//		else
+		//		{
+		//			long objref = new long(event.thread.object.id);
+		//			obj = data.getobject(objref);
+		//			thr.pushcurrentobject(obj);
+		//		}
 
-		if(event.thread.object == null)
-		{
-			if(event.thread.type == ThreadType.INIT)
-			{
-				//Init Thread has no object
-				obj = data.getInitThreadObject();
-			}
-			else if(event.thread.type == ThreadType.MAIN)
-			{
-				obj = data.getMainThreadObject();
-			}
-			else
-			{
-				throw new UnexpectedInstanceException("Invalid object state for RT Thread!");
-			}
+		//		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+		//		{
 
-			thr.pushCurrentObject(obj);
-		}
-		else
-		{
-			Long objref = new Long(event.thread.object.id);
-			obj = data.getObject(objref);
-			thr.pushCurrentObject(obj);
-		}
+		TraceObject obj = thread.getCurrentObject();
 
-		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-		{
-			updateCpuObject(pgti, cpu, obj);
-			Long x1 = null;
-			x1 = obj.getX();
-			Long x2 = x1;
-			Long tmpVal_26 = null;
-			tmpVal_26 = obj.getY();
-			Long y1 = null;
-			y1 = tmpVal_26;
-			Long tmpVal_27 = null;
-			tmpVal_27 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-			Long y2 = null;
-			y2 = tmpVal_27;
-			drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
-			ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-			obj.setY(y2);
-		}*/
+		updateCpuObject(tab, cpu, obj);
+
+		Long x1 = obj.getX();
+		Long x2 = x1;
+		//			Long tmpVal_26 = null;
+		//			tmpVal_26 = obj.getY();
+		Long y1 = obj.getY();
+		//			Long tmpVal_27 = null;
+		//			tmpVal_27 = y1 + ELEMENT_SIZE;
+		//			Long y2 = null;
+		Long y2 = y1 + ELEMENT_SIZE;
+		//			drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
+		//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+		obj.setY(y2);
+
 	}
 
 	public void drawMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
@@ -788,20 +837,53 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	
+
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
+
 	@Override
 	public void drawMessageActivated(GenericTabItem tab, INextGenEvent event) {
 		//Is not drawn for CPU's ?
-		
+
 	}
 
+	private void updateCpuObject(GenericTabItem tab, TraceCPU pcpu, TraceObject pobj)
+	{
+		if(!pobj.isVisible())
+		{	
+			//Draw Object
+			String name = pobj.getName() + " (" + pobj.getId().toString() + ")";
+			NormalLabel nlb = new NormalLabel(name, tab.getCurrentFont());;
+			RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);	
+			Long objectXPos = tab.getXMax() + CPU_X_OFFSET;
+			Long objectYPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
+			Long objWidth = new Long(name.length())*OBJECT_WIDTH_FACTOR;
+			
+			Point np = new Point(objectXPos.intValue(), CPU_Y_POS.intValue());
+			nrr.setLocation(np);
+			nrr.setSize(objWidth, CPU_HEIGHT);
+			tab.addFigure(nrr);
+					
+			//Update Object
+			pobj.setX(objectXPos);
+			pobj.setY(objectYPos);			
+			pobj.setVisible(true);
+			
+			//Draw Object timeline
+            //Line line = new Line(xpos, new Long(ypos.longValue() + (new Long(1L)).longValue()), xpos, new Long(ov_uypos.longValue() - (new Long(1L)).longValue()));
+            Long lineXPos = objectXPos + new Long(objWidth/2);
+            Long lineYStartPos = objectYPos;
+            Long lineYEndPos = tab.getVerticalSize();
+			Line timeLine = new Line(lineXPos, lineYStartPos, lineXPos, lineYEndPos);
+            timeLine.setForegroundColor(ColorConstants.lightGray);
+            timeLine.setDot();
+            tab.addFigure(timeLine);			
+		}
+	}
 
 
 }
