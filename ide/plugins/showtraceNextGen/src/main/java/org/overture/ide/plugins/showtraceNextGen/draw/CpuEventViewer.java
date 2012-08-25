@@ -274,7 +274,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		Long y1 = obj.getY();
 		Long y2 = y1 + ELEMENT_SIZE;
 
-		//drawCpuMarker(tab, x1, y1, x2, y2, ColorConstants.green);
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.green);
 		
 		obj.setY(y2);
 
@@ -733,67 +733,10 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		
-//		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
-//
-//		Long thrid = new Long(tEvent.thread.id);
-//
-//		Long objref = null;
-//		Long cpunm = new Long(tEvent.thread.cpu.id);
-//		TraceThread thr = data.getThread(thrid);
-//		TraceObject obj = null;
-//
-//		if(!thr.hasCurrentObject())
-//		{
-//			if(tEvent.thread.object == null)
-//			{
-//				if(tEvent.thread.type == ThreadType.INIT)
-//				{
-//					obj = data.getInitThreadObject();
-//				}
-//				else if(tEvent.thread.type == ThreadType.MAIN)
-//				{
-//					obj = data.getMainThreadObject();
-//				}
-//			}
-//			else
-//			{
-//				objref = new Long(tEvent.thread.object.id);
-//				obj = data.getObject(objref);
-//			}
-//		}
-//		else
-//		{
-//			obj = thr.getCurrentObject();
-//		}
 
-
-//		tracecpu tmpval_13 = null;
-//		tmpval_13 = data.getcpu(cpunm);
-//		tracecpu cpu = null;
-//		cpu = tmpval_13;
-//		cpu.setcurrentthread(thrid);
-//		thr.pushcurrentobject(obj);
-//		if((new boolean(ov_ucurrenttime.longvalue() >= ov_ustarttime.longvalue())).booleanvalue())
-//		{
 		TraceObject obj = thread.getCurrentObject();
-			updateObject(tab, obj);
-//			Long x1 = null;
-//			x1 = obj.getX();
-//			Long x2 = x1;
-//			Long tmpVal_29 = null;
-//			tmpVal_29 = obj.getY();
-//			Long y1 = null;
-//			y1 = tmpVal_29;
-//			Long tmpVal_30 = null;
-//			tmpVal_30 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-//			Long y2 = null;
-//			y2 = tmpVal_30;
-//			drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-//			drawCpuSwapInImage(pgti, x1, y1);
-//			ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-//			obj.setY(y2);
-//		}
+		updateObject(tab, obj);
+
 	}
 
 
@@ -827,7 +770,6 @@ public class CpuEventViewer  extends TraceEventViewer {
 			tab.addFigure(nrr);
 					
 			//Update Object
-			pobj.setX(objectXPos);
 			pobj.setY(objectYPos);			
 			pobj.setVisible(true);
 			
@@ -839,7 +781,10 @@ public class CpuEventViewer  extends TraceEventViewer {
 			
             timeLine.setForegroundColor(ColorConstants.lightGray);
             timeLine.setDot();
-            tab.addFigure(timeLine);			
+            tab.addFigure(timeLine);	
+            
+            //Object X is timeline X
+            pobj.setX(lineXPos);
 		}
 	}
 
