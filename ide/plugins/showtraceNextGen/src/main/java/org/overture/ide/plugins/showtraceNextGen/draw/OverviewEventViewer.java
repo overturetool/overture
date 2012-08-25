@@ -86,7 +86,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         }
 	}
 	
-	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object)
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
 		//Update the resource
 
@@ -133,7 +133,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 		cpu.setCurrentThread(null);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu)
+	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
 		/*
         Long cpunm = null;
@@ -265,7 +265,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             cpu.setCurrentThread(par_38);*/
 	}
 
-	public void drawThreadKill(GenericTabItem pgti, TraceCPU cpu)
+	public void drawThreadKill(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 			{
 		/*	
         Long cpunm = null;

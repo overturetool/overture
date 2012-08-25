@@ -229,4 +229,11 @@ public abstract class TraceViewer {
         }
     }
     
+    protected void drawTimeline(GenericTabItem tab, Long x1, Long y1, Long x2, Long y2)
+    {
+		Line timeLine = new Line(x1, y1, x2, y2);
+        timeLine.setForegroundColor(ColorConstants.lightGray);
+        timeLine.setDot();
+        tab.addBackgroundFigure(timeLine);
+    }
 }

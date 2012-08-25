@@ -35,12 +35,12 @@ public class ThreadSwapEventHandler extends EventHandler {
 				cpu.setIdle(false);
 				break;
 			case DELAYED_IN: 
-				eventViewer.drawDelayedThreadSwapIn(tab, cpu); 
+				eventViewer.drawDelayedThreadSwapIn(tab, cpu, thread); 
 				cpu.setCurrentThread(threadId);
 				cpu.setIdle(false);
 				break;
 			case SWAP_OUT: 
-				eventViewer.drawThreadSwapOut(tab, cpu, object); 
+				eventViewer.drawThreadSwapOut(tab, cpu, thread); 
 				cpu.setCurrentThread(null);
 				cpu.setIdle(true);
 				break;

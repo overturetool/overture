@@ -48,7 +48,7 @@ public class ThreadEventHandler extends EventHandler {
 		case SWAP: 
 			return false;
 		case KILL: 
-			eventViewer.drawThreadKill(tab, cpu);
+			eventViewer.drawThreadKill(tab, cpu, thread);
 			if(thread.hasCurrentObject())
 				thread.popCurrentObject();
 			break;

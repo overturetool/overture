@@ -120,6 +120,13 @@ public class GenericTabItem
             return;
         }
     }
+    
+    public void addBackgroundFigure(IFigure bFigure)
+    {
+    	//Add figure and dont update xmax and ymax
+        theFigure.add(bFigure);
+        return;
+    }
 
     public Font getCurrentFont()
     {
