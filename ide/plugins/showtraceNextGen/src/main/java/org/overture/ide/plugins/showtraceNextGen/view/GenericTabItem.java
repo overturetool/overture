@@ -112,9 +112,9 @@ public class GenericTabItem
         } else
         {
             Rectangle rect = aFigure.getBounds();
-            int xfig = rect.x + rect.width;
+            int xfig = rect.x + rect.width - 2;
             xmax = xmax < xfig ? xfig : xmax;
-            int yfig = rect.y + rect.height;
+            int yfig = rect.y + rect.height - 2;
             ymax = ymax < yfig ? yfig : ymax;
             theFigure.add(aFigure);
             return;

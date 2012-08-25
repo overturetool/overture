@@ -25,13 +25,13 @@ public class OperationEventHandler extends EventHandler {
 		{
 			
 		case REQUEST: 
-			eventViewer.drawOpRequest(tab,  null);
+			eventViewer.drawOpRequest(tab,  null, null);
 			break;
 		case ACTIVATE: 
-			eventViewer.drawOpActivate(tab,  null);
+			eventViewer.drawOpActivate(tab,  null, null);
 			break;
 		case COMPLETE: 
-			eventViewer.drawOpCompleted(tab,  null);
+			eventViewer.drawOpCompleted(tab,  null, null);
 			break;
 		default: return false;
 		}

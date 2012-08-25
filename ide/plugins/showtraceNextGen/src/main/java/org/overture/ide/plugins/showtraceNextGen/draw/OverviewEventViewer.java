@@ -3,6 +3,8 @@ package org.overture.ide.plugins.showtraceNextGen.draw;
 import java.util.Collections;
 import java.util.Vector;
 
+import jp.co.csk.vdm.toolbox.VDM.CGException;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -49,10 +51,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             cury = new Long(cury.longValue() + RESOURCE_VINTERVAL.longValue());
             
             //Draw CPU line
-            Line line = new Line( cpu.getX(), cpu.getY(), tab.getHorizontalSize(), cpu.getY());
-            line.setForegroundColor(ColorConstants.lightGray);
-            line.setDot();
-            tab.addFigure(line);
+            drawTimeline(tab, cpu.getX(), cpu.getY(), tab.getHorizontalSize(), cpu.getY());
         }
 
         //Draw Bus labels
@@ -79,53 +78,19 @@ public class OverviewEventViewer extends TraceEventViewer {
             cury = new Long(cury.longValue() + RESOURCE_VINTERVAL.longValue());
             
             //Draw Bus line
-            Line line = new Line( bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
-            line.setForegroundColor(ColorConstants.lightGray);
-            line.setDot();
-            tab.addFigure(line);
+            drawTimeline(tab, bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
         }
 	}
 	
 	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		//Update the resource
-
-		//Draw the activity
-
-
+		updateCpu(tab, cpu, thread);
 		
-		Long cpunm = null;
-		//cpunm = pitsw.getCpunm();
-		//cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
-
-		//         TraceCPU tmpVal_6 = null;
-		//         tmpVal_6 = data.getCPU(cpunm);
-		//         TraceCPU cpu = null;
-		//         cpu = tmpVal_6;
-		//         if((new boolean(ov_ucurrenttime.longvalue() >= ov_ustarttime.longvalue())).booleanvalue())
-		//         {
-//		try {
-//			updateOvCpu(tab, cpu);
-//		} catch (CGException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-		Long tmpVal_15 = null;
-		tmpVal_15 = cpu.getX();
-		Long x1 = null;
-		x1 = tmpVal_15;
-		Long tmpVal_16 = null;
-		tmpVal_16 = new Long(x1.longValue() + ELEMENT_SIZE.longValue());
-		Long x2 = null;
-		x2 = tmpVal_16;
-		Long tmpVal_19 = null;
-		tmpVal_19 = cpu.getY();
-		Long y1 = null;
-		y1 = tmpVal_19;
-		Long tmpVal_20 = null;
-		tmpVal_20 = y1;
-		Long y2 = null;
-		y2 = tmpVal_20;
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+		
 		drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
 		drawSwapImage(tab, x1, y1, SWAP_DIRECTION.NORTH);
 		cpu.setX(x2);
@@ -133,49 +98,127 @@ public class OverviewEventViewer extends TraceEventViewer {
 		cpu.setCurrentThread(null);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		/*
-        Long cpunm = null;
-        //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
+		updateCpu(tab, cpu, thread);
+		
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+		
+        drawMarker(tab, x1, y1, x2, y2, ColorConstants.orange);
+        drawSwapImage(tab, x1, y1, SWAP_DIRECTION.SOUTH);
+        cpu.setX(x2);
 
-        TraceCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        TraceCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvCpu(pgti, tmpVal_6);
-            Long tmpVal_15 = null;
-            tmpVal_15 = cpu.getX();
-            Long x1 = null;
-            x1 = tmpVal_15;
-            Long tmpVal_16 = null;
-            tmpVal_16 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
-            Long x2 = null;
-            x2 = tmpVal_16;
-            Long tmpVal_21 = null;
-            tmpVal_21 = cpu.getY();
-            Long y1 = null;
-            y1 = tmpVal_21;
-            Long tmpVal_22 = null;
-            tmpVal_22 = y1;
-            Long y2 = null;
-            y2 = tmpVal_22;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.orange);
-            drawOvSwapInImage(pgti, x1, y1);
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-        }
         //TODO MAA: Should it be used? MVQ: Yes, Martin you dumbass
-        Long par_38 = null;
-        par_38 = ((NextGenThreadEvent)pitsw).thread.id;
-        cpu.setCurrentThread(par_38);*/
+        cpu.setCurrentThread(thread.getId());
+	}
+	
+	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+        
+        drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
+        drawSwapImage(tab, x1, y1, SWAP_DIRECTION.SOUTH);
+        cpu.setX(x2);
+
+        //TODO MAA: Should it be used? MVQ: Yes, Martin you dumbass
+        cpu.setCurrentThread(thread.getId());
+	}
+	
+	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		Long x1 = tab.getXMax() < cpu.getX() ? cpu.getX() : tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+        
+        drawMarker(tab, x1, y1, x2, y2, ColorConstants.red);
+        cpu.setX(x2);
 	}
 
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		Long x1 = tab.getXMax() < cpu.getX() ? cpu.getX() : tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+        
+        drawMarker(tab, x1, y1, x2, y2, ColorConstants.green);
+        cpu.setX(x2);
+	}
+	
+	public void drawOpRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		updateCpu(tab, cpu, thread);
+		
+//		NextGenOperationEvent opEvent = (NextGenOperationEvent) pior;
+//	
+//	    if( ov_ucurrenttime >= ov_ustarttime )
+//	    {
+//			  currentXPosition = currentXPosition + ELEMENT_uSIZE;
+//	          updateOvCpu(pgti, data.getCPU(new Long(opEvent.thread.cpu.id)));
+//	    }
+	
+	    //Check for remote synchronous calls and update thread status to blocked
+//	    if(!opEvent.operation.isAsync)
+//	    {
+//	    	//FIXME MVQ: opEvent doesn't ever seem to have a reference to an object?!
+//	        if(opEvent.object != null)
+//	        {
+//	            boolean cpuHasObject = opEvent.object.cpu.id == opEvent.thread.cpu.id;
+//	            if(!cpuHasObject)
+//	            {
+//	            	data.getThread(opEvent.thread.id).setStatus(true);
+//	            }
+//	        }
+//	    }
+	}
+	
+	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	{/*
+    if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+    {
+        Long cpunm = null;
+        //cpunm = pioa.getCpunm();
+        cpunm = new Long(((NextGenOperationEvent)pioa).thread.cpu.id);
+        TraceCPU tmpVal_9 = null;
+        tmpVal_9 = data.getCPU(cpunm);
+        TraceCPU cpu = null;
+        cpu = tmpVal_9;
+        currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
+        updateOvCpu(pgti, cpu);
+    }*/
+	}
+	
+	public void drawOpCompleted(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	{/*
+            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+            {
+                Long cpunm = null;
+                //cpunm = pioc.getCpunm();
+                cpunm = new Long(((NextGenOperationEvent)pioc).thread.cpu.id);
+                TraceCPU tmpVal_9 = null;
+                tmpVal_9 = data.getCPU(cpunm);
+                TraceCPU cpu = null;
+                cpu = tmpVal_9;
+                currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
+                updateOvCpu(pgti, cpu);
+            }*/
+			}
+
 	public void drawReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
-			{	/*
+	{	/*
     	NextGenBusMessageReplyRequestEvent replyEvent = (NextGenBusMessageReplyRequestEvent) pitrr;
 
         Long busid = null;
@@ -225,105 +268,10 @@ public class OverviewEventViewer extends TraceEventViewer {
             currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
         }*/
-			}
-
-	public void drawThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
-	{
-		/*
-            Long cpunm = null;
-
-            //cpunm = pitsw.getCpunm();
-            cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
-
-            TraceCPU tmpVal_6 = null;
-            tmpVal_6 = data.getCPU(cpunm);
-            TraceCPU cpu = null;
-            cpu = tmpVal_6;
-            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-            {
-                updateOvCpu(pgti, cpu);
-                Long x1 = null;
-                x1 = cpu.getX();
-                Long x2 = new Long((new Long(x1.longValue() + ELEMENT_uSIZE.longValue())).longValue() - (new Long(1L)).longValue());
-                Long tmpVal_21 = null;
-                tmpVal_21 = cpu.getY();
-                Long y1 = null;
-                y1 = tmpVal_21;
-                Long tmpVal_22 = null;
-                tmpVal_22 = y1;
-                Long y2 = null;
-                y2 = tmpVal_22;
-                drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-                drawOvSwapInImage(pgti, x1, y1);
-                currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
-                cpu.setX(x2);
-            }
-
-            //TODO MAA: Is it needed?? MVQ: Yes, Martin you dumbass
-            Long par_38 = null;
-            par_38 = ((NextGenThreadEvent)pitsw).thread.id;
-            cpu.setCurrentThread(par_38);*/
-	}
-
-	public void drawThreadKill(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
-			{
-		/*	
-        Long cpunm = null;
-        //cpunm = pitsw.getCpunm();
-        cpunm = new Long(((NextGenThreadEvent)pitsw).thread.cpu.id);
-
-        TraceCPU tmpVal_6 = null;
-        tmpVal_6 = data.getCPU(cpunm);
-        TraceCPU cpu = null;
-        cpu = tmpVal_6;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvCpu(pgti, cpu);
-            Long x1 = null;
-            x1 = cpu.getX();
-            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long y1 = null;
-            y1 = cpu.getY();
-            Long y2 = y1;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-        }*/
-			}
-
-	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
-	{
-        Long cpunm = null;
-        //NextGenCpu ncpu = ((NextGenThreadEvent)pitc).thread.cpu;
-
-
-        //Integer cpuId = ncpu.id;
-        //cpunm = new Long(cpuId); 
-        //TraceCPU cpu = data.getCPU(cpunm);
-        //cpu.addThreadId(((NextGenThreadEvent)pitc).thread.id);
-
-//        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-//        {
-            //updateCpu(pgti, cpu);
-            Long x1 = null;
-            x1 = cpu.getX();
-            Long x2 = new Long(x1.longValue() + ELEMENT_SIZE.longValue());
-            Long tmpVal_19 = null;
-            tmpVal_19 = cpu.getY();
-            Long y1 = null;
-            y1 = tmpVal_19;
-            Long tmpVal_20 = null;
-            tmpVal_20 = y1;
-            Long y2 = null;
-            y2 = tmpVal_20;
-            //drawMarker(pgti, x1, y1, x2, y2, ColorConstants.green, horizontalImages);
-            //currentXPosition = x2;//UTIL.NumberToLong(UTIL.clone(x2));
-            cpu.setX(x2);
-//        }
 	}
 
 	public void drawMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
-			{
+	{
 		/*
     	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitmc;
 
@@ -384,10 +332,10 @@ public class OverviewEventViewer extends TraceEventViewer {
 			TraceThread thr = data.getThread(busMessageEvent.message.receiverThread.id);
 			thr.setStatus(false);
         }*/
-			}
+	}
 
 	public void drawMessageActivated(GenericTabItem pgti, INextGenEvent pitma)
-			{
+	{
 		/*
     	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitma;
         Long msgid = busMessageEvent.message.id;
@@ -422,7 +370,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
             bus.setX(x2);
         }*/
-			}
+	}
 
 	public void drawMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
 			{
@@ -483,69 +431,35 @@ public class OverviewEventViewer extends TraceEventViewer {
         }*/
 			}
 
-	public void drawOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
-			{/*
-            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-            {
-                Long cpunm = null;
-                //cpunm = pioc.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioc).thread.cpu.id);
-                TraceCPU tmpVal_9 = null;
-                tmpVal_9 = data.getCPU(cpunm);
-                TraceCPU cpu = null;
-                cpu = tmpVal_9;
-                currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
-                updateOvCpu(pgti, cpu);
-            }*/
-			}
-
-	public void drawOpActivate(GenericTabItem pgti, INextGenEvent pioa)
-			{/*
-            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-            {
-                Long cpunm = null;
-                //cpunm = pioa.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioa).thread.cpu.id);
-                TraceCPU tmpVal_9 = null;
-                tmpVal_9 = data.getCPU(cpunm);
-                TraceCPU cpu = null;
-                cpu = tmpVal_9;
-                currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
-                updateOvCpu(pgti, cpu);
-            }*/
-			}
-
-	public void drawOpRequest(GenericTabItem pgti, INextGenEvent pior)
-			{/*
-
-        	NextGenOperationEvent opEvent = (NextGenOperationEvent) pior;
-
-            if( ov_ucurrenttime >= ov_ustarttime )
-            {
-    			  currentXPosition = currentXPosition + ELEMENT_uSIZE;
-                  updateOvCpu(pgti, data.getCPU(new Long(opEvent.thread.cpu.id)));
-            }
-
-            //Check for remote synchronous calls and update thread status to blocked
-            if(!opEvent.operation.isAsync)
-            {
-            	//FIXME MVQ: opEvent doesn't ever seem to have a reference to an object?!
-                if(opEvent.object != null)
-                {
-                    boolean cpuHasObject = opEvent.object.cpu.id == opEvent.thread.cpu.id;
-                    if(!cpuHasObject)
-                    {
-                    	data.getThread(opEvent.thread.id).setStatus(true);
-                    }
-                }
-            }*/
-			}
-
 	
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
 		
 
 	}
+	
+    private void updateCpu(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+    {
+	    if(!cpu.isIdle() && thread != null)
+	    {
+		    Line line = new Line(cpu.getX(), cpu.getY(), tab.getXMax(), cpu.getY());
+	        line.setForegroundColor(ColorConstants.blue);
+	        line.setLineWidth(3L);
+	        if(thread.getStatus())
+	            line.setDot();
+	        
+	        tab.addFigure(line);
+	        cpu.setX(tab.getXMax());
+	        
+	    }
+	    
+	    
+//TODO: MVQ: Check conjectures?
+//	    if(cpu.hasCurrentThread())
+//	    {
+//	    	Long thrid = data.getThread(cpu.getCurrentThread()).getId();
+//	        checkConjectureLimits(pgti, ov_uxpos - ELEMENT_uSIZE, cpu.getY(), ov_ucurrenttime, thrid);
+//	    }
+    }
 
 }
