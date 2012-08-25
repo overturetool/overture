@@ -2,9 +2,11 @@ package org.overture.ide.plugins.showtraceNextGen.draw;
 
 import java.util.Vector;
 
+import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
@@ -384,219 +386,115 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destinationObj )
 	{
-		
-//		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
-//
-//		Long thrid = opEvent.thread.id;
-//		Long objId = null;
-//		TraceObject srcobj = null;
-//
-//		TraceThread thr = data.getThread(thrid);
-//
-//		if(opEvent.thread.object != null)
-//		{
-//			objId = new Long(opEvent.thread.object.id);
-//			srcobj = data.getObject(objId);
-//		}
-//		else
-//		{
-//			srcobj = thr.getCurrentObject();
-//		}
-//
-//
-//		Boolean cond_9 = null;
-//		Boolean unArg_10 = null;
-//
-//		unArg_10 = opEvent.object != null;
-//
-//		cond_9 = new Boolean(!unArg_10.booleanValue());
-//		if(!cond_9.booleanValue())
-//		{
-//			thr.popCurrentObject();
-			TraceObject destobj = thread.getCurrentObject();
-//			if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-//			{
-//				Long cpunm = null;
-//				//cpunm = pioc.getCpunm();
-//				cpunm = new Long(opEvent.thread.cpu.id);
-//				TraceCPU tmpVal_19 = null;
-//				tmpVal_19 = data.getCPU(cpunm);
-//				TraceCPU cpu = null;
-//				cpu = tmpVal_19;
-//				Boolean cond_21 = null;
-//				Long var1_22 = null;
-//				//var1_22 = srcobj.getId();
-//				var1_22 = new Long(opEvent.object.id);
-//				Long var2_23 = null;
-//				var2_23 = destobj.getId();
-//				cond_21 = new Boolean(var1_22.longValue() == var2_23.longValue());
-//				if(cond_21.booleanValue())
-//				{
-					updateObject(tab, destobj);
-					Long x1 = destobj.getX();
-					Long x2 = x1;
-					Long y1 = destobj.getY();
-					Long y2 = y1 + ELEMENT_SIZE;
-					
-//					Long tmpVal_44 = null;
-//					tmpVal_44 = destobj.getY();
-//					y1 = tmpVal_44;
-//					Long tmpVal_45 = null;
-//					tmpVal_45 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-//					Long y2 = null;
-//					y2 = tmpVal_45;
-//					Long objid = null;
-//					//objid = pioc.getObjref();
-//					objid = new Long(opEvent.object.id);
-					NormalLabel lbl = new NormalLabel("C", tab.getCurrentFont());;
-//					org.eclipse.swt.graphics.Font arg_50 = null;
-//					arg_50 = pgti.getCurrentFont();
-//					lbl = new NormalLabel(new String("C"), arg_50);
-					String str = null;
-					Boolean cond_52 = null;
-					//cond_52 = pioc.hasRes(); //TODO MAA: Add return value to data structure?
-					cond_52 = false;
-					if(cond_52.booleanValue())
-					{
-						String var2_54 = null;
-						//var2_54 = pioc.getRes(); //TODO MAA
-						str = (new String(" returns ")).concat(var2_54);
-					} else
-					{
-						str = UTIL.ConvertToString(new String());
-					}
-					NormalLabel ttl = null;
-					String arg_55 = null;
-					String var1_57 = null;
-					String var1_58 = null;
-					String var1_59 = null;
-					String var1_60 = null;
-					String var2_62 = "TODO"; //TODO
-					//var2_62 = pioc.getOpname();
-//					var2_62 = opEvent.operation.name;
-					var1_60 = (new String(" Completed ")).concat(var2_62);
-					var1_59 = var1_60.concat(new String(" on object "));
-					var1_58 = var1_59.concat(destobj.getId().toString());
-					var1_57 = var1_58.concat(str);
-					arg_55 = var1_57.concat(new String(" "));
-					org.eclipse.swt.graphics.Font arg_56 = null;
-					arg_56 = tab.getCurrentFont();
-					ttl = new NormalLabel(arg_55, arg_56);
-					Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
-					drawMarker(tab, x1, y1, x2, y2, ColorConstants.blue);
-					lbl.setToolTip(ttl);
-					lbl.setLocation(pt);
-					tab.addFigure(lbl);
-					//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-					destobj.setY(y2);
-//				} else
-//				{
-//					updateCpuObject(pgti, cpu, srcobj);
-//					updateCpuObject(pgti, cpu, destobj);
-//					Object2ObjectArrow(pgti, srcobj, destobj, new String(""));
-//				}
-//			}
-//		}
+
+		TraceObject currentObj = thread.getCurrentObject();
+		boolean internalOperation = currentObj.getId() == destinationObj.getId();
+		updateObject(tab, currentObj);
+		if(internalOperation)
+		{
+			updateObject(tab, currentObj);
+			Long x1 = currentObj.getX();
+			Long x2 = x1;
+			Long y1 = tab.getYMax();
+			Long y2 = y1 + ELEMENT_SIZE;
+
+			//					Long tmpVal_44 = null;
+			//					tmpVal_44 = destobj.getY();
+			//					y1 = tmpVal_44;
+			//					Long tmpVal_45 = null;
+			//					tmpVal_45 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+			//					Long y2 = null;
+			//					y2 = tmpVal_45;
+			//					Long objid = null;
+			//					//objid = pioc.getObjref();
+			//					objid = new Long(opEvent.object.id);
+			NormalLabel lbl = new NormalLabel("C", tab.getCurrentFont());;
+			//					org.eclipse.swt.graphics.Font arg_50 = null;
+			//					arg_50 = pgti.getCurrentFont();
+			//					lbl = new NormalLabel(new String("C"), arg_50);
+			String str = null;
+			Boolean cond_52 = null;
+			//cond_52 = pioc.hasRes(); //TODO MAA: Add return value to data structure?
+			cond_52 = false;
+			if(cond_52.booleanValue())
+			{
+				String var2_54 = null;
+				//var2_54 = pioc.getRes(); //TODO MAA
+				str = (new String(" returns ")).concat(var2_54);
+			} else
+			{
+				str = UTIL.ConvertToString(new String());
+			}
+			NormalLabel ttl = null;
+			String arg_55 = null;
+			String var1_57 = null;
+			String var1_58 = null;
+			String var1_59 = null;
+			String var1_60 = null;
+			String var2_62 = "TODO"; //TODO
+			//var2_62 = pioc.getOpname();
+			//					var2_62 = opEvent.operation.name;
+			var1_60 = (new String(" Completed ")).concat(var2_62);
+			var1_59 = var1_60.concat(new String(" on object "));
+			var1_58 = var1_59.concat(currentObj.getId().toString());
+			var1_57 = var1_58.concat(str);
+			arg_55 = var1_57.concat(new String(" "));
+			org.eclipse.swt.graphics.Font arg_56 = null;
+			arg_56 = tab.getCurrentFont();
+			ttl = new NormalLabel(arg_55, arg_56);
+			Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
+			drawMarker(tab, x1, y1, x2, y2, ColorConstants.blue);
+			lbl.setToolTip(ttl);
+			lbl.setLocation(pt);
+			tab.addFigure(lbl);
+			//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+			currentObj.setY(y2);
+		} else
+		{
+			updateObject(tab,destinationObj);
+			drawObjectArrow(tab, destinationObj, currentObj, new String(""));
+		}
+
 	}
 
-	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	public void drawOpActivate(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destinationObj, TraceOperation operation)
 	{
-//		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
-//
-//		Long thrid = opEvent.thread.id;
-//		TraceThread thr = data.getThread(thrid);
-//		TraceObject srcobj = null;    
-//
-//		if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.MAIN)
-//		{
-//			srcobj = data.getMainThreadObject();
-//		}
-//		else if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.INIT)
-//		{
-//			srcobj = data.getInitThreadObject();
-//		}
-//		else
-//		{
-//			//srcobj = data.getObject(thr.getCurrentObjectId());
-//			srcobj = thr.getCurrentObject();
-//		}
-//
-//		Boolean cond_9 = null;
-//		Boolean unArg_10 = null;
-//
-//
-//		//unArg_10 = pioa.hasObjref();
-//		unArg_10 = opEvent.object != null;
-//
-//		cond_9 = new Boolean(!unArg_10.booleanValue());
-//		if(!cond_9.booleanValue())
-//		{
-//			Long destobjref = null;
-//			//destobjref = pioa.getObjref();
-//			destobjref = new Long(opEvent.object.id);
-//
-			TraceObject destobj = thread.getCurrentObject();
-//			destobj = data.getObject(destobjref);
-//			if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-//			{
-//				long cpunm = null;
-//				//cpunm = pioa.getcpunm();
-//				cpunm = new long(opevent.thread.cpu.id);
 
-//				tracecpu tmpval_20 = null;
-//				tmpval_20 = data.getcpu(cpunm);
-//				tracecpu cpu = null;
-//				cpu = tmpval_20;
-				boolean cond_22 = true;
-//				long var1_23 = null;
-//				var1_23 = srcobj.getid();
-//				long var2_24 = null;
-//				var2_24 = destobj.getid();
-				cond_22 = true;//new boolean(var1_23.longvalue() == var2_24.longvalue());
-				if(cond_22)
-				{
-					updateObject(pgti, destobj);
-					Long x1 = null;
-					x1 = destobj.getX();
-					Long x2 = x1;
-					Long y1 = null;
-					y1 = destobj.getY();
-					Long y2 = new Long(y1.longValue() + ELEMENT_SIZE.longValue());
-					NormalLabel lbl = null;
-					String arg_49 = null;
-					String var2_52 = null;
-					//var2_52 = pioa.getOpname();
-					//var2_52 = opEvent.operation.name;
-					var2_52 = "";
-					
-					arg_49 = (new String("A ")).concat(var2_52);
-					org.eclipse.swt.graphics.Font arg_50 = null;
-					arg_50 = pgti.getCurrentFont();
-					lbl = new NormalLabel(arg_49, arg_50);
-					Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
-					drawMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
-					lbl.setLocation(pt);
-					pgti.addFigure(lbl);
-					//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-					destobj.setY(y2);
-				} else
-				{
-					//updateObject(pgti, srcobj);
-					updateObject(pgti, destobj);
-					String tmpArg_v_37 = null;
-					//tmpArg_v_37 = pioa.getOpname();
-					//tmpArg_v_37 = opEvent.operation.name;
+		TraceObject currentObj = thread.getCurrentObject();
+		boolean internalOperation = currentObj.getId() == destinationObj.getId();
+		updateObject(tab, currentObj);
+		
+		if(internalOperation)
+		{
+			
+			Long x1 = currentObj.getX();
+			Long x2 = x1;
+			Long y1 = tab.getYMax();
+			Long y2 = y1.longValue() + ELEMENT_SIZE;
+			
+			String operationLabel = "A " + operation.getName();
+			NormalLabel lbl = new NormalLabel(operationLabel, tab.getCurrentFont());
 
-					//Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
-				}
-			//}
-			//thr.pushCurrentObject(destobj);
-		//}
+			Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
+			drawMarker(tab, x1, y1, x2, y2, ColorConstants.blue);
+			lbl.setLocation(pt);
+			tab.addFigure(lbl);
+			//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+			currentObj.setY(y2);
+		} 
+		else
+		{
+			updateObject(tab, destinationObj);
+			String operationName = operation.getName();
+		
+				drawObjectArrow(tab, currentObj, destinationObj, operationName);
+
+		}
 	} 
 
-	public void drawOpRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawOpRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destinationObj, TraceOperation operation)
 	{
 
 		TraceObject obj = thread.getCurrentObject();
@@ -605,7 +503,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		Long x1 = obj.getX();
 
 		Long x2 = x1;
-		Long y1 = obj.getY();
+		Long y1 = tab.getYMax();
 		Long y2 = y1.longValue() + ELEMENT_SIZE;
 		
 		NormalLabel lbl = new NormalLabel("R", tab.getCurrentFont());
@@ -632,7 +530,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		String var2_41 = null;
 		//var2_41 = pior.getOpname();
 		//var2_41 = event.operation.name;
-		var2_41 = "TODO"; //TODO
+		var2_41 = operation.getName(); //TODO
 		var1_39 = (new String(" Requested ")).concat(var2_41);
 		var1_38 = var1_39.concat(new String(" on object "));
 		var1_37 = var1_38.concat(obj.getId().toString());
@@ -735,5 +633,64 @@ public class CpuEventViewer  extends TraceEventViewer {
 		
 	}
 
-
+	
+	protected void drawObjectArrow(GenericTabItem tab, TraceObject psrc, TraceObject pdest, String pstr)
+	{
+		Long psx = psrc.getX();
+		Long psy = tab.getYMax(); //psrc.getY();
+		Long pdx = pdest.getX();
+		Long pdy = tab.getYMax(); //pdest.getY();
+		
+		Line line = new Line(psx, psy, psx, new Long(psy.longValue() + (new Long(20L)).longValue()));
+		
+		NormalLabel lbl = null;
+		org.eclipse.swt.graphics.Font arg_18 = null;
+		arg_18 = tab.getCurrentFont();
+		lbl = new NormalLabel(pstr, arg_18);
+		line.setLineWidth(new Long(3L));
+		line.setForegroundColor(ColorConstants.blue);
+		tab.addFigure(line);
+		line = (Line)UTIL.clone(new Line(pdx, new Long(pdy.longValue() + (new Long(20L)).longValue()), pdx, new Long(pdy.longValue() + (new Long(40L)).longValue())));
+		line.setLineWidth(new Long(3L));
+		line.setForegroundColor(ColorConstants.blue);
+		tab.addFigure(line);
+		line = (Line)UTIL.clone(new Line(psx, new Long(psy.longValue() + (new Long(20L)).longValue()), pdx, new Long(psy.longValue() + (new Long(20L)).longValue())));
+		line.setForegroundColor(ColorConstants.blue);
+		tab.addFigure(line);
+		
+		if((new Boolean(psx.longValue() < pdx.longValue())).booleanValue())
+		{
+			Point pt = new Point((new Long(psx.longValue() + (new Long(20L)).longValue())).intValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).intValue());
+			lbl.setLocation(pt);
+			tab.addFigure(lbl);
+			line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
+			line.setForegroundColor(ColorConstants.blue);
+			tab.addFigure(line);
+			line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
+			line.setForegroundColor(ColorConstants.blue);
+			tab.addFigure(line);
+		} else
+		{
+			Point pt = null;
+			Long arg_56 = null;
+			Long var2_61 = null;
+			Dimension tmpRec_62 = null;
+			tmpRec_62 = lbl.getSize();
+			var2_61 = new Long(tmpRec_62.width);
+			arg_56 = new Long((new Long(psx.longValue() - (new Long(20L)).longValue())).longValue() - var2_61.longValue());
+			pt = new Point(arg_56.intValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).intValue());
+			lbl.setLocation(pt);
+			tab.addFigure(lbl);
+			line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue())));
+			line.setForegroundColor(ColorConstants.blue);
+			tab.addFigure(line);
+			line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(24L)).longValue())));
+			line.setForegroundColor(ColorConstants.blue);
+			tab.addFigure(line);
+		}
+		
+//		ov_uypos = UTIL.NumberToLong(UTIL.clone(new Long(ov_uypos.longValue() + (new Long(40L)).longValue())));
+//		psrc.setY(ov_uypos);
+//		pdest.setY(ov_uypos);
+	}
 }
