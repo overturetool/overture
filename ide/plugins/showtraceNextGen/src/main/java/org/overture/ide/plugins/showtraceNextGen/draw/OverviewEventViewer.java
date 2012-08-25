@@ -3,11 +3,7 @@ package org.overture.ide.plugins.showtraceNextGen.draw;
 import java.util.Collections;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
-
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
@@ -25,32 +21,21 @@ public class OverviewEventViewer extends TraceEventViewer {
 
 	public void drawOverview(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses)
 	{
-        Long cury = RESOURCE_VINTERVAL / 2L;
+        Long yPos = RESOURCE_VINTERVAL / 2L;
         
         //Draw CPU labels in reverse order
         Collections.reverse(cpus);
 
         for(TraceCPU cpu : cpus)
-        {   //FIXME: Partly code generated
-            NormalLabel nlb = null;
-            String arg_20 = null;
-            arg_20 = cpu.getName();
-            org.eclipse.swt.graphics.Font arg_21 = null;
-            arg_21 = tab.getCurrentFont();
-            nlb = new NormalLabel(arg_20, arg_21);
-            Point np = null;
-            Long arg_22 = null;
-            Long var2_27 = null;
-            Dimension tmpRec_28 = null;
-            tmpRec_28 = nlb.getSize();
-            var2_27 = new Long(tmpRec_28.width);
-            arg_22 = BUS_LABEL_X_POS.longValue() - var2_27.longValue();
-            np = new Point(arg_22.longValue(), cury.longValue());
+        {
+            NormalLabel nlb = new NormalLabel(cpu.getName(), tab.getCurrentFont());
+            Long xPos = BUS_LABEL_X_POS - nlb.getSize().width;
+            Point np = new Point(xPos, yPos);
             nlb.setLocation(np);
             tab.addFigure(nlb);
             cpu.setX(CPU_X_START);
-            cpu.setY(new Long(cury.longValue() + (new Long(10L)).longValue()));
-            cury = new Long(cury.longValue() + RESOURCE_VINTERVAL.longValue());
+            cpu.setY(yPos + 10L);
+            yPos += RESOURCE_VINTERVAL;
             
             //Draw CPU line
             drawTimeline(tab, cpu.getX(), cpu.getY(), tab.getHorizontalSize(), cpu.getY());
@@ -58,26 +43,15 @@ public class OverviewEventViewer extends TraceEventViewer {
 
         //Draw Bus labels
         for(TraceBus bus : buses)
-        {   //FIXME: Partly code generated
-            NormalLabel nlb = null;
-            String arg_51 = null;
-            arg_51 = bus.getName();
-            org.eclipse.swt.graphics.Font arg_52 = null;
-            arg_52 = tab.getCurrentFont();
-            nlb = new NormalLabel(arg_51, arg_52);
-            Point np = null;
-            Long arg_53 = null;
-            Long var2_58 = null;
-            Dimension tmpRec_59 = null;
-            tmpRec_59 = nlb.getSize();
-            var2_58 = new Long(tmpRec_59.width);
-            arg_53 = BUS_LABEL_X_POS.longValue() - var2_58.longValue();
-            np = new Point(arg_53.longValue(), cury.longValue());
+        {
+            NormalLabel nlb = new NormalLabel(bus.getName(), tab.getCurrentFont());
+            Long xPos = BUS_LABEL_X_POS - nlb.getSize().width;
+            Point np = new Point(xPos, yPos);
             nlb.setLocation(np);
             tab.addFigure(nlb);
             bus.setX(CPU_X_START);
-            bus.setY(new Long(cury.longValue() + (new Long(10L)).longValue()));
-            cury = new Long(cury.longValue() + RESOURCE_VINTERVAL.longValue());
+            bus.setY(yPos + 10L);
+            yPos = new Long(yPos.longValue() + RESOURCE_VINTERVAL.longValue());
             
             //Draw Bus line
             drawTimeline(tab, bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
@@ -96,8 +70,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 		drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
 		drawSwapImage(tab, x1, y1, SWAP_DIRECTION.NORTH);
 		cpu.setX(x2);
-
-		cpu.setCurrentThread(null);
 	}
 
 	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -112,9 +84,6 @@ public class OverviewEventViewer extends TraceEventViewer {
         drawMarker(tab, x1, y1, x2, y2, ColorConstants.orange);
         drawSwapImage(tab, x1, y1, SWAP_DIRECTION.SOUTH);
         cpu.setX(x2);
-
-        //TODO MAA: Should it be used? MVQ: Yes, Martin you dumbass
-        cpu.setCurrentThread(thread.getId());
 	}
 	
 	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -209,8 +178,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 	
 	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
 	{
-		updateCpu(tab, cpu, thread);
-		
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -230,8 +197,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 
 	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
 	{
-		updateCpu(tab, cpu, thread);
-		
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -251,8 +216,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 	
 	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
 	{
-		updateCpu(tab, cpu, thread);
-		
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -338,37 +301,33 @@ public class OverviewEventViewer extends TraceEventViewer {
 //	    }
     }
     
-    //Helper
-	private void drawVerticalArrow(GenericTabItem pgti, Long x, Long y1, Long y2, String str, Color clr)
+    //Helper function
+	private void drawVerticalArrow(GenericTabItem tab, Long x, Long y1, Long y2, String str, Color clr)
 	{
+		//Draw line
 		Line line = new Line(x, y1, x, y2);
-		NormalLabel lbl = null;
-		String arg_11 = null;
-		String var1_13 = null;
-		var1_13 = (new String(" ")).concat(str);
-		arg_11 = var1_13.concat(new String(" "));
-		org.eclipse.swt.graphics.Font arg_12 = null;
-		arg_12 = pgti.getCurrentFont();
-		lbl = new NormalLabel(arg_11, arg_12);
+		NormalLabel lbl = new NormalLabel(" "+str+" ", tab.getCurrentFont());
 		line.setForegroundColor(clr);
 		line.setToolTip(lbl);
-		pgti.addFigure(line);
-		if((new Boolean(y1.longValue() < y2.longValue())).booleanValue())
+		tab.addFigure(line);
+
+		//Draw arrow
+		if(y1 < y2)
 		{
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
+			line = new Line(x - 4L, y2 - 8L, x, y2);
 			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
+			tab.addFigure(line);
+			line = new Line(x + 4L, y2 - 8L, x, y2);
 			line.setForegroundColor(clr);
-			pgti.addFigure(line);
+			tab.addFigure(line);
 		} else
 		{
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
+			line = new Line(x - 4L, y2 + 8L, x, y2);
 			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
+			tab.addFigure(line);
+			line = new Line(x + 4L, y2 + 8L, x, y2);
 			line.setForegroundColor(clr);
-			pgti.addFigure(line);
+			tab.addFigure(line);
 		}
 	}
 
