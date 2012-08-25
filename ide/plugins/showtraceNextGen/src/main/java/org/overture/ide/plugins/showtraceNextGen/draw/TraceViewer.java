@@ -197,10 +197,10 @@ public abstract class TraceViewer {
     	
     	switch(dir)
     	{
-	    	case NORTH: tab.composePath("icons", "vswapout.gif"); break;
-	    	case SOUTH: tab.composePath("icons", "vswapin.gif");  break;
-	    	case EAST:  tab.composePath("icons", "hswapout.gif"); break;
-	    	case WEST:  tab.composePath("icons", "hswapin.gif");  break;
+	    	case NORTH: imagePath = tab.composePath("icons", "vswapout.gif"); break;
+	    	case SOUTH: imagePath = tab.composePath("icons", "vswapin.gif");  break;
+	    	case EAST:  imagePath = tab.composePath("icons", "hswapout.gif"); break;
+	    	case WEST:  imagePath = tab.composePath("icons", "hswapin.gif");  break;
     	}
     	
         image = tab.getImage(imagePath);
