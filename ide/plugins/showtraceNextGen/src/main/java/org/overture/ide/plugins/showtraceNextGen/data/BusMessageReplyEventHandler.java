@@ -16,12 +16,12 @@ public class BusMessageReplyEventHandler extends EventHandler {
 		NextGenBusMessageReplyRequestEvent bEvent = (NextGenBusMessageReplyRequestEvent)event;
 		if(bEvent == null) return false; //Guard
 		
-//		Long cpuId = new Long(tEvent.thread.cpu.id);
-//		Long threadId = new Long(oEvent.thread.id);
-////		TraceCPU cpu = data.getCPU(cpuId);
-//		TraceThread thread = data.getThread(threadId);
+		TraceCPU cpu = data.getCPU(new Long(bEvent.replyMessage.fromCpu.id));
+		TraceThread thread = data.getThread(bEvent.replyMessage.callerThread.id);
+		TraceBus bus = data.getBUS(new Long(bEvent.replyMessage.bus.id));
+		TraceOperation op = data.getOperation(bEvent.replyMessage.operation.classDef.name + bEvent.replyMessage.operation.name);
 				
-		eventViewer.drawReplyRequest(tab,  null);
+		eventViewer.drawReplyRequest(tab,  cpu, thread, bus, op);
 		return true;
 	}
 

@@ -21,13 +21,13 @@ public abstract class TraceEventViewer extends TraceViewer {
 	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
 
 	//Messages
-	public abstract void drawReplyRequest(GenericTabItem tab,INextGenEvent pitrr);
+	public abstract void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op);
 	
-	public abstract void drawMessageCompleted(GenericTabItem tab,INextGenEvent pitmc);
+	public abstract void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op);
 
-	public abstract void drawMessageRequest(GenericTabItem tab,INextGenEvent pitmr);
+	public abstract void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op);
 	
-	public abstract void drawMessageActivated(GenericTabItem tab, INextGenEvent event);
+	public abstract void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op);
 
 	//Operations
 	public abstract void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread);

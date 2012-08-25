@@ -677,11 +677,6 @@ public class CpuEventViewer  extends TraceEventViewer {
 		
 	}
 
-	@Override
-	public void drawMessageActivated(GenericTabItem tab, INextGenEvent event) {
-		//Is not drawn for CPU's ?
-	}
-
 	private void updateObject(GenericTabItem tab, TraceObject pobj)
 	{
 		if(!pobj.isVisible())
@@ -710,6 +705,34 @@ public class CpuEventViewer  extends TraceEventViewer {
 			pobj.setVisible(true);
             pobj.setX(lineXPos);
 		}
+	}
+
+	@Override
+	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu,
+			TraceThread thread, TraceBus bus, TraceOperation op) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu,
+			TraceThread thread, TraceBus bus, TraceOperation op) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu,
+			TraceThread thread, TraceBus bus, TraceOperation op) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu,
+			TraceThread thread, TraceBus bus, TraceOperation op) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

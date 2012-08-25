@@ -4,17 +4,19 @@ import java.util.Collections;
 import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.swt.graphics.Color;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.*;
-import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
 public class OverviewEventViewer extends TraceEventViewer {
 
 	private final Long ELEMENT_SIZE = 18L;
+	private final Long BUSMSG_ARROW_OFFSET = 8L;
 	
 	public OverviewEventViewer()
 	{
@@ -204,226 +206,109 @@ public class OverviewEventViewer extends TraceEventViewer {
         tab.addFigure(line);
         cpu.setX(tab.getXMax());
 	}
-
-	public void drawReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
-	{	/*
-    	NextGenBusMessageReplyRequestEvent replyEvent = (NextGenBusMessageReplyRequestEvent) pitrr;
-
-        Long busid = null;
-        //busid = pitrr.getBusid();
-        busid = new Long(replyEvent.replyMessage.bus.id);
-
-        Long msgid = null;
-        //msgid = pitrr.getMsgid();
-        msgid = replyEvent.replyMessage.id;
-
-        TraceBus bus = null;
-        bus = data.getBUS(busid);
-        TraceMessage msg = null;
-        msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
-            Long x1 = null;
-            x1 = bus.getX();
-            Long x2 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long tmpVal_25 = null;
-            tmpVal_25 = bus.getY();
-            Long y1 = null;
-            y1 = tmpVal_25;
-            Long tmpVal_26 = null;
-            tmpVal_26 = y1;
-            Long y2 = null;
-            y2 = tmpVal_26;
-            Long ycpu = null;
-            Long var1_29 = null;
-            TraceCPU obj_30 = null;
-            Long par_31 = null;
-            par_31 = msg.getFromCpu();
-            obj_30 = data.getCPU(par_31);
-            var1_29 = obj_30.getY();
-            ycpu = new Long(var1_29.longValue() + (new Long(8L)).longValue());
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
-            String tmpArg_v_47 = null;
-            String var1_48 = null;
-            String var2_50 = "";
-            //var2_50 = msg.getDescr(); //TODO: msg description
-            var2_50 = replyEvent.message.operation.name;
-            var1_48 = (new String(" return from ")).concat(var2_50);
-            tmpArg_v_47 = var1_48.concat(new String(" "));
-            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
-            bus.setX(x2);
-        }*/
-	}
-
-	public void drawMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
+	
+	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
 	{
-		/*
-    	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitmc;
-
-        Long msgid = busMessageEvent.message.id;
-
-        TraceMessage msg = null;
-        msg = data.getMessage(msgid);
-        Long busid = null;
-        busid = msg.getBusId();
-        TraceBus bus = null;
-        bus = data.getBUS(busid);
-        TraceCPU tmpVal_13 = null;
-        Long par_14 = null;
-        par_14 = msg.getToCpu();
-        tmpVal_13 = data.getCPU(par_14);
-        TraceCPU cpu = null;
-        cpu = tmpVal_13;
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvBus(pgti, bus);
-            Long tmpVal_22 = null;
-            tmpVal_22 = bus.getX();
-            Long x1 = null;
-            x1 = tmpVal_22;
-            Long tmpVal_23 = null;
-            tmpVal_23 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long x2 = null;
-            x2 = tmpVal_23;
-            Long tmpVal_26 = null;
-            tmpVal_26 = bus.getY();
-            Long y1 = null;
-            y1 = tmpVal_26;
-            Long tmpVal_27 = null;
-            tmpVal_27 = y1;
-            Long y2 = null;
-            y2 = tmpVal_27;
-            Long ycpu = null;
-            Long var1_30 = null;
-            var1_30 = cpu.getY();
-            ycpu = new Long(var1_30.longValue() + (new Long(8L)).longValue());
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.darkGray);
-            String tmpArg_v_46 = null;
-            String var1_47 = null;
-            String var2_49 = "";
-            //var2_49 = msg.getDescr(); //TODO: Message description?
-            var2_49 = busMessageEvent.message.operation.name;
-            var1_47 = (new String(" ")).concat(var2_49);
-            tmpArg_v_46 = var1_47.concat(new String(" "));
-            drawVerticalArrow(pgti, x2, new Long(y1.longValue() - (new Long(8L)).longValue()), ycpu, tmpArg_v_46, ColorConstants.darkBlue);
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(x2.longValue() + (new Long(6L)).longValue())));
-            updateOvCpu(pgti, cpu);
-            bus.setX(x2);
-        }
-
-        //If this is a reply to an earlier request then unblock the thread which did the request
-        if(busMessageEvent.message.receiverThread != null)
-        {
-			TraceThread thr = data.getThread(busMessageEvent.message.receiverThread.id);
-			thr.setStatus(false);
-        }*/
+		updateCpu(tab, cpu, thread);
+		
+		//Draw marker on bus
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = bus.getY();
+		Long y2 = y1;
+		
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.lightGray);
+		bus.setX(x2); //TODO: MVQ: This info is not used?
+		
+		//Draw arrow from CPU to bus
+		y1 = cpu.getY() + BUSMSG_ARROW_OFFSET;
+		y2 = bus.getY() - BUSMSG_ARROW_OFFSET;
+		String label = " call "+op.getName()+" ";
+		
+		drawVerticalArrow(tab, x1, y1, y2, label, ColorConstants.darkBlue);
 	}
 
-	public void drawMessageActivated(GenericTabItem pgti, INextGenEvent pitma)
+	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
 	{
-		/*
-    	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitma;
-        Long msgid = busMessageEvent.message.id;
-        msgid = ((NextGenBusMessageEvent)pitma).message.id;
-
-        Long busid = null;
-        TraceMessage obj_7 = null;
-        obj_7 = data.getMessage(msgid);
-        busid = obj_7.getBusId();
-        TraceBus bus = null;
-        bus = data.getBUS(busid);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            updateOvBus(pgti, bus);
-            Long tmpVal_18 = null;
-            tmpVal_18 = bus.getX();
-            Long x1 = null;
-            x1 = tmpVal_18;
-            Long tmpVal_19 = null;
-            tmpVal_19 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long x2 = null;
-            x2 = tmpVal_19;
-            Long tmpVal_22 = null;
-            tmpVal_22 = bus.getY();
-            Long y1 = null;
-            y1 = tmpVal_22;
-            Long tmpVal_23 = null;
-            tmpVal_23 = y1;
-            Long y2 = null;
-            y2 = tmpVal_23;
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
-            bus.setX(x2);
-        }*/
+		updateCpu(tab, cpu, thread);
+		
+		//Draw marker on bus
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = bus.getY();
+		Long y2 = y1;
+		
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.lightGray);
+		bus.setX(x2); //TODO: MVQ: This info is not used?
+		
+		//Draw arrow from CPU to bus
+		y1 = cpu.getY() + BUSMSG_ARROW_OFFSET;
+		y2 = bus.getY() - BUSMSG_ARROW_OFFSET;
+		String label = " return from "+op.getName()+" ";
+		
+		drawVerticalArrow(tab, x1, y1, y2, label, ColorConstants.darkBlue);
+	}
+	
+	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		//Draw marker on bus
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = bus.getY();
+		Long y2 = y1;
+		
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
+		bus.setX(x2); //TODO: MVQ: This info is not used?
 	}
 
-	public void drawMessageRequest(GenericTabItem pgti, INextGenEvent pitmr)
-			{
-		/*
-    	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitmr;
-
-        Long busid = null;
-        //busid = pitmr.getBusid();
-        busid = new Long(busMessageEvent.message.bus.id);
-
-        Long msgid = null;
-        //msgid = pitmr.getMsgid();
-        msgid = busMessageEvent.message.id;
-
-        TraceBus bus = null;
-        bus = data.getBUS(busid);
-        TraceMessage msg = null;
-        msg = data.getMessage(msgid);
-        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-        {
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + (new Long(6L)).longValue())));
-            updateOvBus(pgti, bus);
-            Long tmpVal_21 = null;
-            tmpVal_21 = bus.getX();
-            Long x1 = null;
-            x1 = tmpVal_21;
-            Long tmpVal_22 = null;
-            tmpVal_22 = new Long(x1.longValue() + ELEMENT_uSIZE.longValue());
-            Long x2 = null;
-            x2 = tmpVal_22;
-            Long tmpVal_25 = null;
-            tmpVal_25 = bus.getY();
-            Long y1 = null;
-            y1 = tmpVal_25;
-            Long tmpVal_26 = null;
-            tmpVal_26 = y1;
-            Long y2 = null;
-            y2 = tmpVal_26;
-            Long ycpu = null;
-            Long var1_29 = null;
-            TraceCPU obj_30 = null;
-            Long par_31 = null;
-            par_31 = msg.getFromCpu();
-            obj_30 = data.getCPU(par_31);
-            var1_29 = obj_30.getY();
-            ycpu = new Long(var1_29.longValue() + (new Long(8L)).longValue());
-            drawOvMarker(pgti, x1, y1, x2, y2, ColorConstants.lightGray);
-            String tmpArg_v_47 = null;
-            String var1_48 = null;
-            String var2_50 = "";
-            //var2_50 = msg.getDescr(); //TODO
-            var2_50 = busMessageEvent.message.operation.name;
-            var1_48 = (new String(" call ")).concat(var2_50);
-            tmpArg_v_47 = var1_48.concat(new String(" "));
-            drawVerticalArrow(pgti, x1, ycpu, new Long(y1.longValue() - (new Long(8L)).longValue()), tmpArg_v_47, ColorConstants.darkBlue);
-            currentXPosition = UTIL.NumberToLong(UTIL.clone(x2));
-            bus.setX(x2);
-        }*/
-			}
+	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		//Draw marker on bus
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = bus.getY();
+		Long y2 = y1;
+		
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.darkGray);
+		bus.setX(x2); //TODO: MVQ: This info is not used?
+		
+		//Draw arrow from bus to CPU
+		y1 = bus.getY() - BUSMSG_ARROW_OFFSET;
+		y2 = cpu.getY() + BUSMSG_ARROW_OFFSET;
+		String label = " "+op.getName()+" ";
+		
+		drawVerticalArrow(tab, x2, y1, y2, label, ColorConstants.darkBlue);
+	}
 
 	
 	@Override
-	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
+	public void drawTimeMarker(GenericTabItem tab, Long markerTime)
+	{	//FIXME: Magic numbers
+		Long markerStartX = tab.getXMax() < CPU_X_START ? CPU_X_START : tab.getXMax();
+		Long markerStartY = 10L;
+		Long markerEndX = markerStartX;
+		Long markerEndY = tab.getYMax() + 5L;
 		
-
+		//Draw vertical marker line
+		Line markerLine = new Line(markerStartX, markerStartY, markerEndX, markerEndY);
+		markerLine.setForegroundColor(ColorConstants.lightGray);
+		markerLine.setDot();
+		tab.addBackgroundFigure(markerLine);
+		
+		//Draw time label
+		Line labelLine = new Line(markerEndX, markerEndY + 5L, markerEndX, markerEndY + 10L);
+		tab.addBackgroundFigure(labelLine);
+		String labelText = markerTime.toString();
+		RotatedLabel timeLabel = new RotatedLabel(labelText, tab.getCurrentFont());	
+		int labelStartX = markerEndX.intValue() - timeLabel.getSize().width/2;
+		int labelStartY = markerEndY.intValue() + 15;
+		Point labelLocation = new Point(labelStartX, labelStartY);
+		timeLabel.setLocation(labelLocation);
+		tab.addBackgroundFigure(timeLabel);
 	}
 	
     private void updateCpu(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -452,5 +337,39 @@ public class OverviewEventViewer extends TraceEventViewer {
 //	        checkConjectureLimits(pgti, ov_uxpos - ELEMENT_uSIZE, cpu.getY(), ov_ucurrenttime, thrid);
 //	    }
     }
+    
+    //Helper
+	private void drawVerticalArrow(GenericTabItem pgti, Long x, Long y1, Long y2, String str, Color clr)
+	{
+		Line line = new Line(x, y1, x, y2);
+		NormalLabel lbl = null;
+		String arg_11 = null;
+		String var1_13 = null;
+		var1_13 = (new String(" ")).concat(str);
+		arg_11 = var1_13.concat(new String(" "));
+		org.eclipse.swt.graphics.Font arg_12 = null;
+		arg_12 = pgti.getCurrentFont();
+		lbl = new NormalLabel(arg_11, arg_12);
+		line.setForegroundColor(clr);
+		line.setToolTip(lbl);
+		pgti.addFigure(line);
+		if((new Boolean(y1.longValue() < y2.longValue())).booleanValue())
+		{
+			line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
+			line.setForegroundColor(clr);
+			pgti.addFigure(line);
+			line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
+			line.setForegroundColor(clr);
+			pgti.addFigure(line);
+		} else
+		{
+			line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
+			line.setForegroundColor(clr);
+			pgti.addFigure(line);
+			line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
+			line.setForegroundColor(clr);
+			pgti.addFigure(line);
+		}
+	}
 
 }

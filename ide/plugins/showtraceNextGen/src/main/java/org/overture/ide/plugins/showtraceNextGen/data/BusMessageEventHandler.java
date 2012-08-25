@@ -16,24 +16,34 @@ public class BusMessageEventHandler extends EventHandler {
 		NextGenBusMessageEvent bEvent = (NextGenBusMessageEvent)event;
 		if(bEvent == null) return false; //Guard
 		
-//		Long cpuId = new Long(tEvent.thread.cpu.id);
-		//Long threadId = new Long(oEvent.thread.id);
-//		TraceCPU cpu = data.getCPU(cpuId);
-		//TraceThread thread = data.getThread(threadId);
-				
+		TraceCPU cpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
+		TraceThread thread = data.getThread(bEvent.message.callerThread.id);
+		TraceBus bus = data.getBUS(new Long(bEvent.message.bus.id));
+		TraceOperation op = data.getOperation(bEvent.message.operation.classDef.name + bEvent.message.operation.name);
+		
+		//TODO: MVQ: Review if all objects are required in all draw methods
 		switch(bEvent.type)
-		{			
-		case ACTIVATE: 
-			eventViewer.drawMessageActivated(tab, null);
+		{
+		case REQUEST: 
+			eventViewer.drawMessageRequest(tab, cpu, thread, bus, op);
 			break;
-		case COMPLETED: 
-			eventViewer.drawMessageCompleted(tab, null);
+		case ACTIVATE:
+			eventViewer.drawMessageActivated(tab, cpu, thread, bus, op);
+			break;
+		case COMPLETED:
+			cpu = data.getCPU(new Long(bEvent.message.toCpu.id));
+			eventViewer.drawMessageCompleted(tab, cpu, thread, bus, op);
+			
+	        //If this is a reply to an earlier request then unblock the thread which did the request
+	        if(bEvent.message.receiverThread != null)
+	        {
+				TraceThread thr = data.getThread(bEvent.message.receiverThread.id);
+				thr.setStatus(false);
+	        }
+	        
 			break;
 		case REPLY_REQUEST:
 			return false; //Handle by BusMesageReplyEventHandler
-		case REQUEST: 
-			eventViewer.drawMessageRequest(tab, null);
-			break;
 		default: 
 			return false;
 		}

@@ -96,40 +96,6 @@ public abstract class TraceViewer {
 //		pdest.setY(ov_uypos);
 	}
 
-	protected void drawVerticalArrow(GenericTabItem pgti, Long x, Long y1, Long y2, String str, Color clr)
-			throws CGException
-			{
-		Line line = new Line(x, y1, x, y2);
-		NormalLabel lbl = null;
-		String arg_11 = null;
-		String var1_13 = null;
-		var1_13 = (new String(" ")).concat(str);
-		arg_11 = var1_13.concat(new String(" "));
-		org.eclipse.swt.graphics.Font arg_12 = null;
-		arg_12 = pgti.getCurrentFont();
-		lbl = new NormalLabel(arg_11, arg_12);
-		line.setForegroundColor(clr);
-		line.setToolTip(lbl);
-		pgti.addFigure(line);
-		if((new Boolean(y1.longValue() < y2.longValue())).booleanValue())
-		{
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() - (new Long(8L)).longValue()), x, y2));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-		} else
-		{
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() - (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-			line = (Line)UTIL.clone(new Line(new Long(x.longValue() + (new Long(4L)).longValue()), new Long(y2.longValue() + (new Long(8L)).longValue()), x, y2));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-		}
-			}
-
 	protected void drawHorizontalArrow(GenericTabItem pgti, Long x1, Long x2, Long y, String str, Color clr)
 			throws CGException
 			{
