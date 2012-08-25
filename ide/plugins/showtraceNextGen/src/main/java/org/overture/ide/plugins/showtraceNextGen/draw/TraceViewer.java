@@ -21,7 +21,8 @@ public abstract class TraceViewer {
 	protected final Long CPU_WIDTH = new Long(150L);
 	protected final Long CPU_HEIGHT = new Long(40L);
     
-	protected final Long BUS_X_POS = new Long(125L);
+	protected final Long BUS_LABEL_X_POS = new Long(125L);
+	protected final Long BUS_X_START = new Long(100L);
 	protected final Long BUS_Y_START = new Long(90L);
 	protected final Long BUS_Y_OFFSET = new Long(30L);
 	

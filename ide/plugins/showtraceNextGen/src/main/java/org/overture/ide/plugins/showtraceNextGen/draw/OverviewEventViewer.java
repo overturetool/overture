@@ -40,7 +40,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             Dimension tmpRec_28 = null;
             tmpRec_28 = nlb.getSize();
             var2_27 = new Long(tmpRec_28.width);
-            arg_22 = BUS_X_POS.longValue() - var2_27.longValue();
+            arg_22 = BUS_LABEL_X_POS.longValue() - var2_27.longValue();
             np = new Point(arg_22.longValue(), cury.longValue());
             nlb.setLocation(np);
             tab.addFigure(nlb);
@@ -70,7 +70,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             Dimension tmpRec_59 = null;
             tmpRec_59 = nlb.getSize();
             var2_58 = new Long(tmpRec_59.width);
-            arg_53 = BUS_X_POS.longValue() - var2_58.longValue();
+            arg_53 = BUS_LABEL_X_POS.longValue() - var2_58.longValue();
             np = new Point(arg_53.longValue(), cury.longValue());
             nlb.setLocation(np);
             tab.addFigure(nlb);
@@ -484,20 +484,21 @@ public class OverviewEventViewer extends TraceEventViewer {
 			}
 
 	public void drawOpCompleted(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
-			{/*
-            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-            {
-                Long cpunm = null;
-                //cpunm = pioc.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioc).thread.cpu.id);
-                TraceCPU tmpVal_9 = null;
-                tmpVal_9 = data.getCPU(cpunm);
-                TraceCPU cpu = null;
-                cpu = tmpVal_9;
-                currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
-                updateOvCpu(pgti, cpu);
-            }*/
-			}
+	{
+//        if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+//        {
+//            Long cpunm = null;
+//            //cpunm = pioc.getCpunm();
+//            cpunm = new Long(((NextGenOperationEvent)pioc).thread.cpu.id);
+//            TraceCPU tmpVal_9 = null;
+//            tmpVal_9 = data.getCPU(cpunm);
+//            TraceCPU cpu = null;
+//            cpu = tmpVal_9;
+//            currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
+//            
+//            updateOvCpu(pgti, cpu);
+//        }
+	}
 
 	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 			{/*

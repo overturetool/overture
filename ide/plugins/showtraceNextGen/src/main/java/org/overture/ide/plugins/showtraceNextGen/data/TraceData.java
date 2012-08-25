@@ -44,6 +44,7 @@ public class TraceData
 	private HashMap<Long, TraceBus> buses; 
 	private HashMap<Long, TraceThread> threads;
 	private HashMap<Long, TraceBusMessage> messages;
+	private HashMap<String, TraceOperation> operations;
 	
 	private TraceObject mainThreadObject;
 	private TraceObject initThreadObject;
@@ -62,6 +63,7 @@ public class TraceData
     	buses = new HashMap<Long, TraceBus>();
     	threads = new HashMap<Long, TraceThread>();
     	messages = new HashMap<Long, TraceBusMessage>();
+    	operations = new HashMap<String, TraceOperation>();
     	
     	mainThreadObject = new TraceObject(0L,"MAIN");
     	initThreadObject = new TraceObject(0L, "INIT");
@@ -244,6 +246,27 @@ public class TraceData
         return messages.get(pmsgid);
     }
 
+    //Operation
+    public TraceOperation getOperation(String classNameOperationName)
+    {
+        if(!rtLogger.getOperationMap().containsKey(classNameOperationName))
+            throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getOpreation");
+        
+        if(!messages.containsKey(classNameOperationName))
+        {
+        	NextGenOperation message = rtLogger.getOperationMap().get(classNameOperationName);
+        	
+        	String opName = message.name;
+        	Boolean isStatic = message.isStatic;
+        	Boolean isAsync = message.isAsync;
+        	String clName = message.classDef.name;
+        	
+        	operations.put(classNameOperationName, new TraceOperation(opName, isAsync, isStatic, clName));
+        }
+        
+        return operations.get(classNameOperationName);
+    }
+    
     //Object
     public TraceObject getObject(Long pobjid) throws RuntimeErrorException
     {

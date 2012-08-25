@@ -1,9 +1,7 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
-import java.util.HashSet;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
 import jp.co.csk.vdm.toolbox.VDM.UTIL;
 
 import org.eclipse.draw2d.ColorConstants;
@@ -16,7 +14,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 	public void drawView(GenericTabItem tab, Vector<TraceBus> buses)
 	{
-		Long currentXPos = 100L; //TODO MAA: Make constant?
+		Long currentXPos = BUS_X_START; 
 		Long yPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
 
 		for(TraceBus bus : buses)
@@ -108,7 +106,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 		Long x1 = obj.getX();
 		Long x2 = x1;
-		Long y1 = obj.getY();
+		Long y1 = tab.getYMax();
 		Long y2 = y1 + ELEMENT_SIZE;
 
         drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
@@ -125,7 +123,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 		Long x1 = obj.getX();
 		Long x2 = x1;
-		Long y1 = obj.getY();
+		Long y1 = tab.getYMax();
 		Long y2 = y1 + ELEMENT_SIZE;
 
         drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
@@ -382,75 +380,76 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawOpCompleted(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		/*
-		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
-
-		Long thrid = opEvent.thread.id;
-		Long objId = null;
-		TraceObject srcobj = null;
-
-		TraceThread thr = data.getThread(thrid);
-
-		if(opEvent.thread.object != null)
-		{
-			objId = new Long(opEvent.thread.object.id);
-			srcobj = data.getObject(objId);
-		}
-		else
-		{
-			srcobj = thr.getCurrentObject();
-		}
-
-
-		Boolean cond_9 = null;
-		Boolean unArg_10 = null;
-
-		unArg_10 = opEvent.object != null;
-
-		cond_9 = new Boolean(!unArg_10.booleanValue());
-		if(!cond_9.booleanValue())
-		{
-			thr.popCurrentObject();
-			TraceObject destobj = thr.getCurrentObject();
-			if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-			{
-				Long cpunm = null;
-				//cpunm = pioc.getCpunm();
-				cpunm = new Long(opEvent.thread.cpu.id);
-				TraceCPU tmpVal_19 = null;
-				tmpVal_19 = data.getCPU(cpunm);
-				TraceCPU cpu = null;
-				cpu = tmpVal_19;
-				Boolean cond_21 = null;
-				Long var1_22 = null;
-				//var1_22 = srcobj.getId();
-				var1_22 = new Long(opEvent.object.id);
-				Long var2_23 = null;
-				var2_23 = destobj.getId();
-				cond_21 = new Boolean(var1_22.longValue() == var2_23.longValue());
-				if(cond_21.booleanValue())
-				{
-					updateCpuObject(pgti, cpu, destobj);
-					Long x1 = null;
-					x1 = destobj.getX();
+		
+//		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
+//
+//		Long thrid = opEvent.thread.id;
+//		Long objId = null;
+//		TraceObject srcobj = null;
+//
+//		TraceThread thr = data.getThread(thrid);
+//
+//		if(opEvent.thread.object != null)
+//		{
+//			objId = new Long(opEvent.thread.object.id);
+//			srcobj = data.getObject(objId);
+//		}
+//		else
+//		{
+//			srcobj = thr.getCurrentObject();
+//		}
+//
+//
+//		Boolean cond_9 = null;
+//		Boolean unArg_10 = null;
+//
+//		unArg_10 = opEvent.object != null;
+//
+//		cond_9 = new Boolean(!unArg_10.booleanValue());
+//		if(!cond_9.booleanValue())
+//		{
+//			thr.popCurrentObject();
+			TraceObject destobj = thread.getCurrentObject();
+//			if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+//			{
+//				Long cpunm = null;
+//				//cpunm = pioc.getCpunm();
+//				cpunm = new Long(opEvent.thread.cpu.id);
+//				TraceCPU tmpVal_19 = null;
+//				tmpVal_19 = data.getCPU(cpunm);
+//				TraceCPU cpu = null;
+//				cpu = tmpVal_19;
+//				Boolean cond_21 = null;
+//				Long var1_22 = null;
+//				//var1_22 = srcobj.getId();
+//				var1_22 = new Long(opEvent.object.id);
+//				Long var2_23 = null;
+//				var2_23 = destobj.getId();
+//				cond_21 = new Boolean(var1_22.longValue() == var2_23.longValue());
+//				if(cond_21.booleanValue())
+//				{
+					updateObject(tab, destobj);
+					Long x1 = destobj.getX();
 					Long x2 = x1;
-					Long tmpVal_44 = null;
-					tmpVal_44 = destobj.getY();
-					Long y1 = null;
-					y1 = tmpVal_44;
-					Long tmpVal_45 = null;
-					tmpVal_45 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-					Long y2 = null;
-					y2 = tmpVal_45;
-					Long objid = null;
-					//objid = pioc.getObjref();
-					objid = new Long(opEvent.object.id);
-					NormalLabel lbl = null;
-					org.eclipse.swt.graphics.Font arg_50 = null;
-					arg_50 = pgti.getCurrentFont();
-					lbl = new NormalLabel(new String("C"), arg_50);
+					Long y1 = destobj.getY();
+					Long y2 = y1 + ELEMENT_SIZE;
+					
+//					Long tmpVal_44 = null;
+//					tmpVal_44 = destobj.getY();
+//					y1 = tmpVal_44;
+//					Long tmpVal_45 = null;
+//					tmpVal_45 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+//					Long y2 = null;
+//					y2 = tmpVal_45;
+//					Long objid = null;
+//					//objid = pioc.getObjref();
+//					objid = new Long(opEvent.object.id);
+					NormalLabel lbl = new NormalLabel("C", tab.getCurrentFont());;
+//					org.eclipse.swt.graphics.Font arg_50 = null;
+//					arg_50 = pgti.getCurrentFont();
+//					lbl = new NormalLabel(new String("C"), arg_50);
 					String str = null;
 					Boolean cond_52 = null;
 					//cond_52 = pioc.hasRes(); //TODO MAA: Add return value to data structure?
@@ -470,32 +469,32 @@ public class CpuEventViewer  extends TraceEventViewer {
 					String var1_58 = null;
 					String var1_59 = null;
 					String var1_60 = null;
-					String var2_62 = null;
+					String var2_62 = "TODO"; //TODO
 					//var2_62 = pioc.getOpname();
-					var2_62 = opEvent.operation.name;
+//					var2_62 = opEvent.operation.name;
 					var1_60 = (new String(" Completed ")).concat(var2_62);
 					var1_59 = var1_60.concat(new String(" on object "));
-					var1_58 = var1_59.concat(nat2str(objid));
+					var1_58 = var1_59.concat(destobj.getId().toString());
 					var1_57 = var1_58.concat(str);
 					arg_55 = var1_57.concat(new String(" "));
 					org.eclipse.swt.graphics.Font arg_56 = null;
-					arg_56 = pgti.getCurrentFont();
+					arg_56 = tab.getCurrentFont();
 					ttl = new NormalLabel(arg_55, arg_56);
 					Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
-					drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
+					drawMarker(tab, x1, y1, x2, y2, ColorConstants.blue);
 					lbl.setToolTip(ttl);
 					lbl.setLocation(pt);
-					pgti.addFigure(lbl);
-					ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+					tab.addFigure(lbl);
+					//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
 					destobj.setY(y2);
-				} else
-				{
-					updateCpuObject(pgti, cpu, srcobj);
-					updateCpuObject(pgti, cpu, destobj);
-					Object2ObjectArrow(pgti, srcobj, destobj, new String(""));
-				}
-			}
-		}*/
+//				} else
+//				{
+//					updateCpuObject(pgti, cpu, srcobj);
+//					updateCpuObject(pgti, cpu, destobj);
+//					Object2ObjectArrow(pgti, srcobj, destobj, new String(""));
+//				}
+//			}
+//		}
 	}
 
 	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
@@ -651,8 +650,33 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
-		// TODO Auto-generated method stub
+		
+		Long markerStartX = BUS_X_START;
+		Long markerStartY = tab.getYMax();
+		Long markerEndX = tab.getXMax();
+		Long markerEndY = markerStartY;
+		
+		//Draw horizontal marker line
+		Line markerLine = new Line(markerStartX, markerStartY, markerEndX, markerEndY);
+		markerLine.setForegroundColor(ColorConstants.lightGray);
+		markerLine.setDot();
+		tab.addBackgroundFigure(markerLine);
+		
+		//Draw time label
+		String labelText = markerTime.toString();
+		NormalLabel timeLabel = new NormalLabel(labelText, tab.getCurrentFont());	
+		int labelStartX = markerStartX.intValue() - timeLabel.getSize().width;
+		int labelStartY = markerStartY.intValue() - (int)(timeLabel.getSize().height/2);
+		Point labelLocation = new Point(labelStartX, labelStartY);
+		timeLabel.setLocation(labelLocation);
+		tab.addBackgroundFigure(timeLabel);
+		
 
+		
+		
+
+		
+				
 	}
 
 	@Override

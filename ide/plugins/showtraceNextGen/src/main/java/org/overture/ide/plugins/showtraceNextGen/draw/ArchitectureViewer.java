@@ -73,7 +73,7 @@ public class ArchitectureViewer extends TraceViewer {
 		{	
 			//Calculate bus label coordinates and draw 
 			NormalLabel busLabel = new NormalLabel(bus.getName(), textFont);	
-			Long xLabelStart = new Long(BUS_X_POS - new Long(busLabel.getSize().width));		
+			Long xLabelStart = new Long(BUS_LABEL_X_POS - new Long(busLabel.getSize().width));		
 			Point labelPoint = new Point(xLabelStart.intValue(), currentYPos.intValue());			
 			busLabel.setLocation(labelPoint);
 			bus.setY(currentYPos);
