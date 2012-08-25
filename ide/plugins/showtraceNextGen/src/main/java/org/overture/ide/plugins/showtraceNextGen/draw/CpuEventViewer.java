@@ -1,11 +1,45 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
-import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
+import java.util.HashSet;
+import java.util.Vector;
+
+import jp.co.csk.vdm.toolbox.VDM.UTIL;
+
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.geometry.Point;
+import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
 public class CpuEventViewer  extends TraceEventViewer {
 
+	public void drawView(GenericTabItem tab, Vector<TraceBus> buses)
+	{
+		Long currentXPos = 100L; //TODO MAA: Make constant?
+		Long yPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
+		
+		for(TraceBus bus : buses)
+		{
+			NormalLabel nlb = new NormalLabel(bus.getName(), tab.getCurrentFont());
+
+            RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);
+            Point np = new Point(currentXPos.intValue(), CPU_Y_POS.intValue());
+
+            if(bus.isVirtual())
+            {
+            	nrr.setDash();
+            	nrr.setForegroundColor(ColorConstants.darkGray);
+            }
+            
+            nrr.setLocation(np);
+            nrr.setSize(CPU_WIDTH, CPU_HEIGHT);
+            tab.addFigure(nrr);
+            bus.setX(currentXPos + new Long((CPU_WIDTH/2))); //+12
+            bus.setY(yPos);
+            currentXPos = currentXPos + CPU_WIDTH + CPU_HEIGHT;         
+		}
+	}
+	
 	public void drawReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
 	{
 		/*
@@ -56,18 +90,19 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawThreadSwapOut(GenericTabItem pgti, TraceCPU cpu)
-	{/*
-		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object)
+	{
+		/*
+//		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
 		Long objref = null;
 		TraceObject obj = null;
-		Long thrid = tEvent.thread.id;
-		TraceThread thr = data.getThread(thrid);
+//		Long thrid = tEvent.thread.id;
+//		TraceThread thr = data.getThread(thrid);
 		Boolean cond_6 = null;
-		Long cpunm = new Long(tEvent.thread.cpu.id);
-		TraceCPU cpu = data.getCPU(cpunm);
+//		Long cpunm = new Long(tEvent.thread.cpu.id);
+//		TraceCPU cpu = data.getCPU(cpunm);
 
-		if(!thr.hasCurrentObject())
+		if(!thread.hasCurrentObject())
 		{
 			if(tEvent.thread.object == null)
 			{
@@ -216,7 +251,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		thr.popCurrentObject();*/
 	}
 
-	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu)
+	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
 		/*
 		NextGenThreadEvent event = (NextGenThreadEvent)pitc;

@@ -49,6 +49,7 @@ public class TraceFileRunner implements ITraceRunner
 			throws Exception 
 	{
 		data.reset();
+		
 		OverviewEventViewer viewer = new OverviewEventViewer();
 		viewer.drawOverview(tab, data.getCPUs(), data.getBuses());
 		
@@ -68,6 +69,9 @@ public class TraceFileRunner implements ITraceRunner
 			throws Exception 
 	{
 		data.reset();
+		
+		CpuEventViewer viewer = new CpuEventViewer();
+		viewer.drawView(tab, data.getConnectedBuses(cpuId));
 		
 		for(INextGenEvent event : data.getSortedCpuEvents(cpuId))
 		{
