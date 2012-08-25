@@ -19,16 +19,12 @@
 package org.overture.ide.plugins.showtraceNextGen.view;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
 import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -321,7 +317,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void createTabPages()
 	{
 		try

@@ -1,21 +1,12 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
-import java.util.Iterator;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
-import jp.co.csk.vdm.toolbox.VDM.VDMRunTimeException;
-
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.Color;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.*;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
 
 public class OverviewEventViewer extends TraceEventViewer {
 

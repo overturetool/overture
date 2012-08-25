@@ -1,28 +1,8 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
-import java.util.Iterator;
-
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
-
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.ImageFigure;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.Color;
-import org.overture.ide.plugins.showtraceNextGen.data.TraceBus;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
-import org.overture.ide.plugins.showtraceNextGen.data.TraceBusMessage;
-import org.overture.ide.plugins.showtraceNextGen.data.TraceObject;
-import org.overture.ide.plugins.showtraceNextGen.data.TraceResource;
-import org.overture.ide.plugins.showtraceNextGen.data.TraceThread;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
-import org.overture.ide.plugins.showtraceNextGen.view.UnexpectedInstanceException;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 
 public class CpuEventViewer  extends TraceEventViewer {
 

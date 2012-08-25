@@ -10,7 +10,6 @@ public class NextGenTraceParser extends Thread {
 	private String fileName = null;
 	private boolean isFinished = false;
 	private Object lock = new Object();
-	private NextGenRTLogger rtLogger = null;
 	public TraceData data = null;
 	public Exception error = null;
 
@@ -24,7 +23,7 @@ public class NextGenTraceParser extends Thread {
 	{
 		try 
 		{
-			rtLogger = NextGenRTLogger.getInstanceFromFile(fileName);
+			NextGenRTLogger.getInstanceFromFile(fileName);
 						
 			data = new TraceData();
 			data.sortEvents();

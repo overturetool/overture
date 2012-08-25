@@ -2,9 +2,7 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
 
 public class BusMessageReplyEventHandler extends EventHandler {
 

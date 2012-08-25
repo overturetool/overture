@@ -1,15 +1,9 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
-
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Font;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceBus;

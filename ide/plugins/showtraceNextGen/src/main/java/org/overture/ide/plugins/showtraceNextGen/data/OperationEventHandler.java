@@ -17,9 +17,9 @@ public class OperationEventHandler extends EventHandler {
 		if(oEvent == null) return false; //Guard
 		
 //		Long cpuId = new Long(tEvent.thread.cpu.id);
-		Long threadId = new Long(oEvent.thread.id);
+		//Long threadId = new Long(oEvent.thread.id);
 //		TraceCPU cpu = data.getCPU(cpuId);
-		TraceThread thread = data.getThread(threadId);
+		//TraceThread thread = data.getThread(threadId);
 				
 		switch(oEvent.type)
 		{

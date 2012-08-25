@@ -65,7 +65,7 @@ public abstract class TraceViewer {
 		
 		if((new Boolean(psx.longValue() < pdx.longValue())).booleanValue())
 		{
-			Point pt = new Point((new Long(psx.longValue() + (new Long(20L)).longValue())).longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
+			Point pt = new Point((new Long(psx.longValue() + (new Long(20L)).longValue())).intValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).intValue());
 			lbl.setLocation(pt);
 			pgti.addFigure(lbl);
 			line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() - (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue()), new Long(pdx.longValue() - (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue())));
@@ -83,7 +83,7 @@ public abstract class TraceViewer {
 			tmpRec_62 = lbl.getSize();
 			var2_61 = new Long(tmpRec_62.width);
 			arg_56 = new Long((new Long(psx.longValue() - (new Long(20L)).longValue())).longValue() - var2_61.longValue());
-			pt = new Point(arg_56.longValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).longValue());
+			pt = new Point(arg_56.intValue(), (new Long(psy.longValue() + (new Long(2L)).longValue())).intValue());
 			lbl.setLocation(pt);
 			pgti.addFigure(lbl);
 			line = (Line)UTIL.clone(new Line(new Long(pdx.longValue() + (new Long(2L)).longValue()), new Long(pdy.longValue() + (new Long(20L)).longValue()), new Long(pdx.longValue() + (new Long(10L)).longValue()), new Long(pdy.longValue() + (new Long(16L)).longValue())));
