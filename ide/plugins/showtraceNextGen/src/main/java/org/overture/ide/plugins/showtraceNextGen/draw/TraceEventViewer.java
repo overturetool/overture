@@ -14,7 +14,7 @@ public abstract class TraceEventViewer extends TraceViewer {
 	
 	public abstract void drawDelayedThreadSwapIn(GenericTabItem pgti,TraceCPU cpu);
 
-	public abstract void drawThreadSwapIn(GenericTabItem pgti, TraceCPU cpu);
+	public abstract void drawThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread);
 	
 	public abstract void drawThreadKill(GenericTabItem pgti, TraceCPU cpu);
 

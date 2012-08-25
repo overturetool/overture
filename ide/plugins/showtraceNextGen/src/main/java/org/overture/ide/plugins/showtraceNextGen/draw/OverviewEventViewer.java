@@ -227,7 +227,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         }*/
 			}
 
-	public void drawThreadSwapIn(GenericTabItem pgti, TraceCPU cpu)
+	public void drawThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
 		/*
             Long cpunm = null;

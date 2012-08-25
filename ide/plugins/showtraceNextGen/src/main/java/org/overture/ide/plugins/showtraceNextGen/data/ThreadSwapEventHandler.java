@@ -30,7 +30,7 @@ public class ThreadSwapEventHandler extends EventHandler {
 		switch(tEvent.swapType)
 		{
 			case SWAP_IN: 
-				eventViewer.drawThreadSwapIn(tab, cpu); 
+				eventViewer.drawThreadSwapIn(tab, cpu, thread); 
 				cpu.setCurrentThread(threadId);
 				cpu.setIdle(false);
 				break;
