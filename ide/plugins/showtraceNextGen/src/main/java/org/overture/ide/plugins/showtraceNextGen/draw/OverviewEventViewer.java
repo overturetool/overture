@@ -161,60 +161,49 @@ public class OverviewEventViewer extends TraceEventViewer {
 	{
 		updateCpu(tab, cpu, thread);
 		
-//		NextGenOperationEvent opEvent = (NextGenOperationEvent) pior;
-//	
-//	    if( ov_ucurrenttime >= ov_ustarttime )
-//	    {
-//			  currentXPosition = currentXPosition + ELEMENT_uSIZE;
-//	          updateOvCpu(pgti, data.getCPU(new Long(opEvent.thread.cpu.id)));
-//	    }
-	
-	    //Check for remote synchronous calls and update thread status to blocked
-//	    if(!opEvent.operation.isAsync)
-//	    {
-//	    	//FIXME MVQ: opEvent doesn't ever seem to have a reference to an object?!
-//	        if(opEvent.object != null)
-//	        {
-//	            boolean cpuHasObject = opEvent.object.cpu.id == opEvent.thread.cpu.id;
-//	            if(!cpuHasObject)
-//	            {
-//	            	data.getThread(opEvent.thread.id).setStatus(true);
-//	            }
-//	        }
-//	    }
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+		
+	    Line line = new Line(x1, y1, x2, y2);
+        line.setForegroundColor(ColorConstants.blue);
+        line.setLineWidth(3L);
+        tab.addFigure(line);
+        cpu.setX(tab.getXMax());
 	}
 	
-	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
-	{/*
-    if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-    {
-        Long cpunm = null;
-        //cpunm = pioa.getCpunm();
-        cpunm = new Long(((NextGenOperationEvent)pioa).thread.cpu.id);
-        TraceCPU tmpVal_9 = null;
-        tmpVal_9 = data.getCPU(cpunm);
-        TraceCPU cpu = null;
-        cpu = tmpVal_9;
-        currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
-        updateOvCpu(pgti, cpu);
-    }*/
+	public void drawOpActivate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+		
+	    Line line = new Line(x1, y1, x2, y2);
+        line.setForegroundColor(ColorConstants.blue);
+        line.setLineWidth(3L);
+        tab.addFigure(line);
+        cpu.setX(tab.getXMax());
 	}
 	
-	public void drawOpCompleted(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
-	{/*
-            if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-            {
-                Long cpunm = null;
-                //cpunm = pioc.getCpunm();
-                cpunm = new Long(((NextGenOperationEvent)pioc).thread.cpu.id);
-                TraceCPU tmpVal_9 = null;
-                tmpVal_9 = data.getCPU(cpunm);
-                TraceCPU cpu = null;
-                cpu = tmpVal_9;
-                currentXPosition = UTIL.NumberToLong(UTIL.clone(new Long(currentXPosition.longValue() + ELEMENT_uSIZE.longValue())));
-                updateOvCpu(pgti, cpu);
-            }*/
-			}
+	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		updateCpu(tab, cpu, thread);
+		
+		Long x1 = tab.getXMax();
+		Long x2 = x1 + ELEMENT_SIZE;
+		Long y1 = cpu.getY();
+		Long y2 = y1;
+		
+	    Line line = new Line(x1, y1, x2, y2);
+        line.setForegroundColor(ColorConstants.blue);
+        line.setLineWidth(3L);
+        tab.addFigure(line);
+        cpu.setX(tab.getXMax());
+	}
 
 	public void drawReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
 	{	/*
@@ -439,18 +428,21 @@ public class OverviewEventViewer extends TraceEventViewer {
 	
     private void updateCpu(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
     {
-	    if(!cpu.isIdle() && thread != null)
-	    {
-		    Line line = new Line(cpu.getX(), cpu.getY(), tab.getXMax(), cpu.getY());
-	        line.setForegroundColor(ColorConstants.blue);
-	        line.setLineWidth(3L);
-	        if(thread.getStatus())
-	            line.setDot();
-	        
-	        tab.addFigure(line);
-	        cpu.setX(tab.getXMax());
-	        
-	    }
+    	if(cpu.getX() < tab.getXMax())
+    	{
+		    if(!cpu.isIdle() && thread != null)
+		    {
+			    Line line = new Line(cpu.getX(), cpu.getY(), tab.getXMax(), cpu.getY());
+		        line.setForegroundColor(ColorConstants.blue);
+		        line.setLineWidth(3L);
+		        if(thread.getStatus())
+		            line.setDot();
+		        
+		        tab.addFigure(line);
+		        cpu.setX(tab.getXMax());
+		        
+		    }
+    	}
 	    
 	    
 //TODO: MVQ: Check conjectures?

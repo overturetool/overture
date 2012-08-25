@@ -20,12 +20,26 @@ public class OperationEventHandler extends EventHandler {
 		Long threadId = new Long(oEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);
 		TraceThread thread = data.getThread(threadId);
-				
+		
 		switch(oEvent.type)
 		{
 			
 		case REQUEST: 
 			eventViewer.drawOpRequest(tab, cpu, thread);
+			
+			//Check for remote synchronous calls and update thread status to blocked
+			if(!oEvent.operation.isAsync)
+			{
+		        if(oEvent.object != null)
+		        {
+		            boolean cpuHasObject = oEvent.object.cpu.id == oEvent.thread.cpu.id;
+		            if(!cpuHasObject)
+		            {
+		            	data.getThread(oEvent.thread.id).setStatus(true);
+		            }
+		        }				
+			}
+			
 			break;
 		case ACTIVATE: 
 			eventViewer.drawOpActivate(tab,  cpu, thread);
