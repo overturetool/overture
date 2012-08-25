@@ -10,31 +10,31 @@ public abstract class TraceEventViewer extends TraceViewer {
 	protected final Long RESOURCE_VINTERVAL = new Long(50L);
 	
 	//Threads
-	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object);
+	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
 	
-	public abstract void drawDelayedThreadSwapIn(GenericTabItem pgti,TraceCPU cpu);
+	public abstract void drawDelayedThreadSwapIn(GenericTabItem tab,TraceCPU cpu, TraceThread thread);
 
-	public abstract void drawThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
 	
-	public abstract void drawThreadKill(GenericTabItem pgti, TraceCPU cpu);
+	public abstract void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
 
-	public abstract void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
 
 	//Messages
-	public abstract void drawReplyRequest(GenericTabItem pgti,INextGenEvent pitrr);
+	public abstract void drawReplyRequest(GenericTabItem tab,INextGenEvent pitrr);
 	
-	public abstract void drawMessageCompleted(GenericTabItem pgti,INextGenEvent pitmc);
+	public abstract void drawMessageCompleted(GenericTabItem tab,INextGenEvent pitmc);
 
-	public abstract void drawMessageRequest(GenericTabItem pgti,INextGenEvent pitmr);
+	public abstract void drawMessageRequest(GenericTabItem tab,INextGenEvent pitmr);
 	
 	public abstract void drawMessageActivated(GenericTabItem tab, INextGenEvent event);
 
 	//Operations
-	public abstract void drawOpCompleted(GenericTabItem pgti, INextGenEvent pioc);
+	public abstract void drawOpCompleted(GenericTabItem tab, INextGenEvent pioc);
 
-	public abstract void drawOpActivate(GenericTabItem pgti, INextGenEvent pioa);
+	public abstract void drawOpActivate(GenericTabItem tab, INextGenEvent pioa);
 
-	public abstract void drawOpRequest(GenericTabItem pgti, INextGenEvent pior);
+	public abstract void drawOpRequest(GenericTabItem tab, INextGenEvent pior);
 
 	public abstract void drawTimeMarker(GenericTabItem tab, Long markerTime);
 	

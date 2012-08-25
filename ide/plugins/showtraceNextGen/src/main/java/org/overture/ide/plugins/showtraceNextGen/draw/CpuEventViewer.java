@@ -41,13 +41,11 @@ public class CpuEventViewer  extends TraceEventViewer {
             Long lineXPos = currentXPos + new Long(CPU_WIDTH/2);
             Long lineYStartPos = yPos;
             Long lineYEndPos = tab.getVerticalSize();
-			Line timeLine = new Line(lineXPos, lineYStartPos, lineXPos, lineYEndPos);
-            timeLine.setForegroundColor(ColorConstants.lightGray);
-            timeLine.setDot();
-            tab.addFigure(timeLine);
-			
-			bus.setX(currentXPos + new Long((CPU_WIDTH/2))); //+12
+            drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
+	
+			bus.setX(currentXPos + new Long((CPU_WIDTH/2))); 
 			bus.setY(yPos);
+			
 			currentXPos = currentXPos + CPU_WIDTH + CPU_X_OFFSET;         
 		}
 	}
@@ -102,72 +100,41 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceObject object)
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		/*
-//		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitsw;
-		Long objref = null;
-		TraceObject obj = null;
-//		Long thrid = tEvent.thread.id;
-//		TraceThread thr = data.getThread(thrid);
-		Boolean cond_6 = null;
-//		Long cpunm = new Long(tEvent.thread.cpu.id);
-//		TraceCPU cpu = data.getCPU(cpunm);
+		TraceObject obj = thread.getCurrentObject();
+		updateObject(tab, obj);
+		
 
-		if(!thread.hasCurrentObject())
-		{
-			if(tEvent.thread.object == null)
-			{
-				if(tEvent.thread.type == ThreadType.INIT)
-				{
-					obj = data.getInitThreadObject();
-				}
-				else if(tEvent.thread.type == ThreadType.MAIN)
-				{
-					obj = data.getMainThreadObject();
-				}
-			}
-			else
-			{
-				objref = new Long(tEvent.thread.object.id);
-				obj = data.getObject(objref);
-			}
-		}
-		else
-		{
-			obj = thr.getCurrentObject();
-		}
+		Long x1 = obj.getX();
+		Long x2 = x1;
+		Long y1 = obj.getY();
+		Long y2 = y1 + ELEMENT_SIZE;
 
-		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-		{
-			updateCpuObject(pgti, cpu, obj);
-			Long tmpVal_23 = null;
-			tmpVal_23 = obj.getX();
-			Long x1 = null;
-			x1 = tmpVal_23;
-			Long tmpVal_24 = null;
-			tmpVal_24 = x1;
-			Long x2 = null;
-			x2 = tmpVal_24;
-			Long tmpVal_25 = null;
-			tmpVal_25 = obj.getY();
-			Long y1 = null;
-			y1 = tmpVal_25;
-			Long tmpVal_26 = null;
-			tmpVal_26 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-			Long y2 = null;
-			y2 = tmpVal_26;
-			drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.gray);
-			drawCpuSwapOutImage(pgti, x1, y1);
-			ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-			obj.setY(y2);
-		}
-		cpu.setCurrentThread(null);
-		//thr.popCurrentObject(); //TODO MAA: Should this be used?
-		 */
+        drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
+        drawSwapImage(tab, x1, y1, SWAP_DIRECTION.EAST);
+        
+		obj.setY(y2);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu)
+	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		TraceObject obj = thread.getCurrentObject();
+		updateObject(tab, obj);
+		
+
+		Long x1 = obj.getX();
+		Long x2 = x1;
+		Long y1 = obj.getY();
+		Long y2 = y1 + ELEMENT_SIZE;
+
+        drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
+        drawSwapImage(tab, x1, y1, SWAP_DIRECTION.WEST);
+        
+		obj.setY(y2);
+	}
+	
+	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
 		/*
 		NextGenThreadEvent threadEvent = (NextGenThreadEvent) pitsw;
@@ -230,40 +197,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawThreadKill(GenericTabItem pgti, TraceCPU cpu)
-	{
-		/*
-		NextGenThreadEvent tEvent = (NextGenThreadEvent)pitk;
-		Long thrid = new Long(tEvent.thread.id);
-
-		TraceThread thr = data.getThread(thrid);
-
-		Long cpunm = null;
-		//cpunm = pitsw.getCpunm();
-		cpunm = new Long(tEvent.thread.cpu.id);
-		TraceCPU tmpVal_8 = null;
-		tmpVal_8 = data.getCPU(cpunm);
-		TraceCPU cpu = null;
-		cpu = tmpVal_8;
-		TraceObject obj = null;
-		obj = thr.getCurrentObject();
-		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-		{
-			updateCpuObject(pgti, cpu, obj);
-			Long x1 = null;
-			x1 = obj.getX();
-			Long x2 = x1;
-			Long y1 = null;
-			y1 = obj.getY();
-			Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-			drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.red);
-			ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-			obj.setY(y2);
-		}
-		thr.popCurrentObject();*/
-	}
-
-	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
 		TraceObject obj = thread.getCurrentObject();
 		
@@ -274,10 +208,25 @@ public class CpuEventViewer  extends TraceEventViewer {
 		Long y1 = obj.getY();
 		Long y2 = y1 + ELEMENT_SIZE;
 
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.red);
+		
+		obj.setY(y2);
+	}
+
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	{
+		TraceObject obj = thread.getCurrentObject();
+		
+		updateObject(tab, obj);
+
+		Long x1 = obj.getX();
+		Long x2 = x1;
+		Long y1 = (obj.getY() > tab.getYMax()) ? obj.getY() : tab.getYMax();//obj.getY();
+		Long y2 = y1 + ELEMENT_SIZE;
+
 		drawMarker(tab, x1, y1, x2, y2, ColorConstants.green);
 		
 		obj.setY(y2);
-
 	}
 
 	public void drawMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
@@ -731,21 +680,11 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
-	{
-
-		TraceObject obj = thread.getCurrentObject();
-		updateObject(tab, obj);
-
-	}
-
-
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
 		// TODO Auto-generated method stub
 
 	}
-
 
 	@Override
 	public void drawMessageActivated(GenericTabItem tab, INextGenEvent event) {
@@ -769,21 +708,17 @@ public class CpuEventViewer  extends TraceEventViewer {
 			nrr.setSize(objWidth, CPU_HEIGHT);
 			tab.addFigure(nrr);
 					
-			//Update Object
-			pobj.setY(objectYPos);			
-			pobj.setVisible(true);
+
 			
 			//Draw Object timeline
             Long lineXPos = objectXPos + new Long(objWidth/2);
             Long lineYStartPos = objectYPos;
             Long lineYEndPos = tab.getVerticalSize();
-			Line timeLine = new Line(lineXPos, lineYStartPos, lineXPos, lineYEndPos);
+			drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
 			
-            timeLine.setForegroundColor(ColorConstants.lightGray);
-            timeLine.setDot();
-            tab.addFigure(timeLine);	
-            
-            //Object X is timeline X
+			//Update Object
+			pobj.setY(objectYPos);			
+			pobj.setVisible(true);
             pobj.setX(lineXPos);
 		}
 	}
