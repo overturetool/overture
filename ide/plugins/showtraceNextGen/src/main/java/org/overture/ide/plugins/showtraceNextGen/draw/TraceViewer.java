@@ -213,7 +213,7 @@ public abstract class TraceViewer {
 	    				break;
 	    	case WEST:  imagePath = tab.composePath("icons", "hswapin.gif");
 	    				dim = new Dimension(20, 16);
-	    				point = new Point(x + 2L, y - 24L);
+	    				point = new Point(x + 8L, y + 2L);
 	    				break;
     	}
     	
