@@ -194,23 +194,37 @@ public abstract class TraceViewer {
     {
     	org.eclipse.swt.graphics.Image image = null;
     	String imagePath = "";
+    	Dimension dim = null;
+    	Point point = null;
     	
     	switch(dir)
     	{
-	    	case NORTH: imagePath = tab.composePath("icons", "vswapout.gif"); break;
-	    	case SOUTH: imagePath = tab.composePath("icons", "vswapin.gif");  break;
-	    	case EAST:  imagePath = tab.composePath("icons", "hswapout.gif"); break;
-	    	case WEST:  imagePath = tab.composePath("icons", "hswapin.gif");  break;
+	    	case NORTH: imagePath = tab.composePath("icons", "vswapout.gif");
+	    				dim = new Dimension(16, 20);
+	    				point = new Point(x + 2L, y - 24L);
+	    				break;
+	    	case SOUTH: imagePath = tab.composePath("icons", "vswapin.gif");
+	    				dim = new Dimension(16, 20);
+	    				point = new Point(x + 2L, y - 24L);
+	    				break;
+	    	case EAST:  imagePath = tab.composePath("icons", "hswapout.gif");
+	    				dim = new Dimension(20, 16);
+	    				point = new Point(x + 8L, y + 2L);
+	    				break;
+	    	case WEST:  imagePath = tab.composePath("icons", "hswapin.gif");
+	    				dim = new Dimension(20, 16);
+	    				point = new Point(x + 2L, y - 24L);
+	    				break;
     	}
     	
         image = tab.getImage(imagePath);
         
-        if(image != null)
+        
+        if(image != null && point != null && dim != null)
         {
             ImageFigure imagefig = new ImageFigure(image);
-            Point point = new Point(x + 2L, y - 24L);
             imagefig.setLocation(point);
-            imagefig.setSize(16, 20);
+            imagefig.setSize(dim);
             tab.addFigure(imagefig);
         }
     }
