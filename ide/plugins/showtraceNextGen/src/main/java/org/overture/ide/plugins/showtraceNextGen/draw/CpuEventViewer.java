@@ -253,40 +253,40 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 	public void drawThreadCreate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
-		/*
-		NextGenThreadEvent event = (NextGenThreadEvent)pitc;
+		
+//		NextGenThreadEvent event = (NextGenThreadEvent)pitc;
 
-		Long threadId = event.thread.id;
-		TraceThread thr = data.getThread(threadId);
-		TraceObject obj = null;
-
-		Long cpunm = new Long(event.thread.cpu.id);    
-		TraceCPU cpu = data.getCPU(cpunm);
-
-		if(event.thread.object == null)
-		{
-			if(event.thread.type == ThreadType.INIT)
-			{
-				//Init Thread has no object
-				obj = data.getInitThreadObject();
-			}
-			else if(event.thread.type == ThreadType.MAIN)
-			{
-				obj = data.getMainThreadObject();
-			}
-			else
-			{
-				throw new UnexpectedInstanceException("Invalid object state for RT Thread!");
-			}
-
-			thr.pushCurrentObject(obj);
-		}
-		else
-		{
-			Long objref = new Long(event.thread.object.id);
-			obj = data.getObject(objref);
-			thr.pushCurrentObject(obj);
-		}
+//		long threadid = event.thread.id;
+//		tracethread thr = data.getthread(threadid);
+//		traceobject obj = null;
+//
+//		long cpunm = new long(event.thread.cpu.id);    
+//		tracecpu cpu = data.getcpu(cpunm);
+//
+//		if(event.thread.object == null)
+//		{
+//			if(event.thread.type == threadtype.init)
+//			{
+//				//init thread has no object
+//				obj = data.getinitthreadobject();
+//			}
+//			else if(event.thread.type == threadtype.main)
+//			{
+//				obj = data.getmainthreadobject();
+//			}
+//			else
+//			{
+//				throw new unexpectedinstanceexception("invalid object state for rt thread!");
+//			}
+//
+//			thr.pushcurrentobject(obj);
+//		}
+//		else
+//		{
+//			long objref = new long(event.thread.object.id);
+//			obj = data.getobject(objref);
+//			thr.pushcurrentobject(obj);
+//		}
 
 		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
 		{
@@ -305,7 +305,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 			drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.green);
 			ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
 			obj.setY(y2);
-		}*/
+		}
 	}
 
 	public void drawMessageCompleted(GenericTabItem pgti, INextGenEvent pitmc)
