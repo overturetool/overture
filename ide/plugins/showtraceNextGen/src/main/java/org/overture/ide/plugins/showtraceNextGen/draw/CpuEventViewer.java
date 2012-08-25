@@ -46,6 +46,10 @@ public class CpuEventViewer  extends TraceEventViewer {
 			
 			currentXPos = currentXPos + CPU_WIDTH + CPU_X_OFFSET;         
 		}
+		
+		Line spacer = new Line(0L, CPU_Y_POS, 0L, yPos);
+		spacer.setForegroundColor(ColorConstants.white);
+		tab.addFigure(spacer);
 	}
 
 	public void drawReplyRequest(GenericTabItem pgti, INextGenEvent pitrr)
@@ -203,7 +207,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 		Long x1 = obj.getX();
 		Long x2 = x1;
-		Long y1 = obj.getY();
+		Long y1 = tab.getYMax();
 		Long y2 = y1 + ELEMENT_SIZE;
 
 		drawMarker(tab, x1, y1, x2, y2, ColorConstants.red);
@@ -219,7 +223,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 		Long x1 = obj.getX();
 		Long x2 = x1;
-		Long y1 = (obj.getY() > tab.getYMax()) ? obj.getY() : tab.getYMax();//obj.getY();
+		Long y1 = tab.getYMax();
 		Long y2 = y1 + ELEMENT_SIZE;
 
 		drawMarker(tab, x1, y1, x2, y2, ColorConstants.green);
@@ -671,12 +675,6 @@ public class CpuEventViewer  extends TraceEventViewer {
 		timeLabel.setLocation(labelLocation);
 		tab.addBackgroundFigure(timeLabel);
 		
-
-		
-		
-
-		
-				
 	}
 
 	@Override
@@ -700,9 +698,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 			nrr.setLocation(np);
 			nrr.setSize(objWidth, CPU_HEIGHT);
 			tab.addFigure(nrr);
-					
-
-			
+				
 			//Draw Object timeline
             Long lineXPos = objectXPos + new Long(objWidth/2);
             Long lineYStartPos = objectYPos;
