@@ -483,7 +483,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         }*/
 			}
 
-	public void drawOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
+	public void drawOpCompleted(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 			{/*
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
@@ -499,7 +499,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             }*/
 			}
 
-	public void drawOpActivate(GenericTabItem pgti, INextGenEvent pioa)
+	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 			{/*
             if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
             {
@@ -515,7 +515,7 @@ public class OverviewEventViewer extends TraceEventViewer {
             }*/
 			}
 
-	public void drawOpRequest(GenericTabItem pgti, INextGenEvent pior)
+	public void drawOpRequest(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 			{/*
 
         	NextGenOperationEvent opEvent = (NextGenOperationEvent) pior;
