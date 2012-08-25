@@ -815,6 +815,13 @@ public class CpuEventViewer  extends TraceEventViewer {
 		
 	}
 
+	
+	@Override
+	public void drawMessageActivated(GenericTabItem tab, INextGenEvent event) {
+		//Is not drawn for CPU's ?
+		
+	}
+
 
 
 }

@@ -407,7 +407,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         }*/
 			}
 
-	public void drawMessageActivate(GenericTabItem pgti, INextGenEvent pitma)
+	public void drawMessageActivated(GenericTabItem pgti, INextGenEvent pitma)
 			{
 		/*
     	NextGenBusMessageEvent busMessageEvent = (NextGenBusMessageEvent) pitma;
@@ -591,4 +591,5 @@ public class OverviewEventViewer extends TraceEventViewer {
 	    label.setLocation(labelPoint);
 	    tab.addFigure(label);
 	}
+
 }

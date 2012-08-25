@@ -26,6 +26,8 @@ public abstract class TraceEventViewer extends TraceViewer {
 	public abstract void drawMessageCompleted(GenericTabItem pgti,INextGenEvent pitmc);
 
 	public abstract void drawMessageRequest(GenericTabItem pgti,INextGenEvent pitmr);
+	
+	public abstract void drawMessageActivated(GenericTabItem tab, INextGenEvent event);
 
 	//Operations
 	public abstract void drawOpCompleted(GenericTabItem pgti, INextGenEvent pioc);
