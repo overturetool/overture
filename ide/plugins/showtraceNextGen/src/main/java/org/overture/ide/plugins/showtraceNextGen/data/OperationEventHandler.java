@@ -16,22 +16,22 @@ public class OperationEventHandler extends EventHandler {
 		NextGenOperationEvent oEvent = (NextGenOperationEvent)event;
 		if(oEvent == null) return false; //Guard
 		
-//		Long cpuId = new Long(tEvent.thread.cpu.id);
-		//Long threadId = new Long(oEvent.thread.id);
-//		TraceCPU cpu = data.getCPU(cpuId);
-		//TraceThread thread = data.getThread(threadId);
+		Long cpuId = new Long(oEvent.thread.cpu.id);
+		Long threadId = new Long(oEvent.thread.id);
+		TraceCPU cpu = data.getCPU(cpuId);
+		TraceThread thread = data.getThread(threadId);
 				
 		switch(oEvent.type)
 		{
 			
 		case REQUEST: 
-			eventViewer.drawOpRequest(tab,  null, null);
+			eventViewer.drawOpRequest(tab, cpu, thread);
 			break;
 		case ACTIVATE: 
-			eventViewer.drawOpActivate(tab,  null, null);
+			eventViewer.drawOpActivate(tab,  cpu, thread);
 			break;
 		case COMPLETE: 
-			eventViewer.drawOpCompleted(tab,  null, null);
+			eventViewer.drawOpCompleted(tab,  cpu, thread);
 			break;
 		default: return false;
 		}

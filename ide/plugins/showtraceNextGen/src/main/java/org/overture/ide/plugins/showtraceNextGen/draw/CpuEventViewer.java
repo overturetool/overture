@@ -382,7 +382,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawOpCompleted(GenericTabItem pgti, INextGenEvent pioc)
+	public void drawOpCompleted(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
 	{
 		/*
 		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioc;
@@ -498,186 +498,155 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}*/
 	}
 
-	public void drawOpActivate(GenericTabItem pgti, INextGenEvent pioa)
-	{/*
-		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
+	public void drawOpActivate(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	{
+//		NextGenOperationEvent opEvent = (NextGenOperationEvent) pioa;
+//
+//		Long thrid = opEvent.thread.id;
+//		TraceThread thr = data.getThread(thrid);
+//		TraceObject srcobj = null;    
+//
+//		if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.MAIN)
+//		{
+//			srcobj = data.getMainThreadObject();
+//		}
+//		else if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.INIT)
+//		{
+//			srcobj = data.getInitThreadObject();
+//		}
+//		else
+//		{
+//			//srcobj = data.getObject(thr.getCurrentObjectId());
+//			srcobj = thr.getCurrentObject();
+//		}
+//
+//		Boolean cond_9 = null;
+//		Boolean unArg_10 = null;
+//
+//
+//		//unArg_10 = pioa.hasObjref();
+//		unArg_10 = opEvent.object != null;
+//
+//		cond_9 = new Boolean(!unArg_10.booleanValue());
+//		if(!cond_9.booleanValue())
+//		{
+//			Long destobjref = null;
+//			//destobjref = pioa.getObjref();
+//			destobjref = new Long(opEvent.object.id);
+//
+			TraceObject destobj = thread.getCurrentObject();
+//			destobj = data.getObject(destobjref);
+//			if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+//			{
+//				long cpunm = null;
+//				//cpunm = pioa.getcpunm();
+//				cpunm = new long(opevent.thread.cpu.id);
 
-		Long thrid = opEvent.thread.id;
-		TraceThread thr = data.getThread(thrid);
-		TraceObject srcobj = null;    
-
-		if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.MAIN)
-		{
-			srcobj = data.getMainThreadObject();
-		}
-		else if(!thr.hasCurrentObject() && opEvent.thread.type == ThreadType.INIT)
-		{
-			srcobj = data.getInitThreadObject();
-		}
-		else
-		{
-			//srcobj = data.getObject(thr.getCurrentObjectId());
-			srcobj = thr.getCurrentObject();
-		}
-
-		Boolean cond_9 = null;
-		Boolean unArg_10 = null;
-
-
-		//unArg_10 = pioa.hasObjref();
-		unArg_10 = opEvent.object != null;
-
-		cond_9 = new Boolean(!unArg_10.booleanValue());
-		if(!cond_9.booleanValue())
-		{
-			Long destobjref = null;
-			//destobjref = pioa.getObjref();
-			destobjref = new Long(opEvent.object.id);
-
-			TraceObject destobj = null;
-			destobj = data.getObject(destobjref);
-			if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
-			{
-				Long cpunm = null;
-				//cpunm = pioa.getCpunm();
-				cpunm = new Long(opEvent.thread.cpu.id);
-
-				TraceCPU tmpVal_20 = null;
-				tmpVal_20 = data.getCPU(cpunm);
-				TraceCPU cpu = null;
-				cpu = tmpVal_20;
-				Boolean cond_22 = null;
-				Long var1_23 = null;
-				var1_23 = srcobj.getId();
-				Long var2_24 = null;
-				var2_24 = destobj.getId();
-				cond_22 = new Boolean(var1_23.longValue() == var2_24.longValue());
-				if(cond_22.booleanValue())
+//				tracecpu tmpval_20 = null;
+//				tmpval_20 = data.getcpu(cpunm);
+//				tracecpu cpu = null;
+//				cpu = tmpval_20;
+				boolean cond_22 = true;
+//				long var1_23 = null;
+//				var1_23 = srcobj.getid();
+//				long var2_24 = null;
+//				var2_24 = destobj.getid();
+				cond_22 = true;//new boolean(var1_23.longvalue() == var2_24.longvalue());
+				if(cond_22)
 				{
-					updateCpuObject(pgti, cpu, destobj);
+					updateObject(pgti, destobj);
 					Long x1 = null;
 					x1 = destobj.getX();
 					Long x2 = x1;
 					Long y1 = null;
 					y1 = destobj.getY();
-					Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
+					Long y2 = new Long(y1.longValue() + ELEMENT_SIZE.longValue());
 					NormalLabel lbl = null;
 					String arg_49 = null;
 					String var2_52 = null;
 					//var2_52 = pioa.getOpname();
-					var2_52 = opEvent.operation.name;
-
+					//var2_52 = opEvent.operation.name;
+					var2_52 = "";
+					
 					arg_49 = (new String("A ")).concat(var2_52);
 					org.eclipse.swt.graphics.Font arg_50 = null;
 					arg_50 = pgti.getCurrentFont();
 					lbl = new NormalLabel(arg_49, arg_50);
 					Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
-					drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
+					drawMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
 					lbl.setLocation(pt);
 					pgti.addFigure(lbl);
-					ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+					//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
 					destobj.setY(y2);
 				} else
 				{
-					updateCpuObject(pgti, cpu, srcobj);
-					updateCpuObject(pgti, cpu, destobj);
+					//updateObject(pgti, srcobj);
+					updateObject(pgti, destobj);
 					String tmpArg_v_37 = null;
 					//tmpArg_v_37 = pioa.getOpname();
-					tmpArg_v_37 = opEvent.operation.name;
+					//tmpArg_v_37 = opEvent.operation.name;
 
-					Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
+					//Object2ObjectArrow(pgti, srcobj, destobj, tmpArg_v_37);
 				}
-			}
-			thr.pushCurrentObject(destobj);
-		}*/
+			//}
+			//thr.pushCurrentObject(destobj);
+		//}
 	} 
 
-	public void drawOpRequest(GenericTabItem pgti, INextGenEvent pior)
+	public void drawOpRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		/*
-		if((new Boolean(ov_ucurrenttime.longValue() >= ov_ustarttime.longValue())).booleanValue())
+
+		TraceObject obj = thread.getCurrentObject();
+		updateObject(tab, obj);
+		
+		Long x1 = obj.getX();
+
+		Long x2 = x1;
+		Long y1 = obj.getY();
+		Long y2 = y1.longValue() + ELEMENT_SIZE;
+		
+		NormalLabel lbl = new NormalLabel("R", tab.getCurrentFont());
+		
+		//TODO: Cleanup auto generated code below:
+		
+		String str = "";
+		Boolean hasArguments = false; //TODO MAA
+		if(hasArguments)
 		{
-			NextGenOperationEvent event = (NextGenOperationEvent)pior;
-			Long thrid = null;
-			//thrid = pior.getId();
-			thrid = event.thread.id;
+			String var2_33 = "Operation Request";;
+			//var2_33 = pior.getArgs(); //TODO MAA
+			str = (new String(" with arguments ")).concat(var2_33);
+		} else
+		{
+			str = UTIL.ConvertToString(new String());
+		}
 
-			Long objid = null;
+		String arg_34 = null;
+		String var1_36 = null;
+		String var1_37 = null;
+		String var1_38 = null;
+		String var1_39 = null;
+		String var2_41 = null;
+		//var2_41 = pior.getOpname();
+		//var2_41 = event.operation.name;
+		var2_41 = "TODO"; //TODO
+		var1_39 = (new String(" Requested ")).concat(var2_41);
+		var1_38 = var1_39.concat(new String(" on object "));
+		var1_37 = var1_38.concat(obj.getId().toString());
+		var1_36 = var1_37.concat(str);
+		arg_34 = var1_36.concat(new String(" "));
+		org.eclipse.swt.graphics.Font arg_35 = null;
+		arg_35 = tab.getCurrentFont();
+		NormalLabel ttl = new NormalLabel(arg_34, arg_35);
+		Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
+		drawMarker(tab, x1, y1, x2, y2, ColorConstants.blue);
+		lbl.setToolTip(ttl);
+		lbl.setLocation(pt);
+		tab.addFigure(lbl);
+		//ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
+		obj.setY(y2);
 
-			if(event.object == null)
-			{
-				return; //FIXME MAA; What to do when object is null?
-				//use event.thread.object instead?
-			}
 
-			objid = new Long(event.object.id);
-
-			Long cpunm = null;
-			//cpunm = pior.getCpunm();
-			cpunm = new Long(event.thread.cpu.id);
-
-			TraceCPU tmpVal_10 = null;
-			tmpVal_10 = data.getCPU(cpunm);
-			TraceCPU cpu = null;
-			cpu = tmpVal_10;
-			TraceThread thr = null;
-			thr = data.getThread(thrid);
-			Boolean cond_14 = null;
-			//cond_14 = (((NextGenOperationEvent)pior).thread != null);
-			cond_14 = thr.hasCurrentObject();
-			if(cond_14.booleanValue())
-			{
-				TraceObject obj = thr.getCurrentObject();
-				updateCpuObject(pgti, cpu, obj);
-				Long x1 = null;
-				x1 = obj.getX();
-				Long x2 = x1;
-				Long y1 = null;
-				y1 = obj.getY();
-				Long y2 = new Long(y1.longValue() + ELEMENT_uSIZE.longValue());
-				NormalLabel lbl = null;
-				org.eclipse.swt.graphics.Font arg_29 = null;
-				arg_29 = pgti.getCurrentFont();
-				lbl = new NormalLabel(new String("R"), arg_29);
-				String str = null;
-				Boolean cond_31 = null;
-				//cond_31 = pior.hasArgs(); //TODO MAA: Should be implemented in NextGen data?
-						cond_31 = false;
-				if(cond_31.booleanValue())
-				{
-					String var2_33 = "Operation Request";;
-					//var2_33 = pior.getArgs(); //TODO MAA
-					str = (new String(" with arguments ")).concat(var2_33);
-				} else
-				{
-					str = UTIL.ConvertToString(new String());
-				}
-				NormalLabel ttl = null;
-				String arg_34 = null;
-				String var1_36 = null;
-				String var1_37 = null;
-				String var1_38 = null;
-				String var1_39 = null;
-				String var2_41 = null;
-				//var2_41 = pior.getOpname();
-				var2_41 = event.operation.name;
-				var1_39 = (new String(" Requested ")).concat(var2_41);
-				var1_38 = var1_39.concat(new String(" on object "));
-				var1_37 = var1_38.concat(nat2str(objid));
-				var1_36 = var1_37.concat(str);
-				arg_34 = var1_36.concat(new String(" "));
-				org.eclipse.swt.graphics.Font arg_35 = null;
-				arg_35 = pgti.getCurrentFont();
-				ttl = new NormalLabel(arg_34, arg_35);
-				Point pt = new Point((new Long(x1.longValue() + (new Long(8L)).longValue())).longValue(), (new Long(y1.longValue() + (new Long(2L)).longValue())).longValue());
-				drawCpuMarker(pgti, x1, y1, x2, y2, ColorConstants.blue);
-				lbl.setToolTip(ttl);
-				lbl.setLocation(pt);
-				pgti.addFigure(lbl);
-				ov_uypos = UTIL.NumberToLong(UTIL.clone(y2));
-				obj.setY(y2);
-			}
-		}*/
 	}
 
 	@Override
