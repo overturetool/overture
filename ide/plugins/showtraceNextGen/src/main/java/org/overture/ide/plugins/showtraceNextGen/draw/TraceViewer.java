@@ -12,8 +12,6 @@ import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 
 public abstract class TraceViewer {
 
-	protected static Long markerXPosition = 0L;
-	protected static Long markerYPosition = 0L;
 	
 	protected final Long CPU_X_START = new Long(150L);
 	protected final Long CPU_X_OFFSET= new Long(40L);
@@ -25,16 +23,6 @@ public abstract class TraceViewer {
 	protected final Long BUS_Y_START = new Long(90L);
 	protected final Long BUS_Y_OFFSET = new Long(30L);
 	
-	public TraceViewer()
-	{
-		
-	}
-	
-	public static void resetView()
-	{
-		markerXPosition = 0L;
-		markerYPosition = 200L;
-	}
 	
 	protected void Object2ObjectArrow(GenericTabItem pgti, TraceObject psrc, TraceObject pdest, String pstr)
 			throws CGException

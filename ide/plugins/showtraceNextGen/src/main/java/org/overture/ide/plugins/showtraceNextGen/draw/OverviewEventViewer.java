@@ -557,30 +557,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
 		
-		System.out.println("Drawing time marker: " + markerTime + " Y position: " + markerYPosition + " X Position: " + markerXPosition);
-		
-		markerXPosition += 150;
-		
-	    //Long dy = new Long(RESOURCE_VINTERVAL.longValue() / (new Long(2L)).longValue());
-	    //Line line1 = new Line(markerXPosition, new Long(dy.longValue() - (new Long(10L)).longValue()), currentXPosition, new Long(markerYPosition.longValue() - dy.longValue()));
-	    Line line2 = new Line(markerXPosition, 0L, markerXPosition, 0L);
-	    
-	    RotatedLabel label = new RotatedLabel(markerTime.toString(), tab.getCurrentFont());
 
-	    Dimension labelSize = label.getSize();;
-	    Long labelWidth = new Long(labelSize.width);
-	    Long xoffset = new Long(labelWidth / 2L);
-	    
-	    Point labelPoint = new Point(new Long(markerXPosition - xoffset).intValue(), new Long(markerYPosition).intValue());
-	    
-	    //line1.setForegroundColor(ColorConstants.lightGray);
-	    //line1.setDot();
-	    
-	    //tab.addFigure(line1);
-	    tab.addFigure(line2);
-	    
-	    label.setLocation(labelPoint);
-	    tab.addFigure(label);
 	}
 
 }

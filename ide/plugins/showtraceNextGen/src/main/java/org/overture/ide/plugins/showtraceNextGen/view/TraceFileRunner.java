@@ -40,7 +40,6 @@ public class TraceFileRunner implements ITraceRunner
 	public void drawArchitecture(GenericTabItem tab) throws Exception 
 	{
 		data.reset();
-		TraceViewer.resetView();
 		
 		ArchitectureViewer viewer = new ArchitectureViewer();
 		viewer.drawArchitecture(tab, data.getCPUs(), data.getBuses());	
@@ -50,7 +49,6 @@ public class TraceFileRunner implements ITraceRunner
 			throws Exception 
 	{
 		data.reset();
-		TraceViewer.resetView();
 		OverviewEventViewer viewer = new OverviewEventViewer();
 		viewer.drawOverview(tab, data.getCPUs(), data.getBuses());
 		
@@ -70,7 +68,6 @@ public class TraceFileRunner implements ITraceRunner
 			throws Exception 
 	{
 		data.reset();
-		TraceViewer.resetView();
 		
 		for(INextGenEvent event : data.getSortedCpuEvents(cpuId))
 		{
