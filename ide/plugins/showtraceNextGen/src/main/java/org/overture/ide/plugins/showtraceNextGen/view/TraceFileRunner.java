@@ -55,13 +55,15 @@ public class TraceFileRunner implements ITraceRunner
 		
 		for(INextGenEvent event : data.getSortedEvents())
 		{
+			
 			EventHandler handler = eventHandlers.get(event.getClass());
 			
 			if(handler == null)
 				throw new Exception("No eventhandler registered for event: " + event.getClass());
 
 			if(!handler.handleEvent(event, EventViewType.OVERVIEW, tab))
-				System.out.println("Failed to handle Overview event: " + event.getClass());			
+				System.out.println("Failed to handle Overview event: " + event.getClass());		
+			
 		}
 	}
 
@@ -75,6 +77,8 @@ public class TraceFileRunner implements ITraceRunner
 		
 		for(INextGenEvent event : data.getSortedCpuEvents(cpuId))
 		{
+
+			
 			EventHandler handler = eventHandlers.get(event.getClass());
 			
 			if(handler == null)

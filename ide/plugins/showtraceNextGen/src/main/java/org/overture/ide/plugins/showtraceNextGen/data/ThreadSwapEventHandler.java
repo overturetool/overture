@@ -21,6 +21,7 @@ public class ThreadSwapEventHandler extends EventHandler {
 		TraceCPU cpu = data.getCPU(cpuId);
 		TraceThread thread = data.getThread(threadId);
 		TraceObject object = null;
+		
 		if(tEvent.thread.object != null)
 		{
 			Long objectId = new Long(tEvent.thread.object.id);

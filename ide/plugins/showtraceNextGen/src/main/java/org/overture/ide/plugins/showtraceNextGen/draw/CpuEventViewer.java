@@ -605,28 +605,25 @@ public class CpuEventViewer  extends TraceEventViewer {
 		}
 	}
 
-	@Override
-	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread, TraceBus bus, TraceOperation op) {
+	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu,TraceThread thread, TraceBus bus, TraceOperation op) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu,
 			TraceThread thread, TraceBus bus, TraceOperation op) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu,
 			TraceThread thread, TraceBus bus, TraceOperation op) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu,
 			TraceThread thread, TraceBus bus, TraceOperation op) {
 		// TODO Auto-generated method stub
