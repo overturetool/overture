@@ -39,8 +39,7 @@ public class BusMessageEventHandler extends EventHandler {
 	        {
 				TraceThread thr = data.getThread(bEvent.message.receiverThread.id);
 				thr.setStatus(false);
-	        }
-	        
+	        }        
 			break;
 		case REPLY_REQUEST:
 			return false; //Handle by BusMesageReplyEventHandler

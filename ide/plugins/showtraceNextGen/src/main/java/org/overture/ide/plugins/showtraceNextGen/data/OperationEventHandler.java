@@ -35,18 +35,10 @@ public class OperationEventHandler extends EventHandler {
 			eventViewer.drawOpRequest(tab, cpu, thread, destObj, operation);
 			
 			//Check for remote synchronous calls and update thread status to blocked
-			if(!oEvent.operation.isAsync)
+			if(!oEvent.operation.isAsync && oEvent.object.cpu.id != oEvent.thread.cpu.id)
 			{
-//		        if(oEvent.object != null)
-//		        {
-		            boolean cpuHasObject = oEvent.object.cpu.id == oEvent.thread.cpu.id;
-		            if(!cpuHasObject)
-		            {
-		            	thread.setStatus(true);
-		            }
-//		        }				
-			}
-			
+            	thread.setStatus(true);         		
+			}		
 			break;
 		case ACTIVATE: 
 			eventViewer.drawOpActivate(tab,  cpu, thread, destObj, operation);
@@ -54,7 +46,7 @@ public class OperationEventHandler extends EventHandler {
 			break;
 		case COMPLETE: 
 			thread.popCurrentObject();
-			eventViewer.drawOpCompleted(tab,  cpu, thread, destObj);
+			eventViewer.drawOpCompleted(tab,  cpu, thread, destObj, operation);
 			break;
 		default: return false;
 		}

@@ -33,42 +33,8 @@ public abstract class TraceViewer {
 	
 	protected final Long OBJECT_WIDTH_FACTOR = new Long(10L);
 	
+	protected final Long OBJECT_ARROW_SIZE = new Long(5L);
 	
-	
-
-	protected void drawHorizontalArrow(GenericTabItem pgti, Long x1, Long x2, Long y, String str, Color clr)
-			throws CGException
-			{
-		Line line = new Line(x1, y, x2, y);
-		NormalLabel lbl = null;
-		String arg_11 = null;
-		String var1_13 = null;
-		var1_13 = (new String(" ")).concat(str);
-		arg_11 = var1_13.concat(new String(" "));
-		org.eclipse.swt.graphics.Font arg_12 = null;
-		arg_12 = pgti.getCurrentFont();
-		lbl = new NormalLabel(arg_11, arg_12);
-		line.setForegroundColor(clr);
-		line.setToolTip(lbl);
-		pgti.addFigure(line);
-		if((new Boolean(x1.longValue() < x2.longValue())).booleanValue())
-		{
-			line = (Line)UTIL.clone(new Line(x1, y, new Long(x1.longValue() + (new Long(8L)).longValue()), new Long(y.longValue() - (new Long(4L)).longValue())));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-			line = (Line)UTIL.clone(new Line(x1, y, new Long(x1.longValue() + (new Long(8L)).longValue()), new Long(y.longValue() + (new Long(4L)).longValue())));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-		} else
-		{
-			line = (Line)UTIL.clone(new Line(new Long(x1.longValue() - (new Long(8L)).longValue()), new Long(y.longValue() - (new Long(4L)).longValue()), x1, y));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-			line = (Line)UTIL.clone(new Line(new Long(x1.longValue() - (new Long(8L)).longValue()), new Long(y.longValue() + (new Long(4L)).longValue()), x1, y));
-			line.setForegroundColor(clr);
-			pgti.addFigure(line);
-		}
-	}
 	
     protected void drawMarker(GenericTabItem tab, Long x1, Long y1, Long x2, Long y2, Color clr)
 	{
@@ -109,19 +75,19 @@ public abstract class TraceViewer {
     	{
 	    	case NORTH: imagePath = tab.composePath("icons", "vswapout.gif");
 	    				dim = new Dimension(16, 20);
-	    				point = new Point(x + 2L, y - 24L);
+	    				point = new Point(x.intValue() + 2, y.intValue() - 24);
 	    				break;
 	    	case SOUTH: imagePath = tab.composePath("icons", "vswapin.gif");
 	    				dim = new Dimension(16, 20);
-	    				point = new Point(x + 2L, y - 24L);
+	    				point = new Point(x.intValue() + 2, y.intValue() - 24);
 	    				break;
 	    	case EAST:  imagePath = tab.composePath("icons", "hswapout.gif");
 	    				dim = new Dimension(20, 16);
-	    				point = new Point(x + 8L, y + 2L);
+	    				point = new Point(x.intValue() + 8, y.intValue() + 2);
 	    				break;
 	    	case WEST:  imagePath = tab.composePath("icons", "hswapin.gif");
 	    				dim = new Dimension(20, 16);
-	    				point = new Point(x + 8L, y + 2L);
+	    				point = new Point(x.intValue() + 8, y.intValue() + 2);
 	    				break;
     	}
     	
@@ -144,4 +110,72 @@ public abstract class TraceViewer {
         timeLine.setDot();
         tab.addBackgroundFigure(timeLine);
     }
+    
+    protected void drawHorizontalArrow(GenericTabItem tab, Long fromX, Long toX, Long y, String label, String toolTip, Color color)
+    {
+		NormalLabel arrowLabel = new NormalLabel(label, tab.getCurrentFont());
+		NormalLabel toolLabel = new NormalLabel(toolTip, tab.getCurrentFont());
+		
+		Line horizontalLine = new Line(fromX, y, toX, y);
+		horizontalLine.setForegroundColor(color);
+		horizontalLine.setToolTip(toolLabel);
+		tab.addFigure(horizontalLine);
+		
+		Line upperArrow;
+		Line lowerArrow;
+		Long labelX;
+		
+		if(toX > fromX) //Left to right
+		{
+			labelX = fromX + new Long(((toX-fromX) - new Long(arrowLabel.getSize().width))/2); //Place label on center of arrow
+			upperArrow = new Line(toX - OBJECT_ARROW_SIZE, y - OBJECT_ARROW_SIZE, toX, y);
+			lowerArrow = new Line(toX - OBJECT_ARROW_SIZE, y + OBJECT_ARROW_SIZE, toX, y);
+		} 
+		else //Right to left
+		{
+			labelX = new Long((fromX-toX)/2) - new Long(arrowLabel.getSize().width) + toX;
+			upperArrow = new Line(toX + OBJECT_ARROW_SIZE, y - OBJECT_ARROW_SIZE, toX, y);
+			lowerArrow = new Line(toX + OBJECT_ARROW_SIZE, y + OBJECT_ARROW_SIZE, toX, y);		
+		}
+		
+		Point labelPos = new Point(labelX.intValue(), y.intValue() - arrowLabel.getSize().height); //Place label above arrow
+		arrowLabel.setLocation(labelPos);
+		
+		upperArrow.setForegroundColor(color);
+		lowerArrow.setForegroundColor(color);
+		
+		tab.addFigure(upperArrow);
+		tab.addFigure(lowerArrow);
+		tab.addFigure(arrowLabel);
+    }
+    
+	protected void drawVerticalArrow(GenericTabItem tab, Long x, Long y1, Long y2, String label, Color clr)
+	{
+		//Draw line
+		Line line = new Line(x, y1, x, y2);
+		NormalLabel lbl = new NormalLabel(" "+label+" ", tab.getCurrentFont());
+		line.setForegroundColor(clr);
+		line.setToolTip(lbl);
+		tab.addFigure(line);
+
+		//Draw arrow
+		//TODO: Remove magic numbers
+		if(y1 < y2)
+		{
+			line = new Line(x - 4L, y2 - 8L, x, y2);
+			line.setForegroundColor(clr);
+			tab.addFigure(line);
+			line = new Line(x + 4L, y2 - 8L, x, y2);
+			line.setForegroundColor(clr);
+			tab.addFigure(line);
+		} else
+		{
+			line = new Line(x - 4L, y2 + 8L, x, y2);
+			line.setForegroundColor(clr);
+			tab.addFigure(line);
+			line = new Line(x + 4L, y2 + 8L, x, y2);
+			line.setForegroundColor(clr);
+			tab.addFigure(line);
+		}
+	}
 }

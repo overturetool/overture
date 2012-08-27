@@ -30,7 +30,7 @@ public abstract class TraceEventViewer extends TraceViewer {
 	public abstract void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op);
 
 	//Operations
-	public abstract void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject sourceObj);
+	public abstract void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject sourceObj, TraceOperation operation);
 
 	public abstract void drawOpActivate(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destinationObj, TraceOperation operation);
 

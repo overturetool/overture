@@ -29,8 +29,8 @@ public class OverviewEventViewer extends TraceEventViewer {
         for(TraceCPU cpu : cpus)
         {
             NormalLabel nlb = new NormalLabel(cpu.getName(), tab.getCurrentFont());
-            Long xPos = BUS_LABEL_X_POS - nlb.getSize().width;
-            Point np = new Point(xPos, yPos);
+            Long xPos = BUS_LABEL_X_POS - new Long(nlb.getSize().width);
+            Point np = new Point(xPos.intValue(), yPos.intValue());
             nlb.setLocation(np);
             tab.addFigure(nlb);
             cpu.setX(CPU_X_START);
@@ -45,8 +45,8 @@ public class OverviewEventViewer extends TraceEventViewer {
         for(TraceBus bus : buses)
         {
             NormalLabel nlb = new NormalLabel(bus.getName(), tab.getCurrentFont());
-            Long xPos = BUS_LABEL_X_POS - nlb.getSize().width;
-            Point np = new Point(xPos, yPos);
+            Long xPos = BUS_LABEL_X_POS - new Long(nlb.getSize().width);
+            Point np = new Point(xPos.intValue(), yPos.intValue());
             nlb.setLocation(np);
             tab.addFigure(nlb);
             bus.setX(CPU_X_START);
@@ -160,7 +160,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(tab.getXMax());
 	}
 	
-	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destionationObject)
+	public void drawOpCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceObject destionationObject,TraceOperation operation)
 	{
 		updateCpu(tab, cpu, thread);
 		
@@ -300,35 +300,4 @@ public class OverviewEventViewer extends TraceEventViewer {
 //	        checkConjectureLimits(pgti, ov_uxpos - ELEMENT_uSIZE, cpu.getY(), ov_ucurrenttime, thrid);
 //	    }
     }
-    
-    //Helper function
-	private void drawVerticalArrow(GenericTabItem tab, Long x, Long y1, Long y2, String str, Color clr)
-	{
-		//Draw line
-		Line line = new Line(x, y1, x, y2);
-		NormalLabel lbl = new NormalLabel(" "+str+" ", tab.getCurrentFont());
-		line.setForegroundColor(clr);
-		line.setToolTip(lbl);
-		tab.addFigure(line);
-
-		//Draw arrow
-		if(y1 < y2)
-		{
-			line = new Line(x - 4L, y2 - 8L, x, y2);
-			line.setForegroundColor(clr);
-			tab.addFigure(line);
-			line = new Line(x + 4L, y2 - 8L, x, y2);
-			line.setForegroundColor(clr);
-			tab.addFigure(line);
-		} else
-		{
-			line = new Line(x - 4L, y2 + 8L, x, y2);
-			line.setForegroundColor(clr);
-			tab.addFigure(line);
-			line = new Line(x + 4L, y2 + 8L, x, y2);
-			line.setForegroundColor(clr);
-			tab.addFigure(line);
-		}
-	}
-
 }

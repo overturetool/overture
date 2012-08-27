@@ -77,8 +77,6 @@ public class TraceFileRunner implements ITraceRunner
 		
 		for(INextGenEvent event : data.getSortedCpuEvents(cpuId))
 		{
-
-			
 			EventHandler handler = eventHandlers.get(event.getClass());
 			
 			if(handler == null)
