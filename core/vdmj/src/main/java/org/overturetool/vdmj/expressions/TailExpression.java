@@ -31,6 +31,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.Seq1Type;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -42,6 +43,7 @@ import org.overturetool.vdmj.values.ValueList;
 public class TailExpression extends UnaryExpression
 {
 	private static final long serialVersionUID = 1L;
+	private Type etype;
 
 	public TailExpression(LexLocation location, Expression exp)
 	{
@@ -57,7 +59,7 @@ public class TailExpression extends UnaryExpression
 	@Override
 	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
 	{
-		Type etype = exp.typeCheck(env, null, scope);
+		etype = exp.typeCheck(env, null, scope);
 
 		if (!etype.isSeq())
 		{
@@ -97,7 +99,12 @@ public class TailExpression extends UnaryExpression
 	public ProofObligationList getProofObligations(POContextStack ctxt)
 	{
 		ProofObligationList obligations = super.getProofObligations(ctxt);
-		obligations.add(new NonEmptySeqObligation(exp, ctxt));
+		
+		if (!etype.isType(Seq1Type.class))
+		{
+			obligations.add(new NonEmptySeqObligation(exp, ctxt));
+		}
+		
 		return obligations;
 	}
 
