@@ -85,6 +85,10 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 					{
 						return SourceViewerEditorManager.getInstance().getEditorId(contentTypeId);
 					}
+					else //TODO: it fixes the source lookup for wordDocs - not sure if this has other implications  
+					{
+						return SourceViewerEditorManager.getInstance().getEditorId("org.overture.ide.vdm.external.content-type");
+					}
 				} catch (CoreException e)
 				{
 					// TODO Auto-generated catch block
