@@ -60,7 +60,7 @@ public class PoTableView extends ViewPart implements ISelectionListener
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		viewer = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		viewer = new Text(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setFont(font);
 	}
 
