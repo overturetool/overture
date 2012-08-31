@@ -48,43 +48,53 @@ public class TraceFileRunner implements ITraceRunner
 	public void drawOverview(GenericTabItem tab, Long eventStartTime)
 			throws Exception 
 	{
-		data.reset();
-		
-		OverviewEventViewer viewer = new OverviewEventViewer();
-		viewer.drawOverview(tab, data.getCPUs(), data.getBuses());
-		
-		for(INextGenEvent event : data.getSortedEvents())
-		{
-			
-			EventHandler handler = eventHandlers.get(event.getClass());
-			
-			if(handler == null)
-				throw new Exception("No eventhandler registered for event: " + event.getClass());
-
-			if(!handler.handleEvent(event, EventViewType.OVERVIEW, tab))
-				System.out.println("Failed to handle Overview event: " + event.getClass());		
-			
-		}
+		drawView(tab, eventStartTime, EventViewType.OVERVIEW, 0L);
 	}
 
 	public void drawCpu(GenericTabItem tab, Long cpuId, Long eventStartTime)
 			throws Exception 
 	{
+		drawView(tab, eventStartTime, EventViewType.CPU, cpuId);		
+	}
+	
+	private void drawView(GenericTabItem tab, Long eventStartTime, EventViewType viewType, Long cpuId) throws Exception
+	{
 		data.reset();
 		
-		CpuEventViewer viewer = new CpuEventViewer();
-		viewer.drawView(tab, data.getConnectedBuses(cpuId));
-		
-		for(INextGenEvent event : data.getSortedCpuEvents(cpuId))
+		//Draw pre-defined content
+		if(viewType == EventViewType.OVERVIEW)
 		{
-			EventHandler handler = eventHandlers.get(event.getClass());
+			OverviewEventViewer viewer = new OverviewEventViewer();
+			viewer.drawOverview(tab, data.getCPUs(), data.getBuses());
+		}
+		else if(viewType == EventViewType.CPU)
+		{
+			CpuEventViewer viewer = new CpuEventViewer();
+			viewer.drawView(tab, data.getConnectedBuses(cpuId));
+		}
 			
-			if(handler == null)
-				throw new Exception("No eventhandler registered for event: " + event.getClass());
-
-			if(!handler.handleEvent(event, EventViewType.CPU, tab))
-				System.out.println("Failed to handle CPU event: " + event.getClass());			
-		}		
+		Long eventTime = eventStartTime;
+		boolean canvasOverrun = false; //TODO MAA: Check for canvas overrun
+		
+		//Draw events as long as there is room and time
+		while(!canvasOverrun && eventTime <= data.getMaxEventTime()) 
+		{
+			for(Object event : data.getEvents(eventTime))
+			{		
+				if(viewType == EventViewType.CPU && !data.isEventForCpu(event, cpuId)) 
+					continue; //Ignore event for other CPU's
+				
+				EventHandler handler = eventHandlers.get(event.getClass());
+				
+				if(handler == null)
+					throw new Exception("No eventhandler registered for event: " + event.getClass());
+	
+				if(!handler.handleEvent(event, viewType, tab))
+					throw new Exception("Failed to handle Overview event: " + event.getClass());						
+			}
+			
+			eventTime = data.getCurrentEventTime() + 1; //Get next event time
+		}
 	}
 	
 	public Vector<Long> getCpuIds() 

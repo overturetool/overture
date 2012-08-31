@@ -20,8 +20,11 @@ public abstract class EventHandler {
 		this.overviewViewer = new OverviewEventViewer();
 	}
 	
-	public boolean handleEvent(INextGenEvent event, EventViewType viewType, GenericTabItem tab)
+	public boolean handleEvent(Object e, EventViewType viewType, GenericTabItem tab)
 	{
+		INextGenEvent event = (INextGenEvent)e;
+		if(event == null) return false; //Guard
+		
 		//Set viewer used in handle
 		switch(viewType)
 		{
@@ -31,10 +34,10 @@ public abstract class EventHandler {
 		}
 		
 		//Check event time and draw marker if needed
-		if(data.getEventTime() == null || data.getEventTime() != event.getTime())
+		if(data.getLastMarkerTime() == null || data.getLastMarkerTime() != event.getTime())
 		{
 			eventViewer.drawTimeMarker(tab, event.getTime());
-			data.setEventTime(event.getTime());
+			data.setLastMarkerTime(event.getTime());
 		}
 		
 		//Handle the event

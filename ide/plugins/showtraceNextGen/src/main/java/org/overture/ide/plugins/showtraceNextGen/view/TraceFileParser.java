@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
-public class NextGenTraceParser extends Thread {
+public class TraceFileParser extends Thread {
 	
 	private String fileName = null;
 	private boolean isFinished = false;
@@ -13,7 +13,7 @@ public class NextGenTraceParser extends Thread {
 	public TraceData data = null;
 	public Exception error = null;
 
-	public NextGenTraceParser(String file)
+	public TraceFileParser(String file)
 	{
 		this.fileName = file;
 	}
@@ -23,10 +23,9 @@ public class NextGenTraceParser extends Thread {
 	{
 		try 
 		{
-			NextGenRTLogger.getInstanceFromFile(fileName);
-						
-			data = new TraceData();
-			data.sortEvents();
+			NextGenRTLogger logger = NextGenRTLogger.getInstanceFromFile(fileName);
+			data = new TraceData(logger);
+
 		} 
 		catch (IOException e) {
 			error = e;

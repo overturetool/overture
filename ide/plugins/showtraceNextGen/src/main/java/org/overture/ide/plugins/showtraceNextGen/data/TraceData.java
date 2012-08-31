@@ -26,9 +26,8 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.management.RuntimeErrorException;
@@ -44,20 +43,19 @@ public class TraceData
 	private HashMap<Long, TraceBus> buses; 
 	private HashMap<Long, TraceThread> threads;
 	private HashMap<Long, TraceBusMessage> messages;
-	private HashMap<String, TraceOperation> operations;
+	private HashMap<String, TraceOperation> operations; //Key = Class+Operation
 	
 	private TraceObject mainThreadObject;
 	private TraceObject initThreadObject;
 	
-	private List<INextGenEvent> sortedEvents;
-	private HashMap<Long, List<INextGenEvent>> cpuEvents;
-	private Vector<Long> times; 
+	private Long currentEventTime;
+	private Long lastMarkerTime;
 	
-	private Long eventTime;
-	
-    public TraceData()
+    public TraceData(NextGenRTLogger logger)
     {
-    	rtLogger = NextGenRTLogger.getInstance();
+    	//Pass by reference is needed to avoid problems when switching between two RT models (different NextGenRTLogger instances)
+    	rtLogger = logger;//NextGenRTLogger.getInstance();
+    	 	
     	cpus = new HashMap<Long, TraceCPU>();
     	objects = new HashMap<Long, TraceObject>();
     	buses = new HashMap<Long, TraceBus>();
@@ -67,14 +65,11 @@ public class TraceData
     	
     	mainThreadObject = new TraceObject(0L,"MAIN");
     	initThreadObject = new TraceObject(0L, "INIT");
-    	
-    	sortedEvents = null;
-    	cpuEvents = new HashMap<Long, List<INextGenEvent>>();
-    	times = null;
-    	eventTime = null;
+
+    	currentEventTime = null;
+    	lastMarkerTime = null;
     }
 
-    //CPU
     public TraceCPU getCPU(Long pid) throws RuntimeErrorException
     {
     	if(!rtLogger.getCpuMap().containsKey((int)(long)pid))
@@ -92,19 +87,6 @@ public class TraceData
     	}
     	
         return cpus.get(pid);
-    }
-
-    //TODO: Remove - is only used in TraceFileVisitor
-    public HashSet<Long> getCPUIds()
-    {
-        HashSet<Long> cpuIds = new HashSet<Long>();
-        Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
-        for(Integer key : cpus.keySet())
-        {
-        	cpuIds.add(new Long(key));
-        }
-
-        return cpuIds;
     }
 
     public Vector<TraceCPU> getCPUs()
@@ -133,13 +115,6 @@ public class TraceData
         return tdCpuIds;
     }
 
-    public Long getNoCpus()
-    {
-    	Map<Integer, NextGenCpu> cpus = rtLogger.getCpuMap();
-    	return new Long(cpus.size());
-    }
-
-    //Bus
     public TraceBus getBUS(Long pid) throws RuntimeErrorException
     {   
         if(!rtLogger.getBusMap().containsKey(pid.intValue()))
@@ -165,52 +140,18 @@ public class TraceData
         return buses.get(pid);
     }
 
-    //TODO: Remove - is only used in TraceFileVisitor
-    public HashSet<Long> getBusIds()
-    {      
-        HashSet<Long> tdBusIds = new HashSet<Long>();
-        Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
-        for(Integer key : buses.keySet())
-        {
-        	tdBusIds.add(new Long(key));
-        }
-        
-        return tdBusIds;
-    }
-
     public Vector<TraceBus> getBuses()
     {
     	Vector<TraceBus> buses = new Vector<TraceBus>();
-    	for(Long busId : getOrderedBuses())
+    	for(Integer busId : rtLogger.getBusMap().keySet())
     	{
-    		TraceBus bus = getBUS(busId);
+    		TraceBus bus = getBUS(new Long(busId));
     		buses.add(bus);
     	}
     	
     	return buses;
     }
-    
-    public Vector<Long> getOrderedBuses()
-    {    	
-    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap();
-    	Vector<Long> tdBusIds = new Vector<Long>();
-    	
-    	for(Integer key : buses.keySet())
-    	{
-    		tdBusIds.add(new Long(key));
-    	}
-    	
-    	Collections.sort(tdBusIds);
-    	
-    	return tdBusIds;
-    }
 
-    public Long getNoBuses()
-    {
-        return new Long(rtLogger.getBusMap().size());
-    }
-
-    //Thread
     public TraceThread getThread(Long pthrid) throws RuntimeErrorException
     {
         if(!rtLogger.getThreadMap().containsKey(pthrid))
@@ -224,7 +165,6 @@ public class TraceData
         return threads.get(pthrid);
     }
 
-    //Message
     public TraceBusMessage getMessage(Long pmsgid) throws RuntimeErrorException
     {
         if(!rtLogger.getBusMessage().containsKey(pmsgid))
@@ -246,7 +186,6 @@ public class TraceData
         return messages.get(pmsgid);
     }
 
-    //Operation
     public TraceOperation getOperation(String classNameOperationName)
     {
         if(!rtLogger.getOperationMap().containsKey(classNameOperationName))
@@ -266,8 +205,7 @@ public class TraceData
         
         return operations.get(classNameOperationName);
     }
-    
-    //Object
+
     public TraceObject getObject(Long pobjid) throws RuntimeErrorException
     {
         if(!rtLogger.getObjectMap().containsKey(pobjid.intValue()))
@@ -296,12 +234,6 @@ public class TraceData
     	return mainThreadObject;
     }
     
-    //Helpers
-    public Vector<Long> getTimes()
-    {
-        return times;
-    }
-
 	public void reset()
     {
         cpus.clear();
@@ -310,10 +242,7 @@ public class TraceData
         threads.clear();
         messages.clear();
         
-        eventTime = null;
-        
-        
-        
+        currentEventTime = null;
     }
 	
 	public Vector<TraceBus> getConnectedBuses(Long cpuId)
@@ -334,109 +263,87 @@ public class TraceData
         return res; 
 	}
 	
-	
-	//TODO: Remove - is only used in TraceFileVisitor
-    public Vector<Long> getBusIdsFromCpu(Long cpuId)
-    {
-    	Vector<Long> res = new Vector<Long>();
-    	
-    	Map<Integer, NextGenBus> buses = rtLogger.getBusMap(); 	
-    	for(NextGenBus bus : buses.values())
-    	{	
-    		for (NextGenCpu cpu : bus.cpus) 
-    		{
-    			if(cpuId.intValue() == cpu.id)
-    				res.add(new Long(bus.id));
-			}  		
-    	}
-        return res; 
-    }
-    
-    public Vector<Long> getObjectIdsFromCpu(Long cpuId)
-    {
-    	Vector<Long> res = new Vector<Long>();   	
-    	Map<Integer, NextGenObject> objects = rtLogger.getObjectMap(); 
-   		    	
-    	for(NextGenObject obj : objects.values())
-    	{	
-			if(cpuId.intValue() == obj.cpu.id)
-				res.add(new Long(obj.id));	  		
-    	}
-    	  	
-        return res; 
-    }
-    
-	public void sortEvents()
+	public Long getMaxEventTime()
 	{
-		sortedEvents = new ArrayList<INextGenEvent>(rtLogger.getEvents());	
-		//Collections.copy(sortedEvents, events);
-		
-		//Sort events
-		Collections.sort(sortedEvents, new EventComparator());
-			
-		//Collect events belonging to each CPU
-		//XXX: Can we do this smarter - maybe specify filter or sorting rules? 
-		cpuEvents.clear();
-		for(Integer iCpuId : rtLogger.getCpuMap().keySet())
-		{
-			Vector<INextGenEvent> result = new Vector<INextGenEvent>();	
-			Long cpuId = new Long((int)iCpuId);
-			
-			for(INextGenEvent event : sortedEvents)
-			{
-				if(event instanceof NextGenThreadEvent)
-	            {
-	    			int eventCpu = ((NextGenThreadEvent)event).thread.cpu.id;
-	    			if(eventCpu == cpuId)
-	    			{
-	    				result.add(event);
-	    			}
-	            }
-	            else if(event instanceof NextGenOperationEvent)
-	            {
-	    			int eventCpu = ((NextGenOperationEvent)event).thread.cpu.id;
-	    			if(eventCpu == cpuId)
-	    			{
-	    				result.add(event);
-	    			}
-	    			
-	            }
-	            else if(event instanceof NextGenBusMessageEvent)
-	            {
-	    			int fromCpu = ((NextGenBusMessageEvent)event).message.fromCpu.id;
-	    			int toCpu =  ((NextGenBusMessageEvent)event).message.toCpu.id;
-	    			if(fromCpu == cpuId || toCpu == cpuId)
-	    			{
-	    				result.add(event);
-	    			}
-	            }
-	            else 
-	            {
-	            	throw new UnknownEventTypeException("Unknown event type!");
-	            }
-			}
-			
-			cpuEvents.put(cpuId, result);
-		}
-	}
-	
-	public List<INextGenEvent> getSortedEvents()
-	{
-		return sortedEvents;
-	}
-	
-	public List<INextGenEvent> getSortedCpuEvents(Long cpuId)
-	{
-		return cpuEvents.get(cpuId);
+		return getEvents().lastKey();
 	}
 
-	public Long getEventTime()
+	public Long getCurrentEventTime()
 	{
-		return eventTime;
+		return currentEventTime;
 	}
 	
-	public void setEventTime(Long eventTime)
+	public Long getLastMarkerTime()
 	{
-		this.eventTime = eventTime;
+		return lastMarkerTime;
+	}
+	
+	public void setLastMarkerTime(Long time)
+	{
+		lastMarkerTime = time;
+	}
+	
+	private TreeMap<Long, ArrayList<INextGenEvent>> getEvents()
+	{
+		return (TreeMap<Long, ArrayList<INextGenEvent>>)rtLogger.getEvents();
+	}
+	
+	public ArrayList<INextGenEvent> getEvents(Long fromTime)
+	{
+		ArrayList<INextGenEvent> events = null;
+		
+		Long eventKey = getEvents().ceilingKey(fromTime); //Null if no key equal to or greater than
+	    if(eventKey != null)
+	    {
+	    	events = getEvents().get(eventKey);
+	    	currentEventTime = eventKey;
+	    }
+	    else
+	    {
+	    	return events = new ArrayList<INextGenEvent>();
+	    }
+				
+		return events;
+	}
+	
+	public boolean isEventForCpu(Object e, Long cpuId)
+	{
+		INextGenEvent event = (INextGenEvent)e;
+		if(event == null) return false; //Guard
+		
+		boolean isForThisCpu = false;
+		
+		if(event instanceof NextGenThreadEvent)
+        {
+			int eventCpu = ((NextGenThreadEvent)event).thread.cpu.id;
+			if(eventCpu == cpuId)
+			{
+				isForThisCpu = true;
+			}
+        }
+        else if(event instanceof NextGenOperationEvent)
+        {
+			int eventCpu = ((NextGenOperationEvent)event).thread.cpu.id;
+			if(eventCpu == cpuId)
+			{
+				isForThisCpu = true;
+			}
+			
+        }
+        else if(event instanceof NextGenBusMessageEvent)
+        {
+			int fromCpu = ((NextGenBusMessageEvent)event).message.fromCpu.id;
+			int toCpu =  ((NextGenBusMessageEvent)event).message.toCpu.id;
+			if(fromCpu == cpuId || toCpu == cpuId)
+			{
+				isForThisCpu = true;
+			}
+        }
+        else 
+        {
+        	throw new UnknownEventTypeException("Unknown event type!");
+        }
+		
+		return isForThisCpu;
 	}
 }

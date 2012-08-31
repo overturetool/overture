@@ -163,7 +163,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		theConjectures.parseValidationFile(valFileName);
 	}
 
-
 	void diagramExportAction()
 	{
 		theArch.exportJPG((new StringBuilder(String.valueOf(fileName))).append(".arch").toString());
@@ -279,7 +278,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	@SuppressWarnings("deprecation")
 	private void doParse(final String fname, IProgressMonitor monitor)
 	{
-		NextGenTraceParser t = new NextGenTraceParser(fname);
+		TraceFileParser t = new TraceFileParser(fname);
 		t.start();
 
 		while (!t.isFinished())
@@ -324,7 +323,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			traceRunner.drawArchitecture(theArch);
 			traceRunner.drawOverview(theOverview, new Long(currentTime));
 			canExportJpg = true;
-			canMoveHorizontal = true;
+			canMoveHorizontal = true; 
 			canOpenValidation = true;
 			Vector<Long> theCpus = traceRunner.getCpuIds();
 			

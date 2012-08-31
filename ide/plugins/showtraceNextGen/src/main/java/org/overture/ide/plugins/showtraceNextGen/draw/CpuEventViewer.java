@@ -164,8 +164,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 		Long arrowYPos = tab.getYMax();
 		
 		//TODO: Investigate why the below "getCurrentObject" gets a null reference exception
-		
-		/*
+	/*
 		TraceObject obj = thread.getCurrentObject();
 		Long objX = obj.getX();
 		
@@ -182,10 +181,9 @@ public class CpuEventViewer  extends TraceEventViewer {
 		tab.addFigure(line);
 
 		drawHorizontalArrow(tab, objX, busX, tab.getYMax(), " " , toolTipLabel, ColorConstants.darkGreen);
-		*/
-		//Draw Bus Marker
 		
-		drawMarker(tab, busX, arrowYPos, busX, arrowYPos + ELEMENT_SIZE, ColorConstants.lightGray);	
+		//Draw Bus Marker		
+		drawMarker(tab, busX, arrowYPos, busX, arrowYPos + ELEMENT_SIZE, ColorConstants.lightGray);	*/
 	}
 
 	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op) {

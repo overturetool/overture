@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.Color;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.*;
 
@@ -16,7 +15,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 	
 	public OverviewEventViewer()
 	{
-
 	}
 
 	public void drawOverview(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses)
@@ -247,7 +245,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 		drawVerticalArrow(tab, x2, y1, y2, label, ColorConstants.darkBlue);
 	}
 
-	
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime)
 	{	//FIXME: Magic numbers

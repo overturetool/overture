@@ -27,6 +27,7 @@ import java.io.File;
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
@@ -55,24 +56,35 @@ public class GenericTabItem
         theFont = null;
         
         if(!$assertionsDisabled && theName == null)
+        {
             throw new AssertionError();
+        }
         if(!$assertionsDisabled && theFolder == null)
         {
             throw new AssertionError();
-        } else
+        } 
+        else
         {
-            theTabItem = new TabItem(theFolder, 0);
+        	theFigure = new Figure();
+        	
+        	theCanvas = new FigureCanvas(theFolder);
+        	theCanvas.setLayout(new FillLayout());
+        
+        	theCanvas.setContents(theFigure);
+        	theCanvas.setBackground(ColorConstants.white);
+        	theCanvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
+        	theCanvas.setSize(theFolder.getSize());
+        	theCanvas.setSize(3000,3000);
+
+        	theTabItem = new TabItem(theFolder, 0);
             theTabItem.setText(theName);
-            theCanvas = new FigureCanvas(theFolder);
             theTabItem.setControl(theCanvas);
-            theCanvas.setLayout(new FillLayout());
-            theFigure = new Figure();
-            theCanvas.setContents(theFigure);
-            theFigure.setSize(3000, 3000);
-            theCanvas.setBackground(ColorConstants.white);
-            theCanvas.setScrollBarVisibility(FigureCanvas.ALWAYS);
+            //theFigure.
+            //theFigure.setSize(3000, 3000);
+            
             theFont = new Font(theTabItem.getDisplay(), "MS Gothic", 12, 0);
             return;
+            
         }
     }
 
@@ -94,12 +106,14 @@ public class GenericTabItem
 
     public Long getHorizontalSize()
     {
-        return new Long(3000L);
+        //return new Long(theFigure.getSize().width);
+    	return new Long(theCanvas.getSize().x);
     }
 
     public Long getVerticalSize()
     {
-        return new Long(3000L);
+        //return new Long(theFigure.getSize().height);
+    	return new Long(theCanvas.getSize().y);
     }
 
     public void addFigure(IFigure aFigure)
