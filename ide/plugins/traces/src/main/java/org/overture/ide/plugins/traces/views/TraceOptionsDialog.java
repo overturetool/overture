@@ -96,13 +96,17 @@ public class TraceOptionsDialog extends Composite
 	{
 
 		comboReductionType = new Combo(this, SWT.READ_ONLY);
-
-		String[] reductions = new String[TraceReductionType.values().length];
+		
+		String[] reductions = new String[TraceReductionType.values().length - 1];
 		int i = 0;
 		for (TraceReductionType r : TraceReductionType.values())
 		{
-			reductions[i] = r.toString();
-			i++;
+			if(r != TraceReductionType.NONE) //Removed NONE at Nicks request
+			{
+				reductions[i] = r.toString();
+				i++;
+			}
+			
 		}
 
 		comboReductionType.setItems(reductions);
