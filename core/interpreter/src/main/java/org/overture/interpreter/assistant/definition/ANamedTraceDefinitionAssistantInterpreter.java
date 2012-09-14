@@ -33,8 +33,7 @@ public class ANamedTraceDefinitionAssistantInterpreter
 			tests.reduce(subset, type, seed);
 		}
 
-		tests.typeCheck(tracedef.getClassDefinition());
-		return tests;
+		return tests.typeCheck(tracedef.getClassDefinition());
 	}
 
 }

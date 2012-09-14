@@ -188,7 +188,10 @@ public class TraceTestEngine
 				{
 					try
 					{
-						p.exitValue();
+						if(p!=null)
+						{
+							p.exitValue();
+						}
 					} catch (Exception e)
 					{
 						if (p != null)

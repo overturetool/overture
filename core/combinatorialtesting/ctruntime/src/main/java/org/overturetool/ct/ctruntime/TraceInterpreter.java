@@ -3,6 +3,7 @@ package org.overturetool.ct.ctruntime;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -19,6 +20,7 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.TypeCheckedTestSequence;
 import org.overture.interpreter.traces.Verdict;
 import org.overturetool.ct.utils.TraceXmlWrapper;
 
@@ -154,7 +156,7 @@ public class TraceInterpreter
 			Object traceDefinition, Context ctxt) throws Exception
 	{
 		ANamedTraceDefinition mtd = (ANamedTraceDefinition) traceDefinition;
-		TestSequence tests = null;
+		TypeCheckedTestSequence tests = null;
 		if (!reduce)
 		{
 			subset = 1.0F;
@@ -162,12 +164,19 @@ public class TraceInterpreter
 			seed = 999;
 		}
 
-		tests = ANamedTraceDefinitionAssistantInterpreter.getTests(mtd,ctxt, subset, traceReductionType, seed);
+		TestSequence tests1 = ANamedTraceDefinitionAssistantInterpreter.getTests(mtd,ctxt, subset, traceReductionType, seed);
+		if(tests1 instanceof TypeCheckedTestSequence)
+		{
+			tests = (TypeCheckedTestSequence) tests1;
+		}else
+		{
+			throw new Exception("Failed to get tests");
+		}
 
 		processingTrace(className, mtd.getName().name, tests.size());
 		if (storage != null)
 		{
-			storage.StartTrace(mtd.getName().name, mtd.getLocation().file.getName(), mtd.getLocation().startLine, mtd.getLocation().startPos, tests.size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+			storage.StartTrace(mtd.getName().name, mtd.getLocation().file.getName(), mtd.getLocation().startLine, mtd.getLocation().startPos, tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
 		int n = 1;
@@ -176,7 +185,7 @@ public class TraceInterpreter
 		int inconclusiveCount = 0;
 		int skippedCount = 0;
 
-		for (CallSequence test : tests)
+		for (CallSequence test : tests.getTests())
 		{
 			processingTest(className, mtd.getName().name, n, tests.size());
 			// Bodge until we figure out how to not have explicit op
@@ -199,12 +208,22 @@ public class TraceInterpreter
 				}
 			} else
 			{
-				interpreter.init(null); // Initialize completely between
-				// every
-				// run...
-				List<Object> result = interpreter.runOneTrace(mtd, test, false);
-
-				tests.filter(result, test, n);
+				List<Object> result = null;
+				
+				if(tests.isTypeCorrect(test))
+				{
+					interpreter.init(null); // Initialize completely between
+					// every
+					// run...
+					result = interpreter.runOneTrace(mtd, test, false);
+	
+					tests.filter(result, test, n);
+				}else
+				{
+					result = new Vector<Object>();
+					result.add(tests.getTypeCheckError(test));
+					result.add(Verdict.FAILED);
+				}
 
 				if (result.get(result.size() - 1) == Verdict.FAILED)
 				{
@@ -246,11 +265,11 @@ public class TraceInterpreter
 				worstVerdict = Verdict.INCONCLUSIVE;
 			}
 
-			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
+			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.getTests().size(), skippedCount, faildCount, inconclusiveCount);
 			storage.StopElement();
 		}
 
-		processingTraceFinished(className, mtd.getName().name, tests.size(), faildCount, inconclusiveCount, skippedCount);
+		processingTraceFinished(className, mtd.getName().name, tests.getTests().size(), faildCount, inconclusiveCount, skippedCount);
 	}
 
 	protected void processingTraceFinished(String className, String name,

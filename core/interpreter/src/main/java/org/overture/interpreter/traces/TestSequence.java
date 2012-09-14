@@ -40,6 +40,7 @@ import org.overture.ast.util.Utils;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.parser.messages.VDMErrorsException;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
@@ -79,40 +80,48 @@ public class TestSequence extends Vector<CallSequence>
 		}
 	}
 
-	public void typeCheck(SClassDefinition classdef) throws Exception
+	public TypeCheckedTestSequence typeCheck(SClassDefinition classdef) throws Exception
 	{
+		Map<CallSequence,VDMErrorsException> failed = new HashMap<CallSequence,VDMErrorsException>();
+		
 		Interpreter interpreter = Interpreter.getInstance();
 
 		for (CallSequence test: this)
 		{
-			Environment env = null;
-
-			if (interpreter instanceof ClassInterpreter)
+			try{
+				Environment env = null;
+	
+				if (interpreter instanceof ClassInterpreter)
+				{
+					env = new FlatEnvironment(
+						SClassDefinitionAssistantInterpreter.getSelfDefinition(classdef),
+						new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
+				}
+				else
+				{
+					env = new FlatEnvironment(
+						new Vector<PDefinition>(),
+						interpreter.getGlobalEnvironment());
+				}
+	
+	    		for (PStm statement: test)
+	    		{
+	    			if(statement instanceof TraceVariableStatement)
+	    			{
+	    				((TraceVariableStatement)statement).typeCheck(env, NameScope.NAMESANDSTATE);
+	    			}
+	    			else
+	    			{
+	    				interpreter.typeCheck(statement, env);	
+	    			}
+					
+	    		}
+			}catch(VDMErrorsException e)
 			{
-				env = new FlatEnvironment(
-					SClassDefinitionAssistantInterpreter.getSelfDefinition(classdef),
-					new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
+				failed.put(test, e);
 			}
-			else
-			{
-				env = new FlatEnvironment(
-					new Vector<PDefinition>(),
-					interpreter.getGlobalEnvironment());
-			}
-
-    		for (PStm statement: test)
-    		{
-    			if(statement instanceof TraceVariableStatement)
-    			{
-    				((TraceVariableStatement)statement).typeCheck(env, NameScope.NAMESANDSTATE);
-    			}
-    			else
-    			{
-    				interpreter.typeCheck(statement, env);	
-    			}
-				
-    		}
 		}
+		return new TypeCheckedTestSequence(this, failed);
 	}
 
 	public void reduce(float subset, TraceReductionType type, long seed)

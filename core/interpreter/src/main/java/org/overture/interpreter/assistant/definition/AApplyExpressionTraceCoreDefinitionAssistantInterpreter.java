@@ -90,7 +90,7 @@ public class AApplyExpressionTraceCoreDefinitionAssistantInterpreter
 		if (core.getCallStatement() instanceof ACallStm)
 		{
 			ACallStm stmt = (ACallStm)core.getCallStatement();
-			newStatement = AstFactory.newACallStm(stmt.getName(), newargs);
+			newStatement = AstFactory.newACallStm(stmt.getName().clone(), newargs);
 		}
 		else
 		{
