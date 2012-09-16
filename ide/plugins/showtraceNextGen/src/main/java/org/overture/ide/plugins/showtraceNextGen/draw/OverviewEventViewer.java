@@ -11,7 +11,7 @@ import org.overture.ide.plugins.showtraceNextGen.view.*;
 public class OverviewEventViewer extends TraceEventViewer {
 
 	private final Long ELEMENT_SIZE = 18L;
-	private final Long BUSMSG_ARROW_OFFSET = 8L;
+
 	
 	public OverviewEventViewer()
 	{
@@ -174,7 +174,7 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(tab.getXMax());
 	}
 	
-	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
@@ -193,7 +193,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 		drawVerticalArrow(tab, x1, y1, y2, label, ColorConstants.darkBlue);
 	}
 
-	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
@@ -212,7 +212,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 		drawVerticalArrow(tab, x1, y1, y2, label, ColorConstants.darkBlue);
 	}
 	
-	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
@@ -224,7 +224,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 		bus.setX(x2); //TODO: MVQ: This info is not used?
 	}
 
-	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op, TraceObject obj)
 	{
 		updateCpu(tab, cpu, thread);
 		

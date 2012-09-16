@@ -17,11 +17,12 @@ public class BusMessageReplyEventHandler extends EventHandler {
 		if(bEvent == null) return false; //Guard
 		
 		TraceCPU cpu = data.getCPU(new Long(bEvent.replyMessage.fromCpu.id));
-		TraceThread thread = data.getThread(bEvent.replyMessage.callerThread.id);
+		//TraceThread thread = data.getThread(bEvent.replyMessage.callerThread.id);
+		TraceObject object = null;
 		TraceBus bus = data.getBUS(new Long(bEvent.replyMessage.bus.id));
 		TraceOperation op = data.getOperation(bEvent.replyMessage.operation.classDef.name + bEvent.replyMessage.operation.name);
 				
-		eventViewer.drawReplyRequest(tab,  cpu, thread, bus, op);
+		eventViewer.drawReplyRequest(tab,  cpu, object, bus, op);
 		return true;
 	}
 

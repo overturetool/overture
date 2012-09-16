@@ -63,7 +63,7 @@ public class NextGenBusMessage implements Serializable {
 		s.append(" fromCpu: "); s.append(this.fromCpu.id);
 		s.append(" toCpu: "); s.append(this.toCpu.id);
 		s.append(" callerThread: "); s.append(this.callerThread.id);
-		s.append(" receiverThread: "); s.append(this.receiverThread.id);
+		s.append(" receiverThread: "); s.append(this.receiverThread != null ? this.receiverThread.id : "no receiver");
 		s.append(" operation: "); s.append(this.operation!= null ? this.operation.name : "no op");
 		s.append(" size: "); s.append(this.size);
 		s.append(" object: "); s.append(this.object!=null ? this.object.id : "no object");

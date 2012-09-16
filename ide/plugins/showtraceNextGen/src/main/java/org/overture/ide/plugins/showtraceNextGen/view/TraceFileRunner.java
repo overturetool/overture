@@ -54,6 +54,7 @@ public class TraceFileRunner implements ITraceRunner
 	public void drawCpu(GenericTabItem tab, Long cpuId, Long eventStartTime)
 			throws Exception 
 	{
+		System.out.println("************* CPU : " + cpuId + "**************");
 		drawView(tab, eventStartTime, EventViewType.CPU, cpuId);		
 	}
 	
@@ -75,6 +76,7 @@ public class TraceFileRunner implements ITraceRunner
 			
 		Long eventTime = eventStartTime;
 		boolean canvasOverrun = false; //TODO MAA: Check for canvas overrun
+		int eventCounter = 0;
 		
 		//Draw events as long as there is room and time
 		while(!canvasOverrun && eventTime <= data.getMaxEventTime()) 
@@ -88,7 +90,9 @@ public class TraceFileRunner implements ITraceRunner
 				
 				if(handler == null)
 					throw new Exception("No eventhandler registered for event: " + event.getClass());
-	
+
+				System.out.println(eventCounter++ + " - " + ((INextGenEvent)event).getTime() +" CPU " + event.toString());
+				
 				if(!handler.handleEvent(event, viewType, tab))
 					throw new Exception("Failed to handle Overview event: " + event.getClass());						
 			}

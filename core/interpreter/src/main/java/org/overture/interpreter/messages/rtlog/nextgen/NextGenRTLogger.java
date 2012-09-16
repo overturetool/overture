@@ -205,7 +205,6 @@ public class NextGenRTLogger {
 	{
 		if(logFile != null)
 		{
-			//printDataStructure("c:\\persisToFile_structure.txt"); //TODO MAA: Remove
 			
 			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
 			ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -289,12 +288,13 @@ public class NextGenRTLogger {
         	out.newLine();
 		}
         
+        //System.out.println("Printing events");
         out.newLine();
         out.append("### Events ######################\n");
         out.newLine();
-        for (Long time : this.events.keySet()) 
+        for (Map.Entry<Long, ArrayList<INextGenEvent>> entry : events.entrySet()) 
         {
-        	for(INextGenEvent e : this.events.get(time))
+        	for(INextGenEvent e : entry.getValue())
         	{
 	        	out.append(Long.toString(e.getTime()));
 	        	out.append(" -> ");
@@ -616,9 +616,9 @@ public class NextGenRTLogger {
 		
 	private void writeEvents(BufferedWriter out) throws IOException {
 		
-		for(Long time : this.events.keySet())
+		for(Map.Entry<Long, ArrayList<INextGenEvent>> entry : this.events.entrySet())
 		{
-			for (INextGenEvent e : this.events.get(time)) 
+			for (INextGenEvent e : entry.getValue()) 
 			{
 				out.append(e.toString());
 				out.newLine();
@@ -675,7 +675,8 @@ public class NextGenRTLogger {
 		this.events = (Map<Long, ArrayList<INextGenEvent>>) in.readObject();
 
 		in.close();
-		//printDataStructure("c:\\readFromFile_structure.txt");
+		
+		printDataStructure("c:\\readFromFile_structure.txt");
 	}
 		
 	private void addEvent(INextGenEvent event)

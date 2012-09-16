@@ -302,6 +302,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		else if (t.data != null)
 		{
 			traceRunner = TraceRunnerFactory.getTraceRunner(t.data);
+			theTimes = t.data.getEventTimes();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{
 				public void run()

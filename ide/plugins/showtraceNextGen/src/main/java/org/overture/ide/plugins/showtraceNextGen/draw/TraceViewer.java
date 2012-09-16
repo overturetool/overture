@@ -34,6 +34,7 @@ public abstract class TraceViewer {
 	protected final Long OBJECT_WIDTH_FACTOR = new Long(10L);
 	
 	protected final Long OBJECT_ARROW_SIZE = new Long(5L);
+	protected final Long BUSMSG_ARROW_OFFSET = 8L;
 	
 	
     protected void drawMarker(GenericTabItem tab, Long x1, Long y1, Long x2, Long y2, Color clr)

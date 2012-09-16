@@ -33,6 +33,7 @@ import java.util.Vector;
 import javax.management.RuntimeErrorException;
 import org.overture.ide.plugins.showtraceNextGen.view.UnknownEventTypeException;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 
 
 public class TraceData
@@ -283,6 +284,11 @@ public class TraceData
 		lastMarkerTime = time;
 	}
 	
+	public Vector<Long> getEventTimes()
+	{
+		return new Vector<Long>(getEvents().keySet());
+	}
+	
 	private TreeMap<Long, ArrayList<INextGenEvent>> getEvents()
 	{
 		return (TreeMap<Long, ArrayList<INextGenEvent>>)rtLogger.getEvents();
@@ -323,21 +329,26 @@ public class TraceData
         }
         else if(event instanceof NextGenOperationEvent)
         {
-			int eventCpu = ((NextGenOperationEvent)event).thread.cpu.id;
-			if(eventCpu == cpuId)
-			{
-				isForThisCpu = true;
-			}
-			
+			isForThisCpu = (((NextGenOperationEvent)event).thread.cpu.id == cpuId.intValue());			
         }
         else if(event instanceof NextGenBusMessageEvent)
         {
-			int fromCpu = ((NextGenBusMessageEvent)event).message.fromCpu.id;
-			int toCpu =  ((NextGenBusMessageEvent)event).message.toCpu.id;
-			if(fromCpu == cpuId || toCpu == cpuId)
-			{
-				isForThisCpu = true;
-			}
+        	NextGenBusMessageEvent busMsg = (NextGenBusMessageEvent)event;
+        	if(busMsg.type != NextGenBusMessageEventType.ACTIVATE)
+        	{
+				int fromCpu = busMsg.message.fromCpu.id;
+				int toCpu =  busMsg.message.toCpu.id;
+				
+				switch(busMsg.type)
+				{
+					case ACTIVATE: 		isForThisCpu = (fromCpu == cpuId); break;
+					case COMPLETED: 	isForThisCpu = (toCpu == cpuId); break;
+					case REPLY_REQUEST: isForThisCpu = (fromCpu == cpuId); break;
+					case REQUEST: 		isForThisCpu = (fromCpu == cpuId); break;
+					default: 			isForThisCpu = false;
+				}
+
+        	}
         }
         else 
         {

@@ -146,47 +146,68 @@ public class CpuEventViewer  extends TraceEventViewer {
 	}
 
 	//Bus Messages
-	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu,  TraceThread thread, TraceBus bus, TraceOperation op, TraceObject obj)
 	{
-		//TODO
+		Long busX = bus.getX();
+		String toolTipLabel = op.getName();
+	
+		Long objX = obj.getX();
+		
+		//Add request line to object
+//		Line verticalMarkerSource = new Line(objX, tab.getYMax(), objX, tab.getYMax() + ELEMENT_SIZE);
+//		verticalMarkerSource.setLineWidth(MARKER_THICKNESS);
+//		verticalMarkerSource.setForegroundColor(ColorConstants.blue);
+//		tab.addFigure(verticalMarkerSource);
+		
+//		Long arrowYPos = tab.getYMax();
+		drawMarker(tab, busX, tab.getYMax(), busX, tab.getYMax() + ELEMENT_SIZE, ColorConstants.darkGray);	
+		drawHorizontalArrow(tab, busX + BUSMSG_ARROW_OFFSET, objX - BUSMSG_ARROW_OFFSET, tab.getYMax(), " " , toolTipLabel, ColorConstants.darkGreen);
+		
+		//Draw Bus Marker		
+		
+		//Draw Request Line
+//		Line line = new Line(busX, arrowYPos, busX, arrowYPos);
+//		line.setForegroundColor(ColorConstants.lightGray);
+//		line.setDot();
+//		tab.addFigure(line);
+		
 	}
 	
-	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu,TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{
 		//TODO 
 	}
 	
-	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op)
+	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{	
-		
 		Long busX = bus.getX();
 		String toolTipLabel = " Call " + op.getName();
-		Long arrowYPos = tab.getYMax();
-		
-		//TODO: Investigate why the below "getCurrentObject" gets a null reference exception
-	/*
-		TraceObject obj = thread.getCurrentObject();
-		Long objX = obj.getX();
+
+		Long objX = object.getX();
 		
 		//Add request line to object
-		Line verticalMarkerSource = new Line(objX, tab.getYMax(), objX, tab.getYMax() + ELEMENT_SIZE);
-		verticalMarkerSource.setLineWidth(MARKER_THICKNESS);
-		verticalMarkerSource.setForegroundColor(ColorConstants.blue);
-		tab.addFigure(verticalMarkerSource);
+//		Line verticalMarkerSource = new Line(objX, tab.getYMax(), objX, tab.getYMax() + ELEMENT_SIZE);
+//		verticalMarkerSource.setLineWidth(MARKER_THICKNESS);
+//		verticalMarkerSource.setForegroundColor(ColorConstants.blue);
+//		tab.addFigure(verticalMarkerSource);
 		
-		//Draw Request Line
-		Line line = new Line(busX, tab.getYMax(), busX, tab.getYMax());
-		line.setForegroundColor(ColorConstants.lightGray);
-		line.setDot();
-		tab.addFigure(line);
-
-		drawHorizontalArrow(tab, objX, busX, tab.getYMax(), " " , toolTipLabel, ColorConstants.darkGreen);
+		Long arrowYPos = tab.getYMax();
 		
 		//Draw Bus Marker		
-		drawMarker(tab, busX, arrowYPos, busX, arrowYPos + ELEMENT_SIZE, ColorConstants.lightGray);	*/
+		drawMarker(tab, busX, tab.getYMax(), busX, tab.getYMax() + ELEMENT_SIZE, ColorConstants.lightGray);	
+		
+		//Draw Request Line
+//		Line line = new Line(busX, arrowYPos, busX, arrowYPos);
+//		line.setForegroundColor(ColorConstants.lightGray);
+//		line.setDot();
+//		tab.addFigure(line);
+		
+		//Draw message arrow
+		drawHorizontalArrow(tab, objX - BUSMSG_ARROW_OFFSET, busX+BUSMSG_ARROW_OFFSET, arrowYPos, " " , toolTipLabel, ColorConstants.darkGreen);
+	
 	}
 
-	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op) {
+	public void drawMessageActivated(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op) {
 		//Intentionally left blank : Ignore on CPU view
 	}
 
