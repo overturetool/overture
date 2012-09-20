@@ -16,12 +16,16 @@ public class BusMessageEventHandler extends EventHandler {
 		NextGenBusMessageEvent bEvent = (NextGenBusMessageEvent)event;
 		if(bEvent == null) return false; //Guard
 		
+		if(bEvent.message.callerThread.object == null) return true; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
+		
 		TraceCPU fromCpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
 		TraceCPU toCpu = data.getCPU(new Long(bEvent.message.toCpu.id));
 		TraceThread callerthread = data.getThread(bEvent.message.callerThread.id);
 		TraceThread receiverThread = bEvent.message.receiverThread != null ? data.getThread(bEvent.message.receiverThread.id) : null;
 		TraceBus bus = data.getBUS(new Long(bEvent.message.bus.id));
 		TraceObject fromObject = data.getObject(new Long(bEvent.message.object.id));
+		
+		
 		TraceObject toObject = data.getObject(new Long(bEvent.message.callerThread.object.id));
 		TraceOperation op = data.getOperation(bEvent.message.operation.classDef.name + bEvent.message.operation.name);
 		

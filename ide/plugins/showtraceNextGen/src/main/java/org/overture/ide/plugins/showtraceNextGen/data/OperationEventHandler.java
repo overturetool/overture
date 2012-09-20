@@ -16,6 +16,8 @@ public class OperationEventHandler extends EventHandler {
 		NextGenOperationEvent oEvent = (NextGenOperationEvent)event;
 		if(oEvent == null) return false; //Guard
 		
+		if(oEvent.object == null) return true; //XXX: Ignore util operations
+		
 		Long cpuId = new Long(oEvent.thread.cpu.id);
 		TraceCPU cpu = data.getCPU(cpuId);
 		
