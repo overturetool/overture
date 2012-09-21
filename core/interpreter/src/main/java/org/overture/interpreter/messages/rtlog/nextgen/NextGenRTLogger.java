@@ -676,7 +676,7 @@ public class NextGenRTLogger {
 
 		in.close();
 		
-		printDataStructure("c:\\readFromFile_structure.txt");
+		//printDataStructure("c:\\readFromFile_structure.txt");
 	}
 		
 	private void addEvent(INextGenEvent event)
