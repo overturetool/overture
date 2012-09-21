@@ -4,7 +4,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Version: 2.2.0
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
-Bundle-Name: ShowtraceNextGen
+Bundle-Name: Showtrace
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.showtraceNextGen;singleton:=true
 Require-Bundle: org.eclipse.draw2d;bundle-version="3.5.2",
@@ -12,11 +12,9 @@ Require-Bundle: org.eclipse.draw2d;bundle-version="3.5.2",
  org.eclipse.core.resources;bundle-version="3.5.2",
  org.eclipse.core.runtime;bundle-version="3.7.0",
  org.overture.ide.core;bundle-version="2.2.0"
-Bundle-Activator: org.overture.ide.plugins.showtraceNextGen.viewer.TracefileViewerPlugin
+Bundle-Activator: org.overture.ide.plugins.showtraceNextGen.view.TracefileViewerPlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .,
- org.overture.ide.core-2.2.0.jar,
- org.overture.ide.ui-2.2.0.jar,
  ast-2.2.0.jar,
  interpreter-2.2.0.jar,
  parser-2.2.0.jar,
