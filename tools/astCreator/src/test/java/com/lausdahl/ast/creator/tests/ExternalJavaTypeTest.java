@@ -1,6 +1,7 @@
 package com.lausdahl.ast.creator.tests;
 
 import java.io.File;
+import java.io.FileInputStream;
 
 import junit.framework.TestCase;
 
@@ -18,7 +19,7 @@ public class ExternalJavaTypeTest extends TestCase
 		Main.test = true;
 		try
 		{
-			Main.create(new File(new File(".").getParentFile(), FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true,false);
+			Main.create(new FileInputStream(new File(new File(".").getParentFile(), FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath()), output, true,false);
 		} catch (Exception e)
 		{
 			fail(e.getMessage());

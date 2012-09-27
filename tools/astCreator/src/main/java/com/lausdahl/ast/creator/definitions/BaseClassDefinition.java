@@ -58,7 +58,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (IInterfaceDefinition i : this.imports)
 		{
-			imports.add(i.getName().getCanonicalName());
+			String theImport = i.getName().getCanonicalName(); 
+			imports.add(theImport);
 		}
 
 		for (IInterfaceDefinition i : this.interfaces)
@@ -96,6 +97,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (String importName : getImports())
 		{
+			//importName = importName.replace("org.overture.ast", "eu.compassresearch.ast");
 			sb.append("import " + importName + ";\n");
 		}
 		sb.append("\n\n");

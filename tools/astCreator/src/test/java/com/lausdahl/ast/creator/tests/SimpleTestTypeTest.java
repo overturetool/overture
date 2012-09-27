@@ -1,6 +1,7 @@
 package com.lausdahl.ast.creator.tests;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import com.lausdahl.ast.creator.AstCreatorException;
@@ -17,6 +18,6 @@ public class SimpleTestTypeTest extends TestCase
 		System.out.println(new File(".").getAbsolutePath());
 		File output = new File(FilePathUtil.getPlatformPath("target/testData/external"));
 		String inputFile= TESTDATA_BASE+"extend/t1.astv2";
-		Main.create(new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath(), output, true,false);
+		Main.create(new FileInputStream( new File(new File(".").getParentFile(),FilePathUtil.getPlatformPath(inputFile)).getAbsolutePath() ), output, true,false);
 	}
 }

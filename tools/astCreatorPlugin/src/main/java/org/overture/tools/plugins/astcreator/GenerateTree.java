@@ -1,6 +1,7 @@
 package org.overture.tools.plugins.astcreator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -122,7 +123,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 	{
 		try
 		{
-			env1 = Main.create(treeName.getAbsolutePath(), generated, true, generateVdm());
+			env1 = Main.create(new FileInputStream(treeName.getAbsolutePath()), generated, true, generateVdm());
 			setCrc(treeName);
 			setCrc(toStringAstFile);
 		} catch (Exception e)

@@ -1,6 +1,7 @@
 package com.lausdahl.ast.creator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class CmdMain
@@ -27,7 +28,7 @@ public class CmdMain
 			grammarFilePath= grammarFilePath.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 			String outputPath = args[1];
 			outputPath=outputPath.replace('/', File.separatorChar).replace('\\', File.separatorChar);
-			Main.create(grammarFilePath, new File(outputPath), true,GENERATE_VDM);
+			Main.create(new FileInputStream(grammarFilePath), new File(outputPath), true,GENERATE_VDM);
 		}
 	
 		

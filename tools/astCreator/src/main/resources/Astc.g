@@ -203,7 +203,14 @@ ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
 JAVANAME 
   : ID ('.' '#'? ID)*
   ;    
-  
+
+SUBTYPE
+    : '<:'
+    ;
+
+extends
+	: SUBTYPE ID
+	;
   
 //FIELDNAME
 //  : JAVANAME 
@@ -257,7 +264,7 @@ aspectName
 
 
 production
-  : name productionfields? (ASSIGN alternative ('|' alternative)*)? ';' -> ^(ID["P"] name productionfields? (alternative)*) 
+  : name extends? productionfields? (ASSIGN alternative ('|' alternative)*)? ';' -> ^(ID["P"] name productionfields? (alternative)*) 
   ;
   
 name 
