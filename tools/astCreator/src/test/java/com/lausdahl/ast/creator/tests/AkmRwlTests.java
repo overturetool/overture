@@ -5,6 +5,8 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import com.lausdahl.ast.creator.Main;
+
 public class AkmRwlTests extends TestCase
   {
     
@@ -40,7 +42,7 @@ public class AkmRwlTests extends TestCase
         ByteArrayInputStream input1 = new ByteArrayInputStream(src.getBytes());
         ByteArrayInputStream input2 = new ByteArrayInputStream(src2.getBytes());
         
-        // Main.create(input1, input2, output, "Cml", false);
+        Main.create(input1, input2, output, "Cml", false);
         
       }
     
