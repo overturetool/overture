@@ -19,8 +19,8 @@ public class CustomSetMethod extends Method
 	protected void prepare(Environment env)
 	{
 		this.name = "set"
-				+ NameUtil.javaClassName(f.getName());
-		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
+				+ NameUtil.javaClassName(f.getName(env));
+		this.arguments.add(new Argument(f.getMethodArgumentType(env), "value"));
 
 		/**
 		 * Sets the {@code left} child of this {@link ABinopExp} node.
@@ -32,14 +32,14 @@ public class CustomSetMethod extends Method
 		sbDoc.append("\t");
 		sbDoc.append("/**\n");
 		sbDoc.append("\t");
-		sbDoc.append("* Sets the {@code " + f.getName()
+		sbDoc.append("* Sets the {@code " + f.getName(env)
 				+ "} child of this {@link " + classDefinition.getName().getName() + "} node.\n");
-		sbDoc.append("\t* @param value the new {@code " + f.getName()
+		sbDoc.append("\t* @param value the new {@code " + f.getName(env)
 				+ "} child of this {@link " + classDefinition.getName().getName() + "} node\n");
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("\t\tthis." + f.getName() + " = value;");
+		sb.append("\t\tthis." + f.getName(env) + " = value;");
 
 		sbDoc.append("\t*/");
 		this.javaDoc = sbDoc.toString();

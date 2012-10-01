@@ -54,7 +54,7 @@ public class GetChildrenMethod extends Method {
 		sb.append("\t\t}\n");
 		
 		for (Field field : fields) {
-			sb.append("\t\tfields.put(\""+field.getName()+"\",this."+field.getName()+");\n");
+			sb.append("\t\tfields.put(\""+field.getName(env)+"\",this."+field.getName(env)+");\n");
 		}
 		
 		sb.append("\t\treturn fields;");

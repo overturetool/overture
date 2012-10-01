@@ -336,12 +336,12 @@ public class Main
         IClassDefinition copyAdaptor = ClassFactory.createCustom(new JavaName(
             destination.getDefaultPackage(), "", "CopyAdaptor", namePostfix),
             destination);
-        Field converFactoryField = new Field(destination);
+        Field converFactoryField = new Field();
         converFactoryField.name = "factory";
         converFactoryField.type = convertFactory;
         copyAdaptor.addField(converFactoryField);
         
-        Field cacheField = new Field(destination);
+        Field cacheField = new Field();
         cacheField.name = "cache";
         cacheField.setType("Hashtable");
         destination.addClass(new PredefinedClassDefinition("java.util",

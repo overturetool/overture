@@ -87,10 +87,10 @@ public class DepthFirstCaseMethod extends Method
 			} else if(f.isList && !f.isDoubleList)
 			{
 				bodySb.append("\t\t{\n");
-				bodySb.append("\t\t\tList<" + f.getInnerTypeForList()
-						+ "> copy = new ArrayList<" + f.getInnerTypeForList()
+				bodySb.append("\t\t\tList<" + f.getInnerTypeForList(env)
+						+ "> copy = new ArrayList<" + f.getInnerTypeForList(env)
 						+ ">(" + getter + ");\n");
-				bodySb.append("\t\t\tfor( " + f.getInnerTypeForList()
+				bodySb.append("\t\t\tfor( " + f.getInnerTypeForList(env)
 						+ " e : copy) \n");
 				bodySb.append("\t\t\t{\n");
 				bodySb.append("\t\t\t\tif(!_"+visitedNodesField.name+".contains(e))\n");
@@ -103,13 +103,13 @@ public class DepthFirstCaseMethod extends Method
 			}else if(f.isDoubleList)
 			{
 				bodySb.append("\t\t{\n");
-				bodySb.append("\t\t\tList<List<" + f.getInnerTypeForList()
-						+ ">> copy = new ArrayList<List<" + f.getInnerTypeForList()
+				bodySb.append("\t\t\tList<List<" + f.getInnerTypeForList(env)
+						+ ">> copy = new ArrayList<List<" + f.getInnerTypeForList(env)
 						+ ">>(" + getter + ");\n");
-				bodySb.append("\t\t\tfor( List<" + f.getInnerTypeForList()
+				bodySb.append("\t\t\tfor( List<" + f.getInnerTypeForList(env)
 						+ "> list : copy) {\n");
 
-				bodySb.append("\t\t\t\tfor( " + f.getInnerTypeForList()
+				bodySb.append("\t\t\t\tfor( " + f.getInnerTypeForList(env)
 						+ " e : list) \n");
 				bodySb.append("\t\t\t{\n");
 				bodySb.append("\t\t\t\t\tif(!_"+visitedNodesField.name+".contains(e))\n");
@@ -162,7 +162,7 @@ public class DepthFirstCaseMethod extends Method
 			}
 			if(f.isList || f.isDoubleList)
 			{
-				f.getInnerTypeForList();
+				f.getInnerTypeForList(env);
 				imports.add(f.type.getName().getCanonicalName());
 			}
 		}

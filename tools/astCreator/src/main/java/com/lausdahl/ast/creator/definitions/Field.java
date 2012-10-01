@@ -31,24 +31,22 @@ public class Field
 	public IInterfaceDefinition type;
 	public boolean isList = false;
 	public static String fieldPrefic = "_";
-	private Environment env;
 	private String unresolvedType;
 	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
 	public boolean isDoubleList = false;
 	public StructureType structureType = StructureType.Tree;
 	private String customInitializer ="";
 
-	public Field(Environment env)
+	public Field()
 	{
-		this.env = env;
 	}
 
-	public List<String> getRequiredImports()
+	public List<String> getRequiredImports(Environment env)
 	{
 		List<String> imports = new Vector<String>();
 		if (isList)
 		{
-			imports.add(getInternalType(unresolvedType).getName().getCanonicalName());
+			imports.add(getInternalType(unresolvedType, env).getName().getCanonicalName());
 			if (isTypeExternalNotNode())
 			{
 				imports.add(Environment.vectorDef.getName().getCanonicalName());
@@ -82,13 +80,13 @@ public class Field
 			}
 		}
 
-		IInterfaceDefinition defIntf = env.lookUpInterface(getType());
+		IInterfaceDefinition defIntf = env.lookUpInterface(getType(env));
 		if (defIntf != null)
 		{
 			imports.add(defIntf.getName().getCanonicalName());
 		}
 
-		IClassDefinition def = env.lookUp(getType());
+		IClassDefinition def = env.lookUp(getType(env));
 		if (def != null)
 		{
 			imports.add(def.getName().getCanonicalName());
@@ -100,37 +98,35 @@ public class Field
 	@Override
 	public String toString()
 	{
-		String name = null;
-		String typeName = null;
-		try
-		{
-			name = getName();
-			typeName = getType();
-		} catch (Exception e)
-		{
-
-		}
-		return name + ": " + typeName;
+//		String name = null;
+//		try
+//		{
+//			name = getName();
+//		} catch (Exception e)
+//		{
+//
+//		}
+		return this.name;
 	}
 
-	public String getName()
+	public String getName(Environment env)
 	{
 		if (type == null)
 		{
-			type = getInternalType(unresolvedType);
+			type = getInternalType(unresolvedType, env);
 		}
 		String tmp = (name == null ? type.getName().getName() : name);
 		return fieldPrefic + tmp.substring(0, 1).toLowerCase()
 				+ tmp.substring(1);
 	}
 
-	public String getType(boolean abstractType)
+	public String getType(boolean abstractType, Environment env)
 	{
 		if (type == null)
 		{
-			type = getInternalType(unresolvedType);
+			type = getInternalType(unresolvedType,env);
 		}
-		checkType(type);
+		checkType(type,env);
 		String internaalType = type.getName().getName();
 		if (isList && !isDoubleList)
 		{
@@ -195,19 +191,19 @@ public class Field
 		return internaalType;
 	}
 
-	public String getType()
+	public String getType(Environment env)
 	{
-		return getType(false);
+		return getType(false, env);
 	}
 
-	public String getMethodArgumentType()
+	public String getMethodArgumentType(Environment env)
 	{
 		// String internaalType = getInternalType();
 		if (type == null)
 		{
-			type = getInternalType(unresolvedType);
+			type = getInternalType(unresolvedType,env);
 		}
-		checkType(type);
+		checkType(type,env);
 		String internaalType = type.getName().getName();
 		if (isList && !isDoubleList)
 		{
@@ -221,7 +217,7 @@ public class Field
 		return internaalType;
 	}
 
-	public void checkType(IInterfaceDefinition t)
+	public void checkType(IInterfaceDefinition t, Environment env)
 	{
 		if (t == null)
 		{
@@ -242,18 +238,18 @@ public class Field
 		}
 	}
 
-	public String getInnerTypeForList()
+	public String getInnerTypeForList(Environment env)
 	{
 		if (type == null)
 		{
-			type = getInternalType(unresolvedType);
+			type = getInternalType(unresolvedType, env);
 		}
 
 		String internaalType = type.getName().getName();
 		return internaalType;
 	}
 
-	protected IInterfaceDefinition getInternalType(String unresolvedTypeName)
+	protected IInterfaceDefinition getInternalType(String unresolvedTypeName, Environment env)
 	{
 		if (isTokenField)
 		{
@@ -276,9 +272,9 @@ public class Field
 		return (type instanceof ExternalJavaClassDefinition && !((ExternalJavaClassDefinition) type).extendsNode);
 	}
 
-	public String getCast()
+	public String getCast(Environment env)
 	{
-		return "(" + getType() + ")";
+		return "(" + getType(env) + ")";
 	}
 
 	/**
@@ -291,10 +287,6 @@ public class Field
 		return this.unresolvedType;
 	}
 
-	public void updateEnvironment(Environment env)
-	{
-		this.env = env;
-	}
 
 	public boolean hasCustomInitializer()
 	{

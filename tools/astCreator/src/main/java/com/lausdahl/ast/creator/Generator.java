@@ -57,7 +57,7 @@ public class Generator
             if (doTypeHierarchyCheck)
               for (IClassDefinition def : env.getClasses())
                 {
-                  def.checkFieldTypeHierarchy();
+                  def.checkFieldTypeHierarchy(env);
                 }
           } catch (AstCreatorException e)
           {
@@ -412,7 +412,7 @@ public class Generator
             source.getAnalysisPackage(), "DepthFirstAnalysisAdaptor"), source);
         // adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
         adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
-        Field queue = new Field(source);
+        Field queue = new Field();
         queue.name = "visitedNodes";
         queue.accessspecifier = AccessSpecifier.Protected;
         queue.type = new GenericArgumentedIInterfceDefinition(

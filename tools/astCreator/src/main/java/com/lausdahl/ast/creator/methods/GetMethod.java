@@ -24,21 +24,21 @@ public class GetMethod extends Method
 
 		javaDoc = "\t/**\n";
 		//javaDoc += "\t * Returns the {@link "+f.getType()+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node.\n";
-		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType(true))+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
+		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType(true,env))+"} node which is the {@code "+f.getName(env)+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
 		javaDoc += "\t*/";
 
 		this.name = "get"
-				+ NameUtil.javaClassName(f.getName());
+				+ NameUtil.javaClassName(f.getName(env));
 		// this.arguments.add(new Argument(f.getType(), "value"));
-		this.returnType = f.getType(true);
+		this.returnType = f.getType(true,env);
 		StringBuilder sb = new StringBuilder();
 
 		String cast ="";
-		if(classDefinition.isRefinedField(f))
+		if(classDefinition.isRefinedField(f,env))
 		{
-			cast = f.getCast();
+			cast = f.getCast(env);
 		}
-		sb.append("\t\treturn "+cast+"this."+ f.getName() + ";");
+		sb.append("\t\treturn "+cast+"this."+ f.getName(env) + ";");
 
 		this.body = sb.toString();
 	}

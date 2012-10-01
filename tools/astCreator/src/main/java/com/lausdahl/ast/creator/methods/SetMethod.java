@@ -19,13 +19,13 @@ public class SetMethod extends Method {
 	protected void prepare(Environment env) {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
-				+ NameUtil.javaClassName(f.getName());
-		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
+				+ NameUtil.javaClassName(f.getName(env));
+		this.arguments.add(new Argument(f.getMethodArgumentType(env), "value"));
 
 		javaDoc = "\t/**\n";
-		javaDoc += "\t * Sets the {@code " + f.getName()
+		javaDoc += "\t * Sets the {@code " + f.getName(env)
 				+ "} child of this {@link " + c.getName().getName() + "} node.\n";
-		javaDoc += "\t * @param value the new {@code " + f.getName()
+		javaDoc += "\t * @param value the new {@code " + f.getName(env)
 				+ "} child of this {@link " + c.getName().getName() + "} node\n";
 		javaDoc += "\t*/";
 
@@ -33,12 +33,12 @@ public class SetMethod extends Method {
 
 		if ((!f.isTokenField && !(env.classToType.get(c)==ClassType.Custom)) || (f.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)f.type).extendsNode)) {
 			if (f.isList) {
-				sb.append("\t\tif (this." + f.getName() + ".equals(value)) {\n");
+				sb.append("\t\tif (this." + f.getName(env) + ".equals(value)) {\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t}\n");
-				sb.append("\t\tthis." + f.getName() + ".clear();\n");
+				sb.append("\t\tthis." + f.getName(env) + ".clear();\n");
 				sb.append("\t\tif (value != null) {\n");
-				sb.append("\t\t\tthis." + f.getName() + ".addAll(value);\n");
+				sb.append("\t\t\tthis." + f.getName(env) + ".addAll(value);\n");
 				sb.append("\t\t}\n");
 
 			}else
@@ -53,8 +53,8 @@ public class SetMethod extends Method {
 					case Tree:
 //						if(!f.isAspect)
 //						{
-							sb.append("\t\tif (this." + f.getName() + " != null) {\n");
-							sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
+							sb.append("\t\tif (this." + f.getName(env) + " != null) {\n");
+							sb.append("\t\t\tthis." + f.getName(env) + ".parent(null);\n");
 							sb.append("\t\t}\n");
 							sb.append("\t\tif (value != null) {\n");
 							sb.append("\t\t\tif (value.parent() != null) {\n");
@@ -67,10 +67,10 @@ public class SetMethod extends Method {
 					
 				}
 								
-				sb.append("\t\tthis." + f.getName() + " = value;\n");
+				sb.append("\t\tthis." + f.getName(env) + " = value;\n");
 			}
 		}else if (f.isTokenField || f.isAspect) {
-			sb.append("\t\tthis." + f.getName() + " = value;");
+			sb.append("\t\tthis." + f.getName(env) + " = value;");
 		}
 
 		this.body = sb.toString();
@@ -80,13 +80,13 @@ public class SetMethod extends Method {
 	protected void prepareVdm(Environment env) {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
-				+ NameUtil.javaClassName(f.getName());
-		this.arguments.add(new Argument(f.getMethodArgumentType(), "value"));
+				+ NameUtil.javaClassName(f.getName(env));
+		this.arguments.add(new Argument(f.getMethodArgumentType(env), "value"));
 
 		javaDoc = "\t/**\n";
-		javaDoc += "\t * Sets the {@code " + f.getName()
+		javaDoc += "\t * Sets the {@code " + f.getName(env)
 				+ "} child of this {@link " + c.getName() + "} node.\n";
-		javaDoc += "\t * @param value the new {@code " + f.getName()
+		javaDoc += "\t * @param value the new {@code " + f.getName(env)
 				+ "} child of this {@link " + c.getName() + "} node\n";
 		javaDoc += "\t*/";
 
@@ -95,8 +95,8 @@ public class SetMethod extends Method {
 		if (!f.isTokenField && !f.isAspect
 				&& !(env.classToType.get(c)==ClassType.Custom)) {
 			if (!f.isList) {
-				sb.append("\t\tif this." + f.getName() + " <> null then(\n");
-				sb.append("\t\t\tthis." + f.getName() + ".parent(null);\n");
+				sb.append("\t\tif this." + f.getName(env) + " <> null then(\n");
+				sb.append("\t\t\tthis." + f.getName(env) + ".parent(null);\n");
 				sb.append("\t\t);\n");
 				sb.append("\t\tif value <> null then (\n");
 				sb.append("\t\t\tif value.parent() <> null then (\n");
@@ -104,20 +104,20 @@ public class SetMethod extends Method {
 				sb.append("\t\t);\n");
 				sb.append("\t\t\tvalue.parent(this);\n");
 				sb.append("\t\t);\n");
-				sb.append("\t\tthis." + f.getName() + " := value;\n");
+				sb.append("\t\tthis." + f.getName(env) + " := value;\n");
 			} else {
 
-				sb.append("\t\tif value = this." + f.getName() + " then (\n");
+				sb.append("\t\tif value = this." + f.getName(env) + " then (\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t);\n");
-				sb.append("\t\tthis." + f.getName() + ".clear();\n");
-				sb.append("\t\tthis." + f.getName() + ".addAll(value);\n");
+				sb.append("\t\tthis." + f.getName(env) + ".clear();\n");
+				sb.append("\t\tthis." + f.getName(env) + ".addAll(value);\n");
 
 			}
 		}
 
 		else if (f.isTokenField || f.isAspect) {
-			sb.append("\t\tthis." + f.getName() + " := value;");
+			sb.append("\t\tthis." + f.getName(env) + " := value;");
 		}
 
 		this.body = sb.toString();

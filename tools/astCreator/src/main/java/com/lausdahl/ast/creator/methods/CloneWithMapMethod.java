@@ -44,7 +44,7 @@ public class CloneWithMapMethod extends CloneMethod
 
 		for (Field field :  classDefinition.getInheritedFields())
 		{
-			if (!classDefinition.refinesField(field.getName()))
+			if (!classDefinition.refinesField(field.getName(env),env))
 			{
 				fields.add(field);
 			}
@@ -70,11 +70,11 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 
 						if (f.structureType == StructureType.Graph)
@@ -91,7 +91,7 @@ public class CloneWithMapMethod extends CloneMethod
 						} else
 						{
 
-							if (JavaTypes.isPrimitiveType(f.getType())
+							if (JavaTypes.isPrimitiveType(f.getType(env))
 									|| f.type instanceof ExternalEnumJavaClassDefinition)
 							{
 								tmp += ("\t\t\t" + name + ",\n");
@@ -116,11 +116,11 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 						tmp += ("get"
 								+ NameUtil.getClassName(name) + "(), ");
@@ -187,11 +187,11 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : c.getFields())
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 						if (f.isList)
 						{
@@ -216,10 +216,10 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : c.getFields())
 					{
-						String name = f.getName();
-						if (classDefinition.isRefinedField(f))
+						String name = f.getName(env);
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 						tmp += ("get"
 								+ NameUtil.getClassName(name) + "(), ");

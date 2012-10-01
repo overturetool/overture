@@ -39,7 +39,7 @@ public class CloneMethod extends Method
 
 		for (Field field : classDefinition.getInheritedFields())
 		{
-			if (!classDefinition.refinesField(field.getName()))
+			if (!classDefinition.refinesField(field.getName(env),env))
 			{
 				fields.add(field);
 			}
@@ -65,11 +65,11 @@ public class CloneMethod extends Method
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 
 						if (f.structureType == StructureType.Graph)
@@ -85,7 +85,7 @@ public class CloneMethod extends Method
 							tmp += ("\t\t\tcloneListList(" + name + "),\n");
 						} else
 						{
-							if (JavaTypes.isPrimitiveType(f.getType())
+							if (JavaTypes.isPrimitiveType(f.getType(env))
 									|| f.type instanceof ExternalEnumJavaClassDefinition)
 							{
 								tmp += ("\t\t\t" + name + ",\n");
@@ -109,11 +109,11 @@ public class CloneMethod extends Method
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 
 						tmp += ("get" + NameUtil.getClassName(name) + "(), ");
@@ -144,9 +144,9 @@ public class CloneMethod extends Method
 		imports.addAll(super.getRequiredImports(env));
 		for (Field f : classDefinition.getInheritedFields())
 		{
-			if (classDefinition.isRefinedField(f))
+			if (classDefinition.isRefinedField(f,env))
 			{
-				imports.addAll(f.getRequiredImports());
+				imports.addAll(f.getRequiredImports(env));
 			}
 		}
 		return imports;

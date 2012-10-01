@@ -68,20 +68,20 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		skip = skip && fields.isEmpty();
 		for (Field f : fields)
 		{
-			if (classDefinition.refinesField(f.getName()))
+			if (classDefinition.refinesField(f.getName(env),env))
 			{
 				// This field is refined in the sub class, so skip it and null the super class field.
-				sb.append(JavaTypes.getDefaultValue(f.getType())+",");
+				sb.append(JavaTypes.getDefaultValue(f.getType(env))+",");
 			} else
 			{
 				if (f.structureType == StructureType.Tree)
 				{
-					String name = f.getName().replaceAll("_", "") + "_";
-					this.arguments.add(new Argument(f.getMethodArgumentType(), name));
+					String name = f.getName(env).replaceAll("_", "") + "_";
+					this.arguments.add(new Argument(f.getMethodArgumentType(env), name));
 					sb.append(name + ",");
 				} else
 				{
-					sb.append(JavaTypes.getDefaultValue(f.getType())+",");
+					sb.append(JavaTypes.getDefaultValue(f.getType(env))+",");
 				}
 			}
 		}
@@ -95,27 +95,27 @@ public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 		{
 			if (f.structureType == StructureType.Tree)
 			{
-				String name = f.getName().replaceAll("_", "");
-				this.arguments.add(new Argument(f.getMethodArgumentType(), name
+				String name = f.getName(env).replaceAll("_", "");
+				this.arguments.add(new Argument(f.getMethodArgumentType(env), name
 						+ "_"));
 				sb.append("\t\t");
 				sb.append("this.set");
-				sb.append(NameUtil.javaClassName(f.getName()));
+				sb.append(NameUtil.javaClassName(f.getName(env)));
 				sb.append("(");
 				sb.append(name + "_");
 				sb.append(");\n");
 
 				sbDoc.append("\t* @param " + name + "_ the {@link "
-						+ NameUtil.stripGenerics(f.getType()) + "} node for the {@code " + name
+						+ NameUtil.stripGenerics(f.getType(env)) + "} node for the {@code " + name
 						+ "} child of this {@link " + classDefinition.getName().getName()
 						+ "} node\n");
-			}else if(JavaTypes.isPrimitiveType(f.getType()))
+			}else if(JavaTypes.isPrimitiveType(f.getType(env)))
 			{
 				sb.append("\t\t");
 				sb.append("this.set");
-				sb.append(NameUtil.javaClassName(f.getName()));
+				sb.append(NameUtil.javaClassName(f.getName(env)));
 				sb.append("(");
-				sb.append(JavaTypes.getDefaultValue(f.getType()));
+				sb.append(JavaTypes.getDefaultValue(f.getType(env)));
 				sb.append(");\n");
 
 //				sbDoc.append("\t* @param " + name + " the {@link "

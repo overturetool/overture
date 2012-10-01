@@ -19,7 +19,7 @@ public class ParentGetMethod extends Method
 	{
 		name = "parent";
 		returnType = structureClassName;
-		body = "\t\treturn " + f.getName() + ";";
+		body = "\t\treturn " + f.getName(env) + ";";
 	}
 
 }

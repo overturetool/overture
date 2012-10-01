@@ -11,7 +11,7 @@ public class FieldTypeResolver
         String unresolvedTypeName, Environment env, Field field)
       {
         IInterfaceDefinition type = searchType(unresolvedTypeName, env);
-        field.checkType(type);
+        field.checkType(type, env);
         IInterfaceDefinition intf = env.getInterfaceForCommonTreeNode(type);
         if (intf == null)
           {
@@ -113,6 +113,12 @@ public class FieldTypeResolver
                 return c;
               }
           }
+        
+        for(IInterfaceDefinition i : env.getInterfaces())
+        {
+        	if (i.getName().getName().equals(unresolvedTypeName))
+        		return i;
+        }
         
         return null;// "%" + type;
         

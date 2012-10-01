@@ -25,7 +25,7 @@ public class TokenConstructorMethod extends Method
 		isConstructor = true;
 		name = classDefinition.getName().getName();
 		returnType = "";
-		body = "\t\t" + f.getName()
+		body = "\t\t" + f.getName(env)
 				+ " = \""
 				+ tokenName + "\";";
 	}
@@ -36,7 +36,7 @@ public class TokenConstructorMethod extends Method
 		isConstructor = true;
 		name = classDefinition.getName().getName();
 		returnType = "";
-		body = "\t\t" + f.getName()
+		body = "\t\t" + f.getName(env)
 				+ " := \""
 				+ tokenName + "\";";
 	}

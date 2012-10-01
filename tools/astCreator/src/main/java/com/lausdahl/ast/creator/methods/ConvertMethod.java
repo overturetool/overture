@@ -37,7 +37,7 @@ public class ConvertMethod extends Method
 		this.name = "convert";
 		if (from != null)
 		{
-			this.returnType = to.getType();
+			this.returnType = to.getType(env);
 		} else
 		{
 			this.returnType = toCDef.getName().getName();

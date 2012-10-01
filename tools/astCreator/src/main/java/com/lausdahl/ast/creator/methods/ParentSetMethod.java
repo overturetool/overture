@@ -19,7 +19,7 @@ public class ParentSetMethod extends Method
 	{
 		name = "parent";
 		arguments.add(new Method.Argument(structureClassName, "value"));
-		body = "\t\tthis." + f.getName() + " = value;";
+		body = "\t\tthis." + f.getName(env) + " = value;";
 	}
 
 }

@@ -54,14 +54,14 @@ public class RemoveChildMethod extends Method
 				{
 					// We need to ignore this since the parent might have been set to this node as a lack of a better
 					// parent
-					sb.append("\t\tif (this." + field.getName()
+					sb.append("\t\tif (this." + field.getName(env)
 							+ " == child) {\n");
 					sb.append("\t\t\treturn;\n");
 					sb.append("\t\t}\n\n");
 					continue;
 				} else
 				{
-					sb.append("\t\tif (this." + field.getName()
+					sb.append("\t\tif (this." + field.getName(env)
 							+ ".contains(child)) {\n");
 					sb.append("\t\t\treturn;\n");
 					sb.append("\t\t}\n\n");
@@ -75,13 +75,13 @@ public class RemoveChildMethod extends Method
 			}
 			if (!field.isList)
 			{
-				sb.append("\t\tif (this." + field.getName() + " == child) {\n");
-				sb.append("\t\t\tthis." + field.getName() + " = null;\n");
+				sb.append("\t\tif (this." + field.getName(env) + " == child) {\n");
+				sb.append("\t\t\tthis." + field.getName(env) + " = null;\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t}\n\n");
 			} else
 			{
-				sb.append("\t\tif (this." + field.getName()
+				sb.append("\t\tif (this." + field.getName(env)
 						+ ".remove(child)) {\n");
 				sb.append("\t\t\t	return;\n");
 				sb.append("\t\t}\n");
@@ -121,14 +121,14 @@ public class RemoveChildMethod extends Method
 			}
 			if (!field.isList)
 			{
-				sb.append("\t\tif this." + field.getName()
+				sb.append("\t\tif this." + field.getName(env)
 						+ " = child then (\n");
-				sb.append("\t\t\tthis." + field.getName() + " := null;\n");
+				sb.append("\t\t\tthis." + field.getName(env) + " := null;\n");
 				sb.append("\t\t\treturn;\n");
 				sb.append("\t\t);\n\n");
 			} else
 			{
-				sb.append("\t\tif this." + field.getName()
+				sb.append("\t\tif this." + field.getName(env)
 						+ ".remove(child) then (\n");
 				sb.append("\t\t\t	return;\n");
 				sb.append("\t\t);\n");

@@ -24,15 +24,15 @@ public interface IClassDefinition extends IInterfaceDefinition
 
 	void addField(Field field);
 
-	boolean hasField(String name);
+	boolean hasField(String name, Environment env);
 
-	boolean refinesField(String name);
+	boolean refinesField(String name, Environment env);
 
-	public boolean isRefinedField(Field field);
+	public boolean isRefinedField(Field field, Environment env);
 
 	public List<Field> getInheritedFields();
 
-	public void checkFieldTypeHierarchy() throws AstCreatorException;
+	public void checkFieldTypeHierarchy(Environment e) throws AstCreatorException;
 
 	public enum ClassType
 	{

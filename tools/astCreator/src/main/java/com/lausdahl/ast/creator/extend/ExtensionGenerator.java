@@ -164,7 +164,7 @@ public class ExtensionGenerator
           {
             for (Field newF : cNew.getFields())
               {
-                if (f.getName().equals(newF.getName()))
+                if (f.getName(env).equals(newF.getName(env)))
                   {
                     f.setType(newF.getUnresolvedType());
                     matchedFields.add(newF);
@@ -177,7 +177,7 @@ public class ExtensionGenerator
         newFields.removeAll(matchedFields);
         for (Field field : newFields)
           {
-            field.updateEnvironment(env);
+            
             c.addField(field);
           }
         

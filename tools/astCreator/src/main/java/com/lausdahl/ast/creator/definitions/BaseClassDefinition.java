@@ -15,7 +15,7 @@ import com.lausdahl.ast.creator.methods.Method;
 
 public class BaseClassDefinition extends InterfaceDefinition implements
 		IClassDefinition
-{
+{ 
 	protected final List<Field> fields = new Vector<Field>();
 	protected final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
 	protected final Set<IInterfaceDefinition> interfaces = new HashSet<IInterfaceDefinition>();
@@ -27,7 +27,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	}
 
 	public boolean hasSuper()
-	{
+	{ 
 		return this.superDef != null;
 	}
 
@@ -76,7 +76,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 		for (Field m : fields)
 		{
-			for (String string : m.getRequiredImports())
+			for (String string : m.getRequiredImports(env))
 			{
 				imports.add(string);
 			}
@@ -146,7 +146,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		sb.append("\n\tprivate static final long serialVersionUID = 1L;\n");
 		for (Field f : fields)
 		{
-			if (isRefinedField(f))
+			if (isRefinedField(f, env))
 			{
 				continue;
 			}
@@ -155,8 +155,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 				sb.append("\n\t/**\n\t* Graph field, parent will not be removed when added and parent \n\t*  of this field may not be this node. Also excluded for visitor.\n\t*/");
 			}
 
-			sb.append("\n\t" + f.accessspecifier.syntax + " " + f.getType()
-					+ " " + f.getName());
+			sb.append("\n\t" + f.accessspecifier.syntax + " " + f.getType(env)
+					+ " " + f.getName(env));
 			if (f.isList)
 			{
 				if (f.isTypeExternalNotNode())
@@ -165,7 +165,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 							+ ">()");
 				} else
 				{
-					sb.append(" = new " + f.getType() + "(this)");
+					sb.append(" = new " + f.getType(env) + "(this)");
 				}
 			}
 			
@@ -236,15 +236,15 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return this.toStringAddOn;
 	}
 
-	public boolean hasField(String name)
+	public boolean hasField(String name, Environment env)
 	{
-		if (getSuperDef() != null && getSuperDef().hasField(name))
+		if (getSuperDef() != null && getSuperDef().hasField(name, env))
 		{
 			return true;
 		}
 		for (Field f : getFields())
 		{
-			if (f.getName().equals(name))
+			if (f.getName(env).equals(name))
 			{
 				return true;
 			}
@@ -252,16 +252,16 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return false;
 	}
 
-	public boolean refinesField(String name)
+	public boolean refinesField(String name, Environment env)
 	{
 		boolean fieldExistsInSuper = false;
-		if (getSuperDef() != null && getSuperDef().hasField(name))
+		if (getSuperDef() != null && getSuperDef().hasField(name,env))
 		{
 			fieldExistsInSuper = true;
 		}
 		for (Field f : getFields())
 		{
-			if (f.getName().equals(name))
+			if (f.getName(env).equals(name))
 			{
 				return fieldExistsInSuper;
 			}
@@ -269,9 +269,9 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return false;
 	}
 
-	public boolean isRefinedField(Field field)
+	public boolean isRefinedField(Field field, Environment env)
 	{
-		boolean existsInSuper = (getSuperDef() != null && getSuperDef().hasField(field.getName()));
+		boolean existsInSuper = (getSuperDef() != null && getSuperDef().hasField(field.getName(env),env));
 		for (Field f : getFields())
 		{
 			if (f == field && existsInSuper)
@@ -294,16 +294,16 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return fields;
 	}
 
-	public void checkFieldTypeHierarchy() throws AstCreatorException
+	public void checkFieldTypeHierarchy(Environment env) throws AstCreatorException
 	{
 		for (Field field : getFields())
 		{
-			if (isRefinedField(field))
+			if (isRefinedField(field,env))
 			{
 				Field superField = null;
 				for (Field iField : getInheritedFields())
 				{
-					if (field.getName().equals(iField.getName()))
+					if (field.getName(env).equals(iField.getName(env)))
 					{
 						superField = iField;
 						break;
@@ -312,17 +312,17 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 				if (!isSubclassOf(field.type, superField.type))
 				{
-					String msg = "Field \"" + field.getName() + "\" in class "
+					String msg = "Field \"" + field.getName(env) + "\" in class "
 							+ getName().getName() + " with type \""
-							+ field.getType() + "\" is not a subclass of \""
-							+ superField.getType() + "\"";
+							+ field.getType(env) + "\" is not a subclass of \""
+							+ superField.getType(env) + "\"";
 					throw new AstCreatorException(msg, null, true);
 				} else if(field.type!=superField.type)
 				{
-					String msg = "Field \"" + field.getName() + "\" in class "
+					String msg = "Field \"" + field.getName(env) + "\" in class "
 							+ getName().getName() + " with type \""
-							+ field.getType() + "\" specializes \""
-							+ superField.getType() + "\"";
+							+ field.getType(env) + "\" specializes \""
+							+ superField.getType(env) + "\"";
 					System.out.println("WARNING: " + msg);
 				}
 			}

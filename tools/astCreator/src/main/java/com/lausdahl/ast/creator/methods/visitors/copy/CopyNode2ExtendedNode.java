@@ -117,7 +117,7 @@ public class CopyNode2ExtendedNode extends Method
 					from = sourceFields.next();
 				}
 
-				if (from != null && to.getName().equals(from.getName()))
+				if (from != null && to.getName(env).equals(from.getName(env)))
 				{
 					doInset(bodySb, to, from, env);
 					if (sourceFields.hasNext())
@@ -177,8 +177,8 @@ public class CopyNode2ExtendedNode extends Method
 			sb.append("null," + nl);
 			return;
 		}
-		if (classDefinition.refinesField(from.getName())
-				&& !classDefinition.isRefinedField(from))
+		if (classDefinition.refinesField(from.getName(env),env)
+				&& !classDefinition.isRefinedField(from,env))
 		{
 			return;
 		}
@@ -223,7 +223,7 @@ public class CopyNode2ExtendedNode extends Method
 					sb.append(cast + "checkCache(" + getter + "," + getter
 							+ ".apply(this))");
 				}
-			} else if (JavaTypes.isPrimitiveType(to.getType()))
+			} else if (JavaTypes.isPrimitiveType(to.getType(env)))
 			{
 				sb.append(getter);
 			} else

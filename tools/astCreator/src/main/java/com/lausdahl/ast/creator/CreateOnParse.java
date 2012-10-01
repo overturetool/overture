@@ -297,7 +297,7 @@ public class CreateOnParse
         // TODO
         // c.imports.add(env.token);
         // c.imports.add(env.iNode);
-        Field f = new Field(env);
+        Field f = new Field();
         f.name = "text";
         f.type = Environment.stringDef;
         f.isTokenField = true;
@@ -538,7 +538,7 @@ public class CreateOnParse
     private static Field exstractField(CommonTree fTree, Environment env)
       {
         // CommonTree fTree = (CommonTree) f;
-        Field field = new Field(env);
+        Field field = new Field();
         String typeName = fTree.getText();
         
         int SYMBOL_POS = 0;
