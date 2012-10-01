@@ -136,7 +136,7 @@ public class ExtensionGenerator
                 IClassDefinition oldSuper = def.getSuperDef();
                 ((BaseClassDefinition) def).imports.remove(oldSuper);
                 def.setSuper(baseEnv.lookUp(oldSuper.getName().getName()));
-                def.updateEnvironment(baseEnv);
+               // def.updateEnvironment(baseEnv);
               }
           }
         baseEnv.getClasses().addAll(newClasses);
@@ -147,7 +147,7 @@ public class ExtensionGenerator
         // update env for all
         for (IClassDefinition def : baseEnv.getClasses())
           {
-            def.updateEnvironment(baseEnv);
+            // def.updateEnvironment(baseEnv);
           }
         
         return baseEnv;

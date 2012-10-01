@@ -17,12 +17,12 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 public class CloneWithMapMethod extends CloneMethod
 {
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = getSpecializedTypeName(c);
+		this.returnType = getSpecializedTypeName(c,env);
 		this.requiredImports.add("java.util.Map");
 
 		this.arguments.add(new Argument("Map<" + env.iNode.getName().getName() + ","
@@ -140,14 +140,13 @@ public class CloneWithMapMethod extends CloneMethod
 		this.body = sb.toString();
 	}
 
-	public CloneWithMapMethod(IClassDefinition c, ClassType classType,
-			Environment env)
+	public CloneWithMapMethod(IClassDefinition c, ClassType classType)
 	{
-		super(c, classType, env);
+		super(c, classType);
 	}
 
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 
 		skip = true;
@@ -241,10 +240,10 @@ public class CloneWithMapMethod extends CloneMethod
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
-		imports.addAll(super.getRequiredImports());
+		imports.addAll(super.getRequiredImports(env));
 		imports.add(env.iNode.getName().getCanonicalName());
 		imports.add("java.util.Map");
 		return imports;

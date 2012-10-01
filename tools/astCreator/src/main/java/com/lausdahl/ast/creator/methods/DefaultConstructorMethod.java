@@ -5,14 +5,14 @@ import com.lausdahl.ast.creator.env.Environment;
 
 public class DefaultConstructorMethod extends Method
 {
-	public DefaultConstructorMethod(IClassDefinition c,Environment env)
+	public DefaultConstructorMethod(IClassDefinition c)
 	{
-		super(c,env);
+		super(c);
 		isConstructor=true;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		this.name = c.getName().getName();

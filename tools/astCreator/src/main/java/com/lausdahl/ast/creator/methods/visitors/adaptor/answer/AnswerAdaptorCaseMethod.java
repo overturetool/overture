@@ -8,21 +8,21 @@ public class AnswerAdaptorCaseMethod extends AnalysisAdaptorCaseMethod
 {
 	public AnswerAdaptorCaseMethod()
 	{
-		super(null,null);
+		super(null);
 	}
 
-	public AnswerAdaptorCaseMethod(IClassDefinition c,Environment env)
+	public AnswerAdaptorCaseMethod(IClassDefinition c)
 	{
-		super(c,env);
+		super(c);
 		
 	}
 	
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		addReturnToBody = true;
-		super.prepare();
+		super.prepare(env);
 		this.returnType="A";
 	}
 	

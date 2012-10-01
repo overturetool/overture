@@ -50,11 +50,10 @@ public abstract class Method
 	// private boolean isStructureFinal = false;
 	protected boolean skip = false;
 	protected boolean optionalVdmArgument = true;
-	protected Environment env;
+//	protected Environment env;
 
-	public Method(IClassDefinition c, Environment env)
+	public Method(IClassDefinition c)
 	{
-		this.env = env;
 		setClassDefinition(c);
 	}
 
@@ -69,7 +68,7 @@ public abstract class Method
 		this.classDefinition = c;
 	}
 
-	private void internalPrepare()
+	private void internalPrepare(Environment env)
 	{
 		// if (isStructureFinal)
 		// {
@@ -78,35 +77,35 @@ public abstract class Method
 		requiredImports.clear();
 		throwsDefinitions.clear();
 		arguments.clear();
-		prepare();
+		prepare(env);
 	}
 
-	private void internalVdmPrepare()
+	private void internalVdmPrepare(Environment env)
 	{
 		optionalVdmArgument = true;
 		skip = false;
 		requiredImports.clear();
 		arguments.clear();
-		prepareVdm();
+		prepareVdm(env);
 	}
 
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 
 	}
 
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
-		prepare();
+		prepare(env);
 	}
 
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
-		internalPrepare();
-		addImportForType(returnType);
+		internalPrepare(env);
+		addImportForType(returnType, env);
 		for (Argument arg : arguments)
 		{
-			addImportForType(arg.type);
+			addImportForType(arg.type, env);
 		}
 		
 		if(!throwsDefinitions.isEmpty())
@@ -120,7 +119,7 @@ public abstract class Method
 		return requiredImports;
 	}
 
-	private void addImportForType(String typeName)
+	private void addImportForType(String typeName, Environment env)
 	{
 		//TODO type name as a string is not good
 		Set<String> names = new HashSet<String>();
@@ -161,13 +160,13 @@ public abstract class Method
 
 	}
 
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		internalPrepare();
-		addImportForType(returnType);
+		internalPrepare(env);
+		addImportForType(returnType, env);
 		for (Argument arg : arguments)
 		{
-			addImportForType(arg.type);
+			addImportForType(arg.type, env);
 		}
 		
 		if(!throwsDefinitions.isEmpty())
@@ -184,12 +183,12 @@ public abstract class Method
 	@Override
 	public String toString()
 	{
-		return getJavaSourceCode();
+		return this.name;
 	}
 
-	public String getJavaSourceCode()
+	public String getJavaSourceCode(Environment env)
 	{
-		internalPrepare();
+		internalPrepare(env);
 		if (skip)
 		{
 			return "";
@@ -200,7 +199,7 @@ public abstract class Method
 		{
 			tmp += "\t" + annotation + "\n";
 		}
-		tmp += getSignature();
+		tmp += getSignature(env);
 
 		if (isAbstract)
 		{
@@ -218,9 +217,9 @@ public abstract class Method
 		return tmp;
 	}
 
-	public String getVdmSourceCode()
+	public String getVdmSourceCode(Environment env)
 	{
-		internalVdmPrepare();
+		internalVdmPrepare(env);
 		if (skip)
 		{
 			return "";
@@ -231,7 +230,7 @@ public abstract class Method
 		{
 			tmp += "\t--" + annotation + "\n";
 		}
-		tmp += getVdmSignature() + "\n";
+		tmp += getVdmSignature(env) + "\n";
 
 		if (isAbstract)
 		{
@@ -249,9 +248,9 @@ public abstract class Method
 		return tmp;
 	}
 
-	public String getSignature()
+	public String getSignature(Environment env)
 	{
-		internalPrepare();
+		internalPrepare(env);
 		String tmp = "\t"
 				+ ("public " + (isAbstract ? "abstract " : "") + (isConstructor?"":returnType)).trim()
 				+ " " + name + "(";
@@ -281,9 +280,9 @@ public abstract class Method
 		return tmp;
 	}
 
-	public String getVdmSignature()
+	public String getVdmSignature(Environment env)
 	{
-		internalVdmPrepare();
+		internalVdmPrepare(env);
 		String tmp = "\t" + "public " + name + ": ";
 		for (Argument a : arguments)
 		{
@@ -323,18 +322,14 @@ public abstract class Method
 		return tmp;
 	}
 
-	public String getJavaDoc()
+	public String getJavaDoc(Environment env)
 	{
-		internalPrepare();
+		internalPrepare(env);
 		return javaDoc;
 	}
 
-	public void setEnvironment(Environment env2)
-	{
-		this.env = env2;
-	}
 
-	protected String getSpecializedTypeName(IInterfaceDefinition c)
+	protected String getSpecializedTypeName(IInterfaceDefinition c, Environment env)
 	{
 		IInterfaceDefinition intfForClass = env.getInterfaceForCommonTreeNode(c);
 		if (intfForClass == null)
@@ -346,7 +341,7 @@ public abstract class Method
 		}
 	}
 
-	public boolean isOverride(Method m)
+	public boolean isOverride(Method m, Environment env)
 	{
 		if (this.name.equals(m.name) && arguments.size() == m.arguments.size())
 		{

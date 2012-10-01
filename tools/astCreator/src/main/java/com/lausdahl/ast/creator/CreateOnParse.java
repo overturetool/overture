@@ -306,7 +306,7 @@ public class CreateOnParse
           {
             addGetSetMethods(env, ClassType.Token, c, f);
           }
-        Method m = new TokenConstructorMethod(c, f, idT.getText(), env);
+        Method m = new TokenConstructorMethod(c, f, idT.getText());
         c.addMethod(m);
         println("Token: " + p);
       }
@@ -516,10 +516,10 @@ public class CreateOnParse
     protected static void addGetSetMethods(Environment env, ClassType type,
         IClassDefinition c, Field field)
       {
-        Method setM = new SetMethod(c, field, env);
+        Method setM = new SetMethod(c, field);
         c.addMethod(setM);
         
-        Method getM = new GetMethod(c, field, env);
+        Method getM = new GetMethod(c, field);
         c.addMethod(getM);
         if (type == ClassType.Production || type == ClassType.SubProduction)
           {

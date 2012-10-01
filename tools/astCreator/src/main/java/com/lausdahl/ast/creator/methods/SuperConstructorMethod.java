@@ -11,10 +11,10 @@ public class SuperConstructorMethod extends Method
 {
 	public List<Argument> argumentsToSuper = new Vector<Method.Argument>();
 
-	public SuperConstructorMethod(IClassDefinition c, Environment env,
+	public SuperConstructorMethod(IClassDefinition c,
 			Argument... arg)
 	{
-		super(c, env);
+		super(c);
 		if (arg != null)
 		{
 			for (Argument argument : arg)
@@ -25,7 +25,7 @@ public class SuperConstructorMethod extends Method
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		StringBuilder sb = new StringBuilder();
 		isConstructor = true;

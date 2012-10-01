@@ -9,15 +9,15 @@ public class KindMethod extends Method
     
     boolean isAbstractKind = false;
     
-    public KindMethod(IClassDefinition c, boolean isAbstractKind,
-        Environment env)
+    public KindMethod(IClassDefinition c, boolean isAbstractKind
+        )
       {
-        super(c, env);
+        super(c);
         this.isAbstractKind = isAbstractKind;
       }
     
     @Override
-    protected void prepare()
+    protected void prepare(Environment env)
       {
         
         if (isAbstractKind)// (c.getType() == ClassType.Production)
@@ -58,7 +58,7 @@ public class KindMethod extends Method
       }
     
     @Override
-    protected void prepareVdm()
+    protected void prepareVdm(Environment env)
       {
         skip = true;
       }

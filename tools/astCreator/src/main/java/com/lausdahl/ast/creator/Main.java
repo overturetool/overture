@@ -325,10 +325,10 @@ public class Main
                 System.err.println(destination);
                 throw new Exception("Tree match error on copy");
               }
-            Method m = new CopyNode2ExtendedNode(c, destDef, source,
+            Method m = new CopyNode2ExtendedNode(c, destDef, 
                 destination, convertFactory);
             m.setClassDefinition(c);
-            m.setEnvironment(source);
+            // m.setEnvironment(source);
             methods.add(m);
             
           }
@@ -355,19 +355,19 @@ public class Main
             source.getTaggedDef(destination.TAG_IAnswer), destination.node
                 .getName().getName()));
         copyAdaptor.getMethods().addAll(methods);
-        copyAdaptor.addMethod(new CopyNode2ExtendedNodeListHelper(source,
+        copyAdaptor.addMethod(new CopyNode2ExtendedNodeListHelper(
             destination));
-        copyAdaptor.addMethod(new CopyNode2ExtendedNodeListListHelper(source,
+        copyAdaptor.addMethod(new CopyNode2ExtendedNodeListListHelper(
             destination));
-        copyAdaptor.addMethod(new CheckCacheMethod(copyAdaptor, destination));
+        copyAdaptor.addMethod(new CheckCacheMethod(copyAdaptor));
         // copyAdaptor.methods.add(new
         // ConstructorMethod(copyAdaptor,destination));
         // copyAdaptor.imports.addAll(source.getAllDefinitions());
         // copyAdaptor.imports.addAll(destination.getAllDefinitions());
         // copyAdaptor.setNamePostfix(namePostfix);
         // destination.addClass(copyAdaptor);
-        SourceFileWriter.write(outputFolder, copyAdaptor);
-        SourceFileWriter.write(outputFolder, convertFactory);
+        SourceFileWriter.write(outputFolder, copyAdaptor, source);
+        SourceFileWriter.write(outputFolder, convertFactory, source);
         
       }
     

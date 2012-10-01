@@ -10,13 +10,13 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 public class SetMethod extends Method {
 	Field f;
 
-	public SetMethod(IClassDefinition c, Field f, Environment env) {
-		super(c, env);
+	public SetMethod(IClassDefinition c, Field f) {
+		super(c);
 		this.f = f;
 	}
 
 	@Override
-	protected void prepare() {
+	protected void prepare(Environment env) {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
 				+ NameUtil.javaClassName(f.getName());
@@ -77,7 +77,7 @@ public class SetMethod extends Method {
 	}
 
 	@Override
-	protected void prepareVdm() {
+	protected void prepareVdm(Environment env) {
 		IClassDefinition c = classDefinition;
 		this.name = "set"
 				+ NameUtil.javaClassName(f.getName());

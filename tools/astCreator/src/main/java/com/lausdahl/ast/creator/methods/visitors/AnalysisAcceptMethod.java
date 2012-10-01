@@ -10,16 +10,16 @@ public class AnalysisAcceptMethod extends Method
 {
 	public AnalysisAcceptMethod()
 	{
-		super(null,null);
+		super(null);
 	}
 
 	public AnalysisAcceptMethod(IClassDefinition c,Environment env)
 	{
-		super(c,env);
+		super(c);
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IAnalysis);
@@ -40,9 +40,9 @@ public class AnalysisAcceptMethod extends Method
 	}
 	
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
-		super.prepareVdm();
+		super.prepareVdm(env);
 		optionalVdmArgument = false;
 	}
 }

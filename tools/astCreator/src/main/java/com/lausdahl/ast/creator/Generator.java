@@ -320,12 +320,12 @@ public class Generator
                   {
                     Method m = (Method) accept.newInstance();
                     m.setClassDefinition(c);
-                    m.setEnvironment(env);
+                    //m.setEnvironment(env);
                     c.addMethod(m);
                     
                     m = (Method) caseM.newInstance();
                     m.setClassDefinition(c);
-                    m.setEnvironment(env);
+                    //m.setEnvironment(env);
                     answerIntf.methods.add(m);
                     break;
                   }
@@ -354,7 +354,7 @@ public class Generator
                       {
                         Method m = (Method) caseM.newInstance();
                         m.setClassDefinition(c);
-                        m.setEnvironment(env);
+                        // m.setEnvironment(env);
                         answerClass.addMethod(m);
                       }
                       break;
@@ -369,7 +369,7 @@ public class Generator
                       {
                         Method m = (Method) defaultCase.newInstance();
                         m.setClassDefinition(c);
-                        m.setEnvironment(env);
+                        // m.setEnvironment(env);
                         answerClass.addMethod(m);
                       }
                       break;
@@ -384,11 +384,11 @@ public class Generator
           }
         
         Method m = (Method) defaultNodeMethod.newInstance();
-        m.setEnvironment(env);
+        // m.setEnvironment(env);
         answerClass.addMethod(m);
         
         m = (Method) defaultTokenMethod.newInstance();
-        m.setEnvironment(env);
+        // m.setEnvironment(env);
         answerClass.addMethod(m);
       }
     
@@ -423,7 +423,7 @@ public class Generator
             + source.iNode.getName().getName() + ">()");
         adaptor.addField(queue);
         ((InterfaceDefinition) adaptor).imports.add(queue.type);
-        adaptor.addMethod(new SetMethod(adaptor, queue, source));
+        adaptor.addMethod(new SetMethod(adaptor, queue));
         adaptor
             .setAnnotation("@SuppressWarnings({\"rawtypes\",\"unchecked\"})");
         
@@ -449,17 +449,17 @@ public class Generator
                 case SubProduction:
                   {
                     AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(
-                        c, source);
+                        c);
                     mIn.setDefaultPostfix("In");
                     mIn.setClassDefinition(c);
-                    mIn.setEnvironment(source);
+           //         mIn.setEnvironment(source);
                     adaptor.addMethod(mIn);
                     
                     AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(
-                        c, source);
+                        c);
                     mOut.setDefaultPostfix("Out");
                     mOut.setClassDefinition(c);
-                    mOut.setEnvironment(source);
+             //       mOut.setEnvironment(source);
                     adaptor.addMethod(mOut);
                   }
                   break;
@@ -467,9 +467,9 @@ public class Generator
                 case Token:
                   {
                     // continue;
-                    Method m = new DepthFirstCaseMethod(c, source, queue);
+                    Method m = new DepthFirstCaseMethod(c, queue);
                     m.setClassDefinition(c);
-                    m.setEnvironment(source);
+                    // m.setEnvironment(source);
                     adaptor.addMethod(m);
                   }
                   break;
@@ -478,49 +478,43 @@ public class Generator
               
               }
             
-            AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c,
-                source);
+            AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c);
             mIn.setMethodNamePrefix("in");
             mIn.setDefaultPostfix("In");
             mIn.setClassDefinition(c);
-            mIn.setEnvironment(source);
+          //  mIn.setEnvironment(source);
             adaptor.addMethod(mIn);
             
-            AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c,
-                source);
+            AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
             mOut.setMethodNamePrefix("out");
             mOut.setDefaultPostfix("Out");
             mOut.setClassDefinition(c);
-            mOut.setEnvironment(source);
+//            mOut.setEnvironment(source);
             adaptor.addMethod(mOut);
             
           }
           
           {
-            AnalysisAdaptorDefaultNodeMethod mOut = new AnalysisAdaptorDefaultNodeMethod(
-                source);
+            AnalysisAdaptorDefaultNodeMethod mOut = new AnalysisAdaptorDefaultNodeMethod();
             mOut.setDefaultPostfix("Out");
-            mOut.setEnvironment(source);
+  //          mOut.setEnvironment(source);
             adaptor.addMethod(mOut);
             
-            AnalysisAdaptorDefaultNodeMethod mIn = new AnalysisAdaptorDefaultNodeMethod(
-                source);
+            AnalysisAdaptorDefaultNodeMethod mIn = new AnalysisAdaptorDefaultNodeMethod();
             mIn.setDefaultPostfix("In");
-            mIn.setEnvironment(source);
+    //        mIn.setEnvironment(source);
             adaptor.addMethod(mIn);
           }
           
           {
-            AnalysisAdaptorDefaultTokenMethod mOut = new AnalysisAdaptorDefaultTokenMethod(
-                source);
+            AnalysisAdaptorDefaultTokenMethod mOut = new AnalysisAdaptorDefaultTokenMethod();
             mOut.setDefaultPostfix("Out");
-            mOut.setEnvironment(source);
+      //      mOut.setEnvironment(source);
             adaptor.addMethod(mOut);
             
-            AnalysisAdaptorDefaultTokenMethod mIn = new AnalysisAdaptorDefaultTokenMethod(
-                source);
+            AnalysisAdaptorDefaultTokenMethod mIn = new AnalysisAdaptorDefaultTokenMethod();
             mIn.setDefaultPostfix("In");
-            mIn.setEnvironment(source);
+        //    mIn.setEnvironment(source);
             adaptor.addMethod(mIn);
           }
         

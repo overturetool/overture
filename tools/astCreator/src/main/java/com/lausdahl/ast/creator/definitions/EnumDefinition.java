@@ -3,6 +3,7 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 
 public class EnumDefinition extends BaseClassDefinition
@@ -15,7 +16,7 @@ public class EnumDefinition extends BaseClassDefinition
 	}
 	
 	@Override
-	public String getJavaSourceCode(StringBuilder sb)
+	public String getJavaSourceCode(StringBuilder sb, Environment env)
 	{
 		sb.append(IInterfaceDefinition.copurightHeader+ "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
@@ -25,7 +26,7 @@ public class EnumDefinition extends BaseClassDefinition
 			sb.append("\npackage " +getName().getPackageName() + ";\n");
 		}
 
-		for (String importName : getImports())
+		for (String importName : getImports(env))
 		{
 			sb.append("import " + importName + ";\n");
 		}

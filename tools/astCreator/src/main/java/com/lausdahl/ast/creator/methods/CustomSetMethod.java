@@ -8,17 +8,15 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 public class CustomSetMethod extends Method
 {
 	Field f;
-//	CustomClassDefinition c;
 
-	public CustomSetMethod(IClassDefinition c, Field f, Environment env)
+	public CustomSetMethod(IClassDefinition c, Field f)
 	{
-		super(c, env);
-//		this.c = c;
+		super(c);
 		this.f = f;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.name = "set"
 				+ NameUtil.javaClassName(f.getName());

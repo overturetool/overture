@@ -11,16 +11,12 @@ AnalysisAdaptorDefaultTokenMethod
 
 	}
 
-	public AnswerAdaptorDefaultTokenMethod(Environment env)
-	{
-		super(env);
-	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		addReturnToBody = true;
-		super.prepare();
+		super.prepare(env);
 		this.returnType="A";
 	}
 }

@@ -13,14 +13,14 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class ConstructorMethod extends Method
 {
-	public ConstructorMethod(IClassDefinition c, Environment env)
+	public ConstructorMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 		isConstructor=true;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		skip = classDefinition.getFields().isEmpty();
 		this.name = classDefinition.getName().getName();
@@ -113,10 +113,10 @@ public class ConstructorMethod extends Method
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImports());
+		list.addAll(super.getRequiredImports(env));
 		if (env.isTreeNode(classDefinition ))
 		{
 

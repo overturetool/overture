@@ -55,7 +55,7 @@ public class SourceFileWriter
 				i = 80;
 				System.out.println();
 			}
-			SourceFileWriter.write(outputFolder, def);
+			SourceFileWriter.write(outputFolder, def, env);
 			// SourceFileWriter.write(generatedVdm, def, false);
 		}
 		long endTime = System.currentTimeMillis();
@@ -188,13 +188,13 @@ public class SourceFileWriter
 		}
 	}
 
-	public static void write(File generated, IInterfaceDefinition def)
+	public static void write(File generated, IInterfaceDefinition def, Environment env)
 	{
-		write(generated, def, true);
+		write(generated, def, true, env);
 	}
 
 	private static void write(File generated, IInterfaceDefinition def,
-			boolean writeJava)
+			boolean writeJava, Environment env)
 	{
 		try
 		{
@@ -204,7 +204,7 @@ public class SourceFileWriter
 			if (writeJava)
 			{
 				name = def.getName().getName();
-				content = def.getJavaSourceCode(new StringBuilder());
+				content = def.getJavaSourceCode(new StringBuilder(), env);
 			} else
 			{
 				InterfaceDefinition.VDM = true;

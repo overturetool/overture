@@ -7,15 +7,15 @@ public class ParentSetMethod extends Method
 {
 	Field f;
 	String structureClassName;
-	public ParentSetMethod(String structureClassName, Field f,Environment env)
+	public ParentSetMethod(String structureClassName, Field f)
 	{
-		super(null,env);
+		super(null);
 		this.f = f;
 		this.structureClassName = structureClassName;
 	}
 	
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		name = "parent";
 		arguments.add(new Method.Argument(structureClassName, "value"));

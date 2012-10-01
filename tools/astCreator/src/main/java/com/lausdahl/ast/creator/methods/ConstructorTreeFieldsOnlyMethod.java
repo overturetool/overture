@@ -12,14 +12,14 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class ConstructorTreeFieldsOnlyMethod extends ConstructorMethod
 {
-	public ConstructorTreeFieldsOnlyMethod(IClassDefinition c, Environment env)
+	public ConstructorTreeFieldsOnlyMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 		this.name = classDefinition.getName().getName();
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		skip = true;
 		// skip = classDefinition.getFields().isEmpty();

@@ -47,7 +47,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	}
 
 	@Override
-	public Set<String> getImports()
+	public Set<String> getImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
 
@@ -68,7 +68,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		}
 		for (Method m : methods)
 		{
-			for (String string : m.getRequiredImports())
+			for (String string : m.getRequiredImports(env))
 			{
 				imports.add(string);
 			}
@@ -85,7 +85,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return imports;
 	}
 
-	public String getJavaSourceCode(StringBuilder sb)
+	public String getJavaSourceCode(StringBuilder sb, Environment env)
 	{
 		sb.append(IInterfaceDefinition.copurightHeader + "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
@@ -95,7 +95,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			sb.append("\npackage " + getName().getPackageName() + ";\n\n\n");
 		}
 
-		for (String importName : getImports())
+		for (String importName : getImports(env))
 		{
 			//importName = importName.replace("org.overture.ast", "eu.compassresearch.ast");
 			sb.append("import " + importName + ";\n");
@@ -183,10 +183,10 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		{
 			if (m.isConstructor)
 			{
-				sb.append(m.getJavaSourceCode() + "\n");
+				sb.append(m.getJavaSourceCode(env) + "\n");
 			} else
 			{
-				noneCtorMethods.append(m.getJavaSourceCode() + "\n");
+				noneCtorMethods.append(m.getJavaSourceCode(env) + "\n");
 			}
 		}
 
@@ -353,18 +353,6 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		return false;
 	}
 
-	public void updateEnvironment(Environment env)
-	{
-		for (Field f : getFields())
-		{
-			f.updateEnvironment(env);
-		}
-
-		for (Method m : methods)
-		{
-			m.setEnvironment(env);
-		}
-	}
 
 	public void addInterface(IInterfaceDefinition intf)
 	{
@@ -377,4 +365,5 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		}
 		this.interfaces.add(intf);
 	}
+
 }

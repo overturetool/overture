@@ -19,12 +19,12 @@ public class CloneMethod extends Method
 	ClassType classType;
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = getSpecializedTypeName(c);
+		this.returnType = getSpecializedTypeName(c, env);
 
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");
@@ -131,17 +131,17 @@ public class CloneMethod extends Method
 		this.body = sb.toString();
 	}
 
-	public CloneMethod(IClassDefinition c, ClassType classType, Environment env)
+	public CloneMethod(IClassDefinition c, ClassType classType)
 	{
-		super(c, env);
+		super(c);
 		this.classType = classType;
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
-		imports.addAll(super.getRequiredImports());
+		imports.addAll(super.getRequiredImports(env));
 		for (Field f : classDefinition.getInheritedFields())
 		{
 			if (classDefinition.isRefinedField(f))
@@ -153,7 +153,7 @@ public class CloneMethod extends Method
 	}
 
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 		skip = true;
 	}

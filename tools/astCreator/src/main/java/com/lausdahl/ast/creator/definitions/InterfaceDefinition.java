@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
@@ -76,7 +77,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
      * @see com.lausdahl.ast.creator.IInterfaceDefinition#getImports()
      */
     
-    public Set<String> getImports()
+    public Set<String> getImports(Environment env)
       {
         Set<String> imports = new HashSet<String>();
         
@@ -91,7 +92,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
               {
                 continue;
               }
-            for (String string : m.getRequiredImportsSignature())
+            for (String string : m.getRequiredImportsSignature(env))
               {
                 imports.add(string);
               }
@@ -160,7 +161,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
      * @see com.lausdahl.ast.creator.IInterfaceDefinition#getJavaSourceCode()
      */
     
-    public String getJavaSourceCode(StringBuilder sb)
+    public String getJavaSourceCode(StringBuilder sb, Environment env)
       {
         
         sb.append(IInterfaceDefinition.copurightHeader + "\n");
@@ -171,7 +172,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
             sb.append("\npackage " + getName().getPackageName() + ";\n\n\n");
           }
         
-        for (String importName : getImports())
+        for (String importName : getImports(env))
           {
             sb.append("import " + importName + ";\n");
           }
@@ -207,8 +208,8 @@ public class InterfaceDefinition implements IInterfaceDefinition
               {
                 continue;
               }
-            sb.append(m.getJavaDoc() + "\n");
-            sb.append(m.getSignature() + ";\n");
+            sb.append(m.getJavaDoc(env) + "\n");
+            sb.append(m.getSignature(env) + ";\n");
           }
         
         sb.append("\n}\n");
@@ -361,6 +362,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
       {
         return this.supers;
       }
+
     
     // @Override
     // public int hashCode()

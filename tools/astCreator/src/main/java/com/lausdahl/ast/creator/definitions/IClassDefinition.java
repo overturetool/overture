@@ -44,8 +44,6 @@ public interface IClassDefinition extends IInterfaceDefinition
 	void addToStringAddOn(ToStringAddOn addon);
 
 	List<ToStringAddOn> getToStringAddOns();
-
-	void updateEnvironment(Environment environment);
 	
 	public void addInterface(IInterfaceDefinition intf);
 }

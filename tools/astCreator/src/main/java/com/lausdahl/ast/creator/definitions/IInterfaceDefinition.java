@@ -3,6 +3,7 @@ package com.lausdahl.ast.creator.definitions;
 import java.util.List;
 import java.util.Set;
 
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
@@ -11,7 +12,7 @@ public interface IInterfaceDefinition
 
 	public abstract JavaName getName();
 
-	public abstract Set<String> getImports();
+	public abstract Set<String> getImports(Environment env);
 	
 	Set<IInterfaceDefinition> getSuperDefs();
 
@@ -23,7 +24,7 @@ public interface IInterfaceDefinition
 	
 	public void setAbstract(boolean isAbstract);
 
-	public abstract String getJavaSourceCode(StringBuilder sb);
+	public abstract String getJavaSourceCode(StringBuilder sb, Environment env);
 
 	public abstract String getVdmSourceCode(StringBuilder sb);
 	

@@ -11,15 +11,11 @@ public class QuestionAdaptorDefaultNodeMethod extends
 
 	}
 
-	public QuestionAdaptorDefaultNodeMethod(Environment env)
-	{
-		super(env);
-	}
 
 	@Override
-	protected void setupArguments()
+	protected void setupArguments(Environment env)
 	{
-		super.setupArguments();
+		super.setupArguments(env);
 		this.arguments.add(new Argument("Q", "question"));
 	}
 }

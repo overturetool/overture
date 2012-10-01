@@ -11,23 +11,19 @@ AnalysisAdaptorDefaultTokenMethod
 
 	}
 
-	public QuestionAnswerAdaptorDefaultTokenMethod(Environment env)
-	{
-		super(env);
-	}
 	
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		addReturnToBody = true;
-		super.prepare();
+		super.prepare(env);
 		this.returnType="A";
 	}
 
 	@Override
-	protected void setupArguments()
+	protected void setupArguments(Environment env)
 	{
-		super.setupArguments();
+		super.setupArguments(env);
 		this.arguments.add(new Argument("Q", "question"));
 	}
 }

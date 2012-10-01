@@ -9,18 +9,18 @@ import com.lausdahl.ast.creator.utils.EnumUtil;
 
 public class KindNodeMethod extends Method
   {
-    public KindNodeMethod(Environment env)
+    public KindNodeMethod()
       {
-        super(null, env);
+        super(null);
       }
     
-    public KindNodeMethod(IClassDefinition c, Environment env)
+    public KindNodeMethod(IClassDefinition c)
       {
-        super(c, env);
+        super(c);
       }
     
     @Override
-    protected void prepare()
+    protected void prepare(Environment env)
       {
         
         StringBuilder sb = new StringBuilder();
@@ -47,10 +47,10 @@ public class KindNodeMethod extends Method
       }
     
     @Override
-    public Set<String> getRequiredImports()
+    public Set<String> getRequiredImports(Environment env)
       {
         Set<String> imports = new HashSet<String>();
-        imports.addAll(super.getRequiredImports());
+        imports.addAll(super.getRequiredImports(env));
         
         imports.add(env.getDefaultPackage() + "."
             + EnumUtil.getEnumTypeName(env.node, env));
@@ -59,7 +59,7 @@ public class KindNodeMethod extends Method
       }
     
     @Override
-    protected void prepareVdm()
+    protected void prepareVdm(Environment env)
       {
         skip = true;
       }

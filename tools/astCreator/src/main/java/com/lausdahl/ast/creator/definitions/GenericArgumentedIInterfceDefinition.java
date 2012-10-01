@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
@@ -28,12 +29,12 @@ public class GenericArgumentedIInterfceDefinition implements
 		return this.def.getName();
 	}
 
-	public Set<String> getImports()
+	public Set<String> getImports(Environment env)
 	{
-		return def.getImports();
+		return def.getImports(env);
 	}
 
-	public String getJavaSourceCode(StringBuilder sb)
+	public String getJavaSourceCode(StringBuilder sb, Environment env)
 	{
 		return null;
 	}

@@ -16,15 +16,15 @@ import com.lausdahl.ast.creator.env.Environment;
 public class ToStringMethod extends Method
 {
 
-	public ToStringMethod(IClassDefinition c, Environment env)
+	public ToStringMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	String bodyCache = null;
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.name = "toString";
 		this.returnType = "String";
@@ -202,7 +202,7 @@ public class ToStringMethod extends Method
 //	}
 
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 	}
 

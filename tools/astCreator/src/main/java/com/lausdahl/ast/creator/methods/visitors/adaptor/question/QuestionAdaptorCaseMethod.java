@@ -8,19 +8,19 @@ public class QuestionAdaptorCaseMethod extends AnalysisAdaptorCaseMethod
 {
 	public QuestionAdaptorCaseMethod()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public QuestionAdaptorCaseMethod(IClassDefinition c, Environment env)
+	public QuestionAdaptorCaseMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 
 	}
 
 	@Override
-	protected void setupArguments()
+	protected void setupArguments(Environment env)
 	{
-		super.setupArguments();
+		super.setupArguments(env);
 		this.arguments.add(new Argument("Q", "question"));
 	}
 

@@ -10,16 +10,16 @@ public class QuestionAnswerAcceptMethod extends Method
 {
 	public QuestionAnswerAcceptMethod()
 	{
-		super(null,null);
+		super(null);
 	}
 
-	public QuestionAnswerAcceptMethod(IClassDefinition c,Environment env)
+	public QuestionAnswerAcceptMethod(IClassDefinition c)
 	{
-		super(c,env);
+		super(c);
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
@@ -44,7 +44,7 @@ public class QuestionAnswerAcceptMethod extends Method
 	}
 	
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 		optionalVdmArgument=false;
 		IClassDefinition c = classDefinition;

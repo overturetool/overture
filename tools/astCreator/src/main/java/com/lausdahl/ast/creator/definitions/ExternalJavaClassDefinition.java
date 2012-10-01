@@ -36,7 +36,7 @@ public class ExternalJavaClassDefinition extends BaseClassDefinition
 	}
 
 	@Override
-	public String getJavaSourceCode(StringBuilder sb)
+	public String getJavaSourceCode(StringBuilder sb, Environment env)
 	{
 		return "";
 	}

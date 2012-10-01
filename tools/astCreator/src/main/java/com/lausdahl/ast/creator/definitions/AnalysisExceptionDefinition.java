@@ -12,12 +12,12 @@ public class AnalysisExceptionDefinition extends BaseClassDefinition
       {
         super(name);
         superDef = new PredefinedClassDefinition("java.lang", "Exception");
-        addMethod(new SuperConstructorMethod(this, env, new Argument[] {}));
-        addMethod(new SuperConstructorMethod(this, env, new Argument("String",
+        addMethod(new SuperConstructorMethod(this, new Argument[] {}));
+        addMethod(new SuperConstructorMethod(this, new Argument("String",
             "message")));
-        addMethod(new SuperConstructorMethod(this, env, new Argument("String",
+        addMethod(new SuperConstructorMethod(this, new Argument("String",
             "message"), new Argument("Throwable", "cause")));
-        addMethod(new SuperConstructorMethod(this, env, new Argument(
+        addMethod(new SuperConstructorMethod(this, new Argument(
             "Throwable", "cause")));
       }
     

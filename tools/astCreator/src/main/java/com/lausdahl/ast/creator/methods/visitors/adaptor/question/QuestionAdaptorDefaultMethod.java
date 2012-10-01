@@ -8,18 +8,18 @@ public class QuestionAdaptorDefaultMethod extends AnalysisAdaptorDefaultMethod
 {
 	public QuestionAdaptorDefaultMethod()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public QuestionAdaptorDefaultMethod(IClassDefinition c, Environment env)
+	public QuestionAdaptorDefaultMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	@Override
-	protected void setupArguments()
+	protected void setupArguments(Environment env)
 	{
-		super.setupArguments();
+		super.setupArguments(env);
 		this.arguments.add(new Argument("Q", "question"));
 	}
 }

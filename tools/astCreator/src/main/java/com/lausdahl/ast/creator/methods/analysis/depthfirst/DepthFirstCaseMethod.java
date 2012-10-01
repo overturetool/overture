@@ -16,19 +16,19 @@ public class DepthFirstCaseMethod extends Method
 {
 	private Field visitedNodesField;
 
-	public DepthFirstCaseMethod(IClassDefinition c, Environment source, Field visitedNodesField)
+	public DepthFirstCaseMethod(IClassDefinition c, Field visitedNodesField)
 	{
-		super(null, null);
+		super(null);
 		this.visitedNodesField = visitedNodesField;
 	}
 
-	public DepthFirstCaseMethod(IClassDefinition c, Environment env)
+	public DepthFirstCaseMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		throwsDefinitions.add(env.analysisException);
 		IClassDefinition c = classDefinition;
@@ -73,8 +73,8 @@ public class DepthFirstCaseMethod extends Method
 			{
 				continue;
 			}
-			Method getMethod = new GetMethod(c, f, env);
-			getMethod.getJavaSourceCode();
+			Method getMethod = new GetMethod(c, f);
+			getMethod.getJavaSourceCode(env);
 			String getMethodName = getMethod.name;
 			String getter = "node." + getMethodName + "()";
 
@@ -151,9 +151,9 @@ public class DepthFirstCaseMethod extends Method
 	}
 	
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
-		Set<String> imports = super.getRequiredImports();
+		Set<String> imports = super.getRequiredImports(env);
 		for (Field f : classDefinition.getFields())
 		{
 			if (f.isTokenField)

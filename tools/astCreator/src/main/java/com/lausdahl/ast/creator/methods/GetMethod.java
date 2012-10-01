@@ -12,14 +12,14 @@ public class GetMethod extends Method
 {
 	Field f;
 
-	public GetMethod(IClassDefinition c, Field f,Environment env)
+	public GetMethod(IClassDefinition c, Field f)
 	{
-		super(c,env);
+		super(c);
 		this.f = f;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 
 		javaDoc = "\t/**\n";
@@ -44,10 +44,10 @@ public class GetMethod extends Method
 	}
 	
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImports());
+		list.addAll(super.getRequiredImports(env));
 		//list.add(NameUtil.stripGenerics(f.i.getType()));
 		
 		if(f.isList && !f.isDoubleList)
@@ -66,10 +66,10 @@ public class GetMethod extends Method
 	}
 	
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImportsSignature());
+		list.addAll(super.getRequiredImportsSignature(env));
 		//list.add(NameUtil.stripGenerics(f.getType()));
 		return list;
 	}

@@ -8,23 +8,21 @@ import com.lausdahl.ast.creator.methods.Method;
 
 public class CopyNode2ExtendedNodeListHelper extends Method
 {
-	Environment env;
 	Environment envDest;
 
 	public CopyNode2ExtendedNodeListHelper()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public CopyNode2ExtendedNodeListHelper(Environment env, Environment envDest)
+	public CopyNode2ExtendedNodeListHelper(Environment envDest)
 	{
-		super(null, env);
-		this.env = env;
+		super(null);
 		this.envDest = envDest;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.name = "copyList";
 		this.arguments.add(new Argument(Environment.listDef.getName().getCanonicalName()
@@ -48,10 +46,10 @@ public class CopyNode2ExtendedNodeListHelper extends Method
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
-		imports.addAll(super.getRequiredImports());
+		imports.addAll(super.getRequiredImports(env));
 		imports.add(Environment.listDef.getName().getCanonicalName());
 		return imports;
 	}

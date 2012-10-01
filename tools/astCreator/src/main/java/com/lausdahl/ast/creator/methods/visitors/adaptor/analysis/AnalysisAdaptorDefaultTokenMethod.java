@@ -10,36 +10,32 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 {
 	public AnalysisAdaptorDefaultTokenMethod()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public AnalysisAdaptorDefaultTokenMethod(Environment env)
-	{
-		super(null, env);
-	}
 	
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
-		Set<String> temp = super.getRequiredImports();
+		Set<String> temp = super.getRequiredImports(env);
 		temp.add( env.iToken.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
 	
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		Set<String> temp =super.getRequiredImportsSignature();
+		Set<String> temp =super.getRequiredImportsSignature(env);
 		temp.add( env.iToken.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
-		super.prepare();
+		super.prepare(env);
 		intf = env.iToken;
 		IInterfaceDefinition c = intf;
 		StringBuilder sb = new StringBuilder();
@@ -54,7 +50,7 @@ public class AnalysisAdaptorDefaultTokenMethod extends AnalysisMethodTemplate
 		this.javaDoc = sb.toString();
 		this.name = "default" + defaultPostFix
 				+ NameUtil.getClassName(c.getName().getName());
-		setupArguments();
+		setupArguments(env);
 
 		this.body = "\t\t" + (addReturnToBody ? "return null;" : "")
 				+ "//nothing to do";

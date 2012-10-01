@@ -68,7 +68,7 @@ public class ClassFactory
 		name.setTag(rawName);
 		BaseClassDefinition classDef = new BaseClassDefinition(name);
 		classDef.setSuper(superClass);
-		classDef.methods.addAll(createMethods(type, classDef, env));
+		classDef.methods.addAll(createMethods(type, classDef));
 		classDef.setAbstract(type ==ClassType.Production || type == ClassType.SubProduction);
 		classDef.setFinal(type == ClassType.Token);
 		env.addClass(classDef);
@@ -77,40 +77,40 @@ public class ClassFactory
 	}
 
 	private static Set<Method> createMethods(ClassType type,
-			IClassDefinition classDef, Environment env)
+			IClassDefinition classDef)
 	{
 		Set<Method> methods = new HashSet<Method>();
 
-		methods.add(new ConstructorMethod(classDef, env));
-		methods.add(new ConstructorTreeFieldsOnlyMethod(classDef, env));
+		methods.add(new ConstructorMethod(classDef));
+		methods.add(new ConstructorTreeFieldsOnlyMethod(classDef));
 		if (type != ClassType.Token)
 		{
-			methods.add(new DefaultConstructorMethod(classDef, env));
-			methods.add(new RemoveChildMethod(classDef, env));
+			methods.add(new DefaultConstructorMethod(classDef));
+			methods.add(new RemoveChildMethod(classDef));
 		}
 
-		methods.add(new ToStringMethod(classDef, env));
-		methods.add(new GetChildrenMethod(classDef, env));
+		methods.add(new ToStringMethod(classDef));
+		methods.add(new GetChildrenMethod(classDef));
 
-		methods.add(new CloneMethod(classDef, type, env));
-		methods.add(new CloneWithMapMethod(classDef, type, env));
+		methods.add(new CloneMethod(classDef, type));
+		methods.add(new CloneWithMapMethod(classDef, type));
 		
-		methods.add(new EqualsMethod(classDef,env));
+		methods.add(new EqualsMethod(classDef));
 
 		switch (type)
 		{
 			case Alternative:
 
 			case Custom:
-				methods.add(new KindMethod(classDef, false, env));
+				methods.add(new KindMethod(classDef, false));
 				break;
 			case Production:
-				methods.add(new KindNodeMethod(classDef, env));
-				methods.add(new KindMethod(classDef, true, env));
+				methods.add(new KindNodeMethod(classDef));
+				methods.add(new KindMethod(classDef, true));
 				break;
 			case SubProduction:
-				methods.add(new KindMethod(classDef, false, env));
-				methods.add(new KindMethod(classDef, true, env));
+				methods.add(new KindMethod(classDef, false));
+				methods.add(new KindMethod(classDef, true));
 				break;
 			case Token:
 				break;
@@ -141,8 +141,8 @@ public class ClassFactory
 	public static IClassDefinition createCustom(JavaName name, Environment env)
 	{
 		IClassDefinition c = new BaseClassDefinition(name);
-		c.addMethod(new ConstructorMethod(c, env));
-		c.addMethod(new DefaultConstructorMethod(c, env));
+		c.addMethod(new ConstructorMethod(c));
+		c.addMethod(new DefaultConstructorMethod(c));
 		env.addClass(c);
 		env.classToType.put(c, ClassType.Custom);
 		return c;
