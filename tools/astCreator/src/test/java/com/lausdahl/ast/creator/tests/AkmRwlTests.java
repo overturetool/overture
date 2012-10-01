@@ -20,8 +20,8 @@ public class AkmRwlTests extends TestCase
                             + "    =   {binary} [left]:exp [op]:binop [right]:exp\n"
                             + "    ;\n"
                             + "binop {-> package='org.overture.ast.expressions'}\n"
-                            + "      = {and}" + "      | {or} \n" + "      ;\n"
-                            + "Aspect Declaration\n";
+                            + "      = {and}" + "      " + "      | {or} \n"
+                            + "      ;\n" + "Aspect Declaration\n";
     
     private String src2 = "Packages\n"
                             + "base eu.compassresearch.ast.node;\n"
@@ -29,7 +29,7 @@ public class AkmRwlTests extends TestCase
                             + "Tokens\n"
                             + "\n"
                             + "Abstract Syntax Tree\n"
-                            + "cml <: exp {-> package='eu.compassresearch.ast.expressions'}\n"
+                            + "cml {-> package='eu.compassresearch.ast.expressions'}\n"
                             + "    =   {binary} [left]:exp [op]:binop [right]:exp\n"
                             + "    ;\n" + "Aspect Declaration\n";
     

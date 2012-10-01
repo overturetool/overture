@@ -37,7 +37,7 @@ public class Environment extends BaseEnvironment
     
     private String                                               analysisPackage     = "org.overture.ast.analysis";
     
-    public Environment(String name)
+    private Environment(String name)
       {
         super(name);
         iNode = new PredefinedClassDefinition(defaultPackage, "INode");
@@ -46,12 +46,24 @@ public class Environment extends BaseEnvironment
         iToken.supers.add(iNode);
         node.addInterface(iNode);
         token.addInterface(iToken);
-        addCommonTreeInterface(node, iNode);
-        addCommonTreeInterface(token, iToken);
         
         analysisException = new AnalysisExceptionDefinition(analysisPackage,
             "AnalysisException", this);
         addClass(analysisException);
+      }
+    
+    public static Environment getEmptyInstance(String name)
+      {
+        Environment res = new Environment(name);
+        return res;
+      }
+    
+    public static Environment getInstance(String name)
+      {
+        Environment res = new Environment(name);
+        res.addCommonTreeInterface(res.node, res.iNode);
+        res.addCommonTreeInterface(res.token, res.iToken);
+        return res;
       }
     
     public List<IInterfaceDefinition> getInterfaces()

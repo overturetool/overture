@@ -35,7 +35,7 @@ public class CreateOnParse
         throws IOException, AstCreatorException
     
       {
-        Environment env = new Environment(envName);
+        Environment env = Environment.getInstance(envName);
         
         ANTLRInputStream input = new ANTLRInputStream(astFile);
         AstcLexer lexer = new AstcLexer(input);

@@ -13,7 +13,6 @@ import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
 import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
-import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.env.BaseEnvironment;
 import com.lausdahl.ast.creator.env.Environment;
@@ -88,41 +87,6 @@ public class Generator
         
         // SourceFileWriter.write(outputFolder, env1);
         return env;
-      }
-    
-    @SuppressWarnings("unused")
-    private Environment merge(Environment env, Environment env2)
-      {
-        Environment res = new Environment("Extended Environment");
-        
-        List<IInterfaceDefinition> stuff = env.getAllDefinitions();
-        for (IInterfaceDefinition d : stuff)
-          {
-            if (!res.getAllDefinitions().contains(d))
-              {
-                if (d instanceof IClassDefinition)
-                  res.addClass((IClassDefinition) d);
-                else
-                  res.addInterface(d);
-              }
-          }
-        
-        stuff = env2.getAllDefinitions();
-        for (IInterfaceDefinition d : stuff)
-          {
-            if (!res.getAllDefinitions().contains(d))
-              {
-                System.out.println("Adding " + d.getName()
-                    + " from base env to extended environment");
-                
-                if (d instanceof IClassDefinition)
-                  res.addClass((IClassDefinition) d);
-                else
-                  res.addInterface(d);
-              }
-          }
-        
-        return res;
       }
     
     public void runPostGeneration(Environment env)
@@ -209,7 +173,6 @@ public class Generator
       {
         EnumDefinition eDef = new EnumDefinition(new JavaName(
             env.getDefaultPackage(), "NodeEnum"));
-        // eDef.setPackageName(env.getDefaultPackage());
         env.addClass(eDef);
         eDef.elements.add("TOKEN");
         eDef.elements.add("ExternalDefined");
@@ -217,7 +180,6 @@ public class Generator
           {
             if (env.isTreeNode(d))
               {
-                // CommonTreeClassDefinition c = (CommonTreeClassDefinition) d;
                 
                 if (env.classToType.get(d) == ClassType.Production)
                   {
