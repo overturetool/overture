@@ -52,7 +52,7 @@ public class KindNodeMethod extends Method
         Set<String> imports = new HashSet<String>();
         imports.addAll(super.getRequiredImports(env));
         
-        imports.add(env.getDefaultPackage() + "."
+        imports.add(env.getTemplateDefaultPackage() + "."
             + EnumUtil.getEnumTypeName(env.node, env));
         
         return imports;

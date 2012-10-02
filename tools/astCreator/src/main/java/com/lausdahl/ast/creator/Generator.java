@@ -172,7 +172,7 @@ public class Generator
     private static void createNodeEnum(Environment env)
       {
         EnumDefinition eDef = new EnumDefinition(new JavaName(
-            env.getDefaultPackage(), "NodeEnum"));
+            env.getTemplateDefaultPackage(), "NodeEnum"));
         env.addClass(eDef);
         eDef.elements.add("TOKEN");
         eDef.elements.add("ExternalDefined");
@@ -290,7 +290,7 @@ public class Generator
         IllegalAccessException
       {
         InterfaceDefinition answerIntf = new InterfaceDefinition(new JavaName(
-            env.getAnalysisPackage() + ".intf", "I" + intfName));
+            env.getTemplateAnalysisPackage() + ".intf", "I" + intfName));
         answerIntf.setTag(tag);
         answerIntf.setGenericArguments(genericArguments);
         env.addInterface(answerIntf);
@@ -339,7 +339,7 @@ public class Generator
           }
         
         IClassDefinition answerClass = ClassFactory.createCustom(new JavaName(
-            env.getAnalysisPackage(), intfName + "Adaptor"), env);
+            env.getTemplateAnalysisPackage(), intfName + "Adaptor"), env);
         answerClass.setGenericArguments(answerIntf.getGenericArguments());
         answerClass.addInterface(answerIntf);
         

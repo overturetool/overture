@@ -35,7 +35,8 @@ public class SourceFileWriter
 		outputFolder.mkdirs();
 
 		System.out.println("Copying base classes to destination...");
-		copyBaseClasses(outputFolder, env.getDefaultPackage(), env.getAnalysisPackage(), env);
+		
+		copyBaseClasses(outputFolder, env.getTemplateDefaultPackage(), env.getTemplateAnalysisPackage(), env);
 		System.out.println("Writing source files.:");
 		long startTime = System.currentTimeMillis();
 		int i = 80;

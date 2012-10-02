@@ -48,8 +48,8 @@ public class BaseEnvironment
                                                                    "Collection",
                                                                    true);
     
-    public final PredefinedClassDefinition     node;
-    public final PredefinedClassDefinition     token;
+    public PredefinedClassDefinition     node;
+    public PredefinedClassDefinition     token;
     public final PredefinedClassDefinition     nodeList;
     public final PredefinedClassDefinition     nodeListList;
     public final PredefinedClassDefinition     graphNodeList;
@@ -141,11 +141,11 @@ public class BaseEnvironment
         defs.addAll(interfaces);
         return defs;
       }
-    
+    protected String templateDefaultPackage;
     public void setDefaultPackages(String defaultPackages)
       {
         String oldPackage = this.defaultPackage;
-        this.defaultPackage = defaultPackages;
+        this.templateDefaultPackage = this.defaultPackage = defaultPackages;
         node.getName().setPackageName(defaultPackage);
         nodeList.getName().setPackageName(defaultPackage);
         nodeListList.getName().setPackageName(defaultPackage);

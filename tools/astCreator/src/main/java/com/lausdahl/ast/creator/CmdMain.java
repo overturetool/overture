@@ -10,12 +10,9 @@ public class CmdMain
 
 	/**
 	 * @param args
-	 * @throws AstCreatorException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, AstCreatorException
+	public static void main(String[] args) throws Exception
 	{
 		if (args.length == 0)
 		{
@@ -31,6 +28,26 @@ public class CmdMain
 			Main.create(new FileInputStream(grammarFilePath), new File(outputPath), true,GENERATE_VDM);
 		}
 	
+		if (args.length == 4)
+		{
+			System.out.println("Creating extension AST.");
+			File ast1File = new File(args[0]);
+			File ast2File = new File(args[1]);
+			String extName= args[2];
+			File output   = new File(args[3]);
+			
+			// Check ast file 1
+			if (!(ast1File.exists() && ast1File.canRead()))
+				{ System.out.println(ast1File+" does not exists or is not reable.");return; }
+			
+			// Check ast file 2
+			if (!(ast2File.exists() && ast2File.canRead()))
+				{ System.out.println(ast2File+" does not exists or is not reable.");return; }
+			
+			// Fire in the hall
+			Main.create(new FileInputStream(ast1File), new FileInputStream(ast2File),output,extName,GENERATE_VDM);
+				
+		}
 		
 	}
 

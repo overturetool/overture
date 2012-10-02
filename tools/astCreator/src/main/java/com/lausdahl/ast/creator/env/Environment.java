@@ -17,17 +17,18 @@ import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
+import com.lausdahl.ast.creator.java.definitions.JavaName;
 
 public class Environment extends BaseEnvironment
   {
-    public final PredefinedClassDefinition                       iNode;
-    public final InterfaceDefinition                             iToken;
+    public PredefinedClassDefinition                       iNode;
+    public InterfaceDefinition                             iToken;
     
     public final String                                          TAG_IAnalysis       = "IAnalysis";
     public final String                                          TAG_IAnswer         = "IAnswer";
     public final String                                          TAG_IQuestion       = "IQuestion";
     public final String                                          TAG_IQuestionAnswer = "IQuestionAnswer";
-    public final BaseClassDefinition                             analysisException;
+    public BaseClassDefinition                             analysisException;
     
     private final List<ToStringAddOn>                            toStringAddOn       = new Vector<ToStringAddOn>();
     
@@ -37,20 +38,47 @@ public class Environment extends BaseEnvironment
     
     private String                                               analysisPackage     = "org.overture.ast.analysis";
     
-    private Environment(String name)
+    private String templateAnalysisPackage;
+    
+    public String getTemplateDefaultPackage() {
+		return templateDefaultPackage;
+	}
+
+	public void setTemplateDefaultPackage(String templateDefaultPackage) {
+		this.templateDefaultPackage = templateDefaultPackage;
+	}
+
+	public String getTemplateAnalysisPackage() {
+		return templateAnalysisPackage;
+	}
+
+	public void setTemplateAnalysisPackage(String templateAnalysisPackage) {
+		this.templateAnalysisPackage = templateAnalysisPackage;
+	}
+
+	private Environment(String name)
       {
         super(name);
-        iNode = new PredefinedClassDefinition(defaultPackage, "INode");
-        iToken = new PredefinedClassDefinition(defaultPackage, "IToken");
-        // iToken.addInterface(iNode);
-        iToken.supers.add(iNode);
-        node.addInterface(iNode);
-        token.addInterface(iToken);
-        
-        analysisException = new AnalysisExceptionDefinition(analysisPackage,
-            "AnalysisException", this);
-        addClass(analysisException);
       }
+    
+    public static Environment getFromBase(Environment base, String extAnalysisPackage, String extDefaultPackage)
+    {
+    	Environment res = new Environment("extended_"+base.name);
+    	res.setAnalysisPackages(extAnalysisPackage);
+    	res.setDefaultPackages(extDefaultPackage);
+        res.iNode = base.iNode;
+        res.iToken = base.iToken;
+        res.node = base.node;
+        res.token = base.token;
+        res.iToken.supers.add(res.iNode);
+        res.node.addInterface(res.iNode);
+        res.token.addInterface(res.iToken);
+        res.analysisException = base.analysisException;
+        res.addCommonTreeInterface(base.node, base.iNode);
+        res.addCommonTreeInterface(base.token, base.iToken);
+        res.addClass(base.analysisException);
+        return res;
+    }
     
     public static Environment getEmptyInstance(String name)
       {
@@ -61,8 +89,17 @@ public class Environment extends BaseEnvironment
     public static Environment getInstance(String name)
       {
         Environment res = new Environment(name);
+        res.iNode = new PredefinedClassDefinition(res.defaultPackage, "INode");
+        res.iToken = new PredefinedClassDefinition(res.defaultPackage, "IToken");
+        // iToken.addInterface(iNode);
+        res.iToken.supers.add(res.iNode);
+        res.node.addInterface(res.iNode);
+        res.token.addInterface(res.iToken);
+        res.analysisException = new AnalysisExceptionDefinition(res.analysisPackage,
+            "AnalysisException", res);
         res.addCommonTreeInterface(res.node, res.iNode);
-        res.addCommonTreeInterface(res.token, res.iToken);
+        res.addCommonTreeInterface(res.token, res.iToken); 
+        res.addClass(res.analysisException);
         return res;
       }
     
@@ -82,7 +119,7 @@ public class Environment extends BaseEnvironment
     public void setAnalysisPackages(String analysisPackage)
       {
         String oldPackage = this.analysisPackage;
-        this.analysisPackage = analysisPackage;
+        this.templateAnalysisPackage = this.analysisPackage = analysisPackage;
         for (IClassDefinition c : classes)
           {
             if (c.getName().getPackageName().equals(oldPackage))
@@ -104,6 +141,20 @@ public class Environment extends BaseEnvironment
       {
         return this.analysisPackage;
       }
+    
+    public IInterfaceDefinition lookupByTag(String tag)
+    {
+    	int a;
+    	for(IInterfaceDefinition idef : classes)
+    	{
+    		if (tag.equals(idef.getTag()))
+    			return idef;
+    		JavaName jn = idef.getName();
+    		if (jn != null && tag.equals(jn.getTag()))
+    			return idef;
+    	}
+    	return null;
+    }
     
     public IInterfaceDefinition lookUpType(String name)
       {
@@ -239,8 +290,8 @@ public class Environment extends BaseEnvironment
     public void addCommonTreeInterface(IInterfaceDefinition source,
         IInterfaceDefinition intf)
       {
-        treeNodeInterfaces.put(source, intf);
         addInterface(intf);
+        treeNodeInterfaces.put(source, intf);
       }
     
     public IInterfaceDefinition getInterfaceForCommonTreeNode(
