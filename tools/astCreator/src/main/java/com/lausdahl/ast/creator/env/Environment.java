@@ -66,16 +66,27 @@ public class Environment extends BaseEnvironment
     	Environment res = new Environment("extended_"+base.name);
     	res.setAnalysisPackages(extAnalysisPackage);
     	res.setDefaultPackages(extDefaultPackage);
+    	res.classes.clear();
         res.iNode = base.iNode;
         res.iToken = base.iToken;
         res.node = base.node;
         res.token = base.token;
+        res.nodeList = base.nodeList;
+        res.nodeListList = base.nodeListList;
+        res.graphNodeList = base.graphNodeList;
+        res.graphNodeListList = base.graphNodeListList;
+        res.externalNode = base.externalNode;
         res.iToken.supers.add(res.iNode);
         res.node.addInterface(res.iNode);
         res.token.addInterface(res.iToken);
         res.analysisException = base.analysisException;
         res.addCommonTreeInterface(base.node, base.iNode);
         res.addCommonTreeInterface(base.token, base.iToken);
+        res.addClass(res.node);
+        res.addClass(res.nodeList);
+        res.addClass(res.nodeListList);
+        res.addClass(res.token);
+        res.addClass(res.externalNode);
         res.addClass(base.analysisException);
         return res;
     }

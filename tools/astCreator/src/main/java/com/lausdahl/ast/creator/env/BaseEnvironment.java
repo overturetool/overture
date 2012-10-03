@@ -50,11 +50,11 @@ public class BaseEnvironment
     
     public PredefinedClassDefinition     node;
     public PredefinedClassDefinition     token;
-    public final PredefinedClassDefinition     nodeList;
-    public final PredefinedClassDefinition     nodeListList;
-    public final PredefinedClassDefinition     graphNodeList;
-    public final PredefinedClassDefinition     graphNodeListList;
-    public final PredefinedClassDefinition     externalNode;
+    public PredefinedClassDefinition     nodeList;
+    public PredefinedClassDefinition     nodeListList;
+    public PredefinedClassDefinition     graphNodeList;
+    public PredefinedClassDefinition     graphNodeListList;
+    public PredefinedClassDefinition     externalNode;
     
     protected String                           name;
     protected String                           defaultPackage  = "org.overture.ast.node";

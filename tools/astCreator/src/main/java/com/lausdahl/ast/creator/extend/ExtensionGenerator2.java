@@ -111,6 +111,7 @@ public class ExtensionGenerator2
 						int a;
 						
 						IInterfaceDefinition type =  base.lookupByTag(f.getUnresolvedType());
+						if (type == null) type = ext.lookupByTag(f.getUnresolvedType());
 						if (type != null)
 						{
 							f.type = type;
