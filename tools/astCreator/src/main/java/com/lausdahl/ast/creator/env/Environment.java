@@ -155,13 +155,15 @@ public class Environment extends BaseEnvironment
     
     public IInterfaceDefinition lookupByTag(String tag)
     {
-    	int a;
+    	if("".equals(tag))
+    		return null;    		
+
     	for(IInterfaceDefinition idef : classes)
     	{
     		if (tag.equals(idef.getTag()))
     			return idef;
     		JavaName jn = idef.getName();
-    		if (jn != null && tag.equals(jn.getTag()))
+    		if (tag.equals(jn.getTag()))
     			return idef;
     	}
     	return null;

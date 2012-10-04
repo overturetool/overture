@@ -362,8 +362,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
       {
         return this.supers;
       }
-
-    
+       
     // @Override
     // public int hashCode()
     // {

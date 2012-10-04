@@ -1,15 +1,21 @@
 package com.lausdahl.ast.creator.extend;
 
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
+import com.lausdahl.ast.creator.java.definitions.JavaName;
+import com.lausdahl.ast.creator.utils.ClassFactory;
 
 public class ExtensionGenerator2
 {
@@ -57,13 +63,45 @@ public class ExtensionGenerator2
 			if (!isTemplateClass(cdef, ext))
 				result.getClasses().add(cdef);
 
-		// Copy over all interfaces
+		// Copy over all interfaces from base
 		for (IInterfaceDefinition idef : base.getInterfaces())
 			result.getInterfaces().add(idef);
 
+		//Copy over all interfaces from extension
+		Map<IInterfaceDefinition,IInterfaceDefinition> interfaceReplaced = new HashMap<IInterfaceDefinition,IInterfaceDefinition>();
+		Map<IInterfaceDefinition,IInterfaceDefinition> superReplaced = new HashMap<IInterfaceDefinition,IInterfaceDefinition>();
 		for(IInterfaceDefinition idef : ext.getInterfaces())
+		{
 			if (!isTemplateClass(idef, ext))
-				result.getInterfaces().add(idef);
+			{
+				
+				IInterfaceDefinition baseProd = base.lookUpType(idef.getName().getName());
+							
+				if(null != baseProd && !(idef instanceof PredefinedClassDefinition))
+				{
+					// Create Cml Production Node (extension) E.g. for PExp we create PCmlExp
+					String newNameStr = ext.getName()+ baseProd.getName().getRawName();
+					JavaName newName = new JavaName(ext.getDefaultPackage(), newNameStr);
+					InterfaceDefinition extProd = new InterfaceDefinition(newName);
+					extProd.supers.add(baseProd); 
+					result.getInterfaces().add(extProd);
+					result.treeNodeInterfaces.put(extProd,baseProd);
+					interfaceReplaced.put(baseProd, extProd);
+					
+					
+					//Lookup base class
+					IClassDefinition baseProdBase = base.lookUp(baseProd.getName().getRawName() + "Base");
+					assert(baseProdBase != null);
+					//Create new base class and set baseProdBase as super
+					IClassDefinition extProdBase =  ClassFactory.create(ext.getDefaultPackage(), newNameStr + "Base" , baseProdBase, base.classToType.get(baseProdBase), result);
+					superReplaced.put(baseProdBase, extProdBase);
+					
+					
+				}
+				else
+					result.getInterfaces().add(idef);
+			}
+		}
 
 		// Copy classToType mapping
 		Set<Entry<IClassDefinition, ClassType>> c2t = base.classToType
@@ -81,15 +119,19 @@ public class ExtensionGenerator2
 				.entrySet();
 		for (Entry<IInterfaceDefinition, IInterfaceDefinition> e : tn2i)
 		{
-
-			result.treeNodeInterfaces.put(e.getKey(), e.getValue());
+			if(interfaceReplaced.containsKey(e.getValue()))
+				result.treeNodeInterfaces.put(e.getKey(), interfaceReplaced.get(e.getValue()));
+			else
+				result.treeNodeInterfaces.put(e.getKey(), e.getValue());
 		}
 
 		tn2i = ext.treeNodeInterfaces.entrySet();
 		for(Entry<IInterfaceDefinition, IInterfaceDefinition> e : tn2i)
 		{
-			if (!isTemplateClass(e.getKey(), ext))			
-				result.treeNodeInterfaces.put(e.getKey(), e.getValue());        	
+			if (!isTemplateClass(e.getKey(), ext))
+			{
+				result.treeNodeInterfaces.put(e.getKey(), e.getValue());
+			}
 		}
 
 		// Path node, token, inode and itoken

@@ -56,11 +56,11 @@ public class AkmRwlTests extends TestCase
     	File output = new File("../../testdata/generatedCode");
     	InputStream cmlAST = getClass().getResourceAsStream("/extend2/cml_merge.ast");
     	InputStream ovtAST = getClass().getResourceAsStream("/extend2/ovt_merge.ast");
-    	//InputStream ovt = getClass().getResourceAsStream("/overtureII.astv2");
-    	//InputStream cml = getClass().getResourceAsStream("/cml.ast");
+    	InputStream ovt = getClass().getResourceAsStream("/overtureII.astv2");
+    	InputStream cml = getClass().getResourceAsStream("/ucml.ast");
     	Assert.assertNotNull("Ast file 1 cannot be found", cmlAST);
     	Assert.assertNotNull("Ast file 2 cannot be found", ovtAST);
-    	Main.create(ovtAST, cmlAST,output, "Cml", false );
+    	Main.create(ovt, cml,output, "Cml", false );
     	// Main.create(ovt, output, true, false);
     }
     
