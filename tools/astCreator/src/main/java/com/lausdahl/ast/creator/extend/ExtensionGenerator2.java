@@ -143,6 +143,9 @@ public class ExtensionGenerator2
 				// node is a sub-interface for the baseProduction node. 
 				result.addCommonTreeInterface(extProduction, baseProduction);
 				
+				// Add the newly generated interface to the interface list in the result env.
+				result.getInterfaces().add(extProduction);
+				
 				// Alternatives and base classes in ext current has Production 
 				// and SubProduction nodes from the ext environment that should 
 				// not exist as super Def and in their interface-lists. The same 

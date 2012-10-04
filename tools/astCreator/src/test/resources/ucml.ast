@@ -14,7 +14,7 @@ source {->  package='eu.compassresearch.ast.program'}
       ;
     
 exp {-> package='eu.compassresearch.ast.expressions'}    
-   = {fat} [type]:type   
+   = {fat} (type):type [fissan]:type   
     ;
    
 Aspect Declaration
