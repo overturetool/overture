@@ -57,7 +57,15 @@ public class BaseEnvironment
     public PredefinedClassDefinition     externalNode;
     
     protected String                           name;
-    protected String                           defaultPackage  = "org.overture.ast.node";
+    protected String                           astPackage      = "org.overture.ast";
+    public String getAstPackage() {
+		return astPackage;
+	}
+
+	public void setAstPackage(String astPackage) {
+		this.astPackage = astPackage;
+	}
+	protected String                           defaultPackage  = astPackage+".node";
     
     protected final Set<IInterfaceDefinition>  baseClasses     = new HashSet<IInterfaceDefinition>();
     protected final List<IClassDefinition>     classes         = new Vector<IClassDefinition>();
@@ -142,10 +150,13 @@ public class BaseEnvironment
         return defs;
       }
     protected String templateDefaultPackage;
-    public void setDefaultPackages(String defaultPackages)
+    public void setDefaultPackages(String defaultNodePackage)
       {
+		String astPackage = defaultNodePackage.substring(0,defaultNodePackage.lastIndexOf("."));
+		String nodePackage= defaultNodePackage.substring(defaultNodePackage.lastIndexOf("."));
+		this.astPackage = astPackage;
         String oldPackage = this.defaultPackage;
-        this.templateDefaultPackage = this.defaultPackage = defaultPackages;
+        this.templateDefaultPackage = this.defaultPackage = astPackage + nodePackage;
         node.getName().setPackageName(defaultPackage);
         nodeList.getName().setPackageName(defaultPackage);
         nodeListList.getName().setPackageName(defaultPackage);

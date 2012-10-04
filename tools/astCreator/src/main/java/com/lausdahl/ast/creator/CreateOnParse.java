@@ -206,8 +206,9 @@ public class CreateOnParse
 			Object n = node.getChild(p.getChildIndex() + 1);
 			if (n instanceof CommonTree)
 			{
-				env.setDefaultPackages(((CommonTree) n).getText());
-				return;
+				String rawPackage = ((CommonTree)n).getText();
+				env.setDefaultPackages(rawPackage);
+				return; 
 			}
 		} else if (p.getText() != null && p.getText().equals("analysis")
 				&& node.getChildCount() > p.getChildIndex() + 1)

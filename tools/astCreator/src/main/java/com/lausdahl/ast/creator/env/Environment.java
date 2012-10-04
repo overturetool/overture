@@ -314,7 +314,7 @@ public class Environment extends BaseEnvironment
           {
             return treeNodeInterfaces.get(node);
           }
-        
+        /*
         System.out.println("Error getting interface for common tree node:\n\t"
             + node.getName()
             + "\nThe mapping is as defined as follows in environment \""
@@ -326,7 +326,7 @@ public class Environment extends BaseEnvironment
             System.out.println("\t" + e.getKey().getName() + " ==> "
                 + e.getValue().getName());
           }
-        
+        */
         return null;
       }
     
