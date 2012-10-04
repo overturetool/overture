@@ -1,10 +1,8 @@
 package com.lausdahl.ast.creator.extend;
 
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.Map.Entry;
 import java.util.Set;
-
 import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
@@ -21,7 +19,6 @@ public class ExtensionGenerator2
 	public ExtensionGenerator2(Environment base)
 	{
 		this.base = base;
-
 	}
 
 
@@ -51,7 +48,7 @@ public class ExtensionGenerator2
 
 		result.setTemplateAnalysisPackage(base.getAnalysisPackage());
 		result.setTemplateDefaultPackage(base.getDefaultPackage());
-		
+
 		// Copy over all class definitions
 		for (IClassDefinition cdef : base.getClasses())
 			result.getClasses().add(cdef);
@@ -103,13 +100,11 @@ public class ExtensionGenerator2
 				BaseClassDefinition bcdef = (BaseClassDefinition)def;
 				if (bcdef.getSuperDef() == base.node || bcdef.getSuperDef() == ext.node)
 					bcdef.setSuper(result.node);
-				
+
 				for(Field f : bcdef.getFields())
 				{
 					if (f.type == null)
 					{
-						int a;
-						
 						IInterfaceDefinition type =  base.lookupByTag(f.getUnresolvedType());
 						if (type == null) type = ext.lookupByTag(f.getUnresolvedType());
 						if (type != null)
@@ -121,13 +116,13 @@ public class ExtensionGenerator2
 								if (ejcd.getFields() != null && ejcd.getFields().size() > 0 && ejcd.getFields().get(0).isTokenField)
 									f.isTokenField = true;
 							}
-								
-						
+
+
 						}
 						else
 							System.out.println("Shit man I cannot lookup unresolved type: "+f.getUnresolvedType());
 					}
-					 
+
 				}
 			}
 

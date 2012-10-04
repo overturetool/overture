@@ -180,10 +180,10 @@ public class ClassFactory
 		JavaName name = intf.getName();
 		name.setPrefix(prefix /*+ intf.getName().getPrefix()*/);
 		name.setPostfix(postFix);
-		name.setTag(c.getName().getTag());
 		intf.setTag(c.getName().getTag());
 		intf.filterMethodsIfInherited = true;
 		IInterfaceDefinition superClass = env.getInterfaceForCommonTreeNode(c.getSuperDef());
+		
 		if(superClass==null)
 		{
 			return false;
