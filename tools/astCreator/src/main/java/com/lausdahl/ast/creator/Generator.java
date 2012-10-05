@@ -290,7 +290,7 @@ public class Generator
         IllegalAccessException
       {
         InterfaceDefinition answerIntf = new InterfaceDefinition(new JavaName(
-            env.getTemplateAnalysisPackage() + ".intf", "I" + intfName));
+            env.getTemplateAnalysisPackage()+ ".intf", "I" + intfName));
         answerIntf.setTag(tag);
         answerIntf.setGenericArguments(genericArguments);
         env.addInterface(answerIntf);

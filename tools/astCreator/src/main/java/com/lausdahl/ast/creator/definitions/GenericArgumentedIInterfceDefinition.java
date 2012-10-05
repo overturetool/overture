@@ -16,6 +16,7 @@ public class GenericArgumentedIInterfceDefinition implements
 {
 	IInterfaceDefinition def;
 	List<String> arguments = new Vector<String>();
+	private boolean written;
 
 	public GenericArgumentedIInterfceDefinition(IInterfaceDefinition def,
 			String... arguments)
@@ -129,6 +130,14 @@ public class GenericArgumentedIInterfceDefinition implements
 	public Set<IInterfaceDefinition> getSuperDefs()
 	{
 		return new HashSet<IInterfaceDefinition>();
+	}
+
+	public boolean isJavaSourceWritten() {
+		return written;
+	}
+
+	public void setJavaSourceWritten(boolean isWritten) {
+		this.written = isWritten;
 	}
 
 }

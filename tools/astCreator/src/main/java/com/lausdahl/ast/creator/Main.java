@@ -260,6 +260,7 @@ public class Main
         
         // Create the base AST environment
         Environment base = generator.generate(ast1, "Base", true);
+        //generator.runPostGeneration(base);
         
         // Create the extended tree with loose ends so do not test for integrity
         Environment envExtOnly = generator.generate(ast2, "Extension", false);

@@ -13,5 +13,5 @@ source {->  package='eu.compassresearch.ast.program'}
 
 Aspect Declaration
 
-%exp = (type):type
+%exp = (typeGuf):type
      ;

@@ -15,6 +15,8 @@ import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
+import com.lausdahl.ast.creator.methods.KindMethod;
+import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.utils.ClassFactory;
 
 public class ExtensionGenerator2
@@ -175,7 +177,7 @@ public class ExtensionGenerator2
 		// Generate the base classes
 		for(Entry<String, IInterfaceDefinition> e : replacementMap.entrySet())
 		{
-			IInterfaceDefinition baseProduction = base.lookUpType(e.getKey());
+			final IInterfaceDefinition baseProduction = base.lookUpType(e.getKey());
 
 			// Lookup the base production base class e.g. PExpBase that will be the super class 
 			// for out to be created PCmlExpBase. Examplified of course
@@ -189,6 +191,34 @@ public class ExtensionGenerator2
 			JavaName newName = makeExtensionJavaName(baseProductionBase, ext, base);
 			IClassDefinition extensionProductionBase = ClassFactory.create(cmlPackage, newName.getRawName(), baseProductionBase, base.classToType.get(baseProductionBase), result);
 			extensionProductionBase.addInterface(extProduction);
+			
+			class LocalKindMethod extends KindMethod {
+
+				public LocalKindMethod(IClassDefinition c,
+						boolean isAbstractKind) {
+					super(c, isAbstractKind);
+					
+					
+				}
+
+				@Override
+				public String getJavaSourceCode(Environment env) {
+					StringBuilder result = new StringBuilder();
+					String returnType = "E" + baseProduction.getName().getRawName();
+					
+					result.append("public "+returnType+" kind"+baseProduction.getName().getPrefix()+baseProduction.getName().getRawName()+"()");
+					result.append("{ throw new RuntimeException(\"Using the kind method is kind of deprecated ;).\"); }");
+					return result.toString();
+				}
+				
+			}
+			
+			
+			// Add kindMethod that throw RuntimeException
+			Method kindMethod = new LocalKindMethod(baseProductionBase, false);
+			extensionProductionBase.addMethod(kindMethod);
+			kindMethod.returnType = "E"+baseProduction.getName().getRawName();
+			
 			
 			// Add mapping from the extensionProductionBase production to the extProduction
 			result.treeNodeInterfaces.put(extensionProductionBase, extProduction);
@@ -328,5 +358,11 @@ public class ExtensionGenerator2
 		}
 
 		return result;
+	}
+	
+	
+	public static void runPostGeneration(Environment extEnv)
+	{
+		// DTW
 	}
 }

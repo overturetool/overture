@@ -197,6 +197,7 @@ public class SourceFileWriter
 	private static void write(File generated, IInterfaceDefinition def,
 			boolean writeJava, Environment env)
 	{
+		if (def.isJavaSourceWritten()) return;
 		try
 		{
 			String name = null;
@@ -232,6 +233,7 @@ public class SourceFileWriter
 		{
 			e.printStackTrace();
 		}
+		//def.setJavaSourceWritten(true);
 	}
 
 	private static File createFolder(File src, String packageName)

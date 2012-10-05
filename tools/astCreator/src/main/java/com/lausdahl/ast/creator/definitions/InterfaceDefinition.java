@@ -29,6 +29,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
     public boolean                   filterMethodsIfInherited = false;
     private boolean                  isFinal                  = false;
     private boolean                  isAbstract               = false;
+	private boolean isWritten = false;
     
     public InterfaceDefinition(JavaName name)
       {
@@ -362,6 +363,14 @@ public class InterfaceDefinition implements IInterfaceDefinition
       {
         return this.supers;
       }
+
+	public boolean isJavaSourceWritten() {
+		return isWritten;
+	}
+
+	public void setJavaSourceWritten(boolean isWritten) {
+		this.isWritten = isWritten;
+	}
        
     // @Override
     // public int hashCode()

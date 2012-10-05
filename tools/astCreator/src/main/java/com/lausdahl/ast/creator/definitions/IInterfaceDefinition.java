@@ -9,7 +9,21 @@ import com.lausdahl.ast.creator.methods.Method;
 
 public interface IInterfaceDefinition
 {
-
+	/**
+	 * Returns whether source code for this has object 
+	 * already be acquired.
+	 * 
+	 * @return
+	 */
+	public abstract boolean isJavaSourceWritten();
+	
+	/**
+	 * Should be invoked with true when the Java source code for this object
+	 * has been written to a file. 
+	 * @param isWritten
+	 */
+	public abstract void setJavaSourceWritten(boolean isWritten);
+	
 	public abstract JavaName getName();
 
 	public abstract Set<String> getImports(Environment env);
