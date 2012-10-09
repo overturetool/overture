@@ -298,21 +298,6 @@ public class Generator
         
         for (IClassDefinition c : getClasses(env.getClasses(), env))
           {
-            // if (env.classToType.get(c) ==
-            // IClassDefinition.ClassType.Production)
-            // {
-            // continue;
-            // }
-            // Method m = (Method) accept.newInstance();
-            // m.setClassDefinition(c);
-            // m.setEnvironment(env);
-            // c.addMethod(m);
-            //
-            // m = (Method) caseM.newInstance();
-            // m.setClassDefinition(c);
-            // m.setEnvironment(env);
-            // answerIntf.methods.add(m);
-            
             switch (env.classToType.get(c))
               {
                 case Alternative:
@@ -320,12 +305,10 @@ public class Generator
                   {
                     Method m = (Method) accept.newInstance();
                     m.setClassDefinition(c);
-                    //m.setEnvironment(env);
                     c.addMethod(m);
                     
                     m = (Method) caseM.newInstance();
                     m.setClassDefinition(c);
-                    //m.setEnvironment(env);
                     answerIntf.methods.add(m);
                     break;
                   }

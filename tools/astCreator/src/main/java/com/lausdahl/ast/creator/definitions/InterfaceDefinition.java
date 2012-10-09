@@ -345,7 +345,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
         
         for (Method m : methods)
           {
-            if (m.name.equals(name))
+            if (m.name != null && m.name.equals(name))
               {
                 matches.add(m);
               }

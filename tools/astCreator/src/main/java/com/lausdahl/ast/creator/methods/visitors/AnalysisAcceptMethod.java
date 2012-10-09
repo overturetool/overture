@@ -8,6 +8,17 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class AnalysisAcceptMethod extends Method
 {
+	private String privilegedBody;
+	
+	
+	public String getPrivilegedBody() {
+		return privilegedBody;
+	}
+
+	public void setPrivilegedBody(String privilegedBody) {
+		this.privilegedBody = privilegedBody;
+	}
+
 	public AnalysisAcceptMethod()
 	{
 		super(null);
@@ -35,9 +46,10 @@ public class AnalysisAcceptMethod extends Method
 		name = "apply";
 		annotation = "@Override";
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "analysis"));
-		body = "\t\tanalysis.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this);";
+		body = privilegedBody == null ? "\t\tanalysis.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this);" : privilegedBody;
 		throwsDefinitions.add(env.analysisException);
 	}
+	
 	
 	@Override
 	protected void prepareVdm(Environment env)

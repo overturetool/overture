@@ -270,6 +270,7 @@ public class Main
         ExtensionGenerator2 extGen = new ExtensionGenerator2(base);
         Environment envResolvedExt = extGen.extend(envExtOnly);
         generator.runPostGeneration(envResolvedExt);
+        ExtensionGenerator2.runPostGeneration(envExtOnly, envResolvedExt);
         
         System.out.println("Writing sources to the file system, standby ... ");
         System.out.println("Destination: " + generated.getAbsolutePath());

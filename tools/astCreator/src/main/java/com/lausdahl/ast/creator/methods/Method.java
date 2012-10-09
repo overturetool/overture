@@ -34,6 +34,23 @@ public abstract class Method
 		{
 			return type + " " + name;
 		}
+
+		@Override
+		public int hashCode() {
+			return name.hashCode() + type.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof Argument)
+			{
+				Argument obj = (Argument)o;
+				return name.equals(obj.name) && type.equals(obj.type);
+			}
+			return false;
+		}
+		
+		
 	}
 
 	public boolean isConstructor = false;
@@ -52,6 +69,9 @@ public abstract class Method
 	protected boolean optionalVdmArgument = true;
 //	protected Environment env;
 
+	
+	
+	
 	public Method(IClassDefinition c)
 	{
 		setClassDefinition(c);
@@ -328,6 +348,7 @@ public abstract class Method
 		return javaDoc;
 	}
 
+	
 
 	protected String getSpecializedTypeName(IInterfaceDefinition c, Environment env)
 	{
