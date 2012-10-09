@@ -38,6 +38,7 @@ import com.lausdahl.ast.creator.utils.ClassFactory;
 
 public class ExtensionGenerator2 {
 
+	private static final String COMPASS_JAVA_DOC_STRING = "*\n* Extensions by the COMPASS Project\n* @author Rasmus Winther Lauritsen\n";
 	private final Environment base;
 
 	public ExtensionGenerator2(Environment base) {
@@ -303,9 +304,13 @@ public class ExtensionGenerator2 {
 			Environment ext, Environment base) throws AstCreatorException {
 		// Path node, token, inode and itoken
 		for (IInterfaceDefinition def : result.getAllDefinitions()) {
+
+			if (def instanceof InterfaceDefinition)
+				((InterfaceDefinition) def)
+						.setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
+
 			if (def instanceof BaseClassDefinition) {
 				BaseClassDefinition bcdef = (BaseClassDefinition) def;
-
 				for (Field f : bcdef.getFields()) {
 					if (f.type == null) {
 						IInterfaceDefinition type = base.lookupByTag(f
@@ -749,7 +754,7 @@ public class ExtensionGenerator2 {
 		result.addInterface(extNewDef);
 		IInterfaceDefinition iAnalysis = result.lookUpType("I" + name);
 		extNewDef.supers.add(iAnalysis);
-
+		extNewDef.setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
 		// Add methods for the analysis and apply functions for the classes
 		for (IClassDefinition cdef : result.getClasses()) {
 			Environment env = null;

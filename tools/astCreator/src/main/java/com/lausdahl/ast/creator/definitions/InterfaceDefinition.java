@@ -19,13 +19,22 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 	public static boolean VDM = false;
 	private String tag = "";
 	protected String annotation = "";
-	protected String javaDoc = "/**\n" + "* Generated file by AST Creator\n"
-			+ "* @author Kenneth Lausdahl\n" + "*\n" + "*/\n";
+	protected String extJavaDoc = "";
+	// private String javaDoc =
 
 	public boolean filterMethodsIfInherited = false;
 	private boolean isFinal = false;
 	private boolean isAbstract = false;
 	private boolean isWritten = false;
+
+	public String getJavaDoc() {
+		return "/**\n" + "* Generated file by AST Creator\n"
+				+ "* @author Kenneth Lausdahl\n" + extJavaDoc + "*\n" + "*/\n";
+	}
+
+	public void setExtJavaDoc(String extJavaDoc) {
+		this.extJavaDoc = extJavaDoc;
+	}
 
 	public InterfaceDefinition(JavaName name) {
 		this.name = name;
@@ -152,7 +161,7 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 			sb.append("import " + importName + ";\n");
 		}
 
-		sb.append("\n\n" + javaDoc);
+		sb.append("\n\n" + getJavaDoc());
 		sb.append("public interface " + getName().getName());
 
 		sb.append(getGenericsString());
