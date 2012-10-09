@@ -21,10 +21,15 @@ import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.KindMethod;
 import com.lausdahl.ast.creator.methods.Method;
-import com.lausdahl.ast.creator.methods.Method.Argument;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;
+import com.lausdahl.ast.creator.methods.visitors.AnswerAcceptMethod;
+import com.lausdahl.ast.creator.methods.visitors.QuestionAcceptMethod;
+import com.lausdahl.ast.creator.methods.visitors.QuestionAnswerAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorCaseMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionAdaptorCaseMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer.QuestionAnswerAdaptorCaseMethod;
 import com.lausdahl.ast.creator.utils.ClassFactory;
 
 public class ExtensionGenerator2
@@ -453,30 +458,144 @@ public class ExtensionGenerator2
 	/**
 	 * Create Analysis interfaces and adaptors for the extensions alone.
 	 * 
+	 * It is a precondition that the Generator.generator method has been run
+	 * on the given result environment. The extEnv remains as it were after invoking 
+	 * the extend method.
 	 * 
-	 * @param extEnv
-	 * @param result
+	 * @param extEnv - the extension environment
+	 * @param result - an extended environment for which analysis 
+	 *                 classes should be generated.
+	 *                 
+	 * Notice: The analysis created will have cases for the classes that exists in both
+	 * result and extEnv such that the case maps to either an Alternative or a Token in the
+	 * extended environment.
 	 */
 	public static void runPostGeneration(Environment extEnv, Environment result)
 	{
 
 		createIAnalysisInterface(result, extEnv);
 
+		createIAnswerInterface(result,extEnv);
 		
-		// Look up the IAnalysis interface from the base 
-
-		// Remove methods that are handling extension cases
-
-		// Create Analysis for the extension adding only extension methods
-
-		// 
+		createIQuestionInterface(result,extEnv);
+		
+		createIQuestionAnswerInterface(result, extEnv);
 	}
 
+	private static void createIQuestionAnswerInterface(final Environment result,
+			Environment extEnv) {
+
+		
+		List<String> genericArguments = new LinkedList<String>();
+		genericArguments.add("A");
+		genericArguments.add("Q");
+		String name = "QuestionAnswer";
+		String tag = result.TAG_IQuestionAnswer;
+		MethodFactory extMf = new MethodFactory() {
+
+			@Override
+			public Method createCaseMethod(IClassDefinition cdef) {
+				QuestionAnswerAdaptorCaseMethod qaacm = new QuestionAnswerAdaptorCaseMethod();
+				qaacm.setClassDefinition(cdef);
+				return qaacm;
+			}
+
+			@Override
+			public void updateApplyMethod(IClassDefinition cdef,
+					String newAnalysisName) {
+				
+				QuestionAnswerAcceptMethod qaam = findMethodType(QuestionAnswerAcceptMethod.class, cdef);
+				if (qaam != null)
+					qaam.setPrivilegedBody("\t\treturn (A)(("+newAnalysisName+"<A,Q>)caller).case" + AnalysisUtil.getCaseClass(result, cdef).getName().getName() + "(this, question);");
+				
+			}
+			
+		};
+		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv, result);
+	}
+
+
+
+	/*
+	 * Create the Question interface e.g. eu.compassresearch.ast.analysis.intf.IQuestion
+	 * for the extension.
+	 */
+	private static void createIQuestionInterface(final Environment result,
+			Environment extEnv) {
+		
+		List<String> genericArguments = new LinkedList<String>();
+		genericArguments.add("Q");
+		String name = "Question";
+		String tag = result.TAG_IQuestion;
+		MethodFactory extMf = new MethodFactory() {
+			
+			@Override
+			public void updateApplyMethod(IClassDefinition cdef, String newAnalysisName) {
+				QuestionAcceptMethod qam = findMethodType(QuestionAcceptMethod.class, cdef);
+				if (qam != null)
+					qam.setPrivilegedBody( "\t\t(("+newAnalysisName+"<Q>)caller).case" + AnalysisUtil.getCaseClass(result, cdef).getName().getName() + "(this, question);" );
+			}
+			
+			@Override
+			public Method createCaseMethod(IClassDefinition cdef) {
+				QuestionAdaptorCaseMethod caseM = new QuestionAdaptorCaseMethod();
+				caseM.setClassDefinition(cdef);
+				return caseM;
+			}
+		};
+		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv, result);
+	}
+
+
+
+	/*
+	 * Create the IAnswer interface for the extension.
+	 */
+	private static void createIAnswerInterface(final Environment result,
+			Environment extEnv) {
+
+		
+		List<String> genericArguments = new LinkedList<String>();
+		genericArguments.add("A");
+		String name = "Answer";
+		String tag = result.TAG_IAnswer;
+		MethodFactory extMf = new MethodFactory() {
+			
+			@Override
+			public void updateApplyMethod(IClassDefinition cdef, String newAnalysisName) {
+				AnswerAcceptMethod aam = findMethodType(AnswerAcceptMethod.class, cdef);
+				if (aam != null)
+					aam.setPrivilegedBody("\t\treturn (A)(("+newAnalysisName+"<A>)caller).case" + AnalysisUtil.getCaseClass(result, cdef).getName().getName() + "(this);");
+			}
+			
+			@Override
+			public Method createCaseMethod(IClassDefinition cdef) {
+				AnswerAdaptorCaseMethod caseM = new AnswerAdaptorCaseMethod();
+				caseM.setClassDefinition(cdef);
+				return caseM;
+			}
+		};
+		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv, result);
+	}
+
+	/*
+	 * Helper class adding an extra level of indirection for Method creation.
+	 */
 	private static abstract class MethodFactory {
 		public abstract Method createCaseMethod(IClassDefinition cdef);
 		public abstract void updateApplyMethod(IClassDefinition cdef, String newAnalysisName);
 	}
 
+	private static<T extends Method> T findMethodType(Class<T> c, IClassDefinition cdef)
+	{
+		for(Method m : cdef.getMethods())
+			if (c.isInstance(m))
+				return c.cast(m);
+		return null;}
+	
+	/*
+	 * Create the IExtAnalysis interface.
+	 */
 	private static void createIAnalysisInterface(final Environment result, final Environment ext)
 	{
 		
@@ -492,22 +611,9 @@ public class ExtensionGenerator2
 
 			@Override
 			public void updateApplyMethod(final IClassDefinition cdef, final String newAnalysisName) {
-
-				
-				AnalysisAcceptMethod aam = null;
-				for(Method m : cdef.getMethods())
-				{
-					if (m instanceof AnalysisAcceptMethod)
-					{
-						aam = (AnalysisAcceptMethod)m;
-					}
-				}
-				
+				AnalysisAcceptMethod aam = findMethodType(AnalysisAcceptMethod.class, cdef);
 				if (aam != null)
-				{
 					aam.setPrivilegedBody("\t\t ( ("+newAnalysisName+") analysis).case" + AnalysisUtil.getCaseClass(result, cdef).getName().getName() + "(this);");
-				}
-				
 			}
 
 		};
@@ -518,12 +624,12 @@ public class ExtensionGenerator2
 	private static void createAnalysisInterface(List<String> genericArguments, String name, String tag, MethodFactory extMf,  Environment extEnv, Environment result) {
 
 		// Create a extended analysis interface and add it to result
-		JavaName jname = new JavaName(result.getDefaultPackage(), "I"+extEnv.getName()+name);
+		JavaName jname = new JavaName(result.getAstPackage()+".analysis.intf", "I"+extEnv.getName()+name);
 		InterfaceDefinition extNewDef = new InterfaceDefinition(jname);
 		extNewDef.setTag(tag);
 		extNewDef.setGenericArguments(genericArguments);
 		result.addInterface(extNewDef);
-		IInterfaceDefinition iAnalysis = result.lookUpType("IAnalysis");
+		IInterfaceDefinition iAnalysis = result.lookUpType("I"+name);
 		extNewDef.supers.add(iAnalysis);
 
 		// Add methods for the analysis and apply functions for the classes

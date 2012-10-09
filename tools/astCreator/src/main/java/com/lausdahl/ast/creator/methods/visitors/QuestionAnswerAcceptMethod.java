@@ -8,6 +8,18 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class QuestionAnswerAcceptMethod extends Method
 {
+	private String privilegedBody = null;
+	
+	
+	
+	public String getPrivilegedBody() {
+		return privilegedBody;
+	}
+
+	public void setPrivilegedBody(String privilegedBody) {
+		this.privilegedBody = privilegedBody;
+	}
+
 	public QuestionAnswerAcceptMethod()
 	{
 		super(null);
@@ -39,7 +51,7 @@ public class QuestionAnswerAcceptMethod extends Method
 		returnType = "<Q, A> A";
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "caller"));
 		arguments.add(new Argument("Q", "question"));
-		body = "\t\treturn caller.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this, question);";
+		body = (privilegedBody == null ? "\t\treturn caller.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this, question);" : privilegedBody);
 		throwsDefinitions.add(env.analysisException);
 	}
 	
