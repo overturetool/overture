@@ -349,15 +349,26 @@ public class ExtensionGenerator2
 					cdef.getSuperDefs().remove(ext.node);
 					cdef.getSuperDefs().add(result.node);
 				}
-
+				
 				if (cdef.getSuperDefs().contains(base.iNode) || cdef.getSuperDefs().contains(ext.iNode))
 				{
 					cdef.getSuperDefs().remove(base.iNode);
 					cdef.getSuperDefs().remove(ext.iNode);
 					cdef.getSuperDefs().add(result.iNode);
 				}
-
 			}
+			
+		}
+
+		for (IInterfaceDefinition idef : ext.getInterfaces())
+		{
+			if (idef.getSuperDefs().contains(base.iNode) || idef.getSuperDefs().contains(ext.iNode))
+			{
+				idef.getSuperDefs().remove(base.iNode);
+				idef.getSuperDefs().remove(ext.iNode);
+				idef.getSuperDefs().add(result.iNode);
+			}
+			
 		}
 
 	}
