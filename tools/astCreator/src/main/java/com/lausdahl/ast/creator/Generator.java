@@ -392,7 +392,7 @@ public class Generator
     private void createdepthFirstAdaptor(Environment source)
       {
         IClassDefinition adaptor = ClassFactory.createCustom(new JavaName(
-            source.getAnalysisPackage(), "DepthFirstAnalysisAdaptor"), source);
+            source.getTemplateAnalysisPackage(), "DepthFirstAnalysisAdaptor"), source);
         // adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
         adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
         Field queue = new Field();

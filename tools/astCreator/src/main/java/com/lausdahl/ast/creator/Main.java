@@ -277,7 +277,7 @@ public class Main
         // write sources for the two trees
         SourceFileWriter.write(generated, envResolvedExt, generateVdm);
         // createCopyAdaptor(env1, env2, extendName, generated);
-        
+        System.out.println("Created AST with extensions.");
       }
     
     public static void setExtendName(Environment env, String extendName)
