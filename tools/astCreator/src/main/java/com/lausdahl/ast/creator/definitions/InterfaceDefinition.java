@@ -84,6 +84,7 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 		// }
 		// imports.addAll(this.imports);
 		for (Method m : filter(methods)) {
+			int a;
 			if (m.isConstructor) {
 				continue;
 			}

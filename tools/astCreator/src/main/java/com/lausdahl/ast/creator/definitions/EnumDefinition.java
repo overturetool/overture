@@ -9,8 +9,9 @@ import com.lausdahl.ast.creator.java.definitions.JavaName;
 public class EnumDefinition extends BaseClassDefinition {
 	public List<String> elements = new Vector<String>();
 
-	public EnumDefinition(JavaName name) {
-		super(name);
+	public EnumDefinition(JavaName name, String astPackage) {
+		super(name, astPackage);
+
 	}
 
 	@Override

@@ -112,8 +112,12 @@ public class ExtensionGenerator2 {
 	// - Create function: void includeClassesFromExtension(result, extEnv)
 	private static boolean willGenerateExtentionFor(IInterfaceDefinition iDef,
 			Environment base) {
-		return base.lookUpType(iDef.getName().getName()) != null
-				&& !isUtilityOrTemplateClass(iDef, base);
+		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef
+				.getName().getName());
+		boolean hasSameTag = overtureEquivalent == null ? false : iDef
+				.getName().getTag()
+				.equals(overtureEquivalent.getName().getTag());
+		return hasSameTag && !isUtilityOrTemplateClass(iDef, base);
 	}
 
 	private static boolean isUtilityOrTemplateClass(IInterfaceDefinition def,
@@ -153,6 +157,7 @@ public class ExtensionGenerator2 {
 		newName.setPrefix(baseProduction.getName().getPrefix());
 		newName.setPostfix(baseProduction.getName().getPostfix());
 		newName.setPackageName(cmlPackage);
+		newName.setTag(baseProduction.getName().getTag());
 		return newName;
 	}
 
@@ -237,14 +242,31 @@ public class ExtensionGenerator2 {
 			// Lookup the base production base class e.g. PExpBase that will be
 			// the super class
 			// for out to be created PCmlExpBase. Examplified of course
-			String baseProductionBaseName = baseProduction.getName()
-					.getPrefix()
-					+ baseProduction.getName().getRawName()
-					+ "Base";
-			IClassDefinition baseProductionBase = base
-					.lookUp(baseProductionBaseName);
+			IClassDefinition baseProductionBase = null;
+			String baseProductionBaseName1 = null;
+			String baseProductionBaseName2 = null;
+
+			IInterfaceDefinition c = baseProduction;
+			while (c.getSuperDefs().size() > 0) {
+				IInterfaceDefinition tmp = c.getSuperDefs().iterator().next();
+				if (tmp instanceof PredefinedClassDefinition)
+					break;
+				c = tmp;
+			}
+			JavaName basePName = baseProduction.getName();
+			baseProductionBaseName1 = basePName.getPrefix()
+					+ basePName.getRawName() + basePName.getPostfix();
+			baseProductionBaseName2 = baseProductionBaseName1.replace(c
+					.getName().getRawName(), "Base");
+			baseProductionBaseName1 += "Base";
 
 			IInterfaceDefinition extProduction = e.getValue();
+			baseProductionBase = base.lookUp(baseProductionBaseName1);
+			if (baseProductionBase == null)
+				baseProductionBase = base.lookUp(baseProductionBaseName2);
+
+			if (baseProductionBase == null)
+				System.out.println("Crap!");
 
 			// In our running example let us Create the PCmlExpBase class
 			String cmlPackage = computeExtensionPackageName(ext, base,
@@ -254,8 +276,9 @@ public class ExtensionGenerator2 {
 			IClassDefinition extensionProductionBase = ClassFactory.create(
 					cmlPackage, newName.getRawName(), baseProductionBase,
 					base.classToType.get(baseProductionBase), result);
+			extensionProductionBase.getName().setTag(
+					baseProductionBase.getName().getTag());
 			extensionProductionBase.addInterface(extProduction);
-
 			class LocalKindMethod extends KindMethod {
 
 				public LocalKindMethod(IClassDefinition c,
@@ -273,17 +296,20 @@ public class ExtensionGenerator2 {
 					result.append("public " + returnType + " kind"
 							+ baseProduction.getName().getPrefix()
 							+ baseProduction.getName().getRawName() + "()");
-					result.append("{ throw new RuntimeException(\"Using the kind method is kind of deprecated ;).\"); }");
+					result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
 					return result.toString();
 				}
 
 			}
 
-			// Add kindMethod that throw RuntimeException
-			Method kindMethod = new LocalKindMethod(baseProductionBase, false);
-			extensionProductionBase.addMethod(kindMethod);
-			kindMethod.returnType = "E" + baseProduction.getName().getRawName();
-
+			if (!"S".equals(newName.getPrefix())) {
+				// Add kindMethod that throw RuntimeException
+				Method kindMethod = new LocalKindMethod(baseProductionBase,
+						false);
+				extensionProductionBase.addMethod(kindMethod);
+				kindMethod.returnType = "E"
+						+ baseProduction.getName().getRawName();
+			}
 			// Add mapping from the extensionProductionBase production to the
 			// extProduction
 			result.treeNodeInterfaces.put(extensionProductionBase,
@@ -298,7 +324,9 @@ public class ExtensionGenerator2 {
 	}
 
 	/*
-	 * UpdateFieldsWithUnresolvedTypes -------------------------------
+	 * UpdateFieldsWithUnresolvedTypes
+	 * 
+	 * -------------------------------
 	 * 
 	 * We allow the extension environment (ext) to be created with unresolved
 	 * types pointing into the base environment. Now it is time to resolve
@@ -320,29 +348,24 @@ public class ExtensionGenerator2 {
 			if (def instanceof BaseClassDefinition) {
 				BaseClassDefinition bcdef = (BaseClassDefinition) def;
 				for (Field f : bcdef.getFields()) {
-					if (f.type == null) {
-						IInterfaceDefinition type = base.lookupByTag(f
-								.getUnresolvedType());
-						if (type == null)
-							type = ext.lookupByTag(f.getUnresolvedType());
-						if (type != null) {
-							f.type = type;
-							if (type instanceof ExternalJavaClassDefinition) {
-								ExternalJavaClassDefinition ejcd = (ExternalJavaClassDefinition) type;
-								if (ejcd.getFields() != null
-										&& ejcd.getFields().size() > 0
-										&& ejcd.getFields().get(0).isTokenField)
-									f.isTokenField = true;
-							}
-						} else
-							throw new AstCreatorException(
-									"The extension points to production: "
-											+ f.getUnresolvedType()
-											+ " in alternative "
-											+ def.getName().getName()
-											+ " which does not exists.", null,
-									true);
-					}
+					IInterfaceDefinition type = (f.type == null ? result
+							.lookupTagPath(f.getUnresolvedType()) : f.type);
+					if (type != null) {
+						f.type = type;
+						if (type instanceof ExternalJavaClassDefinition) {
+							ExternalJavaClassDefinition ejcd = (ExternalJavaClassDefinition) type;
+							if (ejcd.getFields() != null
+									&& ejcd.getFields().size() > 0
+									&& ejcd.getFields().get(0).isTokenField)
+								f.isTokenField = true;
+						}
+					} else
+						throw new AstCreatorException(
+								"The extension points to production: "
+										+ f.getUnresolvedType()
+										+ " in alternative "
+										+ def.getName().getName()
+										+ " which does not exists.", null, true);
 				}
 			}
 
@@ -392,8 +415,11 @@ public class ExtensionGenerator2 {
 	//
 	// Also any top-level nodes taken from the ext-tree should have their
 	// super def to ext.node updated to result.node
+	//
+	//
 	private void updateSuperDefinitions(Environment result, Environment ext,
-			Map<String, IClassDefinition> cReplacementMap) {
+			Map<String, IClassDefinition> cReplacementMap,
+			Map<String, IInterfaceDefinition> iReplacementMap) {
 		for (IClassDefinition cdef : ext.getClasses()) {
 			IClassDefinition superDef = cdef.getSuperDef();
 			if (superDef != null) {
@@ -423,6 +449,20 @@ public class ExtensionGenerator2 {
 					cdef.getSuperDefs().remove(ext.iNode);
 					cdef.getSuperDefs().add(result.iNode);
 				}
+
+				// Replace supers
+				List<IInterfaceDefinition> tbr = new LinkedList<IInterfaceDefinition>();
+				List<IInterfaceDefinition> tba = new LinkedList<IInterfaceDefinition>();
+				for (IInterfaceDefinition idef : cdef.getSuperDefs())
+					if (cReplacementMap.containsKey(idef.getName().getName())) {
+						IClassDefinition newDef = cReplacementMap.get(idef
+								.getName().getName());
+						tbr.add(idef);
+						tba.add(newDef);
+					}
+				cdef.getSuperDefs().removeAll(tbr);
+				cdef.getSuperDefs().addAll(tba);
+
 			}
 
 		}
@@ -435,6 +475,18 @@ public class ExtensionGenerator2 {
 				idef.getSuperDefs().add(result.iNode);
 			}
 
+			List<IInterfaceDefinition> tbr = new LinkedList<IInterfaceDefinition>();
+			List<IInterfaceDefinition> tba = new LinkedList<IInterfaceDefinition>();
+			for (IInterfaceDefinition sidef : idef.getSuperDefs()) {
+				if (iReplacementMap.containsKey(sidef.getName().getName())) {
+					IInterfaceDefinition replacement = iReplacementMap
+							.get(sidef.getName().getName());
+					tbr.add(sidef);
+					tba.add(replacement);
+				}
+			}
+			idef.getSuperDefs().removeAll(tbr);
+			idef.getSuperDefs().addAll(tba);
 		}
 
 	}
@@ -507,7 +559,7 @@ public class ExtensionGenerator2 {
 		updateClassToType(result, ext, base);
 
 		// 6 Update super definitions
-		updateSuperDefinitions(result, ext, cReplacementMap);
+		updateSuperDefinitions(result, ext, cReplacementMap, iReplacementMap);
 
 		// 7 Update treeNode to interface mapping (that is the common implements
 		// relationship)
@@ -537,7 +589,7 @@ public class ExtensionGenerator2 {
 	 *            to either an Alternative or a Token in the extended
 	 *            environment.
 	 */
-	public static void runPostGeneration(Environment extEnv, Environment result) {
+	public void runPostGeneration(Environment extEnv, Environment result) {
 
 		createIAnalysisInterface(result, extEnv);
 
@@ -550,8 +602,8 @@ public class ExtensionGenerator2 {
 		createDepthFirstAdaptor(result,extEnv);
 	}
 
-	private static void createIQuestionAnswerInterface(
-			final Environment result, Environment extEnv) {
+	private void createIQuestionAnswerInterface(final Environment result,
+			Environment extEnv) {
 
 		List<String> genericArguments = new LinkedList<String>();
 		genericArguments.add("Q");
@@ -591,14 +643,14 @@ public class ExtensionGenerator2 {
 
 		};
 		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv,
-				result);
+				result, base);
 	}
 
 	/*
 	 * Create the Question interface e.g.
 	 * eu.compassresearch.ast.analysis.intf.IQuestion for the extension.
 	 */
-	private static void createIQuestionInterface(final Environment result,
+	private void createIQuestionInterface(final Environment result,
 			Environment extEnv) {
 
 		List<String> genericArguments = new LinkedList<String>();
@@ -635,13 +687,13 @@ public class ExtensionGenerator2 {
 			}
 		};
 		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv,
-				result);
+				result, base);
 	}
 
 	/*
 	 * Create the IAnswer interface for the extension.
 	 */
-	private static void createIAnswerInterface(final Environment result,
+	private void createIAnswerInterface(final Environment result,
 			Environment extEnv) {
 
 		List<String> genericArguments = new LinkedList<String>();
@@ -678,7 +730,7 @@ public class ExtensionGenerator2 {
 			}
 		};
 		createAnalysisInterface(genericArguments, name, tag, extMf, extEnv,
-				result);
+				result, base);
 	}
 
 	/*
@@ -712,7 +764,7 @@ public class ExtensionGenerator2 {
 	/*
 	 * Create the IExtAnalysis interface.
 	 */
-	private static void createIAnalysisInterface(final Environment result,
+	private void createIAnalysisInterface(final Environment result,
 			final Environment ext) {
 
 		MethodFactory extMf = new MethodFactory() {
@@ -747,7 +799,7 @@ public class ExtensionGenerator2 {
 
 		};
 		createAnalysisInterface(Arrays.asList(new String[0]), "Analysis",
-				result.TAG_IAnalysis, extMf, ext, result);
+				result.TAG_IAnalysis, extMf, ext, result, base);
 	}
 	
 	/***
@@ -915,7 +967,7 @@ public class ExtensionGenerator2 {
 
 	private static void createAnalysisInterface(List<String> genericArguments,
 			String name, String tag, MethodFactory extMf, Environment extEnv,
-			Environment result) {
+			Environment result, Environment base) {
 
 		// Create a extended analysis interface and add it to result
 		JavaName jname = new JavaName(
@@ -928,15 +980,17 @@ public class ExtensionGenerator2 {
 		IInterfaceDefinition iAnalysis = result.lookUpType("I" + name);
 		extNewDef.supers.add(iAnalysis);
 		extNewDef.setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
+
 		// Add methods for the analysis and apply functions for the classes
 		for (IClassDefinition cdef : result.getClasses()) {
 			Environment env = null;
 			IInterfaceDefinition newDef = null;
 			MethodFactory mf = null;
-			if (extEnv.classToType.containsKey(cdef)) {
+			if (!base.classToType.containsKey(cdef)
+					&& result.classToType.containsKey(cdef)) {
 				mf = extMf;
 				newDef = extNewDef;
-				env = extEnv;
+				env = result;
 			}
 
 			// Should it have an apply method and a case in the analysis?
@@ -977,8 +1031,9 @@ public class ExtensionGenerator2 {
 		extAnswerClass.setSuper(answerClass);
 
 		for (IClassDefinition cdef : result.getClasses()) {
-			if (extEnv.classToType.containsKey(cdef)) {
-				switch (extEnv.classToType.get(cdef)) {
+			if (result.classToType.containsKey(cdef)
+					&& !base.classToType.containsKey(cdef)) {
+				switch (result.classToType.get(cdef)) {
 				case Alternative:
 				case Token:
 
