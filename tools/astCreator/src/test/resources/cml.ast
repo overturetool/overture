@@ -4,40 +4,10 @@ base eu.compassresearch.ast.node;
 analysis eu.compassresearch.ast.analysis;
   
 Tokens
-/* This section declared tokens as internal types or external classes
- * internal definitions:
- *  plus='+';
- * 
- * external
- *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
- */
-  LexToken = 'java:node:eu.compassresearch.ast.lex.LexToken';
-  LexNameToken = 'java:node:eu.compassresearch.ast.lex.LexNameToken';
-  LexIdentifierToken = 'java:node:eu.compassresearch.ast.lex.LexIdentifierToken';
-  LexBooleanToken = 'java:node:eu.compassresearch.ast.lex.LexBooleanToken';
-  LexCharacterToken = 'java:node:eu.compassresearch.ast.lex.LexCharacterToken';
-  LexIntegerToken = 'java:node:eu.compassresearch.ast.lex.LexIntegerToken';
-  LexQuoteToken = 'java:node:eu.compassresearch.ast.lex.LexQuoteToken';
-  LexRealToken = 'java:node:eu.compassresearch.ast.lex.LexRealToken';
-  LexStringToken = 'java:node:eu.compassresearch.ast.lex.LexStringToken';
-  clonableFile ='java:eu.compassresearch.ast.util.ClonableFile';
-  clonableString ='java:eu.compassresearch.ast.util.ClonableString';
-  ClassDefinitionSettings = 'java:enum:eu.compassresearch.ast.typechecker.ClassDefinitionSettings';
-  location = 'java:eu.compassresearch.ast.lex.LexLocation';
-  nameScope = 'java:enum:eu.compassresearch.ast.typechecker.NameScope';
-  
-  //Java
-  java_Boolean = 'java:java.lang.Boolean';
-  java_Integer = 'java:java.lang.Integer';
-  java_String = 'java:java.lang.String';
-  java_Long = 'java:java.lang.Long';
   java_File = 'java:java.io.File';
   java_Stream = 'java:java.io.InputStream';
   
      
-  static = 'static';
-  async = 'async';
-  
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
  *
@@ -221,8 +191,8 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             [postcondition]:exp
                             [measure]:LexNameToken
                             
-                            (predef):explicit 
-                            (postdef):explicit
+                            (predef):definition.#function.explicit 
+                            (postdef):definition.#function.explicit
                             (measureDef):definition
                             (paramDefinitionList):definition*
                             
@@ -243,8 +213,8 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             [result]:pair*
                             [precondition]:exp 
                             [postcondition]:exp 
-                            (predef):explicit 
-                            (postdef):explicit 
+                            (predef):definition.#function.explicit 
+                            (postdef):definition.#function.explicit 
                             (measureDef):definition
                             (recursive):java_Boolean
                             (isUndefined):java_Boolean 
@@ -822,7 +792,7 @@ parameter {-> package='eu.compassresearch.ast.actions'}
 	= {let} [action]:action [localDefinitions]:definition*
 	| {block} [declareStatement]:action.#Statement.declare [action]:action	
 	| {nonDeterministicIf} 
-		[alternatives]:nonDeterministicAlt*
+		[alternatives]: action.#Statement.nonDeterministicAlt*
 	| {nonDeterministicAlt} 
 		[guard]:exp 
 		[action]:action
@@ -859,7 +829,7 @@ parameter {-> package='eu.compassresearch.ast.actions'}
 		(classdef):definition.#paragraph.class 
 		(ctorDefinition):definition
 	| {nonDeterministicDo} 
-		[alternatives]:nonDeterministicAlt*
+		[alternatives]: action.#Statement.nonDeterministicAlt*
 	| {forSet} 
 		[pattern]:pattern 
 		[set]:exp 
