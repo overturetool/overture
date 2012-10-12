@@ -13,6 +13,7 @@ public class ConjectureData
     
     public void addConjecture(Conjecture c)
     {
+    	//TODO: Check if conjecture already exists in the list
     	conjectures.add(c);
     }
     
