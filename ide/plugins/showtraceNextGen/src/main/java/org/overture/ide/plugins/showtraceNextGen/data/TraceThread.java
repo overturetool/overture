@@ -2,7 +2,7 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 
 import java.util.Stack;
 
-public class TraceThread 
+public class TraceThread extends TraceResource
 {
     private Long id;
     private Boolean blocked;

@@ -5,9 +5,9 @@ import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 public class ThreadSwapEventHandler extends EventHandler {
 
-	public ThreadSwapEventHandler(TraceData data) 
+	public ThreadSwapEventHandler(TraceData data, ConjectureData conjectures) 
 	{
-		super(data);
+		super(data, conjectures);
 	}
 
 	@Override

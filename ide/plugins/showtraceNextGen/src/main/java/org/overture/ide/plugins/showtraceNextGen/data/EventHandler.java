@@ -1,6 +1,10 @@
 package org.overture.ide.plugins.showtraceNextGen.data;
 
-import org.overture.ide.plugins.showtraceNextGen.draw.*;
+import java.util.Vector;
+
+import org.overture.ide.plugins.showtraceNextGen.draw.CpuEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.OverviewEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.TraceEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
@@ -8,13 +12,15 @@ public abstract class EventHandler {
 	
 	public enum EventViewType {OVERVIEW, CPU};
 	
+	protected ConjectureData conjectures;
 	protected TraceData data;
 	protected TraceEventViewer eventViewer;
 	protected CpuEventViewer cpuViewer;
 	protected OverviewEventViewer overviewViewer;
 
-	public EventHandler(TraceData data)
+	public EventHandler(TraceData data, ConjectureData conjectures)
 	{
+		this.conjectures = conjectures;
 		this.data = data;
 		this.cpuViewer = new CpuEventViewer();
 		this.overviewViewer = new OverviewEventViewer();
@@ -29,13 +35,21 @@ public abstract class EventHandler {
 		switch(viewType)
 		{
 			case OVERVIEW: 
-				eventViewer = overviewViewer;	
-				//if(conjectureData.IsConjecturePresent(event.time))
-				//{
-				//	Vector<TraceCPU> cpus = data.GetCpuFromThreadId(conjectureData.GetConjectureThreadId(event.time));
-				//  for(TraceCPU cpu : cpus)
-				//	  overviewViewer.DrawConjecture(cpu, conjectureName);
-				//}
+				eventViewer = overviewViewer;
+				
+				//Draw conjectures on the overview
+				Vector<Conjecture> cons = conjectures.getConjecture(event.getTime());
+				
+				for(Conjecture c : cons)
+				{
+					TraceCPU cpu = data.getCpuFromThreadId(c.getThreadID());
+					switch(c.getType())
+					{
+						case SOURCE: overviewViewer.drawSourceConjecture(tab, cpu, c.getName());
+						case DESTINATION: overviewViewer.drawDestinationConjecture(tab, cpu, c.getName());
+					}
+				}
+
 				break;
 			case CPU: eventViewer = cpuViewer; break;
 			default: return false;

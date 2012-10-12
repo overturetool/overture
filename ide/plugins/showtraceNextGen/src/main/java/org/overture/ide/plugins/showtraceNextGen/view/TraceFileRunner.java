@@ -11,30 +11,22 @@ import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 public class TraceFileRunner implements ITraceRunner 
 {
+	private ConjectureData conjectures;
 	private TraceData data;
 	private Map<Class<?>, EventHandler> eventHandlers;
 	
-	public TraceFileRunner(TraceData data)
+	public TraceFileRunner(TraceData data, ConjectureData conjectures)
 	{
+		this.conjectures = conjectures;
 		this.data = data;
 		this.eventHandlers = new HashMap<Class<?>, EventHandler>();
 		
 		//Register Events
-		eventHandlers.put(NextGenThreadEvent.class, new ThreadEventHandler(data));
-		eventHandlers.put(NextGenThreadSwapEvent.class, new ThreadSwapEventHandler(data));
-		eventHandlers.put(NextGenOperationEvent.class, new OperationEventHandler(data));
-		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data));
-		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data));
-	}
-	
-	public void addFailedUpper(Long ptime, Long pthr, String pname) 
-	{
-		// TODO Auto-generated method stub
-	}
-
-	public void addFailedLower(Long ptime, Long pthr, String pname) 
-	{
-		// TODO Auto-generated method stub
+		eventHandlers.put(NextGenThreadEvent.class, new ThreadEventHandler(data, conjectures));
+		eventHandlers.put(NextGenThreadSwapEvent.class, new ThreadSwapEventHandler(data, conjectures));
+		eventHandlers.put(NextGenOperationEvent.class, new OperationEventHandler(data, conjectures));
+		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data, conjectures));
+		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data, conjectures));
 	}
 
 	public void drawArchitecture(GenericTabItem tab) throws Exception 
@@ -74,7 +66,8 @@ public class TraceFileRunner implements ITraceRunner
 			
 		//Draw events as long as there is room and time
 		Long eventTime = eventStartTime;
-		while(!tab.isCanvasOverrun() && eventTime <= data.getMaxEventTime()) 
+		Long lastEventTime = data.getMaxEventTime();
+		while(!tab.isCanvasOverrun() && eventTime <= lastEventTime) 
 		{
 			//Get all events at the current time
 			for(Object event : data.getEvents(eventTime))

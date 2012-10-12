@@ -7,9 +7,9 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 public class ThreadEventHandler extends EventHandler {
 
 
-	public ThreadEventHandler(TraceData data) 
+	public ThreadEventHandler(TraceData data, ConjectureData conjectures) 
 	{
-		super(data);
+		super(data, conjectures);
 	}
 
 	@Override
@@ -43,7 +43,6 @@ public class ThreadEventHandler extends EventHandler {
 			}
 			thread.pushCurrentObject(object);
 			eventViewer.drawThreadCreate(tab, cpu, thread);
-			cpu.addThreadId(threadId);
 			break;
 		case SWAP: 
 			return false;

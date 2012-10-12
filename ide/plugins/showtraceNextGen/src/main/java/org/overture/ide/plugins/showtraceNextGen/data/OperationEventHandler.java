@@ -5,9 +5,9 @@ import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 public class OperationEventHandler extends EventHandler {
 
-	public OperationEventHandler(TraceData data) 
+	public OperationEventHandler(TraceData data, ConjectureData conjectures) 
 	{
-		super(data);
+		super(data, conjectures);
 	}
 
 	@Override

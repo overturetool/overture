@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Vector;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.geometry.Point;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.*;
@@ -53,6 +54,11 @@ public class OverviewEventViewer extends TraceEventViewer {
             //Draw Bus line
             drawTimeline(tab, bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
         }
+        
+		//Add spacer between bus/cpu objects and timeline
+		Line spacer = new Line(0L, 0L, CPU_X_START, 0L);
+		spacer.setForegroundColor(ColorConstants.white);
+		tab.addFigure(spacer);
 	}
 	
 	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -103,7 +109,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 	{
 		updateCpu(tab, cpu, thread);
 		
-		Long x1 = tab.getXMax() < cpu.getX() ? cpu.getX() : tab.getXMax();
+		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
 		Long y1 = cpu.getY();
 		Long y2 = y1;
@@ -116,7 +122,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 	{
 		updateCpu(tab, cpu, thread);
 		
-		Long x1 = tab.getXMax() < cpu.getX() ? cpu.getX() : tab.getXMax();
+		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
 		Long y1 = cpu.getY();
 		Long y2 = y1;
@@ -287,13 +293,47 @@ public class OverviewEventViewer extends TraceEventViewer {
 		        
 		    }
     	}
-	    
-	    
-//TODO: MVQ: Check conjectures?
-//	    if(cpu.hasCurrentThread())
-//	    {
-//	    	Long thrid = data.getThread(cpu.getCurrentThread()).getId();
-//	        checkConjectureLimits(pgti, ov_uxpos - ELEMENT_uSIZE, cpu.getY(), ov_ucurrenttime, thrid);
-//	    }
     }
+    
+	public void drawSourceConjecture(GenericTabItem tab, TraceCPU cpu, String name)
+	{
+        Ellipse ellipse = new Ellipse();
+        NormalLabel label = new NormalLabel(name, tab.getCurrentFont());
+
+        Point p1 = new Point(tab.getXMax() + 1L, cpu.getY() - 8L);
+        Point p2 = new Point(tab.getXMax() + 2L, cpu.getY() + 12L);
+  
+        ellipse.setLocation(p1);
+        ellipse.setSize(16, 16);
+        ellipse.setFill(false);
+        ellipse.setForegroundColor(ColorConstants.red);
+        
+        tab.addBackgroundFigure(ellipse);
+        
+        label.setLocation(p2);
+        label.setForegroundColor(ColorConstants.red);
+        
+        tab.addBackgroundFigure(label);
+	}
+    
+	public void drawDestinationConjecture(GenericTabItem tab, TraceCPU cpu, String name)
+	{
+        Ellipse ellipse = new Ellipse();
+        NormalLabel label = new NormalLabel(name, tab.getCurrentFont());
+
+        Point p1 = new Point(tab.getXMax() + 1L, cpu.getY() - 8L);
+        Point p2 = new Point(tab.getXMax() + 2L, cpu.getY() - 40L);
+        
+        ellipse.setLocation(p1);
+        ellipse.setSize(16, 16);
+        ellipse.setFill(false);
+        ellipse.setForegroundColor(ColorConstants.red);
+        
+        tab.addBackgroundFigure(ellipse);
+        
+        label.setLocation(p2);
+        label.setForegroundColor(ColorConstants.red);
+        
+        tab.addBackgroundFigure(label);
+	}
 }

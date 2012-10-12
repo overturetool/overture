@@ -6,8 +6,8 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 
 public class BusMessageEventHandler extends EventHandler {
 
-	public BusMessageEventHandler(TraceData data) {
-		super(data);
+	public BusMessageEventHandler(TraceData data, ConjectureData conjectures) {
+		super(data, conjectures);
 	}
 
 	@Override

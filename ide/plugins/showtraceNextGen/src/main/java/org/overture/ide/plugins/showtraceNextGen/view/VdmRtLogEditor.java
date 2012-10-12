@@ -49,6 +49,9 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem.AllowedOverrunDirection;
+import org.overture.ide.plugins.showtraceNextGen.data.Conjecture;
+import org.overture.ide.plugins.showtraceNextGen.data.Conjecture.ConjectureType;
+import org.overture.ide.plugins.showtraceNextGen.data.ConjectureData;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
 public class VdmRtLogEditor extends EditorPart implements IViewCallback
@@ -75,9 +78,11 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	private ITraceRunner traceRunner;
 	private TracefileMarker theMarkers;
+	private ConjectureData conjectureData;
 
 	public VdmRtLogEditor()
 	{
+		conjectureData = new ConjectureData();
 		theConjectures = null;
 		theArch = null;
 		theOverview = null;
@@ -162,6 +167,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		FileDialog fDlg = new FileDialog(getSite().getShell());
 		String valFileName = fDlg.open();
 		theConjectures.parseValidationFile(valFileName);
+		
+		updateOverviewPage();
 	}
 
 	void diagramExportAction()
@@ -224,28 +231,14 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		updateOverviewPage();
 	}
 
-	public void addLowerError(Long x1, Long x2, String name)
+	public void addLowerError(Long time, Long threadID, String name)
 	{
-		if (traceRunner != null)
-			try
-			{
-				traceRunner.addFailedLower(x1, x2, name);
-			} catch (Exception cge)
-			{
-				showMessage(cge.getMessage());
-			}
+		conjectureData.addConjecture(new Conjecture(time, threadID, name, ConjectureType.SOURCE));
 	}
 
-	public void addUpperError(Long x1, Long x2, String name)
+	public void addUpperError(Long time, Long threadID, String name)
 	{
-		if (traceRunner != null)
-			try
-			{
-				traceRunner.addFailedUpper(x1, x2, name);
-			} catch (Exception cge)
-			{
-				showMessage(cge.getMessage());
-			}
+		conjectureData.addConjecture(new Conjecture(time, threadID, name, ConjectureType.DESTINATION));
 	}
 
 	private void parseFile(final String fname)
@@ -302,7 +295,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}		
 		else if (t.data != null)
 		{
-			traceRunner = TraceRunnerFactory.getTraceRunner(t.data);
+			traceRunner = TraceRunnerFactory.getTraceRunner(t.data, conjectureData);
 			theTimes = t.data.getEventTimes();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{
