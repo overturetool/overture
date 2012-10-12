@@ -264,6 +264,7 @@ public class TraceData
         return res; 
 	}
 	
+	//Events
 	public Long getMaxEventTime()
 	{
 		return getEvents().lastKey();

@@ -68,9 +68,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	private Vector<Long> theTimes;
 	private long currentTime;
 
-	private boolean canExportJpg = false;
-	private boolean canMoveHorizontal = false;
-	private boolean canOpenValidation = false;
+	private boolean canExportJpg = true;
+	private boolean canMoveHorizontal = true;
+	private boolean canOpenValidation = true;
 
 	private ITraceRunner traceRunner;
 	private TracefileMarker theMarkers;
