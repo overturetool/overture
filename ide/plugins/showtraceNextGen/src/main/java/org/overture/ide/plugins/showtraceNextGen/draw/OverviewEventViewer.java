@@ -288,13 +288,15 @@ public class OverviewEventViewer extends TraceEventViewer {
 		        
 		    }
     	}
-	    
-	    
-//TODO: MVQ: Check conjectures?
-//	    if(cpu.hasCurrentThread())
-//	    {
-//	    	Long thrid = data.getThread(cpu.getCurrentThread()).getId();
-//	        checkConjectureLimits(pgti, ov_uxpos - ELEMENT_uSIZE, cpu.getY(), ov_ucurrenttime, thrid);
-//	    }
     }
+    
+	public void drawSourceConjecture(GenericTabItem tab, TraceCPU cpu, String name)
+	{
+
+	}
+    
+	public void drawDestinationConjecture(GenericTabItem tab, TraceCPU cpu, String name)
+	{
+
+	}
 }

@@ -26,16 +26,6 @@ public class TraceFileRunner implements ITraceRunner
 		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data));
 		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data));
 	}
-	
-	public void addFailedUpper(Long ptime, Long pthr, String pname) 
-	{
-		// TODO Auto-generated method stub
-	}
-
-	public void addFailedLower(Long ptime, Long pthr, String pname) 
-	{
-		// TODO Auto-generated method stub
-	}
 
 	public void drawArchitecture(GenericTabItem tab) throws Exception 
 	{
