@@ -108,9 +108,10 @@ public class CpuEventViewer  extends TraceEventViewer {
 		obj.setY(y2);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem pgti, TraceCPU cpu, TraceThread thread)
+	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
 	{
-		//TODO
+		//MAA: Assumes from reverse engineering Tracefilevisitor that ThreadSwapIn = DelayedThreadSwapIn
+		drawThreadSwapIn(tab, cpu, thread);
 	}
 
 	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -144,6 +145,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 
 		obj.setY(y2);
 	}
+
 
 	//Bus Messages
 	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu,  TraceThread thread, TraceBus bus, TraceOperation op, TraceObject obj)

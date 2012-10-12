@@ -98,6 +98,7 @@ public class TraceFileRunner implements ITraceRunner
 			}
 			
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
+			//canvasOverrun = tab.isCanvasOverrun();
 		}
 	}
 	
