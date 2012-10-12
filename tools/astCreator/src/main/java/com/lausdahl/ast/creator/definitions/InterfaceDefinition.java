@@ -21,7 +21,7 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 	protected String annotation = "";
 	protected String extJavaDoc = "";
 	// private String javaDoc =
-
+	private String astPackage;
 	public boolean filterMethodsIfInherited = false;
 	private boolean isFinal = false;
 	private boolean isAbstract = false;
@@ -36,8 +36,9 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 		this.extJavaDoc = extJavaDoc;
 	}
 
-	public InterfaceDefinition(JavaName name) {
+	public InterfaceDefinition(JavaName name, String astPackage) {
 		this.name = name;
+		this.astPackage = astPackage;
 	}
 
 	public JavaName getName() {
@@ -347,4 +348,9 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 	// {
 	// return getName().hashCode();
 	// }
+
+	public String getAstPackage() {
+		return astPackage;
+	}
+
 }

@@ -19,11 +19,9 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	protected final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
 	protected final Set<IInterfaceDefinition> interfaces = new HashSet<IInterfaceDefinition>();
 	protected IClassDefinition superDef;
-	private String astPackage;
 
 	public BaseClassDefinition(JavaName name, String astPackage) {
-		super(name);
-		this.astPackage = astPackage;
+		super(name, astPackage);
 	}
 
 	public boolean hasSuper() {
@@ -306,10 +304,6 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 			}
 		}
 		this.interfaces.add(intf);
-	}
-
-	public String getAstPackage() {
-		return astPackage;
 	}
 
 }

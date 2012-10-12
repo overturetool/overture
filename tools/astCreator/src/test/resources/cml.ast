@@ -98,7 +98,7 @@ definition {-> package='eu.compassresearch.ast.definitions'}
     		(invType):type.#invariant 
             [invPattern]:pattern 
             [invExpression]:exp 
-            [invdef]:definition.#function.explicit 
+            [invdef]:definition.explicitFunction 
 			[infinite]:java_Boolean //is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
@@ -144,8 +144,8 @@ definition {-> package='eu.compassresearch.ast.definitions'}
  	   		[operationDefinition]: definition
  	   | {state} 
     		[fields]:field.field* 
-            [invPattern]:pattern [invExpression]:exp (invdef):definition.#function.explicit
-            [initPattern]:pattern [initExpression]:exp (initdef):definition.#function.explicit
+            [invPattern]:pattern [invExpression]:exp (invdef):definition.explicitFunction
+            [initPattern]:pattern [initExpression]:exp (initdef):definition.explicitFunction
             (stateDefs):definition* 
 	   ;
     
@@ -157,8 +157,8 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             
                             (type):type.operation
                             
-                            (predef):definition.#function.explicit
-                            (postdef):definition.#function.explicit
+                            (predef):definition.explicitFunction
+                            (postdef):definition.explicitFunction
                             (paramDefinitions):definition*
                             (state):definition.#paragraph.state
                             
@@ -174,14 +174,15 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             [errors]:case.error*
                             
                             (type):type.operation
-                            (predef):definition.#function.explicit
-                            (postdef):definition.#function.explicit
+                            (predef):definition.explicitFunction
+                            (postdef):definition.explicitFunction
                             (state):definition.#paragraph.state
                             (actualResult):type
                             (stateDefinition):definition
                             [isConstructor]:java_Boolean    
     ;
-    
+
+/*
 #function {-> package='eu.compassresearch.ast.definitions'}
     =  {explicit}  [typeParams]:LexNameToken* 
                             [paramPatternList]:pattern**
@@ -191,8 +192,8 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             [postcondition]:exp
                             [measure]:LexNameToken
                             
-                            (predef):definition.#function.explicit 
-                            (postdef):definition.#function.explicit
+                            (predef):definition.explicitFunction 
+                            (postdef):definition.explicitFunction
                             (measureDef):definition
                             (paramDefinitionList):definition*
                             
@@ -213,8 +214,8 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             [result]:pair*
                             [precondition]:exp 
                             [postcondition]:exp 
-                            (predef):definition.#function.explicit 
-                            (postdef):definition.#function.explicit 
+                            (predef):definition.explicitFunction 
+                            (postdef):definition.explicitFunction 
                             (measureDef):definition
                             (recursive):java_Boolean
                             (isUndefined):java_Boolean 
@@ -224,6 +225,7 @@ definition {-> package='eu.compassresearch.ast.definitions'}
                             (type):type.function
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
 	;
+*/
 
 /*
     Expressions
@@ -241,7 +243,7 @@ exp {-> package='eu.compassresearch.ast.expressions'}
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.#function.explicit (impdef):definition.#function.implicit
+    |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp /*cml*/
     |   {iota} [bind]:bind [predicate]:exp
@@ -1036,7 +1038,7 @@ Aspect Declaration
 
 %type->#invariant
     =   (opaque):java_Boolean
-        (invDef):definition.#function.explicit
+        (invDef):definition.explicitFunction
     ; 
 
 %type->#seq

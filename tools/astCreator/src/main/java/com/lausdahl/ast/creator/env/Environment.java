@@ -163,10 +163,18 @@ public class Environment extends BaseEnvironment {
 	 * For example: exp.#Binary.plus
 	 * 
 	 * @param path
+	 * @param generalize
+	 *            - if true: lookupTagPath will generalize to the must general
+	 *            class, which must be unique, if not an AstCreatorException is
+	 *            thrown.
+	 * 
+	 *            - if false: lookupTagPath will not generalize however then the
+	 *            result may be ambiguous in which case null is returned.
+	 * 
 	 * @return The unique alternative or production pointed out by the path.
 	 * @throws AstCreatorException
 	 */
-	public IInterfaceDefinition lookupTagPath(String path)
+	public IInterfaceDefinition lookupTagPath(String path, boolean generalize)
 			throws AstCreatorException {
 
 		List<IClassDefinition> possibleResult = null;
@@ -217,7 +225,8 @@ public class Environment extends BaseEnvironment {
 
 						if (isSuperTo(parentIdef, childIdef)) {
 							validContinuation.add(childIdef);
-							validContinuation.add(parentIdef);
+							if (generalize)
+								validContinuation.add(parentIdef);
 						}
 					}
 				possibleResult = validContinuation;
@@ -246,12 +255,24 @@ public class Environment extends BaseEnvironment {
 			return null;
 		if (possibleResult.size() == 1) {
 			IInterfaceDefinition found = possibleResult.get(0);
-			if (treeNodeInterfaces.containsKey(found))
-				return treeNodeInterfaces.get(found);
+			if (generalize) {
+
+				if (treeNodeInterfaces.containsKey(found))
+					return treeNodeInterfaces.get(found);
+				return found;
+			}
 			return found;
 		}
-		throw new AstCreatorException("Searching for tag \"" + path
-				+ "\" gave multiple possibilities.", null, true);
+
+		if (generalize) {
+			StringBuilder message = new StringBuilder();
+			message.append("Searching for tag \"" + path
+					+ "\" gave multiple possibilities:\n");
+			for (IInterfaceDefinition p : possibleResult)
+				message.append("\t" + p.toString() + "\n");
+			throw new AstCreatorException(message.toString(), null, true);
+		} else
+			return null;
 	}
 
 	public IInterfaceDefinition lookupByTag(String tag) {

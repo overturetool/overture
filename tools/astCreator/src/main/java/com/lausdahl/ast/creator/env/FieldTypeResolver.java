@@ -12,7 +12,9 @@ public class FieldTypeResolver {
 
 		IInterfaceDefinition type = null;
 		try {
-			type = env.lookupTagPath(unresolvedTypeName);
+			type = env.lookupTagPath(unresolvedTypeName, false);
+			if (type == null)
+				type = env.lookupTagPath(unresolvedTypeName, true);
 			if (type == null)
 				type = searchType(unresolvedTypeName, env);
 		} catch (AstCreatorException e) {
@@ -28,6 +30,7 @@ public class FieldTypeResolver {
 
 	public static IInterfaceDefinition searchType(String unresolvedTypeName,
 			Environment env) {
+
 		// First look up all tokens
 		for (IClassDefinition cd : env.getClasses()) {
 			if (env.isTreeNode(cd)) {
@@ -48,6 +51,7 @@ public class FieldTypeResolver {
 				}
 			}
 		}
+
 		// Lookup in all sub productions
 		for (IClassDefinition cd : env.getClasses()) {
 			if (env.isTreeNode(cd)) {

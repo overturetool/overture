@@ -9,23 +9,18 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.lausdahl.ast.creator.AstCreatorException;
-import com.lausdahl.ast.creator.Generator;
 import com.lausdahl.ast.creator.definitions.BaseClassDefinition;
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
-import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
-import com.lausdahl.ast.creator.definitions.Field.AccessSpecifier;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
-import com.lausdahl.ast.creator.env.BaseEnvironment;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.KindMethod;
 import com.lausdahl.ast.creator.methods.Method;
-import com.lausdahl.ast.creator.methods.SetMethod;
 import com.lausdahl.ast.creator.methods.analysis.depthfirst.DepthFirstCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;
@@ -34,8 +29,6 @@ import com.lausdahl.ast.creator.methods.visitors.QuestionAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.QuestionAnswerAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
-import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultNodeMethod;
-import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultTokenMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorDefaultMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionAdaptorCaseMethod;
@@ -190,7 +183,7 @@ public class ExtensionGenerator2 {
 				JavaName newName = makeExtensionJavaName(baseProduction, ext,
 						base);
 				InterfaceDefinition extProduction = new InterfaceDefinition(
-						newName);
+						newName, result.getAstPackage());
 				extProduction.supers.add(baseProduction);
 
 				// Update mapping, in the result environment the new extension
@@ -349,7 +342,8 @@ public class ExtensionGenerator2 {
 				BaseClassDefinition bcdef = (BaseClassDefinition) def;
 				for (Field f : bcdef.getFields()) {
 					IInterfaceDefinition type = (f.type == null ? result
-							.lookupTagPath(f.getUnresolvedType()) : f.type);
+							.lookupTagPath(f.getUnresolvedType(), true)
+							: f.type);
 					if (type != null) {
 						f.type = type;
 						if (type instanceof ExternalJavaClassDefinition) {
@@ -598,8 +592,8 @@ public class ExtensionGenerator2 {
 		createIQuestionInterface(result, extEnv);
 
 		createIQuestionAnswerInterface(result, extEnv);
-		
-		createDepthFirstAdaptor(result,extEnv);
+
+		createDepthFirstAdaptor(result, extEnv);
 	}
 
 	private void createIQuestionAnswerInterface(final Environment result,
@@ -801,88 +795,94 @@ public class ExtensionGenerator2 {
 		createAnalysisInterface(Arrays.asList(new String[0]), "Analysis",
 				result.TAG_IAnalysis, extMf, ext, result, base);
 	}
-	
+
 	/***
-	 * Get the list of classes from classList that are in env. If a class has been replaced
-	 * due to extending base classes the replaced class will be included.
-	 * @param classList 
-	 * @param extensionName Name of the extension, which helps to identify replaced classes
-	 * @param env Environment to check for the existence
+	 * Get the list of classes from classList that are in env. If a class has
+	 * been replaced due to extending base classes the replaced class will be
+	 * included.
+	 * 
+	 * @param classList
+	 * @param extensionName
+	 *            Name of the extension, which helps to identify replaced
+	 *            classes
+	 * @param env
+	 *            Environment to check for the existence
 	 * @return
 	 */
 	private static List<IClassDefinition> getExtClasses(
-			List<IClassDefinition> classList, 
-			String extensionName,
-			Environment env )
-	{
+			List<IClassDefinition> classList, String extensionName,
+			Environment env) {
 		List<IClassDefinition> classes = new LinkedList<IClassDefinition>();
 
-		for (IClassDefinition c : classList)
-		{
-			//Check for the existing of the classdef directly.
-			if (env.isTreeNode(c))
-			{
+		for (IClassDefinition c : classList) {
+			// Check for the existing of the classdef directly.
+			if (env.isTreeNode(c)) {
 				classes.add(c);
 			}
-			//else if it does not exist in env, check if the class has been replaced and add this instead.
+			// else if it does not exist in env, check if the class has been
+			// replaced and add this instead.
 			else {
-				
-				String newName = c.getName().getPrefix() + extensionName + c.getName().getRawName() +  c.getName().getPostfix();
-				
+
+				String newName = c.getName().getPrefix() + extensionName
+						+ c.getName().getRawName() + c.getName().getPostfix();
+
 				IClassDefinition newC = env.lookUp(newName);
-				
-				if(null != newC)
+
+				if (null != newC)
 					classes.add(newC);
 			}
 		}
 		return classes;
 	}
-	
+
 	/***
 	 * Creates the DepthFistAnalysisAdaptor for the extension
-	 * @param result The environment of the result of merging the base with the extension environment
-	 * @param extEnv The extension environment only
+	 * 
+	 * @param result
+	 *            The environment of the result of merging the base with the
+	 *            extension environment
+	 * @param extEnv
+	 *            The extension environment only
 	 */
 	private static void createDepthFirstAdaptor(Environment result,
-			Environment extEnv)
-	{
+			Environment extEnv) {
 
 		// Create a extended depth first analysis adapter and add it to extEnv
-		JavaName jname = new JavaName(
-				result.getAstPackage() + ".analysis", "DepthFirstAnalysis" + extEnv.getName() + "Adaptor");
+		JavaName jname = new JavaName(result.getAstPackage() + ".analysis",
+				"DepthFirstAnalysis" + extEnv.getName() + "Adaptor");
 		IClassDefinition extAdaptor = ClassFactory.createCustom(jname, result);
-		
-		//Find the base DepthFirstAnalysisAdaptor and set it as super to the newly created one
-		IClassDefinition baseAdaptor = result.lookUp("DepthFirstAnalysisAdaptor");
+
+		// Find the base DepthFirstAnalysisAdaptor and set it as super to the
+		// newly created one
+		IClassDefinition baseAdaptor = result
+				.lookUp("DepthFirstAnalysisAdaptor");
 		extAdaptor.setSuper(baseAdaptor);
 
-		//Find the base visitedNode field
-		//FIXME "".get(0) is not the best way of getting the field :)
+		// Find the base visitedNode field
+		// FIXME "".get(0) is not the best way of getting the field :)
 		Field queue = baseAdaptor.getFields().get(0);
-		
-		//The inherited field type also need to be imported because it is used in the constructor
+
+		// The inherited field type also need to be imported because it is used
+		// in the constructor
 		((InterfaceDefinition) extAdaptor).imports.add(queue.type);
 
 		/**
-		 * Go Through all the classes in the extension and add the corresponding methods 
-		 * in the extended analysis and remove them in the base analysis
+		 * Go Through all the classes in the extension and add the corresponding
+		 * methods in the extended analysis and remove them in the base analysis
 		 */
-		for (IClassDefinition c : getExtClasses(extEnv.getClasses(),extEnv.getName(),
-				result))
-		{
-			switch (result.classToType.get(c))
-			{
+		for (IClassDefinition c : getExtClasses(extEnv.getClasses(),
+				extEnv.getName(), result)) {
+			switch (result.classToType.get(c)) {
 
 			case Custom:
 				break;
 			case Production:
-			case SubProduction:
-			{
+			case SubProduction: {
 				AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(
 						c);
 				mIn.setDefaultPostfix("In");
 				mIn.setClassDefinition(c);
-				
+
 				extAdaptor.addMethod(mIn);
 				AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(
 						c);
@@ -892,21 +892,20 @@ public class ExtensionGenerator2 {
 				extAdaptor.addMethod(mOut);
 
 			}
-			break;
+				break;
 			case Alternative:
-			case Token:
-			{
-				
+			case Token: {
+
 				IClassDefinition superDef = c.getSuperDef();
-				
+
 				// continue;
 				Method m = new DepthFirstCaseMethod(c, queue);
 				m.setClassDefinition(c);
 				// m.setEnvironment(source);
 				extAdaptor.addMethod(m);
-								
+
 			}
-			break;
+				break;
 			case Unknown:
 				break;
 
@@ -916,17 +915,16 @@ public class ExtensionGenerator2 {
 			mIn.setMethodNamePrefix("in");
 			mIn.setDefaultPostfix("In");
 			mIn.setClassDefinition(c);
-			//  mIn.setEnvironment(source);
+			// mIn.setEnvironment(source);
 			extAdaptor.addMethod(mIn);
 
 			AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
 			mOut.setMethodNamePrefix("out");
 			mOut.setDefaultPostfix("Out");
 			mOut.setClassDefinition(c);
-			//          mOut.setEnvironment(source);
+			// mOut.setEnvironment(source);
 			extAdaptor.addMethod(mOut);
 
-			
 			// Remove the case for the existing adaptor
 			List<Method> toBeRemoved = new LinkedList<Method>();
 			for (Method method : baseAdaptor.getMethods()) {
@@ -935,34 +933,38 @@ public class ExtensionGenerator2 {
 				}
 			}
 			baseAdaptor.getMethods().removeAll(toBeRemoved);
-			
+
 		}
-		
-//		{
-//			AnalysisAdaptorDefaultNodeMethod mOut = new AnalysisAdaptorDefaultNodeMethod();
-//			mOut.setDefaultPostfix("Out");
-//			//          mOut.setEnvironment(source);
-//			extAdaptor.addMethod(mOut);
-//
-//			AnalysisAdaptorDefaultNodeMethod mIn = new AnalysisAdaptorDefaultNodeMethod();
-//			mIn.setDefaultPostfix("In");
-//			//        mIn.setEnvironment(source);
-//			extAdaptor.addMethod(mIn);
-//		}
-//
-//		{
-//			AnalysisAdaptorDefaultTokenMethod mOut = new AnalysisAdaptorDefaultTokenMethod();
-//			mOut.setDefaultPostfix("Out");
-//			//      mOut.setEnvironment(source);
-//			extAdaptor.addMethod(mOut);
-//
-//			AnalysisAdaptorDefaultTokenMethod mIn = new AnalysisAdaptorDefaultTokenMethod();
-//			mIn.setDefaultPostfix("In");
-//			//    mIn.setEnvironment(source);
-//			extAdaptor.addMethod(mIn);
-//		}
-//
-//		// FIXME adaptor.getImports().addAll(source.getAllDefinitions());
+
+		// {
+		// AnalysisAdaptorDefaultNodeMethod mOut = new
+		// AnalysisAdaptorDefaultNodeMethod();
+		// mOut.setDefaultPostfix("Out");
+		// // mOut.setEnvironment(source);
+		// extAdaptor.addMethod(mOut);
+		//
+		// AnalysisAdaptorDefaultNodeMethod mIn = new
+		// AnalysisAdaptorDefaultNodeMethod();
+		// mIn.setDefaultPostfix("In");
+		// // mIn.setEnvironment(source);
+		// extAdaptor.addMethod(mIn);
+		// }
+		//
+		// {
+		// AnalysisAdaptorDefaultTokenMethod mOut = new
+		// AnalysisAdaptorDefaultTokenMethod();
+		// mOut.setDefaultPostfix("Out");
+		// // mOut.setEnvironment(source);
+		// extAdaptor.addMethod(mOut);
+		//
+		// AnalysisAdaptorDefaultTokenMethod mIn = new
+		// AnalysisAdaptorDefaultTokenMethod();
+		// mIn.setDefaultPostfix("In");
+		// // mIn.setEnvironment(source);
+		// extAdaptor.addMethod(mIn);
+		// }
+		//
+		// // FIXME adaptor.getImports().addAll(source.getAllDefinitions());
 	}
 
 	private static void createAnalysisInterface(List<String> genericArguments,
@@ -973,7 +975,8 @@ public class ExtensionGenerator2 {
 		JavaName jname = new JavaName(
 				result.getAstPackage() + ".analysis.intf", "I"
 						+ extEnv.getName() + name);
-		InterfaceDefinition extNewDef = new InterfaceDefinition(jname);
+		InterfaceDefinition extNewDef = new InterfaceDefinition(jname,
+				result.getAstPackage());
 		extNewDef.setTag(tag);
 		extNewDef.setGenericArguments(genericArguments);
 		result.addInterface(extNewDef);

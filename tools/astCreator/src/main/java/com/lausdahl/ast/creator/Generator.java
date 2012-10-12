@@ -131,7 +131,7 @@ public class Generator {
 				processedClasses.addAll(createInterfacesForNodePoints(env,
 						processedClasses, c.getSuperDef()));
 				InterfaceDefinition intf = new InterfaceDefinition(c.getName()
-						.clone());
+						.clone(), env.getAstPackage());
 				intf.methods.addAll(c.getMethods());
 				c.addInterface(intf);
 				intf.getName().setPackageName(
@@ -259,7 +259,8 @@ public class Generator {
 			Class defaultTokenMethod, Environment env, String tag)
 			throws InstantiationException, IllegalAccessException {
 		InterfaceDefinition answerIntf = new InterfaceDefinition(new JavaName(
-				env.getTemplateAnalysisPackage() + ".intf", "I" + intfName));
+				env.getTemplateAnalysisPackage() + ".intf", "I" + intfName),
+				env.getAstPackage());
 		answerIntf.setTag(tag);
 		answerIntf.setGenericArguments(genericArguments);
 		env.addInterface(answerIntf);

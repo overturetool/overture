@@ -150,7 +150,8 @@ public class ClassFactory {
 			return false;
 		}
 
-		InterfaceDefinition intf = new InterfaceDefinition(c.getName().clone());
+		InterfaceDefinition intf = new InterfaceDefinition(c.getName().clone(),
+				env.getAstPackage());
 		intf.methods.addAll(c.getMethods());
 
 		// intf.getName().setPackageName(c.getName().getPackageName()
