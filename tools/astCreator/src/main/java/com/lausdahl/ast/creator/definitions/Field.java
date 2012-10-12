@@ -7,21 +7,17 @@ import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.env.FieldTypeResolver;
 import com.lausdahl.ast.creator.utils.NameUtil;
 
-public class Field
-{
-	public static enum AccessSpecifier
-	{
+public class Field {
+	public static enum AccessSpecifier {
 		Private("private"), Protected("protected"), Public("public");
 		public final String syntax;
 
-		private AccessSpecifier(String syntax)
-		{
+		private AccessSpecifier(String syntax) {
 			this.syntax = syntax;
 		}
 	}
 
-	public static enum StructureType
-	{
+	public static enum StructureType {
 		Tree, Graph
 	}
 
@@ -35,60 +31,51 @@ public class Field
 	public AccessSpecifier accessspecifier = AccessSpecifier.Private;
 	public boolean isDoubleList = false;
 	public StructureType structureType = StructureType.Tree;
-	private String customInitializer ="";
+	private String customInitializer = "";
 
-	public Field()
-	{
+	public Field() {
 	}
 
-	public List<String> getRequiredImports(Environment env)
-	{
+	public List<String> getRequiredImports(Environment env) {
 		List<String> imports = new Vector<String>();
-		if (isList)
-		{
-			imports.add(getInternalType(unresolvedType, env).getName().getCanonicalName());
-			if (isTypeExternalNotNode())
-			{
+		if (isList) {
+			imports.add(getInternalType(unresolvedType, env).getName()
+					.getCanonicalName());
+			if (isTypeExternalNotNode()) {
 				imports.add(Environment.vectorDef.getName().getCanonicalName());
 			}
-			if (!isDoubleList)
-			{
-				switch (structureType)
-				{
-					case Graph:
-						imports.add(env.graphNodeList.getName().getCanonicalName());
-						break;
-					case Tree:
-						imports.add(env.nodeList.getName().getCanonicalName());
-						break;
+			if (!isDoubleList) {
+				switch (structureType) {
+				case Graph:
+					imports.add(env.graphNodeList.getName().getCanonicalName());
+					break;
+				case Tree:
+					imports.add(env.nodeList.getName().getCanonicalName());
+					break;
 
 				}
 
 			}
 		}
-		if (isDoubleList)
-		{
-			switch (structureType)
-			{
-				case Graph:
-					imports.add(env.graphNodeListList.getName().getCanonicalName());
-					break;
-				case Tree:
-					imports.add(env.nodeListList.getName().getCanonicalName());
-					break;
+		if (isDoubleList) {
+			switch (structureType) {
+			case Graph:
+				imports.add(env.graphNodeListList.getName().getCanonicalName());
+				break;
+			case Tree:
+				imports.add(env.nodeListList.getName().getCanonicalName());
+				break;
 
 			}
 		}
 
 		IInterfaceDefinition defIntf = env.lookUpInterface(getType(env));
-		if (defIntf != null)
-		{
+		if (defIntf != null) {
 			imports.add(defIntf.getName().getCanonicalName());
 		}
 
 		IClassDefinition def = env.lookUp(getType(env));
-		if (def != null)
-		{
+		if (def != null) {
 			imports.add(def.getName().getCanonicalName());
 		}
 
@@ -96,23 +83,20 @@ public class Field
 	}
 
 	@Override
-	public String toString()
-	{
-//		String name = null;
-//		try
-//		{
-//			name = getName();
-//		} catch (Exception e)
-//		{
-//
-//		}
+	public String toString() {
+		// String name = null;
+		// try
+		// {
+		// name = getName();
+		// } catch (Exception e)
+		// {
+		//
+		// }
 		return this.name;
 	}
 
-	public String getName(Environment env)
-	{
-		if (type == null)
-		{
+	public String getName(Environment env) {
+		if (type == null) {
 			type = getInternalType(unresolvedType, env);
 		}
 		String tmp = (name == null ? type.getName().getName() : name);
@@ -120,114 +104,105 @@ public class Field
 				+ tmp.substring(1);
 	}
 
-	public String getType(boolean abstractType, Environment env)
-	{
-		if (type == null)
-		{
-			type = getInternalType(unresolvedType,env);
+	public String getType(boolean abstractType, Environment env) {
+		if (type == null) {
+			type = getInternalType(unresolvedType, env);
 		}
-		checkType(type,env);
+		checkType(type, env);
 		String internaalType = type.getName().getName();
-		if (isList && !isDoubleList)
-		{
-			if (isTypeExternalNotNode())
-			{
+		if (isList && !isDoubleList) {
+			if (isTypeExternalNotNode()) {
 				internaalType = "List<? extends " + internaalType + ">";
-			} else
-			{
+			} else {
 				IInterfaceDefinition def = null;
-				if (abstractType)
-				{
+				if (abstractType) {
 					def = Environment.linkedListDef;
-					// internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());//new
-					// GenericArgumentedIInterfceDefinition(def, type).getName().getName();
-				} else
-				{
-					if (structureType == StructureType.Tree)
-					{
+					// internaalType =
+					// NameUtil.getGenericName(def.getName().getName(),
+					// type.getName().getName());//new
+					// GenericArgumentedIInterfceDefinition(def,
+					// type).getName().getName();
+				} else {
+					if (structureType == StructureType.Tree) {
 						def = env.nodeList;
 
-					} else
-					{
+					} else {
 						def = env.graphNodeList;
 					}
-					// internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());//new
-					// GenericArgumentedIInterfceDefinition(def, type).getName().getName();
+					// internaalType =
+					// NameUtil.getGenericName(def.getName().getName(),
+					// type.getName().getName());//new
+					// GenericArgumentedIInterfceDefinition(def,
+					// type).getName().getName();
 				}
-				internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());
+				internaalType = NameUtil.getGenericName(
+						def.getName().getName(), type.getName().getName());
 
 			}
 		}
-		if (isDoubleList)
-		{
+		if (isDoubleList) {
 			IInterfaceDefinition def = null;
-			if (abstractType)
-			{
-				// def = new GenericArgumentedIInterfceDefinition(Environment.linkedListDef, new
-				// GenericArgumentedIInterfceDefinition(Environment.listDef, type));
+			if (abstractType) {
+				// def = new
+				// GenericArgumentedIInterfceDefinition(Environment.linkedListDef,
+				// new
+				// GenericArgumentedIInterfceDefinition(Environment.listDef,
+				// type));
 				// internaalType = def.getName().getName();
-				internaalType = NameUtil.getGenericName(Environment.linkedListDef.getName().getName(), NameUtil.getGenericName(Environment.listDef.getName().getName(), type.getName().getName()));
-			} else
-			{
-				if (structureType == StructureType.Tree)
-				{
+				internaalType = NameUtil.getGenericName(
+						Environment.linkedListDef.getName().getName(), NameUtil
+								.getGenericName(Environment.listDef.getName()
+										.getName(), type.getName().getName()));
+			} else {
+				if (structureType == StructureType.Tree) {
 					def = env.nodeListList;
 
-				} else
-				{
+				} else {
 					def = env.graphNodeListList;
 				}
-				internaalType = NameUtil.getGenericName(def.getName().getName(), type.getName().getName());// new
-																											// GenericArgumentedIInterfceDefinition(def,
-																											// type).getName().getName();
+				internaalType = NameUtil.getGenericName(
+						def.getName().getName(), type.getName().getName());// new
+																			// GenericArgumentedIInterfceDefinition(def,
+																			// type).getName().getName();
 			}
 
 		}
-//		if(type instanceof GenericArgumentedIInterfceDefinition)
-//		{
-//			return type.getName()+type.getGenericsString();
-//		}
+		// if(type instanceof GenericArgumentedIInterfceDefinition)
+		// {
+		// return type.getName()+type.getGenericsString();
+		// }
 
 		return internaalType;
 	}
 
-	public String getType(Environment env)
-	{
+	public String getType(Environment env) {
 		return getType(false, env);
 	}
 
-	public String getMethodArgumentType(Environment env)
-	{
+	public String getMethodArgumentType(Environment env) {
 		// String internaalType = getInternalType();
-		if (type == null)
-		{
-			type = getInternalType(unresolvedType,env);
+		if (type == null) {
+			type = getInternalType(unresolvedType, env);
 		}
-		checkType(type,env);
+		checkType(type, env);
 		String internaalType = type.getName().getName();
-		if (isList && !isDoubleList)
-		{
+		if (isList && !isDoubleList) {
 
 			return "List<? extends " + internaalType + ">";
 		}
-		if (isDoubleList)
-		{
+		if (isDoubleList) {
 			return "Collection<? extends List<" + internaalType + ">>";
 		}
 		return internaalType;
 	}
 
-	public void checkType(IInterfaceDefinition t, Environment env)
-	{
-		if (t == null)
-		{
-			String msg = ("Unable to resolve type for field: \"" + name
-					+ " : " + unresolvedType + "\" in class %s with raw type " + unresolvedType);
+	public void checkType(IInterfaceDefinition t, Environment env) {
+		if (t == null) {
+			String msg = ("Unable to resolve type for field: \"" + name + " : "
+					+ unresolvedType + "\" in class %s with raw type " + unresolvedType);
 			String className = "";
-			for (IClassDefinition def : env.getClasses())
-			{
-				if (def.getFields() != null && def.getFields().contains(this))
-				{
+			for (IClassDefinition def : env.getClasses()) {
+				if (def.getFields() != null && def.getFields().contains(this)) {
 					className = def.getName().getName();
 				}
 
@@ -238,10 +213,8 @@ public class Field
 		}
 	}
 
-	public String getInnerTypeForList(Environment env)
-	{
-		if (type == null)
-		{
+	public String getInnerTypeForList(Environment env) {
+		if (type == null) {
 			type = getInternalType(unresolvedType, env);
 		}
 
@@ -249,31 +222,28 @@ public class Field
 		return internaalType;
 	}
 
-	protected IInterfaceDefinition getInternalType(String unresolvedTypeName, Environment env)
-	{
-		if (isTokenField)
-		{
+	protected IInterfaceDefinition getInternalType(String unresolvedTypeName,
+			Environment env) {
+		if (isTokenField) {
 			return type;
 		}
 
-		//TODO return FieldTypeResolver.searchType(unresolvedTypeName, env);
-		return FieldTypeResolver.searchTypePreferInterface(unresolvedTypeName, env,this);
+		// TODO return FieldTypeResolver.searchType(unresolvedTypeName, env);
+		return FieldTypeResolver.searchTypePreferInterface(unresolvedTypeName,
+				env, this);
 	}
 
-	public void setType(String text)
-	{
+	public void setType(String text) {
 		this.unresolvedType = text;
 		// this.type = getInternalType(unresolvedType);
 
 	}
 
-	public boolean isTypeExternalNotNode()
-	{
+	public boolean isTypeExternalNotNode() {
 		return (type instanceof ExternalJavaClassDefinition && !((ExternalJavaClassDefinition) type).extendsNode);
 	}
 
-	public String getCast(Environment env)
-	{
+	public String getCast(Environment env) {
 		return "(" + getType(env) + ")";
 	}
 
@@ -282,24 +252,19 @@ public class Field
 	 * 
 	 * @return
 	 */
-	public String getUnresolvedType()
-	{
+	public String getUnresolvedType() {
 		return this.unresolvedType;
 	}
 
-
-	public boolean hasCustomInitializer()
-	{
+	public boolean hasCustomInitializer() {
 		return !this.customInitializer.isEmpty();
 	}
 
-	public String getCustomInitializer()
-	{
+	public String getCustomInitializer() {
 		return this.customInitializer;
 	}
-	
-	public void setCustomInitializer(String customInitializer)
-	{
+
+	public void setCustomInitializer(String customInitializer) {
 		this.customInitializer = customInitializer;
 	}
 }

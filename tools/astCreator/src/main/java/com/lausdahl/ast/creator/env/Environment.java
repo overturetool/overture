@@ -172,11 +172,6 @@ public class Environment extends BaseEnvironment {
 		List<IClassDefinition> possibleResult = null;
 		String[] parts = path.split("\\.");
 
-		// happy go lucky
-		// IInterfaceDefinition luck = lookupByTag(path);
-		// if (luck != null)
-		// return luck;
-
 		// okay we have a path a.b.c and so on.
 		// Lookup all interface and classes for each a.b.c... and
 		// see if we can build a valid path of object e.g. here a is
@@ -249,8 +244,12 @@ public class Environment extends BaseEnvironment {
 
 		if (possibleResult.size() == 0)
 			return null;
-		if (possibleResult.size() == 1)
-			return possibleResult.get(0);
+		if (possibleResult.size() == 1) {
+			IInterfaceDefinition found = possibleResult.get(0);
+			if (treeNodeInterfaces.containsKey(found))
+				return treeNodeInterfaces.get(found);
+			return found;
+		}
 		throw new AstCreatorException("Searching for tag \"" + path
 				+ "\" gave multiple possibilities.", null, true);
 	}
