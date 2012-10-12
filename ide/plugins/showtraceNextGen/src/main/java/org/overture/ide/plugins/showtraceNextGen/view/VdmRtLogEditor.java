@@ -166,6 +166,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		FileDialog fDlg = new FileDialog(getSite().getShell());
 		String valFileName = fDlg.open();
 		theConjectures.parseValidationFile(valFileName);
+		
+		updateOverviewPage();
 	}
 
 	void diagramExportAction()
@@ -292,7 +294,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}		
 		else if (t.data != null)
 		{
-			traceRunner = TraceRunnerFactory.getTraceRunner(t.data);
+			traceRunner = TraceRunnerFactory.getTraceRunner(t.data, conjectureData);
 			theTimes = t.data.getEventTimes();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{

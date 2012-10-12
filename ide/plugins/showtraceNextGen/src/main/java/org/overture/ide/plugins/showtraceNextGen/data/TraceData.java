@@ -368,4 +368,14 @@ public class TraceData
 		
 		return isForThisCpu;
 	}
+
+	public TraceCPU getCpuFromThreadId(Long threadID)
+	{
+        if(!rtLogger.getThreadMap().containsKey(threadID))
+            throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getCpuFromThreadId");
+        
+        int CpuId = rtLogger.getThreadMap().get(threadID).cpu.id;
+        
+        return getCPU(new Long(CpuId));
+	}
 }

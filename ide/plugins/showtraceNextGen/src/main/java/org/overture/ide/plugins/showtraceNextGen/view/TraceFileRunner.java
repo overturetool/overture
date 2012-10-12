@@ -11,20 +11,22 @@ import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 public class TraceFileRunner implements ITraceRunner 
 {
+	private ConjectureData conjectures;
 	private TraceData data;
 	private Map<Class<?>, EventHandler> eventHandlers;
 	
-	public TraceFileRunner(TraceData data)
+	public TraceFileRunner(TraceData data, ConjectureData conjectures)
 	{
+		this.conjectures = conjectures;
 		this.data = data;
 		this.eventHandlers = new HashMap<Class<?>, EventHandler>();
 		
 		//Register Events
-		eventHandlers.put(NextGenThreadEvent.class, new ThreadEventHandler(data));
-		eventHandlers.put(NextGenThreadSwapEvent.class, new ThreadSwapEventHandler(data));
-		eventHandlers.put(NextGenOperationEvent.class, new OperationEventHandler(data));
-		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data));
-		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data));
+		eventHandlers.put(NextGenThreadEvent.class, new ThreadEventHandler(data, conjectures));
+		eventHandlers.put(NextGenThreadSwapEvent.class, new ThreadSwapEventHandler(data, conjectures));
+		eventHandlers.put(NextGenOperationEvent.class, new OperationEventHandler(data, conjectures));
+		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data, conjectures));
+		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data, conjectures));
 	}
 
 	public void drawArchitecture(GenericTabItem tab) throws Exception 
