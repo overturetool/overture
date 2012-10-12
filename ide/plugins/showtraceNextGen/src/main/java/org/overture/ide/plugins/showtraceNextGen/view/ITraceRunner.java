@@ -5,9 +5,6 @@ import java.util.Vector;
 
 public interface ITraceRunner 
 {
-	 void addFailedUpper(Long ptime, Long pthr, String pname);
-	 void addFailedLower(Long ptime, Long pthr, String pname);
-	 
 	 void drawArchitecture(GenericTabItem tab) throws Exception;
 	 void drawOverview(GenericTabItem tab, Long eventStartTime) throws Exception;
 	 

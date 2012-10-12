@@ -1,6 +1,8 @@
 package org.overture.ide.plugins.showtraceNextGen.data;
 
-import org.overture.ide.plugins.showtraceNextGen.draw.*;
+import org.overture.ide.plugins.showtraceNextGen.draw.CpuEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.OverviewEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.TraceEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
