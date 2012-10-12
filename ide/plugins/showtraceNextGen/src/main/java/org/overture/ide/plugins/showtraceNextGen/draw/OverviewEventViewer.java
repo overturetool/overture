@@ -53,6 +53,11 @@ public class OverviewEventViewer extends TraceEventViewer {
             //Draw Bus line
             drawTimeline(tab, bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
         }
+        
+		//Add spacer between bus/cpu objects and timeline
+		Line spacer = new Line(0L, 0L, CPU_X_START, 0L);
+		spacer.setForegroundColor(ColorConstants.white);
+		tab.addFigure(spacer);
 	}
 	
 	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -103,7 +108,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 	{
 		updateCpu(tab, cpu, thread);
 		
-		Long x1 = tab.getXMax() < cpu.getX() ? cpu.getX() : tab.getXMax();
+		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
 		Long y1 = cpu.getY();
 		Long y2 = y1;
@@ -116,7 +121,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 	{
 		updateCpu(tab, cpu, thread);
 		
-		Long x1 = tab.getXMax() < cpu.getX() ? cpu.getX() : tab.getXMax();
+		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
 		Long y1 = cpu.getY();
 		Long y2 = y1;

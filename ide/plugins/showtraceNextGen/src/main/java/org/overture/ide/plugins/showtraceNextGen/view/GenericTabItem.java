@@ -72,7 +72,7 @@ public class GenericTabItem
         
         	theCanvas.setContents(theFigure);
         	theCanvas.setBackground(ColorConstants.white);
-        	theCanvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
+        	theCanvas.setScrollBarVisibility(FigureCanvas.NEVER);
         	theCanvas.setSize(theFolder.getSize());
         	theCanvas.setSize(3000,3000);
 
@@ -102,7 +102,7 @@ public class GenericTabItem
     
     public boolean isCanvasOverrun()
     {
-    	Rectangle rect = theFigure.getBounds();
+    	/*Rectangle rect = theFigure.getBounds();
     	
     	int figWidth = rect.width;
     	int figHeight = rect.height;
@@ -112,7 +112,8 @@ public class GenericTabItem
     	int tabFolderHeight = tabFolderSize.y;
     	
     	
-    	return figWidth > tabFolderWidth || figHeight > tabFolderHeight;
+    	return figWidth > tabFolderWidth || figHeight > tabFolderHeight;*/
+    	return false;
     }
 
     public Long getXMax()

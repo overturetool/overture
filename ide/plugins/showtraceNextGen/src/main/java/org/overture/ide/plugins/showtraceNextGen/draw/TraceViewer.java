@@ -1,14 +1,10 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
-import org.overture.ide.plugins.showtraceNextGen.data.TraceObject;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 
 public abstract class TraceViewer {
