@@ -25,6 +25,7 @@ package org.overture.ide.plugins.showtraceNextGen.view;
 
 import java.io.File;
 import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -38,7 +39,9 @@ import org.eclipse.swt.widgets.TabItem;
 //            TracefileViewerPlugin, tdCPU
 
 public class GenericTabItem
-{
+{	
+	public enum AllowedOverrunDirection {Horizontal, Vertical, Both}
+	
     private TabItem theTabItem;
     private FigureCanvas theCanvas;
     private Figure theFigure;
@@ -46,8 +49,10 @@ public class GenericTabItem
     private int ymax;
     private Font theFont;
     static final boolean $assertionsDisabled = false;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
-
-    public GenericTabItem(String theName, TabFolder theFolder)
+    private AllowedOverrunDirection allowedDirection;
+    
+    
+    public GenericTabItem(String theName, TabFolder theFolder, AllowedOverrunDirection direction)
     {
         theTabItem = null;
         theCanvas = null;
@@ -73,9 +78,10 @@ public class GenericTabItem
         
         	theCanvas.setContents(theFigure);
         	theCanvas.setBackground(ColorConstants.white);
-        	theCanvas.setScrollBarVisibility(FigureCanvas.AUTOMATIC);
+
+        	theCanvas.setScrollBarVisibility(FigureCanvas.ALWAYS);
         	theCanvas.setSize(theFolder.getSize());
-        	theCanvas.setSize(3000,3000);
+        	//theCanvas.setSize(3000,3000);
 
         	theTabItem = new TabItem(theFolder, 0);
             theTabItem.setText(theName);
@@ -83,6 +89,8 @@ public class GenericTabItem
             
             //theFigure.
             //theFigure.setSize(3000, 3000);
+            
+            this.allowedDirection = direction;
             
             theFolder.addControlListener(new ResizeListener(theFolder));
             
@@ -106,18 +114,29 @@ public class GenericTabItem
     }
     
     public boolean isCanvasOverrun()
+    { 	
+    	if(this.allowedDirection == AllowedOverrunDirection.Horizontal)
+    		return isCanvasVerticallyOverrun();
+    	else if(this.allowedDirection == AllowedOverrunDirection.Vertical)
+    		return isCanvasHorizontallyOverrun();
+    	else //Both, so we never overrun
+    		return false;
+    }
+    
+    private boolean isCanvasHorizontallyOverrun()
     {
-    	Rectangle rect = theFigure.getBounds();
-    	
-    	int figWidth = rect.width;
-    	int figHeight = rect.height;
-    	
     	Point tabFolderSize = theTabItem.getParent().getSize();
     	int tabFolderWidth = tabFolderSize.x;
+    	
+    	return xmax > tabFolderWidth;
+    }
+    
+    private boolean isCanvasVerticallyOverrun(){
+    	
+    	Point tabFolderSize = theTabItem.getParent().getSize();
     	int tabFolderHeight = tabFolderSize.y;
     	
-    	
-    	return figWidth > tabFolderWidth || figHeight > tabFolderHeight;
+    	return ymax > tabFolderHeight;
     }
 
     public Long getXMax()
@@ -155,7 +174,7 @@ public class GenericTabItem
         {
             throw new AssertionError();
         } else
-        {
+        {    	
             Rectangle rect = aFigure.getBounds();
             int xfig = rect.x + rect.width - 2;
             xmax = xmax < xfig ? xfig : xmax;
@@ -163,8 +182,11 @@ public class GenericTabItem
             ymax = ymax < yfig ? yfig : ymax;
             theFigure.add(aFigure);
             
-            Dimension figSize = theFigure.getSize();
-            theCanvas.setSize(theFigure.getSize().width, theFigure.getSi)
+
+			Point currentFolderSize = theTabItem.getParent().getSize();
+			int currentX = currentFolderSize.x;
+			int currentY = currentFolderSize.y;
+            sizeCanvas(currentX, currentY);
         }
     }
     
@@ -238,6 +260,28 @@ public class GenericTabItem
             theFont.dispose();
     }
     
+    private void sizeCanvas(int currentX, int currentY){
+    	
+    	if(allowedDirection == AllowedOverrunDirection.Both)
+		{
+    		if(xmax > currentX || ymax > currentY)
+    			theCanvas.setSize(xmax, ymax);
+			return; //handleResize()
+		}
+		else if(allowedDirection == AllowedOverrunDirection.Horizontal)
+		{
+			//theCanvas.setSize(theCanvas.getSize().x, currentY); //Keep the canvas "x size"
+    		//if(xmax > currentX)
+    			theCanvas.setSize(xmax, currentY);
+		}
+		else //Allows vertical overrun
+		{
+			//theCanvas.setSize(currentX, theCanvas.getSize().y); //Keep the canvas "y size"
+    		//if(ymax > currentY)
+    			theCanvas.setSize(currentX, ymax);
+		}
+    }
+    
     final class ResizeListener implements org.eclipse.swt.events.ControlListener
     {
     	private int lastX;
@@ -255,12 +299,17 @@ public class GenericTabItem
 		}
 
 		public void controlResized(ControlEvent e) {
-			
+				
 			TabFolder folder = (TabFolder) e.getSource();
+			Point currentFolderSize = folder.getSize();
 			
-			int currentX = folder.getSize().x;
-			int currentY = folder.getSize().y;
+			int currentX = currentFolderSize.x;
+			int currentY = currentFolderSize.y;
 			
+			sizeCanvas(currentX, currentY);
+			
+			//theCanvas.setSize(3000, 3000);
+							
 			if(currentX > lastX || currentY > lastY)
 				handleResize();
 		}

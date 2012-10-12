@@ -16,7 +16,7 @@ public class BusMessageEventHandler extends EventHandler {
 		NextGenBusMessageEvent bEvent = (NextGenBusMessageEvent)event;
 		if(bEvent == null) return false; //Guard
 		
-		//if(bEvent.message.callerThread.object == null) return true; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
+		if(bEvent.message.callerThread.object == null) return true; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
 		
 		TraceCPU fromCpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
 		TraceCPU toCpu = data.getCPU(new Long(bEvent.message.toCpu.id));

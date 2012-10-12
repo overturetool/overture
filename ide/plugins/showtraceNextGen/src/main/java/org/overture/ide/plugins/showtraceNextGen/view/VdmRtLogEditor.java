@@ -48,6 +48,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.utility.FileUtility;
+import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem.AllowedOverrunDirection;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
 public class VdmRtLogEditor extends EditorPart implements IViewCallback
@@ -115,8 +116,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		folder = new TabFolder(form, 128);
 		theConjectures = new ValidationTable(form, this);
 		form.setWeights(new int[] { 85, 15 });
-		theArch = new GenericTabItem("Architecture overview", folder);
-		theOverview = new GenericTabItem("Execution overview", folder);
+		theArch = new GenericTabItem("Architecture overview", folder, AllowedOverrunDirection.Both);
+		theOverview = new GenericTabItem("Execution overview", folder, AllowedOverrunDirection.Vertical);
 		cw.clear();
 		try
 		{
@@ -333,7 +334,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			for(Long cpu : theCpus)
 			{
 				String cpuName = traceRunner.getCpuName(cpu);
-				GenericTabItem theDetail = new GenericTabItem(cpuName, folder);
+				GenericTabItem theDetail = new GenericTabItem(cpuName, folder, AllowedOverrunDirection.Horizontal);
 				traceRunner.drawCpu(theDetail, cpu, new Long(currentTime));
 				cpuTabs.put(cpu, theDetail);
 			}
