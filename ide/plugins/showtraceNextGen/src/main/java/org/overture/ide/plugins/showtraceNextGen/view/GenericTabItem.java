@@ -94,7 +94,6 @@ public class GenericTabItem
             
             theFolder.addControlListener(new ResizeListener(theFolder));
             
-            
             theFont = new Font(theTabItem.getDisplay(), "MS Gothic", 12, 0);
             return;
             
@@ -114,7 +113,8 @@ public class GenericTabItem
     }
     
     public boolean isCanvasOverrun()
-    { 	
+    { 	 
+    	
     	if(this.allowedDirection == AllowedOverrunDirection.Horizontal)
     		return isCanvasVerticallyOverrun();
     	else if(this.allowedDirection == AllowedOverrunDirection.Vertical)
@@ -270,16 +270,13 @@ public class GenericTabItem
 		}
 		else if(allowedDirection == AllowedOverrunDirection.Horizontal)
 		{
-			//theCanvas.setSize(theCanvas.getSize().x, currentY); //Keep the canvas "x size"
-    		//if(xmax > currentX)
     			theCanvas.setSize(xmax, currentY);
 		}
 		else //Allows vertical overrun
 		{
-			//theCanvas.setSize(currentX, theCanvas.getSize().y); //Keep the canvas "y size"
-    		//if(ymax > currentY)
-    			theCanvas.setSize(currentX, ymax);
+			theCanvas.setSize(currentX, ymax);
 		}
+    	
     }
     
     final class ResizeListener implements org.eclipse.swt.events.ControlListener
