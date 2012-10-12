@@ -64,7 +64,8 @@ public class TraceFileRunner implements ITraceRunner
 			
 		//Draw events as long as there is room and time
 		Long eventTime = eventStartTime;
-		while(!tab.isCanvasOverrun() && eventTime <= data.getMaxEventTime()) 
+		Long lastEventTime = data.getMaxEventTime();
+		while(!tab.isCanvasOverrun() && eventTime <= lastEventTime) 
 		{
 			//Get all events at the current time
 			for(Object event : data.getEvents(eventTime))

@@ -1,6 +1,6 @@
 package org.overture.ide.plugins.showtraceNextGen.data;
 
-public class TraceBusMessage
+public class TraceBusMessage extends TraceResource
 {
     private Long id;
     private Long busId;

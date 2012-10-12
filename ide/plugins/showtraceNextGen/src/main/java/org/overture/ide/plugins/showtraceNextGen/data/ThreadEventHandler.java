@@ -43,7 +43,6 @@ public class ThreadEventHandler extends EventHandler {
 			}
 			thread.pushCurrentObject(object);
 			eventViewer.drawThreadCreate(tab, cpu, thread);
-			cpu.addThreadId(threadId);
 			break;
 		case SWAP: 
 			return false;

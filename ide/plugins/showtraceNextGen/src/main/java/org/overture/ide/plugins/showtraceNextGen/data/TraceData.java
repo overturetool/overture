@@ -237,7 +237,12 @@ public class TraceData
     
 	public void reset()
     {
-        cpus.clear();
+		for(TraceCPU cpu : cpus.values())
+		{
+			cpu.setX(0L);
+			cpu.setY(0L);
+		}
+
         objects.clear();
         buses.clear();
         threads.clear();
